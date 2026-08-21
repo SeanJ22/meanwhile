@@ -32,6 +32,15 @@ on:
           data can be proven to execute without waiting for the data to move.
         type: boolean
         default: false
+      force_job_failure:
+        description: >-
+          NH31 proof input. Make ONE source (the mock child) report a JOB
+          failure, so the partial-commit path and the two-consecutive
+          detector can both be exercised on demand. Dispatch only — the
+          ingest ignores it unless the run is a workflow_dispatch, so a
+          schedule can never trip it, and it changes no data.
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -70,12 +79,69 @@ jobs:
       - name: Install
         run: corepack pnpm install --frozen-lockfile
 
+      # NH31 (2026-08-21): A BROKEN SOURCE MAY NOT DISCARD THE HEALTHY ONES.
+      #
+      # This step used to be a bare `run:`, so any non-zero exit from the
+      # ingest ended the job here — before the diff, before the gate, before
+      # the commit. That is correct for one of the ingest's two failure
+      # meanings and catastrophic for the other, and it had no way to tell
+      # them apart, because both were exit 1.
+      #
+      # Run 32485680324 is the shape: 11 sources attempted, 10 read, one
+      # job-failed on an eventless VCALENDAR, 330 rows WRITTEN to disk — and
+      # nothing committed. Ten sources' fresh data was fetched, normalised,
+      # written, and thrown away by the eleventh.
+      #
+      # At eleven sources that reads as flakiness. The observed per-source
+      # job-failure rate is 0.042 (14 failed runs of 37 over eight days, so
+      # 1 - 0.622^(1/11)), which commits 62% of the time. At the national
+      # volume this product is aimed at, (1 - 0.042)^5000 is 3e-94: the
+      # refresh would never commit again, the corpus would stop growing, and
+      # every run would be red for an honest reason while the data quietly
+      # aged out. A refresh whose success requires five thousand simultaneous
+      # healthy vendors is not a refresh.
+      #
+      # So the codes are now three (lib/meetings/refresh-exit.ts):
+      #   0  clean — commit.
+      #   1  NOTHING was written — do not commit, and stop here.
+      #   2  written WITH named job failures — commit it, THEN go red.
+      #
+      # Code 2 continues past this step and fails the job at the end instead,
+      # after the good rows are safely on main. The run is still red, the
+      # broken source is still named in the log and in the snapshot, and
+      # RULING 12 still holds: a JOB failure is our stopwatch running out and
+      # is never compiled into a skip. Committing the survivors is not
+      # skipping it.
       - name: Refresh the snapshot
+        id: refresh
         env:
           # Identified traffic gets a conversation; anonymous traffic gets
           # blocked. Set INGEST_CONTACT_EMAIL as a repository variable.
           INGEST_CONTACT_EMAIL: ${{ vars.INGEST_CONTACT_EMAIL }}
-        run: corepack pnpm ingest composite
+          # Dispatch-only proof input for the two-consecutive detector and for
+          # this partial-commit path. It makes ONE named source report a JOB
+          # failure and touches nothing else; the ingest refuses it unless the
+          # run is a workflow_dispatch, so a schedule can never trip it.
+          WTP_INGEST_FORCE_JOB_FAILURE: ${{ inputs.force_job_failure }}
+          WTP_INGEST_DISPATCHED: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          set +e
+          corepack pnpm ingest composite
+          code=$?
+          set -e
+          echo "ingest_exit=$code" >> "$GITHUB_OUTPUT"
+          case "$code" in
+            0)
+              echo "ingest exited 0 — clean run."
+              ;;
+            2)
+              echo "::warning title=NH31 partial progress::The ingest wrote a snapshot and one or more sources failed for a JOB reason. The healthy sources' rows continue to the gate and the commit; this job will be FAILED at the end, after they are safely on main."
+              ;;
+            *)
+              echo "ingest exited $code — nothing was written, so there is nothing to commit. Stopping here."
+              exit "$code"
+              ;;
+          esac
 
       # AUD-07 (2026-08-18): the diff moved AHEAD of the gate.
       #
@@ -158,3 +224,27 @@ jobs:
           git commit -m "Snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
           node scripts/push-main.mjs
+
+      # NH31, second half. The commit is behind us; now the run goes red.
+      #
+      # `always()` because this must fire whatever the steps between did.
+      # A job failure that also hit a walled vendor, or whose gate went red,
+      # is still a job failure and still has to reach a human — the job-watch
+      # workflow reads exactly this conclusion, and RULING 56 depends on it
+      # being truthful.
+      #
+      # This is the ONLY step that turns a code-2 run red, and it is
+      # deliberately last. Anything that fails the job earlier reintroduces
+      # NH31 for whatever came after it.
+      - name: A source failed for a JOB reason — this run is red
+        if: always() && steps.refresh.outputs.ingest_exit == '2'
+        run: |
+          echo "The ingest wrote its snapshot and one or more sources failed for a"
+          echo "JOB reason — our code, not a wall (RULING 12). The healthy sources'"
+          echo "rows have already been gated and committed above; that is NH31's fix"
+          echo "and it is not a pass."
+          echo ""
+          echo "This run is FAILED. The named source is in the ingest log above and"
+          echo "is recorded inside data/meetings-snapshot.json as a job failure."
+          echo "Two of these in a row opens a Needs Sean row (job-watch.yml)."
+          exit 1

@@ -44,6 +44,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { bodyAccountingFor } from "../lib/registry/body-name-match.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 
 const zipAt = process.argv.indexOf("--zip");
@@ -83,13 +84,6 @@ const slug = (value: string) =>
     .replace(/[^a-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "");
 
-const loose = (value: string | null | undefined): string =>
-  (value ?? "")
-    .toUpperCase()
-    .replace(/[^A-Z ]/g, " ")
-    .replace(/ {2,}/g, " ")
-    .trim();
-
 /** The division id a Census unit would carry here, or null if it has none. */
 function divisionFor(unit: { name: string | null; countyFips: string }): string | null {
   const name = unit.name ?? "";
@@ -123,24 +117,16 @@ for (const body of [...CURATED_BODIES, ...registry.bodies]) {
 }
 const shippedDivisions = new Set(registry.divisions.map((d) => d.id));
 
-/** A curated body filed under this unit's own name, for a unit with no division. */
+/**
+ * A curated body filed under this unit's own name, for a unit with no division.
+ *
+ * The matcher moved to lib/registry/body-name-match.ts (NH Hunt 5), because
+ * docs/gap-ledger.md was answering the same question with no lookup at all and
+ * contradicting this report about Lake Todd Village District on the same day.
+ * Two instruments, one implementation.
+ */
 function divisionlessBodyFor(name: string): string | undefined {
-  const key = loose(name);
-  /*
-   * A unit with no Census division of its own may still be wired here as a
-   * body under the division it sits inside — the Warner Village Water
-   * District is a separate government with its own elected commissioners and
-   * it is filed under the Town of Warner, because that is the division a
-   * reader's zip resolves to. So the whole body-name index is searched, not
-   * only the divisionless slice.
-   */
-  return allBodyNames.find((candidate) => {
-    const other = loose(candidate).replace(
-      / (GOVERNING BOARD|BOARD OF SUPERVISORS|BOARD OF DIRECTORS|BOARD OF TRUSTEES|BOARD OF EDUCATION|BOARD)$/,
-      "",
-    );
-    return other === key || other.startsWith(key) || key.startsWith(other);
-  });
+  return bodyAccountingFor(name, allBodyNames);
 }
 
 const near = universe.units.filter((u) => u.meetingsNearZip);

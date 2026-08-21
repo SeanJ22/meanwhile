@@ -545,9 +545,9 @@
     "ballot-nj-morris:us-senate:fernandez": {
       "photoUrl": "/candidates/nj-morris-us-senate-fernandez.png",
       "photoSource": "clean solo studio portrait — the campaign site's own photo (https://img1.wsimg.com/isteam/ip/968e4fa3-7440-46a2-ae03-16126b33e7da/blob-3188f26.png), read 2026-08-14; committed copy served from our origin, metadata stripped",
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "bio": "We're not being governed, we're being looted. I don't answer to big donors or special interests, I answer only to YOU!",
+      "bioSourceUrl": "https://veronicaforsenate.com",
+      "bioSourceLabel": "In the campaign's words — veronicaforsenate.com, read 2026-08-21",
       "email": null,
       "phone": null,
       "filedAddress": null,
@@ -2107,6 +2107,12 @@
       "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
       "name": "Daniel E. Innis",
       "note": "NH Hunt 4, 2026-08-21. Two independent branches for the campaign site, which was the one field owed. BRANCH 1 — the NH Campaign Finance System's filing-entity record, reached at rung 7 through the app's own XHR (rungs 2-4 refused HTTP 403 by Akamai), which names InnisforNH.com as this candidate's website for the 2026 cycle. BRANCH 2 — the site itself at rung 2, whose title and prose name the same person, the same district and the same town as the filing.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:fernandez",
+      "name": "Veronica Fernandez",
+      "note": "NH Hunt 5 item 3, the re-walk. RULING 53 re-walk of every FOUND candidate field found ONE genuine mismatch in 74 judged: the hunt state recorded blurb=FOUND for this candidacy while the card carried bio=null, so the product claimed to hold a description it did not have. Re-hunted rather than downgraded, because the correct response to a gap is more hunting. Rung 2 (plain fetch) of the campaign's own site, https://veronicaforsenate.com, HTTP 200, 148,323 bytes, read 2026-08-21: the og:description carries the campaign's own two-sentence pitch, quoted here verbatim with its source class. Second branch not needed — the campaign's own domain is the most authoritative publisher of its own words and it answered on the first rung.",
       "attemptedAt": "2026-08-21"
     }
   ]

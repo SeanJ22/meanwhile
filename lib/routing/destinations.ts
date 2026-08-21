@@ -71,7 +71,14 @@ export const DESTINATION_ROUTES: readonly DestinationRoute[] = [
     surface: "BALLOT",
     label: "What's on your ballot",
     statement:
-      "The ballot page lists the contests and measures we have found for the address you give it, each one sourced. Where we have not found something, it says so rather than leaving it out.",
+      // RULING 59 (2026-08-21). The second sentence used to read "Where we
+      // have not found something, it says so rather than leaving it out." It
+      // was banned twice: it characterises what has not been worked out, and
+      // it had ALSO been false since RULING 28, which says a field with no
+      // data renders nothing at all — no row, no label, no placeholder. The
+      // page stopped saying so a day before this sentence stopped claiming it
+      // did.
+      "The ballot page lists the contests and measures we have found for the address you give it, each one sourced.",
     href: "/ballot",
     phrases: [
       "on my ballot",

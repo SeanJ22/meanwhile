@@ -103,12 +103,32 @@ const SOURCES: { label: string; collect: () => Measurement[] }[] = [
       const out: Measurement[] = [];
       for (const [candidate, fields] of Object.entries(file.candidates ?? {})) {
         for (const [field, record] of Object.entries(fields)) {
-          // Only a COMPLETED measurement can go stale. NOT_HUNTED was never a
-          // measurement, so it is owed a first walk rather than a re-walk, and
-          // counting it here would drown the real signal.
-          if (record.state !== "VERIFIED_ABSENT" && record.state !== "NOT_APPLICABLE") continue;
+          /*
+           * WHICH STATES ARE MEASUREMENTS, AND WHY FOUND JOINED THEM.
+           * (NH Hunt 5, 2026-08-21.)
+           *
+           * NOT_HUNTED is still excluded and the original reasoning holds: it
+           * was never a measurement, so it is owed a FIRST walk rather than a
+           * re-walk, and counting it here would drown the signal in 406 rows
+           * that this instrument has nothing to say about.
+           *
+           * FOUND was excluded too, silently, and that was wrong. A found
+           * field IS a measurement — "this candidate's campaign site was at
+           * this URL on the day we looked" — and RULING 53 gives candidate
+           * fields a seven-day window precisely because campaign sites go
+           * down, photos get pulled, and phone numbers get disconnected
+           * between a filing deadline and an election. A FOUND record that
+           * has aged past its window has the same problem a stale absence
+           * has: it no longer carries a claim on being current.
+           *
+           * The visible symptom of the exclusion was this source reporting
+           * "0 stale of 0 measured" while holding 544 field records — a
+           * zero-row read presented as a clean board, which is the shape this
+           * repo has now sighted six times.
+           */
+          if (record.state === "NOT_HUNTED") continue;
           out.push({
-            what: `${candidate} · ${field}`,
+            what: `${candidate} · ${field} [${record.state}]`,
             kind: "candidateField",
             checkedAt: record.checkedAt ?? null,
           });

@@ -258,7 +258,10 @@ export function WelcomeOverlay({
           </>
         )}
 
-        <p className="welcome-divider">Or try a place we cover well</p>
+        {/* RULING 59: "Or try a place we cover well" characterised our
+            holdings to sell four buttons. The buttons need a label, not a
+            coverage claim, and the label's job is the reader's next move. */}
+        <p className="welcome-divider">Or start with one of these</p>
 
         <div className="welcome-teams">
           {QUICK_ZIPS.map((quick) => (
@@ -274,16 +277,29 @@ export function WelcomeOverlay({
         </div>
 
         {/*
-          The honest coverage statement, before anyone types a zip we cannot
-          answer well. Any zip works; what differs is how much we hold, and
-          the map's coverage notice says exactly which bodies we can't see
-          yet. Nothing here ranks or suggests — it states where the data is.
+          RULING 59 (2026-08-21). This read: "These four areas have the deepest
+          coverage today. Any U.S. zip works — elsewhere you'll see what we
+          have so far, and the map says plainly which local governments we
+          can't see yet."
+
+          Two sentences, both deleted, for two different reasons.
+
+          The first is the banned form: a claim about our holdings, ranked
+          ("deepest"), counted ("four"), and dated ("today") — and derived from
+          nothing on the screen, so it goes stale silently the moment a fifth
+          area is worked and nobody remembers this file. Found by the RULING 59
+          guard rather than by reading, which is the point of the guard.
+
+          The second had already gone false. It pointed at the map's coverage
+          notice as the thing that "says plainly which local governments we
+          can't see yet" — and that notice is what RULING 59 deleted. A
+          sentence whose whole job is to forward the reader to a deleted
+          surface is a broken promise on the first screen anyone sees.
+
+          What survives is the only part that was ever about what the reader
+          can DO, which is the register this surface is in.
         */}
-        <p className="welcome-fineprint">
-          These four areas have the deepest coverage today. Any U.S. zip
-          works — elsewhere you&apos;ll see what we have so far, and the map
-          says plainly which local governments we can&apos;t see yet.
-        </p>
+        <p className="welcome-fineprint">Any U.S. zip works.</p>
 
         <button
           type="button"

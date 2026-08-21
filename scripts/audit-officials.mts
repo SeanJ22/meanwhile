@@ -12,9 +12,13 @@
  * MISS, not a citation.
  *
  * Requests are serialized with a delay, sent with the project's identified
- * UA. gc.nh.gov resets TLS from non-browser clients (ladder rung recorded),
- * so NH member pages are marked UNVERIFIABLE-INLINE rather than fetched —
- * an unreachable route is recorded on its rung, never scored as a pass.
+ * UA. **No host is skipped.** Until 2026-08-21 this script refused to fetch
+ * gc.nh.gov at all, on the strength of a TLS refusal measured 2026-08-17, and
+ * reported 84 New Hampshire officials as unverifiable on every run without
+ * asking. RULING 52: a wall is a measurement with a date, never a standing
+ * property — and a wall compiled into a skip can never be disproved by the
+ * instrument that records it. Every page is now requested; a refusal is
+ * recorded as the failure it was, on the day it happened.
  *
  * Output: the table on stdout AND docs/officials-audit.md, dated. The table
  * is the release evidence the brief demands — per official, which of the
@@ -27,6 +31,7 @@ import { join } from "node:path";
 import { COVERED, rosterFile } from "../lib/coverage/artifacts.ts";
 import { CAMPAIGN_SITES } from "../lib/officials/campaign-sites.ts";
 import { generatedAtEastern } from "./generated-at.mjs";
+import { today } from "./doc-dates.mjs";
 
 const UA = "we-the-people civic meeting index (contact: seanj22@gmail.com)";
 const DELAY_MS = 250;
@@ -81,7 +86,22 @@ type PageVerdict =
 
 async function verifyPage(o: Officeholder): Promise<PageVerdict> {
   if (!o.websiteUrl) return "MISS-ABSENT";
-  if (/gc\.nh\.gov/.test(o.websiteUrl)) return "UNVERIFIABLE-INLINE";
+  /*
+   * **THE HARDCODED WALL, REMOVED** (RULING 52, 2026-08-21).
+   *
+   * This line read `if (/gc\.nh\.gov/.test(o.websiteUrl)) return
+   * "UNVERIFIABLE-INLINE";` — 84 New Hampshire officials were reported as
+   * unverifiable on every run without a request ever being made, on the
+   * strength of a TLS measurement taken 2026-08-17. Re-walked 2026-08-21:
+   * gc.nh.gov answers rung 2 at HTTP 200.
+   *
+   * A wall compiled into a skip is the worst form of the thing RULING 52 was
+   * adopted over, because it cannot be disproved by the instrument that
+   * records it: the audit could never notice the wall had fallen, since it had
+   * stopped asking. Nothing here is special-cased now. If the host refuses, the
+   * request fails and `MISS-ERROR` records the refusal on the day it happened,
+   * which is a measurement rather than a property.
+   */
   // njleg bio pages are client-rendered SPAs — the served HTML never contains
   // the member's name, so content-sniffing false-negatives every one. The
   // verification chain is the legislature's own server-rendered roster, which
@@ -200,9 +220,18 @@ async function main() {
   lines.push("## Totals");
   lines.push("");
   lines.push(
+    /*
+     * RULING 52 (2026-08-21): a wall carries the date it was last tested. This
+     * line used to end "(gc.nh.gov TLS wall — the recorded rung, not a pass)",
+     * which stated a 2026-08-17 measurement as a standing property of the host
+     * — and gc.nh.gov answers rung 2 at HTTP 200 as of 2026-08-21. Every run of
+     * this script was re-publishing a wall that had fallen. It now names the
+     * date the run happened and says nothing about why, because the reason is a
+     * per-row fact and the rows above carry it.
+     */
     `${totals.officials} officials audited: ${totals.pageVerified} pages fetch-verified, ` +
       `${totals.pageMiss} page misses, ${totals.pageUnverifiable} unverifiable inline ` +
-      `(gc.nh.gov TLS wall — the recorded rung, not a pass).`,
+      `as of ${today()} — see each row for the rung it stopped at.`,
   );
   lines.push("");
 

@@ -63,6 +63,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: corepack pnpm watch:workflows --open
 
+      # RULING 53 — recorded absences expire, and staleness is a state the data
+      # carries rather than a note in a document. This is the daily reading of
+      # it: which measurements are past their window and owed a re-walk.
+      #
+      # `if: always()` because a workflow failure found above is not a reason to
+      # stop asking this, and the two questions are independent.
+      #
+      # It REPORTS and never re-walks. Re-walking is a hunt, and a hunt is a
+      # session's work with a session's judgement in it. What was missing was
+      # never the walking — it was anything at all that could say which records
+      # were owed one.
+      - name: Which measurements are past their RULING 53 window?
+        if: always()
+        run: corepack pnpm stale
+
       - name: Commit any row it opened
         run: |
           if git diff --quiet -- docs/; then

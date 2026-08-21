@@ -115,6 +115,55 @@ C item 6; `docs/rulings.md` RULING 16).
 walked, every miss with its URL. Its own numbered header list is retired in
 place with a dated note and lives here now.
 
+### THE DISCOVERY LADDER IS A TREE (RULING 52, added 2026-08-21, NH Hunt 3)
+
+**The lettered list below is not walked to a verdict.** A to M are BRANCHES —
+independent routes to the same fact — and a branch coming back empty is one
+measurement on one date, never a finding about the fact. The letters are an
+ordering of where to look FIRST, not a sequence that terminates in
+"unreachable". A ladder produces that answer because a ladder has one
+direction; a tree does not have it available.
+
+Three walls this repo had written down as permanent fell in one session
+(2026-08-21), and all three had a defensible RUNG history behind them:
+`gc.nh.gov` answers rung 2 at HTTP 200 after being recorded as refusing every
+client including browsers; `sos.nh.gov` fell at rung 5 after being walled
+host-wide since 2026-08-13; Kearsarge's nine board emails were in the page's own
+`href`s after two sessions recorded them absent. Rungs prove the retrieval
+discipline was followed on ONE route. Nothing about a rung count proves a second
+route was ever tried.
+
+**How a branch is chosen.** Take the branch that fails for a DIFFERENT REASON
+than the one that just failed. That is the whole heuristic and it is what makes
+the tree worth more than a longer ladder:
+
+- A host refused you → take a branch through a **different publisher**, not a
+  different header. Different headers are rungs 2–4 on the same branch.
+- A document does not exist where it should → take a branch through a **body
+  that files the same fact for its own purposes** (the county clerk holds what
+  the town will not publish; the state holds what the county will not).
+- A page is a dead end → take a branch through **a different format of the same
+  publication** — the `.ics`, the JSON the widget calls, the PDF, the RSS.
+- Every online branch is dry → the **records-request branch** is a branch and
+  not a defeat, and it is made and recorded rather than described.
+
+**Independence is declared, not inferred.** Two routes that fail for the same
+reason are one route wearing two names, so a branch records what it goes
+*through* — a host, a vendor, a publisher — and independence is counted over
+distinct dependencies. Nothing automated can tell that two hostnames sit behind
+one WAF; a person can, and writes it down. `lib/hunt/discovery.ts` holds the
+model and `independentBranchCount` is the function that does the counting.
+
+**Reconciling two branches that both answer.** If they agree, record both — the
+second is what makes the first checkable. If they DISAGREE, that is the finding
+and it renders as one; the product does not quietly prefer one sourced claim
+over another. `verdictOf` returns `divergent` for exactly this case.
+
+**And no branch result is permanent** (RULING 53). Candidate fields go stale in
+7 days, bodies and rosters in 14, and walled sources in 14 regardless of how
+emphatically the wall was recorded. Past its window a record is re-walked before
+it is relied on.
+
 ### The discovery ladder, A to M
 
 Walked in order, each recorded with `attemptedAt` and its result. Reaching M

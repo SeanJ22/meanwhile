@@ -89,46 +89,68 @@ test("12: measures get no battlecard pill", () => {
   assert.match(cardSource, /battlecardSlot/, "the slot moved off the candidate card");
 });
 
-test("14: the ROW carries the count and never the enumeration", () => {
+/**
+ * **RULING 47 AND RULING 44 (2026-08-20) — THE COUNT AND THE ENUMERATION ARE
+ * BOTH GONE, AND NEITHER MAY COME BACK.**
+ *
+ * Item 14 (2026-08-19) split one ninety-word list into a COUNT on the ballot
+ * row and the LIST buried in the battlecard. The author has since ruled the
+ * whole measurement out: *"the per-card issue count is removed"*, and
+ * `CLAUDE.md`'s fourth friction exception — honesty about coverage gaps — is
+ * retired with it. A digit is RULING 44's banned statement compressed, and a
+ * `<details>` reading "Which 9 we found nothing on" is the digit with a door
+ * on it.
+ *
+ * This test replaces the two item-14 guards that asserted the opposite. That
+ * is the only circumstance in which a walk or a guard is retired: the author
+ * retiring the claim behind it.
+ */
+test("47: no per-card issue count, and no per-card gap enumeration", () => {
   const positions = read("components", "ballot", "candidate-positions.tsx");
+  const card = read("components", "ballot", "candidate-card.tsx");
+  const page = read("app", "ballot", "page.tsx");
   const lib = read("lib", "candidates", "positions.ts");
 
-  // The annotation exists, states a count, and names no issues.
-  assert.match(lib, /export function positionsAnnotation/);
-  const annotation = lib.slice(lib.indexOf("export function positionsAnnotation"));
   assert.ok(
-    !/housing costs|prescription costs|reproductive rights/i.test(annotation),
-    "the row's annotation is enumerating issues again",
+    !/positionsAnnotation/.test(lib),
+    "the row's count function is back in lib/candidates/positions.ts",
   );
-  assert.match(annotation, /\$\{issuesWithPassages\} of the \$\{issuesSearched\}/);
+  for (const [name, src] of [
+    ["candidate-positions.tsx", positions],
+    ["candidate-card.tsx", card],
+    ["ballot/page.tsx", page],
+  ] as const) {
+    assert.ok(
+      !/data-gap-annotation|data-gap-enumeration|annotationSlot|CandidatePositionsAnnotation/.test(
+        src,
+      ),
+      `${name} carries a per-card completeness marker again`,
+    );
+  }
 
-  // The enumeration is behind a disclosure, and marked so a walk can find it.
-  assert.match(positions, /<details[^>]*data-gap-enumeration/, "the list must be buried");
-  assert.match(positions, /data-gap-annotation/, "the row's short form needs its marker");
+  // The headline that replaced it is provenance, and provenance has no digits.
+  const headline = lib.slice(lib.indexOf("export function positionsHeadline"));
+  assert.ok(
+    !/issuesWithPassages|issuesSearched|\$\{summary\./.test(headline),
+    "the headline is interpolating a count again",
+  );
 });
 
 /**
- * **The disclaimer travels with the list.** Item 14's second clause, and the
- * one worth guarding hardest: without it, twelve issue labels under a
- * person's name read as a finding about the person rather than as a report of
- * what our reading did and did not cover.
+ * RULING 28's half of it: a candidate we hold nothing published for renders
+ * NO section — not a placeholder, not a greyed line, not a sentence about our
+ * research. This is the shape `PE01` reported and the author answered.
  */
-test("14: the enumeration never renders without its disclaimer", () => {
+test("44: nothing held renders nothing, not a sentence about our research", () => {
   const positions = read("components", "ballot", "candidate-positions.tsx");
-
-  const start = positions.indexOf("data-gap-enumeration");
-  assert.ok(start > 0, "the enumeration disclosure is gone");
-  const block = positions.slice(start, positions.indexOf("</details>", start));
-
   assert.match(
-    block,
-    /Nothing in the pages we hold from them mentions/,
-    "the enumeration left the disclosure",
+    positions,
+    /if \(nothingCollected[^)]*\) return null;/,
+    "the empty case must render nothing at all",
   );
-  assert.match(
-    block,
-    /That is what\s+their own pages say, as we read them — not a statement about what\s+they think/,
-    "the disclaimer must sit inside the same block as the list it qualifies",
+  assert.ok(
+    !/haven't collected anything|haven’t collected anything/i.test(positions),
+    "the no-published-words sentence is back on the card",
   );
 });
 

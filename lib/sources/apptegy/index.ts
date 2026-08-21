@@ -7,6 +7,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * Apptegy / Thrillshare meeting source.
@@ -111,7 +115,7 @@ export function makeApptegySource(
   const normalizeWithDrops = (
     raw: ApptegyRaw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -181,7 +185,7 @@ export function makeApptegySource(
       }
     }
 
-    return { meetings, drops };
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
   };
 
   return {

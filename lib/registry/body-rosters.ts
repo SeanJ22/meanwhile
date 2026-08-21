@@ -631,6 +631,930 @@ export const BODY_ROSTERS: BodyRoster[] = [
       },
     ],
   },
+  /*
+   * ── MERRIMACK COUNTY'S BOARD OF COMMISSIONERS (NH Hunt, 2026-08-20) ───────
+   *
+   * **The county's own Board of Commissioners page names not one commissioner.**
+   * Retrieved 2026-08-20, HTTP 200, 47,963 bytes: four paragraphs describing
+   * what the board does, a Zoom link, and no names. A reader at 03255 who
+   * wanted to know who governs their county could not find out from the page
+   * whose title is the answer. That is a finding about the county's publishing,
+   * and it is recorded in `docs/gap-ledger.md`.
+   *
+   * The names are on rung 9 — the county's own linked documents. Its
+   * `departments/administration/annual_reports.php` Document Center carries
+   * **Final Annual Report 2025.pdf**, and page 5 of that report is a "County
+   * Directory · Officers and Department Heads (Current)" naming all three
+   * commissioners with their towns, plus every elected officer and department
+   * head. Read 2026-08-20 with `pnpm extract text`: 37 pages carrying text,
+   * born-digital, no OCR needed. Page 6 repeats the three names over the
+   * commissioners' own signature block, which is the second reading that makes
+   * this a verification rather than a single transcription.
+   *
+   * PARTISAN, and settled from a RECORD rather than from a statute. The first
+   * draft of this row cited RSA 661:1 for the proposition that county officers
+   * run on the partisan state ballot. RSA 661:1 was READ before it was
+   * committed — it is about vacancies among public officers, and says nothing
+   * of the kind — so the citation is not here. A plausible statute number is
+   * the same failure as a plausible date.
+   *
+   * What does prove it is a government record this repository already holds:
+   * the New Hampshire Secretary of State's certified 2024 county-office return
+   * for Merrimack, which prints a party beside every county candidate's name.
+   *
+   * The party PER COMMISSIONER is not written on any row below. The annual
+   * report does not state it, and under this file's own rule a null
+   * `partyLabel` on a partisan office means "not sourced yet" — which is
+   * exactly true. The next rung is that same return, read name by name.
+   */
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
+    bodyName: "Merrimack County Board of Commissioners",
+    sourceUrl:
+      "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
+    sourceOrg: "Merrimack County",
+    collectedAt: "2026-08-20",
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: NH_2024_MERRIMACK_COUNTY,
+    members: [
+      {
+        id: "roster:merrimack-commissioners#1",
+        name: "Stuart D. Trachy",
+        officeTitle: "Chair, Merrimack County Commissioner (Franklin)",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+      {
+        id: "roster:merrimack-commissioners#2",
+        name: "David M. Lovlien",
+        officeTitle: "Vice Chair, Merrimack County Commissioner (Pembroke)",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+      {
+        id: "roster:merrimack-commissioners#3",
+        name: "Stephen Shurtleff",
+        officeTitle: "Clerk, Merrimack County Commissioner",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
+      },
+    ],
+  },
+  /*
+   * ── THE COUNTY DELEGATION'S OFFICERS (NH Hunt, 2026-08-20) ────────────────
+   *
+   * The Merrimack County Delegation is the county's LEGISLATIVE body — every
+   * member of the New Hampshire House elected from the county, sitting
+   * together to appropriate the county budget. Forty-five of them, listed on
+   * page 6 of the same annual report; the six OFFICERS are here because they
+   * are the body's own leadership and because the delegation's own page
+   * (`elected_officials/delegation/index.php`, read 2026-08-20, HTTP 200)
+   * publishes exactly these three plus the Zoom link a reader needs to attend.
+   *
+   * The forty-five members are NOT written here as a roster. They hold their
+   * seats as state representatives, they are already the subject of this
+   * product's state-legislature data, and writing them a second time under a
+   * county body would create two records of one person that could drift apart.
+   * The county's own list is on the record in the annual report cited above.
+   *
+   * PARTISAN, on the same record as the commissioners above: the Secretary of
+   * State's certified county return prints a party beside every name on the
+   * state general-election ballot, and a New Hampshire representative is
+   * elected on it. The party per member is not stated in the county's report
+   * and is not written here.
+   */
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#delegation",
+    bodyName: "Merrimack County Delegation",
+    sourceUrl: "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+    sourceOrg: "Merrimack County",
+    collectedAt: "2026-08-20",
+    partisanship: "PARTISAN",
+    partisanshipSourceUrl: NH_2024_MERRIMACK_COUNTY,
+    members: [
+      {
+        id: "roster:merrimack-delegation#1",
+        name: "David Luneau",
+        officeTitle: "Chair, Merrimack County Delegation",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+      },
+      {
+        id: "roster:merrimack-delegation#2",
+        name: "Brian Seaworth",
+        officeTitle: "Vice Chair, Merrimack County Delegation",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+      },
+      {
+        id: "roster:merrimack-delegation#3",
+        name: "Thomas Schamberg",
+        officeTitle: "Clerk, Merrimack County Delegation",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl: "https://www.merrimackcounty.net/elected_officials/delegation/index.php",
+      },
+      {
+        id: "roster:merrimack-delegation#4",
+        name: "James MacKay",
+        officeTitle: "Chair, Delegation Executive Committee",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
+      },
+      {
+        id: "roster:merrimack-delegation#5",
+        name: "Karen Ebel",
+        officeTitle: "Vice Chair, Delegation Executive Committee",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
+      },
+      {
+        id: "roster:merrimack-delegation#6",
+        name: "Michael Moffett",
+        officeTitle: "Clerk, Delegation Executive Committee",
+        termNote: null,
+        email: null,
+        phone: "(603) 796-6800",
+        websiteUrl:
+          "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
+      },
+    ],
+  },
+  /*
+   * ── NINE MORE NEWBURY BOARDS (NH Hunt, 2026-08-20) ────────────────────────
+   *
+   * Sixty-three people, read off each board's OWN page on the town's own site
+   * on 2026-08-20, through `pnpm hunt:roster` and layer 5 of the extraction
+   * toolkit (`lib/extract/roster-table.ts`). The retrieval ledger, one line per
+   * page with its rung, its HTTP status and its extraction counts, is committed
+   * at `docs/evidence/nhhunt-newbury-roster.jsonl`.
+   *
+   * **Curated, not scraped, and the difference is the review.** The extractor
+   * reads a Drupal Views table; every row below was read back against the page
+   * it came from before it was written here. What the tool produced and what is
+   * committed differ in exactly two ways, both recorded rather than silent:
+   *
+   *   1. A member whose Title cell is EMPTY is written `Member`, because the
+   *      town lists them under a heading that says "Board Members" — the
+   *      section is the town's own statement, not our inference. Where the
+   *      town states a title, the title is theirs, verbatim, including
+   *      "Chief. Bradley Wheeler" and "Selectboard Sponsor".
+   *   2. One trailing full stop was trimmed from "Alden Beauchemin." — a typing
+   *      artifact on the town's page, not part of a person's name.
+   *
+   * **A TERM THAT HAS ALREADY EXPIRED IS RENDERED AS THE TOWN PUBLISHED IT.**
+   * Newbury's Cemetery Trustees page states terms ending 2021, 2022 and 2023,
+   * and its Planning Board lists an alternate whose term ended March 2021. Those
+   * are the town's own current published statements and they are five years
+   * stale. Correcting them would be inventing a fact about a named person;
+   * dropping them would assert an absence the town has not asserted. They ship
+   * as published, with the term note that lets a reader see it, and the
+   * staleness is a finding recorded in `docs/gap-ledger.md` rather than a
+   * silence.
+   *
+   * Eight further Newbury bodies were read and are NOT here, because they are
+   * departments and offices rather than boards with rosters — Administration,
+   * Town Clerk, Tax Collector, Assessor, Highway, Emergency Management, Health
+   * Officer and the Transfer Station. Their eighteen staff contacts are on the
+   * same ledger.
+   */
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
+    bodyName: "Newbury Planning Board",
+    sourceUrl: "https://www.newbury.nh.gov/planning-board",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-planning-board#1",
+        name: "Deane Geddes",
+        officeTitle: "Alternate",
+        termNote: "Term ends March 2021",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#2",
+        name: "Jim Lord",
+        officeTitle: "Alternate",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#3",
+        name: "Wayne Seaholm",
+        officeTitle: "Member",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#4",
+        name: "Donna Long",
+        officeTitle: "Recording Secretary",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#5",
+        name: "Peter Stanley",
+        officeTitle: "Consultant",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#6",
+        name: "Christopher Millette",
+        officeTitle: "Chair",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#7",
+        name: "Chris Hernick",
+        officeTitle: "Vice Chair",
+        termNote: "Term ends 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#8",
+        name: "Michael Bedard",
+        officeTitle: "Member",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#9",
+        name: "Sandra Warde",
+        officeTitle: "Ex-Officio",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#10",
+        name: "Richard Wright",
+        officeTitle: "Member",
+        termNote: "Term ends March 2027",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+      {
+        id: "roster:newbury-planning-board#11",
+        name: "Gary Keane",
+        officeTitle: "Member",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/planning-board",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
+    bodyName: "Newbury Zoning Board of Adjustment",
+    sourceUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#1",
+        name: "Dave Blohm",
+        officeTitle: "Chair",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#2",
+        name: "Alex Azodi",
+        officeTitle: "Alternate",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#3",
+        name: "Hank Thomas",
+        officeTitle: "Vice-Chair",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#4",
+        name: "Katheryn Holmes",
+        officeTitle: "Alternate",
+        termNote: "Term ends March 2027",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#5",
+        name: "Steve Hurd",
+        officeTitle: "Alternate",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#6",
+        name: "Larry Briggs",
+        officeTitle: "Member",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#7",
+        name: "Patricia Sherman",
+        officeTitle: "Member",
+        termNote: "Term ends March 2027",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+      {
+        id: "roster:newbury-zoning-board-of-adjustment#8",
+        name: "Peter Fuller",
+        officeTitle: "Member",
+        termNote: "Term ends March 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/zoning-board-adjustment",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
+    bodyName: "Newbury Conservation Commission",
+    sourceUrl: "https://www.newbury.nh.gov/conservation-commission",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-conservation-commission#1",
+        name: "Katheryn Holmes",
+        officeTitle: "Chair",
+        termNote: "Term ends 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+      {
+        id: "roster:newbury-conservation-commission#2",
+        name: "Bob Stewart",
+        officeTitle: "Vice Chair",
+        termNote: "Term ends 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+      {
+        id: "roster:newbury-conservation-commission#3",
+        name: "John Magee",
+        officeTitle: "Member",
+        termNote: "Term ends 2027",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+      {
+        id: "roster:newbury-conservation-commission#4",
+        name: "Alden Beauchemin",
+        officeTitle: "Member",
+        termNote: "Term ends 2027",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+      {
+        id: "roster:newbury-conservation-commission#5",
+        name: "Kristen Schultz",
+        officeTitle: "Ex Officio",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+      {
+        id: "roster:newbury-conservation-commission#6",
+        name: "David Rhodes",
+        officeTitle: "Member",
+        termNote: "Term ends 2028",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/conservation-commission",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#advisory-budget-committee",
+    bodyName: "Newbury 2026 Advisory Budget Committee",
+    sourceUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-advisory-budget-committee#1",
+        name: "Jack Kutner",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+      },
+      {
+        id: "roster:newbury-advisory-budget-committee#2",
+        name: "Marek Kotelba",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+      },
+      {
+        id: "roster:newbury-advisory-budget-committee#3",
+        name: "Alan Scribner",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+      },
+      {
+        id: "roster:newbury-advisory-budget-committee#4",
+        name: "Michael Bedard",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+      },
+      {
+        id: "roster:newbury-advisory-budget-committee#5",
+        name: "Norm Larochelle",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#blodgett-sewer-user-advisory-committee",
+    bodyName: "Newbury Blodgett Sewer User Advisory Committee",
+    sourceUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#1",
+        name: "Kara Obey",
+        officeTitle: "Alternate",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#2",
+        name: "David Rhodes",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#3",
+        name: "Anthony LoPresti",
+        officeTitle: "Chair",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#4",
+        name: "Andrew Cockerill",
+        officeTitle: "Vice Chair",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#5",
+        name: "Jeanne Palleiko",
+        officeTitle: "Secretary",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#6",
+        name: "Todd Mailly",
+        officeTitle: "Alternate",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#7",
+        name: "Sandra Warde",
+        officeTitle: "Selectboard Sponsor",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+      {
+        id: "roster:newbury-blodgett-sewer-user-advisory-committee#8",
+        name: "Daniel Wolf",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#cemetery-trustees",
+    bodyName: "Newbury Cemetery Trustees",
+    sourceUrl: "https://www.newbury.nh.gov/cemetery-trustees",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-cemetery-trustees#1",
+        name: "Knowlton \"Nonie\" Reynders",
+        officeTitle: "Chairman",
+        termNote: "Term ends 2021",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/cemetery-trustees",
+      },
+      {
+        id: "roster:newbury-cemetery-trustees#2",
+        name: "Deane Geddes",
+        officeTitle: "Member",
+        termNote: "Term ends 2023",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/cemetery-trustees",
+      },
+      {
+        id: "roster:newbury-cemetery-trustees#3",
+        name: "Judy Healey",
+        officeTitle: "Member",
+        termNote: "Term ends 2022",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/cemetery-trustees",
+      },
+      {
+        id: "roster:newbury-cemetery-trustees#4",
+        name: "Marcia Keane",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/cemetery-trustees",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-loss-management-committee",
+    bodyName: "Newbury Joint Loss Management Committee",
+    sourceUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-joint-loss-management-committee#1",
+        name: "Darren Finneral",
+        officeTitle: "Chair",
+        termNote: "Term ends March 2026",
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#2",
+        name: "Wayne R. Whitford",
+        officeTitle: "Emergency Management",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#3",
+        name: "Tate Sweetbrown",
+        officeTitle: "Highway Department",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#4",
+        name: "Chief. Bradley Wheeler",
+        officeTitle: "Police Chief",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#5",
+        name: "Hank Thomas",
+        officeTitle: "Fire Department",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#6",
+        name: "Lea McBain",
+        officeTitle: "Library Director",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#7",
+        name: "Jessica Dennis",
+        officeTitle: "Finance Director",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#8",
+        name: "Dave Smith",
+        officeTitle: "Fire Chief",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#9",
+        name: "Rick Wright",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#10",
+        name: "Aaron Sparks",
+        officeTitle: "Police Department",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+      {
+        id: "roster:newbury-joint-loss-management-committee#11",
+        name: "Josh Fisher",
+        officeTitle: "Police Department",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/joint-loss-management-committee",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#septic-committee",
+    bodyName: "Newbury Septic Committee",
+    sourceUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-septic-committee#1",
+        name: "David Rhodes",
+        officeTitle: "Chair",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#2",
+        name: "Bob Stewart",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#3",
+        name: "Wayne R. Whitford",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#4",
+        name: "Hank Thomas",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#5",
+        name: "Larry Briggs",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#6",
+        name: "Jack Kutner",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+      {
+        id: "roster:newbury-septic-committee#7",
+        name: "Jack Fisher",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/newbury-septic-committee",
+      },
+    ],
+  },
+  {
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#trustees-of-the-trust-funds",
+    bodyName: "Newbury Trustees of the Trust Funds",
+    sourceUrl: "https://www.newbury.nh.gov/trustees-trust-funds",
+    sourceOrg: "Town of Newbury",
+    collectedAt: "2026-08-20",
+    // NONPARTISAN, same record as the Selectboard's above: the town's own
+    // 2025 Annual Report prints the moderator's certified count for every
+    // town office with no party beside any name (M62, 2026-08-15). New
+    // Hampshire town elections run under RSA 669 on a ballot the town itself
+    // adopts, so this is settled from Newbury's ballot and not from a statute.
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl:
+      "https://www.newbury.nh.gov/sites/g/files/vyhlif4761/f/news/town_of_newbury_2025_report.pdf",
+    members: [
+      {
+        id: "roster:newbury-trustees-of-the-trust-funds#1",
+        name: "Clayton Johnson",
+        officeTitle: "Trustee",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/trustees-trust-funds",
+      },
+      {
+        id: "roster:newbury-trustees-of-the-trust-funds#2",
+        name: "Debbie Prussman",
+        officeTitle: "Trustee",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/trustees-trust-funds",
+      },
+      {
+        id: "roster:newbury-trustees-of-the-trust-funds#3",
+        name: "Tara Faunce",
+        officeTitle: "Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.newbury.nh.gov/trustees-trust-funds",
+      },
+    ],
+  },
   {
     // 3d/6e (2026-08-17): the wall came down. kearsarge.org 403'd every
     // client recorded in earlier hunts; a browser-UA fetch from this
@@ -743,6 +1667,73 @@ export const BODY_ROSTERS: BodyRoster[] = [
         phone: null,
         websiteUrl:
           "https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members",
+      },
+      {
+        /*
+         * **THE SUPERINTENDENT, AND THE DISTRICT'S FIRST PUBLISHED PHONE AND
+         * EMAIL FOR ANYONE.** (NH Hunt, 2026-08-20.)
+         *
+         * Not elected and not a board member — hired by the board, stored here
+         * because the body card's `superintendent` slot resolves out of this
+         * array, exactly as Tucson Unified's does above, and removed from the
+         * "who sits on it" list by `bodySubject` in the same pass.
+         *
+         * SOURCE, and the ladder it took. `kearsarge.org` serves a Cloudflare
+         * managed challenge on the board-roster path to every client this repo
+         * has, including a headless browser at rung 6 — but NOT on
+         * `/district/district/pages/contact-us`, which answered 200 to a plain
+         * identified fetch on 2026-08-20 and carries the district office's
+         * whole directory: fourteen people, each with a direct phone and, for
+         * eleven of them, a district email. That is the first per-person
+         * contact this product has held for anyone at Kearsarge; the nine
+         * board members above still have neither, and the district publishes
+         * neither for them.
+         *
+         * "Interim" is the district's own word and is carried verbatim. It is
+         * a fact about the appointment and a reader is entitled to it.
+         */
+        id: "roster:kearsarge#supt",
+        name: "Michael Bessette",
+        officeTitle: "Interim Superintendent of Schools",
+        termNote: "Appointed by the School Board, not elected",
+        email: "mbessette@kearsarge.org",
+        phone: "(603) 526-9163",
+        websiteUrl: "https://www.kearsarge.org/district/district/pages/contact-us",
+      },
+      {
+        /*
+         * The board's own clerk, published in the same directory. She is the
+         * route a reader uses to ask the board for a record, which is why she
+         * is on the roster rather than only in the ledger — "District Clerk"
+         * is the office RSA 671:20 gives the school-district ballot to.
+         *
+         * The email is the district's own, as published. It is a
+         * `@gmail.com` address on a `@kearsarge.org` directory page, which is
+         * unusual and is recorded exactly as the district wrote it — correcting
+         * it to the pattern the other thirteen rows follow would be inventing a
+         * contact route for a named person.
+         */
+        id: "roster:kearsarge#clerk",
+        name: "Debra Breault",
+        officeTitle:
+          "District Clerk, and Administrative Assistant to the Superintendent and School Board",
+        termNote: "Appointed staff, not elected",
+        email: "dbreault@gmail.com",
+        phone: "(603) 526-9163",
+        websiteUrl: "https://www.kearsarge.org/district/district/pages/contact-us",
+      },
+      {
+        /*
+         * The business administrator — the officer who prepares the budget the
+         * Municipal Budget Committee reviews and the district meeting votes.
+         */
+        id: "roster:kearsarge#business",
+        name: "Lawrence LeBoeuf",
+        officeTitle: "Business Administrator",
+        termNote: "Appointed staff, not elected",
+        email: "lleboeuf@kearsarge.org",
+        phone: "(603) 526-9177",
+        websiteUrl: "https://www.kearsarge.org/district/district/pages/contact-us",
       },
     ],
   },

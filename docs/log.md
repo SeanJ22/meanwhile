@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **107 sessions.**
+Newest first. **108 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -14,11 +14,21 @@ their date and their own commit subject. That is a lookup rather than a guess, a
 
 ---
 
+## Deleted rows — RULING 46
+
+Rows Sean removed outright, because they are not project work and do not
+belong in the tracker at all. **Only he may delete a row**; a session never
+may, and `tests/tracker-stores.test.ts` fails the build if one tries. These
+are hard-removed from both stores — this list is the whole surviving record.
+
+- **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
+
+---
+
 ## Sean · 2026-08-20
 
-**What it finished.** 2 row(s).
+**What it finished.** 1 row(s).
 
-- **B08** — Sean has signed nothing since his October promotion and his employer has not sent the paperwork. Assignment and non-compete language is still readable before he signs, and reading it is the point.
 - **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
 
 **Needs Sean.** Nothing.
@@ -1509,7 +1519,7 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **M03** — Congressional district boundaries as a layer the reader can switch on over the map.
 - **R03** — Nothing is marked done without the branch and which checks passed. An agent grading its own homework drifts optimistic.
 
-**What it started.** 69 row(s) opened, 40 still open.
+**What it started.** 68 row(s) opened, 40 still open.
 
 - **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows. *(open)*
 - **C01** — A sample of what a buyer actually receives: one Pima County measure broken into its provisions, with support per provision and counts by how well each answer was verified. Synthetic numbers, clearly labelled, built to show rather than to sell. *(open)*
@@ -1526,3 +1536,18 @@ The first session. The map, the tracker, and congressional district boundaries o
 - …and 28 more still open.
 
 **Needs Sean.** B01, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04
+
+## NHHUNT
+
+**What it started.** 8 row(s) opened, 8 still open.
+
+- **NH01** — The Kearsarge Regional School District publishes who sits on its school board, and its own page for that list refuses every way we have of reading it. The nine names we show came from an earlier read and the district may have changed them since. Getting a current list needs a route we have not walked yet. *(open)*
+- **NH02** — Newbury's own site lists a Parks and Recreation Committee and a Housing Committee in its sitemap, and both pages ask for a password. They are real committees the town has not published. We never sign in to anything, so their membership and meetings have to come from somewhere else. *(open)*
+- **NH03** — The town's own pages state terms ending 2021, 2022 and 2023 for its Cemetery Trustees, and March 2021 for one Planning Board alternate. Those are the town's current published words and they are up to five years out of date. We render them as published, which is honest, and a reader may still be looking at people who left. *(open)*
+- **NH04** — We now hold all three county commissioners, the delegation's officers and every department head by name. What the county publishes for reaching any of them is one main number. The Kelly standard asks for a working contact per person and the county does not print one. *(open)*
+- **NH05** — Ten Newbury boards now read their meetings off the town's own calendar, and the town has not posted a single upcoming date for any of them. Seventy-eight of their past sittings are on that calendar, so they do meet. A reader who wants to attend one cannot find out when from anything the town publishes. *(open)*
+- **NH06** — Newbury's Selectboard and its three land-use boards are now read from two places at once: the vendor portals that carry agendas, and the town calendar that carries more dates. A merge decides which row a reader sees. That works, and nobody has measured whether it is the right arrangement over a few refreshes. *(open)*
+- **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it. *(open)*
+- **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look. *(open)*
+
+**Needs Sean.** NH08

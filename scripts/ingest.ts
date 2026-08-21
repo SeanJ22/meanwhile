@@ -34,7 +34,10 @@ import {
 } from "../lib/meetings/snapshot.ts";
 import { makeApptegySource } from "../lib/sources/apptegy/index.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
-import { CompositeSource } from "../lib/sources/composite/index.ts";
+import {
+  CompositeSource,
+  collapseDuplicateSittings,
+} from "../lib/sources/composite/index.ts";
 import {
   SCHEDULED_REFRESH_TIMEOUT_MS,
   buildCompositeSource,
@@ -335,19 +338,53 @@ function writeMeetingsSnapshot(
     now,
   );
 
-  const meetingIds = new Set(served.map((m) => m.id));
+  /*
+   * **THE MERGE RUNS AGAIN AFTER CARRY-FORWARD, BECAUSE CARRY-FORWARD CAN PUT
+   * A DUPLICATE BACK.** (NH Hunt, 2026-08-20.)
+   *
+   * The composite collapses cross-source duplicates at merge time, and then
+   * this runs: a source that was refused THIS run has its last known rows
+   * restored from the previous snapshot — rows the merge never saw. Newbury's
+   * Conservation Commission proved it in one refresh. Its `schedulepage` route
+   * was refused, three of its sittings were carried forward, and the `ical`
+   * route had freshly produced the same three. Nine duplicates were collapsed
+   * and three walked back in behind them, onto the reader's page.
+   *
+   * Same function, same key, and the informativeness ordering already prefers
+   * a fresh row over a carried one at equal detail — so a carried row survives
+   * only when it carries an agenda the fresh row does not, which is the
+   * correct outcome and not an accident.
+   */
+  const afterCarry = collapseDuplicateSittings(served);
+  const finalRows = afterCarry.rows;
+
+  const meetingIds = new Set(finalRows.map((m) => m.id));
   // Both numbers, stated (hotfix-0817). `fresh` is what this run retrieved and
   // `carried` is what it could not — counted off the marks the rows actually
   // carry, never off the difference between two other numbers, because a
   // count derived from an assumption stops being true when the assumption
   // grows a new case. `validateSnapshot` refuses the file if they disagree.
-  const carriedRows = served.filter((m) => m.carried).length;
+  /*
+   * Counted off the rows that SURVIVED, and counted twice over rather than
+   * derived: `carriedRows` is the marks present in the file, and
+   * `duplicatesCollapsed` is the merge's own count plus the FRESH rows the
+   * second pass dropped. Neither is a subtraction — `validateSnapshot` refuses
+   * the file if `fresh + collapsed` does not equal what the sources claimed,
+   * and a number obtained by subtraction would satisfy that check by
+   * construction while telling nobody anything.
+   */
+  const carriedRows = finalRows.filter((m) => m.carried).length;
+  const freshDroppedAfterCarry = afterCarry.dropped.filter((m) => !m.carried).length;
+  const collapsedTotal = report.duplicateSittingsCollapsed + freshDroppedAfterCarry;
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
     generatedAt: now.toISOString(),
     counts: {
       // `meetings` is this run's own normalized output, not a subtraction.
-      fresh: meetings.length,
+      fresh: finalRows.length - carriedRows,
+      // The merge's own number, so the pair reconciles against per-source
+      // `normalized`, which is counted before either pass runs.
+      duplicatesCollapsed: collapsedTotal,
       carried: carriedRows,
       total: served.length,
     },
@@ -370,14 +407,25 @@ function writeMeetingsSnapshot(
       ...(c.unreachableOcdIds && c.unreachableOcdIds.length > 0
         ? { unreachableOcdIds: c.unreachableOcdIds }
         : {}),
-      ...(carried.has(c.source) ? { carriedForward: carried.get(c.source) } : {}),
+      /*
+       * Recounted off the rows that SURVIVED the second merge, not off what
+       * carry-forward set out to restore. `validateSnapshot` asserts this
+       * equals the marks actually in the file, and a carried row the merge
+       * then dropped as a duplicate would have made the two disagree.
+       */
+      ...(carried.has(c.source)
+        ? {
+            carriedForward: finalRows.filter((m) => m.carried?.source === c.source)
+              .length,
+          }
+        : {}),
     })),
-    meetings: served,
+    meetings: finalRows,
     // Every stored version for a meeting still on the calendar window, plus
     // the versions a CARRIED meeting already had — a carried sitting that
     // lost its agenda would be a second, quieter kind of emptying.
     agendaDocuments: [
-      ...served.flatMap((m) => agendaDocumentStore.versionsFor(m.id)),
+      ...finalRows.flatMap((m) => agendaDocumentStore.versionsFor(m.id)),
       ...(previous?.agendaDocuments ?? []),
     ].filter(
       (doc, i, all) =>

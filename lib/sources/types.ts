@@ -9,6 +9,7 @@
 // Type-only, so this stays a one-way dependency at runtime: attribution.ts
 // imports `OcdId` from here, and nothing is emitted for either import.
 import type { MeetingBody } from "../meetings/attribution.ts";
+import type { Accounted } from "./normalize-account.ts";
 
 /**
  * An OCD division identifier, e.g.
@@ -305,10 +306,19 @@ export interface NormalizeDropCounts {
  */
 export interface ReportingMeetingSource<Raw = unknown>
   extends MeetingSource<Raw> {
+  /**
+   * **The return is BRANDED** (RULING 43, 2026-08-20). `Accounted<...>` carries
+   * a `unique symbol` that only `accountedNormalize()` in
+   * `lib/sources/normalize-account.ts` attaches, and that factory throws rather
+   * than returning a value for a non-zero fetch with zero meetings and zero
+   * drops. A plain object literal here no longer compiles. See that module for
+   * why the sixth sighting of the shape had to be closed in the type rather
+   * than in a sixth written rule.
+   */
   normalizeWithDrops(
     raw: Raw[],
     now?: Date,
-  ): {
+  ): Accounted<{
     meetings: Meeting[];
     drops: NormalizeDropCounts;
     /**
@@ -328,7 +338,7 @@ export interface ReportingMeetingSource<Raw = unknown>
      * remains the right report for it.
      */
     unreachableOcdIds?: string[];
-  };
+  }>;
 }
 
 /**

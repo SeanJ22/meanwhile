@@ -107,3 +107,75 @@ test("0C: an ordinary 200 still comes back exactly as before", async () => {
   assert.equal(res.status, 200);
   assert.ok(res.text.includes("John Carruth"));
 });
+
+/**
+ * **THE SIZE FLOOR IS PER-SIGNATURE** (NH Hunt, 2026-08-20).
+ *
+ * The floor was global at 20 KB and Cloudflare's current managed challenge is
+ * 29,809 bytes, so it sailed through. Kearsarge Regional School District's
+ * board-roster page was served as one, handed to the extractor as a document,
+ * and reported as `ZERO_ROWS` — a finding about the district's page when the
+ * truth was that we never saw the district's page. A wall rendered as an
+ * emptiness, which the transparency mandate forbids by name.
+ *
+ * Both halves are asserted, because fixing one broke the other on the first
+ * attempt: the precise marks must fire at ANY size, and the ambiguous ones must
+ * keep their floor. `cdn-cgi/challenge-platform` is ambiguous — Cloudflare
+ * injects that script into ordinary pages — and removing its floor marked two
+ * real, parseable Morris Hills agenda pages as refused.
+ */
+test("NHHUNT: the modern managed challenge is caught at 30 KB, not missed", () => {
+  // The shape Kearsarge served, at the size it served it.
+  const filler = "<p>lorem ipsum dolor sit amet consectetur</p>\n".repeat(700);
+  const challenge =
+    "<!DOCTYPE html><html><head><title>Just a moment...</title></head><body>" +
+    "<div>Performing security verification</div>" +
+    "<script>window._cf_chl_opt={cvId:'3'};</script>" +
+    '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>' +
+    filler +
+    "</body></html>";
+  assert.ok(challenge.length > 20_000, `the sample is ${challenge.length} bytes`);
+  assert.equal(challengeIn(challenge), "Cloudflare 'just a moment'");
+
+  // Each precise mark alone, above the old floor, with no title to help.
+  for (const mark of [
+    "window._cf_chl_opt = {}",
+    '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>',
+    "<h2>Performing security verification</h2>",
+  ]) {
+    const page = `<html><body>${mark}${filler}</body></html>`;
+    assert.ok(page.length > 20_000);
+    assert.equal(
+      challengeIn(page),
+      "Cloudflare managed challenge",
+      `a 30 KB page carrying ${mark.slice(0, 40)} read as a document`,
+    );
+  }
+});
+
+test("NHHUNT: the ambiguous marks keep their floor, so a real page stays a page", () => {
+  /*
+   * Cloudflare's JS-detections beacon, which it injects into ORDINARY pages.
+   * Both recorded `schedulepage` fixtures carry it and both parse into real
+   * meetings; reading it as a wall at any size would mark a working source
+   * refused. This is the assertion that failed when the floor was first
+   * removed from every signature at once.
+   */
+  const beacon =
+    "<script>var a=document.createElement('script');" +
+    "a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';</script>";
+  const realPage =
+    "<html><head><title>BOE Meetings</title></head><body>" +
+    "<table><tr><td>September 8, 2026</td></tr></table>" +
+    "<p>agenda text</p>\n".repeat(1200) +
+    beacon +
+    "</body></html>";
+  assert.ok(realPage.length > 20_000, `the sample is ${realPage.length} bytes`);
+  assert.equal(challengeIn(realPage), null, "a real agenda page was called a wall");
+
+  // Small, it is still the interstitial it always was.
+  assert.equal(
+    challengeIn(`<html><body>${beacon}</body></html>`),
+    "Cloudflare interstitial",
+  );
+});

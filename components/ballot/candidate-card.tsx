@@ -32,7 +32,6 @@ export function CandidateCard({
   filedSiteUrl,
   nameSlot,
   battlecardSlot,
-  annotationSlot,
   derivedBlurb,
 }: {
   /**
@@ -76,16 +75,6 @@ export function CandidateCard({
    * `tests/candidate-battlecard.test.ts` holds that line.
    */
   battlecardSlot?: React.ReactNode;
-  /**
-   * **The positions annotation** — item 14, 2026-08-19. The COUNT, never the
-   * enumeration.
-   *
-   * It renders directly above the pill, so the reader meets the number and
-   * then the door to the detail behind it, in that order. The full list —
-   * and the "as we read them, not a statement about what they think" clause
-   * that must travel with it — lives inside the battlecard.
-   */
-  annotationSlot?: React.ReactNode;
   /** Party label (and slogan where filed), already formatted by the caller. */
   partyLine: React.ReactNode;
   card: CandidateCardData | null;
@@ -255,8 +244,6 @@ export function CandidateCard({
             )}
           </p>
         )}
-
-        {annotationSlot}
 
         {/* Item 12: directly beneath the links row — a candidate we hold
             little about still gets the same door, because the pill is where

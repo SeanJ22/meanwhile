@@ -12,6 +12,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * **An `.ics` feed is a calendar handed to us** — ladder rung 8, and the first
@@ -211,11 +215,11 @@ export function makeIcalSource(
   const normalizeWithDrops = (
     raw: IcalRaw[],
     now: Date = new Date(),
-  ): {
+  ): Accounted<{
     meetings: Meeting[];
     drops: NormalizeDropCounts;
     unreachableOcdIds?: string[];
-  } => {
+  }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -237,16 +241,61 @@ export function makeIcalSource(
         continue;
       }
 
-      // The board this row serves, as the feed's own CATEGORIES writes it.
-      // Required: without it, every town event on the calendar would become a
-      // sitting of this board.
+      /*
+       * **WHICH EVENTS ON THIS CALENDAR ARE THIS BODY'S SITTINGS.**
+       *
+       * Two answers, because two real feeds answer differently, and one of
+       * them is required — without either, every town event on the calendar
+       * would become a sitting of this board.
+       *
+       * `categoryMatch` — the feed's own `CATEGORIES` names the board. This is
+       * the better signal and the one Wilmot's WordPress plugin gives, because
+       * it is the publisher's own classification rather than our reading of a
+       * title.
+       *
+       * `titleMatch` — a comma-separated list of phrases, any of which in the
+       * `SUMMARY` makes the event this body's (NH Hunt, 2026-08-20). Added for
+       * the Town of Newbury, whose own Drupal calendar publishes **1,157
+       * events with no `CATEGORIES` field at all** — 272 Selectboard sittings,
+       * 116 Conservation Commission, 108 Zoning Board, 84 Planning Board, and
+       * ninety-four of them still upcoming. A category-only adapter reads that
+       * feed as a calendar belonging to nobody, which is how a town publishing
+       * everything ends up rendering as a town publishing nothing.
+       *
+       * **It is a LIST because a body's name is spelled several ways on its
+       * own calendar**, and dropping the variants would silently lose real
+       * sittings: Newbury writes "Supervisors of the Checklist" and
+       * "Supervisions of the Checklist" — a typo the town has repeated for
+       * years — and its Energy Committee appears as both "Energy Committee
+       * Meeting" and "Newbury Energy Committee Meeting". The list is what the
+       * wiring row states it is; nothing is inferred from a near-miss.
+       *
+       * `titleExclude` removes what the phrase would over-catch. Nothing needs
+       * it at Newbury today; it exists because the first town whose "Planning
+       * Board" also runs a "Planning Board Budget Hearing (staff only)" should
+       * be a wiring row and not a code change.
+       */
       const category = wiring.config.categoryMatch ?? "";
+      const titleTerms = (wiring.config.titleMatch ?? "")
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
+      const excludeTerms = (wiring.config.titleExclude ?? "")
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter(Boolean);
 
       for (const event of parseIcs(ics)) {
         const cats = (event.categories ?? "")
           .split(",")
           .map((c) => c.trim().toLowerCase());
-        if (!category || !cats.includes(category.toLowerCase())) {
+        const summary = (event.summary ?? "").toLowerCase();
+        const matched = category
+          ? cats.includes(category.toLowerCase())
+          : titleTerms.length > 0 &&
+            titleTerms.some((t) => summary.includes(t)) &&
+            !excludeTerms.some((t) => summary.includes(t));
+        if (!matched) {
           drops.notConfigured++;
           continue;
         }
@@ -264,7 +313,29 @@ export function makeIcalSource(
         if (when < from || when > to) continue;
 
         const rawLocation = (event.location ?? "").trim();
-        if (!rawLocation) {
+        /*
+         * **AN EMPTY `LOCATION` IS NOT A PLACELESS MEETING** (NH Hunt,
+         * 2026-08-20), and the distinction is worth twenty-four of Newbury's
+         * public meetings.
+         *
+         * `placeless` means D18's fact: the body PUBLISHED a location string
+         * and that string names no building — "Virtual Meeting", "Microsoft
+         * Teams". Those are real, attendable meetings kept with a null
+         * `location` and an `online` block.
+         *
+         * The Town of Newbury publishes **no `LOCATION` line at all** on any of
+         * its 1,157 events. That is not a claim that the meeting is nowhere; it
+         * is the feed saying nothing about where. Dropping it as `placeless`
+         * read the town's silence as an assertion — the render-default failure,
+         * one layer upstream in the data — and it did so BEFORE the row's own
+         * `venueMatch` was ever consulted, so a body with a standing, sourced,
+         * published meeting place never got to use it.
+         *
+         * So an empty location falls through to `venueMatch` exactly as an
+         * unrecognised one does. With no `venueMatch` on the row it is still a
+         * `placeless` drop, because then we genuinely have nothing.
+         */
+        if (!rawLocation && !wiring.config.venueMatch) {
           drops.placeless++;
           continue;
         }
@@ -332,11 +403,18 @@ export function makeIcalSource(
       }
     }
 
-    return {
-      meetings,
-      drops,
-      ...(unreachable.length > 0 ? { unreachableOcdIds: unreachable } : {}),
-    };
+    return accountedNormalize(
+      SOURCE_NAME,
+      raw,
+      {
+        meetings,
+        drops,
+        ...(unreachable.length > 0 ? { unreachableOcdIds: unreachable } : {}),
+      },
+      // A refused row carries no document, so it is not one this pass could
+      // have extracted from. See `accountedNormalize`.
+      { unretrieved: raw.filter((r) => r.refused).length },
+    );
   };
 
   return {
@@ -344,6 +422,25 @@ export function makeIcalSource(
 
     async fetch(_query: MeetingQuery): Promise<IcalRaw[]> {
       const collected: IcalRaw[] = [];
+      /*
+       * **ONE FEED IS FETCHED ONCE, HOWEVER MANY BODIES IT SERVES.**
+       * (NH Hunt, 2026-08-20.)
+       *
+       * Ten Newbury bodies are wired to the same `export.ics`, and the loop
+       * below is per WIRING ROW — so the town was being asked for the same
+       * 466 KB document ten times per refresh, and Wilmot for the same
+       * document three times. That is not a performance note: `CLAUDE.md`
+       * forbids requesting at a rate that degrades service, and a tenfold
+       * duplicate of a half-megabyte file is exactly the behaviour a
+       * reputation limiter is built to stop. Newbury's did, mid-hunt, and it
+       * refused all ten rows at once.
+       *
+       * The cache is per RUN and lives only for this call. A row still gets
+       * its own `IcalRaw` with its own wiring, so nothing downstream changes;
+       * a refusal is shared by every row on that URL, which is correct,
+       * because it is one retrieval and one wall.
+       */
+      const fetched = new Map<string, { ics: string; refused: boolean }>();
       for (const wiring of wiringRows) {
         const url = wiring.config.feedUrl;
         if (!url) {
@@ -353,6 +450,17 @@ export function makeIcalSource(
             collectedAt: new Date().toISOString(),
             refused: true,
             sourceUrl: "",
+          });
+          continue;
+        }
+        const cached = fetched.get(url);
+        if (cached) {
+          collected.push({
+            wiring,
+            ics: cached.ics,
+            collectedAt: new Date().toISOString(),
+            ...(cached.refused ? { refused: true } : {}),
+            sourceUrl: url,
           });
           continue;
         }
@@ -393,6 +501,7 @@ export function makeIcalSource(
               // jurisdiction with no concluded meetings.
             }
           }
+          fetched.set(url, { ics, refused: false });
           collected.push({
             wiring,
             ics,
@@ -402,6 +511,7 @@ export function makeIcalSource(
         } catch {
           // One host's refusal empties this row and no other. `refused`
           // carries it forward as a refusal rather than as an empty calendar.
+          fetched.set(url, { ics: "", refused: true });
           collected.push({
             wiring,
             ics: "",

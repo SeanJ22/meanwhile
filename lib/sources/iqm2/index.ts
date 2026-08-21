@@ -15,6 +15,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * Granicus IQM2 meeting source — the Morris County half of the 07866 hunt.
@@ -156,7 +160,7 @@ export function makeIqm2Source(
   const normalizeWithDrops = (
     raw: Iqm2Raw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -231,7 +235,7 @@ export function makeIqm2Source(
       }
     }
 
-    return { meetings, drops };
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
   };
 
   return {

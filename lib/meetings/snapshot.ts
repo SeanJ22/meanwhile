@@ -102,8 +102,29 @@ export interface SnapshotSourceReport {
  * the rows themselves.
  */
 export interface SnapshotCounts {
-  /** Rows this run actually retrieved. Equals the sum of `normalized`. */
+  /**
+   * Rows this run actually retrieved and KEPT — the sum of `normalized` less
+   * `duplicatesCollapsed`.
+   *
+   * It was the plain sum until 2026-08-20, when a second route was wired for
+   * the Town of Newbury's four boards and the cross-source merge began
+   * collapsing sittings two sources both published. A count that ignored the
+   * merge would have disagreed with the rows underneath it, which is the
+   * stated-N-equals-rendered-rows rule failing in the one file whose job is to
+   * reconcile.
+   */
   fresh: number;
+  /**
+   * Rows the cross-source merge collapsed as the same sitting published twice
+   * (NH Hunt, 2026-08-20). Stated rather than absorbed: "fewer meetings than
+   * the reader would otherwise have seen" is never allowed to be silent, and
+   * a merge that quietly ate a real sitting would otherwise look like a source
+   * that quietly stopped publishing one.
+   *
+   * Optional so every snapshot written before the merge existed still reads;
+   * absent means zero and means no merge ran.
+   */
+  duplicatesCollapsed?: number;
   /** Rows carried out of the previous snapshot. Equals the marked rows. */
   carried: number;
   /** `fresh + carried`, and the length of `meetings`. */
@@ -198,10 +219,21 @@ export function reconcileCounts(snap: MeetingsSnapshot): void {
     );
   }
 
+  /*
+   * The pair, made to reconcile (the D68 rule). Per-source `normalized` is
+   * what each child produced BEFORE the cross-source merge; `fresh` is what
+   * survived it. The difference is not slack — it is `duplicatesCollapsed`,
+   * and this is the arithmetic that refuses a snapshot where it is not.
+   */
   const claimed = snap.sources.reduce((n, s) => n + s.normalized, 0);
-  if (counts.fresh !== claimed) {
+  const collapsed = counts.duplicatesCollapsed ?? 0;
+  if (!Number.isInteger(collapsed) || collapsed < 0) {
+    throw new Error("snapshot states a non-integer duplicatesCollapsed");
+  }
+  if (counts.fresh + collapsed !== claimed) {
     throw new Error(
-      `snapshot states ${counts.fresh} fresh meetings but sources claim ${claimed}`,
+      `snapshot states ${counts.fresh} fresh meetings plus ${collapsed} collapsed ` +
+        `but sources claim ${claimed}`,
     );
   }
 

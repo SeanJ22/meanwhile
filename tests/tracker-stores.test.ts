@@ -1,13 +1,15 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { execFileSync } from "node:child_process";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
   CLOSING_RESOLUTIONS,
   COLUMNS,
+  DELETE_RESOLUTION,
   P1_CAP,
   PRIORITIES,
   RESOLUTIONS,
@@ -17,12 +19,14 @@ import {
   isOpen,
   nextId,
   p1Census,
+  planDeletions,
   planMoves,
   readSections,
   readStore,
   sectionOrder,
 } from "../scripts/tracker-core.mjs";
 import { buildWorkbook, readWorkbook, zip } from "../scripts/xlsx.mjs";
+import { revertsProtectedFile } from "../scripts/guard-protected-files.mjs";
 
 /**
  * **THE TRACKER'S GUARDS** (Prompt E items 5–9, 2026-08-20).
@@ -502,4 +506,246 @@ test("RULING 36: Pending review does NOT close a row", () => {
   assert.equal(isOpen({ Resolution: "Conditionally resolved" }), false);
   assert.deepEqual(CLOSING_RESOLUTIONS, ["Resolved", "Conditionally resolved"]);
   assert.ok(RESOLUTIONS.includes("Pending review"));
+});
+
+/* ========================================================================== */
+/* RULING 46 — Delete is his state, and a session may never set it            */
+/* ========================================================================== */
+
+test("RULING 46: a session may not delete a row, and Sean may", () => {
+  const row = (over: Record<string, string>) => ({
+    ...Object.fromEntries(COLUMNS.map((c) => [c, ""])),
+    ...over,
+  });
+
+  // A session marking a row Delete, with nothing in his handwriting behind it.
+  const sessionAttempt = planDeletions({
+    rows: [row({ ID: "Z01", Section: "repo-ops", Resolution: DELETE_RESOLUTION })],
+    actor: "session",
+  });
+  assert.equal(sessionAttempt.deletions.length, 0);
+  assert.match(sessionAttempt.refusals[0] ?? "", /RULING 46/);
+
+  // A session naming an id on the command line, with nothing behind it either.
+  const flagAttempt = planDeletions({
+    rows: [row({ ID: "Z02", Section: "repo-ops" })],
+    requested: ["Z02"],
+    actor: "session",
+  });
+  assert.equal(flagAttempt.deletions.length, 0);
+  assert.match(flagAttempt.refusals[0] ?? "", /RULING 46/);
+
+  // The same resolution, read out of the workbook, is in HIS handwriting.
+  const his = planDeletions({
+    rows: [row({ ID: "Z03", Section: "needs-sean", Resolution: DELETE_RESOLUTION })],
+    resolutionAuthor: { Z03: "sean" },
+    actor: "session",
+  });
+  assert.equal(his.deletions.length, 1);
+  assert.deepEqual(his.refusals, []);
+
+  // And his instruction in the Notes column he owns is the second route — the
+  // one `B08` came through, because he wrote it on a row already resolved.
+  const noted = planDeletions({
+    rows: [
+      row({
+        ID: "Z04",
+        Section: "needs-sean",
+        Resolution: "Resolved",
+        Notes: "This has absolutely nothing to do with this project at all.  Delete this entirely",
+      }),
+    ],
+    requested: ["Z04"],
+    actor: "session",
+  });
+  assert.equal(noted.deletions.length, 1);
+  assert.match(noted.deletions[0].evidence, /his note/);
+});
+
+test("RULING 46: B08 is hard-removed from both stores and recorded in the log", () => {
+  assert.deepEqual(
+    all.filter((r) => (r.ID ?? "").trim() === "B08").map((r) => r.Section),
+    [],
+    "B08 is still in a store — Sean instructed its deletion explicitly",
+  );
+
+  const record = JSON.parse(
+    readFileSync(join(ROOT, "docs", "tracker-deletions.json"), "utf8"),
+  ) as { deletions: { id: string; deletedOn: string; deletedBy: string }[] };
+  const b08 = record.deletions.find((d) => d.id === "B08");
+  assert.ok(b08, "the permanent record of the deletion is missing");
+  assert.match(b08!.deletedOn, /^\d{4}-\d{2}-\d{2}$/);
+  assert.equal(b08!.deletedBy, "Sean");
+
+  // RULING 46 asks for the deletion to be recorded in docs/log.md, and log.md
+  // is generated FROM the stores — so the record has to be rendered into it
+  // from outside, or a deleted row disappears without a trace.
+  const log = readFileSync(join(ROOT, "docs", "log.md"), "utf8");
+  assert.match(log, /## Deleted rows — RULING 46/);
+  assert.match(log, /\*\*B08\*\*/);
+  assert.match(log, /deleted \d{4}-\d{2}-\d{2} by Sean/);
+});
+
+test("RULING 46: no row in either store is left carrying Delete", () => {
+  // A row that still says Delete is a deletion the script did not execute,
+  // which would read as done and not be.
+  assert.deepEqual(
+    all
+      .filter((r) => (r.Resolution ?? "").trim() === DELETE_RESOLUTION)
+      .map((r) => r.ID),
+    [],
+  );
+});
+
+/* ========================================================================== */
+/* RULING 48 — no session reverts his files with git                          */
+/* ========================================================================== */
+
+/**
+ * The guard is a PreToolUse hook, because git has no hook that fires on
+ * `git checkout -- <path>`. This asserts three things the hook alone cannot:
+ * that the predicate catches the exact command that destroyed his edits, that
+ * it does NOT catch the ordinary branch checkouts a session lives on, and that
+ * the hook is actually wired into `.claude/settings.json` — a guard script
+ * nothing calls is not a guard.
+ *
+ * **What it cannot cover, stated rather than implied.** The hook sees this
+ * harness's shell tools. A committed script shelling out to git is covered by
+ * the sweep below; a human with a git GUI, an IDE's "discard changes", or a
+ * different agent runtime is covered by nothing, and nothing should pretend
+ * otherwise.
+ */
+test("RULING 48: the guard catches the command that destroyed his edits", () => {
+  const destructive = [
+    "git checkout docs/tracker-working.csv docs/tracker-resolved.csv",
+    "git checkout -- docs/tracker.csv",
+    "git restore docs/state.md",
+    "git restore --source=HEAD --staged --worktree docs/tracker.xlsx",
+    "git reset --hard origin/main",
+    "git -C . checkout HEAD -- docs/tracker-resolved.csv",
+    "cd docs && git checkout -- tracker-working.csv",
+    "git clean -fd",
+    "git checkout HEAD -- docs/",
+  ];
+  for (const cmd of destructive) {
+    assert.ok(
+      revertsProtectedFile(cmd),
+      `RULING 48 — this would have gone through: ${cmd}`,
+    );
+  }
+
+  const allowed = [
+    /*
+     * **A COMMIT MESSAGE THAT DESCRIBES THE GUARD IS NOT A REVERT.** The very
+     * first commit this hook ever saw was refused, because its message said
+     * what the hook does and named the files it protects. A false positive on
+     * a commit is not harmless: it is the failure that gets a guard turned off.
+     */
+    "git commit -F- <<EOF\nRULING 48 refuses git checkout against docs/tracker.csv\nEOF",
+    "git commit -m 'restored docs/state.md by hand rather than with git restore'",
+    'git commit -m "reset --hard was refused, correctly"',
+    "git checkout -b claude/nh-hunt-0820",
+    "git checkout main",
+    "git status --short",
+    "git show HEAD:docs/tracker-working.csv",
+    "git log --oneline -5 -- docs/state.md",
+    "git add docs/state.md",
+    "git diff docs/tracker-working.csv",
+  ];
+  for (const cmd of allowed) {
+    assert.equal(
+      revertsProtectedFile(cmd),
+      null,
+      `RULING 48 — the guard is blocking ordinary work: ${cmd}`,
+    );
+  }
+});
+
+test("RULING 48: the hook is wired, and no committed script reverts a protected file", () => {
+  const settings = JSON.parse(
+    readFileSync(join(ROOT, ".claude", "settings.json"), "utf8"),
+  ) as { hooks?: { PreToolUse?: { hooks?: { command?: string }[] }[] } };
+  const wired = (settings.hooks?.PreToolUse ?? []).some((entry) =>
+    (entry.hooks ?? []).some((h) =>
+      (h.command ?? "").includes("guard-protected-files.mjs"),
+    ),
+  );
+  assert.ok(wired, "the RULING 48 hook is not wired into .claude/settings.json");
+
+  // The static half: a committed script that shells out to git bypasses the
+  // hook entirely, because the hook sees the shell tool and not what a node
+  // process does afterwards.
+  const roots = ["scripts", "tests", ".github"];
+  const hits: string[] = [];
+  let scanned = 0;
+  const walkDir = (dir: string) => {
+    for (const entry of readdirSync(dir)) {
+      if (entry === "node_modules" || entry === ".git") continue;
+      const full = join(dir, entry);
+      if (statSync(full).isDirectory()) walkDir(full);
+      else if (/\.(mjs|mts|ts|js|yml|yaml|ps1|sh)$/.test(entry)) {
+        scanned += 1;
+        const rel = relative(ROOT, full).split(sep).join("/");
+        if (rel === "scripts/guard-protected-files.mjs") continue;
+        if (rel === "tests/tracker-stores.test.ts") continue;
+        for (const line of readFileSync(full, "utf8").split("\n")) {
+          if (line.trim().startsWith("*") || line.trim().startsWith("//")) continue;
+          if (revertsProtectedFile(line)) hits.push(`${rel} — ${line.trim().slice(0, 90)}`);
+        }
+      }
+    }
+  };
+  for (const r of roots) walkDir(join(ROOT, r));
+  assert.ok(scanned > 40, `the sweep read ${scanned} files`);
+  assert.deepEqual(hits, [], "a committed script reverts a protected file");
+});
+
+/* ========================================================================== */
+/* RULING 48 — a state.md section edit INSERTS; it never replaces             */
+/* ========================================================================== */
+
+/**
+ * A `state.md` §7 replace destroyed 28 KB in one call on 2026-08-20, including
+ * the Phase A–E roadmap, and it was recovered from git rather than noticed.
+ * The structural fact that would have caught it is that the file lost sections
+ * and shrank, so that is what is asserted — against the committed HEAD version,
+ * which is the only version a test can compare to without a session declaring
+ * a baseline it could also get wrong.
+ */
+test("RULING 48: docs/state.md never loses a section or a third of its bytes", () => {
+  const path = join(ROOT, "docs", "state.md");
+  const now = readFileSync(path, "utf8");
+  const headings = (src: string) =>
+    src.split("\n").filter((l) => /^#{1,3}\s/.test(l)).map((l) => l.trim());
+
+  let head = "";
+  try {
+    head = execFileSync("git", ["show", "HEAD:docs/state.md"], {
+      cwd: ROOT,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024 * 1024,
+    });
+  } catch {
+    // No git, or the file is new in this commit. A check that could not RUN is
+    // reported as that and never as a pass in disguise — see RULING 24 — but a
+    // unit test has only pass and fail, so the honest form is to assert the
+    // thing that is still checkable and say why the rest was skipped.
+    assert.ok(now.length > 1000, "docs/state.md is present and not a stub");
+    return;
+  }
+
+  const before = headings(head);
+  const after = headings(now);
+  const lost = before.filter((h) => !after.includes(h));
+  assert.deepEqual(
+    lost,
+    [],
+    "a section edit INSERTS; it never replaces. These headings were in HEAD " +
+      "and are gone from the working tree — which is what a replace looks like.",
+  );
+  assert.ok(
+    now.length >= Math.floor(head.length * 0.9),
+    `docs/state.md shrank from ${head.length} to ${now.length} bytes — a ` +
+      "section edit adds and amends; it does not remove a tenth of the file",
+  );
 });

@@ -113,67 +113,27 @@ export function positionsSummary(positions: readonly IssuePosition[]) {
 }
 
 /**
- * The sentence above a candidate's issue list.
+ * The provenance line above a candidate's quotes — **never a count**.
+ * (Rewritten 2026-08-20 under RULING 44 and RULING 47.)
  *
- * States the denominator first, because every count under it is a count out
- * of the same issue list — and because "3 issues" means nothing without
- * "of the 12 we search for everyone".
+ * It used to state the denominator and the number matched: *"We search the
+ * same 12 issues for every candidate in this contest. This one's own pages
+ * mention 3 of them."* That is a measurement of our coverage rendered beside
+ * a named person, which RULING 47 removed from the ballot row and RULING 44
+ * forbids on a card in any wording — a digit is the banned statement
+ * compressed. The one disclosure is now page-level and says the same thing
+ * about every card at once: *"What we have found, we are displaying here."*
+ *
+ * Returns `null` when we hold nothing this candidate has published, because
+ * there is then no section to put a line above — `CandidatePositions`
+ * renders nothing at all in that case (RULING 28).
  */
-export function positionsHeadline(positions: readonly IssuePosition[]): string {
-  const summary = positionsSummary(positions);
-  if (summary.nothingCollected) {
-    return (
-      "We haven't collected anything this candidate has published yet. " +
-      "This is not a statement about them — we run the same search for " +
-      "every candidate in every contest."
-    );
-  }
+export function positionsHeadline(
+  positions: readonly IssuePosition[],
+): string | null {
+  if (positionsSummary(positions).nothingCollected) return null;
   return (
-    `We search the same ${summary.issuesSearched} issues for every candidate ` +
-    `in this contest. This one's own pages mention ` +
-    `${summary.issuesWithPassages} of them, in their words below.`
-  );
-}
-
-/**
- * **The ballot row's annotation: the COUNT, never the enumeration.**
- * (F01-continued session 2, item 14, 2026-08-19.)
- *
- * The author's finding: every person's "in their own words" ended with the
- * full twelve-issue list — *"Nothing in the pages we hold from them mentions
- * housing costs and homebuilding, health care and prescription costs, schools
- * and education funding, taxes, immigration and the border, abortion and
- * reproductive rights, guns, energy and the climate, water, veterans, Social
- * Security and retirement, jobs and wages."* His ruling: **the honesty is
- * right and stays; the volume is wrong. Annotate and bury.**
- *
- * Both halves matter and they pull in opposite directions. The enumeration is
- * `CLAUDE.md`'s fourth friction exception — honesty about coverage gaps,
- * which may never be smoothed into implied completeness — so it may not be
- * deleted. It is also ninety words repeated under every candidate in a
- * contest, which is the forever scroll item 12 measured.
- *
- * So the row gets the number and the battlecard gets the list. This sentence
- * is the number: it states the denominator, states how many were found, and
- * says where the rest is. **It never implies completeness** — "we searched
- * 12 and found 2" cannot be read as "they have two positions", which is the
- * thing the enumeration was protecting against.
- *
- * `positionsHeadline` above stays as it is: it renders INSIDE the battlecard,
- * where "in their words below" is still true.
- */
-export function positionsAnnotation(positions: readonly IssuePosition[]): string {
-  const summary = positionsSummary(positions);
-  if (summary.nothingCollected) {
-    return (
-      "We haven't collected anything this candidate has published yet — " +
-      "that's about our research, not about them. Their battlecard has the detail."
-    );
-  }
-  const { issuesSearched, issuesWithPassages } = summary;
-  return (
-    `Their own pages mention ${issuesWithPassages} of the ${issuesSearched} issues ` +
-    `we check for every candidate in this contest. ` +
-    `Which ones, in their words, is on their battlecard.`
+    "Passages below are this candidate's own words, from the pages named " +
+    "under each one."
   );
 }

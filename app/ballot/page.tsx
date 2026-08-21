@@ -29,10 +29,8 @@ import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
-  CandidatePositionsAnnotation,
 } from "@/components/ballot/candidate-positions";
 import {
-  positionsAnnotation,
   positionsFor,
   positionsHeadline,
 } from "@/lib/candidates/positions";
@@ -975,16 +973,6 @@ export default async function BallotPage({
                             }
                           />
                         }
-                        /* ITEM 14 (2026-08-19): the ROW carries the count and
-                           never the enumeration. The list, with its
-                           disclaimer, is inside the battlecard below. */
-                        annotationSlot={
-                          <CandidatePositionsAnnotation
-                            annotation={positionsAnnotation(
-                              positionsFor(`${contest.id}|${nominee.name}`),
-                            )}
-                          />
-                        }
                         /* ITEM 12 (2026-08-19): the long sections moved off
                            the inline row and into the battlecard. Three of
                            them — "in their own words", campaign money, and
@@ -1140,15 +1128,6 @@ export default async function BallotPage({
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }
                                   : null
                               }
-                            />
-                          }
-                          /* ITEM 14: the identical annotation on this side.
-                             Both branches or neither — a build where one
-                             carried the count and the other the enumeration
-                             would be a ranking by layout. */
-                          annotationSlot={
-                            <CandidatePositionsAnnotation
-                              annotation={positionsAnnotation(positionsFor(cand.id))}
                             />
                           }
                           /* ITEM 12: the identical move on the filed-candidate

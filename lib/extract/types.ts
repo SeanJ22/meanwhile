@@ -26,6 +26,8 @@
  *   3. OCR — scanned PDFs. `lib/extract/ocr.ts`
  *   4. EMBEDDED PAYLOAD — CMS pages that ship their content as escaped JSON
  *      inside the HTML. `lib/extract/embedded-payload.ts`
+ *   5. ROSTER TABLE — who sits on a board, off the body's own page.
+ *      `lib/extract/roster-table.ts` (NH Hunt, 2026-08-20)
  *
  * The fourth is why F11 is no longer PDF-specific. Vail's superintendent was
  * missed because Apptegy ships page content as an escaped JSON payload inside
@@ -53,7 +55,7 @@ export type ExtractOutcome =
   | "CANNOT_RUN";
 
 export interface ExtractResult<T> {
-  layer: "TEXT_LAYER" | "TABLES" | "OCR" | "EMBEDDED_PAYLOAD";
+  layer: "TEXT_LAYER" | "TABLES" | "OCR" | "EMBEDDED_PAYLOAD" | "ROSTER_TABLE";
   outcome: ExtractOutcome;
   /** What was extracted. Empty for every outcome except EXTRACTED. */
   items: T[];

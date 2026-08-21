@@ -113,6 +113,11 @@ export interface CompositeReport {
   at: string;
   fromCache: boolean;
   children: ChildRunReport[];
+  /**
+   * How many rows the cross-source merge collapsed as the same sitting
+   * published twice. Stated, never silent — see `collapseDuplicateSittings`.
+   */
+  duplicateSittingsCollapsed: number;
 }
 
 /** A child's raw rows, tagged so normalize() can route them back to it. */
@@ -162,6 +167,135 @@ function withTimeout<T>(
       },
     );
   });
+}
+
+/**
+ * **ONE SITTING, ONE ROW, HOWEVER MANY SOURCES CARRY IT** (NH Hunt, 2026-08-20).
+ *
+ * ## Why this had to exist before a second route could be wired
+ *
+ * The Town of Newbury publishes its whole calendar as an iCalendar feed —
+ * 1,157 events, and **24 sittings of its four wired boards inside the serving
+ * window against the 16 those boards' existing routes produce.** Eight public
+ * meetings a reader at 03255 could not see, sitting in a document the town
+ * publishes for exactly this purpose.
+ *
+ * The obvious move — wire the feed as a second route — was not available,
+ * because ids are namespaced PER SOURCE by contract and nothing above them
+ * merged. Newbury's Selectboard on 14 September would have rendered twice, and
+ * "we show every meeting" would have become "we show some meetings twice",
+ * which is a worse failure than the one it fixed.
+ *
+ * The alternative — swapping the feed in and the old routes out — was
+ * measured and REFUSED: the existing routes carry real agendas
+ * (`newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370`,
+ * `/planning-board/agenda/agenda-15`) and the feed carries none. Trading a
+ * reader's agenda for a reader's date is not a trade this product should make.
+ *
+ * So both routes ship, and the merge decides.
+ *
+ * ## The key, and what it deliberately does NOT collapse
+ *
+ * `ocdId | bodyName | startsAt` — the same body, in the same division, sitting
+ * at the same instant, is one sitting. Two bodies meeting at once stay two
+ * rows; one body meeting twice in a day stays two rows; two sources
+ * disagreeing about the TIME stay two rows, which is correct and is a finding
+ * rather than a merge — a published disagreement about when a public meeting
+ * starts is something a reader should see, not something we should average.
+ *
+ * A body with a null `ocdId` keys on its `jurisdiction` instead, so two
+ * division-less bodies in different places cannot collide.
+ *
+ * **And it collapses ACROSS SOURCES ONLY.** Two rows from the SAME source at
+ * the same instant are that source's own catalogue and are left alone: a board
+ * that publishes a Regular Session and an Executive Session both at 18:00 is
+ * publishing two meetings, and one adapter reading its own portal is the thing
+ * that knows the difference. Cross-source is where the duplication this exists
+ * for actually lives, and restricting it there is what stops the merge
+ * deleting a real second sitting to tidy up a first.
+ *
+ * ## Which row wins, and why it is never arbitrary
+ *
+ * The one that tells the reader more, scored in this order:
+ *   1. it carries an `agendaUrl` — the whole reason the swap was refused;
+ *   2. it carries `actingBodies` — the D19 join, which only agenda-reading
+ *      sources produce;
+ *   3. it carries a `location` rather than only an `online` block;
+ *   4. it is NOT a carried-forward row, because a fresh row beats a stale one;
+ *   5. failing all of that, the first one seen, which is source-registration
+ *      order and is stable across runs.
+ *
+ * **The count is reported, never silent.** `duplicateSittingsCollapsed` rides
+ * on the composite's own report, so "fewer meetings than the reader would
+ * otherwise have seen" is a stated number with a reason — the same rule every
+ * drop counter in this file exists to satisfy.
+ */
+export function collapseDuplicateSittings(rows: Meeting[]): {
+  rows: Meeting[];
+  collapsed: number;
+  /**
+   * The rows that lost, kept rather than counted away.
+   *
+   * The snapshot writer has to know WHICH rows went, not just how many: it
+   * runs this a second time after carry-forward and has to reconcile fresh
+   * against carried afterwards. A count is not enough to do that with, and
+   * deriving it by subtraction is the shape `SnapshotCounts` warns about in
+   * its own doc block.
+   */
+  dropped: Meeting[];
+} {
+  const informativeness = (m: Meeting): number =>
+    (m.agendaUrl ? 8 : 0) +
+    (m.actingBodies && m.actingBodies.length > 0 ? 4 : 0) +
+    (m.location ? 2 : 0) +
+    (m.carried ? 0 : 1);
+
+  const best = new Map<string, Meeting>();
+  let collapsed = 0;
+
+  /** The source that minted an id, which namespaces it by contract. */
+  const sourceOf = (m: Meeting) => m.id.slice(0, m.id.indexOf(":"));
+
+  const kept: Meeting[] = [];
+  const dropped: Meeting[] = [];
+  for (const m of rows) {
+    /*
+     * The INSTANT, not the string. `schedulepage` writes
+     * `2026-06-16T19:00:00-04:00` and `ical` writes `2026-06-16T23:00:00.000Z`
+     * for the same moment, and keying on the text collapsed nothing at all —
+     * the first run of this merge reported `collapsed: 0` against a page that
+     * was visibly showing Newbury's Conservation Commission twice. A
+     * comparison that cannot see through a timezone offset is not a comparison
+     * of times.
+     */
+    const instant = Date.parse(m.startsAt);
+    const key = [
+      m.ocdId ?? `jurisdiction:${m.jurisdiction}`,
+      m.bodyName,
+      Number.isNaN(instant) ? m.startsAt : String(instant),
+    ].join("|");
+    const held = best.get(key);
+    if (!held) {
+      best.set(key, m);
+      kept.push(m);
+      continue;
+    }
+    if (sourceOf(m) === sourceOf(held)) {
+      // Same source, same instant: its own catalogue, and not ours to merge.
+      kept.push(m);
+      continue;
+    }
+    collapsed += 1;
+    if (informativeness(m) > informativeness(held)) {
+      kept[kept.indexOf(held)] = m;
+      best.set(key, m);
+      dropped.push(held);
+    } else {
+      dropped.push(m);
+    }
+  }
+
+  return { rows: kept, collapsed, dropped };
 }
 
 export class CompositeSource implements MeetingSource<TaggedRaw> {
@@ -414,14 +548,17 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       }
     }
 
+    const { rows, collapsed } = collapseDuplicateSittings(merged);
+
     this.lastReport = {
       at: now.toISOString(),
       fromCache: fetchInfo?.fromCache ?? false,
       children,
+      duplicateSittingsCollapsed: collapsed,
     };
     this.pendingFetch = null;
 
-    return merged;
+    return rows;
   }
 
   async upsert(meetings: Meeting[]) {

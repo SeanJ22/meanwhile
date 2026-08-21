@@ -12,6 +12,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * The body's own page — tracker **M78**, born 2026-08-15; **M79** made it
@@ -686,12 +690,12 @@ export function makeSchedulePageSource(
   const normalizeWithDrops = (
     raw: SchedulePageRaw[],
     now: Date = new Date(),
-  ): {
+  ): Accounted<{
     meetings: Meeting[];
     drops: NormalizeDropCounts;
     /** Divisions whose own page refused this run — see `SchedulePageRaw.error`. */
     unreachableOcdIds: string[];
-  } => {
+  }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -830,7 +834,11 @@ export function makeSchedulePageSource(
       }
     }
 
-    return { meetings, drops, unreachableOcdIds: [...unreachable] };
+    return accountedNormalize(SOURCE_NAME, raw, {
+      meetings,
+      drops,
+      unreachableOcdIds: [...unreachable],
+    });
   };
 
   return {

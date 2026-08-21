@@ -21,6 +21,7 @@ import { makeOnBaseSource } from "../onbase/index.ts";
 import type { ReportingMeetingSource } from "../types.ts";
 
 import { CompositeSource } from "./index.ts";
+import { accountedNormalize } from "../normalize-account.ts";
 
 /**
  * Which adapter serves which `AgendaSourceType` — the capability registry
@@ -47,7 +48,13 @@ const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
       raw,
       now ?? new Date(),
     );
-    return { meetings, drops: { ...drops, notConfigured: 0 } };
+    // Re-branded because the drop shape changes here — legistar counts three
+    // reasons, the composite's contract carries four. Same input array, so the
+    // factory judges the same fact twice and cannot disagree with itself.
+    return accountedNormalize("legistar", raw, {
+      meetings,
+      drops: { ...drops, notConfigured: 0 },
+    });
   },
 };
 

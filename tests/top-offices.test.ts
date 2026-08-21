@@ -125,11 +125,51 @@ test("F01 1.2: every curated roster resolves at least a presiding officer", () =
       ),
     ),
   }));
-  const empty = results.filter((r) => r.top.length === 0);
+  /*
+   * **THE BODIES WHOSE OWN PAGE NAMES NO OFFICER, LISTED BY NAME.**
+   * (NH Hunt, 2026-08-20.)
+   *
+   * Every body has someone presiding. Not every body's publisher SAYS SO, and
+   * those are different facts. Newbury's 2026 Advisory Budget Committee lists
+   * five people all titled "Member", and its Trustees of the Trust Funds list
+   * two "Trustee" and one with no title at all — read off the town's own pages
+   * on 2026-08-20 and verified against them.
+   *
+   * The alternative was to have `topOfficesFor` fall back to whoever is listed
+   * first, and that is a claim about which named person chairs a public body,
+   * made up from row order. This product does not do that.
+   *
+   * So the exemption is a LIST rather than a loosened rule: the thirty-odd
+   * bodies that do publish a chair still fail this test the moment a title
+   * string regresses, and the two that do not are on the record here and in
+   * `docs/gap-ledger.md` as a gap in what the TOWN publishes — not in what we
+   * looked for.
+   */
+  const NO_OFFICER_PUBLISHED = new Set([
+    "Newbury 2026 Advisory Budget Committee",
+    "Newbury Trustees of the Trust Funds",
+  ]);
+  const empty = results.filter(
+    (r) => r.top.length === 0 && !NO_OFFICER_PUBLISHED.has(r.body),
+  );
   assert.deepEqual(
     empty.map((r) => r.body),
     [],
     `these rosters resolve no presiding officer: ${empty.map((r) => r.body).join(", ")}`,
   );
+  // The exemption may not quietly grow to cover a body that DOES publish one.
+  const exempted = results.filter((r) => NO_OFFICER_PUBLISHED.has(r.body));
+  assert.equal(
+    exempted.length,
+    NO_OFFICER_PUBLISHED.size,
+    "an exempted body left the roster register — remove it from the list too",
+  );
+  for (const r of exempted) {
+    assert.equal(
+      r.top.length,
+      0,
+      `${r.body} now resolves a presiding officer and no longer needs the exemption`,
+    );
+  }
   assert.equal(results.length, BODY_ROSTERS.length);
 });

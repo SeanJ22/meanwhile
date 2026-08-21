@@ -267,8 +267,34 @@ test("the fresh count still has to equal the per-source claims — unchanged, ai
   snap.sources[0].normalized = 121;
   assert.throws(
     () => validateSnapshot(snap),
-    /states 193 fresh meetings but sources claim 194/,
+    /states 193 fresh meetings plus 0 collapsed but sources claim 194/,
   );
+});
+
+/**
+ * The merge's own number has to be part of the arithmetic, not an excuse for
+ * it (NH Hunt, 2026-08-20). `normalized` is counted per source BEFORE the
+ * cross-source merge and `fresh` is what survived it, so the two only
+ * reconcile through `duplicatesCollapsed` — and a snapshot that states a
+ * collapse it did not make is as wrong as one that hides a collapse it did.
+ */
+test("the collapse count is what makes fresh and the per-source claims close", () => {
+  const snap = partiallyRefusedSnapshot();
+  // One sitting published by two sources: the claims are one higher than the
+  // rows, and the merge says why.
+  snap.sources[0].normalized += 1;
+  snap.counts.duplicatesCollapsed = 1;
+  assert.doesNotThrow(() => validateSnapshot(snap));
+
+  // A collapse that did not happen cannot be used to paper over a miscount.
+  snap.counts.duplicatesCollapsed = 4;
+  assert.throws(
+    () => validateSnapshot(snap),
+    /plus 4 collapsed but sources claim/,
+  );
+
+  snap.counts.duplicatesCollapsed = -1;
+  assert.throws(() => validateSnapshot(snap), /non-integer duplicatesCollapsed/);
 });
 
 test("fresh + carried must close against the total", () => {
@@ -335,7 +361,7 @@ test("the invariant cannot be satisfied by inflating the per-source claims", () 
   snap.sources[2].normalized = 24;
   assert.throws(
     () => validateSnapshot(snap),
-    /states 193 fresh meetings but sources claim 217/,
+    /states 193 fresh meetings plus 0 collapsed but sources claim 217/,
   );
 });
 
@@ -389,10 +415,17 @@ test("the committed snapshot exists, validates, and states its counts", () => {
     snap.meetings.length,
     `snapshot holds ${snap.meetings.length} meetings but states ${counts.fresh} fresh + ${counts.carried} carried`,
   );
+  // The cross-source merge is part of this arithmetic (NH Hunt, 2026-08-20):
+  // `normalized` is counted per source before it runs and `fresh` is what
+  // survived it, so `duplicatesCollapsed` is what closes the gap. Stated in
+  // the message, because this is the assertion the scheduled job fails on and
+  // a job that fails must print what it counted.
+  const collapsed = counts.duplicatesCollapsed ?? 0;
   assert.equal(
-    counts.fresh,
+    counts.fresh + collapsed,
     claimed,
-    `snapshot states ${counts.fresh} fresh meetings but sources claim ${claimed}`,
+    `snapshot states ${counts.fresh} fresh meetings plus ${collapsed} collapsed as ` +
+      `cross-source duplicates, but sources claim ${claimed}`,
   );
   assert.equal(
     counts.carried,

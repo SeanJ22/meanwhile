@@ -15,6 +15,10 @@ import type {
   NormalizeDropCounts,
   ReportingMeetingSource,
 } from "../types.ts";
+import {
+  accountedNormalize,
+  type Accounted,
+} from "../normalize-account.ts";
 
 /**
  * The Tucson City Clerk's boards application — tracker **D29**.
@@ -495,7 +499,7 @@ export function makeClerksBoardsSource(
   const normalizeWithDrops = (
     raw: ClerksBoardsRaw[],
     now: Date = new Date(),
-  ): { meetings: Meeting[]; drops: NormalizeDropCounts } => {
+  ): Accounted<{ meetings: Meeting[]; drops: NormalizeDropCounts }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
       placeless: 0,
@@ -600,7 +604,7 @@ export function makeClerksBoardsSource(
       }
     }
 
-    return { meetings, drops };
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
   };
 
   return {

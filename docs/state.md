@@ -13520,3 +13520,323 @@ nothing** — the identity diff caught them, which is the last line of defence
 rather than the first. `R58` names all seventeen and the fix: invert the
 conditional, so a check that cannot reach its subject says so instead of
 vanishing.
+
+---
+
+## Prompt D — the product renders again (2026-08-20)
+
+**A restoration session.** It ran ahead of the queue because the equal-depth
+render gate shipped in Prompt C withheld every candidate contest in all four
+pilot zips. The product rendered **no candidate cards anywhere** while
+portraits, campaign-finance figures, contact details and verified pages sat in
+the database. That was a worse state than the product was in before Prompt B.
+
+### The headline, as a pair, per zip
+
+| zip | contests rendering cards, before → after | candidate cards, before → after |
+|---|---|---|
+| `03255` Newbury NH | **0 of 12 → 12 of 12** | **0 → 47** |
+| `07866` Rockaway Twp NJ | **0 of 6 → 6 of 6** | **0 → 15** |
+| `85641` Vail AZ | **0 of 9 → 9 of 9** | **0 → 25** |
+| `85701` Tucson AZ | **0 of 9 → 9 of 9** | **0 → 20** |
+| **total** | **0 of 36 → 36 of 36** | **0 → 107** |
+
+Measured the same way on both sides: a fetch of `/ballot?zip=…` against
+production, counting `.candidate-row` elements in the parsed DOM. The
+before-figures are the deploy `ae720a9` was serving; the after-figures are
+`ce20fe1`. Counted in the DOM rather than in the HTML text on purpose — Next
+embeds the RSC flight payload in the document, so a raw-string count of the
+contest annotations reads exactly double.
+
+**Cory Booker at 07866**, named because a missing contact must not suppress
+anything else: portrait, party (Democratic), the campaign's own words with
+`corybooker.com` and the read date `2026-08-14`, official site, campaign site,
+the positions annotation, and the battlecard door. He has no contact recorded
+and **nothing renders where the contact would be** — no row, no label, no dash.
+Beside him Justin Murphy renders an email and a phone, and Joanne Kuniansky
+renders initials and the thin line. Three different card lengths in one contest,
+which is correct.
+
+### RULING 26, 27 and 28 are law
+
+`CLAUDE.md` went **60,928 → 65,046 bytes**. There is no size cap on it.
+
+**RULING 26 — SHOW EVERYTHING WE FIND**, with its rationale attached in full,
+because a stripped rule reads as guidance. Completeness is a property of the
+HUNT and kept being treated as a property of the record. Every version of the
+gate — strict field equality in Prompt B, hunt-completion equality in Prompt C —
+tried to make the display responsible for a fairness problem that belongs to the
+collection discipline, and each withheld more than the last. Equal effort lives
+in the hunt: a hunt session takes a contest as a unit and works every candidate
+in it before moving on. It is not a display rule and it never becomes one.
+
+**RULING 27 — no suppression path may exist**, guarded by
+`tests/no-suppression.test.ts`, which fails the build rather than waiting for
+the author to open the site. That is how both previous versions were found.
+
+**RULING 28 — one buried annotation per contest.** The exact wording shipped:
+
+> **\* An incumbent is likely to have more information available here than the
+> people running against them.**
+
+In DOM order it sits **after the candidate `<ul>` and before the state-funding
+note and the pick control**, in `text-muted` at `0.6875rem`. The marker is a
+bare `<sup>*</sup>` on the contest heading, not a link — the footnote is a few
+centimetres below it inside the same card, and a jump link to something already
+on screen is reader friction with nothing to buy it.
+
+`docs/rulings.md` (14,390 → 23,961 bytes before this section) records RULING 7's
+display half and RULING 18 as **DEAD, superseded in full**, with what each was
+and why it failed, and carries the three interpretation calls this session had
+to make.
+
+### What was removed, counted
+
+- **The shared gate**: `equalDepthGate` and its types lived in
+  `lib/coverage/tier.ts`; the component was `components/ballot/equal-depth.tsx`.
+  Both are deleted. **Two call sites** removed from `app/ballot/page.tsx` (the
+  certified-lineup branch and the filing-list branch), plus the `depthFor` and
+  `verifiedAbsentFor` helpers that fed them.
+- **Per-field absence strings**: `VERIFIED_ABSENT_WORDING` and
+  `KELLY_FIELD_LABEL` deleted from `lib/ballot/hunt-state.ts`; the
+  `verifiedAbsent` prop and its render block deleted from
+  `components/ballot/candidate-card.tsx`. **Three render sites changed** — the
+  two contest branches and the card.
+- **The withheld-state paragraph**, including the sentence about showing the
+  best-known candidates, deleted with the component that carried it.
+- **The dead rule as prose**, at the author's mid-session instruction:
+  **28 instances across 16 files**, all removed —
+  `CLAUDE.md`, `docs/rulings.md` (5), `docs/state.md` (4), `docs/tracker.csv`
+  (5), `docs/DESIGN.md`, `docs/photo-report.md`,
+  `components/ballot/candidate-positions.tsx`,
+  `components/map/popup/entity-modal.tsx`,
+  `components/officials/card-section.tsx`, `lib/candidates/blurbs.ts`,
+  `lib/candidates/issues.ts`, `scripts/b14-official-links.mts`,
+  `scripts/promptb-shots.mts` (2), `scripts/walk-all.mts` (2),
+  `tests/body-battlecard.test.ts`, `tests/candidate-corpus.test.ts`.
+  `scripts/promptc-shots.mts` existed only to photograph the gate and is
+  deleted with its `package.json` entry. The thirty `HD` rows lost
+  "so the contest can render" from their titles and the gate from their details.
+- **Zero suppression paths remain** — live, flagged, dead or commented.
+
+### The asterisk collided, and the collision is recorded
+
+The first render produced **"Member of the United States Senate\*\*"** at
+`07866`: one asterisk meaning the incumbency note and one meaning a source cited
+at the foot of the page, adjacent and indistinguishable. The ballot page has
+always run ONE marker sequence precisely so that a `*` there means one thing. So
+`*` is reserved for the incumbency footnote and the source sequence starts at
+`†` — **unconditionally**, including on a ballot that renders no candidate cards
+at all, because a symbol that means different things on different pages is the
+same defect one page later.
+
+### `NOT_APPLICABLE` moved nothing, and that is the finding
+
+Added as the fourth state with the same evidence standard `VERIFIED_ABSENT`
+carries — a **reason and a date**, refused without either, guarded in
+`tests/hunt-state.test.ts`.
+
+The queue tracks four Kelly fields, and the frozen required-field matrix
+(`lib/evidence/field-matrix.ts`, `vH-1`, frozen 2026-08-16 **before any hunting
+began**) records every one of them as `notApplicableWhen: "never"`. The clear
+structural case the brief names — a voting record for someone who has never held
+the office — **is not one of these four**, is not a tracked Kelly field anywhere
+in this product, and is already handled structurally: the voting-record door
+comes from the exact-key incumbent join, so a challenger simply has no door.
+
+**Owed fields: 249 before, 249 after, of 368 possible** (92 candidates × 4).
+**0 moved** to `NOT_APPLICABLE`. `VERIFIED_ABSENT` stays at **0**. Per field:
+Contact 82, Photo 58, In their own words 56, Campaign site 53. No reader-facing
+surface reads the field — enforced by import graph, not by a conditional.
+
+### `R58`: the seventeen fire again, and the class is closed
+
+All seventeen restored, plus the two that had reported COULD NOT RUN and one
+more: **20 identities added**, 363 distinct of 363 run.
+
+The **structural** fix, at the shared code path: the `F01C2`/`F22` block used to
+sit behind one `cannotRun` and a `continue`. Its ten checks are now named in one
+list at the top of the block and every early exit declares **all** of them.
+Three more silent branches inside it: the dated-events else-branch dropped the
+multi-day-window check, the no-pill path dropped both voting-panel checks, and
+the panel-never-appeared path dropped the placeholder check. **Sixteen new
+declaration paths.**
+
+The **class instrument**, which is the part that matters: the suite now
+**ASSERTS** that every identity in the committed baseline either ran or declared
+COULD NOT RUN, and pushes a NAMED REGRESSION when one did neither. Prompt C's
+walk printed seventeen GONE lines and still exited 0; a diff nobody has to act
+on is a diff people scroll past. **It caught its own first case on its first
+run**: `[promptC] the sold store accepted this run's rows at all` fired only on
+the branch that reads production, so a local run dropped the revenue path's one
+observable and said nothing. All three branches declare now.
+
+**Four checks left the baseline in the same commit that removed them**, because
+the author retired the claim behind them: `[promptB] /ballot explains every
+contest it withholds`, at each of the four pilot zips. Baseline **345 → 341**
+before the run, **363 after**.
+
+Prompt B's zero-landed-against-nonzero-issued check is in place and firing — it
+is `[promptC] the sold store accepted this run's rows at all`, and it passed.
+
+### P0 meant nothing, and the status page was why
+
+`docs/status.md` printed **P0 across all 451 rows** under a heading about the
+whole tracker, so 17 open P0 read as 100. A single figure standing in front of
+two measurements is the D68 pattern, and it manufactured the premise a
+re-prioritisation got scheduled against. **Both numbers print now**, and which
+is the queue is stated.
+
+**P0 is defined**: blocks a reader-visible outcome before 2026-11-03. A row is <!-- expected-future: 2026-11-03 is US general polling day, the deadline this priority is defined against -->
+P0 when a reader meets its output on a surface, that surface is wrong, missing
+or unreachable until the row closes, and it can land before polling day.
+
+**Open P0: 17 → 10.** The ten: `D07`, `D50`, `F01`, `D68`, `HUNT01`, `HUNT02`,
+`HUNT04`, `P02`, `P03`, `T05`. Fifteen rows changed priority, each with the
+reason appended to its Notes. Dependency sectioning still holds: **no row
+depends on anything in a later section, and no dependency dangles.**
+
+### The six federal members, named
+
+`docs/officials-audit.md` has said "531 division-linked of 537" since
+2026-08-14 with nothing saying what the six were. A stated number with an
+unexplained remainder is a margin, and a margin is where a real loss hides.
+
+All six are **non-voting**: Eleanor Holmes Norton (DC), Stacey E. Plaskett (VI),
+Aumua Amata Coleman Radewagen (AS), James C. Moylan (GU) and Kimberlyn
+King-Hinds (MP) are Delegates; Pablo José Hernández (PR) is the Resident
+Commissioner. **Not a vacancy, not a resignation, not a join loss.**
+
+The mechanism, stated separately from the classification: each carries a
+division of the shape `…/state:<xx>/cd:at-large`, `lib/registry` holds no such
+division because the district geometry comes from Census TIGER congressional
+districts which do not enumerate DC or the five territories, and
+`scripts/build-officeholders.ts` **correctly** drops the link and records it in
+`unmatched` with the id it looked for. The join works; the divisions do not
+exist. The arithmetic: 537 = 100 senators + 437 House; 437 = 431 voting reps + 6
+non-voting; 531 = 100 + 431; four House seats vacant on the read date.
+
+`tests/federal-roster.test.ts` names the six and fails if a seventh appears
+unexplained, if one of them becomes division-linked without leaving the list, or
+if the counts stop reconciling. `scripts/audit-officials.mts` prints the
+unlinked members with their recorded reason, so the document carries the named
+remainder from its next generation. The reader consequence — nobody in six
+territories can reach their own member from a division lookup — is **`PD01`**.
+
+### `D73`: the class, not the instance
+
+**The schema gate.** `app/api/schema/route.ts` asks the RUNNING DEPLOY whether
+the database it talks to has the migrations it was built from. Per request,
+uncached, **HTTP 503 with the missing migration named by tag**; 501 when there
+is no database to ask and 502 when the migrations table could not be read,
+because an unreadable answer must never print as a passing one. Not at build
+time (the builder has no production credential) and not at cold start (a cached
+answer would report "in sync" through the entire window the gate exists to
+catch). Mirrored by `pnpm db:check` for CI, wired **read-only** into the daily
+intake-tripwire workflow ahead of the tripwire step, and asserted by walk:all.
+A gate that could fix what it finds would apply an unreviewed migration to
+production at 4am, so it names and refuses.
+
+It found something on its first run, before it had shipped: **the local Neon
+branch is eight migrations behind** (`PD02`). Production was one behind — the
+brand-new `0015`, applied before the code that writes to it went out, which is
+the ordering D73 got wrong. Production is now **16 of 16**.
+
+**The write alarm.** A failed write to `search_log` or `reactions` raises into
+`write_alarm` — its own space, the same discipline `intake_limiter` carries: no
+zip, no division, no continuity key, no run id, no foreign key, no column that
+could join to any store. It holds the store, the SQLSTATE and the database's own
+words. Readable by `pnpm alarms`, asserted by walk:all, read daily by the
+tripwire workflow.
+
+**RULING 25 held throughout.** Every reader-facing status and body on all three
+sold-store write paths is byte-identical to what shipped before, pinned in
+`tests/write-alarm.test.ts`.
+
+**The sweep.** Exactly **three** call sites write to a sold store —
+`app/api/meetings`, `app/api/reactions`, `app/api/log` — derived from source
+rather than hand-listed, so a fourth joins the guard on its first test run. All
+three raise. Of the 25 catch sites in `app/`, the rest are not sold-store
+writes; `lib/db/feedback.ts` and `lib/db/intake-limiter.ts` already return
+failure rather than success. **Count found 3, count fixed 3.** One adjacent
+finding was recorded rather than fixed: `PD03`, a failed division lookup writing
+an empty `ocdIds` list onto a reaction row.
+
+### The two things the live verification caught, and both are in the record
+
+**Second code merge.** The alarm fired as `void raiseWriteAlarm(...)` with the
+response returned on the next line. A serverless invocation ends when the
+response goes out and a promise still in flight is dropped, so the induced
+failure got its correct 400 and **nothing landed**. Every test passed. The alarm
+built to catch a silent failure failed silently. `/api/log` and `/api/reactions`
+now await it; `/api/meetings` schedules it with `after()`. Guarded: a bare
+`void raiseWriteAlarm(` is banned. That import broke two test files —
+`next/server` is a real file with no `exports` map, so node RESOLVED the
+specifier and then failed to LOAD it — and `scripts/test-alias-loader.mjs` now
+learns what the bundler already knows.
+
+**Third code merge, and it is a deviation from the one-merge rule, named as
+one.** The alarm's first REAL firing wrote a row reading `Failed query: insert
+into "search_log" (…) params: …,03255,["ocd-division/country:us/state:nh/…`. The
+Neon driver wraps a failure as the query plus its **params**, so the message
+carried a reader's zip and the divisions their search resolved to, into the one
+table whose entire design is that it holds nothing about who was writing. The
+column guard cannot see a value smuggled inside a text field it permits.
+`errorMessageOf` now cuts at `params:` and scrubs division- and zip-shaped
+tokens from what survives; `column "coverage_tier" does not exist` — the
+sentence that would have closed D73 in a minute — is untouched by either. The
+one offending row was deleted, named: `e2e0d8ff-5ae8-4c96-838f-97b18bad4b2b`,
+raised `2026-08-21T00:21:13.729Z`, store `search_log`. It went because its <!-- expected-future: a real UTC instant read from write_alarm; the Phoenix day was 2026-08-20 and UTC had already turned over -->
+CONTENTS are not permitted, not because the finding was inconvenient.
+
+### The alarm is raising true positives
+
+Two separate walk runs each raised exactly one `search_log` alarm —
+`2026-08-21T00:21:13Z` and `2026-08-21T00:28:19Z` — with **no SQLSTATE** on <!-- expected-future: real UTC instants read from write_alarm; the Phoenix day was 2026-08-20 and UTC had already turned over -->
+either, which points at a transport failure rather than a database refusal. The
+first run landed 93 + 9 rows, so the rate is on the order of **one insert in
+ninety-four**. `search_log` is a sold store; a one-percent loss is invisible to
+every reader and shows up in a buyer's aggregate as a number slightly smaller
+than the truth. **Nobody could have known this before the alarm existed.**
+`PD04` holds it. The standing walk check is RED on it and is correct to be.
+
+### Numbers
+
+* **Code SHAs: `bb98d25` (planned), `8e62171` (second, the dropped alarm
+  promise), `9ecac3c` (third, the params leak).** Merges `7cc7d4c`, `fa0d5b7`,
+  `ce20fe1`. Deploy `6a879b36d1a6d800089e6147`, serving `ce20fe1`, context
+  production. **Close-out records follow as their own commits.**
+* **`pnpm test`: Windows 1442 tests / 1442 pass / 0 fail / 0 skipped · Linux
+  1442 tests / 1441 pass / 0 fail / 1 skipped** — the bundle scan, which runs in
+  the build job and reports 16 of 16. **The pair agrees.**
+* **`pnpm lint`: 0 errors, 11 warnings, all 11 allowlisted, 0 stale.**
+* **`tsc --noEmit`: clean.** Both build modes green.
+* **Budgets, read from `scripts/bundle-budget.json` and CI run `32432672875`:**
+  1a **201** of 220 (baseline 195, both modes) · 1b default **935** of 1050
+  (baseline 935) · 1b standalone **1138** of 1300 (baseline 1138) · client exact
+  **raw 2,742,591 · gzip 826,755** against 3,100,000 and 940,000. **No ceiling
+  was moved.**
+* **`walk:all` on the live build: 362 passed, 1 named regression, 0 could not
+  run.** 363 distinct of 363; **baseline 341 → 363, +22 added, 0 GONE, 0
+  silent.** The one regression is the alarm check, a true positive (`PD04`).
+* **Production rows this session created: 3 named probes plus two walk runs.**
+  `promptd-6.5-writeproof@2026-08-21T00:06:51Z` — one `search_log` row and one <!-- expected-future: a run id minted by this session in UTC; the Phoenix day was 2026-08-20 and UTC had already turned over -->
+  `reactions` row (target `ballot-az-pima:attorney-general:glassman-rodney`,
+  value `UNSURE`, run-id digest
+  `34cccba3cc2948ef8f716c91c9b8fe6d13feed3b59b35ae73a05cbe890dc7097`, which is
+  `sha256("reaction-run:" + that id)`, checked). Two
+  `promptd-6.5-alarmprobe@…` runs against `/api/log`, both refused at 400 by
+  design, one raising an alarm row that was read back and then reverted (1 of 1
+  deleted, 0 remaining). Plus `walk-all` and `walk-all-local` ids from two walk
+  runs, and the counting-only `promptd-*` GETs. **All SYNTHETIC. Zero organic.**
+* **Organic census: 143. Prompt C closed at 139. Delta +4.** Reported, not
+  investigated, per RULING 3.
+* **Screenshots: 8 of 8 read as images**, all four pilot zips at 430×932, taken
+  against the live deploy through `scripts/promptd-shots.mts` — the page shrunk
+  with `html{zoom:.18}` and cards banded at real scale, the technique
+  `scripts/f22-pill-map.mts` established.
+* **Tracker: 456 rows · 315 done · 141 open · 10 open P0 (of 93 across all rows)
+  · 7 sections · 24 Areas.** Five rows opened: `PD01`–`PD05`. `R58` and `D73`
+  closed.
+* **Playbook diff: nothing new.** No hunt was run — this session restored
+  rendering and repaired instruments, and no wall was walked.

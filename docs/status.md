@@ -17,7 +17,7 @@ answer *what does this deliver* rather than *what kind of work is it*.
 
 ## The whole tracker
 
-- **454 rows** · **315 done** · **139 open** · **12 of the open ones blocked or parked**
+- **456 rows** · **315 done** · **141 open** · **12 of the open ones blocked or parked**
 - **10 OPEN P0** — the queue — of **93 P0 across all rows** (the rest have shipped)
 - **7 sections** · **24 distinct Areas**
 
@@ -39,7 +39,7 @@ nothing, which is what this definition exists to prevent.
 
 **What you get:** NOT A DELIVERABLE, and named honestly rather than dressed as one. This is every row whose `Depends on` column is empty, which is most of the tracker — the column is sparse, so the graph cannot tell work that genuinely has no prerequisite from work whose prerequisite was never written down. See `R56`.
 
-**246 rows** · **192 done** · **54 open** · **8 blocked or parked**
+**247 rows** · **192 done** · **55 open** · **8 blocked or parked**
 
 **Open P0 in this section (4):**
 
@@ -52,7 +52,7 @@ nothing, which is what this definition exists to prevent.
 
 **What you get:** A reader at 03255, 07866, 85641 or 85701 gets every body, every officeholder and every contest that place actually has — the depth sweeps, the blurb equalization, the state voting records and the funding surface all sit here.
 
-**104 rows** · **55 done** · **49 open** · **0 blocked or parked**
+**105 rows** · **55 done** · **50 open** · **0 blocked or parked**
 
 **Open P0 in this section (3):**
 

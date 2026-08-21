@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-20 (America/Phoenix). 37 stamp(s) audited.
+Run on 2026-08-20 (America/Phoenix). 41 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -42,7 +42,11 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | The campaign's own self-published portrait from its own s… | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
 | Last resort, when doors 1–3 all fail for a person | 2026-08-15 | 2026-08-15 | 0 | `f5de914` The structures are born: state folders, notes, and the zip playbook |
 | A campaign that lives on Facebook still has a campaign si… | 2026-08-15 | 2026-08-15 | 0 | `800fecf` The money tells its story: sorting, the second hop, honest percentages, and a geocoder that works (#39) |
-| Equal effort per candidate within a race. | 2026-08-14 | 2026-08-14 | 0 | `81ce4d8` The tester's mobile pass: the bleed fenced, the ballot found, 281 faces |
+| Equal effort per candidate within a race — A HUNT DISCIPL… | 2026-08-14 | 2026-08-20 | -6 d | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
+| RULING 26 — SHOW EVERYTHING WE FIND. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
+| RULING 27 — NO SUPPRESSION PATH MAY EXIST IN THE CODEBASE. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
+| RULING 28 — ABSENCE IS ONE BURIED ANNOTATION PER CONTEST,… | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
+| RULING 23 — the four-state field is DATA, not a gate. | 2026-08-20 | 2026-08-20 | 0 | `bb98d25` Prompt D: the product renders again, the gate is law-forbidden, and a silent failure gets a bell |
 | Every blurb carries its source class. | 2026-08-14 | 2026-08-14 | 0 | `1f00818` 7: two standing rules into CLAUDE.md |
 | Every production probe row a session creates is NAMED in … | 2026-08-15 | 2026-08-15 | 0 | `0b94547` The documents: section 24, the walk, the brief, and the probe-rows rule |
 | The ripcord doctrine — legally-open features ship behind … | 2026-08-13 | 2026-08-13 | 0 | `56d8787` 7: the session's documents — §14, the ripcord doctrine, the rows, the rungs, and the brief |
@@ -68,7 +72,7 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 ## What the deltas say
 
-- **0 stamp(s) disagree with git history.**
+- **1 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-20) — a date that had not happened when it was written.
 - **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
@@ -89,6 +93,10 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | `CLAUDE.md:181` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
 | `CLAUDE.md:182` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
+| Line | Claimed | Recovered | Delta | Note |
+|---|---|---|---|---|
+| `CLAUDE.md:192` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+
 ## The literal `--diff-filter=A` result, per stamp
 
 | Rule (opening clause) | `--diff-filter=A` returned | Unfiltered matches |
@@ -107,7 +115,11 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | The campaign's own self-published portrait from its own s… | none | 1 |
 | Last resort, when doors 1–3 all fail for a person | none | 1 |
 | A campaign that lives on Facebook still has a campaign si… | none | 1 |
-| Equal effort per candidate within a race. | none | 1 |
+| Equal effort per candidate within a race — A HUNT DISCIPL… | none | 1 |
+| RULING 26 — SHOW EVERYTHING WE FIND. | none | 1 |
+| RULING 27 — NO SUPPRESSION PATH MAY EXIST IN THE CODEBASE. | none | 1 |
+| RULING 28 — ABSENCE IS ONE BURIED ANNOTATION PER CONTEST,… | none | 1 |
+| RULING 23 — the four-state field is DATA, not a gate. | none | 1 |
 | Every blurb carries its source class. | none | 1 |
 | Every production probe row a session creates is NAMED in … | none | 1 |
 | The ripcord doctrine — legally-open features ship behind … | none | 1 |

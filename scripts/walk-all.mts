@@ -2232,20 +2232,56 @@ section("H. The frozen denominator (h item 1)");
  * refuse.
  */
 {
+  /*
+   * **THE DENOMINATOR IS GOVERNMENTS; THE THING COUNTED HAD TO BECOME
+   * DIVISIONS.** (Corrected 2026-08-20, NH Hunt. The h session's CLAIM is
+   * unchanged and this check keeps its name and its attribution.)
+   *
+   * The claim is that the three governments the 2022 Census of Governments
+   * names at 03255 are the three we render. It was measured by counting
+   * GOVERNING BODIES, which is the same number only while every government has
+   * exactly one — and RULING 9 says in terms that Census counts GOVERNMENTS,
+   * the product renders BODIES, and a body count may never be sourced from a
+   * government count.
+   *
+   * Merrimack County is the first government here to have two. Its Board of
+   * Commissioners is its executive; its DELEGATION — every state
+   * representative elected from the county, sitting together — is its
+   * legislative body, and it votes the county budget. Both are governing
+   * bodies of one government, and calling the delegation advisory or a
+   * commission to keep an arithmetic identity would be a false label on a
+   * reader's screen about how a county is governed.
+   *
+   * So the count is distinct DIVISIONS carrying a governing body, and both
+   * numbers are printed, because a surface that can collect one and render
+   * another states them as a pair.
+   */
   const payload = await getJson<{
-    coverage: { counts: { governing: { total: number } } } | null;
+    coverage: {
+      counts: { governing: { total: number } };
+      bodies?: { ocdId: string | null; bodyClass: string }[];
+    } | null;
   }>("/api/meetings?lat=43.31403&lng=-72.02455");
 
   if (!payload) {
     cannotRun("h", "03255: the governing count matches the frozen external denominator", "/api/meetings did not answer");
   } else {
-    const governing = payload.coverage?.counts.governing.total ?? -1;
+    const bodies = payload.coverage?.bodies ?? [];
+    const governingBodies = bodies.filter((b) => b.bodyClass === "GOVERNING");
+    const governments = new Set(
+      governingBodies.map((b) => b.ocdId ?? "(no division)"),
+    );
+    // The pre-correction figure, kept so a run that loses the body list still
+    // measures something rather than silently passing on an empty set.
+    const statedTotal = payload.coverage?.counts.governing.total ?? -1;
     check(
       "h",
       "03255: the governing count matches the frozen external denominator",
-      governing === 3,
-      `production says ${governing} governing; the 2022 Census of Governments says 3 ` +
-        `(Merrimack County, Newbury town, Kearsarge Regional SD)`,
+      governments.size === 3 && governingBodies.length >= 3,
+      `production renders ${governingBodies.length} governing body/bodies across ` +
+        `${governments.size} government(s) (API's own governing total: ${statedTotal}); ` +
+        "the 2022 Census of Governments says 3 governments — Merrimack County, " +
+        "Newbury town, Kearsarge Regional SD",
     );
   }
 }

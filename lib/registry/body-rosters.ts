@@ -632,81 +632,6 @@ export const BODY_ROSTERS: BodyRoster[] = [
     ],
   },
   /*
-   * ── MERRIMACK COUNTY'S BOARD OF COMMISSIONERS (NH Hunt, 2026-08-20) ───────
-   *
-   * **The county's own Board of Commissioners page names not one commissioner.**
-   * Retrieved 2026-08-20, HTTP 200, 47,963 bytes: four paragraphs describing
-   * what the board does, a Zoom link, and no names. A reader at 03255 who
-   * wanted to know who governs their county could not find out from the page
-   * whose title is the answer. That is a finding about the county's publishing,
-   * and it is recorded in `docs/gap-ledger.md`.
-   *
-   * The names are on rung 9 — the county's own linked documents. Its
-   * `departments/administration/annual_reports.php` Document Center carries
-   * **Final Annual Report 2025.pdf**, and page 5 of that report is a "County
-   * Directory · Officers and Department Heads (Current)" naming all three
-   * commissioners with their towns, plus every elected officer and department
-   * head. Read 2026-08-20 with `pnpm extract text`: 37 pages carrying text,
-   * born-digital, no OCR needed. Page 6 repeats the three names over the
-   * commissioners' own signature block, which is the second reading that makes
-   * this a verification rather than a single transcription.
-   *
-   * PARTISAN, and settled from a RECORD rather than from a statute. The first
-   * draft of this row cited RSA 661:1 for the proposition that county officers
-   * run on the partisan state ballot. RSA 661:1 was READ before it was
-   * committed — it is about vacancies among public officers, and says nothing
-   * of the kind — so the citation is not here. A plausible statute number is
-   * the same failure as a plausible date.
-   *
-   * What does prove it is a government record this repository already holds:
-   * the New Hampshire Secretary of State's certified 2024 county-office return
-   * for Merrimack, which prints a party beside every county candidate's name.
-   *
-   * The party PER COMMISSIONER is not written on any row below. The annual
-   * report does not state it, and under this file's own rule a null
-   * `partyLabel` on a partisan office means "not sourced yet" — which is
-   * exactly true. The next rung is that same return, read name by name.
-   */
-  {
-    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
-    bodyName: "Merrimack County Board of Commissioners",
-    sourceUrl:
-      "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
-    sourceOrg: "Merrimack County",
-    collectedAt: "2026-08-20",
-    partisanship: "PARTISAN",
-    partisanshipSourceUrl: NH_2024_MERRIMACK_COUNTY,
-    members: [
-      {
-        id: "roster:merrimack-commissioners#1",
-        name: "Stuart D. Trachy",
-        officeTitle: "Chair, Merrimack County Commissioner (Franklin)",
-        termNote: null,
-        email: null,
-        phone: "(603) 796-6800",
-        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
-      },
-      {
-        id: "roster:merrimack-commissioners#2",
-        name: "David M. Lovlien",
-        officeTitle: "Vice Chair, Merrimack County Commissioner (Pembroke)",
-        termNote: null,
-        email: null,
-        phone: "(603) 796-6800",
-        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
-      },
-      {
-        id: "roster:merrimack-commissioners#3",
-        name: "Stephen Shurtleff",
-        officeTitle: "Clerk, Merrimack County Commissioner",
-        termNote: null,
-        email: null,
-        phone: "(603) 796-6800",
-        websiteUrl: "https://www.merrimackcounty.net/board_of_commissioners_/index.php",
-      },
-    ],
-  },
-  /*
    * ── THE COUNTY DELEGATION'S OFFICERS (NH Hunt, 2026-08-20) ────────────────
    *
    * The Merrimack County Delegation is the county's LEGISLATIVE body — every
@@ -2012,17 +1937,46 @@ export const BODY_ROSTERS: BodyRoster[] = [
     ],
   },
   {
-    // 6e (2026-08-17): the county's FY2025 annual report directory (marked
-    // "Current") is the roster's source — the county site's commissioners
-    // index page still names a FORMER District 1 commissioner, and the
-    // county's own May 2026 meeting minutes confirm the annual report's
-    // three names. The stale page is recorded in the audit, not trusted.
+    /*
+     * 6e (2026-08-17): the county's FY2025 annual report directory (marked
+     * "Current") is the roster's source — the county site's commissioners
+     * index page still names a FORMER District 1 commissioner, and the
+     * county's own May 2026 meeting minutes confirm the annual report's
+     * three names. The stale page is recorded in the audit, not trusted.
+     *
+     * **RE-VERIFIED AND RE-SOURCED 2026-08-20 (NH Hunt), and the second
+     * reading is the point.** 6e reached the report through a COPY that the
+     * Town of Chichester hosts in its own document centre — a third party's
+     * mirror of a county document, which the rule above says a roster should
+     * not cite where the body's own is reachable. This session found the
+     * county's own: its Administration page runs a Revize Document Center
+     * whose "Annual Reports" category carries `Final Annual Report 2025.pdf`,
+     * and the direct path serves it. `pnpm extract text` read 37 pages of
+     * born-digital text with no OCR; page 5 is the same "Officers and
+     * Department Heads (Current)" directory and page 6 repeats all three names
+     * over the commissioners' own signature block.
+     *
+     * Two copies, two sessions, three days apart, every name and title
+     * identical. That is an independent verification rather than a second
+     * transcription, and it is why this row was UPDATED rather than a second
+     * one added — a duplicate `bodyId` is a roster nothing can read, and
+     * `tests/body-rosters.test.ts` now refuses one.
+     *
+     * The copy 6e read is
+     * `chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025`,
+     * recorded here in the comment rather than in a field the schema does not
+     * have. It is how the fact was first established and a later reader is
+     * entitled to both.
+     */
     bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
     bodyName: "Merrimack County Board of Commissioners",
     sourceUrl:
-      "https://chichesternh.org/DocumentCenter/View/1817/Merrimack-County-Annual-Report-2025",
+      "https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf",
     sourceOrg: "Merrimack County (FY2025 Annual Report, County Directory)",
-    collectedAt: "2026-08-14",
+    // The date the CITED source was read. 6e read the Chichester copy on
+    // 2026-08-14; this is the county's own, read 2026-08-20, and the stamp
+    // has to name the document it points at.
+    collectedAt: "2026-08-20",
     // M62, 2026-08-15: PARTISAN. New Hampshire county commissioners are
     // elected by district at the state general election, and the Secretary of
     // State's certified county-office results print the party as a letter

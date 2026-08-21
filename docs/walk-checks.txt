@@ -89,7 +89,6 @@
 [F01C2] 07866: a multi-day window carries the affordance too
 [F01C2] 07866: every candidate row carries a battlecard pill
 [F01C2] 07866: every dated voting event can be calendared
-[F01C2] 07866: the ballot row carries the count, not the twelve-issue list
 [F01C2] 07866: the battlecard holds the sections the row gave up
 [F01C2] 07866: the in-app voting panel opens on the ballot
 [F01C2] 07866: the placeholder address names no region
@@ -98,7 +97,6 @@
 [F01C2] 85701: a multi-day window carries the affordance too
 [F01C2] 85701: every candidate row carries a battlecard pill
 [F01C2] 85701: every dated voting event can be calendared
-[F01C2] 85701: the ballot row carries the count, not the twelve-issue list
 [F01C2] 85701: the battlecard holds the sections the row gave up
 [F01C2] 85701: the in-app voting panel opens on the ballot
 [F01C2] 85701: the placeholder address names no region
@@ -126,6 +124,8 @@
 [F01] 9.6: selecting a district shades it, closing deselects
 [F22] 07866: the polling-place pointer renders exactly once on the ballot
 [F22] 85701: the polling-place pointer renders exactly once on the ballot
+[NHHUNT] 07866: no per-card completeness count or enumeration anywhere on the ballot
+[NHHUNT] 85701: no per-card completeness count or enumeration anywhere on the ballot
 [f] 03255: Kearsarge Regional School District's sittings
 [g10] 85701: agenda attribution reaches the served payload
 [g10] 85701: an unresolved heading is attributed to NOTHING, never to the host

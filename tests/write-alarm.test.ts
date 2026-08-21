@@ -108,6 +108,37 @@ test("6.4: the alarm is raised on the SAME catch that swallows, in every route",
   );
 });
 
+test("6.5: the alarm is not left as an unawaited promise", () => {
+  /*
+   * **THE DEFECT THE LIVE PROBE FOUND, GUARDED** (Prompt D item 6.5,
+   * 2026-08-20).
+   *
+   * The first version of the alarm fired as `void raiseWriteAlarm(...)` and
+   * returned on the next line. Every test passed, every route compiled, and on
+   * the live deploy NOTHING LANDED: a serverless invocation ends when the
+   * response is returned, and a promise still in flight is dropped. The alarm
+   * built to catch a silent failure failed silently.
+   *
+   * So a bare `void raiseWriteAlarm` is banned. Either the handler AWAITS it —
+   * safe, because it never throws, and the reader is already receiving an
+   * error on that branch — or it is scheduled through `after()`, which is the
+   * platform's own primitive for work that outlives the response.
+   */
+  for (const f of soldStoreWriteRoutes()) {
+    const src = readFileSync(join(ROOT, f), "utf8");
+    assert.ok(
+      !src.includes("void raiseWriteAlarm("),
+      `${f} fires the alarm without awaiting it — a promise in flight when the ` +
+        "response returns is dropped by the runtime, which is how an alarm " +
+        "for a silent failure fails silently",
+    );
+    assert.ok(
+      src.includes("await raiseWriteAlarm(") || src.includes("=> raiseWriteAlarm("),
+      `${f} must either await the alarm or schedule it with after()`,
+    );
+  }
+});
+
 test("6.4 / RULING 25: the reader-facing answers on the write paths are unchanged", () => {
   /*
    * Reader-facing behaviour is not degraded to fix an internal problem. These

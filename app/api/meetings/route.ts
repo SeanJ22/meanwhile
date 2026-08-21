@@ -1,6 +1,8 @@
 import { haversineKm } from "@/lib/geo/distance";
 import { nearestZcta } from "@/lib/geo/zcta";
 import { logSearchEvent } from "@/lib/db/search-log";
+import { after } from "next/server";
+
 import { raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
@@ -224,7 +226,23 @@ export async function GET(request: Request) {
      * hours with every instrument green.
      */
     console.error("search log write failed", error);
-    void raiseWriteAlarm("search_log", error);
+    /*
+     * **`after()`, not a bare promise** — the fix the live probe forced
+     * (Prompt D item 6.5, 2026-08-20).
+     *
+     * The first version fired the alarm as an unawaited promise. On a
+     * serverless runtime the invocation ends when the response is returned,
+     * and any promise still in flight is simply dropped — so the alarm did
+     * not land, and the probe against the live deploy found it. Which is the
+     * probe working, and the reason item 6.5 asks for a live induced failure
+     * rather than a green test.
+     *
+     * `after()` schedules work the platform keeps the invocation alive for.
+     * The reader is unaffected either way: this runs strictly after their
+     * response has gone, and the search had already answered before the log
+     * write was even attempted.
+     */
+    after(() => raiseWriteAlarm("search_log", error));
   });
 
   /*

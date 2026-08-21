@@ -166,7 +166,7 @@ export async function POST(request: Request) {
      * the alarm does not need to, because a raised alarm is read by a human who
      * can see the database's own words.
      */
-    void raiseWriteAlarm("search_log", error);
+    await raiseWriteAlarm("search_log", error);
     return Response.json({ error: String((error as Error).message) }, { status: 400 });
   }
 }

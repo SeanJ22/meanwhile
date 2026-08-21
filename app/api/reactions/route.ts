@@ -330,7 +330,7 @@ export async function POST(request: Request) {
      * so it cannot turn a stored-reaction failure into a worse one.
      */
     console.error("reaction write failed", error);
-    void raiseWriteAlarm("reactions", error);
+    await raiseWriteAlarm("reactions", error);
     return Response.json({ error: "could not store the reaction" }, { status: 500 });
   }
 }

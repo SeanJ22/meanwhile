@@ -14830,6 +14830,272 @@ the ten; the manifest goes 940 → 948 rows.
 `docs/zip-playbook.md` §4, which gained 24 KB including a new §7 on how a
 candidacy is taken to Kelly depth.
 
+## NH Hunt 4 — 2026-08-21: three dark towns get 59 bodies, and a lake's village district reaches the reader who lives on it
+
+**Code merges `980a2f6` (PR #134) and `1e07e11` (PR #135).** Deploys
+`6a88d20020d90c000724dc25` and `6a88d5952bc77a00081d35de`. Two code merges: the
+first is the planned one, the second is RULING 1's single exception, taken for a
+live self-contradiction the walk caught — and the contradiction was one the
+first merge created. Both are named below. The close-out records that follow are
+separate commits, because a document cannot name the commit that contains it.
+
+### RULING 57 is law: every twig is named
+
+The trunk is the United States, the branches are the states, and the twig is a
+township water authority. **A body is never skipped for being small.** It is
+NAMED first and hunted second, and a body that cannot be reached today is a
+dated measurement carrying its branches rather than a decision to leave it out.
+`CLAUDE.md` **76,630 → 79,374 bytes**, rationale attached; `docs/rulings.md`
+carries its entry; `pnpm verify-stamps` recovers its stamp at delta 0.
+
+The argument in one sentence, because a stripped rule reads as guidance: the
+easy bodies are already covered by somebody, and a product that reaches only
+those is not smaller than it could be — it is redundant.
+
+### Bradford, Sutton and Warner had nothing here at all
+
+Three of Kearsarge Regional School District's seven member towns, and this
+registry held **not one body** for any of them — not a committee, not the select
+board. All three publish a boards index AND a live calendar. Nothing had ever
+asked them.
+
+| | bodies before | bodies now | wired live |
+|---|---|---|---|
+| Warner | 0 | 26 | 16 |
+| Sutton | 0 | 18 | 0 |
+| Bradford | 0 | 15 | 15 |
+| New London | 4 | 16 | 16 |
+| Wilmot | 3 | 12 | 4 |
+| Newbury | 16 | 16 | 16 |
+| Springfield | 8 | 8 | 0 |
+| **seven towns** | **31** | **111** | **67** |
+
+**Meetings 332 → 414.** Warner 41, Bradford 22, New London 15 → 28, Wilmot
+23 → 26. At 03255 a reader now reaches **160 meetings across 42 distinct
+bodies**, where this morning it was 80 across roughly 15.
+
+**Warner's list includes the Warner Village Water District** — a separate
+government with its own elected commissioners and its own budget, which is the
+author's own example of a twig wearing a New Hampshire name.
+
+**The menu is an undercount, every time, and the calendar is the better
+directory.** Bradford's index lists eight boards; its calendar files sittings
+for a CIP Committee, a Hazard Mitigation Committee, a Facilities Use Committee
+and an Independence Day Committee besides. **Wilmot's Safety Services Facility
+Committee and its Transfer Station Advisory Group appear on no town index
+anywhere** and exist only in the PAST view of the town's feed.
+
+**Sutton is named and KNOWN_UNCOVERED on purpose.** Its calendar exports 1,312
+events, 47 of them upcoming, and **every single one has an empty `LOCATION`**.
+Wiring them would have produced eighteen bodies whose every sitting drops, or —
+worse — eighteen bodies pinned at the town office because a town office is where
+boards usually meet, which is a guess about a specific sitting dressed as a fact
+that a reader acts on by driving somewhere. `NH34` carries the venue hunt.
+
+### The two districts that were resolved yesterday and still could not render
+
+`HUNT05` resolved the **Merrimack County Conservation District** and **Lake Todd
+Village District** to 03255 on 2026-08-21 and wrote them into
+`data/derived/special-district-territory.json`. Nothing but the gap ledger reads
+that file. **A resolution recorded where no reader-facing surface reads it is
+not a resolution a reader can see.**
+
+The conservation district's own obstacle was worse than a missing wiring row: it
+shipped with `ocdId: null` under the divisionless D28 shape, and
+`lib/registry/resolve.ts`'s `bodiesAt` filters on `b.ocdId && ids.has(b.ocdId)`,
+so **no point on earth could return it**. RSA 432:12 says each county "is hereby
+incorporated into a conservation district" whose boundaries conform to the
+county. That is a division, and it is the county's.
+
+And a claim of ours was falsified. `lib/registry/curated-bodies.ts` carried the
+settled note *"no village district's boundary reaches Newbury."* The New
+Hampshire Office of Business and Economic Affairs publishes a register of all
+**91 village districts** with their host municipalities, and it lists **Lake Todd
+Village District twice — once under Bradford and once under NEWBURY**. The note
+is deleted. Lake Todd is wired LIVE against the Town of Bradford's own calendar,
+which files three of its sittings; its own site is HTTP 404 at rungs 2, 3, 4, 5
+and 6, and the Internet Archive answered "Temporarily Offline" on the day.
+
+Eleven twig rows ship in all: Lake Todd (Newbury and Bradford), the New
+London–Springfield Water System Precinct (New London and Springfield, three
+named commissioners meeting the first Monday at 4pm), Highland Haven, the
+Ashuelot Pond Dam Precinct, Emerald Lake, Andover Village District, Andover Fire
+District and East Andover Fire Precinct.
+
+**Two official enumerations disagree and that is a finding.** The Ashuelot Pond
+Dam Precinct is in the 2022 Census of Governments and absent from the state's
+own village-district register, both read the same day. It ships named, with both
+facts recorded.
+
+### The twig pair at 03255
+
+`pnpm twig:pair` is the instrument, and it reconciles:
+
+| | |
+|---|---|
+| units the Census places inside the first-rung circle | **48** |
+| units this registry holds a body for | **28** (was 20) |
+| units with NO body here | **20** (was 28) |
+| bodies held across them | **270** |
+
+Every un-held unit prints by NAME with its distance and the site the Census
+recorded — because a count is not a name, and a village water district
+disappears into a statistic the moment it is only counted. Seven of the twenty
+are not missing a body so much as a DIVISION: Sullivan County itself, and
+Lempster, Croydon, Newport, Windsor, Acworth and Grantham are not in the shipped
+division list at all. `NH42`.
+
+### Item 2 — the county contests, and a state API that only a visible browser sees
+
+**Owed fields 196 → 184 of 368.** The county contests, before → after: County
+Attorney 11 → 4, Commissioner D2 10 → 8, Sheriff 9 → 7, Register of Deeds 6 → 6,
+Treasurer 8 → 8, Register of Probate 4 → 4. Forty-eight owed across the six
+became thirty-seven, and Daniel Innis's campaign site closed the twelfth.
+
+The branch that did most of it is new. **`cfs.sos.nh.gov`, the NH Campaign
+Finance System, refuses rungs 2, 3, 4 and 6** — headless Chromium, a real Chrome
+channel and a masked user agent alike, all HTTP 403 from Akamai — and answers a
+visible browser on the same machine and the same IP. **Rung 7 is the way
+through**: read the app's own JS bundles from the page, grep them for the API
+base (`https://cfsapi.sos.nh.gov/api`, a plain literal), and call
+`PublicFilerDetails/GetFilingEntityDetails` from the page's own context, where
+CORS is already allowed. Only `filerName` is honoured; `electionYear` and
+`filerTypeCode` are accepted and ignored. **The search endpoint IS the detail
+endpoint** — every row carries the candidate's mailing address, phone, email,
+website and the whole committee block. It gave Meg Hagaman, Jon Raiche, Sarah
+Rogers and Jason Gerhard their contacts and Daniel Innis his site. It is a
+procedure and not a script, and `NH40` says so.
+
+Three portraits shipped, all three PENDING the author's review under RULING 55 —
+Hagaman door 3, Raiche door 3, Ribas door 2. **Ben Weir's photo is REFUSED**: the
+only portrait-shaped image his site publishes is a campaign photograph of him
+holding a yard sign whose wordmark dominates the frame. That is a decision about
+a FILE and says nothing about whether a clean portrait of him exists.
+
+**A search summary is not a source.** A web search reported Vincent Ribas as the
+sitting Commissioner for District 2. The county's own board page names Stuart D.
+Trachy and the Secretary of State's roster agrees; Ribas is a challenger and a
+sitting Franklin city councilor, whose official portrait and phone are on
+`franklinnh.gov` — after `franklinnh.org`, the domain the search index still
+carries, failed at five rungs with four different errors.
+
+### Item 1 — the corrections reached the reader
+
+**0 false sentences rendering**, across four zips and three surfaces each, read
+off the live page rather than the data file. 4 captures read as images.
+
+**Per-asset photo keying: 2 found, 2 restored, both rendering.** Kelly Ayotte's
+official Governor's portrait renders at 03255 with attribution to the Office of
+the Governor; Jason Gerhard's card carries his. Each holds a REFUSED asset
+alongside the approved one, and under the old per-person key each would have
+been withheld by the bad file. **66 portraits held, 63 render, 3 pending** — and
+the 3 are this session's own.
+
+The six genuine misses the removed `gc.nh.gov` skip surfaced, by name: **James
+Gallagher, Rachel Keshel, Rosanna Gabaldón, Mary Jane Wallner, John McKeon and
+Parker Space.** Wallner's stored page was the `?member=` form the General Court
+no longer serves. **75 of 410 New Hampshire officeholders carried it** and
+exactly one had surfaced, because only the 85 division-linked officials are
+audited at all. `pnpm nh:fix-pages` repairs them from the chamber's own roster:
+**75 found, 74 repaired, 0 ambiguous, 1 genuinely off the roster.** The Arizona
+twin (67 of 90 on a past legislature) is `NH37`; the New Jersey one (6 senators
+on an Assembly party page) is `NH38`.
+
+### Item 7 — the jobs, and what 39% becomes nationally
+
+| workflow | reading | cause |
+|---|---|---|
+| `refresh-meetings-snapshot` | 14 of 37 | **JOB, ours.** Two causes in that history; one fixed 2026-08-20, one fixed here |
+| `refresh-dotgov-snapshot` | 1 of 8 | **JOB, ours, already fixed** — the one failure is the deliberate dispatch that proved the gate had no browser |
+| `intake-tripwire` | 2 of 8 | **NEITHER.** Both are the ALARM FIRING, which is the job working |
+
+The live meetings cause: `ical: fetched 3 document(s) and extracted 0
+meeting(s)`, with **every drop counter at zero** — and zero drops is the tell,
+because with three rows over one feed any event at all would have produced
+`notConfigured` hits on the rows it did not belong to. The document carried **no
+`VEVENT`**. `politeGetText` cannot catch it; NH Hunt 3 taught the fetch layer to
+refuse a blank body and a wrong-format body, and this is the third shape — a
+well-formed `BEGIN:VCALENDAR` envelope with nothing inside. The row is refused
+now, which routes it into carry-forward instead of failing the whole source.
+
+**What 37.8% becomes at national volume, stated plainly.** The refresh commits
+only if EVERY source succeeded. Eleven sources at that whole-run rate implies
+about **4.2% per source per run**. A national corpus needs a source instance per
+distinct feed or portal; at 5,000 of them the chance every one succeeds in a
+single run is `(1 − 0.042)^5000`, which **rounds to zero**. At a tenth of that
+per-source rate it is `1.4 × 10⁻¹¹`. The gate stops being a gate and becomes a
+permanent refusal to publish. What it protects is real and must survive; the
+proposal is per-SOURCE failure semantics, and `NH31` puts that decision in front
+of the author.
+
+The two-consecutive detector was proved against a window whose outcome is
+already known — `--asof=2026-08-20T14:00:00Z` names runs `32372995194` and
+`32342602616`, names the failing step and queues the row. **I did not induce a
+real failure on `main` to prove it**: breaking a governed artifact's job on
+purpose is an outward-facing, hard-to-reverse act, and `--asof` exists precisely
+so the proof does not need one.
+
+### The second merge, and it fixes something the first one broke
+
+The live walk at 03255 found the product **rendering Lake Todd Village
+District's meetings while the coverage note on the same page said we had not
+worked out whether it reaches this ZIP code** — with Lake Todd among the
+eighteen it named. Item 4 made that sentence false, and I did not notice until I
+read the capture as an image.
+
+`stamp-coverage-tiers.mts` counted every special district in an overlapping
+county as unresolved and never read the territory file. It does now: **03255
+stamps 5 governments resolved against 3, and 16 unresolved against 18.**
+
+Two defects in my own fix, both caught by asking for a count rather than an exit
+code. The first loader iterated `district.reaches` unguarded, threw on the third
+row — sixteen of eighteen carry no `reaches` key because their territory is
+unresolved — and the surrounding `try/catch` turned the throw into an empty map;
+the stamp came out byte-identical and looked like a correct no-op. It prints
+what it read now. The second moved two districts into the resolved column
+without moving them in the tier DISTRIBUTION, and
+`tests/coverage-tier.test.ts` item 3.1 caught it in the same run.
+
+### Class sweeps, found and fixed
+
+- **41 committed portraits over 600 KB, largest 15 MB.** 41 found, 40 rewritten,
+  1 skipped, **77 MB → 7 MB**. The shared path is fixed too: `ship:candidate`
+  now names a portrait's format from its BYTES rather than from the plan's
+  filename, and caps what a card is asked to load.
+- **75 New Hampshire officials on a dead URL form**, above. 74 repaired.
+- **A collapsing join in `documentUrlFor`**: it took the first wiring row on the
+  meeting's DIVISION carrying a notice URL, so adding Lake Todd to Newbury's
+  division attached Lake Todd's notice page to the Town of Newbury's meetings
+  and the ingest went and fetched it for them. The body is matched first now.
+- **The hunt queue was reading the RENDER view.** Three portraits found, judged
+  and committed still read as owed, because `cardForCandidacy` applies RULING
+  55's review gate. RULING 23 settles which reading belongs where: the queue
+  reads the raw store.
+
+### Tools built, because the absence of one is never a wall
+
+`pnpm twig:pair`, `pnpm image:view`, `pnpm portraits:normalise`,
+`pnpm nh:fix-pages`, and `scripts/transcode-image.mts`. All five are in
+`docs/zip-playbook.md` §4 with their interfaces.
+
+### The numbers
+
+`walk:all` **370 passed · 1 regression · 0 could not run · 371 distinct of 371 ·
+0 GONE · 0 silent.** The regression is Prompt D's alarm row — unchanged from NH
+Hunt 3, now diagnosed and tracked as `NH32`. Product **107 cards, 58 contests**
+across four zips, unchanged. Gates: test **1543 pass 0 fail**, lint 0 errors,
+`tsc --noEmit` clean, build green in both modes. No budget ceiling moved.
+Production rows this session: **518 search-log rows, every one SYNTHETIC and
+attributable**. Organic census **163**, against 159 — reported, not
+investigated.
+
+`docs/zip-playbook.md` **154,154 → 165,403 bytes**, including a new **§7 on TWIG
+ENUMERATION** — how a small body is found when no menu lists it, and what to do
+when a body is known to exist and publishes nothing.
+
+Rows opened: `NH30`–`NH42`, thirteen, every one confirmed present. `NH14` and
+`NH15` resolved and moved.
+
 ## NH Hunt 3 — 2026-08-21: the ladder becomes a tree, and ten recorded absences out of ten were wrong
 
 **Code merge `2440915` (PR #133), deploy `6a88b047d0f60a0008bb2a90`.** One

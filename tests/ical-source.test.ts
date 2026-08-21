@@ -23,6 +23,11 @@ const FIXTURE = readFileSync(
   "utf8",
 );
 
+/** Every ICAL row reads its own wired feed; the query is not consulted. */
+const QUERY = { zip: "03255" } as unknown as Parameters<
+  ReturnType<typeof makeIcalSource>["fetch"]
+>[0];
+
 /** The middle of the fixture's window, so the same rows are in range always. */
 const NOW = new Date("2026-08-19T12:00:00Z");
 
@@ -125,6 +130,61 @@ test("ICAL: a Z suffix is already UTC", () => {
     parseDtStart("TZID=America/New_York:20260820T223000Z", "UTC")?.iso,
     "2026-08-20T22:30:00.000Z",
   );
+});
+
+/* ───────── an eventless calendar is a REFUSAL, not an empty calendar ────── */
+
+test("ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source", async () => {
+  /*
+   * The named cause of the meetings refresh failing 14 of 37 runs to
+   * 2026-08-21. The composite went red on "fetched 3 document(s) and extracted
+   * 0 meeting(s)" with EVERY DROP COUNTER AT ZERO — and zero drops is the tell:
+   * with three rows over one feed, any event at all would have produced
+   * notConfigured hits on the rows it did not belong to. The document that
+   * arrived carried no VEVENT.
+   *
+   * The transport cannot catch it: the envelope is a well-formed
+   * BEGIN:VCALENDAR and passes every check politeGetText can make. So the
+   * adapter refuses the row, which routes it into carry-forward instead of
+   * failing the whole source and taking every other town's calendar with it.
+   */
+  const EMPTY_FEED =
+    "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Test//EN\r\nEND:VCALENDAR\r\n";
+  const wiring = wiringForTypes(["ICAL"]).filter((w) =>
+    w.config.feedUrl?.includes("wilmotnh.org"),
+  );
+  assert.ok(wiring.length >= 3, `expected Wilmot's rows, got ${wiring.length}`);
+
+  const stub: typeof fetch = async () =>
+    new Response(EMPTY_FEED, {
+      status: 200,
+      headers: { "content-type": "text/calendar" },
+    });
+  const source = makeIcalSource(wiring, stub);
+  const raw = await source.fetch(QUERY);
+
+  assert.equal(raw.length, wiring.length, "every row still reports, with its own wiring");
+  assert.equal(
+    raw.filter((r) => r.refused).length,
+    wiring.length,
+    "an eventless calendar refuses every row on that feed — it is one retrieval and one wall",
+  );
+  const { meetings, drops } = source.normalizeWithDrops(raw, new Date("2026-08-19T12:00:00Z"));
+  assert.equal(meetings.length, 0);
+  assert.equal(drops.unknownVenue, 0, "a refusal is not a drop; nothing was examined");
+});
+
+test("ICAL: a calendar WITH events is not refused by the same check", async () => {
+  /* The other half, so the guard cannot pass by refusing everything. */
+  const wiring = wiringForTypes(["ICAL"])
+    .filter((w) => w.config.feedUrl?.includes("wilmotnh.org"))
+    .slice(0, 1);
+  const stub: typeof fetch = async () =>
+    new Response(FIXTURE, { status: 200, headers: { "content-type": "text/calendar" } });
+  const source = makeIcalSource(wiring, stub);
+  const raw = await source.fetch(QUERY);
+  assert.equal(raw.filter((r) => r.refused).length, 0, "a real calendar is not a refusal");
+  assert.ok(raw[0].ics.includes("BEGIN:VEVENT"), "and the document reaches normalize");
 });
 
 /* ---------------------------------------------------------- normalize --- */

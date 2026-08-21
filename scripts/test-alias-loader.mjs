@@ -26,5 +26,36 @@ export function resolve(specifier, context, nextResolve) {
       }
     }
   }
+  /*
+   * **EXTENSIONLESS BARE SPECIFIERS THE BUNDLER RESOLVES AND NODE DOES NOT**
+   * (Prompt D item 6.5, 2026-08-20).
+   *
+   * `next/server` is a real file — `node_modules/next/server.js` — and Next's
+   * package.json declares no `exports` map, so a bundler finds it by appending
+   * the extension and plain node ESM does not. `app/api/meetings/route.ts`
+   * imports `after` from it; the route builds and deploys, and every test that
+   * imports that route died with ERR_MODULE_NOT_FOUND.
+   *
+   * The alternative was to stop importing it, which would mean shipping the
+   * alarm as an unawaited promise the runtime drops — the exact defect the live
+   * probe had just caught. So the LOADER learns what the bundler already knows.
+   *
+   * Node RESOLVES this specifier happily and then fails to LOAD it, so the fix
+   * has to run BEFORE `nextResolve` rather than in a catch around it. Narrow on
+   * purpose: bare specifiers only, and only when the extensionless path is
+   * absent and the `.js` beside it is really there.
+   */
+  if (
+    !specifier.startsWith(".") &&
+    !specifier.startsWith("/") &&
+    !specifier.startsWith("node:") &&
+    !specifier.startsWith("file:")
+  ) {
+    const bare = join(root, "node_modules", specifier);
+    if (!existsSync(bare) && existsSync(`${bare}.js`)) {
+      return nextResolve(pathToFileURL(`${bare}.js`).href, context);
+    }
+  }
+
   return nextResolve(specifier, context);
 }

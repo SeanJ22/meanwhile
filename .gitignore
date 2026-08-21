@@ -84,4 +84,8 @@ next-env.d.ts
 # do not go in git.
 /.promptc/
 /.promptd/
+# Prompt E capture directory (item 3.6). Same reason as the three above: the
+# captures are evidence a session READ, and the reading is what the report
+# carries — the pixels are not the repo's to keep.
+/.prompte/
 /.f22tmp/

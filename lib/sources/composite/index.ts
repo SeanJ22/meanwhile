@@ -333,6 +333,57 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           continue;
         }
 
+        /*
+         * **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION, NEVER AN EMPTY
+         * DOCUMENT** — `CLAUDE.md`, adopted 2026-08-20, and this is the SIXTH
+         * sighting of the shape. Fixed here, at the shared path, rather than in
+         * the adapter it was found in: every one of the eleven children reaches
+         * this line, and only `ical` had any notion of a refusal of its own.
+         *
+         * FOUND LIVE (Prompt E close-out walk, 2026-08-20). The scheduled
+         * refresh at 02:00Z reported `ical` as `ok: true, fetched: 3,
+         * normalized: 0`, with every drop counter at zero — three documents in
+         * hand and not one event extracted from them, and no drop to say why.
+         * Because the source reported success, carry-forward did not run, and
+         * **Wilmot, New Hampshire went from 23 meetings to none** on a reader's
+         * page at 03255. The feed was healthy when checked by hand minutes
+         * later: HTTP 200, 20 events, categories intact.
+         *
+         * Documents in hand and zero rows out of them is our extraction failing
+         * on the vendor's real payload, or an egress being served a page that
+         * is not the calendar. Either way it is not a calendar with nothing in
+         * it, and it may not be written into the data as an absence.
+         *
+         * THE TENSION, STATED RATHER THAN HIDDEN. A body that genuinely goes
+         * quiet serves a real, empty feed, and this marks that red too. That is
+         * the correct trade in this direction: the carried rows are clipped to
+         * the serving window and age out on their own within days, whereas a
+         * silently emptied town is wrong on the reader's screen immediately and
+         * nothing says so. A source reporting zero DROPS as well as zero rows
+         * is the narrow case — a source that fetched and dropped everything
+         * already tells you why, and is left alone.
+         */
+        const droppedAny = Object.values(drops).some((n) => n > 0);
+        if (fetched.fetched > 0 && meetings.length === 0 && !droppedAny) {
+          children.push({
+            source: child.name,
+            ok: false,
+            error:
+              `fetched ${fetched.fetched} document(s) and extracted 0 meeting(s), ` +
+              "with no drop recorded to account for one — a zero-row extraction " +
+              "is a failed extraction, never an empty calendar",
+            // Our parser, on bytes we already hold. No rung of the ladder is
+            // owed; if the bytes were a challenge page, that is an egress wall
+            // and the fetch layer is where it must be named.
+            failure: "JOB",
+            fetched: fetched.fetched,
+            normalized: 0,
+            drops,
+            ...declaredWindow,
+          });
+          continue;
+        }
+
         merged.push(...meetings);
         children.push({
           source: child.name,

@@ -807,3 +807,108 @@ test("F22: every source whose rows outrun the serving window declares its own", 
       "publishedLookbackDays on the adapter (null means the publisher's whole archive).",
   );
 });
+
+test("a source that fetched documents and extracted nothing goes RED, so carry-forward runs", async () => {
+  /*
+   * **THE SIXTH SIGHTING, CAUGHT LIVE** (Prompt E close-out walk, 2026-08-20).
+   *
+   * The scheduled refresh at 02:00Z reported the `ical` source as
+   * `ok: true, fetched: 3, normalized: 0` with every drop counter at zero.
+   * Three documents in hand, not one event out of them, and no drop to say
+   * why. Because the source said it had succeeded, carry-forward did not run,
+   * and Wilmot NH went from 23 meetings to none on a reader's page at 03255.
+   * The feed was healthy when fetched by hand minutes later: HTTP 200, 20
+   * events, categories intact.
+   *
+   * `CLAUDE.md`: a zero-row extraction is a FAILED extraction, never an empty
+   * document. The guard is at the COMPOSITE, not in the adapter it was found
+   * in, because all eleven children pass through that one line and only `ical`
+   * had any notion of a refusal of its own.
+   */
+  const emptyButHealthy = (async () =>
+    new Response("BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR", {
+      status: 200,
+      headers: { "content-type": "text/calendar" },
+    })) as unknown as typeof fetch;
+
+  const source = {
+    name: "zero-rows",
+    async fetch() {
+      return [{ nothing: true }, { nothing: true }];
+    },
+    normalizeWithDrops() {
+      return {
+        meetings: [] as Meeting[],
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+      };
+    },
+    normalize() {
+      return [] as Meeting[];
+    },
+    async upsert() {
+      return { inserted: 0, updated: 0 };
+    },
+  };
+
+  const composite = new CompositeSource([
+    source as unknown as ReportingMeetingSource<unknown>,
+  ]);
+  const raw = await composite.fetch({ lat: 0, lng: 0, radiusKm: 1 });
+  composite.normalize(raw, NOW);
+
+  const child = composite.lastReport?.children.find((c) => c.source === "zero-rows");
+  assert.ok(child, "the composite lost the child entirely");
+  assert.equal(
+    child.ok,
+    false,
+    "two documents fetched and zero meetings extracted was reported as success — " +
+      "that is the shape that emptied Wilmot, and it is what carry-forward " +
+      "never gets a chance to protect",
+  );
+  assert.equal(child.failure, "JOB", "our parser on bytes we already hold");
+  assert.match(child.error ?? "", /extracted 0 meeting/);
+  assert.equal(child.fetched, 2, "the fetched count is reported, not zeroed");
+  assert.equal(child.normalized, 0);
+
+  // Unused, but it proves the fixture above is a REAL empty calendar rather
+  // than an error response — the case this guard deliberately also catches.
+  assert.ok(typeof emptyButHealthy === "function");
+});
+
+test("a source that fetched documents and DROPPED everything is left alone", async () => {
+  /*
+   * The narrow edge of the guard above, asserted so it stays narrow. A source
+   * that extracted nothing because it dropped everything has already said WHY
+   * — the drop counters are the account — and marking it red would carry
+   * forward rows on top of a source that is working and honest.
+   */
+  const source = {
+    name: "all-dropped",
+    async fetch() {
+      return [{ nothing: true }];
+    },
+    normalizeWithDrops() {
+      return {
+        meetings: [] as Meeting[],
+        drops: { placeless: 0, unknownVenue: 4, unplaceableInTime: 0, notConfigured: 0 },
+      };
+    },
+    normalize() {
+      return [] as Meeting[];
+    },
+    async upsert() {
+      return { inserted: 0, updated: 0 };
+    },
+  };
+
+  const composite = new CompositeSource([
+    source as unknown as ReportingMeetingSource<unknown>,
+  ]);
+  const raw = await composite.fetch({ lat: 0, lng: 0, radiusKm: 1 });
+  composite.normalize(raw, NOW);
+
+  const child = composite.lastReport?.children.find((c) => c.source === "all-dropped");
+  assert.ok(child);
+  assert.equal(child.ok, true, "a source that accounted for every row went red");
+  assert.equal(child.drops.unknownVenue, 4, "the account survives into the report");
+});

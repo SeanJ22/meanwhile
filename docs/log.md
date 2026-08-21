@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-20 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **105 sessions.**
+Newest first. **106 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -1504,3 +1504,12 @@ The first session. The map, the tracker, and congressional district boundaries o
 - …and 29 more still open.
 
 **Needs Sean.** B01, B08, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04
+
+## Prompt E
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip. *(open)*
+- **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing. *(open)*
+
+**Needs Sean.** PE01

@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **141 open**, 315 resolved.
-- **36 waiting on Sean** — the first section below.
+- **143 open**, 315 resolved.
+- **37 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**36 open · 8 resolved.**
+**37 open · 8 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -90,6 +90,8 @@ Only Sean closes a row here. A session may open one and may work it.
 ### P3
 
 **C01** — A sample of what a buyer actually receives: one Pima County measure broken into its provisions, with support per provision and counts by how well each answer was verified. Synthetic numbers, clearly labelled, built to show rather than to sell.
+
+**PE01** — A candidate we hold no published words for still gets a sentence on their card saying so. It is honest and it names the gap as ours, and it also appears only on the shortest cards — which is the same shape as the line RULING 42 just deleted. Whether it goes too is a call about a reader surface, so it is yours. Seen on the live ballot at every pilot zip.
 
 **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
 
@@ -465,7 +467,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**4 open · 56 resolved.**
+**5 open · 56 resolved.**
 
 ### P2
 
@@ -476,6 +478,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PD02** — The local development database is eight migrations behind production, so nothing can be tried locally against the real schema.
 
 **PD05** — The production walk creates rows under two different run labels and then counts only one of them, so it under-reports how many rows it wrote.
+
+**PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **R54** — A standing mechanism rather than a job: every portrait Sean needs to eyeball collects into one list he can work through, regenerated rather than hand-kept.
 

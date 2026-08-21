@@ -882,6 +882,43 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
 
+### The branch toolkit (NH Hunt 3, added 2026-08-21 — RULING 52 and 53)
+
+| Command | What it does |
+|---|---|
+| `pnpm stale` | Which dated measurements are past their RULING 53 window and owed a re-walk. Reports and never re-walks — re-walking is a hunt, and a hunt needs a session's judgement. Prints the pair per source, names its own blind spots, and says the total is a floor. |
+| `pnpm nh:roster [--name=X]` | The General Court's own roster as a branch INDEPENDENT of our officeholder registry. See the two-chamber recipe below. |
+| `pnpm watch:workflows [--open] [--asof=]` | RULING 56. Opens a Needs Sean row when a scheduled job fails twice consecutively. `--asof` holds the detector against a window whose outcome is already known, which is how it was proved without breaking anything. |
+
+**The NH General Court, two chambers, two branches** (2026-08-21). Worth
+recording as a shape rather than as one state's trivia: *the same host can treat
+two paths of one body completely differently, and meeting the refusal on one is
+no evidence at all about the other.*
+
+- **House — the name index is published as a form control.**
+  `gc.nh.gov/house/members/` answers rung 2 at 200 and carries a `<select>` of
+  every member: `<option value="700">Ebel, Karen</option>`. **The option value
+  IS the `pid`** in `member.aspx?pid=` — confirmed against Gregory Sargent,
+  whose option value 10832 matches his already-recorded pid. One request yields
+  a complete name-to-page index: **384 members of 400 seats**, measured
+  2026-08-21. This is the general lesson — *a `<select>` is a published index* —
+  and it is worth reaching for before any search engine.
+- **Senate — a path-scoped WAF, so there is no index and the DISTRICT is the
+  key.** `gc.nh.gov/senate/members/` answers **403** to the same client that
+  gets 200 from the House path one directory over. But
+  `senate/members/webpages/district07.aspx` answers 200 (districts 01, 07, 15
+  and 24 all confirmed). Twenty-four requests cover the chamber.
+
+A session that met the 403 and stopped would have written down "the Senate
+roster is walled", which is the sentence RULING 52 exists to stop.
+
+**And where a value is already known, never re-derive it from prose.** The first
+version of this tool parsed the district back out of the senator's page and
+harvested `District Maps` from the site navigation — a menu item, about to be
+written into a named senator's record. The district was the loop variable all
+along. This is the playbook's own "strip the navigation before harvesting"
+lesson, and it still caught the session that wrote it down.
+
 ### The extraction toolkit (F11, added 2026-08-20)
 
 Four layers, one contract. **A ZERO-ROW EXTRACTION IS A FAILED EXTRACTION,

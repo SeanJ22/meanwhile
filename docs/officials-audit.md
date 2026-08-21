@@ -1,6 +1,6 @@
 # Officials audit — the Kelly standard
 
-Generated 2026-08-14T05:47:14.131Z by `pnpm officials:audit`.
+Generated 2026-08-21 15:14:00 EDT by `pnpm officials:audit`.
 
 Five fields per official: **page** (specific official page, fetch-verified to
 name the member), **contact** (form or email present), **phone**, **photo**
@@ -10,6 +10,15 @@ not an oversight), **campaign** (verified campaign site). Only division-
 linked officials are audited — the ones a reader can open.
 
 ## US (federal) — 531 division-linked of 537
+
+**The 6 not audited, named** — a reader cannot open these, and the count above must not stand as an unexplained margin:
+
+- Eleanor Holmes Norton (DC) — no division ocd-division/country:us/state:dc/cd:at-large in registry (Eleanor Holmes Norton)
+- Stacey E. Plaskett (VI) — no division ocd-division/country:us/state:vi/cd:at-large in registry (Stacey E. Plaskett)
+- Aumua Amata Coleman Radewagen (AS) — no division ocd-division/country:us/state:as/cd:at-large in registry (Aumua Amata Coleman Radewagen)
+- James C. Moylan (GU) — no division ocd-division/country:us/state:gu/cd:at-large in registry (James C. Moylan)
+- Kimberlyn King-Hinds (MP) — no division ocd-division/country:us/state:mp/cd:at-large in registry (Kimberlyn King-Hinds)
+- Pablo José Hernández (PR) — no division ocd-division/country:us/state:pr/cd:at-large in registry (Pablo José Hernández)
 
 | Official | Office | Page | Contact | Phone | Photo | Campaign |
 |---|---|---|---|---|---|---|
@@ -542,155 +551,654 @@ linked officials are audited — the ones a reader can open.
 | Alan Armstrong | U.S. Senator | VERIFIED | MISS | yes | none (license rule) | not found yet |
 | Clay Fuller | U.S. Representative | VERIFIED | MISS | yes | none (license rule) | not found yet |
 | Analilia Mejia | U.S. Representative | VERIFIED | MISS | yes | none (license rule) | yes |
-| James Gallagher | U.S. Representative | VERIFIED | MISS | yes | none (license rule) | not found yet |
+| James Gallagher | U.S. Representative | MISS-ABSENT | MISS | yes | none (license rule) | not found yet |
 | Darline Graham | U.S. Senator | VERIFIED | MISS | yes | none (license rule) | not found yet |
 
 ## AZ — 24 division-linked of 90
 
+**The 66 not audited, named** — a reader cannot open these, and the count above must not stand as an unexplained margin:
+
+- Aaron Márquez (?) — no lower division for AZ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Alex Kolodin (?) — no lower division for AZ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Analise Ortiz (?) — no upper division for AZ "24" — outside the clipped boundary coverage, or a designation mismatch
+- Anna Abeytia (?) — no lower division for AZ "24" — outside the clipped boundary coverage, or a designation mismatch
+- Beverly Pingerelli (?) — no lower division for AZ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Garcia (?) — no lower division for AZ "8" — outside the clipped boundary coverage, or a designation mismatch
+- Carine Werner (?) — no upper division for AZ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Catherine Miranda (?) — no upper division for AZ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Cesar Aguilar (?) — no lower division for AZ "26" — outside the clipped boundary coverage, or a designation mismatch
+- Cody Reim (?) — no lower division for AZ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Dave Farnsworth (?) — no upper division for AZ "10" — outside the clipped boundary coverage, or a designation mismatch
+- David Livingston (?) — no lower division for AZ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Mitzi Epstein (?) — no upper division for AZ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Elda Luna-Nájera (?) — no lower division for AZ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Eva Diaz (?) — no upper division for AZ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Flavio Bravo (?) — no upper division for AZ "26" — outside the clipped boundary coverage, or a designation mismatch
+- Frank Carroll (?) — no upper division for AZ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Hildy Angius (?) — no upper division for AZ "30" — outside the clipped boundary coverage, or a designation mismatch
+- Jake Hoffman (?) — no upper division for AZ "15" — outside the clipped boundary coverage, or a designation mismatch
+- James Taylor (?) — no lower division for AZ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Janae Shamp (?) — no upper division for AZ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Janeen Connolly (?) — no lower division for AZ "8" — outside the clipped boundary coverage, or a designation mismatch
+- J.D. Mesnard (?) — no upper division for AZ "13" — outside the clipped boundary coverage, or a designation mismatch
+- Jeff Weninger (?) — no lower division for AZ "13" — outside the clipped boundary coverage, or a designation mismatch
+- John Gillette (?) — no lower division for AZ "30" — outside the clipped boundary coverage, or a designation mismatch
+- John Kavanagh (?) — no upper division for AZ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Julie Willoughby (?) — no lower division for AZ "13" — outside the clipped boundary coverage, or a designation mismatch
+- Junelle Cavero (?) — no lower division for AZ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Justin Olson (?) — no lower division for AZ "10" — outside the clipped boundary coverage, or a designation mismatch
+- Justin Wilmeth (?) — no lower division for AZ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Kevin Payne (?) — no upper division for AZ "27" — outside the clipped boundary coverage, or a designation mismatch
+- Khyl Powell (?) — no lower division for AZ "14" — outside the clipped boundary coverage, or a designation mismatch
+- Kiana Sears (?) — no upper division for AZ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Lauren Kuby (?) — no upper division for AZ "8" — outside the clipped boundary coverage, or a designation mismatch
+- Laurin Hendrix (?) — no lower division for AZ "14" — outside the clipped boundary coverage, or a designation mismatch
+- Lela Alston (?) — no upper division for AZ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Leo Biasiucci (?) — no lower division for AZ "30" — outside the clipped boundary coverage, or a designation mismatch
+- Lisa Fink (?) — no lower division for AZ "27" — outside the clipped boundary coverage, or a designation mismatch
+- Lorena Austin (?) — no lower division for AZ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Lupe Contreras (?) — no lower division for AZ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Lydia Hernandez (?) — no lower division for AZ "24" — outside the clipped boundary coverage, or a designation mismatch
+- Mae Peshlakai (?) — no lower division for AZ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Finchem (?) — no upper division for AZ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Matt Gress (?) — no lower division for AZ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Carbone (?) — no lower division for AZ "25" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Way (?) — no lower division for AZ "15" — outside the clipped boundary coverage, or a designation mismatch
+- Myron Tsosie (?) — no lower division for AZ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Neal Carter (?) — no lower division for AZ "15" — outside the clipped boundary coverage, or a designation mismatch
+- Nick Kupper (?) — no lower division for AZ "25" — outside the clipped boundary coverage, or a designation mismatch
+- Oscar De Los Santos (?) — no lower division for AZ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Pamela Carter (?) — no lower division for AZ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Patty Contreras (?) — no lower division for AZ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Quang Nguyen (?) — no lower division for AZ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Quantá Crews (?) — no lower division for AZ "26" — outside the clipped boundary coverage, or a designation mismatch
+- Ralph Heap (?) — no lower division for AZ "10" — outside the clipped boundary coverage, or a designation mismatch
+- Sarah Liguori (?) — no lower division for AZ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Selina Bliss (?) — no lower division for AZ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Seth Blattman (?) — no lower division for AZ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Shawnna Bolick (?) — no upper division for AZ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Stacey Travers (?) — no lower division for AZ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Stephanie Simacek (?) — no lower division for AZ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Steve Montenegro (?) — no lower division for AZ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Theresa Hatathlie (?) — no upper division for AZ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Tim Dunn (?) — no upper division for AZ "25" — outside the clipped boundary coverage, or a designation mismatch
+- Tony Rivero (?) — no lower division for AZ "27" — outside the clipped boundary coverage, or a designation mismatch
+- Warren Petersen (?) — no upper division for AZ "14" — outside the clipped boundary coverage, or a designation mismatch
+
 | Official | Office | Page | Contact | Phone | Photo | Campaign |
 |---|---|---|---|---|---|---|
-| Alma Hernández | State Representative | VERIFIED | form | yes | none (license rule) | yes |
-| Betty Villegas | State Representative | VERIFIED | form | yes | none (license rule) | yes |
-| Brian Fernandez | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Chris Lopez | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Chris Mathis | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Consuelo Hernandez | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| David Gowan | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Gail Griffin | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Kevin Volk | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Lupe Diaz | State Representative | VERIFIED | form | yes | none (license rule) | yes |
-| Mariana Sandoval | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Michele Peña | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Nancy Gutierrez | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Priya Sundareshan | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Rachel Keshel | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Rosanna Gabaldón | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Sally Gonzales | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Stephanie Stahl Hamilton | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Sylvia Allen | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Teresa Martinez | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| T.J. Shope | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Vince Leach | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
-| Walt Blackman | State Representative | VERIFIED | form | yes | none (license rule) | not found yet |
-| Wendy Rogers | State Senator | VERIFIED | form | yes | none (license rule) | not found yet |
+| Alma Hernández | State Representative | VERIFIED | email | MISS | none (license rule) | yes |
+| Betty Villegas | State Representative | VERIFIED | email | MISS | none (license rule) | yes |
+| Brian Fernandez | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Chris Lopez | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Chris Mathis | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Consuelo Hernandez | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| David Gowan | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Gail Griffin | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Kevin Volk | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Lupe Diaz | State Representative | VERIFIED | email | MISS | none (license rule) | yes |
+| Mariana Sandoval | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Michele Peña | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Nancy Gutierrez | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Priya Sundareshan | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Rachel Keshel | State Representative | MISS-GENERIC | email | MISS | none (license rule) | not found yet |
+| Rosanna Gabaldón | State Senator | MISS-GENERIC | email | MISS | none (license rule) | not found yet |
+| Sally Gonzales | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Stephanie Stahl Hamilton | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Sylvia Allen | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Teresa Martinez | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| T.J. Shope | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Vince Leach | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Walt Blackman | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Wendy Rogers | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
 
 ## NH — 85 division-linked of 410
 
+**The 325 not audited, named** — a reader cannot open these, and the count above must not stand as an unexplained margin:
+
+- Aboul Khan (?) — no lower division for NH "Rockingham 30" — outside the clipped boundary coverage, or a designation mismatch
+- Adam Presa (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Aidan Ankarberg (?) — no lower division for NH "Strafford 7" — outside the clipped boundary coverage, or a designation mismatch
+- Alexis Simpson (?) — no lower division for NH "Rockingham 33" — outside the clipped boundary coverage, or a designation mismatch
+- Alice Wade (?) — no lower division for NH "Strafford 15" — outside the clipped boundary coverage, or a designation mismatch
+- Alicia Gregg (?) — no lower division for NH "Hillsborough 7" — outside the clipped boundary coverage, or a designation mismatch
+- Alissandra Murray (?) — no lower division for NH "Hillsborough 20" — outside the clipped boundary coverage, or a designation mismatch
+- Allan Howland (?) — no lower division for NH "Strafford 20" — outside the clipped boundary coverage, or a designation mismatch
+- Allison Knab (?) — no lower division for NH "Rockingham 12" — outside the clipped boundary coverage, or a designation mismatch
+- Alvin See (?) — no lower division for NH "Merrimack 26" — outside the clipped boundary coverage, or a designation mismatch
+- Amy Malone (?) — no lower division for NH "Strafford 9" — outside the clipped boundary coverage, or a designation mismatch
+- Andrew Prout (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Anita Burroughs (?) — no lower division for NH "Carroll 2" — outside the clipped boundary coverage, or a designation mismatch
+- Arnie Davis (?) — no lower division for NH "Coos 2" — outside the clipped boundary coverage, or a designation mismatch
+- Barry Faulkner (?) — no lower division for NH "Cheshire 10" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Boyd (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Gannon (?) — no upper division for NH "23" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Ohm (?) — no lower division for NH "Hillsborough 10" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Bolton (?) — no lower division for NH "Grafton 8" — outside the clipped boundary coverage, or a designation mismatch
+- Billie Butler (?) — no lower division for NH "Strafford 12" — outside the clipped boundary coverage, or a designation mismatch
+- Bob Lynn (?) — no lower division for NH "Rockingham 17" — outside the clipped boundary coverage, or a designation mismatch
+- Bobbi Boudman (?) — no lower division for NH "Carroll 7" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Cole (?) — no lower division for NH "Hillsborough 26" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Labrie (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Sullivan (?) — no lower division for NH "Sullivan 1" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Nadeau (?) — no lower division for NH "Rockingham 4" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Taylor (?) — no lower division for NH "Carroll 8" — outside the clipped boundary coverage, or a designation mismatch
+- Buzz Scherr (?) — no lower division for NH "Rockingham 26" — outside the clipped boundary coverage, or a designation mismatch
+- Calvin Beaulier (?) — no lower division for NH "Grafton 1" — outside the clipped boundary coverage, or a designation mismatch
+- Carol McGuire (?) — no lower division for NH "Merrimack 27" — outside the clipped boundary coverage, or a designation mismatch
+- Carrie Sorensen (?) — no lower division for NH "Rockingham 28" — outside the clipped boundary coverage, or a designation mismatch
+- Carry Spier (?) — no lower division for NH "Hillsborough 6" — outside the clipped boundary coverage, or a designation mismatch
+- Cathy Kenny (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Catherine Rombeau (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Catherine Sofikitis (?) — no lower division for NH "Hillsborough 7" — outside the clipped boundary coverage, or a designation mismatch
+- Cathryn Harvey (?) — no lower division for NH "Cheshire 6" — outside the clipped boundary coverage, or a designation mismatch
+- Charles McMahon (?) — no lower division for NH "Rockingham 17" — outside the clipped boundary coverage, or a designation mismatch
+- Charlie Foote (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Charlie Melvin (?) — no lower division for NH "Rockingham 20" — outside the clipped boundary coverage, or a designation mismatch
+- Charlie St. Clair (?) — no lower division for NH "Belknap 5" — outside the clipped boundary coverage, or a designation mismatch
+- Chris Muns (?) — no lower division for NH "Rockingham 29" — outside the clipped boundary coverage, or a designation mismatch
+- Chris McAleer (?) — no lower division for NH "Carroll 2" — outside the clipped boundary coverage, or a designation mismatch
+- Christal Lloyd (?) — no lower division for NH "Hillsborough 8" — outside the clipped boundary coverage, or a designation mismatch
+- Chris Herbert (?) — no lower division for NH "Hillsborough 24" — outside the clipped boundary coverage, or a designation mismatch
+- Cindy Bennett (?) — no lower division for NH "Rockingham 4" — outside the clipped boundary coverage, or a designation mismatch
+- Cindy Rosenwald (?) — no upper division for NH "13" — outside the clipped boundary coverage, or a designation mismatch
+- Claudine Burnham (?) — no lower division for NH "Strafford 2" — outside the clipped boundary coverage, or a designation mismatch
+- Dale Girard (?) — no lower division for NH "Sullivan 6" — outside the clipped boundary coverage, or a designation mismatch
+- Dale Swanson (?) — no lower division for NH "Hillsborough 5" — outside the clipped boundary coverage, or a designation mismatch
+- Dan Bergeron (?) — no lower division for NH "Hillsborough 16" — outside the clipped boundary coverage, or a designation mismatch
+- Dan LeClerc (?) — no lower division for NH "Hillsborough 34" — outside the clipped boundary coverage, or a designation mismatch
+- Daniel Popovici-Muller (?) — no lower division for NH "Rockingham 17" — outside the clipped boundary coverage, or a designation mismatch
+- Dan Veilleux (?) — no lower division for NH "Hillsborough 34" — outside the clipped boundary coverage, or a designation mismatch
+- Darrell Louis (?) — no lower division for NH "Grafton 1" — outside the clipped boundary coverage, or a designation mismatch
+- Daryl Abbas (?) — no upper division for NH "22" — outside the clipped boundary coverage, or a designation mismatch
+- David Love (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- David Lundgren (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- David Milz (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- David Fracht (?) — no lower division for NH "Grafton 16" — outside the clipped boundary coverage, or a designation mismatch
+- David Watters (?) — no upper division for NH "4" — outside the clipped boundary coverage, or a designation mismatch
+- David Meuse (?) — no lower division for NH "Rockingham 37" — outside the clipped boundary coverage, or a designation mismatch
+- David Paige (?) — no lower division for NH "Carroll 1" — outside the clipped boundary coverage, or a designation mismatch
+- David Rochefort (?) — no upper division for NH "1" — outside the clipped boundary coverage, or a designation mismatch
+- David Walker (?) — no lower division for NH "Strafford 19" — outside the clipped boundary coverage, or a designation mismatch
+- Debra Altschiller (?) — no upper division for NH "24" — outside the clipped boundary coverage, or a designation mismatch
+- Debra DeSimone (?) — no lower division for NH "Rockingham 18" — outside the clipped boundary coverage, or a designation mismatch
+- Denis Murphy (?) — no lower division for NH "Cheshire 11" — outside the clipped boundary coverage, or a designation mismatch
+- Denise DeDe-Poulin (?) — no lower division for NH "Strafford 6" — outside the clipped boundary coverage, or a designation mismatch
+- Denise Ricciardi (?) — no upper division for NH "9" — outside the clipped boundary coverage, or a designation mismatch
+- Dennis Malloy (?) — no lower division for NH "Rockingham 24" — outside the clipped boundary coverage, or a designation mismatch
+- Dennis Mannion (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- Diane Kelley (?) — no lower division for NH "Hillsborough 32" — outside the clipped boundary coverage, or a designation mismatch
+- Diane Pauer (?) — no lower division for NH "Hillsborough 36" — outside the clipped boundary coverage, or a designation mismatch
+- Dick Thackston (?) — no lower division for NH "Cheshire 12" — outside the clipped boundary coverage, or a designation mismatch
+- Dillon Dumont (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Donald McFarlane (?) — no lower division for NH "Grafton 18" — outside the clipped boundary coverage, or a designation mismatch
+- Donald Selby (?) — no lower division for NH "Rockingham 9" — outside the clipped boundary coverage, or a designation mismatch
+- Donovan Fenton (?) — no upper division for NH "10" — outside the clipped boundary coverage, or a designation mismatch
+- Douglas Trottier (?) — no lower division for NH "Belknap 8" — outside the clipped boundary coverage, or a designation mismatch
+- Doug Thomas (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Dru Fox (?) — no lower division for NH "Cheshire 2" — outside the clipped boundary coverage, or a designation mismatch
+- Efstathia Booras (?) — no lower division for NH "Hillsborough 8" — outside the clipped boundary coverage, or a designation mismatch
+- Ellen Read (?) — no lower division for NH "Rockingham 10" — outside the clipped boundary coverage, or a designation mismatch
+- Ellen Rockmore (?) — no lower division for NH "Grafton 12" — outside the clipped boundary coverage, or a designation mismatch
+- Eric Turer (?) — no lower division for NH "Rockingham 6" — outside the clipped boundary coverage, or a designation mismatch
+- Erica Layon (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Erica de Vries (?) — no lower division for NH "Rockingham 29" — outside the clipped boundary coverage, or a designation mismatch
+- Erik Johnson (?) — no lower division for NH "Strafford 11" — outside the clipped boundary coverage, or a designation mismatch
+- Erin Kerwin (?) — no lower division for NH "Hillsborough 40" — outside the clipped boundary coverage, or a designation mismatch
+- Fred Davis (?) — no lower division for NH "Hillsborough 3" — outside the clipped boundary coverage, or a designation mismatch
+- Gaby Grossman (?) — no lower division for NH "Rockingham 11" — outside the clipped boundary coverage, or a designation mismatch
+- Gary Gilmore (?) — no lower division for NH "Strafford 16" — outside the clipped boundary coverage, or a designation mismatch
+- Gary Woods (?) — no lower division for NH "Merrimack 30" — outside the clipped boundary coverage, or a designation mismatch
+- Geoff Smith (?) — no lower division for NH "Strafford 21" — outside the clipped boundary coverage, or a designation mismatch
+- George Sykes (?) — no lower division for NH "Grafton 14" — outside the clipped boundary coverage, or a designation mismatch
+- Gerry Griffin (?) — no lower division for NH "Hillsborough 42" — outside the clipped boundary coverage, or a designation mismatch
+- Gerry Ward (?) — no lower division for NH "Rockingham 27" — outside the clipped boundary coverage, or a designation mismatch
+- Glenn Bailey (?) — no lower division for NH "Strafford 2" — outside the clipped boundary coverage, or a designation mismatch
+- Heather Baldwin (?) — no lower division for NH "Grafton 4" — outside the clipped boundary coverage, or a designation mismatch
+- Heather Raymond (?) — no lower division for NH "Hillsborough 5" — outside the clipped boundary coverage, or a designation mismatch
+- Hope Damon (?) — no lower division for NH "Sullivan 8" — outside the clipped boundary coverage, or a designation mismatch
+- J.D. Bernardy (?) — no lower division for NH "Rockingham 36" — outside the clipped boundary coverage, or a designation mismatch
+- Jack Flanagan (?) — no lower division for NH "Hillsborough 45" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Qualey (?) — no lower division for NH "Cheshire 18" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Summers (?) — no lower division for NH "Rockingham 20" — outside the clipped boundary coverage, or a designation mismatch
+- James Thibault (?) — no lower division for NH "Merrimack 25" — outside the clipped boundary coverage, or a designation mismatch
+- James Tierney (?) — no lower division for NH "Coos 1" — outside the clipped boundary coverage, or a designation mismatch
+- Janet Wall (?) — no lower division for NH "Strafford 11" — outside the clipped boundary coverage, or a designation mismatch
+- Janet Lucas (?) — no lower division for NH "Grafton 7" — outside the clipped boundary coverage, or a designation mismatch
+- Jared Sullivan (?) — no lower division for NH "Grafton 2" — outside the clipped boundary coverage, or a designation mismatch
+- Jay Markell (?) — no lower division for NH "Rockingham 18" — outside the clipped boundary coverage, or a designation mismatch
+- Jean Jeudy (?) — no lower division for NH "Hillsborough 23" — outside the clipped boundary coverage, or a designation mismatch
+- Jeanine Notter (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Jeff Tenczar (?) — no lower division for NH "Hillsborough 1" — outside the clipped boundary coverage, or a designation mismatch
+- Jennifer Rhodes (?) — no lower division for NH "Cheshire 17" — outside the clipped boundary coverage, or a designation mismatch
+- Jennifer Mandelbaum (?) — no lower division for NH "Rockingham 21" — outside the clipped boundary coverage, or a designation mismatch
+- Jeremy Slottje (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Jerry Stringham (?) — no lower division for NH "Grafton 3" — outside the clipped boundary coverage, or a designation mismatch
+- Jess Edwards (?) — no lower division for NH "Rockingham 31" — outside the clipped boundary coverage, or a designation mismatch
+- Jessica LaMontagne (?) — no lower division for NH "Strafford 17" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Gruber (?) — no lower division for NH "Cheshire 16" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Kofalt (?) — no lower division for NH "Hillsborough 32" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Snodgrass (?) — no lower division for NH "Merrimack 28" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Maggiore (?) — no lower division for NH "Rockingham 23" — outside the clipped boundary coverage, or a designation mismatch
+- Jodi Newell (?) — no lower division for NH "Cheshire 4" — outside the clipped boundary coverage, or a designation mismatch
+- Jodi Nelson (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Hamblen (?) — no lower division for NH "Carroll 3" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Sweeney (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- John Hunt (?) — no lower division for NH "Cheshire 14" — outside the clipped boundary coverage, or a designation mismatch
+- John Janigian (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- John Larochelle (?) — no lower division for NH "Strafford 19" — outside the clipped boundary coverage, or a designation mismatch
+- John Potucek (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- John Cloutier (?) — no lower division for NH "Sullivan 6" — outside the clipped boundary coverage, or a designation mismatch
+- John Schneller (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- John Stone (?) — no lower division for NH "Strafford 12" — outside the clipped boundary coverage, or a designation mismatch
+- John Suiter (?) — no lower division for NH "Hillsborough 36" — outside the clipped boundary coverage, or a designation mismatch
+- John Sytek (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- John MacDonald (?) — no lower division for NH "Carroll 6" — outside the clipped boundary coverage, or a designation mismatch
+- Jonah Wheeler (?) — no lower division for NH "Hillsborough 33" — outside the clipped boundary coverage, or a designation mismatch
+- Jonathan Smith (?) — no lower division for NH "Carroll 5" — outside the clipped boundary coverage, or a designation mismatch
+- Jordan Ulery (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Guthrie (?) — no lower division for NH "Rockingham 15" — outside the clipped boundary coverage, or a designation mismatch
+- Joseph Barton (?) — no lower division for NH "Grafton 1" — outside the clipped boundary coverage, or a designation mismatch
+- Julie Gilman (?) — no lower division for NH "Rockingham 11" — outside the clipped boundary coverage, or a designation mismatch
+- Julie Miles (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Julius Soti (?) — no lower division for NH "Rockingham 35" — outside the clipped boundary coverage, or a designation mismatch
+- Karel Crawford (?) — no lower division for NH "Carroll 3" — outside the clipped boundary coverage, or a designation mismatch
+- Karen Hegner (?) — no lower division for NH "Hillsborough 41" — outside the clipped boundary coverage, or a designation mismatch
+- Kat McGhee (?) — no lower division for NH "Hillsborough 35" — outside the clipped boundary coverage, or a designation mismatch
+- Kate Murray (?) — no lower division for NH "Rockingham 22" — outside the clipped boundary coverage, or a designation mismatch
+- Katelyn Kuttab (?) — no lower division for NH "Rockingham 17" — outside the clipped boundary coverage, or a designation mismatch
+- Katherine Prudhomme-O'Brien (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Kathi Paquette (?) — no lower division for NH "Hillsborough 25" — outside the clipped boundary coverage, or a designation mismatch
+- Kathy Staub (?) — no lower division for NH "Hillsborough 25" — outside the clipped boundary coverage, or a designation mismatch
+- Katy Peternel (?) — no lower division for NH "Carroll 6" — outside the clipped boundary coverage, or a designation mismatch
+- Keith Ammon (?) — no lower division for NH "Hillsborough 42" — outside the clipped boundary coverage, or a designation mismatch
+- Kelley Potenza (?) — no lower division for NH "Strafford 19" — outside the clipped boundary coverage, or a designation mismatch
+- Ken Weyler (?) — no lower division for NH "Rockingham 14" — outside the clipped boundary coverage, or a designation mismatch
+- Kevin Avard (?) — no upper division for NH "12" — outside the clipped boundary coverage, or a designation mismatch
+- Kevin Scully (?) — no lower division for NH "Hillsborough 8" — outside the clipped boundary coverage, or a designation mismatch
+- Kim Rice (?) — no lower division for NH "Hillsborough 38" — outside the clipped boundary coverage, or a designation mismatch
+- Kristin Noble (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Kris Schultz (?) — no lower division for NH "Merrimack 29" — outside the clipped boundary coverage, or a designation mismatch
+- Kristine Perez (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Larry Gagne (?) — no lower division for NH "Hillsborough 16" — outside the clipped boundary coverage, or a designation mismatch
+- Larry Miner (?) — no lower division for NH "Rockingham 7" — outside the clipped boundary coverage, or a designation mismatch
+- Laura Telerski (?) — no lower division for NH "Hillsborough 11" — outside the clipped boundary coverage, or a designation mismatch
+- Laurel Stavis (?) — no lower division for NH "Grafton 13" — outside the clipped boundary coverage, or a designation mismatch
+- Lee Ann Kluger (?) — no lower division for NH "Hillsborough 6" — outside the clipped boundary coverage, or a designation mismatch
+- Lilli Walsh (?) — no lower division for NH "Rockingham 15" — outside the clipped boundary coverage, or a designation mismatch
+- Lily Foss (?) — no lower division for NH "Hillsborough 41" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Harriott-Gathright (?) — no lower division for NH "Hillsborough 10" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Franz (?) — no lower division for NH "Grafton 6" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Gould (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Linda McGrath (?) — no lower division for NH "Rockingham 40" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Ryan (?) — no lower division for NH "Hillsborough 4" — outside the clipped boundary coverage, or a designation mismatch
+- Lino Avellani (?) — no lower division for NH "Carroll 4" — outside the clipped boundary coverage, or a designation mismatch
+- Lisa Post (?) — no lower division for NH "Hillsborough 42" — outside the clipped boundary coverage, or a designation mismatch
+- Lisa Freeman (?) — no lower division for NH "Belknap 8" — outside the clipped boundary coverage, or a designation mismatch
+- Lisa Mazur (?) — no lower division for NH "Hillsborough 44" — outside the clipped boundary coverage, or a designation mismatch
+- Liz Barbour (?) — no lower division for NH "Hillsborough 35" — outside the clipped boundary coverage, or a designation mismatch
+- Loren Foxx (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Loren Selig (?) — no lower division for NH "Strafford 10" — outside the clipped boundary coverage, or a designation mismatch
+- Lori Korzen (?) — no lower division for NH "Coos 7" — outside the clipped boundary coverage, or a designation mismatch
+- Lorie Ball (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- Lou Juris (?) — no lower division for NH "Hillsborough 7" — outside the clipped boundary coverage, or a designation mismatch
+- Lucius Parshall (?) — no lower division for NH "Cheshire 8" — outside the clipped boundary coverage, or a designation mismatch
+- Lucy Weber (?) — no lower division for NH "Cheshire 5" — outside the clipped boundary coverage, or a designation mismatch
+- Luz Bay (?) — no lower division for NH "Strafford 21" — outside the clipped boundary coverage, or a designation mismatch
+- Manoj Chourasia (?) — no lower division for NH "Hillsborough 11" — outside the clipped boundary coverage, or a designation mismatch
+- Marc Tremblay (?) — no lower division for NH "Coos 5" — outside the clipped boundary coverage, or a designation mismatch
+- Marc Plamondon (?) — no lower division for NH "Hillsborough 3" — outside the clipped boundary coverage, or a designation mismatch
+- Margaret Drye (?) — no lower division for NH "Sullivan 7" — outside the clipped boundary coverage, or a designation mismatch
+- Marie Bjelobrk (?) — no lower division for NH "Grafton 5" — outside the clipped boundary coverage, or a designation mismatch
+- Marjorie Smith (?) — no lower division for NH "Strafford 10" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Vallone (?) — no lower division for NH "Rockingham 5" — outside the clipped boundary coverage, or a designation mismatch
+- Mark McConkey (?) — no upper division for NH "3" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Proulx (?) — no lower division for NH "Hillsborough 15" — outside the clipped boundary coverage, or a designation mismatch
+- Mark McLean (?) — no lower division for NH "Hillsborough 15" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Paige (?) — no lower division for NH "Rockingham 11" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Pearson (?) — no lower division for NH "Rockingham 34" — outside the clipped boundary coverage, or a designation mismatch
+- Mark MacKenzie (?) — no lower division for NH "Hillsborough 40" — outside the clipped boundary coverage, or a designation mismatch
+- Mark Warden (?) — no lower division for NH "Hillsborough 39" — outside the clipped boundary coverage, or a designation mismatch
+- Martin Jack (?) — no lower division for NH "Hillsborough 10" — outside the clipped boundary coverage, or a designation mismatch
+- Mary Hakken-Phillips (?) — no lower division for NH "Grafton 12" — outside the clipped boundary coverage, or a designation mismatch
+- Mary Ford (?) — no lower division for NH "Rockingham 3" — outside the clipped boundary coverage, or a designation mismatch
+- Mary Georges (?) — no lower division for NH "Hillsborough 23" — outside the clipped boundary coverage, or a designation mismatch
+- Matt Drew (?) — no lower division for NH "Hillsborough 19" — outside the clipped boundary coverage, or a designation mismatch
+- Matt Sabourin dit Choinière (?) — no lower division for NH "Rockingham 30" — outside the clipped boundary coverage, or a designation mismatch
+- Matt Coker (?) — no lower division for NH "Belknap 2" — outside the clipped boundary coverage, or a designation mismatch
+- Maureen Mooney (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Megan Murray (?) — no lower division for NH "Hillsborough 37" — outside the clipped boundary coverage, or a designation mismatch
+- Melissa Litchfield (?) — no lower division for NH "Rockingham 32" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Edgar (?) — no lower division for NH "Rockingham 29" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Aron (?) — no lower division for NH "Sullivan 8" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Cahill (?) — no lower division for NH "Rockingham 10" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Harrington (?) — no lower division for NH "Strafford 18" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Granger (?) — no lower division for NH "Strafford 2" — outside the clipped boundary coverage, or a designation mismatch
+- Michael Vose (?) — no lower division for NH "Rockingham 5" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Bordes (?) — no lower division for NH "Belknap 5" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Drago (?) — no lower division for NH "Rockingham 4" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Ouellet (?) — no lower division for NH "Coos 3" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Belcher (?) — no lower division for NH "Carroll 4" — outside the clipped boundary coverage, or a designation mismatch
+- Molly Howard (?) — no lower division for NH "Hillsborough 31" — outside the clipped boundary coverage, or a designation mismatch
+- Myles England (?) — no lower division for NH "Strafford 12" — outside the clipped boundary coverage, or a designation mismatch
+- Nancy Murphy (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Ned Raynolds (?) — no lower division for NH "Rockingham 39" — outside the clipped boundary coverage, or a designation mismatch
+- Nick Germana (?) — no lower division for NH "Cheshire 15" — outside the clipped boundary coverage, or a designation mismatch
+- Nicholas Bridle (?) — no lower division for NH "Rockingham 29" — outside the clipped boundary coverage, or a designation mismatch
+- Nicole Leapley (?) — no lower division for NH "Hillsborough 22" — outside the clipped boundary coverage, or a designation mismatch
+- Paige Beauchemin (?) — no lower division for NH "Hillsborough 3" — outside the clipped boundary coverage, or a designation mismatch
+- Pam Brown (?) — no lower division for NH "Rockingham 14" — outside the clipped boundary coverage, or a designation mismatch
+- Patricia Cornell (?) — no lower division for NH "Hillsborough 22" — outside the clipped boundary coverage, or a designation mismatch
+- Patrick Long (?) — no lower division for NH "Hillsborough 26" — outside the clipped boundary coverage, or a designation mismatch
+- Paul Dargie (?) — no lower division for NH "Hillsborough 43" — outside the clipped boundary coverage, or a designation mismatch
+- Paul Berch (?) — no lower division for NH "Cheshire 6" — outside the clipped boundary coverage, or a designation mismatch
+- Peggy Balboni (?) — no lower division for NH "Rockingham 38" — outside the clipped boundary coverage, or a designation mismatch
+- Peter Schmidt (?) — no lower division for NH "Strafford 14" — outside the clipped boundary coverage, or a designation mismatch
+- Peter Lovett (?) — no lower division for NH "Grafton 8" — outside the clipped boundary coverage, or a designation mismatch
+- Pete Morency (?) — no lower division for NH "Coos 5" — outside the clipped boundary coverage, or a designation mismatch
+- Peter Petrigno (?) — no lower division for NH "Hillsborough 43" — outside the clipped boundary coverage, or a designation mismatch
+- Peter Leishman (?) — no lower division for NH "Hillsborough 33" — outside the clipped boundary coverage, or a designation mismatch
+- Peter Bixby (?) — no lower division for NH "Strafford 13" — outside the clipped boundary coverage, or a designation mismatch
+- Philip Jones (?) — no lower division for NH "Cheshire 3" — outside the clipped boundary coverage, or a designation mismatch
+- Phyllis Katsakiores (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Pierre DuPont (?) — no lower division for NH "Hillsborough 20" — outside the clipped boundary coverage, or a designation mismatch
+- Ralph Boehm (?) — no lower division for NH "Hillsborough 38" — outside the clipped boundary coverage, or a designation mismatch
+- Ray Newman (?) — no lower division for NH "Hillsborough 4" — outside the clipped boundary coverage, or a designation mismatch
+- Ray Peeples (?) — no lower division for NH "Hillsborough 14" — outside the clipped boundary coverage, or a designation mismatch
+- Ray Plante (?) — no lower division for NH "Merrimack 27" — outside the clipped boundary coverage, or a designation mismatch
+- Rebecca Perkins Kwoka (?) — no upper division for NH "21" — outside the clipped boundary coverage, or a designation mismatch
+- Regina Birdsell (?) — no upper division for NH "19" — outside the clipped boundary coverage, or a designation mismatch
+- Rich Nalevanko (?) — no lower division for NH "Cheshire 9" — outside the clipped boundary coverage, or a designation mismatch
+- Dick Ames (?) — no lower division for NH "Cheshire 13" — outside the clipped boundary coverage, or a designation mismatch
+- Richard Tripp (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Richard Brown (?) — no lower division for NH "Carroll 8" — outside the clipped boundary coverage, or a designation mismatch
+- Rich Lascelles (?) — no lower division for NH "Hillsborough 14" — outside the clipped boundary coverage, or a designation mismatch
+- Rick Ladd (?) — no lower division for NH "Grafton 5" — outside the clipped boundary coverage, or a designation mismatch
+- Rita Mattson (?) — no lower division for NH "Cheshire 18" — outside the clipped boundary coverage, or a designation mismatch
+- Bob Harb (?) — no lower division for NH "Rockingham 20" — outside the clipped boundary coverage, or a designation mismatch
+- Robert Wherry (?) — no lower division for NH "Hillsborough 13" — outside the clipped boundary coverage, or a designation mismatch
+- Robley Hall (?) — no lower division for NH "Strafford 1" — outside the clipped boundary coverage, or a designation mismatch
+- Ron Dunn (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Rosemarie Rung (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Ross Berry (?) — no lower division for NH "Hillsborough 44" — outside the clipped boundary coverage, or a designation mismatch
+- Russ Muirhead (?) — no lower division for NH "Grafton 12" — outside the clipped boundary coverage, or a designation mismatch
+- Sallie Fellows (?) — no lower division for NH "Grafton 8" — outside the clipped boundary coverage, or a designation mismatch
+- Sam Farrington (?) — no lower division for NH "Strafford 8" — outside the clipped boundary coverage, or a designation mismatch
+- Samantha Jacobs (?) — no lower division for NH "Cheshire 15" — outside the clipped boundary coverage, or a designation mismatch
+- Sanjeev Manohar (?) — no lower division for NH "Hillsborough 9" — outside the clipped boundary coverage, or a designation mismatch
+- Santosh Salvi (?) — no lower division for NH "Hillsborough 9" — outside the clipped boundary coverage, or a designation mismatch
+- Sayra DeVito (?) — no lower division for NH "Rockingham 8" — outside the clipped boundary coverage, or a designation mismatch
+- Sean Durkin (?) — no lower division for NH "Coos 1" — outside the clipped boundary coverage, or a designation mismatch
+- Seth King (?) — no lower division for NH "Coos 4" — outside the clipped boundary coverage, or a designation mismatch
+- Seth Miller (?) — no lower division for NH "Strafford 21" — outside the clipped boundary coverage, or a designation mismatch
+- Shane Sirois (?) — no lower division for NH "Hillsborough 32" — outside the clipped boundary coverage, or a designation mismatch
+- Sheri Minor (?) — no lower division for NH "Belknap 5" — outside the clipped boundary coverage, or a designation mismatch
+- Sherm Packard (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Skip Rollins (?) — no lower division for NH "Sullivan 3" — outside the clipped boundary coverage, or a designation mismatch
+- Sly Karasinski (?) — no lower division for NH "Cheshire 10" — outside the clipped boundary coverage, or a designation mismatch
+- Stephanie Grund (?) — no lower division for NH "Hillsborough 34" — outside the clipped boundary coverage, or a designation mismatch
+- Steve Pearson (?) — no lower division for NH "Rockingham 13" — outside the clipped boundary coverage, or a designation mismatch
+- Steve Woodcock (?) — no lower division for NH "Carroll 1" — outside the clipped boundary coverage, or a designation mismatch
+- Steven Smith (?) — no lower division for NH "Sullivan 3" — outside the clipped boundary coverage, or a designation mismatch
+- Steve Bogert (?) — no lower division for NH "Belknap 5" — outside the clipped boundary coverage, or a designation mismatch
+- Sue DeLemus (?) — no lower division for NH "Strafford 1" — outside the clipped boundary coverage, or a designation mismatch
+- Sue Newman (?) — no lower division for NH "Hillsborough 4" — outside the clipped boundary coverage, or a designation mismatch
+- Susan Elberger (?) — no lower division for NH "Hillsborough 5" — outside the clipped boundary coverage, or a designation mismatch
+- Susan DeRoy (?) — no lower division for NH "Strafford 3" — outside the clipped boundary coverage, or a designation mismatch
+- Sue Vandecasteele (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- Susan Porcelli (?) — no lower division for NH "Rockingham 19" — outside the clipped boundary coverage, or a designation mismatch
+- Susan Almy (?) — no lower division for NH "Grafton 17" — outside the clipped boundary coverage, or a designation mismatch
+- Suzanne Chretien (?) — no lower division for NH "Hillsborough 19" — outside the clipped boundary coverage, or a designation mismatch
+- Tanya Donnelly (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- Ted Gorski (?) — no lower division for NH "Hillsborough 2" — outside the clipped boundary coverage, or a designation mismatch
+- Terri O'Rorke (?) — no lower division for NH "Cheshire 7" — outside the clipped boundary coverage, or a designation mismatch
+- Terry Roy (?) — no lower division for NH "Rockingham 31" — outside the clipped boundary coverage, or a designation mismatch
+- Terry Spahr (?) — no lower division for NH "Grafton 12" — outside the clipped boundary coverage, or a designation mismatch
+- Tom Cormen (?) — no lower division for NH "Grafton 15" — outside the clipped boundary coverage, or a designation mismatch
+- Tom Buco (?) — no lower division for NH "Carroll 1" — outside the clipped boundary coverage, or a designation mismatch
+- Thomas Kaczynski (?) — no lower division for NH "Strafford 5" — outside the clipped boundary coverage, or a designation mismatch
+- Tom Southworth (?) — no lower division for NH "Strafford 11" — outside the clipped boundary coverage, or a designation mismatch
+- Thomas Oppel (?) — no lower division for NH "Grafton 9" — outside the clipped boundary coverage, or a designation mismatch
+- Tim Hartnett (?) — no lower division for NH "Hillsborough 41" — outside the clipped boundary coverage, or a designation mismatch
+- Tim Mannion (?) — no lower division for NH "Hillsborough 1" — outside the clipped boundary coverage, or a designation mismatch
+- Tim McGough (?) — no upper division for NH "11" — outside the clipped boundary coverage, or a designation mismatch
+- Timothy Horrigan (?) — no lower division for NH "Strafford 10" — outside the clipped boundary coverage, or a designation mismatch
+- Tom Mannion (?) — no lower division for NH "Hillsborough 1" — outside the clipped boundary coverage, or a designation mismatch
+- Tom Dolan (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Toni Weinstein (?) — no lower division for NH "Rockingham 10" — outside the clipped boundary coverage, or a designation mismatch
+- Trinidad Tellez (?) — no lower division for NH "Hillsborough 40" — outside the clipped boundary coverage, or a designation mismatch
+- Valerie McDonnell (?) — no lower division for NH "Rockingham 25" — outside the clipped boundary coverage, or a designation mismatch
+- Vanessa Sheehan (?) — no lower division for NH "Hillsborough 43" — outside the clipped boundary coverage, or a designation mismatch
+- Vicki Wilson (?) — no lower division for NH "Rockingham 9" — outside the clipped boundary coverage, or a designation mismatch
+- Victoria Sullivan (?) — no upper division for NH "18" — outside the clipped boundary coverage, or a designation mismatch
+- Terry Spilsbury (?) — no lower division for NH "Sullivan 3" — outside the clipped boundary coverage, or a designation mismatch
+- Wayne MacDonald (?) — no lower division for NH "Rockingham 16" — outside the clipped boundary coverage, or a designation mismatch
+- Wayne Hemingway (?) — no lower division for NH "Sullivan 6" — outside the clipped boundary coverage, or a designation mismatch
+- Wayne Burton (?) — no lower division for NH "Strafford 10" — outside the clipped boundary coverage, or a designation mismatch
+- Wayne Pearson (?) — no lower division for NH "Strafford 12" — outside the clipped boundary coverage, or a designation mismatch
+- Wendy Thomas (?) — no lower division for NH "Hillsborough 12" — outside the clipped boundary coverage, or a designation mismatch
+- Will Darby (?) — no lower division for NH "Hillsborough 11" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Dolan (?) — no lower division for NH "Hillsborough 9" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Palmer (?) — no lower division for NH "Sullivan 2" — outside the clipped boundary coverage, or a designation mismatch
+- Zoe Manos (?) — no lower division for NH "Rockingham 12" — outside the clipped boundary coverage, or a designation mismatch
+
 | Official | Office | Page | Contact | Phone | Photo | Campaign |
 |---|---|---|---|---|---|---|
-| Barbara Comtois | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Beth Richards | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Brian Seaworth | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Bryan Morse | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
+| Barbara Comtois | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Beth Richards | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Brian Seaworth | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Bryan Morse | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Cassandra Levesque | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
-| Christine Seibert | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Clayton Wood | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Connie Lane | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Cy Aures | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Dan McGuire | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Dan Innis | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Dave Nagel | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| David Preece | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| David Luneau | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Deborah Aylward | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Eileen Kelly | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Eleana Colby | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Eric Gallager | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Ernesto Gonzalez | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| George Grant | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Glen Aldrich | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Greg Sargent | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Greg Hill | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Heath Howard | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Henry Giasson | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Howard Pearl | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jim Spillane | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| James Roesener | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| James Newsom | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| James Gray | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jim MacKay | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jason Osborne | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jessica Grill | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jim Fedolfi | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jim Guzofski | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jim Creighton | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Joe Alexander | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| John Leavitt | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| John Sellers | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Jose Cambrils | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Judy Aron | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Juliet Harvey-Bolia | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Karen Ebel | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Keith Erf | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Keith Murphy | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Kevin Verville | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Len Turcotte | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Lex Berezhny | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Linda DiSilvestro | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Louise Andrus | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Mary Jane Wallner | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Mary Murphy | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Matt Wilhelm | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Matthew Pitaro | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Matthew Hicks | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Merryl Gibbs | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Mike Moffett | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Muriel Hall | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Pat Long | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Paul Terry | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Paul Tudor | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Peter Mehegan | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Peter Varney | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Riché Colcombe | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Rick Devoid | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Russ Dumais | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Ruth Ward | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Scott Bryer | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Sharon Carson | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Sherri Reinfurt | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Stephanie Payeur | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Stephen Boyd | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Steve Kesselring | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Sue Prentiss | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tara Reardon | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tom Schamberg | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Thomas Walsh | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Timothy Soucy | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tim Lang | State Senator | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tom Ploszaj | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tony Caplan | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Tracy Bricchi | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Travis Corcoran | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Travis Toner | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
-| Yury Polozov | State Representative | UNVERIFIABLE-INLINE | email | MISS | none (license rule) | not found yet |
+| Christine Seibert | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Clayton Wood | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Connie Lane | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Cy Aures | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Dan McGuire | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Dan Innis | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Dave Nagel | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| David Preece | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| David Luneau | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Deborah Aylward | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Eileen Kelly | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Eleana Colby | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Eric Gallager | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Ernesto Gonzalez | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| George Grant | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Glen Aldrich | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Greg Sargent | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Greg Hill | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Heath Howard | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Henry Giasson | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Howard Pearl | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jim Spillane | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| James Roesener | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| James Newsom | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| James Gray | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jim MacKay | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jason Osborne | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jessica Grill | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jim Fedolfi | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jim Guzofski | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jim Creighton | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Joe Alexander | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| John Leavitt | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| John Sellers | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Jose Cambrils | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Judy Aron | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Juliet Harvey-Bolia | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Karen Ebel | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Keith Erf | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Keith Murphy | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Kevin Verville | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Len Turcotte | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Lex Berezhny | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Linda DiSilvestro | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Louise Andrus | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Mary Jane Wallner | State Representative | MISS-GENERIC | email | MISS | none (license rule) | not found yet |
+| Mary Murphy | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Matt Wilhelm | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Matthew Pitaro | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Matthew Hicks | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Merryl Gibbs | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Mike Moffett | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Muriel Hall | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Pat Long | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Paul Terry | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Paul Tudor | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Peter Mehegan | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Peter Varney | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Riché Colcombe | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Rick Devoid | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Russ Dumais | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Ruth Ward | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Scott Bryer | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Sharon Carson | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Sherri Reinfurt | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Stephanie Payeur | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Stephen Boyd | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Steve Kesselring | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Sue Prentiss | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tara Reardon | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tom Schamberg | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Thomas Walsh | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Timothy Soucy | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tim Lang | State Senator | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tom Ploszaj | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tony Caplan | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Tracy Bricchi | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Travis Corcoran | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Travis Toner | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Yury Polozov | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 
 ## NJ — 21 division-linked of 120
 
+**The 99 not audited, named** — a reader cannot open these, and the count above must not stand as an unexplained margin:
+
+- Al Abdelaziz (?) — no lower division for NJ "35" — outside the clipped boundary coverage, or a designation mismatch
+- Alex Sauickie (?) — no lower division for NJ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Andrea Katz (?) — no lower division for NJ "8" — outside the clipped boundary coverage, or a designation mismatch
+- Andrew Zwicker (?) — no upper division for NJ "16" — outside the clipped boundary coverage, or a designation mismatch
+- Angela McKnight (?) — no upper division for NJ "31" — outside the clipped boundary coverage, or a designation mismatch
+- Annette Quijano (?) — no lower division for NJ "20" — outside the clipped boundary coverage, or a designation mismatch
+- Anthony Angelozzi (?) — no lower division for NJ "8" — outside the clipped boundary coverage, or a designation mismatch
+- Anthony Verrelli (?) — no lower division for NJ "15" — outside the clipped boundary coverage, or a designation mismatch
+- Antwan McClellan (?) — no lower division for NJ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Avi Schnall (?) — no lower division for NJ "30" — outside the clipped boundary coverage, or a designation mismatch
+- Balvir Singh (?) — no lower division for NJ "7" — outside the clipped boundary coverage, or a designation mismatch
+- Benjie Wimberly (?) — no upper division for NJ "35" — outside the clipped boundary coverage, or a designation mismatch
+- Bob Smith (?) — no upper division for NJ "17" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Rumpf (?) — no lower division for NJ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Brian Stack (?) — no upper division for NJ "33" — outside the clipped boundary coverage, or a designation mismatch
+- Britnee Timberlake (?) — no upper division for NJ "34" — outside the clipped boundary coverage, or a designation mismatch
+- Carmen Amato (?) — no upper division for NJ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Carmen Morales (?) — no lower division for NJ "34" — outside the clipped boundary coverage, or a designation mismatch
+- Carol Murphy (?) — no lower division for NJ "7" — outside the clipped boundary coverage, or a designation mismatch
+- Chigozie Onyema (?) — no lower division for NJ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Cleopatra Tucker (?) — no lower division for NJ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Clinton Calabrese (?) — no lower division for NJ "36" — outside the clipped boundary coverage, or a designation mismatch
+- Cody Miller (?) — no lower division for NJ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Craig Coughlin (?) — no lower division for NJ "19" — outside the clipped boundary coverage, or a designation mismatch
+- Dan Hutchison (?) — no lower division for NJ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Dave Bailey (?) — no lower division for NJ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Declan O'Scanlon (?) — no upper division for NJ "13" — outside the clipped boundary coverage, or a designation mismatch
+- Don Guardian (?) — no lower division for NJ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Ed Rodriguez (?) — no lower division for NJ "20" — outside the clipped boundary coverage, or a designation mismatch
+- Eliana Pintor Marin (?) — no lower division for NJ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Ellen Park (?) — no lower division for NJ "37" — outside the clipped boundary coverage, or a designation mismatch
+- Erik Simonsen (?) — no lower division for NJ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Gabe Rodriguez (?) — no lower division for NJ "33" — outside the clipped boundary coverage, or a designation mismatch
+- Gary Schaer (?) — no lower division for NJ "36" — outside the clipped boundary coverage, or a designation mismatch
+- Gerry Scharfenberger (?) — no lower division for NJ "13" — outside the clipped boundary coverage, or a designation mismatch
+- Gordon Johnson (?) — no upper division for NJ "37" — outside the clipped boundary coverage, or a designation mismatch
+- Greg Myhre (?) — no lower division for NJ "9" — outside the clipped boundary coverage, or a designation mismatch
+- Greg McGuckin (?) — no lower division for NJ "10" — outside the clipped boundary coverage, or a designation mismatch
+- Heather Simmons (?) — no lower division for NJ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Holly Schepisi (?) — no upper division for NJ "39" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Beach (?) — no upper division for NJ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Kennedy (?) — no lower division for NJ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Jim Holzapfel (?) — no upper division for NJ "10" — outside the clipped boundary coverage, or a designation mismatch
+- Jerry Walker (?) — no lower division for NJ "31" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Danielsen (?) — no lower division for NJ "17" — outside the clipped boundary coverage, or a designation mismatch
+- John Azzariti (?) — no lower division for NJ "39" — outside the clipped boundary coverage, or a designation mismatch
+- John Burzichelli (?) — no upper division for NJ "3" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Lagana (?) — no upper division for NJ "38" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Vitale (?) — no upper division for NJ "19" — outside the clipped boundary coverage, or a designation mismatch
+- Joe Cryan (?) — no upper division for NJ "20" — outside the clipped boundary coverage, or a designation mismatch
+- Katie Brennan (?) — no lower division for NJ "32" — outside the clipped boundary coverage, or a designation mismatch
+- Kenyatta Stewart (?) — no lower division for NJ "35" — outside the clipped boundary coverage, or a designation mismatch
+- Kevin Egan (?) — no lower division for NJ "17" — outside the clipped boundary coverage, or a designation mismatch
+- Larry Wainstein (?) — no lower division for NJ "33" — outside the clipped boundary coverage, or a designation mismatch
+- Latham Tiver (?) — no upper division for NJ "8" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Greenstein (?) — no upper division for NJ "14" — outside the clipped boundary coverage, or a designation mismatch
+- Linda Carter (?) — no lower division for NJ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Lisa Swain (?) — no lower division for NJ "38" — outside the clipped boundary coverage, or a designation mismatch
+- Lou Greenwald (?) — no lower division for NJ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Luanne Peterpaul (?) — no lower division for NJ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Teresa Ruiz (?) — no upper division for NJ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Margie Donlon (?) — no lower division for NJ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Maureen Rowan (?) — no lower division for NJ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Melinda Kane (?) — no lower division for NJ "6" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Testa (?) — no upper division for NJ "1" — outside the clipped boundary coverage, or a designation mismatch
+- Mike Venezia (?) — no lower division for NJ "34" — outside the clipped boundary coverage, or a designation mismatch
+- Mitchelle Drulis (?) — no lower division for NJ "16" — outside the clipped boundary coverage, or a designation mismatch
+- Nick Scutari (?) — no upper division for NJ "22" — outside the clipped boundary coverage, or a designation mismatch
+- Nilsa Cruz-Perez (?) — no upper division for NJ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Owen Henry (?) — no upper division for NJ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Chris Tully (?) — no lower division for NJ "38" — outside the clipped boundary coverage, or a designation mismatch
+- Patrick Diegnan (?) — no upper division for NJ "18" — outside the clipped boundary coverage, or a designation mismatch
+- Paul Sarlo (?) — no upper division for NJ "36" — outside the clipped boundary coverage, or a designation mismatch
+- Paul Moriarty (?) — no upper division for NJ "4" — outside the clipped boundary coverage, or a designation mismatch
+- Paul Kanitra (?) — no lower division for NJ "10" — outside the clipped boundary coverage, or a designation mismatch
+- Raj Mukherji (?) — no upper division for NJ "32" — outside the clipped boundary coverage, or a designation mismatch
+- Ravi Bhalla (?) — no lower division for NJ "32" — outside the clipped boundary coverage, or a designation mismatch
+- Renee Burgess (?) — no upper division for NJ "28" — outside the clipped boundary coverage, or a designation mismatch
+- Bob Auth (?) — no lower division for NJ "39" — outside the clipped boundary coverage, or a designation mismatch
+- Rob Clifton (?) — no lower division for NJ "12" — outside the clipped boundary coverage, or a designation mismatch
+- Robert Karabinchak (?) — no lower division for NJ "18" — outside the clipped boundary coverage, or a designation mismatch
+- Bob Singer (?) — no upper division for NJ "30" — outside the clipped boundary coverage, or a designation mismatch
+- Roy Freiman (?) — no lower division for NJ "16" — outside the clipped boundary coverage, or a designation mismatch
+- Sean Kean (?) — no lower division for NJ "30" — outside the clipped boundary coverage, or a designation mismatch
+- Shama Haider (?) — no lower division for NJ "37" — outside the clipped boundary coverage, or a designation mismatch
+- Shanique Speight (?) — no lower division for NJ "29" — outside the clipped boundary coverage, or a designation mismatch
+- Shirley Turner (?) — no upper division for NJ "15" — outside the clipped boundary coverage, or a designation mismatch
+- Sterley Stanley (?) — no lower division for NJ "18" — outside the clipped boundary coverage, or a designation mismatch
+- Tennille McCoy (?) — no lower division for NJ "14" — outside the clipped boundary coverage, or a designation mismatch
+- Troy Singleton (?) — no upper division for NJ "7" — outside the clipped boundary coverage, or a designation mismatch
+- Verlina Reynolds-Jackson (?) — no lower division for NJ "15" — outside the clipped boundary coverage, or a designation mismatch
+- Vicky Flynn (?) — no lower division for NJ "13" — outside the clipped boundary coverage, or a designation mismatch
+- Vin Gopal (?) — no upper division for NJ "11" — outside the clipped boundary coverage, or a designation mismatch
+- Vince Polistina (?) — no upper division for NJ "2" — outside the clipped boundary coverage, or a designation mismatch
+- Wayne DeAngelo (?) — no lower division for NJ "14" — outside the clipped boundary coverage, or a designation mismatch
+- Will Sampson (?) — no lower division for NJ "31" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Moen (?) — no lower division for NJ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Bill Spearman (?) — no lower division for NJ "5" — outside the clipped boundary coverage, or a designation mismatch
+- Yvonne Lopez (?) — no lower division for NJ "19" — outside the clipped boundary coverage, or a designation mismatch
+
 | Official | Office | Page | Contact | Phone | Photo | Campaign |
 |---|---|---|---|---|---|---|
-| Al Barlas | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Alixon Collazos-Gill | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Andrew Macurdy | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Tony Bucco | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Aura Dunn | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Brian Bergen | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Chris DePhillips | Assemblymember | VERIFIED-VIA-ROSTER | form | MISS | none (license rule) | not found yet |
-| Dawn Fantasia | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Doug Steinhardt | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Erik Peterson | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Jay Webber | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| John DiMaio | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| John McKeon | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Jon Bramnick | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Joe Pennacchio | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Kristin Corrado | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Marisa Sweeney | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Mike Inganamort | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Parker Space | State Senator | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Rosy Bagolie | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
-| Vinnie Kearney | Assemblymember | VERIFIED-VIA-ROSTER | form | yes | none (license rule) | not found yet |
+| Al Barlas | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Alixon Collazos-Gill | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Andrew Macurdy | Assemblymember | VERIFIED-VIA-ROSTER | email | yes | none (license rule) | not found yet |
+| Tony Bucco | State Senator | VERIFIED | email | yes | none (license rule) | not found yet |
+| Aura Dunn | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Brian Bergen | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Chris DePhillips | Assemblymember | VERIFIED | email | MISS | none (license rule) | not found yet |
+| Dawn Fantasia | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Doug Steinhardt | State Senator | VERIFIED | email | yes | none (license rule) | not found yet |
+| Erik Peterson | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Jay Webber | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| John DiMaio | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| John McKeon | State Senator | MISS-404 | email | yes | none (license rule) | not found yet |
+| Jon Bramnick | State Senator | VERIFIED | email | yes | none (license rule) | not found yet |
+| Joe Pennacchio | State Senator | VERIFIED | email | yes | none (license rule) | not found yet |
+| Kristin Corrado | State Senator | VERIFIED | email | yes | none (license rule) | not found yet |
+| Marisa Sweeney | Assemblymember | VERIFIED-VIA-ROSTER | email | yes | none (license rule) | not found yet |
+| Mike Inganamort | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Parker Space | State Senator | MISS-404 | email | yes | none (license rule) | not found yet |
+| Rosy Bagolie | Assemblymember | VERIFIED | email | yes | none (license rule) | not found yet |
+| Vinnie Kearney | Assemblymember | VERIFIED-VIA-ROSTER | email | yes | none (license rule) | not found yet |
 
 ## Totals
 
-661 officials audited: 577 pages verified (556 fetch-verified by content, 21 VERIFIED-VIA-ROSTER — njleg bio pages are client-rendered SPAs, so the chain is the legislature's server-rendered roster naming the member beside the link), 0 page misses, 84 unverifiable inline (gc.nh.gov TLS wall — the recorded rung, not a pass). Totals line corrected by hand 2026-08-16 after fixing the script's counter, which had classed VERIFIED-VIA-ROSTER as a miss; the per-row verdicts above are the generated record.
+661 officials audited: 655 pages fetch-verified, 6 page misses, 0 unverifiable inline as of 2026-08-21 — see each row for the rung it stopped at.
 

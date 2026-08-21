@@ -129,7 +129,8 @@
     "nh:legislator": "tsx scripts/nh-legislator.mts",
     "bodies:enumerate": "tsx scripts/enumerate-town-bodies.mts",
     "watch:workflows": "tsx scripts/watch-workflows.mts",
-    "stale": "tsx scripts/stale.mts"
+    "stale": "tsx scripts/stale.mts",
+    "nh:roster": "tsx scripts/nh-roster-branch.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

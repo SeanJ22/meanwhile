@@ -1,0 +1,485 @@
+{
+  "note": "RULING 55 (2026-08-21) — a photo never blocks anything, and every photo is reviewed by Sean. Only an APPROVED photo renders; a PENDING one renders initials, which this product treats as a success. Nothing else on the card is affected by any of this: name, party, blurb, contacts, filed address, funding and votes render exactly as they would if no photo had ever been found. This is a CORRECTNESS gate on one field, never a completeness gate on a card — see lib/photos/review.ts for why the distinction is the rule. A REJECTED photo is a branch result under RULING 52: this image is not this person, and nothing about whether a correct portrait exists.",
+  "builtAt": "2026-08-21",
+  "counts": {
+    "rejected": 5,
+    "grandfathered": 48,
+    "people": 51,
+    "decisions": 53
+  },
+  "reviews": {
+    "VICTOR ORLANDO": [
+      {
+        "state": "REJECTED",
+        "url": "https://victororlando.com/images/headshots/victor-formal.jpg",
+        "reason": "Read as an image 2026-08-21: a stock photograph of the United States flag against a blue sky. There is no person in it. The filename, the path (/images/headshots/) and the alt text ('Victor Orlando') all say formal headshot. A hunt that trusted any of the three would have shipped a flag as this man's face.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "Sean (the author's standing composition and licence rules)"
+      }
+    ],
+    "JASON GERHARD": [
+      {
+        "state": "REJECTED",
+        "url": "og:image and twitter:image on the candidate's own site (same file)",
+        "reason": "Read as an image 2026-08-21: a scanned cover of a 1978 New Hampshire Grand Jury manual, not a portrait. A hunt that trusted og:image would have shipped a library document as this man's face.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "Sean (the author's standing composition and licence rules)"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-sheriff-gerhard-jason.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "KARISHMA MANZUR": [
+      {
+        "state": "REJECTED",
+        "url": "og:image on karishmaforsenate.com",
+        "reason": "Read as an image 2026-08-21: her photograph beside a wordmark reading 'KARISHMA MANZUR / US SENATE' over a state outline. The composition standard forbids a banner and a wordmark by name, and this is both. The standards never move, at any door.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "Sean (the author's standing composition and licence rules)"
+      }
+    ],
+    "KARISHMA MANZUR SECOND IMAGE": [
+      {
+        "state": "REJECTED",
+        "url": "https://karishmaforsenate.com/Monkman_Manzur_Campaign_022.jpg",
+        "reason": "The filename carries a PHOTOGRAPHER'S credit. Photographer-credited images are prohibited at EVERY door — that is the demand-letter class and no door reaches it. A working photographer's copyright is not narrowed by where the image was reposted.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "Sean (the author's standing composition and licence rules)"
+      }
+    ],
+    "KELLY AYOTTE": [
+      {
+        "state": "REJECTED",
+        "url": "KellyAyotteForNH_WinRed_WebsitePullTrough_v2-1.jpg",
+        "reason": "A campaign graphic with logo text, not a portrait. Refused 2026-08-14 when the composition standard was tightened; recorded here because it is the same class as the three NH Hunt 2 caught and the store is the record.",
+        "decidedAt": "2026-08-14",
+        "decidedBy": "Sean (the author's standing composition and licence rules)"
+      },
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-nh-governor.png",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "CINDE WARMINGTON": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-governor-warmington-cinde.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "CHRIS PAPPAS": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/P000614.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "P SCOTT BROWN": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-senate-brown-scott-p-.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "E JOHN SUNUNU": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-senate-sununu-john-e-.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "LILY WILLIAMS TANG": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-house-2-tang-williams-lily.png",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "M GREGORY SARGENT": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "KAREN HILL LIOT": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "BOOKER": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-senate-booker.png",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "MURPHY": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-senate-murphy.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "MEJIA": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/M001246.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "SELEN": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-county-commissioner-selen.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "KATIE HOBBS": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/statewide-az-governor.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ANDY BIGGS": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/B001302.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "MAGGIE GOODLANDER": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/G000604.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "DAVID SCHWEIKERT": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/S001183.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "JUAN CISCOMANI": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/C001133.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ADRIAN FONTES": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "KRIS MAYES": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "GAIL GRIFFIN": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-1e39adcf-868d-4722-a07b-09fcd36ad9ed.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ALMA HERNANDEZ": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-6dba6afa-b274-4273-b8c6-270d27214eee.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "LUPE DIAZ": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-bc52f516-a13b-4490-a12c-7b98fa3969e5.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "DAVID GOWAN": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-51520de4-0e87-475b-91d2-99aa18addf72.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ANN SALLY GONZALES": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "SALLY ANN GONZALES": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "BETTY VILLEGAS": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-81d12f3a-b635-4111-be8d-a71d2f7565f2.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ADELITA GRIJALVA": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/G000606.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "WARREN PETERSEN": [
+      {
+        "state": "APPROVED",
+        "url": "/officials/plural-66e496a4-a407-4af1-add3-ef6899b89807.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "KIMBERLY YEE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ALEXANDER KOLODIN": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "TOM HORNE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-superintendent-horne-tom.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "NICK MANSOUR": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "TERESA LEYBA RUIZ": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "FERNANDEZ": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-senate-fernandez.png",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "TERESA RUIZ LEYBA": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "TERI ANN HOURIHAN": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-governor-hourihan-teri-ann.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "WALTER LES PRESMYK": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "RISA LOMBARDO": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/az-pima-governor-lombardo-risa.png",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "SAMANTHA MORSE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-register-of-deeds-morse-samantha.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "E DANIEL INNIS": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-state-senate-7-innis-daniel.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "ELIZABETH KAREN EBEL": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-state-house-merrimack-7-ebel-karen.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "PETER SHEPHARD": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-sheriff-shephard-peter.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "L MAXWELL SAAL": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-senate-saal-maxwell.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "F HAROLD FRENCH": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-commissioner-2-french-harold.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "SARAH ROGERS": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-attorney-rogers-sarah.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "SKY DANLEY": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-senate-danley-sky.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ],
+    "TOM ALCIERE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-us-senate-alciere-tom.jpg",
+        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
+        "decidedAt": "2026-08-21",
+        "decidedBy": "grandfathered"
+      }
+    ]
+  }
+}

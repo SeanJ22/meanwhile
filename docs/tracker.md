@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **155 open**, 321 resolved.
-- **40 waiting on Sean** — the first section below.
+- **156 open**, 321 resolved.
+- **41 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **2**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**40 open · 11 resolved.**
+**41 open · 11 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -58,6 +58,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH12** — The New Hampshire Secretary of State publishes a mailing address for every candidate on the ballot, and for most of them it is where they live. It is a public record, the state prints it, and it is the only working contact we hold for about half of the forty-seven people on Newbury's ballot. I have recorded all forty-seven in the hunt notes and rendered none of them, because putting a named person's home street address on a consumer app is a different act from a state PDF and I did not want to make that call on my own.
 
 **NH13** — The constitution records a wall that is not there. Two paragraphs - the source register in CLAUDE.md and the curator note in the New Hampshire ballot data - say gc.nh.gov 'refuses every client this project has, browsers included'. It answers a plain fetch at HTTP 200. Only you change CLAUDE.md, so this is a correction routed to you rather than made.
+
+**NH18** — RULING 55 says every photo is reviewed by you and only an approved photo renders. Gating on an empty store would have blanked every portrait in the product the moment the rule shipped, so the 48 photos already shipping were recorded APPROVED with decidedBy grandfathered - which means SHIPPING BEFORE THE RULE EXISTED, NOT APPROVED BY YOU. They are labelled that way in data/photos/review.json and carry a decision date, so pnpm stale surfaces them on RULING 53 clock. What is owed is your eye on them. The 5 refusals are already recorded REJECTED with their reasons - the flag stock photo alt-texted Victor Orlando, the scanned 1978 Grand Jury manual served as a campaign og:image, the Karishma Manzur banner-with-wordmark, the photographer-credited Monkman file, and the Ayotte WinRed graphic from 2026-08-14. One row per session listing N photos, never one row per photo: 47 candidates plus 90 officials would otherwise flood this queue.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 

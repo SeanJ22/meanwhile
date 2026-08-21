@@ -14138,3 +14138,26 @@ jurisdiction(s)* at 03255.
   two author-ruled photo-door entries have. **Nothing was corrected
   automatically.**
 * **Playbook diff: nothing new.** No hunt was run — this brief forbade one.
+
+### Correction to the two figures the record could not know when it was written
+
+The section above was committed before the session's last walk ran, and a
+document cannot name what happens after it. Both figures are restated here
+rather than edited in place, so the delta is readable.
+
+* **Production rows this session created: 721, all SYNTHETIC, across 13 run
+  ids** — not the 617 across 11 stated above, which was the count at the moment
+  the record was written. The difference is one further `walk:all` run against
+  the shipped close-out deploy (`walk-all@2026-08-21T03:17:30.790Z`, 95 rows, <!-- expected-future: a UTC instant on the Phoenix day 2026-08-20; UTC had already turned over -->
+  plus its `walk-all-local` sibling at 9). **Five `walk:all` runs in total.**
+  **0 reactions. 0 alarms.**
+* **ORGANIC rows in the session window: 11, and none of them ours.** One further
+  reader row arrived at 20:17 local after the record was written. **Organic
+  census 155**; Prompt D closed at 143, so the delta is **+12**. Reported, not
+  investigated, per RULING 3.
+* **The final `walk:all`, against the deploy production actually serves
+  (`9ff9684`, deploy id `6a87c2e0db252300073728f6`): 370 passed, 1 named
+  regression, 0 could not run. 371 distinct of 371, baseline 371, 0 added, 0
+  GONE, 0 silent.** `M123` reads green — *68 meeting(s) across 4
+  jurisdiction(s): Newbury · Wilmot · Kearsarge Regional School District · New
+  London*. The one regression is the stale alarm row described above.

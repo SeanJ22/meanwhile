@@ -773,10 +773,35 @@ test("item 4: the live Nicholson card renders the raw sentence, and Booker keeps
   }
 });
 
+/**
+ * The claim is the ATTRIBUTION, never a particular sentence — the same
+ * clarification the render-default rule got on 2026-08-19, applied here.
+ *
+ * This used to pin the clause "we haven't wired those yet". RULING 59
+ * (2026-08-21) removed it: whether one source is wired is a progress report
+ * about our own pipeline, no reader can act on it, and it is the class of
+ * sentence that goes stale the day the work is done with nothing to notice.
+ *
+ * What must survive is what the sentence was FOR, and both halves are asserted
+ * below: the reader is told WHERE the money actually is (state campaign-finance
+ * systems, not the FEC), and is explicitly told that its absence here is not a
+ * claim that no money was raised. That is the whole of the honesty; the missing
+ * clause was editorial about our own shortcomings, which is exactly what the
+ * author struck elsewhere in the product.
+ */
 test("the state-systems note is a stated gap, never silence pretending coverage", () => {
   assert.match(STATE_FUNDING_NOTE, /state campaign-finance systems/);
-  assert.match(STATE_FUNDING_NOTE, /we haven’t wired those yet|we haven't wired those yet/i);
+  assert.match(
+    STATE_FUNDING_NOTE,
+    /not a statement that no money was raised/i,
+    "the refusal to assert absence is the load-bearing half and may not be lost",
+  );
   assert.doesNotMatch(STATE_FUNDING_NOTE, /gap in our (data|research)/i);
+  assert.doesNotMatch(
+    STATE_FUNDING_NOTE,
+    /we (?:have not|haven't|haven’t) wired/i,
+    "RULING 59: no progress report about our own pipeline on a reader surface",
+  );
 });
 
 test("funding reaction target ids validate against the snapshot", () => {

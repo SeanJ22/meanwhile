@@ -220,4 +220,4 @@ export { plainContributorLabel } from "./labels.ts";
 
 /** The honest line for offices the FEC does not cover. */
 export const STATE_FUNDING_NOTE =
-  "Money in state and local races is filed with state campaign-finance systems, not the FEC. We haven't wired those yet. This is not a statement that no money was raised.";
+  "Money in state and local races is filed with state campaign-finance systems, not the FEC. This is not a statement that no money was raised.";

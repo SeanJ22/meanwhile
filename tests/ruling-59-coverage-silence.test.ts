@@ -62,7 +62,15 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** Directories a reader's page is built from. */
 const RENDER_ROOTS = ["app", "components", "lib", "data"];
-const CODE_EXT = /\.(ts|tsx|mts|mjs|js|jsx)$/;
+/*
+ * `.json` is in scope, and that is the point.
+ *
+ * The "Not here yet" section was half in `app/ballot/page.tsx` and half in
+ * `data/ballot/az-pima-2026.json`, and a sweep over code alone could see only
+ * the half that carried no claim. Reader-facing prose in this product lives in
+ * DATA as often as it lives in code.
+ */
+const CODE_EXT = /\.(ts|tsx|mts|mjs|js|jsx|json)$/;
 const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "fixtures"]);
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -168,6 +176,40 @@ const BANNED: ReadonlyArray<{ re: RegExp; why: string }> = [
     why:
       "a statement of what we intend to hunt next. It is a roadmap on a " +
       "reader surface and it goes stale the moment the step is taken",
+  },
+  /*
+   * The three below were added AFTER the first sweep, because reading a
+   * production screenshot as an image found a whole section the source scan
+   * had missed: a heading reading "Not here yet" over a note reading "Pima
+   * County offices, City of Tucson offices, and school-district (TUSD, Vail
+   * Unified) contests are not curated yet."
+   *
+   * Two lessons, and the second is why `data` is in RENDER_ROOTS:
+   *
+   * 1. The heading was three ordinary words in a JSX element and matched
+   *    nothing. A pattern list built from the sentences you already know about
+   *    only finds the sentences you already know about.
+   * 2. The sentence that made it a coverage claim lived in
+   *    `data/ballot/az-pima-2026.json` and never appeared under `app/` at all.
+   *    Reader-facing prose in this product lives in DATA as often as in code.
+   */
+  {
+    re: /\bnot here yet\b/i,
+    why:
+      "a section heading announcing a list of what the product lacks. RULING " +
+      "59: the page says one thing about completeness and nothing else",
+  },
+  {
+    re: /\bnot curated yet\b/i,
+    why:
+      "hunt-queue vocabulary on a reader surface (RULING 28), attached to an " +
+      "enumeration of offices nobody has worked yet",
+  },
+  {
+    re: /\bwe (?:have not|haven't) (?:wired|curated|worked)\b/i,
+    why:
+      "a progress claim about our own pipeline. Whether one source is wired " +
+      "is a fact about us that no reader can act on",
   },
 ];
 

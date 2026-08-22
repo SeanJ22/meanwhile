@@ -90,6 +90,7 @@ next-env.d.ts
 /.prompte/
 /.f22tmp/
 /.nh3tmp/
+/.nh5tmp/
 
 # Excel owner-lock files. Sean edits docs/tracker.xlsx by hand, and Excel
 # writes a ~$tracker.xlsx beside it while the workbook is open. NH Hunt 5

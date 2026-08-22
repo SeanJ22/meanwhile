@@ -246,6 +246,278 @@ correctness session (§14).
 
 ---
 
+## NH Hunt 6, 2026-08-21 — exhaustion becomes a named list, and Sutton stops being dark
+
+**Code merge: `8be2bb2` → PR #145, merged as `cb4c3cb`.** One planned code
+merge, no second. Production serves `cb4c3cb`, deploy `6a89293a97d9b0000825bc05`,
+read from `/api/build` with a no-cache header and a declared synthetic run.
+Close-out records follow as separate commits and are labelled as such.
+
+### The headline: what is actually obtainable in the six county contests
+
+**35 fields owed. 1 found. 0 exhausted. 34 still owed.**
+
+That is the answer to the question the brief asked, and it is smaller than
+anybody wanted. The honest reading of it is not "the ceiling is here" — it is
+that the routes which reach a small-county challenger in New Hampshire are the
+ones a machine cannot walk, and the one route that reaches them best is walled
+today.
+
+The field found is **Steven Endres's contact**: the Office of the Merrimack
+County Attorney, Four Court Street, Concord NH 03301-4336, (603) 228-0529, read
+off his own filed comment to the N.H. Supreme Court Advisory Committee on Rules
+at **rung 5** — `courts.nh.gov` refuses rungs 2, 3 and 4 — and corroborated at
+rung 2 on the county's own department page. It is a SHARED OFFICE LINE and Meg
+Hagaman's card already carries it, because both are attorneys in that office.
+That duplicate is a fact about the office rather than a join collapsing, and it
+is stated here so a later distinctness sweep reads it as a decision. `NH55` asks
+Sean whether a switchboard reaching a candidate's employer is a contact worth
+publishing; it ships on the reading that RULING 26 forbids showing nothing.
+
+**`VERIFIED_ABSENT` is still 0, and after a full manifest walk that is the
+correct number rather than a shortfall.** RULING 61 made exhaustion a named
+list, and the contact list is 35 of the manifest's 36 routes, because a phone
+number can come from anywhere. Seven of those routes are mechanically walkable
+and were walked for all thirteen candidates; the other twenty-eight need a
+person. Nothing can be marked exhausted while twenty-eight named routes are
+unwalked, and the ruling exists precisely to stop a session calling that
+"we tried everything".
+
+### What the routes actually returned, so the number above can be read
+
+Thirteen candidates, seven automated routes each. What it produced:
+
+| Route | Result |
+|---|---|
+| `domain-search` | **4 confident hits, all four other people.** `kathleendonnelly.com` is a novelist; `ericadavis.org` is a Harris County TEXAS school-trustee candidate; `electfrench.com` is French Hill of Arkansas; `samanthamorse.com` names no office, county or state. The route now demands a corroborant and still reports a name-only match as needing a person. |
+| `web-archive` | captures for `electbilodeau.com` (2004), `frankcassidy.com` (2011–2013), `votedonnelly.com` (2001) — all predating these candidacies |
+| `legislative-directory` | both `gc.nh.gov` chamber indexes read, 221,243 bytes; Dianne Schuett is a FORMER member and is on neither |
+| `donation-platform` | 16 slugs per candidate, none answered |
+| `campaign-site` | `haroldfrench.com` is his AUCTION and REAL-ESTATE business site, not a candidacy; `sheriffpeteshephard.com` carries no contact at rung 2 or rung 6 |
+| `business-registry` | NH QuickStart HTTP 403 at rung 2; it searches by POST and needs rung 6 |
+| `nonprofit-filing` | ProPublica answered for 3 of 13, 404 for the rest |
+
+And the route that would have reached them is **walled**: `campaign-social`.
+`facebook.com` renders 977,803 and 928,697 bytes to our headless browser and
+**zero characters of readable text**. That matters more than it looks, because a
+campaign that lives on Facebook still has a campaign site, and that rule
+protects exactly the candidates least able to buy a domain. It is named as
+walled with its date (`NH52`) and re-walks on RULING 53's fourteen-day clock. It
+is not an absence and was not recorded as one.
+
+### RULING 61 — the branch manifest
+
+`docs/branch-manifest.md`, indexed by question. `lib/hunt/branch-manifest.ts` is
+authoritative for the ids, the counts and the verdict; `isEvidencedAbsence`
+enforces it; `tests/branch-manifest.test.ts` and `tests/hunt-state.test.ts`
+guard it.
+
+**Manifest `v1`: 36 routes** across 35 distinct dependencies —
+photo 7 · in their own words 10 · contact 35 · campaign site 14 · specific
+verified page 8. Append-only, with the `v1` roster written out by hand in the
+test so a deletion cannot pass. Every absence record stamps the manifest version
+it was earned under, so adding a route re-opens every absence earned under the
+old one **automatically**, with nothing to remember.
+
+RULING 58's two-branch bar is **superseded and marked so in place**, with the
+independence test it established explicitly NOT superseded. The change is
+guarded as *the old bar passing and the new one refusing on one record*, so what
+moved is checkable rather than described.
+
+### RULING 62 — and what the sweep found
+
+`tests/guard-census.json` records every test file and every guard NAME in it. A
+guard that stops existing fails the build **by name**. The census is not a lock:
+`pnpm guard:census --write` refuses to erase a name without `--allow-removals`,
+so making the census agree with a deletion is itself a diff saying which guards
+left. Proven end-to-end by overwriting `tests/hunt-state.test.ts` with a single
+new guard and watching all twelve of its names print.
+
+**Why the count is not the instrument**, stated because the brief asked: it
+moves on every normal commit so it is noise rather than an alarm; it is blind to
+substitution, because eight deleted and eight added leaves the total identical;
+and a drop cannot name what stopped running.
+
+**The sweep.** `pnpm guard:history` walked all **228** commits that touched
+`tests/`. **1,599** guard names have existed; **1,547** stood; **60** had not
+been seen since. **57 legitimate** — renames, and guards retired by an explicit
+ruling (RULING 7's equal-depth gate, RULING 18's hunt-completion gate, RULING
+42's thin-candidate line, RULING 47's buried enumeration), each with its
+replacement present and checked. **3 genuinely silent, and restored**:
+`af766f5` rewrote `tests/who-governs.test.ts` for a count-reconciliation item —
+111 insertions, 75 deletions — and carried off three UI density guards belonging
+to the author's 2026-08-16 ruling, unmentioned in its message. All twelve of
+their assertions were re-run against today's code before restoring: **all twelve
+still hold**, so the guards came back rather than the rule being re-litigated.
+The ruling was never reversed; it stopped being checked for four days.
+
+`~$*` was already in `.gitignore` from NH Hunt 5 and is confirmed by
+`git check-ignore`. The 8 curated-divisions guards NH Hunt 5 restored are
+present and passing.
+
+### Sutton: JOB, not WALL — and it is live
+
+**5 meetings served at 03255**, from 0. Planning Board, at Pillsbury Memorial
+Hall, verified through `/api/meetings` on production.
+
+The diagnosis, whose stopwatch ran out: **ours**. The feed answers rung 2 at
+HTTP 200 with **370,587 bytes and 1,312 events, 0 of them carrying a non-empty
+`LOCATION`** — counted, not estimated. The source has never refused us. What was
+missing was a venue and a coordinate, and both were reachable by branches:
+
+1. **`suttonnh.gov` walls its HTML and serves its `.ics` freely** — a
+   PATH-SCOPED Cloudflare wall. Rungs 2, 3 and 4 refuse the board pages; the
+   headless browser cannot clear the challenge; **rung 5 reads them straight
+   through**. The Planning Board's page then states the venue in the town's own
+   words.
+2. **A second geocoder settled the coordinate.** OpenStreetMap returns *Sutton
+   Town Hall, 93 Main Street* — **38 metres** from the Census point, whose
+   COORDINATE was right the whole time and whose CITY LABEL said Bradford,
+   because TIGER attributes the 89–99 MAIN ST range there. Two sessions read the
+   label and threw away a correct answer. `pnpm geocode` walks both and reports
+   the pair.
+
+**Exactly one body is wired, and the restraint is the finding.** Sutton's own
+index names sixteen governing bodies; fifteen of their pages carry
+"93 Main Street | Sutton Mills" in the SITE FOOTER and nowhere else. That is the
+town's postal address on a template, not a statement about where the Cemetery
+Commission sits, and reading it as one would pin fifteen bodies on a page
+layout. `NH50` names the fifteen for the registry (RULING 57 — named first,
+hunted second); `NH51` holds the venue hunt.
+
+**Springfield**: no separate calendar reached this session. The two
+New London–Springfield Water System Precinct rows in the registry ship
+`KNOWN_UNCOVERED`, unchanged.
+
+### The five officials nobody had worked
+
+All five named, all five repaired, each verified before replacing.
+
+| Who | The stored page | What it returned |
+|---|---|---|
+| Rachel Keshel | `azleg.gov` 56th Legislature, legislator 2173 | HTTP 200, 106,944 bytes, **surname nowhere in it** |
+| Rosanna Gabaldón | `azleg.gov` **55th** Legislature | a page for a previous term |
+| John McKeon | `assemblydems.com/john-mckeon/` | **HTTP 404**, and a party ASSEMBLY page for a sitting SENATOR |
+| Parker Space | `njassemblygop.com/space/` | a party ASSEMBLY page for a sitting SENATOR |
+| James Gallagher | nothing at all | seated 2026-06-10; congress-legislators still carries `url: null` |
+
+Three of five were a page correct for a PREVIOUS term. A stale official page is
+worse than none — a wrong claim about where a named person's record lives, on
+the surface whose whole job is to say where a claim came from, answering HTTP
+200 so nothing notices. The check that finds the class: **does the page still
+NAME them?**
+
+The NJ roster is a **rung-2 false miss** — identical 25,380-byte SPA shells for
+every member, rendering *"Senator John F. McKeon (D), District 27"* and
+*"Senator Parker Space (R), District 24"* only at rung 6, each with the district
+phone our record already held.
+
+`tests/officeholders.test.ts` asserted `verifiedAt === null` for every row with
+the message "nothing human has confirmed these rows". That was a FACT about the
+corpus written as a rule about it, so it failed the day somebody confirmed a
+row. It now asserts the stronger claim: `verifiedAt` may be null or a stamped
+date, and a row claiming verification must name an OFFICIAL host.
+
+### The tools, all registered in `docs/zip-playbook.md` §4
+
+`pnpm manifest:walk` · `pnpm rung6` · `pnpm geocode` · `pnpm guard:census` ·
+`pnpm guard:history` · `pnpm fix:official-pages` · `pnpm manifest:doc` ·
+`pnpm nh6:shots`.
+
+**`pnpm rung6` exists because `pnpm ladder` cannot cover this.** The ladder stops
+at the first rung that READS, judged by status and byte count — right for a
+wall, wrong for a false miss. `gc.nh.gov`'s member page answers rung 2 at HTTP
+200 with 29 KB of chrome and an empty detail region; the ladder calls that a
+read and hands back a document containing none of the facts it was fetched for.
+
+**And `gc.nh.gov` walls rung 6 while answering rung 2** — a WAF block, *Error
+403 / Web Page Blocked / Attack ID 20000051*. Every entry in the playbook before
+today assumed the browser rung is the strongest. It is not, and a 3,672-byte
+block page reads like a page with nothing on it: `rung6` now detects the block
+and reports a REFUSAL rather than the byte arithmetic it first printed.
+
+### R18's Eastern stamp and the Phoenix guard collided
+
+`docs/officials-audit.md` was written at `2026-08-22 00:19:56 EDT` <!-- expected-future: the Eastern instant a generator actually stamped, quoted; verified against the file R18 wrote it into -->
+while Phoenix said 2026-08-21, and the future-date guard read it as a
+fabrication. Two correct
+rules, colliding for three hours every night. The Eastern generated-at header is
+now a **third species** with a narrow predicate — the header form, the zone
+abbreviation required, one day of lead and no more — and seven assertions prove
+each clause rather than trusting it. Two days ahead still fails; a bare date on
+a "Generated" line still fails; a legitimate stamp does not launder other dates
+on its line.
+
+### Where the numbers stand
+
+| | before | after |
+|---|---:|---:|
+| owed candidate fields | 182 of 368 | **181 of 368** |
+| — photo · own words · contact · site | 45 · 41 · 60 · 36 | **45 · 41 · 59 · 36** |
+| `VERIFIED_ABSENT` | 0 | **0**, and correctly so under RULING 61 |
+| Sutton meetings at 03255 | 0 | **5** |
+| meetings in the snapshot | 415 | **422** |
+| units held at 03255 | 48 of 48 | **48 of 48**, reconciles, 0 un-held |
+| branch-manifest routes | — | **36** (v1) |
+| tests | 1569 | **1603**, 0 fail |
+| guard names in the census | — | **1,573** named + 6 dynamic across 176 files |
+| `walk:all` | 371 | **371 passed · 0 regressions · 0 could not run · 371 of 371 distinct · 0 GONE · 0 silent** |
+| tracker open | 177 | **183** |
+| `CLAUDE.md` | 79,374 b | **88,135 b** |
+| `docs/zip-playbook.md` | 175,444 b | **196,201 b** |
+
+Cards and contests, as a pair: **107 candidate cards across the four zips —
+matching exactly, no regression** — inside **60 ballot sections, of which 36
+carry candidate cards**. The 36 is this session's instrument (a `main section`
+containing a `.candidate-row`); it is not the same measurement as the 58 the
+previous close-out reported, and the difference is stated rather than reconciled
+by picking a number.
+
+Production rows: **141 requests issued, 103 landed**, every one carrying
+`run_id nh6-walk-0821`. No reaction tapped. Organic search-log **163** — delta
+**0** against NH Hunt 5. Organic reactions 0.
+
+Screenshots: **4 of 4 read as images**, and reading them is what caught two
+defects in this session's own evidence. The first pass captured the WELCOME
+OVERLAY at `?zip=03255` — a page reading "0 meetings" — because the query string
+does not dismiss it; the zip is now seeded the way `walk:all` seeds it. The
+second pass produced two captures whose claims did not match their contents: the
+who-governs card sits over the meetings list, so "Sutton's Planning Board
+sittings render" was a claim about a picture that did not contain them. That
+shot now FINDS the row and reports **NOT VISIBLE** when it cannot — the Sutton
+row is in the tree and not in the phone viewport, and the evidence for Sutton
+being live is the API check, not the picture.
+
+Gates: tests **1603/1603** on Windows, 0 fail. Lint **0 errors, 12 warnings**
+(baseline 12). `tsc --noEmit` clean. Both build modes green.
+
+Budgets, read from `scripts/bundle-budget.json`, **no ceiling moved**: app
+manifest baseline 195 ceiling 220, measured 203; framework default baseline 935
+ceiling 1050, measured 927 (Windows); framework standalone baseline 1138 ceiling
+1300, measured 1130 (Windows); client baseline raw 2,716,714 / gzip 818,445,
+ceilings 3,100,000 / 940,000, measured raw 2,761,780 / gzip 828,545. The
+committed baselines cite CI run **32202237032**; this session's CI run is the
+one `build-check.yml` fired on the merge of #145.
+
+### Branches inherited against branches newly built (RULING 63)
+
+**Inherited: 6** — the `.gov` sibling, the Virtual Town Hall `/boards` index,
+the Internet Archive for a dead town site, the state village-district register,
+the SAU page naming three districts' boards, and the trade-association
+directory. **Newly built: 5** — the municipal mirror of a walled state document,
+rung 5 through a Cloudflare managed challenge, the second-geocoder
+reconciliation, rung 6 as a deliberate step past a false-miss rung 2, and the
+manifest walk itself. **No branch was built which already existed**; each was
+checked against the manifest first.
+
+### Newbury is not finished
+
+Every candidate field in the six county contests is either found or **still
+owed**. None is exhausted, and under RULING 61 none can be while twenty-eight
+named routes per field need a person. Sutton is 1 body of 16. Kearsarge stands
+where NH Hunt 5 left it. **03255 is not done, and NH Hunt 6 does not close it.**
+
+
 ## 1. What this is
 
 **We the People** is a civic app. Today it contains exactly one screen: the map

@@ -147,7 +147,8 @@
     "manifest:walk": "tsx scripts/manifest-walk.mts",
     "rung6": "tsx scripts/rung6.mts",
     "geocode": "tsx scripts/geocode.mts",
-    "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts"
+    "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts",
+    "nh6:shots": "tsx scripts/nh6-shots.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

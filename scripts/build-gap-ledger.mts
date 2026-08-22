@@ -35,6 +35,7 @@ import { bodyAccountingFor } from "../lib/registry/body-name-match.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { readTable } from "../lib/reference/index.ts";
 import { today } from "./doc-dates.mjs";
+import { resolveZipGeography } from "../lib/geo/zip-geography.ts";
 
 /**
  * EVERY BODY NAME THIS REGISTRY HOLDS — so the ledger can ASK rather than
@@ -64,6 +65,35 @@ const PILOTS = [
   { zip: "07866", what: "Rockaway Township, New Jersey" },
   { zip: "03255", what: "Newbury, New Hampshire" },
 ];
+
+/*
+ * ── RULING 67: THE LABEL IS A GEOGRAPHY CLAIM AND IT IS CHECKED (NJ Hunt 2,
+ * 2026-08-22) ──────────────────────────────────────────────────────────────
+ *
+ * Each `what` above names a state, and this file writes that label into
+ * `docs/gap-ledger.md` beside a count of that zip's governments. Nothing
+ * checked it. A hand-kept state name next to an enumeration is the same shape
+ * as an enumeration that picked its own state: wrong, confident, and internally
+ * consistent, because the count and the label never speak to each other.
+ *
+ * The state is now read from the zip's own geography — TIGER's state outlines,
+ * corroborated by the Department of Education's LEA directory — and a
+ * disagreement stops the run rather than printing a mislabelled ledger.
+ */
+for (const pilot of PILOTS) {
+  const geo = resolveZipGeography(pilot.zip);
+  if (!geo.ok) {
+    throw new Error(
+      `pilot ${pilot.zip} ("${pilot.what}") cannot be geography-checked: ${geo.reason} — ${geo.detail}`,
+    );
+  }
+  if (!pilot.what.includes(geo.stateName)) {
+    throw new Error(
+      `pilot ${pilot.zip} is labelled "${pilot.what}", and ${pilot.zip} is in ${geo.stateName}. ` +
+        "A hand-written state beside an enumeration is a claim, and this one is wrong.",
+    );
+  }
+}
 
 type Edge = {
   layer: string;

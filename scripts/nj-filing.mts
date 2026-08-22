@@ -44,6 +44,7 @@ import {
   parseNjFiling,
   type FiledCandidate,
   type FiledNoElection,
+  type FiledUnfilledSeat,
 } from "../lib/hunt/nj-filing.ts";
 import { today as stampToday } from "./doc-dates.mjs";
 
@@ -125,6 +126,7 @@ interface DocResult {
   bytes: number;
   candidates: FiledCandidate[];
   noElection: FiledNoElection[];
+  unfilled: FiledUnfilledSeat[];
 }
 
 async function readDoc(url: string, label: string): Promise<DocResult> {
@@ -147,8 +149,9 @@ async function readDoc(url: string, label: string): Promise<DocResult> {
     throw new Error(`${label}: parse ${parsed.outcome} — ${parsed.reason}`);
   }
   const candidates = parsed.items.filter((r): r is FiledCandidate => "familyName" in r);
-  const noElection = parsed.items.filter((r): r is FiledNoElection => !("familyName" in r));
-  return { label, url, bytes: byteCount, candidates, noElection };
+  const noElection = parsed.items.filter((r): r is FiledNoElection => !("familyName" in r) && !("office" in r));
+  const unfilled = parsed.items.filter((r): r is FiledUnfilledSeat => !("familyName" in r) && "office" in r);
+  return { label, url, bytes: byteCount, candidates, noElection, unfilled };
 }
 
 console.log(`\nNJ FILING BRANCH — filing-county and filing-state, walked ${today}\n`);
@@ -173,7 +176,8 @@ if (localPdf) {
     url: localPdf,
     bytes: byteCount,
     candidates: parsed.items.filter((r): r is FiledCandidate => "familyName" in r),
-    noElection: parsed.items.filter((r): r is FiledNoElection => !("familyName" in r)),
+    noElection: parsed.items.filter((r): r is FiledNoElection => !("familyName" in r) && !("office" in r)),
+    unfilled: parsed.items.filter((r): r is FiledUnfilledSeat => !("familyName" in r) && "office" in r),
   });
 } else {
   /* ── filing-county: the clerk's own page names its current PDFs ─────────── */
@@ -236,9 +240,16 @@ if (localPdf) {
             email: m[3]!,
             termYears: null,
             voteFor: null,
+            /*
+             * The state's emails PDF has no district column — it is a federal
+             * contact list. Null is the honest value; a copied municipality
+             * would be a field this document does not contain.
+             */
+            district: null,
           };
         }),
         noElection: [],
+        unfilled: [],
       });
     } catch (err) {
       console.log(`    FAILED   ${url.split("/").pop()} — ${String(err)}`);
@@ -248,6 +259,7 @@ if (localPdf) {
 
 const allCandidates = docs.flatMap((d) => d.candidates);
 const allNoElection = docs.flatMap((d) => d.noElection);
+const allUnfilled = docs.flatMap((d) => d.unfilled);
 
 if (allCandidates.length === 0) {
   console.error(
@@ -257,8 +269,31 @@ if (allCandidates.length === 0) {
 }
 
 console.log(
-  `\n  TOTAL  ${allCandidates.length} candidates · ${allCandidates.filter((c) => c.email).length} with a filed email · ${allCandidates.filter((c) => c.address).length} with a filed address · ${allNoElection.length} jurisdictions declaring NO LOCAL ELECTION\n`,
+  `\n  TOTAL  ${allCandidates.length} candidates · ${allCandidates.filter((c) => c.email).length} with a filed email · ${allCandidates.filter((c) => c.address).length} with a filed address · ${allNoElection.length} jurisdictions declaring NO LOCAL ELECTION · ${allUnfilled.length} seat(s) a party filed nobody for\n`,
 );
+
+/*
+ * A jurisdiction that is not a jurisdiction is a parse failure wearing a
+ * plausible name, and the first version of this tool shipped twenty of them —
+ * `Made Democratic Rockaway Borough`, `City State Zip Email` — each attached to
+ * a real named candidate. It is checked rather than eyeballed, because a wrong
+ * jurisdiction on a real person's row is the sort of thing that reads fine in a
+ * summary count.
+ */
+const suspectJurisdictions = allCandidates.filter((c) =>
+  /\b(?:No Nomination|Made|Street Address|City State Zip|First Name)\b/i.test(c.jurisdiction),
+);
+if (suspectJurisdictions.length > 0) {
+  console.error(
+    `\n  ${suspectJurisdictions.length} candidate row(s) carry a jurisdiction that is document furniture rather than a place — ` +
+      "the parse has drifted:\n" +
+      suspectJurisdictions
+        .slice(0, 10)
+        .map((c) => `    ${c.givenName} ${c.familyName} -> ${JSON.stringify(c.jurisdiction)}`)
+        .join("\n"),
+  );
+  process.exit(1);
+}
 
 if (wantMunicipality) {
   const hits = allCandidates.filter((c) =>
@@ -290,6 +325,7 @@ if (jsonOut) {
         documents: docs.map((d) => ({ label: d.label, url: d.url, bytes: d.bytes })),
         candidates: allCandidates,
         noElection: allNoElection,
+        unfilled: allUnfilled,
       },
       null,
       2,

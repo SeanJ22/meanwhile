@@ -103,6 +103,33 @@ export interface ManifestRoute {
    */
   subBranches?: readonly { where: string; on: string; instead: string }[];
   /**
+   * RULING 68 — this route can ECHO, WALL or TEMPLATE, so it may not be walked
+   * without a control query.
+   *
+   * Three shapes, all of which answer HTTP 200:
+   *  - **echo** — a search that prints the query back into its own no-results
+   *    page, so a substring test for the surname passes on a page saying
+   *    nothing was found;
+   *  - **wall** — a login or challenge page served identically to everyone;
+   *  - **template** — an SPA shell or directory stub served byte-identically
+   *    for every identifier.
+   *
+   * A route flagged here is walked through `lib/hunt/control-query.ts`: the
+   * host is first asked for an identifier that cannot exist, and any answer
+   * indistinguishable from that is EMPTY. Where the identifier was GUESSED
+   * rather than confirmed from a source, the best available outcome is LEAD.
+   *
+   * Sixteen people, two routes, thirty-two HITs, all fabricated — caught by one
+   * control query. `tests/branch-manifest.test.ts` fails the build if a route
+   * that guesses an identifier is not flagged.
+   */
+  controlQueryRequired?: true;
+  /**
+   * The identifier this route uses is GUESSED rather than read from a source.
+   * Such a route can never return better than LEAD.
+   */
+  guessesIdentifier?: true;
+  /**
    * A route that stopped working keeps its place with a dated note. It is never
    * deleted, and it is never counted toward exhaustion once retired.
    */
@@ -213,6 +240,12 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
         on: "`elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated",
         instead:
           "`filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52.",
+      },
+      {
+        where: "New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2, RULING 69)",
+        on: "the Imperva wall above was recorded as though it were the whole of ELEC. It is the whole of ELEC'S WEBSITE, which is a different and much smaller thing, and reading one as the other is how a host becomes a permanent wall in this repo",
+        instead:
+          "the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80.",
       },
     ],
   },
@@ -376,6 +409,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "6",
     through: "the social platform",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     forbiddenFor: ["photo"],
     expectedToTravel:
       "Everywhere, and it MATTERS MOST in the smallest races — a campaign that lives on Facebook still has a campaign site, and recording that as nothing penalises exactly the candidates least able to buy a domain.",
@@ -419,6 +454,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "meta ad library",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     forbiddenFor: ["photo"],
     expectedToTravel:
       "Nationally and by law — political-ad disclosure is mandatory, so a candidate who buys a single ad appears. Silent on campaigns that never advertise, which in the smallest races is most of them; that silence is a fact about spending, not about the candidate.",
@@ -432,6 +469,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "11",
     through: "web.archive.org",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     forbiddenFor: ["photo"],
     expectedToTravel:
       "Everywhere the page has been captured, which is uneven for small campaigns and good for anything that drew attention. A capture is DATED and says so — it is evidence about that date, never about today.",
@@ -445,6 +484,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2, then 6",
     through: "the mirroring platform",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     forbiddenFor: ["photo"],
     expectedToTravel:
       "Broadly, and it is the single most useful of these five in practice. A campaign posting only to Facebook is real and is the case this route does not reach.",
@@ -458,6 +499,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 11",
     through: "the local press",
     fields: ["blurb", "campaignSite"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo", "contact"],
     expectedToTravel:
       "Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all.",
@@ -470,6 +512,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the donation platform",
     fields: ["contact", "campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     expectedToTravel: "Nationally. Absent in races too small to raise money.",
   },
   {
@@ -480,6 +524,8 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 10",
     through: "the search index",
     fields: ["campaignSite"],
+    controlQueryRequired: true,
+    guessesIdentifier: true,
     expectedToTravel: "Everywhere. Cheap, and the one route that finds an unlinked site.",
   },
 
@@ -493,6 +539,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 11",
     through: "the local press",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo"],
     expectedToTravel:
       "Everywhere there is still a paper, which is the shrinking part. Where the paper is dead, rung 11 is the route.",
@@ -506,6 +553,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 6",
     through: "the interviewing outlet",
     fields: ["blurb", "contact"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo"],
     expectedToTravel: "Everywhere, and systematically under-used relative to what it yields.",
   },
@@ -530,6 +578,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 11",
     through: "the announcement publisher",
     fields: ["blurb", "contact", "campaignSite"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo"],
     expectedToTravel: "Everywhere. Every campaign starts once.",
   },
@@ -554,6 +603,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the employer",
     fields: ["contact"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo"],
     expectedToTravel: "Everywhere somebody is employed publicly. Silent on the retired and the self-employed.",
   },
@@ -565,6 +615,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the licensing authority",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel:
       "Nationally, per profession. It is a PUBLIC REGISTER and the address on it is the one the licensee published.",
   },
@@ -576,6 +627,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the bar association",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel:
       "Every state has a bar. It reaches only lawyers — but county-attorney and judicial races are full of them, which is where it earns its place.",
   },
@@ -587,6 +639,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "state corporate registry",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel: "All fifty states run one. Formats differ; the institution does not.",
   },
   {
@@ -597,6 +650,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "irs 990 filings",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel: "Nationally, exactly — it is federal.",
   },
   {
@@ -607,6 +661,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the civic organisation",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel:
       "Small-town America broadly. It is the route RULING 57's twigs are actually reachable through.",
   },
@@ -618,6 +673,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the congregation",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel:
       "Broad but shallow. Named because it exists and has yielded elsewhere; walked with care, since a person's congregation is not a fact this product publishes.",
   },
@@ -629,6 +685,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2",
     through: "the chamber of commerce",
     fields: ["contact"],
+    controlQueryRequired: true,
     expectedToTravel: "Everywhere there is a chamber, which is most places.",
   },
   {
@@ -639,6 +696,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "6",
     through: "the professional directory",
     fields: ["campaignSite", "contact"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo", "blurb"],
     expectedToTravel:
       "Everywhere, weakly. Login walls are named, not defeated, and a profile is not the person's words about their candidacy.",
@@ -651,6 +709,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "2 and 11",
     through: "the archive publisher",
     fields: ["contact"],
+    controlQueryRequired: true,
     forbiddenFor: ["photo", "blurb"],
     expectedToTravel:
       "Everywhere, as a BRIDGE route. It rarely produces a Kelly field directly and often produces the key to one.",
@@ -677,6 +736,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "10",
     through: "the search index",
     fields: ["photo", "blurb", "contact", "campaignSite", "verifiedPage"],
+    controlQueryRequired: true,
     expectedToTravel: "Everywhere. Cheapest route in the manifest, and never sufficient on its own.",
   },
   {
@@ -688,6 +748,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     rung: "11",
     through: "web.archive.org",
     fields: ["photo", "blurb", "contact", "campaignSite", "verifiedPage"],
+    controlQueryRequired: true,
     expectedToTravel:
       "Everywhere. It has already produced a shipped portrait here (Harold French's Senate portrait, from a 2022 capture).",
   },

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 176,
-    "named": 1574,
+    "files": 179,
+    "named": 1611,
     "dynamic": 6
   },
   "files": {
@@ -167,6 +167,7 @@
     "tests/ballot.test.ts": {
       "names": [
         "F21: the ballot page renders the polling-place pointer exactly once, in the dates header",
+        "NJ01: a 07866 reader sees Rockaway BOROUGH's government, not only the Township's",
         "a Newbury voter (03255) sees the November slate, and March is stated, not hidden",
         "a Rockaway Township voter sees every contest the clerk filed for 07866",
         "a Tucson voter (85701) sees the statewide slate, CD-7, LD-20 and the measures",
@@ -613,6 +614,26 @@
         "the href strips to digits; the displayed number keeps its formatting",
         "the modal dials, dismisses, and leaves the card underneath alone",
         "the pill row branches on the COUNT, and only above one opens a modal"
+      ],
+      "dynamic": 0
+    },
+    "tests/control-query.test.ts": {
+      "names": [
+        "a CONFIRMED identifier may be a HIT",
+        "a body that never mentions the term is not an echo either",
+        "a control that itself refuses makes any 200 a real difference",
+        "a guessed identifier can never be better than LEAD",
+        "a no-results page that echoes the query is not a finding",
+        "a real article mentioning the name is NOT an echo",
+        "a search route can never be walked without a control",
+        "a wall is REFUSED and never an absence",
+        "an SPA shell is EMPTY, however confidently it returns 200",
+        "every route that guesses an identifier also requires a control query",
+        "the control is asked once per host, not once per person",
+        "the control is fetched from the SAME url shape as the query",
+        "the flagged count is stated, so a silent drop is visible",
+        "the routes that produced the fabricated findings are all flagged",
+        "the tolerance survives a shell that varies slightly between requests"
       ],
       "dynamic": 0
     },
@@ -1451,6 +1472,21 @@
       ],
       "dynamic": 0
     },
+    "tests/nj-filing-parse.test.ts": {
+      "names": [
+        "NO LOCAL ELECTION is recorded against the municipality the document names",
+        "a candidate's party is never taken from the preceding unfilled-seat row",
+        "a document with no office headings is ZERO_ROWS with a reason, not success",
+        "a seat a party filed nobody for is RECORDED, not discarded",
+        "an empty text layer is a FAILED parse naming itself, never an empty filing",
+        "every jurisdiction is a plausible place name, or empty only on a federal office",
+        "every unfilled seat in the document is accounted for",
+        "no candidate is filed under document furniture instead of a place",
+        "the document yields a real number of candidates, not merely no error",
+        "the four Rockaway Borough council candidates parse with their filed contact"
+      ],
+      "dynamic": 0
+    },
     "tests/no-suppression.test.ts": {
       "names": [
         "RULING 23: no page or component imports the hunt-state work queue",
@@ -1798,7 +1834,7 @@
         "2d: no module reads reference data from any path outside data/reference",
         "2d: the loader resolves every dataset inside data/reference",
         "Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976",
-        "data/reference holds 14 files: 7 data files and 7 provenance notes",
+        "data/reference holds 18 files: 9 data files and 9 provenance notes",
         "every provenance note says something about its data file",
         "every reference data file is paired with its provenance note, both ways",
         "every reference file holds the row count it is expected to",
@@ -2446,6 +2482,22 @@
         "clearing the radius limiter leaves unrelated filters alone",
         "enabling the radius limiter keeps the widened results on screen",
         "every target zip survives the client filter with default state"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-geography.test.ts": {
+      "names": [
+        "07866 resolves to Morris County, New Jersey — not to New Hampshire",
+        "a malformed or unknown zip is distinguished from an out-of-scope one",
+        "a witness with nothing to say is UNAVAILABLE, never agreement and never disagreement",
+        "a zip outside the committed geometry states OUR scope, never the zip's absence",
+        "a zip that cannot be geography-checked STOPS the enumeration rather than passing it",
+        "an enumeration that read the right geography passes and hands back the truth",
+        "an enumeration that read the wrong county THROWS",
+        "an enumeration that read the wrong state THROWS, and the message names both",
+        "every pilot zip resolves to the state it is actually in",
+        "the printed line names the ruling, the state, and how many witnesses spoke",
+        "the witnesses are distinct publishers, and one of them is not the Census"
       ],
       "dynamic": 0
     },

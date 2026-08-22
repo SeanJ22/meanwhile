@@ -288,6 +288,7 @@ A route that failed somewhere new is never discarded — it grows a limb. Each r
 | `filing-state` | New Jersey Division of Elections, 2026-08-22 | `www.nj.gov` sits behind Imperva and refused rungs 2 and 3 on one run — and answered rung 2 plainly on several others within the same minute. An intermittent wall, and a single reading of it recorded as a property of the source is the shape `gc.nh.gov` and `sos.nh.gov` were both wrongly recorded under | rung 4 — `curl`, whose TLS fingerprint passes what Node's does not — cleared it on the run that rungs 2 and 3 refused. And the state publishes the contact document SEPARATELY from the candidate list: `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. A session that reads only the candidate list finds no contact and records an absence that the neighbouring file disproves. |
 | `filing-county` | Morris County, New Jersey, 2026-08-22 | nothing failed — this is the reverse entry, and it is recorded here because RULING 60 is about what a route does in a new SHAPE, which includes doing better | the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current. |
 | `filing-campaign-finance-state` | New Jersey ELEC, 2026-08-22 | `elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated | `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52. |
+| `filing-campaign-finance-state` | New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2, RULING 69) | the Imperva wall above was recorded as though it were the whole of ELEC. It is the whole of ELEC'S WEBSITE, which is a different and much smaller thing, and reading one as the other is how a host becomes a permanent wall in this repo | the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80. |
 | `body-roster-page` | Kearsarge Regional School District, 2026-08-21 | the roster page's visible cells carry no email | read the cell's own href — nine board emails were in mailto: links (rung 4) |
 | `campaign-social` | Merrimack County Attorney, 2026-08-21 | a search snippet carried a plausible-looking bio | open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim |
 | `campaign-social` | every Newbury county candidate, 2026-08-21 | facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around | RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated. |
@@ -331,3 +332,84 @@ On the record itself, never in a document. `RecordedFieldState` in
 `lib/hunt/branch-manifest.ts` decides whether they add up to exhaustion and
 returns the **missing routes as a work list** when they do not. Staleness is a
 state the data carries (RULING 53), not a note here.
+
+---
+
+## Manifest CANDIDATES from the FEC directories — RULING 69 (added 2026-08-22, NJ Hunt 2)
+
+**These are not routes. They are offices a federal directory says exist.**
+
+RULING 61 is explicit that a route is added when it has been WALKED somewhere,
+not when a document says the office is there. Promoting a directory listing
+straight into the manifest would inflate the exhaustion bar with routes nobody
+has ever tried, which makes `VERIFIED_ABSENT` harder to earn without making it
+mean more. So they are named here, as a work list, and each moves into the
+routes table above on the day a session walks it and records what came back.
+
+Both directories are committed and refreshable — `corepack pnpm fec:directories`
+— at `data/reference/fec_state_election_offices.html` and
+`data/reference/fec_combined_federal_state_disclosure_directory.pdf`, with their
+provenance notes beside them. Both are public domain, being works of the United
+States federal government.
+
+### What the directory covers
+
+All 50 states, DC, American Samoa, Guam, the Northern Mariana Islands, Puerto
+Rico and the US Virgin Islands. For each: the federal disclosure offices, the
+legislative committees dealing with ELECTIONS, the legislative committees
+dealing with ETHICS, and nine national and international associations.
+
+### Candidate route classes
+
+| Candidate | What it would yield | Which existing route it would enrich |
+| --- | --- | --- |
+| The state's chief election office, per state | The filing authority itself, with a phone, an email and a postal address | `filing-state` |
+| The state campaign-finance authority, per state | Committee addresses, treasurers, and the reports themselves | `filing-campaign-finance-state` |
+| The state ethics commission, per state | Personal financial disclosure by public officials | `filing-ethics-disclosure` |
+| The state corporate-records office, per state | A candidate's business, its registered agent and its address | `business-registry` |
+| Legislative committees dealing with ELECTIONS (directory p. 128) | Hearing records and testimony naming local officials | none yet — a new class |
+| Legislative committees dealing with ETHICS (directory p. 134) | Disclosure and complaint records | none yet — a new class |
+| COGEL, NASS, NASED, NCSL, NAAG, NACo, IAGO, IFES, IIMC (pp. 143–145) | Cross-state indexes of the offices above | none yet — a new class |
+
+### What New Jersey's own entry names, and what it does NOT
+
+This is the direct test of whether the directory answers the publishing-practice
+question the NJ Hunt raised. It answers **half** of it, and the half it answers
+is the more useful one.
+
+New Jersey, directory pages 80–81, six offices:
+
+1. **Department of State, Division of Elections** — candidates on ballot,
+   election results, federal campaign-finance reports, HAVA, NVRA, voting
+   accessibility. `nj.elections@sos.nj.gov`, 609/292-3760.
+2. **Election Law Enforcement Commission** — state and local campaign-finance
+   reports, personal financial reports, lobby reports, public financing,
+   pay-to-play disclosure. Amanda S. Haines, Executive Director; 609/292-8700;
+   PO Box 185, Trenton NJ 08625-0185.
+3. **State Ethics Commission** — personal financial reports for state employees.
+   `ethics@ethics.nj.gov`.
+4. **Office of Legislative Services, Office of Public Information** — legislative
+   schedules and public information. `leginfo@njleg.org`.
+5. **Department of the Treasury** — political-contributions compliance, and the
+   Corporate Records Unit in Revenue and Enterprise Services.
+6. **Attorney General** — counsel to the chief election official and to the
+   county boards of elections and county superintendents.
+
+**It names WHO the authority is and how to reach a human there. It does not say
+what that authority PUBLISHES.** So it does not, by itself, tell the next state
+whether its county clerks put a filed email in a PDF the way Morris County's
+does. That still takes a walk. What it removes is the part that used to take
+the longest — finding out who to walk to.
+
+### The one it already paid for
+
+`elec.nj.gov` has been recorded in this repo as Imperva-walled since
+2026-08-19, re-walked and still walled on 2026-08-22. That was read as "ELEC is
+unreachable". It is not: it is ELEC'S WEBSITE that is unreachable, and the
+directory hands over a named Executive Director, a telephone number and a
+postal address for the same records — a compliant route straight to rung 13
+that no WAF can refuse.
+
+That distinction — a HOST being walled versus a BODY being unreachable — is
+RULING 52's whole point, and this project had collapsed the two again without
+noticing. The sub-branch is recorded on `filing-campaign-finance-state` above.

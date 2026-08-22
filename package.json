@@ -151,7 +151,10 @@
     "nh6:shots": "tsx scripts/nh6-shots.mts",
     "nj:filing": "tsx scripts/nj-filing.mts",
     "ad:library": "tsx scripts/ad-library.mts",
-    "shoot:nj0822": "tsx scripts/shoot-nj-0822.mts"
+    "shoot:nj0822": "tsx scripts/shoot-nj-0822.mts",
+    "zip:divisions": "tsx scripts/build-zip-division-ids.mts",
+    "nj:ballot": "tsx scripts/build-nj-morris-ballot.mts",
+    "fec:directories": "tsx scripts/fetch-fec-directories.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

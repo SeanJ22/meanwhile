@@ -50,6 +50,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { today as stampToday } from "./doc-dates.mjs";
+import { CONTROL_IDENTIFIER, beyondControl } from "../lib/hunt/control-query.ts";
 
 const UA = "we-the-people civic data (contact: seanj22@gmail.com)";
 
@@ -257,8 +258,18 @@ async function routeSocialArchive(p: Person): Promise<RouteResult> {
  * reported EMPTY. A tool that skipped this would have put thirty-two
  * fabricated findings into an exhaustion count.
  */
-const CONTROL = "zzqxwvnonexistent99";
-const SHELL_TOLERANCE = 0.02; /* 2% — instagram's shell varied by 16 bytes in 615 KB */
+/*
+ * EXTRACTED to `lib/hunt/control-query.ts` (NJ Hunt 2, 2026-08-22, item 3).
+ *
+ * RULING 68 makes the control query mandatory on every route that can echo,
+ * wall or template — not on the one script that happened to discover it. A
+ * remedy living only where the defect was found is how the same defect returns
+ * somewhere else, and this repo has recorded this shape seven times.
+ *
+ * The rationale, the byte measurements and the HIT/LEAD rule live in that
+ * module. These re-exports keep this file reading as it did.
+ */
+const CONTROL = CONTROL_IDENTIFIER;
 
 const controlCache = new Map<string, number>();
 
@@ -271,12 +282,6 @@ async function controlSize(make: (s: string) => string): Promise<number> {
   const size = r.status === 200 ? r.body.length : -1;
   controlCache.set(key, size);
   return size;
-}
-
-/** Is this response distinguishable from the host's answer for a name that cannot exist? */
-function beyondControl(size: number, control: number): boolean {
-  if (control < 0) return true; /* the control 404'd — a 200 here is a real difference */
-  return Math.abs(size - control) > control * SHELL_TOLERANCE;
 }
 
 /* ── social-mirror ───────────────────────────────────────────────────────── */

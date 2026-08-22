@@ -1,0 +1,537 @@
+/**
+ * **THE MORRIS COUNTY BALLOT, GENERATED FROM THE FILING** (NJ Hunt 2,
+ * 2026-08-22 — `NJ01`, and items 4 and 5).
+ *
+ *   corepack pnpm nj:ballot [--write]
+ *
+ * ## Why this replaces a hand transcription
+ *
+ * `data/ballot/nj-morris-2026.json` was transcribed by hand from the clerk's
+ * 2026-08-07 revision and carried six contests: two federal, one county, and
+ * three Rockaway TOWNSHIP school contests. Rockaway BOROUGH — a separate
+ * municipality inside the same zip, running a four-candidate council race —
+ * was not in it at all. Neither were the other forty-odd Morris municipalities
+ * the same document lists.
+ *
+ * The clerk has since republished (2026-08-21): 328 candidates where the hand
+ * transcription's source held 272. A hand-kept copy of a document that is
+ * revised on the authority's own schedule goes stale silently, and the only
+ * evidence of the staleness is a contest that does not render.
+ *
+ * So the file is GENERATED from `pnpm nj:filing`'s parse of the CURRENT
+ * documents, discovered from the clerk's own page hrefs. Re-running it is how
+ * this ballot stays current.
+ *
+ * ## What it refuses to do
+ *
+ * **It never guesses a division.** A jurisdiction whose OCD id cannot be
+ * resolved from the committed TIGER layers produces NO contest, and is named in
+ * the run's output. A contest wired to the wrong division shows one town's race
+ * to another town's readers, which is worse than a contest that is missing —
+ * the first is a false claim and the second is a stated gap.
+ *
+ * **It never invents a field.** Party, slogan, term and seats come from the
+ * filing; incumbency and websites are not in these documents and stay null, as
+ * they did before. The filed EMAIL and ADDRESS are contact data and are carried
+ * to the contact store, never rendered as a candidate's own words.
+ *
+ * ## Counts, always
+ *
+ * Every run states candidates read, contests built, jurisdictions mapped, and
+ * jurisdictions REFUSED with their names. A zero-contest build exits non-zero:
+ * a generator that produces nothing has told you about itself.
+ */
+
+import { readFileSync, writeFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+
+import { extractTextLayer } from "../lib/extract/text-layer.ts";
+import {
+  NJ_FILING_SOURCES,
+  newestFilingPdfs,
+  parseNjFiling,
+  type FiledCandidate,
+  type FiledNoElection,
+  type FiledUnfilledSeat,
+} from "../lib/hunt/nj-filing.ts";
+import { today } from "./doc-dates.mjs";
+
+const WRITE = process.argv.includes("--write");
+const ROOT = process.cwd();
+const STAMP = today();
+const ELECTION = { id: "nj-2026-11-03", date: "2026-11-03", name: "2026 General Election", state: "NJ" };
+const VINTAGE = "TIGER_GENZ2025";
+const UA = "we-the-people/1.0 (civic data; seanj22@gmail.com)";
+
+/* -------------------------------------------------------------------------- */
+/* Jurisdiction name → OCD id, from the committed layers and nothing else      */
+/* -------------------------------------------------------------------------- */
+
+type Feature = { properties: Record<string, string> };
+const layers = new Map<string, Feature[]>();
+for (const name of readdirSync(join(ROOT, "public", "geo"))) {
+  if (!/^(place|cousub|unsd|elsd|scsd)-34\.geojson$/.test(name)) continue;
+  const parsed = JSON.parse(readFileSync(join(ROOT, "public", "geo", name), "utf8")) as {
+    features?: Feature[];
+  };
+  layers.set(name.replace(/-34\.geojson$/, ""), parsed.features ?? []);
+}
+
+const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
+const norm = (s: string) =>
+  s
+    .toUpperCase()
+    .replace(/[^A-Z0-9]+/g, " ")
+    .trim();
+
+/**
+ * The municipality's own division.
+ *
+ * The clerk writes `Rockaway Borough`; the county-subdivision layer writes
+ * `Rockaway borough`. Where that subdivision row is Census's FICTITIOUS filler
+ * (`FUNCSTAT F`) the real government is the coextensive PLACE row, and the
+ * place row is what `lib/registry/derive.ts` built this registry's body from —
+ * so taking the subdivision id here would mint a key that matches nothing.
+ * Joined by GEOID, checked across the whole layer before it was relied on.
+ */
+const placeByGeoidTail = new Map<string, Feature>();
+for (const f of layers.get("place") ?? []) {
+  const g = String(f.properties.geoid ?? "");
+  if (g.length > 2) placeByGeoidTail.set(g.slice(2), f);
+}
+
+function municipalDivision(jurisdiction: string): string | null {
+  const want = norm(jurisdiction);
+  const sub = (layers.get("cousub") ?? []).find((f) => norm(f.properties.label) === want);
+  if (!sub) return null;
+  if (String(sub.properties.funcstat ?? "") === "F") {
+    const twin = placeByGeoidTail.get(String(sub.properties.geoid ?? "").slice(5));
+    if (twin && GOVERNING_FUNCSTAT.has(String(twin.properties.funcstat ?? ""))) {
+      return String(twin.properties.ocdId);
+    }
+  }
+  return String(sub.properties.ocdId);
+}
+
+/**
+ * The school district serving a municipality, by name.
+ *
+ * The clerk heads a school row with the MUNICIPALITY, not the district, so
+ * `Rockaway Borough` has to reach `Rockaway Borough School District`. The match
+ * is on the district layer's own label with the purpose words removed, and it
+ * is accepted ONLY when exactly one district answers — Rockaway has two
+ * districts whose names differ by one word, and an ambiguous match here would
+ * put the Borough's children in front of the Township's board.
+ */
+function schoolDivision(jurisdiction: string): { ocdId: string; label: string } | null {
+  const all = [...(layers.get("unsd") ?? []), ...(layers.get("elsd") ?? []), ...(layers.get("scsd") ?? [])];
+  const match = (want: string) => {
+    const hits = all.filter(
+      (f) => norm(f.properties.label).replace(/\s+(SCHOOL|DISTRICT)\b/g, "").trim() === want,
+    );
+    return hits.length === 1 ? hits[0]! : null;
+  };
+  /*
+   * `Chester Borough/Township` is ONE filing jurisdiction for a district that
+   * two municipalities run together, and TIGER labels that district for one of
+   * them — `Chester Township School District`. So a slashed name is expanded to
+   * the municipalities it joins and each is tried, in the order the clerk wrote
+   * them. Still accepted only on a UNIQUE match: a joint jurisdiction is a
+   * reason to try harder, never a licence to pick.
+   */
+  const candidates =
+    jurisdiction.includes("/")
+      ? (() => {
+          const [head, ...rest] = jurisdiction.split("/");
+          const stem = head!.replace(/\s+\S+$/, "").trim();
+          const headType = head!.split(/\s+/).pop() ?? "";
+          return [jurisdiction, `${stem} ${headType}`, ...rest.map((t) => `${stem} ${t.trim()}`)];
+        })()
+      : [jurisdiction];
+  for (const name of candidates) {
+    const hit = match(norm(name));
+    if (hit) return { ocdId: String(hit.properties.ocdId), label: String(hit.properties.label) };
+  }
+  return null;
+}
+
+/* -------------------------------------------------------------------------- */
+/* IDS ARE CARRIED FORWARD, BECAUSE AN ID IS A JOIN KEY A READER'S DATA HANGS  */
+/* OFF (NJ Hunt 2, 2026-08-22)                                                */
+/* -------------------------------------------------------------------------- */
+
+/*
+ * The first version of this generator minted every id from scratch. Nine guards
+ * failed, and what they were guarding was the real problem: candidate cards,
+ * candidate links, office explainers, the snapshot's target keys and — worst —
+ * the REACTIONS store all key on contest and candidacy ids.
+ *
+ * A reaction is a reader's answer about a named person. Re-minting that
+ * person's id does not lose a formatting detail; it orphans the answer, and the
+ * orphan is invisible because the new record simply has no reactions rather
+ * than obviously-wrong ones. That is the revenue path quietly losing rows.
+ *
+ * So the previous committed file is read FIRST and its ids are reused wherever
+ * the same contest or the same person is recognisable. A contest matches on
+ * DIVISION plus office; a candidacy matches on its contest plus the filed name.
+ * Both are properties of the world rather than of the old file's naming
+ * convention, which is what makes the carry-forward stable across a rename.
+ */
+type PriorFile = {
+  contests: { id: string; ocdId: string; title: string }[];
+  candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
+};
+let prior: PriorFile = { contests: [], candidacies: [] };
+try {
+  prior = JSON.parse(
+    readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
+  ) as PriorFile;
+} catch {
+  /* No previous file is a first run, not an error. Stated in the counts below. */
+}
+
+const officeKey = (title: string) =>
+  title
+    .toUpperCase()
+    .replace(/\(.*?\)/g, " ")
+    .replace(/[^A-Z0-9]+/g, " ")
+    .replace(/\bMEMBER OF THE\b/, "")
+    .trim();
+
+const priorContestId = new Map<string, string>();
+for (const c of prior.contests ?? []) {
+  priorContestId.set(`${c.ocdId}|${officeKey(c.title)}`, c.id);
+}
+const priorCandidacyId = new Map<string, string>();
+for (const c of prior.candidacies ?? []) {
+  priorCandidacyId.set(
+    `${c.contestId}|${norm(c.familyName)}|${norm(c.givenName)}`,
+    c.id,
+  );
+}
+let idsCarried = 0;
+let idsMinted = 0;
+
+/* -------------------------------------------------------------------------- */
+/* Read the documents                                                         */
+/* -------------------------------------------------------------------------- */
+
+async function readPdf(url: string) {
+  const res = await fetch(url, { headers: { "user-agent": UA } });
+  if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`);
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const byteCount = bytes.length;
+  const text = await extractTextLayer(bytes, url);
+  if (text.outcome !== "EXTRACTED") throw new Error(`${url}: text layer ${text.outcome}`);
+  const parsed = parseNjFiling(
+    (text.items as { text: string }[]).map((p) => p.text).join("\n"),
+    url,
+  );
+  if (parsed.outcome !== "EXTRACTED") throw new Error(`${url}: parse ${parsed.outcome} — ${parsed.reason}`);
+  const items = parsed.items as Array<FiledCandidate | FiledNoElection | FiledUnfilledSeat>;
+  return {
+    url,
+    bytes: byteCount,
+    candidates: items.filter((r): r is FiledCandidate => "familyName" in r),
+    noElection: items.filter((r): r is FiledNoElection => !("familyName" in r) && !("office" in r)),
+    unfilled: items.filter((r): r is FiledUnfilledSeat => !("familyName" in r) && "office" in r),
+  };
+}
+
+const clerkPage = await fetch(NJ_FILING_SOURCES.morrisClerkCandidates, {
+  headers: { "user-agent": UA },
+}).then((r) => r.text());
+const pdfs = newestFilingPdfs(clerkPage, NJ_FILING_SOURCES.morrisClerkCandidates).filter(
+  (u) => !/candidate-order/.test(u),
+);
+console.log(`clerk page → ${pdfs.length} filed-candidate PDF(s)`);
+
+const docs = [];
+for (const url of pdfs) {
+  const d = await readPdf(url);
+  console.log(
+    `  ${url.split("/").pop()} — ${d.bytes} bytes · ${d.candidates.length} candidates · ` +
+      `${d.noElection.length} NO LOCAL ELECTION · ${d.unfilled.length} unfilled seat(s)`,
+  );
+  docs.push(d);
+}
+
+const filed = docs.flatMap((d) => d.candidates.map((c) => ({ ...c, sourceUrl: d.url })));
+const noElection = docs.flatMap((d) => d.noElection.map((n) => ({ ...n, sourceUrl: d.url })));
+const unfilled = docs.flatMap((d) => d.unfilled.map((u) => ({ ...u, sourceUrl: d.url })));
+if (filed.length === 0) {
+  console.error("ZERO candidates read — a failed extraction, not an empty filing.");
+  process.exit(1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Build contests                                                             */
+/* -------------------------------------------------------------------------- */
+
+const slug = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+/** Federal and county offices sit on divisions the municipality name cannot give. */
+function statewideDivision(office: string, jurisdiction: string): string | null {
+  if (/UNITED STATES SENATE/.test(office)) return "ocd-division/country:us/state:nj";
+  if (/HOUSE OF REPRESENTATIVES/.test(office)) {
+    const m = /^(\d+)(?:st|nd|rd|th) Congressional$/.exec(jurisdiction);
+    return m ? `ocd-division/country:us/state:nj/cd:${m[1]}` : null;
+  }
+  if (/BOARD OF COUNTY COMMISSIONERS|COUNTY COMMISSIONER|SHERIFF|SURROGATE|COUNTY CLERK/.test(office)) {
+    return "ocd-division/country:us/state:nj/county:morris";
+  }
+  return null;
+}
+
+const SCHOOL_OFFICE = /BOARD OF EDUCATION|REGIONAL BOARD OF EDUCATION/;
+
+type Built = {
+  contestId: string;
+  ocdId: string;
+  title: string;
+  voteFor: number;
+  termYears: number | null;
+  sourceUrl: string;
+  scopeNote: string | null;
+};
+
+const contests = new Map<string, Built>();
+const candidacies: Record<string, unknown>[] = [];
+const refused = new Map<string, { why: string; rows: number }>();
+let refusedRows = 0;
+const contacts: Record<string, unknown>[] = [];
+
+for (const c of filed) {
+  const office = c.office.replace(/\s+/g, " ").trim();
+  let ocdId = statewideDivision(office, c.jurisdiction);
+  let scopeNote: string | null = null;
+
+  if (!ocdId && SCHOOL_OFFICE.test(office)) {
+    /*
+     * THE DOCUMENT'S OWN DISTRICT CELL IS TRIED FIRST, and it is not a nicety.
+     * `Rockaway Township MEMBER OF THE REGIONAL BOARD OF EDUCATION` is a MORRIS
+     * HILLS REGIONAL seat. Resolving it from the municipality gave it the
+     * Rockaway Township district — the same division as the township's own
+     * board — so two different boards' contests came out sharing one key, and
+     * one of them would have put the wrong candidates in front of the wrong
+     * district's readers. The clerk prints the right answer in its own column;
+     * the municipality is the fallback, not the source.
+     */
+    const bareType = /^(?:Town|Township|Borough|City|Village|Regional|W\d+|At Large)$/i;
+    const cell = c.district && !bareType.test(c.district) ? c.district : null;
+    const hit = (cell ? schoolDivision(cell) : null) ?? schoolDivision(c.jurisdiction);
+    if (hit) {
+      ocdId = hit.ocdId;
+      scopeNote = `The ${hit.label}, which serves ${c.jurisdiction}.`;
+    }
+  }
+  if (!ocdId) {
+    ocdId = municipalDivision(c.jurisdiction);
+    if (ocdId) scopeNote = `${c.jurisdiction}'s own contest.`;
+  }
+  if (!ocdId) {
+    const key = `${c.jurisdiction} — ${office}`;
+    const prev = refused.get(key);
+    refused.set(key, {
+      why: "no division in the committed TIGER layers answers to this jurisdiction name",
+      rows: (prev?.rows ?? 0) + 1,
+    });
+    refusedRows++;
+    continue;
+  }
+
+    /*
+   * The contest KEY includes the resolved division, so two contests for one
+   * municipality that sit on different boards can never collapse into one id.
+   * Rockaway Township has a township board and a regional board, and keying on
+   * municipality-plus-office alone was already producing one id for both.
+   */
+  const mintedContestId = `ballot-nj-morris:${slug(c.jurisdiction)}-${slug(office)}-${slug(ocdId.split("/").pop() ?? "")}`;
+  const carried = priorContestId.get(`${ocdId}|${officeKey(office)}`);
+  const contestId = carried ?? mintedContestId;
+  if (!contests.has(contestId)) {
+    if (carried) idsCarried++;
+    else idsMinted++;
+    contests.set(contestId, {
+      contestId,
+      ocdId,
+      /*
+       * A carried contest keeps the TITLE it already had. The old titles were
+       * written by a person and say things the office string cannot — "Member
+       * of the Regional Board of Education (Rockaway Township seats)" tells a
+       * reader which seats these are, and `office-blurbs` resolves explainers
+       * off these titles. Overwriting them with a mechanical Title Case of the
+       * clerk's capitals would lose the first and break the second.
+       */
+      title:
+        prior.contests.find((p) => p.id === contestId)?.title ??
+        office
+          .toLowerCase()
+          .replace(/\b([a-z])/g, (m) => m.toUpperCase())
+          .replace(/\bOf\b/g, "of")
+          .replace(/\bThe\b/g, "the"),
+      voteFor: c.voteFor ?? 1,
+      termYears: c.termYears,
+      sourceUrl: c.sourceUrl,
+      scopeNote,
+    });
+  }
+
+  const personSlug = slug(`${c.familyName} ${c.givenName}`);
+  const carriedPerson = priorCandidacyId.get(
+    `${contestId}|${norm(c.familyName)}|${norm(c.givenName)}`,
+  );
+  if (carriedPerson) idsCarried++;
+  else idsMinted++;
+  candidacies.push({
+    id: carriedPerson ?? `${contestId}:${personSlug}`,
+    contestId,
+    familyName: c.familyName,
+    givenName: c.givenName,
+    partyLabel: c.party,
+    slogan: c.slogan,
+    incumbent: null,
+    websiteUrl: null,
+    provenance: {
+      sourceUrl: c.sourceUrl,
+      sourceOrg: "Morris County Clerk",
+      collectedAt: STAMP,
+      verifiedAt: STAMP,
+    },
+  });
+
+  /*
+   * The filed email and street address are CONTACT, and they are kept out of
+   * the ballot file on purpose. A candidacy record renders; a home address does
+   * not, and putting one in the file the page reads is how it ends up on a
+   * page. The contact side is written separately and consumed by the contact
+   * store, which already has the rules for what may be shown.
+   */
+  if (c.email || c.address) {
+    contacts.push({
+      candidacyId: carriedPerson ?? `${contestId}:${personSlug}`,
+      familyName: c.familyName,
+      givenName: c.givenName,
+      email: c.email,
+      filedAddress: c.address,
+      route: "filing-county",
+      sourceUrl: c.sourceUrl,
+      sourceOrg: "Morris County Clerk",
+      collectedAt: STAMP,
+    });
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+
+const absences = noElection
+  .map((n) => {
+    const ocdId = municipalDivision(n.jurisdiction);
+    if (!ocdId) {
+      refused.set(`${n.jurisdiction} — NO LOCAL ELECTION`, { why: "jurisdiction name resolves to no division", rows: 1 });
+      return null;
+    }
+    return {
+      ocdId,
+      divisionVintage: VINTAGE,
+      statement:
+        `NO LOCAL ELECTION — the Morris County Clerk's 2026 general-election candidate list carries this ` +
+        `entry for ${n.jurisdiction}: no municipal seats are on the November 2026 ballot.`,
+      provenance: {
+        sourceUrl: n.sourceUrl,
+        sourceOrg: "Morris County Clerk",
+        collectedAt: STAMP,
+        verifiedAt: STAMP,
+      },
+    };
+  })
+  .filter((a): a is NonNullable<typeof a> => a !== null);
+
+const out = {
+  formatVersion: 1,
+  curatedAt: STAMP,
+  curatorNote:
+    `Generated by \`corepack pnpm nj:ballot --write\` from the Morris County Clerk's CURRENT filed-candidate ` +
+    `PDFs, discovered from the clerk's own page hrefs on ${STAMP} — the clerk republishes at a new version ` +
+    `path on every revision, and a hardcoded URL reads a superseded filing as current. ` +
+    `${filed.length} candidates read across ${pdfs.length} document(s). ` +
+    `The clerk's ballot-position drawing PDF is a scan with no text layer, so ballot order is not ` +
+    `machine-readable and candidates render alphabetically by surname. The filings carry party, slogan, ` +
+    `term and seats; they state neither incumbency nor websites, so those fields are null throughout. ` +
+    `Filed emails and street addresses are contact data and are written to ` +
+    `data/ballot/nj-morris-2026-contacts.json rather than into this file.`,
+  election: ELECTION,
+  contests: [...contests.values()].map((b) => ({
+    id: b.contestId,
+    electionId: ELECTION.id,
+    ocdId: b.ocdId,
+    divisionVintage: VINTAGE,
+    title: b.title,
+    type: "CANDIDACY",
+    voteFor: b.voteFor,
+    termYears: b.termYears,
+    scopeNote: b.scopeNote,
+    provenance: {
+      sourceUrl: b.sourceUrl,
+      sourceOrg: "Morris County Clerk",
+      collectedAt: STAMP,
+      verifiedAt: STAMP,
+    },
+  })),
+  candidacies,
+  measures: [],
+  absences,
+};
+
+console.log(`\n  candidates read              ${filed.length}`);
+console.log(`  contests built               ${contests.size}`);
+console.log(`  candidacies built            ${candidacies.length}`);
+console.log(`  contacts carried             ${contacts.length}`);
+console.log(`  NO LOCAL ELECTION absences   ${absences.length}`);
+console.log(`  seats a party filed nobody for ${unfilled.length}`);
+console.log(`  ids carried from the previous file  ${idsCarried} · newly minted ${idsMinted}`);
+console.log(`  REFUSED rows (no division)     ${refusedRows}, across ${refused.size} named jurisdiction/office pair(s)`);
+for (const [what, r] of refused) console.log(`      ${what} — ${r.rows} row(s) — ${r.why}`);
+
+if (contests.size === 0) {
+  console.error("\nZERO contests built — a failed generation, not an election with no contests.");
+  process.exit(1);
+}
+
+const reconciles = candidacies.length + refusedRows === filed.length;
+console.log(
+  `\n  ${candidacies.length} built + ${refusedRows} refused = ${candidacies.length + refusedRows} vs ${filed.length} read` +
+    (reconciles ? "  (accounted)" : "  *** ROWS VANISHED ***"),
+);
+
+if (WRITE) {
+  writeFileSync(
+    join(ROOT, "data", "ballot", "nj-morris-2026.json"),
+    `${JSON.stringify(out, null, 2)}\n`,
+    "utf8",
+  );
+  writeFileSync(
+    join(ROOT, "data", "ballot", "nj-morris-2026-contacts.json"),
+    `${JSON.stringify(
+      {
+        generatedAt: STAMP,
+        route: "filing-county",
+        note:
+          "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. " +
+          "A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never " +
+          "rendered.",
+        contacts,
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  console.log("\n  written data/ballot/nj-morris-2026.json and nj-morris-2026-contacts.json");
+} else {
+  console.log("\n  dry run — pass --write to update the committed files");
+}

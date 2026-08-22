@@ -62,6 +62,8 @@ import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
  * was asked is the same defect class as an operation that reports success
  * without stating its count.
  */
+import { assertEnumerationGeography, geographyLine } from "../lib/geo/zip-geography.ts";
+
 const zipAt = process.argv.indexOf("--zip");
 const positional = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 const flagged = zipAt >= 0 ? process.argv[zipAt + 1] : undefined;
@@ -88,9 +90,31 @@ const universe = JSON.parse(
     countyFips: string;
     ocdId: string | null;
     venueKm: number | null;
-    meetingsNearZip: boolean;
+    /*
+     * ── THIS IS TRI-STATE, AND TYPING IT `boolean` COST 37 UNITS ───────────
+     * (NJ Hunt 2, 2026-08-22.)
+     *
+     * `zip:universe` writes `true`, `false`, or the string `"UNRESOLVED"` for a
+     * unit whose distance it could not establish. This declaration said
+     * `boolean`, so TypeScript never objected to `filter((u) => u.meetingsNearZip)`
+     * — and `"UNRESOLVED"` is a non-empty string, which is truthy.
+     *
+     * Thirty-seven units at 07866 were therefore counted as sitting inside a
+     * 25 km circle around Rockaway. Among them: Ocean County, Union County,
+     * Mercer County, the City of Camden and two Cape May townships, none of
+     * which are within a hundred kilometres. The denominator read 178, the pair
+     * reported 5 held against 173 missing, and 5 + 173 = 178 reconciled
+     * perfectly — RULING 67's self-reconciling wrong answer, in the instrument
+     * the coverage claim is made with.
+     *
+     * The type now says what the data says, and the three cases are handled
+     * separately below, because an undecidable distance is a failed measurement
+     * and must never be folded into either side of a coverage pair.
+     */
+    meetingsNearZip: boolean | "UNRESOLVED";
     web?: string;
   }[];
+  centroid?: { lat: number; lng: number };
 };
 const registry = JSON.parse(
   readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
@@ -250,7 +274,17 @@ function divisionlessBodyFor(name: string): string | undefined {
   return bodyAccountingFor(name, allBodyNames);
 }
 
-const near = universe.units.filter((u) => u.meetingsNearZip);
+const near = universe.units.filter((u) => u.meetingsNearZip === true);
+/**
+ * Units whose distance from the zip could not be established at all.
+ *
+ * These are a FAILED MEASUREMENT, and they are reported beside the pair rather
+ * than inside it. Counting them as inside the circle inflates the denominator
+ * with governments that are demonstrably elsewhere; counting them as outside
+ * asserts they are far away, which nothing here measured. Neither is honest, so
+ * they get their own number and their own names.
+ */
+const undecidable = universe.units.filter((u) => u.meetingsNearZip === "UNRESOLVED");
 const held: { unit: string; bodies: number; how: string }[] = [];
 const missing: {
   unit: string;
@@ -290,6 +324,34 @@ for (const unit of near) {
 
 const bodiesHeld = held.reduce((n, h) => n + h.bodies, 0);
 
+/*
+ * ── RULING 67: CHECKED AGAINST THE ZIP'S OWN GEOGRAPHY, EXTERNALLY ─────────
+ *
+ * This pair used to be validated only against the enumeration it was computed
+ * from — `held + missing === near`, where all three came out of one file. It
+ * reconciled on the day `zip:universe` enumerated New Hampshire for this New
+ * Jersey zip, and it would reconcile again tomorrow under the same failure.
+ *
+ * So the universe file is now required to STATE the state it read, and that
+ * statement is checked against TIGER's state outlines and the Department of
+ * Education's LEA directory — neither of which this pair or that enumeration
+ * consults to decide what to read.
+ */
+const enumeratedStateFips = [
+  ...new Set(universe.units.map((u) => String(u.countyFips ?? "").slice(0, 2)).filter((s) => /^\d{2}$/.test(s))),
+];
+if (enumeratedStateFips.length !== 1) {
+  throw new Error(
+    `data/audit/universe-${zip}.json enumerates ${enumeratedStateFips.length} states (${enumeratedStateFips.join(", ") || "none"}). ` +
+      "A zip's universe is enumerated from one state's files, so this is a corrupt or hand-edited universe rather than a wide one.",
+  );
+}
+const truth = assertEnumerationGeography(zip, {
+  stateFips: enumeratedStateFips[0]!,
+  by: `data/audit/universe-${zip}.json, as read by pnpm twig:pair`,
+});
+console.log(`\n${geographyLine(truth)}`);
+
 console.log(`\nTHE TWIG PAIR AT ${zip} — RULING 57`);
 console.log(`  units the Census places within the first-rung circle:  ${near.length}`);
 console.log(`  units this registry holds a body for:                  ${held.length}`);
@@ -299,6 +361,34 @@ console.log(
     (held.length + missing.length === near.length ? "  (reconciles)" : "  (DOES NOT RECONCILE)"),
 );
 console.log(`  bodies held across those units:                        ${bodiesHeld}`);
+console.log(
+  `  units whose distance could NOT be established:         ${undecidable.length}` +
+    "   (a failed measurement — outside the pair on purpose, never folded into either side)",
+);
+if (undecidable.length > 0) {
+  /*
+   * Being unplaceable says nothing about whether this product holds the body,
+   * and the two must not be conflated a second time. Morris County Soil
+   * Conservation District has a body here and no resolvable distance; printing
+   * it under a bare "undecidable" heading would read as a gap.
+   */
+  const undecidableHeld = undecidable.filter((u) => {
+    const division = divisionFor(u);
+    if (division && (bodiesByDivision.get(division) ?? []).length > 0) return true;
+    return Boolean(u.name && divisionlessBodyFor(u.name));
+  });
+  console.log(
+    `\nDISTANCE UNDECIDABLE — named, because a failed measurement that is only counted disappears.` +
+      `\n  ${undecidableHeld.length} of these ${undecidable.length} DO carry a body here; being unplaceable is not being unheld.`,
+  );
+  for (const u of undecidable) {
+    const isHeld = undecidableHeld.includes(u);
+    console.log(
+      `  ${isHeld ? "held " : "     "} ${String(u.kind).padEnd(25)}  ${String(u.name ?? "(unnamed)").padEnd(48)}` +
+        `county ${String(u.countyFips ?? "?")}${u.web ? `  ${u.web}` : ""}`,
+    );
+  }
+}
 
 console.log(`\nHELD — units, and how many bodies each carries here:`);
 for (const h of [...held].sort((a, b) => b.bodies - a.bodies)) {

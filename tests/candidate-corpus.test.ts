@@ -311,15 +311,28 @@ test("P02: no issue phrase is a single loose word that turns a search into noise
 test("B14: the denominator is measured from the ballot, not quoted", async () => {
   const { measureCoverage, ballotPeople } = await import("../scripts/b14-coverage.mts");
   const people = ballotPeople();
-  // 136: every filed candidacy in the three county files plus every
-  // certified nominee in the Arizona general lineup. Both are the reader's
-  // ballot and both count, and they are keyed differently — which is exactly
-  // how a count goes wrong when it is carried forward instead of re-derived.
-  assert.equal(people.length, 136);
-  assert.equal(new Set(people.map((p) => p.key)).size, 136, "a duplicate key");
+  /*
+   * Every filed candidacy in the three county files plus every certified
+   * nominee in the Arizona general lineup. Both are the reader's ballot and
+   * both count, and they are keyed differently — which is exactly how a count
+   * goes wrong when it is carried forward instead of re-derived.
+   *
+   * **It was 136 and it is 393** (2026-08-22). The Morris file stopped being a
+   * hand transcription of six contests and became a generated read of the
+   * county clerk's current filing — 272 candidacies where there were 15. The
+   * jump is the point of the row rather than a break in it.
+   *
+   * A FLOOR, and self-consistency asserted exactly. An equality here fails
+   * every time a county publishes, and the fix for a failing equality is always
+   * to edit the number, which is how a guard stops guarding. What must hold
+   * exactly is that the denominator is DERIVED — every person distinct, and the
+   * coverage measurement counting the same set the ballot does.
+   */
+  assert.ok(people.length >= 390, `only ${people.length} people on the ballot`);
+  assert.equal(new Set(people.map((p) => p.key)).size, people.length, "a duplicate key");
 
   const coverage = measureCoverage();
-  assert.equal(coverage.total, 136);
+  assert.equal(coverage.total, people.length, "coverage counted a different set from the ballot");
   // The headline number this row turns on.
   assert.equal(coverage.bare, coverage.bareKeys.length);
   assert.ok(coverage.bare > 0, "nothing bare — the measurement stopped measuring");

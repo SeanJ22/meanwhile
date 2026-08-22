@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import test from "node:test";
 
 import {
@@ -17,20 +18,61 @@ import { resolveZip } from "../lib/geo/zcta.ts";
  * ballot.
  */
 
+/*
+ * Resolved the way `app/ballot/page.tsx` resolves it — the zip's AREA, not just
+ * its centroid (`NJ01`, 2026-08-22). A test that asked the narrower question
+ * would pass on a build where Rockaway Borough had vanished from the page
+ * again, which is exactly the regression it exists to catch.
+ */
 async function ballotAt(zip: string) {
   const r = resolveZip(zip);
   assert.ok(r.ok, `${zip} must resolve`);
   const set = ballotNjMorrisSource.normalize(await ballotNjMorrisSource.fetch());
   const divisions = await divisionsAt(r.centroid.lat, r.centroid.lng);
-  return { set, ...contestsForDivisions(set, divisions.map((d) => d.ocdId)) };
+  const ocdIds = await divisionIdsForZipArea(zip, divisions.map((d) => d.ocdId));
+  return { set, ...contestsForDivisions(set, ocdIds) };
 }
 
 test("the committed Morris file validates, and every record is cited", async () => {
   const [raw] = await ballotNjMorrisSource.fetch();
   validateBallotFile(raw);
   const set = ballotNjMorrisSource.normalize([raw]);
-  assert.equal(set.contests.length, 6);
-  assert.equal(set.candidacies.length, 15);
+  /*
+   * MINIMUMS, not equalities (2026-08-22). The file is no longer a hand
+   * transcription frozen at six contests — `corepack pnpm nj:ballot --write`
+   * regenerates it from the clerk's CURRENT documents, and the clerk revises on
+   * its own schedule, so an equality here would fail every time the county
+   * publishes and would be "fixed" by editing the number until it stopped
+   * meaning anything.
+   *
+   * What the equality was actually guarding is kept and strengthened below: the
+   * specific contests must be present BY ID, and the OCD join is asserted at
+   * 07866 by name. A floor catches the failure that matters — the file
+   * collapsing — while a ceiling only caught the county doing its job.
+   */
+  assert.ok(set.contests.length >= 80, `only ${set.contests.length} contests`);
+  assert.ok(set.candidacies.length >= 250, `only ${set.candidacies.length} candidacies`);
+  const contestIds = new Set(set.contests.map((c) => c.id));
+  assert.equal(contestIds.size, set.contests.length, "duplicate contest ids");
+  const candidacyIds = new Set(set.candidacies.map((c) => c.id));
+  assert.equal(candidacyIds.size, set.candidacies.length, "duplicate candidacy ids");
+  /*
+   * The ids a reader's stored reactions hang off. Re-minting one orphans real
+   * answers about a named person, invisibly — the new record simply has no
+   * reactions rather than obviously wrong ones. Pinned by name so a generator
+   * change cannot quietly break the join.
+   */
+  for (const id of [
+    "ballot-nj-morris:us-senate",
+    "ballot-nj-morris:us-house-11",
+    "ballot-nj-morris:county-commissioner",
+    "ballot-nj-morris:rockaway-twp-boe",
+    "ballot-nj-morris:rockaway-twp-boe-unexpired",
+    "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp",
+  ]) {
+    assert.ok(contestIds.has(id), `contest id ${id} was not carried forward`);
+  }
+  assert.ok(candidacyIds.has("ballot-nj-morris:us-senate:booker"));
   for (const record of [...set.contests, ...set.candidacies, ...set.absences]) {
     assert.match(
       record.provenance.sourceUrl ?? "",
@@ -43,19 +85,20 @@ test("the committed Morris file validates, and every record is cited", async () 
 test("a Rockaway Township voter sees every contest the clerk filed for 07866", async () => {
   const { set, contests, absences } = await ballotAt("07866");
 
-  // The join's denominator: all six curated contests belong to divisions
-  // covering the 07866 centroid — senate via the state walk, the rest by
-  // containment. Fewer means the OCD join silently broke.
-  assert.equal(
-    contests.length,
-    6,
-    `expected all 6 contests at 07866, got ${contests.map((c) => c.id).join(", ")}`,
+  // The join's denominator: every contest whose division reaches inside 07866.
+  // Fewer than the six the hand transcription carried means the OCD join
+  // silently broke.
+  assert.ok(
+    contests.length >= 6,
+    `expected at least the original 6 contests at 07866, got ${contests.map((c) => c.id).join(", ")}`,
   );
 
   const byId = new Map(contests.map((c) => [c.id, c]));
   assert.ok(byId.has("ballot-nj-morris:us-senate"));
   assert.ok(byId.has("ballot-nj-morris:us-house-11"));
   assert.ok(byId.has("ballot-nj-morris:county-commissioner"));
+  assert.ok(byId.has("ballot-nj-morris:rockaway-twp-boe"));
+  assert.ok(byId.has("ballot-nj-morris:morris-hills-regional-boe-rockaway-twp"));
 
   const senate = set.candidacies.filter(
     (c) => c.contestId === "ballot-nj-morris:us-senate",
@@ -63,8 +106,61 @@ test("a Rockaway Township voter sees every contest the clerk filed for 07866", a
   assert.equal(senate.length, 4, "four Senate candidates filed");
 
   // The clerk's own statement of municipal absence renders, cited — and the
-  // no-public-question statement alongside it.
-  assert.equal(absences.length, 2, absences.map((a) => a.ocdId).join(", "));
+  // no-public-question statement alongside it. A floor, because the generated
+  // file now carries the clerk's NO LOCAL ELECTION statement for every
+  // municipality that reaches this zip rather than only for Rockaway Township.
+  assert.ok(absences.length >= 2, absences.map((a) => a.ocdId).join(", "));
+});
+
+/**
+ * `NJ01` — Rockaway Borough and Rockaway Township are two governments in one
+ * zip, and the product held only one of them.
+ *
+ * The Borough runs its own council and its own school district. Its residents
+ * write 07866. The ballot page resolved the zip to a single ZCTA centroid,
+ * which falls inside the TOWNSHIP, so a Borough resident entering their own zip
+ * saw the Township's government, none of their own, and a four-candidate
+ * council race that did not render at all.
+ *
+ * The four candidates are named here on purpose. A count would pass on a build
+ * that rendered four of the Township's people under the Borough's heading,
+ * which is the collapsed-join failure this session found three other instances
+ * of on the same day.
+ */
+test("NJ01: a 07866 reader sees Rockaway BOROUGH's government, not only the Township's", async () => {
+  const { set, contests } = await ballotAt("07866");
+  const byId = new Map(contests.map((c) => [c.id, c]));
+
+  const council = [...byId.values()].find(
+    (c) => c.ocdId === "ocd-division/country:us/state:nj/place:rockaway" && /Council/i.test(c.title),
+  );
+  assert.ok(council, "the Rockaway Borough council contest does not render at 07866");
+  assert.equal(council!.voteFor, 2);
+
+  const running = set.candidacies
+    .filter((c) => c.contestId === council!.id)
+    .map((c) => c.familyName)
+    .sort();
+  assert.deepEqual(running, ["BURNSIDE", "DAWKINS, JR.", "MCDONALD", "NATALE"]);
+
+  const boroBoe = [...byId.values()].find(
+    (c) => c.ocdId === "ocd-division/country:us/state:nj/school_district:rockaway_borough_school_district",
+  );
+  assert.ok(boroBoe, "the Rockaway Borough school board contest does not render at 07866");
+
+  /*
+   * And the Township's own contests are untouched. Widening the resolver must
+   * ADD the Borough, never trade one municipality for the other — that would be
+   * the same defect pointed the other way.
+   */
+  assert.ok(byId.has("ballot-nj-morris:rockaway-twp-boe"));
+
+  /*
+   * The two Rockaway school districts must never share a division. They differ
+   * by one word and were collapsed onto one another once already, which put the
+   * Borough's children in front of the Township's board.
+   */
+  assert.notEqual(boroBoe!.ocdId, byId.get("ballot-nj-morris:rockaway-twp-boe")!.ocdId);
 });
 
 test("the ballot never leaks across boundaries", async () => {

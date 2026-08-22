@@ -59,6 +59,8 @@ const arg = (name: string): string | null => {
 };
 const ONE_URL = arg("url");
 const TOWN = arg("town");
+/** Case-insensitive, because the argument is typed by a person and the id is not. */
+const matchesTown = (ocdId: string) => ocdId.toLowerCase().includes((TOWN ?? "").toLowerCase());
 
 /**
  * The shapes a standing-venue sentence takes on a New Hampshire board page.
@@ -316,8 +318,39 @@ if (ONE_URL) {
    * silently skipped — a queue that quietly shrinks is the zero-row shape.
    */
   const named = registry.bodies.filter(
-    (b) => b.coverageStatus !== "LIVE" && (TOWN ? String(b.ocdId).includes(TOWN) : true),
+    (b) => b.coverageStatus !== "LIVE" && (TOWN ? matchesTown(String(b.ocdId)) : true),
   );
+
+  /*
+   * ── AN ARGUMENT THAT MATCHES NOTHING IS NOT AN EMPTY TOWN ────────────────
+   * (NJ Hunt 2, 2026-08-22.)
+   *
+   * The filter was `String(b.ocdId).includes(TOWN)` — case-SENSITIVE. This
+   * file's own header documents `--town sutton_town`, and `--town Sutton`
+   * therefore matched none of Sutton's nineteen bodies and printed
+   *
+   *     0 body(ies) not LIVE under Sutton
+   *
+   * which is a sentence about Sutton and is false. The run did exit non-zero,
+   * which is the only reason this was caught rather than believed.
+   *
+   * So the match is case-insensitive, and an argument matching NO body at all
+   * — before the LIVE filter is applied — stops the run naming the argument.
+   * "Your filter matched nothing" and "this town has nothing owed a hunt" are
+   * different answers and may never print as the same one.
+   */
+  if (TOWN) {
+    const anyBody = registry.bodies.filter((b) => matchesTown(String(b.ocdId)));
+    if (anyBody.length === 0) {
+      console.error(
+        `\n  --town ${JSON.stringify(TOWN)} matches NO body in this registry, of ${registry.bodies.length}. ` +
+          "That is a fact about the argument, not about the town. Division ids look like " +
+          "`ocd-division/country:us/state:nh/county:merrimack/place:sutton_town`, so a fragment of one — " +
+          "`sutton_town`, `sutton`, `merrimack` — is what this expects.\n",
+      );
+      process.exit(2);
+    }
+  }
   const withPage = named.filter((b) => b.homepageUrl);
   console.log(`\nstanding-venue hunt — RULING 60, ${AS_OF}\n`);
   console.log(

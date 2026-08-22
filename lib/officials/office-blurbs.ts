@@ -30,6 +30,7 @@ export type OfficeType =
   | "mayor"
   | "city-council"
   | "select-board"
+  | "nj-municipal-governing-body"
   | "governor"
   | "executive-councilor"
   | "secretary-of-state"
@@ -107,6 +108,31 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
   },
   // 2e (2026-08-17): the substitute-for-a-mayor case, explained rather than
   // left as a gap. New England towns are run this way on purpose.
+  /*
+   * NEW JERSEY'S MUNICIPAL GOVERNING BODIES (NJ Hunt 2, 2026-08-22).
+   *
+   * Added when the Morris ballot stopped being six contests and became the
+   * county clerk's whole filing — borough councils, township committees,
+   * township councils and ward-based town councils, none of which any existing
+   * explainer resolved for.
+   *
+   * It is NOT mapped to , and that is deliberate. New Jersey
+   * municipalities run under several different forms of government, and a
+   * township committee is not a city council: the committee members are the
+   * governing body AND the heads of the town's departments, and the mayor is
+   * chosen from among them rather than elected separately. An explainer that
+   * described one form as though it were all of them would be a generated claim
+   * about how a reader's own town works.
+   *
+   * So the text says what is true across the forms and says plainly that the
+   * rest varies, which is the honest answer and is checkable against the town's
+   * own charter.
+   */
+  "nj-municipal-governing-body": {
+    text: "Your council or committee is the town's own elected lawmaking body. They pass local ordinances, adopt the municipal budget, set the local tax rate, decide zoning, and oversee the people who run town services. New Jersey towns use several different forms of government — borough, township committee, township council, town council — so how much sits with this body rather than with a mayor or an administrator depends on your town's charter. Call them about local roads, zoning, rubbish collection, the police budget, and anything else the town itself runs.",
+    basis: "New Jersey Revised Statutes Title 40A, and the municipality's own charter",
+    basisUrl: null,
+  },
   "select-board": {
     text: "Your Select Board is the town's government — a few neighbors elected to run things between town meetings. They set the budget proposal, oversee town staff, and carry out what the annual town meeting votes. The biggest decisions — the budget itself, big purchases — are made by the voters at town meeting, not by the board. Call them about roads, town services, and anything the town runs.",
     basis: "New Hampshire RSA 41 (town officers)",
@@ -303,6 +329,14 @@ export function officeTypeForContestTitle(title: string): OfficeType | null {
   }
   if (t.includes("county commissioner")) return "county-commissioner";
   if (t.includes("board of education")) return "school-board";
+  if (
+    t.includes("borough council") ||
+    t.includes("township committee") ||
+    t.includes("township council") ||
+    t.includes("town council")
+  ) {
+    return "nj-municipal-governing-body";
+  }
   if (t.includes("state senator")) return "state-senator";
   if (t.includes("state representative")) return "state-representative";
   if (t.includes("executive councilor")) return "executive-councilor";

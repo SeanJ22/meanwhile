@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-21 (America/Phoenix). 48 stamp(s) audited.
+Run on 2026-08-21 (America/Phoenix). 52 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -32,6 +32,10 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
 | RULING 53 — RECORDED ABSENCES EXPIRE | 2026-08-21 | 2026-08-21 | 0 | `2633089` Item 3: discovery is a tree, and a wall compiled into a skip cannot be disproved |
 | RULING 57 — EVERY TWIG IS NAMED | 2026-08-21 | 2026-08-21 | 0 | `df1dfcf` Item 5 and item 1c: RULING 57 is law, and one stale URL form was 75 officials |
+| RULING 60 — THE SESSION HAND-WORKS BODIES, AND EVERY BRAN… | 2026-08-21 | 2026-08-21 | 0 | `8be2bb2` The branch manifest: exhaustion becomes a named list, and Sutton stops being dark |
+| RULING 61 — THE BRANCH MANIFEST, AND WHAT EXHAUSTION MEANS | 2026-08-21 | 2026-08-21 | 0 | `8be2bb2` The branch manifest: exhaustion becomes a named list, and Sutton stops being dark |
+| RULING 62 — A TEST FILE MAY NOT LOSE GUARDS SILENTLY | 2026-08-21 | 2026-08-21 | 0 | `8be2bb2` The branch manifest: exhaustion becomes a named list, and Sutton stops being dark |
+| RULING 63 — EVERY ZIP INHERITS; NO ZIP STARTS FROM SCRATCH | 2026-08-21 | 2026-08-21 | 0 | `8be2bb2` The branch manifest: exhaustion becomes a named list, and Sutton stops being dark |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
@@ -97,12 +101,12 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 
 | Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:310` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
-| `CLAUDE.md:311` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:458` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:459` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:321` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:469` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -112,6 +116,10 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 52 — DISCOVERY IS A TREE, NOT A LADDER | none | 1 |
 | RULING 53 — RECORDED ABSENCES EXPIRE | none | 1 |
 | RULING 57 — EVERY TWIG IS NAMED | none | 1 |
+| RULING 60 — THE SESSION HAND-WORKS BODIES, AND EVERY BRAN… | none | 1 |
+| RULING 61 — THE BRANCH MANIFEST, AND WHAT EXHAUSTION MEANS | none | 1 |
+| RULING 62 — A TEST FILE MAY NOT LOSE GUARDS SILENTLY | none | 1 |
+| RULING 63 — EVERY ZIP INHERITS; NO ZIP STARTS FROM SCRATCH | none | 1 |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | none | 1 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |

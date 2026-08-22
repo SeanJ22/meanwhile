@@ -1259,5 +1259,19 @@
       "NS02",
       "NS03"
     ]
+  },
+  {
+    "session": "nj-hunt3",
+    "opened": "2026-08-22",
+    "ids": [
+      "PU02"
+    ]
+  },
+  {
+    "session": "nj-hunt3",
+    "opened": "2026-08-22",
+    "ids": [
+      "VF01"
+    ]
   }
 ]

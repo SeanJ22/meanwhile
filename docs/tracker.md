@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **207 open**, 324 resolved.
+- **209 open**, 324 resolved.
 - **53 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -23,7 +23,7 @@ and when. Nothing is ever deleted.
   - Arizona hunt — **0**
   - Visual feedback — **1**
   - Data infrastructure — **1**
-  - Product / UI — **1**
+  - Product / UI — **2**
   - Constitution & rules — **1**
   - Repo & ops — **0**
 
@@ -349,7 +349,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**2 open · 34 resolved.**
+**3 open · 34 resolved.**
 
 ### P1
 
@@ -358,6 +358,10 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 ### P2
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
+
+### P3
+
+**VF01** — Read as an image on production f20e1e9 at 430x932. On the map's who-governs card the pill sits inline in each body row, between the body name and the type label. At phone width that squeezes the name into two and three lines - Rockaway Township School District wraps to three, Denville Township School District to three - and the pill itself wraps to two or three lines beside them. Every word is legible and the classification is correct; the row is simply cramped, and six of eight rows carry it at this zip. The pill reads well on the ballot page, where it wraps under a wide heading rather than competing with a narrow column. Worth a look at whether it belongs under the row rather than inside it on narrow viewports, or whether the type label should move.
 
 ## Data infrastructure
 
@@ -525,9 +529,17 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**19 open · 131 resolved.**
+**20 open · 131 resolved.**
 
 ### P1
+
+**PU02** — Measured on production f20e1e9, 2026-08-22, at 430x932 with the walk's own page shape. Typing "a" into the ask box and clicking the FIRST row of type Body opens no card at either zip: 85701 offers "Amphitheater Unified School District Governing Board" and 85641 offers "Armory Park Historic Zone Advisory Board", and neither produces a .account-modal within 5 seconds. No page error is thrown. This is M135's rule (g15) -- a row opens a card -- broken for at least some rows.
+
+It is PRE-EXISTING and is not caused by this session's coverage widening. The proof is 85701, which this session did not change in that direction and which fails on its first Body row exactly the same way. walk:all passes at 85701 only because its loop retries up to three times and a LATER row happens to open ("AGENDA FOR AUDIT COMMITTEE MEETING"); at 85641 only one Body row is offered, so `attempt >= offered` breaks the loop after one attempt and a single non-opening row fails the check.
+
+Why it surfaced as a regression today: the meetings snapshot refreshed at 20:04 (455 rows, 381 fresh + 74 carried), which changed which rows the autocomplete offers first at 85641. The check's verdict is therefore sensitive to snapshot content, which is worth knowing about the check as well as about the defect.
+
+Two things for whoever takes it: why that class of row resolves to no card, and whether M135's retry loop should keep trying rather than breaking when a zip offers exactly one Body row -- a check that passes because the second row worked is not asserting what it reads as asserting.
 
 **P02** — Mapping candidates' stated positions onto the issues on a reader's ballot, every one carrying its source. Never a score, never a ranking — the positions side by side and the reader deciding.
 

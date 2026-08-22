@@ -62,6 +62,9 @@ export function scanText(text) {
       date: match[0],
       line,
       expected: isExpectedFutureLine(lines[line - 1]),
+      // Kept so classify() can tell an R18 Eastern generated-at header from a
+      // bare date somebody typed. See isEasternGeneratedAtLead.
+      text: lines[line - 1] ?? "",
     });
   }
   return hits;
@@ -248,6 +251,39 @@ export function parseAllowlistSource(source, label) {
 }
 
 /**
+ * The R18 generated-at header, exactly: `Generated 2026-08-22 00:19:56 EDT`.
+ *
+ * The ZONE ABBREVIATION is required and is the whole safety of this. A bare
+ * date on a line starting "Generated" would be a date somebody typed; a date
+ * followed by a wall-clock time and a zone label is a stamp a formatter
+ * produced, and only a formatter can produce one that is legitimately ahead of
+ * the Phoenix day.
+ */
+const EASTERN_GENERATED_AT_RE =
+  /Generated\s+(20\d\d-\d\d-\d\d)\s+\d\d:\d\d:\d\d\s+(E[SD]T|[A-Z]{2,5}T)\b/;
+
+/** Whole days from `a` to `b`, both `YYYY-MM-DD`. */
+function dayGap(a, b) {
+  return Math.round((Date.parse(`${b}T00:00:00Z`) - Date.parse(`${a}T00:00:00Z`)) / 86_400_000);
+}
+
+/**
+ * Is this future date an R18 Eastern generated-at stamp, leading Phoenix by the
+ * one day the two zones can legitimately differ by?
+ *
+ * Narrow on purpose. It must be the header FORM, the date in the hit must be
+ * the date the header stamped (not some other date on the same line), and the
+ * lead must be exactly one day. Two days ahead fails, because no clock produces
+ * that and a fabricated stamp is what this guard exists to catch.
+ */
+export function isEasternGeneratedAtLead(hit, todayStr) {
+  const m = EASTERN_GENERATED_AT_RE.exec(hit.text ?? "");
+  if (!m) return false;
+  if (m[1] !== hit.date) return false;
+  return dayGap(todayStr, hit.date) === 1;
+}
+
+/**
  * Split a file's hits into allowed and failing.
  *
  * An allowlist entry carries a count, and the count is the point: it pins the
@@ -263,6 +299,7 @@ export function classify(hits, allowlist, file, todayStr) {
   }
 
   const expected = [];
+  const easternStamps = [];
   const allowed = [];
   const failures = [];
   for (const hit of hits) {
@@ -273,6 +310,34 @@ export function classify(hits, allowlist, file, todayStr) {
       expected.push({ ...hit, file });
       continue;
     }
+    /*
+     * **R18's EASTERN GENERATED-AT STAMP IS ONE DAY AHEAD FOR THREE HOURS
+     * EVERY NIGHT, AND IT IS NOT A FABRICATION** (NH Hunt 6, 2026-08-21).
+     *
+     * Two correct rules collided. `pnpm stamp` is America/Phoenix and answers
+     * "what DAY is it for the author" — every rule, tracker note and
+     * reader-facing line is dated by it, and this guard measures against it.
+     * R18 ruled that a GENERATED document's "this file was written at" header
+     * carries EASTERN, because that is provenance on a machine-written
+     * artifact rather than a date about the author's day.
+     *
+     * Between 21:00 Phoenix and midnight Eastern those two are on different
+     * calendar days, and any generator run in that window writes a header this
+     * guard reads as a future date. `docs/officials-audit.md` did exactly that
+     * at `2026-08-22 00:19:56 EDT` while Phoenix said 2026-08-21.
+     *
+     * The exemption is deliberately narrow, and every clause is load-bearing:
+     * the line must be the R18 header FORM (`Generated <date> <time> <zone>`),
+     * the zone abbreviation must be present — which is what makes it a stamped
+     * instant rather than a bare date somebody typed — and it may lead the
+     * Phoenix day by at most ONE day, which is the largest gap the two zones
+     * can ever open. A generated-at line two days ahead is still a failure,
+     * because no clock produces that.
+     */
+    if (isEasternGeneratedAtLead(hit, todayStr)) {
+      easternStamps.push({ ...hit, file });
+      continue;
+    }
     const left = budget.get(hit.date) ?? 0;
     if (left > 0) {
       budget.set(hit.date, left - 1);
@@ -281,7 +346,7 @@ export function classify(hits, allowlist, file, todayStr) {
       failures.push({ ...hit, file });
     }
   }
-  return { expected, allowed, failures };
+  return { expected, easternStamps, allowed, failures };
 }
 
 /**

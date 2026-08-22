@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-21 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **113 sessions.**
+Newest first. **114 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -1602,6 +1602,19 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look. *(open)*
 
 **Needs Sean.** NH08
+
+## NH-Hunt-6
+
+**What it started.** 6 row(s) opened, 6 still open.
+
+- **NH50** — Sutton's own boards-and-committees index lists sixteen governing bodies and the registry holds two of them. RULING 57 names a body first and hunts it second, so the fifteen missing ones are entered with what is known — the name, the host municipality, and the page that named them — whether or not a meeting source exists. The index is at suttonnh.gov/boards-committees and is reachable at rung 5 (rungs 2, 3 and 4 hit a Cloudflare managed challenge). NH Hunt 6 wired the Planning Board only, because its page is the only one that states a venue. *(open)*
+- **NH51** — Fifteen of Sutton's sixteen bodies have no published venue this session could find. Their pages carry '93 Main Street | Sutton Mills' in the SITE FOOTER only — the town's postal address on a template, not a statement about where that board sits — and reading a footer as a venue would pin fifteen bodies on the strength of a page layout. What is owed is the posted NOTICE per body, which carries the room by construction, or a minutes header that states it. *(open)*
+- **NH52** — facebook.com renders 977,803 and 928,697 bytes and ZERO characters of readable text to our headless browser, on two campaign and committee pages read 2026-08-21. campaign-social is the highest-yield branch-manifest route for the smallest races — the rule that a campaign living on Facebook still has a campaign site exists to protect exactly the candidates least able to buy a domain. The route is WALLED today, with its date, and RULING 53 puts it back on the queue in fourteen days. *(open)*
+- **NH53** — The walker covers 7 of the 36 manifest routes mechanically. Per field that leaves 4 of 7 photo routes, 8 of 10 blurb, 29 of 35 contact, 10 of 14 campaign site and 6 of 8 verified page needing a person — reported by name on every run, never counted as walked. Each route automated is a whole class of candidate the manifest can be exhausted against without a session reading pages one at a time. *(open)*
+- **NH54** — A statewide New Hampshire candidate-and-results database exists at electiondatabase.nhpr.org and nh.electionstats.com. Every /candidates/view/<Name> URL from the search index returns the SPA's 404 shell — 41,148 bytes, identical for a known-good name — and rung 6 confirms a genuine 'Page Not Found'. The path has moved. It would serve many candidates at once if found: prior candidacies, districts, and results. *(open)*
+- **NH55** — Steven Endres is an Assistant Merrimack County Attorney and a candidate for County Attorney. The only working contact any manifest route reached for him is his office of record — Four Court Street, Concord, (603) 228-0529 — published on courts.nh.gov in his own filed comment and on the county's own department page. Meg Hagaman's card already carries the same number, because she is an attorney in the same office. Two candidates in one race now show one phone. That is a true fact about the office rather than a join collapsing, and it is shipped; but whether a reader is well served by a switchboard that reaches a candidate's EMPLOYER is a judgement about the product, not about the data. *(open)*
+
+**Needs Sean.** NH55
 
 ## NH Hunt 4
 

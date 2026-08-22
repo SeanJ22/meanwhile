@@ -161,7 +161,7 @@ test("the candidate absence record now REQUIRES branches, not only rungs", () =>
       state: "VERIFIED_ABSENT",
       checkedAt: "2026-08-21",
       rungs: [{ rung: "2", attemptedAt: "2026-08-21", result: "404" }],
-    } as never),
+    } as never, "campaignSite"),
     false,
     "rungs alone can no longer earn an absence",
   );

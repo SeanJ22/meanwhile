@@ -1507,7 +1507,7 @@
       "termEnd": "",
       "birthDate": null,
       "partyLabel": "Republican",
-      "websiteUrl": "https://www.azleg.gov/house-member/?legislature=56&session=127&legislator=2173",
+      "websiteUrl": "https://www.azleg.gov/House/House-member/?legislature=57&session=130&legislator=2317",
       "contactFormUrl": null,
       "phone": null,
       "email": "rkeshel@azleg.gov",
@@ -1517,7 +1517,7 @@
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
         "collectedAt": "2026-08-16T05:18:56.258Z",
-        "verifiedAt": null
+        "verifiedAt": "2026-08-21"
       }
     },
     {
@@ -1551,7 +1551,7 @@
       "termEnd": "",
       "birthDate": null,
       "partyLabel": "Democratic",
-      "websiteUrl": "https://www.azleg.gov/senate-member/?legislature=55&legislator=1956",
+      "websiteUrl": "https://www.azleg.gov/Senate/Senate-member/?legislature=57&session=130&legislator=2380",
       "contactFormUrl": null,
       "phone": null,
       "email": "rgabaldon@azleg.gov",
@@ -1561,7 +1561,7 @@
         "sourceUrl": "https://data.openstates.org/people/current/az.csv",
         "sourceOrg": "Plural Open States (CC-0)",
         "collectedAt": "2026-08-16T05:18:56.258Z",
-        "verifiedAt": null
+        "verifiedAt": "2026-08-21"
       }
     },
     {

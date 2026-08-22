@@ -15782,7 +15782,7 @@
       "termEnd": "2027-01-03",
       "birthDate": "1981-03-07",
       "partyLabel": "Republican",
-      "websiteUrl": null,
+      "websiteUrl": "https://gallagher.house.gov/",
       "contactFormUrl": null,
       "phone": "202-225-3076",
       "email": null,
@@ -15792,7 +15792,7 @@
         "sourceUrl": "https://unitedstates.github.io/congress-legislators/legislators-current.json",
         "sourceOrg": "unitedstates/congress-legislators (public domain)",
         "collectedAt": "2026-08-16T05:18:56.258Z",
-        "verifiedAt": null
+        "verifiedAt": "2026-08-21"
       },
       "state": "CA",
       "chamber": "house"

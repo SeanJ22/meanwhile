@@ -1,6 +1,6 @@
 # Officials audit — the Kelly standard
 
-Generated 2026-08-21 15:14:00 EDT by `pnpm officials:audit`.
+Generated 2026-08-22 00:19:56 EDT by `pnpm officials:audit`.
 
 Five fields per official: **page** (specific official page, fetch-verified to
 name the member), **contact** (form or email present), **phone**, **photo**
@@ -1034,7 +1034,7 @@ linked officials are audited — the ones a reader can open.
 | Lex Berezhny | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Linda DiSilvestro | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Louise Andrus | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
-| Mary Jane Wallner | State Representative | MISS-GENERIC | email | MISS | none (license rule) | not found yet |
+| Mary Jane Wallner | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Mary Murphy | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Matt Wilhelm | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
 | Matthew Pitaro | State Representative | VERIFIED | email | MISS | none (license rule) | not found yet |
@@ -1200,5 +1200,5 @@ linked officials are audited — the ones a reader can open.
 
 ## Totals
 
-661 officials audited: 655 pages fetch-verified, 6 page misses, 0 unverifiable inline as of 2026-08-21 — see each row for the rung it stopped at.
+661 officials audited: 656 pages fetch-verified, 5 page misses, 0 unverifiable inline as of 2026-08-21 — see each row for the rung it stopped at.
 

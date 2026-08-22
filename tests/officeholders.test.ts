@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import { isOfficialHost } from "../lib/officials/verification.ts";
 
 import {
   congressSource,
@@ -85,14 +86,57 @@ test("a congressional district resolves to exactly one representative", () => {
 });
 
 test("every officeholder carries provenance naming where it was read", () => {
+  /*
+   * **THIS ASSERTION CHANGED ON 2026-08-21 (NH Hunt 6 item 5), AND THE OLD ONE
+   * IS WORTH STATING SO THE CHANGE READS AS A DECISION.**
+   *
+   * It used to be `verifiedAt === null` for every row, with the message
+   * "nothing human has confirmed these rows". That was TRUE when it was
+   * written, and it was written as a fact about the corpus rather than as a
+   * rule about it — so the day somebody DID confirm a row, the guard failed on
+   * the confirmation. A guard that only holds while nothing has been verified
+   * stops holding exactly when the verification work starts.
+   *
+   * The author's ruling of 2026-08-16 is what it collided with: **a read from
+   * the subject's own official source IS the verification**, by that source, on
+   * the read date. Five officials had their specific verified page repaired
+   * this session by fetching and reading each replacement — Keshel and Gabaldón
+   * on `azleg.gov`, McKeon and Space on `njleg.state.nj.us`, Gallagher on
+   * `house.gov` — and stamping `verifiedAt` is what that ruling asks for.
+   *
+   * So the rule replacing the fact is STRONGER, not weaker: `verifiedAt` may be
+   * null, or a stamped ISO date — and a row that claims verification must have
+   * been read from an OFFICIAL host. A confirmed date sitting on an
+   * aggregator's page is precisely what "not yet" is reserved for.
+   */
+  const ISO = /^\d{4}-\d{2}-\d{2}$/;
   for (const person of SET.officeholders) {
     assert.ok(person.provenance.sourceUrl?.startsWith("https://"));
     assert.ok(person.provenance.sourceOrg.length > 0);
     assert.ok(person.provenance.collectedAt);
-    assert.equal(
-      person.provenance.verifiedAt,
-      null,
-      "nothing human has confirmed these rows",
+
+    const verified = person.provenance.verifiedAt;
+    if (verified === null || verified === undefined) continue;
+
+    assert.match(
+      verified.slice(0, 10),
+      ISO,
+      `${person.name}: a verification date is a wall-clock stamp from ` +
+        "corepack pnpm stamp, never a plausible-looking string",
+    );
+
+    const host = (() => {
+      try {
+        return new URL(person.websiteUrl ?? "").hostname;
+      } catch {
+        return null;
+      }
+    })();
+    assert.ok(
+      host !== null && isOfficialHost(host),
+      `${person.name}: verifiedAt is set but the page it names (${person.websiteUrl ?? "none"}) ` +
+        "is not an official host. A read is the verification only when it is the " +
+        "subject's OWN official source; anywhere else a second rung is still owed.",
     );
   }
 });

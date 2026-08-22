@@ -6,6 +6,7 @@ import test from "node:test";
 import {
   SCAN_EXEMPT,
   classify,
+  isEasternGeneratedAtLead,
   readAllowlist,
   scanText,
   isExpectedFutureLine,
@@ -517,4 +518,111 @@ test("an empty allowlist is legitimate; a broken extraction still throws", async
   const missing = join(dir, "missing.ts");
   write(missing, "const SOMETHING_ELSE = [];\n", "utf8");
   assert.throws(() => readAllowlist(missing), /no ALLOWLIST literal/);
+});
+
+/* ========================================================================== */
+/* THE THIRD SPECIES — R18's Eastern generated-at stamp (NH Hunt 6,           */
+/* 2026-08-21)                                                                */
+/* ========================================================================== */
+
+test("R18: an Eastern generated-at stamp may lead Phoenix by one day, and only that", () => {
+  /*
+   * Two correct rules collided, and the collision fires for three hours every
+   * night. `pnpm stamp` is America/Phoenix and answers "what DAY is it for the
+   * author" — every rule, tracker note and reader-facing line is dated by it,
+   * and the guard above measures against it. R18 ruled that a GENERATED
+   * document's "this file was written at" header carries EASTERN, because that
+   * is provenance on a machine-written artifact rather than a date about the
+   * author's day. Between 21:00 Phoenix and midnight Eastern they are on
+   * different calendar days, and any generator run in that window writes a
+   * header the guard reads as a fabricated future date.
+   *
+   * `docs/officials-audit.md` did exactly that: `Generated 2026-08-22 00:19:56
+   * EDT` while Phoenix said 2026-08-21.
+   *
+   * The exemption is narrow and every clause is load-bearing, so it is proven
+   * clause by clause here rather than trusted.
+   */
+  const on = "2026-08-21";
+  const stamped = (text: string) => ({ date: "2026-08-22", line: 1, text });
+
+  assert.equal(
+    isEasternGeneratedAtLead(
+      stamped("Generated 2026-08-22 00:19:56 EDT by `pnpm officials:audit`."),
+      on,
+    ),
+    true,
+    "the real case: a formatter's Eastern stamp one day ahead of Phoenix",
+  );
+  assert.equal(
+    isEasternGeneratedAtLead(stamped("Generated 2026-08-22 23:00:00 EST by a job."), on),
+    true,
+    "the abbreviation is EST in winter and EDT in summer, and both are true",
+  );
+
+  // A bare date on a Generated line is a date somebody TYPED. The wall-clock
+  // time and the zone label are what make it a formatter's output, and they
+  // are the whole safety of this exemption.
+  assert.equal(
+    isEasternGeneratedAtLead(stamped("Generated 2026-08-22 by hand."), on),
+    false,
+    "no time and no zone — that is a typed date, not a stamped instant",
+  );
+  assert.equal(
+    isEasternGeneratedAtLead(stamped("Generated 2026-08-22 00:19:56 by a job."), on),
+    false,
+    "a time with no zone abbreviation proves nothing about which clock wrote it",
+  );
+
+  // Two days is not a timezone. No pair of US clocks can open that gap, so it
+  // is the fabrication this whole guard exists to catch.
+  assert.equal(
+    isEasternGeneratedAtLead(
+      { date: "2026-08-23", line: 1, text: "Generated 2026-08-23 00:19:56 EDT by a job." },
+      on,
+    ),
+    false,
+    "two days ahead is not a zone difference — it is a fabricated stamp",
+  );
+
+  // The hit's own date must be the one the header stamped. A line carrying a
+  // legitimate stamp AND some other future date must not launder the second.
+  assert.equal(
+    isEasternGeneratedAtLead(
+      {
+        date: "2026-12-25",
+        line: 1,
+        text: "Generated 2026-08-22 00:19:56 EDT — next run 2026-12-25.",
+      },
+      on,
+    ),
+    false,
+    "a stamped line does not excuse every other date sitting on it",
+  );
+
+  // And a line that is not the header form at all gets nothing.
+  assert.equal(
+    isEasternGeneratedAtLead(stamped("The meeting is 2026-08-22 00:19:56 EDT."), on),
+    false,
+    "the header FORM is required — 'Generated <date> <time> <zone>'",
+  );
+});
+
+test("R18: the exemption reports as its own species, never as an allowlisted hit", () => {
+  // The doctrine above is that the species report SEPARATELY because they mean
+  // opposite things. An Eastern stamp folded into `allowed` would read as a
+  // tolerated defect and would consume an allowlist budget it has no business
+  // touching — which is what the first attempt at this did.
+  const split = classify(
+    [
+      { date: "2026-08-22", line: 1, text: "Generated 2026-08-22 00:19:56 EDT by a job." },
+      { date: "2026-08-22", line: 2, text: "Some other future date 2026-08-22." },
+    ],
+    [],
+    "docs/example.md",
+    "2026-08-21",
+  );
+  assert.equal(split.easternStamps.length, 1, "the stamp is its own species");
+  assert.equal(split.allowed.length, 0, "and it never lands in the allowlisted bucket");
+  assert.equal(split.failures.length, 1, "while the bare future date still fails outright");
 });

@@ -97,3 +97,4 @@ next-env.d.ts
 # committed one with git add -A: it then blocked every branch switch, because
 # Excel holds the file open and git cannot unlink it to check the branch out.
 ~$*
+/.nh6tmp/

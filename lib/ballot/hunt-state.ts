@@ -8,10 +8,14 @@
  *
  *   NOT_HUNTED       no completed hunt for this field.
  *   FOUND            the field is present, with its source recorded.
- *   VERIFIED_ABSENT  a completed hunt walked every applicable rung and the
- *                    thing does not exist — a FINDING, earned by a hunt
- *                    session and NEVER by a backfill, carrying the rungs
- *                    walked and the date checked.
+ *   VERIFIED_ABSENT  a completed hunt walked EVERY ROUTE THE BRANCH MANIFEST
+ *                    NAMES for this field and the thing does not exist — a
+ *                    FINDING, earned by a hunt session and NEVER by a
+ *                    backfill, carrying the rungs walked, the branches walked
+ *                    with their manifest route ids, the manifest version, and
+ *                    the date checked. RULING 61 raised this bar from RULING
+ *                    52 two independent branches, which was too low to
+ *                    support a claim about a named person.
  *   NOT_APPLICABLE   the field cannot exist for this candidate — structural
  *                    absence, with its reason and its date. A candidate who
  *                    has never held the office has no voting record to find,
@@ -43,7 +47,12 @@
  * NOT_HUNTED, and only with evidence behind it.
  */
 
-import { type Branch, isEvidencedByBranches } from "../hunt/discovery.ts";
+import {
+  judgeManifestWalk,
+  type ManifestBranch,
+  type ManifestField,
+} from "../hunt/branch-manifest.ts";
+import { isEvidencedByBranches } from "../hunt/discovery.ts";
 
 /** The four reader-visible Kelly fields, in the order they are reported. */
 export const KELLY_FIELDS = ["photo", "blurb", "contact", "campaignSite"] as const;
@@ -91,9 +100,26 @@ export type RecordedFieldState =
        * Required, and validated by `isEvidencedAbsence` below. There are zero
        * `VERIFIED_ABSENT` records in the product as of this ruling, so nothing
        * is grandfathered and nothing needs to be.
+       *
+       * **RULING 61, 2026-08-21: each branch also names the MANIFEST ROUTE it
+       * walked.** Two independent branches was still too low a bar for a claim
+       * about a named person, so exhaustion stopped being a count and became a
+       * named list — `docs/branch-manifest.md`. A branch with no `route` is a
+       * legal branch and does not count toward exhaustion, which is how a
+       * session walks something the manifest has not named yet.
        */
-      branches: Branch[];
+      branches: ManifestBranch[];
       checkedAt: string;
+      /**
+       * **The manifest version this absence was earned under (RULING 61).**
+       *
+       * The manifest only grows, and a new route applies RETROACTIVELY to
+       * everything already marked absent. Stamping the version is what makes
+       * that automatic rather than something a session has to remember: a
+       * record earned under `v1` stops being exhaustion the moment `v2` exists,
+       * and `judgeManifestWalk` says so instead of leaving it to be noticed.
+       */
+      manifestVersion: string;
     }
   | { state: "NOT_APPLICABLE"; reason: string; checkedAt: string };
 
@@ -124,11 +150,13 @@ const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
  */
 export function isEvidencedAbsence(
   record: RecordedFieldState | undefined,
+  field: ManifestField,
 ): record is {
   state: "VERIFIED_ABSENT";
   rungs: WalkedRung[];
-  branches: Branch[];
+  branches: ManifestBranch[];
   checkedAt: string;
+  manifestVersion: string;
 } {
   if (!record || record.state !== "VERIFIED_ABSENT") return false;
   if (!Array.isArray(record.rungs) || record.rungs.length === 0) return false;
@@ -144,6 +172,20 @@ export function isEvidencedAbsence(
   if (!isEvidencedByBranches({ branches: record.branches, checkedAt: record.checkedAt })) {
     return false;
   }
+  /*
+   * RULING 61 (2026-08-21). And two is no longer enough. Every LIVE route the
+   * manifest names for this field, walked, named and dated, none of them
+   * finding it — judged against the CURRENT manifest, so that adding a route
+   * re-opens every absence earned under the old one without anybody having to
+   * remember to go back for them.
+   */
+  const verdict = judgeManifestWalk({
+    field,
+    branches: record.branches,
+    checkedAt: record.checkedAt,
+    manifestVersion: record.manifestVersion ?? "unstamped",
+  });
+  if (!verdict.exhausted) return false;
   return record.rungs.every(
     (r) =>
       r &&
@@ -166,9 +208,10 @@ export function isEvidencedAbsence(
 export function stateFor(
   present: boolean,
   record: RecordedFieldState | undefined,
+  field: ManifestField,
 ): HuntState {
   if (present) return "FOUND";
-  if (isEvidencedAbsence(record)) return "VERIFIED_ABSENT";
+  if (isEvidencedAbsence(record, field)) return "VERIFIED_ABSENT";
   if (isEvidencedNotApplicable(record)) return "NOT_APPLICABLE";
   return "NOT_HUNTED";
 }
@@ -180,7 +223,7 @@ export function statesFor(
 ): Record<KellyField, HuntState> {
   const out = {} as Record<KellyField, HuntState>;
   for (const field of KELLY_FIELDS) {
-    out[field] = stateFor(presence[field], recorded?.[field]);
+    out[field] = stateFor(presence[field], recorded?.[field], field);
   }
   return out;
 }

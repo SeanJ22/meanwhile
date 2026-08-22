@@ -140,7 +140,14 @@
     "rewalk:candidates": "tsx scripts/rewalk-candidate-fields.mts",
     "rewalk:walls": "tsx scripts/rewalk-walls.mts",
     "venue:hunt": "tsx scripts/hunt-standing-venue.mts",
-    "nh5:shots": "tsx scripts/nh5-shots.mts"
+    "nh5:shots": "tsx scripts/nh5-shots.mts",
+    "guard:census": "node scripts/guard-census.mjs",
+    "guard:history": "node scripts/guard-history.mjs",
+    "manifest:doc": "tsx scripts/branch-manifest-doc.mts",
+    "manifest:walk": "tsx scripts/manifest-walk.mts",
+    "rung6": "tsx scripts/rung6.mts",
+    "geocode": "tsx scripts/geocode.mts",
+    "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

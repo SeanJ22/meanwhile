@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 182,
-    "named": 1664,
+    "files": 183,
+    "named": 1674,
     "dynamic": 6
   },
   "files": {
@@ -1323,6 +1323,21 @@
         "the body homepage rung is labelled with the division, never a minted body name",
         "the ladder never constructs a link it was not given",
         "the meeting record rung is dropped when it duplicates the agenda"
+      ],
+      "dynamic": 0
+    },
+    "tests/main-green.test.ts": {
+      "names": [
+        "a check still running is PENDING, which is not green",
+        "a genuinely failing check is still RED",
+        "a long run with no steps is still judged on the steps, not the clock",
+        "a mixed run judges what RAN and names what did not",
+        "a run that completed with NO STEPS never started",
+        "a run that recorded even one step DID start, however it ended",
+        "all checks passing is the only GREEN",
+        "an in-flight run is not judged at all",
+        "every check stillborn reads CANNOT TELL, never RED",
+        "no check at all is CANNOT TELL, not GREEN"
       ],
       "dynamic": 0
     },

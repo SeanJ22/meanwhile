@@ -1586,7 +1586,7 @@ The first session. The map, the tracker, and congressional district boundaries o
 
 ## nj-hunt3
 
-**What it started.** 11 row(s) opened, 11 still open.
+**What it started.** 12 row(s) opened, 12 still open.
 
 - **NJ06** — data/ballot/nh-merrimack-2026.json gives the contest "Executive Councilor, District 2" the ocdId ocd-division/country:us/state:nh/county:merrimack/place:newbury_town. New Hampshire's Executive Council District 2 covers 81 cities and towns; Newbury is one of them. Two consequences: the contest renders only for readers whose divisions include Newbury, so the other 80 towns in the district never see their own Executive Council race; and the id is a wrong join key, which CLAUDE.md makes the universal key for districts, offices and elections. Found while verifying RULING 71's certainty classification -- the contest read as CERTAIN at 03255, which is accidentally the right answer for the wrong reason (Newbury covers the whole zip, and District 2 does cover Newbury). The right division is an Executive Council district, which this repo has no committed geometry for. Fixing it means either committing that layer or recording the contest against the state with a scope note. *(open)*
 - **NJ07** — pnpm twig:pair --zip 07866 gives 90 of 142 units held, and 52 of 52 unheld rows read "no division of its own". 34 of those are GENERAL_PURPOSE and SCHOOL_DISTRICT units in Sussex, Passaic, Essex, Bergen and Warren counties, 16-25 km out. Real TIGER polygons exist for all of them. The gap is that CLIP_COUNTIES is one county per covered state (lib/coverage/artifacts.ts, derived from the coverage manifest): place-34.geojson holds 67 features and cousub-34.geojson 66, all Morris. scripts/fetch-districts.ts states the tradeoff explicitly -- national coverage across these types is 13,000+ features, which ends the committed-GeoJSON approach and forces vector tiling. Extending to five adjacent counties is roughly 1,000 more features. That is a real step toward the stated ceiling and it is an architecture decision rather than a hunt, which is why this is a row and not a fix. Note the denominator: 142 is the first-rung 25 km circle, and every government whose territory reaches inside 07866 IS held. *(open)*
@@ -1605,8 +1605,15 @@ Why it surfaced as a regression today: the meetings snapshot refreshed at 20:04 
 
 Two things for whoever takes it: why that class of row resolves to no card, and whether M135's retry loop should keep trying rather than breaking when a zip offers exactly one Body row -- a check that passes because the second row worked is not asserting what it reads as asserting. *(open)*
 - **VF01** — Read as an image on production f20e1e9 at 430x932. On the map's who-governs card the pill sits inline in each body row, between the body name and the type label. At phone width that squeezes the name into two and three lines - Rockaway Township School District wraps to three, Denville Township School District to three - and the pill itself wraps to two or three lines beside them. Every word is legible and the classification is correct; the row is simply cramped, and six of eight rows carry it at this zip. The pill reads well on the ballot page, where it wraps under a wide heading rather than competing with a narrow column. Worth a look at whether it belongs under the row rather than inside it on narrow viewports, or whether the type label should move. *(open)*
+- **NS04** — Every job on d0e0e34 completed in three to four seconds with ZERO steps recorded, twice, including an explicit `gh run rerun`. Runs 32600684167 and its re-run both died before any step reported and the logs are not retrievable ("log not found").
 
-**Needs Sean.** NS02, NS03
+It is not the tree. f20e1e9, twenty minutes earlier, passed all three checks, and d0e0e34 differs from it only by documents and one capture script. Locally: test 1694/1694, lint 0 errors, tsc clean, both build modes green. Every gate this repo has says the tree is fine.
+
+A completed job with no steps at all did not run -- a job that reaches even its first step records that step. The usual causes are an Actions minutes cap, a spending limit, or a runner allocation failure, and all three are account settings only Sean can see or change. `gh api /settings/billing/actions` returns 404 for a session.
+
+What this costs while it stands: nothing merges through `pnpm handoff --ship` with a green check behind it, and `pnpm main:green` will report CANNOT TELL on every commit rather than green -- which is honest and is also not a working gate. scripts/main-green.mjs was corrected this session to tell this apart from a genuinely red main; before that fix it reported this as "main is broken", which would have sent a session hunting a defect that does not exist. *(open)*
+
+**Needs Sean.** NS02, NS03, NS04
 
 ## nj-hunt-0822
 

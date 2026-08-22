@@ -84,6 +84,38 @@ export function resolveMainSha({ fetch = true } = {}) {
  * Split out from the fetch so it is testable without a network — the states
  * that matter are the ones that are awkward to produce on demand.
  */
+/**
+ * A run that NEVER STARTED, told apart from a run that FAILED.
+ * (NJ Hunt 3, 2026-08-22 — found by using this tool on its first close-out.)
+ *
+ * All three checks on `d0e0e34` completed in three to four seconds with ZERO
+ * steps recorded, twice, including an explicit re-run. Meanwhile `f20e1e9` —
+ * twenty minutes earlier, differing only by documents and one capture script —
+ * had passed all three, and the tree was green locally on every gate.
+ *
+ * GitHub reports `conclusion: failure` for that, and it is not wrong: the run
+ * failed. But it is a failure of the CHECK, not of the TREE, and this script's
+ * whole discipline is that those must never print the same way. Reporting a
+ * runner that could not be allocated as "main is broken" would send a session
+ * hunting a defect that does not exist, which is the mirror image of the
+ * failure it was built to catch.
+ *
+ * **A completed job with no steps at all did not run.** A job that reaches even
+ * its first step records that step, whatever happens next — so zero steps is
+ * the signature, and the duration is corroboration rather than the test. It
+ * reports CANNOT TELL, which is honest in both directions: it does not claim
+ * the tree is broken, and it does not claim it is fine.
+ */
+export function neverStarted(check) {
+  if (check.status !== "completed") return false;
+  if (Array.isArray(check.steps) && check.steps.length > 0) return false;
+  if (!Array.isArray(check.steps)) return false;
+  const started = Date.parse(check.started_at ?? "");
+  const done = Date.parse(check.completed_at ?? "");
+  if (!Number.isFinite(started) || !Number.isFinite(done)) return true;
+  return done - started < 15_000;
+}
+
 export function verdictFromCheckRuns(checkRuns) {
   if (!Array.isArray(checkRuns) || checkRuns.length === 0) {
     return {
@@ -91,6 +123,24 @@ export function verdictFromCheckRuns(checkRuns) {
       why: "no check has ever been registered against this commit — that is not the same as passing",
       failed: [],
       pending: [],
+    };
+  }
+
+  /*
+   * Checked BEFORE anything else. A tree cannot be judged by runs that never
+   * executed, and if every run never started there is nothing here to judge.
+   */
+  const stillborn = checkRuns.filter(neverStarted).map((c) => c.name);
+  if (stillborn.length > 0 && stillborn.length === checkRuns.length) {
+    return {
+      verdict: UNKNOWN,
+      why:
+        `all ${stillborn.length} check(s) completed with NO STEPS — the runners never started, so this ` +
+        "says NOTHING about the tree. Usually an Actions minutes or spending cap, or a runner " +
+        "allocation failure; it is a WALL, not a JOB",
+      failed: [],
+      pending: [],
+      neverStarted: stillborn,
     };
   }
 
@@ -105,7 +155,11 @@ export function verdictFromCheckRuns(checkRuns) {
     .filter(
       (c) =>
         c.status === "completed" &&
-        !["success", "neutral", "skipped"].includes(c.conclusion),
+        !["success", "neutral", "skipped"].includes(c.conclusion) &&
+        // A run that never started is not a failing check. Where SOME runs
+        // started and some did not, the ones that ran are still judged — the
+        // stillborn ones are named separately rather than counted as red.
+        !neverStarted(c),
     )
     .map((c) => `${c.name} (${c.conclusion ?? "no conclusion"})`);
 
@@ -120,11 +174,18 @@ export function verdictFromCheckRuns(checkRuns) {
 
 /** Ask GitHub. Returns `null` when the question could not be put. */
 export function fetchCheckRuns(sha) {
+  /*
+   * `steps`, `started_at` and `completed_at` ride along so `neverStarted` can
+   * tell a runner that could not be allocated from a tree that is broken. The
+   * first version of this asked only for name/status/conclusion, and reported
+   * three stillborn runs as a red `main` — a check that could not run printing
+   * exactly like a failure of the thing it checks.
+   */
   const out = run("gh", [
     "api",
     `repos/${REPO}/commits/${sha}/check-runs`,
     "--jq",
-    "[.check_runs[] | {name, status, conclusion}]",
+    "[.check_runs[] | {name, status, conclusion, started_at, completed_at, steps: (.steps // [])}]",
   ]);
   if (out === null) return null;
   try {

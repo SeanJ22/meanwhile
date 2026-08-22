@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **209 open**, 324 resolved.
-- **53 waiting on Sean** — the first section below.
+- **210 open**, 324 resolved.
+- **54 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**53 open · 11 resolved.**
+**54 open · 11 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -48,6 +48,14 @@ Only Sean closes a row here. A session may open one and may work it.
 **JOB01** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32543652154 and 32543393133), both at: A source failed for a JOB reason — this run is red, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
 
 **NH31** — The refresh commits only if every source succeeded. One source producing zero rows from a non-zero fetch fails the run, so the snapshot does not move - even when carry-forward already saved that source's rows and every other source was fine. Today that is 14 failures of 37 runs. At national volume it means the snapshot never commits again, and the decision to make the gate per-source rather than per-run is yours.
+
+**NS04** — Every job on d0e0e34 completed in three to four seconds with ZERO steps recorded, twice, including an explicit `gh run rerun`. Runs 32600684167 and its re-run both died before any step reported and the logs are not retrievable ("log not found").
+
+It is not the tree. f20e1e9, twenty minutes earlier, passed all three checks, and d0e0e34 differs from it only by documents and one capture script. Locally: test 1694/1694, lint 0 errors, tsc clean, both build modes green. Every gate this repo has says the tree is fine.
+
+A completed job with no steps at all did not run -- a job that reaches even its first step records that step. The usual causes are an Actions minutes cap, a spending limit, or a runner allocation failure, and all three are account settings only Sean can see or change. `gh api /settings/billing/actions` returns 404 for a session.
+
+What this costs while it stands: nothing merges through `pnpm handoff --ship` with a green check behind it, and `pnpm main:green` will report CANNOT TELL on every commit rather than green -- which is honest and is also not a working gate. scripts/main-green.mjs was corrected this session to tell this apart from a genuinely red main; before that fix it reported this as "main is broken", which would have sent a session hunting a defect that does not exist.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 

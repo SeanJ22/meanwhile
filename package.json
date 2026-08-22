@@ -138,7 +138,8 @@
     "twig:pair": "tsx scripts/twig-pair.mts",
     "nh:fix-pages": "tsx scripts/fix-nh-official-pages.mts",
     "rewalk:candidates": "tsx scripts/rewalk-candidate-fields.mts",
-    "rewalk:walls": "tsx scripts/rewalk-walls.mts"
+    "rewalk:walls": "tsx scripts/rewalk-walls.mts",
+    "venue:hunt": "tsx scripts/hunt-standing-venue.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

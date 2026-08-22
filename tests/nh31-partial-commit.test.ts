@@ -69,8 +69,21 @@ test("NH31: the three outcomes carry three distinct exit codes", () => {
       "tell 'nothing to commit' from 'commit this and then go red'",
   );
   assert.equal(EXIT_CLEAN, 0, "a clean run must exit 0 or every caller breaks");
+  /*
+   * Widened to `number` deliberately. These are `const`, so TypeScript knows
+   * their literal types and calls `EXIT_NOTHING_WRITTEN !== 0` a comparison
+   * with no overlap — which is true today and is exactly what the assertion
+   * is here to keep true. Comparing the VALUES rather than the literal types
+   * keeps the guard live: set either constant to 0 and this fails, which is
+   * the regression it exists for (a failure that exits 0 commits nothing and
+   * tells nobody).
+   */
+  const failureCodes: number[] = [
+    EXIT_NOTHING_WRITTEN,
+    EXIT_WRITTEN_WITH_JOB_FAILURES,
+  ];
   assert.ok(
-    EXIT_NOTHING_WRITTEN !== 0 && EXIT_WRITTEN_WITH_JOB_FAILURES !== 0,
+    failureCodes.every((code) => code !== 0),
     "both failure outcomes must be non-zero: the run is red either way",
   );
 });

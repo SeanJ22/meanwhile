@@ -891,6 +891,14 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm portraits:normalise [--write]` | Sweeps every committed portrait for size and resamples what is over the cap. Never renames a file — a renamed portrait is a broken image — and REPORTS rather than silently corrects a file whose extension disagrees with its bytes. |
 | `scripts/transcode-image.mts` | The shared normaliser `pnpm ship:candidate` runs every portrait through: decodes WebP and AVIF, names the format from the BYTES rather than from the plan's filename, and caps the served size. Every change it makes is recorded in the photo's own source string, so nothing we re-encoded is cited as though it were the bytes the source published. |
 
+### The re-walk toolkit (NH Hunt 5, added 2026-08-21 — RULING 52, 53 and 60)
+
+| Command | What it does |
+|---|---|
+| `pnpm rewalk:candidates [--stamp] [--only=X]` | Re-walks every candidate field recorded FOUND and asks whether the claim still stands: the photo asset on disk, the campaign URL live, the quoted blurb still on the page it cites. `--stamp` writes `checkedAt` and NOTHING else — it never downgrades a field, because removing a fact about a named person over one refused branch is the failed-fetch-empties-a-full-surface defect at the candidate layer. Reports STANDS / WRONG / NOT VERIFIABLE / DUPLICATE KEY as a reconciling pair, with duplicates excluded from the error-rate denominator. |
+| `pnpm rewalk:walls [--host=X]` | Re-tests every host this repo has ever recorded as walled, at rung 2 and rung 3, and prints what each returns TODAY against how the wall was described and when. RULING 53 gives a walled source a 14-day window regardless of how emphatically the wall was written down. Distinguishes OPEN from STILL WALLED from PATH MOVED, because a 404 is the host answering us and is a different hunt from a refusal. |
+| `pnpm venue:hunt [--town X] [--url U]` | Reads a body's own page for the sentence that says where it meets. Built because Sutton's eighteen bodies had a live calendar carrying 1,312 events and not one meeting in this product: every event's `LOCATION` was empty, and the venue was in prose on the board's own page all along. Reports SENTENCES with the URL that carried them; never writes a wiring row, and never applies one board's published venue to another. |
+
 ### The branch toolkit (NH Hunt 3, added 2026-08-21 — RULING 52 and 53)
 
 | Command | What it does |
@@ -2877,3 +2885,149 @@ The Ashuelot Pond Dam Precinct is in the 2022 Census of Governments and is
 ABSENT from New Hampshire's own village-district register, both read
 2026-08-21. Neither is wrong to consult and neither settles it. It ships named,
 with both facts recorded — RULING 57.
+
+## 8. MANUAL HUNTING — every body worked by hand, and the branch each one became (NH Hunt 5, added 2026-08-21; RULING 60)
+
+RULING 60: *the session hand-works bodies, and that is the point.* Where no
+automated route reaches a body, the session reads the town report, opens the
+warrant article, follows the name through the minutes, calls up the PDF. Then
+**the route that succeeded is built into a named branch and applied across
+every body of the same shape, with the count reached reported.** Hand-working
+one body is how the branch that reaches the next fifty gets discovered.
+
+This section is that record. Every row is a body somebody sat down and read.
+
+### 8.1 The finding that made this section necessary
+
+Twenty Census units at 03255 were named and un-held. Six of the seven towns
+among them were un-held for a reason that has nothing to do with the towns:
+
+| Town | The URL the Census of Governments records | What is actually there, read 2026-08-21 |
+|---|---|---|
+| Acworth | `http://www.acworth.cc` | DNS does not resolve. **No Internet Archive snapshot has ever existed** for that host, which is itself evidence the URL was never right. |
+| Newport | `http://WWW.NEWPORTNH.NET` | Answers 200 — and is a parked domain whose sitemap contains one Cyrillic "uncategorised" category. |
+| Grantham | `http://www.granthamnh.net` | Redirects to the live `granthamnh.gov`. Merely stale. |
+| Croydon | (none recorded) | `townofcroydon.com` is a Squarespace **"Coming Soon"** page and has been since at least 2024-12-19. |
+| Windsor | (none recorded) | `windsornh.gov` is a **GoDaddy parking lander** — a `.gov` that is not the town. |
+| Lempster | (none recorded) | — |
+
+**A hunt that trusted the denominator's own URLs would have recorded five of
+these towns as publishing nothing.** All five publish a full boards index. The
+Census of Governments is the right denominator for WHICH governments exist and
+is not a source for where they publish; those are different questions and the
+file answers only the first one reliably.
+
+### 8.2 The branches, and how far each reached
+
+**BRANCH — the `.gov` sibling.** When a recorded town URL is dead or parked,
+try the same town name on `.gov` before concluding anything. Newport, Windsor
+and Sullivan County were all found this way in one pass. *Reached: 3 of 6
+towns hunted.* The trap it also exposes: `windsornh.gov` ANSWERS 200 and is a
+parking lander, so a status code is not an identity — the title tag and the
+page's own words are.
+
+**BRANCH — the Virtual Town Hall / Drupal 7 `/boards` index.** Newport,
+Croydon and Windsor all run the same install: `<Town>, NH |` in the `<title>`,
+`/sites/all/...` asset paths, a `/boards` index, `/<body-slug>` pages, and
+`/<body>/events/NNNN` for sittings. **Windsor's front page renders ZERO links
+to a plain client and its `/boards` index renders ten.** Guessing the path from
+the CMS family beat crawling the site. *Reached: 3 towns, 23 bodies.*
+
+**BRANCH — the Internet Archive, rung 11, for a town whose site is GONE.**
+Croydon's `croydon-nh.com` answers "Web Site Not Found" to a plain client AND
+to a real browser on 2026-08-21 — so this is not a wall to climb, it is a site
+that has been taken down. The 2026-05-21 snapshot carries the full boards
+index. *Reached: 1 town, 6 bodies.* **The provenance is recorded as an archive
+read with its snapshot date, never restamped as a live one** — the same
+discipline `carryForward` follows for a refused source.
+
+**BRANCH — the state register, for a class of body no town menu lists.** A New
+Hampshire village district is a separate government and a town's own site
+frequently does not mention it. The Office of Business and Economic Affairs
+publishes every one of them with its host municipality, mailing address and
+phone:
+`https://www.nheconomy.com/getmedia/f087979c-98b8-41b5-a2e0-1808faaa8ffe/village-districts-locations-addresses.csv`
+— **91 districts, 87 with a phone, 70 with a postal address.** It is the only
+publisher that names the Eastman Village District at all. *Reached: the whole
+class, 91 districts statewide.*
+
+**BRANCH — one SAU page that names every member district's school board.** New
+Hampshire school districts are administered in School Administrative Units, and
+an SAU's school-boards page names the board of EVERY member district. **One
+read of SAU 34 produced three separate Census units** — Hillsboro-Deering
+Cooperative, Washington and Windsor. One read of SAU 24 produced two more.
+*Reached: 6 school districts from 4 page reads.*
+
+**BRANCH — the trade association's directory, when the body has no page.** The
+Sullivan County Conservation District publishes nothing of its own. The New
+Hampshire Association of Conservation Districts (`nhacd.net`) publishes its
+address, its manager, and the part a reader actually needs: **"Board Meetings:
+First Friday of each Month 2pm - 4pm."** *Reached: the conservation-district
+class, 10 districts statewide.*
+
+**BRANCH — the board's own page states its standing venue in prose.** Built as
+`pnpm venue:hunt`; see 8.3.
+
+### 8.3 The venue-in-prose branch, and its honest yield
+
+**The wall.** A meeting with no venue is dropped. Sutton's eighteen bodies had
+a live CivicPlus calendar carrying 1,312 events and **not one meeting in this
+product**, because every event's `LOCATION` field is empty. NH Hunt 4 recorded
+that honestly and refused to pin them at the town office, which was right: a
+guess about a specific sitting dressed as a fact is exactly what the rule
+forbids.
+
+**The route.** The venue is not missing. It is in prose, on the board's own
+page, in the board's own words:
+
+> "The Sutton Planning Board meets at the Pillsbury Memorial Hall, 93 Main
+> Street, Sutton Mills, NH on the second Tuesday of the month at 7:00 pm."
+
+That is a sourced claim with a citation, which is the same standing on which
+the Wilmot Selectboard's venue already ships.
+
+**The branch, applied.** `pnpm venue:hunt` reads every body that is not LIVE
+and has a page, tries the recorded homepage first and then the body's own
+slug path, and reports the sentence with the URL that carried it.
+***Reached: 157 pages read — 3 state a venue, 137 read and state none, 17 not
+read.*** Two of the three are real finds (Sutton Planning Board; Wilmot Zoning
+Board of Adjustment, which names the Town Office Building already in the venue
+cache). The third names a schedule and no place, and is left in deliberately:
+this instrument reports candidates and a session judges them.
+
+**What the yield means, and it is not a disappointing number.** 137 boards were
+READ and genuinely publish no standing meeting place. That is a dated
+measurement about 137 pages, it is now on the record, and it is the reason the
+next session should go to the posted NOTICE rather than the board page — the
+notices are what RSA 91-A actually obliges, and they carry the room.
+
+### 8.4 The one that stopped, and exactly where
+
+**Sutton Planning Board — venue FOUND, wiring BLOCKED on a coordinate.**
+
+The venue is sourced and quotable. What cannot be established is where it is.
+The Census geocoder was asked three ways and returned a different place every
+time:
+
+| Asked | Returned |
+|---|---|
+| `93 Main Street, Sutton Mills, NH 03221` | 93 MAIN ST, **BRADFORD**, NH |
+| `93 Main Street, Sutton, NH 03221` | 93 MAIN ST, **BRADFORD**, NH |
+| `93 Main Street, Sutton Mills, NH` | 93 MAIN ST, SUTTON, **MA** |
+| `93 Main St, Sutton, NH 03260` | no match |
+
+Every venue-cache row carries a `coordinateSourceUrl` because a pin is a claim.
+Shipping the Bradford coordinate would put a Sutton board in another town, and
+shipping the Massachusetts one would put it in another state. **So the venue is
+recorded as a finding and the wiring is not shipped**, which is a boundary stop
+with its evidence attached rather than a failure. The next rung is a different
+geocoder or the town's own published coordinates, and it is a tracker row.
+
+### 8.5 The rule this section exists to make repeatable
+
+Three of the four highest-yield branches above share one shape: **the body
+itself publishes nothing, and somebody ELSE with a statutory or associational
+reason to enumerate it publishes everything.** The state register for village
+districts, the SAU for school boards, the association for conservation
+districts. When a small body appears to publish nothing, the next question is
+never "does it exist" — it is **"who is obliged to list it?"**

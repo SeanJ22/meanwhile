@@ -643,6 +643,14 @@
         "verification": "Read 2026-08-21 at rung 2. Title 'Ben Weir For Merrimack County Sheriff'. The campaign's own hero photograph shows him holding a yard sign reading BEN WEIR FOR MERRIMACK COUNTY SHERIFF with www.Weir4Liberty.org printed on it, which is this domain.",
         "attemptedAt": "2026-08-21"
       }
+    },
+    "ballot-nh-merrimack:county-attorney:endres-steven": {
+      "official": null,
+      "campaign": {
+        "url": "https://www.facebook.com/people/Steven-Endres-for-Merrimack-County-Attorney/61573266140508/",
+        "verification": "Read in a live browser 2026-08-21. The page self-identifies as 'Steven Endres for Merrimack County Attorney', is categorised by Facebook as 'Page - Political Candidate', and its Intro names the filed candidate name, the office and the cycle: 'I am an attorney who has been practicing criminal law for over 25 years, and I am proud to be running for the position of Merrimack County Attorney in 2026.' Filed name, office and cycle all match the Secretary of State cumulative filing this contest is built from. Reached as the top self-identified match, which the campaign-site rule names as an authoritative trail. Labeled as the campaign's Facebook page and never dressed as a website; it supplies NO photo, because social-media images are prohibited at every door of the photo rule.",
+        "attemptedAt": "2026-08-21"
+      }
     }
   },
   "hunts": [

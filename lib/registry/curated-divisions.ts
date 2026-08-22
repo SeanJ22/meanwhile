@@ -1,4 +1,5 @@
-import type { Division, OcdId } from "./types.ts";
+import type { Division } from "./types.ts";
+import type { OcdId } from "../sources/types.ts";
 import { tierForOcdId } from "../ocd/tiers.ts";
 
 /**
@@ -60,7 +61,7 @@ import { tierForOcdId } from "../ocd/tiers.ts";
  * ENUMERATED — present in the Census of Governments or NCES — and the
  * committed geometry does not carry it. It is never a place to invent a
  * jurisdiction, and never a way to route around a division that TIGER does
- * carry. `tests/curated-divisions.test.ts` holds both of those shut.
+ * carry. `tests/curated-division-overlay.test.ts` holds both of those shut.
  */
 
 const NH = "ocd-division/country:us/state:nh";

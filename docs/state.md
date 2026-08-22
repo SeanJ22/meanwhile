@@ -15298,3 +15298,174 @@ than the fields would have been. **Item 6 is 1 field of 197 and item 7 is 8
 bodies of 90.** Both are honestly short.
 
 Rows opened: `NH26` (photo review, Needs Sean), `NH27`, `NH28`, `NH29`.
+
+## NH Hunt 5 — 2026-08-21: Newbury holds every unit the Census names, and a green suite was hiding eight deleted tests
+
+**03255 holds 48 of 48 government units, up from 28.** `pnpm twig:pair`
+reconciles: 48 in the Census denominator, 48 held, 0 un-held. That is the
+headline, and the reason the other twenty were un-held is the finding under it.
+
+### Six of the seven towns were dark because the Census recorded a dead URL
+
+Not because the towns publish nothing. Every one of them publishes a full
+boards index.
+
+| Town | The URL the Census of Governments records | What is actually there, 2026-08-21 |
+|---|---|---|
+| Acworth | `http://www.acworth.cc` | DNS does not resolve, and the Internet Archive has NEVER captured that host |
+| Newport | `http://WWW.NEWPORTNH.NET` | answers 200 — a parked domain whose sitemap holds one Cyrillic "uncategorised" category |
+| Grantham | `http://www.granthamnh.net` | redirects to the live `granthamnh.gov`; merely stale |
+| Croydon | (none) | `townofcroydon.com` is a Squarespace "Coming Soon" page, and has been since 2024-12-19 |
+| Windsor | (none) | `windsornh.gov` is a GoDaddy parking lander — a `.gov` that is not the town |
+| Lempster | (none) | — |
+
+A hunt that trusted the denominator's own URLs would have recorded five towns
+as publishing nothing. **The Census of Governments is the right denominator for
+WHICH governments exist and is not a source for where they publish.**
+
+### The routes that worked, each now a branch in the playbook
+
+`docs/zip-playbook.md` §8 records all of them with what each reached. The
+highest-yield three share one shape: **the body publishes nothing, and somebody
+else with a statutory or associational reason to enumerate it publishes
+everything.** New Hampshire's village-district register (91 districts, 87 with
+a phone) is the only publisher that names the Eastman Village District at all.
+One read of SAU 34's school-boards page named three separate Census units. The
+NH Association of Conservation Districts publishes the Sullivan County
+Conservation District's address and *when its board meets*, which the county's
+own 81-URL sitemap does not.
+
+The other three: the `.gov` sibling; the Virtual Town Hall Drupal-7 `/boards`
+index, where **Windsor's front page renders zero links to a plain client and its
+`/boards` index renders ten**; and the Internet Archive at rung 11 for Croydon,
+whose site is down to a plain client AND to a real browser — recorded as an
+archive read with its snapshot date, never restamped as fresh.
+
+### The structural blocker, and the narrow fix
+
+The committed TIGER geometry is clipped to one county per state —
+`public/geo/*.geojson` says `clippedTo 04019/34027/33013` on its own face — and
+03255's first-rung circle crosses three counties. So six whole towns had no
+DIVISION, and `scripts/build-registry.ts` refuses a curated body whose division
+does not exist. Every board this session enumerated for them bounced.
+
+`lib/registry/curated-divisions.ts` supplies the identifier, label, tier, parent
+and real Census/NCES GEOID **without geometry**, because a registry division
+carries none — geometry lives in `public/geo` and is served separately. RULING
+57 says a body is NAMED FIRST and hunted second, and a body that cannot be named
+because a map file was clipped is the opposite of that. Widening the clip is the
+other honest answer and is the author's decision (`NH44`): `countyFips` is
+singular per state, it names the ballot files too, and re-fetching TIGER changes
+every served polygon.
+
+The map cannot draw those six. `tests/municipal-layer.test.ts` was an equality
+and is now a **reconciling pair** — drawn plus held-without-geometry equals held
+— with every undrawable division required to state why in its own provenance.
+
+### Two corrections this session made to its own work, both caught by guards
+
+**Lempster was filed as `goshen_lempster_school_district`**, on the
+reasonable-looking grounds that SAU 71 runs the schools as the Goshen-Lempster
+Cooperative. NCES lists Lempster (3303303) and Goshen (3303304) as two
+districts. Filing one under the other's joint name would have dropped a
+government from the denominator.
+
+**The shared body-name matcher bound `SULLIVAN COUNTY CONSERVATION DISTRICT` to
+`Sullivan County Board of Commissioners`.** Its own doc block had called that
+failure mode theoretical; it fired the same afternoon. Stripping ` BOARD OF
+COMMISSIONERS` leaves `SULLIVAN COUNTY`, which the unit name starts with. Every
+county in the country has both bodies, so it was a rule that would bind two
+unrelated governments wherever it was pointed — and a false positive removes a
+government from the hunt queue silently. The permissive direction is gone.
+
+### NH31: a refresh that commits only when every source is healthy never commits
+
+Run 32485680324, 13:12Z: 11 sources attempted, **10 read, 330 rows WRITTEN**,
+one job-failed on an eventless VCALENDAR, and nothing committed. The ingest
+signalled that with the same exit code it uses for "nothing was written at
+all", so the workflow could not tell them apart and stopped before its commit.
+
+At eleven sources that reads as flakiness. The per-source rate implied by 14
+failed runs of 37 over eight days is 0.042, and a run that commits only when no
+source fails commits with probability `(1-p)^n`: 62% at n=11, **`3e-94` at
+n=5000**. Three outcomes now carry three codes (`lib/meetings/refresh-exit.ts`);
+code 2 means the snapshot is on disk, so the workflow commits it and fails the
+job in a final `always()` step. RULING 12 is untouched — the run is still red
+and the source still named.
+
+### RULING 59, and why the second sweep needed a screenshot
+
+Nine reader-facing coverage statements deleted in the first pass. Then the same
+defect one layer down, inside the document RULING 59 makes load-bearing: the gap
+ledger printed *"2 of these govern part of this zip and are not in the
+registry"* **without ever doing a lookup** — both were in it.
+
+Then a section the source sweep could not see. The production capture at 85701
+showed a heading reading **"NOT HERE YET"** over *"Pima County offices, City of
+Tucson offices, and school-district (TUSD, Vail Unified) contests are not
+curated yet."* `walk:all` passed 371 of 371, the RULING 59 guard passed, and the
+shot script's own DOM assertion reported `bannedCoverage: []`. It was invisible
+to all three because the heading was three ordinary words in JSX, and the
+sentence that made it a coverage claim lived in `data/ballot/az-pima-2026.json`
+and never appeared under `app/`. **The guard now sweeps `.json`, because
+reader-facing prose in this product lives in data as often as in code.**
+
+Second session running in which a human reading a capture found what nothing
+automated could.
+
+### The suite reported 1561 passing, 0 failing, and had lost eight tests
+
+`tests/curated-divisions.test.ts` already existed — eight guards on OCD
+identifier minting and venue scoping — and writing a new file at that path
+replaced it. **A deleted test and a passing test are indistinguishable in
+pass/fail output.** The only instrument that sees it is the COUNT, and the count
+had dropped from 1564. Found by diffing test NAMES against `git show HEAD~1`;
+the originals are restored and the new guards live at
+`tests/curated-division-overlay.test.ts`. `scripts/walk-all.mts` already solves
+exactly this one layer up, by committing every check identity to
+`docs/walk-checks.txt`; the suite deserves the same instrument (`NH47`).
+
+### RULING 53: 138 undated claims, re-walked
+
+The hunt state held 544 field records and **not one carried a date**, so `pnpm
+stale` read "0 stale of 0 measured" while 138 live claims about named people sat
+outside its view. FOUND is a measurement and now counts. All 138 re-walked
+(`pnpm rewalk:candidates`): 49 stand, 24 no branch can verify, **64 are
+duplicate index keys in a second format** (`NH45`), 1 was genuinely wrong —
+hunted rather than downgraded, and shipped. Error rate 1 of 74 judged.
+
+Nine recorded walls re-tested (`pnpm rewalk:walls`): **6 answer rung 2 today**,
+1 is a moved path rather than a refusal, 2 are still walled.
+
+### The venue is in prose, and the one that stopped
+
+Sutton's eighteen bodies had a live calendar carrying 1,312 events and **not one
+meeting in this product** — every event's `LOCATION` is empty. The venue was
+never missing; it is on the board's own page: *"The Sutton Planning Board meets
+at the Pillsbury Memorial Hall, 93 Main Street, Sutton Mills, NH."*
+
+`pnpm venue:hunt` is that branch, applied across **157 pages: 3 state a venue,
+137 read and state none, 17 not read.** The wiring is NOT shipped, and that is
+the honest ending: the Census geocoder was asked four ways and returned Bradford
+NH twice, Sutton **Massachusetts** once, and no match once. Every venue-cache
+row carries a `coordinateSourceUrl` because a pin is a claim (`NH43`).
+
+That 137 is the finding, not a disappointment. The board PAGE is the wrong
+document; what RSA 91-A actually obliges is the posted NOTICE, and a notice
+carries the room by construction (`NH48`).
+
+### Where the numbers stand
+
+| | before | after |
+|---|---:|---:|
+| units held at 03255 | 28 of 48 | **48 of 48** |
+| bodies in the registry | 459 | **533** |
+| divisions | 940 | **953** |
+| owed candidate fields | 184 of 368 | **182 of 368** |
+| Kearsarge bodies LIVE | — | 68 of 122 |
+| tests | 1543 | **1569** |
+| `walk:all` | 371 | **371 passed, 0 regressions, 0 silent** |
+| `VERIFIED_ABSENT` | 0 | **0**, and not forced |
+
+Rows opened: `NH43` and `NH44` (Needs Sean), `NH45`, `NH46`, `NH47`, `NH48`,
+`NH49`.

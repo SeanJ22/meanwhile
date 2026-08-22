@@ -52,9 +52,14 @@ test("a Census GOVERNMENT matches the BODY inside it (RULING 9)", () => {
 });
 
 test("a government this registry genuinely does not hold reports absent", () => {
+  // Both are real New Hampshire governments in the state's own village-district
+  // register, both far from any covered zip, and neither is in this registry.
+  // (The two this test used to name — Eastman Village District and the Sullivan
+  // County Conservation District — were entered by NH Hunt 5, which is the
+  // whole point of the hunt and not a reason to loosen the check.)
   for (const dark of [
-    "EASTMAN VILLAGE DISTRICT",
-    "SULLIVAN COUNTY CONSERVATION DISTRICT",
+    "REDSTONE FIRE DISTRICT",
+    "BARTLETT VILLAGE WATER DISTRICT",
   ]) {
     assert.equal(
       bodyAccountingFor(dark, BODY_NAMES),
@@ -64,6 +69,45 @@ test("a government this registry genuinely does not hold reports absent", () => 
         "because it removes a body from the hunt queue silently",
     );
   }
+});
+
+/**
+ * **THE PREFIX FALSE POSITIVE, HELD SHUT.** (NH Hunt 5, 2026-08-21.)
+ *
+ * The matcher's first version compared prefixes in both directions, and its
+ * own doc block called the second direction theoretical. It fired the same
+ * afternoon: stripping ` BOARD OF COMMISSIONERS` off `Sullivan County Board of
+ * Commissioners` leaves `SULLIVAN COUNTY`, which `SULLIVAN COUNTY
+ * CONSERVATION DISTRICT` starts with — so a county's conservation district
+ * matched its board of commissioners.
+ *
+ * Every county in the United States has both, so this was a rule that would
+ * bind two unrelated governments wherever it was pointed, and it would have
+ * reported the conservation district as covered while nobody had hunted it.
+ */
+test("a shared leading name never binds two different governments", () => {
+  const names = [
+    "Sullivan County Board of Commissioners",
+    "Sullivan County Conservation District Board of Supervisors",
+  ];
+  assert.equal(
+    bodyAccountingFor("SULLIVAN COUNTY CONSERVATION DISTRICT", names),
+    "Sullivan County Conservation District Board of Supervisors",
+    "the conservation district must match ITS OWN board",
+  );
+  assert.equal(
+    bodyAccountingFor("SULLIVAN COUNTY CONSERVATION DISTRICT", [names[0]]),
+    undefined,
+    "with only the commissioners present, the conservation district is ABSENT",
+  );
+  // The general form: a unit whose name merely begins with another's.
+  assert.equal(
+    bodyAccountingFor("WARNER RIVER LOCAL ADVISORY COMMITTEE", [
+      "Warner Board of Selectmen",
+    ]),
+    undefined,
+    "sharing the word Warner is not sharing a government",
+  );
 });
 
 test("an empty or missing name never matches anything", () => {

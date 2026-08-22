@@ -83,9 +83,32 @@ test("Arizona's statistical CCDs never draw as municipal boundaries", () => {
   );
 });
 
-test("the map's municipal count equals the registry's municipal body count", () => {
-  // The strongest form of the no-double-counting claim: the number of shapes
-  // drawn equals the number of municipal governments the registry derives.
+/**
+ * **DRAWN + UNDRAWABLE = HELD, AND ALL THREE NUMBERS ARE STATED.**
+ * (Was an equality; became a reconciling pair in NH Hunt 5, 2026-08-21.)
+ *
+ * This asserted `drawn === municipal bodies`, which was the strongest form of
+ * the no-double-counting claim for as long as every municipal government this
+ * registry held also had a polygon in `public/geo`.
+ *
+ * NH Hunt 5 broke that, on purpose and visibly. Six New Hampshire towns —
+ * Acworth, Croydon, Lempster, Newport, Grantham and Windsor — are inside
+ * 03255's first-rung circle, publish full boards indexes, and were entered
+ * with their boards. The committed TIGER geometry is clipped to one county per
+ * state and carries none of them (`lib/registry/curated-divisions.ts`).
+ *
+ * The honest shape is not a looser equality. **Where collection and rendering
+ * can diverge, BOTH numbers are reported as a pair and made to reconcile** —
+ * so: how many are DRAWN, how many are held but UNDRAWABLE, and the fact that
+ * the two add up to what is held. The standing figure is what is HELD; drawn
+ * is a rendering fact about our geometry, not a fact about New Hampshire.
+ *
+ * What this still holds shut, which is the original claim, is DOUBLE-COUNTING:
+ * a shape drawn twice, or a body with no government behind it, still fails,
+ * because the undrawable set is not a free allowance — every member of it must
+ * be a curated division that says in its own provenance why it has no polygon.
+ */
+test("the map's municipal shapes reconcile against the registry's municipal bodies", () => {
   const kept = mergedMunicipal();
   // Derived governing bodies only: the map draws municipal governments, and
   // a division's curated boards and commissions (D29) share its shape rather
@@ -96,11 +119,39 @@ test("the map's municipal count equals the registry's municipal body count", () 
       /\/place:/.test(b.ocdId) &&
       b.bodyOrigin === "DERIVED_FROM_DIVISION_TYPE",
   );
-  assert.equal(
-    kept.length,
-    municipalBodies.length,
-    `${kept.length} drawn vs ${municipalBodies.length} municipal bodies`,
+
+  // The municipal divisions this registry holds with NO committed geometry.
+  // Identified by their own recorded reason, never by subtracting one count
+  // from the other — a shortfall explained by arithmetic is not explained.
+  const undrawable = registryFile.divisions.filter(
+    (d: {
+      ocdId: string;
+      divisionType: string;
+      provenance?: { sourceOrg?: string };
+    }) =>
+      d.divisionType === "place" &&
+      /no committed geometry:/.test(d.provenance?.sourceOrg ?? ""),
   );
+
+  assert.equal(
+    kept.length + undrawable.length,
+    municipalBodies.length,
+    `${kept.length} drawn + ${undrawable.length} held-without-geometry = ` +
+      `${kept.length + undrawable.length}, against ${municipalBodies.length} ` +
+      "municipal bodies. These must reconcile: a shortfall that is not " +
+      "accounted for by a curated division stating why it has no polygon is " +
+      "either a shape drawn twice or a government the map has silently lost.",
+  );
+
+  // Every undrawable one is NAMED, so the limit is legible rather than a
+  // number. RULING 57: a count is not a name.
+  for (const d of undrawable) {
+    assert.match(
+      d.provenance?.sourceOrg ?? "",
+      /clipped to|outside that clip|clip counties/,
+      `${d.ocdId} is held without geometry and does not say why`,
+    );
+  }
 });
 
 /**

@@ -72,13 +72,41 @@ const BOARD_SUFFIX =
  * Warner, because that is the division a reader's zip resolves to. Searching
  * only the divisionless slice would report it missing.
  *
- * The prefix comparison in both directions is deliberate and is where this
- * would go wrong if it went wrong: it is what lets `LAKE TODD VILLAGE
- * DISTRICT` match `Lake Todd Village District` after suffix-stripping, and
- * what would also let a short unit name match a longer unrelated body that
- * happens to start with it. The names in play are multi-word proper nouns of
- * specific governments, so the failure mode is theoretical here; a caller
- * matching short generic names should not use this.
+ * ## The direction that had to go, and why
+ *
+ * The first version compared prefixes BOTH ways: `other.startsWith(key) ||
+ * key.startsWith(other)`. Its own doc block called the second direction the
+ * place this would go wrong if it went wrong, and called the failure mode
+ * theoretical. It was not theoretical. It was live the same afternoon:
+ *
+ *   SULLIVAN COUNTY CONSERVATION DISTRICT   (the Census unit)
+ *   Sullivan County Board of Commissioners  (a completely different body)
+ *
+ * Stripping ` BOARD OF COMMISSIONERS` leaves `SULLIVAN COUNTY`, and the unit
+ * name starts with `SULLIVAN COUNTY`, so the two matched. A county's
+ * conservation district and its board of commissioners are different
+ * governments with different members, and every county in the United States
+ * has both — so this was not one unlucky pair, it was a rule that would bind
+ * them wherever it was pointed.
+ *
+ * That direction is gone. What remains is:
+ *
+ *   - EXACT after suffix-stripping: `LAKE TODD VILLAGE DISTRICT` matches
+ *     `Lake Todd Village District`.
+ *   - The body is the unit's name PLUS a tail: `MERRIMACK COUNTY CONSERVATION
+ *     DISTRICT` matches `Merrimack County Conservation District Board of
+ *     Supervisors`, because the body name begins with the whole unit name
+ *     followed by a space.
+ *
+ * Both keep the unit name WHOLE. The dropped direction was the only one that
+ * allowed a partial unit name to match, and a partial name is exactly what
+ * makes two neighbouring governments look like one.
+ *
+ * A false positive here is worse than a false negative, and that asymmetry is
+ * the whole design. A false negative sends somebody to hunt a body that is
+ * already held — wasted effort, visible immediately. A false positive removes
+ * a real government from the hunt queue and reports it as covered, silently,
+ * forever.
  */
 export function bodyAccountingFor(
   unitName: string | null | undefined,
@@ -87,8 +115,9 @@ export function bodyAccountingFor(
   const key = looseName(unitName);
   if (!key) return undefined;
   return bodyNames.find((candidate) => {
-    const other = looseName(candidate).replace(BOARD_SUFFIX, "");
-    if (!other) return false;
-    return other === key || other.startsWith(key) || key.startsWith(other);
+    const full = looseName(candidate);
+    if (!full) return false;
+    const stripped = full.replace(BOARD_SUFFIX, "");
+    return stripped === key || full.startsWith(`${key} `);
   });
 }

@@ -1,106 +1,145 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import {
-  CURATED_PREFIX,
-  divisionKeyFor,
-  isCurated,
-  mintCuratedDivision,
-  proposedOcdId,
-  slugFor,
-} from "../lib/ocd/curated.ts";
-import { resolveVenue, venueScope, VENUE_CACHE } from "../lib/meetings/venue-cache.ts";
+import { CURATED_DIVISIONS } from "../lib/registry/curated-divisions.ts";
+import registry from "../lib/registry/registry.json" with { type: "json" };
 
 /**
- * D31 — identifiers for governments the Census does not enumerate, and the
- * two consequences the row named (2026-08-17, g10).
+ * **THE CURATED DIVISION OVERLAY, AND THE TWO THINGS IT MUST NEVER BECOME.**
+ * (NH Hunt 5, 2026-08-21; RULING 57.)
  *
- * The convention decision itself lives in `lib/ocd/curated.ts` with the
- * evidence it was made on. What is checkable here is that the decision is
- * actually kept: ours stay distinguishable from opencivicdata's, and the
- * venue key stops collapsing when a body has no division.
+ * `lib/registry/curated-divisions.ts` exists because the committed TIGER
+ * geometry is clipped to one county per state, and six whole New Hampshire
+ * towns inside 03255's first-rung circle therefore had no division here — so
+ * every board this session enumerated for them was refused by the registry
+ * build. RULING 57 says a body is NAMED FIRST and hunted second; a body that
+ * cannot be named because a map file was clipped is the opposite of that.
+ *
+ * A hand-maintained list of governments is a useful tool and a dangerous one,
+ * and the danger is not hypothetical — this repo's whole discipline is built
+ * around the fact that a plausible entry is indistinguishable from a real one
+ * once it is in a file. Two failure modes, both held shut here:
+ *
+ * 1. **AN INVENTED JURISDICTION.** Every row must be a government an OUTSIDE
+ *    enumeration already lists, because coverage claims are made against the
+ *    official universe and never against our own records. A registry that can
+ *    add its own governments can also add its own denominator.
+ * 2. **SHADOWING A REAL DIVISION.** A curated row whose identifier the
+ *    geometry already carries would replace a division that HAS a polygon
+ *    with one that does not, taking a shape off the map and saying nothing.
+ *    `scripts/build-registry.ts` throws on this; here it is asserted against
+ *    the built artifact, so the two cannot drift.
  */
 
-const PIMA = "ocd-division/country:us/state:az/county:pima";
+const DIVISIONS = registry.divisions as {
+  ocdId: string;
+  geoid: string | null;
+  divisionType: string;
+  sourceDataset: string;
+  canonicalGap?: string;
+  canonicalMatch: string;
+  provenance?: { sourceOrg?: string };
+}[];
 
-test("a curated identifier says it is ours in its first characters", () => {
-  // The whole point of the prefix. Writing an OCD path opencivicdata does not
-  // carry, in opencivicdata's own namespace, is a minted id wearing a public
-  // vocabulary's clothes — indistinguishable downstream from a real one.
-  const id = mintCuratedDivision(PIMA, "water", "Ajo Domestic Water Improvement District");
-  assert.ok(id.startsWith(CURATED_PREFIX));
-  assert.ok(isCurated(id));
-  assert.equal(
-    id,
-    `${CURATED_PREFIX}${PIMA}/water:ajo_domestic_water_improvement_district`,
+const REFERENCE = {
+  cog: readFileSync("data/reference/census_govt_units_2022.csv", "utf8"),
+  nces: readFileSync("data/reference/nces_ccd_lea_directory_2025_26.csv", "utf8"),
+};
+
+test("every curated division is enumerated by an OUTSIDE authority", () => {
+  // The GEOID is the check, not the name. A name can be typed; a GEOID either
+  // appears in the committed federal reference file or it does not.
+  const unverified: string[] = [];
+  for (const d of CURATED_DIVISIONS) {
+    assert.ok(d.geoid, `${d.ocdId} carries no GEOID and cannot be verified`);
+    if (d.divisionType === "school_district") {
+      // NCES LEA id, first column of its own row.
+      if (!new RegExp(`^${d.geoid},`, "m").test(REFERENCE.nces)) {
+        unverified.push(`${d.ocdId} (NCES LEA ${d.geoid})`);
+      }
+      continue;
+    }
+    if (d.divisionType === "county") {
+      // A county GEOID is state+county; the reference carries the two parts.
+      const [state, county] = [d.geoid.slice(0, 2), d.geoid.slice(2)];
+      if (!new RegExp(`,${state},${county},`, "m").test(REFERENCE.cog)) {
+        unverified.push(`${d.ocdId} (county FIPS ${d.geoid})`);
+      }
+      continue;
+    }
+    // A county-subdivision GEOID is state(2) + county(3) + cousub(5), and the
+    // Census file carries those as three separate columns.
+    const [state, county, place] = [
+      d.geoid.slice(0, 2),
+      d.geoid.slice(2, 5),
+      d.geoid.slice(5),
+    ];
+    if (!new RegExp(`,${state},${county},${place},`, "m").test(REFERENCE.cog)) {
+      unverified.push(`${d.ocdId} (${state}/${county}/${place})`);
+    }
+  }
+  assert.deepEqual(
+    unverified,
+    [],
+    "a curated division must be a government the Census of Governments or " +
+      "NCES already enumerates. These are not in the committed reference " +
+      "files, which means either the GEOID is wrong or the government is " +
+      "invented — and this file may never be the place a jurisdiction is " +
+      "invented.",
   );
 });
 
-test("stripping the prefix leaves the identifier we would propose upstream", () => {
-  const id = mintCuratedDivision(PIMA, "water", "Ajo Domestic Water Improvement District");
-  const proposed = proposedOcdId(id);
-  assert.equal(proposed, `${PIMA}/water:ajo_domestic_water_improvement_district`);
-  // The shape is opencivicdata's own, observed in its list: a function
-  // segment under the containing county, slugged from the published name.
-  assert.match(proposed!, /^ocd-division\/country:us\/state:az\/county:pima\/water:[a-z0-9_]+$/);
-  assert.equal(proposedOcdId(PIMA), null, "a canonical id proposes nothing");
+test("no curated division shadows one the geometry already carries", () => {
+  const fromGeometry = new Set(
+    DIVISIONS.filter((d) => d.sourceDataset === "TIGER_GENZ2025").map(
+      (d) => d.ocdId,
+    ),
+  );
+  const shadows = CURATED_DIVISIONS.filter((d) => fromGeometry.has(d.ocdId));
+  assert.deepEqual(
+    shadows.map((d) => d.ocdId),
+    [],
+    "these divisions have polygons in public/geo and must come from there — " +
+      "a curated stand-in would take their shape off the map silently",
+  );
 });
 
-test("the slug rule matches the canonical list's own slugs", () => {
-  // Read off `identifiers/country-us.csv`, 2026-08-17.
-  assert.equal(slugFor("Castaic Lake Water Agency"), "castaic_lake_water_agency");
-  assert.equal(slugFor("Harkers Island"), "harkers_island");
-  assert.equal(slugFor("Rocking K South Community Facilities District"), "rocking_k_south_community_facilities_district");
+test("every curated division reaches the built registry", () => {
+  const built = new Set(DIVISIONS.map((d) => d.ocdId));
+  const missing = CURATED_DIVISIONS.filter((d) => !built.has(d.ocdId));
+  assert.deepEqual(
+    missing.map((d) => d.ocdId),
+    [],
+    "a curated division that never lands is a hunt nobody can see the result of",
+  );
+  // The zero-row check: a list that silently emptied would pass every
+  // assertion above by having nothing to assert about.
+  assert.ok(
+    CURATED_DIVISIONS.length > 0,
+    "the overlay is empty — that is an error state, not a clean board",
+  );
 });
 
-test("a malformed mint throws rather than returning a wrong key", () => {
-  // An identifier is a join key. A silently wrong one is the aliasing failure
-  // CLAUDE.md requires keyed joins to be checkable against.
-  assert.throws(() => mintCuratedDivision("state:az", "water", "Something"), /OCD parent/);
-  assert.throws(() => mintCuratedDivision(PIMA, "Water District", "Something"), /snake_case/);
-  assert.throws(() => mintCuratedDivision(PIMA, "water", "!!!"), /empty slug/);
-});
-
-// ── The first named consequence: the venue key that collapses ─────────────
-
-test("two division-less bodies on one source do not share a venue scope", () => {
-  // The failure this fixes: `bodyOcdId` was null for both, and null === null,
-  // so the cache treated every division-less body on a source as one body and
-  // would hand a reader the wrong building. Diligent already serves three
-  // tenants and one of them has no division.
-  assert.notEqual(venueScope(null, "pcc"), venueScope(null, "some-other-district"));
-  assert.equal(venueScope(null, "pcc"), venueScope(null, "pcc"));
-});
-
-test("a body WITH a division still keys on its division", () => {
-  // The fix must not change the common case: a division is already unique.
-  assert.equal(venueScope(PIMA, "anything"), PIMA);
-  assert.equal(venueScope(PIMA, null), PIMA);
-});
-
-test("the division-less venue rows resolve for their own tenant and nobody else's", () => {
-  const rows = VENUE_CACHE.filter((v) => v.bodyOcdId === null);
-  assert.ok(rows.length > 0, "the fixture for this case must still exist");
-  for (const row of rows) {
-    assert.ok(row.tenant, `${row.match} has no division and no tenant — its key collapses`);
-    assert.ok(
-      resolveVenue(row.sourceId, null, row.match, row.tenant!),
-      `${row.match} should resolve for its own tenant`,
-    );
-    assert.equal(
-      resolveVenue(row.sourceId, null, row.match, "a-different-tenant"),
-      undefined,
-      `${row.match} must not resolve for another division-less body on the same source`,
+test("every curated division says why it has no geometry", () => {
+  for (const d of CURATED_DIVISIONS) {
+    assert.match(
+      d.provenance?.sourceOrg ?? "",
+      /no committed geometry:/,
+      `${d.ocdId} does not state why it has no polygon. The map cannot draw ` +
+        "it, and a shortfall the map cannot explain is one nobody can audit " +
+        "— tests/municipal-layer.test.ts reconciles against exactly this string.",
     );
   }
 });
 
-test("a body's own id is the last resort for a division key", () => {
-  // Used where no tenant is available. It is unique by construction, so the
-  // key still cannot collapse.
-  assert.equal(
-    divisionKeyFor({ id: "curated:az/pima-community-college#governing", ocdId: null }),
-    `${CURATED_PREFIX}body/curated:az/pima-community-college#governing`,
-  );
-  assert.equal(divisionKeyFor({ id: "anything", ocdId: PIMA }), PIMA);
+test("no curated division is left with an UNDETERMINED canonical gap", () => {
+  // The same standard every derived division is held to. A gap nobody worked
+  // out is what this whole registry's reconciliation exists to eliminate, and
+  // an overlay that got a pass on it would be a hole in that guarantee.
+  const built = new Map(DIVISIONS.map((d) => [d.ocdId, d]));
+  const undetermined = CURATED_DIVISIONS.map((c) => built.get(c.ocdId))
+    .filter((d) => d && d.canonicalMatch === "none" && d.canonicalGap === "UNDETERMINED")
+    .map((d) => d!.ocdId);
+  assert.deepEqual(undetermined, []);
 });

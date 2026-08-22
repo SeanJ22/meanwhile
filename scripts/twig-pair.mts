@@ -96,9 +96,77 @@ function divisionFor(unit: { name: string | null; countyFips: string }): string 
   if (/^COUNTY OF /.test(name)) return `ocd-division/country:us/state:nh/county:${county}`;
   const school = /^(.*?)\s+SCH(?:OOL)?\s+DIST(?:RICT)?$/.exec(name);
   if (school) {
-    return `ocd-division/country:us/state:nh/school_district:${slug(school[1])}_school_district`;
+    return `ocd-division/country:us/state:nh/school_district:${schoolSlug(school[1])}_school_district`;
   }
   return null;
+}
+
+/*
+ * NOTE ON THE DOC BLOCK BELOW: its closing paragraph originally described a
+ * LEMPSTER -> goshen_lempster alias as the one per-district fact no rule could
+ * derive. That alias was wrong and has been removed — see SCHOOL_ALIASES. The
+ * two-mechanism split it describes is unchanged and still the point.
+ */
+/**
+ * THE CENSUS ABBREVIATES SCHOOL DISTRICT NAMES AND THE REGISTRY DOES NOT.
+ * (NH Hunt 5, 2026-08-21.)
+ *
+ * This derivation used to be `slug(name)` and nothing else, and it reported
+ * TEN school districts as "division NOT in this registry" on a day when six of
+ * them were sitting in `registry.json` under their expanded names. The
+ * Census's own file writes `HILLSBORO DEERING COOPERATN SCH DIST`, `JOHN STARK
+ * REG SCHOOL DISTRICT` and `HENNIKER TOWN SCH DIST`; NCES and the OCD
+ * identifiers write `hillsboro_deering_cooperative_school_district`,
+ * `john_stark_regional_school_district` and `henniker_school_district`.
+ *
+ * The failure mode is the one that matters most in this report: a unit that IS
+ * held reads as a gap, which sends the next session to hunt a body that is
+ * already in the registry, and — worse — makes the coverage pair understate
+ * itself. An understated denominator is not a safe error here; it is a false
+ * statement about what this product holds.
+ *
+ * Two mechanisms, deliberately separate:
+ *
+ *  - EXPANSIONS are the Census's abbreviation vocabulary, applied to every
+ *    name. They are rules, and a rule that is wrong is wrong visibly.
+ *  - ALIASES are per-district facts that no rule can derive. There are none
+ *    today. When one appears — two federal enumerations genuinely disagreeing
+ *    about one government's name — it belongs there rather than in the
+ *    expansion rules, where it would look derived and would quietly widen to
+ *    districts it was never checked against. RULING 57: two official
+ *    enumerations that disagree is a finding, and a finding gets a line.
+ */
+const SCHOOL_EXPANSIONS: [RegExp, string][] = [
+  [/\bCOOPERATN\b/g, "COOPERATIVE"],
+  [/\bCOOP\b/g, "COOPERATIVE"],
+  [/\bREG\b/g, "REGIONAL"],
+  // "X TOWN SCH DIST" is the Census's way of writing a single-town district.
+  // The identifier drops the word, because "henniker_town_school_district"
+  // and "henniker_school_district" are the same government.
+  [/\s+TOWN$/, ""],
+  [/\s+CITY$/, ""],
+];
+
+const SCHOOL_ALIASES: Record<string, string> = {
+  // Empty, and kept as a named mechanism rather than deleted.
+  //
+  // It briefly held LEMPSTER -> goshen_lempster, which was WRONG: NCES lists
+  // Lempster School District and Goshen School District as two districts, and
+  // the Goshen-Lempster Cooperative is how they jointly run their schools
+  // rather than a third government. See lib/registry/curated-divisions.ts.
+  //
+  // The mechanism stays because the NEXT genuine naming disagreement between
+  // two federal enumerations should land here, visibly, as a per-district fact
+  // rather than being smoothed into the expansion rules where it would look
+  // derived. RULING 57: two official enumerations that disagree is a finding.
+};
+
+function schoolSlug(raw: string): string {
+  let name = raw.toUpperCase().trim();
+  for (const [pattern, replacement] of SCHOOL_EXPANSIONS) {
+    name = name.replace(pattern, replacement).trim();
+  }
+  return SCHOOL_ALIASES[name] ?? slug(name);
 }
 
 const bodiesByDivision = new Map<string, string[]>();

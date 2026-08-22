@@ -5,6 +5,7 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
+import { CLIP_COUNTIES } from "../lib/coverage/artifacts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
@@ -120,9 +121,35 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
     `municipal counts per county disagree with the Census of Governments: ${JSON.stringify(perCounty)}`,
   );
 
+  /*
+   * The county term is the CLIP counties, which is what this test's constant
+   * has always meant — "plus the 3 county governments", per the note above
+   * COG_GENERAL_PURPOSE.
+   *
+   * It used to count every `divisionType === "county"` row, which was the same
+   * number for as long as the registry held only the clip counties. NH Hunt 5
+   * added Sullivan County: 03255's first-rung circle crosses three counties
+   * and the geometry is clipped to one, so Sullivan is now a division here
+   * with no polygon (lib/registry/curated-divisions.ts). It is a real
+   * government and it is correctly in the registry; it is simply not one of
+   * the three counties this federal cross-check is about, and counting it here
+   * would have made the check fail for being MORE complete.
+   *
+   * Scoped by the clip manifest rather than by a literal 3, so the two move
+   * together if the clip ever widens.
+   */
+  const clipFips = new Set(CLIP_COUNTIES.map((c) => c.fips));
+  const clipCountyRows = registry.divisions.filter(
+    (d) => d.divisionType === "county" && d.geoid !== null && clipFips.has(d.geoid),
+  );
+  assert.equal(
+    clipCountyRows.length,
+    CLIP_COUNTIES.length,
+    "every clip county must be a division here, matched on its GEOID",
+  );
+
   const total =
-    Object.values(perCounty).reduce((a, b) => a + b, 0) +
-    registry.divisions.filter((d) => d.divisionType === "county").length;
+    Object.values(perCounty).reduce((a, b) => a + b, 0) + clipCountyRows.length;
 
   assert.equal(total, COG_GENERAL_PURPOSE, `expected ${COG_GENERAL_PURPOSE}, got ${total}`);
 });

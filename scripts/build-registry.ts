@@ -20,6 +20,7 @@ import { TIER_SEGMENTS, type Tier } from "../lib/ocd/tiers.ts";
 import { indexAudits } from "../lib/registry/audit.ts";
 import { COVERAGE_AUDIT_FILE } from "../lib/registry/coverage-audit.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
+import { CURATED_DIVISIONS } from "../lib/registry/curated-divisions.ts";
 import { bodiesFor, slotsFor, type SkipReason } from "../lib/registry/derive.ts";
 import type {
   Body,
@@ -433,6 +434,42 @@ async function main() {
 
   console.log("divisions");
   const divisions = await loadDivisions(now);
+  console.log(`  ${divisions.length} from committed geometry`);
+
+  /*
+   * THE CURATED DIVISION OVERLAY (NH Hunt 5, 2026-08-21; RULING 57).
+   *
+   * The committed TIGER geometry is clipped to one county per state, so six
+   * whole towns inside 03255's first-rung circle - Acworth, Croydon, Lempster,
+   * Newport, Grantham and Windsor - had no division here, and the curated-body
+   * check below therefore refused every board this session enumerated for
+   * them. RULING 57 says a body is NAMED FIRST and hunted second; a body that
+   * cannot be named because a map file was clipped is the opposite of that.
+   *
+   * A registry division carries no geometry - that lives in public/geo and is
+   * served separately - so these rows are identifier, label, tier and parent,
+   * taken from the Census of Governments and NCES. See
+   * lib/registry/curated-divisions.ts for what may and may not go in there.
+   *
+   * Derived rows WIN. A curated row whose identifier the geometry already
+   * carries is a mistake, and it is refused rather than merged: silently
+   * shadowing a real TIGER division with a geometry-less stand-in would take a
+   * polygon off the map and say nothing.
+   */
+  const derivedDivisionIds = new Set(divisions.map((d) => d.ocdId));
+  for (const curated of CURATED_DIVISIONS) {
+    if (derivedDivisionIds.has(curated.ocdId)) {
+      throw new Error(
+        `curated division ${curated.ocdId} already exists in the committed ` +
+          "geometry - remove it from lib/registry/curated-divisions.ts rather " +
+          "than shadowing a row that has a polygon",
+      );
+    }
+    divisions.push(curated);
+  }
+  console.log(
+    `  ${CURATED_DIVISIONS.length} curated (enumerated by Census/NCES, outside the geometry clip)`,
+  );
   console.log(`  ${divisions.length} divisions`);
 
   console.log("reconciliation");

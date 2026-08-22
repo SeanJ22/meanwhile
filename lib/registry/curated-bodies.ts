@@ -447,6 +447,7 @@ export const CURATED_BODIES: Body[] = [
   ...suttonBoardRows(),
   ...warnerBoardRows(),
   ...twigRows(),
+  ...nhHunt5TwigRows(),
 ];
 
 function newburyBoardRows(): Body[] {
@@ -1880,6 +1881,443 @@ function twigRows(): Body[] {
       sourceOrg: row.org,
       collectedAt: collected,
       verifiedAt: collected,
+    },
+  }));
+}
+
+/**
+ * **THE TWENTY UN-HELD UNITS AT 03255** (NH Hunt 5, 2026-08-21, item 5;
+ * RULING 57 and RULING 60).
+ *
+ * `pnpm twig:pair` reconciled 48 Census units against 28 held, and NAMED the
+ * twenty that were not. This block is those twenty, hand-worked. Not one of
+ * them was reachable by an automated route on the day it was tried, and the
+ * reason is worth writing down because it is the finding: **the Census of
+ * Governments' recorded URL was wrong or dead for six of the seven towns.**
+ *
+ * | Unit | Census said | What was actually there |
+ * |---|---|---|
+ * | Acworth | `acworth.cc` | DNS does not resolve; no Wayback snapshot ever |
+ * | Croydon | (none) | `townofcroydon.com` is a Squarespace parking page |
+ * | Newport | `newportnh.net` | a parked domain with Cyrillic categories |
+ * | Windsor | (none) | `windsornh.gov` is a GoDaddy parking lander |
+ * | Lempster | (none) | — |
+ * | Grantham | `granthamnh.net` | redirects to `granthamnh.gov` |
+ *
+ * A hunt that trusted the denominator's own URLs would have recorded five of
+ * these towns as publishing nothing. Every one of them publishes a full boards
+ * index. That is the whole argument for RULING 52: the front door being locked
+ * is one measurement on one route, and there were five other routes.
+ *
+ * ## The routes that worked, each of which became a branch
+ *
+ * 1. **The `.gov` sibling.** Newport, Grantham and Windsor's real sites are on
+ *    `.gov` or a different TLD; the Census row is simply old.
+ * 2. **The Drupal-7 `/boards` index.** Newport, Croydon and Windsor all run
+ *    the same Virtual Town Hall Drupal 7 install — `<Town>, NH |` in the
+ *    title, `/sites/all/...` assets, a `/boards` index and `/<body-slug>`
+ *    pages. Windsor's front page renders zero links to a plain client and its
+ *    `/boards` index renders ten. Guessing the path beat crawling the site.
+ * 3. **The Internet Archive, rung 11.** Croydon's site is DOWN today — "Web
+ *    Site Not Found" to a plain client AND to a real browser. Its boards are
+ *    read from the 2026-05-21 snapshot, and that provenance is recorded as an
+ *    archive read rather than dressed up as a live one.
+ * 4. **The state register.** The Eastman Village District appears in no town
+ *    menu anywhere; New Hampshire's Office of Business and Economic Affairs
+ *    register names it, its host municipality, its mailing address and its
+ *    phone. It is filed there as *Eastman Village WATER District*, which is
+ *    the second naming disagreement between two official enumerations this zip
+ *    has produced — recorded, not resolved.
+ * 5. **The SAU page that names every member district's board.** One read of
+ *    SAU 34's school-boards page named the Hillsboro-Deering Cooperative,
+ *    Washington and Windsor school boards — three separate Census units from
+ *    one document.
+ * 6. **The trade association's directory.** The Sullivan County Conservation
+ *    District has no page of its own; the NH Association of Conservation
+ *    Districts publishes its address, its board's meeting cadence and its
+ *    manager's email.
+ */
+
+interface Hunt5Row {
+  division: string;
+  slug: string;
+  name: string;
+  status: "LIVE" | "KNOWN_UNCOVERED";
+  homepage: string;
+  sourceUrl: string;
+  org: string;
+  cadence?: string | null;
+  cls?: BodyClass;
+}
+
+function nhHunt5TwigRows(): Body[] {
+  // Declared INSIDE, not above: CURATED_BODIES calls this at module
+  // initialisation, which is before any const later in the file exists.
+  const NH5 = "ocd-division/country:us/state:nh";
+  const NH5_COLLECTED = "2026-08-21";
+  const VD_REGISTER =
+    "https://www.nheconomy.com/getmedia/f087979c-98b8-41b5-a2e0-1808faaa8ffe/village-districts-locations-addresses.csv";
+  const CROYDON_ARCHIVE =
+    "http://web.archive.org/web/20260521053506/http://www.croydon-nh.com/";
+
+  const rows: Hunt5Row[] = [];
+
+  /* ---------------------------------------------------------------- towns -- */
+
+  /**
+   * ACWORTH. The Census records `acworth.cc`, which does not resolve and has
+   * never been captured by the Internet Archive. `acworthnh.net` answers rung
+   * 2 and its title is "Government | Town of Acworth, New Hampshire | United
+   * States" — an identity check, because a town-shaped domain is not a town.
+   */
+  const ACWORTH = `${NH5}/county:sullivan/place:acworth_town`;
+  for (const [slug, name] of [
+    ["board-of-selectmen", "Board of Selectmen"],
+    ["budget-committee", "Budget Committee"],
+    ["cemetery-trustees", "Cemetery Trustees"],
+    ["conservation-commission", "Conservation Commission"],
+    ["library-trustees", "Library Trustees"],
+    ["planning-board", "Planning Board"],
+    ["trustees-of-trust-funds", "Trustees of Trust Funds"],
+    ["zoning-board", "Zoning Board"],
+  ] as const) {
+    rows.push({
+      division: ACWORTH,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: `https://www.acworthnh.net/${slug}`,
+      sourceUrl: "https://www.acworthnh.net/boards-committees",
+      org: "Town of Acworth",
+    });
+  }
+
+  /**
+   * CROYDON, read from the Internet Archive at rung 11 because the town's site
+   * is OFFLINE — `croydon-nh.com` answers "Web Site Not Found" to a plain
+   * client and to a real browser alike, on 2026-08-21. The snapshot is
+   * 2026-05-21 and every row here says so.
+   *
+   * This is the case the render-default rule exists for. A town whose website
+   * went down is not a town without boards, and recording these as absent
+   * because the front door is dark would be asserting an absence we know to be
+   * false. They ship KNOWN_UNCOVERED with an archive provenance, which is
+   * exactly what they are.
+   */
+  const CROYDON = `${NH5}/county:sullivan/place:croydon_town`;
+  for (const [slug, name] of [
+    ["select-board", "Select Board"],
+    ["planning-board", "Planning Board"],
+    ["zoning-board", "Zoning Board"],
+    ["conservation-committee", "Conservation Committee"],
+    ["record-retention-committee", "Record Retention Committee"],
+    ["trustees-of-the-trust-fund-and-cemeteries", "Trustees of the Trust Fund and Cemeteries"],
+  ] as const) {
+    rows.push({
+      division: CROYDON,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: CROYDON_ARCHIVE,
+      sourceUrl: CROYDON_ARCHIVE,
+      org: "Town of Croydon (read from the Internet Archive, snapshot 2026-05-21; the town's own site was offline when checked)",
+    });
+  }
+
+  /** NEWPORT. Census says `newportnh.net`, which is a parked domain. */
+  const NEWPORT = `${NH5}/county:sullivan/place:newport_town`;
+  for (const [slug, name] of [
+    ["board-selectmen", "Board of Selectmen"],
+    ["budget-advisory-committee", "Budget Advisory Committee"],
+    ["conservation-commission", "Conservation Commission"],
+    ["heritage-and-monuments-memorials-commission", "Heritage and Monuments & Memorials Commission"],
+    ["nri-action-plan-subcommittee-conservation-commission", "NRI Action Plan Subcommittee of the Conservation Commission"],
+    ["parlin-field-airport-advisory-board", "Parlin Field Airport Advisory Board"],
+    ["planning-board", "Planning Board"],
+    ["zoning-board-adjustment", "Zoning Board of Adjustment"],
+  ] as const) {
+    rows.push({
+      division: NEWPORT,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: `https://www.newportnh.gov/${slug}`,
+      sourceUrl: "https://www.newportnh.gov/boards",
+      org: "Town of Newport",
+    });
+  }
+
+  /**
+   * WINDSOR. `windsornh.gov` is a GoDaddy parking lander — a `.gov` that is
+   * not the town, which is worth knowing about as a class. The real site is
+   * `windsornh.org`, whose front page renders ZERO links to a plain client and
+   * whose `/boards` index renders ten. The path was guessed from the CMS
+   * family rather than crawled.
+   */
+  const WINDSOR = `${NH5}/county:hillsborough/place:windsor_town`;
+  for (const [slug, name] of [
+    ["board-selectmen", "Board of Selectmen"],
+    ["planning-board", "Planning Board"],
+    ["supervisors-checklist", "Supervisors of the Checklist"],
+    ["zoning-board-adjustments", "Zoning Board of Adjustments"],
+    ["welfare", "Welfare"],
+  ] as const) {
+    rows.push({
+      division: WINDSOR,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: `https://www.windsornh.org/${slug}`,
+      sourceUrl: "https://www.windsornh.org/boards",
+      org: "Town of Windsor",
+    });
+  }
+
+  /** LEMPSTER. No URL in the Census row at all; `lempsternh.org` answers rung 2. */
+  const LEMPSTER = `${NH5}/county:sullivan/place:lempster_town`;
+  for (const [slug, name, path] of [
+    ["board-of-selectmen", "Board of Selectmen", "boards-committees/board-of-selectmen/"],
+    ["planning-board", "Planning Board", "boards-committees/planning-board/"],
+    ["cemetery-trustees", "Cemetery Trustees", "boards-committees/cemetery-trustees/"],
+    ["conservation-commission", "Conservation Commission", "boards-committees/conservation-commission/"],
+    ["trustees-of-trust-funds", "Trustees of Trust Funds", "boards-committees/trustees-of-trust-fund/"],
+    ["library-trustees", "Library Trustees", "departments/miner-memorial-library/library-trustees/"],
+  ] as const) {
+    rows.push({
+      division: LEMPSTER,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: `https://lempsternh.org/${path}`,
+      sourceUrl: "https://lempsternh.org/boards-committees/",
+      org: "Town of Lempster",
+    });
+  }
+
+  /** GRANTHAM. The Census URL redirects to the town's live `.gov`. */
+  const GRANTHAM = `${NH5}/county:sullivan/place:grantham_town`;
+  for (const [slug, name] of [
+    ["board-of-selectmen", "Board of Selectmen"],
+    ["capital-improvement", "Capital Improvement Committee"],
+    ["cemetery-trustees", "Cemetery Trustees"],
+    ["conservation-commission", "Conservation Commission"],
+    ["energy-committee", "Energy Committee"],
+    ["technology-committee", "Technology Committee"],
+    ["building-needs-committee", "Building Needs Committee"],
+    ["master-plan-committee", "Master Plan Committee"],
+    ["planning-board", "Planning Board"],
+    ["supervisors-of-the-checklist", "Supervisors of the Checklist"],
+    ["trustees-of-the-trust-funds", "Trustees of the Trust Funds"],
+    ["zoning-board-of-adjustment", "Zoning Board of Adjustment"],
+    ["recreation-park-committee", "Recreation Park Committee"],
+    ["transfer-station-rolloff-truck-committee", "Transfer Station Rolloff Truck Committee"],
+    ["open-space-committee", "Open Space Committee"],
+  ] as const) {
+    rows.push({
+      division: GRANTHAM,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage: "https://granthamnh.gov/government",
+      sourceUrl: "https://granthamnh.gov/government",
+      org: "Town of Grantham",
+    });
+  }
+
+  /* ------------------------------------------------------------- county --- */
+
+  /**
+   * SULLIVAN COUNTY. Two bodies, and they are different in kind: the elected
+   * Board of Commissioners, and the County Delegation — which in New Hampshire
+   * is every state representative whose district lies in the county, sitting
+   * as the county's budget authority. A reader who has never heard of a county
+   * delegation is exactly the reader the stranger test is about.
+   */
+  const SULLIVAN = `${NH5}/county:sullivan`;
+  rows.push(
+    {
+      division: SULLIVAN,
+      slug: "commissioners",
+      name: "Sullivan County Board of Commissioners",
+      status: "KNOWN_UNCOVERED",
+      homepage: "https://sullivancountynh.gov/166/Commissioners",
+      sourceUrl: "https://sullivancountynh.gov/166/Commissioners",
+      org: "Sullivan County",
+    },
+    {
+      division: SULLIVAN,
+      slug: "delegation",
+      name: "Sullivan County Delegation",
+      status: "KNOWN_UNCOVERED",
+      homepage: "https://sullivancountynh.gov/207/Delegation",
+      sourceUrl: "https://sullivancountynh.gov/207/Delegation",
+      org: "Sullivan County",
+    },
+    /**
+     * The conservation district has no page of its own anywhere. The NH
+     * Association of Conservation Districts publishes its address, its
+     * manager, and — the part a reader actually needs — WHEN ITS BOARD MEETS.
+     */
+    {
+      division: SULLIVAN,
+      slug: "conservation-district",
+      name: "Sullivan County Conservation District Board of Supervisors",
+      status: "KNOWN_UNCOVERED",
+      homepage: "https://www.nhacd.net/conservation-districts-1",
+      sourceUrl: "https://www.nhacd.net/conservation-districts-1",
+      org: "New Hampshire Association of Conservation Districts",
+      cadence: "First Friday of each month, 2pm-4pm",
+      cls: "COMMISSION",
+    },
+  );
+
+  /* ------------------------------------------------- village district ----- */
+
+  /**
+   * EASTMAN VILLAGE DISTRICT, in Grantham.
+   *
+   * TWO OFFICIAL ENUMERATIONS DISAGREE ABOUT ITS NAME, and RULING 57 says that
+   * is a finding rather than an error. The 2022 Census of Governments calls it
+   * EASTMAN VILLAGE DISTRICT; New Hampshire's own village-district register
+   * calls it Eastman Village WATER District. Both read 2026-08-21. It ships
+   * under the Census name with the register's name recorded beside it.
+   *
+   * A NEAR MISS WORTH RECORDING. `eastmannh.org` answers rung 2 and looks
+   * exactly like the district's site. It is not: it is the Eastman Community
+   * Association, a private homeowners' club running on ClubEssential, whose
+   * navigation is golf tee times and amenities. Filing it as this district's
+   * page would have attached a private club to a unit of government on a
+   * reader's screen. The register's address — 31 Draper Road, Grantham — is
+   * what actually identifies the district.
+   */
+  rows.push({
+    division: GRANTHAM,
+    slug: "eastman-village-district",
+    name: "Eastman Village District",
+    status: "KNOWN_UNCOVERED",
+    homepage: "https://granthamnh.gov/",
+    sourceUrl: VD_REGISTER,
+    org: "New Hampshire Office of Business and Economic Affairs village-district register (filed there as Eastman Village Water District; 31 Draper Road, Grantham NH 03753)",
+  });
+
+  /* ----------------------------------------------- school districts ------- */
+
+  /**
+   * THE SAU BRANCH, and it is the highest-yield thing in this block.
+   *
+   * New Hampshire school districts are administered in School Administrative
+   * Units, and an SAU's school-boards page names the board of EVERY member
+   * district. One read of SAU 34 produced three Census units. One read of SAU
+   * 24 produced two more.
+   *
+   * Each row is filed under the school district's own division where this
+   * registry ships one, because the district is the government and the SAU is
+   * the administrator.
+   */
+  const SD = (slug: string) => `${NH5}/school_district:${slug}`;
+  for (const [division, slug, name, homepage, sourceUrl, org] of [
+    [
+      SD("hillsboro_deering_cooperative_school_district"),
+      "school-board",
+      "Hillsboro-Deering Cooperative School Board",
+      "https://sau34.org/pages/5ccce93c-763f-4a94-8ee8-6d6bcd36e7b9",
+      "https://sau34.org/en-US/sau-34-school-board-6d1f6cbb",
+      "SAU 34",
+    ],
+    [
+      SD("washington_school_district"),
+      "school-board",
+      "Washington School Board",
+      "https://sau34.org/pages/8e101559-f359-460c-8cc9-89708be04b8f",
+      "https://sau34.org/en-US/sau-34-school-board-6d1f6cbb",
+      "SAU 34",
+    ],
+    [
+      SD("windsor_school_district"),
+      "school-board",
+      "Windsor School Board",
+      "https://sau34.org/pages/c139e8d8-546d-42ed-8de1-1c6107980ebd",
+      "https://sau34.org/en-US/sau-34-school-board-6d1f6cbb",
+      "SAU 34",
+    ],
+    [
+      SD("henniker_school_district"),
+      "school-board",
+      "Henniker School Board",
+      "https://www.sau24.org/school-boards/index",
+      "https://www.sau24.org/school-boards/index",
+      "SAU 24",
+    ],
+    [
+      SD("john_stark_regional_school_district"),
+      "school-board",
+      "John Stark Regional School Board",
+      "https://www.sau24.org/school-boards/index",
+      "https://www.sau24.org/school-boards/index",
+      "SAU 24",
+    ],
+    [
+      SD("sunapee_school_district"),
+      "school-board",
+      "Sunapee School Board",
+      "https://www.sau85.org/schoolboard",
+      "https://www.sau85.org/schoolboard",
+      "SAU 85",
+    ],
+    [
+      SD("newport_school_district"),
+      "school-board",
+      "Newport School Board",
+      "https://www.sau43.nh.gov/school-board",
+      "https://www.sau43.nh.gov/school-board",
+      "SAU 43",
+    ],
+    [
+      SD("lempster_school_district"),
+      "school-board",
+      "Goshen-Lempster Cooperative School Board",
+      "https://www.sau71.org/",
+      "https://www.sau71.org/documents/resources/for-school-board/school-board-policies/836391",
+      "SAU 71",
+    ],
+    [
+      SD("nashua_school_district"),
+      "board-of-education",
+      "Nashua Board of Education",
+      "https://www.nashua.edu/our-district/board-of-education",
+      "https://www.nashua.edu/our-district/board-of-education",
+      "Nashua School District",
+    ],
+  ] as const) {
+    rows.push({
+      division,
+      slug,
+      name,
+      status: "KNOWN_UNCOVERED",
+      homepage,
+      sourceUrl,
+      org,
+    });
+  }
+
+  return rows.map((row) => ({
+    id: `${row.division}#${row.slug}`,
+    ocdId: row.division as Body["ocdId"],
+    name: row.name,
+    bodyClass: (row.cls ?? "GOVERNING") as BodyClass,
+    bodyOrigin: "CURATED" as const,
+    coverageStatus: row.status,
+    agendaSourceType: "NONE" as const,
+    agendaSourceRef: null,
+    meetingCadence: row.cadence ?? null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "COG_2022" as const,
+    provenance: {
+      sourceUrl: row.sourceUrl,
+      sourceOrg: row.org,
+      collectedAt: NH5_COLLECTED,
+      verifiedAt: NH5_COLLECTED,
     },
   }));
 }

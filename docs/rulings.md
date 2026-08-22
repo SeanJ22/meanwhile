@@ -901,3 +901,108 @@ District had no division (RSA 432:12 gives it the county's).
 `pnpm twig:pair` is the instrument. It reports the Census denominator against
 the registry's numerator for a zip, makes them reconcile, and NAMES every unit
 with no body here — because a count is not a name.
+
+### RULING 58 — `VERIFIED_ABSENT` requires two INDEPENDENT branches
+
+*Recorded 2026-08-21 by NH Hunt 5, from the session brief. Three headers
+against one host is one branch.*
+
+It supersedes nothing and makes RULING 52's independence test operational for
+the one state that is a legal claim about a named person. `VERIFIED_ABSENT`
+says a completed hunt walked every applicable rung and the thing does not
+exist; RULING 52 already said two routes that fail for the same reason are one
+route wearing two names. This joins them: **the two branches must go through
+distinct dependencies — a different publisher, a different document class, a
+different jurisdiction's copy — not the same host with different headers.**
+
+`VERIFIED_ABSENT` is **0** across the whole product and has never been earned.
+NH Hunt 5 did not force it: every field still owed carries at most one
+exhausted branch, and one is not two.
+
+### RULING 59 — the page says one thing about completeness and nothing else
+
+*Recorded 2026-08-21 by NH Hunt 5, from the session brief.*
+
+The only reader-facing statement about what this product holds is the author's
+line — **"What we have found, we are displaying here."** — once in the ballot
+section and once on the battlecard, per RULING 51. **No other sentence
+anywhere describes coverage, counts what is missing, or characterises what has
+not been worked out.**
+
+It supersedes the fourth reader-friction exception, which RULING 47 had already
+retired, and it finishes the job RULING 42 and RULING 44 started at card level
+by ending the same class of sentence at PAGE level.
+
+**Why the class goes rather than the instance.** NH Hunt 4's first merge began
+rendering Lake Todd Village District's meetings while the coverage note four
+inches down the same page still counted Lake Todd among eighteen districts "we
+have not worked out". Every automated check was green, and that is a property
+of the sentence rather than a gap in the checks: a sentence counting what is
+missing is a claim ABOUT data that changes underneath it, and nothing can tell
+a correct render from a stale note about that render without re-deriving the
+count at render time — at which point it is a second query free to disagree
+with its own page, which the stated-N rule already forbids.
+
+**What is NOT touched, and the line is load-bearing.** The gap ledger, the
+stated-N rule, the two-numbers pair rule and the prohibition on asserting
+absence all stand. So does the render-default rule: a null still renders as its
+NAMED GAP saying whose gap it is. The distinction is between a **named gap** —
+about one field of one subject, derived from the very row being rendered, and
+unable to go stale independently of it — and a **coverage claim**, about
+holdings in aggregate, derived from somewhere other than what is on screen, and
+going stale silently the moment the work behind it is done.
+
+**What it removed on the day it was adopted.** Ten reader-facing statements
+across five files: the whole coverage note (five statements, two render sites),
+the about-area "Coverage today: New Jersey, New Hampshire, and Arizona", a
+"Not covered yet" section, the welcome overlay ranking four areas by coverage
+depth and forwarding the reader to a notice the same ruling deletes, a ballot
+destination's claim that the page says so where it has not found something
+(false since RULING 28 anyway), and a "NOT HERE YET" section enumerating
+uncurated offices.
+
+**And it found the same defect inside the document it makes load-bearing.**
+`docs/gap-ledger.md` printed *"2 of these govern part of this zip and are not
+in the registry"* without ever doing a lookup — both were in it. Guarded by
+`tests/ruling-59-coverage-silence.test.ts`, which sweeps `.json` as well as
+code, because the last one hid half in a data file.
+
+### RULING 60 — the session hand-works bodies, and that is the point
+
+*Recorded 2026-08-21 by NH Hunt 5, from the session brief.*
+
+Manual hunting is the session's job and is not optional. Where no automated
+route reaches a body, the session works it by hand — reads the town report,
+opens the warrant article, follows the name through the minutes, calls up the
+PDF. **A session that only takes automated branches and reports the rest as
+unreached has not hunted.**
+
+It supersedes nothing and gives RULING 52's tree its labour: the tree says
+branches exist and this says somebody has to walk them.
+
+Two obligations beyond the walking, and they are what make it compound:
+
+1. **Every hand-worked body records what route succeeded, that route is built
+   into a NAMED BRANCH registered in `docs/zip-playbook.md`, and the branch is
+   applied across every body of the same shape with the count reached
+   reported.** Hand-working one body is how the branch that reaches the next
+   fifty gets discovered.
+2. **The residual is the author's, and it is the TAIL rather than the starting
+   point.** When the session has hand-worked everything it can and a handful
+   remain, two to five are handed over by name with every branch and every
+   manual route already attempted and what each returned.
+
+**What it produced on the day it was adopted.** `docs/zip-playbook.md` §8,
+and six branches — the `.gov` sibling; the Virtual Town Hall Drupal-7 `/boards`
+index; the Internet Archive for a town whose site is gone; the state
+village-district register (91 districts); one SAU page naming three Census
+units' school boards; and the trade association's directory for a district that
+publishes nothing at all. Three of those six share one shape, and it is the
+generalisation worth keeping: **the body publishes nothing, and somebody else
+with a statutory or associational reason to enumerate it publishes
+everything.** When a small body appears to publish nothing, the next question
+is never "does it exist" — it is *"who is obliged to list it?"*
+
+**Not yet law.** RULINGS 58, 59 and 60 are recorded here and enforced in the
+suite; whether any becomes law and is written into `CLAUDE.md` is the author's
+decision, and `CLAUDE.md` is changed only by him.

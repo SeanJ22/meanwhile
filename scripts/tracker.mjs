@@ -997,14 +997,54 @@ function modeViews(working, resolved, sections) {
     ? JSON.parse(readFileSync(join(ROOT, "docs/log-purposes.json"), "utf8"))
     : {};
 
-  const book = writeWorkbook(working, resolved);
-  writeFileSync(join(ROOT, WORKBOOK), book);
+  /*
+   * THE MARKDOWN VIEWS ARE WRITTEN FIRST, AND A LOCKED WORKBOOK NO LONGER
+   * STOPS THEM. (NH Hunt 5, 2026-08-21.)
+   *
+   * The workbook write used to come first and throw EBUSY whenever Sean had
+   * `docs/tracker.xlsx` open in Excel — which is often, because that is the
+   * file he edits by hand. The throw killed the process before
+   * `docs/tracker.md` and `docs/log.md` were written, so a `tracker:add` that
+   * had ALREADY updated the CSV stores left the two generated markdown views
+   * describing the store as it was before.
+   *
+   * That is not untidiness. `tests/tracker-stores.test.ts` asserts the count
+   * stated in `tracker.md` equals the rows in the store, so a locked workbook
+   * turned the suite RED — and the only scheduled job that runs `pnpm test` on
+   * Linux is the refresh gate, which means a governed artifact would stop
+   * committing because a spreadsheet was open on somebody's desktop. Found
+   * exactly that way, on refresh run 32543393133.
+   *
+   * The markdown views depend on nothing but the stores, so they are written
+   * unconditionally. The workbook is attempted afterwards and its failure is
+   * REPORTED rather than thrown: the CSVs are the authoritative stores and the
+   * workbook is a generated view of them, so a stale workbook is a thing to be
+   * told about, not a reason to abandon a write that already happened.
+   *
+   * It still exits non-zero, because a stale workbook is a real problem — the
+   * next hand edit is made against out-of-date rows and saving it would revert
+   * them. What changes is that the failure is now a stated one with everything
+   * else correct behind it.
+   */
   writeFileSync(join(ROOT, "docs/tracker.md"), trackerMarkdown(working, resolved, sections), "utf8");
   writeFileSync(join(ROOT, "docs/log.md"), logMarkdown(working, resolved, purposes), "utf8");
 
+  let book = null;
+  let workbookError = null;
+  try {
+    book = writeWorkbook(working, resolved);
+    writeFileSync(join(ROOT, WORKBOOK), book);
+  } catch (error) {
+    workbookError = error;
+  }
+
   const census = p1Census(working, sections);
   console.log(`\ntracker views — ${STAMP}\n`);
-  console.log(`  ${WORKBOOK}            ${book.length} bytes, 3 tabs`);
+  console.log(
+    workbookError
+      ? `  ${WORKBOOK}            NOT WRITTEN — ${workbookError.code ?? "error"}`
+      : `  ${WORKBOOK}            ${book.length} bytes, 3 tabs`,
+  );
   console.log(`  docs/tracker.md               ${working.length} open row(s)`);
   console.log(`  docs/log.md                   generated`);
   console.log(`\n  open per section (P1 · P2 · P3):`);
@@ -1016,6 +1056,21 @@ function modeViews(working, resolved, sections) {
   }
   console.log(`\n  resolved store                ${resolved.length} row(s)`);
   console.log("");
+
+  if (workbookError) {
+    console.error(
+      `  THE WORKBOOK IS STALE. ${WORKBOOK} could not be written ` +
+        `(${workbookError.code ?? "error"}), almost always because it is open in Excel.\n` +
+        "\n" +
+        "  Everything else IS current: the CSV stores are authoritative and\n" +
+        "  docs/tracker.md and docs/log.md were regenerated from them above.\n" +
+        "\n" +
+        "  CLOSE THE WORKBOOK AND RUN `pnpm tracker:views` BEFORE EDITING IT.\n" +
+        "  The open copy is showing rows as they were before this run, and\n" +
+        "  saving it would write those older rows back over the stores.",
+    );
+    process.exitCode = 3;
+  }
 }
 
 /* ------------------------------------------------------------------ main --- */

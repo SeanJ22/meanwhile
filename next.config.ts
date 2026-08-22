@@ -54,6 +54,38 @@ const nextConfig: NextConfig = {
       // regression that looks exactly like honest missing data.
       "./data/derived/zip-division-ids.json",
     ],
+    /*
+     * THE LEDGER IS READ THROUGH `process.cwd()`, WHICH NEXT CANNOT SEE.
+     *
+     * `lib/coverage/zip-tier.ts` builds its path at runtime, so the tracer has
+     * no static reference to follow and the file would simply not be in the
+     * deploy. The read would throw, the catch would return null, and every zip
+     * on production would render "we have not worked this ZIP code out yet"
+     * while every sold row was stamped UNKNOWN.
+     *
+     * That failure is worse than a crash because it is INDISTINGUISHABLE FROM
+     * HONEST MISSING DATA: the surface's own gap wording is what a broken
+     * deploy would produce, so nothing would look wrong. Named here per route
+     * that reaches it.
+     *
+     * Only the 666 KB runtime file is traced. The 18 MB audit file stays in the
+     * repo and out of every function bundle.
+     */
+    /*
+     * RULING 26 (Prompt D item 1, 2026-08-20) removed the hunt-state read from
+     * the ballot page: collection state never governs display, and no render
+     * path may even import the work queue. `candidate-hunt-state.json` is
+     * therefore no longer traced here — it is read by scripts and tests only.
+     */
+    "/ballot": [
+      "./data/derived/zip-coverage-tiers-runtime.json",
+      // A ZIP IS AN AREA (NJ01). Built by `pnpm zip:divisions`, read through
+      // `process.cwd()`, so the tracer cannot see it. Absent from the deploy,
+      // the ballot silently narrows back to the centroid answer and Rockaway
+      // Borough disappears again — a regression that looks exactly like
+      // honest missing data, which is why it is named per route.
+      "./data/derived/zip-division-ids.json",
+    ],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],

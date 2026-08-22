@@ -280,3 +280,56 @@ test("RULING 74: the narrowing surface reads the session before it prompts", () 
     "undo forgets it everywhere, not only here — a reader asking for the whole zip back is asking us to forget",
   );
 });
+
+/* ========================================================================== */
+/* 4. Statewide is certain; a congressional district is not                   */
+/* ========================================================================== */
+
+/*
+ * Found by READING THE DOM of a production capture before opening the image —
+ * which is the whole reason RULING 2 asks for facts printed before evidence.
+ * The first deploy put the pill on "Member of the United States Senate" at
+ * 07866 and on five contests at 03255 where Newbury governs everyone, because
+ * a statewide division is absent from the lattice index and fell through to
+ * UNKNOWN.
+ */
+
+test("3.3: a statewide office is CERTAIN — every reader at this zip votes in it", async () => {
+  const nj = await zipCertainty("07866");
+  assert.ok(nj);
+  assert.equal(nj.certaintyOf("ocd-division/country:us/state:nj"), "CERTAIN");
+  assert.equal(nj.certaintyOf("ocd-division/country:us"), "CERTAIN");
+
+  const nh = await zipCertainty("03255");
+  assert.ok(nh);
+  assert.equal(nh.certaintyOf("ocd-division/country:us/state:nh"), "CERTAIN");
+});
+
+test("3.3: a congressional district is NOT statewide and keeps the pill", async () => {
+  /*
+   * `cd:11` looks federal and is not statewide. A zip can cross a
+   * congressional line exactly as it crosses a municipal one, this repo has
+   * not measured whether 07866 does, and the district reached the page by
+   * being resolved from the ZCTA CENTROID — one point, which is the thing
+   * `CLAUDE.md` says a zip may never be used for. The pill is true.
+   */
+  const c = await zipCertainty("07866");
+  assert.ok(c);
+  assert.notEqual(
+    c.certaintyOf("ocd-division/country:us/state:nj/cd:11"),
+    "CERTAIN",
+    "a House district resolved from one point may not render as settled",
+  );
+  assert.equal(needsPill(c.certaintyOf("ocd-division/country:us/state:nj/cd:11")), true);
+});
+
+test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async () => {
+  const c = await zipCertainty("07866");
+  assert.ok(c);
+  // A county sits under `state:nj/` and must never be swept up as statewide.
+  assert.equal(
+    c.certaintyOf("ocd-division/country:us/state:nj/county:morris/place:rockaway_borough"),
+    "AMBIGUOUS",
+  );
+  assert.notEqual(c.certaintyOf("ocd-division/country:us/state:nj/sldl:25"), "CERTAIN");
+});

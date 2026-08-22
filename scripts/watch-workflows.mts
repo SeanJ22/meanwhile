@@ -74,6 +74,7 @@ import { join } from "node:path";
 import {
   completedRuns,
   failedTwiceConsecutively,
+  failedTwiceInWindow,
   failureRate,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
@@ -108,6 +109,8 @@ interface Finding {
   runs: Run[];
   failingStep: string;
   rate: { failures: number; completed: number };
+  /** True when the pair is not at the head — it broke twice and recovered. */
+  healed: boolean;
 }
 
 function gh(args: string[]): string {
@@ -203,7 +206,26 @@ for (const workflow of WATCHED) {
         : ""),
   );
 
-  const consecutive = failedTwiceConsecutively(runs);
+  /*
+   * THE HEAD FIRST, THEN THE WHOLE WINDOW (NJ Hunt 3 item 1c, 2026-08-22).
+   *
+   * `failedTwiceConsecutively` answers "is this job broken RIGHT NOW", which is
+   * the more urgent question and stays the one asked first. But this watcher
+   * runs once a day, and on 2026-08-22 the meetings refresh failed at 01:25 and
+   * 01:30 and recovered at 01:51 — so the 15:40 reading saw two successes,
+   * passed, and opened nothing. A double failure that heals between two daily
+   * readings was invisible to a detector that only ever looked at the head.
+   *
+   * `failedTwiceInWindow` looks at all of it. A healed pair still earns a row,
+   * because nobody found out why it broke and the next occurrence starts from
+   * the same nothing. The row says WHICH kind it is; the marker keeps it to one
+   * row per workflow either way.
+   */
+  const atHead = failedTwiceConsecutively(runs);
+  // Only scanned when the head is clean, so `healed` comes from the one
+  // detector that computes it rather than from an `in` narrowing over a union.
+  const inWindow = atHead ? null : failedTwiceInWindow(runs);
+  const consecutive = atHead ?? inWindow;
   if (!consecutive) continue;
 
   findings.push({
@@ -211,6 +233,7 @@ for (const workflow of WATCHED) {
     runs: [consecutive.newest, consecutive.previous],
     failingStep: failingStepOf(consecutive.newest.databaseId),
     rate,
+    healed: inWindow?.healed ?? false,
   });
 }
 
@@ -222,7 +245,7 @@ if (unreadable.length > 0) {
 }
 
 if (findings.length === 0) {
-  console.log("  no workflow has failed twice consecutively.");
+  console.log("  no workflow has failed twice consecutively, at the head or anywhere in the window read.");
   process.exit(unreadable.length > 0 ? 2 : 0);
 }
 
@@ -234,6 +257,11 @@ for (const f of findings) {
   const ids = f.runs.map((r) => r.databaseId).join(" and ");
   console.log(`    ${f.workflow} — runs ${ids}`);
   console.log(`      failing step: ${f.failingStep}`);
+  console.log(
+    f.healed
+      ? "      the pair is not at the head — it broke twice and has since recovered, and nobody found out why"
+      : "      the pair is at the head — this job is failing right now",
+  );
 
   if (openRowsMentioning(marker)) {
     console.log("      a row is already open for this workflow — not opening a second.\n");
@@ -242,10 +270,21 @@ for (const f of findings) {
 
   rows.push({
     Section: "needs-sean",
-    Title: `${f.workflow} has failed twice in a row`,
+    Title: f.healed
+      ? `${f.workflow} failed twice in a row and recovered unexamined`
+      : `${f.workflow} has failed twice in a row`,
     "What this is":
-      `The scheduled job ${f.workflow} failed on its two most recent runs ` +
-      `(${ids}), both at: ${f.failingStep}. Over its last ${f.rate.completed} ` +
+      (f.healed
+        ? `The scheduled job ${f.workflow} failed on two CONSECUTIVE runs ` +
+          `(${ids}), both at: ${f.failingStep}, and has since gone green on its ` +
+          "own. It is not broken right now. Nobody found out why it broke, so " +
+          "the next occurrence starts from the same nothing — which is why this " +
+          "is a row rather than a shrug. This watcher runs once a day and used " +
+          "to read only the two most recent runs, so a double failure that " +
+          "healed in between was invisible to it (NJ Hunt 3 item 1c). "
+        : `The scheduled job ${f.workflow} failed on its two most recent runs ` +
+          `(${ids}), both at: ${f.failingStep}. `) +
+      `Over its last ${f.rate.completed} ` +
       `completed runs it has failed ${f.rate.failures} time(s). Two consecutive ` +
       "failures is evidence the cause is ours rather than a host refusing on a " +
       "schedule — a wall would not usually repeat exactly. RULING 56 opens this " +

@@ -6,6 +6,8 @@ import { test } from "node:test";
 
 import {
   readSnapshot,
+  reconcileCounts,
+  snapshotCounts,
   validateSnapshot,
   writeSnapshot,
   type MeetingsSnapshot,
@@ -439,4 +441,106 @@ test("the committed snapshot exists, validates, and states its counts", () => {
       `carried meeting ${m.id} states no instant at which it was last fresh`,
     );
   }
+});
+
+
+/* --------------------------------------------------------------------------
+ * NJ Hunt 3 item 1b (2026-08-22) — refresh #43, and the array the counts were
+ * read off.
+ *
+ * `scripts/ingest.ts` assembled `counts` inline and took `total` from
+ * `served` — the array from BEFORE the second duplicate-collapse pass — while
+ * writing `meetings` from `finalRows`, the array after it. The two are equal
+ * on every run where that pass drops nothing, so it read correct for months.
+ * On the first run where carry-forward put duplicates back, six rows collapsed
+ * and `reconcileCounts` refused the snapshot: "states 461 total meetings but
+ * holds 455". The refusal was right. The arithmetic in front of it was not.
+ *
+ * These guard the repair rather than the symptom: `snapshotCounts` takes ONE
+ * array and every count comes off it, so there is no second array to point at.
+ * ------------------------------------------------------------------------ */
+
+test("1b: snapshotCounts reads total off the rows it is given, never a longer array", () => {
+  const rows = [
+    meetingOf("a", "2026-09-01T18:00:00.000Z", "SCHEDULED"),
+    meetingOf("b", "2026-09-02T18:00:00.000Z", "SCHEDULED"),
+    meetingOf("c", "2026-09-03T18:00:00.000Z", "SCHEDULED"),
+  ];
+  const counts = snapshotCounts(rows, 6);
+  assert.equal(counts.total, rows.length, "total is the row count, always");
+  assert.equal(counts.fresh + counts.carried, counts.total, "the counts close");
+  assert.equal(counts.duplicatesCollapsed, 6, "the merge's own number is stated, not absorbed");
+});
+
+test("1b: carried rows are counted off their marks, not off a subtraction", () => {
+  const fresh = meetingOf("fresh-1", "2026-09-01T18:00:00.000Z", "SCHEDULED");
+  const carriedRow: Meeting = {
+    ...meetingOf("carried-1", "2026-09-02T18:00:00.000Z", "SCHEDULED"),
+    carried: { source: "schedulepage", lastFreshAt: "2026-08-21T07:11:25.917Z" },
+  };
+  const counts = snapshotCounts([fresh, carriedRow], 0);
+  assert.equal(counts.carried, 1);
+  assert.equal(counts.fresh, 1);
+  assert.equal(counts.total, 2);
+});
+
+test("1b: #43's exact shape — a post-carry collapse can no longer strand the total", () => {
+  /*
+   * The pre-collapse array is deliberately BUILT here and deliberately NOT
+   * passed. That is the whole point: the old code had both arrays in scope and
+   * reached for the wrong one. `snapshotCounts` is given only the survivors,
+   * so the mistake has nowhere to live.
+   */
+  const survivors = Array.from({ length: 455 }, (_, i) =>
+    meetingOf(`m${i}`, "2026-09-01T18:00:00.000Z", "SCHEDULED"),
+  );
+  const preCollapse = [
+    ...survivors,
+    ...Array.from({ length: 6 }, (_, i) =>
+      meetingOf(`dupe${i}`, "2026-09-01T18:00:00.000Z", "SCHEDULED"),
+    ),
+  ];
+  assert.equal(preCollapse.length, 461, "the fixture reproduces #43's two numbers");
+
+  const counts = snapshotCounts(survivors, 6);
+  assert.equal(counts.total, 455);
+  assert.notEqual(counts.total, preCollapse.length);
+
+  // And the write-boundary check, which was never wrong, still agrees.
+  const snap: MeetingsSnapshot = {
+    formatVersion: 1,
+    generatedAt: "2026-08-22T18:51:01.000Z",
+    counts,
+    sources: [
+      {
+        source: "composite",
+        ok: true,
+        fetched: 139,
+        normalized: counts.fresh + (counts.duplicatesCollapsed ?? 0),
+        drops: ZERO,
+      } as SnapshotSourceReport,
+    ],
+    meetings: survivors,
+    agendaDocuments: [],
+  };
+  assert.doesNotThrow(() => reconcileCounts(snap));
+});
+
+test("1b: the refusal that caught #43 is untouched — a stranded total still refuses", () => {
+  const survivors = [
+    meetingOf("a", "2026-09-01T18:00:00.000Z", "SCHEDULED"),
+    meetingOf("b", "2026-09-02T18:00:00.000Z", "SCHEDULED"),
+  ];
+  const snap: MeetingsSnapshot = {
+    formatVersion: 1,
+    generatedAt: "2026-08-22T18:51:01.000Z",
+    // Hand-built to the OLD shape: total taken off an array of 3.
+    counts: { fresh: 2, carried: 0, duplicatesCollapsed: 1, total: 3 },
+    sources: [
+      { source: "composite", ok: true, fetched: 3, normalized: 3, drops: ZERO } as SnapshotSourceReport,
+    ],
+    meetings: survivors,
+    agendaDocuments: [],
+  };
+  assert.throws(() => reconcileCounts(snap), /states 3 total meetings but holds 2/);
 });

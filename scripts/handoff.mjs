@@ -74,7 +74,7 @@
  * them and does the two jobs that are pure copies.
  */
 
-import { execFileSync, execSync } from "node:child_process";
+import { execFileSync, execSync, spawnSync } from "node:child_process";
 import {
   copyFileSync,
   existsSync,
@@ -296,6 +296,61 @@ function checkLocalMain() {
 }
 
 checkLocalMain();
+
+/**
+ * IS `origin/main` GREEN? (NJ Hunt 3 item 1.6, 2026-08-22.)
+ *
+ * Every check above compares REFS. None of them asks what happened to the
+ * commits after they landed, and that is the question that went unasked on
+ * 2026-08-22: NJ Hunt 2's two close-out commits put `main` red, Netlify refused
+ * both deploys, production stayed on the previous build for the rest of the
+ * day, and this checklist printed clean throughout — because every line on it
+ * was, truthfully, clean. A session may not report clean gates while leaving
+ * `main` failing and production stale.
+ *
+ * `warn` for PENDING and for CANNOT TELL, `fail` for RED. The distinction is
+ * the standing one: a check that could not reach its subject must never print
+ * like a passing one, and must not print like a failure of the subject either.
+ */
+function checkMainGreen() {
+  if (!hasMain) return;
+  /*
+   * NOT `tryRun`. `main-green.mjs` exits 1 on RED, 3 on PENDING and 2 on
+   * cannot-tell — deliberately, so it can gate a shell — and `tryRun` throws
+   * away the stdout of anything that exits non-zero. Routing this through it
+   * would report every RED main as "could not ask GitHub", which is the exact
+   * confusion between a failing subject and a failing check that both this
+   * function and `tryRun`'s own neighbour comment exist to prevent. The verdict
+   * is in the JSON on stdout; the exit code is for other callers.
+   */
+  const probed = spawnSync(process.execPath, [join(ROOT, "scripts", "main-green.mjs"), "--json"], {
+    cwd: ROOT,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let result = null;
+  try {
+    result = JSON.parse((probed.stdout ?? "").trim());
+  } catch {
+    /* falls through to the cannot-tell branch below */
+  }
+  if (!result) {
+    warn("main checks", "could not ask GitHub — this says NOTHING about main's tip");
+    return;
+  }
+  const short = (result.sha ?? "unknown").slice(0, 7);
+  if (result.verdict === "green") ok("main checks", `${short} green — ${result.why}`);
+  else if (result.verdict === "red")
+    fail(
+      "main checks",
+      `${short} RED — ${result.failed.join(", ")}. main is broken and production will not deploy`,
+    );
+  else if (result.verdict === "pending")
+    warn("main checks", `${short} still running — ${result.pending.join(", ")}`);
+  else warn("main checks", `${short} cannot tell — ${result.why}`);
+}
+
+checkMainGreen();
 
 const prs = tryRun("gh", [
   "pr",

@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 179,
-    "named": 1611,
+    "named": 1620,
     "dynamic": 6
   },
   "files": {
@@ -2053,6 +2053,10 @@
     "tests/snapshot.test.ts": {
       "names": [
         "193 fresh + 24 carried = 217 validates — the run the old invariant refused",
+        "1b: #43's exact shape — a post-carry collapse can no longer strand the total",
+        "1b: carried rows are counted off their marks, not off a subtraction",
+        "1b: snapshotCounts reads total off the rows it is given, never a longer array",
+        "1b: the refusal that caught #43 is untouched — a stranded total still refuses",
         "a carried row that does not name its source is refused",
         "a carried row with no last-fresh timestamp is refused",
         "a failed source must say why",
@@ -2351,6 +2355,11 @@
     },
     "tests/watch-workflows.test.ts": {
       "names": [
+        "1c: a healed double failure is found anywhere in the window",
+        "1c: a pair at the head is reported as still broken, not as healed",
+        "1c: a window with fewer than two runs says nothing rather than healthy",
+        "1c: alternating failures are not a pair — the rule is still ADJACENT",
+        "1c: the MOST RECENT pair is the one returned",
         "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
         "asOf hides later runs, so the detector can be held against known history",

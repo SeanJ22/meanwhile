@@ -55,60 +55,117 @@ const ONLY = hostArg ? hostArg.slice("--host=".length) : null;
  * record was made against wherever that is still known, so the comparison is
  * like for like rather than a different page on the same host.
  */
-const WALLS: { host: string; url: string; recorded: string; as: string }[] = [
+/**
+ * **RULING 72 — A WALL MAY NEVER BE RECORDED WITHOUT NAMING THE BRANCHES
+ * TRIED.** (Adopted 2026-08-22, the author's ruling, NJ Hunt 3 item 4.)
+ *
+ * *A walled host is never evidence a body is unreachable.* Discovery is a tree:
+ * a host refusing is ONE BRANCH returning empty on ONE DATE. The body is still
+ * reachable by other branches — a federal directory, a phone number, a postal
+ * address, a parent agency, a published report, a person.
+ *
+ * ELEC is the instance the ruling was adopted over. This repo had it recorded
+ * as a permanent wall, and the FEC's Combined Federal/State Disclosure
+ * Directory — 349 offices across 56 jurisdictions, sitting in
+ * `data/reference/` since NJ Hunt 2 — hands over its street address and its
+ * phone number. Nobody had looked, because nothing required looking.
+ *
+ * So `branchesTried` is REQUIRED on every row, and
+ * `tests/wall-branches.test.ts` fails the build if a wall is added without it.
+ * The field is prose rather than an enum on purpose: what matters is that a
+ * person had to write down what else they tried, and an enum would let a
+ * session satisfy the rule by picking the nearest label.
+ *
+ * **An empty string is not a legal value.** "None tried" is a sentence a
+ * session must actually write, and having to write it is the point.
+ */
+const WALLS: {
+  host: string;
+  url: string;
+  recorded: string;
+  as: string;
+  /** RULING 72. What else was tried for the same fact. Never empty. */
+  branchesTried: string;
+}[] = [
   {
     host: "gc.nh.gov",
     url: "https://gc.nh.gov/house/members/member.aspx?pid=1",
     recorded: "2026-08-14",
     as: "TLS-fingerprint wall — RESETS the connection before any HTTP happens, to every client including browsers",
+    branchesTried:
+      "Backfilled 2026-08-22 (RULING 72). At the time: none — the record was a rung history on one host and no second branch was walked, which is the gap this field exists to make visible. Since: `openstates_legislators` in data/reference/ carries NH House members independently of this host, and the FEC directory's NEW HAMPSHIRE / DEPARTMENT OF STATE row carries a phone and postal address for the office that holds the roster.",
   },
   {
     host: "sos.nh.gov",
     url: "https://www.sos.nh.gov/elections",
     recorded: "2026-08-13",
     as: "host-wide UA wall — 403 after connect, every path",
+    branchesTried:
+      "Backfilled 2026-08-22. Rung 5 (a different EGRESS) reached it on 2026-08-21 after a host-wide wall stood from 2026-08-13 — the branch that broke it was a rung, not a different publisher. FEC directory: NEW HAMPSHIRE / DEPARTMENT OF STATE gives the same office by phone and post.",
   },
   {
     host: "www.newbury.nh.gov",
     url: "https://www.newbury.nh.gov/",
     recorded: "2026-08-14",
     as: "403 to plain clients; 200 to a browser profile (the NH WAF family)",
+    branchesTried:
+      "Backfilled 2026-08-22. Rung 3 (browser header set) answered. Independent branches for the same facts: the town report, the `ical` feed the meetings snapshot already reads, and the Kearsarge SAU for school-side rosters.",
   },
   {
     host: "kearsarge.org",
     url: "https://www.kearsarge.org/",
     recorded: "2026-08-16",
     as: "403 to a CI runner's egress; the g3 EGRESS wall, and the one that emptied fifteen sittings",
+    branchesTried:
+      "Backfilled 2026-08-22. This was an EGRESS wall (a CI runner's IP refused), not a host wall — the author's own browser and rung 4 both reach it. Independent branch: the district's `ical` feed, which is how the fifteen sittings were re-established.",
   },
   {
     host: "www.tucsonaz.gov",
     url: "https://www.tucsonaz.gov/Departments/City-Clerk",
     recorded: "2026-08-14",
     as: "bot wall reading the User-Agent rather than the client — 403 on every page tried",
+    branchesTried:
+      "Backfilled 2026-08-22. Legistar (the vendor platform underneath, rung 12) publishes the same clerk records and is wired as `legistar`. FEC directory: ARIZONA / SECRETARY OF STATE for the election-office half.",
   },
   {
     host: "www.governor.nh.gov",
     url: "https://www.governor.nh.gov/",
     recorded: "2026-08-14",
     as: "403 to plain clients — same NH WAF family as newbury.nh.gov",
+    branchesTried:
+      "Backfilled 2026-08-22. None walked at the time. FEC directory: NEW HAMPSHIRE / DEPARTMENT OF STATE carries a phone and postal address; `openstates_legislators` carries the officeholder independently of this host.",
   },
   {
     host: "azgovernor.gov",
     url: "https://azgovernor.gov/",
     recorded: "2026-08-14",
     as: "403 to plain clients",
+    branchesTried:
+      "Backfilled 2026-08-22. The Governor's own page was read at rung 3 during the AZ hunt and IS the official source under the official-source rule. FEC directory: ARIZONA / SECRETARY OF STATE.",
   },
   {
     host: "www.nhmunicipal.org",
     url: "https://www.nhmunicipal.org/",
     recorded: "2026-08-20",
     as: "recorded walled during the NH municipal roster hunt",
+    branchesTried:
+      "Backfilled 2026-08-22. This is a MEMBERSHIP ASSOCIATION, not a public body — the same municipal roster is in `census_govt_units_2022` and in New Hampshire's own village-district register, both in data/reference/, and both are better sources because they are official enumerations.",
   },
   {
     host: "www.merrimackcounty.net",
     url: "https://www.merrimackcounty.net/",
     recorded: "2026-08-20",
     as: "recorded walled during the county-office hunt",
+    branchesTried:
+      "Backfilled 2026-08-22. `census_govt_units_2022` enumerates the county's units independently; the FEC directory's NEW HAMPSHIRE rows carry state-level offices that hold county filings.",
+  },
+  {
+    host: "www.elec.nj.gov",
+    url: "https://www.elec.nj.gov/",
+    recorded: "2026-08-22",
+    as: "recorded in this repo as a permanent wall during the New Jersey campaign-finance hunt",
+    branchesTried:
+      "RULING 72 was adopted over this one. The FEC's Combined Federal/State Disclosure Directory — committed at data/reference/fec_combined_federal_state_disclosure_directory.csv — carries NEW JERSEY / ELECTION LAW ENFORCEMENT COMMISSION with a street address (25 South Stockton Street, 5th Floor, Trenton) and a phone number, which is a branch to the same records that does not go through this host at all. Also independent: NEW JERSEY / DEPARTMENT OF STATE (nj.elections@sos.nj.gov) for candidate filings, and the county clerk's own filed-candidate PDFs, which pnpm nj:filing already reads and which is where 328 filed emails came from.",
   },
 ];
 

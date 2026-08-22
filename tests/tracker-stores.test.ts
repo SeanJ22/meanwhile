@@ -889,3 +889,55 @@ test("item 1.4: every row a session reported opening is present in a store", () 
       "row that reached the tracker without going through `tracker add`",
   );
 });
+
+/* ========================================================================== */
+/* RULING 41 — a session amends only the rows it opened itself               */
+/* ========================================================================== */
+
+/**
+ * `tracker amend` was built on 2026-08-22 (NJ Hunt 3) because a session wrote a
+ * row whose description carried internal hunt-queue vocabulary, and there was
+ * then no legal move that could fix it: `add` would create a second row for one
+ * subject, `note` leaves the offending text where it is, and nothing but
+ * `scripts/tracker.mjs` may write the stores.
+ *
+ * The mode is only safe because of two limits, and these guard them.
+ *
+ * RULING 41 is the first: **a session may not reword, retitle or delete a row
+ * Sean wrote.** He is describing what he saw, and a session rewriting that into
+ * what it thinks he meant has replaced the evidence with an interpretation of
+ * it. The second is that a title and a section are re-filing rather than
+ * correcting, and stay out of reach.
+ */
+test("RULING 41: amend refuses a row this session did not open", () => {
+  const source = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(source, /function modeAmend/, "the mode exists");
+  assert.match(
+    source,
+    /!openedBy\.includes\(SESSION_LABEL\)/,
+    "it compares the row's opening attribution against this session's own label",
+  );
+  assert.match(
+    source,
+    /RULING 41: a session may not reword a row it did not write/,
+    "and the refusal names the rule, so a reader of the error knows why",
+  );
+});
+
+test("RULING 41: amend requires a session label rather than defaulting to one", () => {
+  const source = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(
+    source,
+    /if \(!SESSION_LABEL\) \{[\s\S]{0,200}amend needs --session/,
+    "without a label every row would look like this session's own",
+  );
+});
+
+test("amend touches the description and never the title or the section", () => {
+  const source = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  const fn = source.slice(source.indexOf("function modeAmend"), source.indexOf("function modeViews"));
+  assert.match(fn, /row\["What this is"\] = text/, "the description is what moves");
+  assert.doesNotMatch(fn, /row\.Title\s*=|row\["Title"\]\s*=/, "the title is how Sean recognises a row in a list");
+  assert.doesNotMatch(fn, /row\.Section\s*=|row\["Section"\]\s*=/, "the section is RULING 32's home");
+  assert.match(fn, /Description amended by the session that opened this row/, "and the change leaves a trace");
+});

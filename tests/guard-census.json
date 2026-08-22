@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 181,
-    "named": 1653,
+    "files": 182,
+    "named": 1664,
     "dynamic": 6
   },
   "files": {
@@ -639,8 +639,11 @@
     },
     "tests/could-govern-pill.test.ts": {
       "names": [
+        "3.1: a body arriving only through the widening must be GOVERNING",
+        "3.1: filtering the body list recomputes the counts it invalidates",
         "3.1: the class sweep — both zip-resolving surfaces widen to the AREA",
         "3.1: the widening can only ADD divisions, never remove them",
+        "3.1: the wired-status set is imported, never a second hand-typed copy",
         "3.2: a zip outside our committed geometry resolves to null, not to certainty",
         "3.2: an UNMEASURED division gets the pill, never a certainty it never earned",
         "3.2: at 07866 the county and the regional district govern everyone — no pill",
@@ -2282,12 +2285,15 @@
         "RULING 37: a session may not resolve or move a Needs Sean row, in either direction",
         "RULING 40: every row names the session that opened it, and UNKNOWN is a defect",
         "RULING 41: a session may not reword, retitle or delete a row Sean wrote",
+        "RULING 41: amend refuses a row this session did not open",
+        "RULING 41: amend requires a session label rather than defaulting to one",
         "RULING 46: B08 is hard-removed from both stores and recorded in the log",
         "RULING 46: a session may not delete a row, and Sean may",
         "RULING 46: no row in either store is left carrying Delete",
         "RULING 48: docs/state.md never loses a section or a third of its bytes",
         "RULING 48: the guard catches the command that destroyed his edits",
         "RULING 48: the hook is wired, and no committed script reverts a protected file",
+        "amend touches the description and never the title or the section",
         "item 1.4: every row a session reported opening is present in a store",
         "item 8a: every row in both stores carries a plain-English description",
         "the stated open count equals the rows underneath it, section by section",
@@ -2387,6 +2393,16 @@
       "names": [
         "every fixed wait left in walk:all says why it is a duration",
         "the count of fixed waits may fall, never rise"
+      ],
+      "dynamic": 0
+    },
+    "tests/wall-branches.test.ts": {
+      "names": [
+        "RULING 72: ELEC is recorded, with the FEC directory named as its branch",
+        "RULING 72: every recorded wall names the branches tried",
+        "RULING 72: every wall states the DATE it was recorded",
+        "RULING 72: the FEC directory this repo cross-checks against is really here",
+        "RULING 72: the branches field is a SENTENCE, never an empty gesture"
       ],
       "dynamic": 0
     },

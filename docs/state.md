@@ -15971,3 +15971,205 @@ told. What changed is that the good data survived the bad source.
 (#142, deviation 3: the red suite above). Close-out records `cc19a05` and this
 addendum. Three deviations from the one-merge cadence, each named with its
 reason; none of them a second feature or work that ran late.
+
+
+---
+
+# NJ HUNT 3 — 07866, 2026-08-22
+
+## What was wrong when this session opened
+
+`main`'s tip was red and production had not published since 10:17. NJ Hunt 2's
+two close-out commits — `6fb14e4` and `be40ad9` — carried
+`scripts/shoot-nj-hunt2-0822.mts` with five `TS18046` sites, build checks #196
+and #197 both failed, and Netlify refused both deploys at 'building site'.
+
+**How it reached `main` green, with the evidence.** The script did not exist
+when the gates ran. It was added in `6fb14e4`, a CLOSE-OUT commit written after
+the merge `78b0c10` and after build check #195 passed. The local and CI
+type-check scopes are IDENTICAL and nothing needed changing: `tsconfig.json`'s
+include carries `**/*.mts`, `next build` type-checks the same config, and the
+gates job and both build modes reported the same five errors at the same five
+line:column pairs. `scripts/` stays type-checked — excluding it would clear the
+red and remove type safety from the extraction toolkit, `twig:pair`,
+`control-query`, the move script and the walk, in a directory that only grows.
+
+**The class, which is what mattered.** `pnpm handoff --ship` calls itself the
+single door everything merges through. For CODE it is. For close-out records it
+never was — they are committed after the ship and pushed straight to `main`
+through no gate at all, by every session in this repo's history, and the shape
+has now put a red suite on `main` twice. RULING 75, in `docs/rulings.md`:
+`pnpm closeout` is the gated door, `pnpm main:green` asks GITHUB what happened
+to the tip rather than asking the working tree, and `pnpm handoff` now carries a
+`main checks` line that FAILS on red. It fired four times this session and
+caught a red `main` that a local gate could not have seen.
+
+## The headline number, re-taken
+
+Last session's "5 of 178 units auto-resolved — 2.8%" was void. **The pair at
+07866 is 90 of 142 units held, 98 bodies**, and Newbury holds at **47 of 47**
+with 409 bodies after this session's class sweep.
+
+**The far more useful number: 52 of 52 unheld rows read "no division of its
+own".** Not one is a body somebody looked for and could not find. The gap is
+entirely a DIVISION gap, in two classes:
+
+| class | count | why |
+|---|---|---|
+| SPECIAL_DISTRICT | 18 | no TIGER polygon exists at any vintage — fire districts, sewerage authorities, a power authority |
+| GENERAL_PURPOSE + SCHOOL_DISTRICT | 34 | real polygons exist; they sit in Sussex, Passaic, Essex, Bergen and Warren, outside the one-county clip scope |
+
+**And the denominator matters more than the fraction.** 142 is the count inside
+the first-rung 25 km circle, not inside the zip. The nearest unheld unit is 6.44
+km away and the furthest 24.7 km; every government whose territory actually
+reaches inside 07866 IS held. Reporting 90 of 142 without that sentence
+describes a coverage-WIDTH decision as though it were a hunt failure. `NJ07` and
+`NJ08` carry the two classes.
+
+**The honest national read, replacing 2.8%.** Enumeration is per-place work and
+routes compound, and the thing that compounds here is not the hunt — it is the
+GEOMETRY. Nothing at 07866 was blocked by a wall or by a source that would not
+answer. What bounds coverage is which polygons are committed, and that is an
+architecture decision with a stated ceiling: `scripts/fetch-districts.ts` says
+national coverage across these types is 13,000+ features, which ends the
+committed-GeoJSON approach and forces vector tiling. Five adjacent counties is
+roughly 1,000 more features.
+
+## RULING 71 — the pill, and what it is not
+
+`lib/geo/zip-certainty.ts`. Certainty is MEASURED rather than hand-listed, and
+the measurement was already in a committed file nobody was reading:
+`zip-governments.json` records, per government, how many of a ZCTA's 0.01°
+lattice points fell inside it. Covering every sample means governing everyone
+there; covering some means the answer is a fact about the reader's street.
+
+The zip's total is the sum of its COUNTY-layer samples — counties tile the
+country with no gaps or overlaps — **checked across all 33,791 zips in the
+national file before being relied on**, not assumed.
+
+At 07866: Morris County 64 of 64 and Morris Hills Regional 64 of 64, no marker;
+Rockaway Township 55, Rockaway Borough 6, Denville 3 and their three local
+school districts, pilled. At 03255 Newbury is CERTAIN and carries nothing, which
+is the check that stops the pill becoming decoration. **Three of the four pilot
+zips cross; 184 of the 279 zips this repo has committed geometry for do.**
+
+**The RULING 44 distinction is recorded and mechanically asserted.** A
+completeness marker says *we did not find this* — about our data, next to a
+named person, worn only by the least-covered card. This says *this is a fact
+about your street that only you can settle*. `tests/could-govern-pill.test.ts`
+holds the pill's sentence against the same lexicons the RULING 44 guard uses, so
+a reword drifting toward *we don't know which one is yours* fails the build.
+
+## RULING 74 — an address, once given
+
+`lib/geo/session-address.ts`. The RESOLVED OUTCOME — contest ids plus the street
+the reader typed — goes to `sessionStorage`. **The house number and the
+coordinates do not**, and a contest list cannot be walked back to a house.
+Nothing reaches the server, nothing reaches disk, no schema grew a column, and
+the schemas-share-no-joinable-column claim is untouched because it never becomes
+a row. Lifetime is the browser tab. An address given in 07866 does not answer
+for 03255. Verified as an image: the ballot page opens already narrowed, with no
+second prompt.
+
+## Three defects the verification found that no assertion would have
+
+1. **The pill was on the US Senate race.** A statewide division is absent from a
+   lattice index — there is nothing sub-state for it to be partial about — so it
+   fell through to UNKNOWN and UNKNOWN rendered the pill. Caught by a capture
+   script that prints its DOM facts BY NAME before any image is opened. A
+   screenshot would not have shown it either: the defect is a pill that is
+   present and plausible.
+2. **The pill lost its invitation at 430px.** A media query hid "add your address
+   to confirm" to keep it on one line. The DOM reported the full sentence; the
+   IMAGE showed half of it. Stripping the invitation leaves a bare uncertainty
+   marker, which reads as the badge RULING 42 deleted.
+3. **The map's "Who governs here" card was the second instance of `NJ01`, still
+   live.** At 07866 it read *"4 bodies govern the area around 07866"* and listed
+   Rockaway Township and not Rockaway Borough. Found by reading capture 6 as an
+   image, after the DOM probe on that same capture reported the wrong thing.
+   Fixed; it now reads 4 of 8 and lists both municipalities and both school
+   districts. `NH56` is fixed and verified.
+
+## And one the walk found before a reader did
+
+Widening the map's divisions took the coverage payload at 85641 from **2 bodies
+to 61**: 85641 is Vail, the City of Tucson's territory clips that ZCTA, and
+Tucson carries 59 curated boards and commissions. A Vail reader would have been
+handed Tucson's Design Review Board and its Outdoor Lighting Code Committee,
+every one wearing a "Could govern you" pill. **That is worse than the defect it
+was fixing.**
+
+`pnpm walk:all` reported it as a NAMED REGRESSION — M135, shipped by g15 —
+rather than as a coverage number nobody was reading. A body arriving ONLY
+through the widening must now be `GOVERNING`; a body on a division the point
+itself resolved is untouched, which is why 85701 still carries all 59. The
+counts are recomputed off the kept array rather than carried over, and
+`WIRED_STATUSES` is imported rather than retyped — the first draft hand-wrote
+`["WIRED","PARTIAL"]` against a real set of `["LIVE","MANUAL"]`.
+
+## The clerk filing, and a defect that would have crossed two towns' ballots
+
+Re-pulled: **272 candidacies across 90 contests, byte-identical** — the clerk
+has not republished since `082126`. (The brief's "91 contests" does not match
+the committed file, which held 90 before and after.)
+
+The rebuild came back with **87** contests and four orphaned candidacy ids. The
+contest id is minted from jurisdiction + office + DIVISION and the carry map was
+keyed on division + office alone, so a REGIONAL school district — whose seats
+New Jersey allocates per constituent municipality — collapsed three genuinely
+different contests onto one. Every Chester and Mendham reader would have been
+shown Washington Township's candidates for a seat they do not vote on. Fixed by
+bucketing: **362 ids carried, 0 minted, zero orphans.**
+
+The filing is on a RULING 53 clock with a **one-day** window rather than seven —
+this document is not a candidate field, it IS the ballot.
+`.github/workflows/refresh-nj-filing.yml` runs daily and gates like every other
+governed artifact; `pnpm nj:filing:check` states the clerk's published count
+against what this repo renders and exits non-zero on divergence.
+
+**42 seats a party filed nobody for**, as the clerk publishes them: 25
+Democratic, 11 Republican, 6 school-board seats with no party. One of the 42 is
+a parser artifact — `DI01`.
+
+## RULING 72 — the walls
+
+**10 recorded walls, and 7 of 9 re-walked were not walls today**: 6 open at rung
+2, 1 path moved (a 404 is not a refusal), 2 still walled. ELEC is now recorded
+as the tenth, with the FEC directory's street address and phone number named as
+the branch that reaches it without going through its host — the answer had been
+sitting in a committed CSV while the wall was written down as permanent.
+
+`branchesTried` is now a REQUIRED field, backfilled on all ten, and
+`tests/wall-branches.test.ts` fails the build if a wall is recorded without it or
+with a gesture instead of a sentence.
+
+## Photo, blurb and campaign site — measured, not assumed
+
+Across all 272 Morris candidacies:
+
+| field | held | route |
+|---|---|---|
+| contact (email) | **272 of 272** | `filing-county`, one document |
+| ballot slogan | **70 of 272** | `filing-county`, same document |
+| campaign site | **0 of 272** | no route has produced one |
+| photo | **0 of 272** | the document carries none |
+
+New Jersey's mechanical contact windfall is a property of that DOCUMENT, not of
+New Jersey. The clerk's filing carries no portrait, no prose and no URL.
+`pnpm nj:fields` walks a contest and reports per route; the Rockaway Borough
+Council four were walked and returned `filing-county` EMPTY, `campaign-site`
+NOT WALKABLE, `domain-search` one LEAD and three EMPTY. **86 of the 90 contests
+are unwalked**, and no absence has been earned for anybody in either zip.
+
+## Where the numbers stand
+
+| | before | after |
+|---|---|---|
+| test | 1641 | **1694** |
+| lint | 0 errors, 12 warnings | 0 errors, 12 warnings |
+| walk:all distinct | 371 | 371 |
+| 07866 units held | 90 of 142 | 90 of 142 |
+| 03255 units held | 47 of 47 | **47 of 47** |
+| who-governs bodies at 07866 | 4 | **8** |
+| tracker open | 198 | **207** |
+| manifest routes | 41 (v2) | 41 (v2) |

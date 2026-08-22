@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-22 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **115 sessions.**
+Newest first. **116 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -1590,6 +1590,22 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **NH49** — pnpm hunt:gaps reports 182 owed of 368 possible across 30 contests and 92 candidates, down from 184 at NH Hunt 4's close. Per class: Photo 45, In their own words 41, Contact 60, Campaign site 36. *(open)*
 
 **Needs Sean.** NH43, NH44
+
+## NJHUNT2
+
+**What it started.** 9 row(s) opened, 9 still open.
+
+- **NH56** — The ballot page now shows Rockaway Borough's council and school board to a 07866 reader, because it resolves the zip's AREA. The map's who-governs card still resolves a single ZCTA centroid, so it reads '4 bodies govern the area around 07866' and names Morris County, Morris Hills Regional, Rockaway township and Rockaway Township School District — no Borough. Same defect as NJ01, one surface over. *(open)*
+- **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town. *(open)*
+- **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure. *(open)*
+- **NH59** — Sutton's calendar titles the committee's sittings 'WRLAC Mtg @ Pillsbury Library'. Its own page on suttonnh.gov carries only the site footer, so the body names a venue the page does not. Two sittings are held out of the product because of it. *(open)*
+- **NH60** — pnpm venue:hunt --town sutton_town reads 18 of Sutton's board pages and cannot reach seven: Municipal Budget Committee, Supervisors of the Checklist, Trustees of the Trust Funds, Website Committee, Ad Hoc Waste Reduction Advisory Committee, Ad Hoc Grist Mill Bridge Committee, and the 26 Grist Mill Street Committee. suttonnh.gov/boards-committees itself answers 404. *(open)*
+- **NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions. *(open)*
+- **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one. *(open)*
+- **NH63** — RULING 69 says the session fetches the FEC's Combined Federal/State Disclosure and Election Directory into data/reference/, 'including its PDF (~2.2 MB)'. RULING 20 says portraits and PDF corpora do not go in git — they are content-addressed outside the repo with their hashes committed, while reference data and provenance stay in git. Both are yours and they point different ways for this file. *(open)*
+- **NH64** — RULING 37 says a session marks its own completed work Resolved and moves it, in every section except Needs Sean. scripts/tracker.mjs has no mode or flag that does it. Resolution, Condition and Notes are read ONLY out of docs/tracker.xlsx, and anything found there is attributed to Sean. *(open)*
+
+**Needs Sean.** NH63
 
 ## NHHUNT3
 

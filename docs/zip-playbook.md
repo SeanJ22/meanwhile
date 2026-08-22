@@ -896,6 +896,21 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm zip:universe <zip>` | Was hardcoded to New Hampshire's TIGER layers and a three-county NH governments file, so it enumerated New Hampshire for a New Jersey zip and produced a confident wrong answer. Now takes the state FIPS from the containing county in the national `county-us` layer, loads that state's committed layers, and cuts the governments slice from the full national Census file. A state whose layers are missing **fails loudly and names the file** rather than falling back. |
 | `pnpm twig:pair [<zip>\|--zip <zip>]` | Minted `state:nh` OCD ids for every unit, so a township this registry holds nine bodies for read as "no division of its own". Now reads the OCD id `zip:universe` already resolved **by geometry**; the NH name template survives only as a FIPS-33-fenced fallback for special districts with no Census boundary. Also: a bare positional zip used to be silently ignored in favour of the default, and an unrecognised argument is now fatal. |
 
+### The NJ Hunt 2 toolkit (added 2026-08-22 — RULING 67, 68 and 69)
+
+| Command | What it does |
+|---|---|
+| `pnpm zip:divisions` | **A zip is an AREA.** Indexes `data/derived/zip-governments.json` — the 30 MB lattice-sampled edge list, too large to trace into a route — into a 108 KB per-zip list of OCD ids, for the zips in the covered states. `lib/ballot/zip-divisions.ts` unions it with the centroid answer so the ballot page shows every government whose territory reaches inside the zip. Never replaces the centroid answer; a zip absent from the index falls back to exactly the previous behaviour. This is what made Rockaway Borough visible to a 07866 reader. |
+| `pnpm nj:ballot [--write]` | Generates `data/ballot/nj-morris-2026.json` from the Morris County Clerk's CURRENT filed-candidate PDFs — 91 contests, 272 candidacies, each with a filed email — instead of a hand transcription that goes stale on the county's schedule. **Carries every previous id forward**, matching contests on division-plus-office and candidacies on contest-plus-filed-name, because reactions key on candidacy ids and re-minting one orphans a reader's answer invisibly. Refuses to guess a division: a jurisdiction that resolves to none produces NO contest and is NAMED in the run. Filed emails and street addresses go to a separate contacts file, never into the file the page reads. |
+| `pnpm fec:directories` | RULING 69. Fetches the FEC's state-election-offices table and its Combined Federal/State Disclosure and Election Directory, and commits them as DATA — 58 and 349 rows — with provenance notes carrying the source URL, the fetch date, the byte count and the PDF's SHA-256. Reads the PDF link off the landing page's own hrefs, never hardcoded. Content-checks every response: a 200 whose body lacks the words the document must contain is not that document. |
+
+**Two shared modules, both extracted rather than left where they were found:**
+
+| Module | What it is |
+|---|---|
+| `lib/geo/zip-geography.ts` | RULING 67. Where a zip actually is, from files no enumeration reads to decide what to enumerate — TIGER state outlines, corroborated by the Department of Education's NCES LEA directory. `assertEnumerationGeography` throws when a run's resolved state or county disagrees. A witness with nothing to say is UNAVAILABLE and is counted neither way; a zip straddling a state line CORROBORATES rather than contradicts; a zip outside the committed geometry states OUR scope. Guarded in `tests/zip-geography.test.ts`. |
+| `lib/hunt/control-query.ts` | RULING 68. The control query, moved out of `scripts/ad-library.mts` so it binds every route rather than the one that discovered it. `ControlledProbe` asks a host for an identifier that cannot exist before asking for a real one; `guessed: true` caps the outcome at `LEAD`; `isQueryEcho` catches the third shape a byte comparison misses, a no-results page that prints the query back. 22 of 41 manifest routes carry `controlQueryRequired`, 6 carry `guessesIdentifier`, and `tests/control-query.test.ts` fails the build if a guessing route is unflagged. |
+
 ### The twig toolkit (NH Hunt 4, added 2026-08-21 — RULING 57)
 
 | Command | What it does |
@@ -3691,3 +3706,294 @@ asking for it.
 | A 404 page contains the name I searched for. | §NJ 12 — it echoed your query. Check the status first. |
 | An address parsed as a bare number plus a city. | §NJ 13 — a `P.O. Box N` truncated by a leading-digit anchor. |
 | Does this zip cover only one town? | §NJ 14 — 07866 covers Rockaway Township AND Rockaway Borough, both at 0 km. Check the clerk's filing for a second municipality of the same name. |
+
+---
+
+# NJ HUNT 2 — 07866, second pass (2026-08-22)
+
+**Inherited before hunting anything, per RULING 63:** `docs/branch-manifest.md`
+at v2, 41 routes, and this playbook's question index. **36 branches inherited,
+0 newly built, 0 duplicates** — the whole session ran on routes that already
+existed, and what it added was not new routes but the discovery that the
+instrument measuring them was wrong.
+
+That is the finding, and it is worth stating before the entries: *this session
+built no new way of reaching a fact, and moved the coverage number at 07866
+from 5 of 178 to 90 of 142.* The work was not hunting. It was fixing five
+instruments that agreed with themselves about the wrong answer.
+
+## NJ2 1. A ZIP IS AN AREA, AND ASKING IT AS A POINT LOSES WHOLE GOVERNMENTS
+
+**The defect, in one sentence: 07866's ZCTA centroid falls inside Rockaway
+Township, so a Rockaway BOROUGH resident entering their own zip saw the
+Township's government, none of their own, and a four-candidate council race
+that did not render at all.**
+
+`CLAUDE.md` already contained the premise — *a ZCTA crosses city, county, school
+district and legislative boundaries, so a zip can never resolve a ballot* — and
+the ballot page resolved one centroid and rendered the answer as the reader's
+ballot, which treats a ZCTA as though it could.
+
+**The rung:** the zip's whole AREA, not its centroid.
+`data/derived/zip-governments.json` already held it — every ZCTA sampled on a
+0.01° lattice against the committed TIGER polygons — and had held it since
+Prompt B. Nothing needed fetching. `corepack pnpm zip:divisions` indexes it per
+zip as OCD ids (`data/derived/zip-division-ids.json`, 108 KB, 279 zips in the
+covered states), and `lib/ballot/zip-divisions.ts` unions it with the centroid
+answer so nothing a reader saw yesterday can disappear.
+
+**What it does NOT claim, and this matters:** not that a reader at this zip
+votes in all of them. They do not. It is why `CLAUDE.md` says to prompt for a
+street address when a reader wants their actual ballot, and why anything
+surfaced this way renders with the jurisdiction printed beside it.
+
+**Check any new zip for this before anything else.** Two municipalities sharing
+a name and a zip is not a New Jersey curiosity — Rockaway Township and Rockaway
+Borough are the case here, and the clerk's own filing lists both. A zip that
+resolves to one town is a hypothesis until the filing agrees.
+
+## NJ2 2. THE MOST DANGEROUS SHAPE: AN ANSWER THAT RECONCILES WITH ITSELF
+
+RULING 67. **Five instances found, five fixed**, and the reason to read this
+section is that every one of them PASSED its own consistency check.
+
+| Instrument | What it did | Why nothing caught it |
+|---|---|---|
+| `twig-pair.mts` | Counted 37 units as inside a 25 km circle around Rockaway, Camden and Ocean County among them | `meetingsNearZip` is `true \| false \| "UNRESOLVED"` and was TYPED `boolean`. `"UNRESOLVED"` is a non-empty string. `filter((u) => u.meetingsNearZip)` passed type-checking and passed everything downstream |
+| `zip-universe.mts` | Every unit that does not contain the zip centroid read as "no division of its own" | `ocdId` was read off the containment result, so a unit could only acquire an IDENTITY by having JURISDICTION. Rockaway Borough, 0 km away, with a body already in this registry, read as a gap |
+| `zip-universe.mts` | No county ever resolved a distance | The distance lookup used `normalize` where the containment test used `normalizeCounty`. `COUNTY OF MERCER` → `MERCER COUNTY` vs TIGER's `MERCER`. The null became `UNRESOLVED`, which fed the row above |
+| `measure-focus.mts` | Treated New Jersey's own layers as foreign at a New Jersey zip | `const mine = zip === "85701" ? "04" : "33"` — every zip that is not Tucson was New Hampshire |
+| `build-gap-ledger.mts`, `verify-pilot-zips.mts` | Wrote a hand-typed state name into a generated ledger beside a count | Nothing compared the label with the zip |
+
+**The pair at 07866 read `5 held + 173 missing = 178  (reconciles)`.** It is
+`90 + 52 = 142`. The 2.8% coverage figure the previous session reported was an
+artefact of two of these, not a measurement.
+
+**The rung, and it generalises to every instrument in this repo:** an
+enumeration STATES the geography it resolved to, and is checked against the
+zip's own geography established from files it does not read.
+`lib/geo/zip-geography.ts` does it with two DISTINCT PUBLISHERS — TIGER's state
+outlines (geometry) and the Department of Education's NCES LEA directory
+(mailing addresses). RULING 52 counts independence over dependencies, not over
+names, and two Census files off one source table would be one witness.
+
+**A witness with nothing to say is UNAVAILABLE** — never agreement, never
+disagreement. 03255 has no LEA at its zip; reading that silence either way
+would be inventing a measurement.
+
+**And a zip can genuinely straddle a state line.** ZIP 86044 (Tonalea, AZ) sits
+on the Navajo Nation and NCES records districts in both AZ and UT there. The
+first version called that a contradiction and refused to enumerate. A witness
+naming several states, one of which is the geometry's answer, CORROBORATES it.
+
+## NJ2 3. A NAME MATCH ACROSS A STATE COLLAPSES GOVERNMENTS
+
+**New Jersey has FIVE Washington Townships.** Bergen, Burlington, Gloucester,
+Mercer, Morris and Warren. Four Washington Township school districts. Two
+Mansfields. Two Fairfields.
+
+Matching a Census-of-Governments unit to a TIGER polygon BY NAME handed all
+five the same OCD id, and the run reported a higher resolution rate for it —
+which is the trap. *A match rate is not evidence of a correct join; only
+per-key uniqueness is.*
+
+**The rungs:**
+
+- **A municipality is keyed by (name, COUNTY).** TIGER's county-subdivision
+  GEOID is `SSCCCNNNNN` and its first five digits are the county. Exact, and it
+  needs no name cleverness.
+- **A school district has no county in its GEOID**, so contested names are
+  settled by the unit's own administrative point falling inside the polygon —
+  and contested is decided ACROSS THE WHOLE ENUMERATION rather than per unit.
+  One claimant takes it; several are separated by their admin points; where
+  that leaves more than one, NOBODY takes it and the contest is printed.
+- **Containment BREAKS TIES; it never gates a match.** Requiring it outright
+  refused Rockaway Borough School District, whose office is at a 07866 address
+  whose ZCTA centroid is in the Township. True of any district whose office is
+  near its own edge.
+- **Then ASSERT distinctness and throw.** `zip:universe` now stops the run on
+  any OCD id assigned to two units.
+
+## NJ2 4. THE CENSUS AND TIGER DISAGREE ABOUT THE MUNICIPAL TYPE WORD, IN BOTH DIRECTIONS
+
+    Census  "ROCKAWAY TWP SCH DIST"           → "ROCKAWAY TOWNSHIP"
+    TIGER   "Rockaway Township School District" → "ROCKAWAY TOWNSHIP"   ✓
+    Census  "DOVER PUBLIC SCH DIST"           → "DOVER"
+    TIGER   "Dover Town School District"      → "DOVER TOWN"            ✗
+
+Fourteen Morris-area districts this registry already held read as gaps because
+of one word. **But the word cannot be stripped** — that is what collapsed
+Rockaway Borough onto Rockaway Township once already.
+
+**The rung: try the exact type-preserving match FIRST, and relax ONLY when the
+relaxed name answers to exactly one polygon.** Rockaway relaxes to two
+candidates and is refused; Dover relaxes to one and is taken. The relaxation
+count is printed.
+
+## NJ2 5. THE CENSUS WRITES A FICTITIOUS ROW INTO THE LAYER A GOVERNMENT IS NOT IN
+
+Rockaway Borough is `FUNCSTAT A` in `place-34` and `FUNCSTAT F` in `cousub-34`.
+`F` is Census filling its geographic hierarchy. `lib/registry/derive.ts` already
+knew this and built the registry's body from the PLACE row — so a tool reading
+cousub only produces `county:morris/place:rockaway_borough`, which is a key
+matching nothing, and reports a held unit as a gap for a second reason after
+the first is fixed.
+
+**The rung: redirect an `F` county-subdivision to its active place row BY
+GEOID** — for a coextensive place the last five digits of the cousub GEOID are
+the place code. Checked across the whole committed layer before it was relied
+on: all 29 fictitious New Jersey subdivisions map to exactly one active place
+each, none unmatched.
+
+## NJ2 6. A GEOID IS NOT A KEY ON ITS OWN
+
+Morris County is `34027`. New Jersey's **state upper legislative district 27**
+is also `34027`. Keyed on GEOID alone, whichever file loaded second won, and
+07866's division index came out carrying `sldu:27` and no Morris County at all.
+
+**The rung: key on (LAYER, GEOID), and assert no key resolves to two ids.**
+
+## NJ2 7. A FILING PDF'S NON-CANDIDATE ROWS ARE DATA, AND THEY BLEED
+
+Four defects in the Morris County Clerk's two documents, all found in one
+re-read, three of which put wrong words into rows about NAMED REAL PEOPLE.
+
+| What the clerk writes | What it did |
+|---|---|
+| `No Nomination Made <Party>` — a seat a party filed nobody for | Sat between one contest's last candidate and the NEXT contest's municipality, so 20 candidates were filed under places like `Made Democratic Butler Borough` |
+| `NO PETITION FILED` — the school list's version, non-partisan so no party follows | Same, plus it stranded the school list's DISTRICT column (`Town`, `Township`, `Watchung Hills Regional`) as the trailing Title-Case run |
+| The page-one column header | `City State Zip Email` became the municipality for the four US Senate candidates |
+| `NO LOCAL ELECTION Roxbury Township` | The all-caps heading pattern ate the `R`, leaving `oxbury Township`, whose Title-Case tail is `Township` — so the clerk's statement about Roxbury published as a statement about a municipality called `Township` |
+
+**The rungs:**
+
+- **An all-caps heading run must not be followed by a lower-case letter.**
+  `[A-Z.'\-/]+(?![a-z])` ends it exactly where the capitals do.
+- **Strip the header by anchoring on a phrase both documents print, and STOP at
+  the header's last column** — a greedy strip took the header and the first
+  municipality with it.
+- **Remove the unfilled-seat phrase GLOBALLY, not end-anchored.** It sits BEFORE
+  the next jurisdiction, so an end-anchored strip matches nothing.
+- **The hyphen and the slash are part of a place name.**
+  `Parsippany-Troy Hills Township` matched from `Troy` onward and published as a
+  township called `Troy Hills`, which does not exist. `Chester
+  Borough/Township` is ONE filing jurisdiction for a district two
+  municipalities run together.
+- **Read the DISTRICT column rather than skipping it.** `Rockaway Township
+  MEMBER OF THE REGIONAL BOARD OF EDUCATION` is a MORRIS HILLS REGIONAL seat;
+  resolving it from the municipality gave it the Township's own district, so
+  two different boards' contests came out sharing one division.
+
+**And the rows themselves are a FINDING.** 42 seats across the two documents
+where the filing authority states that a party filed nobody. That is
+publishable information about whether a race is contested, and the parser was
+throwing it away.
+
+## NJ2 8. A GENERATED BALLOT MUST CARRY THE OLD IDS
+
+Regenerating `data/ballot/nj-morris-2026.json` from the clerk's current filing
+took it from 6 contests and 15 candidacies to 91 and 272, every one with a filed
+email. **Minting fresh ids broke nine guards, and what they were guarding is the
+real hazard: the REACTIONS store keys on candidacy ids.**
+
+Re-minting a person's id does not lose a formatting detail. It orphans a
+reader's answer about a named person, and the orphan is invisible — the new
+record simply has no reactions rather than obviously wrong ones. That is the
+revenue path quietly losing rows.
+
+**The rung: match the previous file on properties of the WORLD, not on the old
+naming convention.** A contest matches on DIVISION plus office; a candidacy on
+its contest plus the filed name. 21 of 21 prior ids carried. A carried contest
+also keeps its TITLE, because the old titles were written by a person and say
+things the office string cannot.
+
+**And an authority's document goes stale on ITS schedule, not ours.** The
+clerk republished between the two sessions: 272 candidates became 328. A hand
+transcription's only symptom of staleness is a contest that does not render.
+
+## NJ2 9. A FILTER THAT MATCHES NOTHING IS NOT AN EMPTY PLACE
+
+`pnpm venue:hunt --town Sutton` printed **`0 body(ies) not LIVE under Sutton`**
+and exited. Sutton has nineteen. The filter was a case-SENSITIVE substring
+against `place:sutton_town`.
+
+It was caught only because the tool exits non-zero on a zero-page read. The
+SENTENCE was false and read as a fact about Sutton.
+
+**The rung: an argument that matches nothing STOPS the run and names the
+argument.** "Your filter matched nothing" and "this place has nothing owed" are
+different answers and may never print as the same one.
+
+## NJ2 10. WHAT THE FEC's DIRECTORIES ANSWER, AND WHAT THEY DO NOT
+
+RULING 69. `corepack pnpm fec:directories` →
+`data/reference/fec_state_election_offices.csv` (58 rows) and
+`data/reference/fec_combined_federal_state_disclosure_directory.csv` (**349
+offices across 56 jurisdictions**, 316 with a URL, 328 with a phone, 243 with an
+email). Public domain, federal works.
+
+**They answer half the question the NJ Hunt raised, and it is the expensive
+half.** They name WHO the authority is in every state and territory and how to
+reach a human there. They do NOT say what that authority publishes — so they
+cannot tell you whether the next state's county clerks put a filed email in a
+PDF the way Morris County's does. That still takes a walk. What they remove is
+finding out who to walk to.
+
+**They paid for themselves immediately.** `elec.nj.gov` was recorded here as
+Imperva-walled and re-walked still walled. That had been read as *ELEC is
+unreachable*. It is not — it is ELEC'S WEBSITE that is unreachable, and the
+directory hands over a named Executive Director, a telephone number and a
+postal address for the same records: a compliant route straight to rung 13 that
+no WAF can refuse.
+
+**A HOST being walled is not a BODY being unreachable**, and this repo had
+collapsed the two again without noticing.
+
+## NJ2 11. THE PDF IS THE CONTAINER, NOT THE DOCUMENT
+
+RULING 69 says fetch the directory PDF into `data/reference/`. RULING 20 says
+PDF binaries do not go in git. Both hold if what is committed is the CONTENT —
+349 parsed rows as a CSV — with the PDF's URL, byte count and SHA-256 in the
+provenance note. The conflict is on a Needs Sean row rather than settled by a
+session.
+
+*Worth generalising:* a reference document that ships as a PDF is still
+reference data. Parsing it is usually better than committing it — a CSV diffs,
+a PDF does not, and the parse is what a session actually reads.
+
+## NJ2 12. THE CONTROL QUERY BELONGS IN THE LIBRARY, NOT IN THE TOOL THAT FOUND IT
+
+RULING 68. `lib/hunt/control-query.ts`. 22 of 41 manifest routes now carry
+`controlQueryRequired`, and 6 carry `guessesIdentifier` — which caps them at
+`LEAD` forever, because a page at a guessed handle is a page and never proof of
+whose it is.
+
+**A third shape a byte comparison alone misses:** a no-results page that prints
+`no results for Bradstreet` CONTAINS the surname, so a substring test passes on
+a page saying the opposite. `isQueryEcho` REMOVES the echo and asks whether the
+term survives, rather than judging each occurrence by what sits near it — on a
+real results page the heading sits a couple of dozen characters from the first
+genuine headline, so any proximity window wide enough to catch the echo also
+catches the article.
+
+## NJ2 — THE QUESTION INDEX
+
+| The question | Where |
+|---|---|
+| A reader's own town is missing from their zip. | §NJ2 1. Ask the zip as an AREA. `pnpm zip:divisions`. |
+| My coverage pair reconciles. Is it right? | §NJ2 2 — reconciling proves arithmetic, not geography. Check the state externally. |
+| An enumeration returned a confident answer for the wrong place. | §NJ2 2. `lib/geo/zip-geography.ts`, two distinct publishers. |
+| A tri-state field is being used in an `if`. | §NJ2 2 — `"UNRESOLVED"` is truthy. Check the TYPE against the data, not against the declaration. |
+| Two governments got the same OCD id. | §NJ2 3 — key by (name, county); assert distinctness and throw. |
+| A district name will not match its polygon. | §NJ2 4 — expand the type word, relax only when the relaxed name is unique. |
+| The registry's id for a town does not match TIGER's. | §NJ2 5 — `FUNCSTAT F` is Census filler. Redirect to the active PLACE row by GEOID. |
+| A GEOID matched the wrong thing. | §NJ2 6 — a county and a legislative district can share one. Key on (layer, geoid). |
+| A filing PDF put strange words in a candidate's jurisdiction. | §NJ2 7 — `No Nomination Made`, `NO PETITION FILED`, and the column header all bleed forward. |
+| How do I know whether a race is contested? | §NJ2 7 — the clerk states unfilled seats explicitly. 42 in Morris County. Record them. |
+| I want to regenerate a ballot file. | §NJ2 8 — carry the old ids or you orphan readers' reactions, invisibly. |
+| A tool reported zero for a place I know has bodies. | §NJ2 9 — check the ARGUMENT before believing the answer. |
+| Which office receives filings in state X? | §NJ2 10 — `data/reference/fec_*.csv`. It names the office, never what it publishes. |
+| A host is walled. Is the body unreachable? | §NJ2 10 — no. Get the phone number and go to rung 13. |
+| A reference document is a PDF. | §NJ2 11 — parse it; commit the rows and the hash. |
+| A guessed identifier returned 200. | §NJ2 12 and §NJ 5–6. `LEAD`, never `HIT`. |
+| A search page contains the name I searched for. | §NJ2 12 — remove the echo and ask whether the name survives. |

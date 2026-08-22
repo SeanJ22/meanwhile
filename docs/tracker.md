@@ -14,12 +14,12 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **189 open**, 323 resolved.
-- **49 waiting on Sean** — the first section below.
+- **198 open**, 323 resolved.
+- **50 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
-  - New Jersey hunt — **1**
+  - New Jersey hunt — **2**
   - Arizona hunt — **0**
   - Visual feedback — **1**
   - Data infrastructure — **1**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**49 open · 11 resolved.**
+**50 open · 11 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -70,6 +70,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
 **NH44** — A structural decision that belongs to you rather than to a hunt. The committed TIGER geometry is clipped to one county per state - public/geo/*.geojson says clippedTo 04019/34027/33013 on its own face - and 03255's first-rung circle crosses three counties. Six New Hampshire towns inside that circle are now in the registry with their boards and have NO POLYGON, so the map cannot draw them.
+
+**NH63** — RULING 69 says the session fetches the FEC's Combined Federal/State Disclosure and Election Directory into data/reference/, 'including its PDF (~2.2 MB)'. RULING 20 says portraits and PDF corpora do not go in git — they are content-addressed outside the repo with their hashes committed, while reference data and provenance stay in git. Both are yours and they point different ways for this file.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
 
@@ -187,7 +189,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**28 open · 3 resolved.**
+**30 open · 3 resolved.**
 
 ### P1
 
@@ -216,6 +218,10 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 **NH51** — Fifteen of Sutton's sixteen bodies have no published venue this session could find. Their pages carry '93 Main Street | Sutton Mills' in the SITE FOOTER only — the town's postal address on a template, not a statement about where that board sits — and reading a footer as a venue would pin fifteen bodies on the strength of a page layout. What is owed is the posted NOTICE per body, which carries the room by construction, or a minutes header that states it.
 
 **NH52** — facebook.com renders 977,803 and 928,697 bytes and ZERO characters of readable text to our headless browser, on two campaign and committee pages read 2026-08-21. campaign-social is the highest-yield branch-manifest route for the smallest races — the rule that a campaign living on Facebook still has a campaign site exists to protect exactly the candidates least able to buy a domain. The route is WALLED today, with its date, and RULING 53 puts it back on the queue in fourteen days.
+
+**NH59** — Sutton's calendar titles the committee's sittings 'WRLAC Mtg @ Pillsbury Library'. Its own page on suttonnh.gov carries only the site footer, so the body names a venue the page does not. Two sittings are held out of the product because of it.
+
+**NH60** — pnpm venue:hunt --town sutton_town reads 18 of Sutton's board pages and cannot reach seven: Municipal Budget Committee, Supervisors of the Checklist, Trustees of the Trust Funds, Website Committee, Ad Hoc Waste Reduction Advisory Committee, Ad Hoc Grist Mill Bridge Committee, and the 26 Grist Mill Street Committee. suttonnh.gov/boards-committees itself answers 404.
 
 **HD01** — Eleven people are running for United States Senator in New Hampshire and forty-one things about them have never been looked for — faces, their own words, a way to reach them, a website.
 
@@ -259,9 +265,11 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**10 open · 0 resolved.**
+**12 open · 0 resolved.**
 
 ### P1
+
+**NH56** — The ballot page now shows Rockaway Borough's council and school board to a 07866 reader, because it resolves the zip's AREA. The map's who-governs card still resolves a single ZCTA centroid, so it reads '4 bodies govern the area around 07866' and names Morris County, Morris Hills Regional, Rockaway township and Rockaway Township School District — no Borough. Same defect as NJ01, one surface over.
 
 **NJ01** — Zip 07866 covers TWO municipalities, not one. The twig pair run on 2026-08-22 places BOROUGH OF ROCKAWAY and ROCKAWAY BORO SCH DIST at 0 km from the zip centroid, and this registry holds no body for either. The Borough is also holding a live election that this product does not render: the Morris County Clerk's 2026 filing carries four Borough Council candidates (Melissa Burnside and Patrick McDonald, Republican; Clifford D. Dawkins Jr. and Angelo Natale, Democratic), each with a filed street address and email, plus two Borough school board candidates (Edward Graf, Jaclyn D. Long). A reader in the Borough typing 07866 today gets the Township's ballot and nothing of their own. The contacts are already parsed and sitting in pnpm nj:filing output; what is missing is the division wiring, the bodies, and the ballot rows. Note the trap this sits on: the Census name normaliser collapsed Borough and Township onto one OCD id during this session and had to be corrected, so any fix here must keep the two distinct and be checked against that.
 
@@ -284,6 +292,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **HD25** — One person is running for the Rockaway Township school board's unexpired term and four things about them have never been looked for.
 
 ### P3
+
+**NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
 
 **NJ04** — RULING 65's footer-address branch wired seven Sutton bodies on 2026-08-22, and three were deliberately left out because each has better evidence about itself than the town's footer has about it. Ad Hoc Speed Sign Committee: its own feed titles read 'Ad Hoc Speed Sign Committee - Zoom Mtg', so it meets on Zoom and pinning it at 93 Main Street would send a reader to an empty building; the playbook already records that a Zoom URL in LOCATION is a fact and not a building, and this is the same rule read from a title. Warner River Local Advisory Committee: its titles read 'WRLAC Mtg @ Pillsbury Library', a venue this session could not resolve to a coordinate, and it is a multi-town river committee so Sutton's town hall is a poor guess; the work is to resolve Pillsbury Library. Sutton Free Library Board of Trustees: its page states its own meeting arrangement, so it is a STATES A VENUE case. Each has four future sittings, two, and an unknown respectively.
 
@@ -499,7 +509,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**15 open · 131 resolved.**
+**18 open · 131 resolved.**
 
 ### P1
 
@@ -508,6 +518,10 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
   Waiting on candidate info (D05).
 
 ### P2
+
+**NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
+
+**NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions.
 
 **M75** — On a phone, the map's legend crosses the bottom of an open meeting panel and covers the text underneath it.
 
@@ -520,6 +534,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **B18** — Sean asked for federal officials' town halls. There is no authoritative feed for them anywhere, so this row records what was checked and what it found rather than pretending a build is waiting.
 
 **M13** — The radius control broke twice — once blanking results, once refusing to switch off — and both times the tests only covered the logic underneath, not the control a reader touches.
+
+**NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
 **A03** — Answering "is there a data center coming?" by searching pending zoning, permits and agenda items near an address. The same machinery answers warehouses, rezonings and road projects.
 
@@ -567,11 +583,13 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**6 open · 56 resolved.**
+**7 open · 56 resolved.**
 
 ### P2
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
+
+**NH64** — RULING 37 says a session marks its own completed work Resolved and moves it, in every section except Needs Sean. scripts/tracker.mjs has no mode or flag that does it. Resolution, Condition and Notes are read ONLY out of docs/tracker.xlsx, and anything found there is attributed to Sean.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 

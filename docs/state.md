@@ -4,7 +4,72 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-22 — **New Jersey publishes the candidate contact and New Hampshire does not, and that single publishing practice is the whole of the 1-of-16 versus 15-of-15 difference.** The NJ Hunt, Rockaway Township (07866).
+Last updated: 2026-08-22 — **Rockaway Borough was never missing from this
+product's data. It was invisible to five instruments that agreed with
+themselves about the wrong answer.** NJ Hunt 2, Rockaway Township and Rockaway
+Borough (07866).
+
+Zip 07866 covers two municipalities. The ballot page resolved a zip to its ZCTA
+CENTROID, which falls inside the Township, so a Rockaway Borough resident
+entering their own zip saw the Township's government, none of their own, and a
+four-candidate council race that did not render at all. `CLAUDE.md` already
+contained the premise — a ZCTA crosses jurisdiction lines and can never resolve
+a ballot — and the page resolved one point and rendered the answer as the
+reader's ballot, which treats a ZCTA as though it could. **A 07866 reader now
+sees both, verified on production and read as an image.**
+
+The through-line is not "we found a gap". It is that **the coverage pair at
+07866 read `5 held + 173 missing = 178  (reconciles)` and every number in it was
+wrong.** It is `90 + 52 = 142`. Five instruments, all internally consistent:
+`meetingsNearZip` is `true | false | "UNRESOLVED"` and was TYPED `boolean`, so
+37 units — Camden, Ocean County, two Cape May townships — rode a truthy string
+into a 25 km circle around Rockaway; `ocdId` was read off the containment test,
+so a unit could only acquire an IDENTITY by having JURISDICTION and every
+neighbour read as having no division at all; county distance used a different
+normaliser from the containment test, so no county ever resolved one;
+`measure-focus` decided the native state with `zip === "85701" ? "04" : "33"`;
+and two generated ledgers carried hand-typed state names beside their counts.
+That is RULING 67's shape, and the reason it is the most dangerous one here is
+that every instrument in this repo is built on reconciliation.
+
+`lib/geo/zip-geography.ts` now establishes a zip's state and county from files
+no enumeration reads in order to decide what to enumerate — TIGER's state
+outlines and the Department of Education's NCES LEA directory, two distinct
+publishers, because RULING 52 counts independence over dependencies rather than
+over names. A witness with nothing to say is UNAVAILABLE and counted neither
+way. A zip that straddles a state line corroborates rather than contradicts.
+
+**The Morris ballot stopped being a hand transcription.** `pnpm nj:ballot`
+generates it from the county clerk's current filed-candidate PDFs: 91 contests
+and 272 candidacies, every one with a filed email, against 6 and 15. The clerk
+had republished between the two sessions — 272 candidates became 328 — and a
+hand transcription's only symptom of staleness is a contest that does not
+render. Every previous id is carried forward, matched on properties of the
+world rather than on the old naming convention, because **the reactions store
+keys on candidacy ids and re-minting one orphans a reader's answer about a
+named person, invisibly.**
+
+Four parser defects in the clerk's own documents, three of which put wrong words
+into rows about named real people: `No Nomination Made` bled into twenty
+candidates' jurisdictions; an all-caps heading ate the next word's capital so
+the clerk's statement about Roxbury Township published as a statement about a
+municipality called `Township`; hyphenated and slashed place names truncated;
+and the school list's district column leaked, which also meant a REGIONAL board
+contest resolved to the municipality's own district — two boards sharing one
+key. **42 seats where a party filed nobody are now recorded as the finding the
+clerk publishes**, rather than discarded.
+
+The FEC's two directories are committed as data — 349 offices across 56
+jurisdictions — and they answer half the question the first NJ Hunt raised. They
+name who the filing authority is everywhere in the country and how to reach a
+human there; they do not say what any of them publishes, which still takes a
+walk. They paid for themselves at once: `elec.nj.gov` was recorded here as a
+permanent wall, and the directory hands over a named Executive Director, a
+telephone number and a postal address for the same records. **A host being
+walled is not a body being unreachable**, and this repo had collapsed the two
+again without noticing.
+
+Previously (2026-08-22) — **New Jersey publishes the candidate contact and New Hampshire does not, and that single publishing practice is the whole of the 1-of-16 versus 15-of-15 difference.** The NJ Hunt, Rockaway Township (07866).
 
 Previously (2026-08-18) — **four numbers this repo prints turned out to be
 describing something other than what they were named, and each was caught by

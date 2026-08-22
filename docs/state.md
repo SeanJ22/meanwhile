@@ -15469,3 +15469,45 @@ carries the room by construction (`NH48`).
 
 Rows opened: `NH43` and `NH44` (Needs Sean), `NH45`, `NH46`, `NH47`, `NH48`,
 `NH49`.
+
+### NH31, proven on the scheduler itself — addendum, 2026-08-21
+
+Two dispatch-only runs, and the second is the whole fix in one job.
+
+**Run 32543393133.** The ingest exited 2, the workflow CAPTURED that instead
+of dying on it, and every step NH31 promised would now run, ran: the diff, the
+browser install, the gate. The final `always()` step failed the job. Then the
+gate itself refused — on `docs/tracker.md` stating 170 open rows against a
+store of 177, because `pnpm tracker:add` had written the CSVs and crashed on a
+workbook Excel was holding open.
+
+That is a **red suite on `main`**, put there by this session's own close-out
+commit and found by a scheduled job rather than by the session. It is also the
+argument for fixing it in one sentence: **the refresh gate is the only
+scheduled job that runs `pnpm test` on Linux**, so a spreadsheet open on
+somebody's desktop could stop a governed artifact from ever committing, and
+the reason would appear nowhere near the spreadsheet. `modeViews` now writes
+the two markdown views first and attempts the workbook after, reporting a
+failure rather than throwing through it (fourth merge, `99e48c5`).
+
+**Run 32543652154**, after that fix:
+
+| Step | Outcome |
+|---|---|
+| Refresh the snapshot | success — exit 2 captured, not fatal |
+| Diff the governed artifact | success |
+| Validate before committing | success |
+| **Commit** | **success — `3a9068a`, 415 rows (353 fresh + 62 carried)** |
+| A source failed for a JOB reason | **failure — the run goes red LAST** |
+
+Under the old code those 415 rows were written to disk and thrown away.
+RULING 12 is intact: the run is red, the failure is named, and a human is
+told. What changed is that the good data survived the bad source.
+
+**Merges, all four, labelled.** `f741b1e` (#138, the PLANNED code merge) ·
+`6e59b5b` (#139, deviation 1: Excel's owner-lock file, committed by `git add
+-A`, blocking every branch switch while the workbook is open) · `15f283c`
+(#140, deviation 2: the RULING 59 section a screenshot found) · `99e48c5`
+(#142, deviation 3: the red suite above). Close-out records `cc19a05` and this
+addendum. Three deviations from the one-merge cadence, each named with its
+reason; none of them a second feature or work that ran late.

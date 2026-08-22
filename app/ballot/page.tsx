@@ -1462,11 +1462,41 @@ export default async function BallotPage({
         </section>
       )}
 
-      {/* Our gaps, stated as ours — never smoothed into implied
-          completeness. Distinct from the authorities' absence statements. */}
+      {/*
+        RULING 59 (2026-08-21) — THE HEADING WAS "NOT HERE YET", AND IT WAS THE
+        BANNED FORM WITH A SECTION AROUND IT.
+
+        This block was introduced as "our gaps, stated as ours, never smoothed
+        into implied completeness". Under RULING 59 the page says ONE thing
+        about completeness — Sean's line — and nothing else, so a heading that
+        announces a list of what is missing cannot stay, whatever is under it.
+
+        It survived the first sweep of this session because the sweep was a
+        source-text scan and this heading is three ordinary words in a JSX
+        element, while the sentence that made it a coverage claim lived in
+        `data/ballot/az-pima-2026.json` and never appeared in `app/` at all.
+        **It was caught by reading a production screenshot as an image** —
+        exactly as NH Hunt 4's stale note was, and for the same reason: the DOM
+        assertion was happy, and the reader's view was not.
+
+        One note went with it: "Pima County offices, City of Tucson offices,
+        and school-district (TUSD, Vail Unified) contests are not curated yet."
+        That is an aggregate enumeration of what has not been worked out, in
+        hunt-queue vocabulary RULING 28 already keeps off reader surfaces, and
+        it goes false the day any one of them is curated.
+
+        WHAT REMAINS IS NOT A COVERAGE LIST. Every surviving note is a sourced
+        fact about an AUTHORITY's own publishing state — the Secretary of State
+        has not published the seat count, nomination papers are not certified
+        until September 2, no CACR reached the ballot — and each explains why a
+        contest a reader might expect to see is not there. Those are the
+        authorities' absences, not ours, and the render-default rule requires
+        them to stay distinguishable from ours rather than deleted. The heading
+        now names what the block is instead of what the product lacks.
+      */}
       {matched && coverageNotes.length > 0 && (
         <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
-          <h2 className="t-structure text-paper-dim">Not here yet</h2>
+          <h2 className="t-structure text-paper-dim">Notes on this ballot</h2>
           {coverageNotes.map((note) => (
             <p
               key={note}

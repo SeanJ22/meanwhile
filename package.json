@@ -139,7 +139,8 @@
     "nh:fix-pages": "tsx scripts/fix-nh-official-pages.mts",
     "rewalk:candidates": "tsx scripts/rewalk-candidate-fields.mts",
     "rewalk:walls": "tsx scripts/rewalk-walls.mts",
-    "venue:hunt": "tsx scripts/hunt-standing-venue.mts"
+    "venue:hunt": "tsx scripts/hunt-standing-venue.mts",
+    "nh5:shots": "tsx scripts/nh5-shots.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

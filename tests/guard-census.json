@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 181,
-    "named": 1649,
+    "named": 1653,
     "dynamic": 6
   },
   "files": {
@@ -639,13 +639,17 @@
     },
     "tests/could-govern-pill.test.ts": {
       "names": [
+        "3.1: the class sweep — both zip-resolving surfaces widen to the AREA",
+        "3.1: the widening can only ADD divisions, never remove them",
         "3.2: a zip outside our committed geometry resolves to null, not to certainty",
         "3.2: an UNMEASURED division gets the pill, never a certainty it never earned",
         "3.2: at 07866 the county and the regional district govern everyone — no pill",
         "3.2: at 07866 the two Rockaways and Denville each govern PART — pill",
         "3.3: a congressional district is NOT statewide and keeps the pill",
         "3.3: a statewide office is CERTAIN — every reader at this zip votes in it",
+        "3.3: couldGovern is only set on a TYPED zip, never on a panned viewport",
         "3.3: the statewide rule matches the SHAPE exactly, not a prefix",
+        "3.3: the who-governs card carries the pill, per body",
         "3.7: the pill is NOT universal — Newbury governs everyone at 03255",
         "3.8: a zip that crosses nothing carries no pill at all",
         "3.8: the index states how many zips cross, and it is a real fraction",

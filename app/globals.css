@@ -2756,6 +2756,62 @@ label:has(> input[type="checkbox"]) {
   flex-shrink: 0;
 }
 
+/* RULING 71 (NJ Hunt 3, 2026-08-22) — "Could govern you".
+ *
+ * On a contest whose DIVISION covers only part of the reader's zip. It is an
+ * INVITATION, not a disclosure of our incompleteness, and the styling carries
+ * that: it reads as an offer in the link colour, not as a warning and not as a
+ * deficiency badge. RULING 44 bans a per-card completeness marker; this is a
+ * fact about the reader's street, not about our data, and it never wears the
+ * clothes of the thing it is not.
+ *
+ * A named gap in this product renders in the gap's own register — an outline
+ * where a recorded value renders as a filled pill. This is deliberately NOT
+ * that register either: nothing here is absent.
+ *
+ * `[data-could-govern]` is toggled off by ballot-narrowing.tsx on contests a
+ * session address confirms (RULING 74), so the pill disappears from exactly
+ * the bodies the reader has settled and stays on the rest.
+ */
+.could-govern-pill {
+  display: inline-flex;
+  align-items: baseline;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border: 1px solid var(--link);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--link);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.could-govern-action {
+  color: var(--muted);
+}
+
+/* The pill is per BODY, so on a narrow viewport it wraps under the title
+   rather than pushing the heading into a two-line ragged column. */
+@media (max-width: 460px) {
+  .could-govern-pill {
+    margin-left: 0;
+    margin-top: 4px;
+  }
+  .could-govern-pill .could-govern-action {
+    display: none;
+  }
+}
+
+/* A contest the session address CONFIRMED. The pill is parked rather than
+   deleted, so "show the whole zip again" restores the open question. */
+[data-could-govern-parked="true"] .could-govern-pill {
+  display: none;
+}
+
 /* "Show me my actual ballot" (item 2, 2026-08-15) — the ballot page's way out
    of the limitation its own first sentence states. */
 .ballot-narrow-link {

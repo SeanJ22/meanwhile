@@ -1,0 +1,130 @@
+# The scheduled refresh behind data/ballot/nj-morris-2026.json.
+# (NJ Hunt 3 item 2.3, 2026-08-22.)
+#
+# `data/ballot/nj-morris-2026.json` is GENERATED from the Morris County Clerk's
+# filed-candidate PDFs. The clerk republishes at a new version path on their own
+# schedule and leaves the old path reachable — `/v/9/...-082126.pdf` superseded
+# `/v/6/...-080726.pdf` WHILE NJ Hunt 2 WAS RUNNING, and the New Jersey ballot
+# was stale the day it shipped. A generated file whose source moves underneath
+# it goes stale silently, and a hand transcription's only symptom is a contest
+# that does not render: a reader whose race was added after our last pull sees a
+# ballot with their race missing, and nothing anywhere says so.
+#
+# WHY DAILY, AGAINST RULING 53's SEVEN. RULING 53 puts candidate fields on a
+# 7-day window. This document is not a candidate field — it IS the ballot. It is
+# revised on the authority's own schedule, and near a filing deadline or a
+# ballot-position drawing it moves daily. Seven days of staleness on a phone
+# number is a gap; seven days of staleness here renders a wrong ballot as a
+# right one. So: daily, at 08:41 UTC, off the top of the hour and clear of the
+# meetings refresh's :17 slots and the tripwire's 10:41.
+#
+# WHAT IT DOES NOT DO. It never re-mints an id. `pnpm nj:ballot` carries every
+# contest and candidacy id from the committed file, because the REACTIONS store
+# keys on candidacy ids and re-minting one orphans a reader's answer invisibly —
+# the new record simply has no reactions rather than obviously wrong ones. The
+# run prints ids carried against ids minted, and a run that mints where it
+# should have carried is visible in that pair.
+#
+# No secret. These are public filings on a county clerk's public website.
+
+name: Refresh NJ filing
+
+on:
+  schedule:
+    - cron: "41 8 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-nj-filing
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes, and a job that overruns should
+    # fail loudly and named rather than be killed at six hours with no step.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      # THE PAIR, BEFORE ANYTHING IS REBUILT (item 2.4).
+      #
+      # What the clerk publishes today against what this repo renders. It is
+      # `continue-on-error` deliberately: a divergence is the REASON to rebuild,
+      # not a reason to stop, and the rebuild below is what closes it. What the
+      # step buys is the divergence being NAMED in the log with both numbers,
+      # so "the source moved" and "we rebuilt" stay two separate facts.
+      - name: The clerk's published count against what we render
+        id: pair
+        continue-on-error: true
+        run: corepack pnpm nj:filing:check
+
+      - name: Rebuild the ballot from the CURRENT filing
+        run: corepack pnpm nj:ballot --write
+
+      - name: Diff the governed artifact
+        id: diff
+        run: |
+          if git diff --quiet -- data/ballot/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "data/ballot/ is UNCHANGED — the clerk has not republished since the last pull."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "data/ballot/ CHANGED — the full gate runs before anything commits."
+            git diff --stat -- data/ballot/
+          fi
+
+      - name: Unchanged — stating what was skipped and why
+        if: steps.diff.outputs.changed != 'true'
+        run: |
+          echo "The refresh ran and the ballot did not move."
+          echo ""
+          echo "SKIPPED: corepack pnpm test, and the commit."
+          echo "The ballot on main is byte-identical to the one this run produced."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is NOT a pass"
+          echo "of the gate: the gate did not run because there was nothing to gate."
+
+      # R50: tests/beacon-guard.test.ts drives a real Chromium. Only on the
+      # path that runs the suite, so a no-op run pays nothing.
+      - name: Install the browser the gate needs
+        if: steps.diff.outputs.changed == 'true'
+        timeout-minutes: 15
+        run: corepack pnpm exec playwright install --with-deps chromium
+
+      - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
+        timeout-minutes: 15
+        run: corepack pnpm test
+
+      - name: Commit
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          # Re-checked at the point of committing, so a stale `changed` output
+          # can never push an empty commit.
+          if git diff --quiet -- data/ballot/; then
+            echo "ballot unchanged — nothing to commit"
+            exit 0
+          fi
+          git config user.name "nj-filing-refresh[bot]"
+          git config user.email "noreply@github.com"
+          git add data/ballot/
+          git commit -m "NJ filing refresh: the clerk republished, $(date -u +%Y-%m-%dT%H:%MZ)"
+          # R48: rebase-before-push with retry. A rejected push never exits zero.
+          node scripts/push-main.mjs

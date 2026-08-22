@@ -3,6 +3,7 @@ import Link from "next/link";
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { summaryForContest } from "@/lib/ballot/measure-summaries";
 import {
@@ -24,6 +25,7 @@ import {
   cardForNominee,
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
+import { CouldGovernPill } from "@/components/ballot/could-govern-pill";
 import { photosFirst } from "@/lib/ballot/photo-order";
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
@@ -321,6 +323,16 @@ export default async function BallotPage({
   } | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
+  /*
+   * RULING 71 (NJ Hunt 3 item 3). Which of the divisions this zip reaches
+   * COVER THE WHOLE ZIP, and which cover only part of it. A division covering
+   * part governs some readers at this zip and not others, and which is a fact
+   * about the reader's street rather than about our data. Those carry the
+   * pill; the rest render with no marker at all. Null when the zip is outside
+   * our committed geometry — in which case nothing is called certain, because
+   * a render default may never manufacture a claim out of an unmeasured thing.
+   */
+  const certainty = await zipCertainty(zip);
 
   if (centroid) {
     attempted = true;
@@ -872,11 +884,32 @@ export default async function BallotPage({
               // narrowing is presentation, so "show the whole zip again" is
               // instant and can never fail.
               data-contest-id={contest.id}
+              /*
+               * RULING 71. The division this contest sits on, so the pill's
+               * client half can clear exactly the ones a session address
+               * resolves — and so a walk can assert which contests carried it
+               * without reading pixels.
+               */
+              data-ocd-id={contest.ocdId}
+              data-could-govern={
+                certainty && needsPill(certainty.certaintyOf(contest.ocdId))
+                  ? "true"
+                  : undefined
+              }
               className="mt-5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)]"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {contest.title}
+                  {/*
+                    RULING 71: the pill, on bodies whose territory covers only
+                    PART of this zip. Not a completeness marker — our data is
+                    complete and the reader's location is not. See the
+                    component for why that distinction is load-bearing.
+                  */}
+                  {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
+                    <CouldGovernPill jurisdiction={contest.title} />
+                  )}
                   {/* RULING 28: the one buried annotation, on contests that
                       actually render candidate cards. */}
                   {(lineup || candidatesOf(set, contest).length > 0) && (

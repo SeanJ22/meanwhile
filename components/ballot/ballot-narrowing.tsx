@@ -3,6 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 import { locateAddressInZip } from "@/lib/geo/census-geocoder";
+import {
+  clearSessionAddress,
+  sessionAddressFor,
+  writeSessionAddress,
+} from "@/lib/geo/session-address";
 
 /**
  * "Show me my actual ballot" (item 2, 2026-08-15).
@@ -23,14 +28,28 @@ import { locateAddressInZip } from "@/lib/geo/census-geocoder";
  *
  * ## What is stored
  *
- * Nothing. The house number lives in this component's state for exactly as
- * long as the request does; the point lives in React state for as long as the
- * tab is on this page. Neither is written to storage, neither is logged, and
- * the two requests it makes (`/api/geocode`, `/api/ballot/scope`) are both
- * `no-store` POSTs that write nothing on the server. The promise the
- * narrowing chip makes on the map is the same one here, in the same words:
- * your address passes through our server to the Census Bureau's geocoder,
- * and it is not tied to an account. (F01 1e, 2026-08-19: the
+ * **Amended 2026-08-22 (NJ Hunt 3, RULING 74).** This section read "Nothing."
+ * and that is no longer true, so it says what IS true rather than being left
+ * to contradict the code below it.
+ *
+ * The house number still lives in this component's state for exactly as long
+ * as the request does, and the resolved POINT is still never persisted — those
+ * are the two values that would locate a home, and neither is kept. The two
+ * requests it makes (`/api/geocode`, `/api/ballot/scope`) are still `no-store`
+ * POSTs that write nothing on the server, and nothing here reaches a database.
+ *
+ * What IS now kept, in `sessionStorage` and nowhere else, is the RESOLVED
+ * OUTCOME: the contest ids the point produced, plus the street the reader
+ * typed for their own recognition. RULING 74 — an address, once given, is
+ * never asked for twice — and the alternative was re-prompting on every
+ * surface, which reads as a product that is not paying attention. A contest
+ * list cannot be walked back to a house, the browser clears it when the tab
+ * closes, and no schema anywhere grew a column. See
+ * `lib/geo/session-address.ts` for the whole of it.
+ *
+ * The promise the narrowing chip makes on the map is the same one here, in the
+ * same words: your address passes through our server to the Census Bureau's
+ * geocoder, and it is not tied to an account. (F01 1e, 2026-08-19: the
  * never-store/never-log promise is struck by the author's order.)
  */
 export function BallotNarrowing({ zip }: { zip: string }) {
@@ -47,6 +66,7 @@ export function BallotNarrowing({ zip }: { zip: string }) {
     if (open) streetRef.current?.focus();
   }, [open]);
 
+
   /** Mark the sections. The page renders every contest; this hides some. */
   const applyScope = (contestIds: string[] | null): number => {
     const sections =
@@ -61,15 +81,68 @@ export function BallotNarrowing({ zip }: { zip: string }) {
       } else {
         delete section.dataset.scopedOut;
       }
+      /*
+       * RULING 71 + RULING 74. A contest the address CONFIRMS no longer says
+       * "could govern you" — the reader has settled it, and repeating the
+       * question after it has been answered is the product not paying
+       * attention. Restored on undo, because "show the whole zip again" puts
+       * the reader back where the question is open.
+       */
+      if (contestIds === null) {
+        if (section.dataset.couldGovernParked === "true") {
+          section.dataset.couldGovern = "true";
+          delete section.dataset.couldGovernParked;
+        }
+      } else if (!out && section.dataset.couldGovern === "true") {
+        delete section.dataset.couldGovern;
+        section.dataset.couldGovernParked = "true";
+      }
     }
     return hidden;
   };
+
+  /*
+   * **RULING 74: AN ADDRESS, ONCE GIVEN, IS NEVER ASKED FOR TWICE.**
+   *
+   * A reader who gave an address on any surface this session — this one, the
+   * who-governs card, anywhere — has already answered the question this
+   * component asks. So on mount the session's resolved scope is applied
+   * silently, and the prompt does not render. It is not a second prompt
+   * pre-filled; it is no prompt.
+   *
+   * Only for THIS zip: an address resolved in 07866 says nothing about 03255,
+   * and treating the two as one would be the product asserting a location the
+   * reader never gave it.
+   *
+   * It runs once on mount rather than on every render, and reads storage
+   * rather than a prop, because the surface that wrote it may not be this one.
+   */
+  useEffect(() => {
+    const held = sessionAddressFor(zip);
+    if (!held) return;
+    /*
+     * Deferred a tick rather than run synchronously, for two reasons that
+     * happen to agree. React refuses a synchronous `setState` inside an effect
+     * because it cascades a render; and `applyScope` reaches into the DOM for
+     * `[data-contest-id]` sections, which is a read of what the browser has
+     * actually laid out rather than of what React has committed. A tick later
+     * is the honest moment for both.
+     */
+    const id = window.setTimeout(() => {
+      setSetAside(applyScope(held.contestIds));
+      setStreet(held.streetLabel);
+    }, 0);
+    return () => window.clearTimeout(id);
+  }, [zip]);
 
   const undo = () => {
     applyScope(null);
     setSetAside(null);
     setHouse("");
     setStreet("");
+    // RULING 74 in reverse: a reader asking for the whole zip back is asking
+    // us to forget what they told us. It goes, for every surface at once.
+    clearSessionAddress();
   };
 
   const submit = async () => {
@@ -120,6 +193,15 @@ export function BallotNarrowing({ zip }: { zip: string }) {
       const hidden = applyScope(ids);
       setSetAside(hidden);
       setOpen(false);
+      /*
+       * RULING 74. The RESOLVED OUTCOME goes to `sessionStorage` so every
+       * other surface this session reads it instead of asking again. The
+       * street the reader typed goes with it for their own recognition; the
+       * HOUSE NUMBER and the COORDINATES do not, and a contest list cannot be
+       * walked back to a house. Nothing reaches the server and nothing reaches
+       * disk — see `lib/geo/session-address.ts` for the whole of what is kept.
+       */
+      writeSessionAddress({ zip, contestIds: ids, streetLabel: road });
       // The number is done with the moment the request is. Nothing keeps it.
       setHouse("");
     } finally {

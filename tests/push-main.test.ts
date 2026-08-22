@@ -165,7 +165,11 @@ test("R48: every workflow that pushes main goes through the protected push", () 
   );
   assert.equal(
     pushers.length,
-    6,
+    7,
+    // Seven as of NJ Hunt 3 (2026-08-22): the six below plus
+    // refresh-nj-filing.yml, which rebuilds the Morris County ballot daily from
+    // the clerk's current filing and commits when it moves.
+    //
     // Six as of NH Hunt 3 (2026-08-21): the five refresh/tripwire jobs plus
     // job-watch.yml, which commits the Needs Sean row RULING 56 raises and so
     // needs the same rebase-and-retry protection as any other main pusher.

@@ -86,6 +86,9 @@ const WATCHED = [
   "refresh-dotgov-snapshot.yml",
   "refresh-fec-snapshot.yml",
   "refresh-legiscan-snapshot.yml",
+  // NJ Hunt 3 item 2.3: the county filing IS the ballot, so it refreshes daily
+  // and is watched like every other scheduled job that pushes main.
+  "refresh-nj-filing.yml",
 ] as const;
 
 /**

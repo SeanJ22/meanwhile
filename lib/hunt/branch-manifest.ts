@@ -118,13 +118,30 @@ export interface ManifestRoute {
 }
 
 /**
- * **THE MANIFEST, v1.** Append-only. Ids are permanent.
+ * **THE MANIFEST, v2.** Append-only. Ids are permanent.
  *
  * Ordering is by family, not by priority — a manifest walk has no priority,
  * because the whole point is that all of it gets walked. Where a session wants
  * an order for its own convenience, cheapest-first is fine and changes nothing.
+ *
+ * ## v1 → v2 (2026-08-22, NJ Hunt items 2.3 and 5.7)
+ *
+ * **Four routes added under RULING 66**, because `campaign-social` is walled to
+ * every client this project has and RULING 12 says such a wall is NAMED rather
+ * than defeated: `ad-library`, `social-archive`, `social-mirror`, `news-embed`.
+ *
+ * **One route added from New Jersey**: `filing-campaign-finance-local`, the
+ * county-level finance filing that NJ ELEC carries and New Hampshire has no
+ * equivalent of.
+ *
+ * **The version bump is the mechanism, not a label.** RULING 61: every absence
+ * record stamps the `manifestVersion` it was earned under, and
+ * `judgeManifestWalk` refuses to treat a v1 record as exhaustion now that v2
+ * exists. So every `campaign-social` absence Newbury recorded re-opens
+ * automatically, without anyone having to remember to go back for it — which is
+ * the entire reason exhaustion is versioned rather than dated.
  */
-export const MANIFEST_VERSION = "v1";
+export const MANIFEST_VERSION = "v2";
 
 export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The filed record ─────────────────────────────────────────────────── */
@@ -138,17 +155,34 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     fields: ["contact"],
     expectedToTravel:
       "The INSTITUTION travels — every state has one. The route does not: fifty different sites, formats and access postures, and NJ/AZ each need their own walk.",
+    subBranches: [
+      {
+        where: "New Jersey Division of Elections, 2026-08-22",
+        on: "`www.nj.gov` sits behind Imperva and refused rungs 2 and 3 on one run — and answered rung 2 plainly on several others within the same minute. An intermittent wall, and a single reading of it recorded as a property of the source is the shape `gc.nh.gov` and `sos.nh.gov` were both wrongly recorded under",
+        instead:
+          "rung 4 — `curl`, whose TLS fingerprint passes what Node's does not — cleared it on the run that rungs 2 and 3 refused. And the state publishes the contact document SEPARATELY from the candidate list: `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. A session that reads only the candidate list finds no contact and records an absence that the neighbouring file disproves.",
+      },
+    ],
   },
   {
     id: "filing-county",
     what: "The county's own filing or election office record",
-    how: "County clerk / county election office candidate list for the cycle",
-    yields: "The same fields as the state filing, sometimes with a contact the state list omits",
+    how: "County clerk / county election office candidate list for the cycle. In New Jersey this is the whole ballot in one born-digital PDF — `pnpm nj:filing` discovers and parses it.",
+    yields:
+      "The same fields as the state filing, sometimes with a contact the state list omits. In New Jersey: the FILED EMAIL and the FILED STREET ADDRESS for every candidate for every office in the county, school board included.",
     rung: "2",
     through: "county government",
     fields: ["contact", "campaignSite"],
     expectedToTravel:
-      "Uneven. New England counties are thin; NJ and AZ counties run their own elections and publish more.",
+      "Uneven, and this is the route whose unevenness the NJ Hunt was run to measure. New England counties are thin and publish a name and a town; New Jersey's county clerks publish the contact itself. The INSTITUTION is near-universal — every state has a county-level election office — and what it PUBLISHES is a per-state publishing practice with no national floor.",
+    subBranches: [
+      {
+        where: "Morris County, New Jersey, 2026-08-22",
+        on: "nothing failed — this is the reverse entry, and it is recorded here because RULING 60 is about what a route does in a new SHAPE, which includes doing better",
+        instead:
+          "the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current.",
+      },
+    ],
   },
   {
     id: "filing-town-clerk",
@@ -173,6 +207,43 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     fields: ["contact"],
     expectedToTravel:
       "The institution is universal; thresholds are not — a small local candidate may file nothing.",
+    subBranches: [
+      {
+        where: "New Jersey ELEC, 2026-08-22",
+        on: "`elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated",
+        instead:
+          "`filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52.",
+      },
+    ],
+  },
+  {
+    /*
+     * ── A NEW JERSEY ROUTE NEW HAMPSHIRE HAS NO EQUIVALENT OF (NJ Hunt,
+     * 2026-08-22) ────────────────────────────────────────────────────────────
+     *
+     * New Jersey requires LOCAL candidates — school board included — to file
+     * with ELEC once they cross a spending threshold, and the filings are
+     * public. New Hampshire's local candidates file nothing comparable, which
+     * is why this is a route rather than a note on the one above: the two
+     * describe different obligations on different people, and folding them
+     * together would make a New Hampshire session walk a route that cannot
+     * exist there and record its emptiness as evidence.
+     *
+     * It is added as a NAMED ROUTE even though the host that serves it is
+     * walled today. RULING 61: the manifest names what must be walked, and a
+     * walled route is walked and reported as refused — dropping it would make
+     * exhaustion cheaper by pretending the obligation does not exist.
+     */
+    id: "filing-campaign-finance-local",
+    what: "A LOCAL candidate's campaign-finance filing, where the state requires one below state office",
+    how: "The state finance authority's search, by candidate and by committee. NJ: ELEC, walled at rung 2 as of 2026-08-22 — see the sub-branch on `filing-campaign-finance-state`.",
+    yields:
+      "A committee address, a treasurer, and a contact for a school-board or council candidate who files nothing anywhere else",
+    rung: "2",
+    through: "state campaign finance authority",
+    fields: ["contact"],
+    expectedToTravel:
+      "Only where the state imposes a local filing obligation, and that is genuinely uneven — New Jersey does, New Hampshire does not for these offices. A session in a state without the obligation should record this route as NOT APPLICABLE with the reason, never as an absence.",
   },
   {
     id: "filing-fec",
@@ -315,7 +386,81 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
         instead:
           "open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim",
       },
+      {
+        where: "every Newbury county candidate, 2026-08-21",
+        on: "facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around",
+        instead:
+          "RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated.",
+      },
     ],
+  },
+
+  /* ── RULING 66 — reaching a Facebook campaign by compliant routes ──────────
+   *
+   * Adopted 2026-08-21; built here 2026-08-22 (NJ Hunt item 2.3).
+   *
+   * `campaign-social` is walled, and the transparency mandate's two standing
+   * prohibitions mean it stays walled: no residential-proxy spoofing, nothing
+   * fabricated. RULING 12 adds that a captcha or challenge wall is named rather
+   * than defeated. So the answer is not a better browser — it is more routes to
+   * the same fact, which is RULING 52's whole shape.
+   *
+   * These five are first-class manifest routes, not fallbacks. They bump the
+   * manifest to **v2**, which by RULING 61 automatically re-opens every absence
+   * earned under v1 — including every `campaign-social` absence Newbury
+   * recorded.
+   */
+  {
+    id: "ad-library",
+    what: "The Meta Ad Library — mandatory public disclosure for political advertising",
+    how: "The Ad Library API by advertiser name and by page, or the public Ad Library search; `pnpm ad:library` walks it",
+    yields:
+      "For any candidate running paid political ads: the campaign's website, its disclaimer 'paid for by' string, a Page id, and frequently a contact — often better than the Page itself",
+    rung: "2",
+    through: "meta ad library",
+    fields: ["blurb", "contact", "campaignSite"],
+    forbiddenFor: ["photo"],
+    expectedToTravel:
+      "Nationally and by law — political-ad disclosure is mandatory, so a candidate who buys a single ad appears. Silent on campaigns that never advertise, which in the smallest races is most of them; that silence is a fact about spending, not about the candidate.",
+  },
+  {
+    id: "social-archive",
+    what: "An archived capture of the campaign's social page",
+    how: "The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact",
+    yields:
+      "The About section's contact block, the link field, and the campaign's own self-description as it stood on the capture date",
+    rung: "11",
+    through: "web.archive.org",
+    fields: ["blurb", "contact", "campaignSite"],
+    forbiddenFor: ["photo"],
+    expectedToTravel:
+      "Everywhere the page has been captured, which is uneven for small campaigns and good for anything that drew attention. A capture is DATED and says so — it is evidence about that date, never about today.",
+  },
+  {
+    id: "social-mirror",
+    what: "The same content cross-posted to a platform that is not walled",
+    how: "Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once",
+    yields:
+      "The same words, the same link field, and a contact block, from a host that answers",
+    rung: "2, then 6",
+    through: "the mirroring platform",
+    fields: ["blurb", "contact", "campaignSite"],
+    forbiddenFor: ["photo"],
+    expectedToTravel:
+      "Broadly, and it is the single most useful of these five in practice. A campaign posting only to Facebook is real and is the case this route does not reach.",
+  },
+  {
+    id: "news-embed",
+    what: "Local news coverage that quotes, embeds or screenshots the social page",
+    how: "The paper's site searched by candidate name plus the platform, at rung 2 and rung 11",
+    yields:
+      "The candidate's own words as posted, quoted by a publisher that is not walled — and the page's existence and identity corroborated by a third party",
+    rung: "2 and 11",
+    through: "the local press",
+    fields: ["blurb", "campaignSite"],
+    forbiddenFor: ["photo", "contact"],
+    expectedToTravel:
+      "Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all.",
   },
   {
     id: "donation-platform",

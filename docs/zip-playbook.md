@@ -882,6 +882,20 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
 
+### The New Jersey toolkit (NJ Hunt, added 2026-08-22 — items 2.3, 3 and 5)
+
+| Command | What it does |
+|---|---|
+| `pnpm nj:filing [--municipality M] [--pdf F] [--json OUT]` | **The branch that answers this session's headline.** Discovers the Morris County Clerk's and the NJ Division of Elections' CURRENT filed-candidate PDFs from those pages' own `href`s — never a hardcoded URL, because the clerk republishes at a new version path on every revision and both stay reachable — then parses name, office, party, slogan, **filed street address and filed email**. 272 candidates county-wide, 260 with an email, on 2026-08-22. Walks rungs 2 → 3 → 4 on discovery, because `www.nj.gov` refuses intermittently and `curl` clears it. Skips the ballot-position PDF by name: it is a scan with no text layer and belongs to rung 9. Reports every count; a zero-candidate parse exits NON-ZERO with the reason, because a parser that returns nothing has told you about itself. |
+| `pnpm ad:library --name "First Last" --state ST` <br> `pnpm ad:library --roster <file.json>` | **RULING 66's four compliant routes to a walled social page** — `ad-library`, `social-archive`, `social-mirror`, `news-embed` — walked per person with each outcome named. Carries the **control query**: before guessing any identifier at a host it asks that host for a name that cannot exist and treats any answer within 2% of the control as EMPTY, which is what stops an SPA shell, a login wall or a no-results page reading as a find. Distinguishes four outcomes on purpose: `HIT`, **`LEAD`** (a page exists at a guessed handle and whose it is has NOT been established), `EMPTY`, and **`REFUSED`** (a wall or a missing credential — never counted as an absence, so no field moves toward exhaustion on it). `ad-library` needs `META_AD_LIBRARY_TOKEN`, which this project does not hold; see tracker `NS01`. |
+
+**Two inherited tools grew New Jersey limbs rather than being replaced** — RULING 60:
+
+| Command | What changed |
+|---|---|
+| `pnpm zip:universe <zip>` | Was hardcoded to New Hampshire's TIGER layers and a three-county NH governments file, so it enumerated New Hampshire for a New Jersey zip and produced a confident wrong answer. Now takes the state FIPS from the containing county in the national `county-us` layer, loads that state's committed layers, and cuts the governments slice from the full national Census file. A state whose layers are missing **fails loudly and names the file** rather than falling back. |
+| `pnpm twig:pair [<zip>\|--zip <zip>]` | Minted `state:nh` OCD ids for every unit, so a township this registry holds nine bodies for read as "no division of its own". Now reads the OCD id `zip:universe` already resolved **by geometry**; the NH name template survives only as a FIPS-33-fenced fallback for special districts with no Census boundary. Also: a bare positional zip used to be silently ignored in favour of the default, and an unrecognised argument is now fatal. |
+
 ### The twig toolkit (NH Hunt 4, added 2026-08-21 — RULING 57)
 
 | Command | What it does |
@@ -3326,6 +3340,318 @@ never evidence the fact is unobtainable. The shapes named in `CLAUDE.md` as
 certain to break these routes are **Alaska's boroughs**, **Arizona's
 unincorporated county territory**, and **Louisiana's parishes**.
 
+## NJ Hunt, 2026-08-22 — Rockaway Township (07866), and what the median American shape actually requires
+
+**Read this before hunting anywhere that is not New England.** Rockaway
+Township was chosen because it is ordinary — a township with a council and a
+manager, a county that runs elections, a regional school district, a CivicPlus
+portal, and no town meeting. New Hampshire was chosen as the worst possible
+jurisdiction to generalise from. This section is the difference between them.
+
+### 1. THE HEADLINE — NEW JERSEY PUBLISHES THE CONTACT, AND NEW HAMPSHIRE DOES NOT
+
+NH Hunt 6 measured `contact` at **7 mechanically-walkable routes against 28
+that need a person**, and reported ONE contact found for sixteen Merrimack
+County candidates. The question this zip existed to answer was whether that
+ratio is a fact about the country.
+
+**It is not, and the reason is narrower and more useful than "New Jersey is
+easier".** The manifest is the same in both states and the walker automates the
+same seven routes in both. What changed is what two of the *other* routes
+actually return:
+
+| | New Hampshire | New Jersey |
+|---|---|---|
+| `filing-state` | name, town, party. Walled at rungs 2–3; rung 5 reaches it. **No contact.** | a candidate list AND a separate `-emails-` PDF. **The contact itself.** |
+| `filing-county` | the county publishes no candidate list | one born-digital PDF, whole county, **filed email and filed street address for every office including school board** |
+| Contact found | **1 of 16** candidates, after walking all 7 automated routes | **15 of 15** candidates, from ONE document each |
+
+So the honest statement of the finding is: **the human-route dependency does
+not hold. New Hampshire was the anomaly — not because it has fewer routes, but
+because its filing authority does not publish what New Jersey's does.** The
+dependency was never on the number of routes; it was on a per-state publishing
+practice, and no national floor guarantees it either way.
+
+**What this does NOT license.** Two states is two states. Arizona's counties,
+Alaska's boroughs and Louisiana's parishes are all still unmeasured, and the
+Census-of-Governments route that reached Morris County is a state-by-state
+question every time. The next zip asks the same question again rather than
+assuming the answer.
+
+### 2. `pnpm nj:filing` — the branch, and how it finds its own documents
+
+```
+pnpm nj:filing                              # discover + parse, print counts
+pnpm nj:filing --municipality "Rockaway Township"
+pnpm nj:filing --pdf <local.pdf>            # parse a file already on disk
+pnpm nj:filing --json out.json
+```
+
+Two documents, both rung 2, both with a real text layer:
+
+- **The county clerk's filed-candidate list.** Morris County's carries 272
+  candidates county-wide, 260 with a filed email and 260 with a filed address.
+  A SEPARATE school-candidates PDF carries the board races, which is where the
+  down-ballot tier lives.
+- **The Division of Elections' `-emails-` companion.** The state publishes the
+  contact list as its own file *beside* the candidate list:
+  `2026-unofficial-general-candidates-us-house-emails-0727.pdf` next to
+  `2026-official-general-candidates-us-house.pdf`. **A session that reads only
+  the candidate list finds no contact and records an absence the neighbouring
+  file disproves.** Look for the sibling.
+
+**NEVER hardcode the PDF URL.** The clerk republishes at a NEW version path on
+every revision (`/v/9/...-082126.pdf` supersedes `/v/6/...-080726.pdf`) and both
+stay reachable forever. Discovery always fetches the clerk's own candidates PAGE
+and reads its `href`s, taking the newest date stamp. The 082126 revisions found
+on 2026-08-22 superseded the 080726 and 072826 revisions this project curated on
+2026-08-14 — two weeks stale, and a stale filing read as current is a claim
+about who is running.
+
+**The ballot-position PDF is a scan with no text layer** and is skipped by name.
+It is a rung-9 OCR job, not this branch.
+
+### 3. `www.nj.gov` IS INTERMITTENTLY IMPERVA-WALLED, AND RUNG 4 CLEARS IT
+
+Within one minute on 2026-08-22 the same URL returned: a real 85,920-byte page
+to `curl` at rung 2, a real page to a bare Node `fetch`, and an Imperva
+challenge to the polite serialized client. On a later run rungs 2 and 3 both
+refused and **rung 4 (`curl`, whose TLS fingerprint passes what Node's does
+not) cleared it**.
+
+Two rules follow, and they are the ones this repo keeps relearning:
+
+- **A wall observed once is not a wall.** A branch that had died on that single
+  reading would have recorded `NJ Division of Elections — REFUSED`, which is
+  exactly the shape `gc.nh.gov` and `sos.nh.gov` were both wrongly recorded
+  under. `pnpm nj:filing` walks 2 → 3 → 4 and names each result.
+- **`elec.nj.gov` is a DIFFERENT HOST and is genuinely walled** — a 212-byte
+  Imperva challenge, recorded since 2026-08-19 and unchanged on re-walk. Do not
+  generalise `www.nj.gov`'s intermittency to it, or its wall to `www.nj.gov`.
+
+And the wall is not needed anyway: `filing-county` carries the same fields ELEC
+would have been asked for. A walled route is not a lost fact when another
+branch holds the same fact.
+
+### 4. FOUR INHERITED NEW HAMPSHIRE BRANCHES FAILED HERE — AND WHAT REPLACED EACH
+
+RULING 60 in practice. None was deleted; each grew a limb.
+
+**4.1 `zip:universe` was hardcoded to New Hampshire.** It loaded `cousub-33`,
+`unsd-33`, `elsd-33`, `scsd-33` and a three-county NH governments file. Run
+against 07866 it resolved Rockaway Township's centroid *correctly* and then
+enumerated New Hampshire, so `pnpm twig:pair 07866` reported a New Jersey
+township's official universe as ONE unit — the *Nashua City School District*,
+350 km away — and reconciled cleanly while doing it. **A confident,
+arithmetically consistent, entirely wrong answer.**
+*The limb:* the state FIPS now comes from the containing county in the national
+`county-us` layer, the per-state TIGER layers are loaded by that FIPS, and the
+governments slice is cut from the full national Census file already committed at
+`data/reference/census_govt_units_2022.csv` (90,838 rows, every state). A state
+whose layers are not committed now **fails loudly and names the missing file**
+rather than falling back — a silent default is how a session measures the wrong
+place and reports it as coverage.
+
+**4.2 The Census name normaliser did not know `TWP` or `BORO`.** New Hampshire
+spells its unit types out; the Census abbreviates and TIGER does not:
+
+```
+Census  "ROCKAWAY TWP SCH DIST"              -> "ROCKAWAY TWP"
+TIGER   "Rockaway Township School District"  -> "ROCKAWAY"      no match
+```
+
+So the Rockaway Township School District — which the TIGER geometry places the
+zip's centroid *inside* — was written out as `governsZip: false`. A district
+that governs a reader's children reading as one that does not, because of four
+letters.
+
+**4.3 …and the obvious fix was worse.** Stripping `TOWNSHIP` and `BOROUGH`
+along with their abbreviations made `BOROUGH OF ROCKAWAY` and `TOWNSHIP OF
+ROCKAWAY` both normalise to `ROCKAWAY`. They are **separate municipalities with
+separate councils, separate school districts and separate ballots**, and the
+Borough's school district resolved onto the Township's OCD id — a join
+collapsing distinct keys onto one row, which would have shown a Borough reader
+the Township's board.
+*The limb:* **the unit type is the discriminator and is EXPANDED, never
+removed**, and moved to the end so the Census's `TYPE OF NAME` and TIGER's
+`Name type` meet. Only words describing PURPOSE come out (`SCHOOL`, `DISTRICT`,
+`REGIONAL`). A county is compared with its type stripped, because TIGER labels
+counties bare and a county name is unique within a state — a municipality name
+is not.
+
+**4.4 `twig:pair` minted `state:nh` ids for New Jersey units.** Every branch of
+its `divisionFor` template wrote `state:nh` and appended New Hampshire's `_town`
+suffix, so `TOWNSHIP OF ROCKAWAY` — which this registry holds nine bodies for —
+reported as **"no division of its own"** and the pair read 1 of 178.
+*The limb:* read the OCD id `zip:universe` already resolved **by geometry**,
+which is ground truth and carries no naming convention. The template survives
+only as a New-Hampshire fallback for special districts that have no Census
+boundary at any vintage, fenced to FIPS 33 so it can never again mint an id for
+a state whose conventions it does not know.
+
+**4.5 A bare positional argument was silently ignored.** `pnpm twig:pair 07866`
+ran against the 03255 default and printed a full, correct, irrelevant report.
+The header said 03255, which is exactly what makes it dangerous. Both forms are
+accepted now and an unrecognised argument is fatal.
+
+### 5. THE CONTROL QUERY — ASK THE HOST FOR SOMETHING THAT CANNOT EXIST
+
+**The most transferable thing this session built.** `pnpm ad:library`'s first
+run reported `HIT` on **16 of 16 candidates** for two different routes. A 100%
+hit rate on guessed handles across sixteen different people is a measurement of
+the instrument, not a discovery. One control proved it:
+
+```
+bsky.app/profile/janebradstreet.bsky.social ......  200,   5,989 bytes
+bsky.app/profile/zzqxwvnonexistent99.bsky.social .  200,   5,989 bytes
+instagram.com/janebradstreet/ ....................  200, 615,870 bytes
+instagram.com/zzqxwvnonexistent99/ ...............  200, 615,886 bytes
+concordmonitor.com/?s=Bradstreet .................  200, 195,196 bytes
+concordmonitor.com/?s=Zzqxwvnonexistent ..........  200, 195,170 bytes
+```
+
+Three hosts, three shapes of one lie: an SPA shell, a login wall, and an
+empty-results page that **echoes the query into its own HTML**, so a substring
+test for the surname passes on a page with no results in it. All 200.
+
+**So before guessing an identifier at a host, ask that host for a control
+identifier that certainly does not exist, and treat any answer within a few
+percent of the control as EMPTY.** This is the sixth sighting of the
+zero-rows-reported-as-success shape in this repo and the first with a general
+instrument against it. Use it for handles, slugs, domains, member ids, and any
+search endpoint whose no-results page is a 200.
+
+### 6. `LEAD` IS NOT `HIT`, AND THE DIFFERENCE IS A PERSON
+
+Even with the control, a guessed identifier proves a page EXISTS and can never
+prove **whose** it is. `instagram.com/vincentribas` answered 719,095 bytes
+against a 615,950-byte control — a page is certainly there, and nothing in that
+measurement says it belongs to the Merrimack County Commissioner candidate
+rather than to any other Vincent Ribas. NH Hunt 6 recorded the same on domains:
+four of the first four hits were other people.
+
+A guessed-identifier route returns **`LEAD` at best**. It is work for a human,
+counted separately from HIT and EMPTY, and it moves no field toward exhaustion
+in either direction.
+
+### 7. RULING 66 — WHAT THE COMPLIANT FACEBOOK ROUTES ACTUALLY YIELDED
+
+Walked for all sixteen Merrimack County candidates, 2026-08-22, after the
+control was fitted:
+
+| route | HIT | LEAD | EMPTY | REFUSED |
+|---|---:|---:|---:|---:|
+| `ad-library` | 0 | 0 | 0 | **16** |
+| `social-archive` | 0 | 0 | 16 | 0 |
+| `social-mirror` | 0 | 15 | 1 | 0 |
+| `news-embed` | 0 | 0 | 16 | 0 |
+
+`ad-library` is **REFUSED, not EMPTY**: `graph.facebook.com/ads_archive` answers
+HTTP 500 `OAuthException` without an access token, and the public Ad Library web
+pages answer 403 with an anti-automation challenge. The token is issued against
+an identity-verified Meta account, which is a credential decision for the author
+— tracker `NS01`. **A refused route has not been walked for RULING 61 purposes**,
+and a field it would have served stays *still owed* rather than moving toward
+exhaustion. Recording those sixteen as EMPTY would have put sixteen false
+negatives into an exhaustion count.
+
+### 8. RULING 65 — THE FOOTER-ADDRESS BRANCH, AND ITS BOUNDARY
+
+**The footer is an ELEMENT, not a character offset.** The first build took "the
+footer" to mean the last 1,500 characters of stripped text and produced four
+matches across nine pages that share one template — impossible, and the tell.
+These pages carry long bodies (a select-board page ends in twelve years of town
+reports), so the real footer sits at ~95% of the document. `<footer>` is
+unambiguous and cannot drift with page length.
+
+**And the pipe is a separator that has to go before matching.** Sutton's footer
+reads `93 Main Street | Sutton Mills, NH 03221 | (603) 927-2408`, and an address
+pattern guarded with `[^|]` — there to stop a match running across two unrelated
+fields — refuses to cross it, so the route returned **zero on nine pages that
+plainly carry an address**. Normalise `|`, bullets and middots to commas first.
+
+**Reach:** 9 bodies in Sutton, **95 bodies across 17 hosts in three states**
+(NH, NJ and AZ — including `rockawaytownship.org`). Sutton went from **1 body
+live of 19 to 6**, and from **5 meetings to 37**.
+
+**The boundary, which is the rule working.** RULING 65 fills a SILENCE; it never
+overrides a body that says something about itself. Three bodies with a footer
+address were deliberately not wired:
+
+- **Ad Hoc Speed Sign Committee** — its own titles read `- Zoom Mtg`.
+- **Warner River Local Advisory Committee** — its own titles read `@ Pillsbury
+  Library`, a venue this hunt could not resolve; it is a multi-town river
+  committee and Sutton's hall is a poor guess.
+- **Sutton Free Library Board of Trustees** — its page states its own arrangement.
+
+**Always count the feed before writing a wiring row.** A row for a body with no
+sittings renders nothing and reports success.
+
+### 9. A CivicPlus D9 SITE CAN SERVE THE VENDOR'S TEMPLATE SITEMAP
+
+`suttonnh.gov/sitemap.xml` answers 200 with a valid sitemap containing exactly
+one URL: `https://d9template1.civiccms.acsitefactory.com/` — the vendor's
+Drupal 9 template host. **Rung 10 returns the vendor and none of the body's own
+pages**, and a session walking it would find a well-formed sitemap with no board
+pages in it and no signal anything was wrong.
+
+### 10. PACING IS ITSELF A RUNG
+
+`suttonnh.gov` served real HTML at rung 2 to the polite serialized client for
+**18 board pages in a row**, and served a Cloudflare `Just a moment…` challenge
+to an unpaced burst of `curl` requests minutes later. The wall did not come
+down and did not stay up; it responds to REQUEST RATE. Do not record such a host
+as walled from a burst, and do not record it as open from one lucky fetch — and
+prefer the identified serialized client over hand `curl` loops when reading many
+pages from one host.
+
+### 11. READ THE BYTE COUNT BEFORE THE PARSER EATS THE BUFFER
+
+`pdfjs` takes ownership of the `Uint8Array` it is handed and detaches it, so
+`bytes.length` afterwards is **0**. The first run of `pnpm nj:filing` printed
+`0 bytes` for two PDFs it had just parsed 272 candidates out of. A count read
+after the operation that consumed it is a false zero reported as a measurement.
+
+### 12. A 404 PAGE THAT ECHOES YOUR QUERY READS AS A HIT
+
+`nhbar.org/find-a-lawyer/?fwp_lawyer_search=Hagaman` returns **HTTP 404** with a
+167 KB body that contains the string `Hagaman` — because the 404 page echoes the
+query. A substring test passes. Check the STATUS, then the control, then the
+body — in that order.
+
+### 13. A PO BOX IS NOT A STREET NUMBER
+
+An address pattern anchored on a leading digit parsed `P.O. Box 999 Edison NJ
+08818` as `999 Edison NJ 08818`. Two of the fifteen 07866 candidates file a PO
+box — a sixth of the down-ballot tier — so this was not an edge case. Guarded in
+`tests/filed-address.test.ts` by the shape it leaves behind:
+`<number> <City> <ST> <zip>` with no street name.
+
+### 14. ONE ZIP, TWO MUNICIPALITIES
+
+**07866 covers Rockaway TOWNSHIP and Rockaway BOROUGH**, both at 0 km from the
+centroid, and this product holds nothing for the Borough — which is running a
+four-candidate council contest and two school-board seats that do not render.
+Tracker `NJ01`, P1. New England's one-town-one-zip habit does not travel; check
+the clerk's filing for a second municipality sharing the name before assuming
+the zip is one place.
+
+### 15. THE OFFICIAL-UNIVERSE PAIR IS MUCH LARGER IN NEW JERSEY
+
+| | 03255 (Newbury, NH) | 07866 (Rockaway Twp, NJ) |
+|---|---:|---:|
+| units in the 25 km circle | 48 | **178** |
+| units held | 48 | 5 |
+| units with no body | 0 | **173** |
+| bodies held | 412 | 13 |
+
+Northern New Jersey is dense with boroughs, townships, fire districts, regional
+sewerage authorities and municipal utilities authorities. That is an
+enumeration finding rather than a defect — but it means **a New Jersey zip is
+several times the work of a New Hampshire one at the same radius**, and the
+fire districts and MUAs are the largest single unreached class.
+
+
 ## Index by question (RULING 63)
 
 At 175 KB and growing, this file is one a session will skim. Find the entry by
@@ -3349,3 +3675,19 @@ asking for it.
 | A guard disappeared / the suite went quiet. | §4, `pnpm guard:census` and `pnpm guard:history`. RULING 62. |
 | What must I load before hunting a new zip? | The Inheritance section above. RULING 63. |
 | Which of these routes will break in another state? | The Inheritance section's table above. |
+| **NEW JERSEY / anywhere that is not New England** | |
+| How do I reach a candidate's phone or email outside New England? | §NJ 1 and 2. In New Jersey the COUNTY CLERK publishes it: one born-digital PDF, whole county, school board included. `pnpm nj:filing`. This is the route New Hampshire does not have. |
+| I found the state's candidate list and it has no contacts. | §NJ 2 — look for the SIBLING file. New Jersey publishes `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. Reading only the first records an absence the second disproves. |
+| The clerk's PDF URL has a version segment in it. | §NJ 2 — never hardcode it. Every revision gets a new path and the old one stays reachable, so fetch the clerk's PAGE and read its own hrefs. |
+| A host answered once and refused the next time. | §NJ 3 and §NJ 10. `www.nj.gov` did both inside a minute; `suttonnh.gov` refuses BURSTS and serves a paced client 18 pages in a row. Pacing is itself a rung, and rung 4 (`curl`) clears Imperva where Node is refused. |
+| My enumeration tool gave an answer for the wrong state. | §NJ 4.1 — `zip:universe` was hardcoded to New Hampshire's TIGER layers. Anything loading a `-33` layer by name is suspect outside NH. |
+| A Census unit name will not match its TIGER polygon. | §NJ 4.2 and 4.3 — the Census abbreviates (`TWP`, `BORO`) where TIGER spells out. EXPAND the type, never strip it: stripping collapses a Borough onto a Township of the same name. |
+| A guessed handle, slug or domain returned HTTP 200. | §NJ 5 — ask the host for a name that CANNOT exist and compare. An SPA shell, a login wall and a no-results page all answer 200, and a search page echoes your query so a substring test passes on nothing. |
+| I have a 200 at a guessed identifier. Can I ship it? | §NJ 6 — no. That is a `LEAD`, not a `HIT`: it proves a page exists and never whose it is. A human opens it. |
+| Can I reach a campaign's Facebook page? | §NJ 7 and RULING 66 in `docs/branch-manifest.md`. Not directly — it is walled and the wall is NAMED, not defeated. Four compliant routes exist; `ad-library` needs a credential this project does not hold (tracker `NS01`) and reports REFUSED, never EMPTY. |
+| A board page states no venue. Can I use the town's address? | §NJ 8 — yes, RULING 65, from the `<footer>` ELEMENT and cited as the footer, never as the board's own words. But NOT where the body says something better about itself (a Zoom title, its own named venue). |
+| Rung 10 returned a sitemap with nothing in it. | §NJ 9 — a CivicPlus D9 site can serve the VENDOR's template sitemap instead of its own. |
+| My byte count says 0 after a successful parse. | §NJ 11 — `pdfjs` detaches the buffer you hand it. Read the length BEFORE extraction. |
+| A 404 page contains the name I searched for. | §NJ 12 — it echoed your query. Check the status first. |
+| An address parsed as a bare number plus a city. | §NJ 13 — a `P.O. Box N` truncated by a leading-digit anchor. |
+| Does this zip cover only one town? | §NJ 14 — 07866 covers Rockaway Township AND Rockaway Borough, both at 0 km. Check the clerk's filing for a second municipality of the same name. |

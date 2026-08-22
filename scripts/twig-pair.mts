@@ -47,8 +47,36 @@ import { join } from "node:path";
 import { bodyAccountingFor } from "../lib/registry/body-name-match.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 
+/**
+ * **A BARE ZIP IS ACCEPTED, AND AN UNRECOGNISED ARGUMENT IS FATAL.**
+ *
+ * `pnpm twig:pair 07866` used to run against 03255 and print a full, correct,
+ * entirely irrelevant New Hampshire report — the positional was dropped on the
+ * floor and the default silently took over. The header did say 03255, which is
+ * exactly why it is dangerous: it looks right at a glance, and the only thing
+ * distinguishing "the answer for the zip I asked about" from "the answer for
+ * some other zip" is five digits nobody re-reads.
+ *
+ * So both forms work, and anything this cannot interpret stops the run instead
+ * of being ignored. A tool that quietly measures something other than what it
+ * was asked is the same defect class as an operation that reports success
+ * without stating its count.
+ */
 const zipAt = process.argv.indexOf("--zip");
-const zip = zipAt >= 0 ? process.argv[zipAt + 1] : "03255";
+const positional = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+const flagged = zipAt >= 0 ? process.argv[zipAt + 1] : undefined;
+const bare = zipAt >= 0 ? positional.filter((a) => a !== flagged) : positional;
+
+if (bare.length > 1 || (bare.length === 1 && !/^\d{5}$/.test(bare[0]!))) {
+  console.error(
+    `unrecognised argument(s): ${bare.join(" ")}\n` +
+      "usage: pnpm twig:pair [<zip> | --zip <zip>]\n" +
+      "Refusing to run against the default, because a silent default is how a session measures the wrong place.",
+  );
+  process.exit(2);
+}
+
+const zip = flagged ?? bare[0] ?? "03255";
 
 const universe = JSON.parse(
   readFileSync(join(process.cwd(), "data", "audit", `universe-${zip}.json`), "utf8"),
@@ -85,7 +113,32 @@ const slug = (value: string) =>
     .replace(/^_+|_+$/g, "");
 
 /** The division id a Census unit would carry here, or null if it has none. */
-function divisionFor(unit: { name: string | null; countyFips: string }): string | null {
+/**
+ * **THE DIVISION COMES FROM GEOMETRY FIRST, AND FROM A NAME TEMPLATE ONLY AS A
+ * NEW-HAMPSHIRE FALLBACK** (fixed 2026-08-22, NJ Hunt item 3).
+ *
+ * Every branch of the template below writes `state:nh` into the id and appends
+ * New Hampshire's `_town` place suffix. Run against New Jersey it produced
+ * `state:nh/...` ids for Morris County units, matched nothing, and reported
+ * `TOWNSHIP OF ROCKAWAY` — a township this registry holds four bodies for, two
+ * of them LIVE — as **"no division of its own"**. The pair then read 1 of 178,
+ * and reconciled while doing it.
+ *
+ * `zip:universe` already resolves each unit's OCD id by testing the zip's
+ * centroid against the committed TIGER polygons, which is ground truth and
+ * carries no naming convention at all. Reading it is both more correct and less
+ * code. The template is kept ONLY for New Hampshire units that geometry could
+ * not resolve — special districts with no Census boundary at any vintage — and
+ * is fenced to FIPS 33 so it can never again mint an id for a state whose
+ * conventions it does not know.
+ */
+function divisionFor(unit: {
+  name: string | null;
+  countyFips: string;
+  ocdId?: string | null;
+}): string | null {
+  if (unit.ocdId) return unit.ocdId;
+  if (!unit.countyFips.startsWith("33")) return null;
   const name = unit.name ?? "";
   const county = COUNTY_OF.get(unit.countyFips);
   if (!county) return null;

@@ -79,12 +79,107 @@ const VENUE_PATTERNS = [
 /** A sentence that names a building rather than merely a day. */
 const BUILDING = /\b(hall|building|office|library|school|center|centre|station|house|room)\b/i;
 
+/**
+ * ── RULING 65, THE FOOTER-ADDRESS ROUTE (adopted 2026-08-21; built here
+ * 2026-08-22, NJ Hunt item 2.1) ──────────────────────────────────────────────
+ *
+ * **This ruling REVERSES a decision NH Hunt 6 made deliberately, and the
+ * reversal is named here so a later session reads it as a ruling rather than as
+ * drift.**
+ *
+ * `lib/meetings/venue-cache.ts` carries NH Hunt 6's reasoning verbatim: *"The
+ * other fifteen board pages carry '93 Main Street | Sutton Mills' in the SITE
+ * FOOTER — the town's own postal address, not a statement about where that
+ * board sits. Reading a footer as a venue would pin fifteen bodies at a
+ * building on the strength of a template."* That session refused the footer and
+ * wired one body of sixteen.
+ *
+ * The author ruled the other way on 2026-08-21: **one address hosting several
+ * bodies is normal in small and large towns alike**, and a town that publishes
+ * one municipal address is telling a reader where to go. Fifteen bodies dark
+ * because the town uses a site template is a worse answer for the reader than
+ * fifteen bodies pinned at the address the town itself publishes.
+ *
+ * **What the ruling does NOT license, and this is why the route is separate
+ * rather than folded into `STATES A VENUE`:** a footer address is NOT that
+ * board's own statement about itself, and it may never be cited as though it
+ * were. So it gets its own status, its own provenance sentence, and its own
+ * `addressSourceUrl` pointing at the footer that carried it. A reader — and the
+ * next session — can always tell which of the two kinds of claim a pin rests
+ * on. That is the whole of what NH Hunt 6 was protecting, and it survives.
+ */
+const FOOTER_ADDRESS =
+  /(\d{1,5}\s+[A-Z][A-Za-z.'-]*(?:\s+[A-Z][A-Za-z.'-]*){0,4}\s+(?:Street|St|Road|Rd|Avenue|Ave|Lane|Ln|Drive|Dr|Highway|Hwy|Route|Rte|Way|Square|Sq|Place|Pl)\b[^|]{0,60}?(?:NH|New Hampshire|NJ|New Jersey|AZ|Arizona)\s+\d{5}(?:-\d{4})?)/;
+
+/**
+ * **THE FOOTER IS AN ELEMENT, NOT A CHARACTER OFFSET.**
+ *
+ * The first build of this route took "the footer" to mean the last 1,500
+ * characters of the stripped text, and on Sutton that produced four matches out
+ * of nine pages that all share one template — which is impossible, and was the
+ * tell. These pages carry long bodies (a select-board page ends in twelve years
+ * of town reports), so the real footer sits at 95% of the document rather than
+ * at the end of it, and any offset that reached it on one page overshot the body
+ * prose on another. An address picked out of body prose is a property under
+ * discussion or somebody's hearing notice, and pinning a board there is the
+ * fabricated-location defect this whole instrument exists to avoid.
+ *
+ * `<footer>` is unambiguous, is what every CMS in this hunt emits, and cannot
+ * drift with page length. Where a page has no `<footer>`, the route returns
+ * nothing rather than falling back to an offset — a missing footer is an honest
+ * empty, and a guess dressed as a footer is not.
+ */
+function footerOf(html: string): string | null {
+  const m = /<footer[\s\S]*?<\/footer>/i.exec(html);
+  if (!m) return null;
+  return (
+    m[0]
+      .replace(/<[^>]*>/g, " ")
+      .replace(/&nbsp;/g, " ")
+      .replace(/&amp;/g, "&")
+      /*
+       * **The pipe is a SEPARATOR here, and it has to go before matching.**
+       * Sutton's footer reads `93 Main Street | Sutton Mills, NH 03221 | (603)
+       * 927-2408`, and the address pattern's `[^|]` guard — there to stop a
+       * match running across two unrelated footer fields — refuses to cross it,
+       * so the whole route returned zero on nine pages that plainly carry an
+       * address. Normalising the separator to a comma keeps the guard's purpose
+       * (a match still cannot run past a field boundary that is a real newline
+       * or a bullet) while letting the address read as the one field it is.
+       */
+      .replace(/\s*[|•·]\s*/g, ", ")
+      .replace(/\s+/g, " ")
+      .trim()
+  );
+}
+
+/** A phone in the footer is the municipality's published line — Kelly-standard contact. */
+const FOOTER_PHONE = /\(?\b(\d{3})\)?[.\s-]?(\d{3})[.\s-](\d{4})\b/;
+
+function footerAddress(html: string): { address: string; phone: string | null } | null {
+  const foot = footerOf(html);
+  if (!foot) return null;
+  const m = FOOTER_ADDRESS.exec(foot);
+  if (!m) return null;
+  const phone = FOOTER_PHONE.exec(foot);
+  return {
+    address: m[1]!
+      .replace(/\s*\|\s*/g, ", ")
+      .replace(/\s+,/g, ",")
+      .replace(/\s+/g, " ")
+      .trim(),
+    phone: phone ? `(${phone[1]}) ${phone[2]}-${phone[3]}` : null,
+  };
+}
+
 interface Finding {
   body: string;
   ocdId: string | null;
   url: string;
-  status: "STATES A VENUE" | "STATES NO VENUE" | "NOT READ";
+  status: "STATES A VENUE" | "FOOTER ADDRESS" | "STATES NO VENUE" | "NOT READ";
   detail: string;
+  /** The footer address, where the RULING 65 route produced one. */
+  footer?: string;
 }
 
 function textOf(html: string): string {
@@ -162,16 +257,36 @@ function candidateUrlsFor(bodyName: string, recorded: string): string[] {
 async function hunt(body: string, ocdId: string | null, url: string): Promise<Finding> {
   const r = await read(url);
   if (!r.ok) return { body, ocdId, url, status: "NOT READ", detail: r.note };
-  const hits = venueSentences(textOf(r.text));
-  return hits.length > 0
-    ? { body, ocdId, url, status: "STATES A VENUE", detail: hits.join("  ||  ") }
-    : {
+  const text = textOf(r.text);
+  const hits = venueSentences(text);
+  if (hits.length > 0) {
+    return { body, ocdId, url, status: "STATES A VENUE", detail: hits.join("  ||  ") };
+  }
+  /*
+   * RULING 65. The board's own page said nothing, so ask the site footer for
+   * the municipal address — and report it as a DIFFERENT KIND OF CLAIM, never
+   * as the board's own statement.
+   */
+  const foot = footerAddress(r.text);
+  if (foot) {
+    return {
+      body,
+      ocdId,
+      url,
+      status: "FOOTER ADDRESS",
+      footer: foot.address + (foot.phone ? ` · ${foot.phone}` : ""),
+      detail:
+        `${r.note} — the page states no meeting place of its own; the SITE FOOTER carries "${foot.address}"${foot.phone ? ` and the line ${foot.phone}` : ""}. ` +
+        "RULING 65: this is the municipality's published address, cited as the site footer and never as this board's own statement about itself.",
+    };
+  }
+  return {
         body,
         ocdId,
         url,
         status: "STATES NO VENUE",
         detail:
-          `${r.note} — the page was read and states no standing meeting place. ` +
+          `${r.note} — the page was read and states no standing meeting place, and its footer carries no address either. ` +
           "A fact about THIS page on this date, never about the body.",
       };
 }
@@ -243,7 +358,8 @@ if (ONE_URL) {
       const r = await cachedRead(url);
       tried.push(`${url} (${r.ok ? "read" : r.note})`);
       if (!r.ok) continue;
-      const hits = venueSentences(textOf(r.text));
+      const pageText = textOf(r.text);
+      const hits = venueSentences(pageText);
       if (hits.length > 0) {
         finding = {
           body: name,
@@ -254,13 +370,33 @@ if (ONE_URL) {
         };
         break;
       }
+      /*
+       * RULING 65 — the footer route, ranked BELOW the board's own words and
+       * ABOVE nothing. A `break` here would stop the walk at a footer while a
+       * later candidate URL still had the board's own statement on it, and the
+       * board's own words must always win, so this records and keeps walking.
+       */
+      const foot = footerAddress(r.text);
+      if (foot) {
+        finding = {
+          body: name,
+          ocdId: b.ocdId,
+          url,
+          status: "FOOTER ADDRESS",
+          footer: foot.address + (foot.phone ? ` · ${foot.phone}` : ""),
+          detail:
+            `${r.note} — states no meeting place of its own; SITE FOOTER carries "${foot.address}"${foot.phone ? ` and the line ${foot.phone}` : ""}. ` +
+            "RULING 65: the municipality's published address, cited as the footer and never as this board's own words.",
+        };
+        continue;
+      }
       finding = {
         body: name,
         ocdId: b.ocdId,
         url,
         status: "STATES NO VENUE",
         detail:
-          `${r.note} — read, and states no standing meeting place. A fact ` +
+          `${r.note} — read, and states no standing meeting place, and its footer carries no address either. A fact ` +
           "about THIS page on this date, never about the body.",
       };
     }
@@ -279,6 +415,7 @@ if (ONE_URL) {
 }
 
 const stated = findings.filter((f) => f.status === "STATES A VENUE");
+const footed = findings.filter((f) => f.status === "FOOTER ADDRESS");
 const silent = findings.filter((f) => f.status === "STATES NO VENUE");
 const unread = findings.filter((f) => f.status === "NOT READ");
 
@@ -290,6 +427,17 @@ if (stated.length) {
     console.log(`      "${f.detail.slice(0, 400)}"\n`);
   }
 }
+if (footed.length) {
+  console.log(
+    `\n  FOOTER ADDRESS (${footed.length}) — RULING 65: the municipality's own published address,\n` +
+      "  cited as the SITE FOOTER and never as this board's own statement about itself:\n",
+  );
+  for (const f of footed) {
+    console.log(`    ${f.body}`);
+    console.log(`      ${f.url}`);
+    console.log(`      ${f.footer}\n`);
+  }
+}
 if (unread.length) {
   console.log(`\n  NOT READ (${unread.length}) — a wall, not an absence:\n`);
   for (const f of unread) console.log(`    ${f.body}\n      ${f.url} — ${f.detail}`);
@@ -298,11 +446,11 @@ if (unread.length) {
 // The PAIR, always, and the denominator with it.
 console.log(
   `\n  READ ${findings.length} page(s) · STATES A VENUE ${stated.length} · ` +
-    `STATES NO VENUE ${silent.length} · NOT READ ${unread.length}`,
+    `FOOTER ADDRESS ${footed.length} · STATES NO VENUE ${silent.length} · NOT READ ${unread.length}`,
 );
-const sum = stated.length + silent.length + unread.length;
+const sum = stated.length + footed.length + silent.length + unread.length;
 console.log(
-  `  ${stated.length} + ${silent.length} + ${unread.length} = ${sum}` +
+  `  ${stated.length} + ${footed.length} + ${silent.length} + ${unread.length} = ${sum}` +
     (sum === findings.length ? "  (reconciles)" : "  *** DOES NOT RECONCILE ***"),
 );
 

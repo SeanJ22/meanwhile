@@ -148,7 +148,9 @@
     "rung6": "tsx scripts/rung6.mts",
     "geocode": "tsx scripts/geocode.mts",
     "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts",
-    "nh6:shots": "tsx scripts/nh6-shots.mts"
+    "nh6:shots": "tsx scripts/nh6-shots.mts",
+    "nj:filing": "tsx scripts/nj-filing.mts",
+    "ad:library": "tsx scripts/ad-library.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

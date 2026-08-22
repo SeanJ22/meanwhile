@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-21 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-22 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,12 +14,12 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **183 open**, 323 resolved.
-- **48 waiting on Sean** — the first section below.
+- **189 open**, 323 resolved.
+- **49 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
-  - New Jersey hunt — **0**
+  - New Jersey hunt — **1**
   - Arizona hunt — **0**
   - Visual feedback — **1**
   - Data infrastructure — **1**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**48 open · 11 resolved.**
+**49 open · 11 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -70,6 +70,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
 **NH44** — A structural decision that belongs to you rather than to a hunt. The committed TIGER geometry is clipped to one county per state - public/geo/*.geojson says clippedTo 04019/34027/33013 on its own face - and 03255's first-rung circle crosses three counties. Six New Hampshire towns inside that circle are now in the registry with their boards and have NO POLYGON, so the map cannot draw them.
+
+**NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -257,11 +259,17 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**7 open · 0 resolved.**
+**10 open · 0 resolved.**
+
+### P1
+
+**NJ01** — Zip 07866 covers TWO municipalities, not one. The twig pair run on 2026-08-22 places BOROUGH OF ROCKAWAY and ROCKAWAY BORO SCH DIST at 0 km from the zip centroid, and this registry holds no body for either. The Borough is also holding a live election that this product does not render: the Morris County Clerk's 2026 filing carries four Borough Council candidates (Melissa Burnside and Patrick McDonald, Republican; Clifford D. Dawkins Jr. and Angelo Natale, Democratic), each with a filed street address and email, plus two Borough school board candidates (Edward Graf, Jaclyn D. Long). A reader in the Borough typing 07866 today gets the Township's ballot and nothing of their own. The contacts are already parsed and sitting in pnpm nj:filing output; what is missing is the division wiring, the bodies, and the ballot rows. Note the trap this sits on: the Census name normaliser collapsed Borough and Township onto one OCD id during this session and had to be corrected, so any fix here must keep the two distinct and be checked against that.
 
 ### P2
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
+
+**NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
 **HD06** — Three people are running for the Rockaway Township Board of Education and twelve things about them have never been looked for.
 
@@ -274,6 +282,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **HD21** — Two people are running for Congress in New Jersey's 11th district and five things about them have never been looked for.
 
 **HD25** — One person is running for the Rockaway Township school board's unexpired term and four things about them have never been looked for.
+
+### P3
+
+**NJ04** — RULING 65's footer-address branch wired seven Sutton bodies on 2026-08-22, and three were deliberately left out because each has better evidence about itself than the town's footer has about it. Ad Hoc Speed Sign Committee: its own feed titles read 'Ad Hoc Speed Sign Committee - Zoom Mtg', so it meets on Zoom and pinning it at 93 Main Street would send a reader to an empty building; the playbook already records that a Zoom URL in LOCATION is a fact and not a building, and this is the same rule read from a title. Warner River Local Advisory Committee: its titles read 'WRLAC Mtg @ Pillsbury Library', a venue this session could not resolve to a coordinate, and it is a multi-town river committee so Sutton's town hall is a poor guess; the work is to resolve Pillsbury Library. Sutton Free Library Board of Trustees: its page states its own meeting arrangement, so it is a STATES A VENUE case. Each has four future sittings, two, and an unknown respectively.
 
 ## Arizona hunt
 
@@ -327,7 +339,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**61 open · 81 resolved.**
+**63 open · 81 resolved.**
 
 ### P1
 
@@ -362,6 +374,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH29** — Springfield NH went from zero bodies in the registry to eight enumerated and the gap ledger is byte-identical at 22383 bytes before and after. The ledger measures special-district coverage against the Census of Governments, which is right and is not the whole of coverage: RULING 9 says the Census counts GOVERNMENTS and the product renders BODIES, and a New Hampshire town is one government and a dozen or more bodies. So the instrument that is supposed to say how covered a place is cannot see the unit the product actually renders. Six of Kearsarge seven member towns are dark at the body level and nothing measures that. This is a defect in the instrument rather than a gap in coverage, which is why it is a row and not a ledger entry.
 
 **NH46** — One of the three coverageNotes in data/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
+
+**NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
 **PB02** — Nobody publishes boundaries for special districts — fire, water, irrigation, library — so the product cannot tell a reader whether they live in one. They are 43.55% of every government in the country, and this is the largest single hole in the coverage promise.
 
@@ -430,6 +444,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH53** — The walker covers 7 of the 36 manifest routes mechanically. Per field that leaves 4 of 7 photo routes, 8 of 10 blurb, 29 of 35 contact, 10 of 14 campaign site and 6 of 8 verified page needing a person — reported by name on every run, never counted as walked. Each route automated is a whole class of candidate the manifest can be exhausted against without a session reading pages one at a time.
 
 **NH54** — A statewide New Hampshire candidate-and-results database exists at electiondatabase.nhpr.org and nh.electionstats.com. Every /candidates/view/<Name> URL from the search index returns the SPA's 404 shell — 41,148 bytes, identical for a known-good name — and rung 6 confirms a genuine 'Page Not Found'. The path has moved. It would serve many candidates at once if found: prior candidacies, districts, and results.
+
+**NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
 **P12** — Showing readers what other readers answered. Sean tabled this: it anchors the next respondent and corrupts the very data being sold. Recorded so nobody builds it by accident.
 

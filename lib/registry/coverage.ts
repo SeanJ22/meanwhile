@@ -89,6 +89,22 @@ export interface CoveredBody {
    */
   lookedAt: boolean;
   tier: Tier;
+  /**
+   * **RULING 71.** This body's territory covers only PART of the zip the reader
+   * typed, so whether it governs THEM is a fact about their street.
+   *
+   * Optional and absent by default, because it is only knowable when a reader
+   * NAMED a zip. A settled-viewport fetch carries none — the reader panned
+   * rather than named a place — and there is then no zip for a body to be
+   * partial about. Absent means "not applicable here", never "certain".
+   *
+   * **It is not a completeness statement and RULING 44 is not weakened by it.**
+   * A completeness marker says *we did not find this*, about our data. This
+   * says *this is a fact about your street that only you can settle*. We hold
+   * Rockaway Borough's government and Rockaway Township's, both in full; what
+   * is unsettled is which one is the reader's. See `lib/geo/zip-certainty.ts`.
+   */
+  couldGovern?: boolean;
 }
 
 /**

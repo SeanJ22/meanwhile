@@ -9,6 +9,7 @@ import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { coverageAt, divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
@@ -185,6 +186,34 @@ export async function GET(request: Request) {
     );
   } catch (error) {
     console.error("coverage lookup failed", error);
+  }
+
+  /*
+   * **RULING 71 ON THE CARD THAT ASKS THE QUESTION.** (NJ Hunt 3 item 3.3.)
+   *
+   * The widening above makes Rockaway Borough APPEAR beside Rockaway Township.
+   * On its own that trades one wrong answer for a longer one: eight bodies
+   * listed identically, when two of them govern everyone at 07866 and six
+   * govern some readers and not others. So each body carries whether its
+   * territory covers the whole zip, and only the partial ones get the pill.
+   *
+   * Only on a TYPED zip, for the same reason the widening is: a reader who
+   * panned has named no place, and there is then no zip for a body to be
+   * partial about. Absent means not-applicable, never certain — the field is
+   * optional precisely so those two cannot be written as the same thing.
+   */
+  if (coverage && zipRead.value) {
+    const certainty = await zipCertainty(zipRead.value);
+    if (certainty) {
+      coverage = {
+        ...coverage,
+        bodies: coverage.bodies.map((body) =>
+          body.ocdId && needsPill(certainty.certaintyOf(body.ocdId))
+            ? { ...body, couldGovern: true }
+            : body,
+        ),
+      };
+    }
   }
 
   // When the snapshot serves the answer, say how old it is and which sources

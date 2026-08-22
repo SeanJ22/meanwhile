@@ -364,3 +364,60 @@ test("RULING 71: the action half of the pill is never hidden by a media query", 
   );
   assert.match(css, /\.could-govern-pill\s*\{/, "the pill's own rule is still here");
 });
+
+
+/* ========================================================================== */
+/* 6. The card whose heading IS the question                                  */
+/* ========================================================================== */
+
+test("3.3: the who-governs card carries the pill, per body", () => {
+  /*
+   * The map card is headed "Who governs here". Widening it to the zip's area
+   * made Rockaway Borough appear beside Rockaway Township — and on its own that
+   * trades one wrong answer for a longer one: eight bodies listed identically,
+   * when two govern everyone at 07866 and six govern some readers and not
+   * others. The pill is what tells them apart.
+   */
+  const card = codeOf("components", "map", "coverage-notice.tsx");
+  assert.match(card, /CouldGovernPill/, "the card renders the pill");
+  assert.match(
+    card,
+    /body\.couldGovern\s*&&/,
+    "per BODY, from the body's own flag — never per card and never per page",
+  );
+});
+
+test("3.3: couldGovern is only set on a TYPED zip, never on a panned viewport", () => {
+  const route = codeOf("app", "api", "meetings", "route.ts");
+  assert.match(
+    route,
+    /coverage\s*&&\s*zipRead\.value/,
+    "a reader who panned has named no place, so there is no zip for a body to be partial about",
+  );
+});
+
+test("3.1: the class sweep — both zip-resolving surfaces widen to the AREA", () => {
+  /*
+   * NJ01 fixed one and left the other. Two instances found, two fixed. This is
+   * the guard that stops a third surface being added on the point-only
+   * behaviour without anybody noticing.
+   */
+  const ballot = codeOf("app", "ballot", "page.tsx");
+  const meetings = codeOf("app", "api", "meetings", "route.ts");
+  for (const [name, src] of [["ballot page", ballot], ["meetings route", meetings]] as const) {
+    assert.match(
+      src,
+      /divisionIdsForZipArea\(/,
+      `${name} must resolve a zip as an AREA — a ZCTA centroid is one point and may never resolve who governs a reader`,
+    );
+  }
+});
+
+test("3.1: the widening can only ADD divisions, never remove them", () => {
+  const route = codeOf("app", "api", "meetings", "route.ts");
+  assert.match(
+    route,
+    /widened\.length\s*>=\s*resolvedDivisions\.length/,
+    "a resolver change that could shrink the set is how a full surface goes quietly empty",
+  );
+});

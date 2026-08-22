@@ -1,5 +1,6 @@
 "use client";
 
+import { CouldGovernPill } from "@/components/ballot/could-govern-pill";
 import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
@@ -598,6 +599,22 @@ function CoverageBody({
                   {body.name ?? body.divisionLabel}
                 </span>
               )}
+              {/*
+                RULING 71 (NJ Hunt 3, 2026-08-22). This card's heading is "Who
+                governs here", and at a zip that crosses a municipal line it had
+                no way to say that two of eight bodies govern everyone and six
+                govern some readers and not others. The pill says which.
+
+                Only bodies whose territory covers PART of the zip carry it, and
+                only when the reader TYPED a zip — a panned viewport names no
+                place, so `couldGovern` is absent and nothing renders.
+
+                It is an INVITATION, not a disclosure of our incompleteness: we
+                hold Rockaway Borough's government and Rockaway Township's, both
+                in full, and what is unsettled is which is the reader's. RULING
+                44 is not weakened; see components/ballot/could-govern-pill.tsx.
+              */}
+              {body.couldGovern && <CouldGovernPill jurisdiction={body.name ?? body.divisionLabel} />}
               <span
                 className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >

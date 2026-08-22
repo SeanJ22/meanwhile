@@ -14,12 +14,12 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **198 open**, 323 resolved.
+- **197 open**, 324 resolved.
 - **50 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
-  - New Jersey hunt — **2**
+  - New Jersey hunt — **1**
   - Arizona hunt — **0**
   - Visual feedback — **1**
   - Data infrastructure — **1**
@@ -265,13 +265,11 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**12 open · 0 resolved.**
+**11 open · 1 resolved.**
 
 ### P1
 
 **NH56** — The ballot page now shows Rockaway Borough's council and school board to a 07866 reader, because it resolves the zip's AREA. The map's who-governs card still resolves a single ZCTA centroid, so it reads '4 bodies govern the area around 07866' and names Morris County, Morris Hills Regional, Rockaway township and Rockaway Township School District — no Borough. Same defect as NJ01, one surface over.
-
-**NJ01** — Zip 07866 covers TWO municipalities, not one. The twig pair run on 2026-08-22 places BOROUGH OF ROCKAWAY and ROCKAWAY BORO SCH DIST at 0 km from the zip centroid, and this registry holds no body for either. The Borough is also holding a live election that this product does not render: the Morris County Clerk's 2026 filing carries four Borough Council candidates (Melissa Burnside and Patrick McDonald, Republican; Clifford D. Dawkins Jr. and Angelo Natale, Democratic), each with a filed street address and email, plus two Borough school board candidates (Edward Graf, Jaclyn D. Long). A reader in the Borough typing 07866 today gets the Township's ballot and nothing of their own. The contacts are already parsed and sitting in pnpm nj:filing output; what is missing is the division wiring, the bodies, and the ballot rows. Note the trap this sits on: the Census name normaliser collapsed Borough and Township onto one OCD id during this session and had to be corrected, so any fix here must keep the two distinct and be checked against that.
 
 ### P2
 

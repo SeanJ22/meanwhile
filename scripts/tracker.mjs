@@ -990,6 +990,93 @@ function modeNote(working, resolved) {
   return { working, resolved };
 }
 
+/**
+ * `tracker amend <ID> <text-file>` — **a session corrects the DESCRIPTION of a
+ * row it opened itself, and of no other row.** (NJ Hunt 3, 2026-08-22.)
+ *
+ * ## Why this exists at all
+ *
+ * A session wrote a row whose "What this is" contained `VERIFIED_ABSENT`. That
+ * is internal hunt-queue vocabulary, `docs/tracker.md` is a generated view a
+ * reader can open, and `tests/tracker-stores.test.ts` fails the build when it
+ * appears there — correctly, under RULING 28.
+ *
+ * There was then no way to fix it. `add` would create a SECOND row for the same
+ * thing, which the tracker rules forbid outright: a tracker with two rows per
+ * subject cannot be read by anything. `note` appends to the session record and
+ * leaves the offending text exactly where it is. And nothing but this script may
+ * write the stores, so hand-editing the CSV is not an option either. The row was
+ * unfixable by any legal move, minutes after being written.
+ *
+ * ## The two limits, and they are the whole safety of it
+ *
+ * **RULING 41: a session may not reword, retitle or delete a row SEAN wrote.**
+ * He is describing what he saw, and a session rewriting that into what it thinks
+ * he meant has replaced the evidence with an interpretation of it. So this
+ * refuses on any row whose `Opened by` is not this session's own label.
+ *
+ * **The TITLE and the SECTION are untouched.** Only "What this is" moves. A
+ * title is how a row is recognised in a list Sean reads; a section is RULING
+ * 32's home. Changing either is re-filing, not correcting, and it is out of
+ * scope for a session amending its own prose.
+ *
+ * Every amendment leaves a trace in the session record, so the change is visible
+ * as a change rather than as a row that was always worded this way.
+ */
+function modeAmend(working, resolved) {
+  const id = (process.argv[3] ?? "").trim();
+  const path = process.argv[4];
+  if (!id || !path || !existsSync(path)) {
+    console.error("usage: node scripts/tracker.mjs amend <ID> <text-file>");
+    process.exit(2);
+  }
+  const text = readFileSync(path, "utf8").trim().replace(/\s+/g, " ");
+  if (!text) {
+    console.error("the text file is empty — an amendment that says nothing is not an amendment");
+    process.exit(2);
+  }
+  if (!SESSION_LABEL) {
+    console.error("amend needs --session=<label>: it may only touch rows this session opened");
+    process.exit(2);
+  }
+
+  const hits = [...working, ...resolved].filter((r) => (r.ID ?? "").trim() === id);
+  if (hits.length === 0) {
+    console.error(`${id} is in neither store.`);
+    process.exit(1);
+  }
+  if (hits.length > 1) {
+    console.error(`${id} appears ${hits.length} times — a duplicate id breaks every lookup.`);
+    process.exit(1);
+  }
+  const row = hits[0];
+  const openedBy = (row["Opened by"] ?? "").trim();
+  if (!openedBy.includes(SESSION_LABEL)) {
+    console.error(
+      `${id} was opened by "${openedBy}", not by "${SESSION_LABEL}".\n` +
+        "RULING 41: a session may not reword a row it did not write. Open a new row instead.",
+    );
+    process.exit(1);
+  }
+
+  const before = (row["What this is"] ?? "").trim();
+  row["What this is"] = text;
+  const trace = `${STAMP} (${SESSION_LABEL}). Description amended by the session that opened this row; ` +
+    `title and section unchanged. Previous length ${before.length} chars.`;
+  const record = (row["Session record"] ?? "").trim();
+  row["Session record"] = record ? `${record} ${trace}` : trace;
+
+  console.log(`\ntracker amend — ${STAMP}\n`);
+  console.log(`  row                    ${id} · ${row.Section} · ${row.Title}`);
+  console.log(`  opened by              ${openedBy} — this session, so the amendment is allowed`);
+  console.log(`  title and section      UNCHANGED`);
+  console.log(`  What this is           ${before.length} -> ${text.length} chars`);
+  writeFileSync(join(ROOT, WORKING_CSV), writeStore(working), "utf8");
+  writeFileSync(join(ROOT, RESOLVED_CSV), writeStore(resolved), "utf8");
+  console.log(`\n  written  ${WORKING_CSV}\n  written  ${RESOLVED_CSV}`);
+  return { working, resolved };
+}
+
 /* ----------------------------------------------------------------- views --- */
 
 function modeViews(working, resolved, sections) {
@@ -1087,6 +1174,9 @@ if (MODE === "open") {
   modeViews(working, resolved, sections);
 } else if (MODE === "note") {
   ({ working, resolved } = modeNote(working, resolved));
+  modeViews(working, resolved, sections);
+} else if (MODE === "amend") {
+  ({ working, resolved } = modeAmend(working, resolved));
   modeViews(working, resolved, sections);
 } else if (MODE === "add") {
   ({ working, resolved } = modeAdd(working, resolved, sections));

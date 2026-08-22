@@ -421,3 +421,57 @@ test("3.1: the widening can only ADD divisions, never remove them", () => {
     "a resolver change that could shrink the set is how a full surface goes quietly empty",
   );
 });
+
+/* ========================================================================== */
+/* 7. A widened division brings its GOVERNMENTS, not its committee room      */
+/* ========================================================================== */
+
+test("3.1: a body arriving only through the widening must be GOVERNING", () => {
+  /*
+   * Caught by `pnpm walk:all` before it reached a reader, as a NAMED
+   * REGRESSION (M135, shipped by g15) rather than as a coverage number nobody
+   * was reading.
+   *
+   * The widening is right about DIVISIONS and was catastrophically wrong about
+   * BODIES. 85641 is Vail; the City of Tucson's territory clips that ZCTA; and
+   * Tucson carries 59 curated boards and commissions. The coverage payload at
+   * 85641 went from 2 bodies to 61 — a Vail reader handed Tucson's Design
+   * Review Board and its Outdoor Lighting Code Committee, every one wearing a
+   * 'Could govern you' pill. That is worse than the defect it was fixing.
+   *
+   * Rockaway Borough was missing a COUNCIL and a SCHOOL BOARD. Those are
+   * governments of a municipality a reader may actually live in. An advisory
+   * committee is not, and the card's own code already says so.
+   */
+  const route = codeOf("app", "api", "meetings", "route.ts");
+  assert.match(
+    route,
+    /pointOwnDivisionIds\.has\(body\.ocdId\)\s*\|\|\s*body\.bodyClass === "GOVERNING"/,
+    "a body on a widened-in division must be GOVERNING; a body on the point's own division is untouched",
+  );
+});
+
+test("3.1: filtering the body list recomputes the counts it invalidates", () => {
+  /*
+   * Stated N equals rendered rows. `counts.total` counts every body and goes
+   * stale the moment the filter removes one — a number produced by one list
+   * standing in front of a different list, in the payload rather than in the
+   * component.
+   */
+  const route = codeOf("app", "api", "meetings", "route.ts");
+  assert.match(route, /total: kept\.length/, "total is recounted off the kept array");
+  assert.match(route, /governing: \{/, "and so is the governing pair the lead sentence reads");
+});
+
+test("3.1: the wired-status set is imported, never a second hand-typed copy", () => {
+  /*
+   * The first draft hand-wrote ["WIRED", "PARTIAL"]. The real set is
+   * ["LIVE", "MANUAL"] — two invented statuses matching nothing, which would
+   * have reported every body as having no source while the array underneath
+   * was unchanged. A second copy of a closed enum is a second thing that can
+   * be wrong about it.
+   */
+  const route = codeOf("app", "api", "meetings", "route.ts");
+  assert.match(route, /import \{ WIRED_STATUSES \} from/, "imported from lib/registry/coverage");
+  assert.doesNotMatch(route, /\["WIRED", "PARTIAL"\]/, "and not retyped");
+});

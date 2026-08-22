@@ -3997,3 +3997,204 @@ catches the article.
 | A reference document is a PDF. | §NJ2 11 — parse it; commit the rows and the hash. |
 | A guessed identifier returned 200. | §NJ2 12 and §NJ 5–6. `LEAD`, never `HIT`. |
 | A search page contains the name I searched for. | §NJ2 12 — remove the echo and ask whether the name survives. |
+
+
+---
+
+# NJ HUNT 3 — 07866, 2026-08-22
+
+Twelve entries. Append-only: nothing above this line was edited, and where an
+entry corrects an earlier one it says which and leaves the earlier one standing
+with a dated note beside it.
+
+## NJ3 1. THE COUNT THAT IS RIGHT AND THE ARRAY THAT IS WRONG
+
+A snapshot stated `461 total meetings` and held 455, and the refusal was
+correct. The defect was one line: `total` was read off `served`, the array
+from BEFORE the second duplicate-collapse pass, while `meetings` was written
+from `finalRows`, the array after it.
+
+**They are equal on every run where that pass drops nothing, which is almost
+every run.** It read correct for months and refused the first time
+carry-forward put a duplicate back and the pass earned its keep.
+
+**The rung:** when a surface states a count of an array, the count and the array
+must come from the SAME expression. `snapshotCounts(rows, collapsed)` takes one
+array and derives every count from it, so there is no second array in scope to
+point at. That is stronger than checking the two agree — it removes the degree
+of freedom that let a correct check be handed wrong inputs.
+
+## NJ3 2. A CARRY KEY MUST BE THE MINT KEY, EXACTLY
+
+The Morris ballot mints a contest id from **jurisdiction + office + division**
+and carried ids on **division + office**. A `Map` keeps the last write, so three
+contests that minted three distinct ids all read back one.
+
+That is not hypothetical anywhere with REGIONAL school districts. New Jersey
+allocates a regional board's seats per constituent municipality: Chester,
+Mendham and Washington Township each elect members to the West Morris Regional
+board, one division, one office title, three genuinely different contests. A
+rebuild collapsed 90 contests to 87, orphaned four candidacy ids, and would have
+shown every Chester and Mendham reader Washington Township's candidates for a
+seat they do not vote on.
+
+**The rung:** bucket prior records by the ambiguous key and disambiguate on the
+dimension the id itself encodes; where several match and none disambiguates,
+carry NOTHING and mint. A wrong carried id attaches a reader's reaction to the
+wrong person's race. A fresh id is merely a gap.
+
+**Expected to travel:** everywhere with regional or joint districts — New
+England SAUs, Midwestern joint school districts, any consolidated fire or water
+district electing per member town.
+
+## NJ3 3. CERTAINTY WAS ALREADY MEASURED AND NOBODY WAS READING IT
+
+`data/derived/zip-governments.json` samples every ZCTA on a 0.01° lattice and
+records, per government, how many of that zip's points fell inside it. That
+number answers "does this government cover the WHOLE zip or part of it", which
+is exactly the question RULING 71 turns on, and it had been sitting in a
+committed file since the file was built.
+
+**The zip's total is the sum of its COUNTY-layer samples.** Counties and county
+equivalents tile the United States with no gaps and no overlaps, so every
+sampled point falls in exactly one. Checked across all 33,791 zips in the
+national file before being relied on: every zip has at least one county edge and
+no edge anywhere exceeds its zip's county sum.
+
+At 07866: Morris County 64 of 64 and Morris Hills Regional 64 of 64 — certain;
+Rockaway Township 55, Rockaway Borough 6, Denville 3 and their three local
+school districts — partial. **184 of the 279 zips this repo has committed
+geometry for cross at least one governing boundary.**
+
+**Expected to travel:** everywhere, because the lattice is national. The
+committed index is scoped to covered states; the source file is not.
+
+## NJ3 4. A STATEWIDE OFFICE HAS NOTHING TO MEASURE, AND UNKNOWN IS NOT A DEFAULT
+
+The first deploy of the RULING 71 pill put *Could govern you* on **Member of the
+United States Senate** at 07866, because a statewide division is absent from a
+lattice index — there is no sub-state extent to be partial about — and it fell
+through to UNKNOWN, and UNKNOWN rendered the pill.
+
+**The rung:** classify by SHAPE where there is nothing to measure. A division
+matching `country:us` or `country:us/state:XX` exactly is certain.
+
+**And the deliberate exception:** a congressional or legislative district looks
+federal and is NOT statewide. A zip crosses a congressional line as readily as a
+municipal one, those layers are absent from the lattice edge list, and the
+district reached the page by being resolved from the ZCTA CENTROID. Rendering it
+unmarked would assert it is the reader's House race on the strength of one
+point. The pill is true there.
+
+## NJ3 5. HOW THAT WAS CAUGHT, WHICH IS THE TRANSFERABLE PART
+
+A capture script that prints the DOM facts it was taken against BEFORE the image
+is opened. The pilled and certain contest titles were in that list, by name, and
+the wrong one was visible without looking at a single pixel.
+
+A screenshot of that page would not have shown it either: the defect is a pill
+that is PRESENT and PLAUSIBLE, not one that is missing. A DOM assertion alone
+would not have shown it, because the DOM was exactly what the code intended.
+**Print the classification, not just the count.**
+
+## NJ3 6. AND THE OTHER HALF — THE IMAGE CAUGHT WHAT THE DOM COULD NOT
+
+The same run's DOM reported the pill's full sentence. The 430×932 IMAGE showed
+only "Could govern you", because a `max-width: 460px` rule hid the action half
+to keep the pill on one line.
+
+That is not a cosmetic trim. Stripping the invitation leaves a bare uncertainty
+marker beside a body's name, which reads as the per-card completeness statement
+RULING 44 deleted rather than the offer RULING 71 specifies.
+
+**The rung:** where a sentence's MEANING depends on all of it, no media query
+may drop part of it. It wraps. Guarded, so a future rule cannot hide it by
+`display`, `visibility` or `font-size`.
+
+## NJ3 7. FIX ONE INSTANCE, SWEEP THE CLASS — AND THE MAP WAS THE SECOND ONE
+
+`NJ01` fixed the ballot page's centroid resolution. The map's card — headed
+literally **"Who governs here"** — was the same defect and stayed live: at 07866
+it read *"4 bodies govern the area around 07866"* over a list holding Rockaway
+Township and not Rockaway Borough.
+
+**The rung:** when a resolver is fixed, grep for every caller of the OLD
+resolver rather than for the symptom. Both surfaces now call
+`divisionIdsForZipArea`, and a guard asserts both do, so a third surface cannot
+be added on the point-only behaviour quietly.
+
+## NJ3 8. A RESOLVER WIDENING NEEDS A CAN-ONLY-ADD CLAUSE
+
+Widening the map's divisions is where a full surface goes quietly empty. Three
+conditions, and each is load-bearing: only on a TYPED zip (a panned viewport
+names no place); only when the point lookup SUCCEEDED (a failed resolution
+handed on as an empty set becomes "nothing governs here"); and the widened set
+must be a SUPERSET or it is not used.
+
+## NJ3 9. A RUNTIME DATA FILE IS TRACED PER ROUTE, AND A DEDUP SCRIPT ATE ONE
+
+Adding `zip-division-ids.json` to `/api/meetings` as a second key in
+`outputFileTracingIncludes` is a duplicate-property error. Fixing it with a
+regex one-liner deleted the `/ballot` entry, which sat inside the matched span.
+Two files stopped being traced for the ballot page, and `tsc` and `pnpm build`
+were both happy: a missing trace entry is not a build error, it is a deploy
+quietly short of two files.
+
+**The rung:** after any scripted edit to a config, `git diff <last-good> -- <file>`
+and read it. The diff should be exactly the intended change and nothing else.
+And run the SUITE, not just `tsc` and `build` — `tests/coverage-manifest.test.ts`
+is what knows the difference.
+
+## NJ3 10. THE CLERK'S DOCUMENT GIVES CONTACT AND GIVES NOTHING ELSE — MEASURED
+
+New Jersey handed over 328 filed emails from one county-clerk PDF, mechanically,
+where New Hampshire needed a person for nearly every contact. The obvious next
+question is whether PHOTO, BLURB and CAMPAIGN SITE behave the same way here.
+
+**They do not, and this is measured rather than assumed.** Across all 272
+candidacies on the Morris ballot:
+
+| field | held | route |
+| --- | --- | --- |
+| contact (email) | **272 of 272** | `filing-county`, one document |
+| ballot slogan | **70 of 272** | `filing-county`, same document |
+| campaign site | **0 of 272** | no route has produced one |
+| photo | **0 of 272** | the document carries none |
+
+The clerk's filing carries name, party, email, address and sometimes a ballot
+slogan. It carries no portrait, no prose about the candidate, and no URL. **The
+contact windfall was a property of that DOCUMENT, not of New Jersey**, and a
+session that generalised it would report a hunt it never ran.
+
+## NJ3 11. A GUESSED DOMAIN THAT ANSWERS IS STILL A LEAD
+
+Walking `domain-search` for the four Rockaway Borough Council candidates:
+`patrickmcdonald.com` answers 200 and carries the surname. It is recorded as a
+**LEAD**, not a HIT, because the identifier was GUESSED — a squatter's parking
+page carries a name, "Patrick McDonald" is a common name, and *is this the filed
+candidate* is a judgement about a real person.
+
+The control query ran first: five impossible domains through the same guesser,
+zero answered 200, so no host-family signature had to be excluded. Running the
+control is what makes the three EMPTYs mean anything.
+
+## NJ3 12. THE 52 UNHELD UNITS AT 07866 ARE A DIVISION GAP, NOT A HUNT GAP
+
+`pnpm twig:pair --zip 07866` gives 90 of 142 held, and **52 of 52 unheld rows
+read "no division of its own"**. Not one is a body somebody looked for and could
+not find. Two classes:
+
+- **18 SPECIAL_DISTRICTs** — fire districts, sewerage authorities, a power
+  authority. No TIGER polygon exists for these at any vintage, so no geometry
+  pipeline will ever reach them and they need an identity mechanism that is not
+  a polygon. RULING 57 still applies: they can be NAMED without geometry.
+- **34 GENERAL_PURPOSE and SCHOOL_DISTRICT units** — real TIGER polygons exist,
+  and they sit in Sussex, Passaic, Essex, Bergen and Warren counties. This
+  repo's committed `place-34` holds 67 features and `cousub-34` 66, all Morris.
+  The gap is the CLIP-COUNTY scope, one county per covered state.
+
+**And the denominator matters more than the fraction.** 142 is the count inside
+the first-rung 25 km circle, not inside the zip. The nearest unheld unit is 6.44
+km away and the furthest 24.7 km; every government whose territory actually
+reaches inside 07866 IS held. Reporting "90 of 142" without that sentence
+describes a coverage-WIDTH decision as though it were a hunt failure.

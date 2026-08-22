@@ -10,6 +10,7 @@ import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
+import { WIRED_STATUSES } from "@/lib/registry/coverage";
 import { coverageAt, divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
@@ -159,6 +160,14 @@ export async function GET(request: Request) {
    * resident's own council meeting held online is a meeting they should see,
    * and this set only ever grows the list.
    */
+  /*
+   * THE DIVISIONS THE POINT ITSELF RESOLVED, kept apart from the widened set.
+   *
+   * A body on one of THESE is a body at the reader's own location and nothing
+   * about it changes. A body that arrives only through the widening is filtered
+   * below — see `widenedInBodies`, and the 61-body measurement that forced it.
+   */
+  const pointOwnDivisionIds = new Set(divisionsAtPoint);
   if (zipRead.value && resolvedDivisions) {
     const areaIds = await divisionIdsForZipArea(
       zipRead.value,
@@ -202,6 +211,78 @@ export async function GET(request: Request) {
    * partial about. Absent means not-applicable, never certain — the field is
    * optional precisely so those two cannot be written as the same thing.
    */
+  /*
+   * **A WIDENED DIVISION BRINGS ITS GOVERNMENTS, NOT ITS COMMITTEE ROOM.**
+   * (NJ Hunt 3, caught by `pnpm walk:all` before this reached a reader.)
+   *
+   * The widening above is right about DIVISIONS and was catastrophically wrong
+   * about BODIES. 85641 is Vail; the City of Tucson's territory clips that
+   * ZCTA; and Tucson carries 59 curated boards and commissions. The coverage
+   * payload at 85641 went from 2 bodies to 61 — a Vail reader handed Tucson's
+   * Design Review Board, its Outdoor Lighting Code Committee and its Zoning
+   * Examiner Hearings, every one of them wearing a "Could govern you" pill.
+   *
+   * That is worse than the defect it was fixing. Rockaway Borough was missing a
+   * COUNCIL and a SCHOOL BOARD — governments, of a municipality a reader may
+   * actually live in. Tucson's Landscape Advisory Committee is not a government
+   * of anyone in Vail under any reading of the word, and the card's own code
+   * already says so: *a commission isn't a government at all.*
+   *
+   * So a body arriving ONLY through the widening must be `GOVERNING`. A body on
+   * a division the point itself resolved is untouched, which is why 85701 —
+   * where Tucson IS the reader's own municipality — still carries all 59.
+   *
+   * `walk:all` found this as a NAMED REGRESSION (M135, shipped by g15) rather
+   * than as a coverage number nobody was reading, which is the whole argument
+   * for a standing suite that only ever grows.
+   */
+  if (coverage && zipRead.value) {
+    const before = coverage.bodies.length;
+    const kept = coverage.bodies.filter(
+      (body) =>
+        !body.ocdId || pointOwnDivisionIds.has(body.ocdId) || body.bodyClass === "GOVERNING",
+    );
+    if (kept.length !== before) {
+      /*
+       * THE COUNTS ARE RECOMPUTED FROM THE KEPT ARRAY, not carried over.
+       *
+       * `counts.total` counts every body and would go stale the moment this
+       * filter removes one — a number produced by one list standing in front of
+       * a different list, which is the stated-N-equals-rendered-rows rule
+       * failing in the payload rather than in the component.
+       *
+       * `counts.governing` is untouched by construction: every GOVERNING body
+       * is kept unconditionally above, so the governing pair cannot move. It is
+       * still recomputed here rather than assumed, because "cannot move" is an
+       * argument and the array is the evidence.
+       */
+      /*
+       * `WIRED_STATUSES` is IMPORTED, never retyped. The first draft of this
+       * block hand-wrote `["WIRED", "PARTIAL"]` and the real set is
+       * `["LIVE", "MANUAL"]` — two invented statuses that match nothing, which
+       * would have reported every body as having no source while the array
+       * underneath was unchanged. A second copy of a closed enum is a second
+       * thing that can be wrong about it.
+       */
+      const governingKept = kept.filter((b) => b.bodyClass === "GOVERNING");
+      coverage = {
+        ...coverage,
+        bodies: kept,
+        counts: {
+          ...coverage.counts,
+          total: kept.length,
+          withSource: kept.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length,
+          withoutSource: kept.filter((b) => !WIRED_STATUSES.has(b.coverageStatus)).length,
+          lookedAt: kept.filter((b) => b.lookedAt).length,
+          governing: {
+            total: governingKept.length,
+            withSource: governingKept.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length,
+          },
+        },
+      };
+    }
+  }
+
   if (coverage && zipRead.value) {
     const certainty = await zipCertainty(zipRead.value);
     if (certainty) {

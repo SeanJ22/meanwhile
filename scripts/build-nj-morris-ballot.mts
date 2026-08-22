@@ -198,9 +198,53 @@ const officeKey = (title: string) =>
     .replace(/\bMEMBER OF THE\b/, "")
     .trim();
 
-const priorContestId = new Map<string, string>();
+/*
+ * **THE CARRY KEY HAS TO BE THE MINT KEY, AND IT WAS ONE DIMENSION SHORT.**
+ * (NJ Hunt 3 item 2, 2026-08-22.)
+ *
+ * The id is minted from jurisdiction + office + DIVISION. The carry map was
+ * keyed on division + office alone, so several contests that mint distinct ids
+ * all read back the SAME carried id — and a `Map` keeps the last one written.
+ *
+ * That is not hypothetical. A New Jersey REGIONAL school district's board seats
+ * are allocated per constituent municipality: Chester Township, Mendham
+ * Township and Washington Township each elect members to the West Morris
+ * Regional board, and a Chester voter votes on the Chester seats and not the
+ * Washington ones. Three genuinely different contests, one division, one office
+ * title. Re-running the generator collapsed all three onto Washington's id —
+ * 90 contests became 87, four candidacy ids were orphaned, and every reader in
+ * Chester and Mendham would have been shown Washington Township's candidates
+ * for a board seat they do not vote on. A false claim about a reader's ballot,
+ * which is worse than a missing contest and much harder to see.
+ *
+ * So prior contests are BUCKETED by division-and-office rather than overwritten:
+ *
+ * - exactly one prior contest in the bucket → carry it, which keeps every
+ *   hand-written id working, including the ones like `ballot-nj-morris:us-senate`
+ *   whose ids encode no jurisdiction at all;
+ * - several → disambiguate on the jurisdiction the id itself encodes;
+ * - several and none matches this jurisdiction → carry NOTHING and mint. A
+ *   wrong carried id is a reader's reaction attached to the wrong person's
+ *   race, and a fresh id is merely a gap.
+ */
+const priorContestsByDivisionOffice = new Map<string, { id: string }[]>();
 for (const c of prior.contests ?? []) {
-  priorContestId.set(`${c.ocdId}|${officeKey(c.title)}`, c.id);
+  const key = `${c.ocdId}|${officeKey(c.title)}`;
+  const bucket = priorContestsByDivisionOffice.get(key);
+  if (bucket) bucket.push({ id: c.id });
+  else priorContestsByDivisionOffice.set(key, [{ id: c.id }]);
+}
+
+function carriedContestId(
+  ocdId: string,
+  office: string,
+  jurisdiction: string,
+): string | undefined {
+  const bucket = priorContestsByDivisionOffice.get(`${ocdId}|${officeKey(office)}`) ?? [];
+  if (bucket.length === 0) return undefined;
+  if (bucket.length === 1) return bucket[0]?.id;
+  const wanted = `ballot-nj-morris:${slug(jurisdiction)}-`;
+  return bucket.find((p) => p.id.startsWith(wanted))?.id;
 }
 const priorCandidacyId = new Map<string, string>();
 for (const c of prior.candidacies ?? []) {
@@ -351,7 +395,7 @@ for (const c of filed) {
    * municipality-plus-office alone was already producing one id for both.
    */
   const mintedContestId = `ballot-nj-morris:${slug(c.jurisdiction)}-${slug(office)}-${slug(ocdId.split("/").pop() ?? "")}`;
-  const carried = priorContestId.get(`${ocdId}|${officeKey(office)}`);
+  const carried = carriedContestId(ocdId, office, c.jurisdiction);
   const contestId = carried ?? mintedContestId;
   if (!contests.has(contestId)) {
     if (carried) idsCarried++;

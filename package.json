@@ -156,6 +156,7 @@
     "shoot:nj0822": "tsx scripts/shoot-nj-0822.mts",
     "zip:divisions": "tsx scripts/build-zip-division-ids.mts",
     "nj:ballot": "tsx scripts/build-nj-morris-ballot.mts",
+    "nj:filing:check": "tsx scripts/check-nj-filing.mts",
     "fec:directories": "tsx scripts/fetch-fec-directories.mts"
   },
   "dependencies": {

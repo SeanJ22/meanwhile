@@ -111,8 +111,48 @@ const zipGov = JSON.parse(
 ) as { zips: Record<string, { layer: string; id: string; name: string; samples: number }[]> };
 
 const out: Record<string, string[]> = {};
+/*
+ * ── RULING 71: WHICH OF THESE CERTAINLY GOVERN THE READER ────────────────
+ *
+ * The union above is every government whose territory REACHES INSIDE the zip.
+ * It is not a claim that a reader at this zip votes in all of them, and it
+ * never was — but the page rendered them all identically, so a reader had no
+ * way to tell "this is your county, definitely" from "this may or may not be
+ * your municipality, depending on which side of a street you live on".
+ *
+ * The distinction is already measured and nobody was reading it. Each edge
+ * carries the number of LATTICE SAMPLE POINTS of the ZCTA that fell inside that
+ * government. So:
+ *
+ *   samples === the zip's total  →  the government's territory covers the whole
+ *                                   zip. Everyone here is governed by it.
+ *   samples <  the zip's total   →  it covers part. Whether it governs THIS
+ *                                   reader is a fact about their street.
+ *
+ * At 07866 that separates cleanly and correctly: Morris County 64 of 64 and
+ * Morris Hills Regional School District 64 of 64 — no pill; Rockaway Township
+ * 55, Rockaway Borough 6, Denville Township 3, and their three local school
+ * districts on the same numbers — pill. Which is exactly what RULING 71 says
+ * should happen, arrived at from the geometry rather than from a hand-list.
+ *
+ * **THE ZIP TOTAL IS THE SUM OF ITS COUNTY EDGES**, and that is a derivation
+ * rather than an assumption: counties (and county-equivalents) tile the United
+ * States with no gaps and no overlaps, so every sampled point of a ZCTA falls
+ * in exactly one of them. Checked across all 33,791 zips in the national file
+ * before it was relied on — every zip has at least one county edge, and no
+ * edge anywhere exceeds its zip's county sum.
+ *
+ * **The lattice is 0.01° and this is stated as a measurement, not a proof.** A
+ * government covering every sampled point could still miss a sliver finer than
+ * the lattice. The error runs one way — toward calling something certain that
+ * is very nearly certain — and the honest description of the output is "covers
+ * every sampled point of this ZCTA", which is what the consumer says.
+ */
+const partial: Record<string, string[]> = {};
+const zipSamples: Record<string, number> = {};
 let considered = 0;
 let unmapped = 0;
+let noCountyEdge = 0;
 const unmappedLayers = new Map<string, number>();
 
 for (const [zip, edges] of Object.entries(zipGov.zips)) {
@@ -120,7 +160,13 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
   if (!geo.ok) continue;
   if (!COVERED_FIPS.includes(geo.stateFips)) continue;
   considered++;
+
+  const totalSamples = edges
+    .filter((e) => e.layer === "county")
+    .reduce((n, e) => n + e.samples, 0);
+
   const ids = new Set<string>();
+  const partialIds = new Set<string>();
   for (const e of edges) {
     const ocdId = ocdByLayerGeoid.get(`${e.layer}:${e.id}`);
     if (!ocdId) {
@@ -129,8 +175,21 @@ for (const [zip, edges] of Object.entries(zipGov.zips)) {
       continue;
     }
     ids.add(ocdId);
+    /*
+     * A zip with no county edge cannot have its total established, so NOTHING
+     * is called certain there — every division is marked partial. Guessing the
+     * other way would print "this definitely governs you" on the strength of a
+     * number that was never measured, which is the render-default rule failing
+     * in the direction that makes a claim.
+     */
+    if (totalSamples === 0 || e.samples < totalSamples) partialIds.add(ocdId);
   }
-  if (ids.size > 0) out[zip] = [...ids].sort();
+  if (totalSamples === 0) noCountyEdge++;
+  if (ids.size > 0) {
+    out[zip] = [...ids].sort();
+    zipSamples[zip] = totalSamples;
+    if (partialIds.size > 0) partial[zip] = [...partialIds].sort();
+  }
 }
 
 if (considered === 0) {
@@ -152,7 +211,26 @@ const payload = {
     "Every division whose TERRITORY overlaps the zip's area. NOT a claim that a reader at this zip votes " +
     "in all of them — a ZCTA crosses jurisdiction lines, which is why anything surfaced from this renders " +
     "with the jurisdiction it belongs to printed beside it.",
-  counts: { zips: Object.keys(out).length, considered, edgesWithNoOcdId: unmapped },
+  /**
+   * RULING 71. The subset of `zips[zip]` whose territory covers only PART of
+   * the zip — so whether it governs a given reader depends on their street.
+   * An id in `zips` and absent from `partial` covers every sampled point.
+   */
+  partialNote:
+    "Divisions covering only PART of this zip's area, measured on a 0.01-degree lattice. An id present in " +
+    "`zips` and absent here covers every sampled point of the ZCTA. The zip total is the sum of its " +
+    "county-layer samples: counties tile the country with no gaps or overlaps, checked across all 33,791 " +
+    "zips in the national source before being relied on. A zip with no county edge has every division " +
+    "marked partial rather than any called certain.",
+  counts: {
+    zips: Object.keys(out).length,
+    considered,
+    edgesWithNoOcdId: unmapped,
+    zipsWithAPartialDivision: Object.keys(partial).length,
+    zipsWithNoCountyEdge: noCountyEdge,
+  },
+  zipSamples,
+  partial,
   zips: out,
 };
 

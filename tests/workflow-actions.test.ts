@@ -49,13 +49,17 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is still the seven this rule was audited against", () => {
+test("the workflow set is still the eight this rule was audited against", () => {
   assert.equal(
     workflows.length,
+    // Eight as of NJ Hunt 3 (2026-08-22): refresh-nj-filing.yml joined the set.
+    // Its pins were audited here at the same time — checkout@v7 and
+    // setup-node@v7, matching every other workflow.
+    //
     // Seven as of NH Hunt 3 (2026-08-21): job-watch.yml joined the set under
     // RULING 56. Its pins were audited here at the same time — checkout@v7 and
     // setup-node@v7, matching every other workflow.
-    7,
+    8,
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -76,12 +80,15 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    16,
+    18,
+    // 18 as of NJ Hunt 3 (2026-08-22), when refresh-nj-filing.yml added its own
+    // checkout + setup-node pair.
+    //
     // Seven workflows, one checkout + one setup-node each, plus the second
     // job build-check.yml grew in Prompt B item 1c (the Linux gate) with its
     // own pair. 16 as of NH Hunt 3, when job-watch.yml added its pair. Counted
     // rather than assumed, so a new job without pins is caught.
-    `expected 16 Node-runtime action pins across the workflow set, found ${pins}`,
+    `expected 18 Node-runtime action pins across the workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -222,6 +229,11 @@ const REFRESH_WORKFLOWS = [
   "refresh-dotgov-snapshot.yml",
   "refresh-fec-snapshot.yml",
   "refresh-legiscan-snapshot.yml",
+  // NJ Hunt 3 (2026-08-22). The Morris County ballot is GENERATED from the
+  // clerk's filed-candidate PDFs, and the clerk republishes on their own
+  // schedule — one revision landed mid-session and the ballot was stale the day
+  // it shipped. It is a governed artifact and it gates like every other one.
+  "refresh-nj-filing.yml",
 ];
 
 test("F22: every governed-artifact refresh gates on the same full suite", () => {

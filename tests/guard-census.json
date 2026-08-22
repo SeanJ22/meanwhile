@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 179,
-    "named": 1620,
+    "files": 181,
+    "named": 1645,
     "dynamic": 6
   },
   "files": {
@@ -634,6 +634,26 @@
         "the flagged count is stated, so a silent drop is visible",
         "the routes that produced the fabricated findings are all flagged",
         "the tolerance survives a shell that varies slightly between requests"
+      ],
+      "dynamic": 0
+    },
+    "tests/could-govern-pill.test.ts": {
+      "names": [
+        "3.2: a zip outside our committed geometry resolves to null, not to certainty",
+        "3.2: an UNMEASURED division gets the pill, never a certainty it never earned",
+        "3.2: at 07866 the county and the regional district govern everyone — no pill",
+        "3.2: at 07866 the two Rockaways and Denville each govern PART — pill",
+        "3.7: the pill is NOT universal — Newbury governs everyone at 03255",
+        "3.8: a zip that crosses nothing carries no pill at all",
+        "3.8: the index states how many zips cross, and it is a real fraction",
+        "RULING 44: the pill attaches to a BODY, never to a candidate",
+        "RULING 44: the pill makes no claim about OUR data",
+        "RULING 44: the pill's subject is the reader's location, and it says so",
+        "RULING 71: the pill never gates — the page renders every contest regardless",
+        "RULING 74: an address given for one zip does not answer for another",
+        "RULING 74: nothing about the address reaches the server or a store",
+        "RULING 74: the narrowing surface reads the session before it prompts",
+        "RULING 74: the session store keeps the OUTCOME, never the address"
       ],
       "dynamic": 0
     },
@@ -1469,6 +1489,21 @@
         "NH31: the proof harness runs after the write and touches no data",
         "NH31: the three outcomes carry three distinct exit codes",
         "NH31: the workflow carries a code-2 run past the gate to its commit"
+      ],
+      "dynamic": 0
+    },
+    "tests/nj-filing-clock.test.ts": {
+      "names": [
+        "2.3: a curatedAt that cannot be parsed reads as stale, never as fresh",
+        "2.3: past the one-day window the record is STALE even when it agrees",
+        "2.3: the window is a DAY, not RULING 53's seven — this document is the ballot",
+        "2.4: a ballot rendering no contests diverges even when the counts match",
+        "2.4: a clerk who has published FEWER is equally a divergence",
+        "2.4: a clerk who has published MORE than we render is a divergence",
+        "2.4: a zero parse is a FAILED extraction, never an empty filing",
+        "2.4: an unreadable clerk is CANNOT TELL, never agreement",
+        "2.4: the pair reconciling inside its window is the only passing state",
+        "2: the committed ballot still holds 90 contests and 272 candidacies"
       ],
       "dynamic": 0
     },
@@ -2415,7 +2450,7 @@
         "F22: every governed-artifact refresh gates on the same full suite",
         "R45: no workflow pins an action major that targets Node 20",
         "R45: setup-node never tries to restore a cache before pnpm exists",
-        "the workflow set is still the seven this rule was audited against"
+        "the workflow set is still the eight this rule was audited against"
       ],
       "dynamic": 0
     },

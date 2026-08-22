@@ -322,7 +322,11 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   */
   const dir = ".github/workflows";
   const workflows = readdirSync(dir).filter((f) => f.endsWith(".yml"));
-  assert.equal(workflows.length, 7, `the workflow set changed: ${workflows.join(", ")}`);
+  // 8 as of NJ Hunt 3 (2026-08-22): `refresh-nj-filing.yml` joined the set. It
+  // reads a county clerk's public PDFs and rebuilds a committed JSON file; it
+  // touches no database, which is why it appears here only as a count and not
+  // in `withDatabase` below.
+  assert.equal(workflows.length, 8, `the workflow set changed: ${workflows.join(", ")}`);
 
   const withDatabase: string[] = [];
   for (const file of workflows) {

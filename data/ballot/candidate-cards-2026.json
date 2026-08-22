@@ -545,9 +545,9 @@
     "ballot-nj-morris:us-senate:fernandez": {
       "photoUrl": "/candidates/nj-morris-us-senate-fernandez.png",
       "photoSource": "clean solo studio portrait — the campaign site's own photo (https://img1.wsimg.com/isteam/ip/968e4fa3-7440-46a2-ae03-16126b33e7da/blob-3188f26.png), read 2026-08-14; committed copy served from our origin, metadata stripped",
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "bio": "We're not being governed, we're being looted. I don't answer to big donors or special interests, I answer only to YOU!",
+      "bioSourceUrl": "https://veronicaforsenate.com",
+      "bioSourceLabel": "In the campaign's words — veronicaforsenate.com, read 2026-08-21",
       "email": null,
       "phone": null,
       "filedAddress": null,
@@ -897,9 +897,9 @@
     "ballot-nh-merrimack:county-attorney:endres-steven": {
       "photoUrl": null,
       "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "bio": "I am an attorney who has been practicing criminal law for over 25 years, and I am proud to be running for the position of Merrimack County Attorney in 2026.",
+      "bioSourceUrl": "https://www.facebook.com/people/Steven-Endres-for-Merrimack-County-Attorney/61573266140508/",
+      "bioSourceLabel": "In the campaign's words — the campaign's Facebook page, read 2026-08-21",
       "email": null,
       "phone": null,
       "filedAddress": "81A Fairgrounds Rd, Bradford NH 03221",
@@ -2107,6 +2107,18 @@
       "key": "ballot-nh-merrimack:state-senate-7:innis-daniel-e-",
       "name": "Daniel E. Innis",
       "note": "NH Hunt 4, 2026-08-21. Two independent branches for the campaign site, which was the one field owed. BRANCH 1 — the NH Campaign Finance System's filing-entity record, reached at rung 7 through the app's own XHR (rungs 2-4 refused HTTP 403 by Akamai), which names InnisforNH.com as this candidate's website for the 2026 cycle. BRANCH 2 — the site itself at rung 2, whose title and prose name the same person, the same district and the same town as the filing.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nj-morris:us-senate:fernandez",
+      "name": "Veronica Fernandez",
+      "note": "NH Hunt 5 item 3, the re-walk. RULING 53 re-walk of every FOUND candidate field found ONE genuine mismatch in 74 judged: the hunt state recorded blurb=FOUND for this candidacy while the card carried bio=null, so the product claimed to hold a description it did not have. Re-hunted rather than downgraded, because the correct response to a gap is more hunting. Rung 2 (plain fetch) of the campaign's own site, https://veronicaforsenate.com, HTTP 200, 148,323 bytes, read 2026-08-21: the og:description carries the campaign's own two-sentence pitch, quoted here verbatim with its source class. Second branch not needed — the campaign's own domain is the most authoritative publisher of its own words and it answered on the first rung.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:endres-steven",
+      "name": "Steven Endres",
+      "note": "NH Hunt 5 item 4, county contests first. Steven Endres, Merrimack County Attorney, four fields owed. BRANCH 1 - the New Hampshire General Court roster (gc.nh.gov, rung 2, 769 House members read 2026-08-21): NO MATCH, so no official legislator page, portrait, email or phone exists for him there. BRANCH 2 - the county's own site, www.merrimackcounty.net/departments/county_attorney/index.php, rung 2, read 2026-08-21: it publishes the INCUMBENT (Paul Halvorsen) and names no challenger, which is expected and is not a finding about Endres. BRANCH 3 - a search-index sweep for a campaign presence, then the page itself read in a live browser at rung 6 rather than trusted from the snippet: the campaign's Facebook page, verified as above. FOUND: campaign site and blurb. STILL OWED: photo (the campaign's only published images are on Facebook, and social-media images are prohibited at every door - doors 1, 2 and 3 all fail for him because there is no chamber portrait, no government-published portrait, and no campaign domain) and contact (no email or phone is published on the page; the filed mailing address, 81A Fairgrounds Rd, Bradford NH 03221, is already held and rendered under RULING 54). Neither is recorded VERIFIED_ABSENT: RULING 58 needs two exhausted independent branches per field and the photo hunt has walked one.",
       "attemptedAt": "2026-08-21"
     }
   ]

@@ -33,7 +33,6 @@ export interface AreaFactSet {
   stateName: string;
   facts: AreaFact[];
   /** Topics we haven't covered — the honest gap, rendered as such. */
-  notCovered: string[];
 }
 
 const FETCHED = "fetched 2026-08-14";
@@ -109,7 +108,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         verification: FETCHED,
       },
     ],
-    notCovered: [],
   },
   {
     state: "NH",
@@ -183,7 +181,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         verification: NH_WALL,
       },
     ],
-    notCovered: [],
   },
   {
     state: "AZ",
@@ -254,7 +251,6 @@ export const AREA_FACTS: AreaFactSet[] = [
         verification: FETCHED,
       },
     ],
-    notCovered: [],
   },
 ];
 

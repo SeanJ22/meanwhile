@@ -597,25 +597,38 @@ for (const { zip } of FOUR) {
     );
 
     /*
-     * **PROMPT B ITEM 7.6 (2026-08-20) — every zip surface states its tier.**
+     * **RULING 59 (2026-08-21) — THE CLAIM THIS CHECK GUARDED IS RETIRED, AND
+     * THE CHECK NOW GUARDS ITS ABSENCE.**
      *
-     * RULING 6 put a coverage tier on every zip; item 7 puts it in front of
-     * the reader. A surface that renders WITHOUT it is the failure this whole
-     * model exists to prevent: a thin page with no explanation reads as a
-     * quiet town, and the town is not quiet — we have not finished looking.
+     * Prompt B item 7.6 shipped this as "every zip surface states its tier",
+     * asserting a `data-coverage-note` attribute was PRESENT. The reasoning
+     * was that a thin page with no explanation reads as a quiet town. It was
+     * good reasoning and it produced a sentence that could not stay true.
      *
-     * The check is on the DATA ATTRIBUTE rather than the prose, because the
-     * prose is meant to be rewritten. What must survive is that a tier
-     * statement is present; how it is worded may change any day, exactly as
-     * the render-default rule was clarified on 2026-08-19 to guard the
-     * ATTRIBUTION rather than a particular sentence.
+     * NH Hunt 4's first merge began rendering Lake Todd Village District's
+     * meetings while the coverage note on the same page still counted Lake
+     * Todd among eighteen districts "we have not worked out". The note was a
+     * claim about data that changes underneath it; nothing automated could
+     * tell a correct render from a stale note about that render, and this
+     * check was green throughout.
+     *
+     * The author retired the claim — the page says one thing about
+     * completeness, COLLECTION_NOTE, and nothing else. The walk rule says a
+     * check leaves this suite only when the author retires the claim behind
+     * it, and that has now happened; so rather than deleting the check and
+     * losing a slot, it inverts. What it asserts is that the coverage note
+     * has not come back, which is how RULING 42's per-card marker is guarded
+     * one section below, and for the same reason: a deleted reader surface
+     * comes back the way it went out, as somebody reinstating a component
+     * that used to be mandated.
      */
     check(
       "promptB",
-      `/ballot states its coverage tier at ${zip}`,
-      /data-coverage-note="(TIER_[0-3]|UNKNOWN)"/.test(ballot.text),
-      "no coverage-tier statement on the page — a thin page with no explanation " +
-        "reads as a place with nothing happening",
+      `/ballot renders no coverage note at ${zip} (RULING 59)`,
+      !/data-coverage-note=/.test(ballot.text),
+      "the coverage note is rendering again — RULING 59 deleted it, because a " +
+        "sentence counting what has not been worked out goes false the moment " +
+        "the work is done and no test can see it",
     );
 
     /*

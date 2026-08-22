@@ -6,7 +6,6 @@ import { COVERED } from "@/lib/coverage/artifacts";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
-import { CoverageNote } from "@/components/coverage/coverage-note";
 
 /**
  * "About this area" v1 (7, 2026-08-17) — built for the mover: the questions
@@ -74,17 +73,18 @@ export default async function AboutAreaPage({
         We state the rules; what to make of them is yours.
       </p>
 
-      {/* RULING 6 / item 7 (2026-08-20): every zip surface tells the reader
-          which tier of coverage it is showing them, in plain language. */}
-      <CoverageNote zip={zip} />
+      {/* RULING 59 (2026-08-21): the coverage note is deleted here too. See
+          the headstone on app/ballot/page.tsx for why. */}
 
-      {!facts && (
-        <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted">
-          We haven&apos;t written this up for this area yet. Coverage today:
-          New Jersey, New Hampshire, and Arizona. This is a gap in our
-          pages, not a statement about the place.
-        </p>
-      )}
+      {/* RULING 59 (2026-08-21): "Coverage today: New Jersey, New Hampshire,
+          and Arizona" rendered here for a zip we have no facts page for. It is
+          the banned form twice over — it enumerates coverage, and it
+          characterises what has not been worked out — and it is the exact
+          maintenance trap the ruling names: the day a fourth state lands, that
+          sentence is false on a page nobody thought to edit, and no test can
+          see it. Nothing replaces it. A page with nothing to say says
+          nothing, which is RULING 28's principle for a field applied to a
+          section; it asserts no absence and makes no claim about the place. */}
 
       {/* 6g (2026-08-15): the order is shuffled per open. The authoring order
           put marijuana first in all three states, and a page that always
@@ -97,16 +97,12 @@ export default async function AboutAreaPage({
           zip. See the component's own note. */}
       {facts && <ShuffledFacts facts={facts.facts} />}
 
-      {facts && facts.notCovered.length > 0 && (
-        <section className="mt-6 rounded border border-dashed border-[var(--panel-border)] p-4">
-          <h2 className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
-            Not covered yet
-          </h2>
-          <p className="mt-2 text-[0.75rem] leading-relaxed text-paper-dim">
-            {facts.notCovered.join(" · ")}
-          </p>
-        </section>
-      )}
+      {/* RULING 59 (2026-08-21): a section headed "Not covered yet",
+          enumerating to the reader what had not been worked out. Deleted with
+          its data field — every state's list was empty, so it rendered for
+          nobody and waited to be filled in. A banned form that never fired is
+          still a banned form, and leaving the field behind is an invitation
+          to render it again. What it was for lives in docs/gap-ledger.md. */}
 
       {/* 6d (2026-08-14) shipped one line, the state picker, and deferred
           the side-by-side to D47. D47 is built (g21, 2026-08-19), so the

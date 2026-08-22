@@ -31,8 +31,29 @@ import {
   COVERAGE_TIER_ZIP_HEADLINE,
 } from "../lib/coverage/tier.ts";
 import type { CoverageTier } from "../lib/coverage/tier.ts";
+import { bodyAccountingFor } from "../lib/registry/body-name-match.ts";
+import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { readTable } from "../lib/reference/index.ts";
 import { today } from "./doc-dates.mjs";
+
+/**
+ * EVERY BODY NAME THIS REGISTRY HOLDS — so the ledger can ASK rather than
+ * assert. (NH Hunt 5, 2026-08-21.)
+ *
+ * This file used to print "N of these govern part of this zip and are not in
+ * the registry" for every document-resolved special district that reached the
+ * zip. It never looked. The sentence was true on the day it was written and
+ * went false the moment NH Hunt 4 wired Lake Todd Village District and the
+ * Merrimack County Conservation District — and this document is the ONE place
+ * RULING 59 leaves the known-but-not-reached enumeration living, so a stale
+ * claim here sends the next session hunting something already caught.
+ */
+const REGISTRY_BODY_NAMES: string[] = (() => {
+  const registry = JSON.parse(
+    readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
+  ) as { bodies: { name: string }[] };
+  return [...CURATED_BODIES, ...registry.bodies].map((b) => b.name ?? "");
+})();
 
 const DERIVED = join(process.cwd(), "data", "derived");
 const STAMPED_AT = today();
@@ -397,11 +418,46 @@ for (const pilot of PILOTS) {
     }
     w();
     if (resolvedSpecial.length) {
-      w(
-        `**${resolvedSpecial.length} of these govern part of this zip and are not in ` +
-          "the registry.** A reader here can live under one and hear nothing about " +
-          "it, which is what an unresolved government was always the risk of.",
+      /*
+       * THE PAIR, AND IT IS ASKED RATHER THAN ASSERTED (NH Hunt 5).
+       *
+       * This block used to state, unconditionally, that every district in the
+       * table above was absent from the registry. It was a constant with a
+       * count in front of it, and it went false the day two of them were
+       * wired — printing "2 ... are not in the registry" about Lake Todd
+       * Village District and the Merrimack County Conservation District while
+       * `pnpm twig:pair`, reading the same file, reported both as HELD.
+       *
+       * Where collection and rendering can diverge, BOTH numbers are reported
+       * as a pair and made to reconcile. Held and dark are counted separately,
+       * every dark one is NAMED (RULING 57 — a count is not a name), and the
+       * held ones are named too, because a reader of this ledger needs to know
+       * the hunt landed as much as they need to know what is left.
+       */
+      const dark = resolvedSpecial.filter(
+        (d) => !bodyAccountingFor(d.name, REGISTRY_BODY_NAMES),
       );
+      const held = resolvedSpecial.filter((d) =>
+        bodyAccountingFor(d.name, REGISTRY_BODY_NAMES),
+      );
+      w(
+        `**${resolvedSpecial.length} of these govern part of this zip.** ` +
+          `${held.length} ${held.length === 1 ? "is" : "are"} in the registry and ` +
+          `${dark.length} ${dark.length === 1 ? "is" : "are"} not. ` +
+          `${held.length} + ${dark.length} = ${resolvedSpecial.length}.`,
+      );
+      w();
+      if (held.length) {
+        w(`- IN THE REGISTRY: ${held.map((d) => d.name).join(" · ")}`);
+      }
+      if (dark.length) {
+        w(`- NOT IN THE REGISTRY: ${dark.map((d) => d.name).join(" · ")}`);
+        w();
+        w(
+          "A reader here can live under one of those and hear nothing about it, " +
+            "which is what an unresolved government was always the risk of.",
+        );
+      }
       w();
     }
   }

@@ -350,7 +350,9 @@ TIGER publishes no boundary for a special district, so geometry cannot answer th
 | HIGHLANDS VILLAGE DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
 | NORTHFIELD SEWER DISTRICT | no | DRA VILLAGE DISTRICT TAX RATES |
 
-**2 of these govern part of this zip and are not in the registry.** A reader here can live under one and hear nothing about it, which is what an unresolved government was always the risk of.
+**2 of these govern part of this zip.** 2 are in the registry and 0 are not. 2 + 0 = 2.
+
+- IN THE REGISTRY: MERRIMACK COUNTY CONSERVATION DISTRICT · LAKE TODD VILLAGE DISTRICT
 
 #### The 0 districts we cannot yet say you live in
 

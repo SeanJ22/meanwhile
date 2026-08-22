@@ -28,6 +28,10 @@ import {
 } from "../lib/meetings/attribution.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
 import {
+  EXIT_NOTHING_WRITTEN,
+  EXIT_WRITTEN_WITH_JOB_FAILURES,
+} from "../lib/meetings/refresh-exit.ts";
+import {
   readSnapshot,
   writeSnapshot,
   type MeetingsSnapshot,
@@ -245,12 +249,83 @@ async function main() {
 
     await retrieveAgendas(meetings);
     writeMeetingsSnapshot(source, meetings, previous);
+    forceJobFailureIfDispatchedProof();
   } else {
     const dropped = raw.length - meetings.length;
     if (dropped > 0) {
       console.warn(`  ${dropped} record(s) dropped — unplaceable in time or space`);
     }
   }
+}
+
+/**
+ * THE NH31 PROOF HARNESS — dispatch-only, data-free, and loud. (2026-08-21.)
+ *
+ * NH31's fix has two halves that only exist in the seam between this script
+ * and its workflow: the ingest must exit 2 rather than 1 when a snapshot was
+ * written despite a job failure, and the workflow must carry that run all the
+ * way to its commit before failing it. Neither half is exercised by a healthy
+ * run, and the unhealthy run that would exercise them arrives when a vendor
+ * breaks — which is to say, when nobody is watching and it is too late to
+ * discover the handling was wrong.
+ *
+ * The two-consecutive detector in job-watch.yml has the same problem one
+ * layer up. RULING 56 says a scheduled job that fails twice opens a Needs
+ * Sean row. Proving that meant waiting for two real failures in a row.
+ *
+ * So a run can be asked to fail on purpose. What this does NOT do is as
+ * important as what it does:
+ *
+ *   - It runs only on a workflow_dispatch. The workflow passes
+ *     WTP_INGEST_DISPATCHED, and a scheduled run passes "false", so the cron
+ *     path cannot reach this however the other variable is set.
+ *   - It changes NO data. It runs AFTER the snapshot is written and never
+ *     touches it, the sources array, the meetings, or the document store. The
+ *     file on disk after a forced run is byte-identical to the file after the
+ *     same run unforced.
+ *   - It fabricates no source and records no failure anywhere durable. The
+ *     failure exists in this process's exit code and in the log line below,
+ *     and nowhere else. Nothing downstream can mistake it for a real vendor
+ *     failure, because there is nothing downstream to mistake.
+ *   - It says what it is, in the log, in the words a reader of that log
+ *     needs. A synthetic failure that looked like a real one would be worse
+ *     than no proof at all.
+ *
+ * The fabrication prohibition in the transparency mandate is about claims
+ * that reach a reader or a record. This reaches neither; it is a test input
+ * to our own scheduler, declared as one on every line it prints.
+ */
+function forceJobFailureIfDispatchedProof(): void {
+  const asked = process.env.WTP_INGEST_FORCE_JOB_FAILURE === "true";
+  if (!asked) return;
+
+  if (process.env.WTP_INGEST_DISPATCHED !== "true") {
+    console.error(
+      "WTP_INGEST_FORCE_JOB_FAILURE was set on a run that is NOT a " +
+        "workflow_dispatch. Refusing it: this input exists to prove the " +
+        "scheduler's failure handling on demand, and a scheduled run that " +
+        "could trip it would be an alarm nobody could trust. Ignored; the " +
+        "run's real exit code stands.",
+    );
+    return;
+  }
+
+  console.error("");
+  console.error("=== SYNTHETIC JOB FAILURE (NH31 PROOF HARNESS) ===");
+  console.error(
+    "This failure is FORCED by WTP_INGEST_FORCE_JOB_FAILURE on a dispatched " +
+      "run. No vendor failed. No source failed. The snapshot written above is " +
+      "unchanged by this and is exactly what an unforced run would have " +
+      "produced.",
+  );
+  console.error(
+    `Exiting ${EXIT_WRITTEN_WITH_JOB_FAILURES} so the workflow carries this run through its ` +
+      "gate and its commit and THEN reports it failed — which is the NH31 " +
+      "fix, and the thing being proved.",
+  );
+  console.error("=== END SYNTHETIC JOB FAILURE ===");
+  console.error("");
+  process.exitCode = EXIT_WRITTEN_WITH_JOB_FAILURES;
 }
 
 /**
@@ -338,7 +413,7 @@ function writeMeetingsSnapshot(
   const report = source.lastReport;
   if (!report) {
     console.error("snapshot NOT written: composite produced no run report");
-    process.exitCode = 1;
+    process.exitCode = EXIT_NOTHING_WRITTEN;
     return;
   }
 
@@ -350,7 +425,7 @@ function writeMeetingsSnapshot(
           ? `keeping the previous snapshot from ${previous.generatedAt}`
           : "and no previous snapshot exists"),
     );
-    process.exitCode = 1;
+    process.exitCode = EXIT_NOTHING_WRITTEN;
     return;
   }
 
@@ -522,7 +597,47 @@ function writeMeetingsSnapshot(
       `refresh FAILED: ${jobFailed.length} source(s) failed for a job reason, not a wall — ` +
         jobFailed.map((s) => `${s.source}: ${s.error}`).join("; "),
     );
-    process.exitCode = 1;
+    /*
+     * NH31 (2026-08-21) — A SINGLE SOURCE'S JOB FAILURE MAY NOT THROW AWAY
+     * EVERY OTHER SOURCE'S WORK.
+     *
+     * This used to be exit 1, which is the same code the two paths above use
+     * for "no snapshot was written at all". The caller could not tell them
+     * apart, so the workflow treated both as a dead run and stopped before
+     * its commit step — with a perfectly good snapshot sitting on disk. Run
+     * 32485680324 is the shape in one line: 10 of 11 sources read, 330 rows
+     * WRITTEN, one source job-failed, and nothing committed.
+     *
+     * That is survivable at eleven sources and arithmetically fatal at
+     * national volume. The per-source job-failure rate implied by 14 failed
+     * runs of 37 over eight days is 1 - 0.622^(1/11) = 0.042, and
+     * (1 - 0.042)^5000 = 3e-94. A refresh that commits only when every one
+     * of five thousand sources is healthy never commits again, and the
+     * corpus stops growing while every run stays honestly red.
+     *
+     * So the two outcomes get two codes. EXIT_NOTHING_WRITTEN keeps its
+     * meaning — do not commit, there is nothing to commit. This one says the
+     * opposite: the snapshot IS on disk, it IS better than what is committed,
+     * and the caller must commit it and THEN go red. The run still fails, a
+     * human is still told, and the named source is still named. What changes
+     * is that the good data survives the bad source, which is the
+     * per-body-isolation rule (CLAUDE.md, the refresh corollary) applied one
+     * layer up: there it was one host's refusal emptying another host's
+     * bodies, here it is one source's broken parser discarding ten sources'
+     * fresh rows.
+     *
+     * RULING 12 is unchanged and is the reason this stays red at all: a JOB
+     * failure is our stopwatch running out, not a wall, and it may never be
+     * compiled into a skip. Committing the survivors is not skipping it.
+     */
+    console.error(
+      `  PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: ` +
+        `${snapshot.meetings.length} row(s) from ${okCount} of ` +
+        `${snapshot.sources.length} source(s) were written before this failure. ` +
+        `Exiting ${EXIT_WRITTEN_WITH_JOB_FAILURES} (not ${EXIT_NOTHING_WRITTEN}) so the caller ` +
+        `commits them and then reports this run as failed (NH31).`,
+    );
+    process.exitCode = EXIT_WRITTEN_WITH_JOB_FAILURES;
   }
 }
 

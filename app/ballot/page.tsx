@@ -78,7 +78,6 @@ import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
 import { PRODUCT_NAME } from "@/lib/brand";
-import { CoverageNote } from "@/components/coverage/coverage-note";
 import {
   IncumbencyFootnote,
   IncumbencyMarker,
@@ -504,11 +503,29 @@ export default async function BallotPage({
         <span className="font-medium">We never suggest how to vote.</span>
       </p>
 
-      {/* RULING 6 / item 7 (2026-08-20): what the reader is actually
-          looking at. One of the four sanctioned frictions — honesty about
-          coverage gaps, which may never be smoothed into implied
-          completeness. */}
-      <CoverageNote zip={zip} />
+      {/* RULING 59 (2026-08-21) — THE COVERAGE NOTE IS DELETED, and this
+          comment is its headstone rather than a TODO.
+
+          A <CoverageNote> rendered here through NH Hunt 4. It stated a tier
+          headline, counted the governments we had confirmed against the ones
+          we had not, and named a residue: "18 more — water districts, fire
+          districts, and the like — exist in the counties around you. We have
+          not worked out which of them reach this ZIP code."
+
+          It went false in one merge. The same session's first ship began
+          rendering Lake Todd Village District's meetings on this page while
+          that sentence, four inches away, still counted Lake Todd among the
+          eighteen nobody had worked out. No test caught it and no test could
+          have: the sentence is a claim ABOUT data that changes underneath it,
+          and nothing can tell a correct render from a stale note about that
+          render. It was caught by a human reading a screenshot.
+
+          The author's ruling is that the page says one thing about
+          completeness and nothing else — COLLECTION_NOTE, at the foot of the
+          ballot section, which says the same thing about everything at once
+          and cannot go stale. The enumeration of what is known-to-exist-but-
+          not-reached is not lost; it moved to docs/gap-ledger.md, which is
+          internal, generated, and current by construction. */}
 
       {/* Item 2 (2026-08-15): the way out of the limitation the sentence
           above states. Until now the page named the gap and stopped there;

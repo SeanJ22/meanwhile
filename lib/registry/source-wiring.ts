@@ -1121,7 +1121,64 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
    * office because the town office is where boards usually meet, which is a
    * guess about a specific sitting dressed as a fact. So the bodies are NAMED
    * and ship KNOWN_UNCOVERED, and the venue hunt is a tracker row.
+   *
+   * **UPDATE, NH Hunt 6, 2026-08-21 — ONE OF THEM IS NOW WIRED, AND THE
+   * DIAGNOSIS WAS JOB, NOT WALL.**
+   *
+   * Re-measured on 2026-08-21: the feed answers rung 2 at HTTP 200 with
+   * 370,587 bytes and **1,312 events, 0 of them carrying a non-empty
+   * `LOCATION`** — counted, not estimated. The source has never refused us.
+   * Whose stopwatch ran out was OURS: we had no venue and no coordinate.
+   *
+   * Both were reachable, by branches rather than by trying harder at the same
+   * door. `suttonnh.gov` walls its HTML behind a Cloudflare managed challenge
+   * (403 at rungs 2, 3 and 4; the headless browser cannot clear it) while
+   * serving the `.ics` freely — a PATH-SCOPED wall on one host — and **rung 5
+   * reads the board pages straight through it.** The Planning Board's page
+   * then states the venue in the town's own words: *"The Sutton Planning Board
+   * meets at the Pillsbury Memorial Hall, 93 Main Street, Sutton Mills, NH on
+   * the second Tuesday of the month at 7:00 pm."* The coordinate came from a
+   * SECOND geocoder agreeing with the Census to 38 metres — see the venue-cache
+   * row, which carries the whole story.
+   *
+   * **Exactly one row is added, and the restraint is the point.** The other
+   * fifteen board pages carry "93 Main Street | Sutton Mills" in the SITE
+   * FOOTER and nowhere else. That is the town's postal address on a template,
+   * not a statement about where the Cemetery Commission sits, and reading it as
+   * one would pin fifteen bodies on the strength of a page layout. The
+   * paragraph above refused that guess and this refuses it again; what changed
+   * is that one board actually says it.
    */
+  {
+    bodyId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#planning-board",
+    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town" as OcdId,
+    agendaSourceType: "ICAL",
+    jurisdiction: "Sutton, NH",
+    publishingOrg: "Town of Sutton",
+    timeZone: "America/New_York",
+    config: {
+      slug: "sutton-planning-board",
+      feedUrl: "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+      /*
+       * The feed carries no `CATEGORIES` at all, so the title is the only
+       * discriminator. 169 events read `Planning Board Meeting` on 2026-08-21.
+       * `titleExclude` keeps the joint sittings of other boards out — a
+       * Budget-and-Select-Board meeting is not a Planning Board sitting, and
+       * counting one would inflate a body's calendar with somebody else's.
+       */
+      titleMatch: "Planning Board",
+      titleExclude: "Joint,Zoning,Budget",
+      bodyName: "Planning Board",
+      /*
+       * Reached ONLY because the feed gave nothing usable — every event's
+       * `LOCATION` is empty. This is the board's own published standing venue,
+       * cited to its own page, exactly as Wilmot's Selectboard row is.
+       */
+      venueMatch: "Pillsbury Memorial Hall",
+    },
+    verifiedAt: "2026-08-21",
+  },
 
   // ── New London, NH — four boards off one town calendar (M123, 2026-08-19) ──
   //

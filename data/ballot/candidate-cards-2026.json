@@ -901,7 +901,7 @@
       "bioSourceUrl": "https://www.facebook.com/people/Steven-Endres-for-Merrimack-County-Attorney/61573266140508/",
       "bioSourceLabel": "In the campaign's words — the campaign's Facebook page, read 2026-08-21",
       "email": null,
-      "phone": null,
+      "phone": "(603) 228-0529",
       "filedAddress": "81A Fairgrounds Rd, Bradford NH 03221",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing"
     },
@@ -2119,6 +2119,12 @@
       "key": "ballot-nh-merrimack:county-attorney:endres-steven",
       "name": "Steven Endres",
       "note": "NH Hunt 5 item 4, county contests first. Steven Endres, Merrimack County Attorney, four fields owed. BRANCH 1 - the New Hampshire General Court roster (gc.nh.gov, rung 2, 769 House members read 2026-08-21): NO MATCH, so no official legislator page, portrait, email or phone exists for him there. BRANCH 2 - the county's own site, www.merrimackcounty.net/departments/county_attorney/index.php, rung 2, read 2026-08-21: it publishes the INCUMBENT (Paul Halvorsen) and names no challenger, which is expected and is not a finding about Endres. BRANCH 3 - a search-index sweep for a campaign presence, then the page itself read in a live browser at rung 6 rather than trusted from the snippet: the campaign's Facebook page, verified as above. FOUND: campaign site and blurb. STILL OWED: photo (the campaign's only published images are on Facebook, and social-media images are prohibited at every door - doors 1, 2 and 3 all fail for him because there is no chamber portrait, no government-published portrait, and no campaign domain) and contact (no email or phone is published on the page; the filed mailing address, 81A Fairgrounds Rd, Bradford NH 03221, is already held and rendered under RULING 54). Neither is recorded VERIFIED_ABSENT: RULING 58 needs two exhausted independent branches per field and the photo hunt has walked one.",
+      "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nh-merrimack:county-attorney:endres-steven",
+      "name": "Steven Endres",
+      "note": "NH Hunt 6, manifest v1. CONTACT FOUND, on the gov-staff-directory route at rung 5. courts.nh.gov refuses rungs 2, 3 and 4 (HTTP 403 to a plain fetch, to the full browser header set, and to curl) and answers rung 5. The document is his own filed comment to the N.H. Supreme Court Advisory Committee on Rules, 19 October 2023, whose letterhead reads: OFFICE OF THE MERRIMACK COUNTY ATTORNEY / ASSISTANT COUNTY ATTORNEYS ... Steven R. Endres ... Four Court Street, Concord, New Hampshire 03301-4336, Telephone: (603) 228-0529, Fax: (603) 226-4447. Corroborated at rung 2 on merrimackcounty.net's own County Attorney page, which publishes the same address and the same number. This is a SHARED OFFICE LINE and Meg Hagaman's card already carries it: both are attorneys in that office, so the duplicate is a fact about the office rather than a join collapsing — stated here so a later distinctness sweep reads it as a decision. Routes walked and empty for CONTACT: domain-search (16 guesses, none answered with the surname), donation-platform (16 slugs, none answered), web-archive (16 hosts at the CDX API, no 200-status captures), campaign-site (no domain exists to walk), legislative-directory (both gc.nh.gov chamber indexes read, 221,243 bytes, surname in neither), business-registry (NH QuickStart HTTP 403 at rung 2; it searches by POST and needs rung 6), nonprofit-filing (ProPublica API HTTP 404). PHOTO still owed: no door 1-4 basis found. The county's own County Attorney page publishes a portrait of Paul Halvorsen only and names no assistant; his campaign's Facebook page is prohibited at every door and facebook.com renders zero characters of text to our headless browser today, which is a wall on that route rather than an absence. 26 of the 35 manifest routes for contact and 4 of the 7 for photo still need a person and are NOT claimed as walked.",
       "attemptedAt": "2026-08-21"
     }
   ]

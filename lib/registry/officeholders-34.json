@@ -1287,7 +1287,7 @@
       "termEnd": "",
       "birthDate": null,
       "partyLabel": "Democratic",
-      "websiteUrl": "https://www.assemblydems.com/john-mckeon/",
+      "websiteUrl": "https://www.njleg.state.nj.us/legislative-roster/478/senator-mckeon",
       "contactFormUrl": null,
       "phone": "862-930-7071",
       "email": "senmckeon@njleg.org",
@@ -1297,7 +1297,7 @@
         "sourceUrl": "https://data.openstates.org/people/current/nj.csv",
         "sourceOrg": "Plural Open States (CC-0)",
         "collectedAt": "2026-08-16T05:18:56.258Z",
-        "verifiedAt": null
+        "verifiedAt": "2026-08-21"
       }
     },
     {
@@ -1969,7 +1969,7 @@
       "termEnd": "",
       "birthDate": null,
       "partyLabel": "Republican",
-      "websiteUrl": "https://www.njassemblygop.com/space/",
+      "websiteUrl": "https://www.njleg.state.nj.us/legislative-roster/473/senator-space",
       "contactFormUrl": null,
       "phone": "973-300-0200",
       "email": "senspace@njleg.org",
@@ -1979,7 +1979,7 @@
         "sourceUrl": "https://data.openstates.org/people/current/nj.csv",
         "sourceOrg": "Plural Open States (CC-0)",
         "collectedAt": "2026-08-16T05:18:56.258Z",
-        "verifiedAt": null
+        "verifiedAt": "2026-08-21"
       }
     },
     {

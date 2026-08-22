@@ -907,6 +907,13 @@ with no body here — because a count is not a name.
 *Recorded 2026-08-21 by NH Hunt 5, from the session brief. Three headers
 against one host is one branch.*
 
+> **SUPERSEDED 2026-08-21 by RULING 61 (NH Hunt 6), the same day it was
+> recorded.** The two-branch NUMBER is superseded: exhaustion is now every
+> route the branch manifest names for the field. The INDEPENDENCE test this
+> ruling established is not superseded and is still how branches are counted.
+> Zero records were ever earned under the two-branch bar, so nothing is
+> grandfathered.
+
 It supersedes nothing and makes RULING 52's independence test operational for
 the one state that is a legal claim about a named person. `VERIFIED_ABSENT`
 says a completed hunt walked every applicable rung and the thing does not
@@ -1006,3 +1013,130 @@ is never "does it exist" — it is *"who is obliged to list it?"*
 **Not yet law.** RULINGS 58, 59 and 60 are recorded here and enforced in the
 suite; whether any becomes law and is written into `CLAUDE.md` is the author's
 decision, and `CLAUDE.md` is changed only by him.
+
+### RULING 61 — the branch manifest, and what exhaustion means
+
+*Recorded 2026-08-21 by NH Hunt 6, from the session brief. **Supersedes RULING
+58's two-branch bar**, which was too low. Written into `CLAUDE.md` as law the
+same day, item 6.*
+
+**`VERIFIED_ABSENT` is earned only when every route in the manifest for that
+field type has been walked, named and dated, and every one returned nothing.**
+Not a count — a named list, the same list every time, so no session decides on
+the fly what exhausted means.
+
+**What it supersedes, and why.** RULING 58 made RULING 52's independence test
+operational at two independent branches. That bar was correct law from
+2026-08-21 until this ruling the same day, and **zero records were ever earned
+under it**, so nothing is grandfathered and nothing had to be re-opened by hand.
+Two branches proves almost nothing. Trying thirty-seven routes and stopping does
+not tell you the forty-third would have failed either. The independence test
+RULING 58 established is NOT superseded — it is still how branches are counted;
+what is superseded is the number two standing in for exhaustion.
+
+**Where it lives.** `docs/branch-manifest.md` is the document, indexed by
+question. `lib/hunt/branch-manifest.ts` is the machine-readable twin and is
+authoritative for the route ids, the counts and the verdict.
+`isEvidencedAbsence` in `lib/ballot/hunt-state.ts` enforces it, and
+`tests/branch-manifest.test.ts` and `tests/hunt-state.test.ts` guard it —
+including a guard written as *the old bar passing and the new one refusing on
+one record*, so the change itself is checkable rather than merely described.
+
+**Manifest v1: 36 routes.** Photo 7 · in their own words 10 · contact 35 ·
+campaign site 14 · specific verified page 8. A route may serve several fields; a
+route forbidden for a field is not counted there — a newspaper is an excellent
+route to a blurb and a phone number and its photographs are the demand-letter
+class no door reaches.
+
+**The manifest only grows, and it applies retroactively.** Every absence record
+stamps the manifest version it was earned under, so adding a route re-opens
+every absence earned under the old one automatically. A route is never removed;
+one that stops working keeps its id with a dated note, because the next
+jurisdiction may hit that wall from a different side and because a deleted route
+is one the next session rediscovers as new.
+
+**What it costs, stated rather than hidden.** The contact list is nearly the
+whole manifest, because a phone number can come from anywhere, which makes
+`VERIFIED_ABSENT` on a contact close to unearnable in practice. That is the
+correct outcome. A field that cannot be exhausted stays **still owed** and is
+hunted again on its RULING 53 clock. Nothing in this project is ever concluded
+to be unobtainable.
+
+### RULING 62 — a test file may not lose guards silently
+
+*Recorded 2026-08-21 by NH Hunt 6, from the session brief. Written into
+`CLAUDE.md` as law the same day, item 6.*
+
+**A file write that removes assertions from an existing test file fails the
+build unless the removal is explicit and intentional.**
+
+It supersedes nothing. It closes a hole under every other rule in the repo: the
+suite reports on tests that EXIST, so a deleted test reports `fail 0` rather
+than failing, and every protection this project has runs through that suite. NH
+Hunt 5 wrote `tests/<name>.test.ts` for a new guard, the name was taken, and
+eight unrelated guards stopped existing under a green run.
+
+**Why the count is not the instrument.** It moves for legitimate reasons on
+every normal commit, so it is noise rather than an alarm. It is blind to
+substitution — eight deleted and eight added leaves the total identical. And a
+drop cannot name what stopped running, so it cannot be acted on without a hunt
+through the history. Names are the instrument; the count is a summary of it.
+
+**The mechanism.** `tests/guard-census.json` records every test file and every
+guard NAME in it; `tests/guard-census.test.ts` recomputes it and fails BY NAME.
+The census is not a lock — a guard may leave, but it leaves the census in the
+same commit, and `pnpm guard:census --write` refuses to erase a name without
+`--allow-removals`. Making the census agree with a deletion is itself a diff
+saying which guards left.
+
+**What the history sweep found.** `pnpm guard:history` walked all 228 commits
+that touched `tests/`. 1,599 guard names have existed; 1,547 stand today; 60
+have not been seen since. 57 are legitimate — renames, rewrites, and guards
+retired by an explicit ruling (RULING 7's equal-depth gate, RULING 18's
+hunt-completion gate, RULING 42's thin-candidate line, RULING 47's buried
+enumeration), each with its replacement present. **Three were genuinely
+silent**, and they are the shape one turn subtler than the overwrite that
+produced this ruling: `af766f5` rewrote `tests/who-governs.test.ts` wholesale
+for a count-reconciliation item and carried off three UI density guards that
+belonged to the author's 2026-08-16 ruling, with no mention in its message. All
+twelve of their assertions were re-run against the code as it stands and all
+twelve still hold, so the guards were restored rather than the rule
+re-litigated. The density ruling was never reversed — it simply stopped being
+checked for four days.
+
+### RULING 63 — every zip inherits; no zip starts from scratch
+
+*Recorded 2026-08-21 by NH Hunt 6, from the session brief. Written into
+`CLAUDE.md` as law the same day, item 6.*
+
+**The manifest, the playbook, and every branch built are cumulative property of
+the PROJECT, not of the zip that produced them.**
+
+It supersedes nothing and gives RULING 60's hand-work an inheritance: RULING 60
+says the branch a hand-worked body produces is applied across every body of that
+shape, and this says it is applied across every ZIP and every STATE thereafter,
+including the ones nobody has reached yet.
+
+Five obligations, and the second is the one that makes the ratio meaningful:
+
+1. **Every zip run opens** by loading `docs/branch-manifest.md` and
+   `docs/zip-playbook.md` and stating which branches it inherited, before
+   hunting anything.
+2. **Branches inherited against branches newly built, reported as a pair.** That
+   ratio rising across zips is the only real evidence the method compounds. A
+   session that builds a branch which already existed has committed a defect and
+   reports it as one, naming the existing branch.
+3. **A new branch is checked against the manifest before it is built.**
+   Duplication is worse than a gap.
+4. **Both files are indexed by question**, not read front to back. At 175 KB and
+   growing, an unindexed playbook is one a session will skim.
+5. **An inherited branch that fails in a new jurisdiction grows a sub-branch**
+   per RULING 60, and its failure is recorded with the jurisdiction and the
+   date.
+
+**Which of Newbury's branches are expected to fail elsewhere**, recorded now
+rather than discovered later: the village-district register, town-meeting and
+SB2 government, the school administrative unit sitting above the district, and
+the town clerk as the record of local filings. All four are New England shapes.
+Rockaway Township is the median American shape and is the first test of whether
+these routes travel at all.

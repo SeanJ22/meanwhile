@@ -1,0 +1,2463 @@
+{
+  "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
+  "totals": {
+    "files": 176,
+    "named": 1573,
+    "dynamic": 6
+  },
+  "files": {
+    "tests/agenda-documents.test.ts": {
+      "names": [
+        "a PDF that cannot be parsed records the failure and keeps the link",
+        "a meeting with no agenda link yields null, not a fabricated fetch",
+        "a revised agenda appends beside the old version, never over it",
+        "an unchanged document is not stored twice",
+        "contentHashOf is stable for identical bytes",
+        "extractHtmlText strips markup and scripts, keeps the words",
+        "retrieveAgendaDocument extracts HTML text and records provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/amber-remnant.test.ts": {
+      "names": [
+        "every tier toggle's fill is on the measured list",
+        "the dead interactive brown is gone from every token, both themes",
+        "the interactive accent is azure everywhere — no rule reads the tier amber",
+        "the toggle and the legend are one colour per tier — the coupling, literally"
+      ],
+      "dynamic": 0
+    },
+    "tests/anchor-in-viewport.test.ts": {
+      "names": [
+        "F01 9.1: a box taller than the viewport is capped and scrolls, never clipped off-screen",
+        "F01 9.1: a box wider than the viewport still starts inside the left margin",
+        "F01 9.1: a click at the very top-left never places the box off the top or left",
+        "F01 9.1: a click near the bottom edge places the box ENTIRELY on screen",
+        "F01 9.1: a click near the right edge places the box ENTIRELY on screen",
+        "F01 9.1: a click with room keeps the old offset, so nothing common moves",
+        "F01 9.1: a phone-sized viewport still places a full picker whole"
+      ],
+      "dynamic": 0
+    },
+    "tests/area-facts.test.ts": {
+      "names": [
+        "all three covered states answer all seven mover questions",
+        "answers state rules without characterizing them",
+        "every answer is cited to an official https source with a verification note",
+        "lookup is by state code, case-insensitive, honest null otherwise"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-agenda.test.ts": {
+      "names": [
+        "A03/A05: nothing in this module generates a sentence",
+        "A03: a document whose extraction failed is counted, never read as empty",
+        "A03: a reader's question maps to the words agendas actually use",
+        "A03: a search that ran and found nothing renders, and says so",
+        "A03: every topic is searchable, and a topic with no hits is not an error",
+        "A03: real topics find real lines in the real corpus, quoted verbatim",
+        "A03: the corpus limit rides with the answer — agendas are not the permit record",
+        "A03: the corpus this searches is real and its size is stated",
+        "A03: the radius filters on the meeting's own place, and says what it could not place",
+        "A05: a document with no readable structure yields nothing, not a fabricated list",
+        "A05: the item list is the clerk's own items, and never an address",
+        "A05: the meeting card renders the clerk's items, using the one extractor"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-box.test.ts": {
+      "names": [
+        "QUESTION_ASKED is a registered identifier-free event type",
+        "a tie between topics refuses — evidence that does not decide is not a route",
+        "every everyday contact is real: a phone or request URL, an https source, a valid topic and zip",
+        "golden, live at 85701: the library question routes to Tucson and Pima",
+        "golden, live at 85701: the pothole question returns Tucson's street-maintenance owner with a working phone",
+        "golden, live at 85701: the school-construction question routes to district policy",
+        "keyword-first: the classifier can never overrule a deterministic match",
+        "log discipline: routed asks log the topic only; refusals carry capped text",
+        "no generation: the ask pipeline touches no LLM, no network, no API key",
+        "scrub: ordinary questions pass through untouched",
+        "scrub: phone-, email-, and address-shaped text becomes [#] before storage",
+        "scrub: the write path runs it before the insert — nothing unscrubbed reaches the store",
+        "the acknowledgment beat draws from the author's fixed pool — and code never adds an entry",
+        "the classifier answers with a curated topic id, or nothing",
+        "the classifier is bounded: a ripcord, a ceiling, a cache, and no key means off",
+        "the classifier writes no reader-facing sentence, and the key stays server-side",
+        "the everyday contacts ride only their own zip — a Tucson number never answers in Rockaway",
+        "the everyday grid is fully accounted: every topic × zip cell is a contact or a recorded miss, never silence",
+        "the hang-tight beat is presentation only — routed and logged before the timer, and never labeled AI",
+        "the honest refusal: an unroutable question refuses, never guesses",
+        "the refusal log drove the map: the two live refusals now route",
+        "the transparency page covers the ask box in the same commit"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-destinations.test.ts": {
+      "names": [
+        "4d: a bare topic word is never hijacked by a destination",
+        "4d: a question with no destination refuses rather than guessing",
+        "4d: destinations generate nothing — every phrase and sentence is committed",
+        "4d: each of the four routes on the phrases a reader actually types",
+        "4d: every destination carries a label and a level statement",
+        "4d: every destination points at a surface this app actually has",
+        "4d: every question that already routed still routes to the same topic",
+        "4d: exactly the four categories the rule names, and no fifth",
+        "4d: the longest phrase wins, so more evidence is never a tie",
+        "4d: the promised categories are DERIVED from what routes, never written beside it",
+        "the ruling's cost is named: the weak-by-design questions decline, and say what they had"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-matcher.test.ts": {
+      "names": [
+        "PROVING CASE, end to end: with no classifier the weather question is REFUSED, not routed",
+        "PROVING CASE: the weather question does not route on the keyword layer",
+        "a weak match with a classifier topic routes; the same match without one refuses",
+        "askWasAnswered is the single definition, and the surface reads it rather than repeating it",
+        "exact means WHOLE: a name inside a sentence is a question, not a navigation",
+        "exact-name refuses ambiguity, article noise, and fragments",
+        "the classifier still cannot invent a route, and still cannot overrule a strong one",
+        "the four classes the ruling names all route at one match, plus the two the index also carries",
+        "the strong-match threshold is two distinct hits, and it is the same number the code uses"
+      ],
+      "dynamic": 0
+    },
+    "tests/asset-store.test.ts": {
+      "names": [
+        "RULING 20: every manifest row is a real file with the hash it claims",
+        "RULING 20: no NEW portrait or PDF binary is committed to the repo",
+        "RULING 20: reference data and provenance stay in git",
+        "RULING 20: the sweep actually reaches the binaries it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/attribution.test.ts": {
+      "names": [
+        "a meeting whose agenda was NOT read carries no rows at all — absent, not empty",
+        "a page-break marker is typography, not a body — the items after it stay put",
+        "a plain section heading does not start a new body",
+        "an agenda with no sitting-as headings yields exactly one host segment",
+        "an unresolved segment attributes to nothing — never to the host",
+        "control returns to the host afterwards",
+        "every item of real business is attributed to exactly one segment",
+        "resolution never reaches outside the host's own division",
+        "resolving join rows against the registry never writes the host onto an unresolved one",
+        "the adapter produces acting-body rows from a real fetch shape",
+        "the join rows carry the published heading as evidence",
+        "the library district's business is separated from the county board's",
+        "the recorded Pima agenda splits into more than one acting body",
+        "the summary counts unattributed items rather than hiding them",
+        "the write boundary refuses a snapshot that attributes an unresolved heading to the host"
+      ],
+      "dynamic": 0
+    },
+    "tests/ballot-picks.test.ts": {
+      "names": [
+        "3e: the picks disclosure is stated ONCE, on the ballot page, with the reaction distinction",
+        "4c: a pick from another ballot is labelled, and only then",
+        "4c: every shipped ballot's contests have a reader-facing label",
+        "4c: the label never leaks an internal key to a reader",
+        "the picks card renders picks only and transmits nothing",
+        "the picks module never transmits — no fetch, no navigator.sendBeacon, no import of client APIs",
+        "the transparency page discloses picks as device-local",
+        "the transparency page says the card is drawn on-device"
+      ],
+      "dynamic": 0
+    },
+    "tests/ballot.test.ts": {
+      "names": [
+        "F21: the ballot page renders the polling-place pointer exactly once, in the dates header",
+        "a Newbury voter (03255) sees the November slate, and March is stated, not hidden",
+        "a Rockaway Township voter sees every contest the clerk filed for 07866",
+        "a Tucson voter (85701) sees the statewide slate, CD-7, LD-20 and the measures",
+        "a Vail voter (85641) sees CD-6 and LD-19, never Tucson's districts",
+        "every AZ and NH ballot record is cited to an official source",
+        "incumbency is unknown, never defaulted to false",
+        "item 6: every covered state points at its own official polling-place lookup",
+        "the AZ general lineup cites the certified canvass and keys to real contests",
+        "the NJ date strip is complete and cited",
+        "the ballot never leaks across boundaries",
+        "the client's covered-state list agrees with the registry",
+        "the committed Morris file validates, and every record is cited"
+      ],
+      "dynamic": 0
+    },
+    "tests/battlecard-pill.test.ts": {
+      "names": [
+        "12: measures get no battlecard pill",
+        "12: the long sections render inside the battlecard, not on the row",
+        "12: the pill is full width and reads as an invitation",
+        "14: no guard mandated the enumeration's phrasing, and none was amended",
+        "44: nothing held renders nothing, not a sentence about our research",
+        "47: no per-card issue count, and no per-card gap enumeration"
+      ],
+      "dynamic": 0
+    },
+    "tests/beacon-guard.test.ts": {
+      "names": [
+        "a context from the shared site cannot write an undeclared row",
+        "an UNLOAD beacon carrying no header is still recorded as synthetic",
+        "an unguarded context leaks — the plant that proves the test can fail",
+        "the shared site plants the declaration, and the client sends it",
+        "the transport this guards is still the one lib/log/client.ts prefers"
+      ],
+      "dynamic": 0
+    },
+    "tests/bill-summaries.test.ts": {
+      "names": [
+        "every bill in the vote window is summarized or honestly pending",
+        "every summary cites its CRS basis with a date, in a neutral register"
+      ],
+      "dynamic": 0
+    },
+    "tests/boardbook.test.ts": {
+      "names": [
+        "an unobserved venue drops the meeting, counted, never guessed",
+        "normalize emits windowed meetings with cited venues and real agenda links",
+        "the org page parses to at least 15 dated rows"
+      ],
+      "dynamic": 0
+    },
+    "tests/body-battlecard.test.ts": {
+      "names": [
+        "M136: Tucson's own entry wins over the state-level one",
+        "M136: a body with no read statute gets the honest line, never a paraphrase",
+        "M136: a school district's superintendent is asked for and named when missing",
+        "M136: every blurb carries a checkable basis — no unsourced prose anywhere",
+        "M136: the body card orders meetings upcoming-first from one clock",
+        "M136: the card renders the same SET of sections for every body",
+        "M136: the contact section never invents a route",
+        "M136: the three named bodies each get a sourced role, not a generated one"
+      ],
+      "dynamic": 0
+    },
+    "tests/body-name-match.test.ts": {
+      "names": [
+        "a Census GOVERNMENT matches the BODY inside it (RULING 9)",
+        "a government this registry genuinely does not hold reports absent",
+        "a shared leading name never binds two different governments",
+        "a shouting Census name matches its quiet registry spelling",
+        "an empty or missing name never matches anything",
+        "both instruments call the shared matcher, neither rolls its own",
+        "looseName survives punctuation, case and doubled spaces",
+        "the ledger states its held/dark split as a reconciling pair"
+      ],
+      "dynamic": 0
+    },
+    "tests/body-rosters.test.ts": {
+      "names": [
+        "F01 1.2: the superintendent is pulled out of the seated list, not duplicated",
+        "an unwired body renders the honest absence, not an invented roster",
+        "every member has a name, a published title, and no invented contact",
+        "every roster cites the body's own page, never a vendor's",
+        "every roster keys to a real body — a roster for nothing is a curation error",
+        "no two rosters claim the same body",
+        "the author's named example is covered: TUSD renders a full board",
+        "the division lookup finds both registry suffixes — school boards are #board",
+        "the mayor joins the model (5b): Tucson's roster includes the Mayor",
+        "the surfaces render the rosters — the register is not shelf-ware"
+      ],
+      "dynamic": 0
+    },
+    "tests/boilerplate.test.ts": {
+      "names": [
+        "THE DEFECT: the old slice cut mid-word; the helper does not",
+        "THE NAMED INSTANCE: Mejia's press-release rail is chrome",
+        "a chrome-only match answers SEARCHED_NOTHING_MATCHED, not MATCHED",
+        "a document with no extractorVersion is treated as version 1",
+        "a quote that reaches an end carries no ellipsis on that side",
+        "a re-extracted page supersedes its own older copy for reading",
+        "a real sentence about an issue is NOT chrome",
+        "a real statement still matches",
+        "nesting does not eat the page",
+        "no passage this matcher produces breaks a word",
+        "no passage this matcher produces is template chrome",
+        "structural exclusion removes a marked container even when it is a div",
+        "structural exclusion removes nav, header, footer and aside",
+        "the collector strips chrome before extracting, and says which extractor it is",
+        "the ellipsis sits outside the word, with a space",
+        "the matched phrase is never cut in half by the window",
+        "the repetition test says when it could not run",
+        "two revisions at the SAME extractor both survive — that is the record"
+      ],
+      "dynamic": 0
+    },
+    "tests/branch-manifest.test.ts": {
+      "names": [
+        "RULING 61 — a branch that FOUND the thing forecloses the absence claim",
+        "RULING 61 — a full walk of every named route is exhaustion",
+        "RULING 61 — a malformed branch cannot pad a walk",
+        "RULING 61 — a retired route keeps its id, carries a date and a reason, and stops counting",
+        "RULING 61 — a route walked that the manifest does not name is surfaced, never counted",
+        "RULING 61 — a walk judged against an older manifest is re-openable, not exhausted",
+        "RULING 61 — an empty walk is never exhaustion",
+        "RULING 61 — docs/branch-manifest.md is current with the module",
+        "RULING 61 — every route added since v1 is recorded in this guard too",
+        "RULING 61 — every route id appears in the document",
+        "RULING 61 — every route names what it is, how, what it yields, its rung and its dependency",
+        "RULING 61 — no press, social or employer route may supply a photo",
+        "RULING 61 — route ids are unique and stable-shaped",
+        "RULING 61 — the document states plainly that the manifest is incomplete",
+        "RULING 61 — the manifest is append-only: no v1 route has been deleted",
+        "RULING 61 — the reported counts are read from the module, never transcribed",
+        "RULING 61 — the verdict names the routes still owed, as a work list",
+        "RULING 61 — two independent branches is NOT exhaustion any more",
+        "RULING 63 — the document is indexed by question, not read front to back"
+      ],
+      "dynamic": 0
+    },
+    "tests/brand.test.ts": {
+      "names": [
+        "no reader surface carries the old name",
+        "no reader surface hardcodes the new name either",
+        "the product name is a constant, and the title helper uses it",
+        "the repo's off-site identity is deliberately unchanged"
+      ],
+      "dynamic": 0
+    },
+    "tests/browser-construction.test.ts": {
+      "names": [
+        "nothing anywhere in the repo constructs a browser outside the shared site",
+        "scripts/browser.mts is the only place a browser is constructed",
+        "the shared site guards every context it makes"
+      ],
+      "dynamic": 0
+    },
+    "tests/build-attribution.test.ts": {
+      "names": [
+        "a chunk with no source map is UNATTRIBUTED, never assumed to be application",
+        "attributeChunk credits a one-field segment to nobody",
+        "attribution by provenance is identical across a re-chunk",
+        "every byte lands in exactly one bucket, and the total reconciles",
+        "no maps at all REFUSES rather than reporting a zero split",
+        "the substring heuristic FAILS the same re-chunk — the control"
+      ],
+      "dynamic": 0
+    },
+    "tests/build-budget.test.ts": {
+      "names": [
+        "a manifest duplicated under standalone/.next is counted once",
+        "every committed ceiling is at most the baseline plus the stated headroom",
+        "standalone mode is read off the artifact, not off the environment",
+        "the client baseline records where it was measured",
+        "the client split is by provenance, and the gzip split stays retired",
+        "the green control passes, and budget 2 splits MapLibre from application bytes"
+      ],
+      "dynamic": 1
+    },
+    "tests/build-stamp.test.ts": {
+      "names": [
+        "an absent variable renders as absence, never as a seven-character SHA",
+        "next.config.ts inlines every build-metadata name the route reads",
+        "no BUILD constant is assigned from a Netlify variable directly",
+        "the runtime block still reports what the serving process sees",
+        "the stamp is never cached"
+      ],
+      "dynamic": 0
+    },
+    "tests/calendar-links.test.ts": {
+      "names": [
+        "a timed event keeps the 90-minute block",
+        "an all-day event builds VALUE=DATE ics with an exclusive end",
+        "an all-day event crossing a month boundary ends on the right day",
+        "filenames are safe",
+        "the google url carries the same dates"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-cards.test.ts": {
+      "names": [
+        "2b: a card photo is a portrait judgment, never a banner/logo file left behind",
+        "2b: every shipped photo appears in docs/photo-report.md with its judgment",
+        "RULING 42 and RULING 51: the disclosure is declared once and renders once per surface",
+        "RULING 42: no per-card completeness marker survives in the card library",
+        "RULING 42: the card component renders no completeness marker",
+        "every card key resolves against the ballot data or lineup keys",
+        "every photo carries a labeled source and https URL; every bio its citation",
+        "no ranking vocabulary anywhere in the cards file"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-corpus.test.ts": {
+      "names": [
+        "B14: a curated bio always outranks a derived one",
+        "B14: a derived blurb carries its source class, exactly as a curated one does",
+        "B14: no markup ever reaches a reader inside a blurb",
+        "B14: the blurb rung reaches every candidate whose page we hold, equally",
+        "B14: the denominator is measured from the ballot, not quoted",
+        "D05: a held-but-unreadable page is not a search that came back empty",
+        "D05: a passage is a short quote with its link and date, never the page",
+        "D05: a wall is a rung, and the archive is wired in rather than walked by hand",
+        "D05: every answer that searched carries its own scope",
+        "D05: the corpus is real, append-only, and states what it could not reach",
+        "D05: the revision detector hashes the TEXT, not the bytes",
+        "D05: the three answers are three, and none of them is a blank",
+        "P02: equal effort — the same issue list for every candidate, no exceptions",
+        "P02: no composite score exists — not a number, not an order, not a comparison",
+        "P02: no issue phrase is a single loose word that turns a search into noise",
+        "P02: the headline is provenance and carries no count at all"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-links.test.ts": {
+      "names": [
+        "every candidate-links key resolves to a real candidacy or lineup nominee",
+        "every link was fetch-verified: url, verification sentence, and date present",
+        "no ranking vocabulary anywhere in the links file"
+      ],
+      "dynamic": 0
+    },
+    "tests/canonical-reconciliation.test.ts": {
+      "names": [
+        "a GEOID match is one-to-one",
+        "a match names an identifier, and a non-match names none",
+        "a matched division states no gap",
+        "every division carries a canonical verdict",
+        "every division carries the Census GEOID the join depends on",
+        "every unmatched division records WHY, and none is left undetermined",
+        "nothing is matched by slug similarity any more",
+        "the census_name join stays scoped to the one case it was built for"
+      ],
+      "dynamic": 0
+    },
+    "tests/card-navigation.test.ts": {
+      "names": [
+        "F01 2.4: a card opened from INSIDE another pushes; one opened from outside replaces",
+        "F01 2.4: both large surfaces close through the pop, not through a reset",
+        "F01 2.4: the large surface is a stack, and closing pops one frame",
+        "F01 2.4: the stack is bounded, and it drops the OLDEST frame"
+      ],
+      "dynamic": 0
+    },
+    "tests/card-sources.test.ts": {
+      "names": [
+        "a district card with NO roster and NO meetings still cites its boundary",
+        "a district card with a roster and meetings is never sourceless",
+        "a holder with no record at all contributes no row, and says so by absence",
+        "a meeting card lists the sitting and the body's roster",
+        "a person card cites the record its identity came from",
+        "distinct publishers never merge",
+        "same-source rows merge, and the merged row states the count",
+        "the committed Tucson Unified roster resolves — the card under the defect"
+      ],
+      "dynamic": 0
+    },
+    "tests/carry-pins.test.ts": {
+      "names": [
+        "R47: a held answer NEVER carries across a zip change",
+        "R47: a held answer with no zip of its own is not carried",
+        "R47: nothing is carried before a location resolves",
+        "R47: the answer in hand is what renders",
+        "R47: the last answer carries through the gap in the same area",
+        "R47: the map's pins are wired through the rule, not around it"
+      ],
+      "dynamic": 0
+    },
+    "tests/cascade.test.ts": {
+      "names": [
+        "an outlying zip widens the radius and reports that it did",
+        "canceled meetings ride along but never fill an empty map",
+        "concluded meetings come back most recent first",
+        "downtown zip finds upcoming meetings at the first radius",
+        "every returned meeting carries its provenance",
+        "nothing on file anywhere reports the none tier rather than throwing",
+        "upcoming meetings come back in chronological order",
+        "with no upcoming meetings anywhere on the ladder, recent ones fill in"
+      ],
+      "dynamic": 0
+    },
+    "tests/census-join-key.test.ts": {
+      "names": [
+        "item 3: census_id_gidid appears in no join, key, lookup or foreign-key position",
+        "item 3: census_id_gidid is blank on exactly 36 rows — the recorded property",
+        "item 3: census_id_pid6 is unique across all 90,837 units, and blank on none",
+        "item 3: every allowlisted exemption is a file that still exists",
+        "the gidid sweep reaches the source tree it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/challenge-at-200.test.ts": {
+      "names": [
+        "0C: a 200 carrying a challenge is a FAILURE, not an empty page",
+        "0C: a challenge page is detected however it is spelled",
+        "0C: a long document quoting the phrase is still a document",
+        "0C: a real page is never called a challenge",
+        "0C: an ordinary 200 still comes back exactly as before",
+        "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
+        "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
+      ],
+      "dynamic": 0
+    },
+    "tests/clean-typecheck.test.ts": {
+      "names": [
+        "app/layout.tsx writes its own props type",
+        "no first-party file annotates against a Next-generated global type"
+      ],
+      "dynamic": 0
+    },
+    "tests/clerksboards.test.ts": {
+      "names": [
+        "D67: a published per-month date override wins over the recurrence",
+        "D67: a qualifier the parser cannot read declines the board, never expands around it",
+        "D67: a season restriction removes the months the body does not sit",
+        "D67: an exception parenthetical is never read as a month restriction",
+        "D67: an override written for one year is not carried into another",
+        "D67: the recurrence walks the WINDOW, and stops dropping its last sitting",
+        "a body that publishes no schedule is still declined",
+        "a virtual-only board is KEPT, with no place and no invented pin (D18)",
+        "an unknown schedule format produces zero meetings and a counted drop",
+        "expands an Nth-weekday recurrence",
+        "expands an enumerated date list, years assigned right to left",
+        "grammar B accepts 'of the month', which is the same rule as 'of each month'",
+        "grammar C declines a quarterly rule that names no months",
+        "grammar C: a quarterly rule with its months named expands to those months",
+        "grammar D reads month-name dates, and a TBD month yields no date",
+        "normalizes Planning Commission meetings with venue, agenda and cancellation",
+        "parses the recorded Planning Commission page"
+      ],
+      "dynamic": 0
+    },
+    "tests/comment-access.test.ts": {
+      "names": [
+        "a YES row states where the period falls, in the body's own terms",
+        "an UNKNOWN row claims nothing beyond its link",
+        "every comment-access row names a real registry body and cites a source",
+        "lookup is by division plus published body name, never the wrong body's rule"
+      ],
+      "dynamic": 0
+    },
+    "tests/committee-denominator.test.ts": {
+      "names": [
+        "F02: every parent seat with jurisdiction can render it, and every one without names the gap",
+        "F02: no source file hardcodes seven as a committee denominator",
+        "F02: the 186-subcommittee gap reconciles, from memberships",
+        "F02: the denominator is a member's OWN parent seats, and there are far more than seven",
+        "F02: the seven survives as DISTINCT COMMITTEES actually sat on, which is a different fact"
+      ],
+      "dynamic": 0
+    },
+    "tests/committee-tree.test.ts": {
+      "names": [
+        "0a: every subcommittee id extends a parent id that exists",
+        "0a: every subcommittee name is its parent's name plus the separator",
+        "0a: no member sits on a subcommittee without also sitting on its parent",
+        "F01 4.2: Mark Kelly's Armed Services rows nest, and the role rides the child",
+        "F01 4.2: a child with no parent seat renders whole rather than vanishing",
+        "F01 4.2: a row with no jurisdiction renders a NAMED GAP, never silence",
+        "F01 4.2: the tree loses nothing — every seat appears exactly once"
+      ],
+      "dynamic": 0
+    },
+    "tests/comparison.test.ts": {
+      "names": [
+        "D47: an unanswered cell is a named gap about US, never about the state",
+        "D47: every covered pair compares, and none compares with itself",
+        "D47: every rendered answer carries its own source and read date",
+        "D47: nothing ranks — no key and no copy declares a better state",
+        "D47: rows align by TOPIC, never by position",
+        "D47: the census states its own denominators",
+        "D47: the page orders by the manifest, never by the content"
+      ],
+      "dynamic": 0
+    },
+    "tests/composite.test.ts": {
+      "names": [
+        "F22: a broken NAMESPACE is a JOB failure — the run must go red",
+        "F22: a failed FETCH is a WALL — named, skipped, and the run continues",
+        "F22: a normalize that THROWS is a JOB failure, not a wall",
+        "F22: a walled child records the ladder rung it stopped at",
+        "a child violating the namespacing contract is excluded and reported",
+        "a hung child times out and the others still return",
+        "drops from every child surface in the report, per source",
+        "one child failing never blanks the map, and the failure is reported",
+        "the cache serves a repeat query without re-fetching, and reports so"
+      ],
+      "dynamic": 0
+    },
+    "tests/concluded.test.ts": {
+      "names": [
+        "M58: a body that publishes no history says so, in plain language",
+        "M58: every wired jurisdiction either has history or explains its absence",
+        "M58: the Apptegy fetch asks the vendor for the past",
+        "M58: the Concluded chip opens the window its own meetings live in",
+        "M58: the gap note fires only when the reader asks about the past"
+      ],
+      "dynamic": 0
+    },
+    "tests/congress-directory.test.ts": {
+      "names": [
+        "Incumbent and Challenger are the identical chip",
+        "a local roster carries neither, and the chip row says the tier instead",
+        "a non-federal holder gets no directory slice, and that is a real answer",
+        "identity chips are facts, never guesses from a seat label",
+        "it is a DIRECTORY — no votes, no money, no statements",
+        "no standing means no standing chip — absence is not padded",
+        "state and chamber land on every federal row",
+        "the counts match the denominators the brief stated",
+        "the directory source carries its SHA and read date to the render",
+        "the join is by BIOGUIDE, never by name",
+        "the provenance tag names the PROJECT, not official records",
+        "the snapshot is SHA-pinned, never main"
+      ],
+      "dynamic": 0
+    },
+    "tests/contact-phone.test.ts": {
+      "names": [
+        "a Washington number that IS a district number is one number, not two",
+        "a label is never invented — an office with no published city says so",
+        "no recorded number is no choices — never a placeholder row",
+        "offices sharing a switchboard collapse to one row",
+        "one number is one choice — the case that must NOT get a modal",
+        "seven offices collect to seven choices, district first, Washington last",
+        "the chooser sits OVER the battlecard, and its rows stay tappable",
+        "the href strips to digits; the displayed number keeps its formatting",
+        "the modal dials, dismisses, and leaves the card underneath alone",
+        "the pill row branches on the COUNT, and only above one opens a modal"
+      ],
+      "dynamic": 0
+    },
+    "tests/coverage-manifest.test.ts": {
+      "names": [
+        "a manifest state with no artifacts detail row throws rather than being skipped",
+        "adding one state reaches the geometry filenames on every layer type",
+        "adding one state to the manifest reaches every CLIENT-side derived list",
+        "adding one state to the manifest reaches every SERVER-side derived list",
+        "every allowlisted content file is a file the sweep actually reaches",
+        "every manifest FIPS/USPS pair matches the Census table in lib/ocd/fips.ts",
+        "no file outside the manifest holds a hand-kept list of every covered state",
+        "the client module exports ONLY what the browser reads",
+        "the exported lists equal the derivation of the live manifest",
+        "the manifest's generated artifacts are all committed on disk"
+      ],
+      "dynamic": 0
+    },
+    "tests/coverage-tier.test.ts": {
+      "names": [
+        "6.2: a tier is all-or-nothing against its own denominator",
+        "6.2: an empty universe is Tier 0, not an error and not Tier 3",
+        "6.2: zero people is not 'every person is complete'",
+        "6.5: a stamped tier above its evidence is caught; below it is fine",
+        "6.5: no stamped zip carries a tier its own evidence does not support",
+        "6.6: there is no setter — a tier can only be computed from evidence",
+        "RULING 6: the four tiers exist in this vocabulary and no other",
+        "RULING 6: the read side looks a stamp up and cannot compute one",
+        "RULING 6: the stamped ledger exists and its distribution sums to its denominator",
+        "RULING 9: bodies enumerated is its own count, never derived from governments",
+        "every route that reads the coverage ledger traces it into the deploy",
+        "item 3.1: the distribution is written at write time from stamped values",
+        "item 3.1: the stamped ledger carries a distribution for every zip",
+        "item 3.2: the distribution reaches no reader-facing surface",
+        "item 3.5: a sold row cannot be written without its tier distribution",
+        "item 3: the distribution encodes and decodes, and absence is UNKNOWN",
+        "item 8.4: every write path into a sold store states a tier",
+        "item 8: both sold stores carry coverage_tier, NOT NULL and not defaulted",
+        "item 8: the migration backfills UNKNOWN and then removes the default",
+        "the runtime ledger agrees with the audit ledger, zip for zip"
+      ],
+      "dynamic": 0
+    },
+    "tests/coverage.test.ts": {
+      "names": [
+        "03255 resolves the town, deduped to one municipal division",
+        "07866 counts its two school districts separately",
+        "85641 states the unincorporated fact and still names its government",
+        "85701 keeps the City of Tucson and is not called unincorporated",
+        "Rockaway borough and township both survive as separate governments",
+        "a body's name is never invented for display",
+        "a government listed in both layers keeps the real row, not the fictitious one",
+        "every fictitious row is suppressed, and only fictitious rows are",
+        "finding meetings and finding nothing are different states",
+        "nobody is ever told they have no representation",
+        "the clip counties hold exactly the 74 governments Census enumerates"
+      ],
+      "dynamic": 0
+    },
+    "tests/curated-division-overlay.test.ts": {
+      "names": [
+        "every curated division is enumerated by an OUTSIDE authority",
+        "every curated division reaches the built registry",
+        "every curated division says why it has no geometry",
+        "no curated division is left with an UNDETERMINED canonical gap",
+        "no curated division shadows one the geometry already carries"
+      ],
+      "dynamic": 0
+    },
+    "tests/curated-divisions.test.ts": {
+      "names": [
+        "a body WITH a division still keys on its division",
+        "a body's own id is the last resort for a division key",
+        "a curated identifier says it is ours in its first characters",
+        "a malformed mint throws rather than returning a wrong key",
+        "stripping the prefix leaves the identifier we would propose upstream",
+        "the division-less venue rows resolve for their own tenant and nobody else's",
+        "the slug rule matches the canonical list's own slugs",
+        "two division-less bodies on one source do not share a venue scope"
+      ],
+      "dynamic": 0
+    },
+    "tests/day-precision.test.ts": {
+      "names": [
+        "M59: a date-only meeting exports as an all-day event, with the note",
+        "M59: a date-only meeting renders the honest line where the clock goes",
+        "M59: a normal meeting is untouched by the new shape",
+        "M59: a timed meeting still exports as a timed event",
+        "M59: the AgendaCenter parse reads only its own category, with a floor",
+        "M59: the Merrimack notices page still parses its dated documents",
+        "M59: the calendar date is the meeting's own zone, not the reader's",
+        "M59: the shipped snapshot carries day-only meetings and none of them shows a time"
+      ],
+      "dynamic": 0
+    },
+    "tests/db-schema.test.ts": {
+      "names": [
+        "a generated migration exists and creates every schema table",
+        "every collection store is identifier-free and joins nothing",
+        "every table carrying a division identifier carries a NOT NULL vintage",
+        "no table sneaks in a ranking or recommendation column",
+        "reactions are tier-stamped from the first row",
+        "search_log also pairs its division identifiers with a vintage",
+        "the collection stores share no joinable column",
+        "the feedback store holds no continuity key of any kind",
+        "the optional reply address exists on the feedback store and nowhere else",
+        "the reaction continuity key exists only on the reactions table",
+        "the schema exports tables at all — this suite is not vacuous",
+        "the search log carries no identifier of any kind and no foreign keys"
+      ],
+      "dynamic": 0
+    },
+    "tests/deferred-census.test.ts": {
+      "names": [
+        "a binary mirror entry is compared as bytes, never as trimmed text",
+        "a routine run cannot destroy a Disposition the author wrote",
+        "an empty history is not reported as an empty folder of commits",
+        "clipping never severs a future date from the annotation that legalises it",
+        "every explainer points at a tracker row that exists",
+        "every non-code id names a row the census holds",
+        "no explainer cell is ever blank — a blank reads as nothing to decide",
+        "the composed column never reaches the readable census",
+        "the explainer column sits between Notes and Disposition",
+        "the explainers disclaim their own authority",
+        "the generator writes the column in that position, not by luck",
+        "the run refuses rather than shipping a header that disagrees with its body",
+        "the size cap names what would be cut instead of truncating",
+        "the split moves rows and cannot alter one"
+      ],
+      "dynamic": 0
+    },
+    "tests/derived-picks.test.ts": {
+      "names": [
+        "M134 rule 1 — a Yes on one candidate IS the pick, and the race stops asking",
+        "M134 rule 2 — it asks when nobody was said Yes to, and when too many were",
+        "M134 rule 3 — a recorded pick never flips, and EXPLICIT outranks DERIVED",
+        "M134 rule 4 — resolving a pick cannot alter a reaction: this module writes nothing",
+        "M134 rule 5 — a measure's Yes/No derives the same way, through the same function",
+        "M134 — a derived pick says where it came from, and stays on the device"
+      ],
+      "dynamic": 0
+    },
+    "tests/discovery-tree.test.ts": {
+      "names": [
+        "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
+        "a branch missing any of its four required fields is invalid",
+        "a branch that FOUND the thing is not evidence the thing is absent",
+        "a branch with no declared dependency counts for itself",
+        "a candidate field goes stale after seven days",
+        "a record that cannot say when it was measured reads as STALE",
+        "a wall expires on the same clock however emphatically it was recorded",
+        "an absence needs two INDEPENDENT branches, not two attempts at one door",
+        "an empty branch is a measurement, never a verdict",
+        "branches through different publishers count separately",
+        "branches through the same host are ONE branch",
+        "day arithmetic does not drift across a month or a DST boundary",
+        "no branches and no date are each fatal on their own",
+        "no wall in CLAUDE.md is stated as a standing property",
+        "the candidate absence record now REQUIRES branches, not only rungs",
+        "the staleness instrument reads every dated wiring row, and states what it cannot",
+        "the windows are RULING 53's, exactly",
+        "two branches agreeing is simply found",
+        "two branches producing different values is DIVERGENT, not resolved"
+      ],
+      "dynamic": 0
+    },
+    "tests/district-hits.test.ts": {
+      "names": [
+        "Census SLDL is a partition, which is why floterials are missing",
+        "Newbury 03255 finds its base House district; floterials are a known gap",
+        "Rockaway 07866 sits in two school districts at once",
+        "Vail 85641 is unincorporated — no municipal government to find",
+        "every hit carries a tier, so nothing renders as unknown government",
+        "every target zip resolves to a set of districts, never exactly one"
+      ],
+      "dynamic": 0
+    },
+    "tests/district-layer-deps.test.ts": {
+      "names": [
+        "M139: a section with no answer shows no number, rather than a zero",
+        "M139: a zip never claims to know which districts the reader is in",
+        "M139: the active state is still read through a ref, which is why the dep is needed",
+        "M139: the district pass re-runs when the active state resolves",
+        "M139: the districts door renders two sections, never one wearing both names"
+      ],
+      "dynamic": 0
+    },
+    "tests/districts.test.ts": {
+      "names": [
+        "DC uses the district prefix rather than being forced into state:",
+        "an unknown state FIPS is dropped rather than guessed at",
+        "at-large state uses cd:at-large, not cd:1 and not the raw 00 code",
+        "every feature carries a well-formed OCD-ID",
+        "every feature has drawable polygon geometry",
+        "every feature keeps exactly the properties the map needs plus GEOID",
+        "feature count matches the 119th Congress after drops",
+        "item 6b: no Census placeholder name reaches a reader as a district's name",
+        "leading zeros are stripped rather than carried into the identifier",
+        "no two features share an OCD-ID",
+        "ordinary district builds a numbered OCD-ID",
+        "territory keeps the territory prefix and still carries a cd segment",
+        "water and unassigned codes are dropped"
+      ],
+      "dynamic": 0
+    },
+    "tests/division-representation.test.ts": {
+      "names": [
+        "a division we hold people for answers by its OWN key, wherever the reader is",
+        "the named case: State House District 21 holds its two members from a Tucson point",
+        "the route answers by path, and distinct divisions get distinct answers",
+        "three different empties get three different sentences"
+      ],
+      "dynamic": 0
+    },
+    "tests/doc-dates.test.ts": {
+      "names": [
+        "R16: a bare annotation is not an escape hatch",
+        "R16: the two species of future date are told apart, and neither hides",
+        "R18: an Eastern generated-at stamp may lead Phoenix by one day, and only that",
+        "R18: the exemption reports as its own species, never as an allowlisted hit",
+        "an empty allowlist is legitimate; a broken extraction still throws",
+        "no date in CLAUDE.md, docs/*.md, or the tracker's prose columns is in the future",
+        "the pre-commit hook reads the same allowlist this test enforces",
+        "today() reads the Phoenix day, not the UTC day"
+      ],
+      "dynamic": 0
+    },
+    "tests/dotgov.test.ts": {
+      "names": [
+        "DOMAINS ARE NOT A DENOMINATOR, and the file says so",
+        "the election subset is CISA's own classification, not our name match",
+        "the snapshot is pinned, dated, and licensed on its own face",
+        "the snapshot states its counts, and they are the counts it holds"
+      ],
+      "dynamic": 0
+    },
+    "tests/duplicate-sittings.test.ts": {
+      "names": [
+        "a division-less body keys on its jurisdiction, so two places cannot collide",
+        "a fresh row beats a carried-forward one at the same instant",
+        "different bodies, different times and different places never collapse",
+        "the key is the INSTANT, not the string that spells it",
+        "the merge preserves order and never invents a row",
+        "the same sitting from two sources becomes one row, and the agenda wins",
+        "two sittings of one body from ONE source are left alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/extract.test.ts": {
+      "names": [
+        "ZERO_ROWS and CANNOT_RUN are different facts",
+        "describe() always states the counts",
+        "extracted() with items reports EXTRACTED and states its count",
+        "extracted() with no items REFUSES to report success",
+        "layer 1: a non-PDF input CANNOT RUN rather than reading as an empty PDF",
+        "layer 1: zero bytes CANNOT RUN",
+        "layer 2: a non-PDF CANNOT RUN",
+        "layer 2: a wide gap cuts a cell, a word gap does not",
+        "layer 2: items group into rows by baseline, within tolerance",
+        "layer 2: three consecutive rows of equal width are a table; two are not",
+        "layer 3: a missing engine is CANNOT RUN, never 'no text'",
+        "layer 3: an engine that recognises nothing is ZERO_ROWS with the next rung named",
+        "layer 3: an injected engine's output is extracted, page by page",
+        "layer 3: engine availability is answered, not assumed",
+        "layer 4: a DOUBLY-encoded payload is walked, not skipped",
+        "layer 4: all three encodings are read",
+        "layer 4: an empty document CANNOT RUN",
+        "layer 4: firstJsonLiteral respects strings containing braces",
+        "layer 4: no script at all is ZERO_ROWS naming the challenge possibility",
+        "layer 4: scripts with no JSON is ZERO_ROWS naming the next rung",
+        "layer 4: the byline is found in the payload though the prose never carries it",
+        "layer 4: walkStrings records the key path, which is the provenance"
+      ],
+      "dynamic": 0
+    },
+    "tests/federal-roster.test.ts": {
+      "names": [
+        "item 5: every dropped division is recorded with the id it could not find",
+        "item 5: every federal officeholder is division-linked or a NAMED non-voting member",
+        "item 5: the counts reconcile — 531 + 6 = 537, stated as a pair"
+      ],
+      "dynamic": 0
+    },
+    "tests/feedback.test.ts": {
+      "names": [
+        "R41: T09 still scrubs the MESSAGE, and the exception is exactly one field",
+        "R41: blank is the default and a blank submission is not blocked",
+        "R41: the reply address is filled only from its own field, never the message",
+        "R41: the reply address is shape-checked, and the check claims nothing more",
+        "T09 runs before storage — the write path scrubs, and it is the only path",
+        "a message that is nothing but contact details is refused, not stored empty",
+        "a submission never silently succeeds into a void",
+        "nothing in lib/signal can read the feedback store",
+        "the address is in no built client chunk",
+        "the author's personal address is gone from every source a browser can reach",
+        "the feedback budget is its own — neither path spends the other's",
+        "the feedback store carries no key, and its limiter counters cannot join reactions'",
+        "the feedback table is in the schema, the migration, and no export path",
+        "the sidebar's Feedback link points at the in-app route, not a mail client",
+        "the surface enum is closed, and the store's column matches it",
+        "the transparency page discloses the store in the same commit as the form"
+      ],
+      "dynamic": 0
+    },
+    "tests/filed-address.test.ts": {
+      "names": [
+        "every filed address carries its source — a contact without one is a generated claim",
+        "every recorded filed address reached a card — stated N equals rendered rows",
+        "no address was invented — every one ends in a real NH ZIP",
+        "the card renders the address as a FACT, not as a tappable affordance",
+        "the two the ruling names by hand are contactable"
+      ],
+      "dynamic": 0
+    },
+    "tests/fixture-provenance.test.ts": {
+      "names": [
+        "a cited sourceUrl always comes with a sourceOrg",
+        "every fixture names a publishing organization",
+        "no fixture cites a host that is not on the allowlist",
+        "normalize does not manufacture URLs the fixtures did not carry",
+        "nothing has been verified against a live source"
+      ],
+      "dynamic": 0
+    },
+    "tests/format.test.ts": {
+      "names": [
+        "a body name already carrying the jurisdiction stands alone",
+        "a sitting title with no body name gets the jurisdiction in front",
+        "dates render mm/dd/yyyy, including inside ranges",
+        "the address renders once when the source publishes it as the venue name"
+      ],
+      "dynamic": 0
+    },
+    "tests/funding.test.ts": {
+      "names": [
+        "2a: a candidate's own money is labeled as exactly that, from the FEC fields",
+        "D06 g20: a filing with no typing is a named gap, not the generic organization",
+        "D06 g20: bands come from the FEC's filed typing, and cross no sampled base",
+        "D06 g20: every band label comes from the one author-reviewable table",
+        "D06 g20: no committee money renders nothing, not an empty category list",
+        "D06 g20: the FEC's entity typing answers where committee typing is absent",
+        "D06 g20: the band ladder and the row suffix are one derivation",
+        "D06 g20: the candidate's own money is never typed as an untyped committee",
+        "D06 g20: the type bands reach no sold aggregate either",
+        "D06: a small non-zero share never renders as zero",
+        "D06: an unknown state is a named gap, never a zero that reads as 'none from home'",
+        "D06: no district is claimed from a filing that gives only a state",
+        "D06: nothing is sorted into an industry, and the org split is dollars not a share",
+        "D06: nothing to compute over renders nothing, not a row of zeros",
+        "D06: planted contributor-level data reaches no sold aggregate",
+        "D06: the sentences state their base before they state any figure",
+        "D40: distinct officials resolve to distinct funding payloads",
+        "D40: no query-keyed API route marks itself publicly cacheable",
+        "D40: no two candidates share an FEC id, a committee id, or a target key",
+        "a surface headed 'contributions' carries only contributions — no offsets, no interest, no loan repayments",
+        "aggregate output can never carry a contributor name",
+        "every ripcord is registered with question, closer, and tracker rows",
+        "every snapshot record carries its provenance tag",
+        "flip: pulling the aggregates ripcord still filters funding reactions (env override)",
+        "flip: pulling the contributor ripcord empties the display and its write path",
+        "funding reaction target ids validate against the snapshot",
+        "item 2: contributions group by kind and sort by amount descending, in both groups",
+        "item 2: sums equal the parts, and no filing is lost in a collapse",
+        "item 2: the five Booker Victory Fund lines collapse to one row typed as transfers",
+        "item 3: hop books are mechanical, attributed, and distinct per committee id",
+        "item 3: pulling the contributor ripcord empties the second hop too",
+        "item 3: the hop renders only for committee-typed rows, never for individuals",
+        "item 3: the tea is only in the button — the panel's own words stay level",
+        "item 4: below the floor the percentage is replaced by the raw dollars",
+        "item 4: the live Nicholson card renders the raw sentence, and Booker keeps his percentage",
+        "item 6: an unknown code never invents a label — it falls to the honest generic",
+        "item 6: every FEC code in our snapshot maps, or falls to the honest default",
+        "item 6: every label carries two plain sentences and a verified FEC source, and characterizes nobody",
+        "item 6: nothing is ever typed from a committee's NAME",
+        "item 6: the designation wins over the committee type where it is the more specific fact",
+        "live (the shipped state): funding reactions are aggregated like any other",
+        "neutrality: no snapshot record grows a scoring key",
+        "no committed snapshot claims to have been read on a day that has not happened",
+        "no runtime code reads FEC_API_KEY — fetch script only",
+        "plainMoney speaks the way people do",
+        "snapshot target keys resolve to real app-side ids",
+        "the aggregation layer never imports the funding corpus",
+        "the contributions rewording is recorded, and the author's version bump with it",
+        "the funding sentences name the cycle and the small-donor method",
+        "the gate: Ciscomani and at least three ballot candidates have funding",
+        "the match report states its denominators and the absences have reasons",
+        "the state-systems note is a stated gap, never silence pretending coverage",
+        "the transparency page discloses funding data, the reactions and the scale break",
+        "the two funding asks are two sensors, at the write path and the aggregate",
+        "the two funding ripcords ship in the states their questions put them in",
+        "thin guard: a falling candidate count and a vanished candidate both fail",
+        "thin guard: a vanished candidate WITH a recorded absence still fails, naming the recorded reason",
+        "thin guard: growth and steady state pass clean",
+        "thin guard: the Kelly-504 shape — a retained candidate's rows shrink — is a regression",
+        "thin guard: the fetch script runs it before writing and keeps the prior snapshot on failure",
+        "thin guard: the second hop thins under the same rule — a fund that stops answering fails"
+      ],
+      "dynamic": 0
+    },
+    "tests/gate-ordering.test.ts": {
+      "names": [
+        "no gate reads tracked-only repository state",
+        "the shared path excludes what git ignores, and returns no duplicates",
+        "the shared path sees a file that is present but not yet tracked"
+      ],
+      "dynamic": 0
+    },
+    "tests/generated-doc-dates.test.ts": {
+      "names": [
+        "0B: no document-writing script derives its day from a UTC slice",
+        "0B: no script keeps its own private copy of the Phoenix formatter",
+        "0B: the Phoenix day is never ahead of the day a UTC slice would write"
+      ],
+      "dynamic": 0
+    },
+    "tests/geocoder.test.ts": {
+      "names": [
+        "D53/M80: the point is never stored, and the only server it touches is the proxy",
+        "D53: a house number the reader types anyway is stripped before sending",
+        "D53: a real match parses; a real miss is null, not a throw",
+        "D53: a street whose samples agree resolves; one that scatters does not",
+        "D53: every failure mode returns null rather than an error state",
+        "D53: samples that agree give a midpoint; samples that scatter give nothing",
+        "D53: the URL is the federal endpoint, with the sampled number and the zip",
+        "D53: the lookup never sends a reader's number and stops at four samples",
+        "M80: a browser goes through the proxy; the server calls the Bureau direct",
+        "M80: the geocode route writes NOTHING — no log, no store, no echo",
+        "M80: the promise changed in the same commit, on both surfaces",
+        "the answer resolves to the point, and the house number is never kept",
+        "the author's ruling: a crossing street is a question, not a refusal",
+        "the house number never reaches the narrowing store or a log"
+      ],
+      "dynamic": 0
+    },
+    "tests/guard-census.test.ts": {
+      "names": [
+        "RULING 62 — a dynamically-named guard is counted, not named",
+        "RULING 62 — a removal is detected by NAME, not by count",
+        "RULING 62 — a whole file disappearing is reported with its guards",
+        "RULING 62 — adding a guard is never a loss",
+        "RULING 62 — no recorded guard has stopped existing",
+        "RULING 62 — the census totals agree with the census body",
+        "RULING 62 — the extractor finds named guards and ignores prose",
+        "RULING 62 — the guard census is committed"
+      ],
+      "dynamic": 0
+    },
+    "tests/handoff-gate.test.ts": {
+      "names": [
+        "the gate runs the command Netlify runs, and has no way to be skipped",
+        "the ship path runs a build gate before it pushes anything"
+      ],
+      "dynamic": 0
+    },
+    "tests/http-empty-success.test.ts": {
+      "names": [
+        "a 200 in the wrong format is a WALL, and the wall names the format",
+        "a caller that declares no format still gets the blank check",
+        "a real document still passes, and is returned untouched",
+        "an empty 200 is a WALL, not an empty source",
+        "an honest empty — everything parsed, everything out of window — is allowed",
+        "every direct network read in a source adapter checks it got a document",
+        "notADocument reads the marker, not the content type",
+        "the exemption cannot be claimed by a pass that set nothing aside"
+      ],
+      "dynamic": 0
+    },
+    "tests/hunt-state.test.ts": {
+      "names": [
+        "2.1: NOT_APPLICABLE is a legal state and it is the fourth",
+        "2.2: the structural-availability rule is stated for every Kelly field",
+        "2.5: a stored FOUND on an absent field never reads as FOUND",
+        "2.5: an unevidenced VERIFIED_ABSENT reads as NOT_HUNTED, never as a finding",
+        "2.5: no VERIFIED_ABSENT record exists without recorded rungs and a date",
+        "2.5: the validator refuses every defective shape — proven by plant",
+        "2.7: NOT_APPLICABLE without a recorded reason and date is refused",
+        "RULING 61: adding a route re-opens every absence earned under the old manifest",
+        "RULING 61: two independent branches no longer earns VERIFIED_ABSENT",
+        "every NOT_APPLICABLE in the file carries its reason and its date",
+        "every candidate record carries all four fields with a legal state",
+        "statesFor reconciles presence against the record, field by field",
+        "the file's migratedAt is a wall-clock stamp, not a plausible date",
+        "the migration promoted nothing to VERIFIED_ABSENT"
+      ],
+      "dynamic": 0
+    },
+    "tests/ical-source.test.ts": {
+      "names": [
+        "ICAL: CATEGORIES is what assigns a sitting to a board, not the title",
+        "ICAL: a DATE-only value is DAY precision, never an invented hour",
+        "ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source",
+        "ICAL: a Z suffix is already UTC",
+        "ICAL: a calendar WITH events is not refused by the same check",
+        "ICAL: a refused row reports as unreachable and empties nothing else",
+        "ICAL: a wall-clock time resolves through its own TZID, across DST",
+        "ICAL: escaped commas come back as commas",
+        "ICAL: every meeting carries a placed venue and its provenance",
+        "ICAL: every wired feed names the LIST view, never the default view",
+        "ICAL: line folding is unfolded before the address is read",
+        "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
+        "ICAL: the fixture parses to the events it actually contains",
+        "ICAL: the wired boards produce meetings, and the counts are stated"
+      ],
+      "dynamic": 0
+    },
+    "tests/incumbent-record.test.ts": {
+      "names": [
+        "4: Booker's Senate-race key resolves to his roster record",
+        "4: a key the snapshot never heard of resolves null, not an error",
+        "4: an incumbent House rep on a House ballot resolves (Grijalva, AZ-7)",
+        "4: challengers get no link — never a wrong one"
+      ],
+      "dynamic": 0
+    },
+    "tests/intake.test.ts": {
+      "names": [
+        "a legitimate human-paced tap is accepted (202 without a database — never a fake 204)",
+        "a quarantined row is excluded from aggregation unconditionally, and n counts only the clean pool",
+        "a script-speed burst is refused by the in-memory window — and the refusal is a 429 with Retry-After",
+        "a valid submission from a foreign origin is refused with a 403",
+        "an invented target id is refused — the registry is the gate",
+        "classify: a human pace is allowed, velocity quarantines, the hard limit and the daily ceiling refuse",
+        "log intake: a same-origin burst past the per-IP window is refused",
+        "log intake: an over-cap detail string is refused — the server no longer trusts the client's cap",
+        "log intake: an oversized body is refused outright",
+        "log intake: cross-origin submission is refused — text cannot be pumped in from scripts that never loaded the site",
+        "quarantine is sticky on overwrite and carries no identifier — the write path says so structurally",
+        "ripcord.rateLimits pulled: the protections stand down but validity never does",
+        "ripcord.reactionIntake closed: both intakes refuse with 503, and the client renders the honest line on it",
+        "same-origin: matching origin passes, missing and foreign origins fail",
+        "the limiter digest can never join the reaction store — different hash context, disjoint columns",
+        "the per-IP window refuses a burst that rotates device keys",
+        "the tripwire is scheduled daily and only reads, purges expired limiter rows, and commits the report",
+        "thresholds read their env vars — tuning needs no deploy of code",
+        "tripwire report: identifier-free by construction, states its thresholds, and says None honestly",
+        "tripwire: a day where quarantined rows are a disproportionate share is flagged; a lone suspect tap is not",
+        "tripwire: a volume spike far outside the trailing range is flagged, quiet days are not"
+      ],
+      "dynamic": 0
+    },
+    "tests/iqm2-revize.test.ts": {
+      "names": [
+        "iqm2: normalize places every row, resolves both venues, keeps agenda links honest",
+        "iqm2: the calendar parse states its count, and it is not zero",
+        "revize: dated documents parse from both filename spellings",
+        "revize: normalize wires the BOC, drops the delegation's committee counted",
+        "revize: the homepage block parse states its count, and it is not zero"
+      ],
+      "dynamic": 0
+    },
+    "tests/jurisdiction-badge.test.ts": {
+      "names": [
+        "M81: a FAILED lookup is not an empty answer",
+        "M81: a body whose division contains the reader governs them",
+        "M81: a body with no published boundary gets its OWN state",
+        "M81: the API sends the resolved divisions, and null when it failed",
+        "M81: the badge derives from the map's own geometry, never a second source",
+        "M81: the census states all three numbers, never one",
+        "M81: the copy is level register, geometry only, no editorialising"
+      ],
+      "dynamic": 0
+    },
+    "tests/jurisdiction-content.test.ts": {
+      "names": [
+        "curated bodies carry no foreign-jurisdiction content",
+        "everyday contacts serve only their own state's zips",
+        "generic per-office-type blurbs name no covered jurisdiction — per-place truth lives only in DIVISION_OFFICE_BLURBS",
+        "no curated roster carries another jurisdiction's content",
+        "the office blurb a roster member renders never references a foreign jurisdiction",
+        "the regression itself: Rockaway's mayor gets no Tucson content, Tucson's mayor keeps her verified charter blurb",
+        "the regression itself: every ask-box answer at every covered zip is free of another state's content and links",
+        "the sourced Pima library fact reaches Pima readers and nobody else",
+        "topic explainer templates name no covered place — per-place truth lives only in divisionWhy"
+      ],
+      "dynamic": 0
+    },
+    "tests/key-votes.test.ts": {
+      "names": [
+        "B15 g19: every law entry without a roll call says why, in the record",
+        "B15 g19: every recorded roll call carries its tally, its link and its verification date",
+        "B15 g19: law coverage never falls below what has already been verified",
+        "B15 g20 / F01 5.6: the park MECHANISM still holds, with the map now empty",
+        "B15 g20: D68's overwrite is repaired — every House ref is distinct and dated",
+        "B17: the law rows carry roll calls from the chambers' own records",
+        "F01 5.1: only rows the member actually voted on are counted",
+        "F01 5.2: every position the store can hold has a pill, in both views",
+        "F01 5.2: the store actually holds recorded absences, so the pill is not theoretical",
+        "F01 5.3: the key-votes sub-groups ship collapsed, and say how many they hold",
+        "F01 5.6: the shutdown row resolves to H.R. 5371 in both chambers, with tallies",
+        "a sub-group is visually a sub-group, and still a thing to click",
+        "all sixteen nominations are verified against the Senate's own record, name AND tally",
+        "an unresolved roll call renders OUR gap, never the legislature's",
+        "every explainer is level register, one sentence's worth, and never the title again",
+        "no entry carries a scoring key, and nothing aggregates them",
+        "the April 2024 group: four rows on a House card, one on a senator's, with the line",
+        "the chamber rule: a House card never shows a Senate-only entry as a vote",
+        "the criteria sentence is verbatim and renders ON the surface",
+        "the list is the author's: 20 law rows (April 2024 as four siblings) and 16 nominations"
+      ],
+      "dynamic": 0
+    },
+    "tests/legiscan.test.ts": {
+      "names": [
+        "a federal member's votes carry no LegiScan attribution",
+        "a state legislator's votes come back with the CC BY attribution",
+        "an id that is neither shape is refused, not guessed at",
+        "every position points at a roll call that exists",
+        "no state vote record carries a score, rank or recommendation",
+        "surnames fold accents and generational suffixes, and nothing else",
+        "the NH county table agrees with our own boundary labels",
+        "the join is distinct — a match rate is not a match",
+        "the snapshot states its counts, and none of them is zero",
+        "the statewide-numbered states map straight through",
+        "the zip reader rejects what it cannot read rather than returning nothing",
+        "titles and results are the legislature's words, never ours"
+      ],
+      "dynamic": 0
+    },
+    "tests/legistar.test.ts": {
+      "names": [
+        "a meeting with no known venue is dropped, never given an approximate pin",
+        "a meeting with no usable time is dropped rather than placed at midnight",
+        "a study session with no other-body business reports none",
+        "a virtual meeting is KEPT, with no place and no invented pin (D18)",
+        "a virtual meeting is never a pin",
+        "cancellation is only claimed on an explicit word",
+        "coordinates only ever come from the curated venue table",
+        "detects the board sitting as another body — the 4.6.9 case, in real data",
+        "every meeting carries real provenance, and the org is the body not the vendor",
+        "every venue in the table cites where its address and coordinates came from",
+        "ids are namespaced by source and client",
+        "normalizes recorded Pima events into Meetings",
+        "placeless venues are recognised regardless of case",
+        "status codes are described the way the API actually behaves",
+        "status is decided against the passed clock, not the wall clock",
+        "venue matching survives inconsistent punctuation",
+        "wall-clock time is reassembled against the body's zone, not UTC"
+      ],
+      "dynamic": 0
+    },
+    "tests/link-ladder.test.ts": {
+      "names": [
+        "NO_SOURCE_FOUND is never claimed for a body nobody looked at",
+        "a body with no audit row is NOT_ATTEMPTED, and that is most of them",
+        "a meeting with no URLs and no body still offers directions, and nothing else",
+        "a non-http URL never reaches an href",
+        "a venue with no usable coordinates produces no map link",
+        "every URL recorded in the audit is http(s) and absolute",
+        "every audit row points at a body that exists",
+        "every audited body carries the status and URLs its audit recorded",
+        "every mock meeting's division resolves to a registry division",
+        "no body carries a terminal blocked state",
+        "rungs come back in ladder order, agenda first",
+        "the Vail correction is recorded, not silently dropped",
+        "the body homepage rung is labelled with the division, never a minted body name",
+        "the ladder never constructs a link it was not given",
+        "the meeting record rung is dropped when it duplicates the agenda"
+      ],
+      "dynamic": 0
+    },
+    "tests/map-bounds.test.ts": {
+      "names": [
+        "4c: the bottom stack's upper bound is not scoped to one viewport width",
+        "4c: the legend's band is one named number, not two written twice"
+      ],
+      "dynamic": 0
+    },
+    "tests/map-layers.test.ts": {
+      "names": [
+        "a concluded venue goes hollow and lets the stylesheet own its look",
+        "a configured style overrides the default, per theme",
+        "a filter that narrows 500 pins to 480 writes 20 elements, not 980",
+        "a visible key with no pool entry is skipped rather than counted",
+        "a zip with no deliberate altitude gets the metro default, not zero",
+        "an empty result removes the pool rather than leaving it stranded",
+        "an empty venue is not painted as a level it does not have",
+        "an unchanged result set creates and removes nothing",
+        "dark is the default theme, so a caller that forgets does not get a light map",
+        "every zip with a deliberate altitude keeps it",
+        "hidden and shown are written as data attributes, so CSS owns the toggle",
+        "levels render in the committed order regardless of the order meetings arrive",
+        "no key means no basemap — never a silent substitute provider",
+        "one level of government paints one colour and no gradient",
+        "one meeting still scheduled keeps the venue live",
+        "re-applying the same visible set touches nothing at all",
+        "reconcile creates the new, updates the present, and removes only the absent",
+        "selection is exclusive, and clearing it clears every pin",
+        "the badge counts only when there is something to count, and the label says it in words",
+        "the basemap follows the theme, and each theme has its own default",
+        "the fallback style draws ground and nothing else, so the map still initialises",
+        "the first-load bounds are the continental US, the right way round",
+        "two levels in one building draw an equal-slice ring, never one standing in for both",
+        "widening back writes only the pins that came back"
+      ],
+      "dynamic": 0
+    },
+    "tests/measure-provisions.test.ts": {
+      "names": [
+        "Proposition 141's absences survive the fifth kind",
+        "a provision's summary and its measure's summary cite the same document",
+        "every kind is one of the five, and every kind has a reader-facing label",
+        "every measure with an analysis is decomposed, and nothing else is",
+        "every provision cites the analysis of its own measure",
+        "every provision says something, and says it in plain language",
+        "ids are unique, stable-shaped, and resolvable",
+        "no internal identifier reaches a reader through a provision",
+        "no provision advocates, ranks, or recommends",
+        "the fifth kind's name and label carry no stance",
+        "the shape of the decomposition, stated as measured"
+      ],
+      "dynamic": 0
+    },
+    "tests/measure-summaries.test.ts": {
+      "names": [
+        "every extracted analysis has its plain-language summary",
+        "every summary cites the exact official text it was written from",
+        "summaries describe, never advocate",
+        "the analyses store is populated, with its counts stated and consistent",
+        "the ballot surface labels the summary and renders the official text"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-list-attribution.test.ts": {
+      "names": [
+        "F01 3.1: every meetings list renders the three groups, not a raw array",
+        "F01 3.2: a meeting from outside the list gets NO marker, never a wrong one",
+        "F01 3.2: one note per DISTINCT attribution, not one per row",
+        "F01 3.2: the marker set never runs out and never collides",
+        "F01 3.2: the venue row no longer prints the jurisdiction on every meeting",
+        "F01 3.2: two bodies at one venue get two markers, in render order"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-ordering.test.ts": {
+      "names": [
+        "F01 3.1: a canceled meeting is closed even when its date is still ahead",
+        "F01 3.1: an empty group never renders a header over nothing",
+        "F01 3.1: every meeting lands in exactly one group — the partition holds",
+        "F01 3.1: soonest first inside the upcoming blocks, most recent first inside closed",
+        "F01 3.1: the 30-day boundary is inclusive and the day after is not",
+        "F01 3.1: three groups, in the author's order, and nothing else",
+        "a meeting starting exactly now is UPCOMING",
+        "an unparseable start time surfaces rather than sinking",
+        "everything upcoming comes before everything past",
+        "ordering never drops or duplicates a row",
+        "the input array is not mutated"
+      ],
+      "dynamic": 0
+    },
+    "tests/mirror-code.test.ts": {
+      "names": [
+        "an id resolving to a different file is a hard stop, not a warning",
+        "every mirror size is reported, and an absent file is not a zero",
+        "every refusal is named individually, never only counted",
+        "flatten encodes the path so two basenames cannot collide",
+        "handoff reads the canonical set rather than keeping its own copy",
+        "no allowlisted file trips the credential scan today",
+        "the allowlist may not duplicate anything the document mirror carries",
+        "the allowlist stays small and every entry exists",
+        "the canonical mirror set lives in one place, and holds what was ruled into it",
+        "the code mirror runs on every handoff path, not only --ship",
+        "the copy addresses files by path, never by drive id",
+        "the credential scan catches keys and connection strings",
+        "the expected mirror subdirectories are declared",
+        "the hard exclusions refuse what they must",
+        "the id map records the folder and the verification date",
+        "the manifest heads with what it is, and never hides a refusal",
+        "the size caps are the stated ones and today's allowlist fits"
+      ],
+      "dynamic": 0
+    },
+    "tests/mojibake.test.ts": {
+      "names": [
+        "M60: every candidate card's blurb and source line is clean",
+        "M60: no reader-facing string carries a mojibake signature",
+        "M60: repairing mixed text keeps the characters that were already right",
+        "M60: the detector actually detects the production sequence",
+        "M60: the detector leaves legitimate non-ASCII alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/municipal-layer.test.ts": {
+      "names": [
+        "Arizona's statistical CCDs never draw as municipal boundaries",
+        "cousub municipalities the place file lacks now draw (the M14 point)",
+        "every registry row states which dataset it came from (§0f)",
+        "no division exists without a vintage-bearing sourceDataset",
+        "the map's FUNCSTAT rule is the registry's FUNCSTAT rule",
+        "the map's municipal shapes reconcile against the registry's municipal bodies",
+        "the municipal merge draws each government exactly once"
+      ],
+      "dynamic": 0
+    },
+    "tests/name-case.test.ts": {
+      "names": [
+        "Mc names keep the internal capital",
+        "all-caps filed surnames case as names",
+        "apostrophe names keep the capital after the apostrophe",
+        "generational suffixes stay as filed",
+        "internal-capital names resolve via the exceptions map",
+        "mixed-case input passes through byte-identical — never 'corrected'",
+        "particles and multi-word surnames case per word"
+      ],
+      "dynamic": 0
+    },
+    "tests/narrowing.test.ts": {
+      "names": [
+        "every written index file is ambiguous — no prompt where nothing changes",
+        "the approved wording is verbatim in the component — never paraphrased",
+        "the narrowing store never transmits — the code has no network write",
+        "the street index exists for the exemplar zips, ambiguity computed"
+      ],
+      "dynamic": 0
+    },
+    "tests/neutrality-guards.test.ts": {
+      "names": [
+        "no candidate or measure record grows a ranking key",
+        "no committed ballot data record carries a ranking key",
+        "the search log and the subscription store share no key",
+        "the search log carries no identifier of any kind"
+      ],
+      "dynamic": 0
+    },
+    "tests/nh31-partial-commit.test.ts": {
+      "names": [
+        "NH31 class sweep: no other refresh writes its artifact and then exits non-zero",
+        "NH31: a code-2 run still ends red, and does so LAST",
+        "NH31: a job failure exits WRITTEN_WITH_JOB_FAILURES, never NOTHING_WRITTEN",
+        "NH31: a run that wrote nothing still refuses to commit",
+        "NH31: only the written-with-failures code asks the caller to commit",
+        "NH31: the proof harness cannot fire on a scheduled run",
+        "NH31: the proof harness runs after the write and touches no data",
+        "NH31: the three outcomes carry three distinct exit codes",
+        "NH31: the workflow carries a code-2 run past the gate to its commit"
+      ],
+      "dynamic": 0
+    },
+    "tests/no-suppression.test.ts": {
+      "names": [
+        "RULING 23: no page or component imports the hunt-state work queue",
+        "RULING 26: both ballot branches map every candidate onto a card",
+        "RULING 27: no suppression path exists anywhere in the codebase",
+        "RULING 28: no internal state vocabulary appears in a render path",
+        "RULING 28: the contest annotation is one asterisk and one footnote",
+        "RULING 44: no per-card completeness statement, by meaning",
+        "RULING 44: the meaning matcher catches the sentences that shipped"
+      ],
+      "dynamic": 0
+    },
+    "tests/nul-bytes.test.ts": {
+      "names": [
+        "0A: no tracked source file contains a literal NUL byte",
+        "0A: the byte check catches the shape it is guarding against"
+      ],
+      "dynamic": 0
+    },
+    "tests/office-blurbs.test.ts": {
+      "names": [
+        "blurbs describe offices in the register — no advocacy vocabulary",
+        "county offices never borrow their state-level cousin's blurb",
+        "every candidacy contest on every covered ballot has an office explainer",
+        "the Selectboard maps to its own explainer, never a borrowed one (2e)"
+      ],
+      "dynamic": 0
+    },
+    "tests/officeholder-lookup.test.ts": {
+      "names": [
+        "85641 now names its representative, which it could not before",
+        "a division electing several people keeps all of them",
+        "a link pointing at no person is skipped, never rendered blank",
+        "a seat with no record resolves to an empty list, never a placeholder",
+        "coverage still answers when no roster is loaded at all",
+        "every rendered name carries a source, at all four kinds of point",
+        "seatCounts.named counts exactly the seats that have someone",
+        "senators are found from the state prefix of a local division",
+        "senators are not duplicated when several divisions share a state",
+        "state identifier is read from the hierarchy, not from a name"
+      ],
+      "dynamic": 0
+    },
+    "tests/officeholders.test.ts": {
+      "names": [
+        "a House term with no district is reported rather than guessed at",
+        "a congressional district resolves to exactly one representative",
+        "at-large districts map to cd:at-large, never cd:0",
+        "every at-large link in the roster resolves to a real division",
+        "every officeholder carries provenance naming where it was read",
+        "no photo is shipped without a licence",
+        "no shipped division link is a dead join",
+        "normalize attaches senators to the state and reps to the district",
+        "party is carried for display and is the only evaluative-looking field",
+        "seats that matched nothing are reported, not silently dropped",
+        "the division link is many-to-many, which is why it is a join table",
+        "the roster carries no score, rank, or ordering by fit"
+      ],
+      "dynamic": 0
+    },
+    "tests/officials-surface.test.ts": {
+      "names": [
+        "contact fields survive the lookup to the surface",
+        "every campaign site is verified, https, and never a social profile",
+        "every office blurb speaks the product's register",
+        "every roster office title maps to a blurb",
+        "roster-photos.json is exactly the manifest's licensed roster rows",
+        "statewide executive photos carry manifest license rows",
+        "the corpus is append-only in shape and never merges votes",
+        "the photo manifest ships nothing without a license, and records its misses"
+      ],
+      "dynamic": 0
+    },
+    "tests/org-characterization.test.ts": {
+      "names": [
+        "every curated bio names its source class",
+        "funding surfaces never characterize an organization"
+      ],
+      "dynamic": 0
+    },
+    "tests/package-module-type.test.ts": {
+      "names": [
+        "R46: no ambiguous-extension JavaScript file has appeared",
+        "R46: the package declares itself ESM",
+        "R46: tracked source carries no CommonJS-only construct"
+      ],
+      "dynamic": 0
+    },
+    "tests/party-breakdown.test.ts": {
+      "names": [
+        "a result with no tally (voice-vote shape) is refused honestly",
+        "a tally that doesn't sum is refused, never rendered",
+        "every breakdown sums exactly to the chamber's recorded tally",
+        "the rendered sentence is numbers only — no characterization"
+      ],
+      "dynamic": 0
+    },
+    "tests/party.test.ts": {
+      "names": [
+        "M61: every governor carries a party, and the record it came from",
+        "M61: every roster states whether its seats carry a party",
+        "M61: the ballot and the officeholder row agree about party",
+        "M62: an appointed member on a partisan body renders no party",
+        "M62: every party on a curated local is dated and read from an election authority",
+        "M62: no curated roster is left UNDETERMINED, and each cites what settled it"
+      ],
+      "dynamic": 1
+    },
+    "tests/path-separator.test.ts": {
+      "names": [
+        "RULING 14: no path is inverted from POSIX into platform separators",
+        "RULING 14: no repo-path literal uses a backslash as its separator",
+        "RULING 14: the coverage manifest allowlists correctly on this platform",
+        "RULING 14: the shared normalizer exists and normalizes both directions",
+        "the sweep reaches the source tree it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/person-name.test.ts": {
+      "names": [
+        "REGRESSION: initials at the front are a name, not a credential",
+        "THE CONTROL: a bare surname is incomplete",
+        "Vail's superintendent is held under a whole name",
+        "a whole name is not",
+        "empty and missing are incomplete — a blank slot is the same defect wearing less",
+        "no person this product holds carries a name that cannot stand as one",
+        "the display helper renders the named gap, never the fragment",
+        "the top-office slots render through the gap-aware helper"
+      ],
+      "dynamic": 0
+    },
+    "tests/photo-order.test.ts": {
+      "names": [
+        "a contest where everyone has a photo is unchanged",
+        "a contest where nobody has a photo is unchanged",
+        "order WITHIN each group stays as filed — never alphabetical-by-us",
+        "photo-holding candidates render before photo-less ones",
+        "the input array is never mutated",
+        "the key is BINARY — nothing else separates two candidates"
+      ],
+      "dynamic": 0
+    },
+    "tests/photo-person.test.ts": {
+      "names": [
+        "a candidate who holds no office keeps their own card photo",
+        "no person renders two different photos, on any surface",
+        "person keys ignore suffixes, accents and punctuation, and nothing else",
+        "the author's case: Hobbs's ballot card renders her official portrait, with its own credit"
+      ],
+      "dynamic": 0
+    },
+    "tests/photo-review.test.ts": {
+      "names": [
+        "PENDING is the default — nothing is approved by not being looked at",
+        "RULING 55 is written down where the gate lives",
+        "a decision is about an IMAGE, so refusing one file does not withhold the next",
+        "a person renders FULLY with a photo pending — every other field survives",
+        "grandfathered is labelled as what it is, and is not counted as reviewed",
+        "no photo that was rendering stopped rendering when the gate shipped",
+        "the store records the four NH Hunt 2 refusals by their reasons"
+      ],
+      "dynamic": 0
+    },
+    "tests/pick-tally.test.ts": {
+      "names": [
+        "REGRESSION: a contest holding BOTH an explicit pick and a Yes clears completely",
+        "THE DEFECT: a derived candidate pick is counted, not only the explicit measure",
+        "THE DEFECT: clearing suppresses the derived pick as well as the explicit one",
+        "Yes to more than the seat elects is not a pick — it asks",
+        "a clear records the choices cleared, not 'never derive here again'",
+        "a pick stored against a contest this ballot does not carry is listed, never counted",
+        "a v1 picks file still reads — an upgrade never discards a stored ballot",
+        "every PickControl on the ballot page gets its options from the shared builder",
+        "resolveWithSuppression leaves an explicit pick alone",
+        "stated N equals rendered rows: rows.length is always picked",
+        "the clear reaches the derived picks — the confirm calls derivedToSuppress",
+        "the count line names both kinds and reconciles with the numbers",
+        "the denominator is the rendered rows, and it does not move with the picks",
+        "the old behaviour is what would fail: explicit-only would have counted 1 of 2",
+        "the picks store still transmits nothing after gaining the suppression field"
+      ],
+      "dynamic": 0
+    },
+    "tests/pill-cluster.test.ts": {
+      "names": [
+        "4a: the Ask pill opens Ask and nothing else",
+        "4c: one surface at a time is one function, and every opener goes through it",
+        "4e: a battlecard is not a parameter, so it can never host the cluster",
+        "4e: location is decided by exactly two booleans, and WGH wins",
+        "4h: the pointer is always visible, names its source, and opens in the app",
+        "G07: DESIGN.md records the labels, and cites the file rather than copying it",
+        "G07: no placement's pill says a bare Ask, and every one names an example",
+        "M119: a question never narrows the map, and a name still does",
+        "M119: the rail renders no input of its own, and search-box.tsx is deleted"
+      ],
+      "dynamic": 0
+    },
+    "tests/pill-colors.test.ts": {
+      "names": [
+        "every assigned family is in the allowed non-party palette",
+        "every renderable funding type label has an explicit pill family",
+        "pillClassFor returns a stable class pair for every label",
+        "the pill tokens never reuse a party color value"
+      ],
+      "dynamic": 0
+    },
+    "tests/plural.test.ts": {
+      "names": [
+        "CSV parsing handles quoted fields with embedded commas",
+        "New Hampshire House districts index by designation, not by number",
+        "New Jersey's lower chamber members are Assemblymembers",
+        "a district outside the clipped coverage is reported, not dropped silently",
+        "a state with no chamber-title entry reports rather than inventing one",
+        "all four target-zip seat types are now named",
+        "an Arizona legislative district returns one senator and two representatives",
+        "bulk and GraphQL request counts stay separate",
+        "designation normalization survives zero-padding",
+        "no Plural photo is shipped — the URL is a hotlink of unknown licence",
+        "provenance names the bulk file the row was read from",
+        "rows without an id are skipped",
+        "the quota is stated where the build can print it",
+        "the registry label yields the designation Plural publishes",
+        "the roster reads the unmetered bulk host, never the quota'd API"
+      ],
+      "dynamic": 0
+    },
+    "tests/positions-search.test.ts": {
+      "names": [
+        "13: a failed search and an empty search are different sentences",
+        "13: a term we hold but will not quote is not reported as their silence",
+        "13: every candidate with held text is findable by a term from that text",
+        "13: the named candidate from the report is findable",
+        "13: the search index is the UNION of both statement corpora"
+      ],
+      "dynamic": 0
+    },
+    "tests/positions.test.ts": {
+      "names": [
+        "D35 type 1 — MATCHED: the change marker carries dates and never an interpretation",
+        "D35 type 1 — MATCHED: verbatim passages, with the source and the read date",
+        "D35 type 2 — SEARCHED_NOTHING_MATCHED: a bounded search, with its denominator",
+        "D35 type 3 — NOT_YET_COLLECTED: a fact about our collection, not about them",
+        "D35: a late answer for an abandoned query never lands",
+        "D35: nothing in this path generates, and nothing reads party",
+        "D35: the clip is stated, never silent",
+        "D35: the machinery answers against the committed corpus, and states its size",
+        "D35: the surface renders three different sentences, in the gap's own register",
+        "D35: the three answers are distinguishable in data, and none of them says 'no position'",
+        "D35: the topic list is curated, and the search strips the question around the topic"
+      ],
+      "dynamic": 0
+    },
+    "tests/prl.test.ts": {
+      "names": [
+        "D62: PRL's race-competitiveness rating is not in this build",
+        "D62: a member with no classified statements is a gap, never a silent drop",
+        "D62: a moved schema fails loudly rather than guessing which column replaced it",
+        "D62: a share is a percentage as PRL computed it, never a fraction we scaled",
+        "D62: every sentence is PRL's measurement, in PRL's name, with the count stated",
+        "D62: no rank, percentile or ideology score crosses the boundary",
+        "D62: the CSV reader survives a quoted field full of commas",
+        "D62: the attribution is the RHETORIC citation, not the survey one",
+        "D62: the committed snapshot is real, and states its own denominators"
+      ],
+      "dynamic": 0
+    },
+    "tests/push-main.test.ts": {
+      "names": [
+        "F25: every workflow job is bounded well under the platform's six hours",
+        "F25: the gate step and the browser install it needs are each bounded",
+        "Prompt C 1b: the bundle scan still reports CANNOT RUN rather than passing",
+        "Prompt C 1b: the bundle-scanning check runs in the job that has a build",
+        "R48: a push that cannot land never reports success",
+        "R48: every workflow that pushes main goes through the protected push",
+        "R48: two runs pushing into the same window both land their work",
+        "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
+      ],
+      "dynamic": 0
+    },
+    "tests/reaction-pill.test.ts": {
+      "names": [
+        "a write that did not land never wears the pill",
+        "every value on every scale is offered, labelled, and toned",
+        "no rule this model cannot see repaints the reaction control",
+        "tapping any value renders a settled pill carrying that value's tone"
+      ],
+      "dynamic": 1
+    },
+    "tests/reaction-run-class.test.ts": {
+      "names": [
+        "0D: a quarantined row is still excluded, class notwithstanding",
+        "0D: a reaction write without a declaration FAILS rather than defaulting",
+        "0D: an overwrite can lower a row out of the sold pool and never raise one in",
+        "0D: only ORGANIC rows reach an aggregate, and absence is not organic",
+        "0D: run_id relates a robot to its run and joins nothing",
+        "0D: the column's shape matches the search log's, so one word means one thing"
+      ],
+      "dynamic": 0
+    },
+    "tests/reactions.test.ts": {
+      "names": [
+        "CANDIDATE reactions validate against the ballot files, and nothing ranks from them",
+        "M63: the fourth button renders only where the answer is accepted",
+        "M63: the transparency page explains the fourth answer, in the same commit",
+        "M63: the value is in the enum, restricted, and derivable from the data",
+        "M63: the write path accepts the answer in a one-candidate race",
+        "M63: the write path refuses the answer outside a one-candidate race",
+        "P03: a planted verbatim reaches no aggregate — the input type has no room for it",
+        "P03: a reader who types nothing is never told their words were dropped",
+        "P03: an oversized verbatim is refused, and validation sits outside every flag",
+        "P03: every provision is a valid reaction target, and reactions attach to the PART",
+        "P03: pulling the ripcord stops capture and SAYS SO — the binary still counts",
+        "P03: the free-text ripcord is registered, ships live, and both positions are demonstrable",
+        "P03: the provision question asks about the part, never how to vote",
+        "P03: the threat notice sits beside the field, and reserves rather than promises",
+        "P03: the verbatim is optional, capped, and its shape is checked with no flag",
+        "P03: the write path accepts a real provision and refuses an invented one",
+        "a missing database is a quiet false, never a throw or a fake success",
+        "aggregates never mix scales, and the break is dated",
+        "aggregation output carries no ranking vocabulary and no identifier",
+        "aggregation: duplicate division ids on one row never double-count",
+        "aggregation: every tier appears in every tally — the confidence mix is visible, never blended",
+        "aggregation: reactions in, per-division tier-split tallies out, n stated",
+        "rate limiter: a burst beyond the limit is rejected, and the window recovers",
+        "reaction targets are validated against the committed votes snapshot",
+        "submitReaction: 204 is COUNTED; 202, 500, and a network failure are NOT_COUNTED",
+        "submitReaction: the device-local record writes even when the server is unreachable",
+        "the capture point and the transparency page disclose together",
+        "the continuity key is stored only as a hash",
+        "the control renders the three outcomes honestly — counted, saving, not-counted",
+        "the funding scale is the funding scale, and nothing else is",
+        "the funding surfaces ask the author's question, and offer only its scale",
+        "the honest line says both truths: saved on this device, not counted",
+        "validation: enums are closed sets, keys are shaped, targets are capped"
+      ],
+      "dynamic": 0
+    },
+    "tests/reference-data.test.ts": {
+      "names": [
+        "2c: the 13 Texas special districts with blank place are left as a stated gap",
+        "2c: the 339 dormant Census units are RETAINED",
+        "2c: the BoardDocs file is deliberately empty, and zero is the correct state",
+        "2c: the Legistar file is 39 rows of fixture and claims no jurisdictions",
+        "2c: web_address is a seed list for crawling, not a detection surface",
+        "2d: no module reads reference data from any path outside data/reference",
+        "2d: the loader resolves every dataset inside data/reference",
+        "Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976",
+        "data/reference holds 14 files: 7 data files and 7 provenance notes",
+        "every provenance note says something about its data file",
+        "every reference data file is paired with its provenance note, both ways",
+        "every reference file holds the row count it is expected to",
+        "the CSV reader survives quoted commas, escaped quotes and embedded newlines",
+        "the Census type breakdown sums to the unit total",
+        "the Census workbook reconciles: 90,837 units + 1,313 dependent = 92,150"
+      ],
+      "dynamic": 0
+    },
+    "tests/refresh-corollary.test.ts": {
+      "names": [
+        "F01 7.2: a refused body with rows on screen is STALE, not missing",
+        "F01 7.2: the card reads the SAME meeting array the pins are drawn from",
+        "F22: every source whose rows outrun the serving window declares its own",
+        "a fresh row always beats a carried one, and a healthy source carries nothing",
+        "a refused source keeps the calendar it had, and says how many rows are stale",
+        "a row carried twice keeps naming the run that actually fetched it",
+        "a snapshot must state its carry-forward, and may not carry without a refusal",
+        "a source refused on EVERY row still reads as a failed source",
+        "a source that fetched documents and DROPPED everything is left alone",
+        "a source that fetched documents and extracted nothing goes RED, so carry-forward runs",
+        "every surface that states a meeting's freshness reads the row's own stamp",
+        "g13: a declared window survives the composite's FAILURE branch",
+        "g13: a source that publishes its whole archive carries its whole archive",
+        "g13: declaring no back clip is per source, not a global loosening",
+        "one host's refusal does not empty the bodies on the other hosts",
+        "the client meta names the carried rows and the day they were last reached",
+        "the composite carries a partial refusal through to its report"
+      ],
+      "dynamic": 0
+    },
+    "tests/registry-oracle.test.ts": {
+      "names": [
+        "07866 resolves the township, not the neighbouring borough",
+        "07866 sits in two school districts at once",
+        "85641 gets a school board and no municipal government",
+        "every body points at a division that exists",
+        "every curated body carries a sourced name with its citation",
+        "every derived body is labelled structural, never sourced",
+        "no legislative district generates a meeting body"
+      ],
+      "dynamic": 1
+    },
+    "tests/representation.test.ts": {
+      "names": [
+        "3g: the districts door renders exactly the list the card counts",
+        "3h: free scrolling never re-expands the who-governs card; a typed zip does",
+        "M57: districts off says Off, not the couldn't-check dash",
+        "a failed fetch renders couldn't-check, never confident zeros",
+        "a populated selection with the overlay on may never derive to nothing",
+        "district-type selection is never persisted — the defaults stay authoritative on every device",
+        "every body the who-governs card counts is reachable on the map with default layers",
+        "every district layer's committed files exist and hold features",
+        "no division card denies people another surface renders",
+        "the committed rosters are non-empty (the denominator)",
+        "the governing mode counts what contains the reader, and its door lists it",
+        "the honest empty line is the same sentence on both surfaces",
+        "the notice always renders on failure rungs, with or without coverage",
+        "touching the district-type group turns the overlay on — except clear"
+      ],
+      "dynamic": 2
+    },
+    "tests/reset-registry.test.ts": {
+      "names": [
+        "every UiState field is either a registered control or declared non-control",
+        "select all and clear set the district types outright, in canonical order",
+        "the default state has zero active controls, and reset returns to it",
+        "the reducer's filter/reset applies the registry"
+      ],
+      "dynamic": 0
+    },
+    "tests/resolve-once.test.ts": {
+      "names": [
+        "an EMPTY pre-resolved set is not silently treated as an answer",
+        "one /api/meetings request runs exactly one point-in-polygon sweep",
+        "pre-resolving the divisions produces the identical coverage answer",
+        "the counter can read two, so a one is a measurement and not a constant",
+        "the route passes its divisions only when the lookup succeeded"
+      ],
+      "dynamic": 0
+    },
+    "tests/returning-reader.test.ts": {
+      "names": [
+        "a district is never assumed from a zip — the key says what the value is",
+        "offering a tap is still asking — nothing restores the location silently",
+        "the returning reader is offered their own recent places, not only ours"
+      ],
+      "dynamic": 0
+    },
+    "tests/route-refusals.test.ts": {
+      "names": [
+        "/api/directory names an unknown parameter rather than ignoring it",
+        "/api/directory refuses a malformed member instead of asserting no record",
+        "/api/meetings refuses a malformed radiusKm rather than quietly shrinking the search",
+        "/api/meetings refuses a malformed zip rather than logging a location-less search",
+        "/api/meetings refuses a missing coordinate, each named separately",
+        "/api/meetings refuses h's exact probe rather than answering at 0,0",
+        "/api/meetings still answers a well-formed request",
+        "Number(null) is 0 — the coercion this whole file exists for",
+        "matching() refuses a malformed value instead of silently nulling it",
+        "no route reads a coordinate through a bare Number() coercion",
+        "numeric() refuses absent, empty and malformed rather than coercing",
+        "numericInRange() states the range it refused against",
+        "rejectUnknown() names the parameter back and lists what is accepted"
+      ],
+      "dynamic": 0
+    },
+    "tests/routing.test.ts": {
+      "names": [
+        "85723: no routed step ever names a body that isn't the division's own government",
+        "a state-law topic grounds on the actual state legislators",
+        "a thin area routes honestly: gaps stated, nothing guessed",
+        "an unmapped topic returns the honest refusal, never a guess",
+        "every route is cited and party appears nowhere in the map",
+        "golden case: a school being run badly, at Tucson",
+        "golden case: the stopped library, at Tucson",
+        "party labels cannot change what routing returns"
+      ],
+      "dynamic": 0
+    },
+    "tests/ruling-59-coverage-silence.test.ts": {
+      "names": [
+        "RULING 59: no reader surface renders a coverage claim",
+        "RULING 59: the deleted coverage note has not come back",
+        "RULING 59: the sanctioned line is exactly one sentence and unchanged",
+        "RULING 59: the tier prose is internal-only and reaches no reader"
+      ],
+      "dynamic": 0
+    },
+    "tests/schedulepage.test.ts": {
+      "names": [
+        "Kearsarge normalizes with the page's time, place and documents",
+        "Newbury's boards read their own dc:date, and one board's rows stay one board's",
+        "a page with dates but no stated time ships DAY precision, not a guess",
+        "documents join by the date the body wrote in the link text",
+        "event-tip: a band concert is not a meeting of the Planning Board",
+        "event-tip: a board's own sittings come out of a town-wide calendar",
+        "event-tip: an empty titleMatch matches NOTHING rather than everything",
+        "event-tip: four New London boards are wired, each with its own match",
+        "event-tip: the time comes off the event's own line",
+        "normalize windows the year, times it from the page, and cites its source",
+        "the Conservation Commission's two shapes union by date",
+        "the Planning Board normalizes to the venue its own agenda states",
+        "the Zoning Board is wired, on a venue the town publishes in markup",
+        "the month table carries its year forward, and its own words with it",
+        "the schedule page's whole year parses, and only the schedule",
+        "the start time is read from the page's own sentence, never defaulted"
+      ],
+      "dynamic": 0
+    },
+    "tests/search-log-exclusion.test.ts": {
+      "names": [
+        "a class the sentence does not know about still cannot inflate the reader count",
+        "a generated run id survives its own round trip through the header reader",
+        "a malformed declaration is synthetic, never quietly organic",
+        "a request that declares nothing is a reader",
+        "a run declares itself in a header, and the id rides with it",
+        "a runner with no WTP_RUN_ID sends no header — a human at a browser is organic",
+        "no module reads search_log without the organic filter",
+        "reactions grew the marker in its own value space — the stores still share no key",
+        "the author class is named in the sentence and counted in the exclusion",
+        "the denominator sentence states the organic count and what was excluded",
+        "the marker columns exist and carry no identifier fragment",
+        "the migration marks pre-existing rows UNKNOWN, not organic"
+      ],
+      "dynamic": 0
+    },
+    "tests/search-log.test.ts": {
+      "names": [
+        "a malformed event throws; a missing database is a quiet false",
+        "detail bags that could name a person are rejected, not laundered",
+        "event types are a closed set",
+        "logging and the transparency page exist together",
+        "the transparency page is linked from the welcome overlay and the sidebar footer"
+      ],
+      "dynamic": 0
+    },
+    "tests/search-rows.test.ts": {
+      "names": [
+        "a body row's card is refused rather than guessed when the match is ambiguous",
+        "an all-online body carries no geometry, and none is invented for it",
+        "onSearchPick opens a card for the rows it cannot fly to",
+        "the place card elects nobody to stand for the place",
+        "the rows that carry neither venue nor geometry are exactly the kinds with a card fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/server-client-boundary.test.ts": {
+      "names": [
+        "no client component takes a render prop or an injected function",
+        "the about-area page passes ShuffledFacts nothing but data"
+      ],
+      "dynamic": 0
+    },
+    "tests/shared-notes.test.ts": {
+      "names": [
+        "F01 11.1: a note carried by many contests moves to the foot, once",
+        "F01 11.1: a note only ONE contest carries stays exactly where it is",
+        "F01 11.1: contests with no note contribute nothing and break nothing",
+        "F01 11.1: markers continue from the page's source footnotes, never collide",
+        "F01 11.1: the Arizona measures actually collapse — eleven into one",
+        "F01 11.1: two different repeated notes get two different markers",
+        "F01 11.2 / 11.3: the ballot page drops the contradiction and the false claim"
+      ],
+      "dynamic": 0
+    },
+    "tests/small-popup.test.ts": {
+      "names": [
+        "More is the way down, and it is full width like the column",
+        "the contact pills stack in one column, primary channels only",
+        "the party pill stays — it is banned from the list, not from the card",
+        "the small popup renders identity only — no role line, no chips, no in-seat"
+      ],
+      "dynamic": 0
+    },
+    "tests/snapshot.test.ts": {
+      "names": [
+        "193 fresh + 24 carried = 217 validates — the run the old invariant refused",
+        "a carried row that does not name its source is refused",
+        "a carried row with no last-fresh timestamp is refused",
+        "a failed source must say why",
+        "a meeting not namespaced under an accounted source is refused",
+        "a partially-refused snapshot survives write-then-read with its marks intact",
+        "a snapshot accounting for no sources is refused",
+        "a snapshot that states no counts at all is refused",
+        "a snapshot where every source failed is refused — keep the previous one",
+        "a source that does not state a drop count is refused",
+        "a source that does not state its counts is refused",
+        "a valid snapshot validates",
+        "an agenda document citing a meeting outside the snapshot is refused",
+        "fresh + carried must close against the total",
+        "readSnapshot returns null when no file exists — a fresh clone, not an error",
+        "the carried count must equal the rows carrying the mark",
+        "the collapse count is what makes fresh and the per-source claims close",
+        "the committed snapshot exists, validates, and states its counts",
+        "the fresh count still has to equal the per-source claims — unchanged, aimed right",
+        "the invariant cannot be satisfied by inflating the per-source claims",
+        "the snapshot source re-derives status from now; CANCELED survives",
+        "the snapshot source refuses to serve when no snapshot exists",
+        "the stated total must be the number of rows actually present",
+        "write then read round-trips, and the reader validates what it reads"
+      ],
+      "dynamic": 0
+    },
+    "tests/source-adapters.test.ts": {
+      "names": [
+        "apptegy: board meetings filter from district calendars, coords from feed",
+        "civicplus: a cancellation announced in the SUMMARY never says SCHEDULED",
+        "civicplus: iCal parses and council sittings normalize with venues",
+        "civicplus: the boards feed splits Planning Board from Board of Adjustment",
+        "civicplus: the iCal parser unfolds and keys DTSTART params",
+        "civicplus: two bodies on one division do not suppress each other's archive",
+        "civicweb: Newbury Selectboard names from the cited type map",
+        "diligent: TUSD meetings normalize, Zoom sittings are kept with no place",
+        "every source-wiring row names a real registry body",
+        "every wiring row's ocdId is its bodyId without the slot",
+        "onbase: rows parse and mapped venues normalize; unmapped drop counted"
+      ],
+      "dynamic": 0
+    },
+    "tests/source-labels.test.ts": {
+      "names": [
+        "an unknown id gets null, never a plausible phrase",
+        "every wired adapter has a human calendar name",
+        "no label is an internal id wearing a label's clothes",
+        "no reader-facing component interpolates an internal source id"
+      ],
+      "dynamic": 0
+    },
+    "tests/spiderfy.test.ts": {
+      "names": [
+        "EVERY fanned pin clears every other — the claim, at every group size",
+        "F01 9.3: applySpiderfy writes the leg geometry, and clearing removes it",
+        "F01 9.3: every fanned pin draws a leg back to a shared anchor",
+        "a fan of one is not a fan",
+        "a fanned pin says it moved, and not in a colour that already means something",
+        "a press on a stacked pin fans first and selects nothing",
+        "collision is transitive — a chain is one group, not two overlapping pairs",
+        "pins that do not overlap are not a group — a fan of one moves for no reason",
+        "the fan opens far enough to be tappable and not so far it leaves the finger",
+        "the groups are stable — the same collision fans the same way every time",
+        "the pool moves markers by OFFSET, and puts every one of them back",
+        "two pins closer than the collision radius are one group"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-focus.test.ts": {
+      "names": [
+        "a hole is clipped like any other ring, so a viewport inside one cancels to nothing",
+        "a national file is fetched for every state",
+        "a point in no covered state resolves to NULL, never to the last one",
+        "a point resolves to the state it is actually in",
+        "a ring already inside the box is returned unchanged",
+        "a ring crossing the border keeps the crossing, on the border",
+        "a ring entirely outside the viewport clips to NOTHING, which means everything is muted",
+        "a ring far larger than the viewport comes back no larger than the box",
+        "each state fetches its own files and no other state's",
+        "no active state fetches NOTHING for any district type",
+        "simplification drops collinear noise and keeps the silhouette",
+        "simplification never reduces a ring below a triangle",
+        "the clip runs before simplification and leaves a ring the simplifier can hold",
+        "the layer filter pins a layer to one state, and reads back",
+        "the light is brighter than the shade on a light ground",
+        "the offset stays comparable to the blur at every zoom",
+        "the rise is capped by the size of the state it is marking",
+        "the rise scales with zoom and never reaches zero",
+        "the state code comes off the OCD-ID, never off a name string"
+      ],
+      "dynamic": 0
+    },
+    "tests/state-vocabulary.test.ts": {
+      "names": [
+        "D52: a state with no terms carries a refusal with its rungs",
+        "D52: an APPROVED table translates, and only the terms it holds",
+        "D52: an UNAPPROVED table returns the state's own word, never a translation",
+        "D52: every covered state has a vocabulary record, walled or not",
+        "D52: every proposed term cites the state's own definition",
+        "D52: nothing ships approved that a person did not approve",
+        "D52: the census states what it has, including the zeros"
+      ],
+      "dynamic": 0
+    },
+    "tests/strip-image-metadata.test.ts": {
+      "names": [
+        "JPEG: APP1 (EXIF) and COM go, JFIF and pixel data stay",
+        "PNG: text and eXIf chunks go, IHDR/IDAT/IEND stay",
+        "unknown formats pass through unchanged and say so"
+      ],
+      "dynamic": 0
+    },
+    "tests/subdivisions.test.ts": {
+      "names": [
+        "Arizona's county subdivisions are all statistical, not governments",
+        "Rockaway borough and Rockaway township stay separate governments",
+        "every committed subdivision identifier is unique",
+        "every subdivision carries the LSAD that says whether it governs",
+        "places still carry LSAD, so a CDP can be told from a city",
+        "the municipalities behind two target zips have geometry",
+        "the same name in two counties gets two identifiers"
+      ],
+      "dynamic": 0
+    },
+    "tests/tier-grouping.test.ts": {
+      "names": [
+        "every zip's who-governs coverage includes its state's governor",
+        "statewide executives are sourced from the state's own domain, never a third party",
+        "the tier labels are Local / State / Federal — never National on an officials header",
+        "tier membership is correct by office type at every zip, closest-first"
+      ],
+      "dynamic": 0
+    },
+    "tests/tiers.test.ts": {
+      "names": [
+        "DC and territories are state-equivalents, but their seats are national",
+        "an unrecognised division is null, never a guess",
+        "congressional seats are national even though they nest under a state",
+        "school districts and wards are local",
+        "segment values read back",
+        "segments parse, and a malformed id yields none rather than throwing",
+        "state legislative chambers are state",
+        "tier comes from the deepest segment, not the first",
+        "tier matching is empty-safe"
+      ],
+      "dynamic": 0
+    },
+    "tests/top-offices.test.ts": {
+      "names": [
+        "F01 1.2: New Jersey's Commissioner Director presides",
+        "F01 1.2: a body publishing only one of the two returns ONE, never padded",
+        "F01 1.2: a body with a Mayor AND a Council President shows both",
+        "F01 1.2: a mayor presides, and a town manager runs it",
+        "F01 1.2: a single-seat division returns its one officeholder",
+        "F01 1.2: a specific title never falls through to a generic one",
+        "F01 1.2: a vice chair is never mistaken for the chair",
+        "F01 1.2: every curated roster resolves at least a presiding officer",
+        "F01 1.2: nothing sourced returns nothing, and the gap line is OURS",
+        "F01 1.2: the presiding officer leads, then the hired executive"
+      ],
+      "dynamic": 0
+    },
+    "tests/tracker-integrity.test.ts": {
+      "names": [
+        "every tracker ID matches the committed shape",
+        "every tracker record carries exactly nine fields",
+        "every tracker row carries a distinct ID"
+      ],
+      "dynamic": 0
+    },
+    "tests/tracker-stores.test.ts": {
+      "names": [
+        "RULING 29: three priority levels on every open row, and no fourth",
+        "RULING 30: a section over the five-P1 cap is REPORTED as stopped, never trimmed",
+        "RULING 31: Needs Sean is first, and the order comes from the list not from a number",
+        "RULING 32: every row has a home, and there is no holding section",
+        "RULING 34: tracker.md and log.md declare themselves generated and list no resolved row",
+        "RULING 36: Pending review does NOT close a row",
+        "RULING 36: three resolution states, and only these three",
+        "RULING 37: a session may not resolve or move a Needs Sean row, in either direction",
+        "RULING 40: every row names the session that opened it, and UNKNOWN is a defect",
+        "RULING 41: a session may not reword, retitle or delete a row Sean wrote",
+        "RULING 46: B08 is hard-removed from both stores and recorded in the log",
+        "RULING 46: a session may not delete a row, and Sean may",
+        "RULING 46: no row in either store is left carrying Delete",
+        "RULING 48: docs/state.md never loses a section or a third of its bytes",
+        "RULING 48: the guard catches the command that destroyed his edits",
+        "RULING 48: the hook is wired, and no committed script reverts a protected file",
+        "item 1.4: every row a session reported opening is present in a store",
+        "item 8a: every row in both stores carries a plain-English description",
+        "the stated open count equals the rows underneath it, section by section",
+        "the two stores reconcile as a pair against the frozen tracker",
+        "the workbook round-trips, and a shared-string sheet reads as text"
+      ],
+      "dynamic": 0
+    },
+    "tests/verification-vocabulary.test.ts": {
+      "names": [
+        "'not yet' survives where it belongs, and is never filled in with a guess",
+        "a body's own page is official even off a .gov, because the wiring types it so",
+        "a human confirmation still wins, and keeps its own date",
+        "an official host is recognized, and a third party is not",
+        "only the sources list renders the not-yet sentence",
+        "the Hobbs row: an official read renders as verified, by its source, on the read date"
+      ],
+      "dynamic": 0
+    },
+    "tests/viewport-radius.test.ts": {
+      "names": [
+        "a degenerate viewport falls back to the default rather than to zero",
+        "a real pan still re-asks",
+        "a wider viewport never produces a narrower request",
+        "the first settle always asks",
+        "the request is capped at the ladder's top rung, which the server clamps to anyway",
+        "the requested radius covers what the reader can see",
+        "zooming IN never re-asks for a smaller circle",
+        "zooming in never asks for less than the default rung",
+        "zooming out in place re-asks, even though the centre never moved"
+      ],
+      "dynamic": 0
+    },
+    "tests/vote-explainers.test.ts": {
+      "names": [
+        "5b: every vote type states what a No vote mechanically did — never evaluatively",
+        "an unmatched question renders no explainer — never a guessed one",
+        "every common vote type the chambers cast has a plain-words explainer",
+        "every explainer cites its parliamentary definition in the data file",
+        "every notice summary cites an exact document version in the snapshot",
+        "explainers pass the register test: plain words, no advocacy",
+        "the vote surface actually renders the explainers"
+      ],
+      "dynamic": 0
+    },
+    "tests/votes.test.ts": {
+      "names": [
+        "every position is one of the four recorded states, keyed to a real vote",
+        "every vote leads with official words and links the official record",
+        "the chamber tally, not a party subtotal — roll 264 pins the caught bug",
+        "the popup legend speaks of their vote, never our approval",
+        "the snapshot states its window, counts, and identifier match",
+        "the wired federal members all have positions in the window",
+        "vote records carry no evaluation — the neutrality guard extends here"
+      ],
+      "dynamic": 0
+    },
+    "tests/voting-dates-and-place.test.ts": {
+      "names": [
+        "15: the ballot's polling-place affordance opens the map's own panel",
+        "15: the state's own tool is still offered, and labelled as leaving",
+        "16: 'is it still ahead' is decided on the Phoenix wall clock",
+        "16: Arizona and New Jersey produce the same stamps for the same dates",
+        "16: a window is a window, and a phrase is not a date",
+        "16: a window stays actionable until its LAST day is past",
+        "16: every dated voting event with a known date can be calendared",
+        "16: the NJ early-voting window produces a correct multi-day event",
+        "17: no code path can send the placeholder anywhere",
+        "17: no reader-facing placeholder carries a region-specific address",
+        "17: the placeholder address is exactly the approved string"
+      ],
+      "dynamic": 0
+    },
+    "tests/voting-sites.test.ts": {
+      "names": [
+        "B16: a jurisdiction with one location narrows exactly",
+        "B16: a vote-center county is NOT_NEEDED, never a gap",
+        "B16: several locations and no current geometry REFUSES, with rungs",
+        "B19: New Hampshire's state wall names the captcha rung as walked-and-refused",
+        "B19: a jurisdiction with no sites never points at 'these locations'",
+        "B19: a site with no coordinate is kept, with its address",
+        "B19: a site's election label is never filled in from its jurisdiction",
+        "B19: all three covered states are represented",
+        "B19: directions are the only external handoff, built from the site's own address",
+        "B19: every jurisdiction names its authority and the date we read it",
+        "B19: every jurisdiction with no sites carries a refusal with its rungs",
+        "B19: every pinnable site has a plausible point inside the United States",
+        "B19: nothing a browser imports may reach the filesystem",
+        "B19: the model sentence says which model, in plain words",
+        "B19: the panel says what happens to the address, where the reader types it",
+        "B19: the retrieval is not an empty success",
+        "B19: the route writes nothing — a source scan for every write primitive"
+      ],
+      "dynamic": 0
+    },
+    "tests/walk-waits.test.ts": {
+      "names": [
+        "every fixed wait left in walk:all says why it is a duration",
+        "the count of fixed waits may fall, never rise"
+      ],
+      "dynamic": 0
+    },
+    "tests/wall-clock-dates.test.ts": {
+      "names": [
+        "no provenance date anywhere in lib/, data/, app/, or components/ is in the future"
+      ],
+      "dynamic": 0
+    },
+    "tests/watch-workflows.test.ts": {
+      "names": [
+        "a workflow actually runs the watcher on a schedule",
+        "an in-flight run cannot mask the failure before it",
+        "asOf hides later runs, so the detector can be held against known history",
+        "cancelled is not failure — a cancelled run is nobody's diagnosis",
+        "every scheduled workflow in the repo is on the watch list",
+        "one failure is not a finding — a wall does not usually repeat",
+        "runs out of order are sorted before the top two are read",
+        "the rate is a pair, never a bare percentage",
+        "too little history returns null, which is not the same claim as healthy",
+        "two failures at the top of the list is a finding",
+        "two failures separated by a success is not a finding"
+      ],
+      "dynamic": 0
+    },
+    "tests/welcome-copy.test.ts": {
+      "names": [
+        "the welcome overlay carries the author's mission text verbatim",
+        "the zip entry and one-tap examples stay beneath the mission text"
+      ],
+      "dynamic": 0
+    },
+    "tests/who-governs.test.ts": {
+      "names": [
+        "narrowing cannot re-open the gap — the count follows the reader's own list",
+        "no external links on a row — the doors live inside the cards",
+        "no pills in the who-governs list — party renders as plain text",
+        "the 85701 shape: the Board of Adjustment is the row that moved, not the PHA",
+        "the click grammar: a person opens a small card, a body opens a large one",
+        "the stated count and the rendered rows are the same expression, at any size",
+        "wired counts are partitioned, never double-counted across the two sets"
+      ],
+      "dynamic": 0
+    },
+    "tests/wording.test.ts": {
+      "names": [
+        "F01 6.1: no reader surface calls an absence a gap in our research or data",
+        "F01 6.2: the struck clause leaves the whose-gap attribution standing",
+        "a body nobody searched never claims a search",
+        "a body with nothing to say contributes no footnote at all",
+        "an exhausted New Hampshire search says the law does not require an agenda",
+        "footnotes that differ stay separate, in the panel's own order",
+        "identical footnotes collapse to one, naming every distinct body",
+        "outside New Hampshire an exhausted search owns the gap",
+        "outside a no-agenda state, an unsearched body gets no note at all",
+        "the state comes off the identifier, never off a label",
+        "the statutory sentence now renders for real NH bodies"
+      ],
+      "dynamic": 0
+    },
+    "tests/workflow-actions.test.ts": {
+      "names": [
+        "AUD-07: both refresh workflows diff before they gate, and still gate before they commit",
+        "F22: every governed-artifact refresh gates on the same full suite",
+        "R45: no workflow pins an action major that targets Node 20",
+        "R45: setup-node never tries to restore a cache before pnpm exists",
+        "the workflow set is still the seven this rule was audited against"
+      ],
+      "dynamic": 0
+    },
+    "tests/write-alarm.test.ts": {
+      "names": [
+        "6.1: the committed journal head matches the newest migration file",
+        "6.1: the schema gate names the missing migration, and never rounds up",
+        "6.2: the alarm carries the reason and NEVER the values",
+        "6.2: the alarm records the database's own words, capped",
+        "6.2: the alarm table holds no column that could join to a store",
+        "6.4 / RULING 25: the reader-facing answers on the write paths are unchanged",
+        "6.4: every sold-store write path raises on the alarm path",
+        "6.4: the alarm is raised on the SAME catch that swallows, in every route",
+        "6.5: the alarm is not left as an unawaited promise",
+        "PD04: no sold-store WRITE is left as a floating promise either",
+        "PD04: the alarm reads SQLSTATE and the reason from the CAUSE, not the wrapper",
+        "PD04: the chain walk terminates on a cycle and on a bare error"
+      ],
+      "dynamic": 0
+    },
+    "tests/write-guard.test.ts": {
+      "names": [
+        "NODE_ENV values that are not exactly production do not count as production",
+        "PLANTED g13: a sanction nobody has named is refused, and says so",
+        "PLANTED g13: an unrelated script WITH the declaration is still refused",
+        "PLANTED g13: the declaration does not stand in for a destination",
+        "PLANTED g13: the same script WITHOUT the declaration is still refused",
+        "a local database may be written from a local runtime",
+        "a typo in WTP_DB_ROLE fails safe rather than opening the gate",
+        "an undeclared database is assumed to be production, not local",
+        "assertWriteAllowed is silent when the pairing is legitimate",
+        "assertWriteAllowed throws a named error, not a generic one",
+        "every database write path asserts the guard",
+        "g13 audit: every scheduled workflow that writes carries a sanction",
+        "g13: the refusal names the sanctioned path, not only .env.local",
+        "g13: the sanction table is a closed list, and the purge is on it",
+        "g13: the scheduled purge, declared as the workflow declares it, is allowed",
+        "g13: the workflow declares exactly what the guard requires",
+        "no write path outside the guarded set has appeared",
+        "the defect that caused this: a dev server pointed at production is refused",
+        "the production runtime writing to the production database is allowed",
+        "the refusal explains itself in words a person can act on"
+      ],
+      "dynamic": 0
+    },
+    "tests/write-handle.test.ts": {
+      "names": [
+        "PLANTED: a readonly connection string in the RIGHT variable is refused",
+        "PLANTED: any other variable name is refused — there is no second door",
+        "PLANTED: the readonly variable asked for BY NAME is refused",
+        "an unset write variable refuses rather than falling back",
+        "isReadonlyUser catches the role and its prefixed variants",
+        "no writing script reads the READONLY variable directly",
+        "the sanctioned variable resolves, and reports role and host"
+      ],
+      "dynamic": 0
+    },
+    "tests/zero-row-contract.test.ts": {
+      "names": [
+        "every adapter routes its normalize result through the factory",
+        "nothing hand-attaches the brand to route around the factory",
+        "the brand is a real runtime symbol on a returned result",
+        "the composite turns the refusal into JOB, so the run goes red",
+        "the factory refuses a non-zero fetch that yielded nothing and dropped nothing",
+        "the three honest empties still pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/zip-coverage.test.ts": {
+      "names": [
+        "85641 lands on the widened rung and returns meetings",
+        "clearing the radius limiter actually turns it off",
+        "clearing the radius limiter leaves unrelated filters alone",
+        "enabling the radius limiter keeps the widened results on screen",
+        "every target zip survives the client filter with default state"
+      ],
+      "dynamic": 0
+    },
+    "tests/zoned.test.ts": {
+      "names": [
+        "Arizona stays on -07:00 through what would be DST elsewhere",
+        "Eastern time switches offset across the DST boundary",
+        "UTC renders as Z rather than +00:00",
+        "a day offset lands on the right local calendar date",
+        "day offsets cross a DST boundary without drifting an hour",
+        "the same wall clock in two zones is two different instants"
+      ],
+      "dynamic": 0
+    }
+  }
+}

@@ -694,6 +694,59 @@ export const VENUE_CACHE: VenueEntry[] = [
     verifiedAt: "2026-08-19",
   },
 
+  /*
+   * ── SUTTON, NH — THE PLANNING BOARD'S OWN STANDING STATEMENT ────────────
+   * (NH Hunt 6, 2026-08-21, item 4.)
+   *
+   * Sutton has been dark since NH Hunt 4, and the retrieval was never the
+   * problem. Its calendar answers rung 2 with 370,587 bytes and 1,312 events
+   * naming sixteen governing bodies, and **not one of them carries a
+   * `LOCATION` line** — 0 non-empty of 1,312, counted. What stopped the
+   * wiring was a COORDINATE: the Census geocoder was asked four ways and
+   * answered Bradford NH twice, Sutton MASSACHUSETTS once, and no match once.
+   * A pin is a claim, so the row could not be written.
+   *
+   * Two things broke that open on 2026-08-21, and both are branches rather
+   * than cleverness:
+   *
+   * 1. **The board's page was behind Cloudflare and RUNG 5 reached it.**
+   *    `suttonnh.gov` refuses rungs 2, 3 and 4 on its HTML — "Just a
+   *    moment...", HTTP 403 — while serving its `.ics` export at rung 2 with
+   *    no challenge at all. A path-scoped wall on one host, and the document
+   *    that states the venue was on the walled side.
+   * 2. **A SECOND, independent geocoder settled the point.** OpenStreetMap
+   *    returns `43.334070, -71.953113` labelled *Sutton Town Hall, 93 Main
+   *    Street, Sutton, Merrimack County, New Hampshire* — 38 metres from the
+   *    Census point. The Census COORDINATE was right the whole time; only its
+   *    city LABEL was wrong, because TIGER attributes the 89–99 MAIN ST range
+   *    to Bradford. A session reading the label and discarding the point threw
+   *    away a correct answer. `pnpm geocode` now walks both and reports the
+   *    pair, never one figure.
+   *
+   * **Only the Planning Board is wired**, and that is the discipline rather
+   * than a shortfall. Its page states the venue in the town's own words: *"The
+   * Sutton Planning Board meets at the Pillsbury Memorial Hall, 93 Main
+   * Street, Sutton Mills, NH on the second Tuesday of the month at 7:00 pm."*
+   * The other fifteen board pages carry "93 Main Street | Sutton Mills" in the
+   * SITE FOOTER — the town's own postal address, not a statement about where
+   * that board sits. Reading a footer as a venue would pin fifteen bodies at a
+   * building on the strength of a template, which is the guess dressed as a
+   * fact that NH Hunt 4 refused, and refusing it again is the same decision.
+   */
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+    match: "Pillsbury Memorial Hall",
+    name: "Pillsbury Memorial Hall",
+    address: "93 Main Street, Sutton Mills, NH 03221",
+    lat: 43.33407,
+    lng: -71.953113,
+    addressSourceUrl: "https://www.suttonnh.gov/planning-board",
+    coordinateSourceUrl:
+      "https://nominatim.openstreetmap.org/search?street=93%20Main%20Street&city=Sutton&state=NH&country=USA&format=jsonv2&limit=1&addressdetails=1",
+    verifiedAt: "2026-08-21",
+  },
+
   // ── SchedulePage: New London NH (M123, 2026-08-19) ──────────────────────
   // The town's calendar writes the venue INTO the event title — "Board of
   // Selectmen - 5:30 PM - Whipple Memorial Town Hall" — in three spellings

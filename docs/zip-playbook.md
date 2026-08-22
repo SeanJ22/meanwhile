@@ -891,6 +891,52 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm portraits:normalise [--write]` | Sweeps every committed portrait for size and resamples what is over the cap. Never renames a file — a renamed portrait is a broken image — and REPORTS rather than silently corrects a file whose extension disagrees with its bytes. |
 | `scripts/transcode-image.mts` | The shared normaliser `pnpm ship:candidate` runs every portrait through: decodes WebP and AVIF, names the format from the BYTES rather than from the plan's filename, and caps the served size. Every change it makes is recorded in the photo's own source string, so nothing we re-encoded is cited as though it were the bytes the source published. |
 
+### The branch manifest (NH Hunt 6, added 2026-08-21 — RULING 61 and RULING 63)
+
+**`docs/branch-manifest.md` is the named list of routes that must be walked
+before this product may say a Kelly field does not exist for a named person.**
+It is indexed by question — "how do I find a candidate's phone number", "how do
+I reach a town clerk record" — so a session in another state finds the right
+route without reading New Hampshire's specifics. Read it BEFORE hunting, not
+when stuck (RULING 63).
+
+Its machine-readable twin is `lib/hunt/branch-manifest.ts`, which is
+authoritative for the route ids, the counts and the exhaustion verdict.
+
+| Command | What it does |
+|---|---|
+| `pnpm manifest:doc [--check]` | Regenerates the route tables in `docs/branch-manifest.md` from the module. The document's prose and its question index are hand-written; the ROUTES are generated, because a hand-kept second copy of the list that decides whether a claim about a named person may render is a copy that goes wrong. `--check` fails when the document is behind. |
+| `pnpm guard:census [--write] [--allow-removals]` | RULING 62. Every test file and every guard NAME in it, committed to `tests/guard-census.json`. A guard that stops existing fails the build BY NAME. `--write` refuses to erase a name without `--allow-removals`, so a deliberate removal lands in the census diff where a reader sees it. |
+| `pnpm guard:history [--since <rev>] [--all]` | Walks every commit that touched `tests/` and reports every guard name that stopped existing at it, with the commit subject beside it. A name leaving is not by itself a defect — this produces the candidate list a person judges. |
+
+**How to use the manifest in a hunt.** Take one field of one candidate. Walk
+`requiredRouteIds(field)` in whatever order is cheapest. Record each as a
+`ManifestBranch` carrying its `route` id, its `attemptedAt` from
+`corepack pnpm stamp`, what came back, and `found`. Then ask
+`judgeManifestWalk` — it returns `exhausted`, and when it does not, it hands
+back **the routes still owed as a work list**, which is the useful output of a
+failed exhaustion.
+
+**How a route gets added.** Check first that it is not already named (RULING 63:
+building a branch that already exists is a defect and is reported as one, with
+the existing branch named). Then add it to `MANIFEST_ROUTES`, run
+`pnpm manifest:doc`, and know that every absence earned under the previous
+manifest version is now re-opened automatically — the version stamp on each
+record does that without anybody remembering to go back.
+
+**What actually yielded, so far.** One session of evidence, and it is thin on
+purpose — this table grows and is never trimmed.
+
+| Route | Walked | Hit | Note |
+|---|---|---|---|
+| `campaign-site` | high | high | The single best route for photo, blurb and contact at once, where a domain exists at all. |
+| `campaign-social` | high | medium | The route that matters most in the smallest races. Opened in a LIVE BROWSER; a search snippet is not the source. |
+| `filing-state` | high | medium | Yields the filed mailing address reliably and a phone rarely. |
+| `body-roster-page` | high | medium | Incumbents only, by construction — which is exactly the asymmetry the equal-effort rule exists to catch. |
+| `web-archive` | medium | low-but-real | Has already shipped a portrait here (a 2022 capture of a Senate seat page). |
+| `search-index` | high | low | Cheapest route in the manifest and never sufficient on its own. |
+
+
 ### The re-walk toolkit (NH Hunt 5, added 2026-08-21 — RULING 52, 53 and 60)
 
 | Command | What it does |
@@ -3031,3 +3077,275 @@ reason to enumerate it publishes everything.** The state register for village
 districts, the SAU for school boards, the association for conservation
 districts. When a small body appears to publish nothing, the next question is
 never "does it exist" — it is **"who is obliged to list it?"**
+
+## NH Hunt 6, 2026-08-21 — eleven rungs and branches, from real walls
+
+Every entry below is a wall this session walked into, or a route that produced
+something. They are written in the order they were found, not in order of
+importance, because the next session hits them in whatever order its own hunt
+takes it.
+
+### 1. A WALLED STATE DOCUMENT, REPUBLISHED BY A MUNICIPALITY (a `filing-state` sub-branch)
+
+`sos.nh.gov` has been walled since 2026-08-13 and answers only at rung 5. Its
+2026 cumulative candidate-filing PDF — every filed candidate in New Hampshire,
+with domicile, mailing address, city, zip and party — is served at **rung 2,
+HTTP 200, 432,565 bytes** by `goffstownlibrary.com/DocumentCenter/View/5981/`,
+and again by `goffstownpolice.com/DocumentCenter/View/5981/`. A town library and
+a town police department both mirror the state's document into their own
+CivicPlus DocumentCenter.
+
+**The generalisation is the useful part**: when a state publisher is walled, ask
+who ELSE is obliged or motivated to hand the same document to the public. A
+municipal clerk, a library, a police department and a school district all
+republish state election material as a matter of routine, and none of them is
+behind the state's WAF. This is the same shape as NH Hunt 5's "the body
+publishes nothing and somebody with a statutory reason to enumerate it publishes
+everything", pointed at a DOCUMENT rather than at a roster.
+
+What it does NOT carry, counted: **no phone and no email**, for any candidate.
+The columns are Candidate Name, Domicile, Mailing Address, City/State/Zip,
+Party, and that is the whole of it. A route that establishes an address and
+cannot establish a contact is still worth walking; it is not worth walking
+twice.
+
+### 2. A HOST CAN WALL RUNG 6 WHILE ANSWERING RUNG 2 — the inverse of the usual shape
+
+`gencourt.state.nh.us` (→ `gc.nh.gov`) answers a plain fetch at HTTP 200 with 29
+KB. The **live browser is refused** by a WAF: `Error 403 / Web Page Blocked /
+Attack ID 20000051`, with the client IP printed on the block page.
+
+Every entry in this playbook before today assumed the browser rung is the
+STRONGEST one — that anything answering a human answers Playwright. It is not
+true here, and the direction matters: a session that escalates from a
+disappointing rung 2 to rung 6 gets a WORSE answer, and a 3,672-byte block page
+reads like a page with nothing on it.
+
+`pnpm rung6` now detects the block by its own text and reports `was REFUSED —
+this host walls rung 6 while answering rung 2` rather than the byte arithmetic it
+first printed, which read as *added nothing, this page is not JS-rendered*. **A
+block that reads as a clean measurement is the empty-success shape wearing a
+browser's clothes.**
+
+### 3. A HOST CAN WALL ITS HTML AND SERVE ITS FEED FREELY — a PATH-SCOPED Cloudflare wall
+
+`suttonnh.gov` returns the Cloudflare managed challenge (`Just a moment...`,
+HTTP 403) on every HTML page, at rungs 2, 3 and 4, and headless Chromium cannot
+clear it — the playbook already records that last part. The same host serves
+`/calendar/ical/calendar.ics` at **rung 2, HTTP 200, 370,587 bytes** with no
+challenge at all.
+
+So a host is not walled or unwalled. It is walled PER PATH, and the path a
+session happens to try first decides what it writes down. Try the machine-facing
+paths — `.ics`, `.rss`, `.json`, `/sitemap.xml`, an export endpoint — before
+recording a host as refusing.
+
+### 4. RUNG 5 CLEARS A CLOUDFLARE MANAGED CHALLENGE
+
+The same `suttonnh.gov` board pages: rung 2 **403**, rung 3 **403**, rung 4
+**404**, rung 5 **200 with the document**. The relay is not running a browser and
+is not solving the challenge; it is arriving from an egress the challenge does
+not fire on.
+
+Combined with entry 2 above, the ordering lesson is blunt: **rung 5 and rung 6
+are not ranked.** They fail on different things, and a hunt that stops at
+whichever it tried first has walked one branch.
+
+### 5. A SECOND GEOCODER IS A BRANCH, AND THE CENSUS LABEL CAN BE WRONG ON A RIGHT POINT
+
+The wall that kept Sutton dark for two sessions was a coordinate. The Census
+geocoder was asked four ways for the Planning Board's published venue and
+answered Bradford NH twice, Sutton **Massachusetts** once, and no match once — so
+the venue-cache row could not be written, because a pin is a claim.
+
+Walked again on 2026-08-21 with a second, independent provider:
+
+| provider | point | label |
+|---|---|---|
+| Census | `43.334241, -71.953514` | 93 MAIN ST, **BRADFORD**, NH 03221 |
+| OpenStreetMap | `43.334070, -71.953113` | **Sutton Town Hall**, 93 Main Street, Sutton, Merrimack County, NH 03221 |
+
+**Thirty-eight metres apart.** The Census COORDINATE was correct the whole time;
+only its CITY LABEL was wrong, because TIGER attributes the 89–99 MAIN ST
+address range to Bradford. Two sessions read the label, disbelieved the answer,
+and discarded a correct point.
+
+`pnpm geocode` walks both and reports the PAIR — both points, both labels, and
+the metres between them — and never averages a disagreement into a third point
+neither provider returned. Nominatim also needs its **structured** query: the
+same address as free text returned nothing, and
+`street=…&city=…&state=…&country=USA` returned the town hall. An empty free-text
+geocode is a false miss, not an absence.
+
+### 6. DOMAIN-GUESSING IS A FALSE-POSITIVE MACHINE ON A COMMON NAME
+
+`pnpm manifest:walk`'s `domain-search` route guesses sixteen domains per
+candidate. On its first six candidates it produced four confident hits, and
+**all four were other people**:
+
+| guessed | who it actually is |
+|---|---|
+| `kathleendonnelly.com` | a novelist who writes K-9 mysteries |
+| `ericadavis.org` | a Harris County, **Texas** school trustee candidate |
+| `electfrench.com` | **French Hill**, of Arkansas |
+| `samanthamorse.com` | a template site that never names an office, a county or a state |
+
+A surname on a live domain is nothing. The route now requires a
+CORROBORANT in the body — the town, the office, the state, or campaign
+vocabulary — and reports a name-only match as **needing a person** rather than
+as a find. Even corroborated, it is opened and read: `kathleendonnelly.com` and
+`ericadavis.org` both pass the corroborant test, because a novelist's site says
+"campaign" and a Texas candidate's says "elect".
+
+**Never ship a domain a script found. Open it.**
+
+### 7. A PARKED DOMAIN THE SEARCH INDEX STILL PRESENTS AS LIVE
+
+`merrimackcountydems.com` is the top search result for the Merrimack County
+Democratic Committee. Rung 2 returns 114 bytes; rung 6 renders 25 KB of
+**GoDaddy parking page** — *"merrimackcountydems.com is parked free"*, with
+related-search topics for Wisconsin and Massachusetts.
+
+That is the third sighting of this shape in two sessions (`newportnh.net` with
+Cyrillic categories, `windsornh.gov` as a GoDaddy lander, now this). **The
+search index is a stale mirror.** A domain answering HTTP 200 is not a live
+body, and a 114-byte rung-2 answer is a signal to escalate rather than a small
+page.
+
+### 8. `facebook.com` RENDERS ZERO CHARACTERS TO OUR HEADLESS BROWSER
+
+Two campaign/committee pages read at rung 6 on 2026-08-21: `977,803` and
+`928,697` bytes rendered, `0 chars of text` from `document.body.innerText`, no
+emails, no phones. The login wall builds the DOM and paints nothing readable to
+an unauthenticated automated client.
+
+This matters more than it looks, because `campaign-social` is the highest-yield
+route in the branch manifest for the smallest races — a campaign that lives on
+Facebook still has a campaign site, and that rule protects exactly the
+candidates least able to buy a domain. **The route is WALLED today, at rung 6,
+and named as walled with its date.** It is not an absence, and the RULING 53
+clock puts it back on the queue in fourteen days.
+
+### 9. A PARTY COMMITTEE'S POST IS NOT THE CANDIDATE'S PAGE
+
+A search result reads *"Dianne Schuett for Merrimack County Treasurer"* and
+points at `facebook.com/61577753144555/posts/…`. Opened, the page id resolves to
+**"Pembroke NH Democrats"** — a town committee that posted ABOUT her candidacy.
+
+Recording it as her campaign page would have put a party committee's account on
+a named person's card as though it were hers. The search result's TITLE was the
+post's text, not the page's identity. Resolve a social id to its OWNER before
+attributing it, every time.
+
+### 10. A STATE ROSTER SPA SERVES THE IDENTICAL SHELL FOR EVERY MEMBER
+
+`njleg.state.nj.us/legislative-roster/478/senator-mckeon` and `/473/senator-space`
+both return **exactly 25,380 bytes** at rung 2 and neither contains its member's
+name. At rung 6 they render 36,079 bytes and 3,108 characters — *"Senator John
+F. McKeon (D), District 27"* and *"Senator Parker Space (R), District 24"*, each
+with a district phone that matches what our record already held.
+
+A byte count identical across two different URLs is the tell, and it is cheap to
+check: **fetch two members and compare the sizes.** Identical means you are
+holding a shell.
+
+### 11. AN OFFICEHOLDER'S "SPECIFIC VERIFIED PAGE" CAN BE A PAGE FOR A PREVIOUS TERM
+
+Five officials carried a `websiteUrl` nobody had checked. Three of the five
+pointed at a page that was correct for an EARLIER term:
+
+- Rachel Keshel → the **56th** Legislature, at a legislator id that is not hers.
+  HTTP 200, 106,944 bytes, **surname nowhere in the document.**
+- Rosanna Gabaldón → the **55th** Legislature.
+- John McKeon and Parker Space → party **ASSEMBLY** pages, for two sitting
+  **SENATORS**. McKeon's returned HTTP 404.
+
+A stale official page is worse than none: it is a wrong claim about where a
+named person's record lives, on the surface whose whole job is to say where a
+claim came from — and it answers HTTP 200, so nothing notices. `pnpm
+fix:official-pages` repairs these five with each replacement fetched and read
+first, and REFUSES any repair whose stored value no longer matches what the
+script expected.
+
+**The check that finds this class**: does the page still name the person? A
+200 is not a yes.
+
+### The tools NH Hunt 6 built
+
+| Command | What it does |
+|---|---|
+| `pnpm manifest:walk --name "…" [--town T] [--state NH] [--office O] [--site D]` | Walks the mechanically-walkable branch-manifest routes for one person and writes each as a `ManifestBranch` with its route id, date and result. Reports **what it could NOT walk, by name**, per field — a tool that counted its own coverage as the manifest's coverage would be the RULING 61 bar lowering itself. |
+| `pnpm rung6 <url> [--wait ms] [--selector css] [--html] [--out f]` | Rung 6 walked DELIBERATELY, whatever rung 2 said. `pnpm ladder` stops at the first rung that READS, which is right for a wall and wrong for a false miss — a 200 with an empty detail region is a read by byte count and a miss by fact. Reports bytes-before against bytes-after, detects a WAF block as a refusal, and harvests contacts from `mailto:`/`tel:` hrefs as well as visible text. |
+| `pnpm geocode "<address>"` | Two independent geocoders, reconciled, reported as a pair with the metres between them. Never averages a disagreement. Every hit carries the request URL, because `VenueEntry.coordinateSourceUrl` is required and a pin is a claim. |
+| `pnpm fix:official-pages [--write]` | Repairs the five officials whose specific verified page pointed at a previous term or at nothing. Every replacement verified before applying; a stored value that no longer matches is REFUSED rather than forced. |
+| `pnpm guard:census [--write] [--allow-removals]` · `pnpm guard:history` | RULING 62 — see §4. |
+| `pnpm manifest:doc [--check]` | Regenerates the route tables in `docs/branch-manifest.md` — see §4. |
+
+## Inheritance — what the next zip loads before it hunts (RULING 63)
+
+**Read this before starting any zip. It is the first thing in the run, not a
+reference consulted when stuck.**
+
+### What to load, in this order
+
+1. **`docs/branch-manifest.md`** — the named routes that must be walked before
+   absence may be claimed. Start at its **Index by question**, not at the top.
+   36 routes as of manifest `v1`: photo 7 · in their own words 10 · contact 35 ·
+   campaign site 14 · specific verified page 8.
+2. **This file's question index**, below.
+3. **State which branches you inherited, in the run's first report line**, before
+   hunting anything.
+
+### Report branches inherited against branches newly built, as a pair
+
+That ratio rising across zips is the only real evidence the method compounds. A
+session that builds a branch which already existed has **committed a defect** and
+reports it as one, naming the existing branch. Check the manifest BEFORE
+building: duplication is worse than a gap, exactly as it is in the tracker.
+
+### Which of New Hampshire's branches are expected to FAIL elsewhere
+
+Recorded now rather than discovered later. All four are New England shapes and
+nearly every branch this project has built so far was built against them:
+
+| Branch | Why it will not travel |
+|---|---|
+| **The town clerk as the record of local filings** | Works because New England town government makes the clerk the record. Where a COUNTY runs elections — most of New Jersey and Arizona — the clerk holds nothing and the route is a dead end. |
+| **The village-district register** | New Hampshire keeps a state register of village districts. Almost nowhere else has this category of body at all, and the states that do call it something else. |
+| **Town meeting and SB2** | The annual town meeting IS the legislature here, and the town report enumerates every officer as a consequence. A township with a council and a manager publishes nothing equivalent. |
+| **The school administrative unit above the district** | An SAU serving several districts is a New Hampshire structure. Elsewhere the district IS the unit, and looking for the layer above finds nothing and reads as a gap. |
+
+**Rockaway Township, NJ (`07866`) is the median American shape and is the first
+real test of whether any of this travels.** A council, a manager, a county that
+runs elections, a regional school district, and no town meeting.
+
+Where an inherited branch fails in a new jurisdiction it grows a **sub-branch**
+per RULING 60 — recorded with the jurisdiction and the date — and is never
+deleted. A branch that stops working is evidence the tree needs another limb,
+never evidence the fact is unobtainable. The shapes named in `CLAUDE.md` as
+certain to break these routes are **Alaska's boroughs**, **Arizona's
+unincorporated county territory**, and **Louisiana's parishes**.
+
+## Index by question (RULING 63)
+
+At 175 KB and growing, this file is one a session will skim. Find the entry by
+asking for it.
+
+| The question | Where |
+|---|---|
+| How do I get bytes past a wall? | The canonical 14-rung ladder is in `CLAUDE.md`, and its numbering is the only one that reaches the database. |
+| Which rung do I try after a plain fetch fails? | Not in order. §NH6 entries 2 and 4: rung 5 and rung 6 fail on DIFFERENT things and are not ranked. A Cloudflare challenge falls to rung 5; a WAF that blocks browsers answers rung 2. |
+| The page answered 200 but the facts are not in it. | §NH6 entry 10, and `pnpm rung6`. A 200 with an empty detail region is a FALSE MISS. Compare two URLs' byte counts — identical means a shell. |
+| The whole host refuses me. | §NH6 entry 3 — try its machine-facing paths (`.ics`, `.rss`, `.json`, sitemap) before recording the host as walled. Walls are PATH-SCOPED. |
+| A state publisher is walled and I need its document. | §NH6 entry 1 — a municipality, library, police department or school district very likely republishes it. |
+| How do I find where a body meets? | §2 and `pnpm venue:hunt`. The board's own page states it in prose more often than any feed does; an empty `LOCATION` is not a placeless meeting. |
+| I have a venue and no coordinate. | §NH6 entry 5 and `pnpm geocode`. Two providers, reconciled. A wrong CITY LABEL on a right POINT is the trap. |
+| How do I enumerate a town's boards when the menu undercounts? | §2 (the lettered where-to-look ladder), the town's own `/boards-committees` index, its annual report, and its calendar feed's own event titles — Sutton's feed named sixteen bodies its registry entry knew nothing about. |
+| How do I reach a candidate's phone, email, photo, words, or site? | **`docs/branch-manifest.md`**, indexed by exactly those questions. |
+| A script found a campaign domain. Can I ship it? | §NH6 entry 6. No. Four of the first four hits were other people. Open it. |
+| The search index says this body has a website. | §NH6 entry 7 — check it is not a parked domain. Third sighting. |
+| Is this social account really the candidate's? | §NH6 entry 9 — resolve the id to its OWNER. A search result's title can be a post's text. |
+| An official's page 200s. Is it right? | §NH6 entry 11 — does it still NAME them? Three of five pointed at a previous term. |
+| A guard disappeared / the suite went quiet. | §4, `pnpm guard:census` and `pnpm guard:history`. RULING 62. |
+| What must I load before hunting a new zip? | The Inheritance section above. RULING 63. |
+| Which of these routes will break in another state? | The Inheritance section's table above. |

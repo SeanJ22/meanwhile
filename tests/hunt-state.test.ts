@@ -5,6 +5,13 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
+  MANIFEST_VERSION,
+  judgeManifestWalk,
+  requiredRouteIds,
+} from "../lib/hunt/branch-manifest.ts";
+import type { ManifestBranch, ManifestField } from "../lib/hunt/branch-manifest.ts";
+import { isEvidencedByBranches } from "../lib/hunt/discovery.ts";
+import {
   HUNT_STATES,
   KELLY_FIELDS,
   KELLY_FIELD_NOT_APPLICABLE_WHEN,
@@ -50,7 +57,7 @@ test("2.5: no VERIFIED_ABSENT record exists without recorded rungs and a date", 
     for (const field of KELLY_FIELDS) {
       const record = file.candidates[key]![field];
       if (record.state !== "VERIFIED_ABSENT") continue;
-      if (!isEvidencedAbsence(record)) offenders.push(`${key}.${field}`);
+      if (!isEvidencedAbsence(record, field)) offenders.push(`${key}.${field}`);
     }
   }
   assert.deepEqual(
@@ -61,6 +68,26 @@ test("2.5: no VERIFIED_ABSENT record exists without recorded rungs and a date", 
       "which is the one thing this product may never render.",
   );
 });
+
+/**
+ * **RULING 61 (2026-08-21) raised the bar these fixtures are built against.**
+ *
+ * A full manifest walk, built from the manifest itself rather than transcribed,
+ * because a hand-written list of fourteen route ids is a list that goes stale
+ * the first time a route is added — and the whole point of the ruling is that
+ * adding a route re-opens what was already judged.
+ */
+function fullManifestWalk(field: ManifestField, on = "2026-08-20"): ManifestBranch[] {
+  return requiredRouteIds(field).map((route) => ({
+    branch: `walked the ${route} route`,
+    through: route,
+    attemptedAt: on,
+    result: "nothing",
+    found: false,
+    rung: "2",
+    route,
+  }));
+}
 
 test("2.5: the validator refuses every defective shape — proven by plant", () => {
   const good: RecordedFieldState = {
@@ -73,26 +100,12 @@ test("2.5: the validator refuses every defective shape — proven by plant", () 
     // RULING 52 (2026-08-21): two INDEPENDENT branches, going through two
     // different publishers. Rungs alone were never enough — every wrong
     // verdict that produced the ruling had a defensible rung history.
-    branches: [
-      {
-        branch: "the candidate's filing with the Secretary of State",
-        through: "sos.nh.gov",
-        attemptedAt: "2026-08-20",
-        result: "filing carries no website field",
-        found: false,
-        rung: "2",
-      },
-      {
-        branch: "the county party's candidate listing",
-        through: "merrimackdems.org",
-        attemptedAt: "2026-08-20",
-        result: "listed with no link",
-        found: false,
-        rung: "6",
-      },
-    ],
+    // RULING 61 (2026-08-21): and two was not enough either. Exhaustion is now
+    // EVERY route the manifest names for this field.
+    branches: fullManifestWalk("campaignSite"),
+    manifestVersion: MANIFEST_VERSION,
   };
-  assert.equal(isEvidencedAbsence(good), true, "a complete record is accepted");
+  assert.equal(isEvidencedAbsence(good, "campaignSite"), true, "a complete record is accepted");
 
   const bad: Array<[string, unknown]> = [
     ["no rungs at all", { state: "VERIFIED_ABSENT", checkedAt: "2026-08-20" }],
@@ -128,14 +141,106 @@ test("2.5: the validator refuses every defective shape — proven by plant", () 
         rungs: [{ rung: "2", result: "404" }],
       },
     ],
+    // RULING 61's own refusals, each on an otherwise perfect record.
+    [
+      "a complete walk with no manifest version stamped on it",
+      { ...(good as object), manifestVersion: undefined },
+    ],
+    [
+      "a complete walk judged against a superseded manifest",
+      { ...(good as object), manifestVersion: "v0" },
+    ],
+    [
+      "branches that walked routes the manifest does not name",
+      {
+        ...(good as object),
+        branches: fullManifestWalk("campaignSite").map((b) => ({ ...b, route: `x-${b.route}` })),
+      },
+    ],
   ];
   for (const [why, shape] of bad) {
     assert.equal(
-      isEvidencedAbsence(shape as RecordedFieldState),
+      isEvidencedAbsence(shape as RecordedFieldState, "campaignSite"),
       false,
       `refused: ${why}`,
     );
   }
+});
+
+test("RULING 61: two independent branches no longer earns VERIFIED_ABSENT", () => {
+  /*
+   * This is the guard for what the ruling actually CHANGED, and it is written
+   * as the old bar passing and the new one refusing, on one record. RULING 52's
+   * two-independent-branches record was correct law until 2026-08-21 and there
+   * are zero such records in the file, so nothing is grandfathered.
+   */
+  const twoBranches: RecordedFieldState = {
+    state: "VERIFIED_ABSENT",
+    checkedAt: "2026-08-20",
+    rungs: [{ rung: "2 plain fetch", attemptedAt: "2026-08-20", result: "404" }],
+    branches: [
+      {
+        branch: "the candidate's filing with the Secretary of State",
+        through: "sos.nh.gov",
+        attemptedAt: "2026-08-20",
+        result: "filing carries no website field",
+        found: false,
+        rung: "2",
+        route: "filing-state",
+      },
+      {
+        branch: "the county party's candidate listing",
+        through: "merrimackdems.org",
+        attemptedAt: "2026-08-20",
+        result: "listed with no link",
+        found: false,
+        rung: "6",
+        route: "party-committee-roster",
+      },
+    ],
+    manifestVersion: MANIFEST_VERSION,
+  };
+
+  // The RULING 52 bar: still cleanly cleared.
+  assert.ok(
+    isEvidencedByBranches({
+      branches: twoBranches.branches,
+      checkedAt: twoBranches.checkedAt,
+    }),
+    "the fixture must clear the old two-independent-branch bar, or it proves nothing",
+  );
+
+  // The RULING 61 bar: refused, and the verdict hands back a work list.
+  assert.equal(isEvidencedAbsence(twoBranches, "campaignSite"), false);
+  const verdict = judgeManifestWalk({
+    field: "campaignSite",
+    branches: twoBranches.branches,
+    checkedAt: twoBranches.checkedAt,
+    manifestVersion: MANIFEST_VERSION,
+  });
+  assert.equal(verdict.exhausted, false);
+  assert.ok(
+    verdict.missing.length >= 10,
+    `the reader of a failed exhaustion needs the routes still owed; got ${verdict.missing.length}`,
+  );
+});
+
+test("RULING 61: adding a route re-opens every absence earned under the old manifest", () => {
+  // The retroactive half. Nothing has to remember to go back for these —
+  // stamping the version is what makes it automatic.
+  const earnedUnderV0: RecordedFieldState = {
+    state: "VERIFIED_ABSENT",
+    checkedAt: "2026-08-20",
+    rungs: [{ rung: "2", attemptedAt: "2026-08-20", result: "404" }],
+    branches: fullManifestWalk("photo"),
+    manifestVersion: "v0",
+  };
+  assert.equal(isEvidencedAbsence(earnedUnderV0, "photo"), false);
+  assert.equal(
+    stateFor(false, earnedUnderV0, "photo"),
+    "NOT_HUNTED",
+    "and it falls back to 'we have not finished', never forward to 'there is nothing'",
+  );
 });
 
 test("2.5: an unevidenced VERIFIED_ABSENT reads as NOT_HUNTED, never as a finding", () => {
@@ -143,7 +248,7 @@ test("2.5: an unevidenced VERIFIED_ABSENT reads as NOT_HUNTED, never as a findin
   // defective record, the surface must fall back to "we have not finished",
   // never forward to "there is nothing to find".
   const defective = { state: "VERIFIED_ABSENT" } as RecordedFieldState;
-  assert.equal(stateFor(false, defective), "NOT_HUNTED");
+  assert.equal(stateFor(false, defective, "photo"), "NOT_HUNTED");
 });
 
 test("2.5: a stored FOUND on an absent field never reads as FOUND", () => {
@@ -153,9 +258,9 @@ test("2.5: a stored FOUND on an absent field never reads as FOUND", () => {
    * is not finished — the file may raise an absent field only as far as
    * VERIFIED_ABSENT, and only on evidence.
    */
-  assert.equal(stateFor(false, { state: "FOUND" }), "NOT_HUNTED");
+  assert.equal(stateFor(false, { state: "FOUND" }, "photo"), "NOT_HUNTED");
   // And presence wins upward whatever the file says.
-  assert.equal(stateFor(true, { state: "NOT_HUNTED" }), "FOUND");
+  assert.equal(stateFor(true, { state: "NOT_HUNTED" }, "photo"), "FOUND");
 });
 
 /* ========================================================================== */
@@ -195,7 +300,7 @@ test("2.7: NOT_APPLICABLE without a recorded reason and date is refused", () => 
       `refused: ${why}`,
     );
     assert.equal(
-      stateFor(false, shape as RecordedFieldState),
+      stateFor(false, shape as RecordedFieldState, "photo"),
       "NOT_HUNTED",
       `${why} falls back to NOT_HUNTED rather than forward to a finding`,
     );
@@ -207,9 +312,9 @@ test("2.7: NOT_APPLICABLE without a recorded reason and date is refused", () => 
     checkedAt: "2026-08-20",
   };
   assert.equal(isEvidencedNotApplicable(good), true);
-  assert.equal(stateFor(false, good), "NOT_APPLICABLE");
+  assert.equal(stateFor(false, good, "photo"), "NOT_APPLICABLE");
   // Presence still wins upward: a field that is actually there is FOUND.
-  assert.equal(stateFor(true, good), "FOUND");
+  assert.equal(stateFor(true, good, "photo"), "FOUND");
 });
 
 test("2.2: the structural-availability rule is stated for every Kelly field", () => {
@@ -317,26 +422,14 @@ test("statesFor reconciles presence against the record, field by field", () => {
     photo: { state: "NOT_HUNTED" },
     blurb: { state: "NOT_HUNTED" },
     contact: { state: "FOUND" },
+    // RULING 61: a full manifest walk, built from the manifest so that adding
+    // a route re-opens this record rather than leaving it quietly standing.
     campaignSite: {
       state: "VERIFIED_ABSENT",
       checkedAt: "2026-08-20",
       rungs: [{ rung: "2 plain fetch", attemptedAt: "2026-08-20", result: "none" }],
-      branches: [
-        {
-          branch: "state filing",
-          through: "sos.nh.gov",
-          attemptedAt: "2026-08-20",
-          result: "no website field",
-          found: false,
-        },
-        {
-          branch: "local press candidate profile",
-          through: "concordmonitor.com",
-          attemptedAt: "2026-08-20",
-          result: "profile names no site",
-          found: false,
-        },
-      ],
+      branches: fullManifestWalk("campaignSite"),
+      manifestVersion: MANIFEST_VERSION,
     },
   });
   assert.equal(states.photo, "FOUND", "present beats the record");

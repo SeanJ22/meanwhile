@@ -246,6 +246,154 @@ Operationally:
   named here with both facts recorded, rather than dropped because two
   authorities could not agree it exists.
 
+### RULING 60 — THE SESSION HAND-WORKS BODIES, AND EVERY BRANCH KEEPS BRANCHING
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 5; written into law here
+2026-08-21, NH Hunt 6 item 6. It sits beside RULING 52 and RULING 57 because it
+is what happens when the tree those two describe runs out of automated limbs.)
+
+**Where no automated branch reaches a body, the session hand-works it. That is
+the session's job, not a fallback it resorts to.** A body left dark because no
+script reaches it is a body this product chose not to cover, and the choice is
+invisible in every report that only counts what the scripts got. So the hand
+work happens, the route that succeeded is recorded, it is built into a NAMED
+BRANCH, that branch is applied across every body of the same shape, and the
+session reports **how many further bodies the branch then reached** — as a pair
+against how many were hand-worked. A hand-worked body that produced one row and
+no branch has spent the discovery and kept nothing.
+
+**And the caveat is inseparable from the rule, because without it the branch
+becomes a false generalisation:**
+
+**A branch proven in one place is proven for that SHAPE, not for everywhere.**
+The route that reached a Newbury board will not reach a **borough in Alaska**,
+an **unincorporated county in Arizona**, or a **parish in Louisiana**. New
+England town government — town meeting, SB2, an elected board of selectmen, a
+school administrative unit sitting above the district — is one of the stranger
+shapes in the country, and nearly every branch this project has built so far was
+built against it. Alaska has boroughs and an unorganized borough covering an
+area larger than most states, with no municipal layer underneath it at all.
+Arizona's counties run vast unincorporated territory where the county IS the
+municipal government and there is no town clerk to ask. Louisiana has parishes,
+police juries, and a civil-law vocabulary in which half these routes' names mean
+something else.
+
+**When a branch fails somewhere new, it is not discarded — it grows a
+sub-branch.** The failure is recorded with the jurisdiction and the date, so the
+next state knows what to expect rather than rediscovering it. The tree gets
+deeper as the country gets stranger, and **a branch that stops working is
+evidence the tree needs another limb, never evidence the fact is
+unobtainable.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+failure this forbids is subtle and it feels like competence: a session builds a
+branch, the branch works, the branch is written down as THE way to reach that
+fact, and two states later a session walks it, gets nothing, and records an
+absence — with a defensible branch history behind it, which is exactly the shape
+RULING 52 was adopted over. A branch is a measurement of one route in one
+jurisdiction on one date. Generalising it into a rule about the country is how a
+correct discovery becomes a wrong verdict.
+
+The machinery is `subBranches` on each route in `lib/hunt/branch-manifest.ts`,
+and `expectedToTravel`, which records what this project actually believes about
+a route's portability. Honest uncertainty is a legal answer there and is
+better than a confident wrong one.
+
+### RULING 61 — THE BRANCH MANIFEST, AND WHAT EXHAUSTION MEANS
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 6. **Supersedes RULING 58's
+two-branch bar, which was too low.**)
+
+**`VERIFIED_ABSENT` is earned only when every route in the manifest for that
+field type has been walked, named and dated, and every one returned nothing.**
+
+Not a count — a **named list**, the same list every time, so no session decides
+on the fly what exhausted means. The list is `docs/branch-manifest.md`, made
+checkable in `lib/hunt/branch-manifest.ts` and enforced by
+`isEvidencedAbsence`.
+
+**The manifest is a living document that only grows.** It is never complete,
+never final, and never a reason to stop. A session that finds a new route adds
+it to the manifest and applies it **retroactively** to everything already marked
+absent — every absence record stamps the manifest version it was earned under,
+so a record earned under `v1` stops being exhaustion the moment `v2` exists,
+automatically and without anyone having to remember to go back for it. A route
+is never removed; a route that stops working keeps its id with a dated note.
+
+**We do not know what we do not know. Assume there are always more ways.**
+Reaching the end of the manifest is not proof that a fact does not exist — only
+proof that these named routes returned nothing on this date. That sentence ships
+with the manifest and with every verdict it produces.
+
+*Why two was not enough.* RULING 52 set the bar at two independent branches, and
+that was a large improvement on the ladder's `unreachable` verdict. It is still
+far too low to support the sentence it authorises. *This public person has no
+campaign site* is a claim about a named person and the transparency mandate's
+evidence standard applies to it. Two branches proves almost nothing; trying
+thirty-seven routes and stopping does not tell you the forty-third would have
+failed either. Three separate times this project recorded something as absent
+and was wrong, and every one of those had a defensible retrieval history behind
+it.
+
+*What this costs, stated rather than hidden.* The contact list is nearly the
+whole manifest, because a phone number can come from anywhere — which makes
+`VERIFIED_ABSENT` on a contact close to unearnable in practice. That is the
+correct outcome and not a defect in the bar. A field that cannot be exhausted
+stays **still owed** and is hunted again on its RULING 53 clock. Nothing in this
+project is ever concluded to be unobtainable.
+
+### RULING 62 — A TEST FILE MAY NOT LOSE GUARDS SILENTLY
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 6.)
+
+**A file write that removes assertions from an existing test file fails the
+build unless the removal is explicit and intentional.**
+
+The suite reports on tests that EXIST. A deleted test cannot fail, so it reports
+`fail 0` — and every other protection in this project runs through that suite,
+which means a guard vanishing unnoticed silently weakens all of them. A session
+wrote `tests/<name>.test.ts` for a new guard, the name was already taken, and
+eight unrelated guards stopped existing under a green run.
+
+**The test count is too weak an instrument on its own.** It moves for legitimate
+reasons — every session that adds a guard moves it — so it is noise rather than
+an alarm; it is blind to substitution, because a write that deletes eight guards
+and adds eight leaves the total identical; and even a drop cannot name what
+stopped running. **Names are the instrument. The count is a summary of it.**
+
+`tests/guard-census.json` records every test file and every guard NAME in it.
+`tests/guard-census.test.ts` recomputes it and fails BY NAME when a recorded
+guard is gone. The census is not a lock — a guard may leave, but it has to leave
+the census in the same commit, and `pnpm guard:census --write` refuses to erase
+a name without `--allow-removals`. So making the census agree with a deletion is
+itself a diff that says which guards left.
+
+### RULING 63 — EVERY ZIP INHERITS; NO ZIP STARTS FROM SCRATCH
+
+(Adopted 2026-08-21, the author's ruling, NH Hunt 6.)
+
+**The manifest, the playbook, and every branch built are cumulative property of
+the PROJECT, not of the zip that produced them.** Rockaway does not re-derive
+what Newbury learned. Arizona does not re-derive what Rockaway learned.
+
+- **Every zip run OPENS by loading `docs/branch-manifest.md` and
+  `docs/zip-playbook.md` and stating which branches it inherited before hunting
+  anything.** This is the first thing in the run, not a reference consulted when
+  stuck.
+- **Every run reports branches INHERITED against branches NEWLY BUILT, as a
+  pair.** That ratio rising across zips is the only real evidence the method
+  compounds. **A session that builds a branch which already existed has
+  committed a defect** — it is reported as one, with the existing branch named.
+- **A new branch is checked against the manifest BEFORE it is built.**
+  Duplication is worse than a gap, exactly as it is in the tracker.
+- **Both files are indexed BY QUESTION, not read front to back.** A New Jersey
+  session must be able to find "how do I reach a town clerk record" without
+  reading what New Hampshire taught about village districts. At 175 KB and
+  growing, an unindexed playbook is one a session will skim.
+- **Where an inherited branch fails in a new jurisdiction it grows a sub-branch
+  per RULING 60.** It is never deleted, and its failure is recorded with the
+  jurisdiction and the date so the next state knows what to expect.
+
 ### WHAT IS LAW HERE, AND WHAT IS A RULING
 
 (Adopted 2026-08-20, Prompt C item 5.)

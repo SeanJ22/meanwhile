@@ -333,3 +333,34 @@ test("3.3: the statewide rule matches the SHAPE exactly, not a prefix", async ()
   );
   assert.notEqual(c.certaintyOf("ocd-division/country:us/state:nj/sldl:25"), "CERTAIN");
 });
+
+/* ========================================================================== */
+/* 5. The INVITATION half survives every viewport                             */
+/* ========================================================================== */
+
+test("RULING 71: the action half of the pill is never hidden by a media query", () => {
+  /*
+   * Found by reading a 430×932 production capture as an image (RULING 2). The
+   * DOM reported the full sentence and the PICTURE showed only "Could govern
+   * you", because a `max-width: 460px` rule dropped `.could-govern-action`.
+   *
+   * That is not a cosmetic trim. Stripping the invitation leaves a bare
+   * uncertainty marker beside a body's name, which is far closer to the
+   * per-card completeness statement RULING 44 deleted than to the offer
+   * RULING 71 specifies — the words "add your address to confirm" are the
+   * whole reason this pill is a fact about the reader and not about our data.
+   * It may wrap. It may not vanish.
+   */
+  const css = codeOf("app", "globals.css");
+  assert.doesNotMatch(
+    css,
+    /\.could-govern-action[^{}]*\{[^{}]*display\s*:\s*none/i,
+    "the invitation may never be hidden — a bare 'Could govern you' reads as a completeness marker",
+  );
+  assert.doesNotMatch(
+    css,
+    /\.could-govern-action[^{}]*\{[^{}]*(visibility\s*:\s*hidden|font-size\s*:\s*0)/i,
+    "nor by any other way of removing it",
+  );
+  assert.match(css, /\.could-govern-pill\s*\{/, "the pill's own rule is still here");
+});

@@ -2795,14 +2795,22 @@ label:has(> input[type="checkbox"]) {
 }
 
 /* The pill is per BODY, so on a narrow viewport it wraps under the title
-   rather than pushing the heading into a two-line ragged column. */
+   rather than pushing the heading into a two-line ragged column.
+ *
+ * **THE ACTION HALF IS NEVER HIDDEN.** The first version dropped
+ * `.could-govern-action` under 460px to keep the pill on one line, and a
+ * production capture read as an image showed the result: at 430×932 the pill
+ * said only "Could govern you". That is the invitation stripped out, leaving a
+ * bare uncertainty marker beside a body's name — which is much closer to the
+ * per-card completeness statement RULING 44 deleted than to the offer RULING 71
+ * specifies. The distinction that keeps this pill legitimate lives in the words
+ * "add your address to confirm", so those words are the last thing that may be
+ * dropped to save a line. It wraps instead. */
 @media (max-width: 460px) {
   .could-govern-pill {
     margin-left: 0;
     margin-top: 4px;
-  }
-  .could-govern-pill .could-govern-action {
-    display: none;
+    white-space: normal;
   }
 }
 

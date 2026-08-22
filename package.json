@@ -150,7 +150,8 @@
     "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts",
     "nh6:shots": "tsx scripts/nh6-shots.mts",
     "nj:filing": "tsx scripts/nj-filing.mts",
-    "ad:library": "tsx scripts/ad-library.mts"
+    "ad:library": "tsx scripts/ad-library.mts",
+    "shoot:nj0822": "tsx scripts/shoot-nj-0822.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

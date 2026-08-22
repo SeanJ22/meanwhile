@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-18 — **four numbers this repo prints turned out to be
+Last updated: 2026-08-22 — **New Jersey publishes the candidate contact and New Hampshire does not, and that single publishing practice is the whole of the 1-of-16 versus 15-of-15 difference.** The NJ Hunt, Rockaway Township (07866).
+
+Previously (2026-08-18) — **four numbers this repo prints turned out to be
 describing something other than what they were named, and each was caught by
 asking an instrument what it actually returned.** The g18 session, five items
 of five.
@@ -243,6 +245,127 @@ mover's "about this area" page; the sidebar numbers as doors; and the
 four-zip phone-width tester pass at 74 checks green. FEC (D34) deferred
 whole again under stated duress. See §15. Before that, 2026-08-16: the
 correctness session (§14).
+
+---
+
+## NJ Hunt, 2026-08-22 — New Jersey publishes the contact, and that is the whole difference
+
+**Code merge: `a3fc8ba` + `2a2b381` → PR #148, merged as `274ad65`.** One
+planned code merge, no second. Production serves `274ad65`, deploy
+`6a89bb3db8aea300082b2390`. `walk:all` 371 passed, 0 regressions, 0 GONE, 0
+silent, 371 distinct of 371.
+
+### The question this zip existed to answer
+
+NH Hunt 6 measured `contact` at **7 mechanically-walkable routes against 28
+that need a person**, and found ONE contact for sixteen Merrimack County
+candidates. Rockaway Township was picked as the median American shape — a
+township with a council and a manager, a county that runs elections, a regional
+school district, an ordinary vendor portal, no town meeting — to test whether
+that ratio is a fact about the country or a fact about New Hampshire.
+
+**It is a fact about New Hampshire, and the reason is narrower and more useful
+than "New Jersey is easier."** The manifest is the same in both states and the
+walker automates the same seven routes in both. What differs is what two of the
+*other* routes actually return:
+
+| | New Hampshire | New Jersey |
+|---|---|---|
+| `filing-state` | name, town, party. Walled at rungs 2–3. **No contact.** | a candidate list AND a separate `-emails-` PDF. **The contact itself.** |
+| `filing-county` | the county publishes no candidate list | one born-digital PDF, whole county, **filed email and filed street address for every office, school board included** |
+| Contact found | **1 of 16**, after walking all seven automated routes | **15 of 15**, from ONE document each |
+
+The dependency was never on the NUMBER of routes. It was on a per-state
+publishing practice, and no national floor guarantees it either way. Two states
+is two states: Arizona, Alaska and Louisiana are still unmeasured, and the next
+zip asks the question again rather than assuming the answer.
+
+All fifteen 07866 candidates now render a filed email and a filed address with
+the clerk's filing cited — the Rockaway Township school-board candidates
+included, who in New Hampshire's shape would have had nothing.
+
+### What shipped
+
+`pnpm nj:filing` discovers the clerk's *current* PDFs from the page's own
+`href`s and parses 272 county-wide candidates, 260 with an email. It never
+hardcodes a URL: the clerk republishes at a new version path on every revision
+and both stay reachable, and the `082126` revisions read this session
+superseded the `080726`/`072826` ones curated on 2026-08-14 — two weeks stale,
+and a stale filing read as current is a claim about who is running.
+
+**Manifest v1 → v2, 36 → 41 routes.** RULING 66's four compliant routes to a
+walled social page, plus `filing-campaign-finance-local`, which New Jersey
+imposes on local candidates and New Hampshire does not. The bump was PROVEN to
+re-open prior absences rather than assumed: a walk that was full exhaustion
+under v1 now returns `exhausted: false`, `staleManifest: true`, and names the
+four new missing routes.
+
+**RULING 65's footer-address branch** took Sutton from 1 body live of 19 to 6,
+and from 5 meetings to 37 — verified live. The branch reaches **95 bodies
+across 17 hosts in three states**. NH Hunt 6 refused this deliberately and
+wrote its reasoning into `venue-cache.ts`; the author ruled the other way, so
+the reversal is named in both files with the original reasoning kept verbatim,
+and the half that survives is that a footer is the MUNICIPALITY's claim and
+never the board's. Three bodies were deliberately left out because each says
+something better about itself — a Zoom title, its own named venue, its own
+stated arrangement. That boundary is the rule working.
+
+**RULING 64** shipped a `phoneLabel`. Exactly one instance existed across 92
+cards: two County Attorney candidates carried the same switchboard in two
+formats with nothing saying so. The number was verified as the office's on the
+county's own page before it was labelled.
+
+### Four inherited New Hampshire branches failed here, and each grew a limb
+
+None was deleted — RULING 60 in practice, and this is what the session was for.
+
+- **`zip:universe` was hardcoded to New Hampshire's TIGER layers**, so 07866
+  resolved Rockaway Township's centroid correctly and then enumerated New
+  Hampshire — reporting a New Jersey township's official universe as ONE unit,
+  the Nashua City School District, 350 km away, and reconciling cleanly while
+  doing it. A confident, arithmetically consistent, entirely wrong answer. The
+  state now comes from the containing county, and a state whose layers are
+  missing fails loudly instead of falling back.
+- **The Census name normaliser did not know `TWP` or `BORO`**, so a school
+  district the geometry places the zip inside read as not governing it.
+- **…and the obvious fix was worse**: stripping the type collapsed Rockaway
+  BOROUGH onto Rockaway TOWNSHIP — separate municipalities with separate
+  councils, separate districts and separate ballots. The type is the
+  discriminator and is now expanded, never removed.
+- **`twig:pair` minted `state:nh` ids for New Jersey units**, so a township
+  this registry holds nine bodies for read as "no division of its own" and the
+  pair read 1 of 178. It now reads the OCD id geometry already resolved.
+
+### Three of this session's own tools reported findings that were not there
+
+The most transferable thing built here is the **control query**. `pnpm
+ad:library`'s first run reported HIT on 16 of 16 candidates for two routes — a
+100% hit rate on guessed handles across sixteen people, which measures the
+instrument rather than the world. `bsky.app` returns byte-identical 5,989 bytes
+for any handle, `instagram.com` a login wall, and a newspaper search echoes the
+query into its own no-results page so a substring test passes on nothing. All
+200. Every guessed identifier is now asked against a control that cannot exist.
+
+`HIT` also became **`LEAD`** where an identifier is guessed: a page existing
+proves a page exists and never whose it is.
+
+Two smaller ones: `P.O. Box 999` parsed as street number `999` for two of the
+fifteen, and a byte count read after `pdfjs` detached the buffer reported `0`
+for two PDFs it had just parsed 272 candidates out of.
+
+### What 07866 is, and what it is not
+
+The official-universe pair: **178 units in the 25 km circle, 5 held, 173 with
+no body, 13 bodies held.** 03255 is unchanged at 48 of 48. Northern New Jersey
+is far denser inside 25 km than Newbury is, and the fire districts and
+municipal utilities authorities are the largest unreached class.
+
+**07866 is NOT done.** Rockaway BOROUGH is inside it at 0 km, this product
+holds nothing for it, and it is running a four-candidate council contest and
+two school-board seats that do not render (`NJ01`, P1). No candidate field is
+`VERIFIED_ABSENT` anywhere — the count is 0 in both zips, which is correct
+under RULING 61, and photos, blurbs, campaign sites and phones were not hunted
+for the New Jersey candidates at all. They are `NOT_HUNTED`, never absent.
 
 ---
 

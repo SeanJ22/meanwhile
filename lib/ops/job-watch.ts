@@ -69,3 +69,51 @@ export function failedTwiceConsecutively(
   if (newest.conclusion !== "failure" || previous.conclusion !== "failure") return null;
   return { newest, previous };
 }
+
+/**
+ * THE SAME QUESTION, ASKED OF THE WHOLE WINDOW RATHER THAN OF THE HEAD.
+ * (NJ Hunt 3 item 1c, 2026-08-22.)
+ *
+ * `failedTwiceConsecutively` reads the two most recent completed runs, and the
+ * watcher reads it once a day at 15:40 UTC. That is a two-run window sampled
+ * every twenty-four hours, and a double failure that heals in between is
+ * invisible to it — not misjudged, never seen.
+ *
+ * It happened on 2026-08-22. `refresh-meetings-snapshot.yml` failed at 01:25
+ * and again at 01:30, and went green at 01:51. By the 15:40 reading the two
+ * most recent runs were both successes. Job watch ran, passed, and opened
+ * nothing; no Needs Sean row exists for it. Replaying the detector with
+ * `--asof=2026-08-22T01:45:00Z` fires correctly and names both run ids — the
+ * RULE was never wrong. The SAMPLING was.
+ *
+ * That matters because "it broke twice in a row and fixed itself" is not a
+ * non-event. Nobody learned why. The next occurrence starts from zero
+ * knowledge, and the failure rate — 17 of 40 completed runs, printed by this
+ * watcher every day since it was built — is what a run of unexamined
+ * self-healing doubles looks like from outside.
+ *
+ * So the window is scanned for the most recent ADJACENT PAIR of failures
+ * anywhere in it, newest first. Returns `null` when there is none.
+ *
+ * It does not spam: the caller is idempotent per workflow on a marker string,
+ * so a window holding six historical pairs still yields at most one open row.
+ * And `healed` is stated rather than inferred, because "this job is broken
+ * right now" and "this job broke twice last night and recovered" are different
+ * sentences and must not be written as the same one.
+ */
+export function failedTwiceInWindow(runs: WorkflowRun[]): {
+  newest: WorkflowRun;
+  previous: WorkflowRun;
+  healed: boolean;
+} | null {
+  for (let i = 0; i + 1 < runs.length; i += 1) {
+    const newest = runs[i];
+    const previous = runs[i + 1];
+    if (newest?.conclusion === "failure" && previous?.conclusion === "failure") {
+      // Healed when anything newer than the pair completed successfully — i.e.
+      // the pair is not at the head of the list.
+      return { newest, previous, healed: i > 0 };
+    }
+  }
+  return null;
+}

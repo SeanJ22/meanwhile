@@ -198,6 +198,40 @@ const DROP_KEYS: Array<keyof NormalizeDropCounts> = [
  * Exported so the write boundary, the read path and `tests/snapshot.test.ts`
  * all use one implementation rather than three that can drift apart.
  */
+/**
+ * Assemble `counts` FROM THE ROWS THAT WILL BE WRITTEN. (NJ Hunt 3 item 1b,
+ * 2026-08-22.)
+ *
+ * `scripts/ingest.ts` built this object inline, and the four numbers were read
+ * off three different arrays — one of which, `served`, is the array from BEFORE
+ * the second duplicate-collapse pass. `total` came off `served` while
+ * `meetings` was written from `finalRows`. They are equal on every run where
+ * that pass drops nothing, so it read correct for months. Refresh #43 was the
+ * first run where carry-forward put duplicates back, six rows collapsed, and
+ * `reconcileCounts` refused the snapshot on `states 461 total meetings but
+ * holds 455`. The refusal was right; the arithmetic in front of it was not.
+ *
+ * So the assembly takes ONE array — the rows going into the file — and derives
+ * every count that can be derived from it. `total` and `fresh` can no longer be
+ * measured against a different array than `meetings`, because there is no other
+ * array in scope. `reconcileCounts` still checks all four equalities
+ * independently; this does not replace it, and a helper that made the check
+ * pass by construction would be worthless. What it removes is the one degree of
+ * freedom that let a correct check be handed wrong inputs.
+ */
+export function snapshotCounts(
+  rows: readonly Meeting[],
+  duplicatesCollapsed: number,
+): SnapshotCounts {
+  const carried = rows.filter((m) => m.carried).length;
+  return {
+    fresh: rows.length - carried,
+    duplicatesCollapsed,
+    carried,
+    total: rows.length,
+  };
+}
+
 export function reconcileCounts(snap: MeetingsSnapshot): void {
   const counts = snap.counts;
   if (!counts || typeof counts !== "object") {

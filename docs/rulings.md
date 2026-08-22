@@ -1140,3 +1140,246 @@ SB2 government, the school administrative unit sitting above the district, and
 the town clerk as the record of local filings. All four are New England shapes.
 Rockaway Township is the median American shape and is the first test of whether
 these routes travel at all.
+
+
+### RULING 64 — shared office contacts are published, labeled as the office
+
+*Adopted 2026-08-21 (NH Hunt 5). Recorded here 2026-08-22 (NJ Hunt 3) — it and
+the nine below arrived in session briefs and were binding from the day they were
+made, but none of them had been written into this store. A ruling that lives
+only in a chat window is the exact condition this file was created to end.*
+
+A contact that reaches an OFFICE rather than a person is publishable, and it is
+published labeled as what it is. The reader is trying to reach the body; a shared
+line that reaches it is a working contact and withholding it serves nobody.
+
+### RULING 65 — the footer-address branch
+
+*Adopted 2026-08-21 (NH Hunt 5). Recorded here 2026-08-22.*
+
+A body's postal address is very often in its own site footer, in every page of
+it, when the contact page carries nothing. The footer is a named branch and is
+walked before an address is recorded absent.
+
+### RULING 66 — Facebook by compliant routes only
+
+*Adopted 2026-08-21 (NH Hunt 5). Recorded here 2026-08-22.*
+
+Where a campaign lives on Facebook and Facebook is walled, the routes are
+`ad-library` (the mandatory political-ad disclosure, which needs a credential
+this project does not hold — tracker `NS01`, TABLED BY SEAN), `social-archive`,
+`social-mirror` and `news-embed`. Authenticated access is NEVER attempted, and
+the two standing prohibitions in the transparency mandate are not narrowed.
+
+`NS01` is Sean's row and is not to be worked, walked or duplicated by a session.
+
+### RULING 67 — an enumeration states its geography and is checked externally
+
+*Adopted 2026-08-22 (NJ Hunt 2). Recorded here 2026-08-22.*
+
+**A total that reconciles is not a total that is correct.** Every enumeration
+states the geography it resolved to, and that geography is checked against the
+zip's own, established INDEPENDENTLY — against a second publisher, not against
+the same containment test that produced it.
+
+`lib/geo/zip-geography.ts` checks against two distinct publishers: TIGER
+geometry and NCES mailing addresses. The instance that produced the ruling was
+five defects at once, and the total reconciled cleanly throughout all five.
+
+### RULING 68 — control queries are mandatory
+
+*Adopted 2026-08-22 (NJ Hunt 2). Recorded here 2026-08-22.*
+
+**A 200 whose content is not about the thing asked for is not a document.** Any
+route that can echo, wall, or template gets a control query, and a guessed
+identifier yields a `LEAD`, never a `HIT`. `lib/hunt/control-query.ts` is the
+machinery.
+
+### RULING 69 — reference data belongs in the repo, named and refreshable
+
+*Adopted 2026-08-22 (NJ Hunt 2). Recorded here 2026-08-22. See RULING 73, which
+settles how it lands.*
+
+Structured reference data that names bodies, offices and contacts lives in
+`data/reference/` where a hunt can reach it, rather than being re-derived per
+session. The FEC directory's 349 offices across 56 jurisdictions is the first.
+
+### RULING 70 — Ballotpedia is not scraped
+
+*Adopted 2026-08-21 (NH Hunt 5). Recorded here 2026-08-22.*
+
+It is a licensing conversation, and the first-party questionnaire is the better
+path regardless. No scraping route is built.
+
+### RULING 71 — a zip cannot answer "who governs you"; a street address can
+
+*Adopted 2026-08-22 (NJ Hunt 3), the author's ruling. Recorded here 2026-08-22.*
+
+In New Jersey, borough and township are COEQUAL forms of municipality — alongside
+town, city and village — not levels of a hierarchy. Rockaway Borough and Rockaway
+Township are two separate adjacent municipalities that share a name. Neither
+governs the other's residents.
+
+ZIP codes are postal delivery routes and have never respected municipal
+boundaries. 07866 crosses the line, so "who governs you" has two different
+correct answers depending on which side of a street the reader lives on. **This
+is not a defect in 07866. It generalises to a large share of American zips.**
+
+The surface answers with what a zip can establish and MARKS what it cannot. It
+does not gate the page behind an address prompt, and it does not withhold.
+
+- Bodies that CERTAINLY govern the reader render normally, with no marker. County,
+  school district, state and federal do not become uncertain because a zip crosses
+  a municipal line.
+- A body that MAY OR MAY NOT govern the reader renders with a pill reading, in
+  substance: *Could govern you — add your address to confirm.* Per body, not per
+  page, and only the ambiguous ones carry it.
+- **The pill is an invitation, not a disclosure of our incompleteness.** This is
+  the distinction that keeps it clear of RULING 44: a per-card completeness
+  statement says *we did not find this*. This pill says *this is a fact about your
+  street that only you can settle*. Our data is complete; the reader's location is
+  not. RULING 44 is NOT weakened, and the distinction is recorded here so no
+  future session deletes the pill as a completeness marker.
+- The address is an intake surface, handled under the existing collection minimum
+  unchanged — nothing new retained, no new column.
+
+**A ZCTA centroid may never resolve a ballot or a who-governs answer.**
+`CLAUDE.md` already said so, and it was violated in shipped code.
+
+### RULING 72 — a walled host is never evidence a body is unreachable
+
+*Adopted 2026-08-22 (NJ Hunt 3), the author's ruling. Recorded here 2026-08-22.*
+
+Discovery is a tree, not a ladder. A host refusing is ONE BRANCH returning empty
+on ONE DATE. The body is still reachable by other branches — a federal directory,
+a phone number, a postal address, a parent agency, a published report, a person.
+
+ELEC was recorded in this repo as a permanent wall. The FEC's directory hands
+over its phone number and postal address. **Every wall recorded anywhere in this
+project is re-checked against the FEC directory's contact details, and a wall may
+never be recorded without naming which other branches were tried.**
+
+### RULING 73 — large reference documents: commit the CONTENT, never the binary
+
+*Adopted 2026-08-22 (NJ Hunt 3), the author's ruling. Recorded here 2026-08-22.
+It settles RULING 69 against RULING 20.*
+
+RULING 20 keeps bulk binaries out of git because git retains every version
+permanently and the decision cannot be reversed. RULING 69 wants reference data
+in the repo and refreshable. **Both are satisfied by extraction:** parse the
+document, commit the structured content, commit the source's SHA-256 and its
+provenance note, leave the binary out.
+
+That is what the FEC directory did — 349 offices across 56 jurisdictions
+committed, PDF not. **This is the standing pattern for every large reference
+document from here on.**
+
+### RULING 74 — an address, once given, is never asked for twice
+
+*Adopted 2026-08-22 (NJ Hunt 3), the author's ruling. Recorded here 2026-08-22.
+Inseparable from RULING 71.*
+
+Wherever a reader supplies an address — the who-governs surface, the
+polling-place surface, the ballot, anywhere — it persists for the rest of that
+SESSION and resolves every surface that could have used it.
+
+- Every ambiguity that address settles is settled everywhere. No pill renders on a
+  body the address resolves. No surface re-prompts. A reader who gave an address
+  to see who governs them is not asked again to find where they vote.
+- **Asking twice for the same fact is a frustration the product manufactures
+  itself, and it reads as a product that is not paying attention.**
+- It persists for the session and does NOT become a durable record. No new column
+  on the search log, no new column on the reactions store, nothing joined to
+  anything. The claim that survives a hostile reader is *the schemas share no
+  joinable column* — architecture, not a policy promise — and a session-scoped
+  resolution keeps that claim exactly as it is.
+- It does not widen to claim every municipality in the zip governs the reader.
+  `NH56`'s decision not to widen was correct: the card's verb is GOVERN. The pill
+  is how both municipalities appear without either asserting jurisdiction it does
+  not have.
+
+### RULING 75 — a close-out commit is gated like any other commit to `main`
+
+*Adopted 2026-08-22 (NJ Hunt 3 item 1.5). Not yet law — routed to the author.*
+
+The merge-cadence rule in `CLAUDE.md` permits a session to ship its code once and
+then write CLOSE-OUT RECORDS as separate named commits, because a document cannot
+name the commit that contains it. That is correct and it stays. What went
+unnoticed is what it implies about gating.
+
+`pnpm handoff --ship` calls itself "the single door everything merges through".
+**For code it is. For close-out records it never was** — they are committed after
+the ship and pushed straight to `main` through no gate at all. Every session in
+this repo's history has done this, and the shape has now put a red suite on
+`main` twice: once from Prompt D's own close-out, and on 2026-08-22 when NJ Hunt
+2's close-out carried `scripts/shoot-nj-hunt2-0822.mts` with five `TS18046`
+sites. Build checks #196 and #197 failed, Netlify refused both deploys at
+'building site', and production served the 10:17 build for the rest of the day.
+The session reported green gates truthfully — it ran them before the file existed.
+
+**Close-out is a door, so it gets a gate, and the session is asked what happened
+after the push rather than before it.** Three parts, and the third is the one
+nothing local could ever have supplied:
+
+1. `pnpm closeout` (`scripts/close-out.mjs`) — the gated door. Refuses off
+   `main`, refuses a dirty tree, runs `pnpm build` (the literal command
+   `netlify.toml` gives Netlify, which type-checks everything `tsconfig.json`
+   includes, `scripts/` included), pushes through `scripts/push-main.mjs`, then
+   waits for the tip to go green. No skip flag, for the reason `buildGate()`
+   already gives: an escape hatch on a gate is how the gate stops meaning
+   anything.
+2. `pnpm main:green` (`scripts/main-green.mjs`) — **asks GitHub**, not the
+   working tree. Every other gate in this repo answers a question about local
+   files; the question that went unasked is about the REMOTE BRANCH, and only the
+   server knows what happened to a commit after it landed. Four verdicts kept
+   apart — green, red, pending, and could-not-tell — because a check that cannot
+   reach its subject must never print like a passing one.
+3. `pnpm handoff` now carries a `main checks` line, failing on RED. **A session
+   may not report clean gates while leaving `main` failing and production
+   stale.**
+
+*Why not a pre-push hook.* `buildGate()`'s header already rejected one and the
+reasoning holds: `core.hooksPath` is per-clone and can be silently absent in a
+fresh clone, and a hook that runs on every work-in-progress push is a hook that
+gets `--no-verify`d out of existence. The server-truth check has neither
+problem — it cannot be absent, and it costs one API call.
+
+### RULING 76 — session-dated scripts are COMMITTED, and held to every standard
+
+*Adopted 2026-08-22 (NJ Hunt 3 item 1.7). Not yet law — routed to the author.*
+
+A session-dated capture or walk script — `shoot-nj-hunt2-0822.mts`,
+`tester-walk-0819.mts`, `nh6-shots.mts` — photographs one session's work and will
+in all likelihood never run again. **There are 34 of them in `scripts/`, and all
+34 are committed.** The choice is between holding them to the same standard as
+every other file and not committing them at all.
+
+**They are committed, and they are held to the standard.** Three reasons, in
+order of weight:
+
+1. **They carry technique, and technique is a rung.** The F22 page-shrink recipe
+   for a 68,000px ballot page, the `sessionStorage` seeding that stops a map
+   capture showing the welcome overlay, the marker-before-shrink ordering — every
+   one of those is a wall that fell, and the standing rule is that a wall which
+   falls becomes a permanent reusable step rather than a discovery spent and
+   kept. Deleting the script deletes the rung.
+2. **They are the method record behind evidence that has already been reported.**
+   RULING 2 makes a screenshot evidence only once it has been read as an image. A
+   report that says four captures were read, with no committed record of how they
+   were produced, is weaker than one where the recipe is in the tree.
+3. **"Not committed" creates an untracked class the gates never see.** That is
+   the same invisibility that caused the failure in RULING 75 — work reaching
+   `main`'s neighbourhood without passing anything. Moving these out of the tree
+   would not gate them; it would only stop them being looked at.
+
+**The standard, stated:** they type-check under `strict` like every other file,
+they lint, they carry a header saying which session and which claim they served,
+and they are never excluded from the type check. `scripts/` holding one-shot
+tools is not a reason to weaken the check over `scripts/` — it is a directory
+that only grows, and it holds the extraction toolkit, `twig:pair`,
+`control-query`, the move script and the walk.
+
+**What this does NOT license** is minting a new dated script where a
+parameterised one would do. A shooter that takes a zip and a list of contests is
+worth more than the eleventh `shoot-<date>.mts`, and the preference is stated
+here so the count of 34 is a fact about the past rather than a target.

@@ -23,6 +23,30 @@ import { join } from "node:path";
 
 import { launchGuarded } from "./browser.mts";
 
+/*
+ * `page.evaluate` given a STRING page-function has no return type to infer
+ * from, so Playwright hands back `unknown` and `strict` refuses every property
+ * read off it — five of them, which is how this file put `main` red after the
+ * gates had already run. The shapes are declared here rather than asserted at
+ * each site: an `as any` would silence the same five errors while leaving the
+ * next typo to be discovered by a reader looking at a wrong screenshot.
+ */
+type BallotFacts = {
+  cards: number;
+  contests: number;
+  borough: string[];
+  hasBurnside: boolean;
+  hasMcdonald: boolean;
+  hasDawkins: boolean;
+  hasNatale: boolean;
+  pageHeight: number;
+};
+type ContestBox =
+  | { found: true; top: number; height: number; heading: string }
+  | { found: false };
+type PageCounts = { cards: number; contests: number; height: number };
+type MapFacts = { welcomeStillUp: boolean; canvases: number; firstWords: string };
+
 const BASE = process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app";
 const OUT = join(process.cwd(), ".njhunt2", "shots");
 mkdirSync(OUT, { recursive: true });
@@ -36,7 +60,7 @@ const page = await browser.page({ viewport: { width: 430, height: 932 } });
 await page.goto(`${BASE}/ballot?zip=07866`, { waitUntil: "networkidle" });
 await page.waitForTimeout(2000);
 
-const facts = await page.evaluate(`(() => {
+const facts = await page.evaluate<BallotFacts>(`(() => {
   const text = document.body.innerText;
   const headings = [...document.querySelectorAll("h2, h3")].map((h) => h.textContent.trim());
   return {
@@ -84,7 +108,7 @@ console.log(`1 · whole page at zoom ${shrink.toFixed(3)} (page was ${facts.page
 
 await page.evaluate(`document.documentElement.style.zoom = "1"`);
 await page.waitForTimeout(400);
-const council = await page.evaluate(`(() => {
+const council = await page.evaluate<ContestBox>(`(() => {
   for (const el of document.querySelectorAll("[data-contest-id]")) {
     const h = el.querySelector("h2, h3");
     if (h && /Borough Council/i.test(h.textContent || "")) {
@@ -109,7 +133,7 @@ if (council.found) {
 
 await page.goto(`${BASE}/ballot?zip=03255`, { waitUntil: "networkidle" });
 await page.waitForTimeout(2000);
-const nh = await page.evaluate(`(() => ({
+const nh = await page.evaluate<PageCounts>(`(() => ({
   cards: document.querySelectorAll("[data-candidate-battlecard]").length,
   contests: document.querySelectorAll("[data-contest-id]").length,
   height: document.documentElement.scrollHeight,
@@ -154,7 +178,7 @@ await mapPage.addInitScript(({ zip }) => {
 }, { zip: "07866" });
 await mapPage.goto(`${BASE}/`, { waitUntil: "networkidle" });
 await mapPage.waitForTimeout(4000);
-const mapFacts = await mapPage.evaluate(`(() => ({
+const mapFacts = await mapPage.evaluate<MapFacts>(`(() => ({
   welcomeStillUp: /Meanwhile/.test(document.body.innerText),
   canvases: document.querySelectorAll("canvas").length,
   firstWords: document.body.innerText.slice(0, 90).replace(/\\s+/g, " "),

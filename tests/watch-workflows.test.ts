@@ -7,6 +7,7 @@ import test from "node:test";
 import {
   completedRuns,
   failedTwiceConsecutively,
+  failedTwiceInWindow,
   failureRate,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
@@ -155,4 +156,85 @@ test("every scheduled workflow in the repo is on the watch list", () => {
   assert.ok(scheduled.length >= 5, `expected the known scheduled jobs — found ${scheduled.length}`);
   const missing = scheduled.filter((f) => !watcher.includes(f));
   assert.deepEqual(missing, [], `scheduled workflows nothing watches: ${missing.join(", ")}`);
+});
+
+
+/* --------------------------------------------------------------------------
+ * NJ Hunt 3 item 1c (2026-08-22) — the double failure that healed before the
+ * watcher looked.
+ *
+ * `refresh-meetings-snapshot.yml` failed at 01:25 and again at 01:30 on
+ * 2026-08-22 and went green at 01:51. Job watch reads once a day at 15:40 UTC
+ * and read only the two most recent completed runs, so by the time it looked
+ * the pair was buried under a success. It passed. It opened nothing. No Needs
+ * Sean row exists for it, and the failure rate stood at 17 of 40.
+ *
+ * The RULE was never wrong — replaying it with `--asof=2026-08-22T01:45:00Z`
+ * fires and names both run ids. The SAMPLING was: a two-run window read once a
+ * day cannot see anything that heals in between. These hold the widened
+ * detector against the real shape, using the real run ids.
+ * ------------------------------------------------------------------------ */
+
+test("1c: a healed double failure is found anywhere in the window", () => {
+  // The live shape, newest first: success at 01:51 over the 01:30/01:25 pair.
+  const runs = [
+    run(32544643877, "success", "2026-08-22T01:51:50Z"),
+    run(32543652154, "failure", "2026-08-22T01:30:53Z"),
+    run(32543393133, "failure", "2026-08-22T01:25:44Z"),
+    run(32516048635, "success", "2026-08-21T18:58:15Z"),
+  ];
+
+  // The old head-only rule sees nothing. That is the defect, pinned.
+  assert.equal(
+    failedTwiceConsecutively(runs),
+    null,
+    "the head-only rule cannot see a pair that has already healed",
+  );
+
+  const found = failedTwiceInWindow(runs);
+  assert.ok(found, "the window scan finds the pair the daily reading missed");
+  assert.equal(found.newest.databaseId, 32543652154);
+  assert.equal(found.previous.databaseId, 32543393133);
+  assert.equal(found.healed, true, "not at the head — it recovered, and that is stated");
+});
+
+test("1c: a pair at the head is reported as still broken, not as healed", () => {
+  const found = failedTwiceInWindow([
+    run(3, "failure", "2026-08-22T18:50:05Z"),
+    run(2, "failure", "2026-08-22T13:02:18Z"),
+    run(1, "success", "2026-08-22T07:00:52Z"),
+  ]);
+  assert.ok(found);
+  assert.equal(found.healed, false, "the pair is at the head — this job is failing now");
+});
+
+test("1c: alternating failures are not a pair — the rule is still ADJACENT", () => {
+  assert.equal(
+    failedTwiceInWindow([
+      run(4, "failure", "2026-08-22T18:00:00Z"),
+      run(3, "success", "2026-08-22T12:00:00Z"),
+      run(2, "failure", "2026-08-22T06:00:00Z"),
+      run(1, "success", "2026-08-22T00:00:00Z"),
+    ]),
+    null,
+    "a flaky job that never fails twice running is not what this detector claims to catch",
+  );
+});
+
+test("1c: the MOST RECENT pair is the one returned", () => {
+  const found = failedTwiceInWindow([
+    run(6, "success", "2026-08-22T18:00:00Z"),
+    run(5, "failure", "2026-08-22T12:00:00Z"),
+    run(4, "failure", "2026-08-22T06:00:00Z"),
+    run(3, "success", "2026-08-21T18:00:00Z"),
+    run(2, "failure", "2026-08-21T12:00:00Z"),
+    run(1, "failure", "2026-08-21T06:00:00Z"),
+  ]);
+  assert.ok(found);
+  assert.equal(found.newest.databaseId, 5, "the older pair is not the one worth a row");
+});
+
+test("1c: a window with fewer than two runs says nothing rather than healthy", () => {
+  assert.equal(failedTwiceInWindow([]), null);
+  assert.equal(failedTwiceInWindow([run(1, "failure", "2026-08-22T18:00:00Z")]), null);
 });

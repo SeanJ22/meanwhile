@@ -33,6 +33,7 @@ import {
 } from "../lib/meetings/refresh-exit.ts";
 import {
   readSnapshot,
+  snapshotCounts,
   writeSnapshot,
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
@@ -463,30 +464,34 @@ function writeMeetingsSnapshot(
   // carry, never off the difference between two other numbers, because a
   // count derived from an assumption stops being true when the assumption
   // grows a new case. `validateSnapshot` refuses the file if they disagree.
-  /*
-   * Counted off the rows that SURVIVED, and counted twice over rather than
-   * derived: `carriedRows` is the marks present in the file, and
-   * `duplicatesCollapsed` is the merge's own count plus the FRESH rows the
-   * second pass dropped. Neither is a subtraction — `validateSnapshot` refuses
-   * the file if `fresh + collapsed` does not equal what the sources claimed,
-   * and a number obtained by subtraction would satisfy that check by
-   * construction while telling nobody anything.
-   */
-  const carriedRows = finalRows.filter((m) => m.carried).length;
+  //
+  // The carried/fresh/total three moved into `snapshotCounts` (NJ Hunt 3 item
+  // 1b) so all three read off `finalRows` and cannot be pointed at a different
+  // array. `collapsedTotal` stays here: it is the one number the survivors
+  // cannot yield, being a count of rows that are no longer among them.
   const freshDroppedAfterCarry = afterCarry.dropped.filter((m) => !m.carried).length;
   const collapsedTotal = report.duplicateSittingsCollapsed + freshDroppedAfterCarry;
   const snapshot: MeetingsSnapshot = {
     formatVersion: 1,
     generatedAt: now.toISOString(),
-    counts: {
-      // `meetings` is this run's own normalized output, not a subtraction.
-      fresh: finalRows.length - carriedRows,
-      // The merge's own number, so the pair reconciles against per-source
-      // `normalized`, which is counted before either pass runs.
-      duplicatesCollapsed: collapsedTotal,
-      carried: carriedRows,
-      total: served.length,
-    },
+    /*
+     * ONE array in, four counts out (NJ Hunt 3 item 1b, 2026-08-22).
+     *
+     * This was an inline object, and `total` was `served.length` — the array
+     * from BEFORE `collapseDuplicateSittings` on the line above — while
+     * `meetings:` below is written from `finalRows`, the array after it. Equal
+     * on every run where that pass drops nothing, which is almost every run.
+     * Refresh #43 was the first where carry-forward put duplicates back: six
+     * rows collapsed, and `reconcileCounts` refused the snapshot on `states
+     * 461 total meetings but holds 455`. The refusal was correct. The
+     * arithmetic handed to it was not.
+     *
+     * `snapshotCounts` takes only the rows that go into the file, so `total`
+     * and `fresh` cannot be measured against a different array again. The
+     * merge count is still passed in — it is the one number that cannot be
+     * recovered from the survivors, which is exactly why it has to be stated.
+     */
+    counts: snapshotCounts(finalRows, collapsedTotal),
     sources: report.children.map((c) => ({
       source: c.source,
       ok: c.ok,

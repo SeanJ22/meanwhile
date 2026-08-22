@@ -8,7 +8,8 @@ import { markerFromRequest } from "@/lib/db/run-marker";
 import { RADIUS_LADDER_KM, searchMeetings } from "@/lib/meetings/query";
 import { getActiveSnapshotMeta } from "@/lib/meetings/snapshot";
 import { wiringForSourceName } from "@/lib/sources/composite/wiring";
-import { coverageAt, divisionsAt } from "@/lib/registry/server";
+import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
+import { coverageAt, divisionsAt, divisionsByOcdIds } from "@/lib/registry/server";
 import type { Division } from "@/lib/registry/types";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 
@@ -124,6 +125,49 @@ export async function GET(request: Request) {
     divisionsAtPoint = new Set(resolvedDivisions.map((d) => d.ocdId));
   } catch (error) {
     console.error("division lookup failed; online meetings fall back to body-in-view", error);
+  }
+
+  /*
+   * **A ZIP IS AN AREA, AND THIS CARD IS LITERALLY CALLED "WHO GOVERNS HERE".**
+   * (NJ Hunt 3 item 3.1, 2026-08-22 — the second instance of `NJ01`.)
+   *
+   * `NJ01` fixed the ballot page and this surface was left on the old
+   * behaviour, because nobody swept the class. Production at 07866 read "4
+   * bodies govern the area around 07866" over a list holding Rockaway TOWNSHIP
+   * and not Rockaway BOROUGH — a separate municipality inside the same zip,
+   * with its own council, its own school district and its own ballot, missing
+   * from the card whose whole job is to answer that question.
+   *
+   * So when the reader TYPED a zip, the divisions are widened to every one
+   * whose territory reaches inside it, exactly as the ballot page does.
+   *
+   * Three things this is careful about:
+   *
+   * - **Only on a typed zip.** A settled-viewport fetch carries none: the
+   *   reader panned rather than named a place, and widening to a zip they did
+   *   not type would answer about somewhere they are not.
+   * - **Only when the point lookup SUCCEEDED.** A failed resolution stays
+   *   null and is passed as null, so a retrieval failure is never written into
+   *   the coverage answer as "nothing governs here".
+   * - **It can only ADD.** The point's own divisions are the starting set and
+   *   are never removed, so nothing a reader saw yesterday disappears today —
+   *   the failed-fetch-never-empties-a-full-surface rule, applied to a
+   *   resolver change.
+   *
+   * The online-meeting filter is widened with it, deliberately: a Borough
+   * resident's own council meeting held online is a meeting they should see,
+   * and this set only ever grows the list.
+   */
+  if (zipRead.value && resolvedDivisions) {
+    const areaIds = await divisionIdsForZipArea(
+      zipRead.value,
+      resolvedDivisions.map((d) => d.ocdId),
+    );
+    const widened = await divisionsByOcdIds(areaIds);
+    if (widened.length >= resolvedDivisions.length) {
+      resolvedDivisions = widened;
+      divisionsAtPoint = new Set(widened.map((d) => d.ocdId));
+    }
   }
 
   const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionsAtPoint);

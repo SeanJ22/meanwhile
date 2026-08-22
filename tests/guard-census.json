@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 181,
-    "named": 1648,
+    "named": 1649,
     "dynamic": 6
   },
   "files": {
@@ -652,6 +652,7 @@
         "RULING 44: the pill attaches to a BODY, never to a candidate",
         "RULING 44: the pill makes no claim about OUR data",
         "RULING 44: the pill's subject is the reader's location, and it says so",
+        "RULING 71: the action half of the pill is never hidden by a media query",
         "RULING 71: the pill never gates — the page renders every contest regardless",
         "RULING 74: an address given for one zip does not answer for another",
         "RULING 74: nothing about the address reaches the server or a store",

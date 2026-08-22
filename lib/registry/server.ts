@@ -169,6 +169,37 @@ export async function divisionsAt(lat: number, lng: number): Promise<Division[]>
 }
 
 /**
+ * Divisions by OCD id, for a caller that has resolved an AREA rather than a
+ * point. (NJ Hunt 3 item 3.1, 2026-08-22.)
+ *
+ * `NJ01` fixed the ballot page, which resolved a zip to its ZCTA centroid and
+ * asked which divisions contain that ONE point. The map's **"Who governs
+ * here"** card was the second instance of the same defect and it was still
+ * live: production at 07866 read *"4 bodies govern the area around 07866"* and
+ * listed Rockaway TOWNSHIP, with Rockaway BOROUGH — a separate municipality
+ * inside the same zip, running a four-candidate council race — absent from a
+ * card whose heading is the exact question it was getting wrong.
+ *
+ * The ballot's widening goes through `lib/ballot/zip-divisions.ts`, which
+ * yields OCD ids. This turns those back into `Division` records so the coverage
+ * summary can be built from the same area answer.
+ *
+ * **An id the registry does not hold is DROPPED, not invented.** The zip-area
+ * index is built from TIGER polygons and the registry is built from its own
+ * sources; the two are allowed to disagree, and a synthesised division would be
+ * a government this product asserts exists on the strength of nothing.
+ */
+export async function divisionsByOcdIds(ocdIds: readonly string[]): Promise<Division[]> {
+  const { divisionsById } = await loaded();
+  const out: Division[] = [];
+  for (const id of ocdIds) {
+    const division = divisionsById.get(id);
+    if (division) out.push(division);
+  }
+  return out;
+}
+
+/**
  * One officeholder by roster id, in the render shape (4, 2026-08-19).
  * Serves the ballot page's incumbent-record link: the id arrives from an
  * exact-key join (never a name match), and an id the roster doesn't hold

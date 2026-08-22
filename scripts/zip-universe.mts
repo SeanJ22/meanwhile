@@ -52,6 +52,7 @@ import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { haversineKm } from "../lib/geo/distance.ts";
 import { RADIUS_LADDER_KM } from "../lib/meetings/constants.ts";
 import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
+import { assertEnumerationGeography, geographyLine } from "../lib/geo/zip-geography.ts";
 import { parseCsv } from "../lib/reference/index.ts";
 
 const GUS = "data/audit/gus-2022-merrimack-sullivan-hillsborough.json";
@@ -330,6 +331,28 @@ async function main() {
     );
   }
 
+  /*
+   * ── RULING 67: THE ENUMERATION STATES ITS GEOGRAPHY AND IS CHECKED AGAINST
+   * THE ZIP'S OWN, EXTERNALLY (NJ Hunt 2, 2026-08-22) ──────────────────────
+   *
+   * The state above is read from `county-us.geojson`, which is the SAME file
+   * this enumeration then uses to decide what to read. That is a check against
+   * itself, and the previous version of this tool proved what that is worth: it
+   * enumerated New Hampshire for a New Jersey zip and every downstream number
+   * agreed with every other number about the wrong state.
+   *
+   * `assertEnumerationGeography` compares what this run resolved against files
+   * this run does not consult — TIGER's state outlines, and the Department of
+   * Education's LEA directory, which reaches the answer through mailing
+   * addresses rather than through geometry. A disagreement STOPS the run.
+   */
+  const truth = assertEnumerationGeography(zip, {
+    stateFips,
+    countyFips,
+    by: "pnpm zip:universe",
+  });
+  console.log(geographyLine(truth));
+
   for (const layer of [`cousub-${stateFips}`, `unsd-${stateFips}`, `elsd-${stateFips}`, `scsd-${stateFips}`]) {
     if (!existsSync(GEO(layer))) {
       throw new Error(
@@ -344,11 +367,218 @@ async function main() {
   const counties = Object.keys(gus).filter((k) => !k.startsWith("_"));
 
   const cousub = loadLayer(`cousub-${stateFips}`);
+  /*
+   * ── THE PLACE LAYER, BECAUSE THE REGISTRY'S IDS COME FROM IT (NJ Hunt 2,
+   * 2026-08-22) ────────────────────────────────────────────────────────────
+   *
+   * Census writes a government into whichever of the place and
+   * county-subdivision layers it belongs in, and writes a FICTITIOUS row into
+   * the other one to fill the geographic hierarchy. `FUNCSTAT` says which is
+   * which: the real one is `A`/`B`/`C`/`G` and the filler is `F`. That is
+   * exactly the rule `lib/registry/derive.ts` already applies when it decides
+   * what bodies exist, which is why Rockaway Borough's body in this registry is
+   * `state:nj/place:rockaway` and not the county-subdivision layer's
+   * `state:nj/county:morris/place:rockaway_borough`.
+   *
+   * This tool read cousub only. So even once identity stopped depending on
+   * containment, the id it produced for the Borough would have been the
+   * fictitious one — a different key from the registry's, matching nothing, and
+   * reporting a held unit as a gap for a second reason after the first was
+   * fixed.
+   *
+   * The redirect is by GEOID, not by name: for a coextensive place the last
+   * five digits of the county-subdivision GEOID are the place code. Checked
+   * across the whole committed layer before it was relied on — all 29
+   * fictitious New Jersey subdivisions map to exactly one active place each,
+   * none unmatched, which is the per-key distinctness `CLAUDE.md` requires
+   * before a join may be trusted.
+   */
+  const place = existsSync(GEO(`place-${stateFips}`)) ? loadLayer(`place-${stateFips}`) : { features: [] };
+  const GOVERNING_FUNCSTAT = new Set(["A", "B", "C", "G"]);
+  const placeByGeoidTail = new Map<string, (typeof place.features)[number]>();
+  for (const f of place.features) {
+    const geoid = String(f.properties.geoid ?? "");
+    if (geoid.length > 2) placeByGeoidTail.set(geoid.slice(2), f);
+  }
+  let redirected = 0;
+
+  /**
+   * The feature that IS this municipality, preferring the layer Census marked
+   * functional. Name matching stays type-preserving, because `BOROUGH OF
+   * ROCKAWAY` and `TOWNSHIP OF ROCKAWAY` are two governments and collapsing
+   * them once already pointed the Borough's school district at the Township's
+   * board.
+   */
+  /*
+   * ── THE COUNTY IS PART OF THE KEY, AND LEAVING IT OUT COLLAPSED FIVE
+   * GOVERNMENTS INTO ONE (NJ Hunt 2, 2026-08-22) ───────────────────────────
+   *
+   * The first version of this matched on NAME alone across the whole state, and
+   * New Jersey has **five** Washington Townships — Bergen, Burlington,
+   * Gloucester, Mercer, Morris and Warren — four Washington Township school
+   * districts, two Mansfields and two Fairfields. All five Census units named
+   * `TOWNSHIP OF WASHINGTON` matched the one Washington township polygon in the
+   * committed clip and were handed the SAME OCD id.
+   *
+   * That is precisely the defect `CLAUDE.md` presumes broken until proven
+   * otherwise: identical payloads across distinct keys. Left in, a reader in
+   * Washington Township, Gloucester County would have been shown Morris
+   * County's township, and the coverage pair would have counted four
+   * governments as held on the strength of one.
+   *
+   * So the county FIPS is part of the key. TIGER's county-subdivision GEOID is
+   * `SSCCCNNNNN` and its first five digits are the county — an exact
+   * discriminator that needs no name cleverness at all.
+   */
+  function municipalFeature(nameToken: string, unitCountyFips: string) {
+    const sub = cousub.features.find(
+      (f) =>
+        String(f.properties.geoid ?? "").slice(0, 5) === unitCountyFips &&
+        normalize(f.properties.label) === nameToken,
+    );
+    if (!sub) return undefined;
+    if (String(sub.properties.funcstat ?? "") === "F") {
+      const tail = String(sub.properties.geoid ?? "").slice(5);
+      const twin = placeByGeoidTail.get(tail);
+      if (twin && GOVERNING_FUNCSTAT.has(String(twin.properties.funcstat ?? ""))) {
+        redirected++;
+        return twin;
+      }
+    }
+    return sub;
+  }
+
+  /**
+   * The school district feature that IS this unit.
+   *
+   * TIGER's school-district GEOID carries no county, so the county cannot fence
+   * this the way it fences a municipality. The unit's own administrative
+   * address does: a name match is accepted only when the matched district's
+   * polygon actually CONTAINS the Census-published administrative point for the
+   * unit. Washington Township School District in Morris County and Washington
+   * Township School District in Gloucester County have the same name and are
+   * eighty miles apart, and only one of them contains Long Valley.
+   *
+   * Where the unit publishes no administrative zip, the match is accepted only
+   * if the name is unique in the committed layers — and the distinctness
+   * assertion after the loop is what catches anything this reasoning missed,
+   * rather than trusting that it did not.
+   */
+  function schoolFeature(_nameToken: string, censusId: string) {
+    return schoolAssignment.get(censusId);
+  }
+
+
   const school = [
     ...loadLayer(`unsd-${stateFips}`).features,
     ...loadLayer(`elsd-${stateFips}`).features,
     ...loadLayer(`scsd-${stateFips}`).features,
   ];
+
+  /**
+   * WHICH SCHOOL DISTRICT UNIT OWNS WHICH POLYGON, DECIDED ACROSS THE WHOLE
+   * ENUMERATION RATHER THAN ONE UNIT AT A TIME.
+   *
+   * A per-unit test cannot answer this, and the first two attempts here proved
+   * it in opposite directions.
+   *
+   * Accepting any name match handed ONE Washington Township School District
+   * polygon to FOUR Census units in four different counties — a collapsed join,
+   * four governments wearing one identifier.
+   *
+   * Requiring the unit's administrative point to fall inside the polygon fixed
+   * that and broke something else: Rockaway Borough School District's office is
+   * at a 07866 address, and the 07866 ZCTA's internal point sits in Rockaway
+   * TOWNSHIP. A correct, unambiguous match was refused because a mailing
+   * address's ZCTA centroid is not inside the district it serves — which is
+   * true of any district whose office is near its own edge, and is exactly the
+   * sort of near-miss that would have been written down as an absence.
+   *
+   * So containment BREAKS TIES and never gates a match. One claimant takes the
+   * polygon. Several claimants are separated by their administrative points,
+   * and where that fails to leave exactly one, NOBODY takes it and the reason is
+   * printed — an unresolved identity is a work item, and it is far better than
+   * four governments sharing a key.
+   */
+  const schoolAssignment = new Map<string, (typeof school)[number]>();
+  const schoolContest: string[] = [];
+  {
+    /*
+     * ── THE CENSUS DROPS THE MUNICIPAL TYPE WORD AND TIGER KEEPS IT ────────
+     * (NJ Hunt 2, 2026-08-22.)
+     *
+     *   Census  "DOVER PUBLIC SCH DIST"        → "DOVER"
+     *   TIGER   "Dover Town School District"   → "DOVER TOWN"
+     *
+     * Fourteen Morris-area districts this registry already holds — Dover,
+     * Butler, Hopatcong, Morris Plains, Parsippany-Troy Hills, Bloomingdale and
+     * more — read as units with no division at all because of that one word.
+     *
+     * The word cannot simply be stripped: `ROCKAWAY BORO SCH DIST` and
+     * `ROCKAWAY TWP SCH DIST` are two districts serving two municipalities, and
+     * stripping the type collapsed them onto one another once already, pointing
+     * the Borough's children at the Township's board.
+     *
+     * So the exact type-preserving match is tried FIRST and always wins. The
+     * relaxed match runs only when the exact one found nothing, and it is
+     * accepted ONLY IF EXACTLY ONE feature answers to the relaxed name — which
+     * is the whole safety property. Rockaway relaxes to two candidates and is
+     * therefore refused; Dover relaxes to one and is taken.
+     */
+    const stripType = (t: string) =>
+      t.replace(/\s+(TOWNSHIP|BOROUGH|VILLAGE|TOWN|CITY|MUNICIPALITY|COUNTY)$/, "");
+    let relaxed = 0;
+    const claimants = new Map<number, GusRow[]>();
+    for (const fipsKey of Object.keys(gus).filter((k) => !k.startsWith("_"))) {
+      for (const unit of gus[fipsKey] as GusRow[]) {
+        if (unit.kind !== "SCHOOL_DISTRICT" && unit.kind !== "DEPENDENT_SCHOOL_DISTRICT") continue;
+        const token = normalize(unit.name);
+        let idx = school.findIndex((f) => normalize(f.properties.label) === token);
+        if (idx < 0) {
+          const bare = stripType(token);
+          const loose = school
+            .map((f, i) => ({ i, bare: stripType(normalize(f.properties.label)) }))
+            .filter((c) => c.bare === bare);
+          if (loose.length === 1) {
+            idx = loose[0]!.i;
+            relaxed++;
+          }
+        }
+        if (idx < 0) continue;
+        claimants.set(idx, [...(claimants.get(idx) ?? []), unit]);
+      }
+    }
+    if (relaxed > 0) {
+      schoolContest.push(
+        `${relaxed} district(s) matched only after the municipal TYPE word was relaxed, and every one of those ` +
+          "relaxed names answered to exactly one polygon — an ambiguous relaxation is refused, never guessed",
+      );
+    }
+    for (const [idx, units] of claimants) {
+      const feature = school[idx]!;
+      if (units.length === 1) {
+        schoolAssignment.set(units[0]!.censusId, feature);
+        continue;
+      }
+      const inside = units.filter((u) => {
+        const p = u.zip ? lookupZcta(u.zip) : null;
+        return p ? contains([p.lng, p.lat], feature.geometry) : false;
+      });
+      if (inside.length === 1) {
+        schoolAssignment.set(inside[0]!.censusId, feature);
+        schoolContest.push(
+          `${feature.properties.label}: ${units.length} units named it, resolved to ${inside[0]!.name} ` +
+            `(${inside[0]!.countyFips}) by its administrative point`,
+        );
+      } else {
+        schoolContest.push(
+          `${feature.properties.label}: ${units.length} units named it and ${inside.length} contain its ` +
+            `administrative point — UNASSIGNED, because a shared identifier is worse than a missing one ` +
+            `(${units.map((u) => `${u.name} ${u.countyFips}`).join("; ")})`,
+        );
+      }
+    }
+  }
   console.log(
     `\nstate FIPS ${stateFips} · containing county ${containingCounty.properties.label} (${countyFips}) · ` +
       `${counties.length} county slice(s) of the 2022 Census of Governments, ${counties.reduce((n, k) => n + (gus[k] as GusRow[]).length, 0)} units\n`,
@@ -377,22 +607,48 @@ async function main() {
       let geographyServed = "";
       let ocdId: string | null = null;
 
+      /*
+       * ── WHICH GOVERNMENT THIS IS, AND WHETHER IT GOVERNS THIS ZIP, ARE TWO
+       * QUESTIONS (NJ Hunt 2, 2026-08-22) ──────────────────────────────────
+       *
+       * Until today they were one. `ocdId` was read off the polygon that
+       * CONTAINS THE ZCTA CENTROID, so a unit could only ever acquire an
+       * identifier by governing the zip — and every nearby unit that does not
+       * came out with `ocdId: null`.
+       *
+       * `pnpm twig:pair` then printed those units as **"no division of its
+       * own"**, which is what it prints for a village district the Census
+       * publishes no boundary for. Rockaway BOROUGH — a separate municipality
+       * from Rockaway Township, 0 km away, running its own council and its own
+       * school district, and holding a body in this registry already — read as
+       * a unit with no division at all. So did Boonton, Dover, Butler,
+       * Kinnelon, Mountain Lakes and every other neighbour whose bodies this
+       * registry has held all along. The pair reported 5 of 178 with them
+       * counted as gaps, and reconciled.
+       *
+       * Identity is a NAME MATCH OVER THE WHOLE LAYER. Jurisdiction is the
+       * containment test, applied to the matched feature afterwards.
+       */
+      let shape: { properties: Record<string, string>; geometry: { type: string; coordinates: unknown } } | undefined;
+
       if (unit.kind === "GENERAL_PURPOSE" && /COUNTY/.test(unit.unitType ?? "")) {
-        const hit = govCounty.find((f) => normalizeCounty(f.properties.label) === normalizeCounty(unit.name));
-        governs = Boolean(hit);
-        ocdId = hit?.properties.ocdId ?? null;
+        shape = county.features.find(
+          (f) => normalizeCounty(f.properties.label) === normalizeCounty(unit.name),
+        );
+        governs = shape ? contains(point, shape.geometry) : false;
+        ocdId = shape?.properties.ocdId ?? null;
         governsMethod = "TIGER county polygon contains the ZCTA centroid";
         geographyServed = "the whole county";
       } else if (unit.kind === "GENERAL_PURPOSE") {
-        const hit = govCousub.find((f) => normalize(f.properties.label) === token);
-        governs = Boolean(hit);
-        ocdId = hit?.properties.ocdId ?? null;
+        shape = municipalFeature(token, fips);
+        governs = shape ? contains(point, shape.geometry) : false;
+        ocdId = shape?.properties.ocdId ?? null;
         governsMethod = "TIGER county-subdivision polygon contains the ZCTA centroid";
         geographyServed = "the municipality";
       } else if (unit.kind === "SCHOOL_DISTRICT" || unit.kind === "DEPENDENT_SCHOOL_DISTRICT") {
-        const hit = govSchool.find((f) => normalize(f.properties.label) === token);
-        governs = Boolean(hit);
-        ocdId = hit?.properties.ocdId ?? null;
+        shape = schoolFeature(token, unit.censusId);
+        governs = shape ? contains(point, shape.geometry) : false;
+        ocdId = shape?.properties.ocdId ?? null;
         governsMethod = "TIGER school-district polygon contains the ZCTA centroid";
         geographyServed = "the school district";
       } else {
@@ -426,24 +682,28 @@ async function main() {
       const adminKm = adminCentroid ? haversineKm(lat, lng, adminCentroid.lat, adminCentroid.lng) : null;
       let km: number | null = null;
       let nearMethod = "";
-      // The distance layer must be the SAME layer the governs test used.
-      // Searching county and county-subdivision features together made
-      // "TOWN OF MERRIMACK" (Hillsborough County, ~80 km away) match the
-      // MERRIMACK COUNTY polygon and report 5.39 km — the normalizer strips
-      // the type word, so a town and a county sharing a name collapse into
-      // one token. Hillsborough town and Hillsborough County did the same.
-      const layer =
-        unit.kind === "GENERAL_PURPOSE"
-          ? /COUNTY/.test(unit.unitType ?? "")
-            ? county.features
-            : cousub.features
-          : school;
-      if (unit.kind === "GENERAL_PURPOSE" || unit.kind === "SCHOOL_DISTRICT") {
-        const shape = layer.find((f) => normalize(f.properties.label) === token);
-        if (shape) {
-          km = nearestVertexKm(lat, lng, shape.geometry);
-          nearMethod = "nearest point of the unit's own TIGER boundary";
-        }
+      /*
+       * The distance is measured on the SAME feature the identity was read
+       * from, which is what makes the two agree by construction rather than by
+       * two lookups happening to pick the same row.
+       *
+       * The old version re-derived the shape with a second, DIFFERENT lookup —
+       * `normalize` over a hand-picked layer where the governs test had used
+       * `normalizeCounty` over the county layer. So `COUNTY OF MERCER`
+       * normalised to `MERCER COUNTY`, TIGER's county label normalised to
+       * `MERCER`, no county ever matched, and every one of them came out with
+       * no distance at all. That null then became `meetingsNearZip:
+       * "UNRESOLVED"` and rode a truthiness bug in `twig:pair` all the way into
+       * the coverage denominator — Ocean, Union and Mercer counties counted as
+       * inside a 25 km circle around Rockaway.
+       *
+       * The lesson the earlier comment recorded still holds and is why the
+       * layer choice above is explicit: "TOWN OF MERRIMACK" must not be allowed
+       * to match the MERRIMACK COUNTY polygon.
+       */
+      if (shape) {
+        km = nearestVertexKm(lat, lng, shape.geometry);
+        nearMethod = "nearest point of the unit's own TIGER boundary";
       }
       const boundaryKm = km;
       const venueKm = adminKm ?? boundaryKm;
@@ -473,6 +733,46 @@ async function main() {
         web: unit.web || null,
       });
     }
+  }
+
+  /*
+   * ── DISTINCT UNITS MUST GET DISTINCT IDENTIFIERS ─────────────────────────
+   *
+   * `CLAUDE.md`: a join that can collapse must be ASKED for distinctness, and
+   * identical payloads across distinct keys are presumed broken. The name match
+   * above is exactly such a join, and on its first run it handed one OCD id to
+   * five different Washington Townships without complaint.
+   *
+   * A match rate is not evidence here — the collapsed version resolved MORE
+   * units than the fenced one does. Only per-key uniqueness is evidence, so it
+   * is asserted rather than hoped for, and a collision stops the run.
+   */
+  const byOcd = new Map<string, string[]>();
+  for (const r of rows) {
+    const id = r.ocdId as string | null;
+    if (!id) continue;
+    const list = byOcd.get(id) ?? [];
+    list.push(`${r.name as string} (${r.countyFips as string})`);
+    byOcd.set(id, list);
+  }
+  const collisions = [...byOcd.entries()].filter(([, units]) => units.length > 1);
+  if (collisions.length > 0) {
+    throw new Error(
+      `${collisions.length} OCD id(s) were assigned to more than one Census unit, which is a collapsed join and ` +
+        "never a coverage result:\n" +
+        collisions.map(([id, units]) => `  ${id}  <-  ${units.join(" | ")}`).join("\n"),
+    );
+  }
+  console.log(
+    `\nidentity: ${byOcd.size} distinct OCD id(s) across ${rows.filter((r) => r.ocdId).length} unit(s) that resolved one — ` +
+      `no collisions · ${redirected} redirected from a fictitious county-subdivision row to its active place row`,
+  );
+  if (schoolContest.length > 0) {
+    console.log(
+      `  ${schoolContest.length} school-district polygon(s) were claimed by more than one Census unit — every one stated, ` +
+        "because a contested identity settled silently is a coverage number nobody can check:",
+    );
+    for (const line of schoolContest) console.log(`    ${line}`);
   }
 
   const governing = rows.filter((r) => r.governsZip === true);

@@ -19,6 +19,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { readTable } from "../lib/reference/index.ts";
+import { resolveZipGeography } from "../lib/geo/zip-geography.ts";
 
 const DERIVED = join(process.cwd(), "data", "derived");
 
@@ -33,6 +34,25 @@ const PILOTS = [
   { zip: "07866", what: "Rockaway Township, New Jersey" },
   { zip: "03255", what: "Newbury, New Hampshire" },
 ];
+
+/*
+ * RULING 67 (NJ Hunt 2, 2026-08-22). The same unchecked hand-written state
+ * label as `build-gap-ledger.mts`, in the tool whose whole job is verification.
+ * A verifier that trusts its own labels verifies nothing about them.
+ */
+for (const pilot of PILOTS) {
+  const geo = resolveZipGeography(pilot.zip);
+  if (!geo.ok) {
+    throw new Error(
+      `pilot ${pilot.zip} ("${pilot.what}") cannot be geography-checked: ${geo.reason} — ${geo.detail}`,
+    );
+  }
+  if (!pilot.what.includes(geo.stateName)) {
+    throw new Error(
+      `pilot ${pilot.zip} is labelled "${pilot.what}", and ${pilot.zip} is in ${geo.stateName}.`,
+    );
+  }
+}
 
 const LAYER_LABEL: Record<string, string> = {
   county: "county",

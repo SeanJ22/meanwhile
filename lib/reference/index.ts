@@ -41,6 +41,20 @@ export const REFERENCE_DATASETS = [
   "granicus_legistar_tenants",
   "nces_ccd_lea_directory_2025_26",
   "openstates_legislators",
+  /*
+   * RULING 69 (NJ Hunt 2, 2026-08-22). The FEC's two directories, as DATA.
+   *
+   * They answer the question the NJ Hunt raised and could not settle: the
+   * variable deciding whether a candidate's contact is reachable is not the
+   * number of routes in the manifest, it is what each state's filing authority
+   * publishes — and there is no national floor for that. These name every
+   * state's election office and, per jurisdiction, the offices holding
+   * disclosure records, the legislative committees on elections and on ethics,
+   * and the associations. They are public domain, being works of the United
+   * States federal government.
+   */
+  "fec_state_election_offices",
+  "fec_combined_federal_state_disclosure_directory",
 ] as const;
 
 export type ReferenceDataset = (typeof REFERENCE_DATASETS)[number];
@@ -59,6 +73,8 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   granicus_legistar_tenants: 39,
   nces_ccd_lea_directory_2025_26: 19_711,
   openstates_legislators: 7_976,
+  fec_state_election_offices: 58,
+  fec_combined_federal_state_disclosure_directory: 349,
 };
 
 export function dataPath(dataset: ReferenceDataset): string {

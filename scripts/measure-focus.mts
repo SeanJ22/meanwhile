@@ -65,6 +65,7 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { COVERED_FIPS } from "../lib/coverage/artifacts.ts";
+import { resolveZipGeography } from "../lib/geo/zip-geography.ts";
 import { extrusionSpecForZoom } from "../lib/map/state-focus.ts";
 import { decodePng, patchStats, type DecodedPng } from "./png.mts";
 import { launchGuarded } from "./browser.mts";
@@ -665,8 +666,30 @@ for (const theme of ["dark", "light"] as const) {
       customSources: string[];
     } | null;
 
-    // FIPS: 04 Arizona, 33 New Hampshire, 34 New Jersey.
-    const mine = zip === "85701" ? "04" : "33";
+    /*
+     * ── RULING 67: THE STATE COMES FROM THE ZIP, NOT FROM A DEFAULT ────────
+     * (NJ Hunt 2, 2026-08-22.)
+     *
+     * This was `zip === "85701" ? "04" : "33"`. Every zip that is not Tucson
+     * was New Hampshire — so run against 07866 the check "no other state's
+     * geometry is fetched" would have treated New Jersey's own `-34` layers as
+     * foreign and New Hampshire's as native, and reported a failure on a
+     * correct map, or a pass on a wrong one.
+     *
+     * It is the same defect as `zip:universe` enumerating New Hampshire for a
+     * New Jersey zip, one layer up: a geography assumption written as a default
+     * rather than derived from the thing being measured. The resolver reads
+     * TIGER's state outlines and is corroborated by the Department of
+     * Education's LEA directory.
+     */
+    const geo = resolveZipGeography(zip);
+    if (!geo.ok) {
+      throw new Error(
+        `${theme}/${zip}: the focus measurement cannot say which state's geometry is native here — ` +
+          `${geo.reason}: ${geo.detail}`,
+      );
+    }
+    const mine = geo.stateFips;
     const foreignFips = COVERED_FIPS.filter((f) => f !== mine);
     const foreignFiles = requested.filter((url) =>
       foreignFips.some((fips) => url.includes(`-${fips}.geojson`)),
@@ -680,7 +703,7 @@ for (const theme of ["dark", "light"] as const) {
           (unsizedResponses > 0 ? ` (+${unsizedResponses} response(s) unsized)` : "")
         : foreignFiles.join(", "),
     );
-    const wantAbbr = zip === "85701" ? "AZ" : "NH";
+    const wantAbbr = geo.stateAbbr;
     const foreignFilters = (probe?.districtFilterStates ?? []).filter(
       (abbr) => abbr !== null && abbr !== wantAbbr,
     );

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { contestsForDivisions } from "@/lib/sources/ballot-nj-morris";
 import { BALLOT_SOURCES } from "@/lib/ballot/registry";
+import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { summaryForContest } from "@/lib/ballot/measure-summaries";
 import {
@@ -324,7 +325,13 @@ export default async function BallotPage({
   if (centroid) {
     attempted = true;
     const divisions = await divisionsAt(centroid.lat, centroid.lng);
-    const ocdIds = divisions.map((d) => d.ocdId);
+    /*
+     * A ZIP IS AN AREA (`NJ01`, 2026-08-22). The centroid answer is kept whole
+     * and widened to every division whose territory reaches inside this zip —
+     * see `lib/ballot/zip-divisions.ts` for why, and for what this deliberately
+     * does not claim.
+     */
+    const ocdIds = await divisionIdsForZipArea(zip, divisions.map((d) => d.ocdId));
     for (const { source } of BALLOT_SOURCES) {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);

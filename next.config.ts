@@ -70,7 +70,15 @@ const nextConfig: NextConfig = {
      * path may even import the work queue. `candidate-hunt-state.json` is
      * therefore no longer traced here — it is read by scripts and tests only.
      */
-    "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json"],
+    "/ballot": [
+      "./data/derived/zip-coverage-tiers-runtime.json",
+      // A ZIP IS AN AREA (NJ01). Built by `pnpm zip:divisions`, read through
+      // `process.cwd()`, so the tracer cannot see it. Absent from the deploy,
+      // the ballot silently narrows back to the centroid answer and Rockaway
+      // Borough disappears again — a regression that looks exactly like
+      // honest missing data, which is why it is named per route.
+      "./data/derived/zip-division-ids.json",
+    ],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],

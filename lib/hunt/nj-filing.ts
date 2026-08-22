@@ -70,6 +70,22 @@ export interface FiledCandidate {
   termYears: number | null;
   /** Seats to be filled, where the document states it. */
   voteFor: number | null;
+  /**
+   * The document's own DISTRICT column, where it prints one.
+   *
+   * The school list heads every row with a MUNICIPALITY and then names the
+   * district separately — `Town`, `Township`, `Borough`, or a real district
+   * name like `Morris Hills Regional`, `Watchung Hills Regional`, `School
+   * District of the Chathams`, `Chester School District`.
+   *
+   * It is captured because the municipality alone gets a REGIONAL contest
+   * wrong. `Rockaway Township MEMBER OF THE REGIONAL BOARD OF EDUCATION` is a
+   * Morris Hills Regional seat; resolving it from the municipality name pointed
+   * it at the Rockaway Township district, so two different contests for two
+   * different boards came out sharing one division — and one of them would have
+   * shown the wrong board's candidates to the wrong district's readers.
+   */
+  district: string | null;
 }
 
 /**
@@ -87,9 +103,27 @@ export interface FiledNoElection {
   statement: string;
 }
 
+/**
+ * A seat in a real contest that a party filed nobody for.
+ *
+ * The clerk writes `No Nomination Made <Party>` on its own row. This is not an
+ * absence this project measured and it is not a candidate — it is the filing
+ * authority publishing that a seat went unclaimed, which is exactly the kind of
+ * fact a reader deciding whether a race is contested needs and cannot get
+ * anywhere else.
+ */
+export interface FiledUnfilledSeat {
+  jurisdiction: string;
+  office: string;
+  /** The party that filed nobody, where the document names one. */
+  party: string | null;
+  statement: string;
+}
+
 export interface FilingParse {
   candidates: FiledCandidate[];
   noElection: FiledNoElection[];
+  unfilled: FiledUnfilledSeat[];
 }
 
 const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
@@ -111,8 +145,19 @@ const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
  * So a space is only part of the heading when a digit does NOT follow it, with
  * one exception the corpus requires: `- WARD 1` is part of the office.
  */
+/*
+ * **AND IT MUST NOT EAT THE NEXT WORD'S CAPITAL EITHER** (NJ Hunt 2,
+ * 2026-08-22). The same greed, one character wide. `NO LOCAL ELECTION Roxbury
+ * Township` split into a heading of `NO LOCAL ELECTION R` and a remainder of
+ * `oxbury Township`, whose Title-Case tail is `Township` — so the clerk's
+ * statement about Roxbury Township was published as a statement about a
+ * municipality called `Township`.
+ *
+ * An all-caps run in a heading is never followed immediately by a lower-case
+ * letter, so `(?![a-z])` ends it exactly where the capitals do.
+ */
 const OFFICE_RE =
-  /((?:MEMBER OF THE|DOVER BOARD OF EDUCATION CANDIDATES|NO LOCAL ELECTION)(?:\s*-\s*WARD\s\d+|\sWARD\s\d+|[A-Z.'\-/]+|\s(?!\d))*)/;
+  /((?:MEMBER OF THE|DOVER BOARD OF EDUCATION CANDIDATES|NO LOCAL ELECTION)(?:\s*-\s*WARD\s\d+|\sWARD\s\d+|[A-Z.'\-/]+(?![a-z])|\s(?!\d))*)/;
 
 /** `3 2` after an office heading is term-years then seats. */
 const TERM_SEATS_RE = /^\s*(\d{1,2})\s+(\d{1,2})\b/;
@@ -122,8 +167,22 @@ const TERM_SEATS_RE = /^\s*(\d{1,2})\s+(\d{1,2})\b/;
  * heading — `Rockaway Township`, `Victory Gardens Borough`, `Morris County`,
  * `11th Congressional`.
  */
+/*
+ * The hyphen is part of the NAME (NJ Hunt 2, 2026-08-22). `Parsippany-Troy
+ * Hills Township` matched only from `Troy` onward, and the county clerk's
+ * NO LOCAL ELECTION statement was recorded against a township called `Troy
+ * Hills` — which does not exist. New Jersey is full of these: Parsippany-Troy
+ * Hills, Peapack-Gladstone, Ho-Ho-Kus.
+ */
+/*
+ * A SLASH joins two municipalities into one filing jurisdiction. `Chester
+ * Borough/Township` is how the clerk heads the rows for the district Chester
+ * Borough and Chester Township run together. Without the slash the Title-Case
+ * run started at `Township`, so three named candidates were filed under a
+ * municipality called `Township`.
+ */
 const JURISDICTION_TAIL_RE =
-  /((?:[A-Z][a-z]+|[0-9]+(?:st|nd|rd|th)|of|the)(?:\s+(?:[A-Z][a-z]+|[0-9]+(?:st|nd|rd|th)|of|the)){0,3})\s*$/;
+  /((?:[A-Z][a-z]+(?:[-/][A-Z][a-z]+)*|[0-9]+(?:st|nd|rd|th)|of|the)(?:\s+(?:[A-Z][a-z]+(?:[-/][A-Z][a-z]+)*|[0-9]+(?:st|nd|rd|th)|of|the)){0,3})\s*$/;
 
 /**
  * The surname is filed in CAPITALS and the given name is not, which is what
@@ -133,6 +192,76 @@ const JURISDICTION_TAIL_RE =
  */
 const NAME_RE =
   /([A-Z][A-Za-zÀ-ÿ'’.\- ]*?(?:"[^"]+"\s+|\([^)]+\)\s+)?)([A-ZÀ-Ÿ][A-ZÀ-Ÿ'’\-]+(?:\s+[A-ZÀ-Ÿ'’\-]+)*(?:,\s*(?:JR|SR|II|III|IV)\.?)?)\s*$/;
+
+/**
+ * The two ways this county says "a seat on this contest went unclaimed".
+ *
+ * The general-election document writes `No Nomination Made <Party>`; the SCHOOL
+ * document writes `NO PETITION FILED`, with no party, because school elections
+ * here are non-partisan. They are the same fact and are recorded the same way —
+ * and both had to be found, because the first fix knew only about the first
+ * phrase and left the school document's version bleeding into jurisdictions
+ * exactly as before.
+ */
+const UNFILLED_PHRASE = "(?:No Nomination Made|NO PETITION FILED)";
+
+/**
+ * Column headers, which are Title-Case and sit immediately before the first
+ * office heading on each document's first page — precisely where the
+ * jurisdiction rule looks. The general list ends its header with
+ * `...City State Zip Email`; the school list adds a `District` column, so
+ * stripping only from `First Name` left `Vote For District` behind and the
+ * first school contest was filed under a municipality of that name.
+ *
+ * Anchored on `CONTEST TITLE`, which both documents print and no jurisdiction
+ * contains.
+ */
+/*
+ * It stops at `Email`, the header's LAST column, and not at the end of the
+ * string. A greedy strip took the header AND the first municipality with it —
+ * `...Zip Email Boonton Town MEMBER OF THE BOARD OF EDUCATION` — so the first
+ * contest in the school document came out with no jurisdiction at all. Cutting
+ * exactly the header is the difference between removing noise and removing a
+ * town.
+ */
+const HEADER_RUN_RE = /^[\s\S]*?CONTEST TITLE[\s\S]*?\bEmail\b/i;
+
+/**
+ * The school document has a DISTRICT column — `Town`, `Township`, `Borough`,
+ * `Morris Hills Regional` — sitting between the seat count and the first name.
+ *
+ * It only causes trouble on a row where the seat went unclaimed, because then
+ * there is no name after it and it becomes the last Title-Case run before the
+ * next contest's heading. `Town  Boonton Township`, `Borough
+ * Parsippany-Troy Hills Township` and a bare `Township` all reached the
+ * jurisdiction field that way. It is consumed together with the unclaimed-seat
+ * phrase, since that is the only position it is ever ambiguous in.
+ */
+const DISTRICT_COLUMN = "(?:(?:[A-Z][A-Za-z]+\\s+){0,3}Regional|Town|Township|Borough|City|Village)";
+
+/**
+ * The district cell, read off the head of a contest body.
+ *
+ * Order matters and it is the whole of the correctness here: a REAL district
+ * name is matched first, so `Morris Hills Regional` is captured whole rather
+ * than the bare `Regional` alternative firing on its last word. `School
+ * District of the Chathams` is listed explicitly because its name begins with
+ * the words the other patterns end with.
+ *
+ * A ward marker (`W1`) is accepted too, since the general-election list uses
+ * this cell for wards.
+ */
+const DISTRICT_CELL_RE = new RegExp(
+  "^\\s*(" +
+    [
+      "School District of the [A-Z][A-Za-z]+",
+      "(?:[A-Z][A-Za-z]+\\s+){1,3}(?:Regional|School District)",
+      "Town|Township|Borough|City|Village|Regional",
+      "At Large",
+      "W\\d+",
+    ].join("|") +
+    ")(?=\\s+[A-Z])",
+);
 
 const PARTIES = [
   "Democratic",
@@ -156,7 +285,7 @@ const PARTIES = [
 export function parseNjFiling(
   text: string,
   sourceLabel: string,
-): ExtractResult<FiledCandidate | FiledNoElection> {
+): ExtractResult<FiledCandidate | FiledNoElection | FiledUnfilledSeat> {
   if (!text.trim()) {
     return zeroRows(
       "TEXT_LAYER",
@@ -169,6 +298,16 @@ export function parseNjFiling(
 
   const candidates: FiledCandidate[] = [];
   const noElection: FiledNoElection[] = [];
+  /**
+   * Seats a party filed nobody for, as the clerk records them.
+   *
+   * Not candidates, and not an absence we inferred — the filing authority says
+   * this in the document, and it is the difference between "we found two
+   * candidates" and "two ran and two seats went unclaimed by the other party".
+   */
+  const unfilled: FiledUnfilledSeat[] = [];
+  let previousJurisdiction = "";
+  let previousHeading = "";
 
   /*
    * Walk the office headings in order. Everything between one heading and the
@@ -184,9 +323,73 @@ export function parseNjFiling(
     const before = parts[i - 1] ?? "";
     const body = parts[i + 1] ?? "";
 
-    const jm = JURISDICTION_TAIL_RE.exec(before.trimEnd());
+    /*
+     * ── WHAT PRECEDES A HEADING IS NOT ALWAYS THE JURISDICTION ─────────────
+     * (NJ Hunt 2, 2026-08-22.)
+     *
+     * The tail rule reads the Title-Case run before an office heading. Two
+     * things in this document are Title-Case and are not a jurisdiction, and
+     * both sit exactly there:
+     *
+     *   ...No Nomination Made Democratic | Rockaway Borough | MEMBER OF THE...
+     *   ...Street Address City State Zip Email | MEMBER OF THE UNITED STATES...
+     *
+     * The first is how the clerk records a party that filed nobody for a seat;
+     * the second is the table header on page one. Both bled into the NEXT
+     * contest's jurisdiction — `Made Democratic Rockaway Borough`, `City State
+     * Zip Email` — on **20 of 328 rows**, every one of them a real named
+     * candidate filed under a jurisdiction that does not exist.
+     *
+     * Neither is dropped. `No Nomination Made <Party>` is the filing authority
+     * stating a fact about the contest and it is recorded as one, the same way
+     * `NO LOCAL ELECTION` already is. The header is noise and is cut.
+     */
+    const cleanedBefore = before
+      .trimEnd()
+      /*
+       * Removed GLOBALLY, not anchored to the end. The run reads
+       * `... No Nomination Made Democratic | Butler Borough | MEMBER OF THE...`
+       * — the unfilled-seat row comes BEFORE the next contest's jurisdiction,
+       * so an end-anchored strip matches nothing and leaves `Made Democratic
+       * Butler Borough` as the Title-Case tail. That is how sixteen of these
+       * survived the first fix.
+       */
+      .replace(
+        new RegExp(
+          `(?:\\s+${DISTRICT_COLUMN})?\\s*${UNFILLED_PHRASE}(?:\\s+(?:${PARTIES.join("|")}))?`,
+          "g",
+        ),
+        " ",
+      )
+      .replace(HEADER_RUN_RE, "")
+      .replace(/\bFirst Name and Middle Initial\b.*$/i, "")
+      .replace(/\bStreet Address\s+City\s+State\s+Zip\s+Email\s*$/i, "")
+      .trimEnd();
+    const jm = JURISDICTION_TAIL_RE.exec(cleanedBefore);
     const jurisdiction = (jm?.[1] ?? carriedJurisdiction).trim();
     if (jurisdiction) carriedJurisdiction = jurisdiction;
+
+    /*
+     * Every `No Nomination Made` in the run that preceded this heading belongs
+     * to the PREVIOUS contest, whose jurisdiction is the one still carried.
+     * Recording it is the point: a seat a party left unfilled is published
+     * information about a contest, and a reader deciding whether a race is
+     * contested is entitled to it.
+     */
+    for (const nm of before.matchAll(
+      new RegExp(`${UNFILLED_PHRASE}(?:\\s+(${PARTIES.join("|")}))?`, "gi"),
+    )) {
+      unfilled.push({
+        jurisdiction: previousJurisdiction || carriedJurisdiction,
+        office: previousHeading,
+        party: nm[1] ?? null,
+        statement:
+          `${previousJurisdiction || carriedJurisdiction}, ${previousHeading}: ` +
+          `${nm[1] ?? "a party"} filed no candidate for a seat — stated by the filing authority in this document.`,
+      });
+    }
+    previousJurisdiction = jurisdiction;
+    previousHeading = heading;
 
     if (heading.startsWith("NO LOCAL ELECTION")) {
       noElection.push({
@@ -206,7 +409,16 @@ export function parseNjFiling(
      * that a slogan or an address cannot forge.
      */
     let rest = ts ? body.slice(ts[0].length) : body;
-    /* A district-type token (`Township`, `Borough`, `W1`, `Morris Hills Regional`) sits between the seat count and the first name. */
+    /*
+     * A district-type token sits between the seat count and the first name, and
+     * it is READ rather than skipped over — see `FiledCandidate.district` for
+     * the contest it was getting wrong. The real district names are matched
+     * before the bare type words, so `Morris Hills Regional` is not truncated to
+     * a `Regional` that says nothing.
+     */
+    const dm = DISTRICT_CELL_RE.exec(rest);
+    const district = dm ? dm[1]!.trim() : null;
+    if (dm) rest = rest.slice(dm[0].length);
     for (;;) {
       const em = EMAIL_RE.exec(rest);
       if (!em) break;
@@ -215,7 +427,7 @@ export function parseNjFiling(
       rest = rest.slice(em.index + em[0].length);
 
       const row = parseCandidateChunk(chunk, jurisdiction, heading, termYears, voteFor);
-      if (row) candidates.push({ ...row, email });
+      if (row) candidates.push({ ...row, district, email });
     }
 
     /*
@@ -224,13 +436,35 @@ export function parseNjFiling(
      * authority saying a party filed nobody, which is a fact about the contest.
      */
     const tail = rest.replace(/\s+/g, " ").trim();
-    if (tail && !/^No Nomination Made/i.test(tail)) {
+    if (tail && !new RegExp(UNFILLED_PHRASE, "i").test(tail)) {
       const row = parseCandidateChunk(tail, jurisdiction, heading, termYears, voteFor);
-      if (row) candidates.push({ ...row, email: null });
+      if (row) candidates.push({ ...row, district, email: null });
     }
   }
 
-  const rows: (FiledCandidate | FiledNoElection)[] = [...candidates, ...noElection];
+  /*
+   * The LAST contest's trailing rows are in nobody's `before`, because there is
+   * no heading after them. Scanned here rather than left out — a document's
+   * final block is exactly where an off-by-one quietly drops real rows.
+   */
+  for (const nm of (parts[parts.length - 1] ?? "").matchAll(
+    new RegExp(`${UNFILLED_PHRASE}(?:\\s+(${PARTIES.join("|")}))?`, "gi"),
+  )) {
+    unfilled.push({
+      jurisdiction: previousJurisdiction,
+      office: previousHeading,
+      party: nm[1] ?? null,
+      statement:
+        `${previousJurisdiction}, ${previousHeading}: ${nm[1] ?? "a party"} filed no candidate for a seat — ` +
+        "stated by the filing authority in this document.",
+    });
+  }
+
+  const rows: (FiledCandidate | FiledNoElection | FiledUnfilledSeat)[] = [
+    ...candidates,
+    ...noElection,
+    ...unfilled,
+  ];
   if (rows.length === 0) {
     return zeroRows(
       "TEXT_LAYER",
@@ -246,6 +480,7 @@ export function parseNjFiling(
     withEmail: candidates.filter((c) => c.email).length,
     withAddress: candidates.filter((c) => c.address).length,
     noElection: noElection.length,
+    unfilledSeats: unfilled.length,
     textChars: text.length,
   });
 }
@@ -256,10 +491,10 @@ function parseCandidateChunk(
   office: string,
   termYears: number | null,
   voteFor: number | null,
-): Omit<FiledCandidate, "email"> | null {
+): Omit<FiledCandidate, "email" | "district"> | null {
   const flat = chunk.replace(/\s+/g, " ").trim();
   if (!flat) return null;
-  if (/^No Nomination Made/i.test(flat)) return null;
+  if (new RegExp(`^${UNFILLED_PHRASE}`, "i").test(flat)) return null;
 
   /*
    * The address ends the chunk and is recognisable by its state-and-zip tail.

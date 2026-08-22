@@ -60,14 +60,44 @@ test("every filed address carries its source — a contact without one is a gene
   assert.deepEqual(naked, [], `these render an address with no source: ${naked.join(", ")}`);
 });
 
-test("no address was invented — every one ends in a real NH ZIP", () => {
-  // The parse anchors on `<City> NH <zip>`. A value that does not end that way
+test("no address was invented — every one ends in a real state and ZIP", () => {
+  // The parse anchors on `<City> <ST> <zip>`. A value that does not end that way
   // is a half-read address under a named person's name, which is worse than
   // an honest gap.
+  //
+  // **The state was hardcoded to `NH` and this guard failed the moment a second
+  // state shipped** (NJ Hunt, 2026-08-22) — fifteen correctly-parsed New Jersey
+  // addresses read as malformed because the assertion knew only one state. The
+  // check that matters is the SHAPE, so it is written as the shape: two capital
+  // letters and a five-digit ZIP. Naming states one at a time would mean this
+  // guard has to be edited before every new jurisdiction can ship, which is a
+  // guard that trains people to edit guards.
   const malformed = Object.entries(file.cards)
-    .filter(([, c]) => c.filedAddress && !/\bNH\s+\d{5}(-\d{4})?$/.test(c.filedAddress))
+    .filter(([, c]) => c.filedAddress && !/\b[A-Z]{2}\s+\d{5}(-\d{4})?$/.test(c.filedAddress))
     .map(([k, c]) => `${k}: ${c.filedAddress}`);
   assert.deepEqual(malformed, [], `malformed addresses: ${malformed.join(" | ")}`);
+});
+
+test("a filed address is never a bare number — the PO-box truncation cannot return", () => {
+  /*
+   * `P.O. Box 999 Edison NJ 08818` parsed as `999 Edison NJ 08818` on the first
+   * New Jersey run, because the address pattern anchored on a leading digit and
+   * matched from inside the box number. That is a PO box rendered as a street
+   * number: a specific, checkable, WRONG address under a named candidate's
+   * name, which is exactly the class of claim this product cannot survive.
+   *
+   * Two of the fifteen 07866 candidates file a PO box, so it was a sixth of the
+   * down-ballot tier rather than an edge case.
+   */
+  const suspicious = Object.entries(file.cards)
+    .filter(([, c]) => c.filedAddress && /^\d+\s+[A-Z][a-z]+\s+[A-Z]{2}\s+\d{5}/.test(c.filedAddress))
+    .map(([k, c]) => `${k}: ${c.filedAddress}`);
+  assert.deepEqual(
+    suspicious,
+    [],
+    "these read as <number> <City> <ST> <zip> with no street name — the shape a truncated " +
+      `'P.O. Box N' leaves behind: ${suspicious.join(" | ")}`,
+  );
 });
 
 test("the two the ruling names by hand are contactable", () => {

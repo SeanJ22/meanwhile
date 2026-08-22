@@ -1180,6 +1180,114 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     verifiedAt: "2026-08-21",
   },
 
+  /*
+   * ── SUTTON, NH — SEVEN MORE BODIES, ON THE FOOTER ADDRESS (RULING 65,
+   * 2026-08-22, NJ Hunt item 2.1) ──────────────────────────────────────────
+   *
+   * The comment above says Sutton has ONE row and that this is a decision. The
+   * author ruled on that decision on 2026-08-21: where a board page states no
+   * venue and the site footer carries the town's address, **the footer address
+   * is used and the route is recorded**. `lib/meetings/venue-cache.ts` carries
+   * the reversal in full, including the half of the original refusal that
+   * survives — a footer is the MUNICIPALITY's claim, never the board's, and the
+   * two are cited differently and never merged.
+   *
+   * Read at rung 2 on 2026-08-22: nine board pages, one identical footer.
+   *
+   * **The feed was counted before any row was written**, because a wiring row
+   * for a body with no sittings is a row that renders nothing and reports
+   * success. 1,312 events, 2 with a non-empty `LOCATION`, and these are the
+   * future sittings per title on 2026-08-22:
+   *
+   *   Select Board Meeting ......................... 9
+   *   Ad Hoc Sutton Connects! Committee Meeting .... 5
+   *   Conservation Commission Meeting .............. 4
+   *   ZBA Meeting As Needed ........................ 4
+   *   Cemetery Commission Meeting .................. 2
+   *   Hazard Mitigation Committee .................. 0  (wired; sits when it sits)
+   *   Ad Hoc Fire Safety Municipal Building Cttee .. 0  (wired; sits when it sits)
+   *
+   * **THREE BODIES WITH FOOTER ADDRESSES ARE DELIBERATELY NOT WIRED HERE**, and
+   * the reason is the same one in every case: RULING 65 fills a silence, and
+   * these three are not silent.
+   *
+   *   - **Ad Hoc Speed Sign Committee** (4 future sittings) — its own titles
+   *     read "Ad Hoc Speed Sign Committee - Zoom Mtg". A body that says it
+   *     meets on Zoom does not meet at 93 Main Street.
+   *   - **Warner River Local Advisory Committee** (2) — its own titles read
+   *     "WRLAC Mtg @ Pillsbury Library", a venue this hunt could not resolve to
+   *     a coordinate. Substituting Sutton's town hall for a venue the body
+   *     itself named would be the fabricated location, not a fallback.
+   *   - **Sutton Free Library Board of Trustees** — its page states its own
+   *     meeting arrangement, so it is a `STATES A VENUE` case for a later hunt.
+   *
+   * All three are owed a hunt, not a guess, and they are named so the next
+   * session starts from them rather than rediscovering them.
+   */
+  ...(
+    [
+      ["select-board", "Select Board", "Select Board", "Joint,Planning,Zoning,Budget"],
+      [
+        "conservation-commission",
+        "Conservation Commission",
+        "Conservation Commission",
+        "Joint",
+      ],
+      ["cemetery-commission", "Cemetery Commission", "Cemetery Commission", "Joint"],
+      /*
+       * The Zoning Board files its sittings under the initialism its own feed
+       * uses. Matching "Zoning Board of Adjustment" would find nothing and read
+       * as a body that never sits — the false miss this repo has now recorded
+       * five times.
+       */
+      /*
+       * The REGISTRY's slug is `zoning-board`; the SITE's page is
+       * `/zoning-board-adjustment`. They are different strings for the same
+       * body and the wiring row keys on the registry's, because that is what
+       * `tests/source-adapters.test.ts` resolves against — it caught this row
+       * pointing at a body that does not exist, which is the whole reason that
+       * guard is there.
+       */
+      ["zoning-board", "Zoning Board of Adjustment", "ZBA", "Joint,Planning"],
+      [
+        "hazard-mitigation-committee",
+        "Hazard Mitigation Committee",
+        "Hazard Mitigation",
+        "Joint",
+      ],
+      [
+        "ad-hoc-fire-safety-municipal-building-committee",
+        "Ad Hoc Fire Safety Municipal Building Committee",
+        "Fire Safety Municipal Building",
+        "Joint",
+      ],
+      [
+        "ad-hoc-sutton-connects-committee",
+        "Ad Hoc Sutton Connects! Committee",
+        "Sutton Connects",
+        "Joint",
+      ],
+    ] as const
+  ).map(([slug, bodyName, titleMatch, titleExclude]) => ({
+    bodyId: `ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#${slug}`,
+    ocdId:
+      "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town" as OcdId,
+    agendaSourceType: "ICAL" as const,
+    jurisdiction: "Sutton, NH",
+    publishingOrg: "Town of Sutton",
+    timeZone: "America/New_York",
+    config: {
+      slug: `sutton-${slug}`,
+      feedUrl: "https://www.suttonnh.gov/calendar/ical/calendar.ics",
+      titleMatch,
+      titleExclude,
+      bodyName,
+      /* RULING 65 — the town's own footer address, cited as the footer. */
+      venueMatch: "Sutton Town Offices",
+    },
+    verifiedAt: "2026-08-22",
+  })),
+
   // ── New London, NH — four boards off one town calendar (M123, 2026-08-19) ──
   //
   // The first rows on the `event-tip` shape. New London runs GovOffice, whose

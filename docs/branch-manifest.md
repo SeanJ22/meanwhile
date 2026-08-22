@@ -101,18 +101,18 @@ deeper as the country gets stranger.
 
 <!-- BEGIN GENERATED ROUTES — written by `corepack pnpm manifest:doc`, never by hand -->
 
-## The routes — manifest v1
+## The routes — manifest v2
 
-**36 routes named**, across 35 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
+**41 routes named**, across 37 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
 
 **Routes per field type — this is the bar for `VERIFIED_ABSENT`:**
 
 | Field | Routes that must be walked |
 | --- | ---: |
 | Photo | 7 |
-| In their own words | 10 |
-| Contact | 35 |
-| Campaign site | 14 |
+| In their own words | 14 |
+| Contact | 39 |
+| Campaign site | 18 |
 | Specific verified page | 8 |
 
 > This manifest is incomplete and always will be. Reaching the end of it is not proof that a fact does not exist — it is proof that these named routes returned nothing on this date. We do not know what we do not know; there are always more ways.
@@ -129,7 +129,7 @@ deeper as the country gets stranger.
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 
-### In their own words — 10 routes
+### In their own words — 14 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -137,6 +137,10 @@ deeper as the country gets stranger.
 | `town-report` | The town's annual report | The town site's reports archive, as a PDF — rung 9, text layer first, OCR when scanned | Every officer and committee member the town has, with terms; acknowledgements naming people no roster does; occasionally addresses | 9 | municipal publication |
 | `campaign-site` | The campaign's own domain | Home, About and Contact pages; `pnpm probe:site` reads what a campaign site publishes about its own candidate | A self-published portrait (door 3), the candidate's own words, an email, a phone, the site itself | 2, then 6 where the site is a JavaScript build | the campaign's own domain |
 | `campaign-social` | The campaign's social presence — Facebook, X, Instagram, LinkedIn, Bluesky, YouTube, TikTok | Opened in a LIVE BROWSER at rung 6 and read, never trusted from a search snippet | The candidate's own words; an email and phone in the page's own contact block; the link field naming a site nothing else names | 6 | the social platform |
+| `ad-library` | The Meta Ad Library — mandatory public disclosure for political advertising | The Ad Library API by advertiser name and by page, or the public Ad Library search; `pnpm ad:library` walks it | For any candidate running paid political ads: the campaign's website, its disclaimer 'paid for by' string, a Page id, and frequently a contact — often better than the Page itself | 2 | meta ad library |
+| `social-archive` | An archived capture of the campaign's social page | The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact | The About section's contact block, the link field, and the campaign's own self-description as it stood on the capture date | 11 | web.archive.org |
+| `social-mirror` | The same content cross-posted to a platform that is not walled | Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once | The same words, the same link field, and a contact block, from a host that answers | 2, then 6 | the mirroring platform |
+| `news-embed` | Local news coverage that quotes, embeds or screenshots the social page | The paper's site searched by candidate name plus the platform, at rung 2 and rung 11 | The candidate's own words as posted, quoted by a publisher that is not walled — and the page's existence and identity corroborated by a third party | 2 and 11 | the local press |
 | `local-newspaper` | The local newspaper's coverage | The town or county paper's site, searched by name; rung 11 where the archive is paywalled or gone | The candidate quoted in their own words; the announcement piece; a campaign contact the paper prints | 2 and 11 | the local press |
 | `candidate-interview` | A candidate interview or Q&A feature | The paper, the local radio or TV station, a community podcast, a chamber forum recording | Long-form words of their own, and FREQUENTLY a contact detail a filing does not carry — the interview footer prints an email | 2 and 6 | the interviewing outlet |
 | `lwv-questionnaire` | A League of Women Voters / Vote411 candidate questionnaire | Vote411 by address, or the state LWV's own guide | The candidate's own written answers, with a contact block the League collects as a matter of course | 2 | vote411.org |
@@ -144,14 +148,15 @@ deeper as the country gets stranger.
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 
-### Contact — 35 routes
+### Contact — 39 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
 | `filing-state` | The state's own candidate filing — the Secretary of State or state election division | The state filing list for the cycle, per office. NH: sos.nh.gov's 2026 filing list (walled at rung 2 and 3 as of 2026-08-21 — rung 5 reaches it). | Filed name, filed mailing address, party, office, town of residence; occasionally a phone | 5 (a different egress; rung 2 refuses) | state election authority |
-| `filing-county` | The county's own filing or election office record | County clerk / county election office candidate list for the cycle | The same fields as the state filing, sometimes with a contact the state list omits | 2 | county government |
+| `filing-county` | The county's own filing or election office record | County clerk / county election office candidate list for the cycle. In New Jersey this is the whole ballot in one born-digital PDF — `pnpm nj:filing` discovers and parses it. | The same fields as the state filing, sometimes with a contact the state list omits. In New Jersey: the FILED EMAIL and the FILED STREET ADDRESS for every candidate for every office in the county, school board included. | 2 | county government |
 | `filing-town-clerk` | The town or city clerk's record | The clerk's page, the posted filing period notice, the checklist supervisors' notice, or the clerk by phone | Local-office candidates the county and state never list at all, plus addresses and often a phone | 2, escalating to 13 (the body's own records request path) | municipal clerk |
 | `filing-campaign-finance-state` | State campaign-finance filings — receipts and expenditures reports | The state's finance portal, by candidate or committee name | A committee address, a treasurer's name, frequently a phone and an email that appear nowhere else | 2 | state campaign finance authority |
+| `filing-campaign-finance-local` | A LOCAL candidate's campaign-finance filing, where the state requires one below state office | The state finance authority's search, by candidate and by committee. NJ: ELEC, walled at rung 2 as of 2026-08-22 — see the sub-branch on `filing-campaign-finance-state`. | A committee address, a treasurer, and a contact for a school-board or council candidate who files nothing anywhere else | 2 | state campaign finance authority |
 | `filing-fec` | FEC filings for a federal candidate — Form 2 Statement of Candidacy, Form 1 Statement of Organization | docquery.fec.gov / the FEC API by candidate id | Committee street address, phone and email, and the treasurer | 2 (wired — see lib/sources) | fec.gov |
 | `filing-ethics-disclosure` | State ethics or financial-disclosure filings | The state ethics commission's public filing search | An employer, a business address, sometimes a professional listing that leads onward | 2 | state ethics authority |
 | `filing-prior-candidacy` | The same person's records from an EARLIER cycle | Prior-cycle filing lists, prior finance reports, archived campaign sites at rung 11 | A campaign site that has since lapsed, an email still in use, a portrait published under a door | 2 and 11 | prior-cycle records |
@@ -163,6 +168,9 @@ deeper as the country gets stranger.
 | `gov-staff-directory` | Any .gov staff or official directory the person appears in | The municipal, county or state directory page | A portrait shippable at door 2 or door 4, a work phone, an official email | 2 | government directory |
 | `campaign-site` | The campaign's own domain | Home, About and Contact pages; `pnpm probe:site` reads what a campaign site publishes about its own candidate | A self-published portrait (door 3), the candidate's own words, an email, a phone, the site itself | 2, then 6 where the site is a JavaScript build | the campaign's own domain |
 | `campaign-social` | The campaign's social presence — Facebook, X, Instagram, LinkedIn, Bluesky, YouTube, TikTok | Opened in a LIVE BROWSER at rung 6 and read, never trusted from a search snippet | The candidate's own words; an email and phone in the page's own contact block; the link field naming a site nothing else names | 6 | the social platform |
+| `ad-library` | The Meta Ad Library — mandatory public disclosure for political advertising | The Ad Library API by advertiser name and by page, or the public Ad Library search; `pnpm ad:library` walks it | For any candidate running paid political ads: the campaign's website, its disclaimer 'paid for by' string, a Page id, and frequently a contact — often better than the Page itself | 2 | meta ad library |
+| `social-archive` | An archived capture of the campaign's social page | The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact | The About section's contact block, the link field, and the campaign's own self-description as it stood on the capture date | 11 | web.archive.org |
+| `social-mirror` | The same content cross-posted to a platform that is not walled | Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once | The same words, the same link field, and a contact block, from a host that answers | 2, then 6 | the mirroring platform |
 | `donation-platform` | The donation page — ActBlue, WinRed, Anedot, or the committee's own | The platform's candidate page, and the committee disclosure block on it | A committee mailing address, a contact email, and confirmation the campaign is live | 2 | the donation platform |
 | `local-newspaper` | The local newspaper's coverage | The town or county paper's site, searched by name; rung 11 where the archive is paywalled or gone | The candidate quoted in their own words; the announcement piece; a campaign contact the paper prints | 2 and 11 | the local press |
 | `candidate-interview` | A candidate interview or Q&A feature | The paper, the local radio or TV station, a community podcast, a chamber forum recording | Long-form words of their own, and FREQUENTLY a contact detail a filing does not carry — the interview footer prints an email | 2 and 6 | the interviewing outlet |
@@ -184,15 +192,19 @@ deeper as the country gets stranger.
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 | `records-request` | The body's own public-records request path, walked as a named route | The statutory request, filed and recorded with its date | What the body holds and has not published | 13 | the body's records officer |
 
-### Campaign site — 14 routes
+### Campaign site — 18 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
-| `filing-county` | The county's own filing or election office record | County clerk / county election office candidate list for the cycle | The same fields as the state filing, sometimes with a contact the state list omits | 2 | county government |
+| `filing-county` | The county's own filing or election office record | County clerk / county election office candidate list for the cycle. In New Jersey this is the whole ballot in one born-digital PDF — `pnpm nj:filing` discovers and parses it. | The same fields as the state filing, sometimes with a contact the state list omits. In New Jersey: the FILED EMAIL and the FILED STREET ADDRESS for every candidate for every office in the county, school board included. | 2 | county government |
 | `filing-town-clerk` | The town or city clerk's record | The clerk's page, the posted filing period notice, the checklist supervisors' notice, or the clerk by phone | Local-office candidates the county and state never list at all, plus addresses and often a phone | 2, escalating to 13 (the body's own records request path) | municipal clerk |
 | `filing-prior-candidacy` | The same person's records from an EARLIER cycle | Prior-cycle filing lists, prior finance reports, archived campaign sites at rung 11 | A campaign site that has since lapsed, an email still in use, a portrait published under a door | 2 and 11 | prior-cycle records |
 | `campaign-site` | The campaign's own domain | Home, About and Contact pages; `pnpm probe:site` reads what a campaign site publishes about its own candidate | A self-published portrait (door 3), the candidate's own words, an email, a phone, the site itself | 2, then 6 where the site is a JavaScript build | the campaign's own domain |
 | `campaign-social` | The campaign's social presence — Facebook, X, Instagram, LinkedIn, Bluesky, YouTube, TikTok | Opened in a LIVE BROWSER at rung 6 and read, never trusted from a search snippet | The candidate's own words; an email and phone in the page's own contact block; the link field naming a site nothing else names | 6 | the social platform |
+| `ad-library` | The Meta Ad Library — mandatory public disclosure for political advertising | The Ad Library API by advertiser name and by page, or the public Ad Library search; `pnpm ad:library` walks it | For any candidate running paid political ads: the campaign's website, its disclaimer 'paid for by' string, a Page id, and frequently a contact — often better than the Page itself | 2 | meta ad library |
+| `social-archive` | An archived capture of the campaign's social page | The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact | The About section's contact block, the link field, and the campaign's own self-description as it stood on the capture date | 11 | web.archive.org |
+| `social-mirror` | The same content cross-posted to a platform that is not walled | Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once | The same words, the same link field, and a contact block, from a host that answers | 2, then 6 | the mirroring platform |
+| `news-embed` | Local news coverage that quotes, embeds or screenshots the social page | The paper's site searched by candidate name plus the platform, at rung 2 and rung 11 | The candidate's own words as posted, quoted by a publisher that is not walled — and the page's existence and identity corroborated by a third party | 2 and 11 | the local press |
 | `donation-platform` | The donation page — ActBlue, WinRed, Anedot, or the committee's own | The platform's candidate page, and the committee disclosure block on it | A committee mailing address, a contact email, and confirmation the campaign is live | 2 | the donation platform |
 | `domain-search` | A direct search for a campaign domain by candidate name | Name-plus-office and name-plus-year domain guesses, plus the search index at rung 10 | A site nothing links to | 2 and 10 | the search index |
 | `local-newspaper` | The local newspaper's coverage | The town or county paper's site, searched by name; rung 11 where the archive is paywalled or gone | The candidate quoted in their own words; the announcement piece; a campaign contact the paper prints | 2 and 11 | the local press |
@@ -223,9 +235,10 @@ A branch proven in one place is proven for that shape, not for everywhere. The r
 | id | Expected to travel |
 | --- | --- |
 | `filing-state` | The INSTITUTION travels — every state has one. The route does not: fifty different sites, formats and access postures, and NJ/AZ each need their own walk. |
-| `filing-county` | Uneven. New England counties are thin; NJ and AZ counties run their own elections and publish more. |
+| `filing-county` | Uneven, and this is the route whose unevenness the NJ Hunt was run to measure. New England counties are thin and publish a name and a town; New Jersey's county clerks publish the contact itself. The INSTITUTION is near-universal — every state has a county-level election office — and what it PUBLISHES is a per-state publishing practice with no national floor. |
 | `filing-town-clerk` | Strong in New England town government, where the clerk is the record. Weaker where a county runs everything. |
 | `filing-campaign-finance-state` | The institution is universal; thresholds are not — a small local candidate may file nothing. |
+| `filing-campaign-finance-local` | Only where the state imposes a local filing obligation, and that is genuinely uneven — New Jersey does, New Hampshire does not for these offices. A session in a state without the obligation should record this route as NOT APPLICABLE with the reason, never as an absence. |
 | `filing-fec` | Nationally, exactly. Federal candidates only. |
 | `filing-ethics-disclosure` | Varies sharply — some states publish these, some make them request-only. |
 | `filing-prior-candidacy` | Everywhere, and it is systematically under-used. A first-time candidate has none, which is itself information. |
@@ -237,6 +250,10 @@ A branch proven in one place is proven for that shape, not for everywhere. The r
 | `gov-staff-directory` | Wide. Anything on a .gov site is official by the author's ruling, which makes door 4 unusually reachable here. |
 | `campaign-site` | Everywhere a candidate has bought a domain, which in small races is a minority. |
 | `campaign-social` | Everywhere, and it MATTERS MOST in the smallest races — a campaign that lives on Facebook still has a campaign site, and recording that as nothing penalises exactly the candidates least able to buy a domain. |
+| `ad-library` | Nationally and by law — political-ad disclosure is mandatory, so a candidate who buys a single ad appears. Silent on campaigns that never advertise, which in the smallest races is most of them; that silence is a fact about spending, not about the candidate. |
+| `social-archive` | Everywhere the page has been captured, which is uneven for small campaigns and good for anything that drew attention. A capture is DATED and says so — it is evidence about that date, never about today. |
+| `social-mirror` | Broadly, and it is the single most useful of these five in practice. A campaign posting only to Facebook is real and is the case this route does not reach. |
+| `news-embed` | Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all. |
 | `donation-platform` | Nationally. Absent in races too small to raise money. |
 | `domain-search` | Everywhere. Cheap, and the one route that finds an unlinked site. |
 | `local-newspaper` | Everywhere there is still a paper, which is the shrinking part. Where the paper is dead, rung 11 is the route. |
@@ -265,8 +282,12 @@ A route that failed somewhere new is never discarded — it grows a limb. Each r
 
 | Parent route | Where | What failed | What reached it instead |
 | --- | --- | --- | --- |
+| `filing-state` | New Jersey Division of Elections, 2026-08-22 | `www.nj.gov` sits behind Imperva and refused rungs 2 and 3 on one run — and answered rung 2 plainly on several others within the same minute. An intermittent wall, and a single reading of it recorded as a property of the source is the shape `gc.nh.gov` and `sos.nh.gov` were both wrongly recorded under | rung 4 — `curl`, whose TLS fingerprint passes what Node's does not — cleared it on the run that rungs 2 and 3 refused. And the state publishes the contact document SEPARATELY from the candidate list: `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. A session that reads only the candidate list finds no contact and records an absence that the neighbouring file disproves. |
+| `filing-county` | Morris County, New Jersey, 2026-08-22 | nothing failed — this is the reverse entry, and it is recorded here because RULING 60 is about what a route does in a new SHAPE, which includes doing better | the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current. |
+| `filing-campaign-finance-state` | New Jersey ELEC, 2026-08-22 | `elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated | `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52. |
 | `body-roster-page` | Kearsarge Regional School District, 2026-08-21 | the roster page's visible cells carry no email | read the cell's own href — nine board emails were in mailto: links (rung 4) |
 | `campaign-social` | Merrimack County Attorney, 2026-08-21 | a search snippet carried a plausible-looking bio | open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim |
+| `campaign-social` | every Newbury county candidate, 2026-08-21 | facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around | RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated. |
 
 ### Retired routes — kept, never deleted
 

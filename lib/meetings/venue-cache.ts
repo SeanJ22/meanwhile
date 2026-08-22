@@ -732,6 +732,43 @@ export const VENUE_CACHE: VenueEntry[] = [
    * that board sits. Reading a footer as a venue would pin fifteen bodies at a
    * building on the strength of a template, which is the guess dressed as a
    * fact that NH Hunt 4 refused, and refusing it again is the same decision.
+   *
+   * ── SUPERSEDED IN PART BY RULING 65 (2026-08-21; applied 2026-08-22, NJ
+   * Hunt item 2.1). The paragraph above is kept verbatim rather than rewritten,
+   * because it is the reasoning the author ruled ON and a later session must be
+   * able to read both halves. ──────────────────────────────────────────────
+   *
+   * The author ruled that **one address hosting several bodies is normal in
+   * small and large towns alike**, and that the footer address is used and the
+   * route recorded. Fifteen bodies dark because the town uses a site template
+   * is a worse answer for a reader than fifteen bodies pinned at the address
+   * the town itself publishes.
+   *
+   * What survives of the refusal above, and it is the load-bearing half: a
+   * footer address is NOT the board's own statement about itself, so the row
+   * below cites the FOOTER and says so, and `pnpm venue:hunt` reports it under
+   * its own `FOOTER ADDRESS` status rather than as `STATES A VENUE`. The two
+   * kinds of claim never render alike and never merge.
+   *
+   * **And the ruling has a boundary the hunt found immediately.** Three Sutton
+   * bodies were deliberately NOT given this address, because the footer is
+   * evidence about the TOWN and each of these has better evidence about
+   * ITSELF:
+   *
+   *   - **Ad Hoc Speed Sign Committee** — its own feed titles read *"Ad Hoc
+   *     Speed Sign Committee - Zoom Mtg"*. A body that says it meets on Zoom
+   *     does not meet at 93 Main Street, and pinning it there would send a
+   *     reader to a building nobody will be in.
+   *   - **Warner River Local Advisory Committee** — its titles read *"WRLAC Mtg
+   *     @ Pillsbury Library"*. It is a multi-town river committee and its own
+   *     title names a venue this hunt could not resolve to a coordinate; the
+   *     honest answer is to leave it unpinned and hunt the library's address,
+   *     not to substitute Sutton's town hall for a venue the body itself named.
+   *   - **Sutton Free Library Board of Trustees** — its page states its own
+   *     meeting arrangement, so it is a `STATES A VENUE` case and not this one.
+   *
+   * That boundary is the rule working. RULING 65 fills a gap where the body
+   * says nothing; it never overrides a body that says something.
    */
   {
     sourceId: "ical",
@@ -745,6 +782,41 @@ export const VENUE_CACHE: VenueEntry[] = [
     coordinateSourceUrl:
       "https://nominatim.openstreetmap.org/search?street=93%20Main%20Street&city=Sutton&state=NH&country=USA&format=jsonv2&limit=1&addressdetails=1",
     verifiedAt: "2026-08-21",
+  },
+
+  /*
+   * ── SUTTON, NH — THE FOOTER ADDRESS (RULING 65, 2026-08-22, NJ Hunt item
+   * 2.1) ───────────────────────────────────────────────────────────────────
+   *
+   * The town's own site footer, on every board page: *"93 Main Street | Sutton
+   * Mills, NH 03221 | (603) 927-2408"*. Read at rung 2 on 2026-08-22 from nine
+   * board pages, identical on all nine.
+   *
+   * **This is a SEPARATE ROW from the Planning Board's Pillsbury Memorial Hall
+   * above even though the street address is the same string**, and that is
+   * deliberate rather than duplication. The two rows rest on different
+   * evidence: one is a board's published sentence about where that board sits,
+   * the other is a municipality's published postal address. Merging them would
+   * make the Planning Board's citation carry eight other bodies, and a reader
+   * clicking through would land on a page that says nothing about theirs.
+   *
+   * The COORDINATE is the one already verified for this address on 2026-08-21
+   * by two independent geocoders, 38 metres apart — reused rather than
+   * re-derived, and reused because it is the same street address, which is a
+   * statement about geography and not about which body meets there.
+   */
+  {
+    sourceId: "ical",
+    bodyOcdId: "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
+    match: "Sutton Town Offices",
+    name: "Sutton Town Offices, 93 Main Street",
+    address: "93 Main Street, Sutton Mills, NH 03221",
+    lat: 43.33407,
+    lng: -71.953113,
+    addressSourceUrl: "https://www.suttonnh.gov/select-board",
+    coordinateSourceUrl:
+      "https://nominatim.openstreetmap.org/search?street=93%20Main%20Street&city=Sutton&state=NH&country=USA&format=jsonv2&limit=1&addressdetails=1",
+    verifiedAt: "2026-08-22",
   },
 
   // ── SchedulePage: New London NH (M123, 2026-08-19) ──────────────────────

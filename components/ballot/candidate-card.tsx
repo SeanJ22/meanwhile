@@ -246,6 +246,22 @@ export function CandidateCard({
         )}
 
         {/*
+          RULING 64 (2026-08-21): where the number is an OFFICE line rather than
+          the candidate's own, it says so — here, next to it, in the reader's
+          own words.
+
+          Two County Attorney candidates carried the same switchboard in two
+          formats with nothing marking it, which reads as each person's own
+          number. The ruling is that the line is published and LABELLED; the
+          label is the whole of what makes publishing it honest. It is a claim
+          surface, so the register is level and the string is the office's own
+          name — never a hedge, and never hunt vocabulary.
+        */}
+        {card?.phone && card?.phoneLabel && (
+          <p className="mt-1 text-xs text-muted">{card.phoneLabel}</p>
+        )}
+
+        {/*
           RULING 54 (2026-08-21): the address the candidate filed with the
           state renders. It is on a public form they submitted for exactly this
           purpose, and for some candidates it is the ONLY way to reach them —

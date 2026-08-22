@@ -47,11 +47,12 @@
  * proxy that is not labelled is a claim.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 
 import { haversineKm } from "../lib/geo/distance.ts";
 import { RADIUS_LADDER_KM } from "../lib/meetings/constants.ts";
 import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
+import { parseCsv } from "../lib/reference/index.ts";
 
 const GUS = "data/audit/gus-2022-merrimack-sullivan-hillsborough.json";
 const GEO = (layer: string) => `public/geo/${layer}.geojson`;
@@ -111,14 +112,169 @@ function loadLayer(name: string) {
   };
 }
 
+/**
+ * **THE COUNTY'S SLICE OF THE 2022 CENSUS OF GOVERNMENTS, FOR ANY COUNTY.**
+ *
+ * The NH-only extract (`gus-2022-merrimack-sullivan-hillsborough.json`) is kept
+ * and still read for New Hampshire, because it carries a hand-checked
+ * replication note this cannot reproduce. Everywhere else the slice is cut from
+ * the full national file that is already committed — 90,838 rows, every state.
+ *
+ * **The whole containing STATE is not the right denominator and neither is the
+ * county alone.** A zip's 25 km circle crosses county lines constantly, and
+ * Rockaway Township's crosses into Passaic, Essex and Sussex. So the slice is
+ * the containing county plus every county whose units could fall in the circle;
+ * the distance filter downstream does the actual cutting, and taking too many
+ * here is safe while taking too few silently shrinks the denominator — which is
+ * the failure the coverage rule exists to prevent.
+ */
+function gusForCounty(stateFips: string, countyFips: string): Record<string, GusRow[] | string> {
+  if (stateFips === "33") {
+    return JSON.parse(readFileSync(GUS, "utf8")) as Record<string, GusRow[] | string>;
+  }
+  const text = readFileSync("data/reference/census_govt_units_2022.csv", "utf8");
+  const rows = parseCsv(text);
+  const header = rows[0]!;
+  const col = (name: string) => header.indexOf(name);
+  const iState = col("fips_state");
+  const iCounty = col("fips_county");
+  const iName = col("unit_name");
+  const iType = col("unit_type_raw");
+  const iGov = col("gov_type");
+  const iWeb = col("web_address");
+  const iCity = col("city");
+  const iZip = col("zip");
+  const iAddr = col("address1");
+  const iActive = col("is_active");
+  const iPid = col("census_id_pid6");
+
+  const out: Record<string, GusRow[]> = {};
+  let kept = 0;
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i]!;
+    if (r[iState] !== stateFips) continue;
+    const fips = `${stateFips}${String(r[iCounty] ?? "").padStart(3, "0")}`;
+    /*
+     * Every county in the state is kept. The circle-distance filter downstream
+     * is what decides membership; this only decides what is even considered,
+     * and a state has few enough counties that considering all of them costs
+     * nothing and cannot under-count.
+     */
+    const gov = String(r[iGov] ?? "").toUpperCase();
+    const kind = /COUNTY|MUNICIPAL|TOWNSHIP/.test(gov)
+      ? "GENERAL_PURPOSE"
+      : /INDEPENDENT SCHOOL|SCHOOL/.test(gov)
+        ? "SCHOOL_DISTRICT"
+        : /DEPENDENT/.test(gov)
+          ? "DEPENDENT_SCHOOL_DISTRICT"
+          : "SPECIAL_DISTRICT";
+    (out[fips] ??= []).push({
+      kind,
+      censusId: String(r[iPid] ?? ""),
+      name: String(r[iName] ?? "").toUpperCase(),
+      unitType: String(r[iType] ?? ""),
+      web: String(r[iWeb] ?? ""),
+      city: String(r[iCity] ?? "").toUpperCase(),
+      active: String(r[iActive] ?? ""),
+      zip: String(r[iZip] ?? ""),
+      address1: String(r[iAddr] ?? "").toUpperCase(),
+      countyFips: fips,
+    } as GusRow);
+    kept++;
+  }
+  if (kept === 0) {
+    throw new Error(
+      `the 2022 Census of Governments file holds NO units for state FIPS ${stateFips}. ` +
+        "That is a failed read of the file, not a state with no governments.",
+    );
+  }
+  return {
+    ...out,
+    _note: `Sliced from data/reference/census_govt_units_2022.csv for state FIPS ${stateFips} (containing county ${countyFips}) — ${kept} units.`,
+    _vintage: "2022 Census of Governments (January 2022 release)",
+  } as Record<string, GusRow[] | string>;
+}
+
 /** Normalises a Census unit name to a comparable town/district token. */
+/*
+ * **THE ABBREVIATIONS ARE NEW JERSEY'S, AND LEAVING THEM OUT DROPPED A
+ * GOVERNING DISTRICT** (NJ Hunt, 2026-08-22).
+ *
+ * This list was built against New Hampshire, which spells its unit types out.
+ * The Census abbreviates and TIGER does not, so on the first New Jersey run:
+ *
+ *   Census  "ROCKAWAY TWP SCH DIST"           → "ROCKAWAY TWP"
+ *   TIGER   "Rockaway Township School District" → "ROCKAWAY"
+ *
+ * — no match, and the Rockaway Township School District was written out as
+ * `governsZip: false` while the TIGER geometry had the zip's centroid INSIDE
+ * it. A district that governs a reader's children reading as one that does not,
+ * because of four letters. `TWP`, `BORO`, `BOR`, `VLG`, `CO` and `MUN` are the
+ * Census's own forms and are now stripped alongside the words they abbreviate.
+ *
+ * The `OF` prefix strip needs the same treatment for a different reason: New
+ * Jersey's general-purpose units are `TOWNSHIP OF ROCKAWAY` and `BOROUGH OF
+ * ROCKAWAY`, and `BOROUGH` was not in the prefix list at all.
+ */
+/**
+ * **THE UNIT TYPE IS THE DISCRIMINATOR AND MUST NOT BE STRIPPED.**
+ *
+ * The first fix here deleted `TOWNSHIP` and `BOROUGH` along with their Census
+ * abbreviations, and immediately collapsed two different governments into one:
+ * `BOROUGH OF ROCKAWAY` and `TOWNSHIP OF ROCKAWAY` are separate municipalities
+ * with separate councils, separate school districts and separate ballots, and
+ * both normalised to `ROCKAWAY`. The Borough's school district then resolved to
+ * the Township's OCD id — a join collapsing distinct keys onto one row, which
+ * `CLAUDE.md` presumes broken until proven otherwise, and which here would have
+ * shown a reader in the Borough the Township's board.
+ *
+ * So the type is EXPANDED, never removed, and moved to the end so the Census's
+ * `TYPE OF NAME` and TIGER's `Name type` meet:
+ *
+ *   Census  "ROCKAWAY TWP SCH DIST"             → "ROCKAWAY TOWNSHIP"
+ *   TIGER   "Rockaway Township School District" → "ROCKAWAY TOWNSHIP"   ✓ match
+ *   Census  "ROCKAWAY BORO SCH DIST"            → "ROCKAWAY BOROUGH"    ✓ distinct
+ *
+ * Only the words that are never a discriminator come out: `SCHOOL`, `DISTRICT`,
+ * `REGIONAL` and their abbreviations. A district's type is what it is FOR, not
+ * which one it is.
+ */
+const TYPE_WORDS = "TOWN|CITY|TOWNSHIP|TWP|BOROUGH|BORO|BOR|VILLAGE|VLG|MUNICIPALITY|MUN|COUNTY|CO";
+
+const EXPAND: Record<string, string> = {
+  TWP: "TOWNSHIP",
+  BORO: "BOROUGH",
+  BOR: "BOROUGH",
+  VLG: "VILLAGE",
+  MUN: "MUNICIPALITY",
+  CO: "COUNTY",
+};
+
 function normalize(s: string): string {
-  return s
-    .toUpperCase()
-    .replace(/^(TOWN|CITY|COUNTY|TOWNSHIP) OF /, "")
-    .replace(/\b(TOWN|CITY|TOWNSHIP|SCH|SCHOOL|DIST|DISTRICT|REG|REGIONAL|COUNTY)\b/g, " ")
-    .replace(/[^A-Z0-9]+/g, " ")
-    .trim();
+  return (
+    s
+      .toUpperCase()
+      /* `TOWNSHIP OF ROCKAWAY` → `ROCKAWAY TOWNSHIP`, so both conventions agree. */
+      .replace(new RegExp(`^(${TYPE_WORDS}) OF (.+)$`), "$2 $1")
+      /* Words that describe PURPOSE rather than identity. */
+      .replace(/\b(SCH|SCHOOL|DIST|DISTRICT|REG|REGIONAL|INDEPENDENT|PUBLIC)\b/g, " ")
+      .replace(/[^A-Z0-9]+/g, " ")
+      .split(/\s+/)
+      .map((w) => EXPAND[w] ?? w)
+      .join(" ")
+      .trim()
+  );
+}
+
+/**
+ * A COUNTY is compared with its type removed, because TIGER's national county
+ * layer labels them bare (`Morris`) while the Census writes `COUNTY OF MORRIS`.
+ * Nothing is lost: a county name is unique within a state, so the type carries
+ * no discriminating information at this level — unlike a municipality, where a
+ * borough and a township can share a name and routinely do.
+ */
+function normalizeCounty(s: string): string {
+  return normalize(s).replace(/\s*\bCOUNTY\b\s*/g, " ").replace(/\s+/g, " ").trim();
 }
 
 async function main() {
@@ -129,12 +285,74 @@ async function main() {
   const point: [number, number] = [lng, lat];
   const nearKm = RADIUS_LADDER_KM[0];
 
-  const gus = JSON.parse(readFileSync(GUS, "utf8")) as Record<string, GusRow[] | string>;
+  /*
+   * ── THE STATE COMES FROM THE POINT, NOT FROM A CONSTANT (NJ Hunt, 2026-08-22)
+   * ────────────────────────────────────────────────────────────────────────
+   *
+   * **This tool was hardcoded to New Hampshire and gave a confident wrong
+   * answer for anywhere else.** `pnpm zip:universe 07866` resolved Rockaway
+   * Township's centroid correctly to 40.955, -74.488 and then enumerated
+   * `cousub-33`, `unsd-33`, `elsd-33`, `scsd-33` and a three-county New
+   * Hampshire governments file — so `pnpm twig:pair 07866` reported the
+   * official universe of a New Jersey township as ONE unit, the *Nashua City
+   * School District*, 350 km away, and reconciled cleanly while doing it.
+   *
+   * That is the exact shape RULING 60 predicts: a branch built against one
+   * jurisdiction, proven there, and silently wrong in the next. It is not
+   * discarded — it grows a limb. The national county layer already committed
+   * here names the state, the per-state TIGER layers are already committed for
+   * 33, 34 and 04, and the FULL national Census of Governments file is already
+   * committed at `data/reference/census_govt_units_2022.csv`. Nothing had to be
+   * fetched; the tool simply had to ask the point which state it was in.
+   *
+   * A state whose layers are NOT committed fails loudly and names what is
+   * missing, rather than falling back to a default — a silent default here is
+   * how a session measures the wrong place and reports it as coverage.
+   */
+  const county = loadLayer("county-us");
+  const govCountyEarly = county.features.filter((f) => contains(point, f.geometry));
+  const containingCounty = govCountyEarly[0];
+  if (!containingCounty) {
+    throw new Error(
+      `${zip} (${lat}, ${lng}) is inside no county in county-us.geojson. That is a coverage gap in the layer, not an empty universe.`,
+    );
+  }
+  const countyFips = String(
+    containingCounty.properties.fips ??
+      containingCounty.properties.GEOID ??
+      containingCounty.properties.geoid ??
+      "",
+  );
+  const stateFips = countyFips.slice(0, 2);
+  if (!/^\d{2}$/.test(stateFips)) {
+    throw new Error(
+      `could not read a state FIPS from the containing county (${containingCounty.properties.label}); its properties are ${Object.keys(containingCounty.properties).join(", ")}`,
+    );
+  }
+
+  for (const layer of [`cousub-${stateFips}`, `unsd-${stateFips}`, `elsd-${stateFips}`, `scsd-${stateFips}`]) {
+    if (!existsSync(GEO(layer))) {
+      throw new Error(
+        `${zip} is in state FIPS ${stateFips} and ${GEO(layer)} is not committed. ` +
+          "Commit that state's TIGER layers before enumerating its universe — this run is stopping rather than " +
+          "falling back to another state's geography, which is what it used to do.",
+      );
+    }
+  }
+
+  const gus = gusForCounty(stateFips, countyFips);
   const counties = Object.keys(gus).filter((k) => !k.startsWith("_"));
 
-  const cousub = loadLayer("cousub-33");
-  const county = loadLayer("county-us");
-  const school = [...loadLayer("unsd-33").features, ...loadLayer("elsd-33").features, ...loadLayer("scsd-33").features];
+  const cousub = loadLayer(`cousub-${stateFips}`);
+  const school = [
+    ...loadLayer(`unsd-${stateFips}`).features,
+    ...loadLayer(`elsd-${stateFips}`).features,
+    ...loadLayer(`scsd-${stateFips}`).features,
+  ];
+  console.log(
+    `\nstate FIPS ${stateFips} · containing county ${containingCounty.properties.label} (${countyFips}) · ` +
+      `${counties.length} county slice(s) of the 2022 Census of Governments, ${counties.reduce((n, k) => n + (gus[k] as GusRow[]).length, 0)} units\n`,
+  );
 
   // Which named geometries actually contain the point. These are the ground
   // truth the name-matching below is checked against.
@@ -160,7 +378,7 @@ async function main() {
       let ocdId: string | null = null;
 
       if (unit.kind === "GENERAL_PURPOSE" && /COUNTY/.test(unit.unitType ?? "")) {
-        const hit = govCounty.find((f) => normalize(f.properties.label) === token);
+        const hit = govCounty.find((f) => normalizeCounty(f.properties.label) === normalizeCounty(unit.name));
         governs = Boolean(hit);
         ocdId = hit?.properties.ocdId ?? null;
         governsMethod = "TIGER county polygon contains the ZCTA centroid";

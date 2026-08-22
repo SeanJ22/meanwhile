@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 176,
-    "named": 1573,
+    "named": 1574,
     "dynamic": 6
   },
   "files": {
@@ -919,9 +919,10 @@
     },
     "tests/filed-address.test.ts": {
       "names": [
+        "a filed address is never a bare number — the PO-box truncation cannot return",
         "every filed address carries its source — a contact without one is a generated claim",
         "every recorded filed address reached a card — stated N equals rendered rows",
-        "no address was invented — every one ends in a real NH ZIP",
+        "no address was invented — every one ends in a real state and ZIP",
         "the card renders the address as a FACT, not as a tappable affordance",
         "the two the ruling names by hand are contactable"
       ],

@@ -31,6 +31,33 @@ export interface CandidateCardData {
   email: string | null;
   phone: string | null;
   /**
+   * **WHOSE LINE THIS IS, WHEN IT IS NOT THE CANDIDATE'S OWN** (RULING 64,
+   * adopted 2026-08-21, the author's ruling; applied 2026-08-22, NJ Hunt item
+   * 2.2; `NH55`).
+   *
+   * In a small jurisdiction the County Attorney, the Register of Deeds and the
+   * Sheriff plausibly share an address and a switchboard. **That is a fact
+   * about the office, not a data defect**, and the ruling is that the number is
+   * PUBLISHED — labelled as the office line rather than as the candidate's
+   * personal contact. A reader who wants to reach that person can.
+   *
+   * The label is what makes it honest, and it is why this field exists rather
+   * than the number simply being left in `phone`. Two Merrimack County Attorney
+   * candidates carried `(603) 228-0529` and `603-228-0529` — the same
+   * switchboard, in two formats, on two cards, with nothing saying so. Unlabelled,
+   * that reads as each candidate's own number and is a claim we cannot support;
+   * it also trips the distinctness rule in `CLAUDE.md`, which presumes identical
+   * payloads across distinct keys to be broken until proven otherwise.
+   *
+   * Verified on the county's own page before it was labelled: `(603) 228-0529`
+   * at 4 Court Street, Concord NH 03301 is the Merrimack County Attorney's
+   * office, read 2026-08-22 at rung 2 from
+   * `merrimackcounty.net/departments/county_attorney/index.php`.
+   *
+   * Null on every card where the contact IS the candidate's own.
+   */
+  phoneLabel: string | null;
+  /**
    * **THE ADDRESS THE CANDIDATE FILED WITH THE STATE** (RULING 54, adopted
    * 2026-08-21, the author's ruling; `NH12`).
    *

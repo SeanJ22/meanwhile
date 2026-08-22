@@ -86,6 +86,24 @@ const V1_ROUTES = [
   "town-report",
   "voter-file-extract",
   "web-archive",
+  /*
+   * ── ADDED IN v2 (2026-08-22, NJ Hunt items 2.3 and 5.7) ──────────────────
+   *
+   * Four under RULING 66, because `campaign-social` is walled to every client
+   * this project has and RULING 12 says such a wall is named rather than
+   * defeated; one from New Jersey, which imposes a campaign-finance filing
+   * obligation on LOCAL candidates that New Hampshire has no equivalent of.
+   *
+   * They join this list in the same commit that adds them to the manifest, so
+   * the append-only guard above can see any of them leave later. The list is
+   * named V1_ROUTES for its origin and is really "every route that has ever
+   * existed" — renaming it would break nothing and explain nothing.
+   */
+  "filing-campaign-finance-local",
+  "ad-library",
+  "social-archive",
+  "social-mirror",
+  "news-embed",
 ];
 
 const ids = MANIFEST_ROUTES.map((r) => r.id);

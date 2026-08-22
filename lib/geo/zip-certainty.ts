@@ -100,6 +100,34 @@ async function index(): Promise<Index | null> {
  */
 export type GovernCertainty = "CERTAIN" | "AMBIGUOUS" | "UNKNOWN";
 
+/**
+ * **A STATEWIDE OR NATIONWIDE OFFICE IS CERTAIN, AND IT IS NOT MEASURED.**
+ *
+ * RULING 71 is explicit: *county, school district, state and federal do not
+ * become uncertain because a zip crosses a municipal line.* A United States
+ * Senate seat is elected statewide; so is a Governor. Every reader at 07866 is
+ * in New Jersey and votes in New Jersey's Senate race, and putting "could
+ * govern you" on it would be false — and worse than false, because a pill that
+ * appears on things it obviously does not apply to is a pill readers learn to
+ * skip, which costs the Rockaway Borough case the attention it exists to get.
+ *
+ * This is decided on the SHAPE of the OCD id rather than by measurement,
+ * because there is nothing to measure: `ocd-division/country:us/state:nj` has
+ * no sub-state extent to be partial about. The zip's state itself comes from
+ * `resolveZipGeography`, which RULING 67 made check two independent publishers.
+ *
+ * A CONGRESSIONAL OR LEGISLATIVE DISTRICT IS DELIBERATELY NOT ON THIS LIST.
+ * `cd:11` looks federal and is not statewide: a zip can cross a congressional
+ * line exactly as it crosses a municipal one, and those layers are absent from
+ * the lattice edge list, so this repo has NOT measured whether 07866 sits in
+ * one district or two. What it does know is how the district got onto the page
+ * — resolved from the ZCTA CENTROID, one point, which is the very thing
+ * `CLAUDE.md` says a zip may never be used for. Rendering that with no marker
+ * would assert it is the reader's House race on the strength of one point.
+ * The pill is the honest render, and it is true.
+ */
+const STATEWIDE_OR_NATIONAL = /^ocd-division\/country:us(\/state:[a-z]{2})?$/;
+
 export interface ZipCertainty {
   /** Every division whose territory reaches inside this zip. */
   all: string[];
@@ -126,6 +154,9 @@ export async function zipCertainty(zip: string | null): Promise<ZipCertainty | n
     partial,
     samples,
     certaintyOf(ocdId: string): GovernCertainty {
+      // First, because a statewide office is certain by construction and there
+      // is nothing about it for the lattice to measure.
+      if (STATEWIDE_OR_NATIONAL.test(ocdId)) return "CERTAIN";
       if (partialSet.has(ocdId)) return "AMBIGUOUS";
       if (allSet.has(ocdId)) return "CERTAIN";
       return "UNKNOWN";

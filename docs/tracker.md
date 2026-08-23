@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-22 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **216 open**, 339 resolved.
-- **50 waiting on Sean** — the first section below.
+- **230 open**, 339 resolved.
+- **51 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**50 open · 20 resolved.**
+**51 open · 20 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -74,6 +74,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS06** — The Census key has sat in .env.local since before this session and had never been called by anything in the repo - confirmed by sweeping the tree with git grep -a --untracked rather than by trusting docs/sources.md. Called for the first time on 2026-08-22 it returns HTTP 302 with X-DataWebAPI-KeyError: 1 and Location: api.census.gov/data/invalid_key.html. A call with no key at all returns the same 302 pointing at missing_key.html, so the API cannot be reached without a working credential. WHAT IT COSTS: the demographic layer behind a zip - population, median household income, median home value. It closes no Kelly field about a person, so nothing in the hunt is blocked; what is blocked is any zip surface that wants context about a place. WHAT IS NEEDED FROM YOU: request a replacement key at api.census.gov/data/key_signup.html and put it in .env.local. The route is in the manifest as census-acs-api with the wall recorded as a dated measurement on the CREDENTIAL, never as a property of the source.
 
 **NS07** — The government graph crawl enumerates New Jersey's executive departments as governing bodies under RULING 57 - each with its own official site, and each holding public meetings and rulemaking hearings. The Department of Banking and Insurance sets rules on mortgages, insurance premiums and pawnbrokers, and those hearings are exactly the there-is-a-hearing-Tuesday surface this product exists for. THE QUESTION IS NARROW AND IT IS YOURS: their MEETINGS are plainly in scope and the session is wiring them. What is not settled is whether an APPOINTED cabinet secretary or department head renders to a reader as someone who governs them, the way an elected mayor or council member does. The who-governs card's verb is GOVERN, which is a stronger claim than is-responsible-for-this-area, and a session widening it would be making a product decision about what that word means. Nothing is blocked either way - the departments are enumerated and their meetings are hunted regardless of how you rule.
+
+**NS09** — Item 8 of your Discovery Conduct brief says the Discovery conduct block is pinned in context.md and never trimmed, and that if the cap forces trimming the generator trims elsewhere and reports exactly what it trimmed. Built, and it does. MEASURED: the file lands at 40,254 bytes against the 40 KB cap, and the price is the whole tracker-change section — all 10 recovered status changes dropped — plus the P0 notes clipped from 130 to 90 characters. Both are stated in the file itself, so nothing is silent. THE DECISION IS YOURS because you have already made the opposite one once: on 2026-08-17, item 8c, when 20 KB was cutting this same section to nothing, you ruled RAISE THE CAP RATHER THAN CUT ROWS. Following that precedent here means raising the cap to about 56 KB. Following the brief literally means keeping 40 KB and losing the section. The session followed the brief and is telling you what it cost.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -189,7 +191,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**30 open · 3 resolved.**
+**31 open · 3 resolved.**
 
 ### P1
 
@@ -261,11 +263,13 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 **NH41** — The Lake Todd Village District's own site, which the Census of Governments records as laketoddvillagedistrict.us, answers HTTP 404 at rungs 2, 3, 4, 5 and 6, and so does the Town of Bradford's news item for its meeting. The Internet Archive - rung 11, and the rung that produced this district's own words for an earlier session - answered 'Temporarily Offline' on 2026-08-21.
 
+**NH77** — From the 8/22 walkthrough, NOT STARTED this session. Each person's row in Who Governs Here wraps to two lines because the SOURCE link renders beneath their name. One line per person: shift the names left so the name and its source fit on a single row. Verify at 430x932 against a local production build and read the capture as an image.
+
 ## New Jersey hunt
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**24 open · 3 resolved.**
+**25 open · 3 resolved.**
 
 ### P2
 
@@ -290,6 +294,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ11** — The wikipedia-municipality parser reads 39 of 39 Morris County municipalities and parses a roster for most of them. Jefferson Township and Pequannock Township return zero council members while their Local government sections plainly carry one, and both are Faulkner Act municipalities. Chatham Borough and Montville parse a roster but return no form-of-government string. These are parser seams rather than absences and must never be reported as absences about those bodies. The seams already found and fixed are written up in docs/zip-playbook.md section 8 - the roster sentence has no reliable lead-in so every sentence is scored, ref bodies must be masked before sentence splitting or every citation detaches, generational suffixes are not separators, and office titles are glued to names longest-first. These two are the next ones. The diagnostic is the headings array the parser returns on every record.
 
 **NJ12** — Carries forward what NH71 recorded, minus what this session closed and plus what tiering revealed. CLOSED THIS SESSION: filing-campaign-finance-local (NJ ELEC) - the wall was on elec.nj.gov and the records are on njelecefilesearch.com at rung 2; 19 filed entities across the two 07866 municipalities with both controls clean. STILL OWED, with tier: lwv-questionnaire (Tier A) - onyourballot.vote411.org returned candidate-detail pages in search results last session and none has been opened, and it is the highest-value unwalked Tier A route left because one ballot page answers a whole contest. party-committee-roster (Tier A) - the Morris County Republican and Democratic committees publish slates and neither has been walked. filing-prior-candidacy (Tier A) - the manifest calls it the most under-used route in the list and it is under-used again. bar-directory and licensing-board (Tier C) - two candidates surfaced as attorneys through their firms' own sites and njcourts.gov has never been asked. records-request (Tier B) - rung 13, not reached. announcement-archive (Tier C). ad-library (Tier A) - NS01 is tabled by Sean and was not touched. press-outlet-map (Tier A) - the route was BUILT this session and its host list DERIVED from 726 distinct citation hosts, but the outlets' own site searches have not yet been queried.
+
+**NJ13** — From the 8/22 walkthrough, NOT STARTED this session (no hunting was in scope). Morris County has solid representation data and most commissioners have no photo — the first-listed and one other have none, a third does. If one commissioner has an image the rest are findable by the same route. WHAT IS OWED: source photos for every official on that body through the four doors, then open ONE photo review row for Sean. Photos never block anything: every other field renders immediately, photos-first ordering is presentation and not a completeness gate (RULING 50), and a photo decision keys to the ASSET rather than the person — refusing a bad banner once withheld a good Senate portrait.
 
 **HD06** — Three people are running for the Rockaway Township Board of Education and twelve things about them have never been looked for.
 
@@ -323,9 +329,11 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**13 open · 0 resolved.**
+**14 open · 0 resolved.**
 
 ### P2
+
+**AZ01** — NOT STARTED this session. AZ-1: "Know the basics" needs more topics — hunting and fishing ("Am I allowed to hunt or fish?", a common question when somebody moves states) and state abortion law. Both contentious, which is exactly why a clear factual account of where the state stands is owed: state what the law is, cite it, take no position. AZ-2: the state comparison holds one comparison at a time, which is right, but Back returns to Arizona alone when the expected destination is the map — either a reset pill or state pills in the title bar, with deselecting a state dropping it from the comparison, and the same pill pattern on the ballot. AZ-3 (applies across the board, Arizona is only the example): the voting section is five separate items — next election, add to calendar, check registration, where can I vote, search the Secretary of State's tool — and should read as next election, 2026, early voting, with the rest of the noise cut. AZ-4 and AZ-5 (ruled together): three links to the same registration destination inside about ten lines deduplicate to ONE prominent pill, "Check whether you're registered to vote", pointing at the reader's Secretary of State; same pattern for polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-6 is positive: the federal-representative pill system works and stays.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -357,13 +365,19 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**3 open · 35 resolved.**
+**6 open · 35 resolved.**
 
 ### P1
 
 **F01** — Sean's full walk of the product on 2026-08-18, forty-odd findings across cards, meeting order, votes, the ask box, the ballot and the map. The parent row that keeps the whole batch together; the individual findings became their own rows.
 
 ### P2
+
+**VF03** — From the 8/22 walkthrough. Morris County's "Who runs it: [name], president" loses the last letter of the role. NOT FIXED this session, and the reason is stated rather than guessed at: the CSS for the two places a role renders (.person-row-office in the small card, and the inline span in the large one) both wrap rather than clip, and no ellipsis or nowrap rule reaches either. Reading the stylesheet did not find the cause, and guessing at a fix for a visual defect nobody has reproduced would be a change with no evidence behind it. WHAT IS OWED: reproduce it at 430x932 against a local production build with the Morris County card open, read the capture as an image, and fix at whichever bound is actually clipping. Class-wide once found — sweep every place a role or office title renders and report count found and count fixed.
+
+**VF04** — From the 8/22 walkthrough, NOT STARTED this session. LAY-1: the main card (Meetings / Bodies / Districts / View Officials, the one showing 48 meetings and 4 venues) sets the column width, Who Governs Here sits beneath it, and clicking any one should make it take over the left column while the others collapse to pills — one expanded at a time, nested under each other. The existing main sidebar behaviour stays as it works today. LAY-2: the sidebar filters are off-centre, crammed and sloppy when opened; a dedicated screenshot exists in the 8.22 Drive folder. Both are layout work that wants a capture read as an image before and after.
+
+**VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim.
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
 
@@ -375,7 +389,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**67 open · 81 resolved.**
+**69 open · 81 resolved.**
 
 ### P1
 
@@ -394,6 +408,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D50** — The second pass at candidate and official photographs, now that the author has opened the door for portraits a government body publishes about its own members. More faces on cards, each one carrying the door it came through.
 
 **D52** — Turning each state's campaign-finance filing vocabulary into words a fifteen-year-old reads. Every state files differently, so this is a programme with one adapter per state rather than a single job.
+
+**DI03** — pnpm schools:classify stamps each registry school district INDEPENDENT or DEPENDENT from the 2022 Census of Governments' own classification, via data/derived/census-nces-crosswalk.csv. Measured 2026-08-23: 291 INDEPENDENT, 4 DEPENDENT, 219 UNCLASSIFIED, 2 TIGER pseudo-entities skipped. An unclassified district deliberately gets NO class definition — guessing INDEPENDENT because most districts are would be a claim about who governs a reader's schools made on a base rate — so 219 districts render a card with no description. Most of the unmatched are New Hampshire. WHAT IS OWED: raise the crosswalk's match rate for the unmatched names, or add a second key (NCES LEAID, Census GIDID) so the join does not depend on a normalised name alone.
+
+**DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F".
 
 **F02** — The product renders 186 congressional committee rows with no description of what any of them does. The text does not exist in the upstream file, so it has to come from somewhere else.
 
@@ -543,7 +561,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**19 open · 132 resolved.**
+**23 open · 132 resolved.**
 
 ### P1
 
@@ -559,6 +577,12 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 
 **PU01** — Read as an image on production 2026-08-22 at 430x932. The map at 07866 shows a panel reading "BASEMAP UNAVAILABLE -- Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use". That is an environment variable name and a dotfile path rendered to a reader, which the plain-language rule forbids outside a technical-details disclosure: identifiers, enum values and internal keys never render to a reader. The honest half of the message -- that tiles did not load and pins still work -- is right and should stay. Two questions for whoever takes it: whether the key is simply unset on the production deploy (in which case the message is doing its job for the wrong audience), and what a reader should see instead.
 
+**PU03** — NOT STARTED this session. ASK-1: "When is the next meeting?" returns "Where to look: Meetings near you" and explains that the map shows collected meetings, with nothing to click. Give the reader a control right there, tappable on mobile. NH-3: "When does school start again?" returns "we don't have a sourced answer for who owns this topic yet" — the school district owns this and it must be routed. THE STANDARD FOR BOTH is NH-2, which Sean called out as the thing to replicate: coverage disclosure with denominators (35 agendas read, 9 more held but unreadable and therefore excluded), honest gaps, the relevant record surfaced, and a NAMED HUMAN with a phone number and an email. He called the contact details the best part.
+
+**PU04** — From the 8/22 walkthrough. The Rockaway Township Municipal Building / Township Council regular meeting is labelled "nearby — different jurisdiction", and a ZIP CANNOT ESTABLISH THAT. NOT DONE this session: the address prompt it needs (WGH-5) is built and shipped, so what remains is wiring the meeting badge to it — the badge becomes clickable, opens the same one prompt, and everything re-resolves from the answer, exactly as the who-governs pill now does. The badge module already keeps GOVERNS, NEARBY and NO_BOUNDARY apart correctly; what it has no route to is the reader settling which applies to them.
+
+**PU05** — The 8/22 brief said to fetch the Census ZCTA-to-congressional-district relationship file — free, keyless, national. MEASURED 2026-08-23: NO SUCH FILE EXISTS for the current Congress, and four Census directories were walked to establish it. rel2020/zcta520/ holds six files and none of them is CD. rel/ holds only zcta_cd111_rel_10.txt, the 111th Congress with 2010 ZCTAs — two rounds of redistricting stale. rel2022/ and rel2024/ hold Connecticut-only files. baf2020/'s CD assignment file is dated 2020-12-11 (116th) and baf/'s is dated 2011-01-21. WHAT IS OWED, and the machinery for it already exists: scripts/build-zip-governments.mts samples every ZCTA on a 0.01-degree lattice against TIGER cartographic boundary layers and has been verified across all 33,791 zips. Adding a cd layer to its LAYERS list gives per-zip congressional-district sample counts nationally, and the existing partial-versus-whole arithmetic then answers "one district or more than one" for every zip in the country by exactly the method the who-governs pill already trusts. 07866 itself is settled independently: it sits entirely within NJ-11, confirmed against the House zip lookup.
+
 **M75** — On a phone, the map's legend crosses the bottom of an open meeting panel and covers the text underneath it.
 
 **P03** — The one-tap yes or no, with an optional free-text answer, asked after the explanation and attached to a specific provision or a specific sourced position. This is the revenue path.
@@ -572,6 +596,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **M13** — The radius control broke twice — once blanking results, once refusing to switch off — and both times the tests only covered the logic underneath, not the control a reader touches.
 
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
+
+**PU06** — Measured 2026-08-23 at 07866 against a local production build: TWELVE instances across NINE contests on /ballot, unchanged by this session. The MAP panel was fixed — six rows each carrying the full sentence became six asterisks and ONE pill, read as an image — but the ballot page renders the pill per contest heading, which RULING 28 permits and which Sean nonetheless called the headline UX problem of the New Jersey pass. WHAT IS OWED: decide whether the ballot page takes the same treatment (one page-level pill, marks on the affected contests) and, wherever the sentence survives, make it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
 
 **A03** — Answering "is there a data center coming?" by searching pending zoning, permits and agenda items near an address. The same machinery answers warehouses, rezonings and road projects.
 
@@ -619,7 +645,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**7 open · 58 resolved.**
+**8 open · 58 resolved.**
 
 ### P2
 
@@ -636,6 +662,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PD05** — The production walk creates rows under two different run labels and then counts only one of them, so it under-reports how many rows it wrote.
 
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
+
+**RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
 
 **R54** — A standing mechanism rather than a job: every portrait Sean needs to eyeball collects into one list he can work through, regenerated rather than hand-kept.
 

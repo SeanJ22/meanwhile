@@ -2,7 +2,7 @@
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
+import { TOP_OFFICES_GAP, runsSomething, topOfficesFor } from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
@@ -88,7 +88,15 @@ export function DistrictPopup({
 }: DistrictPopupProps) {
   // F01 1.2: derived from the same roster the list below renders, so the two
   // can never name a different set of people.
-  const topOffices = topOfficesFor(representation);
+  /*
+   * LBL-1 (2026-08-22): nobody runs a congressional district and nobody runs a
+   * U.S. Senate seat. The field is REMOVED on those cards — not renamed — and
+   * the representation the card already shows is the correct account of that
+   * relationship. The rule is whether the office holds executive authority over
+   * a governing entity.
+   */
+  const showsWhoRunsIt = runsSomething(district.type);
+  const topOffices = showsWhoRunsIt ? topOfficesFor(representation) : [];
 
   return (
     <PopupCard
@@ -133,8 +141,8 @@ export function DistrictPopup({
         THE GAP IS NAMED. A body whose top offices are not sourced renders a
         sentence about OUR research — never a blank slot, which would read as
         “this body has no leader”. */}
-      <PopupSectionLabel>Who runs it</PopupSectionLabel>
-      {topOffices.length > 0 ? (
+      {showsWhoRunsIt && <PopupSectionLabel>Who runs it</PopupSectionLabel>}
+      {!showsWhoRunsIt ? null : topOffices.length > 0 ? (
         topOffices.map((office) => (
           <div key={`top:${office.holder.id}`} className="person-row">
             <span className="person-row-name">

@@ -28,7 +28,7 @@
  * removal of `tests/foo.test.ts`'s guards.
  */
 import { execFileSync } from "node:child_process";
-import { dirname, join, sep } from "node:path";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { guardsIn } from "./guard-census.mjs";

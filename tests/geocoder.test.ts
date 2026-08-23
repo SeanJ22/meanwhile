@@ -375,8 +375,14 @@ test("the answer resolves to the point, and the house number is never kept", asy
 });
 
 test("the house number never reaches the narrowing store or a log", () => {
+  /*
+   * WGH-5 (2026-08-22): the two address forms collapsed into one component,
+   * so this guard follows the house number to where it now lives. Same claim,
+   * same strength, new address — the number is component state that is spent on
+   * one request and dropped.
+   */
   const source = readFileSync(
-    new URL("../components/map/narrowing-prompt.tsx", import.meta.url),
+    new URL("../components/address/address-prompt.tsx", import.meta.url),
     "utf8",
   );
   // The number lives in component state and goes to the geocoder. It must
@@ -384,18 +390,21 @@ test("the house number never reaches the narrowing store or a log", () => {
   // the same rule the resolved point ships under.
   for (const forbidden of [
     "setStreet(houseNumber",
-    "setDivisions(houseNumber",
+    "writeSessionAddress({ houseNumber",
+    "houseNumber, streetLabel",
     "/api/log",
     "console.log(houseNumber",
     "localStorage",
   ]) {
     assert.ok(
       !source.includes(forbidden),
-      `the narrowing prompt reaches for ${forbidden} with the house number`,
+      `the address prompt reaches for ${forbidden} with the house number`,
     );
   }
-  // And it is cleared once the request finishes, whatever the outcome.
-  assert.match(source, /\.finally\([\s\S]{0,200}setHouseNumber\(""\)/);
+  // And it is cleared once the request finishes, whatever the outcome. The one
+  // prompt uses `try`/`finally` rather than a promise `.finally()`, so the
+  // guard matches the block instead of the method — the CLAIM is unchanged.
+  assert.match(source, /finally \{[\s\S]{0,200}setHouseNumber\(""\)/);
 });
 
 /* ------------------------------------------------- M80: the proxy route --- */
@@ -519,7 +528,7 @@ test("M80: a browser goes through the proxy; the server calls the Bureau direct"
 
 test("M80: the promise changed in the same commit, on both surfaces", () => {
   const prompt = readFileSync(
-    join(process.cwd(), "components", "map", "narrowing-prompt.tsx"),
+    join(process.cwd(), "components", "address", "address-prompt.tsx"),
     "utf8",
   );
   const transparency = readFileSync(
@@ -530,7 +539,7 @@ test("M80: the promise changed in the same commit, on both surfaces", () => {
   // The old promise is gone from the reader-facing copy. It was unkeepable
   // the moment the feature needed a browser, and a promise quietly retracted
   // is worse than one honestly rewritten.
-  const promptCopy = prompt.slice(prompt.indexOf("Your choice stays on this device"));
+  const promptCopy = prompt.slice(prompt.indexOf("We ask for your street"));
   assert.ok(
     !/never send it to us/.test(promptCopy),
     "the narrowing prompt still makes the unkeepable promise",

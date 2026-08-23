@@ -45,7 +45,7 @@
  * empty directory. A zero-row extraction is a FAILED extraction.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { decodeEntities } from "../lib/hunt/roster-page.ts";

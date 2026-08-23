@@ -310,6 +310,58 @@ function readRulings() {
   };
 }
 
+/**
+ * THE PINNED DISCOVERY-CONDUCT BLOCK (2026-08-22, the author's Discovery
+ * Conduct brief, item 8).
+ *
+ * `CLAUDE.md`'s **Discovery conduct** section is read out VERBATIM and is
+ * **never trimmed**. If the cap bites, the shrink cascade below trims elsewhere
+ * and says exactly what it trimmed.
+ *
+ * ## Why this one section is pinned when nothing else here is
+ *
+ * Every other section of this file is an INDEX — headings, counts, pointers —
+ * on the principle that a session that needs the text reads the file. That
+ * principle is right, and it is exactly wrong for this block, because the
+ * failure this block exists to fix is a session not knowing there was anything
+ * to look up. RULING 88 requires an output — a list of routes that did not
+ * exist at session start — that a session cannot produce by consulting a
+ * reference it was never prompted to open. A pointer would be read as *more
+ * rules about hunting, read if stuck*, which is how the last three fixes were
+ * absorbed and then not applied.
+ *
+ * **Nothing is composed.** The text is `CLAUDE.md`'s own, sliced between its
+ * heading and the next `##`, so it cannot drift from the law it quotes.
+ */
+function readDiscoveryConduct() {
+  let text;
+  try {
+    text = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  } catch (error) {
+    return { body: "", failure: `could not read CLAUDE.md: ${error.message}` };
+  }
+  const lines = text.split("\n");
+  const start = lines.findIndex((l) => /^##\s+DISCOVERY CONDUCT\s*$/i.test(l));
+  if (start < 0) {
+    return {
+      body: "",
+      failure: "CLAUDE.md carries no `## DISCOVERY CONDUCT` heading — the section was renamed or removed",
+    };
+  }
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^##\s+/.test(lines[i]) && !/^###/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+  const body = lines.slice(start, end).join("\n").trimEnd();
+  return {
+    body,
+    failure: body.length < 500 ? `the section is only ${body.length} bytes — it looks truncated or emptied` : null,
+  };
+}
+
 export async function buildContext({
   gitFacts = [],
   generatedAt,
@@ -325,6 +377,7 @@ export async function buildContext({
   const { records } = readTracker(csvText);
   const p0 = records.filter((r) => r.priority === "P0");
   const ripcords = await readRipcords();
+  const conduct = readDiscoveryConduct();
   const history = readStatusChanges(10);
 
   const render = (changeLimit, noteChars, cutNote) => {
@@ -374,6 +427,35 @@ export async function buildContext({
 
     /* P0 */
     /* rulings — decisions that are not law, and where to read them */
+    /*
+     * The PINNED block, first among the reference sections and never trimmed.
+     * It is placed AHEAD of the rulings index deliberately: an index tells a
+     * session what exists, and this tells it what it is required to produce.
+     */
+    if (conduct.failure) {
+      put(
+        `> **SECTION FAILED — the pinned Discovery conduct block could not be built.** ${conduct.failure}`,
+        "",
+        "> This is a failure of this generator, not a statement that the rule does not exist.",
+        "> Read `CLAUDE.md` directly. **This block is never trimmed to fit the cap** — if it is",
+        "> missing, something removed or renamed it upstream.",
+        "",
+      );
+    } else {
+      put(
+        "<!-- PINNED: never trimmed to fit the cap. Verbatim from CLAUDE.md. -->",
+        "",
+        conduct.body,
+        "",
+        "*(Pinned verbatim from `CLAUDE.md` by `scripts/context-file.mjs`. Every other",
+        "section of this file is an index; this one is the text, because the failure it",
+        "fixes is a session not knowing there was anything to look up.)*",
+        "",
+        "---",
+        "",
+      );
+    }
+
     const rulings = readRulings();
     put(
       `## Rulings — ${rulings.headings.length} recorded`,
@@ -501,6 +583,20 @@ export async function buildContext({
   const truncation = [];
 
   if (Buffer.byteLength(text) > cap) {
+    /*
+     * THE PINNED BLOCK IS NOT IN THIS CASCADE, and that is deliberate rather
+     * than an oversight (2026-08-22, item 8). The Discovery conduct text is
+     * never trimmed: if the file is over the cap, everything else gives way
+     * first and says what it gave up. A pinned block that could be shortened
+     * "just this once" is a pointer wearing a longer coat.
+     *
+     * What it costs, stated rather than discovered later: the block is roughly
+     * 12 KB against a 40 KB cap, so on a busy tracker it can take the whole
+     * tracker-change section with it. That is visible — the section prints its
+     * own SECTION DROPPED banner — and it is a real trade the author may want to
+     * reverse by raising the cap, exactly as he did on 2026-08-17 when 20 KB was
+     * cutting the same section to nothing.
+     */
     // 1. The tracker-change section, as the author specified.
     let limit = history.changes.length;
     while (limit > 0 && Buffer.byteLength(text) > cap) {

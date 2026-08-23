@@ -7,7 +7,11 @@ import {
   BADGE_COPY,
   badgeCensus,
   badgeFor,
+  jurisdictionClaim,
 } from "../lib/meetings/jurisdiction-badge.ts";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
+
+const ROOT = join(import.meta.dirname, "..");
 
 /**
  * M81 — the jurisdiction badge.
@@ -125,5 +129,79 @@ test("M81: the API sends the resolved divisions, and null when it failed", () =>
     route,
     /governingOcdIds\s*=\s*resolvedDivisions\s*\n?\s*\?\s*resolvedDivisions\.map/,
     "the route flattens a failed resolution into an answer",
+  );
+});
+
+/* ========================================================================== */
+/* JUR-1 — a body may not both govern you and have no boundary                */
+/* ========================================================================== */
+
+/**
+ * (2026-08-22, the author's 8/22 walkthrough, item 12.)
+ *
+ * Morris County's Board of County Commissioners rendered **"Governs your
+ * area"** and **"Boundary not published"** at the same time. Those cannot both
+ * be true: if no boundary is published, whether it governs the reader is a
+ * question that cannot be asked.
+ *
+ * `badgeFor` was never the defect — it returns exactly one value. The
+ * contradiction came from a SECOND code path: the body card built its
+ * `Governs: <division>` row straight off the division label, with no reference
+ * to whether a boundary existed. Two paths, one subject, nothing making them
+ * agree — which is the class this sweeps, not the instance.
+ */
+test("JUR-1: the two claims are mutually exclusive, by construction", () => {
+  // A real body with a real division: GOVERNS, and nothing else.
+  const withBoundary = jurisdictionClaim({
+    ocdId: "ocd-division/country:us/state:nj/county:morris",
+    divisionLabel: "Morris County",
+  });
+  assert.equal(withBoundary.kind, "GOVERNS");
+  assert.equal(withBoundary.label, "Governs");
+  assert.equal(withBoundary.value, "Morris County");
+
+  // No division id at all — Pima Community College's district is the live case.
+  const noId = jurisdictionClaim({ ocdId: null, divisionLabel: "Pima County" });
+  assert.equal(noId.kind, "NO_BOUNDARY");
+  assert.equal(noId.label, BADGE_COPY.NO_BOUNDARY.label);
+
+  // A division id with an EMPTY label is the same situation from the reader's
+  // side, and it is the one that produced the contradiction: the old code
+  // rendered "Governs:" with nothing after it, which reads as a finding.
+  for (const empty of ["", "   "]) {
+    const blank = jurisdictionClaim({ ocdId: "ocd-division/country:us/state:nj", divisionLabel: empty });
+    assert.equal(blank.kind, "NO_BOUNDARY", `an empty label must not produce a Governs row (${JSON.stringify(empty)})`);
+    assert.notEqual(blank.label, "Governs");
+  }
+});
+
+test("JUR-1: no surface builds a Governs row without going through the one claim", () => {
+  /*
+   * The sweep, not the instance. A second place that assembles
+   * `{ label: "Governs", ... }` from a division label is the defect coming
+   * back, and it would look exactly as reasonable as the first one did.
+   */
+  const swept = filesThatWouldBeCommitted({
+    cwd: ROOT,
+    paths: ["app", "components", "lib"],
+  })
+    .map((f) => f.trim())
+    .filter((f) => /\.(ts|tsx)$/.test(f));
+
+  assert.ok(swept.length > 100, `only ${swept.length} files swept — the corpus shrank`);
+
+  const offenders: string[] = [];
+  for (const file of swept) {
+    if (file.endsWith("lib/meetings/jurisdiction-badge.ts")) continue;
+    const text = readFileSync(join(ROOT, file), "utf8");
+    for (const m of text.matchAll(/label:\s*"Governs"/g)) {
+      offenders.push(`${file} (offset ${m.index})`);
+    }
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    "a Governs row is built outside `jurisdictionClaim`, so nothing stops it appearing\n" +
+      `beside "Boundary not published" again:\n${offenders.join("\n")}`,
   );
 });

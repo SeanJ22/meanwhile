@@ -52,7 +52,8 @@ import {
   representationNoteFor,
 } from "@/lib/registry/representation";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
-import { blurbForBody } from "@/lib/officials/body-blurbs";
+import { definitionsForBody } from "@/lib/officials/body-definitions";
+import { schoolDependency } from "@/lib/officials/school-dependency";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
 import {
   formatMeetingDate,
@@ -64,6 +65,8 @@ import {
 import { SCHOOL_DISTRICT_TYPES } from "@/lib/map/districts";
 import type { DistrictHit, DrawnDistrict } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
+
+import { jurisdictionClaim } from "@/lib/meetings/jurisdiction-badge";
 
 import { CoverageNotice } from "./coverage-notice";
 import { DataFreshness } from "./data-freshness";
@@ -2157,6 +2160,9 @@ function bodySubject(
     title: body.name ?? body.divisionLabel,
     subtitle: body.divisionLabel,
     tier: body.tier,
+    // LBL-1 (2026-08-22): decides whether this card carries a Who runs it
+    // heading at all. A county board runs a county; a district does not run.
+    divisionKind: body.divisionType,
     divisionOcdId: null,
     facts: [
       { label: "Type", value: BODY_TYPE_LABEL(body) },
@@ -2190,15 +2196,30 @@ function bodySubject(
     // body — content where the product holds it, the section's own honest
     // absence line where it does not, and never a hidden section.
     bodyCard: {
-      whatItDoes: blurbForBody(body.ocdId, body.divisionType),
+      whatItDoes: definitionsForBody({
+        ocdId: body.ocdId,
+        divisionType: body.divisionType,
+        lsad: body.lsad,
+        schoolDependency: schoolDependency(body.ocdId),
+      }),
       isSchoolDistrict: body.divisionType === "school_district",
       // The superintendent is HIRED by the board, so they are not in the
       // elected roster and have to be asked for separately. Null renders as
       // the named gap, never as an absent row.
       superintendent: superintendent,
       contact: bodyContactRows(body),
+      /*
+       * JUR-1 (2026-08-22): this row used to be built unconditionally from the
+       * division label, which is how Morris County came to render "Governs your
+       * area" and "Boundary not published" on the same card. The claim is now
+       * made in ONE place — lib/meetings/jurisdiction-badge.ts — and a body with
+       * no published boundary cannot produce a Governs row at all.
+       */
       jurisdiction: [
-        { label: "Governs", value: body.divisionLabel },
+        (() => {
+          const claim = jurisdictionClaim(body);
+          return { label: claim.label, value: claim.value };
+        })(),
         { label: "Level", value: TIER_LABEL[body.tier] },
       ],
     },
@@ -2409,6 +2430,9 @@ function districtSubject(
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
     tier: district.tier,
+    // LBL-1: the map vocabulary — congressional / state-senate / state-house
+    // all answer false, which is the whole point of the field.
+    divisionKind: district.type,
     facts: [
       // No OCD-ID row: internal identifiers never render to readers (4a).
       { label: "Type", value: district.typeLabel },

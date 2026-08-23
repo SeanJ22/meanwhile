@@ -2,6 +2,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import {
+  BATTLECARD_SECTIONS,
+  votingRecordEmptyLine,
+} from "../lib/ballot/battlecard-sections.ts";
 
 /**
  * F01-continued session 2, items 12 and 14 (2026-08-19) — the ballot stops
@@ -25,33 +29,124 @@ const read = (...p: string[]) => readFileSync(join(ROOT, ...p), "utf8");
 test("12: the long sections render inside the battlecard, not on the row", () => {
   const page = read("app", "ballot", "page.tsx");
 
-  // Both call sites — the certified lineup and the filed candidacies. A build
-  // where one branch kept its inline sections would render two different
-  // ballots and read as a ranking by layout.
-  const battlecards = page.match(/<CandidateBattlecard/g) ?? [];
-  assert.equal(battlecards.length, 2, "both candidate branches need the card");
+  /*
+   * **BC-1 (2026-08-22) CHANGED THE SHAPE THIS GUARD WAS WRITTEN AGAINST, and
+   * the claim it defends is now enforced structurally rather than counted.**
+   *
+   * It used to assert that `<CandidateBattlecard` appeared twice — once per
+   * contest branch — and that each occurrence had `CandidatePositions`,
+   * `IncumbentRecord` and `CandidateFunding` among its children. The comment
+   * beside it said the two branches "must carry the same sections in the same
+   * order", and **nothing enforced that**: it was two hand-assembled lists that
+   * happened to match, checked by counting to two.
+   *
+   * There is now ONE builder — `BallotBattlecard` — and both branches call it,
+   * so they cannot diverge. That is the same guarantee the old test was
+   * approximating, obtained by construction instead of by arithmetic.
+   */
+  const builders = page.match(/<BallotBattlecard(?![A-Za-z])/g) ?? [];
+  assert.equal(builders.length, 2, "both candidate branches need the card");
 
-  // Every moved section appears the same number of times as the card that
-  // holds it — which is what says they are INSIDE it rather than beside it.
-  // The trailing boundary matters: `<CandidatePositions` is a prefix of
-  // `<CandidatePositionsAnnotation`, which is item 14's ROW annotation and
-  // is supposed to appear twice MORE. A prefix match counted four and
-  // reported the sections as duplicated.
-  for (const section of ["CandidatePositions", "IncumbentRecord", "CandidateFunding"]) {
-    const found = (page.match(new RegExp(`<${section}(?![A-Za-z])`, "g")) ?? []).length;
+  const defined = page.match(/async function BallotBattlecard\(/g) ?? [];
+  assert.equal(
+    defined.length,
+    1,
+    "there must be exactly ONE builder — two would be the divergence this replaced",
+  );
+
+  // The long sections live in the builder's `sections` map and nowhere else on
+  // the row. A second render of any of them outside it would put the section
+  // back beside the card, which is what item 12 moved it off.
+  const builder = page.slice(page.indexOf("async function BallotBattlecard("));
+  const body = builder.slice(0, builder.indexOf("\n}\n"));
+  for (const section of ["CandidatePositions", "CandidateFunding", "RecentVotes"]) {
+    assert.ok(
+      body.includes(`<${section}`),
+      `${section} must be one of the builder's sections`,
+    );
+    const onPage = (page.match(new RegExp(`<${section}(?![A-Za-z])`, "g")) ?? []).length;
     assert.equal(
-      found,
-      2,
-      `${section} should render exactly twice — once per branch, inside the battlecard`,
+      onPage,
+      1,
+      `${section} renders once, inside the one builder — a second render is the row getting it back`,
     );
   }
+});
 
-  // …and structurally inside: each card's children must contain them.
-  for (const block of page.split("<CandidateBattlecard").slice(1)) {
-    const inside = block.slice(0, block.indexOf("</CandidateBattlecard>"));
-    assert.ok(inside.includes("<CandidatePositions"), "positions left the card");
-    assert.ok(inside.includes("<IncumbentRecord"), "the record door left the card");
-    assert.ok(inside.includes("<CandidateFunding"), "funding left the card");
+test("BC-1: every card carries the same seven sections, always", () => {
+  /*
+   * The author's complaint was that *"information is currently parsed onto
+   * cards haphazardly because there is no standard."* This is the standard.
+   *
+   * The SET is fixed and the card renders every section whether or not it holds
+   * content, because a card whose sections appear and disappear with what we
+   * hold makes a well-covered person's card taller and more substantial than a
+   * thin one's — a layout asymmetry tracking incumbency rather than anything
+   * about the people.
+   */
+  const card = read("components", "ballot", "candidate-battlecard.tsx");
+  assert.match(
+    card,
+    /BATTLECARD_SECTIONS\.map/,
+    "the card must render the fixed set, not whatever it was handed",
+  );
+  assert.equal(BATTLECARD_SECTIONS.length, 7, "the seven the author named");
+  assert.deepEqual(
+    BATTLECARD_SECTIONS.map((s) => s.title),
+    [
+      "What this office does",
+      "Positions",
+      "Committees",
+      "Offices near you",
+      "Campaign money",
+      "Voting record",
+      "Sources",
+    ],
+    "the titles and the order are his, verbatim",
+  );
+  // No branch may skip a section for want of content.
+  assert.ok(
+    !/sections\?\.\[spec\.id\][^\n]*&&/.test(card),
+    "a section must never be conditional on having content",
+  );
+});
+
+test("BC-2: the two empty states exist and are distinguishable", () => {
+  /*
+   * An empty Voting record on someone who has never held the office and an
+   * empty one on an incumbent whose record we have not collected are different
+   * facts. Rendering them as one sentence is a null becoming an assertion —
+   * and it makes a challenger's card read as thinner than an incumbent's
+   * because of COPY rather than data.
+   */
+  const held = votingRecordEmptyLine(true);
+  const never = votingRecordEmptyLine(false);
+  assert.notEqual(held, never, "one sentence cannot carry two different facts");
+
+  // The incumbent case is about US. The challenger case is about THEIR
+  // situation. The reader must be able to tell which.
+  assert.match(held, /we haven't collected/i);
+  assert.match(never, /have not held this office/i);
+  assert.doesNotMatch(never, /we haven't|we have not/i, "their situation is not our gap");
+});
+
+test("BC-2: an empty section is never a per-card completeness statement", () => {
+  /*
+   * RULING 44 is untouched. An empty drop-down saying why it is empty is not a
+   * marker of how complete this card is relative to another — no count, no
+   * digit, no sentence about what the card lacks.
+   */
+  const specs = BATTLECARD_SECTIONS.map((s) => s.emptyLine).concat([
+    votingRecordEmptyLine(true),
+    votingRecordEmptyLine(false),
+  ]);
+  for (const line of specs) {
+    assert.doesNotMatch(line, /\d/, `an empty line carries a number: ${line}`);
+    assert.doesNotMatch(
+      line,
+      /\b(less|fewer|thin|incomplete|compared|than other|other candidates)\b/i,
+      `an empty line compares this card to another: ${line}`,
+    );
   }
 });
 

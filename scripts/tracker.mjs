@@ -370,6 +370,11 @@ function trackerMarkdown(working, resolved, sections) {
  */
 function logMarkdown(working, resolved, purposes) {
   const all = [...working, ...resolved];
+  /* The opened ledger, for sessions whose rows are all still open. See below. */
+  const openedLedgerPath = join(ROOT, OPENED_JSON);
+  const openedLedger = existsSync(openedLedgerPath)
+    ? JSON.parse(readFileSync(openedLedgerPath, "utf8"))
+    : [];
   const sessions = new Map();
   const touch = (label) => {
     if (!label) return null;
@@ -385,9 +390,35 @@ function logMarkdown(working, resolved, purposes) {
       if ((r["Resolved on"] ?? "") > c.date) c.date = r["Resolved on"] ?? "";
     }
   }
-  // A session's date: the newest date any of its rows carries, or the date in
-  // its own label for the runs that predate session handles.
+  /*
+   * A session's date: the newest date any of its rows carries, the date the
+   * OPENED LEDGER recorded for it, or the date in its own label for the runs
+   * that predate session handles.
+   *
+   * **The ledger reading was added 2026-08-23 and it closes a real hole.** A
+   * session that only OPENS rows — which is every session that finds more than
+   * it finishes, and is a perfectly ordinary shape — had no date at all: rows
+   * carry `Resolved on` and nothing else dated, `Opened by` is a bare session
+   * label, and a modern label like `discovery-conduct-0823-nonhunt` has no ISO
+   * date in it to fall back to.
+   *
+   * The consequence was not cosmetic. An undated session sorts BELOW every
+   * dated one, so the newest run in the repo rendered at the BOTTOM of a
+   * newest-first document, with no date beside its name. `docs/tracker-opened.json`
+   * has recorded the date all along; nothing was reading it.
+   */
   for (const s of sessions.values()) {
+    if (!s.date) {
+      /*
+       * ISO ONLY. 89 of the ledger's 111 entries record
+       * `reconstructed-2026-08-21` rather than a date, and that string sorts
+       * ABOVE every real date — the first version of this lookup put six
+       * reconstructed runs at the top of a newest-first document. A value that
+       * is not a date is not a date.
+       */
+      const fromLedger = openedLedger.find((e) => e.session === s.label)?.opened ?? "";
+      if (/^\d{4}-\d{2}-\d{2}$/.test(fromLedger)) s.date = fromLedger;
+    }
     if (!s.date) {
       const m = /^(\d{4}-\d{2}-\d{2})/.exec(s.label);
       if (m) s.date = m[1];

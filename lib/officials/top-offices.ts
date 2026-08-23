@@ -172,3 +172,54 @@ export function topOfficesFor(holders: readonly SeatHolder[]): TopOffice[] {
 
   return found;
 }
+
+/**
+ * **LBL-1 — DOES ANYBODY RUN THIS?**
+ * (2026-08-22, the author's 8/22 walkthrough, item 15.)
+ *
+ * The small battlecards for NJ-7 and NJ-11 showed *"Who runs it: [the
+ * representative]"*. **Nobody runs a congressional district, and nobody runs a
+ * U.S. Senate seat.** That relationship is REPRESENTATION, and the card already
+ * shows it correctly elsewhere — under the office title, where it belongs.
+ *
+ * The field is REMOVED on those cards. Not renamed, not relabelled: a heading
+ * that is false of its subject is not improved by softening it, and "Who
+ * represents it" would duplicate a row the card already carries.
+ *
+ * **The rule, stated so it travels:** the field renders where the office holds
+ * EXECUTIVE AUTHORITY over a governing entity — a governor, a county body, a
+ * municipal body, a school district. It does not render where the office is one
+ * voice in a larger chamber and the "entity" is a district drawn on a map.
+ *
+ * A `null` division type is the Senate seat: senators are statewide and carry
+ * no division of their own, and the answer for them is the same as for a
+ * district — nobody runs it.
+ */
+/**
+ * It takes a plain string because TWO vocabularies name the same things: the
+ * registry's `DivisionType` (`place`, `school_district`, `cd`, `sldu`, `sldl`)
+ * and the map's `DistrictType` (`municipal`, `school-unified`, `congressional`,
+ * `state-senate`, `state-house`). Both reach this question and neither is going
+ * to be renamed to suit it, so the ALLOW-LIST names both and anything
+ * unrecognised answers false.
+ *
+ * False is the safe direction here: it suppresses a heading. Answering true for
+ * something unrecognised would put "Who runs it" over a person who runs
+ * nothing, which is the defect being fixed.
+ */
+const RUNS_SOMETHING = new Set([
+  // registry vocabulary
+  "county",
+  "place",
+  "school_district",
+  // map vocabulary
+  "municipal",
+  "school-unified",
+  "school-elementary",
+  "school-secondary",
+]);
+
+export function runsSomething(divisionType: string | null | undefined): boolean {
+  if (divisionType === null || divisionType === undefined) return false;
+  return RUNS_SOMETHING.has(divisionType);
+}

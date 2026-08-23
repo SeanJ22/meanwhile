@@ -73,6 +73,16 @@ export interface CoveredBody {
   name: string | null;
   divisionLabel: string;
   divisionType: DivisionType;
+  /**
+   * The Census legal/statistical area description, carried through from the
+   * division (DEF-1, 2026-08-22).
+   *
+   * It is what tells a New Jersey TOWNSHIP from a borough without matching on
+   * a name string — LSAD 43 is "Township" in the Census own coding — and the
+   * two are different claims about what kind of thing the body is. It was
+   * already on `Division` and was being dropped here.
+   */
+  lsad: string | null;
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
@@ -298,6 +308,7 @@ export function summarizeCoverage(
       // hyperlocal, and not a division. Nothing populates that path yet.
       divisionLabel: division?.label ?? "",
       divisionType: division?.divisionType ?? "place",
+      lsad: division?.lsad ?? null,
       bodyClass: body.bodyClass,
       coverageStatus: body.coverageStatus,
       homepageUrl: body.homepageUrl,

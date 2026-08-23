@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 186,
-    "named": 1706,
+    "files": 188,
+    "named": 1719,
     "dynamic": 6
   },
   "files": {
@@ -190,7 +190,10 @@
         "12: the pill is full width and reads as an invitation",
         "14: no guard mandated the enumeration's phrasing, and none was amended",
         "44: nothing held renders nothing, not a sentence about our research",
-        "47: no per-card issue count, and no per-card gap enumeration"
+        "47: no per-card issue count, and no per-card gap enumeration",
+        "BC-1: every card carries the same seven sections, always",
+        "BC-2: an empty section is never a per-card completeness statement",
+        "BC-2: the two empty states exist and are distinguishable"
       ],
       "dynamic": 0
     },
@@ -625,6 +628,14 @@
       ],
       "dynamic": 0
     },
+    "tests/context-pinned-conduct.test.ts": {
+      "names": [
+        "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
+        "the shrink cascade never reaches the pinned block, even at a punishing cap",
+        "what the pinned block costs is stated, not silent"
+      ],
+      "dynamic": 0
+    },
     "tests/control-query.test.ts": {
       "names": [
         "a CONFIRMED identifier may be a HIT",
@@ -918,6 +929,14 @@
         "the merge preserves order and never invents a row",
         "the same sitting from two sources becomes one row, and the agenda wins",
         "two sittings of one body from ONE source are left alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/expansion-log.test.ts": {
+      "names": [
+        "docs/expansion-log.md states that a zero-yield route is a reported success",
+        "the newest session in docs/log.md has an expansion-log entry, or claims the non-hunt marker",
+        "the non-hunt exemption is claimed by a marker in the id, never inferred"
       ],
       "dynamic": 0
     },
@@ -1234,6 +1253,8 @@
     },
     "tests/jurisdiction-badge.test.ts": {
       "names": [
+        "JUR-1: no surface builds a Governs row without going through the one claim",
+        "JUR-1: the two claims are mutually exclusive, by construction",
         "M81: a FAILED lookup is not an empty answer",
         "M81: a body whose division contains the reader governs them",
         "M81: a body with no published boundary gets its OWN state",
@@ -1505,7 +1526,9 @@
     "tests/narrowing.test.ts": {
       "names": [
         "every written index file is ambiguous — no prompt where nothing changes",
-        "the approved wording is verbatim in the component — never paraphrased",
+        "the address prompt asks for a STREET by default, and says so",
+        "the house number is dropped whatever the request returned",
+        "the house-number field exists ONLY on the split path, and names its reason",
         "the narrowing store never transmits — the code has no network write",
         "the street index exists for the exemplar zips, ambiguity computed"
       ],

@@ -52,6 +52,22 @@ export interface SessionAddressScope {
   contestIds: string[];
   /** What the reader typed for the street, for their own recognition only. */
   streetLabel: string;
+  /**
+   * The division ids the address CONFIRMED, across every level that resolved.
+   *
+   * Added for WGH-5 (2026-08-22). The scope used to carry contests only, which
+   * meant the who-governs card and the meeting pill could not use it — they ask
+   * about jurisdictions, not about a ballot. One address, resolved once, now
+   * answers for every surface. RULING 74 is the reason: an address, once given,
+   * is never asked for twice, and "never asked twice" was only true of the one
+   * surface that happened to store its own answer.
+   */
+  divisionIds: string[];
+  /**
+   * Levels the street genuinely crosses, so a surface can keep hedging exactly
+   * those rows and nothing else. Partial ambiguity resolves partially.
+   */
+  splitLevels: string[];
   /** When it was resolved, so a surface can say "you told us this" honestly. */
   resolvedAt: string;
 }
@@ -85,6 +101,12 @@ export function readSessionAddress(): SessionAddressScope | null {
     return {
       zip: parsed.zip,
       contestIds: parsed.contestIds.filter((id): id is string => typeof id === "string"),
+      divisionIds: Array.isArray(parsed.divisionIds)
+        ? parsed.divisionIds.filter((id): id is string => typeof id === "string")
+        : [],
+      splitLevels: Array.isArray(parsed.splitLevels)
+        ? parsed.splitLevels.filter((id): id is string => typeof id === "string")
+        : [],
       streetLabel: typeof parsed.streetLabel === "string" ? parsed.streetLabel : "",
       resolvedAt: parsed.resolvedAt,
     };

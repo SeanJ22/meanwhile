@@ -12,7 +12,7 @@ import {
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
-import { TOP_OFFICES_GAP, topOfficesFor } from "@/lib/officials/top-offices";
+import { TOP_OFFICES_GAP, runsSomething, topOfficesFor } from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -94,14 +94,68 @@ export interface BodyCardSection {
  * map-entry) decides what is held and the modal decides how it looks, so a
  * section cannot end up rendered two different ways by two callers.
  */
+/**
+ * One sourced description with its citation underneath.
+ *
+ * Extracted when section 2 grew a second layer (DEF-1 to DEF-4, 2026-08-22):
+ * the class definition and the form-specific definition render identically and
+ * only their text and citation differ, so writing the markup twice would be two
+ * places for the citation line to drift apart.
+ */
+function DefinitionBlock({ definition }: { definition: BodyDefinitionText }) {
+  return (
+    <>
+      <p className="text-[0.8125rem] leading-relaxed text-paper-dim">{definition.text}</p>
+      <p className="mt-1.5 text-[0.625rem] text-muted">
+        Powers defined in:{" "}
+        {definition.basisUrl ? (
+          <a
+            href={definition.basisUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="underline decoration-dotted hover:text-link"
+          >
+            {definition.basis}
+          </a>
+        ) : (
+          definition.basis
+        )}
+        , read {definition.readOn}
+      </p>
+    </>
+  );
+}
+
+/** One sourced description — a class definition or a form-specific one. */
+export interface BodyDefinitionText {
+  text: string;
+  basis: string;
+  basisUrl: string | null;
+  readOn: string;
+}
+
 export interface BodyCardData {
-  /** Section 2, or null where no statute has been read for this body. */
+  /**
+   * Section 2 — **TWO LAYERS** (DEF-1 to DEF-4, 2026-08-22, item 11).
+   *
+   * `classDefinition` describes what this KIND of body is and generally does,
+   * and it always renders where the class is known. `formDefinition` is this
+   * body's own charter or statute, and it adds specificity beneath it —
+   * superseding nothing.
+   *
+   * The card used to carry one slot and, empty, printed *"We haven't yet read
+   * the law that defines what this body can decide, so we're not going to
+   * describe it."* **That copy does not ship again.** Rockaway Township,
+   * Rockaway Township School District and Morris County all rendered nothing
+   * useful under it, which is a card refusing to do the one thing it exists
+   * for.
+   */
   whatItDoes: {
-    text: string;
-    basis: string;
-    basisUrl: string | null;
-    readOn: string;
-  } | null;
+    classDefinition: BodyDefinitionText | null;
+    formDefinition: BodyDefinitionText | null;
+    /** One short line beneath a COMPLETE class definition. Never a refusal. */
+    unreadNote: string | null;
+  };
   /**
    * Section 3's extra seat for a school district: the superintendent is not
    * on the board and is not elected, so a card that lists only the board
@@ -161,6 +215,15 @@ export interface ModalSubject {
   title: string;
   subtitle: string;
   tier: Tier;
+  /**
+   * What KIND of thing this subject is, in either the registry vocabulary
+   * (place, county, school_district, cd, sldu, sldl) or the map one
+   * (municipal, congressional, state-senate). LBL-1 (2026-08-22) is the only
+   * reader of it so far: it decides whether the card carries a Who runs it
+   * heading at all, because nobody runs a congressional district and nobody
+   * runs a U.S. Senate seat.
+   */
+  divisionKind?: string | null;
   badges?: { label: string; status?: string }[];
   /** Overview rows. */
   facts: { label: string; value: ReactNode; mono?: boolean }[];
@@ -338,29 +401,40 @@ function BodySections({
     {
       id: "what",
       title: "What this body does",
-      content: card.whatItDoes ? (
-        <>
-          <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
-            {card.whatItDoes.text}
-          </p>
-          <p className="mt-1.5 text-[0.625rem] text-muted">
-            Powers defined in:{" "}
-            {card.whatItDoes.basisUrl ? (
-              <a
-                href={card.whatItDoes.basisUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="underline decoration-dotted hover:text-link"
-              >
-                {card.whatItDoes.basis}
-              </a>
-            ) : (
-              card.whatItDoes.basis
+      /*
+       * TWO LAYERS, in order (DEF-1 to DEF-4, 2026-08-22).
+       *
+       * The class definition first, because it is what the reader needs before
+       * anything else: what KIND of thing is this. The form-specific one below
+       * it, adding what this body's own charter says where we have read it.
+       *
+       * Each carries its own citation. That is what keeps a class definition
+       * clear of the never-generate rule: it is a sourced statement about a
+       * class of government, not an unsourced statement about this one.
+       */
+      content:
+        card.whatItDoes.classDefinition || card.whatItDoes.formDefinition ? (
+          <>
+            {card.whatItDoes.classDefinition && (
+              <DefinitionBlock definition={card.whatItDoes.classDefinition} />
             )}
-            , read {card.whatItDoes.readOn}
-          </p>
-        </>
-      ) : null,
+            {card.whatItDoes.formDefinition && (
+              <div className={card.whatItDoes.classDefinition ? "mt-3" : undefined}>
+                <DefinitionBlock definition={card.whatItDoes.formDefinition} />
+              </div>
+            )}
+            {/*
+              What replaces the refusal. The old line said we were not going to
+              describe the body; this says what we have not read, underneath a
+              description that has already been given.
+            */}
+            {card.whatItDoes.unreadNote && (
+              <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
+                {card.whatItDoes.unreadNote}
+              </p>
+            )}
+          </>
+        ) : null,
       absence: NO_BODY_BLURB_LINE,
     },
     {
@@ -377,6 +451,8 @@ function BodySections({
               holders={subject.representation}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
+              /* LBL-1: removed, not renamed, where nothing is run. */
+              showTopOffices={runsSomething(subject.divisionKind)}
             />
             {/* The school district's non-elected seat, labelled as what it
                 is. Absent for every other body kind rather than rendered
@@ -653,6 +729,8 @@ export function EntityModal({
               holders={subject.representation}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
+              /* LBL-1: removed, not renamed, where nothing is run. */
+              showTopOffices={runsSomething(subject.divisionKind)}
             />
           )}
 

@@ -17,6 +17,8 @@ import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
 import { bodyFromRow, resolveBodyRow, sameName } from "@/lib/search/body-row";
+import { AddressResolutionProvider } from "@/components/address/address-resolution-context";
+import { venueLink } from "@/lib/registry/links";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
@@ -916,6 +918,14 @@ function MapEntryInner() {
       governing: current?.governingOcdIds
         ? new Set(current.governingOcdIds)
         : null,
+      /*
+       * `JUR-2` (2026-08-23). Same construction and same null discipline as
+       * `governing` directly above: `undefined` (an older cached payload) and
+       * `null` (unmeasured) both become null, because neither is "measured,
+       * nothing partial" and an empty set says exactly that.
+       */
+      zipPartial: current?.partialOcdIds ? new Set(current.partialOcdIds) : null,
+      basis: view?.key.startsWith("street:") ? "ADDRESS" : "ZIP",
     }),
     [current, meetings, venues, location, drawnDistricts, failure, view],
   );
@@ -1450,6 +1460,18 @@ function MapEntryInner() {
 
   return (
     <DataProvider value={data}>
+      {/*
+        `JUR-2` (2026-08-23). The jurisdiction badge renders on three surfaces,
+        every one of them several components deep, and until now it could only
+        ASSERT — clicking it did nothing, and what it asserted was resolved
+        from a zip. Providing the two handlers once here means a badge anywhere
+        can open the address prompt and have the whole page re-resolve from the
+        server's answer, without a dozen component signatures each getting a
+        chance to forget to pass them.
+      */}
+      <AddressResolutionProvider
+        value={{ onPoint: onStreetPoint, onResolved: onNarrowApplied }}
+      >
       <main
         className="relative h-dvh w-full overflow-hidden"
         data-sidebar={sidebarState}
@@ -2036,6 +2058,7 @@ function MapEntryInner() {
           <TutorialOverlay active={Boolean(location) && !welcomeRequested} />
         )}
       </main>
+      </AddressResolutionProvider>
     </DataProvider>
   );
 }
@@ -2075,7 +2098,34 @@ function meetingSubject(
       meeting.location
         ? {
             label: "Location",
-            value: locationLine(meeting.location.name, meeting.location.address),
+            /*
+             * **MTG-3 (2026-08-23) — the address is a place you have to get
+             * to, not a string.**
+             *
+             * The venue panel behind a pin has had a Directions link since
+             * 2026-08-16 and the large battlecard never did: the author opened
+             * the Township Council card, found the address inert, and could
+             * not get from "where is this" to "how do I get there" without
+             * leaving. Same helper, same derived-not-cited framing — it is
+             * built from coordinates we hold rather than a page anyone opened,
+             * so it is offered as a convenience and never as a citation.
+             */
+            value: (() => {
+              const line = locationLine(meeting.location.name, meeting.location.address);
+              const directions = venueLink(meeting.location);
+              if (!directions) return line;
+              return (
+                <a
+                  href={directions.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={directions.hint}
+                  className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+                >
+                  {line}
+                </a>
+              );
+            })(),
           }
         : {
             // D18. The same two rows the popup shows, in the compact card's

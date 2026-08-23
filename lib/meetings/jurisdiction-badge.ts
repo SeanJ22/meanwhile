@@ -1,3 +1,4 @@
+import { COULD_GOVERN_ACTION, COULD_GOVERN_TEXT } from "../ballot/could-govern.ts";
 import type { Meeting } from "../sources/types.ts";
 
 /**
@@ -55,7 +56,37 @@ export type JurisdictionBadge =
   /** This body has a division and the reader's point is not in it. */
   | "NEARBY"
   /** This body has no published boundary, so the question cannot be asked. */
-  | "NO_BOUNDARY";
+  | "NO_BOUNDARY"
+  /**
+   * **The answer came from a ZIP, and this division covers only part of it.**
+   * (`JUR-2`, 2026-08-23, the author's 8/22 walkthrough.)
+   *
+   * The Rockaway Township Council meeting card read *"Governs your area"* with
+   * a tooltip saying *"Your address is inside the area this body governs"* —
+   * to a reader who had given nothing but a zip. `CLAUDE.md`'s first
+   * geographic rule is that a zip is orientation only and can never resolve a
+   * ballot; a ZCTA crosses city, county, school district and legislative
+   * lines. 07866 holds Rockaway Township, Rockaway Borough and Denville
+   * Township, and the card was picking one and asserting it.
+   *
+   * It is not `NEARBY` either — that asserts the body governs a DIFFERENT
+   * area, which is the same unearned certainty pointed the other way. Both
+   * collapse to this while the basis is a zip and the division is partial.
+   */
+  | "COULD_GOVERN";
+
+/**
+ * **What the division set was resolved FROM.**
+ *
+ * `ADDRESS` — a street the reader gave, resolved to a point. Membership is a
+ * real geometric answer about a real location.
+ *
+ * `ZIP` — a ZCTA centroid. One point standing in for an area that crosses
+ * every kind of line there is. It answers correctly for a division that covers
+ * the WHOLE zip — a county, a regional school district, a state — and cannot
+ * answer at all for one that covers part of it.
+ */
+export type JurisdictionBasis = "ADDRESS" | "ZIP";
 
 export interface BadgeCopy {
   /** The badge itself. Short enough to sit on a card row. */
@@ -79,6 +110,20 @@ export const BADGE_COPY: Readonly<Record<JurisdictionBadge, BadgeCopy>> = {
     label: "Boundary not published",
     detail:
       "No official boundary is published for this body, so we can't say whether it governs your area.",
+  },
+  /*
+   * The RULING 71 wording, verbatim from `lib/ballot/could-govern.ts`, because
+   * this is the same claim about the same reader on a different surface and
+   * two wordings for one fact is how they drift.
+   *
+   * It is an INVITATION, not a disclosure of our incompleteness. Our data is
+   * complete — we hold Rockaway Township's council and Rockaway Borough's,
+   * both in full. What is unsettled is which one is the reader's, and the
+   * reader is the only party who can settle it.
+   */
+  COULD_GOVERN: {
+    label: COULD_GOVERN_TEXT,
+    detail: `Your zip covers more than one town here, so ${COULD_GOVERN_ACTION}.`,
   },
 };
 
@@ -139,9 +184,32 @@ export function jurisdictionClaim(body: {
 export function badgeFor(
   meeting: Pick<Meeting, "ocdId">,
   divisionsAtPoint: ReadonlySet<string> | null,
+  /**
+   * **`JUR-2`, 2026-08-23.** What the division set was resolved from, and
+   * which divisions cover only PART of the zip.
+   *
+   * Both default to the pre-`JUR-2` behaviour so no call site silently
+   * changes meaning, and every call site was updated in the same commit. The
+   * partial set is passed IN rather than looked up, for the same reason this
+   * module holds no polygons: a badge that consulted a second source could
+   * disagree with the map the reader is looking at, and nothing would say
+   * which was lying.
+   */
+  basis: JurisdictionBasis = "ADDRESS",
+  partialAtZip: ReadonlySet<string> | null = null,
 ): JurisdictionBadge {
   if (meeting.ocdId === null) return "NO_BOUNDARY";
   if (divisionsAtPoint === null) return "NO_BOUNDARY";
+  /*
+   * The zip could not settle it, so nothing here asserts it did. A division
+   * covering the WHOLE zip — a county, a regional district, a state — is still
+   * answered normally: RULING 71 is explicit that those do not become
+   * uncertain because a zip crosses a municipal line, and a pill on things it
+   * obviously does not apply to is a pill readers learn to skip.
+   */
+  if (basis === "ZIP" && partialAtZip !== null && partialAtZip.has(meeting.ocdId)) {
+    return "COULD_GOVERN";
+  }
   return divisionsAtPoint.has(meeting.ocdId) ? "GOVERNS" : "NEARBY";
 }
 
@@ -156,12 +224,17 @@ export function badgeFor(
 export function badgeCensus(
   meetings: Pick<Meeting, "ocdId">[],
   divisionsAtPoint: ReadonlySet<string> | null,
+  basis: JurisdictionBasis = "ADDRESS",
+  partialAtZip: ReadonlySet<string> | null = null,
 ): Record<JurisdictionBadge, number> {
   const census: Record<JurisdictionBadge, number> = {
     GOVERNS: 0,
     NEARBY: 0,
     NO_BOUNDARY: 0,
+    COULD_GOVERN: 0,
   };
-  for (const meeting of meetings) census[badgeFor(meeting, divisionsAtPoint)] += 1;
+  for (const meeting of meetings) {
+    census[badgeFor(meeting, divisionsAtPoint, basis, partialAtZip)] += 1;
+  }
   return census;
 }

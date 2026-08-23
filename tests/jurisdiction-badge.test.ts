@@ -9,6 +9,10 @@ import {
   badgeFor,
   jurisdictionClaim,
 } from "../lib/meetings/jurisdiction-badge.ts";
+import {
+  COULD_GOVERN_ACTION,
+  COULD_GOVERN_TEXT,
+} from "../lib/ballot/could-govern.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -57,13 +61,17 @@ test("M81: a FAILED lookup is not an empty answer", () => {
   assert.equal(badgeFor({ ocdId: HERE }, new Set()), "NEARBY");
 });
 
-test("M81: the census states all three numbers, never one", () => {
+test("M81: the census states every number, never one", () => {
+  // Four states since JUR-2 (2026-08-23) added COULD_GOVERN. The census
+  // states all of them, including the zeroes — a state that only appears when
+  // it is non-zero is a state a reader of the report cannot tell was measured.
   const census = badgeCensus(
     [{ ocdId: HERE }, { ocdId: COUNTY }, { ocdId: ELSEWHERE }, { ocdId: null }],
     AT_POINT,
   );
-  assert.deepEqual(census, { GOVERNS: 2, NEARBY: 1, NO_BOUNDARY: 1 });
-  const total = census.GOVERNS + census.NEARBY + census.NO_BOUNDARY;
+  assert.deepEqual(census, { GOVERNS: 2, NEARBY: 1, NO_BOUNDARY: 1, COULD_GOVERN: 0 });
+  const total =
+    census.GOVERNS + census.NEARBY + census.NO_BOUNDARY + census.COULD_GOVERN;
   assert.equal(total, 4, "the census lost a row");
 });
 
@@ -101,11 +109,26 @@ test("M81: the badge derives from the map's own geometry, never a second source"
     join(process.cwd(), "lib", "meetings", "jurisdiction-badge.ts"),
     "utf8",
   );
-  const imported = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]);
+  const imported = [...source.matchAll(/from\s+"([^"]+)"/g)].map((m) => m[1]).sort();
+  /*
+   * An allowlist with a reason each, rather than a bare list. Both entries are
+   * TEXT or TYPES, and neither can resolve a point:
+   *
+   * - `../sources/types.ts` — the meeting type. The original entry.
+   * - `../ballot/could-govern.ts` — the RULING 71 wording, added by `JUR-2`
+   *   (2026-08-23). The `COULD_GOVERN` badge says the same thing to the same
+   *   reader as the ballot page's pill, and two wordings for one claim is how
+   *   they drift. It is a pair of string constants, and importing it is
+   *   deliberately cheaper than retyping the sentence.
+   *
+   * The rule this guards is unchanged and is asserted directly below: the
+   * module holds no geometry and resolves nothing.
+   */
   assert.deepEqual(
     imported,
-    ["../sources/types.ts"],
-    "the badge module imports something other than the meeting type — it must take the resolved answer, never resolve its own",
+    ["../ballot/could-govern.ts", "../sources/types.ts"],
+    "the badge module imports something other than the meeting type and the shared wording — " +
+      "it must take the resolved answer, never resolve its own",
   );
   for (const forbidden of ["node:fs", "tiger", "geojson", "boundaries", "districts"]) {
     assert.ok(
@@ -204,4 +227,100 @@ test("JUR-1: no surface builds a Governs row without going through the one claim
     "a Governs row is built outside `jurisdictionClaim`, so nothing stops it appearing\n" +
       `beside "Boundary not published" again:\n${offenders.join("\n")}`,
   );
+});
+
+/* ========================================================================== */
+/* JUR-2 — a zip may not assert jurisdiction                                  */
+/* ========================================================================== */
+
+/**
+ * The 8/22 capture: the Rockaway Township Municipal Building card at 07866,
+ * reading **"Governs your area"** with **"Your address is inside the area this
+ * body governs"** underneath it, to a reader who had given nothing but a zip.
+ *
+ * `CLAUDE.md`'s first geographic rule is that a zip is orientation only and can
+ * never resolve a ballot — a ZCTA crosses city, county, school district and
+ * legislative lines. 07866 holds Rockaway Township, Rockaway Borough and
+ * Denville Township. The card picked one and told the reader it was theirs.
+ */
+
+const JUR2_TOWNSHIP = "ocd-division/country:us/state:nj/place:rockaway_township";
+const JUR2_COUNTY = "ocd-division/country:us/state:nj/county:morris";
+
+test("JUR-2: a partial division resolved from a ZIP is COULD_GOVERN, never GOVERNS", () => {
+  const inZip = new Set([JUR2_TOWNSHIP, JUR2_COUNTY]);
+  const partial = new Set([JUR2_TOWNSHIP]);
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, inZip, "ZIP", partial), "COULD_GOVERN");
+});
+
+test("JUR-2: NEARBY is the same over-claim pointed the other way, and collapses too", () => {
+  // "This body governs a different area" is as unearned from a zip as
+  // "this body governs yours". Both are claims about which town the reader
+  // lives in, made from a centroid.
+  const elsewhere = new Set([JUR2_COUNTY]);
+  const partial = new Set([JUR2_TOWNSHIP]);
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, elsewhere, "ZIP", partial), "COULD_GOVERN");
+});
+
+test("JUR-2: a division covering the WHOLE zip still answers normally", () => {
+  /*
+   * RULING 71 is explicit: county, school district, state and federal do not
+   * become uncertain because a zip crosses a municipal line. Every reader at
+   * 07866 is in Morris County. A pill on things it obviously does not apply
+   * to is a pill readers learn to skip, which costs the Rockaway Borough case
+   * the attention it exists to get.
+   */
+  const inZip = new Set([JUR2_TOWNSHIP, JUR2_COUNTY]);
+  const partial = new Set([JUR2_TOWNSHIP]);
+  assert.equal(badgeFor({ ocdId: JUR2_COUNTY }, inZip, "ZIP", partial), "GOVERNS");
+});
+
+test("JUR-2: a resolved ADDRESS answers GOVERNS and NEARBY as before", () => {
+  const atPoint = new Set([JUR2_TOWNSHIP, JUR2_COUNTY]);
+  const partial = new Set([JUR2_TOWNSHIP]);
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, atPoint, "ADDRESS", partial), "GOVERNS");
+  assert.equal(
+    badgeFor({ ocdId: "ocd-division/country:us/state:nj/place:denville" }, atPoint, "ADDRESS", partial),
+    "NEARBY",
+  );
+});
+
+test("JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'", () => {
+  /*
+   * `null` means the lattice never measured this zip — outside the committed
+   * geometry. An empty SET means it measured and found nothing partial. The
+   * two must not render alike, and the honest fall-back for unmeasured is the
+   * pre-JUR-2 answer rather than a pill on everything.
+   */
+  const inZip = new Set([JUR2_TOWNSHIP]);
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, inZip, "ZIP", null), "GOVERNS");
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, inZip, "ZIP", new Set()), "GOVERNS");
+});
+
+test("JUR-2: a failed resolution still beats everything — NO_BOUNDARY wins", () => {
+  assert.equal(badgeFor({ ocdId: null }, new Set([JUR2_TOWNSHIP]), "ZIP", new Set([JUR2_TOWNSHIP])), "NO_BOUNDARY");
+  assert.equal(badgeFor({ ocdId: JUR2_TOWNSHIP }, null, "ZIP", new Set([JUR2_TOWNSHIP])), "NO_BOUNDARY");
+});
+
+test("JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one", () => {
+  /*
+   * Two wordings for one claim about one reader is how they drift. This is
+   * the same sentence the ballot page's pill carries, imported rather than
+   * retyped.
+   */
+  assert.equal(BADGE_COPY.COULD_GOVERN.label, COULD_GOVERN_TEXT);
+  assert.match(BADGE_COPY.COULD_GOVERN.detail, new RegExp(COULD_GOVERN_ACTION));
+  // And it is about the READER's street, never about our record. RULING 44.
+  assert.doesNotMatch(BADGE_COPY.COULD_GOVERN.detail, /\bwe (?:haven't|don't|couldn't)\b/i);
+});
+
+test("JUR-2: the census counts the fourth state", () => {
+  const partial = new Set([JUR2_TOWNSHIP]);
+  const census = badgeCensus(
+    [{ ocdId: JUR2_TOWNSHIP }, { ocdId: JUR2_COUNTY }, { ocdId: null }],
+    new Set([JUR2_TOWNSHIP, JUR2_COUNTY]),
+    "ZIP",
+    partial,
+  );
+  assert.deepEqual(census, { GOVERNS: 1, NEARBY: 0, NO_BOUNDARY: 1, COULD_GOVERN: 1 });
 });

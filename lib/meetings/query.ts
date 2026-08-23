@@ -57,6 +57,16 @@ export interface MeetingSearchResult {
    * specific false claim produced by our own lookup failing.
    */
   governingOcdIds?: string[] | null;
+  /**
+   * The divisions covering only PART of this zip (`JUR-2`, 2026-08-23).
+   *
+   * Attached by the route from the same lattice measurement the ballot page's
+   * RULING 71 pill reads, so the meeting badge and the ballot pill cannot
+   * disagree about which town is unsettled. **NULL means unmeasured** — the
+   * zip is outside the committed geometry — and is not the same as an empty
+   * array, which means measured and nothing is partial.
+   */
+  partialOcdIds?: string[] | null;
 }
 
 function byStartAscending(a: Meeting, b: Meeting) {

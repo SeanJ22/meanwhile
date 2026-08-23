@@ -7,6 +7,7 @@ import type { Venue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 import type { StoredLocation } from "@/hooks/use-stored-zip";
 import type { DrawnDistrict } from "@/lib/map/districts";
+import type { JurisdictionBasis } from "@/lib/meetings/jurisdiction-badge";
 
 /**
  * The server's answer, plus everything derived from it once.
@@ -50,6 +51,25 @@ export interface ShellData {
    * why that distinction is the whole safety of the badge.
    */
   governing: ReadonlySet<string> | null;
+  /**
+   * Divisions covering only PART of the zip on screen (`JUR-2`, 2026-08-23).
+   *
+   * `governing` says which divisions the resolved point is in. When that point
+   * is a ZCTA centroid rather than an address the reader gave, membership is
+   * one point standing in for an area that crosses every kind of line — and
+   * the meeting card was printing "Governs your area" off it, with a tooltip
+   * saying the reader's address is inside. This is what stops it.
+   *
+   * `null` means unmeasured, which is not an empty set. An empty set says the
+   * lattice measured this zip and nothing about it is partial.
+   */
+  zipPartial: ReadonlySet<string> | null;
+  /**
+   * The basis for `governing` — `ADDRESS` when the reader gave a street,
+   * `ZIP` otherwise. Derived from `atAddress` rather than carried separately,
+   * so the two cannot disagree.
+   */
+  basis: JurisdictionBasis;
 }
 
 const DataContext = createContext<ShellData | null>(null);

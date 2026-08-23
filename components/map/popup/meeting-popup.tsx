@@ -8,6 +8,7 @@ import {
   formatRelativeDay,
   locationLine,
   meetingHeadline,
+  meetingSubline,
 } from "@/lib/map/format";
 import { tierForMeeting } from "@/lib/state/derive";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -16,11 +17,8 @@ import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { relativeAge } from "@/lib/meetings/freshness";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { officePhoneForBody } from "@/lib/meetings/office-phone";
-import {
-  BADGE_COPY,
-  badgeFor,
-  type JurisdictionBadge,
-} from "@/lib/meetings/jurisdiction-badge";
+import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
+import { badgeFor, type JurisdictionBadge } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData } from "@/lib/state/data";
 import type { Meeting } from "@/lib/sources/types";
 
@@ -94,9 +92,14 @@ export function MeetingPopup({
    * badges beside "Concluded" and "Cancelled": those two are claims about what
    * happened to the sitting, and this is a claim about who the body governs.
    */
-  const { governing } = useShellData();
-  const jurisdiction: JurisdictionBadge = badgeFor(meeting, governing);
-  const jurisdictionCopy = BADGE_COPY[jurisdiction];
+  /*
+   * `JUR-2` (2026-08-23): and it says so ONLY as far as the basis allows.
+   * This card read "Governs your area" with "Your address is inside the area
+   * this body governs" underneath it, to a reader who had given a zip. 07866
+   * holds three municipalities; the card picked one.
+   */
+  const { governing, zipPartial, basis, location } = useShellData();
+  const jurisdiction: JurisdictionBadge = badgeFor(meeting, governing, basis, zipPartial);
   // 6a (2026-08-17): a concluded meeting is a record, not an errand —
   // Directions drops (nobody drives to a meeting that already happened),
   // and the card gains what happened + the office phone instead.
@@ -118,9 +121,19 @@ export function MeetingPopup({
       onClose={onClose}
     >
       {/* 3a: the headline already says WHAT; the Body row repeats it only
-          when the sitting title is a distinct thing worth its own line. */}
-      {meeting.bodyName !== meeting.title && (
+          when the sitting title is a distinct thing worth its own line.
+
+          MTG-2 (2026-08-23): `bodyName !== title` was the wrong test — it is
+          true for "Township Council" against "Township Council Regular
+          Meeting", so the row printed "Township Council" under a headline
+          reading "Rockaway Township, NJ — Township Council". The question is
+          whether the HEADLINE already carries it. */}
+      {!meetingHeadline(meeting).toLowerCase().includes(meeting.bodyName.toLowerCase()) && (
         <PopupRow label="Body">{meeting.bodyName}</PopupRow>
+      )}
+      {/* And the sitting's own distinct name, where it has one. */}
+      {meetingSubline(meeting) && (
+        <PopupRow label="Sitting">{meetingSubline(meeting)}</PopupRow>
       )}
 
       {/* M81. Geometry only — the badge says which area a body governs and
@@ -128,10 +141,7 @@ export function MeetingPopup({
           next town's select board is entitled to it; this is so they know
           which one they clicked. */}
       <PopupRow label="Jurisdiction">
-        <span className="jurisdiction-badge" data-badge={jurisdiction}>
-          {jurisdictionCopy.label}
-        </span>
-        <span className="jurisdiction-detail">{jurisdictionCopy.detail}</span>
+        <JurisdictionPill badge={jurisdiction} zip={location?.zip ?? null} />
       </PopupRow>
 
       <PopupRow label="Date">

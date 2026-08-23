@@ -431,11 +431,36 @@ export async function GET(request: Request) {
     ? resolvedDivisions.map((d) => d.ocdId)
     : null;
 
+  /*
+   * **`JUR-2` (2026-08-23) — which of those divisions the ZIP could not
+   * settle.**
+   *
+   * `governingOcdIds` above says which divisions the resolved point sits in.
+   * When that point is a ZCTA centroid rather than an address the reader gave,
+   * membership is one point standing in for an area that crosses every kind of
+   * line there is — and the meeting card was printing "Governs your area" off
+   * it. This is the same lattice measurement the ballot page's RULING 71 pill
+   * already trusts, so the two surfaces cannot disagree about which town is
+   * unsettled.
+   *
+   * `null` where the zip is outside the committed geometry: the client reads
+   * that as "we could not measure it", never as "nothing is partial".
+   *
+   * Measured on `nearZip`, which is the zip the answer on screen is ABOUT —
+   * the requested one where there was one, the nearest ZCTA to a lat/lng
+   * otherwise. The coverage pill above measures on the requested zip, and
+   * where a request carried one those are the same value. Where it did not,
+   * the coverage block is absent too, so there is no second surface to
+   * disagree with.
+   */
+  const partialOcdIds = (await zipCertainty(nearZip))?.partial ?? null;
+
   return Response.json({
     ...result,
     coverage,
     snapshot,
     nearZip,
     governingOcdIds,
+    partialOcdIds,
   });
 }

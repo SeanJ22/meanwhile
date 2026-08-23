@@ -9,6 +9,7 @@
 
 import {
   TIME_NOT_POSTED,
+  locationLine,
   meetingHeadline,
   meetingLocalDate,
   startTimeIsKnown,
@@ -167,8 +168,22 @@ export function meetingCalendarEvent(
      * carries an address, because there is not one, and a calendar entry that
      * invented a building would send someone across town.
      */
+    /*
+     * **MTG-4 (2026-08-23) — through `locationLine`, not a join.**
+     *
+     * The venue was reaching the event; what it was reaching it as was
+     * sometimes the same string twice. Several sources publish the ADDRESS as
+     * the venue name, so `[name, address].join(", ")` produced *65 Mount Hope
+     * Road, 65 Mount Hope Road* in the calendar entry — the author's Vail
+     * defect, which every reader-facing surface has routed through
+     * `locationLine` since 2026-08-16 and this one never did.
+     *
+     * A calendar entry is a reader-facing surface that outlives the tab it
+     * was created in, and it is the one place a duplicated address is hardest
+     * to notice and most annoying to fix.
+     */
     location: meeting.location
-      ? [meeting.location.name, meeting.location.address].filter(Boolean).join(", ")
+      ? locationLine(meeting.location.name, meeting.location.address)
       : [meeting.online?.label, meeting.online?.joinUrl].filter(Boolean).join(" — "),
     description: lines.join("\n"),
   };

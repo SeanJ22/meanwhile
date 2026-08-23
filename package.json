@@ -182,7 +182,8 @@
     "zip:universe": "tsx scripts/zip-universe.mts",
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "regen": "tsx scripts/regen-check.mts",
-    "dupes": "tsx scripts/duplicate-implementations.mts"
+    "dupes": "tsx scripts/duplicate-implementations.mts",
+    "shoot:visual": "tsx scripts/shoot-visual-0823.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

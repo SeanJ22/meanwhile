@@ -3171,10 +3171,47 @@ label:has(> input[type="checkbox"]) {
   margin-top: 2px;
 }
 
+/*
+ * MTG-1, second pass (2026-08-23). The jurisdiction badge moved out of the
+ * meta line and under the title. Its own block, so the title keeps the full
+ * row width — the fix for the overlap had squeezed the body name to
+ * "Rockaway Tow…", which a reader scanning nineteen rows cannot use.
+ *
+ * `white-space: normal` because `.al-row-title` sets `nowrap` for its own
+ * ellipsis and a pill inheriting that cannot wrap at a narrow width.
+ */
+.al-row-jurisdiction {
+  display: block;
+  margin-top: 3px;
+  white-space: normal;
+}
+
+/*
+ * MTG-1 (2026-08-23, the author's 8/22 walkthrough). The meta line was a plain
+ * inline run, so the jurisdiction pill and the date shared a line box and the
+ * pill painted over the date in every row of the 48-meetings list. An
+ * inline-block pill beside inline text does not push it; it sits on it.
+ *
+ * A flex row with a real gap fixes it structurally rather than by nudging a
+ * margin: the pill takes its own width, the date takes what is left, and at a
+ * narrow width the line wraps rather than overlapping. `flex-shrink: 0` stays
+ * on the CONTAINER — the meta column is still allowed to keep its size against
+ * the title beside it.
+ */
 .al-row-meta {
   font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-dim);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  row-gap: 0.2rem;
+}
+
+/* Nothing in the meta line may be squeezed to nothing by a long body name. */
+.al-row-meta > * {
   flex-shrink: 0;
 }
 
@@ -3598,6 +3635,41 @@ label:has(> input[type="checkbox"]) {
   border-style: dashed;
   border-color: var(--border);
   color: var(--text-muted);
+}
+
+/*
+ * JUR-2 (2026-08-23). The zip could not settle this, so the pill does not
+ * wear a settled pill's clothes. An OUTLINE where GOVERNS is filled, because
+ * a colour is a claim too and the render-default rule says absence never
+ * borrows a present value's styling.
+ *
+ * It is also the only one of the four that is an AFFORDANCE, so it says so —
+ * a dotted underline and a pointer, the same vocabulary the could-govern pill
+ * on the map panel already uses.
+ */
+.jurisdiction-badge[data-badge="COULD_GOVERN"] {
+  background: none;
+  border-color: var(--border);
+  color: var(--text-muted);
+  white-space: normal;
+}
+
+button.jurisdiction-badge-action {
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  transition:
+    color 120ms ease,
+    border-color 120ms ease;
+}
+
+button.jurisdiction-badge-action:hover,
+button.jurisdiction-badge-action:focus-visible {
+  color: var(--text);
+  border-color: var(--text);
+  text-decoration-style: solid;
 }
 
 .jurisdiction-detail {
@@ -5402,4 +5474,58 @@ main[data-sidebar="closed"] .map-top-row {
     border-radius: var(--radius);
     white-space: normal;
   }
+}
+
+/* ---------------------------------------------------------------------- *
+ * MTG-5 — "Make your voice heard", collapsed (2026-08-23)
+ *
+ * The block runs to four or five paragraphs on the bodies that publish
+ * proper standing rules, and it sat between the reader and the next meeting
+ * date on every card. The content is unchanged; it waits to be asked for.
+ * ---------------------------------------------------------------------- */
+
+.how-to-be-heard-summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0;
+}
+
+/* Safari renders a disclosure triangle through a pseudo-element of its own. */
+.how-to-be-heard-summary::-webkit-details-marker {
+  display: none;
+}
+
+.how-to-be-heard-summary::after {
+  content: "";
+  width: 0.32rem;
+  height: 0.32rem;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translate(-0.05rem, -0.05rem);
+  transition: transform 140ms ease;
+}
+
+.how-to-be-heard[open] .how-to-be-heard-summary::after {
+  transform: rotate(-135deg) translate(-0.05rem, -0.05rem);
+}
+
+.how-to-be-heard-summary:hover,
+.how-to-be-heard-summary:focus-visible {
+  color: var(--text);
+}
+
+/*
+ * JUR-4 (2026-08-23) — the jurisdiction answer, once per group.
+ *
+ * Nineteen consecutive rows under one heading each carried "Could govern you",
+ * which is the repetition the author named the headline UX problem of the New
+ * Jersey pass. It sits under the group heading now, where it is one deliberate
+ * annotation rather than a tic.
+ */
+.al-group-jurisdiction {
+  padding: 8px 22px 4px;
+  margin: 0;
 }

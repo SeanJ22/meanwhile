@@ -30,6 +30,7 @@
     "db:check": "tsx scripts/check-schema-state.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "denominators": "tsx scripts/denominator-reconcile.mts",
     "deferred": "node scripts/deferred.mjs",
     "deferred:xlsx": "node scripts/deferred-xlsx.mjs",
     "dev": "node scripts/dev.mjs",

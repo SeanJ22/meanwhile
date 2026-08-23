@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 191,
-    "named": 1758,
+    "files": 192,
+    "named": 1774,
     "dynamic": 6
   },
   "files": {
@@ -1296,12 +1296,20 @@
       "names": [
         "JUR-1: no surface builds a Governs row without going through the one claim",
         "JUR-1: the two claims are mutually exclusive, by construction",
+        "JUR-2: NEARBY is the same over-claim pointed the other way, and collapses too",
+        "JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'",
+        "JUR-2: a division covering the WHOLE zip still answers normally",
+        "JUR-2: a failed resolution still beats everything — NO_BOUNDARY wins",
+        "JUR-2: a partial division resolved from a ZIP is COULD_GOVERN, never GOVERNS",
+        "JUR-2: a resolved ADDRESS answers GOVERNS and NEARBY as before",
+        "JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one",
+        "JUR-2: the census counts the fourth state",
         "M81: a FAILED lookup is not an empty answer",
         "M81: a body whose division contains the reader governs them",
         "M81: a body with no published boundary gets its OWN state",
         "M81: the API sends the resolved divisions, and null when it failed",
         "M81: the badge derives from the map's own geometry, never a second source",
-        "M81: the census states all three numbers, never one",
+        "M81: the census states every number, never one",
         "M81: the copy is level register, geometry only, no editorialising"
       ],
       "dynamic": 0
@@ -1505,6 +1513,19 @@
         "everything upcoming comes before everything past",
         "ordering never drops or duplicates a row",
         "the input array is not mutated"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-subline.test.ts": {
+      "names": [
+        "MTG-2: a bare generic noun is not a fact, and renders as nothing",
+        "MTG-2: no surface builds the old bodyName-plus-jurisdiction line",
+        "MTG-2: the jurisdiction renders below only where the headline left it out",
+        "MTG-2: the subline never repeats what the headline already said",
+        "MTG-2: the three ways a source writes the body name into the title",
+        "MTG-4: a created event carries the venue in its location field",
+        "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
+        "MTG-4: an online meeting's event still carries no invented address"
       ],
       "dynamic": 0
     },

@@ -1,11 +1,21 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 193,
-    "named": 1786,
+    "files": 198,
+    "named": 1823,
     "dynamic": 6
   },
   "files": {
+    "tests/absence-defaults.test.ts": {
+      "names": [
+        "a single-token type default is not a claim and is not flagged",
+        "every baseline entry carries a reason, and none is a placeholder",
+        "no unrecorded sentence-shaped render default exists",
+        "the baseline only shrinks — a recorded entry that is gone must be removed",
+        "the shape catches every instance the class was named from"
+      ],
+      "dynamic": 0
+    },
     "tests/agenda-documents.test.ts": {
       "names": [
         "a PDF that cannot be parsed records the failure and keeps the link",
@@ -104,12 +114,16 @@
         "4d: exactly the four categories the rule names, and no fifth",
         "4d: the longest phrase wins, so more evidence is never a tie",
         "4d: the promised categories are DERIVED from what routes, never written beside it",
+        "ASK-1: every destination can actually be opened",
+        "ASK-1: the ask box renders a control for both kinds of destination",
         "the ruling's cost is named: the weak-by-design questions decline, and say what they had"
       ],
       "dynamic": 0
     },
     "tests/ask-matcher.test.ts": {
       "names": [
+        "NH-3: the school calendar routes to the school district",
+        "NH-3: the school cues are phrases, so they cannot capture other topics",
         "PROVING CASE, end to end: with no classifier the weather question is REFUSED, not routed",
         "PROVING CASE: the weather question does not route on the keyword layer",
         "a weak match with a classifier topic routes; the same match without one refuses",
@@ -166,6 +180,7 @@
     },
     "tests/ballot.test.ts": {
       "names": [
+        "AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it is a labelled pill",
         "F21: the ballot page renders the polling-place pointer exactly once, in the dates header",
         "NJ01: a 07866 reader sees Rockaway BOROUGH's government, not only the Township's",
         "a Newbury voter (03255) sees the November slate, and March is stated, not hidden",
@@ -501,6 +516,16 @@
       ],
       "dynamic": 0
     },
+    "tests/chromium-pin.test.ts": {
+      "names": [
+        "an absent browser refuses rather than reads as a pass",
+        "playwright is pinned to an exact version, not a range",
+        "the browser resolution is stated, never silent",
+        "the browsers root honours the environment's override",
+        "the committed revision is the one playwright actually wants"
+      ],
+      "dynamic": 0
+    },
     "tests/clean-typecheck.test.ts": {
       "names": [
         "app/layout.tsx writes its own props type",
@@ -636,6 +661,10 @@
         "RULING 106: the shrink cascade is gone from the generator's source",
         "RULING 106: the tracker-change section renders all ten rows",
         "RULING 106: there is no cap, and nothing is trimmed to meet one",
+        "RULING 108: an unreachable mirror does not stop the repo copy",
+        "RULING 108: the generator writes the repo copy first and never guards it",
+        "RULING 108: the repo copy carries the pinned conduct block verbatim",
+        "RULING 108: the repo copy of context.md exists",
         "a block claimed VERBATIM is tested against its source, and divergence fails",
         "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
         "every section of context.md states where it came from"
@@ -1069,6 +1098,18 @@
       ],
       "dynamic": 0
     },
+    "tests/freshness-provenance.test.ts": {
+      "names": [
+        "RULING 107: a run date never renders as a data date",
+        "RULING 107: a stamp cannot be minted without evidence of a read",
+        "RULING 107: carrying a prior read date forward is honest; inventing one is not",
+        "RULING 107: no registered generator can restamp a freshness date without reading",
+        "RULING 107: the declaration is what separates a reading path from a restamp",
+        "RULING 107: the sweep sees a stamp broken across two lines",
+        "RULING 107: the wider class of stamp sites only shrinks"
+      ],
+      "dynamic": 0
+    },
     "tests/funding.test.ts": {
       "names": [
         "2a: a candidate's own money is labeled as exactly that, from the FEC fields",
@@ -1330,6 +1371,15 @@
         "the regression itself: every ask-box answer at every covered zip is free of another state's content and links",
         "the sourced Pima library fact reaches Pima readers and nobody else",
         "topic explainer templates name no covered place — per-place truth lives only in divisionWhy"
+      ],
+      "dynamic": 0
+    },
+    "tests/jurisdiction-note.test.ts": {
+      "names": [
+        "JUR-4: UNKNOWN is counted and never named as partial",
+        "JUR-4: the full pill no longer renders per contest on the ballot page",
+        "JUR-4: the page-level block names bodies, never offices",
+        "JUR-4: the unplaceable sentence says whose gap it is"
       ],
       "dynamic": 0
     },
@@ -2063,6 +2113,16 @@
       ],
       "dynamic": 0
     },
+    "tests/refusal-copy.test.ts": {
+      "names": [
+        "comments are never swept, so recording a fix cannot become a defect",
+        "every shape states in plain words what it looks for",
+        "no honest named gap is ever flagged as a refusal",
+        "no refusal copy survives anywhere a reader can reach",
+        "the shapes catch the two refusals this product actually shipped"
+      ],
+      "dynamic": 0
+    },
     "tests/registry-oracle.test.ts": {
       "names": [
         "07866 resolves the township, not the neighbouring borough",
@@ -2638,6 +2698,8 @@
         "an exhausted New Hampshire search says the law does not require an agenda",
         "footnotes that differ stay separate, in the panel's own order",
         "identical footnotes collapse to one, naming every distinct body",
+        "item 4: no reader surface refuses to describe a body or an office",
+        "item 4: the office and body absence lines keep their whose-gap attribution",
         "outside New Hampshire an exhausted search owns the gap",
         "outside a no-agenda state, an unsearched body gets no note at all",
         "the state comes off the identifier, never off a label",

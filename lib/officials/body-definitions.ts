@@ -79,6 +79,7 @@ export type Definition = BodyBlurb;
 export type ClassKey =
   | "school_district_independent"
   | "school_district_dependent"
+  | "school_district_unclassified"
   | "county"
   | "municipality"
   | "township"
@@ -176,6 +177,47 @@ export const CLASS_DEFINITIONS: ReadonlyArray<ClassRow> = [
       readOn: "2026-08-23",
     },
   },
+  {
+    state: "nh",
+    classKey: "county",
+    /*
+     * **A NEW HAMPSHIRE COUNTY IS GENUINELY NARROW, and the generic county
+     * description this file already holds would be FALSE here.**
+     * (Written 2026-08-23, item 2. It is the twelfth and last of the county
+     * rows that carried no definition at all.)
+     *
+     * The New Jersey row above says a county runs roads, parks, social
+     * services and a college. The Arizona row says a county decides what can
+     * be built in unincorporated territory. **Neither sentence is true of a
+     * New Hampshire county**, and importing either would be the exact failure
+     * the state-scoping comment at the top of this file was written to
+     * prevent — a national noun standing in for fifty different governments.
+     *
+     * The second half is the part a reader cannot guess and most county
+     * descriptions get wrong: **the commissioners are not the legislative
+     * body.** The county convention is, and it is made of the state
+     * representatives elected from that county, sitting together. A reader
+     * who wants to be heard on the county budget goes to their state rep.
+     *
+     * **The source, stated exactly, because it is weaker than the rows
+     * around it and hiding that would be worse than the weakness.** The
+     * substance is this project's own 03255 hunt, recorded in
+     * `docs/zip-playbook.md` §1 on 2026-08-22 and read from the repo today.
+     * `basisUrl` is NULL because **this session had no egress beyond
+     * github.com** and could not open RSA 24 or RSA 28 — and a URL written
+     * without being opened is a read that did not happen (RULING 107).
+     * `DI05` carries the confirmation for the next session that has network,
+     * and `pnpm definitions:verify` is what will do it.
+     */
+    definition: {
+      text:
+        "A New Hampshire county does much less than a county does in most states. It runs the county jail, the county nursing home, the sheriff's office, the registry of deeds and the county attorney's office — and it does not run roads, schools, zoning or land use, all of which belong to the town. Its legislative body is not the county commissioners: it is the county convention, made up of every state representative elected from the county, sitting together to vote the county budget. The commissioners administer what the convention appropriates.",
+      basis:
+        "RSA 24 (county conventions) and RSA 28 (county commissioners), as established by this project's 03255 hunt and recorded in docs/zip-playbook.md §1",
+      basisUrl: null,
+      readOn: "2026-08-22",
+    },
+  },
 
   /* ----------------------------------------------------------- Arizona ---- */
   {
@@ -261,6 +303,39 @@ export const DEPENDENT_SCHOOL_DEFINITION: Definition = {
 };
 
 /**
+ * **A DISTRICT THE CENSUS COULD NOT BE MATCHED TO STILL GETS DESCRIBED.**
+ * (Written 2026-08-23, item 2.)
+ *
+ * `lib/registry/census-school-systems.ts` reaches 510 of 514 rendered
+ * districts across five one-to-one branches. The four it does not reach are
+ * named in `pnpm schools:classify`'s output, and every one of them is a real
+ * divergence rather than a lookup failure: the Census spells Baboquivari
+ * `BABOQUIVARA`; it calls Tonto Basin Elementary `TONTO SCHOOL DISTRICT 33`;
+ * Union Elementary District's whole distinctive name is the word *Union*,
+ * which is a structural word in every district name in the country; and
+ * Prospect Mountain High School Joint Maintenance Agreement District is not in
+ * the 2022 Census of Governments at all.
+ *
+ * **The old behaviour was to render nothing**, which is the refusal by another
+ * route: the reader asks what this district is and the app declines because a
+ * name did not match a spreadsheet.
+ *
+ * So this describes what is TRUE OF EVERY school system in the country and
+ * names the one thing that is still open, as an open question rather than as a
+ * silence. It asserts nothing about who governs THIS district — which is
+ * precisely the claim the classifier refuses to guess at, and refusing to
+ * guess is not a reason to say nothing at all.
+ */
+export const UNCLASSIFIED_SCHOOL_DEFINITION: Definition = {
+  text:
+    "This school system runs public schools for the area it covers — the school buildings, the staff, the budget for them, and the superintendent who runs it day to day. School systems in the United States come in two kinds: most are governments in their own right with a board you elect, and a smaller number are run as a department of a city, a county or the state. We have not yet established which of the two this one is, so the people to go to about it are not stated here.",
+  basis:
+    "2022 Census of Governments, Government Organization — the two-way classification of school systems as independent governments or as agencies of another government",
+  basisUrl: "https://www.census.gov/programs-surveys/cog.html",
+  readOn: "2026-08-23",
+};
+
+/**
  * Which class a body belongs to, from what the registry already knows.
  *
  * `lsad` is the Census legal/statistical area description carried on place and
@@ -284,12 +359,13 @@ export function classKeyFor(input: {
     case "county":
       return "county";
     case "school_district":
-      // UNCLASSIFIED yields NULL. Falling through to the independent
-      // definition because most districts are independent would be a claim
-      // about who governs a reader's schools, made on a base rate.
+      // UNCLASSIFIED still gets DESCRIBED — see UNCLASSIFIED_SCHOOL_DEFINITION.
+      // What it never gets is the INDEPENDENT definition: falling through to
+      // that because most districts are independent would be a claim about who
+      // governs a reader's schools, made on a base rate.
       if (input.schoolDependency === "DEPENDENT") return "school_district_dependent";
       if (input.schoolDependency === "INDEPENDENT") return "school_district_independent";
-      return null;
+      return "school_district_unclassified";
     case "place":
       // Census LSAD 43 is "Township". Everything else in the place/cousub space
       // — borough, town, city, village — is a municipality for the purpose of
@@ -337,12 +413,35 @@ export function definitionsForBody(input: {
   lsad?: string | null;
   schoolDependency?: "INDEPENDENT" | "DEPENDENT" | "UNCLASSIFIED";
 }): BodyDefinitions {
+  /*
+   * **A BODY WITH NO DIVISION GETS NO CLASS DEFINITION** (2026-08-23, item 3).
+   *
+   * `lib/registry/coverage.ts` builds a `CoveredBody` for a body that has no
+   * division at all — the Southeast Regional Council case — and fills
+   * `divisionType` with `"place"` because the field cannot be null there. That
+   * default is a PLACEHOLDER, and until this guard existed it read here as a
+   * finding: the body would resolve to `municipality` and render *"This is a
+   * New Jersey municipality — the layer of government closest to a
+   * resident"* about a body nobody has established is a municipality.
+   *
+   * Closing the class layer to 0 of 1,253 is what made that live. It is the
+   * render-default rule one layer up from a component: a placeholder chosen
+   * for a type's convenience became a claim about a real government. The
+   * upstream fix is `divisionType` becoming nullable on `CoveredBody`, which
+   * is 39 call sites and is `DI06`.
+   */
+  if (input.ocdId === null) {
+    return { classDefinition: null, formDefinition: null, classKey: null, unreadNote: null };
+  }
+
   const classKey = classKeyFor(input);
   const state = input.ocdId?.match(/\/state:([a-z]{2})\b/)?.[1] ?? null;
 
   let classDefinition: Definition | null = null;
   if (classKey === "school_district_dependent") {
     classDefinition = DEPENDENT_SCHOOL_DEFINITION;
+  } else if (classKey === "school_district_unclassified") {
+    classDefinition = UNCLASSIFIED_SCHOOL_DEFINITION;
   } else if (classKey) {
     /*
      * **A TOWNSHIP FALLS BACK TO ITS STATE'S MUNICIPALITY DEFINITION, and that

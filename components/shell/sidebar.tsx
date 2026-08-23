@@ -45,6 +45,9 @@ export function Sidebar({
   onNearMePoint,
   pillCluster,
   clusterElsewhere = false,
+  whoGoverns = null,
+  statsCollapsed = false,
+  onExpandStats,
 }: {
   onReset: () => void;
   /** Reopens the welcome overlay. */
@@ -72,6 +75,25 @@ export function Sidebar({
    * two doors onto one surface.
    */
   clusterElsewhere?: boolean;
+  /**
+   * **LAY-1 (item 4, 2026-08-23) — the who-governs card, in the column.**
+   *
+   * It used to float over the map in `.map-bottom-stack`, beside a rail that
+   * held the counts. The author's instruction is that everything lives in the
+   * left column, NESTED rather than stacked open: the counts card sets the
+   * column width, this sits directly beneath it, and expanding one collapses
+   * the other to pills.
+   *
+   * Null at every width where the rail is a drawer rather than a column —
+   * there the card keeps its place over the map, because a drawer that has to
+   * be opened to read who governs you is the buried entry point the friction
+   * rule forbids.
+   */
+  whoGoverns?: ReactNode;
+  /** True while the who-governs card holds the column. See `whoGoverns`. */
+  statsCollapsed?: boolean;
+  /** Expand the counts card, which collapses the who-governs card to its pill. */
+  onExpandStats?: () => void;
 }) {
   const { location } = useShellData();
 
@@ -216,7 +238,9 @@ export function Sidebar({
       </div>
 
       <div className="sidebar-scroll">
-        <StatsBar />
+        <StatsBar collapsed={statsCollapsed} onExpand={onExpandStats} />
+        {/* LAY-1: directly beneath the counts card, nothing between them. */}
+        {whoGoverns}
         {/* M119: the rail's second input is gone. Searching a meeting, body,
             district or person by name happens in the one input above. */}
         {/*

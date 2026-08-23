@@ -1387,5 +1387,37 @@
     "ids": [
       "JOB02"
     ]
+  },
+  {
+    "session": "visual-tail-and-rehunt-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH87",
+      "NH88",
+      "NH89",
+      "NH90",
+      "NH91",
+      "NH92"
+    ]
+  },
+  {
+    "session": "remote-visual-tail-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH93",
+      "NH94",
+      "NH95",
+      "NH96"
+    ]
+  },
+  {
+    "session": "remote-visual-tail-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH97",
+      "NH98",
+      "NH99",
+      "NH100"
+    ]
   }
 ]

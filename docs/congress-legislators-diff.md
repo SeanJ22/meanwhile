@@ -1,6 +1,6 @@
 # congress-legislators — the migration diff
 
-Generated 2026-08-16 by `pnpm congress:migrate`.
+Written by `pnpm congress:migrate` on a run of 2026-08-23 — that is when the program ran, not when the data was read. The data below was read 2026-08-16.
 
 Snapshot pinned at `4458244308621d0570a15008f46888b7a87645eb`, read 2026-08-16.
 

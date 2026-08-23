@@ -83,7 +83,16 @@ export interface VerifiableProvenance {
   verifiedAt: string | null;
 }
 
-function hostOf(url: string | null): string | null {
+/**
+ * The host of a URL, lowercased and `www.`-stripped, or null.
+ *
+ * Exported 2026-08-23 (item 3) because `components/ballot/candidate-card.tsx`
+ * needs the same answer to NAME a bio's source from the URL already on the
+ * row. A second copy of this is the duplicate-implementation class RULING 103
+ * governs — three copies of an initials function is how `Thomas J. Haynes III`
+ * came out as `TI`.
+ */
+export function hostOf(url: string | null): string | null {
   if (!url) return null;
   try {
     return new URL(url).host.toLowerCase().replace(/^www\./, "");

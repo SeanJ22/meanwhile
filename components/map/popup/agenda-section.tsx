@@ -137,7 +137,14 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
     return (
       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-muted">
         We fetched this meeting&apos;s document but couldn&apos;t read its
-        text ({latest.extractionNote ?? "extraction failed"}).{" "}
+        {/*
+          **A REASON WE DO NOT HOLD IS NOT "extraction failed"**
+          (2026-08-23, item 3). The branch is already inside "we could not
+          read it", so restating that as the REASON says nothing while
+          looking like an explanation. Where no note was recorded, the gap is
+          named as ours.
+        */}
+        text ({latest.extractionNote ?? "we haven't recorded why"}).{" "}
         <a
           href={latest.documentUrl}
           target="_blank"

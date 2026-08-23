@@ -464,18 +464,75 @@ test("F21: the ballot page renders the polling-place pointer exactly once, in th
   );
 
   // Location, not just count. The dates header is the block that also
-  // resolves the registration deadline and early-voting steps; the checker
-  // box below it is the one that must NOT carry a second pill.
+  // resolves the registration deadline and early-voting steps.
   const header = page.indexOf("const reg = registrationLinkFor(set.election.state);");
   const pointer = page.indexOf("pollingPlaceLinkFor(set.election.state)");
   assert.ok(header >= 0 && pointer > header, "the pointer left the dates header");
+  /*
+   * **AZ-4 and AZ-5 (2026-08-23) — the checker box this used to point at is
+   * DELETED, so the assertion that named it is replaced rather than dropped.**
+   *
+   * It read `page.indexOf("registration checker, prominent") > pointer`, which
+   * proved the polling pointer sat ABOVE the separate registration card. That
+   * card was the third appearance of one destination inside about ten lines
+   * and the author ruled it down to one pill inside the next-election box. The
+   * intent the old line carried — the pointer lives in the dates header, not
+   * in some third place below it — is now proved against the section's own
+   * closing tag, which cannot be satisfied by a pill drifting further down the
+   * page.
+   */
+  const sectionEnd = page.indexOf("</section>", pointer);
+  assert.ok(sectionEnd > pointer, "the pointer is not inside the dates section at all");
   assert.ok(
-    page.indexOf("registration checker, prominent") > pointer,
-    "the pointer resolves below the checker box — it belongs in the dates header above it",
+    page.indexOf("registration checker, prominent") === -1,
+    "the separate registration checker box is back — AZ-4 and AZ-5 deduplicated it to one pill",
   );
 
   // The warning travelled with the pointer rather than being deleted with the
   // duplicate: what the state's tool demands on arrival is friction a reader
   // is owed a word about before the tap.
   assert.ok(page.includes("{polls.note}"), "the reader is never told what the tool asks for");
+});
+
+/**
+ * **AZ-4 and AZ-5 (item 5, 2026-08-23, the author's ruling) — the
+ * registration destination reaches the reader ONCE.**
+ *
+ * From the 8/22 capture of the ballot near 85701, it appeared three times
+ * inside about ten lines: an inline link on the registration-deadline line,
+ * the Secretary of State named beneath it, and a third card below repeating
+ * the same words. The author's ruling is one prominent pill, pointing at the
+ * reader's Secretary of State, at the moment of need.
+ *
+ * The reason it may not simply be dropped as friction is stated in the rule
+ * itself: **the Secretary of State is the only authoritative source for
+ * registration status, the app cannot answer it, and a reader who trusts an
+ * in-app answer and does not check loses their vote.** So it leaves the app
+ * deliberately and says so at the point of the tap — the one place where
+ * keeping the reader in the app would be the wrong call.
+ */
+test("AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it is a labelled pill", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+  const page = readFileSync(join(process.cwd(), "app", "ballot", "page.tsx"), "utf8");
+
+  const resolves = page.split("registrationLinkFor(set.election.state)").length - 1;
+  assert.equal(
+    resolves,
+    1,
+    `the registration link resolves ${resolves} time(s); the author's ruling is one pill`,
+  );
+
+  const pills = page.split("data-registration-pill").length - 1;
+  assert.equal(pills, 1, `${pills} registration pill(s) rendered; exactly one is the ruling`);
+
+  assert.ok(
+    page.includes("data-leaves-app\n                    className=\"voting-open-button\"") ||
+      /data-leaves-app[\s\S]{0,120}voting-open-button/.test(page),
+    "the registration pill must be labelled as leaving the app",
+  );
+  assert.ok(
+    /only place this can be\s+checked/.test(page),
+    "the pill must say why it leaves — the Secretary of State is the system of record",
+  );
 });

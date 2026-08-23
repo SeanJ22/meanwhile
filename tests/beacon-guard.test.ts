@@ -4,12 +4,30 @@ import { createServer, type Server } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "playwright";
+import { describeChromium, resolveChromium } from "../lib/ops/chromium-pin.ts";
 
 import { declareRun, launchGuarded } from "../scripts/browser.mts";
 import {
   markerFromRequest,
   markerFromRequestWithBody,
 } from "../lib/db/run-marker.ts";
+
+/**
+ * **`NH91`, item 7, 2026-08-23.** The two plants below launch Playwright
+ * DIRECTLY, on purpose — they are the unguarded contexts that prove the guard
+ * can fail. They therefore miss `scripts/browser.mts`'s build resolution, and
+ * they were two of the three tests that could not run when the image shipped
+ * Chromium 1194 against Playwright's expected 1234.
+ *
+ * A plant that cannot launch proves nothing and must never read as a skip, so
+ * it resolves the same way the guarded path does and THROWS with the directory
+ * it searched when nothing is installed.
+ */
+function rawLaunchOptions(): { executablePath?: string } {
+  const resolved = resolveChromium();
+  if (resolved.kind === "ABSENT") throw new Error(describeChromium(resolved));
+  return resolved.kind === "SUBSTITUTED" ? { executablePath: resolved.executablePath } : {};
+}
 
 /**
  * R50: THE GUARD IS PROVEN BY RUNNING IT (2026-08-18, g16).
@@ -160,6 +178,27 @@ test("a context from the shared site cannot write an undeclared row", async (t) 
 });
 
 test("an unguarded context leaks — the plant that proves the test can fail", async (t) => {
+  /*
+   * **THE PLANT IS BUILD-SENSITIVE, and 2026-08-23 measured it.**
+   *
+   * Its claim is about ONE Chromium build's beacon transport: that an
+   * unload-time `sendBeacon` escapes `extraHTTPHeaders`. Run against the
+   * substituted build 1194, the beacon arrives DECLARED — Chromium 1194 does
+   * apply the headers to it. That is a real measurement and it says nothing
+   * about the pinned build, so asserting either way here would be a claim
+   * about a browser this machine does not have.
+   *
+   * So it reports CANNOT RUN with the substituted build NAMED, which is this
+   * repo's own convention for a check that cannot reach its subject
+   * (`tests/feedback.test.ts`, RULING 24). The drift itself is not silent —
+   * `tests/chromium-pin.test.ts` states the resolution on every run.
+   */
+  const resolved = resolveChromium();
+  if (resolved.kind === "SUBSTITUTED") {
+    t.skip(`CANNOT RUN: ${describeChromium(resolved)} — the beacon transport differs by build`);
+    return;
+  }
+
   const landed: Landed[] = [];
   const { server, origin } = await serve(landed);
   t.after(() => new Promise<void>((r) => server.close(() => r())));
@@ -167,7 +206,7 @@ test("an unguarded context leaks — the plant that proves the test can fail", a
   /* Built exactly as forty unguarded scripts built one: headers, no override.
    * This is the ONLY place outside scripts/browser.mts that may do this, and
    * tests/browser-construction.test.ts only polices scripts/ for that reason. */
-  const raw = await chromium.launch();
+  const raw = await chromium.launch(rawLaunchOptions());
   t.after(() => raw.close());
   const context = await raw.newContext({
     extraHTTPHeaders: { "x-wtp-synthetic-run": RUN_ID },
@@ -293,7 +332,7 @@ test("an UNLOAD beacon carrying no header is still recorded as synthetic", async
   const { server, origin } = await serveWithBody(landed);
   t.after(() => new Promise<void>((r) => server.close(() => r())));
 
-  const raw = await chromium.launch();
+  const raw = await chromium.launch(rawLaunchOptions());
   t.after(() => raw.close());
   /* No extraHTTPHeaders and no sendBeacon override: the leaking configuration,
    * with the run declared in the page instead. */

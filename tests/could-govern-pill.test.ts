@@ -203,14 +203,27 @@ test("RULING 44: the pill attaches to a BODY, never to a candidate", () => {
    * contest heading, which is a body — so it can never single out a candidate,
    * whatever it says.
    */
+  /*
+   * JUR-4 (2026-08-23) changed the MECHANISM and not the intent. The ballot
+   * page no longer renders the eleven-word pill per contest — it renders one
+   * page-level block and a short mark, because the pill repeated down the page
+   * was the headline UX problem of the New Jersey pass. Both still attach to a
+   * contest heading, which is a BODY, so the structural protection this test
+   * exists for is unchanged and is asserted against what actually renders.
+   *
+   * `components/ballot/could-govern-pill.tsx` was orphaned by that change and
+   * is deleted; the surface that still shows the full invitation is
+   * `components/address/could-govern-notice.tsx`.
+   */
   const page = codeOf("app", "ballot", "page.tsx");
-  assert.match(page, /<CouldGovernPill/, "the pill is rendered by the ballot page");
+  assert.match(page, /<JurisdictionMark \/>/, "the body-level mark is not rendered by the ballot page");
+  assert.match(page, /<JurisdictionNote/, "the page-level block is not rendered by the ballot page");
 
   const card = codeOf("components", "ballot", "candidate-card.tsx");
   assert.doesNotMatch(
     card,
-    /CouldGovernPill|could-govern/,
-    "the pill may never reach a candidate card — that is the RULING 44 harm exactly",
+    /CouldGovernPill|could-govern|JurisdictionMark|JurisdictionNote/,
+    "the annotation may never reach a candidate card — that is the RULING 44 harm exactly",
   );
 });
 

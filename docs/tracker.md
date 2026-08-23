@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **236 open**, 345 resolved.
+- **237 open**, 358 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**52 open · 21 resolved.**
+**52 open · 22 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -193,7 +193,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**30 open · 4 resolved.**
+**30 open · 5 resolved.**
 
 ### P1
 
@@ -269,7 +269,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**25 open · 3 resolved.**
+**27 open · 3 resolved.**
 
 ### P2
 
@@ -282,6 +282,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH72** — NJ Hunt 6 wired 19 of 39 Morris municipalities' governing bodies. The other 20 are OWED, not absent, and `corepack pnpm nj:wire --dry` names every one with its reason. Three reasons, in order of frequency: (1) the confirmed member count does not reach the seat count the municipality's own form of government declares, so a partial list would state a false composition; (2) the form-of-government line states no seat count at all, so completeness cannot be checked; (3) the county clerk's certified winners do not reach the municipality, so the SEATS' partisanship is unsettled under M62. Every one of these is closed by more hunting, not by loosening the gate. The nearest wins: Boonton (7 of 8 confirmed), Dover (5 of 8), Netcong (4 of 6), Long Hill (4 of 5).
 
 **NH73** — Denville Township's article listed Angela Cote and Christopher Golinski on the council. The Morris County Clerk's certified 2025 winners name Adrienne Zimmermann and Mark Venis in those seats, and the township's own council page confirms Zimmermann and Venis and does not name Cote or Golinski. This is RULING 87 working exactly as written - the encyclopedia named, the primary source proved, and the primary source disagreed. What is OWED is the sweep: how many of the other 38 Morris municipalities carry a stale encyclopedia roster that the certified winners contradict? `data/hunt/nj-morris-certified-winners.json` holds 263 certified winners and the comparison is a script, not a hunt.
+
+**NH88** — data/hunt/wiki-graph-07866.json holds 80 leader entries harvested on 2026-08-22, and 5 of the 72 usable ones store the Wikipedia link syntax as part of the person's name - "Joseph Jackson ([[Republican Party (United States)" is what the file actually contains for the Mayor of Rockaway Township, and one office title is stored as "[[City manager". A consumer reading the name field straight out gets a string that is not a name. NOTHING WENT RED, because nothing was empty: this is RULING 100's shape, an extraction that came back with some rather than none, and only reading the rows shows it. The fix belongs in the graph's own generator per RULING 92, and that generator reads Wikipedia over the network, so the artifact is owed a regeneration when egress is available. scripts/mine-wiki-leaders.mts cleans the markup at read time as a stopgap and exports cleanWikiText; it is a workaround, not the fix.
+
+**NH89** — The 2026-08-23 session mined two committed corpora that had never been read for the fields they answer, and produced leads it could not confirm because every outbound host was refused at that environment's egress. data/hunt/campaign-site-leads-nj-morris.json holds 12 campaign-site leads across 12 of 272 candidates, 8 of them STRONG (selenformorriscounty.com, joehathawayforcongress.com, strobelforschoolboard.com, rebeccabennettforcongress.com, corybooker.com and three more) against a field that stood at 0 of 272. data/hunt/wiki-leader-leads-07866.json holds 9 New Jersey municipal roster leads - mayor, manager and clerk for Rockaway Township, Rockaway Borough and Denville - none currently held as an officeholder. EVERY ROW IS A LEAD AND NOT A HIT: a domain matching a candidate's name is a guessed identifier, and Wikipedia names a person while the citation proves them (RULING 87). What is owed is the control check - fetch each, confirm the page self-identifies with the filed name, the office and the cycle - which is one fetch per lead for a session that has egress. Regenerate the leads with pnpm mine:campaign-sites and pnpm mine:wiki-leaders.
 
 **NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
@@ -367,17 +371,13 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**6 open · 37 resolved.**
+**4 open · 39 resolved.**
 
 ### P1
 
 **F01** — Sean's full walk of the product on 2026-08-18, forty-odd findings across cards, meeting order, votes, the ask box, the ballot and the map. The parent row that keeps the whole batch together; the individual findings became their own rows.
 
 ### P2
-
-**NH82** — Carried forward unchanged from VF04. LAY-1: the left column cards sprawl and should nest, one expanded at a time with the others collapsed to pills, and the existing sidebar behaviour untouched. LAY-2: the sidebar filters are off-centre and crammed when opened. Both want a capture read as an image before and after, and both must be built against the post-Hunt-6 panel: the registry held 12 bodies when the walkthrough was taken and holds 174 now, so a layout that reads well at 12 is not evidence that it reads well at all.
-
-**VF04** — From the 8/22 walkthrough, NOT STARTED this session. LAY-1: the main card (Meetings / Bodies / Districts / View Officials, the one showing 48 meetings and 4 venues) sets the column width, Who Governs Here sits beneath it, and clicking any one should make it take over the left column while the others collapse to pills — one expanded at a time, nested under each other. The existing main sidebar behaviour stays as it works today. LAY-2: the sidebar filters are off-centre, crammed and sloppy when opened; a dedicated screenshot exists in the 8.22 Drive folder. Both are layout work that wants a capture read as an image before and after.
 
 **VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim.
 
@@ -391,7 +391,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**71 open · 81 resolved.**
+**73 open · 86 resolved.**
 
 ### P1
 
@@ -410,8 +410,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D50** — The second pass at candidate and official photographs, now that the author has opened the door for portraits a government body publishes about its own members. More faces on cards, each one carrying the door it came through.
 
 **D52** — Turning each state's campaign-finance filing vocabulary into words a fifteen-year-old reads. Every state files differently, so this is a programme with one adapter per state rather than a single job.
-
-**DI03** — pnpm schools:classify stamps each registry school district INDEPENDENT or DEPENDENT from the 2022 Census of Governments' own classification, via data/derived/census-nces-crosswalk.csv. Measured 2026-08-23: 291 INDEPENDENT, 4 DEPENDENT, 219 UNCLASSIFIED, 2 TIGER pseudo-entities skipped. An unclassified district deliberately gets NO class definition — guessing INDEPENDENT because most districts are would be a claim about who governs a reader's schools made on a base rate — so 219 districts render a card with no description. Most of the unmatched are New Hampshire. WHAT IS OWED: raise the crosswalk's match rate for the unmatched names, or add a second key (NCES LEAID, Census GIDID) so the join does not depend on a normalised name alone.
 
 **DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F".
 
@@ -434,6 +432,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH75** — Playwright's extraHTTPHeaders applies to EVERY request a context makes, third parties included. MapTiler's CORS preflight does not allow x-wtp-synthetic-run, so the basemap style request was refused in every capture and every walk. That is why NJ Hunt 5's captures showed BASEMAP UNAVAILABLE against a production site serving readers a working map. Fixed at the shared path in scripts/browser.mts. This row is open for the QUESTION IT RAISES rather than the fix: what else has an instrument of ours been breaking while measuring it? The shape - a synthetic marker leaking into a third-party request - is worth sweeping for beyond the browser.
 
 **NH79** — pnpm dupes reads 2114 function bodies across 806 files and finds 26 groups where the same logic lives in more than one file. Two were consolidated on 2026-08-23: four copies of the outbound User-Agent, which CLAUDE.md makes law, and two of the person-name normaliser, one of which sat inside the tool that CHECKS whether the same person is shown twice - so the audit was using a different definition of a person from the resolver it audits. The other 24 are recorded in tests/duplicate-implementations.json with a disposition and a reason each. Six are ALLOWED for reasons that hold: the two intake key paths must stay unable to converge because the stores may never join, React context accessors are three identical lines by construction, and the .mjs date helper cannot import TypeScript because the pre-commit hook runs without tsx. Eighteen are OWED. The guard fails on a NEW group, so the class cannot grow while the backlog is worked, and the baseline only shrinks. The heaviest three: six byte-identical useSyncExternalStore subscribe callbacks across the hooks, four separate CSV parsers with the tracker stores downstream of two of them, and - the worst of the set - tests/district-hits.test.ts carrying its own copies of inRing, inPolygon and contains, so the test that checks point-in-district geometry proves its own copy works and says nothing at all about the shipped one.
+
+**NH93** — The class layer is closed — 1,253 of 1,253 bodies now carry a class definition, up from 1,013 — and the twelve New Hampshire county rows that were the last gap now have one. Its TEXT is sound and its substance is this project's own 03255 hunt, recorded in docs/zip-playbook.md section 1 on 2026-08-22 and read out of the repo today: a New Hampshire county runs the jail, the nursing home, the sheriff, the registry of deeds and the county attorney, runs no roads, schools, zoning or land use, and its legislative body is the county convention of state representatives rather than the commissioners. WHAT IS OWED: the statute URLs. basisUrl is NULL on that row, deliberately, because the 2026-08-23 remote session could reach no host but github.com and writing a URL it had not opened would be RULING 107's defect — a read that did not happen. A session with network confirms the live paths for RSA 24 (county conventions) and RSA 28 (county commissioners), sets basisUrl, and adds their control strings to scripts/definitions-verify.mts. NH90's own note records that gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 while every county-chapter path tried returned 404, so the path hunt is the work rather than the fetch.
+
+**NH94** — lib/registry/coverage.ts line 310 reads `divisionType: division?.divisionType ?? "place"` for a body that has NO division — the Southeast Regional Council case the comment beside it names. The default was harmless while nothing read it as a finding. Closing the class layer on 2026-08-23 made it live: a divisionType of "place" resolves to the municipality class, so such a body would have rendered "This is a New Jersey municipality — the layer of government closest to a resident" about a body nobody has established is a municipality. It is guarded at the definitions path today — definitionsForBody returns nothing for a null ocdId — which closes the false claim without touching the type. THE UPSTREAM FIX is making divisionType nullable on CoveredBody, which is 39 call sites and was out of this session's scope. Until then the placeholder is still a placeholder wearing a value's clothes, and the next thing that reads it as a finding will not have a guard waiting.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
@@ -511,7 +513,9 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH70** — New Jersey has two places named Silver Lake, Census GEOIDs 3467590 and 3467650, and placeIdentity keys on state plus name, so both slug to state:nj/place:silver_lake. The widened geometry clip surfaced it and the build refused to write, correctly - a duplicate join key is a join that collapses. It is fixed for the build by suffixing EVERY side of a collision with its Census GEOID, and the underlying identifier convention is still not unique.
 
-**NH80** — The pnpm regen git sweep on 2026-08-23 found two of ten registered artifacts committed older than something in their generator's source closure. data/hunt/tier-directories.json was behind its own dedicated script and was regenerated - the content came back byte-identical and only the walk date moved. The other is lib/officials/directory-source.ts, behind scripts/doc-dates.mjs, a date helper shared by nine generators, so that edit cannot have changed what congress:migrate produces. It was deliberately NOT regenerated: re-running it moves a pinned upstream commit SHA and restamps a collectedAt of 2026-08-16, which is the date the data was actually read, and restamping a provenance date without re-reading the data is the fabrication rule. What is owed is a decision about whether a shared-helper edit should mark an artifact stale at all. The tool already distinguishes a source dedicated to one generator from one shared by nine and prints which, so the answer may be no more than making the sweep act on the distinction it already reports.
+**NH87** — RULING 107's wider sweep found this and it is the one site of 31 that is a real restamp rather than a reading path. scripts/ship-staged-portraits.mts writes collectedAt: new Date() on every portrait it commits (lines ~175 and ~193), but the collection happened earlier, when the portrait was STAGED from Wikimedia Commons. The ship step is not the read. It cannot be fixed where it stands, because the staged ResultRow carries no collection date to carry forward - so the fix is in the STAGING step, which has to start recording one, and then the ship step carries it rather than minting. Until then the provenance date on every Commons portrait is the day somebody ran the shipper. Pinned in tests/freshness-provenance.test.ts as the single entry of KNOWN_UNDECLARED, a baseline that may only shrink; run pnpm freshness:audit --all to see it.
+
+**NH95** — pnpm schools:classify reaches 510 of 514 rendered districts across five one-to-one branches, up from 295 of 514. The four it does not reach are named on every run and each was read by hand against the committed Census files: AZ Indian Oasis-Baboquivari Unified District, which the 2022 Census of Governments spells BABOQUIVARA; AZ Tonto Basin Elementary District, which the Census calls TONTO SCHOOL DISTRICT 33; AZ Union Elementary District, whose whole distinctive name is the word Union — a structural word in every district name in the country, so it cannot be keyed; and NH Prospect Mountain High School Joint Maintenance Agreement District, which is not in the 2022 Census of Governments at all and is therefore RULING 57's two-enumerations-disagree finding rather than a miss. None of the four renders a refusal: they carry the unclassified-school class definition, which describes what a school system is and names the open question rather than asserting who governs the schools. WHAT WOULD CLOSE IT: a hand-evidenced alias table, which needs a source a session can cite for each pairing — NCES state_leaid does not decode to the Census district number, so the join has to come from somewhere with network.
 
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
@@ -567,7 +571,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**24 open · 133 resolved.**
+**22 open · 135 resolved.**
 
 ### P1
 
@@ -580,10 +584,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
 **NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions.
-
-**NH81** — Carried forward unchanged from PU03. The 2026-08-23 session spent its run on the four guards and the meeting and jurisdiction surfaces and did not reach this. Ask for the next meeting still answers with a heading and nothing to tap, and asking when school starts still answers that no sourced owner is routed for the topic when the school district plainly owns it. The standard for both is NH-2, which he named as the thing to replicate: coverage disclosure with denominators, honest gaps, the relevant record surfaced, and a named human with a phone number and an email. He called the contact details the best part.
-
-**NH84** — Carried forward from PU06. The MAP surfaces are done: the who-governs panel went from six full sentences to six asterisks and one pill, and the 2026-08-23 session took the meetings list from nineteen consecutive Could govern you pills down to one per jurisdiction group, both read as images. The BALLOT page is untouched at twelve instances across nine contests, because it renders the pill per contest heading, which RULING 28 permits and which he nonetheless called the headline UX problem of the New Jersey pass. What is owed is the same treatment - one page-level annotation with marks on the affected contests - and wherever the sentence survives, making it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
 
 **PU01** — Read as an image on production 2026-08-22 at 430x932. The map at 07866 shows a panel reading "BASEMAP UNAVAILABLE -- Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use". That is an environment variable name and a dotfile path rendered to a reader, which the plain-language rule forbids outside a technical-details disclosure: identifiers, enum values and internal keys never render to a reader. The honest half of the message -- that tiles did not load and pins still work -- is right and should stay. Two questions for whoever takes it: whether the key is simply unset on the production deploy (in which case the message is doing its job for the wrong audience), and what a reader should see instead.
 
@@ -653,7 +653,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**10 open · 59 resolved.**
+**11 open · 61 resolved.**
 
 ### P2
 
@@ -662,6 +662,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH69** — Every tracker run this session ended with THE WORKBOOK IS STALE and exit code 3: docs/tracker.xlsx is locked (docs/~$tracker.xlsx exists, which is Excel's own lock file). The two CSV stores are authoritative and were written correctly, and docs/tracker.md and docs/log.md regenerated from them - but the workbook Sean edits is showing the tracker as it was before this session, and saving it would write those older rows back over the stores.
 
 **NH85** — RULING 75's third part asks GitHub rather than the working tree, and the four verdicts it keeps apart are green, red, pending and could-not-tell. Measured on 2026-08-23: both of this session's commits to main are GREEN on GitHub - d0f2831 carries build default, build standalone and the gates, and e83db50 carries those plus the tripwire. But main's TIP was 7112307, an intake-tripwire[bot] commit pushed minutes later, and no check has ever been registered against it. So main:green exits 2 with CANNOT TELL on a healthy tree, and it did the same on 750e094 at the start of this session. Seven workflows push main daily, so the tip is a bot commit far more often than it is a human one, and a gate that reads could-not-tell as its normal answer is a gate a session learns to walk past. What is owed is a decision about the shape rather than a patch: either the scheduled workflows' pushes to main run build check too, or main:green reports on the newest commit that HAS a check and says how many bot commits sit above it. The second keeps the Actions budget RULING 78 protects; the first is stricter. Nothing is broken today and the distinction between the four verdicts must not be softened to make this go away.
+
+**NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 

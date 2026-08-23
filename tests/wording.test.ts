@@ -194,3 +194,87 @@ test("F01 6.2: the struck clause leaves the whose-gap attribution standing", asy
     "the key-votes absence line lost its whose-gap attribution",
   );
 });
+
+/* ------------------------------ item 4, 2026-08-23: the refusal clause --- */
+
+/**
+ * **A CARD MAY SAY IT HAS NOT READ THE LAW. IT MAY NOT SAY IT WILL THEREFORE
+ * TELL THE READER NOTHING.**
+ *
+ * The two-layer definition ruling (DEF-1..DEF-4, 2026-08-22) deleted *"we're
+ * not going to describe it"* from the body cards. It survived one file over,
+ * in `lib/ballot/battlecard-sections.ts`, as *"...so we can't describe it
+ * here"* — because that file was never swept with them. A named instance whose
+ * sibling nobody looked for, which is the failure the class-wide rule names.
+ *
+ * It was in the worst place in the product: the "What this office does"
+ * section is FIRST and mandatory on every candidate and officeholder card, so
+ * the refusal was the first sentence a reader met on the card of a person
+ * asking for their vote.
+ *
+ * **This guard is the class, not the instance.** It reads every reader-facing
+ * source file for the REFUSAL half — a sentence that converts "we have not
+ * read it" into "so there is nothing here for you". The honest half is
+ * untouched and is asserted separately below, exactly as F01 6.1 and 6.2 are
+ * guarded together: banning the apology without keeping the attribution would
+ * trade one defect for another.
+ */
+test("item 4: no reader surface refuses to describe a body or an office", async () => {
+  const { readdirSync, readFileSync: read, statSync } = await import("node:fs");
+  const { join: j } = await import("node:path");
+
+  // The refusal, in the forms it has actually shipped in.
+  const REFUSALS = [
+    /so we can[’']?t describe it/i,
+    /we[’']?re not going to describe it/i,
+    /rather than guess,? we (?:won[’']?t|will not) describe/i,
+  ];
+  const roots = ["app", "components", "lib", "data"];
+  const offenders: string[] = [];
+  const walk = (dir: string) => {
+    for (const name of readdirSync(dir)) {
+      const p = j(dir, name);
+      if (statSync(p).isDirectory()) {
+        walk(p);
+        continue;
+      }
+      if (!/\.(tsx?|json)$/.test(name)) continue;
+      // The file that records what was removed is where the dead copy is
+      // quoted, and a guard that cannot name what it bans cannot ban it.
+      if (p.endsWith(j("lib", "officials", "body-definitions.ts"))) continue;
+      const text = read(p, "utf8");
+      for (const re of REFUSALS) if (re.test(text)) offenders.push(`${p} — ${re}`);
+    }
+  };
+  for (const r of roots) walk(j(process.cwd(), r));
+
+  assert.deepEqual(
+    offenders,
+    [],
+    `the refusal clause is back in ${offenders.length} place(s):\n${offenders.join("\n")}`,
+  );
+});
+
+/**
+ * The other half. Striking the refusal must not strike the attribution with it
+ * — an empty section that said nothing about WHOSE gap it is would pass the
+ * guard above and violate the render-default rule.
+ */
+test("item 4: the office and body absence lines keep their whose-gap attribution", async () => {
+  const { readFileSync: read } = await import("node:fs");
+  const { join: j } = await import("node:path");
+
+  const office = read(j(process.cwd(), "lib", "ballot", "battlecard-sections.ts"), "utf8");
+  assert.match(
+    office,
+    /We haven[’']?t yet read the law that says what this office decides\. What we do hold about it is below\./,
+    "the office section lost its whose-gap attribution",
+  );
+
+  const body = read(j(process.cwd(), "lib", "officials", "body-blurbs.ts"), "utf8");
+  assert.match(
+    body,
+    /We haven[’']?t yet read the law that says what this body decides\. What we do hold about it is below\./,
+    "the body blurb lost its whose-gap attribution",
+  );
+});

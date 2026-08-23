@@ -37,7 +37,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
-import { stamp } from "./stamp.mts";
+import { carried, provenanceLine, runStamp } from "../lib/ops/freshness.ts";
 
 interface SnapshotMember {
   bioguide: string;
@@ -102,7 +102,14 @@ interface Finding {
 const ROOT = process.cwd();
 
 function main() {
-  const collectedAt = stamp();
+  /*
+   * RULING 107. This was named `collectedAt` and fed the report header, which
+   * made a clock date look like a data date: regenerating on 2026-08-23 moved
+   * the header from 2026-08-16 to 2026-08-23 with nothing read. It is a RUN
+   * date and is now typed and named as one, so it cannot reach a freshness
+   * field. The read date is the snapshot's, carried forward below.
+   */
+  const ranOn = runStamp();
   const snapshot = JSON.parse(
     readFileSync(join(ROOT, "data/congress-legislators/snapshot.json"), "utf8"),
   ) as Snapshot;
@@ -263,7 +270,11 @@ function main() {
   const lines: string[] = [
     "# congress-legislators — the migration diff",
     "",
-    `Generated ${collectedAt} by \`pnpm congress:migrate\`.`,
+    provenanceLine(
+      "pnpm congress:migrate",
+      ranOn,
+      carried(snapshot.source.collectedAt, "the pinned upstream snapshot records the day it was read"),
+    ),
     "",
     `Snapshot pinned at \`${snapshot.source.sha}\`, read ${snapshot.source.collectedAt}.`,
     "",

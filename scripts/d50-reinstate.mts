@@ -1,4 +1,12 @@
 /**
+ * @freshness-reads-here
+ *
+ * RULING 107 — the clock stamps in this file are minted by the code path that
+ * performs the read: the freshness date is taken at the moment of the fetch,
+ * which is what the ruling asks for rather than what it forbids. Verified
+ * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ */
+/**
  * **D50 item 7c — reinstate the two portraits the never-wrong-face gate held
  * back**, on the author's instruction (2026-08-19): *"Put them in for now,
  * but be prepared to pull them out. I want to see it to assess it."*

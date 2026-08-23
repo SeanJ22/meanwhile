@@ -271,3 +271,64 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
     "the component's private copy of 'answered' is gone, not shadowed",
   );
 });
+
+/* -------------------------------------------- NH-3, 2026-08-23: schools --- */
+
+/**
+ * **"WHEN DOES SCHOOL START?" IS A QUESTION THE SCHOOL DISTRICT OWNS.**
+ *
+ * It was REFUSED — *"We don't have a sourced answer for who owns this topic
+ * yet. Rather than guess, we haven't routed it."* Not because the topic was
+ * missing: `schools-operations` and `schools-policy` were both there. The
+ * question hit the bare anchor "school" once for each of them and nothing
+ * else, so it sat one hit below the strong-match threshold and fell through.
+ *
+ * The threshold is right and is not touched here — it is what stops *"what
+ * will the weather be like on election day"* being answered at length about
+ * who runs elections. What was missing was a SECOND piece of evidence, and
+ * the negative controls below are the reason it is a phrase rather than the
+ * bare word "start".
+ *
+ * It routes to POLICY because the board adopts the school calendar:
+ * N.J.S.A. 18A:36-2, RSA 189:1. The superintendent runs the year the board sets.
+ */
+test("NH-3: the school calendar routes to the school district", () => {
+  for (const q of [
+    "when does school start?",
+    "when does school start",
+    "when does the school year start",
+    "what is the first day of school",
+    "when does school begin",
+    "what is the school calendar",
+  ]) {
+    const m = matchTopic(q);
+    assert.ok(m !== null, `"${q}" was refused — the school district owns it`);
+    assert.equal(m?.topicId, "schools-policy", `"${q}" routed to ${m?.topicId}`);
+    assert.ok(
+      (m?.matchedOn.length ?? 0) >= STRONG_MATCH_MIN_HITS,
+      `"${q}" routed on ${m?.matchedOn.length} hit(s) — below the strong-match threshold`,
+    );
+  }
+});
+
+test("NH-3: the school cues are phrases, so they cannot capture other topics", () => {
+  /*
+   * The whole reason the fix is "school start" and not "start". A bare "start"
+   * would route every one of these to the school board — a word carrying a
+   * topic's vocabulary rather than its intent, which is the failure the
+   * threshold ruling was adopted over.
+   */
+  for (const q of [
+    "when does the meeting start",
+    "when does early voting start",
+    "when does the construction start",
+    "when does trash pickup start",
+  ]) {
+    const m = matchTopic(q);
+    assert.notEqual(
+      m?.topicId,
+      "schools-policy",
+      `"${q}" was captured by the school cues`,
+    );
+  }
+});

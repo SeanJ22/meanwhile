@@ -139,6 +139,15 @@ export function FiltersArea({
 
           <Group
             label="Body type"
+            collapsible
+            /* LAY-2: every group states where it stands on its own header, so
+               a closed one is an answer rather than a question. */
+            badge={
+              ui.filters.bodyTypes.length === 0
+                ? "all"
+                : `${ui.filters.bodyTypes.length} of ${BODY_TYPES.length}`
+            }
+            openWhenNarrowed={ui.filters.bodyTypes.length > 0}
             onClear={
               ui.filters.bodyTypes.length > 0
                 ? () => dispatch({ type: "filter/clear", group: "bodyTypes" })
@@ -165,6 +174,13 @@ export function FiltersArea({
 
           <Group
             label="Meeting status"
+            collapsible
+            badge={
+              ui.filters.statuses.length === 0
+                ? "all"
+                : `${ui.filters.statuses.length} of ${STATUSES.length}`
+            }
+            openWhenNarrowed={ui.filters.statuses.length > 0}
             onClear={
               ui.filters.statuses.length > 0
                 ? () => dispatch({ type: "filter/clear", group: "statuses" })
@@ -199,6 +215,11 @@ export function FiltersArea({
               and older meetings render wherever their sources publish them. */}
           <Group
             label="Date range"
+            collapsible
+            badge={`${ui.filters.daysBack}d → ${ui.filters.daysAhead}d`}
+            openWhenNarrowed={
+              ui.filters.daysAhead !== 60 || ui.filters.daysBack !== 90
+            }
             // 6f2 (2026-08-15): the default is 90 back → 60 ahead, matching
             // the served window. The clear link appears only when the reader
             // has actually moved a handle away from it — comparing against
@@ -256,7 +277,10 @@ export function FiltersArea({
             // g4 item 14: collapsed by default, with the count on the header
             // so a reader can see how many types are on without opening it.
             collapsible
-            badge={`${ui.filters.districtTypes.length}/${ALL_DISTRICT_TYPES.length}`}
+            badge={`${ui.filters.districtTypes.length} of ${ALL_DISTRICT_TYPES.length}`}
+            openWhenNarrowed={
+              ui.filters.districtTypes.length < ALL_DISTRICT_TYPES.length
+            }
             actions={[
               ...(ui.filters.districtTypes.length < ALL_DISTRICT_TYPES.length
                 ? [
@@ -309,7 +333,12 @@ export function FiltersArea({
           {/* Edia's focusStatesOn: default-on, and visibly so. A reader who
               cannot see that jurisdictions are being hidden reads the gaps as
               "no government here" rather than "not ingested yet". */}
-          <Group label="Coverage quality">
+          <Group
+            label="Coverage quality"
+            collapsible
+            badge={ui.filters.hideUncovered ? "hiding gaps" : "showing gaps"}
+            openWhenNarrowed={!ui.filters.hideUncovered}
+          >
             <label className="filter-check" data-active={ui.filters.hideUncovered}>
               <input
                 type="checkbox"
@@ -335,6 +364,7 @@ function Group({
   onClear,
   actions,
   collapsible,
+  openWhenNarrowed = false,
   badge,
   children,
 }: {
@@ -345,11 +375,30 @@ function Group({
   actions?: Array<{ label: string; onClick: () => void }>;
   /**
    * Starts CLOSED, and its header becomes the control that opens it (g4
-   * item 14). Only the groups the author named collapse; the rest stay as
-   * they were, because collapsing everything would trade one wall of
-   * controls for a wall of headers.
+   * item 14).
+   *
+   * **LAY-2 (2026-08-23) — this is now EVERY group.** The comment here used
+   * to say collapsing everything would trade one wall of controls for a wall
+   * of headers, and against a panel of six open sections that was the right
+   * caution. The author's 8/22 pass settled it the other way: *the filter
+   * panel is off-center and crammed — coverage block, body-type block,
+   * meeting status, date range, district types and the coverage-quality
+   * toggle all competing.* Six headers each carrying its own state is not a
+   * wall; six open sections of chips, sliders and checkboxes is. And
+   * `openWhenNarrowed` is what keeps a set filter from hiding behind one.
    */
   collapsible?: boolean;
+  /**
+   * **LAY-2 (item 4, 2026-08-23) — a NARROWED group opens itself.**
+   *
+   * Collapsing every group is what turns the wall of controls into a list of
+   * answers, and the risk the original comment named is real: a filter the
+   * reader has set, hidden behind a closed header, is a hidden reason the map
+   * is showing less than it holds. So a group whose value is away from its
+   * default starts OPEN, and only the ones sitting at their defaults start
+   * closed. The badge carries the state either way.
+   */
+  openWhenNarrowed?: boolean;
   /**
    * A count on the collapsed header, "where cheap" per the item.
    *
@@ -360,7 +409,7 @@ function Group({
   badge?: string;
   children: React.ReactNode;
 }) {
-  const [open, setOpen] = useState(!collapsible);
+  const [open, setOpen] = useState(!collapsible || openWhenNarrowed);
 
   return (
     <div className="filter-group">

@@ -72,3 +72,40 @@ export function filesThatWouldBeCommitted(options: RepoFilesOptions): string[] {
       .filter((p, i, all) => all.indexOf(p) === i)
   );
 }
+
+/**
+ * **THE TYPESCRIPT SOURCES UNDER GIVEN DIRECTORIES, AS ONE SHARED PATH.**
+ * (RULING 103, 2026-08-23. Extracted from four copies the duplicate sweep
+ * caught the same day it was written — see below, because the way it was
+ * caught is the more useful half.)
+ *
+ * `pnpm sweep:refusal`, `pnpm sweep:absence-defaults` and their two test files
+ * each grew their own `readdirSync` recursion with its own `node_modules` and
+ * `.next` exclusions. Four copies of a directory walker is precisely the
+ * duplicated-implementation class RULING 103 governs, and the fix is the
+ * shared path rather than four baseline entries.
+ *
+ * **It is also strictly better than what it replaces**, and for the reason
+ * this module already exists: a hand-rolled walk sees the filesystem, and a
+ * gate must see WHAT WOULD BE COMMITTED. The hand-rolled version would happily
+ * sweep a file `.gitignore` excludes and miss nothing that mattered — until it
+ * did.
+ *
+ * *How this was caught, recorded because it is a fact about the instrument.*
+ * The full suite ran clean twice while the four copies sat in the working
+ * tree UNTRACKED, and failed on the first run after they were committed —
+ * because `pnpm dupes` reads `filesThatWouldBeCommitted`, and until `git add`
+ * the sweep genuinely could not see them. That is the NH Hunt 3 ordering
+ * defect this module was built over, seen from the other side: the gate was
+ * right both times, and the earlier green was a measurement of a tree that did
+ * not yet contain the defect.
+ */
+export function sourceFilesUnder(
+  cwd: string,
+  dirs: readonly string[],
+  extensions: readonly string[] = [".ts", ".tsx"],
+): string[] {
+  return filesThatWouldBeCommitted({ cwd, paths: dirs }).filter((p) =>
+    extensions.some((ext) => p.endsWith(ext)),
+  );
+}

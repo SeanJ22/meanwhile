@@ -56,6 +56,7 @@ import type {
   Page,
 } from "playwright";
 
+import { describeChromium, resolveChromium } from "../lib/ops/chromium-pin.ts";
 import { makeRunId, syntheticRunHeaders, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
 import { confine } from "../lib/ops/origin-confinement.ts";
 
@@ -155,7 +156,28 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
     );
   }
 
-  const browser: Browser = await chromium.launch(launchOptions);
+  /*
+   * **`NH91`, item 7, 2026-08-23 — the harness asks the IMAGE what it has.**
+   *
+   * Playwright 1.62.1 wants Chromium 1234 and this image ships 1194, so three
+   * beacon-guard tests died on "Executable doesn't exist" and Playwright's
+   * own advice — run `playwright install` — is unreachable here: the browser
+   * CDN is not on this machine's egress.
+   *
+   * So the pinned build is used where it exists, another complete Chromium is
+   * used by explicit path where it does not, and the substitution is PRINTED
+   * rather than absorbed. `ABSENT` throws with the directory it searched:
+   * a run that cannot open a browser must fail loudly and may never read as a
+   * skip. `lib/ops/chromium-pin.ts` holds the pin and the reasoning.
+   */
+  const resolved = resolveChromium();
+  if (resolved.kind === "ABSENT") throw new Error(describeChromium(resolved));
+  if (resolved.kind === "SUBSTITUTED") console.warn(`  ${describeChromium(resolved)}`);
+
+  const browser: Browser = await chromium.launch({
+    ...launchOptions,
+    ...(resolved.kind === "SUBSTITUTED" ? { executablePath: resolved.executablePath } : {}),
+  });
 
   async function guardedContext(contextOptions: BrowserContextOptions = {}): Promise<BrowserContext> {
     const context = await browser.newContext({

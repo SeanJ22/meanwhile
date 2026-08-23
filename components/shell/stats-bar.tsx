@@ -21,7 +21,22 @@ const COVERAGE_LABEL = {
   none: "No coverage",
 } as const;
 
-export function StatsBar() {
+export function StatsBar({
+  collapsed = false,
+  onExpand,
+}: {
+  /**
+   * **LAY-1 (item 4, 2026-08-23).** The column holds one expanded card at a
+   * time; the other collapses to pills. Collapsed, this renders the same four
+   * numbers as a single row of pills, and every one of them is still the door
+   * to what it counts — a collapsed card that stopped being clickable would
+   * be a hidden entry point, which `CLAUDE.md` calls a defect with the same
+   * standing as a wrong number.
+   */
+  collapsed?: boolean;
+  /** Pressing the row's own background expands this card and collapses the other. */
+  onExpand?: () => void;
+} = {}) {
   const { meetings, drawnDistricts, dropped, result, searchFailed, atAddress } =
     useShellData();
   const ui = useUi();
@@ -63,6 +78,51 @@ export function StatsBar() {
       ? `${formatMiles(result.requestedRadiusKm)} → ${formatMiles(result.radiusKm)} mi`
       : null;
 
+  if (collapsed) {
+    /*
+     * **The collapsed form is PILLS, and every pill is still its door.**
+     * (LAY-1, item 4, 2026-08-23.)
+     *
+     * The number never travels without what it counts, exactly as the expanded
+     * tiles carry it — so these read "48 meetings", not "48". A bare number in
+     * a pill is the "179 DISTRICTS" defect in a smaller box.
+     */
+    return (
+      <div className="stats-collapsed">
+        <button
+          type="button"
+          className="stats-collapsed-expand"
+          onClick={onExpand}
+          aria-label="Expand the counts"
+        >
+          Counts
+        </button>
+        <div className="stats-collapsed-pills">
+          <StatPill
+            text={`${view.meetings} meetings`}
+            open={ui.listOverlayOpen}
+            onOpen={() => dispatch({ type: "list/open", open: true })}
+          />
+          <StatPill
+            text={`${view.bodies} bodies here`}
+            open={ui.door === "bodies"}
+            onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
+          />
+          <StatPill
+            text={`${view.districts} districts ${view.districtsLabel.toLowerCase()}`}
+            open={ui.door === "districts"}
+            onOpen={() => dispatch({ type: "door/open", door: "districts" })}
+          />
+          <StatPill
+            text={`${view.officials} officials`}
+            open={ui.door === "officials"}
+            onOpen={() => dispatch({ type: "door/open", door: "officials" })}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="stats-bar">
       {/* 8a (2026-08-17): the numbers are doors. Each count opens the list
@@ -74,9 +134,18 @@ export function StatsBar() {
         open={ui.listOverlayOpen}
         onOpen={() => dispatch({ type: "list/open", open: true })}
       />
+      {/* **The unit is NAMED, and the pair reconciles on the tile.**
+          (Item 6, 2026-08-23.) At 07866 this read `12 Bodies` beside a panel
+          saying "4 of the 8 bodies that govern the area" — both true, neither
+          saying which unit it counted. `Bodies here` matches the door this
+          tile opens, and the second line splits the 12 into the 8 that govern
+          and the 4 boards and committees, so the two numbers on screen state
+          their relationship instead of contradicting each other. This is the
+          same fix the Districts tile already carries. */}
       <Card
-        label="Bodies"
+        label="Bodies here"
         value={view.bodies}
+        sub={view.bodiesSecondary}
         open={ui.door === "bodies"}
         onOpen={() => dispatch({ type: "door/open", door: "bodies" })}
       />
@@ -121,6 +190,34 @@ export function StatsBar() {
         </p>
       )}
     </div>
+  );
+}
+
+/**
+ * The collapsed form of one counter. Same door, smaller box.
+ *
+ * `data-open` carries the same meaning it carries on the expanded tile — this
+ * door is open — so the two forms never teach the reader two different things
+ * about the same colour.
+ */
+function StatPill({
+  text,
+  open,
+  onOpen,
+}: {
+  text: string;
+  open: boolean;
+  onOpen: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      className="stat-pill"
+      data-open={open ? "" : undefined}
+      onClick={onOpen}
+    >
+      {text}
+    </button>
   );
 }
 

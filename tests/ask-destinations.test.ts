@@ -284,3 +284,55 @@ test("4d: destinations generate nothing — every phrase and sentence is committ
     "destinations.ts must import nothing — every phrase and sentence is committed here",
   );
 });
+
+/* ---------------------------------------- ASK-1, 2026-08-23: tappability --- */
+
+/**
+ * **A DESTINATION IS SOMETHING THE READER CAN TAP, NOT SOMETHING THEY ARE TOLD
+ * TO GO AND FIND.**
+ *
+ * *"When is the next meeting?"* returned the heading "Where to look", the
+ * label "Meetings near you", and a sentence explaining that the map shows the
+ * meetings we have collected — **and nothing to click.** The ask box rendered
+ * its link only when a destination carried an `href`, and three of the four
+ * open IN PLACE and carry none.
+ *
+ * That is the reader-friction rule's own definition of a defect: a step
+ * between a reader and the answer they came for, which is not one of the three
+ * load-bearing exceptions. It is also the copy promising what the router
+ * cannot route, one layer down from the gate rule 4d wrote this module for —
+ * the surface was named and could not be reached.
+ */
+test("ASK-1: every destination can actually be opened", () => {
+  for (const d of DESTINATION_ROUTES) {
+    const reachable = d.href !== null || d.action !== null;
+    assert.ok(
+      reachable,
+      `${d.id} has neither an href nor an in-place action — it is a heading with nothing to tap`,
+    );
+    // Exactly one. Two ways in is two things to keep in step.
+    assert.ok(
+      !(d.href !== null && d.action !== null),
+      `${d.id} carries both an href and an in-place action — one of them will drift`,
+    );
+  }
+});
+
+test("ASK-1: the ask box renders a control for both kinds of destination", async () => {
+  const { readFileSync: read } = await import("node:fs");
+  const { join: j } = await import("node:path");
+  const box = read(j(process.cwd(), "components", "ask", "ask-box.tsx"), "utf8");
+
+  // Both branches present, and both marked so a walk can find them.
+  const marks = box.match(/data-ask-destination-go/g) ?? [];
+  assert.equal(marks.length, 2, "the ask box no longer renders both destination branches");
+
+  // The tap target. The line this replaced was a 12px underlined string, which
+  // is a mouse affordance rendered on a phone.
+  assert.ok(
+    box.includes("min-h-11"),
+    "the destination control lost its 44px tap target",
+  );
+  assert.match(box, /dispatch\(\{ type: "list\/open", open: true \}\)/, "the meetings door is no longer opened");
+  assert.match(box, /dispatch\(\{ type: "door\/open", door: action\.door \}\)/, "the in-place doors are no longer opened");
+});

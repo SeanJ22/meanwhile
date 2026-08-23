@@ -5587,3 +5587,147 @@ main[data-sidebar="closed"] .map-top-row {
 .trailing-space-trimmed {
   margin-inline-end: -0.15em;
 }
+
+/* ---------------------------------------------------------------------------
+   LAY-1 (item 4, 2026-08-23) — THE LEFT COLUMN IS NESTED, NOT STACKED OPEN.
+
+   The author's instruction, in his words: everything lives in the left column,
+   nested rather than stacked open; the counts card sets the column width, the
+   who-governs card sits directly beneath it, and clicking one makes it take
+   over the column while the other collapses to pills. One expanded at a time.
+
+   What was there before: the counts card in the rail and the who-governs card
+   floating over the map in `.map-bottom-stack`, so a desktop reader had two
+   competing panels and the map between them. The 8/22 capture `22-15-32` is
+   that layout — the card overlapping the pins it is describing.
+
+   The floating placement is UNCHANGED below the rail's column breakpoint.
+   There the rail is a full-width drawer, and a who-governs card that had to be
+   opened out of a drawer would be the buried entry point the friction rule
+   calls a defect. `wghInColumn` in `components/map/map-entry.tsx` is the one
+   switch, and it reads the existing `railIsAColumn` rather than a second
+   breakpoint that could drift from it.
+   --------------------------------------------------------------------------- */
+
+.sidebar-wgh {
+  padding: 0 14px 14px;
+}
+
+/* The card loses its floating chrome in the column: it is no longer a thing
+   ON something, it IS the column's content. The `.panel` shadow and the
+   viewport-height bound both belong to the map placement. */
+.sidebar-wgh > .coverage-notice {
+  box-shadow: none;
+  max-height: none;
+  width: 100%;
+}
+
+.sidebar-wgh-pill {
+  padding: 0 22px 14px;
+}
+
+/* The collapsed counts card. Same four doors, one row, and every pill still
+   carries what its number counts — a bare number in a pill is the "179
+   DISTRICTS" defect in a smaller box. */
+.stats-collapsed {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 22px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.stats-collapsed-expand {
+  align-self: flex-start;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.stats-collapsed-expand:hover {
+  color: var(--text);
+}
+
+.stats-collapsed-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stat-pill {
+  font-size: 11px;
+  line-height: 1.2;
+  padding: 5px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: var(--surface);
+  color: var(--text-dim);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.stat-pill:hover {
+  color: var(--text);
+}
+
+/* Same meaning as on the expanded tile: this door is OPEN. Two forms of one
+   control may not teach the reader two different things about one colour. */
+.stat-pill[data-open] {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 10%, var(--surface));
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------------------
+   LAY-2 (item 4, 2026-08-23) — THE FILTER PANEL WAS OFF-CENTRE, AND THIS IS
+   WHY.
+
+   The author's words: *the filter panel is off-center and crammed — coverage
+   block, body-type block, meeting status, date range, district types and the
+   coverage-quality toggle all competing.*
+
+   The off-centre half was not a judgement call, it was arithmetic.
+   `.filters-area` carries `padding: 14px 22px 20px`, and the two controls that
+   moved inside it in g4 item 14 — the radius slider and the districts toggle —
+   are `.prox-control`, which carries its own `padding: 10px 22px` from the days
+   when it sat loose in the rail. Nested, they inset 44px while every group
+   label beside them inset 22px, and the panel read as two columns that did not
+   line up. Zeroing the horizontal padding for the nested case aligns every
+   control in the panel to one left edge.
+
+   Their bottom rule goes with it: a full-width divider drawn 22px inside a
+   panel that is already ruled at its own edge is a second grid asserting
+   itself over the first.
+
+   The crammed half is `openWhenNarrowed` in `filters-area.tsx` — every group
+   collapses to a header carrying its own state, and a group the reader has
+   narrowed opens itself so a set filter can never hide behind a closed header.
+   --------------------------------------------------------------------------- */
+
+.filters-area .prox-control {
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 0;
+}
+
+/* The gap between groups was 16px against a 12px header margin, so the panel's
+   vertical rhythm changed halfway down it. One step, everywhere. */
+.filters-area .filter-group {
+  margin-bottom: 12px;
+}
+
+/* A closed group is a single row: its label, its state, and nothing else. The
+   badge is the answer, so it sits at the end of the row rather than crowding
+   the label. */
+.filter-group-toggle {
+  width: 100%;
+}
+
+.filter-group-toggle .filters-count {
+  margin-left: auto;
+}

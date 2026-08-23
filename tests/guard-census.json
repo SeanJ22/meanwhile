@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 193,
-    "named": 1782,
+    "named": 1786,
     "dynamic": 6
   },
   "files": {
@@ -2428,6 +2428,10 @@
     },
     "tests/tracker-stores.test.ts": {
       "names": [
+        "NH64: a SESSION-authored resolution is still refused on a Needs Sean row",
+        "NH64: a resolution requires evidence, and a thin file is refused",
+        "NH64: the resolve mode refuses a row the AUTHOR opened, in any section",
+        "NH64: tracker resolve exists, and refuses without a session label",
         "RULING 29: three priority levels on every open row, and no fourth",
         "RULING 30: a section over the five-P1 cap is REPORTED as stopped, never trimmed",
         "RULING 31: Needs Sean is first, and the order comes from the list not from a number",

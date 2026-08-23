@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync, readdirSync, statSync } from "node:fs";
+import { readFile } from "node:fs/promises";
 import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
@@ -1142,5 +1143,79 @@ test("RULING 37's first half has a path, and it does not reach Needs Sean", () =
     script,
     /RULING 79's --ruling=/,
     "and it says which door Needs Sean has instead",
+  );
+});
+
+/* ========================================================================== */
+/* NH64 — a session may resolve its OWN row, and still not one of his         */
+/* ========================================================================== */
+
+/**
+ * The hole `NH64` recorded, in the words of the row: *"The only way to set
+ * Resolution today is to write it into the workbook, and the move script then
+ * records `resolutionAuthor` as `sean` — which would let a session close a
+ * NEEDS SEAN row by the same keystroke, the exact thing RULING 37 and this
+ * file exist to prevent. So the session did NOT do it… Until it lands, every
+ * session's finished rows accumulate in the working store with their evidence
+ * in the Session record and nothing marking them done, which is the
+ * queue-that-empties failing to empty."*
+ *
+ * `pnpm tracker:resolve` is the write side. These assert that adding it did
+ * not open the door it was carefully built beside.
+ */
+
+test("NH64: tracker resolve exists, and refuses without a session label", async () => {
+  const src = await readFile(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(src, /function modeResolve\(/, "the resolve mode is missing");
+  assert.match(src, /MODE === "resolve"/, "the resolve mode is not dispatched");
+  assert.match(
+    src,
+    /resolve refuses without --session=<label>/,
+    "an unlabelled close is indistinguishable from his and must be refused",
+  );
+});
+
+test("NH64: a SESSION-authored resolution is still refused on a Needs Sean row", () => {
+  /*
+   * The gate itself, exercised through the same function the script calls.
+   * `actor: "session"` is what `tracker:resolve` produces, and RULING 37 has
+   * to hold against it exactly as it holds against everything else.
+   */
+  const sections = [
+    { slug: "needs-sean", title: "Needs Sean", what: "his judgement", onlySeanResolves: true },
+    { slug: "product-ui", title: "Product / UI", what: "reader surfaces" },
+  ];
+  const working = [
+    { ID: "NS99", Section: "needs-sean", Resolution: "Resolved", "Opened by": "a session" },
+    { ID: "PU99", Section: "product-ui", Resolution: "Resolved", "Opened by": "a session" },
+  ];
+  const { moves, refusals } = planMoves({ working, sections, actor: "session" });
+  assert.deepEqual(
+    moves.map((m) => m.ID),
+    ["PU99"],
+    "a session may move its own resolved row and no Needs Sean row",
+  );
+  assert.equal(refusals.length, 1);
+  assert.match(refusals[0], /RULING 37 — NS99/);
+});
+
+test("NH64: the resolve mode refuses a row the AUTHOR opened, in any section", async () => {
+  // RULING 41. He is describing what he saw; whether it is finished is his
+  // judgement, wherever the row happens to sit.
+  const src = await readFile(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(
+    src,
+    /RULING 41 — \$\{id\} was opened by \$\{SEAN_AUTHOR\}/,
+    "resolve does not refuse a row Sean wrote",
+  );
+});
+
+test("NH64: a resolution requires evidence, and a thin file is refused", async () => {
+  const src = await readFile(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(src, /--evidence/, "the evidence flag is missing");
+  assert.match(
+    src,
+    /an agent grading its own homework/,
+    "a resolution with no evidence behind it must be refused, not recorded",
   );
 });

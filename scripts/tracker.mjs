@@ -1306,6 +1306,161 @@ function modeViews(working, resolved, sections) {
   }
 }
 
+/**
+ * `tracker resolve <ID> --session=<label> [--conditional] --evidence <file>`
+ * — **a session marks its OWN finished work resolved.** (`NH64`, owed since
+ * 2026-08-22; built 2026-08-23.)
+ *
+ * ## The hole this closes, in the words of the row that recorded it
+ *
+ * *"The only way to set Resolution today is to write it into the workbook, and
+ * the move script then records `resolutionAuthor` as `sean` — which would let a
+ * session close a NEEDS SEAN row by the same keystroke, the exact thing RULING
+ * 37 and `tests/tracker-stores.test.ts` exist to prevent. So the session did
+ * NOT do it… Until it lands, every session's finished rows accumulate in the
+ * working store with their evidence in the Session record and nothing marking
+ * them done, which is the queue-that-empties failing to empty."*
+ *
+ * That is exactly right, and it is why this writes the resolution with the
+ * author stamped as the SESSION rather than as him.
+ *
+ * ## The three authors, and why a third one was needed
+ *
+ * `planMoves` already knew about two — `"sean"` for a resolution read out of
+ * his workbook, and `"ruling"` for RULING 79's close-by-ruling. What it had no
+ * write path for was `"session"`, the default it has always been able to
+ * REFUSE and never been given. So the refusal message in `tracker-core.mjs`
+ * already read as though this distinction existed; only the write side was
+ * missing.
+ *
+ * The gate is unchanged and is not weakened by this: `planMoves` refuses a
+ * session-authored resolution on any section marked `onlySeanResolves`, so
+ * running this against a Needs Sean row fails with RULING 37 named. **A session
+ * still cannot close one of his rows, and now it can close its own.**
+ *
+ * ## Evidence is required, not encouraged
+ *
+ * `CLAUDE.md`: *nothing is resolved without evidence — the branch name, and
+ * which of `test` / `lint` / `build` passed.* A commit SHA cannot be used; it
+ * does not exist inside the commit that would name it. So the evidence file is
+ * mandatory, it is appended to the Session record where a reader will find it
+ * beside the work, and a run with nothing in it is refused rather than
+ * recorded.
+ */
+function modeResolve(working, resolved, sections) {
+  const id = (process.argv[3] ?? "").trim();
+  const conditional = process.argv.includes("--conditional");
+  const evidenceAt = process.argv.indexOf("--evidence");
+  const evidencePath = evidenceAt === -1 ? null : process.argv[evidenceAt + 1];
+
+  if (!id || !evidencePath || !existsSync(evidencePath)) {
+    console.error(
+      "usage: node scripts/tracker.mjs resolve <ID> --session=<label> " +
+        "--evidence <file> [--conditional]\n" +
+        "\n" +
+        "  The evidence file is REQUIRED. CLAUDE.md: nothing is resolved without\n" +
+        "  evidence — the branch name, and which of test / lint / build passed.",
+    );
+    process.exit(2);
+  }
+  if (!SESSION_LABEL) {
+    console.error(
+      "resolve refuses without --session=<label>. The label is what stamps the\n" +
+        "row's closer as a SESSION rather than as the author, and an unlabelled\n" +
+        "close is indistinguishable from his.",
+    );
+    process.exit(2);
+  }
+
+  const evidence = readFileSync(evidencePath, "utf8").trim().replace(/\s+/g, " ");
+  if (evidence.length < 20) {
+    console.error(
+      `the evidence file holds ${evidence.length} character(s). A resolution with no\n` +
+        "evidence behind it is an agent grading its own homework, which is the one\n" +
+        "thing this tracker exists to refuse.",
+    );
+    process.exit(2);
+  }
+
+  const hits = working.filter((r) => (r.ID ?? "").trim() === id);
+  if (hits.length === 0) {
+    const already = resolved.some((r) => (r.ID ?? "").trim() === id);
+    console.error(
+      already
+        ? `${id} is already in the resolved store.`
+        : `${id} is not in the working store.`,
+    );
+    process.exit(1);
+  }
+  if (hits.length > 1) {
+    console.error(`${id} appears ${hits.length} times — a duplicate id breaks every lookup.`);
+    process.exit(1);
+  }
+
+  const row = hits[0];
+  const section = (row.Section ?? "").trim();
+
+  /*
+   * **RULING 37, refused HERE as well as in `planMoves`.**
+   *
+   * `planMoves` would catch it a moment later, and catching it twice is
+   * deliberate: this refusal happens BEFORE anything is written, so the run
+   * ends with the stores untouched and a message naming the rule, rather than
+   * with a resolution written into a row that then cannot be moved.
+   */
+  const onlySean = new Set(sections.filter((s) => s.onlySeanResolves).map((s) => s.slug));
+  if (onlySean.has(section)) {
+    console.error(
+      `RULING 37 — ${id} is in "${section}" and only Sean closes a row there.\n` +
+        "A session may OPEN one and may WORK it; it may never mark it resolved,\n" +
+        "however finished it looks. Where a dated ruling in docs/rulings.md\n" +
+        `demonstrably answers it, RULING 79 is the route: pnpm tracker:move --ruling ${id}=<number>.`,
+    );
+    process.exit(1);
+  }
+
+  /*
+   * RULING 41 — a session may not close a row SEAN wrote, either. He is
+   * describing what he saw; deciding it is finished is his call, in whatever
+   * section it sits.
+   */
+  if (isSeanAuthored(row)) {
+    console.error(
+      `RULING 41 — ${id} was opened by ${SEAN_AUTHOR}. A session may work his row and\n` +
+        "may set a priority on it; whether it is finished is his judgement.",
+    );
+    process.exit(1);
+  }
+
+  const already = (row.Resolution ?? "").trim();
+  if (already) {
+    console.error(`${id} already carries the resolution "${already}" — nothing to write.`);
+    process.exit(1);
+  }
+
+  row.Resolution = conditional ? "Conditionally resolved" : "Resolved";
+  row["Resolved on"] = STAMP;
+  row["Closed by"] = SESSION_LABEL;
+  const before = (row["Session record"] ?? "").trim();
+  const stamped = `${STAMP} (${SESSION_LABEL}). RESOLVED by the session. ${evidence}`;
+  row["Session record"] = before ? `${before} ${stamped}` : stamped;
+
+  console.log(`\ntracker resolve — ${STAMP}\n`);
+  console.log(`  row                    ${id} · ${section} · ${row.Title}`);
+  console.log(`  resolution             ${row.Resolution}`);
+  console.log(`  closed by              ${SESSION_LABEL} (a SESSION, never the author)`);
+  console.log(`  evidence               ${evidence.length} chars appended to the Session record`);
+
+  writeFileSync(join(ROOT, WORKING_CSV), writeStore(working), "utf8");
+  writeFileSync(join(ROOT, RESOLVED_CSV), writeStore(resolved), "utf8");
+  console.log(`\n  written  ${WORKING_CSV}\n  written  ${RESOLVED_CSV}`);
+  console.log(
+    "\n  The row is marked and is still in the working store. Run\n" +
+      "  `corepack pnpm tracker:move --session=<label>` to move it across.",
+  );
+  return { working, resolved };
+}
+
 /* ------------------------------------------------------------------ main --- */
 
 const sections = readSections();
@@ -1324,10 +1479,13 @@ if (MODE === "open") {
 } else if (MODE === "amend") {
   ({ working, resolved } = modeAmend(working, resolved));
   modeViews(working, resolved, sections);
+} else if (MODE === "resolve") {
+  ({ working, resolved } = modeResolve(working, resolved, sections));
+  modeViews(working, resolved, sections);
 } else if (MODE === "add") {
   ({ working, resolved } = modeAdd(working, resolved, sections));
   modeViews(working, resolved, sections);
 } else {
-  console.error(`unknown mode "${MODE}" — expected open, views, move, add or note`);
+  console.error(`unknown mode "${MODE}" — expected open, views, move, resolve, add, amend or note`);
   process.exit(2);
 }

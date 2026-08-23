@@ -1345,5 +1345,32 @@
       "RO02",
       "NS09"
     ]
+  },
+  {
+    "session": "hunt6-hardening-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH78"
+    ]
+  },
+  {
+    "session": "NJ Hunt 5",
+    "opened": "2026-08-23",
+    "ids": [
+      "VF06",
+      "RO03"
+    ]
+  },
+  {
+    "session": "hunt6-hardening-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH79",
+      "NH80",
+      "NH81",
+      "NH82",
+      "NH83",
+      "NH84"
+    ]
   }
 ]

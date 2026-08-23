@@ -1240,6 +1240,201 @@ so about itself.**
 than have `docs/rulings.md` renumber a ruling of his. He claimed them here. C
 through H continue from 93, the highest then in use.
 
+## HUNT 6 HARDENING — SEVEN RULINGS OF 2026-08-23
+
+(Adopted 2026-08-23, the author's Hunt 6 hardening brief. Seven rulings, **100
+through 106**, held in full here rather than as pointers. `docs/rulings.md`
+carries each with the same text in plain language, because a ruling the author
+cannot read is a ruling that does not bind him.)
+
+### RULING 100 — A PARTIAL ANSWER THAT ADDS UP IS STILL A WRONG ANSWER
+
+(Adopted 2026-08-23, Hunt 6 hardening item 3. The missing half of the
+zero-row-extraction rule above, which catches a reader that came back with
+NOTHING and cannot see one that came back with SOME.)
+
+**Where a source states a count, extraction that yields fewer FAILS. Where a
+source states no count, extraction records that it could not assert one — a
+distinct, named, reportable state, never a silent pass.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* A
+council page says *nine members*. The reader came back with five. Every
+instrument in this repo said that was healthy, because every instrument was
+asking *did anything come back* — and five is not nothing. **A total that
+reconciles is not a total that is correct.**
+
+Three instances in one session, and only the third was visible before it:
+
+- A stray `<br id="isPasted">` ended Rockaway Township's roster sentence early.
+  **Four of nine council members vanished; the parse reported five rows and
+  exited clean.**
+- A filter requiring a party letter, a term year or a seat deleted the two Mount
+  Olive members the article says least about — the two least-documented people
+  on the body, which is the equal-effort failure pointed the other way.
+- Pequannock's sentence used the past-tense copula `was composed of`. **Five
+  sitting members read as an empty body.**
+
+The second state is the load-bearing half. "We read four and the page never said
+how many there should be" is a far weaker claim than "we read four and the page
+says four", and a report running the two together tells a reader it checked
+something it did not.
+
+The machinery is `lib/extract/count-assertion.ts`; `ExtractResult` gains the
+`PARTIAL` outcome and a REQUIRED `count` field, so a new layer cannot be written
+without answering the question and "did not consider" is not expressible.
+Guarded in `tests/count-assertion.test.ts`.
+
+### RULING 101 — OUR OWN IDENTIFIER NEVER LEAVES OUR OWN ORIGIN
+
+(Adopted 2026-08-23, Hunt 6 hardening item 4. It finishes `VF02`, where one of
+two findings was fixed and the other was written down and left.)
+
+**Synthetic-run identification travels to our origin and nowhere else, enforced
+in the harness rather than remembered.**
+
+Two findings, one line of code, and only one was closed. **MapTiler's CORS
+preflight refuses `x-wtp-synthetic-run`, so the basemap failed in every capture
+and every walk this repo has ever taken** — which is why NJ Hunt 5's photographs
+showed *Basemap unavailable* while its 371 checks were green. Both were honest.
+They were looking at different pages, because the instrument was breaking the
+thing it was measuring.
+
+The second was recorded and never enforced: **the run identifier was crossing
+our origin to every third-party host the page touched.** Nothing sensitive is in
+it — it names a walk, not a person — but a header identifying our infrastructure
+arriving at hosts we do not control is the wrong shape for a product whose
+central claim is that its stores share no joinable column.
+
+It is `lib/ops/origin-confinement.ts` now rather than four lines inside a
+harness, which is the difference between enforced and remembered: nothing failed
+if they were deleted and nothing could test them without launching a browser.
+`tests/origin-confinement.test.ts` walks it across every third-party host these
+pages reach, BY NAME, so the guard has a stated denominator rather than one
+example. Failing safe means stripping, never keeping.
+
+### RULING 102 — FIXING A GENERATOR IS NOT FINISHED UNTIL ITS OUTPUT IS REGENERATED AND DIFFED
+
+(Adopted 2026-08-23, Hunt 6 hardening item 5. **Amends RULING 92** by giving it
+the completion condition it never had.)
+
+**Each generator's own source is digested and the digest committed beside its
+artifact. A generator whose digest has moved FAILS THE BUILD until its artifact
+is regenerated and the digest re-recorded, and the count changed is reported.**
+
+`data/hunt/nj-morris-municipal-sites.json` pointed **five municipalities at the
+wrong government's website** — `morris_township` at Morris Plains',
+`chatham_township` at Chatham Borough's — **with its generator already fixed**.
+Somebody did the RULING 92 thing, correctly, and stopped. Every downstream hunt
+read the stale output as current and nothing anywhere went red, because "fix the
+generator" was satisfied the moment the generator was fixed.
+
+**The digest is over the GENERATOR, not the artifact, and that is the whole
+design.** An artifact hash tells you the artifact changed; it cannot tell you the
+artifact SHOULD have changed — which is the entire question. A network
+generator's output legitimately moves when a government moves its website. Its
+SOURCE moves only when somebody edits it, and that is exactly the event after
+which a re-run is owed.
+
+`pnpm regen` reports, `pnpm regen --write` records, and a git sweep finds the
+ones already in the tree by comparing each generator's last commit against its
+artifact's. Guarded in `tests/generated-artifacts.test.ts`.
+
+### RULING 103 — A CLASS SWEEP COVERS DUPLICATED IMPLEMENTATIONS, NOT ONLY NAMED INSTANCES
+
+(Adopted 2026-08-23, Hunt 6 hardening item 6. **Amends the named-instance rule
+above** by naming the blind spot in its own instruction.)
+
+**The sweep predicate is BOTH: every surface showing the named symptom, and
+every duplicate implementation of the code path.**
+
+Three separate copies of an initials function rendered **Thomas J. Haynes III**
+as **"TI"** — each took the first letter of the first token and the first letter
+of the LAST, and the last token was the generational suffix. Fixing the copy the
+reader complained about left two copies of the same defect standing.
+
+Grepping the symptom cannot find them: they are not the same text and they do
+not use the same variable names. So the sweep compares the SHAPE of the code
+with identifiers set aside, which is what makes a renamed copy collide.
+
+**The gap was in the existing rule's own wording.** *Fix at the SHARED code
+path* assumes there is one.
+
+*What the instrument taught about itself.* Its first version read 241
+declarations across 806 files and reported one duplicate group — a sweep
+reporting nothing found without having looked, which is the failure this repo
+names most often. It reads 2,114 now. `pnpm dupes` is the tool,
+`tests/duplicate-implementations.json` is the baseline every entry of which
+carries a disposition and a REASON, and the baseline only shrinks.
+
+### RULING 104 — AN ARTIFACT THE AUTHOR PLACES IN THE REPO IS AN INPUT THE SESSION MUST REACH
+
+(Adopted 2026-08-23, Hunt 6 hardening item 15. **Extends RULING 94 to visual
+sessions explicitly**, which were outside its stated scope.)
+
+**Unreachable is a defect to report, never a permitted outcome.**
+
+The 8/22 visual brief pointed at a Google Drive folder. A session has a shell
+and a repo and no Google credentials: the input was unreachable BY
+CONSTRUCTION. The brief then said *if the folder is unreachable, proceed and
+report that — it is not a blocker*, which is a pre-authorized exit, and the
+session took it and honestly reported that it had not attempted the folder.
+
+Both halves were the brief's fault. The cost was specific: `LBL-2` came back
+*"0 found, could not reproduce, did not guess"* while the image showing it sat
+in a folder the session never opened. **Refusing to guess at a fix was correct.
+Stopping with unread evidence was not.**
+
+RULING 94 already says a non-attempt before recording an obstacle is void. It
+was written for hunts. It binds visual sessions too. The captures live in
+`docs/feedback/<date>/`, they are committed, and `tests/asset-store.test.ts`
+names the exemption with its reason so a size guard cannot push them back out
+to somewhere a session cannot reach.
+
+### RULING 105 — RENDERING IS REPORTED AS A THREE-WAY SPLIT
+
+(Adopted 2026-08-23, Hunt 6 hardening item 15. **Extends the two-numbers rule
+above** from a pair to a triple.)
+
+**Never a bare count. Three numbers, each with its denominator: what is
+RENDERING, what is OUT OF SCOPE with the reason, and what is IN SCOPE AND STILL
+DARK.**
+
+*"174 bodies render"* sounds complete and says nothing about the ones that do
+not. **The middle number is what keeps the report honest**, because without it
+there is no way to tell a body this product decided not to cover from a body it
+failed to reach — and those need completely different responses. One is a
+decision; the other is work.
+
+### RULING 106 — NO GENERATED DOCUMENT CARRIES A SIZE CAP
+
+(Adopted 2026-08-23, Hunt 6 hardening item 16, `NS09` — the author ruled C and
+extended it: there are no caps anywhere. **Supersedes the 40 KB cap** set
+2026-08-17 and the 20 KB one before it.)
+
+**A file this project generates for itself is as long as it needs to be.
+Nothing trims it to fit. Where a generated file grows, the response is to remove
+duplication in the SOURCE, never to clip the output.**
+
+A cap forces silent trimming, and silent trimming is a partial that reconciles
+and reports success — **RULING 100's failure, one floor up.** `context.md` was
+capped at 20 KB and dropped its entire tracker-change section; the cap was
+raised to 40 KB; by 2026-08-23 the same cascade was dropping the same section
+again and walking P0 notes from 130 characters down to 90. Raising a limit is
+treating a symptom, and the third time it happens the limit is the problem.
+
+Two caps found and removed: `context.md`'s `CAP_BYTES` (40 KB, now `Infinity`,
+and the shrink cascade deleted rather than loosened), and `docs/log.md`'s
+twelve-row clip on its finished and still-open lists — the same trim wearing a
+polite face, which grew the file by 25 KB when it came out.
+
+**What replaces a cap.** Uncapped, a generated orientation file can creep toward
+reproducing this one and leave two authorities that disagree. **Every section
+states where it came from, and any block claimed VERBATIM is tested against its
+source so divergence fails the build.**
+`tests/context-pinned-conduct.test.ts` holds both, and its provenance sweep
+immediately found a real gap: the pinned conduct block named its source only at
+the END, after the whole thing, rather than where a reader arrives.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

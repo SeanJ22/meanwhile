@@ -104,9 +104,9 @@ deeper as the country gets stranger.
 
 <!-- BEGIN GENERATED ROUTES — written by `corepack pnpm manifest:doc`, never by hand -->
 
-## The routes — manifest v5
+## The routes — manifest v6
 
-**53 routes named**, across 47 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
+**56 routes named**, across 50 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
 
 **Routes per field type — this is the bar for `VERIFIED_ABSENT`:**
 
@@ -114,9 +114,9 @@ deeper as the country gets stranger.
 | --- | ---: |
 | Photo | 8 |
 | In their own words | 15 |
-| Contact | 50 |
+| Contact | 53 |
 | Campaign site | 21 |
-| Specific verified page | 12 |
+| Specific verified page | 14 |
 
 > This manifest is incomplete and always will be. Reaching the end of it is not proof that a fact does not exist — it is proof that these named routes returned nothing on this date. We do not know what we do not know; there are always more ways.
 
@@ -153,7 +153,7 @@ deeper as the country gets stranger.
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 | `press-outlet-map` | The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine | Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name | Coverage of a named candidate from a publisher that actually covers this state's politics | 2 and 7 | the state's political press |
 
-### Contact — 50 routes
+### Contact — 53 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -207,6 +207,9 @@ deeper as the country gets stranger.
 | `govinfo-cdir` | govinfo — the federal document collections, including the Congressional Directory | `api.govinfo.gov/collections` and the `CDIR` package, fronted by the api.data.gov credential | Member offices, phones and staff for the federal delegation, as the government publishes them | 2 | the Government Publishing Office |
 | `census-acs-api` | The Census ACS API — the demographic layer behind a zip | `api.census.gov/data/{year}/acs/acs5`, authenticated with the Census credential | Population, median household income and median home value for a ZCTA | 2 | the Census Bureau |
 | `lda-filings` | The Senate Lobbying Disclosure Act database | `lda.senate.gov/api/v1/filings/`, with the LDA credential | Federal lobbying registrants, their clients, and the offices they lobby. Recorded here because a credential with no route is a credential nobody decides about. | 2 | the United States Senate |
+| `tier-directory-federal` | USA.gov's directories of the tier below it — every state's government, election office, governor and local-government directory | `pnpm tier:directory`. `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}`. Plain GET, no key. | The state's own official entry points, named by the federal government. On 2026-08-22: 227 entities across seven routes, including the URL of New Jersey's own directory of all 564 municipalities. | 2 | USAGov (federal) |
+| `tier-directory-state-localgov` | A state's own directory of its counties and municipalities, with each one's official website | `pnpm tier:directory --route <state>-localgov`. New Jersey: `nj.gov/nj/gov/county/localgov.shtml`. Reached from the federal route above rather than searched for. | Every county and municipality in the state with its official site. New Jersey returned 624 entities — 569 distinct general-purpose units — including the nine Morris municipalities the county's own page omitted. | 2 | the state government |
+| `usmayors-directory` | The US Conference of Mayors' directory of member cities and their mayors | `usmayors.org`, plain GET. **RECORDED, DELIBERATELY NOT WALKED AS A SOURCE OF RECORD.** | Mayor names for member cities — as a DISCOVERY SURFACE only. It is a nonprofit's compilation, not a government publication, so RULING 70's Ballotpedia question governs it rather than public-domain status. Nothing from it may be cited to a reader; it names who to go and confirm against the city's own record. | 2 | US Conference of Mayors (nonprofit) |
 
 ### Campaign site — 21 routes
 
@@ -234,7 +237,7 @@ deeper as the country gets stranger.
 | `wikipedia-election` | The Wikipedia article for the state's election in this cycle | The same API read, against `<year> <state> <office> election`, plus the per-district sub-articles it links | Declared candidates for federal and state legislative office, with their party, and the External links block that is often the only place a small campaign's own domain is written down | 2 | the Wikimedia Foundation |
 | `press-outlet-map` | The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine | Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name | Coverage of a named candidate from a publisher that actually covers this state's politics | 2 and 7 | the state's political press |
 
-### Specific verified page — 12 routes
+### Specific verified page — 14 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -250,6 +253,8 @@ deeper as the country gets stranger.
 | `wikipedia-government-graph` | The government GRAPH, crawled — not a list of named articles but every link that resolves to a governmental entity touching this zip, followed again from each | Seed from the municipality articles for the zip, classify each outbound link by its Wikipedia CATEGORIES, expand the governmental in-scope ones, and keep going; `pnpm wiki:graph --zip <zip> --state <state>` | Bodies no list would have named — executive departments, agencies, boards, commissions and courts — each with its official site, its structure, its named officials, and the meeting or hearing schedule that makes it a reader surface | 2 | the Wikimedia Foundation |
 | `congress-api` | The Congress.gov API — sitting members of the federal delegation | `/v3/member/congress/{congress}/{state}?currentMember=true`, authenticated with the Congress.gov credential | Every sitting member for a state in one call, each with the chamber's own portrait URL and attribution and a specific verified page on congress.gov | 2 | the Library of Congress |
 | `govinfo-cdir` | govinfo — the federal document collections, including the Congressional Directory | `api.govinfo.gov/collections` and the `CDIR` package, fronted by the api.data.gov credential | Member offices, phones and staff for the federal delegation, as the government publishes them | 2 | the Government Publishing Office |
+| `tier-directory-federal` | USA.gov's directories of the tier below it — every state's government, election office, governor and local-government directory | `pnpm tier:directory`. `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}`. Plain GET, no key. | The state's own official entry points, named by the federal government. On 2026-08-22: 227 entities across seven routes, including the URL of New Jersey's own directory of all 564 municipalities. | 2 | USAGov (federal) |
+| `tier-directory-state-localgov` | A state's own directory of its counties and municipalities, with each one's official website | `pnpm tier:directory --route <state>-localgov`. New Jersey: `nj.gov/nj/gov/county/localgov.shtml`. Reached from the federal route above rather than searched for. | Every county and municipality in the state with its official site. New Jersey returned 624 entities — 569 distinct general-purpose units — including the nine Morris municipalities the county's own page omitted. | 2 | the state government |
 
 ### Whether each route travels — RULING 60
 
@@ -310,6 +315,9 @@ A branch proven in one place is proven for that shape, not for everywhere. The r
 | `govinfo-cdir` | Federal only, every state. |
 | `census-acs-api` | Every zip in the country — WHEN the credential works. Walked 2026-08-22 and the host refused the held key with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too. Recorded as a dated wall on the CREDENTIAL, never as a property of the source. |
 | `lda-filings` | Federal only, and it closes NOTHING at a county or municipal ballot — stated plainly rather than softened, because the register's job is to let the author decide whether a credential earns its place. |
+| `tier-directory-federal` | NATIONAL BY CONSTRUCTION — this is one federal publication covering all fifty states, which is the whole point of RULING 93. What it points AT differs per state, and that is the next route down. |
+| `tier-directory-state-localgov` | The INSTITUTION is near-universal — a state that does not publish a list of its own municipalities is rare. The URL, the shape and the completeness are per-state and unknown until walked. New Jersey's is one page of `<li><a>`; nothing says the next one is. |
+| `usmayors-directory` | Member cities only — it is a membership organisation, so its universe is self-selected and skews large. A small township is not in it, which is precisely the coverage this product exists to reach. |
 
 ### Sub-branches grown so far
 
@@ -322,8 +330,10 @@ A route that failed somewhere new is never discarded — it grows a limb. Each r
 | `filing-campaign-finance-state` | New Jersey ELEC, 2026-08-22 | `elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated | `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52. |
 | `filing-campaign-finance-state` | New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2, RULING 69) | the Imperva wall above was recorded as though it were the whole of ELEC. It is the whole of ELEC'S WEBSITE, which is a different and much smaller thing, and reading one as the other is how a host becomes a permanent wall in this repo | the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80. |
 | `body-roster-page` | Kearsarge Regional School District, 2026-08-21 | the roster page's visible cells carry no email | read the cell's own href — nine board emails were in mailto: links (rung 4) |
+| `body-roster-page` | Morris County, New Jersey municipalities, 2026-08-22 | nothing failed — this entry records TOOLING built for an existing route, not a new route. `pnpm roster:hunt` walks this branch across an index of sites instead of one body at a time, and `lib/hunt/roster-page.ts` reads the roster off the page | 39 sites walked, 13 returned a roster, 11 of those on a page whose OWN heading names a governing body — the control that matters, because anchor text alone chose Chatham Township's Mayors Wellness Advisory Committee as its governing body. The page carries what the encyclopedia never does: a ward, a term, a direct extension and an email per member. Two defects worth carrying forward: `<br id="isPasted">` is what a WYSIWYG editor emits and a `<br>`-only pattern silently glues names to emails (four of Rockaway's nine members vanished that way), and a page may disagree with itself — Rockaway's council page shows one address over a `mailto:` for a different one. |
 | `campaign-social` | Merrimack County Attorney, 2026-08-21 | a search snippet carried a plausible-looking bio | open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim |
 | `campaign-social` | every Newbury county candidate, 2026-08-21 | facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around | RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated. |
+| `tier-directory-state-localgov` | New Jersey, 2026-08-22 | `nj.gov/nj/gov/county/` — the path USA.gov itself publishes — answers HTTP 200 with a styled 'Page not found' body | the document is at `/nj/gov/county/localgov.shtml`. Found by walking path variants at rungs 2 and 3. This is why every directory route declares a control string: a status check alone reads the dead path as a success. |
 
 ### Retired routes — kept, never deleted
 

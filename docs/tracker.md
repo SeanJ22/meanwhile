@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **213 open**, 337 resolved.
+- **216 open**, 339 resolved.
 - **50 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -265,7 +265,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**20 open · 3 resolved.**
+**24 open · 3 resolved.**
 
 ### P2
 
@@ -274,6 +274,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH66** — 44 of the 90 Morris County contests are Boards of Education, and the municipal-roster branch built this session reaches municipalities only. A school district publishes its board members on its own site exactly as a borough publishes its council, so the same branch should reach them - what is missing is the INDEX step: there is no equivalent of the county's Cities-and-Towns page listing every district's website.
 
 **NH67** — search-index was made mechanically walkable this session and walked all 272 candidates: 148 came back with at least one classified URL and 124 came back with none, because Bing and Yahoo both began refusing after roughly 170 queries. That 124 is a fact about one IP's rate ledger on one afternoon, not about those 124 people, and it may never be read as an absence.
+
+**NH72** — NJ Hunt 6 wired 19 of 39 Morris municipalities' governing bodies. The other 20 are OWED, not absent, and `corepack pnpm nj:wire --dry` names every one with its reason. Three reasons, in order of frequency: (1) the confirmed member count does not reach the seat count the municipality's own form of government declares, so a partial list would state a false composition; (2) the form-of-government line states no seat count at all, so completeness cannot be checked; (3) the county clerk's certified winners do not reach the municipality, so the SEATS' partisanship is unsettled under M62. Every one of these is closed by more hunting, not by loosening the gate. The nearest wins: Boonton (7 of 8 confirmed), Dover (5 of 8), Netcong (4 of 6), Long Hill (4 of 5).
+
+**NH73** — Denville Township's article listed Angela Cote and Christopher Golinski on the council. The Morris County Clerk's certified 2025 winners name Adrienne Zimmermann and Mark Venis in those seats, and the township's own council page confirms Zimmermann and Venis and does not name Cote or Golinski. This is RULING 87 working exactly as written - the encyclopedia named, the primary source proved, and the primary source disagreed. What is OWED is the sweep: how many of the other 38 Morris municipalities carry a stale encyclopedia roster that the certified winners contradict? `data/hunt/nj-morris-certified-winners.json` holds 263 certified winners and the comparison is a script, not a hunt.
 
 **NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
@@ -306,6 +310,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH68** — Robert Strobel is a Board of Education candidate and strobelforschoolboard.com answered HTTP 200 to a plain fetch with no mention of his name anywhere in the HTML. That is the classic JavaScript-rendered page: a false miss at rung 2, not a wall and not an absence. The extractor recorded it EMPTY, which is honest about the fetch and wrong about the candidate.
 
 **NH71** — The branch manifest names 41 routes. This session walked search-index, filing-county, body-roster-page, gov-staff-directory, campaign-site, campaign-social, candidate-platform, local-newspaper, web-archive and domain-search. The rest were not walked and each one's reason is recorded here rather than left as a silence, because a route nobody names is a route the next session rediscovers as new.
+
+**NH74** — The township's own Township Council page shows `hmorrison@rockawaytownship.org` as Howard Morrison's address, and the link behind it targets `hkritz@rockawaytownship.org`. Howard Kritz held the seat before Morrison and appears in the Clerk's certified 2023 winners, so the mailto is a predecessor's mailbox the page never updated. We ship the DISPLAYED address, which is what the body publishes as his, and record the mismatch rather than silently preferring either. Worth telling the township: the link on their own page reaches the wrong person.
+
+**NH76** — `corepack pnpm nj:winners` reads the Morris County Clerk's certified general-election winners: 263 people across three cycles, each with a party, a filed street address and usually an email, certified by the election authority. NJ Hunt 6 wired the PARTY from it for 98 sitting officials and used the email only as a fallback where the body's own page publishes none. What is owed is the rest: the filed addresses are unused, and the same document class exists for every New Jersey county and for the school-board and fire-district races the municipal walk does not reach.
 
 **NJ04** — RULING 65's footer-address branch wired seven Sutton bodies on 2026-08-22, and three were deliberately left out because each has better evidence about itself than the town's footer has about it. Ad Hoc Speed Sign Committee: its own feed titles read 'Ad Hoc Speed Sign Committee - Zoom Mtg', so it meets on Zoom and pinning it at 93 Main Street would send a reader to an empty building; the playbook already records that a Zoom URL in LOCATION is a fact and not a building, and this is the same rule read from a title. Warner River Local Advisory Committee: its titles read 'WRLAC Mtg @ Pillsbury Library', a venue this session could not resolve to a coordinate, and it is a multi-town river committee so Sutton's town hall is a poor guess; the work is to resolve Pillsbury Library. Sutton Free Library Board of Trustees: its page states its own meeting arrangement, so it is a STATES A VENUE case. Each has four future sittings, two, and an unknown respectively.
 
@@ -349,15 +357,13 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**4 open · 34 resolved.**
+**3 open · 35 resolved.**
 
 ### P1
 
 **F01** — Sean's full walk of the product on 2026-08-18, forty-odd findings across cards, meeting order, votes, the ask box, the ballot and the map. The parent row that keeps the whole batch together; the individual findings became their own rows.
 
 ### P2
-
-**VF02** — Three captures read as images on 2026-08-22 against production deploy 6a8a606851610e0008305901 - the map at 07866, 03255 and 85701 - all show the app's own fallback panel: BASEMAP UNAVAILABLE, Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use MapTiler. WHAT WAS CHECKED, so the next session does not re-check it: the key IS baked into the production client bundle - chunk 38lr8y2ek8t22.js carries api.maptiler.com/maps/${i}/style.json?key= with a real key - and that style endpoint answers HTTP 200 with 62,975 bytes of valid style JSON from this network. So neither the key's presence nor its validity is the cause. WHAT IS NOT KNOWN: whether a real reader sees this. The capture is a headless Chromium run and the fallback may be a race against the tile load rather than a failure, which would make it a capture artifact and not a defect. It is recorded as UNRESOLVED in that direction rather than dismissed, because the district geometry and the pins render either way and the fallback panel is the only thing that distinguishes the two cases. THE CHECK THAT WOULD SETTLE IT: read the network requests to api.maptiler.com from a real browser session on production, and check whether the style request is issued at all, refused, or simply slower than the capture window.
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
 
@@ -369,7 +375,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**66 open · 81 resolved.**
+**67 open · 81 resolved.**
 
 ### P1
 
@@ -404,6 +410,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH29** — Springfield NH went from zero bodies in the registry to eight enumerated and the gap ledger is byte-identical at 22383 bytes before and after. The ledger measures special-district coverage against the Census of Governments, which is right and is not the whole of coverage: RULING 9 says the Census counts GOVERNMENTS and the product renders BODIES, and a New Hampshire town is one government and a dozen or more bodies. So the instrument that is supposed to say how covered a place is cannot see the unit the product actually renders. Six of Kearsarge seven member towns are dark at the body level and nothing measures that. This is a defect in the instrument rather than a gap in coverage, which is why it is a row and not a ledger entry.
 
 **NH46** — One of the three coverageNotes in data/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
+
+**NH75** — Playwright's extraHTTPHeaders applies to EVERY request a context makes, third parties included. MapTiler's CORS preflight does not allow x-wtp-synthetic-run, so the basemap style request was refused in every capture and every walk. That is why NJ Hunt 5's captures showed BASEMAP UNAVAILABLE against a production site serving readers a working map. Fixed at the shared path in scripts/browser.mts. This row is open for the QUESTION IT RAISES rather than the fix: what else has an instrument of ours been breaking while measuring it? The shape - a synthetic marker leaking into a third-party request - is worth sweeping for beyond the browser.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
@@ -611,7 +619,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**8 open · 57 resolved.**
+**7 open · 58 resolved.**
 
 ### P2
 
@@ -628,8 +636,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PD05** — The production walk creates rows under two different run labels and then counts only one of them, so it under-reports how many rows it wrote.
 
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
-
-**RO01** — NJ Hunt 4's close-out reported that three of its captures claimed to show the who-governs surface and actually showed the map, because the shooter minimises the card before capturing. It corrected the caption in docs/state.md. It did not change the string in scripts/shoot-nj-hunt4-0822.mts. NJ Hunt 5 ran the same shooter against production, read all seven captures as images per RULING 2, and found the same three wrong captions - now four, since 85701 was added. The caption is fixed in the tool this time. THE GENERAL POINT, which is why this is a row rather than a footnote: a correction recorded in a document describes what one session believed on one day; a correction written into the instrument changes what every later run produces. Where a session finds a defect in something a tool emits, the fix belongs in the tool, and the document records that it was fixed there. Worth a sweep for other corrections recorded in state.md whose instrument was never touched.
 
 **R54** — A standing mechanism rather than a job: every portrait Sean needs to eyeball collects into one list he can work through, regenerated rather than hand-kept.
 

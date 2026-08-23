@@ -163,6 +163,53 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
       // overwrite: it goes on last.
       extraHTTPHeaders: { ...contextOptions.extraHTTPHeaders, ...headers },
     });
+    /**
+     * **THE MARKER GOES TO OUR ORIGIN AND NOWHERE ELSE.**
+     * (`VF02`, NJ Hunt 6, 2026-08-22.)
+     *
+     * `extraHTTPHeaders` applies to EVERY request the context makes, third
+     * parties included. MapTiler's CORS preflight does not allow
+     * `x-wtp-synthetic-run`, so the style request was refused **and the basemap
+     * failed in every capture and every walk this repo has ever taken**:
+     *
+     * ```
+     * Access to fetch at 'https://api.maptiler.com/maps/.../style.json'
+     * has been blocked by CORS policy: Request header field
+     * x-wtp-synthetic-run is not allowed by Access-Control-Allow-Headers
+     * ```
+     *
+     * That is why NJ Hunt 5's captures showed *Basemap unavailable* on a
+     * production site that was serving readers a working map, and why 371 walk
+     * checks and every DOM assertion disagreed with the photographs. **The
+     * instrument was breaking the thing it was measuring.** A reader never sent
+     * that header and never saw that failure.
+     *
+     * It is also a leak worth naming on its own: our run identifier was being
+     * handed to every third-party host the page touched.
+     *
+     * The marker exists to declare rows written to OUR log, so our origin is
+     * the only place it belongs. Same-origin requests pass through untouched
+     * and keep it; cross-origin requests have it stripped.
+     */
+    await context.route("**/*", async (route) => {
+      const request = route.request();
+      let sameOrigin = true;
+      try {
+        sameOrigin = new URL(request.url()).origin === new URL(request.frame().url()).origin;
+      } catch {
+        // An opaque or about:blank frame. Treat as cross-origin and strip —
+        // failing safe means not leaking, never leaking to be safe.
+        sameOrigin = false;
+      }
+      if (sameOrigin) {
+        await route.continue();
+        return;
+      }
+      const stripped = { ...request.headers() };
+      for (const name of Object.keys(headers)) delete stripped[name.toLowerCase()];
+      await route.continue({ headers: stripped });
+    });
+
     await context.addInitScript(KILL_BEACON);
     /*
      * ITEM 4b (g17): the declaration in the page, so it can ride in the BODY.

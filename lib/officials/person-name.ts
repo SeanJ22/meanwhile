@@ -111,3 +111,31 @@ export const INCOMPLETE_NAME_LINE = "We haven’t recorded this person’s full 
 export function displayPersonName(name: string | null | undefined): string {
   return isIncompletePersonName(name) ? INCOMPLETE_NAME_LINE : (name as string).trim();
 }
+
+/**
+ * **The initials that stand in for a face this product has not found yet.**
+ * (NJ Hunt 6, 2026-08-22 — extracted after the same function was found written
+ * out three separate times, in `person-identity.tsx`, `official-popup.tsx` and
+ * `candidate-card.tsx`, with three different behaviours.)
+ *
+ * A generational suffix is not a surname. **Thomas J. Haynes III rendered as
+ * `TI`** on the Rockaway Borough council, found by reading a capture as an
+ * image. It is a small thing on a named public person's row, which is where
+ * small things matter most: the placeholder is what a reader sees instead of
+ * him, and getting it wrong makes the absence look like a defect about him.
+ *
+ * The third copy had a different bug of its own — it took the first TWO
+ * alphabetic tokens, so `Thomas J. Haynes` rendered `TJ`, initialling a middle
+ * name rather than a surname.
+ */
+const NAME_SUFFIX = /^(?:Jr|Sr|II|III|IV|V|VI|Esq|PhD|MD|DDS)\.?,?$/i;
+
+export function personInitials(name: string): string {
+  const parts = name
+    .split(/\s+/)
+    .filter((w) => /^[A-Za-z]/.test(w));
+  while (parts.length > 1 && NAME_SUFFIX.test(parts[parts.length - 1])) parts.pop();
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? "") : "";
+  return (first + last).toUpperCase();
+}

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 183,
-    "named": 1689,
+    "files": 186,
+    "named": 1706,
     "dynamic": 6
   },
   "files": {
@@ -1081,6 +1081,14 @@
       ],
       "dynamic": 0
     },
+    "tests/generated-artifacts.test.ts": {
+      "names": [
+        "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
+        "RULING 92: a file declaring itself GENERATED is registered here",
+        "RULING 92: every registered generated artifact exists and names its generator"
+      ],
+      "dynamic": 0
+    },
     "tests/generated-doc-dates.test.ts": {
       "names": [
         "0B: no document-writing script derives its day from a UTC slice",
@@ -1671,6 +1679,15 @@
         "RULING 14: the coverage manifest allowlists correctly on this platform",
         "RULING 14: the shared normalizer exists and normalizes both directions",
         "the sweep reaches the source tree it claims to"
+      ],
+      "dynamic": 0
+    },
+    "tests/person-initials.test.ts": {
+      "names": [
+        "a generational suffix is not a surname",
+        "a name that is only a suffix, or empty, does not throw",
+        "the initials are the FIRST and the SURNAME, never the middle name",
+        "the ordinary cases still hold"
       ],
       "dynamic": 0
     },
@@ -2479,6 +2496,21 @@
         "the click grammar: a person opens a small card, a body opens a large one",
         "the stated count and the rendered rows are the same expression, at any size",
         "wired counts are partitioned, never double-counted across the two sets"
+      ],
+      "dynamic": 0
+    },
+    "tests/wikipedia-parser.test.ts": {
+      "names": [
+        "Boonton — a closing parenthesis separates entries when nothing else does",
+        "Mount Olive — a member Wikipedia says nothing else about is still a member",
+        "Pequannock — the past tense is a copula too",
+        "a generational suffix is part of the name, not a separator",
+        "a spelled-out, hyphenated seat count is still a seat count",
+        "a well-punctuated list is never double-split by the parenthesis rule",
+        "looksLikePersonName rejects offices and clauses, accepts real name shapes",
+        "prose is not a roster, however capitalised it is",
+        "the form-of-government line predicts the body, and is read not inferred",
+        "the seat, the party and the term year survive every live shape"
       ],
       "dynamic": 0
     },

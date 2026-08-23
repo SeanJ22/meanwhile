@@ -1212,6 +1212,177 @@ Committed URL lists live in `data/hunt/`: `newbury-bodies.urls`,
 `docs/evidence/nhhunt-*.jsonl` and are read by `tests/body-rosters.test.ts` as
 proof that a published contact was published.
 
+### NJ Hunt 6 — the wiring toolchain, and the routes it walks (2026-08-22)
+
+**`pnpm tier:directory` — RULING 93's instrument.** Walks the directory the
+tier above publishes about the tier below. Each route declares WHO PUBLISHES it,
+WHICH TIER it is about, and a **control string** that must appear in the
+response. Writes `data/hunt/tier-directories.json`.
+*Interface:* `--route <id>`, `--list`.
+*Measured on adoption day:* 8 routes, 8 answering, **851 entities** — of which
+New Jersey's own local-government directory carried **624**, covering all 21
+counties and all 564 municipalities with their official websites.
+**The rung it taught:** `nj.gov/nj/gov/county/` — the URL USA.gov itself
+publishes — answers **HTTP 200 with a styled "Page not found"**. The document is
+at `/nj/gov/county/localgov.shtml`. A status check alone reads the dead path as
+a success, which is why every directory route carries a control string.
+
+**`pnpm muni:sites` — municipality → official site, control-checked.** Merges
+three branches, state directory FIRST: `--state-directory`, `--wiki`,
+`--county`. Every URL is FETCHED and the page must name the municipality and
+must not title itself a different municipal type of the same name.
+*Interface:* `--wiki <file> [--state-directory <file>] [--county <file>] [--out <file>]`.
+*Measured:* 40 of 42 slugs resolved for Morris; 5 refused by the control check
+and kept with their reason.
+**The rungs it taught:**
+- **The identity ladder.** Title and masthead ALONE refuse real municipal sites —
+  Wharton and Chester Township both title themselves `Home`, and
+  Parsippany–Troy Hills titles itself without half its own legal name. Read the
+  title, the `<h1>`, `og:site_name`, then the leading visible text, and record
+  WHICH one matched.
+- **The TYPE claim is read only from the page's own self-description**, never
+  from body text — Wharton, a borough, reported as a township because the word
+  appears in its news copy.
+- **The qualifier is not decoration.** New Jersey has FIVE Washington Townships
+  and the state directory disambiguates them by county. Matching on name and
+  type alone paired Morris County's township with BERGEN County's website.
+- **A type word may never CROSS in a slug variant.** `chatham_borough` may fall
+  back to `chatham`; it must never reach `chatham_township`.
+
+**`pnpm roster:hunt` — read a governing body's roster off the body's OWN page.**
+Tier B. Finds the roster page from the site's own navigation, extracts, and
+records every attempt with its count.
+*Interface:* `--index <file> [--only <slug>]`, or `--url <site> --label <slug>`.
+*Measured:* 39 sites, 14 with a roster, **12 on a page whose OWN HEADING names a
+governing body**, 57 members, 32 with an email, 24 with a phone.
+**The rungs it taught, and every one of them was a silent partial:**
+- **`<br id="isPasted">` is what a WYSIWYG editor emits.** A `<br>`-only pattern
+  skips it, gluing a name to a term and an extension to an email. **Four of
+  Rockaway Township's nine council members vanished that way** and the run
+  reported five rows and no error.
+- **`<style>` bodies are not text.** Joomla's SP Page Builder emits a per-widget
+  `<style>` block INSIDE the content region; a naive tag-strip returns CSS media
+  queries as the page's words, and a name test then finds nothing in them.
+- **The page's OWN HEADING decides which body it is, never the anchor text that
+  led there.** Anchor text alone chose Chatham Township's *Mayors Wellness
+  Advisory Committee* as its governing body, because "Mayor" scores.
+- **Three extraction shapes, and a site usually has exactly one:** a table whose
+  rows carry a contact; repeated blocks carrying a `mailto:`; and **a list of
+  per-member links to contact FORMS** — `Adrienne Zimmermann (Ward 2)` — which
+  is how Denville publishes a council that the first two strategies read as
+  empty.
+- **A page may disagree with itself.** Rockaway Township's council page displays
+  `hmorrison@` over a `mailto:` for `hkritz@` — a predecessor's mailbox. Ship
+  the DISPLAYED address and record the mismatch.
+- **A scoped re-run MERGES.** `--only` wrote a one-site artifact over a
+  thirty-nine-site one, and nothing errored.
+
+**`pnpm nj:winners` — the county clerk's certified election winners.** M62's
+rung, and the strongest single record in the New Jersey hunt.
+*Interface:* `[--url <pdf> --cycle <year>]`; defaults to Morris's three cycles.
+*Measured:* **263 certified winners, 242 with an email, 246 with a filed street
+address, across 34 municipalities.** Party, contact and filed address in one
+born-digital PDF per cycle, certified by the election authority.
+**The rungs it taught:**
+- **Anchor on the PARTY TOKEN, not on layout.** The text layer arrives as one
+  run-on line per page, so a column parser has nothing to hold. The party word
+  appears once per row, between an upper-cased surname and an address.
+- **A municipality name is only a row header when an OFFICE follows it.** Every
+  winner's filed address ends `… Boonton NJ 07005`, so town names appear twice
+  per row. Taking them all filed a COUNTY SHERIFF under Denville.
+- **Use the document's OWN municipality strings.** It writes `Rockaway
+  Township`, not `Rockaway Twp`; an abbreviation list matched 3 of 40.
+
+**`pnpm nj:wire` — move confirmed people to a reader surface.** The step NJ Hunt
+5 named as the next session's first job. Reads the three artifacts above and
+writes `lib/registry/rosters-nj-morris.ts` plus a retrieval ledger.
+*Interface:* `--dry` prints the gate decision per body and writes nothing.
+*Measured:* **19 bodies wired, 126 members rendering, 102 with an email, 98 with
+a party from a certified result.** 20 bodies OWED, each named with its reason.
+
+**`pnpm census:key` — is the Census credential answering?** Serves `NS06`.
+Asks three questions, because one cannot separate a bad key from a bad request:
+the endpoint with the key, without it, and an endpoint needing none.
+**The rung it taught:** the host's failure mode CHANGED between sessions — a
+`302` with `X-DataWebAPI-KeyError: 1` became a **`200` with an HTML error
+page and no such header**. A status check and a header check each now read a
+dead credential as healthy. **Only asking whether the response is the DATA
+requested survives both.**
+
+**`pnpm shoot:officials` — capture the people on a body, as a reader sees them.**
+A roster renders only once the reader OPENS the body, so `pnpm shoot` cannot
+photograph one.
+*Interface:* `<name> --zip <zip> --body "<row text>" [--exact] [--open "<section>"]`.
+**The rungs it taught:**
+- **`wtp.approximate_location` is the sessionStorage key**, not `wtp.location`.
+  The wrong key leaves the app with no place and the shooter photographs the
+  WELCOME OVERLAY while claiming to photograph a government.
+- **Wait for the ROW, not for a clock.** The who-governs card is built from a
+  fetch that lands well after `networkidle`.
+- **A row's label is SPLIT ACROSS ELEMENTS.** `Denville` and `township` are
+  separate spans, so `innerText.includes` finds nothing on any short element,
+  and a scan that widens until it matches clicks the map marker behind the card.
+  Use the framework's own text locator.
+
+### The rung that invalidated every capture this repo had taken
+
+**Playwright's `extraHTTPHeaders` applies to EVERY request, third parties
+included.** MapTiler's CORS preflight does not allow `x-wtp-synthetic-run`, so
+the basemap style request was REFUSED in every screenshot and every walk this
+project has ever run:
+
+```
+Access to fetch at 'https://api.maptiler.com/maps/.../style.json'
+has been blocked by CORS policy: Request header field
+x-wtp-synthetic-run is not allowed by Access-Control-Allow-Headers
+```
+
+That is why NJ Hunt 5's captures showed *Basemap unavailable* on a production
+site that was serving readers a working map. **The instrument was breaking the
+thing it was measuring**, and no reader ever sent that header. Fixed at the
+shared path in `scripts/browser.mts`: the marker now goes to our origin and is
+stripped from every cross-origin request — which also stops leaking our run id
+to every third-party host the page touches.
+
+## 4a. WIRING — what it takes to move collected material to a reader surface
+
+*(Added 2026-08-22, NJ Hunt 6. This section exists because the gap between
+COLLECTED and RENDERING cost a whole session: NJ Hunt 5 named 261 officials and
+rendered none of them.)*
+
+**Collection is not the finish line, and the wiring step is not small.** The
+route from a confirmed name to a reader is:
+
+1. **The body must exist in `lib/registry/registry.json`.** Derived rows come
+   from the committed boundary files, one `<ocdId>#governing` per division.
+   **A curated row that collides with a derived id throws at build time**, so a
+   named body may not simply be added alongside the derived one.
+2. **The roster keys on that body id.** `BODY_ROSTERS` in
+   `lib/registry/body-rosters.ts`; `governingRosterHoldersForDivision` looks up
+   `<ocdId>#governing` and then `<ocdId>#board`.
+3. **Generated rosters live in their own module** and are spread in, so RULING
+   92 holds: the generator is what gets fixed.
+4. **The guards are the specification**, and reading them first saves a rebuild:
+   at least three members; a name of five characters; an office title of four;
+   unique member ids ACROSS ALL ROSTERS; the source must be the body's own page
+   and never a vendor host; `partisanship` may not be `UNDETERMINED`; every
+   roster must resolve a presiding officer; and **an email must be on the body's
+   own domain OR appear verbatim in a committed ledger under `docs/evidence/`**.
+   That last one is the important one — write the ledger.
+5. **The slugs will not match.** Census division ids carry the municipal type
+   inconsistently (`chatham`, `randolph_township`); the encyclopedia carries
+   whatever it disambiguated with; the clerk's PDF writes it a third way.
+   Type-consistent variants, and a type word that never crosses.
+
+**And the completeness gate, which is the judgement call.** A roster is a claim
+about WHO SITS on a body, so a partial list does not under-state a field — it
+states a false composition, and the members it drops are invisible rather than
+marked missing. Wiring is gated on the member count reaching the seat count the
+municipality's own form of government declares. **This is not RULING 26
+suppression**: every member found is still held, still hunted on its RULING 53
+clock, and every gated-out body is NAMED with its reason by `--dry`.
+
+
 ## 5. The state folders
 
 `states/<st>/NOTES.md` is a state's own memory — its filing systems, its

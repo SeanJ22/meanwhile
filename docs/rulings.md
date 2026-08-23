@@ -1841,3 +1841,100 @@ a window whose outcome is already known.
 *Later measurement, NJ Hunt 4 (2026-08-22):* the detector's sampling was too
 narrow to see a 17-in-40 failure rate and was widened — see RULING 82, which
 closes `JOB01`.
+
+### RULING 91 — every key in `.env.local` is a Tier A route and is walked
+
+*Adopted 2026-08-22 (NJ Hunt 6), the author's ruling, carried in the session
+brief. Recorded here 2026-08-22 — it had been in force and unrecorded, which the
+ruling-gap guard in `tests/tracker-stores.test.ts` is what caught.*
+
+**A paid-for, authenticated source going unwalked while a session hits a
+free-tier rate wall is a DEFECT and is reported as one.**
+
+This is RULING 90 item 5 promoted to a rule of its own and pointed at the
+register: a credential is a route somebody already paid for, so it sits at
+Tier A under RULING 84 and is walked before any unauthenticated route is
+treated as exhausted.
+
+**The measurement behind it**, from NJ Hunt 5: seven credentials, three of which
+nothing in the repo had ever called. Calling them returned 18 sitting members of
+Congress with photos and official pages, 61 state legislators with email
+addresses, 137 federal candidates, 42 federal document collections, and
+**119 owed fields closed in a single run** — all of it available while the
+previous session was measuring how fast a free search engine would rate-limit
+it.
+
+**And a key is only known to work by calling it.** `CENSUS_API_KEY` was
+INVALID, which no amount of reading the register could have surfaced.
+`docs/sources.md` carries the per-key walk with what each one returned,
+including the ones that returned nothing useful.
+
+### RULING 92 — fix the generator, never the artifact
+
+*Adopted 2026-08-22 (NJ Hunt 6), the author's ruling, carried in the session
+brief. Recorded here 2026-08-22. Guarded by `tests/generated-artifacts.test.ts`.*
+
+**A generated artifact is never hand-corrected. The generator is fixed and the
+artifact is regenerated.**
+
+Hand-editing an output produces a file that **looks fixed until it
+regenerates**, which is a silent class: nothing goes red, and the defect returns
+on a schedule nobody is watching.
+
+**The instance it was adopted over.** A screenshot caption was wrong. NJ Hunt 4
+corrected it in `docs/state.md` — the generated file — and left the string in
+the script that writes it untouched. The script kept producing the wrong caption
+and **the defect recurred in NJ Hunt 5**, one session later.
+
+**The sweep it requires**, run on adoption day: every generated file is checked
+against what its generator currently produces, and a difference is a finding.
+NJ Hunt 6's sweep found `data/hunt/nj-morris-municipal-sites.json` **five
+municipalities deep in wrong governments** — `morris_township` pointed at Morris
+Plains' website, `chatham_township` at Chatham Borough's, and three more — with
+six municipalities missing outright. The generator had already been fixed;
+nobody had regenerated. Regenerating corrected all five and added the six.
+
+*Related: RULING 76 (session-dated scripts are committed and held to every
+standard) — the two together are why a generator is a first-class, gated,
+committed artifact rather than a throwaway.*
+
+### RULING 93 — ask what the tier above publishes about the tier below
+
+*Adopted 2026-08-22 (NJ Hunt 6), the author's ruling. **Written into `CLAUDE.md`
+as law in the same session** — it governs every hunt, so it belongs in the
+constitution rather than only here. Authoritative account: `docs/state.md`.
+Shipped as `scripts/tier-directory.mts` (`pnpm tier:directory`) and as
+state-scoped routes in `docs/branch-manifest.md`.*
+
+**The federal government publishes directories of state governments. States
+publish directories of their counties and municipalities. Counties publish
+directories of their towns, school districts and special districts. Before
+hunting any tier, walk the directory the tier above publishes about it.**
+
+A general principle, not a list. **Tier A by construction** under RULING 84: a
+directory answers for everything below it in one fetch.
+
+**What it cost not to have it, measured.** Morris County's own *Cities and
+Towns* page reached **30 of 39** municipalities, and the nine it missed included
+**Rockaway Township — the governing body of the target zip**. Six sessions hunted
+municipal sites sideways. New Jersey had published all 21 counties and all 564
+municipalities with their official websites the whole time, and
+`usa.gov/states/new-jersey` links straight to it.
+
+**The route that taught the control-string rule.** `nj.gov/nj/gov/county/` —
+the URL USA.gov itself publishes — answers **HTTP 200 with a styled "Page not
+found"**. The document lives at `localgov.shtml`. A status check alone reads
+the first as success, so every directory route declares a control string that
+must appear in the response.
+
+**Measured on adoption day** (`data/hunt/tier-directories.json`): 8 routes
+walked, 8 answering, **851 entities named**, of which the New Jersey state
+directory alone carried **624**.
+
+**`usmayors.org` is a discovery surface, never a source of record** — a
+nonprofit's directory, so RULING 70's Ballotpedia question governs it rather
+than public-domain status. It is deliberately absent from the route list.
+
+*Supersedes nothing. It sits beside RULING 86 (per-state source enumeration
+precedes the hunt): RULING 86 says enumerate the state's sources before hunting,
+and this says WHERE THAT ENUMERATION COMES FROM — the tier above.*

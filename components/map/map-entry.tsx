@@ -1276,6 +1276,17 @@ function MapEntryInner() {
   );
 
   const onTileError = useCallback(() => setTilesFailed(true), []);
+  /**
+   * **`VF02` — the notice comes DOWN when the basemap draws.**
+   *
+   * It was a one-way door: `setTilesFailed(true)` was the only writer, so a
+   * single transient error latched *Basemap unavailable* over a map that then
+   * loaded and kept drawing. The notice states a present-tense fact about the
+   * reader's screen, and a reader looking at a working map while we tell them
+   * it is broken is worse than saying nothing — it teaches them not to believe
+   * the next notice either.
+   */
+  const onTilesRecovered = useCallback(() => setTilesFailed(false), []);
   const onDistrictError = useCallback(() => setDistrictsFailed(true), []);
   /*
    * G05 RULE 4a — THE ASK PILL OPENS ASK, AND NOTHING ELSE.
@@ -1582,6 +1593,7 @@ function MapEntryInner() {
             onDrawnDistricts={setDrawnDistricts}
             onSelectVenue={onSelectVenue}
             onTileError={onTileError}
+            onTilesRecovered={onTilesRecovered}
             onViewportSettle={onViewportSettle}
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
@@ -2571,10 +2583,23 @@ function TileNotice() {
       <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
+      {/*
+        **A READER IS NOT AN OPERATOR** (`VF02`, NJ Hunt 6).
+
+        This told a reader in Rockaway to set `NEXT_PUBLIC_MAPTILER_KEY` in
+        `.env.local`. The plain-language rule is explicit that identifiers and
+        internal keys never render outside a technical-details disclosure, and
+        an environment variable name on a civic map is about as far outside one
+        as a string can get. It also said nothing a reader could use.
+
+        What replaces it says what they can see, what still works, and what to
+        do — which is the whole of what a reader needs from a notice about our
+        own infrastructure.
+      */}
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
-        Map tiles didn&apos;t load. Pins and meeting details still work. Set{" "}
-        <code className="font-mono text-text">NEXT_PUBLIC_MAPTILER_KEY</code> in{" "}
-        <code className="font-mono text-text">.env.local</code> to use MapTiler.
+        The map&apos;s background image isn&apos;t loading right now. Everything else
+        works — the pins are in the right places, and meeting details still open.
+        Reloading often fixes it.
       </p>
     </div>
   );

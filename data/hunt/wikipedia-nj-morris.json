@@ -10,12 +10,12 @@
     "municipalitiesAsked": 39,
     "municipalitiesReached": 39,
     "withGoverningBodyParsed": 37,
-    "withRosterParsed": 37,
-    "officialRowsExtracted": 898,
-    "distinctOfficials": 261,
-    "citationChecks": 898,
-    "confirmed": 818,
-    "leads": 45,
+    "withRosterParsed": 38,
+    "officialRowsExtracted": 908,
+    "distinctOfficials": 270,
+    "citationChecks": 908,
+    "confirmed": 825,
+    "leads": 48,
     "unreachable": 16,
     "noCitation": 19
   },
@@ -266,7 +266,31 @@
           "termEnds": 2027,
           "seat": "Ward 4",
           "body": "Town Council",
-          "rawParenthetical": "Ward 4; D, 2027) Kimberly Mazzei (Ward 3; D, 2027) John P. Meehan (Ward 1; R, 2027",
+          "rawParenthetical": "Ward 4; D, 2027",
+          "citationUrls": [
+            "https://www.boonton.org/180/Governing-Body"
+          ]
+        },
+        {
+          "name": "Kimberly Mazzei",
+          "title": null,
+          "party": "D",
+          "termEnds": 2027,
+          "seat": "Ward 3",
+          "body": "Town Council",
+          "rawParenthetical": "Ward 3; D, 2027",
+          "citationUrls": [
+            "https://www.boonton.org/180/Governing-Body"
+          ]
+        },
+        {
+          "name": "John P. Meehan",
+          "title": null,
+          "party": "R",
+          "termEnds": 2027,
+          "seat": "Ward 1",
+          "body": "Town Council",
+          "rawParenthetical": "Ward 1; R, 2027",
           "citationUrls": [
             "https://www.boonton.org/180/Governing-Body"
           ]
@@ -839,6 +863,32 @@
         },
         {
           "person": "Luisa F. Lopez",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.boonton.org/180/Governing-Body",
+          "attempts": [
+            {
+              "url": "https://www.boonton.org/180/Governing-Body",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Kimberly Mazzei",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.boonton.org/180/Governing-Body",
+          "attempts": [
+            {
+              "url": "https://www.boonton.org/180/Governing-Body",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "John P. Meehan",
           "verdict": "CONFIRMED",
           "confirmedBy": "https://www.boonton.org/180/Governing-Body",
           "attempts": [
@@ -4815,7 +4865,7 @@
             },
             {
               "url": "http://coanj.com/member-list/clerks/",
-              "status": "fetch failed",
+              "status": 200,
               "mentioned": false
             },
             {
@@ -8415,10 +8465,10 @@
         "plan": null,
         "usingFormStatewide": 71,
         "statewideTotal": 564,
-        "seats": null,
+        "seats": 7,
         "wardSeats": null,
         "atLargeSeats": null,
-        "bodyName": null,
+        "bodyName": "township council",
         "evidence": "[[File:Denville town clock.jpg|250px|right|thumb|Denville's town clock with sign for Route 53 visible]]\nDenville Township is governed within the Faulkner Act, formally known as the Optional Municipal Charter Law, under Mayor-Council plan F, as implemented as of January 1, 1972, based on the recommendations of a Charter Study Commission. The township is one of 71 municipalities (of the 564) statewide governed under this form. The governing body is comprised of the mayor and the seven-member township council, all elected to four-year terms of office on a partisan basis in odd-numbered years as part of the November general election."
       },
       "mayor": {
@@ -8440,7 +8490,7 @@
           "party": null,
           "termEnds": 2025,
           "seat": "Ward 4",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "2025; Ward 4",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8457,7 +8507,7 @@
           "party": "R",
           "termEnds": 2025,
           "seat": "Ward 3",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2025; Ward 3",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8474,7 +8524,7 @@
           "party": "R",
           "termEnds": 2027,
           "seat": "At-large",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2027; at-large",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8491,7 +8541,7 @@
           "party": "R",
           "termEnds": 2025,
           "seat": "Ward 2",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2025; Ward 2",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8508,7 +8558,7 @@
           "party": "R",
           "termEnds": 2025,
           "seat": "Ward 1",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2025; Ward 1",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8525,7 +8575,7 @@
           "party": "R",
           "termEnds": 2027,
           "seat": "At-large",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2027; at-large",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -8542,7 +8592,7 @@
           "party": "R",
           "termEnds": 2027,
           "seat": "At-large",
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2027; at-large",
           "citationUrls": [
             "https://www.denvillenj.org/administration/township_council.php",
@@ -15802,10 +15852,10 @@
         "plan": null,
         "usingFormStatewide": null,
         "statewideTotal": null,
-        "seats": null,
+        "seats": 5,
         "wardSeats": null,
         "atLargeSeats": null,
-        "bodyName": null,
+        "bodyName": "Township Council",
         "evidence": "Jefferson Township is governed under a Mayor-Council system of municipal government under the Faulkner Act. The township is one of 71 (of the 564) municipalities statewide that use this form of government. The governing body is comprised of the Mayor and the five-member Township Council."
       },
       "mayor": {
@@ -18038,10 +18088,10 @@
         "plan": null,
         "usingFormStatewide": 71,
         "statewideTotal": 564,
-        "seats": null,
+        "seats": 7,
         "wardSeats": null,
         "atLargeSeats": null,
-        "bodyName": null,
+        "bodyName": "borough council",
         "evidence": "The Borough of Lincoln Park is governed within the Faulkner Act (formally known as the Optional Municipal Charter Law) under the Mayor-Council Plan F system of municipal government, implemented based on the recommendations of a Charter Study Commission as of January 1, 1971. The borough is one of 71 municipalities (of the 564) statewide that use this form of government. The governing body is comprised of the mayor and the seven-member borough council, with three council seats elected at-large and four from wards, with all positions chosen in partisan elections held in even-numbered years as part of the November general election."
       },
       "mayor": {
@@ -18063,7 +18113,7 @@
           "party": "R",
           "termEnds": 2026,
           "seat": "At-large",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R; at-large, 2026",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18075,7 +18125,7 @@
           "party": "D",
           "termEnds": 2028,
           "seat": "Ward 3",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "D; Ward 3, 2028",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18087,7 +18137,7 @@
           "party": "R",
           "termEnds": 2028,
           "seat": "Ward 1",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R; Ward 1, 2028",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18099,7 +18149,7 @@
           "party": "R",
           "termEnds": 2028,
           "seat": "Ward 4",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R, Ward 4, 2028",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18111,7 +18161,7 @@
           "party": "R",
           "termEnds": 2026,
           "seat": "At-large",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R; at-large, 2026",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18123,7 +18173,7 @@
           "party": "R",
           "termEnds": 2028,
           "seat": "Ward 2",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R; Ward 2, 2028",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -18135,7 +18185,7 @@
           "party": "R",
           "termEnds": 2026,
           "seat": "At-large",
-          "body": null,
+          "body": "borough council",
           "rawParenthetical": "R; at-large, 2026",
           "citationUrls": [
             "https://www.lincolnpark.org/129/Borough-Council"
@@ -31305,6 +31355,40 @@
             "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
             "https://results.enr.clarityelections.com/NJ/Morris/98870/web/#/summary"
           ]
+        },
+        {
+          "name": "Mary Lalama",
+          "title": null,
+          "party": null,
+          "termEnds": null,
+          "seat": null,
+          "body": "Township Council",
+          "rawParenthetical": null,
+          "citationUrls": [
+            "https://www.mountolivetwpnj.org/township-council",
+            "https://www.mountolivetwpnj.org/sites/g/files/vyhlif4736/f/uploads/1427_adoptbudget_2022_pdf.pdf#page=11",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=50",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://results.enr.clarityelections.com/NJ/Morris/98870/web/#/summary"
+          ]
+        },
+        {
+          "name": "Raffaele Ruggiero",
+          "title": null,
+          "party": null,
+          "termEnds": null,
+          "seat": null,
+          "body": "Township Council",
+          "rawParenthetical": null,
+          "citationUrls": [
+            "https://www.mountolivetwpnj.org/township-council",
+            "https://www.mountolivetwpnj.org/sites/g/files/vyhlif4736/f/uploads/1427_adoptbudget_2022_pdf.pdf#page=11",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=50",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://results.enr.clarityelections.com/NJ/Morris/98870/web/#/summary"
+          ]
         }
       ],
       "representation": {
@@ -31935,6 +32019,82 @@
         },
         {
           "person": "John Mania",
+          "verdict": "LEAD",
+          "confirmedBy": null,
+          "attempts": [
+            {
+              "url": "https://www.mountolivetwpnj.org/township-council",
+              "status": 403,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.mountolivetwpnj.org/sites/g/files/vyhlif4736/f/uploads/1427_adoptbudget_2022_pdf.pdf#page=11",
+              "status": 404,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=50",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://results.enr.clarityelections.com/NJ/Morris/98870/web/#/summary",
+              "status": 200,
+              "mentioned": false
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Mary Lalama",
+          "verdict": "LEAD",
+          "confirmedBy": null,
+          "attempts": [
+            {
+              "url": "https://www.mountolivetwpnj.org/township-council",
+              "status": 403,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.mountolivetwpnj.org/sites/g/files/vyhlif4736/f/uploads/1427_adoptbudget_2022_pdf.pdf#page=11",
+              "status": 404,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=50",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://results.enr.clarityelections.com/NJ/Morris/98870/web/#/summary",
+              "status": 200,
+              "mentioned": false
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Raffaele Ruggiero",
           "verdict": "LEAD",
           "confirmedBy": null,
           "attempts": [
@@ -34884,10 +35044,10 @@
         "plan": "E",
         "usingFormStatewide": 71,
         "statewideTotal": 564,
-        "seats": null,
+        "seats": 5,
         "wardSeats": null,
         "atLargeSeats": null,
-        "bodyName": null,
+        "bodyName": "township council",
         "evidence": "The township is governed within the Faulkner Act (formally known as the Optional Municipal Charter Law) under the Mayor-Council system of municipal government (Plan E), implemented based on the recommendations of a Charter Study Commission as of January 1, 1966. The township is one of 71 municipalities (of the 564) statewide that use this form of government. The governing body is comprised of the mayor and the five-member township council, all elected to four-year terms of office on an at-large basis in partisan elections held in odd-numbered years as part of the November general election."
       },
       "mayor": {
@@ -34909,7 +35069,7 @@
           "party": "D",
           "termEnds": 2027,
           "seat": null,
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "D, 2027",
           "citationUrls": [
             "https://www.parsippany.net/directory",
@@ -34925,7 +35085,7 @@
           "party": "D",
           "termEnds": 2029,
           "seat": null,
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "D, 2029",
           "citationUrls": [
             "https://www.parsippany.net/directory",
@@ -34941,7 +35101,7 @@
           "party": "R",
           "termEnds": 2027,
           "seat": null,
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2027",
           "citationUrls": [
             "https://www.parsippany.net/directory",
@@ -34957,7 +35117,7 @@
           "party": "D",
           "termEnds": 2029,
           "seat": null,
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "D, 2029",
           "citationUrls": [
             "https://www.parsippany.net/directory",
@@ -34973,7 +35133,7 @@
           "party": "R",
           "termEnds": 2027,
           "seat": null,
-          "body": null,
+          "body": "township council",
           "rawParenthetical": "R, 2027",
           "citationUrls": [
             "https://www.parsippany.net/directory",
@@ -36163,8 +36323,110 @@
         "bodyName": "council",
         "evidence": "Since January 1, 1956, the township has operated within the Faulkner Act, formally known as the Optional Municipal Charter Law, under the Council-Manager Plan E form of local government. The township is one of 42 municipalities (of the 564) statewide that use this form of government. The council is comprised of five members elected at-large in a partisan vote to four-year terms in office on a staggered basis, with either two or three seats coming up for election in even-numbered years as part of the November general election."
       },
-      "mayor": null,
-      "council": [],
+      "mayor": {
+        "name": "David G. Kohle",
+        "title": "Mayor",
+        "party": "R",
+        "termEnds": 2024,
+        "seat": null,
+        "body": "council",
+        "rawParenthetical": "R, term on council ends December 31, 2024; term as mayor ends 2023",
+        "citationUrls": [
+          "https://www.peqtwp.org/243/Township-Council",
+          "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+          "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+          "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+          "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+          "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+        ]
+      },
+      "council": [
+        {
+          "name": "David G. Kohle",
+          "title": "Mayor",
+          "party": "R",
+          "termEnds": 2024,
+          "seat": null,
+          "body": "council",
+          "rawParenthetical": "R, term on council ends December 31, 2024; term as mayor ends 2023",
+          "citationUrls": [
+            "https://www.peqtwp.org/243/Township-Council",
+            "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+          ]
+        },
+        {
+          "name": "Ryan Herd",
+          "title": "Deputy Mayor",
+          "party": "R",
+          "termEnds": 2024,
+          "seat": null,
+          "body": "council",
+          "rawParenthetical": "R, term on council ends 2024; term as deputy mayor ends 2023",
+          "citationUrls": [
+            "https://www.peqtwp.org/243/Township-Council",
+            "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+          ]
+        },
+        {
+          "name": "John Driesse",
+          "title": null,
+          "party": "R",
+          "termEnds": 2026,
+          "seat": null,
+          "body": "council",
+          "rawParenthetical": "R, 2026",
+          "citationUrls": [
+            "https://www.peqtwp.org/243/Township-Council",
+            "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+          ]
+        },
+        {
+          "name": "Melissa Florance-Lynch",
+          "title": null,
+          "party": "R",
+          "termEnds": 2026,
+          "seat": null,
+          "body": "council",
+          "rawParenthetical": "R, 2026",
+          "citationUrls": [
+            "https://www.peqtwp.org/243/Township-Council",
+            "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+          ]
+        },
+        {
+          "name": "Kyle Russell",
+          "title": null,
+          "party": "R",
+          "termEnds": 2026,
+          "seat": null,
+          "body": "council",
+          "rawParenthetical": "R, 2026",
+          "citationUrls": [
+            "https://www.peqtwp.org/243/Township-Council",
+            "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+            "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf"
+          ]
+        }
+      ],
       "representation": {
         "congressionalDistrict": "11",
         "legislativeDistrict": "26",
@@ -36654,6 +36916,109 @@
         }
       ],
       "citationChecks": [
+        {
+          "person": "David G. Kohle",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.peqtwp.org/243/Township-Council",
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "David G. Kohle",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.peqtwp.org/243/Township-Council",
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Ryan Herd",
+          "verdict": "LEAD",
+          "confirmedBy": null,
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.peqtwp.org/DocumentCenter/View/14237/2023-Introduced-Municipal-Budget-PDF",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/3/manual/mc-manual-2024-web-040924.pdf#page=54",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/2024-municipal-elected-officials-032224.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2021-general-winners-121421.pdf",
+              "status": 200,
+              "mentioned": false
+            },
+            {
+              "url": "https://www.morriscountyclerk.org/files/sharedassets/clerk/elections/past-results/2020-general-summary-report-official.pdf",
+              "status": 200,
+              "mentioned": false
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "John Driesse",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.peqtwp.org/243/Township-Council",
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Melissa Florance-Lynch",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.peqtwp.org/243/Township-Council",
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
+        {
+          "person": "Kyle Russell",
+          "verdict": "CONFIRMED",
+          "confirmedBy": "https://www.peqtwp.org/243/Township-Council",
+          "attempts": [
+            {
+              "url": "https://www.peqtwp.org/243/Township-Council",
+              "status": 200,
+              "mentioned": true
+            }
+          ],
+          "checkedAt": "2026-08-22"
+        },
         {
           "person": "Analilia Mejia",
           "verdict": "CONFIRMED",

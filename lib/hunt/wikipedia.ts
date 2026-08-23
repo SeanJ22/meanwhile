@@ -410,8 +410,30 @@ export function parseGoverningBody(localGovernment: string): GoverningBody {
     /(?:The\s+([A-Z][A-Za-z' ]{2,40}?)\s+(?:is comprised of|includes|consists of|is composed of|comprises)\s+([\w-]+)\s+members)/i.exec(
       text,
     );
-  const bodyName = comp === null ? null : comp[1].trim();
-  const seats = comp === null ? null : num(comp[2]);
+  let bodyName = comp === null ? null : comp[1].trim();
+  let seats = comp === null ? null : num(comp[2]);
+
+  /**
+   * **The hyphenated form — `the seven-member township council`** (NJ Hunt 6).
+   *
+   * The composition pattern above wants *The X is comprised of N members*.
+   * Denville writes *The governing body is comprised of the mayor and the
+   * seven-member township council*, and Dover, Boonton Township and others use
+   * the same construction. `seats` came back null for **eleven of thirty-nine**
+   * Morris municipalities, and a null seat count is not a small loss: it is the
+   * denominator the roster completeness gate checks against, so every one of
+   * those bodies was unwirable for want of a hyphen.
+   */
+  if (seats === null) {
+    const hyphenated =
+      /\b(?:the\s+)?([\w-]+)-member\s+((?:[a-z]+\s+)?(?:council|committee|board|commission))/i.exec(
+        text,
+      );
+    if (hyphenated !== null) {
+      seats = num(hyphenated[1]);
+      if (bodyName === null) bodyName = hyphenated[2].trim();
+    }
+  }
 
   let wardSeats: number | null = null;
   let atLargeSeats: number | null = null;
@@ -553,6 +575,31 @@ export function splitMembers(sentence: string): string[] {
       if (ch === "(") depth++;
       else if (ch === ")") depth--;
       if (depth === 0) {
+        /**
+         * **A closing parenthesis is a separator when nothing else is** (NJ
+         * Hunt 6). Boonton's roster sentence runs
+         * `Luisa F. Lopez (Ward 4; D, 2027) Kimberly Mazzei (Ward 3; D, 2027)
+         * John P. Meehan (Ward 1; R, 2027) and Cy Wekilsky (…)` — three
+         * members with no comma between them, in the article's own text. The
+         * comma-and-`and` split produced ONE entry carrying three people, so
+         * Mazzei and Meehan did not exist and Lopez inherited the wrong ward:
+         * two sitting council members deleted and one misdescribed, from a
+         * missing punctuation mark.
+         *
+         * A `)` that returns depth to zero, followed by whitespace and a
+         * capital letter that is not a connective, therefore ends the entry.
+         * Where the article DOES punctuate, the comma or ` and ` is consumed
+         * next and the empty buffer is filtered out, so this never
+         * double-splits a well-formed list.
+         */
+        if (ch === ")") {
+          const rest = sentence.slice(i + 1);
+          if (/^\s+[A-Z]/.test(rest) && !/^\s+(?:and|or|with|of|in)\b/i.test(rest)) {
+            parts.push(buf + ch);
+            buf = "";
+            continue;
+          }
+        }
         if (ch === ",") {
           // `Marcos Tapia-Aguilar, Sr. (Ward 4; D, 2026)` — a generational
           // suffix is part of the name, and splitting on its comma produced a
@@ -664,6 +711,49 @@ export function parseMember(entry: string, body: string | null): WikiOfficial | 
   };
 }
 
+/**
+ * Words that mean an entry is an OFFICE or a clause, never a person, however
+ * capitalised it is. Append-only — each one costs nothing to keep.
+ */
+const NOT_A_PERSON =
+  /\b(?:council|committee|board|township|borough|town|city|county|manager|administrator|clerk|attorney|department|commission|authority|district|term|seat|election|meeting|office|position|member|members|vacancy|resident|residents)\b/i;
+
+/**
+ * **Does this bare name look like a person?** (NJ Hunt 6.)
+ *
+ * Mount Olive's roster sentence ends `…John Mania (R, 2025), Mary Lalama, and
+ * Raffaele Ruggiero.` — two sitting council members whom the article names
+ * without a party or a term. The roster filter kept only entries carrying a
+ * party, a year or a seat, so both were discarded as prose and a seven-member
+ * council rendered as five.
+ *
+ * **The discarded ones are the members the encyclopedia says least about**,
+ * which is the equal-effort failure exactly: a filter keyed on how much detail
+ * an entry carries deletes the least-documented people first. So a bare entry
+ * survives when it reads as a personal name — every token capitalised, an
+ * initial, a particle or a suffix — and carries no word that names an office.
+ * It is still only a NAME, and RULING 87 governs it from there: it is a `LEAD`
+ * until its own citation is read, exactly like every other name on the page.
+ */
+export function looksLikePersonName(name: string): boolean {
+  const trimmed = name.trim().replace(/\.$/, "");
+  if (trimmed.length < 5 || NOT_A_PERSON.test(trimmed)) return false;
+  const tokens = trimmed.split(/\s+/);
+  if (tokens.length < 2 || tokens.length > 5) return false;
+  const PARTICLE = /^(?:van|von|de|del|della|di|da|la|le|du|of|bin|al)$/i;
+  const SUFFIX = /^(?:Sr|Jr|II|III|IV|V|Esq)\.?$/i;
+  let capitalised = 0;
+  for (const token of tokens) {
+    const bare = token.replace(/^["'(]+|["')]+$/g, "");
+    if (bare.length === 0) return false;
+    if (PARTICLE.test(bare) || SUFFIX.test(bare)) continue;
+    if (!/^[A-Z]/.test(bare)) return false;
+    if (!/^[A-Z][A-Za-z'’.-]*$/.test(bare)) return false;
+    capitalised++;
+  }
+  return capitalised >= 2;
+}
+
 export interface RosterParse {
   officials: WikiOfficial[];
   /** The sentence the roster was read out of, in plain text. */
@@ -733,9 +823,19 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
     const lower = s.text.toLowerCase();
     const leadIn = ROSTER_LEAD_INS.find((p) => lower.includes(p + " ")) ?? null;
 
-    const copula = /\b(?:are|is comprised of|is composed of|consists of|includes|is)\b/i.exec(
-      s.text,
-    );
+    /**
+     * **The past tense is a copula too** (NJ Hunt 6). Pequannock's roster
+     * sentence is *As of 2023, Pequannock's Township Council was composed of
+     * Mayor David G. Kohle (R, …)* — five sitting council members behind a
+     * `was` where the list only knew `is`. The whole municipality parsed to
+     * zero officials and reported as a body with no roster, which is the
+     * zero-row-extraction failure: the parser had told us about itself, not
+     * about the document. Append-only, like the lead-in list.
+     */
+    const copula =
+      /\b(?:are|were|is comprised of|was comprised of|is composed of|was composed of|consists of|consisted of|comprises|comprised|includes|included|is|was)\b/i.exec(
+        s.text,
+      );
     if (copula === null) continue;
     const listText = s.text.slice(copula.index + copula[0].length).trim();
 
@@ -752,10 +852,23 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
     const citationUrls = [...new Set(spanRefs.flatMap((r) => r.urls))];
     bestScore = score;
     best = {
-      // Keep only the entries that look like people. A trailing clause parsed
-      // out of the same sentence is prose, and prose is not a council member.
+      /**
+       * Keep the entries that look like people. An entry carrying a party, a
+       * term year or a seat is one; so is a bare personal name (NJ Hunt 6 —
+       * see `looksLikePersonName`, and the two Mount Olive members the
+       * stricter test deleted). A trailing clause is neither.
+       *
+       * The SCORE above stays on the strict test on purpose: a sentence full
+       * of capitalised prose must not out-score a real roster.
+       */
       officials: officials
-        .filter((o) => o.party !== null || o.termEnds !== null || o.seat !== null)
+        .filter(
+          (o) =>
+            o.party !== null ||
+            o.termEnds !== null ||
+            o.seat !== null ||
+            looksLikePersonName(o.name),
+        )
         .map((o) => ({ ...o, citationUrls })),
       sentence: s.text,
       leadIn,

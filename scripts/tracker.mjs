@@ -97,6 +97,30 @@ const DELETE_IDS = (
   .split(",")
   .map((x) => x.trim())
   .filter(Boolean);
+/**
+ * **RULING 79 (2026-08-22) — the rows a recorded ruling closes.**
+ *
+ * `--ruling NS02=78,NS04=81` says: RULING 78 answers `NS02`, RULING 81 answers
+ * `NS04`. Each named ruling is checked against `docs/rulings.md` before
+ * anything moves — a close whose authority does not exist is refused, not
+ * written — and the ruling number is stamped onto the row so he can trace and
+ * reverse any the session got wrong.
+ *
+ * This is the ONLY way a session closes a Needs Sean row, and it is not a
+ * general-purpose flag: `planMoves` still refuses every Needs Sean row that
+ * arrives without one.
+ */
+const RULING_CLOSURES = Object.fromEntries(
+  (process.argv.find((a) => a.startsWith("--ruling="))?.slice("--ruling=".length) ?? "")
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean)
+    .map((pair) => {
+      const [id, ruling] = pair.split("=");
+      return [id.trim(), (ruling ?? "").trim()];
+    }),
+);
+
 const STAMP = today();
 
 const WORKING_SHEET = "Working";
@@ -614,6 +638,41 @@ function modeMove(working, resolved, sections) {
         }
       }
     }
+  }
+
+  /*
+   * RULING 79, applied before anything is planned: mark the rows a recorded
+   * ruling closes, refusing any whose ruling is not actually in the file.
+   */
+  const RULINGS_MD = join(ROOT, "docs", "rulings.md");
+  const rulingsText = existsSync(RULINGS_MD) ? readFileSync(RULINGS_MD, "utf8") : "";
+  const rulingCloses = [];
+  for (const [id, ruling] of Object.entries(RULING_CLOSURES)) {
+    const row = working.find((r) => (r.ID ?? "").trim() === id);
+    if (!row) {
+      refusals.push(`RULING 79 — ${id} is not an open row, so no ruling can close it.`);
+      continue;
+    }
+    if (!/^\d+$/.test(ruling)) {
+      refusals.push(`RULING 79 — ${id}=${ruling} does not name a ruling NUMBER.`);
+      continue;
+    }
+    if (!new RegExp(`^###\\s*RULING ${ruling}\\b`, "m").test(rulingsText)) {
+      refusals.push(
+        `RULING 79 — RULING ${ruling} is not recorded in docs/rulings.md, so it cannot ` +
+          `close ${id}. A close whose authority does not exist is worse than an open row.`,
+      );
+      continue;
+    }
+    if (!(row.Resolution ?? "").trim()) row.Resolution = "Resolved";
+    const note = `Closed under RULING ${ruling} (RULING 79), ${STAMP}${SESSION_LABEL ? `, ${SESSION_LABEL}` : ""}.`;
+    row.Notes = [(row.Notes ?? "").trim(), note].filter(Boolean).join(" ");
+    resolutionAuthor[id] = "ruling";
+    rulingCloses.push(`${id} ← RULING ${ruling}`);
+  }
+  if (rulingCloses.length > 0) {
+    console.log(`\nRULING 79 closes (each is reported so any can be reversed):`);
+    for (const line of rulingCloses) console.log(`  ${line}`);
   }
 
   const before = [...working, ...resolved].map((r) => ({ ...r }));

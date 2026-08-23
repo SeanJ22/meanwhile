@@ -72,3 +72,39 @@ export function surnameDisplayCase(surname: string): string {
     .map((part) => (/^\s+$/.test(part) || part === "-" ? part : caseWord(part)))
     .join("");
 }
+
+/**
+ * The name as a SEARCH KEY, which is a different job from the display case
+ * above and is deliberately in the same file so the two cannot drift.
+ *
+ * NJ Hunt 4 (2026-08-22) needed to type 272 filed names into a search index and
+ * into municipal roster pages. Two things go wrong with the filed string:
+ *
+ * 1. **Ledger caps defeat the engine.** `"Melissa BURNSIDE" Rockaway New
+ *    Jersey` came back with ten results about a shoe brand and not one mention
+ *    of the person; `"Melissa Burnside"` returned the Borough's own directory at
+ *    rank 1. Bing tokenises an all-caps word differently and silently drops it
+ *    from a quoted phrase. That defect would have read as 272 honest absences.
+ * 2. **A generational suffix is not part of the name being searched for.**
+ *    `DAWKINS, JR.` is filed that way and appears on his own law firm's page as
+ *    `Clifford D. Dawkins`, so the suffix has to come off the key — while
+ *    staying on the filed string, which is never altered.
+ *
+ * `surnameDisplayCase` does the casing, unchanged; this only strips the suffix
+ * and the trailing comma around it.
+ *
+ * **RULING 63, recorded against this session.** NJ Hunt 4 wrote its own
+ * title-caser in `scripts/nj-hunt4-search.mts` before checking whether one
+ * existed. One did — this file, since 2026-08-17, with an exceptions map, Mc
+ * handling and apostrophe handling that the new one lacked. The duplicate was
+ * deleted and this is its replacement. Duplication is worse than a gap.
+ */
+export function searchableSurname(filed: string): string {
+  const withoutSuffix = filed.replace(/,?\s*(JR|SR|II|III|IV)\.?\s*$/i, "").trim();
+  return surnameDisplayCase(withoutSuffix || filed);
+}
+
+/** The given name as a search key — the first token, cased the same way. */
+export function searchableGiven(filed: string): string {
+  return surnameDisplayCase(filed.trim().split(/\s+/)[0] ?? filed);
+}

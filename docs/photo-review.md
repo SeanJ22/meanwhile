@@ -8,7 +8,7 @@ in one place he can work from. A portrait is the one thing in this product a
 machine cannot finally judge — every rung before this one exists to put a
 picture in front of a person who can say yes or no.
 
-Generated 2026-08-19. Manifest holds **902** portraits and
+Generated 2026-08-22. Manifest holds **902** portraits and
 **229** named misses.
 
 **557** of those **902** belong to a person some surface can
@@ -20,7 +20,7 @@ MAPPING gap rather than a photo gap: the picture is fine, the seat is missing.
 
 ### The standing figure, and it reconciles
 
-Counted 2026-08-19 from `lib/registry/official-photos.json` against the
+Counted 2026-08-22 from `lib/registry/official-photos.json` against the
 shipped division mappings, the curated body rosters and the who-governs
 card. Every manifest row lands in exactly ONE of these, which is the point:
 
@@ -34,7 +34,7 @@ card. Every manifest row lands in exactly ONE of these, which is the point:
 
 **531 + 23 + 3 + 345 = 902.**
 
-### The standing figure for PORTRAITS RENDERED is **591**, and everything else is derived from it
+### The standing figure for PORTRAITS RENDERED is **609**, and everything else is derived from it
 
 **Method.** `scripts/photo-census.mts` walks the SLOT side — every person
 the product can put on a screen — and asks of each whether the surface
@@ -44,11 +44,11 @@ PEOPLE WITH A FACE, not of manifest rows, and it is quoted from here.
 
 | Figure | Count | How it is obtained |
 |---|---|---|
-| **Portraits rendered (STANDING)** | **591** | slot side: people the product renders who have a portrait |
+| **Portraits rendered (STANDING)** | **609** | slot side: people the product renders who have a portrait |
 | — drawn from this manifest | 557 | derived: the standing figure less the candidate-card portraits |
-| — drawn from `candidate-cards-2026.json` | 34 | derived: ballot-candidate portraits, which never enter this manifest |
-| People rendering initials | 161 | derived: the slot denominator less the standing figure |
-| Slot denominator | 752 | every person the product renders |
+| — drawn from `candidate-cards-2026.json` | 52 | derived: ballot-candidate portraits, which never enter this manifest |
+| People rendering initials | 472 | derived: the slot denominator less the standing figure |
+| Slot denominator | 1081 | every person the product renders |
 
 **The two sides now cross exactly**, which is what says the ledger is
 closed: 557 manifest rows are drawn by a rendered slot, and
@@ -58,7 +58,7 @@ closed: 557 manifest rows are drawn by a rendered slot, and
 `591 + 311` as though both partitioned the same 902 and reported that they
 disagreed by 37 about how many portraits reach a reader. They never
 partitioned the same population. `pnpm photo:reconcile` intersects the two
-universes by id and resolves the 37 with no residue: **34 of it is
+universes by id and resolves the 37 with no residue: **52 of it is
 ballot-candidate portraits**, which live in `candidate-cards-2026.json` and
 are not manifest rows at all, and **3 of it was a defect in this file** —
 the three governors render on the who-governs card at every zip in their

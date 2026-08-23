@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 183,
-    "named": 1674,
+    "named": 1679,
     "dynamic": 6
   },
   "files": {
@@ -2075,6 +2075,8 @@
     },
     "tests/search-rows.test.ts": {
       "names": [
+        "PU02 class sweep: no surface joins a snapshot body name to a registry name by ===",
+        "PU02: a body row the registry cannot resolve still opens a card, built from the row",
         "a body row's card is refused rather than guessed when the match is ambiguous",
         "an all-online body carries no geometry, and none is invented for it",
         "onSearchPick opens a card for the rows it cannot fly to",
@@ -2308,6 +2310,9 @@
         "RULING 48: docs/state.md never loses a section or a third of its bytes",
         "RULING 48: the guard catches the command that destroyed his edits",
         "RULING 48: the hook is wired, and no committed script reverts a protected file",
+        "RULING 79: a recorded ruling closes a Needs Sean row, and nothing else does",
+        "RULING 79: docs/rulings.md has no gap in its ruling numbers",
+        "RULING 79: the move script refuses a ruling that is not in docs/rulings.md",
         "amend touches the description and never the title or the section",
         "item 1.4: every row a session reported opening is present in a store",
         "item 8a: every row in both stores carries a plain-English description",

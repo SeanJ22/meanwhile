@@ -118,12 +118,25 @@ const TYPES: DistrictType[] = [
     key: "county",
     url: () => `${BASE}/cb_${VINTAGE}_us_county_500k.zip`,
     national: true,
-    // Exactly the clip counties, not everything that touches them. For every
-    // other type an adjacent feature that reaches the county line is genuinely
-    // nearby and worth drawing; for the layer that *is* the clip, including
-    // eighteen neighbours would misrepresent what this build covers.
+    /*
+     * RULING 80: the county layer draws THE WHOLE EXTENT — the primaries and
+     * the counties adjacent to them.
+     *
+     * It used to draw exactly the three primaries, on the reasoning that "for
+     * the layer that IS the clip, including eighteen neighbours would
+     * misrepresent what this build covers". That reasoning was correct about a
+     * build whose extent was three counties and is wrong about this one: the
+     * extent IS the neighbours now, and a county layer that omitted them would
+     * be the one misrepresenting the build — it would draw a boundary around
+     * territory whose towns, districts and school boards this file is about to
+     * draw anyway.
+     *
+     * What is covered and what is DRAWABLE stay separate elsewhere:
+     * `CLIP_COUNTIES` is unchanged and still means "the county this state's
+     * data is about", which is what the coverage denominator counts.
+     */
     identity: (row) =>
-      CLIP_COUNTIES.some((c) => c.fips === `${row.STATEFP}${row.COUNTYFP}`)
+      CLIP_EXTENT.has(`${row.STATEFP}${row.COUNTYFP}`)
         ? countyIdentity(row.STATEFP, row.NAME)
         : null,
     note: "Counties",
@@ -647,34 +660,111 @@ async function tigerAttributes(
 }
 
 /**
- * The clip polygons, quantized to the same grid as everything else.
+ * THE CLIP EXTENT — every county in it, with its polygons, quantized to the
+ * same grid as everything else.
  *
- * Built from the national county file, which is also a district type in its own
- * right — the same download serves both.
+ * **RULING 80 (2026-08-22, NJ Hunt 4 item 4), which closed `NH44`.** This used
+ * to be exactly the three primary counties. A zip's first-rung circle crosses
+ * county lines — 3 of the 4 pilot zips do, and 184 of 279 measured — so towns
+ * inside that circle entered the registry with their boards, their rosters and
+ * their meetings, and NO POLYGON. RULING 57 says a body is named first and
+ * hunted second; a body that cannot be DRAWN because a build-time clip was
+ * convenient is that rule losing to a file format.
+ *
+ * **Adjacency is MEASURED, never remembered.** No list of neighbouring county
+ * FIPS is written down anywhere in this repo, because a hand-written one is a
+ * claim about American geography with nothing behind it and it goes stale the
+ * next time Census redraws anything. Two counties are adjacent here when their
+ * quantized boundaries SHARE A VERTEX — TIGER's neighbouring counties share
+ * boundary arcs exactly, so after the same quantization both sides carry the same
+ * points, and the test is an equality rather than a tolerance.
+ *
+ * The national county file is downloaded once and serves three purposes: the
+ * clip polygons, the adjacency, and the `county` layer itself.
  */
-async function loadClipCounties(): Promise<Map<string, Polygon[]>> {
+interface ClipCounty {
+  label: string;
+  polygons: Polygon[];
+  /** True for a county this build is ABOUT; false for one it can merely draw. */
+  primary: boolean;
+}
+
+/**
+ * Filled by `loadClipExtent` before any layer is built, and read by the
+ * `county` type's identity function, which runs later inside `buildClipped`.
+ * A module-level binding rather than a parameter because `TYPES` is a const
+ * declared above and threading the extent through it would change every
+ * identity signature for one caller.
+ */
+let CLIP_EXTENT: Map<string, ClipCounty> = new Map();
+
+async function loadClipExtent(): Promise<Map<string, Polygon[]>> {
   const zip = await download(
     `${BASE}/cb_${VINTAGE}_us_county_500k.zip`,
     join(TMP_DIR, "county-us.zip"),
   );
   const { rows, shapes } = readShapefile(zip);
 
-  const wanted = new Map<string, string>(
+  const primary = new Map<string, string>(
     CLIP_COUNTIES.map((c) => [c.fips as string, c.label as string]),
   );
-  const out = new Map<string, Polygon[]>();
 
+  /* Every county's quantized polygons, once — adjacency needs all of them. */
+  const quantized = new Map<string, { polygons: Polygon[]; label: string }>();
   for (let i = 0; i < rows.length; i++) {
     const geoid = `${rows[i].STATEFP}${rows[i].COUNTYFP}`;
-    if (!wanted.has(geoid)) continue;
-    out.set(
-      geoid,
-      shapes[i].map((poly) => poly.map(quantizeRing).filter((r) => r.length >= 4)),
-    );
+    quantized.set(geoid, {
+      polygons: shapes[i].map((poly) => poly.map(quantizeRing).filter((r) => r.length >= 4)),
+      label: `${rows[i].NAME} County, ${rows[i].STATEFP}`,
+    });
   }
 
-  for (const [fips, label] of wanted) {
-    if (!out.has(fips)) throw new Error(`Clip county ${label} (${fips}) not found.`);
+  for (const [fips, label] of primary) {
+    if (!quantized.has(fips)) throw new Error(`Clip county ${label} (${fips}) not found.`);
+  }
+
+  /* The vertices on every primary county's boundary. */
+  const primaryVertices = new Set<string>();
+  for (const fips of primary.keys()) {
+    for (const poly of quantized.get(fips)!.polygons) {
+      for (const ring of poly) {
+        for (const [x, y] of ring) primaryVertices.add(`${x},${y}`);
+      }
+    }
+  }
+
+  const out = new Map<string, Polygon[]>();
+  const extent = new Map<string, ClipCounty>();
+
+  for (const [geoid, { polygons, label }] of quantized) {
+    const isPrimary = primary.has(geoid);
+    const touches =
+      isPrimary ||
+      polygons.some((poly) =>
+        poly.some((ring) => ring.some(([x, y]) => primaryVertices.has(`${x},${y}`))),
+      );
+    if (!touches) continue;
+    out.set(geoid, polygons);
+    extent.set(geoid, { label: primary.get(geoid) ?? label, polygons, primary: isPrimary });
+  }
+
+  CLIP_EXTENT = extent;
+
+  /*
+   * The count, stated. A zero-row read is a failed read: a national county file
+   * that produced no neighbour for any of three counties would mean the
+   * adjacency test is broken, not that the counties are islands.
+   */
+  const adjacent = [...extent.values()].filter((c) => !c.primary).length;
+  console.log(
+    `\nclip extent (RULING 80): ${primary.size} primary + ${adjacent} adjacent = ${extent.size} counties`,
+  );
+  if (adjacent === 0) {
+    throw new Error(
+      "No adjacent county was found for any primary county. Three counties in the " +
+        "continental United States are not islands, so this is a failed adjacency " +
+        "read rather than an empty one.",
+    );
   }
 
   return out;
@@ -692,6 +782,12 @@ interface Feature {
     lsad?: string;
     funcstat?: string;
     classfp?: string;
+    /**
+     * The clip counties whose polygons this feature's geometry overlaps
+     * (RULING 80). Exact, measured at build time, and the answer to "which
+     * county is this municipality in" that nothing downstream has to guess.
+     */
+    clipCounties?: string[];
     /**
      * The Census GEOID, verbatim. Complete by construction and exact — it
      * matched 100% on every layer during the M17 TIGER join. Retained so
@@ -716,6 +812,23 @@ interface BuildOptions {
   identity: (row: Row) => DivisionIdentity | null;
   /** Keep only features passing this. Absent means keep everything. */
   keep?: (polygons: Polygon[]) => boolean;
+  /**
+   * The clip counties this feature's geometry actually OVERLAPS, as GEOIDs.
+   *
+   * RULING 80 (2026-08-22, NJ Hunt 4 item 4). Recorded because the alternative
+   * turned out to be a guess: `tests/coverage.test.ts` placed each municipality
+   * in a county by averaging its exterior-ring vertices and testing that point
+   * against the SIMPLIFIED county polygon, and once the clip widened, three
+   * Sussex County municipalities on the Lake Hopatcong shore — Byram, Hopatcong
+   * and Stanhope — landed inside Morris and inflated a federal cross-check by
+   * three. A vertex average is not a centroid, and a 200-metre-simplified
+   * boundary is not a boundary.
+   *
+   * This is computed here from the real overlap, against the county polygons the
+   * clip is built from, before any simplification. It is exact, it costs a few
+   * bytes per feature, and it means no consumer has to guess again.
+   */
+  clipCountiesFor?: (polygons: Polygon[], geoid?: string) => string[];
   /** Refuse to write below this, so a partial result never overwrites a good file. */
   minFeatures: number;
   extra?: Record<string, unknown>;
@@ -741,6 +854,7 @@ async function build(opts: BuildOptions): Promise<number> {
       funcstat?: string;
       classfp?: string;
       geoid?: string;
+      clipCounties?: string[];
       polygons: Polygon[];
     }
     const pending: Pending[] = [];
@@ -777,6 +891,9 @@ async function build(opts: BuildOptions): Promise<number> {
       pending.push({
         ...identity,
         geoid: (row as { GEOID?: string }).GEOID || undefined,
+        clipCounties: opts.clipCountiesFor
+          ? opts.clipCountiesFor(polygons, (row as { GEOID?: string }).GEOID)
+          : undefined,
         polygons,
       });
     }
@@ -884,6 +1001,15 @@ async function build(opts: BuildOptions): Promise<number> {
           ...(item.funcstat ? { funcstat: item.funcstat } : {}),
           ...(item.classfp ? { classfp: item.classfp } : {}),
           ...(item.geoid ? { geoid: item.geoid } : {}),
+          /*
+           * RULING 80: the clip counties this feature's geometry actually
+           * overlaps, measured against the county polygons the clip is built
+           * from. Several is normal and real — a school district crosses county
+           * lines all the time. Absent on the unclipped national layers.
+           */
+          ...(item.clipCounties && item.clipCounties.length > 0
+            ? { clipCounties: item.clipCounties }
+            : {}),
         },
         geometry:
           simplified.length === 1
@@ -931,10 +1057,67 @@ async function build(opts: BuildOptions): Promise<number> {
       );
     }
 
+    /*
+     * TWO PLACES, ONE NAME, ONE STATE — a collision the widened clip surfaced.
+     *
+     * (RULING 80, NJ Hunt 4 item 4, 2026-08-22.) `placeIdentity` keys on state
+     * and name, and New Jersey has TWO Silver Lake CDPs: `3467590` and
+     * `3467650`. Both slug to `state:nj/place:silver_lake`. The build refused,
+     * correctly — an OCD-ID is the universal join key and a duplicate one is a
+     * join that collapses, which is exactly the failure the distinctness rule in
+     * `CLAUDE.md` was written for.
+     *
+     * The refusal was right and stopping there would have been wrong: it would
+     * have meant the geometry cannot widen because two hamlets share a name.
+     * `subdivisionIdentity` already solved the same problem for county
+     * subdivisions by carrying more of the row in the identifier, and this is
+     * the same answer with a narrower blast radius.
+     *
+     * **Only the COLLIDING ids are disambiguated, and every side of a collision
+     * is disambiguated** — never one kept bare and one suffixed, because "which
+     * one is the real Silver Lake" is not a question this build gets to answer,
+     * and a bare id that changes owner between builds is worse than no id.
+     * The suffix is the Census GEOID, which is exact, stable and already carried
+     * on every feature.
+     *
+     * A collision on an id that is ALREADY COMMITTED is a different and worse
+     * event — it would move an identifier something else joins on — so it is
+     * named loudly rather than silently renamed.
+     */
+    const byId = new Map<string, Feature[]>();
+    for (const f of features) {
+      const list = byId.get(f.properties.ocdId) ?? [];
+      list.push(f);
+      byId.set(f.properties.ocdId, list);
+    }
+    let disambiguated = 0;
+    for (const [id, group] of byId) {
+      if (group.length < 2) continue;
+      console.log(
+        `  COLLISION ${id}: ${group.map((f) => `${f.properties.label} [${f.properties.geoid ?? "no geoid"}]`).join(" | ")}`,
+      );
+      if (group.some((f) => !f.properties.geoid)) {
+        throw new Error(
+          `${id} collides ${group.length} ways and at least one side carries no GEOID, ` +
+            `so there is nothing exact to disambiguate on.`,
+        );
+      }
+      for (const f of group) {
+        f.properties.ocdId = `${id}_${f.properties.geoid}`;
+        disambiguated++;
+      }
+    }
+    if (disambiguated > 0) {
+      console.log(
+        `  disambiguated ${disambiguated} feature(s) across ${[...byId.values()].filter((g) => g.length > 1).length} name collision(s), ` +
+          `every side suffixed with its Census GEOID`,
+      );
+    }
+
     const ids = new Set(features.map((f) => f.properties.ocdId));
     if (ids.size !== features.length) {
       throw new Error(
-        `${features.length - ids.size} duplicate ocdId(s). ` +
+        `${features.length - ids.size} duplicate ocdId(s) survived disambiguation. ` +
           `OCD-IDs are the join key and must be unique.`,
       );
     }
@@ -1017,9 +1200,71 @@ async function buildClipped(
   type: DistrictType,
   clip: Map<string, Polygon[]>,
 ): Promise<void> {
-  const counties = [...clip.values()];
+  const countyEntries = [...clip.entries()];
+  const counties = countyEntries.map(([, polys]) => polys);
   const keep = (polygons: Polygon[]) =>
     counties.some((county) => overlaps(polygons, county));
+  /**
+   * The clip county a feature SITS IN, and it is not the same question as which
+   * counties it touches.
+   *
+   * `overlaps` is true for NEIGHBOURS — quantized county boundaries share their
+   * vertices exactly, so every municipality along the Morris–Sussex line
+   * "overlaps" both, and a first version of this recorded both and over-counted
+   * a federal cross-check by 27 in one county.
+   *
+   * So the measure is a VOTE OF THE FEATURE'S OWN VERTICES: for each clip
+   * county, how many of this feature's boundary points fall inside it. A town in
+   * Sussex has all of its vertices inside Sussex and at most a couple of shared
+   * ones ambiguous against Morris. The winner is the county with the most, and a
+   * genuine straddler — a regional school district across a county line — keeps
+   * every county that holds at least a fifth of its vertices, because that is a
+   * real fact about it rather than a rounding of one.
+   */
+  const clipCountiesFor = (polygons: Polygon[], geoid?: string) => {
+    /*
+     * **READ IT WHERE THE DATA SAYS IT, AND ONLY VOTE WHERE IT DOES NOT.**
+     *
+     * A county-subdivision GEOID is state(2) + county(3) + cousub(5), so for
+     * every New England town and every New Jersey township the county is
+     * already in the key — exact, and not a question geometry has to answer.
+     * The vote below is a good instrument and it is still an instrument: it put
+     * Sunapee town in Merrimack, because Sunapee sits on the Sullivan–Merrimack
+     * line across Lake Sunapee and has more of its boundary vertices on the
+     * Merrimack side. Its own GEOID says Sullivan, and its own GEOID is right.
+     *
+     * So: read the county off the key when the key carries one, and vote only
+     * for the layers whose keys do not — places (state + place) and school
+     * districts (state + district).
+     */
+    if (geoid && geoid.length === 10) {
+      const fromKey = geoid.slice(0, 5);
+      if (clip.has(fromKey)) return [fromKey];
+    }
+    const votes: { geoid: string; n: number }[] = [];
+    for (const [geoid, county] of countyEntries) {
+      if (!overlaps(polygons, county)) continue;
+      let n = 0;
+      for (const poly of polygons) {
+        for (const point of poly[0]) {
+          if (county.some((c) => pointInPolygon(point, c))) n++;
+        }
+      }
+      votes.push({ geoid, n });
+    }
+    if (votes.length === 0) return [];
+    const best = Math.max(...votes.map((v) => v.n));
+    if (best === 0) {
+      /*
+       * Not one vertex of this feature is inside any clip county, yet it
+       * overlapped one — which means the county is INSIDE the feature (a state
+       * legislative district containing the whole county, say). Every county it
+       * overlaps is then correct.
+       */
+      return votes.map((v) => v.geoid);
+    }
+    return votes.filter((v) => v.n === best).map((v) => v.geoid);
+  };
 
   // A national source is read once; per-state sources once per state.
   const states = type.national ? ["us"] : CLIP_STATES;
@@ -1073,15 +1318,19 @@ async function buildClipped(
     await build({
       outName,
       sourceUrl: url,
-      note: `${type.note}, clipped to ${CLIP_COUNTIES.map((c) => c.label).join("; ")}. Census cartographic boundary release generalized to 1:500,000. Orientation and display only.`,
+      note: `${type.note}, clipped to ${CLIP_COUNTIES.map((c) => c.label).join("; ")} and every county adjacent to them (RULING 80, adjacency measured from the Census county file by shared boundary vertex, never from a written-down list). Census cartographic boundary release generalized to 1:500,000. Orientation and display only.`,
       rows,
       shapes,
       identity: type.identity,
       keep,
+      clipCountiesFor,
       // One is enough: some types genuinely have a single feature in a county,
       // and a floor above that would reject a correct result.
       minFeatures: 1,
-      extra: { clippedTo: CLIP_COUNTIES.map((c) => c.fips) },
+      extra: {
+        clippedTo: CLIP_COUNTIES.map((c) => c.fips),
+        clipExtent: [...CLIP_EXTENT.keys()].sort(),
+      },
     });
   }
 }
@@ -1097,7 +1346,7 @@ async function main() {
 
     const types = TYPES.filter((t) => only.size === 0 || only.has(t.key));
     if (types.length > 0) {
-      const clip = await loadClipCounties();
+      const clip = await loadClipExtent();
       console.log(
         `\nclip: ${CLIP_COUNTIES.map((c) => c.label).join("; ")}`,
       );

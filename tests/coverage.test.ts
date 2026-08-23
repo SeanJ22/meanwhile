@@ -99,21 +99,56 @@ test("the clip counties hold exactly the 74 governments Census enumerates", () =
   // out of the identifier: after the FUNCSTAT fix a New Jersey borough is a flat
   // `state:nj/place:*` row with no county segment at all, so an identifier-shaped
   // test would silently miss 29 governments.
-  const counties = JSON.parse(
-    readFileSync(join(GEO_DIR, "county-us.geojson"), "utf8"),
-  ).features as GeoFeature[];
+  /*
+   * **THE COUNTY IS READ, NOT GUESSED.** (RULING 80, NJ Hunt 4 item 4,
+   * 2026-08-22.)
+   *
+   * This used to place each municipality in a county by AVERAGING its
+   * exterior-ring vertices and testing that point against the simplified county
+   * polygon. Both halves of that are approximations, and once the clip widened
+   * from three counties to twenty-two they stopped cancelling out: three Sussex
+   * County municipalities on the Lake Hopatcong shore — Byram township,
+   * Hopatcong and Stanhope — reported as Morris, and inflated a federal
+   * cross-check by three. A vertex average is not a centroid, and a
+   * 200-metre-simplified boundary is not a boundary.
+   *
+   * `clipCounties` is written onto every clipped feature at build time from the
+   * REAL overlap against the county polygons the clip is built from, before any
+   * simplification. It is exact. A municipality that genuinely straddles a
+   * county line carries both, and is counted in both — which is the truth about
+   * it, not a rounding of it.
+   */
+  const countyLabel = new Map(CLIP_COUNTIES.map((c) => [c.fips, c.label.replace(" County,", "")]));
 
   const perCounty: Record<string, number> = {};
+  let outsideThePrimaries = 0;
   for (const feature of features) {
     if (!bodyOcdIds.has(feature.properties.ocdId)) continue;
     const division = byId.get(feature.properties.ocdId);
     if (division?.divisionType !== "place") continue;
 
-    const home = counties.find((c) => contains(centroid(feature), c));
-    if (!home) continue;
-    const key = `${home.properties.label} ${(home.properties as { state?: string }).state}`;
-    perCounty[key] = (perCounty[key] ?? 0) + 1;
+    const homes = (feature.properties as { clipCounties?: string[] }).clipCounties ?? [];
+    const primaries = homes.filter((fips) => countyLabel.has(fips));
+    if (primaries.length === 0) {
+      outsideThePrimaries++;
+      continue;
+    }
+    for (const fips of primaries) {
+      const key = countyLabel.get(fips)!;
+      perCounty[key] = (perCounty[key] ?? 0) + 1;
+    }
   }
+
+  /*
+   * THE PAIR. The widened extent draws municipal governments outside the three
+   * counties this federal cross-check is about, and saying only the in-scope
+   * number would hide that. The standing figure is the per-county one below.
+   */
+  console.log(
+    `COG cross-check: ${Object.values(perCounty).reduce((a, b) => a + b, 0)} municipal ` +
+      `bodies inside the three primary counties · ${outsideThePrimaries} held in the ` +
+      `adjacent counties the RULING 80 extent now draws`,
+  );
 
   assert.deepEqual(
     perCounty,
@@ -186,12 +221,20 @@ test("a government listed in both layers keeps the real row, not the fictitious 
 });
 
 test("every fictitious row is suppressed, and only fictitious rows are", () => {
-  // 32 across the three clip counties. If this number moves, either Census
-  // changed a vintage or the rule stopped reading FUNCSTAT.
+  /*
+   * **121 across the clip EXTENT**, which is the three primary counties plus
+   * every county adjacent to them (RULING 80, 2026-08-22). It was 32 while the
+   * clip was three counties; the rule did not change and the universe did.
+   *
+   * If this number moves again, either Census changed a vintage, the clip
+   * changed, or the rule stopped reading FUNCSTAT — and the second assertion
+   * below is the one that distinguishes the third case from the first two,
+   * because it is about the RULE rather than about the count.
+   */
   const municipal = registry.divisions.filter((d) => d.divisionType === "place");
   const fictitious = municipal.filter((d) => d.funcstat === "F");
 
-  assert.equal(fictitious.length, 32, "expected 32 fictitious duplicate rows");
+  assert.equal(fictitious.length, 121, "expected 121 fictitious duplicate rows");
   assert.ok(
     fictitious.every((d) => !bodyOcdIds.has(d.ocdId)),
     "a fictitious row must never produce a governing body",

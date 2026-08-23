@@ -28,8 +28,22 @@
 
 name: Build check
 
+# RULING 78 (2026-08-22, NJ Hunt 4 item 2) — CI runs where it earns its cost.
+#
+# This used to read `push:` with no branch filter, which meant ONE merge cost
+# THREE runs of the same check plus a Netlify deploy each: the branch push, the
+# pull request, and the merge to `main`. On top of the scheduled refreshes that
+# exhausted the Actions balance, and an exhausted balance does not fail loudly —
+# it produced completed jobs with zero steps recorded, which read as a broken
+# tree for a whole session (`NS04`, RULING 81).
+#
+# NOTHING STOPS GATING. Every branch that matters becomes a pull request, and
+# every merge lands on `main`; `pnpm closeout` pushes close-out records straight
+# to `main` and RULING 75 requires the tip to go green, which is this check on
+# the `main` push. The two surviving triggers cover everything the third did.
 on:
   push:
+    branches: [main]
   pull_request:
   workflow_dispatch: {}
 

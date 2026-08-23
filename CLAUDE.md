@@ -26,10 +26,20 @@ What does not drift, and is therefore law:
   `netlify.toml`, and `.github/workflows/build-check.yml` runs that same string
   on every push so a refused build is readable without the author's Netlify
   login.
-- **The scheduler is GitHub Actions, not platform cron.** Five workflows push
-  `main` — the four governed-artifact refreshes plus the intake tripwire — and
-  each rebases and retries through `scripts/push-main.mjs`, because two of them
-  running close together used to lose one run's work (R48).
+- **The scheduler is GitHub Actions, not platform cron.** **SEVEN** workflows
+  push `main` (corrected 2026-08-22, NJ Hunt 4 item 1, `NS02` — this line said
+  five from the day it was written and was two short by the time anyone read
+  it): `refresh-meetings-snapshot`, `refresh-fec-snapshot`,
+  `refresh-legiscan-snapshot`, `refresh-dotgov-snapshot`, `intake-tripwire`,
+  `job-watch` (added NH Hunt 3, RULING 56 — it commits the Needs Sean row it
+  raises) and `refresh-nj-filing` (added NJ Hunt 3 — it rebuilds the Morris
+  County ballot from the clerk's current filing). Each rebases and retries
+  through `scripts/push-main.mjs`, because two of them running close together
+  used to lose one run's work (R48). **The number is asserted in
+  `tests/push-main.test.ts`**, so the next one to be added moves the test rather
+  than quietly making this sentence wrong again. **Cadence is RULING 78's**:
+  every scheduled refresh runs ONCE DAILY, except the clerk filing, which stays
+  on its one-day RULING 53 clock near a filing deadline.
 - Auth via Auth.js, email magic link only — no OAuth, no social login.
 - MapLibre GL with a vector tile provider. Not Google Maps.
 - Mobile is responsive web first. A React Native client comes later if push
@@ -393,6 +403,183 @@ what Newbury learned. Arizona does not re-derive what Rockaway learned.
 - **Where an inherited branch fails in a new jurisdiction it grows a sub-branch
   per RULING 60.** It is never deleted, and its failure is recorded with the
   jurisdiction and the date so the next state knows what to expect.
+
+### RULING 75 — A CLOSE-OUT COMMIT IS GATED LIKE ANY OTHER COMMIT TO `main`
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 3. Written into law here
+2026-08-22, NJ Hunt 4 item 1.3, closing `NS03`. It sits beside RULING 62 because
+both are about a protection that reported green while not running.)
+
+**Every commit that reaches `main` passes the same gate, and a close-out record
+is a commit that reaches `main`.**
+
+The merge-cadence rule above permits a session to ship its code once and then
+write close-out records as separate named commits, because a document cannot
+name the commit that contains it. That is correct and it stays. What went
+unnoticed is what it implies about gating: `pnpm handoff --ship` calls itself the
+single door everything merges through, and **for code it is — for close-out
+records it never was.** They were committed after the ship and pushed straight
+to `main` through no gate at all, by every session in this repo's history.
+
+The shape put a red suite on `main` twice. The second time, NJ Hunt 2's close-out
+carried a session script with five `TS18046` sites, build checks #196 and #197
+failed, Netlify refused both deploys at 'building site', and production served a
+seven-hour-old build for the rest of the day. **The session reported green gates
+truthfully** — it ran them before the file existed. That is the failure this rule
+exists to name: an honest report about a tree that no longer matched what was on
+the server.
+
+Three parts, and the third is the one nothing local could ever have supplied:
+
+1. **`pnpm closeout` is the gated door.** It refuses off `main`, refuses a dirty
+   tree, runs the literal build command `netlify.toml` gives Netlify — which
+   type-checks everything `tsconfig.json` includes, `scripts/` included — pushes
+   through `scripts/push-main.mjs`, then waits for the tip to go green. **There
+   is no skip flag**, for the reason the build gate already gives: an escape
+   hatch on a gate is how the gate stops meaning anything.
+2. **`pnpm main:green` asks GitHub, not the working tree.** Every other gate in
+   this repo answers a question about local files. The question that went unasked
+   is about the REMOTE BRANCH, and only the server knows what happened to a
+   commit after it landed. Four verdicts are kept apart — green, red, pending and
+   **could-not-tell** — because a check that cannot reach its subject must never
+   print like a passing one (RULING 24).
+3. **`pnpm handoff` carries a `main checks` line and fails on RED.** A session
+   may not report clean gates while leaving `main` failing and production stale.
+
+*Why not a pre-push hook.* `core.hooksPath` is per-clone and can be silently
+absent in a fresh clone, and a hook that runs on every work-in-progress push is a
+hook that gets `--no-verify`d out of existence. The server-truth check has
+neither problem — it cannot be absent, and it costs one API call.
+
+### RULING 76 — SESSION-DATED SCRIPTS ARE COMMITTED, AND HELD TO EVERY STANDARD
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 3. Written into law here
+2026-08-22, NJ Hunt 4 item 1.3, closing `NS03`.)
+
+**A one-shot script written for one session's evidence stays in the tree, and
+`scripts/` is never excluded from the type check.**
+
+Three reasons, in order of weight:
+
+1. **They carry technique, and technique is a rung.** The page-shrink recipe for
+   a 68,000px ballot page, the `sessionStorage` seeding that stops a map capture
+   showing the welcome overlay, the marker-before-shrink ordering — every one of
+   those is a wall that fell, and the standing rule is that a wall which falls
+   becomes a permanent reusable step rather than a discovery spent and kept.
+   **Deleting the script deletes the rung.**
+2. **They are the method record behind evidence already reported.** RULING 2
+   makes a screenshot evidence only once it has been read as an image. A report
+   saying four captures were read, with no committed record of how they were
+   produced, is weaker than one where the recipe is in the tree.
+3. **"Not committed" creates an untracked class the gates never see** — the same
+   invisibility that caused RULING 75's failure, work reaching `main`'s
+   neighbourhood without passing anything. Moving these out of the tree would not
+   gate them; it would only stop them being looked at.
+
+**The standard, stated:** they type-check under `strict` like every other file,
+they lint, they carry a header saying which session and which claim they served,
+and they are never excluded from the type check. `scripts/` holding one-shot
+tools is not a reason to weaken the check over `scripts/`.
+
+**What this does NOT license** is minting a new dated script where a
+parameterised one would do. A shooter that takes a zip and a list of contests is
+worth more than the eleventh `shoot-<date>.mts`, and the preference is stated
+here so the count is a fact about the past rather than a target.
+
+### RULING 77 — VERIFY LOCALLY, SHIP ONCE
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 4. It is the merge-cadence
+rule's missing half: that rule says how many times a session may ship, and this
+says WHEN.)
+
+**Never ship and then verify. Verify, confirm it works, then ship.**
+
+Almost nothing needs production. Screenshots at 430×932, `pnpm walk:all`, the
+card checks, the who-governs pill and the whole ballot page all run against a
+**local production build**. Only the deploy-SHA confirmation and `/api/build`
+require the live site, because only those two are questions about what the server
+is serving.
+
+- **One planned deploy, one merge**, and close-out records are part of that
+  commit where they can be.
+- **A defect found in local verification is fixed BEFORE the ship**, not shipped
+  and then patched. The second-merge exception in the merge-cadence rule above
+  survives — a live walk that catches a regression must be allowed to fix it —
+  but a session that could have caught the defect locally and did not has spent
+  the exception on its own carelessness, and the report says so.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* Ship-
+then-verify was costing a merge every time, and the merges were not the real
+price: between the ship and the verification, production was serving the defect
+to readers. A local production build is the same bytes. There was never a reason
+to find out on the live site.
+
+### RULING 78 — CI RUNS WHERE IT EARNS ITS COST
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 4.)
+
+**A gate that runs three times for one merge is one gate and two copies of it.**
+
+Build check was firing on the branch push, again on the pull request, and again
+on the merge to `main` — three runs plus a Netlify deploy each, on top of the
+scheduled refreshes. That exhausted the Actions balance, and an exhausted balance
+does not fail loudly: it produced completed jobs with zero steps recorded, which
+read as a broken tree for a whole session (`NS04`).
+
+- **Build check runs on the pull request and on `main`.** The branch-push trigger
+  is removed. Those two together cover everything the third covered, because
+  every branch that matters becomes a pull request and every merge lands on
+  `main`.
+- **Scheduled refresh workflows run ONCE DAILY**, except the clerk filing near a
+  filing deadline, which keeps its one-day RULING 53 clock.
+- **Nothing stops gating.** This removes duplicate runs of the same check, never
+  a check. A cadence change that dropped coverage would be the budget raised to
+  fit the change it was supposed to catch, in another costume.
+
+### RULING 79 — A RULING CLOSES THE NEEDS SEAN ROW IT ANSWERS
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 4. **This amends RULING 37
+deliberately**, and the amendment is narrow.)
+
+RULING 37 says only the author closes a Needs Sean row. That stands for rows
+awaiting his judgement. What it did not anticipate is the row he has ALREADY
+ANSWERED — he rules in conversation, the ruling is recorded in `docs/rulings.md`
+and shipped, and the row that asked the question sits open waiting for him to say
+the same thing a second time in a spreadsheet. Needs Sean stood at 54 open and an
+unknown share of those were already answered. **That is the accumulation the
+section was built to prevent.**
+
+- **Where a dated ruling in `docs/rulings.md` demonstrably answers a Needs Sean
+  row, the session marks it Resolved**, records the ruling number and the
+  shipping SHA on the row, and moves it.
+- **Every such close is reported individually with its ruling and SHA**, so he
+  can reverse any the session got wrong.
+- **Where no ruling answers the row, it stays open and is named individually.**
+  Ambiguity is not a licence to close.
+- **Rows that are genuinely his judgement and carry no ruling** — a naming
+  decision, a business call, a visual preference — **stay open regardless of how
+  long they have been there.**
+
+### RULING 80 — THE COMMITTED GEOMETRY FOLLOWS THE READER, NOT THE COUNTY
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 4 item 4, closing `NH44`.)
+
+**The TIGER geometry clip widens to the adjacent counties. A unit this product
+names is a unit the map can draw.**
+
+The committed geometry was clipped to ONE county per state. A zip's first-rung
+circle crosses county lines — 3 of 4 pilot zips do, and 184 of 279 measured — so
+towns inside the circle were entering the registry with their boards, their
+rosters and their meetings, and no polygon. RULING 57 says a body is NAMED FIRST
+and hunted second; a body that cannot be DRAWN because a build-time clip was
+convenient is that rule losing to a file format.
+
+- **The clip is the county plus its adjacent counties**, per state.
+- **The vector-tiling threshold is a real constraint and is measured, not
+  assumed**: the feature count is stated before and after against it, and a tile
+  over its budget is a finding rather than a rounding error.
+- **A unit that reads "no division of its own" after the widening is a
+  DIFFERENT finding from one that read it before**, and the pair is stated.
 
 ### WHAT IS LAW HERE, AND WHAT IS A RULING
 

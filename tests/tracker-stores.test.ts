@@ -941,3 +941,106 @@ test("amend touches the description and never the title or the section", () => {
   assert.doesNotMatch(fn, /row\.Section\s*=|row\["Section"\]\s*=/, "the section is RULING 32's home");
   assert.match(fn, /Description amended by the session that opened this row/, "and the change leaves a trace");
 });
+
+/* ========================================================================== */
+/* RULING 79 — a ruling closes the Needs Sean row it answers                  */
+/* ========================================================================== */
+
+test("RULING 79: a recorded ruling closes a Needs Sean row, and nothing else does", () => {
+  /*
+   * RULING 79 (2026-08-22) amends RULING 37 narrowly. The guard above still
+   * stands and is not weakened: a session that simply marks a Needs Sean row
+   * Resolved is still refused. What is new is a THIRD author — `"ruling"` —
+   * which `scripts/tracker.mjs` sets only after checking that the named ruling
+   * exists in `docs/rulings.md`, and only when the row itself names it.
+   *
+   * Both halves are asserted, because the dangerous failure is the permissive
+   * one: an author string a session can set for itself would turn RULING 37
+   * into a suggestion.
+   */
+  const base = {
+    ID: "TEST79",
+    Section: "needs-sean",
+    Title: "t",
+    "What this is": "d",
+    Resolution: "Resolved",
+    Condition: "",
+  };
+
+  // A session, unaided, still cannot.
+  const plain = planMoves({ working: [{ ...base }], sections, actor: "session" });
+  assert.equal(plain.moves.length, 0);
+  assert.match(plain.refusals[0], /RULING 37/);
+  assert.match(plain.refusals[0], /RULING 79/, "the refusal names the one exception");
+
+  // A ruling close that does not NAME its ruling is refused — the number is the
+  // whole of the authority, and a close he cannot trace is one he cannot reverse.
+  const unnamed = planMoves({
+    working: [{ ...base, Notes: "closed because it looked done" }],
+    sections,
+    actor: "session",
+    resolutionAuthor: { TEST79: "ruling" },
+  });
+  assert.equal(unnamed.moves.length, 0);
+  assert.match(unnamed.refusals[0], /RULING 79/);
+
+  // Named, it moves.
+  const named = planMoves({
+    working: [{ ...base, Notes: "Closed under RULING 78 (RULING 79), 2026-08-22." }],
+    sections,
+    actor: "session",
+    resolutionAuthor: { TEST79: "ruling" },
+  });
+  assert.equal(named.moves.length, 1, "a row a recorded ruling answers closes");
+  assert.deepEqual(named.refusals, []);
+});
+
+test("RULING 79: the move script refuses a ruling that is not in docs/rulings.md", () => {
+  /*
+   * The check that makes the whole thing safe, asserted against the SOURCE
+   * because it lives in the script rather than in the rules module: a close
+   * whose authority does not exist is worse than an open row, and "RULING 999
+   * answers this" must fail rather than write.
+   */
+  const script = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(script, /--ruling=/, "the flag exists");
+  assert.match(script, /rulings\.md/, "the named ruling is checked against the record");
+  assert.match(
+    script,
+    /is not recorded in docs\/rulings\.md/,
+    "and a ruling that is not there is refused by name",
+  );
+  assert.match(
+    script,
+    /resolutionAuthor\[id\] = "ruling"/,
+    "the ruling author is set only on that path",
+  );
+});
+
+test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
+  /*
+   * The hole this session found and filled. This file is "the append-only
+   * record of every ruling that is not law", and it ran 1…51, 57… — rulings 52
+   * through 56 were adopted on 2026-08-21 and written into `CLAUDE.md` and
+   * `docs/state.md` instead. Nothing was lost, and a session asking this file
+   * what he ruled about filed addresses got no answer.
+   *
+   * RULING 79 makes that gap operational: it closes a Needs Sean row only on a
+   * ruling recorded HERE. So the record has to be whole, and a future gap fails
+   * the build instead of being discovered by a close that cannot be made.
+   *
+   * RULING 11 is the one deliberate absence and is named as such in the file.
+   */
+  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const numbers = [...text.matchAll(/^### RULING (\d+)\b/gm)].map((m) => Number(m[1]));
+  const seen = new Set(numbers);
+  const highest = Math.max(...numbers);
+  const missing: number[] = [];
+  for (let n = 1; n <= highest; n++) if (!seen.has(n)) missing.push(n);
+  assert.deepEqual(
+    missing,
+    [],
+    `docs/rulings.md is missing RULING ${missing.join(", ")} — every ruling is recorded here, ` +
+      "and a number that is only in CLAUDE.md or state.md cannot close a Needs Sean row",
+  );
+});

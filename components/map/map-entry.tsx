@@ -16,6 +16,7 @@ import { useNarrowing } from "@/hooks/use-narrowing";
 import { useStoredTheme } from "@/hooks/use-stored-theme";
 import { useStoredZip } from "@/hooks/use-stored-zip";
 import type { SearchItem } from "@/lib/search";
+import { bodyFromRow, resolveBodyRow, sameName } from "@/lib/search/body-row";
 import { DataProvider, type ShellData } from "@/lib/state/data";
 import { applyFilters, noticeShouldExpand } from "@/lib/state/derive";
 import { deriveActiveDistrictTypes } from "@/lib/state/district-intent";
@@ -980,16 +981,35 @@ function MapEntryInner() {
           });
         }
       } else if (item.kind === "body") {
-        const candidates = (current?.coverage?.bodies ?? []).filter(
-          (b) => b.ocdId !== null && b.ocdId === item.ocdId,
-        );
-        const named = candidates.filter((b) => b.name === item.label);
+        /*
+         * PU02 / M135, NJ Hunt 4 item 3 (2026-08-22). The resolution moved to
+         * `lib/search/body-row.ts` — read its header for the measurement.
+         *
+         * In short: the old matcher required `CoveredBody.name === item.label`
+         * on the same division, and across twenty production rows at four zips
+         * that comparison succeeded ONCE. Everything that opened, opened through
+         * the one-body-on-the-division fallback. At 03255 nothing opened at all.
+         *
+         * The refusal principle is unchanged and is why this is not a fuzzy
+         * match: `resolveBodyRow` normalises two spellings of the SAME name and
+         * refuses anything less certain. What changed is what happens when it
+         * refuses — the card is now built from the ROW, which names the body the
+         * reader clicked and carries that body's meetings, instead of the row
+         * answering a click with silence.
+         */
+        const resolved = resolveBodyRow(item, current?.coverage?.bodies ?? []);
         const body =
-          named.length === 1
-            ? named[0]
-            : candidates.length === 1
-              ? candidates[0]
-              : null;
+          resolved?.body ??
+          (item.ocdId !== null
+            ? bodyFromRow({
+                label: item.label,
+                ocdId: item.ocdId,
+                jurisdiction:
+                  (current?.meetings ?? []).find(
+                    (m) => m.ocdId === item.ocdId && sameName(m.bodyName, item.label),
+                  )?.jurisdiction ?? item.label,
+              })
+            : null);
         if (body) {
           openLarge({
             kind: "entity",
@@ -2264,8 +2284,15 @@ function placeSubject(
       tierLabel: tier ? TIER_LABEL[tier] : null,
       bodies: mine
         .map((b) => {
+          /*
+           * PU02's class sweep (NJ Hunt 4 item 3, 2026-08-22) — the third
+           * instance of the exact-string join between the snapshot's published
+           * `bodyName` and the registry's hunted `name`. Undercounts a body's
+           * sittings whenever the two spell the name differently, and prints
+           * NOTHING at zero, so the undercount rendered as "sits never".
+           */
           const count = meetings.filter(
-            (m) => m.ocdId === ocdId && m.bodyName === (b.name ?? b.divisionLabel),
+            (m) => m.ocdId === ocdId && sameName(m.bodyName, b.name ?? b.divisionLabel),
           ).length;
           return {
             key: b.bodyId,

@@ -111,7 +111,7 @@ const CLIP =
   "(public/geo/*.geojson, clippedTo 04019/34027/33013) and this government is " +
   "outside that clip";
 
-const ROWS: CuratedDivisionRow[] = [
+const RETIRED_2026_08_22: CuratedDivisionRow[] = [
   /* ------------------------------------------------------- Sullivan County -- */
   {
     ocdId: `${NH}/county:sullivan`,
@@ -201,6 +201,38 @@ const ROWS: CuratedDivisionRow[] = [
     org: NCES_ORG,
   })),
 ];
+
+/**
+ * **EVERY ROW ABOVE IS RETIRED, AND THE AUTHOR'S DECISION IS WHY.** (RULING 80,
+ * NJ Hunt 4 item 4, 2026-08-22 — the ruling that answered `NH44`.)
+ *
+ * This file's own header said the other honest answer was to widen the clip, and
+ * that it was "a structural change the author should make deliberately, and a
+ * tracker row rather than a side effect of a hunt". The row was `NH44`. He ruled:
+ * the clip widens to every county ADJACENT to each primary county, measured from
+ * the Census county file by shared boundary vertex rather than from a
+ * written-down list.
+ *
+ * **All thirteen of these now have real TIGER geometry** — Sullivan County, five
+ * Sullivan towns, Windsor town in Hillsborough, and six school districts —
+ * checked against `public/geo` on 2026-08-22. `scripts/build-registry.ts` refuses
+ * a curated row that shadows a polygon, correctly, and it refused this one the
+ * moment the widened geometry landed.
+ *
+ * **They are kept, not deleted.** A clip that narrows again — a vintage change, a
+ * build-size decision — puts these thirteen governments back out of reach, and the
+ * next session should find the work already done rather than rediscover thirteen
+ * towns. `tests/curated-division-overlay.test.ts` asserts every retired row IS in
+ * the committed geometry, so a narrowing fails the build here rather than being
+ * noticed by a reader at 03255.
+ *
+ * The machinery is untouched and `CURATED_DIVISIONS` stays exported: the next
+ * state will have units the geometry cannot supply, and RULING 57 has not changed.
+ */
+export const RETIRED_CURATED_ROWS: readonly CuratedDivisionRow[] = RETIRED_2026_08_22;
+
+const ROWS: CuratedDivisionRow[] = [];
+
 
 /**
  * The curated divisions, shaped exactly like a derived one so nothing

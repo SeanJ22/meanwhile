@@ -887,6 +887,10 @@ people-on-the-ledger against people-read-this-run.
 | Command | What it does |
 |---|---|
 | `pnpm nj:filing [--municipality M] [--pdf F] [--json OUT]` | **The branch that answers this session's headline.** Discovers the Morris County Clerk's and the NJ Division of Elections' CURRENT filed-candidate PDFs from those pages' own `href`s — never a hardcoded URL, because the clerk republishes at a new version path on every revision and both stay reachable — then parses name, office, party, slogan, **filed street address and filed email**. 272 candidates county-wide, 260 with an email, on 2026-08-22. Walks rungs 2 → 3 → 4 on discovery, because `www.nj.gov` refuses intermittently and `curl` clears it. Skips the ballot-position PDF by name: it is a scan with no text layer and belongs to rung 9. Reports every count; a zero-candidate parse exits NON-ZERO with the reason, because a parser that returns nothing has told you about itself. |
+| `pnpm nj:search [--resume] [--contest C]` | **`search-index`, made mechanically walkable.** Five engines as a TREE (three SearXNG instances at rung 5, then Bing, Yahoo, DuckDuckGo, Mojeek), unioned rather than first-answer-wins, with a doubling rest per engine after a wall and a WAIT rather than a miss when all of them are resting. Title-cases the filed name before asking, because ALL-CAPS makes Bing drop a quoted phrase silently. Refuses a result set that never mentions the surname — a 200 whose content is not about the thing asked for is not a document. Classifies every URL into the manifest route it would be evidence FOR, and caps everything at LEAD (RULING 68). `--resume` keeps every candidate that already has hits and re-walks the rest. 272 candidates, 148 with at least one classified URL, 2026-08-22.
+| `pnpm nj:rosters [--index] [--only M]` | **The New Jersey municipal-roster branch.** `--index` reads the county’s own Cities-and-Towns page — found by following the county home page’s `href`s, never guessed — and matches each official municipal website to its municipality with a TYPE-AWARE match, because New Jersey puts a borough and a township of the same name in the same county. Then walks each site’s own governing-body links and reports which pages carry a filed candidate’s name. 30 of 33 municipalities indexed, 167 pages read, 2 walls named, 2026-08-22.
+| `pnpm nj:extract [--contest C]` | **From a page that names somebody to a field about them.** Re-reads each roster page and works PER PERSON: the smallest enclosing block around the FULL NAME, and nothing from outside it. Reconstructs the JavaScript-concatenated `mailto` municipal sites use (rung 8). Attributes a portrait by FILENAME where the publisher named the file after the person, and by position otherwise — saying which. Verifies every campaign-site lead by fetching it: HIT only when the page carries the name AND the race.
+| `pnpm nj:portraits` | Downloads every portrait a hunt proposed and draws them into ONE contact sheet, shot full-page. RULING 2 makes a capture evidence only once it has been READ AS AN IMAGE; this is what makes reading six of them affordable. It approves nothing — RULING 55 leaves that with the author.
 | `pnpm ad:library --name "First Last" --state ST` <br> `pnpm ad:library --roster <file.json>` | **RULING 66's four compliant routes to a walled social page** — `ad-library`, `social-archive`, `social-mirror`, `news-embed` — walked per person with each outcome named. Carries the **control query**: before guessing any identifier at a host it asks that host for a name that cannot exist and treats any answer within 2% of the control as EMPTY, which is what stops an SPA shell, a login wall or a no-results page reading as a find. Distinguishes four outcomes on purpose: `HIT`, **`LEAD`** (a page exists at a guessed handle and whose it is has NOT been established), `EMPTY`, and **`REFUSED`** (a wall or a missing credential — never counted as an absence, so no field moves toward exhaustion on it). `ad-library` needs `META_AD_LIBRARY_TOKEN`, which this project does not hold; see tracker `NS01`. |
 
 **Two inherited tools grew New Jersey limbs rather than being replaced** — RULING 60:
@@ -4198,3 +4202,250 @@ the first-rung 25 km circle, not inside the zip. The nearest unheld unit is 6.44
 km away and the furthest 24.7 km; every government whose territory actually
 reaches inside 07866 IS held. Reporting "90 of 142" without that sentence
 describes a coverage-WIDTH decision as though it were a hunt failure.
+
+---
+
+## THE NEW JERSEY CANDIDATE HUNT — NJ Hunt 4, 2026-08-22
+
+**Read this section first if you are opening a new state.** It is the one that
+generalises. Everything below was learned in Morris County, New Jersey against a
+272-candidate, 90-contest county ballot where the filing document carried a name,
+a party, an email, a street address and nothing else — no portrait, no prose, no
+URL for anybody.
+
+### Q: The clerk's filing gave me names and nothing else. Where do the other fields live?
+
+**Not in one place, and the highest-yield route is not the obvious one.**
+Measured, Morris County, 2026-08-22:
+
+| Route | What it reached |
+| --- | --- |
+| `filing-county` (the clerk's PDF) | 272 of 272 contacts. Spent — it carries nothing else. |
+| `search-index` (made mechanical) | 148 of 272 candidates returned at least one classified URL |
+| `body-roster-page` via the municipal branch below | 18 candidates, with the government's own page naming them |
+| `candidate-platform` (GoodParty) | 76 of 272 — the single biggest host, and worth the least |
+| `campaign-site`, verified by reading | 5 confirmed campaign sites in the whole county |
+
+**Five campaign sites in 272 candidacies is the finding, not the failure.** These
+are borough councils and school boards; most of these people do not have a
+website, and the product's job is to say so honestly rather than to keep looking
+for one that does not exist. What they DO have is a government page, a filed
+email, and often a Facebook page.
+
+### Q: How do I get every municipality's official website without guessing 39 hostnames?
+
+**Ask the county, and find its index by following its own links.**
+
+The guesses failed and are recorded because guessing is the tempting move:
+`morriscountynj.gov/Residents/Municipalities`, `/Government/Municipalities` and
+`/municipalities` all answered **404** on 2026-08-22.
+
+The index exists and the county home page links it. Fetch the county home page
+at rung 2, read its `href`s, and take the one whose path is about towns —
+`/Residents/Community-Information/Cities-and-Towns`. It carries the official
+website of every municipality in the county. **One document, 39 municipalities.**
+
+`pnpm nj:rosters --index` does exactly this and writes
+`data/hunt/nj-morris-municipal-sites.json`.
+
+**This travels.** Every county in the United States that has a website has a page
+listing its municipalities; almost none of them is at a path you can guess.
+
+### Q: The county index matched the wrong town. Why?
+
+**Because New Jersey puts a borough and a township of the same name in the same
+county, and thirty of its 564 municipalities collide that way.**
+
+Chester borough and Chester township. Mendham borough and Mendham township.
+Boonton town and Boonton township. Rockaway borough and Rockaway township. A
+first version matched each host to the longest municipality name it contained and
+produced four wrong rows — Boonton town's site assigned to Boonton TOWNSHIP,
+Chester borough's to Chester TOWNSHIP — while the four it took the sites from read
+as having no website at all.
+
+**Both sides must declare a TYPE and the types must agree.** The municipality's
+type comes from its OCD slug (`_township` / `_borough` / `_town`); the host's
+comes from the host string. An untyped host may serve any municipality, but only
+after every typed host is assigned.
+
+**And a hostname has no words in it.** The second version used `\btown\b`, which
+matches nothing inside `townofmorristown.org` — so Morristown's own site and
+Morris Township's `morristwp.com` both came out untyped and were assigned to each
+other's government. Two wrong rows, and the give-away was that both were wrong in
+the same swap. **Substring, longest type first, no word boundaries.**
+
+30 of 33 municipalities matched after the fix. The three that did not —
+Madison (`rosenet.org`), Pequannock and Washington Township — have hostnames
+carrying no form of their name, which no index-side rule can fix; they need the
+search index or the municipality's own letterhead.
+
+### Q: The council page publishes emails and my fetch sees none.
+
+**Read the page's own JavaScript. The address is there in two pieces.**
+
+Butler Borough's council page carries no `mailto:` anywhere. What it carries is:
+
+```js
+a = 'rverdonik'; b = 'butlerborough.com'; document.write(" ");
+```
+
+— the anti-harvesting idiom every CivicPlus-era municipal site uses, which
+assembles the address in the browser. A plain fetch sees the two halves and no
+address, and records "no email published", which is a **false miss** about a
+sitting councilman whose address the borough publishes on its own page.
+
+This is **rung 8** — the structured data the prose hides — and it is not
+circumvention: nothing is authenticated, nothing is decoded, no access control is
+passed. The page published the address; it published it in two pieces.
+
+`scripts/nj-hunt4-extract.mts` reconstructs it and marks the address as
+`javascript-concatenated (rung 8)` so a reader can tell it from one lifted out of
+an `href`. It reached **4 of the 9 official emails** this session found.
+
+### Q: The roster page names twelve people and carries nine emails. Whose is which?
+
+**Work inside the person's own block, and anchor on the FULL NAME.**
+
+The smallest enclosing `<tr>` / `<li>` / `<div>` / `<td>` containing the name is
+that person's row on every vendor this county uses, because a roster is a list of
+people. Take the email, the phone and the portrait from inside it and nothing
+from outside it.
+
+**A surname is not a key.** Anchoring on the surname alone attributed a Lincoln
+Park block reading *"Janet Cassidy, Superintendent of Recreation"* to WILLIAM
+Cassidy, and a Kinnelon vote tally reading *"CHIRDO, Mabey, Lewis"* to Sean
+Mabey. Both would have shipped another person's contact under a candidate's name.
+The anchor is `Given Family` or `Family, Given`, and the block itself has to carry
+both names. That cost six of twenty-four apparent matches, and all six were wrong.
+
+### Q: How do I attach a portrait to the right face?
+
+**The filename is the strongest attribution on the page, and it is free.**
+
+Proximity is a weak instrument: half these vendors put the face in one `<div>`
+and the name in the next, so a tighter block loses the portrait and a looser one
+risks attaching a face to the wrong person — the worst single error this product
+can make.
+
+These municipalities name the file after the person:
+`chathamtownship.org/wp-content/uploads/jen_rowland.jpg`,
+`kinnelonboro.org/Images/thumb.Mabey 400.jpg`,
+`mendhamnj.org/Images/thumb.Althoff1.png`,
+`mountainlakes.gov/wp-content/uploads/2014/09/Muilenburg-Photo-scaled.jpg`.
+A surname in the URL of an image on that person's own government's roster page is
+the **publisher saying whose face it is**, and it does not depend on where the
+markup puts the two.
+
+**And it is not infallible, which is why a person still looks.** Kinnelon
+publishes `thumb.Franks.jpg` on a page naming *Cynthia Frank*. FRANKS is not
+FRANK. Any doubt about identity fails at every door, so that portrait was refused
+and her photo stays owed.
+
+`pnpm nj:portraits` downloads every proposed portrait and draws them into ONE
+contact sheet, so six faces are judged in one look instead of six. RULING 2 makes
+a capture evidence only once it has been read as an image; this is what makes the
+reading affordable.
+
+### Q: The search index stopped answering after two hundred queries.
+
+**It is a rate wall, it is a fact about the hour, and the answer is more front
+doors.**
+
+DuckDuckGo's HTML endpoint answered this machine at 09:0x and was serving HTTP
+202 with an empty result set by 09:1x — **six queries**. Bing and Yahoo both
+walled after roughly 170. A single-engine hunt would have written 180 honest-
+looking absences off one IP's rate ledger.
+
+The engine tree, in the order worth trying, and independence counted over the
+DEPENDENCY rather than over the name:
+
+1. **SearXNG public instances** — `priv.au`, `opnxng.com`, `paulgo.io`,
+   `search.mdosch.de`, `searxng.site`, `searx.perennialte.ch`. This is the
+   ladder's **rung 5**: the instance queries the upstream engines from ITS
+   server, so our requests are not on the walled rate ledger at all. Of
+   twenty-six public instances probed on 2026-08-22, **three** were answering
+   with results — a public instance is somebody's hobby server, so the pool is
+   re-probed rather than trusted.
+2. **Bing** — results are `b_algo` blocks whose href is a `ck/a` redirect
+   carrying the target base64url-encoded in `u=a1…`. Decode it; the breadcrumb in
+   the title is a usable fallback.
+3. **Yahoo** — `d-ib` anchors, target in a `/RU=…/` path segment.
+4. **DuckDuckGo HTML** — `result__a` anchors, target in `uddg=`.
+5. **Mojeek** — its own crawler, so genuinely independent, and it returns few
+   rows.
+
+Three mechanical rules make the tree work:
+
+- **A walled engine is RESTED, not hammered** — a doubling backoff from one
+  minute, capped at fifteen. Asking a walled engine again immediately, 272 times,
+  is what turned a temporary wall into an apparent 180-candidate absence.
+- **When every engine is resting, WAIT.** "All four are resting for another forty
+  seconds" and "nothing on the internet knows about this person" are completely
+  different statements, and writing the first as the second is the false miss
+  this whole project exists to refuse.
+- **The control query must not rest an engine.** An engine that answers
+  `"Zzyzx Qwertling"` with zero results is the control WORKING — and zero rows is
+  also how a rate wall looks, so the engines that behaved correctly were being
+  rested before the run asked a single real question. Clear the ledger after the
+  control.
+
+### Q: Bing gave me a shoe brand instead of the candidate.
+
+**Two separate traps, and both look like an empty result.**
+
+1. **ALL-CAPS defeats the quoted phrase.** County clerks file names in ledger
+   caps. `"Melissa BURNSIDE" Rockaway New Jersey Borough Council` came back with
+   ten results about a shoe brand and not one mention of the person;
+   `"Melissa Burnside"` returned the Borough's own directory at rank 1. Title-case
+   the name before asking — `surnameDisplayCase` in `lib/ballot/name-case.ts`
+   already does it, and `searchableSurname` beside it strips the generational
+   suffix a search must not carry.
+2. **A thin query gets the quotes dropped silently.** Word ORDER matters:
+   `"Melissa Burnside" Rockaway Borough Council New Jersey` worked and
+   `"Melissa Burnside" Rockaway NJ` did not, same engine, same minute. Put the
+   office before the state and keep the query long.
+
+**The mechanical defence against both is the standing rule made checkable: a 200
+whose content is not about the thing asked for is not a document.** If no row in
+a result set mentions the surname, that engine has failed THIS query — record it
+and ask the next engine. It is what caught both traps.
+
+### Q: Which hosts are worth classifying, and which are never evidence?
+
+Recorded from 272 candidates' worth of results:
+
+| Host family | Route it is evidence for |
+| --- | --- |
+| `goodparty.org` | `candidate-platform` — a LEAD, never a photo or a blurb (its headshots come from `assets.civicengine.com`, BallotReady's CDN) |
+| `newjerseyhills.com`, `tapinto.net`, `patch.com`, `dailyrecord.com`, `morrisfocus.com`, `parsippanyfocus.com`, `dovernow.com` | `local-newspaper` — the candidate's own words in an announcement piece; **never a photo** |
+| `onyourballot.vote411.org` | `lwv-questionnaire` |
+| a host carrying the surname | `campaign-site`, and still only a LEAD until the page is READ |
+| `*.nj.us`, `*.gov` | `gov-staff-directory` |
+| `civic-mirror.com`, `oppintell.com`, `change.org`, `votewiser.com`, `smarter.vote`, `ballotready.org` | aggregators — a LEAD at most |
+| `voterrecords.com`, `whitepages`, `spokeo`, `radaris`, `truepeoplesearch`, `fastpeoplesearch`, `beenverified`, `zoominfo` | **never evidence of anything** |
+
+### Q: What did NOT work, so I do not spend the afternoon on it again?
+
+- **`nj.gov` directory paths are not guessable.** `nj.gov/education/data/dir/`,
+  `nj.gov/education/directory/` and `nj.gov/dca/home/roster.shtml` all 404 to a
+  plain client. They were guesses; they are LEADs that failed, not walls.
+- **`elec.nj.gov` answers 212 bytes** — a JavaScript application shell. NJ ELEC
+  is the highest-value unwalked route in this state (New Jersey imposes local
+  campaign-finance filing on council and school-board candidates above a
+  threshold) and it needs **rung 6**.
+- **A campaign site can answer 200 without its own candidate's name.**
+  `strobelforschoolboard.com` did. That is a JavaScript build and a false miss at
+  rung 2, not an absence — rung 6 is owed to it and to every site like it.
+- **Two municipal hosts were walled**, both Cloudflare managed challenge:
+  `victorygardensnj.gov` and one other. Named, not defeated (RULING 12). The
+  other 28 municipalities answered.
+
+### Q: Is a law firm's page a campaign site?
+
+**No, and the classifier will offer it to you.** `dawkinswarrington.com` carries
+Clifford D. Dawkins' surname and is his law firm; `chippersonlaw.com` is Rita C.
+Chipperson's. A surname in a hostname is a guess about a person (RULING 68) and
+these verify as LEAD rather than HIT precisely because the page names the person
+and says nothing about the race. They are `bar-directory` evidence — a real route,
+a working contact, a different field — and county-attorney and judicial races are
+full of them.

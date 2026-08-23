@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 188,
-    "named": 1719,
+    "files": 191,
+    "named": 1758,
     "dynamic": 6
   },
   "files": {
@@ -323,7 +323,8 @@
         "no reader surface carries the old name",
         "no reader surface hardcodes the new name either",
         "the product name is a constant, and the title helper uses it",
-        "the repo's off-site identity is deliberately unchanged"
+        "the repo's off-site identity is deliberately unchanged",
+        "the three adapters that lost their copy still SEND the repo-derived token"
       ],
       "dynamic": 0
     },
@@ -687,6 +688,29 @@
       ],
       "dynamic": 0
     },
+    "tests/count-assertion.test.ts": {
+      "names": [
+        "PARTIAL is not complete, and a caller testing EXTRACTED alone would miss it",
+        "a bare count in unrelated prose is NOT read as a seat count",
+        "a matching count reports EXTRACTED and records that it was CHECKED",
+        "a source stating no count is NOT_ASSERTABLE — a named state, never a pass",
+        "a stated count that beats the row count reports PARTIAL, not EXTRACTED",
+        "an empty roster parse still carries the denominator it failed against",
+        "assertionLine is printable on every verdict",
+        "describe() prints the assertion on every line, including NOT_ASSERTABLE",
+        "every constructor carries an assertion — there is no result without one",
+        "extractRosterTables asserts against the page's own membership sentence",
+        "extractRosterTables with no membership sentence names what it looked for",
+        "implausible counts are refused rather than asserted",
+        "more rows than the source states is OVER — reported, never silent, never a failure",
+        "numberFrom reads digits and English number words, and nothing else",
+        "parseRoster carries an assertion against the article's own composition sentence",
+        "parseRoster on an article stating no size reports NOT_ASSERTABLE, not a pass",
+        "statedCountIn reads the shapes a body's own page actually uses",
+        "the census counts what could be checked at all"
+      ],
+      "dynamic": 0
+    },
     "tests/coverage-manifest.test.ts": {
       "names": [
         "a manifest state with no artifacts detail row throws rather than being skipped",
@@ -920,6 +944,20 @@
       ],
       "dynamic": 0
     },
+    "tests/duplicate-implementations.test.ts": {
+      "names": [
+        "a recorded group that has been consolidated leaves the baseline",
+        "every recorded group carries a disposition and a reason",
+        "no duplicate implementation exists that the baseline does not record",
+        "stripComments preserves length and newlines, so line numbers stay true",
+        "the extractor reads the signatures a regex over \\\\([^)]*\\\\) loses",
+        "the named instance is fixed: ONE initials implementation, and it keeps the surname",
+        "the shape hash collides on a rename and not on different logic",
+        "the sweep actually scans the tree — a collapsed scan reports nothing found",
+        "two copies in the SAME file are not a cross-file duplicate"
+      ],
+      "dynamic": 0
+    },
     "tests/duplicate-sittings.test.ts": {
       "names": [
         "a division-less body keys on its jurisdiction, so two places cannot collide",
@@ -1102,6 +1140,9 @@
     },
     "tests/generated-artifacts.test.ts": {
       "names": [
+        "RULING 102: every registered artifact records its generator's digest",
+        "RULING 102: no generator has moved since its artifact was last regenerated",
+        "RULING 102: the digest is sensitive to a change anywhere in the closure",
         "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
         "RULING 92: a file declaring itself GENERATED is registered here",
         "RULING 92: every registered generated artifact exists and names its generator"
@@ -1664,6 +1705,19 @@
       "names": [
         "every curated bio names its source class",
         "funding surfaces never characterize an organization"
+      ],
+      "dynamic": 0
+    },
+    "tests/origin-confinement.test.ts": {
+      "names": [
+        "EVERY third-party host this product's pages reach is stripped",
+        "a localhost production build is its own origin and keeps the marker",
+        "a subdomain is a different origin, and so is a scheme change",
+        "an unreadable origin fails SAFE — stripped, and named as its own verdict",
+        "marker names are matched case-insensitively",
+        "scripts/browser.mts routes every request through confine()",
+        "the MapTiler style request — the exact call that failed — carries no custom header",
+        "the marker travels to our own origin"
       ],
       "dynamic": 0
     },

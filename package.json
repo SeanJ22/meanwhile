@@ -180,7 +180,9 @@
     "zip:add": "tsx scripts/zip-add.mts",
     "zip:divisions": "tsx scripts/build-zip-division-ids.mts",
     "zip:universe": "tsx scripts/zip-universe.mts",
-    "zipgov:build": "tsx scripts/build-zip-governments.mts"
+    "zipgov:build": "tsx scripts/build-zip-governments.mts",
+    "regen": "tsx scripts/regen-check.mts",
+    "dupes": "tsx scripts/duplicate-implementations.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

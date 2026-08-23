@@ -97,11 +97,21 @@ test("the repo's off-site identity is deliberately unchanged", () => {
   // as its contact route. A body with our identifier in last week's logs must
   // find the same identifier this week. So these keep the old token ON PURPOSE
   // and this test is the record of that decision, not an oversight.
+  /*
+   * **The list shrank on 2026-08-23, and the shrink is the fix rather than a
+   * loss of coverage** (RULING 103). The Congress, Legistar and Plural
+   * adapters each carried a byte-identical copy of the User-Agent function —
+   * four implementations of "who is calling", which `CLAUDE.md` makes law.
+   * They now import `sourceUserAgent` from `lib/sources/http.ts`, so the token
+   * lives in ONE home and the three call sites cannot drift from it.
+   *
+   * This is the same move the comment below already records for
+   * `lib/geo/outbound-agent.ts`: one home for the string, one place this
+   * check has to look. The guard asserting the string in a file that no longer
+   * declares it would be asserting a copy back into existence.
+   */
   for (const path of [
     join("lib", "sources", "http.ts"),
-    join("lib", "sources", "congress", "index.ts"),
-    join("lib", "sources", "legistar", "client.ts"),
-    join("lib", "sources", "plural", "index.ts"),
     // The outbound User-Agent both geocoder-calling routes send, same
     // reasoning. It moved out of app/api/geocode/route.ts in g21 when a
     // second route needed it: one home for the string, one exemption in
@@ -114,6 +124,38 @@ test("the repo's off-site identity is deliberately unchanged", () => {
       /we-the-people/,
       `${path} lost the repo-derived User-Agent token — that identifier is what a public body ` +
         `has in its logs, and it is not the display name`,
+    );
+  }
+});
+
+test("the three adapters that lost their copy still SEND the repo-derived token", () => {
+  /*
+   * The other half of the shrink above, and the half that makes it safe. A
+   * public body must find the same identifier in this week's logs as in last
+   * week's — so it is not enough that the string lives somewhere; these three
+   * adapters have to be reaching it. RULING 103's consolidation is only
+   * correct if the call sites still call.
+   */
+  for (const path of [
+    join("lib", "sources", "congress", "index.ts"),
+    join("lib", "sources", "legistar", "client.ts"),
+    join("lib", "sources", "plural", "index.ts"),
+  ]) {
+    const source = readFileSync(join(ROOT, path), "utf8");
+    assert.match(
+      source,
+      /import \{[^}]*sourceUserAgent[^}]*\} from "\.\.?\/(?:\.\.\/)?http\.ts"/,
+      `${path} does not import the shared User-Agent`,
+    );
+    assert.match(
+      source,
+      /"User-Agent": sourceUserAgent\(\)/,
+      `${path} imports the shared User-Agent and does not send it`,
+    );
+    assert.doesNotMatch(
+      source,
+      /function userAgent\(\)/,
+      `${path} has grown its own copy back — four copies is what RULING 103 removed`,
     );
   }
 });

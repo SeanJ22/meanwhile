@@ -1,0 +1,132 @@
+{
+  "ruling": "RULING 103 — a class sweep covers duplicated implementations, not only named instances",
+  "recordedOn": "2026-08-23",
+  "generator": "corepack pnpm dupes",
+  "whatThisIs": "The BASELINE, not an approval. tests/duplicate-implementations.test.ts fails on a duplicate group that is NOT recorded here, so the class cannot grow while the backlog is worked. Every entry carries a disposition and a reason; an entry with no reason fails, because an entry that says nothing has quietly become permission.",
+  "consolidatedOn2026-08-23": [
+    "sourceUserAgent — four byte-identical copies of 'who is calling' across lib/sources/http.ts, congress, plural and legistar. CLAUDE.md makes an identified User-Agent with a contact address law; four copies is four places for that claim to drift. Now one, imported. Legistar's PACING stayed local on purpose — its spacing and retry budget were measured against Legistar.",
+    "personKey — scripts/photo-person-audit.mts carried a byte-identical copy under the name normalizePersonName. The audit that CHECKS one-person-one-photo was using a different definition of a person from the resolver it audits."
+  ],
+  "groups": [
+    {
+      "id": "exact:components/map/tutorial-overlay.tsx#subscribe,hooks/use-district-layer.ts#subscribe,hooks/use-narrowing.ts#subscribe,hooks/use-recent-zips.ts#subscribe,hooks/use-stored-theme.ts#subscribe,hooks/use-stored-zip.ts#subscribe",
+      "disposition": "OWED",
+      "reason": "Six byte-identical useSyncExternalStore subscribe callbacks. A shared subscribeToStorage helper is the fix. The largest group in the tree and the one most likely to drift, because a fix to one is invisible from the other five."
+    },
+    {
+      "id": "exact:lib/ballot/dated-events.ts#phoenixToday,scripts/doc-dates.mjs#today",
+      "disposition": "ALLOWED",
+      "reason": "A .mjs helper run under plain node cannot import TypeScript, and scripts/tracker.mjs, scripts/handoff.mjs and the pre-commit hook all run without tsx. Consolidating would either break the hook or move the date rule into a module the hook cannot read. Both bodies compute the Phoenix day identically and tests/doc-dates.test.ts pins the rule itself."
+    },
+    {
+      "id": "exact:lib/ballot/zip-divisions.ts#index,lib/geo/zip-certainty.ts#index",
+      "disposition": "OWED",
+      "reason": "Two copies of the same derived-index loader. One lazy loader for the zip-division index."
+    },
+    {
+      "id": "exact:lib/feedback/client.ts#mintKey,lib/reactions/client.ts#mintKey",
+      "disposition": "ALLOWED",
+      "reason": "CLAUDE.md: the collection stores never join, and the continuity key exists on the reactions table alone. Two independent key paths that cannot be refactored into one are the enforcement of that rule in code, not an oversight. tests/db-schema.test.ts asserts the schemas share no joinable column; a shared minting path would be the first step toward one."
+    },
+    {
+      "id": "exact:lib/feedback/client.ts#getOrCreateFeedbackKey,lib/reactions/client.ts#getOrCreateReactionKey",
+      "disposition": "ALLOWED",
+      "reason": "Same rule as mintKey above, one layer up. These read different storage keys into different stores and must stay unable to converge."
+    },
+    {
+      "id": "exact:lib/geo/zip-geography.ts#ringsOf,scripts/zip-universe.mts#ringsOf",
+      "disposition": "OWED",
+      "reason": "Ring extraction from GeoJSON, duplicated between the library and a script. The script should import it."
+    },
+    {
+      "id": "exact:lib/map/state-focus.ts#pointInPolygon,scripts/fetch-zcta-outlines.mts#pointInPolygon",
+      "disposition": "OWED",
+      "reason": "Point-in-polygon, twice. A geometry primitive with two implementations is a geometry primitive that can disagree with itself about whether a reader is inside a district."
+    },
+    {
+      "id": "exact:lib/registry/resolve.ts#inRing,scripts/fetch-districts.ts#inRing,tests/district-hits.test.ts#inRing",
+      "disposition": "OWED",
+      "reason": "THE WORST OF THE SET: the TEST carries its own copy of the function it exists to check. A test that reimplements its subject proves the test's copy works and says nothing about the shipped one."
+    },
+    {
+      "id": "exact:lib/registry/resolve.ts#inPolygon,tests/district-hits.test.ts#inPolygon",
+      "disposition": "OWED",
+      "reason": "Same as inRing above — the test reimplements its subject."
+    },
+    {
+      "id": "exact:lib/registry/resolve.ts#contains,tests/district-hits.test.ts#contains",
+      "disposition": "OWED",
+      "reason": "Same as inRing above — the test reimplements its subject."
+    },
+    {
+      "id": "exact:lib/routing/digest.ts#normalize,lib/routing/match.ts#normalize",
+      "disposition": "OWED",
+      "reason": "Two text normalisers in the same subsystem. The ask box matches against one and digests against the other; a divergence would route a question one way and record it another."
+    },
+    {
+      "id": "exact:scripts/deferred.mjs#parseCsv,scripts/xlsx.mjs#parseCsv",
+      "disposition": "OWED",
+      "reason": "582 characters of CSV parsing, twice, and scripts/doc-dates.mjs exports a third. The tracker stores are CSV; a parser that disagrees with itself about a quoted cell is a tracker that disagrees with itself about a row."
+    },
+    {
+      "id": "exact:scripts/gus-extract.mts#unescapeXml,scripts/xlsx.mjs#unxml",
+      "disposition": "OWED",
+      "reason": "XML entity unescaping, twice, under two names."
+    },
+    {
+      "id": "exact:scripts/handoff.mjs#tryRun,scripts/session-start.mjs#tryRun",
+      "disposition": "OWED",
+      "reason": "The gate runner, duplicated between the two scripts that bookend a session. A fix to how a failing gate is reported lands in one of them."
+    },
+    {
+      "id": "exact:tests/coverage.test.ts#loadFeatures,tests/registry-oracle.test.ts#loadFeatures,tests/resolve-once.test.ts#loadFeatures",
+      "disposition": "OWED",
+      "reason": "Three tests each load the committed features their own way. A shared fixture loader is the fix."
+    },
+    {
+      "id": "exact:tests/no-suppression.test.ts#walk,tests/ruling-59-coverage-silence.test.ts#walk",
+      "disposition": "OWED",
+      "reason": "Two guards walk the tree with their own copy of the walker. RULING 27 and RULING 59 both depend on that walk reaching every file; two walkers is two populations."
+    },
+    {
+      "id": "shape:app/api/feedback/route.ts#getLimiters,app/api/reactions/route.ts#getLimiters",
+      "disposition": "ALLOWED",
+      "reason": "Same rule as the client key paths: the two intake routes write to stores that may never join, and their limiter accessors are deliberately independent. The limiter table's own digest is already keyed differently from the reaction continuity hash for the same reason."
+    },
+    {
+      "id": "shape:hooks/use-stored-theme.ts#getSnapshot,hooks/use-stored-zip.ts#getSnapshot",
+      "disposition": "OWED",
+      "reason": "Travels with the subscribe group above and is fixed by the same shared helper."
+    },
+    {
+      "id": "shape:lib/ballot/candidate-cards.ts#load,lib/ballot/candidate-sites.ts#load",
+      "disposition": "ALLOWED",
+      "reason": "The idiomatic lazy-JSON-loader shape — read a committed file once, cache it, return the typed value. Structurally identical by construction and typed differently; a shared generic would add an indirection without removing a place a defect can hide."
+    },
+    {
+      "id": "shape:lib/reference/index.ts#parseCsv,lib/sources/prl/index.ts#parseCsv",
+      "disposition": "OWED",
+      "reason": "A third and fourth CSV parser, in lib this time. Travels with the scripts/ pair above."
+    },
+    {
+      "id": "shape:lib/state/data.tsx#useShellData,lib/state/provider.tsx#useUi,lib/state/provider.tsx#useUiDispatch",
+      "disposition": "ALLOWED",
+      "reason": "React context accessors: useContext, throw if absent, return. Three lines each, identical by construction across every codebase that uses contexts. Consolidating would produce a generic that is longer than the thing it replaces."
+    },
+    {
+      "id": "shape:lib/votes/key-vote-positions.ts#load,lib/votes/key-votes-rows.ts#getKeyVotesSnapshot",
+      "disposition": "ALLOWED",
+      "reason": "The lazy-JSON-loader shape again, over two different vote artifacts."
+    },
+    {
+      "id": "shape:scripts/check-build-output.mjs#traceManifests,scripts/trace-census.mjs#manifests",
+      "disposition": "OWED",
+      "reason": "Two readers of the Next build trace manifests. The build-budget guard and the trace census must be looking at the same population, and today each computes it."
+    },
+    {
+      "id": "shape:scripts/verify-local-write.mts#finish,scripts/verify-readonly.mts#finish",
+      "disposition": "OWED",
+      "reason": "Two database-verification scripts each print their own verdict. A shared reporter keeps the four-verdict discipline (green, red, pending, could-not-tell) identical between them."
+    }
+  ]
+}

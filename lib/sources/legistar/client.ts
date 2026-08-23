@@ -10,6 +10,19 @@
  * single tenant, and honour what the server tells you.
  */
 
+/*
+ * The User-Agent is `sourceUserAgent` from the shared HTTP module (RULING 103,
+ * 2026-08-23). This file carried its own byte-identical copy, and so did the
+ * Congress and Plural adapters — four implementations of "who is calling",
+ * which is a claim `CLAUDE.md` makes law: an identified `User-Agent` with a
+ * contact address. Four copies is four places for that claim to drift.
+ *
+ * The PACING is deliberately NOT shared. Legistar's spacing and retry budget
+ * were measured against Legistar; folding them into the shared module would
+ * silently re-tune a tenant's rate limit.
+ */
+import { sourceUserAgent } from "../http.ts";
+
 const API_ROOT = "https://webapi.legistar.com/v1";
 
 /** Legistar caps a reply at 1000 rows regardless of what `$top` asks for. */
@@ -19,24 +32,6 @@ const PAGE_SIZE = 1000;
 const REQUEST_SPACING_MS = 350;
 
 const MAX_RETRIES = 4;
-
-/**
- * Who is calling, so an administrator seeing this in a log has somewhere to
- * write. Anonymous traffic is what gets blocked; identified traffic gets a
- * conversation.
- *
- * The contact address comes from the environment rather than being committed,
- * because a personal email in a public repository is a different decision from
- * a polite User-Agent. Unset, it falls back to the project URL — still
- * identifying, just less useful to whoever wants to complain.
- */
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  const suffix = contact
-    ? `contact: ${contact}`
-    : "https://github.com/SeanJ22/we-the-people";
-  return `we-the-people civic meeting index (${suffix})`;
-}
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -85,7 +80,7 @@ async function requestOnce(
   const impl = options.fetchImpl ?? fetch;
   return impl(url, {
     headers: {
-      "User-Agent": userAgent(),
+      "User-Agent": sourceUserAgent(),
       Accept: "application/json",
     },
     signal: options.signal,
@@ -217,4 +212,4 @@ export async function fetchEventItems<T>(
   );
 }
 
-export { REQUEST_SPACING_MS, PAGE_SIZE, userAgent };
+export { REQUEST_SPACING_MS, PAGE_SIZE, sourceUserAgent as userAgent };

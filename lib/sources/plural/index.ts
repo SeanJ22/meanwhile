@@ -4,7 +4,7 @@ import type {
   OfficeholderSet,
 } from "../../officials/types.ts";
 
-import { notADocument } from "../http.ts";
+import { notADocument, sourceUserAgent } from "../http.ts";
 
 /**
  * State legislators, from Plural Open (ex-Open States). Phase 5.2 tier 2,
@@ -239,7 +239,7 @@ async function fetchState(state: string): Promise<string> {
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     requestCount.bulk++;
     const response = await fetch(url, {
-      headers: { "User-Agent": userAgent(), Accept: "text/csv" },
+      headers: { "User-Agent": sourceUserAgent(), Accept: "text/csv" },
     });
 
     if (response.ok) {
@@ -371,12 +371,5 @@ export function normalize(
   return { scope, generatedAt: collectedAt, officeholders, divisions, unmatched };
 }
 
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  const suffix = contact
-    ? `contact: ${contact}`
-    : "https://github.com/SeanJ22/we-the-people";
-  return `we-the-people civic meeting index (${suffix})`;
-}
 
 export { SOURCE_ORG, SOURCE_NAME, CHAMBER_TITLE };

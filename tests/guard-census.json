@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 193,
-    "named": 1777,
+    "named": 1782,
     "dynamic": 6
   },
   "files": {
@@ -631,9 +631,14 @@
     },
     "tests/context-pinned-conduct.test.ts": {
       "names": [
+        "RULING 106: P0 notes render at their full length",
+        "RULING 106: a stated size is REPORTED and never acted on",
+        "RULING 106: the shrink cascade is gone from the generator's source",
+        "RULING 106: the tracker-change section renders all ten rows",
+        "RULING 106: there is no cap, and nothing is trimmed to meet one",
+        "a block claimed VERBATIM is tested against its source, and divergence fails",
         "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
-        "the shrink cascade never reaches the pinned block, even at a punishing cap",
-        "what the pinned block costs is stated, not silent"
+        "every section of context.md states where it came from"
       ],
       "dynamic": 0
     },

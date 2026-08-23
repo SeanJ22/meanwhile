@@ -87,7 +87,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { checkBranchNames } from "./check-branch-names.mjs";
-import { CAP_BYTES, writeContext } from "./context-file.mjs";
+import { writeContext } from "./context-file.mjs";
 import { stopDevServer } from "./dev-server.mjs";
 import { today } from "./doc-dates.mjs";
 import { generatedAtEastern } from "./generated-at.mjs";
@@ -560,19 +560,23 @@ async function writeContextFile(note) {
       stampToday: today(),
     });
     const kb = (built.bytes / 1024).toFixed(1);
-    // Item 8c: the cap is READ from the generator, never restated here. This
-    // line said "of 20 KB" while the generator had been raised to 40, so the
-    // first run after the raise printed "23.0 KB of 20 KB" and looked like an
-    // overrun that nothing warned about.
-    const capKb = Math.round(CAP_BYTES / 1024);
+    /*
+     * RULING 106 (2026-08-23): there is no cap, so the line states the SIZE
+     * and stops. It used to read "N KB of 40 KB", which invites the next
+     * reader to treat the second number as a budget and trim to it — and
+     * trimming a generated file is the failure the ruling ends.
+     *
+     * Item 8c's lesson survives in the shape: the number is READ from the
+     * generator, never restated here. That line said "of 20 KB" while the
+     * generator had been raised to 40, so the first run after the raise
+     * printed "23.0 KB of 20 KB" and looked like an overrun nothing warned
+     * about.
+     */
     const counts =
       `${built.counts.phases} phase(s), ${built.counts.p0} P0 row(s), ` +
       `${built.counts.ripcords} ripcord(s), ${built.counts.statusChanges} status change(s)`;
-    if (built.truncated) {
-      warn("context", `context.md ${kb} KB of ${capKb} KB — TRUNCATED: ${built.truncation.join("; ")}`);
-    } else {
-      ok("context", `context.md ${note} — ${kb} KB of ${capKb} KB, ${counts}`);
-    }
+    ok("context", `context.md ${note} — ${kb} KB, uncapped, ${counts}`);
+    for (const line of built.truncation) warn("context", line);
   } catch (error) {
     warn("context", `context.md not written — ${error.message}`);
   }

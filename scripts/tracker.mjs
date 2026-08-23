@@ -491,21 +491,32 @@ function logMarkdown(working, resolved, purposes) {
       w(purpose);
       w("");
     }
+    /*
+     * **RULING 106 (2026-08-23) — the twelve-row clips are gone.**
+     *
+     * These read `.slice(0, 12)` with an "…and N more" line beneath. That is a
+     * size cap on a generated document wearing a polite face: the rows exist,
+     * the file knows them, and it prints a count instead — which is a partial
+     * that reconciles and reports success. `docs/log.md` is the session record,
+     * and the rows it dropped were exactly the ones from a busy session, which
+     * is when a reader most needs them.
+     *
+     * The count still prints. Now it prints as the denominator of a list that
+     * is actually there, which is the stated-N-equals-rendered-rows rule.
+     */
     if (s.closed.length) {
       w(`**What it finished.** ${s.closed.length} row(s).`);
       w("");
-      for (const r of s.closed.slice(0, 12)) w(`- **${r.ID}** — ${r["What this is"]}`);
-      if (s.closed.length > 12) w(`- …and ${s.closed.length - 12} more, on the Resolved tab.`);
+      for (const r of s.closed) w(`- **${r.ID}** — ${r["What this is"]}`);
       w("");
     }
     if (s.opened.length) {
       const stillOpen = s.opened.filter((r) => isOpen(r));
       w(`**What it started.** ${s.opened.length} row(s) opened, ${stillOpen.length} still open.`);
       w("");
-      for (const r of stillOpen.slice(0, 12)) {
+      for (const r of stillOpen) {
         w(`- **${r.ID}** — ${r["What this is"]} *(open)*`);
       }
-      if (stillOpen.length > 12) w(`- …and ${stillOpen.length - 12} more still open.`);
       w("");
     }
     const sean = s.opened.filter((r) => (r.Section ?? "") === "needs-sean" && isOpen(r));

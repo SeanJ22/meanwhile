@@ -5,7 +5,10 @@
  * conversation that only needs to know where things stand: by the time it has
  * been pasted anywhere useful there is no room left for the actual question.
  * This is the short answer to "what is the current state of this project" —
- * dense, flat, and under 20 KB by construction.
+ * dense and flat. **It carries no size cap** (RULING 106, 2026-08-23): it is
+ * short because every section is an index rather than a copy, not because
+ * anything trims it to fit. Where it grows, the answer is to remove
+ * duplication in the SOURCE, never to clip the output.
  *
  * **Nothing in it is composed.** Every line is read out of `docs/state.md`,
  * `docs/tracker.csv`, `lib/ripcords.ts` and git. Where a field is too long for
@@ -34,18 +37,40 @@ import { parseCsv } from "./doc-dates.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/** The hard cap the author set. Bytes, not characters. */
 /*
- * ITEM 8c (2026-08-17, the author's ruling): **raise the cap rather than cut
- * rows.** 20 KB was truncating the tracker-change section to nothing — the
- * g6 session's own handoff reported "19.4 KB of 20 KB — TRUNCATED:
- * tracker-change section: 10 of 10 rows dropped; P0 notes clipped from 130 to
- * 110 characters", which is the whole of that section gone from the one file
- * that orients every session.
+ * **THERE IS NO CAP. RULING 106, 2026-08-23 (`NS09`, the author ruled C and
+ * extended it: there are no caps anywhere).**
+ *
+ * The history is the argument. 20 KB truncated the tracker-change section to
+ * nothing — the g6 session's own handoff reported *"19.4 KB of 20 KB —
+ * TRUNCATED: tracker-change section: 10 of 10 rows dropped; P0 notes clipped
+ * from 130 to 110 characters"*, which is the whole of that section gone from
+ * the one file that orients every session. ITEM 8c raised it to 40 KB, and by
+ * 2026-08-23 the same cascade was dropping the same section again and clipping
+ * P0 notes from 130 characters to 90.
+ *
+ * Raising a cap is treating a recurring symptom. **A cap forces silent
+ * trimming, and silent trimming is a partial that reconciles and reports
+ * success — the same failure shape as RULING 100.** The shrink cascade
+ * announced its cuts, which is better than nothing and is still a file that
+ * says less than it knows while reading as complete.
+ *
+ * Where a generated file grows, the response is to remove duplication in the
+ * SOURCE, never to clip the output.
+ *
+ * `CAP_BYTES` is kept, exported, and set to `Infinity` rather than deleted:
+ * `pnpm handoff` and `tests/context-pinned-conduct.test.ts` both import it,
+ * and a name that disappears is a name a later reader cannot search for.
  */
-export const CAP_BYTES = 40 * 1024;
+export const CAP_BYTES = Infinity;
 
-/** How much of a tracker Note survives into a one-line cell. */
+/**
+ * How much of a tracker Note survives into a one-line cell.
+ *
+ * **Restored to its full length and no longer clipped by the cascade** (RULING
+ * 106). This is the length the author set; the shrink path used to walk it
+ * down to 90 and, at 20 KB, to 110.
+ */
 const NOTE_CHARS = 130;
 const ITEM_CHARS = 62;
 
@@ -437,13 +462,30 @@ export async function buildContext({
         `> **SECTION FAILED — the pinned Discovery conduct block could not be built.** ${conduct.failure}`,
         "",
         "> This is a failure of this generator, not a statement that the rule does not exist.",
-        "> Read `CLAUDE.md` directly. **This block is never trimmed to fit the cap** — if it is",
+        "> Read `CLAUDE.md` directly. **This block is never trimmed** — if it is",
         "> missing, something removed or renamed it upstream.",
         "",
       );
     } else {
+      /*
+       * **The provenance goes BEFORE the block as well as after it** (RULING
+       * 106, 2026-08-23). It used to sit only at the end, which meant a reader
+       * landing on the heading — which is what a reader does — read the whole
+       * thing before being told where it came from. Uncapped, this file has to
+       * be readable as a set of SOURCED EXTRACTS rather than as a second
+       * authority competing with `CLAUDE.md`, and that only works if each
+       * section says whose words these are at the point the reader arrives.
+       *
+       * Found by `tests/context-pinned-conduct.test.ts`, which sweeps every
+       * `## ` heading for a source line and found this one without one.
+       */
       put(
-        "<!-- PINNED: never trimmed to fit the cap. Verbatim from CLAUDE.md. -->",
+        "<!-- PINNED: never trimmed. Verbatim from CLAUDE.md. -->",
+        "",
+        "> **Source: `CLAUDE.md`, the `## DISCOVERY CONDUCT` section, verbatim.**",
+        "> `CLAUDE.md` is the authority; this is a copy of it, pinned here because the",
+        "> failure RULING 88 fixes is a session not knowing there was anything to look up.",
+        "> `tests/context-pinned-conduct.test.ts` fails the build if the two diverge.",
         "",
         conduct.body,
         "",
@@ -536,13 +578,19 @@ export async function buildContext({
        * the section said nothing had been recovered while the truncation
        * summary said 10 of 10 rows had been dropped. Two statements, same
        * file, opposite meanings.
+       *
+       * RULING 106 (2026-08-23) removed the cascade that could drop them, so
+       * this branch is now only reachable when nothing WAS recovered — but the
+       * distinction stays, because a branch that can only be right today is a
+       * branch that goes wrong the moment anything changes.
        */
       if (history.changes.length > 0) {
         put(
-          `> **SECTION DROPPED — all ${history.changes.length} recovered status change(s) were cut to fit the ${capLabel}.**`,
+          `> **${history.changes.length} recovered status change(s) are missing from this section.**`,
           "",
-          "> They were found. They are not shown. Raise the cap or narrow the walk;",
-          "> do not read this as a quiet period in the tracker.",
+          "> They were found and they are not shown, and since RULING 106 removed the",
+          "> shrink cascade nothing here drops them — so this is a defect rather than a",
+          "> trade. Do not read it as a quiet period in the tracker.",
           "",
         );
       } else {
@@ -571,77 +619,45 @@ export async function buildContext({
     return out.join("\n");
   };
 
-  const capLabel = `${Math.round(cap / 1024)} KB cap`;
-  const cutNoteFor = (limit) =>
-    limit < history.changes.length
-      ? `> **Truncated to fit the ${capLabel}:** ${history.changes.length - limit} of ` +
-        `${history.changes.length} recovered status change(s) dropped from this section.`
-      : null;
+  /*
+   * **THE SHRINK CASCADE IS GONE** (RULING 106, 2026-08-23).
+   *
+   * What stood here: drop the tracker-change section a row at a time until the
+   * file fit, then walk the P0 note length down from 130 characters in steps
+   * of 20, then — if that bottomed out — say so. It announced every cut, which
+   * is better than a silent clip and is still a generated file that knows more
+   * than it says while reading as complete.
+   *
+   * Every section renders at full length now. `cap` survives as a parameter so
+   * a caller can still ASK how big the file is against a number, and nothing
+   * in the repo passes one.
+   *
+   * The pinned Discovery-conduct block was already exempt from the cascade,
+   * for the reason that made the whole cascade wrong: a pinned block that
+   * could be shortened "just this once" is a pointer wearing a longer coat.
+   * The same is now true of every other section.
+   */
+  const text = render(history.changes.length, NOTE_CHARS, null);
+  const bytes = Buffer.byteLength(text);
 
-  // Full size first; shrink only if it does not fit.
-  let text = render(history.changes.length, NOTE_CHARS, null);
-  const truncation = [];
-
-  if (Buffer.byteLength(text) > cap) {
-    /*
-     * THE PINNED BLOCK IS NOT IN THIS CASCADE, and that is deliberate rather
-     * than an oversight (2026-08-22, item 8). The Discovery conduct text is
-     * never trimmed: if the file is over the cap, everything else gives way
-     * first and says what it gave up. A pinned block that could be shortened
-     * "just this once" is a pointer wearing a longer coat.
-     *
-     * What it costs, stated rather than discovered later: the block is roughly
-     * 12 KB against a 40 KB cap, so on a busy tracker it can take the whole
-     * tracker-change section with it. That is visible — the section prints its
-     * own SECTION DROPPED banner — and it is a real trade the author may want to
-     * reverse by raising the cap, exactly as he did on 2026-08-17 when 20 KB was
-     * cutting the same section to nothing.
-     */
-    // 1. The tracker-change section, as the author specified.
-    let limit = history.changes.length;
-    while (limit > 0 && Buffer.byteLength(text) > cap) {
-      limit--;
-      text = render(limit, NOTE_CHARS, cutNoteFor(limit));
-    }
-    if (limit < history.changes.length) {
-      truncation.push(
-        `tracker-change section: ${history.changes.length - limit} of ${history.changes.length} rows dropped`,
-      );
-    }
-
-    // 2. Only if that was not enough. Said out loud in the P0 section header,
-    //    which already states the clip length.
-    let notes = NOTE_CHARS;
-    while (notes > 40 && Buffer.byteLength(text) > cap) {
-      notes -= 20;
-      text = render(limit, notes, cutNoteFor(limit));
-    }
-    if (notes < NOTE_CHARS) {
-      truncation.push(`P0 notes clipped from ${NOTE_CHARS} to ${notes} characters`);
-    }
-
-    // The floor. With 70 P0 rows this cannot be reached at 20 KB, but a file
-    // that is over the cap must SAY it is over the cap — a silent overrun is
-    // the same defect as a silent truncation, pointing the other way.
-    if (Buffer.byteLength(text) > cap) {
-      truncation.push(
-        `STILL OVER: ${Buffer.byteLength(text)} bytes against a ${cap}-byte cap — ` +
-          `the shrink cascade bottomed out and nothing further was dropped`,
-      );
-    }
-  }
-
-  if (truncation.length > 0) {
-    text = text.replace(
-      "---\n",
-      `**Truncated to fit the ${capLabel}:** ${truncation.join("; ")}.\n\n---\n`,
-    );
-  }
+  /*
+   * Reported, never acted on. A caller that wants to know the file is unusually
+   * large gets the number and the comparison; nothing here trims to meet it.
+   * `Infinity` is the standing value, so this is normally empty.
+   */
+  const truncation =
+    Number.isFinite(cap) && bytes > cap
+      ? [
+          `OVER THE STATED SIZE: ${bytes} bytes against ${cap} — reported, and ` +
+            "NOTHING was dropped. RULING 106: where a generated file grows, the " +
+            "response is to remove duplication in the source, never to clip the output.",
+        ]
+      : [];
 
   return {
     text,
-    bytes: Buffer.byteLength(text),
-    truncated: truncation.length > 0,
+    bytes,
+    truncated: false,
     truncation,
     counts: {
       phases: phases.rows.length,

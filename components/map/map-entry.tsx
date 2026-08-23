@@ -2070,6 +2070,41 @@ function MapEntryInner() {
  * `sourceUrl` is null. Omitting those would imply everything shown was cited,
  * which is the more damaging of the two possible lies.
  */
+/**
+ * **MTG-3 (2026-08-23) — the address is a place you have to get to, not a
+ * string.**
+ *
+ * The venue panel behind a pin has had a Directions link since 2026-08-16 and
+ * the large battlecard never did: the author opened the Township Council card,
+ * found the address inert, and could not get from *where is this* to *how do I
+ * get there* without leaving the product. Same helper as the venue panel, and
+ * the same derived-not-cited framing — it is built from coordinates we hold
+ * rather than a page anyone opened, so it is offered as a convenience and
+ * never as a citation.
+ *
+ * A NAMED function rather than an inline IIFE inside the facts array, because
+ * `tests/server-client-boundary.test.ts` reads `value: (…) =>` as a client
+ * component declaring a function prop — a false positive there, and a guard
+ * that has to be taught about a shape is a guard weakened. The named form
+ * costs nothing and reads better.
+ */
+function locationWithDirections(location: NonNullable<Meeting["location"]>): React.ReactNode {
+  const line = locationLine(location.name, location.address);
+  const directions = venueLink(location);
+  if (!directions) return line;
+  return (
+    <a
+      href={directions.url}
+      target="_blank"
+      rel="noreferrer"
+      title={directions.hint}
+      className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
+    >
+      {line}
+    </a>
+  );
+}
+
 function meetingSubject(
   meeting: Meeting,
   body: CoveredBody | null = null,
@@ -2098,34 +2133,7 @@ function meetingSubject(
       meeting.location
         ? {
             label: "Location",
-            /*
-             * **MTG-3 (2026-08-23) — the address is a place you have to get
-             * to, not a string.**
-             *
-             * The venue panel behind a pin has had a Directions link since
-             * 2026-08-16 and the large battlecard never did: the author opened
-             * the Township Council card, found the address inert, and could
-             * not get from "where is this" to "how do I get there" without
-             * leaving. Same helper, same derived-not-cited framing — it is
-             * built from coordinates we hold rather than a page anyone opened,
-             * so it is offered as a convenience and never as a citation.
-             */
-            value: (() => {
-              const line = locationLine(meeting.location.name, meeting.location.address);
-              const directions = venueLink(meeting.location);
-              if (!directions) return line;
-              return (
-                <a
-                  href={directions.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  title={directions.hint}
-                  className="underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                >
-                  {line}
-                </a>
-              );
-            })(),
+            value: locationWithDirections(meeting.location),
           }
         : {
             // D18. The same two rows the popup shows, in the compact card's

@@ -41,7 +41,8 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **PU06** — Measured 2026-08-23 at 07866 against a local production build: TWELVE instances across NINE contests on /ballot, unchanged by this session. The MAP panel was fixed — six rows each carrying the full sentence became six asterisks and ONE pill, read as an image — but the ballot page renders the pill per contest heading, which RULING 28 permits and which Sean nonetheless called the headline UX problem of the New Jersey pass. WHAT IS OWED: decide whether the ballot page takes the same treatment (one page-level pill, marks on the affected contests) and, wherever the sentence survives, make it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page. *(open)*
 - **DI03** — pnpm schools:classify stamps each registry school district INDEPENDENT or DEPENDENT from the 2022 Census of Governments' own classification, via data/derived/census-nces-crosswalk.csv. Measured 2026-08-23: 291 INDEPENDENT, 4 DEPENDENT, 219 UNCLASSIFIED, 2 TIGER pseudo-entities skipped. An unclassified district deliberately gets NO class definition — guessing INDEPENDENT because most districts are would be a claim about who governs a reader's schools made on a base rate — so 219 districts render a card with no description. Most of the unmatched are New Hampshire. WHAT IS OWED: raise the crosswalk's match rate for the unmatched names, or add a second key (NCES LEAID, Census GIDID) so the join does not depend on a normalised name alone. *(open)*
 - **DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F". *(open)*
-- …and 2 more still open.
+- **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it. *(open)*
+- **NS09** — Item 8 of your Discovery Conduct brief says the Discovery conduct block is pinned in context.md and never trimmed, and that if the cap forces trimming the generator trims elsewhere and reports exactly what it trimmed. Built, and it does. MEASURED: the file lands at 40,254 bytes against the 40 KB cap, and the price is the whole tracker-change section — all 10 recovered status changes dropped — plus the P0 notes clipped from 130 to 90 characters. Both are stated in the file itself, so nothing is silent. THE DECISION IS YOURS because you have already made the opposite one once: on 2026-08-17, item 8c, when 20 KB was cutting this same section to nothing, you ruled RAISE THE CAP RATHER THAN CUT ROWS. Following that precedent here means raising the cap to about 56 KB. Following the brief literally means keeping 40 KB and losing the section. The session followed the brief and is telling you what it cost. *(open)*
 
 **Needs Sean.** NS09
 
@@ -142,7 +143,13 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH56** — The ballot page now shows Rockaway Borough's council and school board to a 07866 reader, because it resolves the zip's AREA. The map's who-governs card still resolves a single ZCTA centroid, so it reads '4 bodies govern the area around 07866' and names Morris County, Morris Hills Regional, Rockaway township and Rockaway Township School District — no Borough. Same defect as NJ01, one surface over.
 - **NH64** — RULING 37 says a session marks its own completed work Resolved and moves it, in every section except Needs Sean. scripts/tracker.mjs has no mode or flag that does it. Resolution, Condition and Notes are read ONLY out of docs/tracker.xlsx, and anything found there is attributed to Sean.
 - **NJ07** — pnpm twig:pair --zip 07866 gives 90 of 142 units held, and 52 of 52 unheld rows read "no division of its own". 34 of those are GENERAL_PURPOSE and SCHOOL_DISTRICT units in Sussex, Passaic, Essex, Bergen and Warren counties, 16-25 km out. Real TIGER polygons exist for all of them. The gap is that CLIP_COUNTIES is one county per covered state (lib/coverage/artifacts.ts, derived from the coverage manifest): place-34.geojson holds 67 features and cousub-34.geojson 66, all Morris. scripts/fetch-districts.ts states the tradeoff explicitly -- national coverage across these types is 13,000+ features, which ends the committed-GeoJSON approach and forces vector tiling. Extending to five adjacent counties is roughly 1,000 more features. That is a real step toward the stated ceiling and it is an architecture decision rather than a hunt, which is why this is a row and not a fix. Note the denominator: 142 is the first-rung 25 km circle, and every government whose territory reaches inside 07866 IS held.
-- …and 1 more, on the Resolved tab.
+- **PU02** — Measured on production f20e1e9, 2026-08-22, at 430x932 with the walk's own page shape. Typing "a" into the ask box and clicking the FIRST row of type Body opens no card at either zip: 85701 offers "Amphitheater Unified School District Governing Board" and 85641 offers "Armory Park Historic Zone Advisory Board", and neither produces a .account-modal within 5 seconds. No page error is thrown. This is M135's rule (g15) -- a row opens a card -- broken for at least some rows.
+
+It is PRE-EXISTING and is not caused by this session's coverage widening. The proof is 85701, which this session did not change in that direction and which fails on its first Body row exactly the same way. walk:all passes at 85701 only because its loop retries up to three times and a LATER row happens to open ("AGENDA FOR AUDIT COMMITTEE MEETING"); at 85641 only one Body row is offered, so `attempt >= offered` breaks the loop after one attempt and a single non-opening row fails the check.
+
+Why it surfaced as a regression today: the meetings snapshot refreshed at 20:04 (455 rows, 381 fresh + 74 carried), which changed which rows the autocomplete offers first at 85641. The check's verdict is therefore sensitive to snapshot content, which is worth knowing about the check as well as about the defect.
+
+Two things for whoever takes it: why that class of row resolves to no card, and whether M135's retry loop should keep trying rather than breaking when a zip offers exactly one Body row -- a check that passes because the second row worked is not asserting what it reads as asserting.
 
 **What it started.** 7 row(s) opened, 7 still open.
 
@@ -242,7 +249,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt. *(open)*
 - **NH40** — cfs.sos.nh.gov holds first-party contact details for every New Hampshire candidate who registered a committee, and it refuses rungs 2, 3, 4 and 6 with an Akamai 403 - headless Chromium, a real Chrome channel and a masked user agent alike. A visible browser on the same machine and the same IP gets HTTP 200. It was harvested by hand this session through the app's own XHR at rung 7, which is a procedure and not a script, so nothing in CI can repeat it. *(open)*
 - **NH41** — The Lake Todd Village District's own site, which the Census of Governments records as laketoddvillagedistrict.us, answers HTTP 404 at rungs 2, 3, 4, 5 and 6, and so does the Town of Bradford's news item for its meeting. The Internet Archive - rung 11, and the rung that produced this district's own words for an earlier session - answered 'Temporarily Offline' on 2026-08-21. *(open)*
-- …and 1 more still open.
+- **NH42** — pnpm twig:pair reports 48 government units inside 03255's first-rung circle, 28 with a body in this registry and 20 without. Seven of the twenty are not missing a body so much as missing a DIVISION: Sullivan County itself, and the towns of Lempster, Croydon, Newport, Windsor, Acworth and Grantham are not in the shipped division list at all, so no body could be attached to them. *(open)*
 
 **Needs Sean.** NH30, NH31, NH32, NH33
 
@@ -299,7 +306,31 @@ Rewrote the constitution's shelf-life sections so they point at the files that a
 - **HD10** — Two people are running for Merrimack County Treasurer and eight things about them have never been looked for. *(open)*
 - **HD11** — Two people are running for New Hampshire Executive Councillor in the second district and eight things about them have never been looked for. *(open)*
 - **HD12** — Two people are running for Merrimack County Register of Deeds and eight things about them have never been looked for. *(open)*
-- …and 25 more still open.
+- **HD13** — Two people are running for state representative in Merrimack County's seventh district and eight things about them have never been looked for. *(open)*
+- **HD14** — Two people are running for the Morris Hills regional school board's Rockaway Township seats and eight things about them have never been looked for. *(open)*
+- **HD15** — Two people are running for Arizona State Mine Inspector and six things about them have never been looked for. *(open)*
+- **HD16** — Three people are running for Arizona Secretary of State and six things about them have never been looked for. *(open)*
+- **HD17** — Three people are running for United States Senator in New Jersey and six things about them have never been looked for. *(open)*
+- **HD18** — Two people are running for Arizona's 19th state senate district and five things about them have never been looked for. *(open)*
+- **HD19** — Two people are running for New Hampshire's seventh state senate district and five things about them have never been looked for. *(open)*
+- **HD20** — Two people are running for the Morris County Board of Commissioners and five things about them have never been looked for. *(open)*
+- **HD21** — Two people are running for Congress in New Jersey's 11th district and five things about them have never been looked for. *(open)*
+- **HD22** — Three people are running for Governor of Arizona and four things about them have never been looked for. *(open)*
+- **HD23** — Two people are running for Arizona's 20th state house district and four things about them have never been looked for. *(open)*
+- **HD24** — One person is running for Merrimack County Register of Probate and four things about them have never been looked for. *(open)*
+- **HD25** — One person is running for the Rockaway Township school board's unexpired term and four things about them have never been looked for. *(open)*
+- **HD26** — Two people are running for Arizona State Treasurer and three things about them have never been looked for. *(open)*
+- **HD27** — Two people are running for Congress in Arizona's seventh district and three things about them have never been looked for. *(open)*
+- **HD28** — Two people are running for Arizona Attorney General and two things about them have never been looked for. *(open)*
+- **HD29** — Two people are running for Arizona Superintendent of Public Instruction and two things about them have never been looked for. *(open)*
+- **HD30** — One person is running for Arizona's 20th state senate district and one thing about them has never been looked for. *(open)*
+- **SRC01** — A Census Bureau API key sits unused. The product reads Census bulk files instead, so the key buys nothing until something wants live population or income figures. *(open)*
+- **SRC02** — A lobbying-disclosure API key sits unused. The credential half of the row that says the product fetches no lobbying data at all. *(open)*
+- **SRC03** — A data.gov umbrella key sits unused, and an earlier session reported it did not exist. It does — it is in the environment file — and this row corrects the record. *(open)*
+- **SRC04** — The government publishing office's API, sized and deliberately not built. The row records the decision so a later session does not re-open the question from scratch. *(open)*
+- **R55** — The document Sean's session prompts are generated from lived outside the repo. It is now committed, and this stays open until he confirms the committed copy is the one to use. *(open)*
+- **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right. *(open)*
+- **R57** — Portraits and PDF archives are too big for git, so they live in a content-addressed store. Where that store actually lives — so a deploy can restore from it — is Sean's call. *(open)*
 
 **Needs Sean.** R55, R56, R57
 
@@ -327,7 +358,12 @@ Built the national picture: how many governments exist, how many of them the pro
 - **HUNT01** — Walk every single governing body around Newbury, New Hampshire to full depth — who sits on it, when it meets, where its records are. The first place the product tries to answer completely. *(open)*
 - **HUNT02** — Nobody publishes a list of the boards and commissions inside a government. The Census counts governments; readers need bodies. Until a government's boards are enumerated, there is no honest denominator for how much of it the product covers. *(open)*
 - **HUNT04** — The 47 people who filed to run around Newbury, New Hampshire. None has been researched. Every one of them is a card a reader will meet. *(open)*
-- …and 6 more still open.
+- **HUNT03** — Coverage records written before the product knew how to get past several kinds of wall. Each one re-walked is a public body that becomes visible after having been written off. *(open)*
+- **PB10** — Reading individual donors out of the federal campaign-finance data, rather than only committee totals. Held until an election lawyer rules on the commercial-use restriction that attaches to donor names and addresses. *(open)*
+- **HUNT06** — Re-running each new capability against the place it was built for, so its cost is measured in steady state rather than mixed in with the cost of inventing it. *(open)*
+- **HUNT05** — Forty special districts that might or might not reach Newbury, New Hampshire. Nobody publishes their boundaries, so the answer has to come from somewhere other than a map. *(open)*
+- **PB03** — A reader for agenda data hidden inside a page's HTML rather than published at an address. Without it, whole families of school and municipal sites come back empty and look like places with no meetings. *(open)*
+- **PB04** — The list of towns on the CivicPlus platform covers about 12% of its customers and most of it went stale in 2020. Every town missing from that list is a town whose meetings the product cannot find. *(open)*
 
 **Needs Sean.** PB10
 
@@ -544,7 +580,28 @@ The deploy landed, and two instruments that could not actually measure the thing
 - **G06** — A line on incumbents' cards ended with a defence of itself. The author cut the defence; the fact stayed.
 - **G08** — The mayor was removed from the who-governs card, where the placement was awkward and the office already appeared elsewhere.
 - **G09** — Measure the map's ramp-up animation and capture the frames before changing anything. The author ruled: measure first, decide after.
-- …and 22 more, on the Resolved tab.
+- **M137** — One search box that answers everything, replacing a question box, a separate search field and a duplicate of the first one inside another card.
+- **M138** — One thing open at a time. The author's screenshot showed four surfaces stacked on top of each other.
+- **R02** — The tracker lives in the repository under version control, with a spreadsheet view generated from it on demand.
+- **C05** — The aggregate sold to a campaign is a different surface for a different audience, and its denominator excludes rows the product's own automated runs created.
+- **G04** — The production walk reported how many rows it created by counting requests it sent rather than rows that landed. Two different numbers presented as one.
+- **R11** — A commit message or tracker note that names a branch has to name a branch that exists. Eight rows had cited one that never did.
+- **R30** — A mirror of the source code, so the person writing the next brief can read the code rather than infer it from reports.
+- **R31** — One complete list of everything still open. The tracker had reached 329 rows and half a megabyte, and nobody could answer "what is outstanding?" without rebuilding it by hand.
+- **R38** — Internal adapter names — schedulepage, civicplus, iqm2 — were reaching readers. Correct in the wiring, wrong in front of a person.
+- **R08** — The mirror compared files byte for byte without normalising line endings, so a line-ending change would have forced a full recopy every time.
+- **R17** — Three documents each stated a different number of mirror files and none of them matched the actual list.
+- **R19** — The session-start check warned about the constitution's size on every single open, because the expected size had never been updated. A warning that always fires is a warning nobody reads.
+- **M142** — "Last checked 6 hours ago" was true of the file and false of the rows carried forward out of an earlier one, which could be days old.
+- **M131** — The lit side of a raised state did not lead the shaded side by the measured margin in the light theme, so the effect read flat.
+- **R05** — The map tests covered the logic and nothing covered the markers, the camera or how the base map is chosen.
+- **R16** — A date guard found 122 future-dated occurrences across the documents rather than the three expected. Each one needed the author to say whether it was a real future date or a fabricated one.
+- **R32** — The list of open questions split into two tabs — build work and decisions only the author can make — because mixing them made both harder to read.
+- **R35** — Eight rows cited a branch name that never existed, so the evidence behind eight claims pointed at nothing.
+- **R37** — A session compared its walk to the previous one by subtracting two totals. A run that loses three checks and gains seven looks identical to one that gained four.
+- **R18** — Generated documents stamped themselves in UTC, so after 5pm local they carried tomorrow's date.
+- **R23** — A single line of code caused the build to trace the entire project into the bundle, tests included — and it was the mechanism behind a refused deploy.
+- **M120** — The reported rubber-band on panning did not reproduce. The row records what was ruled out rather than leaving the report unanswered.
 
 **What it started.** 24 row(s) opened, 1 still open.
 
@@ -570,7 +627,16 @@ The question matcher stopped answering questions nobody asked, and the interface
 - **R36** — The connection string named READONLY connects with full permission to write, drop and truncate. The name promised a protection that did not exist.
 - **D22** — The second school-board agenda platform. Vail's district runs a different one from Newbury's, so reaching both target districts needed both.
 - **A01** — One input that answers a question instead of making the reader navigate to it. This is the interface, not a feature on it.
-- …and 10 more, on the Resolved tab.
+- **D19** — A county board sitting as a different board is a real and common thing. Items were all being recorded as county-board business, which is the wrong body.
+- **R42** — The local database connection could not authenticate at all, so no local run could prove that a write works.
+- **D18** — A meeting held only online is real and public and has no coordinates, so the map was dropping it entirely.
+- **M93** — What the who-governs card shows by default and what sits one tap down, decided and written into the design document.
+- **A02** — Answering "what's going on where I live?" with upcoming items, recent decisions and who represents them, scoped to the reader's own districts.
+- **R40** — The author's personal email address was in the rendered product. It is replaced by a feedback link opening a form inside the app, with its own store.
+- **M119** — Two inputs in the sidebar where the author ruled there should be one, keyword-first, with anything else routing as a question. Recorded, not built.
+- **M19** — Two venues a few metres apart render overlapping pins and the top one swallows clicks meant for the other, so one of them is unreachable.
+- **M12** — One "school" layer merged three different kinds of district, so a K-8 boundary and a regional high-school boundary drew identically and a reader could not tell them apart.
+- **R41** — The feedback form ships with no way to reply to whoever wrote in. That is the strictest reading of its own spec and it costs a real thing, so the author has to decide.
 
 **What it started.** 2 row(s) opened, 0 still open.
 
@@ -836,7 +902,46 @@ Two blocked websites opened, every district card started confessing where its fa
 - **M66** — The ballot and the funding surface given flagship treatment — a header with presence, contests as designed cards rather than a list.
 - **M67** — Three voices applied across the whole product: explainer, tappable link, and sourced data, each visually distinct so a reader can tell a fact from a link from an explanation.
 - **M68** — When the same source line repeats under every contest, it renders once at the foot with a marker at each contest instead of a wall of identical citations.
-- …and 40 more, on the Resolved tab.
+- **M69** — The narrowing prompt stopped being a modal that reappeared every time the reader panned across a boundary, and became a quiet chip they can ignore.
+- **M70** — Typing a street now visibly does something: the municipality containing it shades on the map, so the reader can see their answer was understood.
+- **M71** — Clearing every pick now asks in a real dialog rather than an inline line of text that is easy to trigger by accident.
+- **M72** — At desktop width the top of the who-governs card rendered above the top of the window, so the reader never saw its heading.
+- **M73** — At phone width the sidebar's footer line ran underneath the map legend.
+- **M74** — Picks saved from Arizona's ballot were listed on New Hampshire's ballot with nothing saying where they came from.
+- **M76** — Every meetings source was fetching thirty days of history while the product served ninety, so two months of concluded meetings could never appear.
+- **M82** — Beside the voting dates, a link to the reader's own state's official polling-place lookup.
+- **M83** — The map named a district "School District Not Defined" — a Census placeholder rendering as though it were the name of a real district.
+- **M88** — The transparency page keeps every commitment and loses the words about how plainly it is saying them.
+- **X05** — The design system written down — type scale, shared structural classes, the three registers, colour roles, spacing and shape.
+- **X06** — The voice doctrine as law: playful where the reader is being invited to do something, level where the product is stating a fact about a real person or real money.
+- **D53** — Turning a typed street into an actual point, so meetings and officials re-centre on where the reader lives rather than on the middle of their zip.
+- **R21** — Before-and-after screenshot pairs and contact sheets, because design work is judged by eye and one browser session should produce the whole pass.
+- **D59** — A governor's corrected portrait appeared on her officials row and the old one stayed on her ballot card. Photos now key to the person, so one person has one photo everywhere.
+- **B17** — The Senate publishes official long titles rather than the names people use, so searching for a vote by its popular name could never work. Resolved through the Congress API instead.
+- **D60** — A candidate the author reported as having no photograph was already covered by an existing rule; the miss was in what had been looked at, not in what was held.
+- **M62** — Not one of the twelve local bodies publishes party affiliation on its own roster, including offices that are unambiguously partisan. Certified election results are the route.
+- **M80** — Proven in a real browser rather than assumed: the Census geocoder cannot be called from a web page at all, so the promise to resolve a typed street on the device needs a different route.
+- **M84** — Zero cancelled meetings across Tucson and Vail is implausible, and it was — two adapters were not reading cancellation status at all.
+- **M87** — A tile read "179 DISTRICTS" as though the reader were governed by 179 of them. It was counting what was drawn on screen.
+- **M90** — The second mobile pass: native dismissal gestures, the floating controls, a location that lasts only for the session, and a colour pass.
+- **M98** — The card collapses, the votes read as two columns, and a missing position stopped rendering as "Did not vote" — which would have been a specific false claim about a named member of Congress.
+- **M99** — Four of the author's rulings shipped together, including retiring the phrase "not independently verified" and defaulting the meetings window to 90 days.
+- **R20** — Each state gets its own notes file — filing systems, vendor patterns, walls hit, statutory quirks — and the zip playbook is born.
+- **D54** — The state-legislation refresh had a decided cadence and no scheduled job to run it, so it only ever ran when somebody ran it by hand.
+- **M59** — Two archives publish past meetings with a date and no start time, and a meeting with no time was being dropped rather than shown as a day.
+- **A12** — The ask box's second rung: when the keyword matcher cannot route a question a person could route in a second, a model picks which curated topic it belongs to — and can never invent one.
+- **M77** — Rockaway Township showed one municipal body. It has five, listed on the township's own page — the others were on a different platform.
+- **M78** — The high-school district serving 07866 had never been attempted. It runs no agenda vendor at all, which turned out to be a whole new shape of source.
+- **M85** — When a street crosses a district line the reader is supposed to be asked for their house number. The question was never actually being asked.
+- **M96** — About twenty places in the stylesheet referred to a colour that did not exist, so they resolved to nothing. Found by reading what the browser computed rather than what the file said.
+- **M97** — Two design rules made machine-checkable: nothing overlaps anything, and every text passes contrast. The author asked for an audit of all of them, not a fix of the one he saw.
+- **D58** — Money a committee received that was not a contribution was rendering as a contribution, live on production. Found by a line-by-line census rather than reported.
+- **D61** — The author's ruling on what is actually licensed: anonymous reader-attention signal, never the federal filing data itself. A buyer receives opinions, not a repackaged public record.
+- **D55** — Contributions sorted by amount and grouped by kind, with repeat filings from the same donor collapsed. The reader's question is who has spent the most to elect this person.
+- **D57** — "54% from small donors" on $325 raised is true and misleading. A percentage of a tiny base is noise wearing a statistic's clothes, so it now has a floor.
+- **M79** — Two New Hampshire hosts that refuse the product's pipeline, proven rather than assumed: at Newbury the portal carries only the selectboard, and a whole-year query proved it.
+- **D56** — A joint fundraising committee files its own books, so "who gives to the committee that gave to this candidate" is a question with a real, published answer one hop further out.
+- **M89** — Newbury's zoning board went live because its meeting venue was hidden in the markup behind a map link on the town's own site, where no plain read would find it.
 
 **What it started.** 65 row(s) opened, 8 still open.
 
@@ -1745,7 +1850,34 @@ The first session. The map, the tracker, and congressional district boundaries o
 - **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true. *(open)*
 - **V04** — Take one real Pima County down-ballot race and build the full side-by-side of sourced positions and the reader's own priorities. The test of whether the sourcing actually holds up end to end. *(open)*
 - **V06** — Read the plain-language output back to real people with real questions and find out whether it is actually plain. Synthetic test questions cannot tell you that. *(open)*
-- …and 28 more still open.
+- **B02** — A trademark search in the three classes this product would file under. Cannot usefully happen until the name is settled. *(open)*
+- **B03** — What legal entity this becomes. An LLC now and a public benefit corporation after the buyer calls, rather than a plain C-corp. *(open)*
+- **D03** — State legislators' voting records, all fifty states, from Plural Open. Today a state legislator's card can say who they are but not how they voted. *(open)*
+- **D06** — Where a candidate's money comes from — top sources, how concentrated it is, and how much came from inside the district they want to represent. *(open)*
+- **P02** — Mapping candidates' stated positions onto the issues on a reader's ballot, every one carrying its source. Never a score, never a ranking — the positions side by side and the reader deciding. *(open)*
+- **P03** — The one-tap yes or no, with an optional free-text answer, asked after the explanation and attached to a specific provision or a specific sourced position. This is the revenue path. *(open)*
+- **T04** — Decide, and publish, whether this data is ever sold exclusively to one buyer. The neutrality claim does not survive a yes, so the answer shapes the business. *(open)*
+- **B07** — How to price this. Selling to a campaign below fair market value can count as an in-kind political contribution, so the prices have to be real and documented, pilots included. *(open)*
+- **P05** — Tell a reader when an official they follow votes on something. *(open)*
+- **T03** — A security review before a single real person's political opinions are stored. A breach ends the product. *(open)*
+- **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat. *(open)*
+- **B04** — Registering as a data broker in California, Vermont, Texas and Oregon. Annual deadlines with per-day penalties for missing them. *(open)*
+- **P04** — Turning individual answers into a number a buyer can trust: weighting by how much the person actually read, freezing each snapshot so it can never be quietly amended, and reporting on every export how well each answer was verified. *(open)*
+- **T02** — Proving a real person is answering without learning who they are — device attestation, a phone check that rejects burner numbers, an address that exists. Weighted rather than gated, so nobody is turned away. *(open)*
+- **D04** — How your own city council voted. It sits in unstructured minutes nobody has parsed, which is exactly why it is worth doing and why nobody else has. *(open)*
+- **P06** — One tap to send a letter when a representative votes against a position the reader cared about. Public contact details only — delivery, not lobbying. *(open)*
+- **P07** — Tell a reader what happened at the hearing they could not attend: passed, failed, or held over. *(open)*
+- **P10** — Build the product for a second metro so the demo is not only Tucson. *(open)*
+- **X02** — Five content creators on Instagram. The cheapest distribution channel available to a product nobody has heard of. *(open)*
+- **X03** — A podcast pitch, shorter and more specific than feels comfortable. *(open)*
+- **A03** — Answering "is there a data center coming?" by searching pending zoning, permits and agenda items near an address. The same machinery answers warehouses, rezonings and road projects. *(open)*
+- **T06** — Grade a hundred real answers by hand against the verification tiers before any automatic classifier touches them. The hand pass is what tells you whether the tiers mean anything. *(open)*
+- **T07** — The abuse policy points at a file of escalation contacts that does not exist — local police, the state agency per state, the Capitol Police threat unit. A policy pointing at nothing cannot be followed. *(open)*
+- **C02** — The commercial front end: buyers log in and see signal by district, race, measure and provision, over time, with the ability to filter, drill down and export. *(open)*
+- **C03** — The actual file or API a buyer receives — its schema, the confidence-mix figures on every row, how much was excluded by moderation, and the snapshot id that makes it citable. *(open)*
+- **C04** — Publish what the signal predicted before each election and how it actually turned out. A public scoreboard, including the misses. *(open)*
+- **P08** — After a decision, tell the reader how long they have to appeal it and how. *(open)*
+- **P09** — A different product for people deciding where to live: pending development, zoning and state-by-state requirements near an address they are considering. A real market, and not this one. *(open)*
 
 **Needs Sean.** B01, C01, V01, V03, V05, B05, T01, V04, V06, B02, B03, T04, B07, T03, T05, B04, T02, X02, X03, T06, T07, C02, C03, C04
 

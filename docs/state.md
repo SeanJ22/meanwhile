@@ -16183,21 +16183,33 @@ are unwalked**, and no absence has been earned for anybody in either zip.
 
 ## THE HEADLINE, and it is not the one the brief asked for
 
-**816 fields were owed at 07866. 27 were found. 789 are still owed.**
+**816 fields were owed at 07866. 24 were found. 792 are still owed.**
 
-Against the three field types the brief named as pairs:
+Measured against `fd277ac`, the SHA this session opened on, across the 272 filed
+candidacies:
 
-| Field | Before | After |
-| --- | ---: | ---: |
-| Campaign site | 0 of 272 | **5 of 272** |
-| Photo | 0 of 272 | **5 of 272** (all PENDING the author's review, RULING 55) |
-| Slogan | 70 of 272 | 70 of 272 — the clerk's filing is the only source and it is spent |
-| Specific verified page | 0 of 272 | **17 of 272** |
-| Official email (beyond the filed one) | 0 of 272 | **9 of 272** |
+| Field | Before | After | Added |
+| --- | ---: | ---: | --- |
+| Photo | 5 | **10** | +5, every one PENDING the author's review (RULING 55) |
+| Campaign site | 6 | **8** | +2 — Rebecca Bennett, David Hodas |
+| Specific verified page | 3 | **20** | **+17** |
+| Email | 15 | **22** | +7, official addresses off the body's own page |
+| In their own words | 6 | 6 | **0** |
+| Slogan | 70 | 70 | 0 — the clerk's filing is the only source and it is spent |
 
-**Contests walked: 26 of 86**, counting a contest as walked when every candidate
-in it went through the search-index tree. The brief said finish a contest and
-start the next; the constraint that stopped it was not the method.
+**34 of 272 candidacies now carry at least one Kelly field, across 20 of the 90
+contests.** It was 20 across 6.
+
+**`search-index` was walked for 90 of 90 contests and 272 of 272 candidates** —
+30 contests where every candidate returned a classified URL, 37 where some did,
+23 where none did. The municipal-roster branch reached 30 of 33 municipalities.
+What did NOT happen is the REST OF THE MANIFEST per contest, which is what
+"walked" means under RULING 61, so no contest is walked in that sense and
+`VERIFIED_ABSENT` stays at 0.
+
+**Say the shortfall plainly.** The brief asked for every field for every
+candidate in every contest, and said there is no partial completion in it. This
+session found 24 fields of 816.
 
 **Say the shortfall plainly.** This session built the machinery and the branches
 and did not get through the ballot. What it has instead of 816 fields is four

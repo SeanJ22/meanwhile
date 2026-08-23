@@ -121,6 +121,28 @@ const RULING_CLOSURES = Object.fromEntries(
     }),
 );
 
+/**
+ * **RULING 37's FIRST HALF, WHICH HAD NO PATH.** (`NH64`, closed 2026-08-22.)
+ *
+ * "A session marks its own completed work Resolved and moves it, in every
+ * section except Needs Sean." That has been the rule since 2026-08-20 and this
+ * script had no mode or flag that did it: `Resolution`, `Condition` and
+ * `Notes` were read ONLY out of the workbook, and anything found there is
+ * attributed to SEAN. So a session finishing its own work either left the row
+ * open or wrote a resolution into a file the tool credits to him — and both are
+ * worse than the rule not existing.
+ *
+ * `--resolve=PU02,NJ07` marks those rows Resolved, closes them as the session
+ * (`--session=`), and refuses a Needs Sean row by name: that section has its
+ * own door, `--ruling=`, and it needs an actual ruling behind it.
+ */
+const RESOLVE_IDS = (
+  process.argv.find((a) => a.startsWith("--resolve="))?.slice("--resolve=".length) ?? ""
+)
+  .split(",")
+  .map((x) => x.trim())
+  .filter(Boolean);
+
 const STAMP = today();
 
 const WORKING_SHEET = "Working";
@@ -673,6 +695,29 @@ function modeMove(working, resolved, sections) {
   if (rulingCloses.length > 0) {
     console.log(`\nRULING 79 closes (each is reported so any can be reversed):`);
     for (const line of rulingCloses) console.log(`  ${line}`);
+  }
+
+  /* RULING 37's first half — a session closing its own completed work. */
+  const sessionCloses = [];
+  for (const id of RESOLVE_IDS) {
+    const row = working.find((r) => (r.ID ?? "").trim() === id);
+    if (!row) {
+      refusals.push(`${id} is not an open row, so a session cannot resolve it.`);
+      continue;
+    }
+    if ((row.Section ?? "").trim() === "needs-sean") {
+      refusals.push(
+        `RULING 37 — ${id} is in Needs Sean and --resolve does not reach that section. ` +
+          "Only Sean closes a row there, or RULING 79's --ruling= with a recorded ruling behind it.",
+      );
+      continue;
+    }
+    if (!(row.Resolution ?? "").trim()) row.Resolution = "Resolved";
+    sessionCloses.push(id);
+  }
+  if (sessionCloses.length > 0) {
+    console.log(`
+session closes (RULING 37): ${sessionCloses.join(", ")}`);
   }
 
   const before = [...working, ...resolved].map((r) => ({ ...r }));

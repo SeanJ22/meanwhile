@@ -16173,3 +16173,275 @@ are unwalked**, and no absence has been earned for anybody in either zip.
 | who-governs bodies at 07866 | 4 | **8** |
 | tracker open | 198 | **207** |
 | manifest routes | 41 (v2) | 41 (v2) |
+
+---
+
+# NJ HUNT 4 — 2026-08-22
+
+**Code SHA `47feeca` (PR #157, one planned merge). Deploy `6a8a3c78cff51800081bf764`.
+`main` green.**
+
+## THE HEADLINE, and it is not the one the brief asked for
+
+**816 fields were owed at 07866. 27 were found. 789 are still owed.**
+
+Against the three field types the brief named as pairs:
+
+| Field | Before | After |
+| --- | ---: | ---: |
+| Campaign site | 0 of 272 | **5 of 272** |
+| Photo | 0 of 272 | **5 of 272** (all PENDING the author's review, RULING 55) |
+| Slogan | 70 of 272 | 70 of 272 — the clerk's filing is the only source and it is spent |
+| Specific verified page | 0 of 272 | **17 of 272** |
+| Official email (beyond the filed one) | 0 of 272 | **9 of 272** |
+
+**Contests walked: 26 of 86**, counting a contest as walked when every candidate
+in it went through the search-index tree. The brief said finish a contest and
+start the next; the constraint that stopped it was not the method.
+
+**Say the shortfall plainly.** This session built the machinery and the branches
+and did not get through the ballot. What it has instead of 816 fields is four
+committed tools, three named branches, and a measurement of what each route
+actually reaches — which is what the next session needs and did not have. That
+is a real result and it is not the result that was asked for.
+
+## What actually limited it, measured rather than guessed
+
+**The search index rate-walled, twice, and it is the binding constraint.**
+
+- DuckDuckGo's HTML endpoint answered at 09:0x and was serving HTTP 202 with an
+  empty body by 09:1x — **six queries**.
+- Bing and Yahoo both walled after roughly **170 queries**. From candidate 90 to
+  candidate 100 the first full walk answered ZERO queries and failed thirty.
+- Of **26 public SearXNG instances probed**, three were answering with results.
+
+The first complete walk got through all 272 candidates before the wall closed:
+**148 returned at least one classified URL, 124 returned none.** That 124 is a
+fact about one IP's rate ledger on one afternoon and may never be read as an
+absence about those people.
+
+**And one loss that was mine.** The re-walk of the 124 had reached 50 when it was
+stopped, and it wrote only at the end, so those 50 are gone. The flush-as-it-goes
+fix is in `scripts/nj-hunt4-search.mts` now and arrived one run too late.
+
+## The three branches, and what each reaches
+
+**`search-index`, made mechanically walkable** (`pnpm nj:search`). It has been a
+manifest route id since v1 and never had a script, which meant it was walked for
+the candidates somebody had time for — the ranking the equal-effort rule forbids,
+produced by tooling rather than by choice. Five engines as a TREE, unioned:
+three SearXNG instances at **rung 5** (the instance queries the upstream engines
+from ITS server, so our requests are not on the walled ledger at all), then Bing,
+Yahoo, DuckDuckGo, Mojeek.
+
+Three mechanical rules make it honest:
+
+- **A walled engine is RESTED**, doubling from a minute, capped at fifteen.
+- **When every engine is resting, the walk WAITS** rather than recording a miss.
+  "All four are resting for another forty seconds" and "nothing on the internet
+  knows about this person" are completely different statements.
+- **A 200 whose rows never mention the surname is not a document.** Bing drops a
+  quoted phrase silently when the query is thin: `"Melissa BURNSIDE" Rockaway
+  NJ` returned ten pages about a shoe brand. That rule caught it, and it caught
+  the ALL-CAPS trap underneath it.
+
+**The New Jersey municipal-roster branch** (`pnpm nj:rosters`). The county
+publishes an index of every municipality's official website and it is not at a
+path anyone can guess — three guesses answered 404. It is in the county home
+page's own `href`s. **30 of 33 municipalities indexed, 167 pages read, 2 walls
+named, 18 candidates found on their own government's page.**
+
+**Per-person extraction** (`pnpm nj:extract`). A directory naming twelve people
+and carrying nine emails says nothing about whose is whose. The block around the
+FULL NAME, and nothing outside it — anchoring on the surname alone attributed
+*"Janet Cassidy, Superintendent of Recreation"* to WILLIAM Cassidy and a vote
+tally reading *"CHIRDO, Mabey, Lewis"* to Sean Mabey.
+
+## Two rungs that fell
+
+**The JavaScript-concatenated `mailto`, at rung 8.** Butler Borough's council
+page carries no `mailto:` at all. It carries `a = 'rverdonik'; b =
+'butlerborough.com';` — the anti-harvesting idiom every CivicPlus-era municipal
+site uses. A plain fetch records "no email published", which is a false miss
+about a councilman whose address the borough publishes on its own page. It
+reached **4 of the 9 official emails found**.
+
+**The filename as portrait attribution.** Proximity is weak — half these vendors
+put the face in one `<div>` and the name in the next. These municipalities name
+the file after the person, and a surname in the URL of an image on that person's
+own government's roster page is the publisher saying whose face it is.
+
+**And it is not infallible, which is why a person still looked.** Kinnelon
+publishes `thumb.Franks.jpg` on a page naming *Cynthia Frank*. FRANKS is not
+FRANK. Any doubt about identity fails at every door — refused, and her portrait
+stays owed.
+
+## Item 1 — Needs Sean, 54 → 45
+
+RULING 79. Nine closed, each attributed:
+
+| Row | Ruling | Shipped |
+| --- | --- | --- |
+| `NS02` — CLAUDE.md says five workflows push main | RULING 78 | `47feeca` |
+| `NS03` — RULINGS 75 and 76 are recorded but not law | RULING 75 | `47feeca` |
+| `NS04` — Actions cannot allocate runners | RULING 81 | `47feeca` |
+| `JOB01` — the refresh failed twice and recovered unexamined | RULING 82 | `47feeca` |
+| `NH44` — widen the TIGER clip, or accept six undrawable towns | RULING 80 | `47feeca` |
+| `NH12` — 47 filed addresses render | RULING 54 | `66494be` |
+| `NH13` — CLAUDE.md records a wall that is not there | RULING 52 | `2633089` |
+| `NH55` — a candidate's shared office line | RULING 64 | `66494be` |
+| `NH63` — RULING 69 and RULING 20 disagree about the FEC PDF | RULING 73 | `66494be` |
+
+P1 in that section: **5 → 3** (`B05` find counsel, `T05` abuse policy live,
+`NH31` the refresh gate).
+
+**A hole in the record, found and filled.** `docs/rulings.md` calls itself the
+append-only record of every ruling, and it ran 1…51 and then 57. Rulings 52–56
+were adopted on 2026-08-21 and written into `CLAUDE.md` and `docs/state.md`
+instead, and RULING 22 was recorded only by description. All six are backfilled
+from their authoritative text, and `tests/tracker-stores.test.ts` now fails on a
+gap in the numbering — because RULING 79 closes a row only on a ruling recorded
+*there*, which makes a missing entry operational rather than cosmetic.
+
+## Item 3 — `PU02`, and it was four times the size of the symptom
+
+The walk said the first body row does not open a card. Read off production at
+four zips, first five body rows each:
+
+| zip | opened a card |
+| --- | ---: |
+| `07866` | 5 of 5 |
+| `85641` | 2 of 5 |
+| `85701` | 1 of 5 |
+| `03255` | **0 of 5** |
+
+**The name comparison succeeded ONCE across all twenty.** Everything that opened
+went through the one-body-on-the-division fallback — the matcher was doing no
+work at all. Three causes: the same name spelled differently (`Selectboard` /
+`Select Board`, `Board of Adjustment` / `Board of Adjustment (BAJ)`); a division
+carrying 58 bodies and none matching; and a division carrying NO body while the
+meeting exists.
+
+The third is why no matcher could have fixed it. `lib/search/body-row.ts`
+normalises two spellings of one name, refuses anything looser, and **builds the
+card from the ROW when the registry cannot say** — the name the reader clicked,
+its division, its meetings, and every unhunted field rendering as its own gap.
+
+**Class sweep: found 4, fixed 4.** The autocomplete, the Bodies door's next-
+sitting lookup, the place card's per-body sitting count (which prints nothing at
+zero, so its undercount read as *sits never*), and a fourth I introduced in the
+fix and the new guard caught.
+
+Verified locally, read as an image: the FIRST body row at 03255 is *Ad Hoc Sutton
+Connects! Committee* and it opens a card with 13 upcoming meetings. `walk:all`
+now reports **1 clicked, 1 opened** at both zips — no retry.
+
+## Item 4 — RULING 80, and the thirteen towns that came back
+
+**966 → 2,294 features against the 13,000 vector-tiling threshold.** 3 primary
+counties + **19 adjacent** = 22, and the adjacency is MEASURED from the Census
+county file by shared boundary vertex. No list of neighbouring FIPS is written
+down anywhere in this repo, because a hand-written one is a claim about American
+geography with nothing behind it.
+
+**`twig:pair` at 07866: 90 + 52 → 120 + 24.** All **15 general-purpose
+municipalities** that read *"no division of its own"* now resolve. The 24 left
+are **18 special districts** — fire districts and sewerage authorities, for which
+Census draws no boundary layer at any vintage, so no clip could ever supply them
+— and **6 school districts**.
+
+**At 03255 the pair is 47 + 0, unchanged, and that is not the finding.** The
+finding is that all **thirteen curated divisions now have real TIGER geometry** —
+Sullivan County, five Sullivan towns, Windsor town, six school districts. They
+had a division only because NH Hunt 5 hand-wrote one; they can now be DRAWN. The
+rows are retired in place rather than deleted, and a guard asserts every one is
+in the geometry, so a clip that narrows again fails the build here instead of
+being noticed by a reader at 03255.
+
+**Three defects the widening surfaced, all of them older than the widening:**
+
+1. **Two Silver Lakes, one identifier.** New Jersey has two places of that name
+   (GEOIDs 3467590, 3467650) and `placeIdentity` keys on state + name. Also
+   Franklin Township and Washington Township school districts. Fixed for the
+   build by suffixing EVERY side of a collision with its GEOID; the convention
+   itself is still not unique and is a tracker row.
+2. **A place GEOID and a school-district GEOID collide.** `0404190` is both
+   Buckshot CDP and St. David Unified District. The canonical join is keyed on
+   `(layer, geoid)` now.
+3. **A slug-similarity match the guard had always forbidden.**
+   `state:nj/place:springfield` was matched to a Springfield sixty miles away in
+   Burlington County. The guard passed for weeks only because the clipped
+   universe contained no such case; the producer can no longer make one.
+
+## Item 2 — RULING 78
+
+**Builds per merge: 3 → 2.** Branch push, pull request, merge each ran the same
+check plus a Netlify deploy. Build check now runs on the **pull request** and on
+**`main`** only. Nothing stopped gating: every branch that matters becomes a PR,
+`pnpm closeout` pushes straight to `main`, and the two surviving triggers cover
+what the third did.
+
+**Scheduled runs per day: 7.4 → 4.4.** `refresh-meetings-snapshot` was every six
+hours — four runs a day, more than half of all scheduled minutes this repo spent.
+Once daily. The clerk filing keeps its own daily cadence because a filing
+deadline moves in hours.
+
+## What is still owed at 07866, named
+
+**No.** Every field at 07866 is not found and is not properly exhausted.
+`VERIFIED_ABSENT` remains **0** in both zips and was not forced — RULING 61 wants
+every route in the manifest walked, named and dated, and 9 of the 42 routes were
+never walked here. Each is named in a tracker row with its reason. The largest
+by value is **NJ ELEC**: `elec.nj.gov` answers 212 bytes to a plain client — a
+JavaScript shell needing rung 6 — and New Jersey imposes local campaign-finance
+filing on council and school-board candidates above a threshold.
+
+**44 of the 90 contests are Boards of Education and the roster branch reaches
+municipalities only.** That is the single biggest unopened door.
+
+## The gates, and the walk
+
+**Windows, 2026-08-22:** test **1709 of 1709** (baseline 1704; +5 guards — the
+`PU02` resolver, its class sweep, RULING 79's three, and RULING 37's
+session-close path). Lint **0 errors, 15 warnings**. `tsc --noEmit` clean. Both
+builds green.
+
+**Budgets, read from `scripts/bundle-budget.json`, both modes, no ceiling
+moved:** 1a largest app trace **205** (baseline 195, ceiling 220) · 1b framework
+runtime **927** default / **1130** standalone (ceilings 1050 / 1300) · client
+initial JS **2699.2 KB raw, 809.8 KB gzip** (ceiling 3027.3 / 918.0).
+
+**`walk:all` against production at `47feeca`: 371 distinct of 371 run, 371
+passed, 0 regressions, 0 GONE, 0 silent, 0 could not run.** Baseline 370, added
+1 — the sold-store check, which the local run had correctly declared COULD NOT
+RUN because it targeted `localhost`.
+
+`M135` / `PU02` reads **1 body row offered, 1 clicked, 1 opened the large card**
+at both zips. It used to need the retry.
+
+**Local first, per RULING 77.** The same walk ran against a local production
+build before the ship: 366 ok, 4 failing, and all four were the checks that
+require the live site — `/api/build`'s commit and deploy id (a local `next start`
+has neither) and the production migration state. Those four are exactly the
+boundary the ruling draws.
+
+**Ballot render, local production build, 430×932: 26 + 47 + 20 + 25 = 118
+candidate rows and 9 + 12 + 20 + 20 = 61 contests**, which is the no-regression
+floor exactly.
+
+**Rows this run created:** 76 search-log GETs and 67 ask/log requests, every one
+declared SYNTHETIC; no reaction tapped. **Organic 163, delta 0.**
+
+**Screenshots: 8 of 8 read as images.** The portrait contact sheet (six faces,
+one look, one refused on a filename that says FRANKS where the page says FRANK),
+both ballot pages shrunk to 34% so they could be read at all, and both `PU02`
+captures — the first body row at 03255 opens *Ad Hoc Sutton Connects! Committee*
+with 13 upcoming meetings, which is `bodyFromRow` doing its job for a division
+the registry holds no body on.
+
+**And three captures that were thrown away, which is the point of reading them.**
+The first `nj4-governs-*` shots were captioned "the who-governs surface at
+07866" and showed the WELCOME OVERLAY: `?zip=` does not seed the app, and the
+first draft guessed the `sessionStorage` keys instead of reading them off
+`walk:all`. A capture whose claim does not match its contents is worse than no
+capture.

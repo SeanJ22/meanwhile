@@ -1044,3 +1044,31 @@ test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
       "and a number that is only in CLAUDE.md or state.md cannot close a Needs Sean row",
   );
 });
+
+test("RULING 37's first half has a path, and it does not reach Needs Sean", () => {
+  /*
+   * `NH64`, closed 2026-08-22. RULING 37 has said since 2026-08-20 that a
+   * session marks its own completed work Resolved in every section except Needs
+   * Sean, and `scripts/tracker.mjs` had no mode or flag that did it —
+   * `Resolution`, `Condition` and `Notes` were read ONLY out of the workbook,
+   * and anything found there is attributed to SEAN. A session finishing its own
+   * work either left the row open or wrote a resolution into a file the tool
+   * credits to him. Both are worse than the rule not existing.
+   *
+   * Both halves are asserted, because the dangerous one is the permissive one:
+   * a `--resolve` that reached Needs Sean would make RULING 37 a suggestion and
+   * would route around RULING 79's requirement of an actual recorded ruling.
+   */
+  const script = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
+  assert.match(script, /--resolve=/, "a session has a path to close its own row");
+  assert.match(
+    script,
+    /--resolve does not reach that section/,
+    "and it refuses Needs Sean by name",
+  );
+  assert.match(
+    script,
+    /RULING 79's --ruling=/,
+    "and it says which door Needs Sean has instead",
+  );
+});

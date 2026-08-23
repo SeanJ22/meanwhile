@@ -14,16 +14,16 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **208 open**, 333 resolved.
+- **204 open**, 337 resolved.
 - **46 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
-  - New Jersey hunt — **1**
+  - New Jersey hunt — **0**
   - Arizona hunt — **0**
   - Visual feedback — **1**
   - Data infrastructure — **1**
-  - Product / UI — **2**
+  - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **0**
 
@@ -257,11 +257,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**20 open · 1 resolved.**
-
-### P1
-
-**NH56** — The ballot page now shows Rockaway Borough's council and school board to a 07866 reader, because it resolves the zip's AREA. The map's who-governs card still resolves a single ZCTA centroid, so it reads '4 bodies govern the area around 07866' and names Morris County, Morris Hills Regional, Rockaway township and Rockaway Township School District — no Borough. Same defect as NJ01, one surface over.
+**18 open · 3 resolved.**
 
 ### P2
 
@@ -274,8 +270,6 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
 **NJ06** — data/ballot/nh-merrimack-2026.json gives the contest "Executive Councilor, District 2" the ocdId ocd-division/country:us/state:nh/county:merrimack/place:newbury_town. New Hampshire's Executive Council District 2 covers 81 cities and towns; Newbury is one of them. Two consequences: the contest renders only for readers whose divisions include Newbury, so the other 80 towns in the district never see their own Executive Council race; and the id is a wrong join key, which CLAUDE.md makes the universal key for districts, offices and elections. Found while verifying RULING 71's certainty classification -- the contest read as CERTAIN at 03255, which is accidentally the right answer for the wrong reason (Newbury covers the whole zip, and District 2 does cover Newbury). The right division is an Executive Council district, which this repo has no committed geometry for. Fixing it means either committing that layer or recording the contest against the state with a scope note.
-
-**NJ07** — pnpm twig:pair --zip 07866 gives 90 of 142 units held, and 52 of 52 unheld rows read "no division of its own". 34 of those are GENERAL_PURPOSE and SCHOOL_DISTRICT units in Sussex, Passaic, Essex, Bergen and Warren counties, 16-25 km out. Real TIGER polygons exist for all of them. The gap is that CLIP_COUNTIES is one county per covered state (lib/coverage/artifacts.ts, derived from the coverage manifest): place-34.geojson holds 67 features and cousub-34.geojson 66, all Morris. scripts/fetch-districts.ts states the tradeoff explicitly -- national coverage across these types is 13,000+ features, which ends the committed-GeoJSON approach and forces vector tiling. Extending to five adjacent counties is roughly 1,000 more features. That is a real step toward the stated ceiling and it is an architecture decision rather than a hunt, which is why this is a row and not a fix. Note the denominator: 142 is the first-rung 25 km circle, and every government whose territory reaches inside 07866 IS held.
 
 **NJ08** — The other half of the 52. Fire districts, sewerage authorities and a power authority -- ROCKAWAY VALLEY REGIONAL SEWAGE AUTHORITY, five PARSIPPANY-TROY HILLS TOWNSHIP FIRE DISTRICTs, three MONTVILLE TOWNSHIP FIRE DISTRICTs, HANOVER TOWNSHIP FIRE DISTRICTs 2 and 3, PEQUANNOCK RIVER BASIN REGIONAL SEWERAGE AUTHORITY, NEW JERSEY PUBLIC POWER AUTHORITY, SOUTHEAST MORRIS COUNTY MUNICIPAL UTILITIES AUTHORITY, PEQUANNOCK-LINCOLN PARK-FAIRFIELD SEWERAGE AUTH, WANAQUE VALLEY REGIONAL SEWERAGE AUTHORITY, MUSCONETCONG SEWERAGE AUTHORITY. No TIGER polygon exists for any of them at any vintage, so no geometry pipeline will ever reach them. RULING 57 says a body is NAMED FIRST and hunted second, and that a body with no source and no site is still entered and still rendered. scripts/twig-pair.mts already has divisionlessBodyFor(), so the mechanism exists in one place and has not been generalised. Eleven of the eighteen publish a website, listed in the twig:pair output.
 
@@ -525,17 +519,9 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**20 open · 131 resolved.**
+**19 open · 132 resolved.**
 
 ### P1
-
-**PU02** — Measured on production f20e1e9, 2026-08-22, at 430x932 with the walk's own page shape. Typing "a" into the ask box and clicking the FIRST row of type Body opens no card at either zip: 85701 offers "Amphitheater Unified School District Governing Board" and 85641 offers "Armory Park Historic Zone Advisory Board", and neither produces a .account-modal within 5 seconds. No page error is thrown. This is M135's rule (g15) -- a row opens a card -- broken for at least some rows.
-
-It is PRE-EXISTING and is not caused by this session's coverage widening. The proof is 85701, which this session did not change in that direction and which fails on its first Body row exactly the same way. walk:all passes at 85701 only because its loop retries up to three times and a LATER row happens to open ("AGENDA FOR AUDIT COMMITTEE MEETING"); at 85641 only one Body row is offered, so `attempt >= offered` breaks the loop after one attempt and a single non-opening row fails the check.
-
-Why it surfaced as a regression today: the meetings snapshot refreshed at 20:04 (455 rows, 381 fresh + 74 carried), which changed which rows the autocomplete offers first at 85641. The check's verdict is therefore sensitive to snapshot content, which is worth knowing about the check as well as about the defect.
-
-Two things for whoever takes it: why that class of row resolves to no card, and whether M135's retry loop should keep trying rather than breaking when a zip offers exactly one Body row -- a check that passes because the second row worked is not asserting what it reads as asserting.
 
 **P02** — Mapping candidates' stated positions onto the issues on a reader's ballot, every one carrying its source. Never a score, never a ranking — the positions side by side and the reader deciding.
 
@@ -609,13 +595,11 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**8 open · 56 resolved.**
+**7 open · 57 resolved.**
 
 ### P2
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
-
-**NH64** — RULING 37 says a session marks its own completed work Resolved and moves it, in every section except Needs Sean. scripts/tracker.mjs has no mode or flag that does it. Resolution, Condition and Notes are read ONLY out of docs/tracker.xlsx, and anything found there is attributed to Sean.
 
 **NH69** — Every tracker run this session ended with THE WORKBOOK IS STALE and exit code 3: docs/tracker.xlsx is locked (docs/~$tracker.xlsx exists, which is Excel's own lock file). The two CSV stores are authoritative and were written correctly, and docs/tracker.md and docs/log.md regenerated from them - but the workbook Sean edits is showing the tracker as it was before this session, and saving it would write those older rows back over the stores.
 

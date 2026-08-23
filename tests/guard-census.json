@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 183,
-    "named": 1679,
+    "named": 1680,
     "dynamic": 6
   },
   "files": {
@@ -2299,6 +2299,7 @@
         "RULING 34: tracker.md and log.md declare themselves generated and list no resolved row",
         "RULING 36: Pending review does NOT close a row",
         "RULING 36: three resolution states, and only these three",
+        "RULING 37's first half has a path, and it does not reach Needs Sean",
         "RULING 37: a session may not resolve or move a Needs Sean row, in either direction",
         "RULING 40: every row names the session that opened it, and UNKNOWN is a defect",
         "RULING 41: a session may not reword, retitle or delete a row Sean wrote",

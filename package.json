@@ -163,7 +163,13 @@
     "nj:extract": "tsx scripts/nj-hunt4-extract.mts",
     "nj:portraits": "tsx scripts/nj-hunt4-portrait-sheet.mts",
     "nj4:shots": "tsx scripts/shoot-nj-hunt4-0822.mts",
-    "fec:directories": "tsx scripts/fetch-fec-directories.mts"
+    "fec:directories": "tsx scripts/fetch-fec-directories.mts",
+    "wiki:muni": "tsx scripts/wiki-municipality.mts",
+    "nj:elec": "tsx scripts/nj-elec.mts",
+    "wiki:graph": "tsx scripts/wiki-graph.mts",
+    "keys:walk": "tsx scripts/api-keys-walk.mts",
+    "officials:contact": "tsx scripts/officials-contact.mts",
+    "nj5:ledger": "tsx scripts/nj-hunt5-ledger.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

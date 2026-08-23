@@ -32,6 +32,11 @@ import {
   requiredRouteIds,
   routeCounts,
   routesFor,
+  routesForTier,
+  tierCounts,
+  judgeTierOrder,
+  nextTierOwed,
+  MANIFEST_TIERS,
   type ManifestBranch,
   type ManifestField,
 } from "../lib/hunt/branch-manifest.ts";
@@ -106,6 +111,19 @@ const V1_ROUTES = [
   "news-embed",
   /* v3, NJ Hunt 4 (2026-08-22): the civic platform carrying a page per candidate. */
   "candidate-platform",
+  /* v4, NJ Hunt 5 (2026-08-22): the four Tier A routes RULING 84 and RULING 87 added. */
+  "wikipedia-municipality",
+  "wikipedia-election",
+  "press-outlet-map",
+  "nces-district-directory",
+  /* v5, NJ Hunt 5 (2026-08-22): the graph crawler and every held credential. */
+  "wikipedia-government-graph",
+  "congress-api",
+  "fec-committee-contact",
+  "openstates-bulk",
+  "govinfo-cdir",
+  "census-acs-api",
+  "lda-filings",
 ];
 
 const ids = MANIFEST_ROUTES.map((r) => r.id);
@@ -385,4 +403,131 @@ test("RULING 61 — the reported counts are read from the module, never transcri
   // And the document's table is the same numbers.
   assert.match(DOC, new RegExp(`\\| Photo \\| ${counts.photo} \\|`));
   assert.match(DOC, new RegExp(`\\| Contact \\| ${counts.contact} \\|`));
+});
+
+/* ── RULING 84 — the manifest is tiered, and walked in order ─────────────── */
+
+test("RULING 84 — every live route carries a tier, and it is one of the three", () => {
+  const untiered = MANIFEST_ROUTES.filter(
+    (r) => !MANIFEST_TIERS.includes(r.tier as (typeof MANIFEST_TIERS)[number]),
+  ).map((r) => r.id);
+  assert.deepEqual(
+    untiered,
+    [],
+    "a route was added without a tier, or with one that is not A, B or C. " +
+      "RULING 84: a route with no tier silently re-flattens the list, which is " +
+      "the exact shape that let 124 candidates be searched one at a time while " +
+      "a templated encyclopedia page listed nine council members outright.",
+  );
+});
+
+test("RULING 84 — the tier counts are read from the module, never transcribed", () => {
+  const { overall, byField } = tierCounts();
+  const live = MANIFEST_ROUTES.filter((r) => r.retiredOn === undefined);
+  assert.equal(
+    overall.A + overall.B + overall.C,
+    live.length,
+    "every live route lands in exactly one tier",
+  );
+  for (const f of MANIFEST_FIELDS) {
+    const summed = byField[f].A + byField[f].B + byField[f].C;
+    assert.equal(summed, routesFor(f).length, `${f}'s tiers must sum to its route count`);
+    for (const t of MANIFEST_TIERS) {
+      assert.equal(byField[f][t], routesForTier(f, t).length);
+    }
+  }
+});
+
+test("RULING 84 — every field has at least one Tier A route to walk first", () => {
+  for (const f of MANIFEST_FIELDS) {
+    assert.ok(
+      routesForTier(f, "A").length > 0,
+      `${f} has no Tier A route at all. That is not automatically wrong — not ` +
+        `every field has a broad source — but it means the first thing a hunt ` +
+        `does for this field is spend a per-entity query, and RULING 85 says ` +
+        `check the obvious route before accepting that.`,
+    );
+  }
+});
+
+test("RULING 84 — nextTierOwed returns A until every Tier A route is walked", () => {
+  const field: ManifestField = "contact";
+  assert.equal(nextTierOwed(field, []), "A", "nothing walked, so tier A is owed");
+
+  const tierA = routesForTier(field, "A").map((r) => r.id);
+  assert.equal(
+    nextTierOwed(field, tierA.slice(0, -1)),
+    "A",
+    "one Tier A route still unwalked is still tier A owed — not 'close enough'",
+  );
+  assert.equal(nextTierOwed(field, tierA), "B", "tier A complete, so tier B is next");
+
+  const all = routesFor(field).map((r) => r.id);
+  assert.equal(nextTierOwed(field, all), null, "every tier walked, nothing left to permit");
+});
+
+test("RULING 84 — a Tier C walk with Tier A unwalked is OUT OF ORDER, and says which routes were skipped", () => {
+  const field: ManifestField = "campaignSite";
+  const c = routesForTier(field, "C")[0];
+  assert.ok(c, "campaignSite must have a Tier C route for this guard to mean anything");
+
+  const v = judgeTierOrder(field, [c.id]);
+  assert.equal(v.inOrder, false, "reaching per-entity search first is the defect RULING 84 names");
+  assert.equal(v.reached, "C");
+  const skippedA = v.skipped.find((s) => s.tier === "A");
+  assert.ok(skippedA, "the verdict must name the Tier A routes that were skipped");
+  assert.deepEqual(
+    skippedA.routes,
+    routesForTier(field, "A")
+      .map((r) => r.id)
+      .sort(),
+    "the skipped list is the work list — every unwalked cheaper route, named",
+  );
+  assert.match(v.reason, /cheaper route/);
+});
+
+test("RULING 84 — a walk taken in tier order is in order, and an empty walk is not a violation", () => {
+  const field: ManifestField = "campaignSite";
+  assert.equal(judgeTierOrder(field, []).inOrder, true, "nothing walked is not out of order");
+  assert.equal(judgeTierOrder(field, []).reached, null);
+
+  const inOrder = [
+    ...routesForTier(field, "A").map((r) => r.id),
+    ...routesForTier(field, "B").map((r) => r.id),
+    routesForTier(field, "C")[0].id,
+  ];
+  const v = judgeTierOrder(field, inOrder);
+  assert.equal(v.inOrder, true, v.reason);
+  assert.equal(v.reached, "C");
+  assert.deepEqual(v.skipped, []);
+});
+
+test("RULING 84 — the verdict carries the tier order and the next tier owed", () => {
+  const v = judgeManifestWalk({
+    field: "photo",
+    branches: [],
+    checkedAt: "2026-08-22",
+    manifestVersion: MANIFEST_VERSION,
+  });
+  assert.equal(v.nextTier, "A", "a walk that has done nothing owes tier A first");
+  assert.equal(v.tierOrder.inOrder, true);
+  assert.match(v.reason, /tier A is owed next/);
+});
+
+test("RULING 87 — the Wikipedia routes are Tier A, and may never supply a photo or a blurb", () => {
+  for (const id of ["wikipedia-municipality", "wikipedia-election"]) {
+    const r = MANIFEST_ROUTES.find((x) => x.id === id);
+    assert.ok(r, `${id} must be in the manifest — it is the route six sessions never walked`);
+    assert.equal(r.tier, "A", `${id} is Tier A by definition: one read, many entities`);
+    assert.ok(
+      (r.forbiddenFor ?? []).includes("photo"),
+      `${id} may not supply a photo — RULING 87 makes it a DISCOVERY source, and ` +
+        `the photo doors do not open onto an encyclopedia`,
+    );
+    assert.ok(
+      (r.forbiddenFor ?? []).includes("blurb"),
+      `${id} may not supply a blurb — a description of a real person needs its ` +
+        `own source class, and 'an encyclopedia said so' is not one`,
+    );
+  }
 });

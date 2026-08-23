@@ -72,10 +72,37 @@ export const MANIFEST_FIELDS = [
 
 export type ManifestField = (typeof MANIFEST_FIELDS)[number];
 
+/**
+ * **RULING 84 — the tier a route is walked at, and the tiers go in order.**
+ *
+ * - **`A`** — a broad source that answers MANY ENTITIES AT ONCE. One county
+ *   clerk PDF carrying 328 filed emails; one Wikipedia municipality article
+ *   naming nine council members with party and ward; one Vote411 ballot page.
+ * - **`B`** — the entity's OWN OFFICIAL SOURCE. The town site, the district
+ *   site, the body's own roster page, the campaign's own domain.
+ * - **`C`** — PER-ENTITY SEARCH. A query that answers about one person, and has
+ *   to be re-asked for the next one.
+ *
+ * **The tier is a statement about COST PER FACT, never about quality.** Tier C
+ * routes find things Tier A never will — a candidate's own words, a local
+ * paper's interview, a domain nobody linked. What the ordering buys is that the
+ * scarce thing (a rate-limited engine's quota, a session's attention) is not
+ * spent on one person while a document listing fifty sits unopened.
+ */
+export type ManifestTier = "A" | "B" | "C";
+
+export const MANIFEST_TIERS: readonly ManifestTier[] = ["A", "B", "C"] as const;
+
 /** One named route to a fact. */
 export interface ManifestRoute {
   /** Stable id. Written into absence records, so it never changes meaning. */
   id: string;
+  /**
+   * RULING 84. Required on every route — `tests/branch-manifest.test.ts` fails
+   * the build if a route is added without one, because a route with no tier is
+   * a route that silently re-flattens the list.
+   */
+  tier: ManifestTier;
   /** What the route IS, in one line. */
   what: string;
   /** How it is reached — the concrete step a session takes. */
@@ -192,12 +219,45 @@ export interface ManifestRoute {
  * that already exists a reported defect, and this session committed one — see
  * `searchableSurname` in `lib/ballot/name-case.ts`.
  */
-export const MANIFEST_VERSION = "v3";
+/**
+ * ## v3 → v4 (2026-08-22, NJ Hunt 5 items 1 and 2)
+ *
+ * **Every route grew a `tier`** — RULING 84. Nothing was removed and no route
+ * changed meaning; what changed is that the list now has an ORDER, and
+ * `judgeManifestWalk` refuses to honour a Tier C walk for a field whose Tier A
+ * and Tier B routes are unwalked. The count that came out of tiering the
+ * existing 42: **A 14, B 11, C 17**.
+ *
+ * **Four Tier A routes added**, all of them things a person with a browser would
+ * have reached first, which is RULING 85's whole point:
+ *
+ * - **`wikipedia-municipality`** — the route six hunt sessions never walked. One
+ *   API read of Rockaway Township's wikitext yields the form of government, the
+ *   mayor, nine council members with party and ward, the county governing body,
+ *   the constitutional officers, both districts, and the external-links block,
+ *   every fact footnoted to a primary source. RULING 87 governs what may be done
+ *   with it: discovery source, never source of record.
+ * - **`wikipedia-election`** — the same read against the cycle's election
+ *   articles, for federal and state legislative candidates and their own
+ *   domains.
+ * - **`press-outlet-map`** — the outlets a state's own encyclopedia citations
+ *   cluster in, queried through their own site search rather than through a
+ *   general engine. Derived per state rather than guessed.
+ * - **`nces-district-directory`** — the federal district file that is already
+ *   this product's school-district coverage denominator, read for the contact it
+ *   has been carrying all along.
+ *
+ * **The version bump is the mechanism, not a label**, exactly as it was at v2:
+ * every absence earned under v3 re-opens automatically, because four routes that
+ * did not exist when it was earned now do.
+ */
+export const MANIFEST_VERSION = "v5";
 
 export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The filed record ─────────────────────────────────────────────────── */
   {
     id: "filing-state",
+    tier: "A",
     what: "The state's own candidate filing — the Secretary of State or state election division",
     how: "The state filing list for the cycle, per office. NH: sos.nh.gov's 2026 filing list (walled at rung 2 and 3 as of 2026-08-21 — rung 5 reaches it).",
     yields: "Filed name, filed mailing address, party, office, town of residence; occasionally a phone",
@@ -217,6 +277,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-county",
+    tier: "A",
     what: "The county's own filing or election office record",
     how: "County clerk / county election office candidate list for the cycle. In New Jersey this is the whole ballot in one born-digital PDF — `pnpm nj:filing` discovers and parses it.",
     yields:
@@ -237,6 +298,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-town-clerk",
+    tier: "A",
     what: "The town or city clerk's record",
     how: "The clerk's page, the posted filing period notice, the checklist supervisors' notice, or the clerk by phone",
     yields:
@@ -249,6 +311,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-campaign-finance-state",
+    tier: "A",
     what: "State campaign-finance filings — receipts and expenditures reports",
     how: "The state's finance portal, by candidate or committee name",
     yields:
@@ -292,6 +355,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
      * exhaustion cheaper by pretending the obligation does not exist.
      */
     id: "filing-campaign-finance-local",
+    tier: "A",
     what: "A LOCAL candidate's campaign-finance filing, where the state requires one below state office",
     how: "The state finance authority's search, by candidate and by committee. NJ: ELEC, walled at rung 2 as of 2026-08-22 — see the sub-branch on `filing-campaign-finance-state`.",
     yields:
@@ -304,6 +368,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-fec",
+    tier: "A",
     what: "FEC filings for a federal candidate — Form 2 Statement of Candidacy, Form 1 Statement of Organization",
     how: "docquery.fec.gov / the FEC API by candidate id",
     yields: "Committee street address, phone and email, and the treasurer",
@@ -314,6 +379,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-ethics-disclosure",
+    tier: "A",
     what: "State ethics or financial-disclosure filings",
     how: "The state ethics commission's public filing search",
     yields: "An employer, a business address, sometimes a professional listing that leads onward",
@@ -324,6 +390,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "filing-prior-candidacy",
+    tier: "A",
     what: "The same person's records from an EARLIER cycle",
     how: "Prior-cycle filing lists, prior finance reports, archived campaign sites at rung 11",
     yields:
@@ -336,6 +403,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "voter-file-extract",
+    tier: "A",
     what: "The public voter file or checklist extract",
     how: "The state's public voter-list request, or a town's posted checklist",
     yields: "Confirms a residence and a district; never a phone, and never published wholesale here",
@@ -349,6 +417,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The body's own publication ───────────────────────────────────────── */
   {
     id: "body-roster-page",
+    tier: "B",
     what: "The body's own roster or membership page, where the person holds or held office",
     how: "The body's site, its members page, its department page",
     yields:
@@ -368,6 +437,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "legislative-directory",
+    tier: "A",
     what: "The state legislature's own member directory",
     how: "NH: gc.nh.gov, per member and per seat. Answers rung 2 at HTTP 200 as of 2026-08-21.",
     yields: "An official portrait, a district, a committee list, a legislative email and phone",
@@ -379,6 +449,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "town-report",
+    tier: "B",
     what: "The town's annual report",
     how: "The town site's reports archive, as a PDF — rung 9, text layer first, OCR when scanned",
     yields:
@@ -391,6 +462,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "minutes-naming-them",
+    tier: "B",
     what: "Minutes of the body, or of another body, that name the person",
     how: "The minutes archive, searched for the name — rung 9 for PDFs, rung 12 for a vendor portal",
     yields:
@@ -402,6 +474,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "gov-staff-directory",
+    tier: "B",
     what: "Any .gov staff or official directory the person appears in",
     how: "The municipal, county or state directory page",
     yields: "A portrait shippable at door 2 or door 4, a work phone, an official email",
@@ -415,6 +488,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The campaign's own presence ──────────────────────────────────────── */
   {
     id: "campaign-site",
+    tier: "B",
     what: "The campaign's own domain",
     how: "Home, About and Contact pages; `pnpm probe:site` reads what a campaign site publishes about its own candidate",
     yields:
@@ -426,6 +500,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "campaign-social",
+    tier: "B",
     what: "The campaign's social presence — Facebook, X, Instagram, LinkedIn, Bluesky, YouTube, TikTok",
     how: "Opened in a LIVE BROWSER at rung 6 and read, never trusted from a search snippet",
     yields:
@@ -471,6 +546,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
    */
   {
     id: "ad-library",
+    tier: "A",
     what: "The Meta Ad Library — mandatory public disclosure for political advertising",
     how: "The Ad Library API by advertiser name and by page, or the public Ad Library search; `pnpm ad:library` walks it",
     yields:
@@ -486,6 +562,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "social-archive",
+    tier: "B",
     what: "An archived capture of the campaign's social page",
     how: "The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact",
     yields:
@@ -501,6 +578,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "social-mirror",
+    tier: "B",
     what: "The same content cross-posted to a platform that is not walled",
     how: "Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once",
     yields:
@@ -516,6 +594,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "news-embed",
+    tier: "C",
     what: "Local news coverage that quotes, embeds or screenshots the social page",
     how: "The paper's site searched by candidate name plus the platform, at rung 2 and rung 11",
     yields:
@@ -530,6 +609,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "candidate-platform",
+    tier: "A",
     what: "A civic platform carrying a page per candidate — GoodParty.org is the live case",
     how: "The platform's own candidate URL, reached from a search index rather than guessed; read at rung 2",
     yields:
@@ -556,6 +636,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "donation-platform",
+    tier: "B",
     what: "The donation page — ActBlue, WinRed, Anedot, or the committee's own",
     how: "The platform's candidate page, and the committee disclosure block on it",
     yields: "A committee mailing address, a contact email, and confirmation the campaign is live",
@@ -568,6 +649,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "domain-search",
+    tier: "C",
     what: "A direct search for a campaign domain by candidate name",
     how: "Name-plus-office and name-plus-year domain guesses, plus the search index at rung 10",
     yields: "A site nothing links to",
@@ -582,6 +664,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── Press ────────────────────────────────────────────────────────────── */
   {
     id: "local-newspaper",
+    tier: "C",
     what: "The local newspaper's coverage",
     how: "The town or county paper's site, searched by name; rung 11 where the archive is paywalled or gone",
     yields:
@@ -596,6 +679,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "candidate-interview",
+    tier: "C",
     what: "A candidate interview or Q&A feature",
     how: "The paper, the local radio or TV station, a community podcast, a chamber forum recording",
     yields:
@@ -609,6 +693,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "lwv-questionnaire",
+    tier: "A",
     what: "A League of Women Voters / Vote411 candidate questionnaire",
     how: "Vote411 by address, or the state LWV's own guide",
     yields:
@@ -622,6 +707,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "announcement-archive",
+    tier: "C",
     what: "The announcement — the 'X announces a run' item, wherever it landed",
     how: "The paper, the party's own release, the candidate's first social post, rung 11 for a dead page",
     yields: "The campaign's opening self-description, a launch contact, the site as first published",
@@ -636,6 +722,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── Organisational and professional ──────────────────────────────────── */
   {
     id: "party-committee-roster",
+    tier: "A",
     what: "The party committee's own roster — town, county or state",
     how: "The committee's site and its officers page",
     yields: "A contact for a candidate who holds a committee office, and the campaign site it links",
@@ -647,6 +734,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "employer-listing",
+    tier: "C",
     what: "The employer or professional listing, where public",
     how: "A law-firm bio page, a faculty page, a business site's team page",
     yields: "A work email and a direct phone; a portrait that is NOT shippable under any door",
@@ -659,6 +747,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "licensing-board",
+    tier: "C",
     what: "A professional licensing board — bar, real estate, medical, insurance, engineering",
     how: "The board's public licensee lookup by name",
     yields: "A business address and phone of record, and a licence status that dates it",
@@ -671,6 +760,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "bar-directory",
+    tier: "C",
     what: "The state or county bar directory, for an attorney candidate",
     how: "The bar association's member lookup",
     yields: "An office address, a direct phone, an email of record",
@@ -683,6 +773,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "business-registry",
+    tier: "C",
     what: "The Secretary of State's corporate registry",
     how: "Business-entity search by the person's name as officer, agent or incorporator",
     yields: "A registered address and a phone, and the business that leads to an employer listing",
@@ -694,6 +785,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "nonprofit-filing",
+    tier: "C",
     what: "IRS Form 990 and state charity filings where the person is an officer or director",
     how: "ProPublica Nonprofit Explorer or the state charities registry, by name",
     yields: "An organisation address, and a role that a bio never mentions",
@@ -705,6 +797,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "civic-organisation",
+    tier: "C",
     what: "A civic, fraternal or service organisation listing — Rotary, Lions, Grange, VFW, historical society, library trustees",
     how: "The organisation's officers page or newsletter",
     yields: "A contact, and confirmation of a name that a small town knows and no register does",
@@ -717,6 +810,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "congregation-listing",
+    tier: "C",
     what: "A church or congregation listing naming the person",
     how: "The congregation's own site, its officers or council page",
     yields: "A contact, occasionally the only published one",
@@ -729,6 +823,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "chamber-directory",
+    tier: "C",
     what: "A chamber of commerce or local business directory",
     how: "The chamber's member directory by name and by business",
     yields: "A business phone and address",
@@ -740,6 +835,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "professional-directory",
+    tier: "C",
     what: "LinkedIn and general professional directories",
     how: "The public profile, read at rung 6",
     yields: "An employer, a history, occasionally a site link; rarely a direct contact",
@@ -753,6 +849,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "alumni-obituary-archive",
+    tier: "C",
     what: "Alumni notes, announcement and obituary archives naming the person or their family",
     how: "The institution's class notes, the paper's announcements archive, rung 11 where it is gone",
     yields: "A hometown, a maiden name, an employer, a family connection that unlocks another route",
@@ -766,6 +863,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "prior-employer-release",
+    tier: "C",
     what: "A prior employer's press release naming the person",
     how: "The employer's newsroom, searched by name; rung 11 where the release is gone",
     yields:
@@ -780,6 +878,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── Retrieval-shaped routes that are genuinely separate branches ─────── */
   {
     id: "search-index",
+    tier: "C",
     what: "The search index itself, worked as a route rather than as a reflex",
     how: "Quoted name plus office, plus town, plus `site:` against each candidate host in turn",
     yields: "A page no other route names",
@@ -791,6 +890,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "web-archive",
+    tier: "B",
     what: "The Internet Archive, of any route above that is now dead",
     how: "Snapshot URLs at rung 11, against the exact dead path",
     yields:
@@ -804,6 +904,7 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   },
   {
     id: "records-request",
+    tier: "B",
     what: "The body's own public-records request path, walked as a named route",
     how: "The statutory request, filed and recorded with its date",
     yields: "What the body holds and has not published",
@@ -812,6 +913,161 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     fields: ["contact", "verifiedPage"],
     expectedToTravel:
       "Every state has a records law. It is SLOW, which is a reason to file it early in a hunt and never a reason to skip it.",
+  },
+
+  /* ── Tier A discovery — one document, many entities (RULING 84, RULING 87) ─ */
+  {
+    id: "wikipedia-municipality",
+    tier: "A",
+    what: "The Wikipedia article for the municipality, read as a TEMPLATED ROSTER",
+    how: "`action=query&prop=revisions&rvslots=main` for the article's raw wikitext, then the Local government and Federal/state/county representation sections; the officeholder templates those sections transclude are fetched the same way",
+    yields:
+      "The form of government and what it implies about which bodies exist; the mayor with party and term; every council member with party, term and ward or at-large seat; the county governing body; the constitutional officers; the legislative and congressional districts; and the External links block — every one carrying the footnote it came from",
+    rung: "2",
+    through: "the Wikimedia Foundation",
+    fields: ["contact", "verifiedPage"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "Roughly 19,000 US municipality articles share this template, so one parser reads all of them. New England town articles and New Jersey municipality articles both parse. Where it will break is a place with no article at all, and the smallest twigs RULING 57 exists for are exactly those.",
+    subBranches: [],
+  },
+  {
+    id: "wikipedia-election",
+    tier: "A",
+    what: "The Wikipedia article for the state's election in this cycle",
+    how: "The same API read, against `<year> <state> <office> election`, plus the per-district sub-articles it links",
+    yields:
+      "Declared candidates for federal and state legislative office, with their party, and the External links block that is often the only place a small campaign's own domain is written down",
+    rung: "2",
+    through: "the Wikimedia Foundation",
+    fields: ["campaignSite", "contact"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "Federal and statewide races are covered in every state. County and municipal races are almost never covered, so this route is broad and SHALLOW where the ballot is deep.",
+  },
+  {
+    id: "press-outlet-map",
+    tier: "A",
+    what:
+      "The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine",
+    how: "Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name",
+    yields: "Coverage of a named candidate from a publisher that actually covers this state's politics",
+    rung: "2 and 7",
+    through: "the state's political press",
+    fields: ["blurb", "contact", "campaignSite"],
+    forbiddenFor: ["photo"],
+    controlQueryRequired: true,
+    expectedToTravel:
+      "The METHOD travels to every state; the LIST does not, and is rebuilt per state. That is the point of it — it is a curated map of who covers this state, derived rather than guessed.",
+  },
+  {
+    id: "nces-district-directory",
+    tier: "A",
+    what: "The NCES public-school-district directory record for a school district",
+    how: "The CCD district file, joined on LEA id; the same record the coverage denominator already comes from",
+    yields: "The district's mailing address, phone and superintendent name — one file covering every district in the country",
+    rung: "1 and 2",
+    through: "the National Center for Education Statistics",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "Every state. It is a federal collection with a uniform schema, which is why it is already the coverage denominator for school districts.",
+  },
+
+  /* ── Tier A, authenticated — RULING 90 item 5 ──────────────────────────── */
+  {
+    id: "wikipedia-government-graph",
+    tier: "A",
+    what:
+      "The government GRAPH, crawled — not a list of named articles but every link that resolves to a governmental entity touching this zip, followed again from each",
+    how: "Seed from the municipality articles for the zip, classify each outbound link by its Wikipedia CATEGORIES, expand the governmental in-scope ones, and keep going; `pnpm wiki:graph --zip <zip> --state <state>`",
+    yields:
+      "Bodies no list would have named — executive departments, agencies, boards, commissions and courts — each with its official site, its structure, its named officials, and the meeting or hearing schedule that makes it a reader surface",
+    rung: "2",
+    through: "the Wikimedia Foundation",
+    fields: ["contact", "verifiedPage"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "The METHOD travels everywhere — every state has a Government of {state} article and roughly 19,000 municipalities have one. What does NOT travel is the category vocabulary: a state whose agencies are categorised differently needs its patterns added, and that is a sub-branch rather than a failure.",
+    subBranches: [],
+  },
+  {
+    id: "congress-api",
+    tier: "A",
+    what: "The Congress.gov API — sitting members of the federal delegation",
+    how: "`/v3/member/congress/{congress}/{state}?currentMember=true`, authenticated with the Congress.gov credential",
+    yields:
+      "Every sitting member for a state in one call, each with the chamber's own portrait URL and attribution and a specific verified page on congress.gov",
+    rung: "2",
+    through: "the Library of Congress",
+    fields: ["photo", "contact", "verifiedPage"],
+    expectedToTravel: "Every state and every cycle. It is a federal API with a uniform schema.",
+  },
+  {
+    id: "fec-committee-contact",
+    tier: "A",
+    what: "The FEC committee record behind a federal candidate — treasurer, address, agent phone",
+    how: "`/v1/candidates/?state=..` for the list, then `/v1/committees/?candidate_id=..` per candidate; the FEC credential",
+    yields:
+      "A filed street address, city, zip and designated-agent phone for the committee — a real contact, filed by the person, on a federal form",
+    rung: "2",
+    through: "the Federal Election Commission",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "Every state, FEDERAL office only. It reaches nothing below Congress, which is most of a county ballot.",
+  },
+  {
+    id: "openstates-bulk",
+    tier: "A",
+    what: "The Open States / Plural BULK legislator file, already committed to this repo",
+    how: "Read `data/reference/openstates_legislators.csv` — 7,976 rows — and filter by jurisdiction and district. No API call, no quota.",
+    yields: "Every state legislator with chamber, district, party and an official email address",
+    rung: "1",
+    through: "Open States / Plural",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "All fifty states — it is one national file. It carries NO photo and NO bio, which is what the caucus walk is for; the caucus walk is not for assembling the roster, because the roster is already here.",
+  },
+  {
+    id: "govinfo-cdir",
+    tier: "A",
+    what: "govinfo — the federal document collections, including the Congressional Directory",
+    how: "`api.govinfo.gov/collections` and the `CDIR` package, fronted by the api.data.gov credential",
+    yields: "Member offices, phones and staff for the federal delegation, as the government publishes them",
+    rung: "2",
+    through: "the Government Publishing Office",
+    fields: ["contact", "verifiedPage"],
+    forbiddenFor: ["blurb"],
+    expectedToTravel: "Federal only, every state.",
+  },
+  {
+    id: "census-acs-api",
+    tier: "A",
+    what: "The Census ACS API — the demographic layer behind a zip",
+    how: "`api.census.gov/data/{year}/acs/acs5`, authenticated with the Census credential",
+    yields: "Population, median household income and median home value for a ZCTA",
+    rung: "2",
+    through: "the Census Bureau",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb", "campaignSite", "verifiedPage"],
+    expectedToTravel:
+      "Every zip in the country — WHEN the credential works. Walked 2026-08-22 and the host refused the held key with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too. Recorded as a dated wall on the CREDENTIAL, never as a property of the source.",
+  },
+  {
+    id: "lda-filings",
+    tier: "A",
+    what: "The Senate Lobbying Disclosure Act database",
+    how: "`lda.senate.gov/api/v1/filings/`, with the LDA credential",
+    yields:
+      "Federal lobbying registrants, their clients, and the offices they lobby. Recorded here because a credential with no route is a credential nobody decides about.",
+    rung: "2",
+    through: "the United States Senate",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb", "campaignSite", "verifiedPage"],
+    expectedToTravel:
+      "Federal only, and it closes NOTHING at a county or municipal ballot — stated plainly rather than softened, because the register's job is to let the author decide whether a credential earns its place.",
   },
 ] as const;
 
@@ -839,6 +1095,109 @@ export function routeCounts(): Record<ManifestField, number> {
   const out = {} as Record<ManifestField, number>;
   for (const f of MANIFEST_FIELDS) out[f] = routesFor(f).length;
   return out;
+}
+
+/**
+ * **RULING 84 — the routes for a field, at one tier.**
+ *
+ * This is what a session actually walks: the whole of tier A, then the whole of
+ * tier B, then tier C. A field's tier may be EMPTY — not every field has a broad
+ * source — and an empty tier is walked in zero steps rather than being a reason
+ * to stop.
+ */
+export function routesForTier(field: ManifestField, tier: ManifestTier): ManifestRoute[] {
+  return routesFor(field).filter((r) => r.tier === tier);
+}
+
+/**
+ * How many live routes sit in each tier, overall and per field. **Reported, never
+ * assumed** — the operation-count rule applied to the manifest's own shape, so a
+ * tier that silently emptied is visible rather than inferred.
+ */
+export function tierCounts(): {
+  overall: Record<ManifestTier, number>;
+  byField: Record<ManifestField, Record<ManifestTier, number>>;
+} {
+  const live = MANIFEST_ROUTES.filter((r) => r.retiredOn === undefined);
+  const overall = { A: 0, B: 0, C: 0 } as Record<ManifestTier, number>;
+  for (const r of live) overall[r.tier]++;
+
+  const byField = {} as Record<ManifestField, Record<ManifestTier, number>>;
+  for (const f of MANIFEST_FIELDS) {
+    byField[f] = { A: 0, B: 0, C: 0 };
+    for (const r of routesFor(f)) byField[f][r.tier]++;
+  }
+  return { overall, byField };
+}
+
+/**
+ * **Which tier is this walk allowed to reach next?** RULING 84 made answerable.
+ *
+ * Returns the FIRST tier that is not yet fully walked for this field. A session
+ * asking "may I run a per-person search now" gets `"A"` back until every Tier A
+ * route for the field is named in the walk — and that answer is the whole rule.
+ * `null` means every tier is walked and there is nothing left to permit.
+ */
+export function nextTierOwed(
+  field: ManifestField,
+  walkedRouteIds: readonly string[],
+): ManifestTier | null {
+  const walked = new Set(walkedRouteIds);
+  for (const tier of MANIFEST_TIERS) {
+    const owed = routesForTier(field, tier).filter((r) => !walked.has(r.id));
+    if (owed.length > 0) return tier;
+  }
+  return null;
+}
+
+/**
+ * **Was this walk taken IN ORDER?** RULING 84's violation, named rather than
+ * silently tolerated.
+ *
+ * A walk is out of order when it names a route at some tier while a route at an
+ * EARLIER tier for the same field is unwalked. The return is the work list, not
+ * a boolean: the useful output is which cheap routes were skipped.
+ */
+export interface TierOrderVerdict {
+  inOrder: boolean;
+  /** The deepest tier this walk actually reached. */
+  reached: ManifestTier | null;
+  /** Routes at a tier EARLIER than `reached` that were skipped. */
+  skipped: { tier: ManifestTier; routes: string[] }[];
+  reason: string;
+}
+
+export function judgeTierOrder(
+  field: ManifestField,
+  walkedRouteIds: readonly string[],
+): TierOrderVerdict {
+  const walked = new Set(walkedRouteIds);
+  let reached: ManifestTier | null = null;
+  for (const tier of MANIFEST_TIERS) {
+    if (routesForTier(field, tier).some((r) => walked.has(r.id))) reached = tier;
+  }
+
+  const skipped: { tier: ManifestTier; routes: string[] }[] = [];
+  if (reached !== null) {
+    for (const tier of MANIFEST_TIERS) {
+      if (tier === reached) break;
+      const owed = routesForTier(field, tier)
+        .filter((r) => !walked.has(r.id))
+        .map((r) => r.id)
+        .sort();
+      if (owed.length > 0) skipped.push({ tier, routes: owed });
+    }
+  }
+
+  const inOrder = skipped.length === 0;
+  const reason = inOrder
+    ? reached === null
+      ? "nothing walked yet, so nothing is out of order"
+      : `walked in tier order through tier ${reached}`
+    : `tier ${reached} was reached while ${skipped.reduce((n, s) => n + s.routes.length, 0)} cheaper route(s) sat unwalked: ` +
+      skipped.map((s) => `${s.tier} — ${s.routes.join(", ")}`).join(" · ");
+
+  return { inOrder, reached, skipped, reason };
 }
 
 /**
@@ -873,6 +1232,15 @@ export interface ManifestVerdict {
   found: boolean;
   /** Set when the walk was judged against an older manifest than the live one. */
   staleManifest: boolean;
+  /**
+   * RULING 84. Whether the walk was taken in tier order, and which cheaper
+   * routes were skipped if it was not. A walk can be complete and still be out
+   * of order — that is not a contradiction, it is a process finding, and it is
+   * reported rather than smoothed away.
+   */
+  tierOrder: TierOrderVerdict;
+  /** The next tier this field still owes, or `null` when every tier is walked. */
+  nextTier: ManifestTier | null;
   reason: string;
 }
 
@@ -902,6 +1270,8 @@ export function judgeManifestWalk(walk: ManifestWalk): ManifestVerdict {
   const missing = required.filter((id) => !walkedSet.includes(id));
   const independent = independentBranchCount(valid);
   const staleManifest = walk.manifestVersion !== MANIFEST_VERSION;
+  const tierOrder = judgeTierOrder(walk.field, walkedSet);
+  const nextTier = nextTierOwed(walk.field, walkedSet);
 
   let reason: string;
   if (found) {
@@ -909,7 +1279,8 @@ export function judgeManifestWalk(walk: ManifestWalk): ManifestVerdict {
   } else if (staleManifest) {
     reason = `walked against manifest ${walk.manifestVersion}; the live manifest is ${MANIFEST_VERSION}, so this is re-openable`;
   } else if (missing.length > 0) {
-    reason = `${missing.length} of ${required.length} manifest routes not yet walked: ${missing.join(", ")}`;
+    const owed = nextTier === null ? "" : ` — tier ${nextTier} is owed next`;
+    reason = `${missing.length} of ${required.length} manifest routes not yet walked${owed}: ${missing.join(", ")}`;
   } else {
     reason = `every one of the ${required.length} routes named by manifest ${MANIFEST_VERSION} returned nothing on ${walk.checkedAt} — which is what these routes measured on that date, and is never proof the fact does not exist`;
   }
@@ -923,6 +1294,8 @@ export function judgeManifestWalk(walk: ManifestWalk): ManifestVerdict {
     independent,
     found,
     staleManifest,
+    tierOrder,
+    nextTier,
     reason,
   };
 }

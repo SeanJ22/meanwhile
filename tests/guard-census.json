@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 183,
-    "named": 1680,
+    "named": 1689,
     "dynamic": 6
   },
   "files": {
@@ -303,7 +303,15 @@
         "RULING 61 — the reported counts are read from the module, never transcribed",
         "RULING 61 — the verdict names the routes still owed, as a work list",
         "RULING 61 — two independent branches is NOT exhaustion any more",
-        "RULING 63 — the document is indexed by question, not read front to back"
+        "RULING 63 — the document is indexed by question, not read front to back",
+        "RULING 84 — a Tier C walk with Tier A unwalked is OUT OF ORDER, and says which routes were skipped",
+        "RULING 84 — a walk taken in tier order is in order, and an empty walk is not a violation",
+        "RULING 84 — every field has at least one Tier A route to walk first",
+        "RULING 84 — every live route carries a tier, and it is one of the three",
+        "RULING 84 — nextTierOwed returns A until every Tier A route is walked",
+        "RULING 84 — the tier counts are read from the module, never transcribed",
+        "RULING 84 — the verdict carries the tier order and the next tier owed",
+        "RULING 87 — the Wikipedia routes are Tier A, and may never supply a photo or a blurb"
       ],
       "dynamic": 0
     },
@@ -2311,6 +2319,7 @@
         "RULING 48: docs/state.md never loses a section or a third of its bytes",
         "RULING 48: the guard catches the command that destroyed his edits",
         "RULING 48: the hook is wired, and no committed script reverts a protected file",
+        "RULING 79: a deliberately-unassigned ruling number is DECLARED, never merely absent",
         "RULING 79: a recorded ruling closes a Needs Sean row, and nothing else does",
         "RULING 79: docs/rulings.md has no gap in its ruling numbers",
         "RULING 79: the move script refuses a ruling that is not in docs/rulings.md",

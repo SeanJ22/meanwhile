@@ -1552,6 +1552,174 @@ detector working.
 The row asked why the job broke. It is answered: the cause was found, named,
 fixed and proven, and the instrument that missed it was corrected.
 
+### RULINGS 83 THROUGH 87 — the five process rulings of NJ Hunt 5
+
+*Adopted 2026-08-22 (NJ Hunt 5 item 1, from the author's brief). Law: written
+into `CLAUDE.md` in the same commit, each with its rationale attached.*
+
+**THE NUMBERING, named rather than fixed silently.** The author's brief adopted
+these five as RULINGS **81 through 85**. Both of those numbers were already spent
+by NJ Hunt 4 earlier the same day, from his previous brief — RULING 81 (`NS04`,
+the exhausted Actions balance) and RULING 82 (`JOB01`, the job watcher's
+sampling) — and both are cited by id in the resolved tracker store and above in
+this file. This document is append-only, so renumbering what already shipped
+would leave dangling references in the one record that is supposed never to move.
+The five therefore take **83 through 87** in the brief's order. Each carries the
+brief's number beside it. `NJ5-01` is open for the author to reverse this if he
+wants his own numbering to win.
+
+| Brief | Law | Name |
+| --- | --- | --- |
+| 81 | **83** | The free-source floor |
+| 82 | **84** | The manifest is tiered and walked in order |
+| 83 | **85** | The two-click test |
+| 84 | **86** | Per-state source enumeration precedes the hunt |
+| 85 | **87** | Wikipedia is a Tier A discovery source, never a source of record |
+
+### RULING 83 — the free-source floor
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief, where it is numbered
+81). **Supersedes nothing.** It CONSTRAINS the standing recommendation practice
+that produced NJ Hunt 4's close-out, and it is the precondition on every future
+"we are blocked" claim.*
+
+No paid resource is proposed, acquired or specced until every free route in the
+manifest has been walked and reported with counts. A session or a review naming a
+constraint that money would solve must first show what the free routes returned.
+
+The measurement behind it: NJ Hunt 4 correctly measured DuckDuckGo walling after
+six queries, Bing and Yahoo after ~170, and 124 of 272 candidates returning no
+classified URL — and recommended buying a search API. Wikipedia's Rockaway
+Township page was two clicks from a plain Google search, had never been opened by
+any of six hunt sessions, and carries the mayor, nine council members with party
+and ward, seven county commissioners, three constitutional officers, both
+districts, and links to the township, the school district, NCES and the fire
+department, every fact footnoted.
+
+### RULING 84 — the manifest is tiered, and walked in order
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief, where it is numbered
+82). **Amends RULING 61.** The manifest's shape changes; its bar does not.
+RULING 61 said `VERIFIED_ABSENT` is earned by walking a NAMED LIST rather than a
+count, and that is untouched. What is added is that the list has an ORDER, and
+that walking it out of order is itself a defect.*
+
+Tier A is a broad source answering many entities at once; Tier B is the entity's
+own official source; Tier C is per-entity search. A field may not reach Tier C
+until Tier A and Tier B are walked and recorded for it.
+
+Enforced in `lib/hunt/branch-manifest.ts`: `tier` is required on every route,
+`tests/branch-manifest.test.ts` fails the build on a route without one, and
+`judgeManifestWalk` refuses to honour a Tier C walk for a field whose Tier A and
+Tier B routes are unwalked.
+
+### RULING 85 — the two-click test
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief, where it is numbered
+83). **Supersedes nothing. Adds a precondition to RULING 61 and RULING 52.***
+
+Before recording any absence, or naming any constraint, the session states what a
+person with a browser would type into a search box to answer this, and confirms
+that path was walked. A route a non-technical person would reach in two clicks is
+Tier A by definition and is added to the manifest the moment it is found.
+
+Why it is a separate rule from RULING 84: the tier system orders routes that are
+IN the manifest. This one is about the route that is not in it, and could not be,
+because nobody thought of it. The ladder, the tree, the manifest and the control
+query are all instruments for getting PAST something, and none of them ever asks
+whether there was anything to get past.
+
+### RULING 86 — per-state source enumeration precedes the hunt
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief, where it is numbered
+84). **Extends RULING 63** from branches to sources.*
+
+Before any state's hunt begins, the session enumerates that state's free sources
+into the manifest as state-scoped routes, as a written research step producing a
+written list, before the first entity is touched.
+
+RULING 63 makes the TECHNIQUE cumulative. This makes the PLACES cumulative. A
+branch that reaches a town clerk record is portable; which office in this state
+IS the clerk is not, and a session that discovers that mid-hunt discovers it
+once, expensively, under time pressure, and usually incompletely.
+
+### RULING 87 — Wikipedia is a Tier A discovery source, never a source of record
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief, where it is numbered
+85). **Supersedes nothing. Distinguished from RULING 70** — Ballotpedia is not
+scraped because its disclaimer prohibits automated commercial extraction and its
+text is copyleft; that is a licensing question and it is the author's. Wikipedia
+is a different question with a different answer, and this ruling says so
+explicitly so no session reads RULING 70 as covering both.*
+
+Municipality articles are templated across roughly 19,000 US articles, so one
+parser reads all of them. Every extracted fact carries the footnote it came from
+and the primary source is fetched and confirmed before the fact ships — Wikipedia
+names the person, the citation proves them, and a fact whose citation cannot be
+confirmed is a `LEAD`, not a `FOUND`. The form-of-government line predicts which
+bodies exist and answers RULING 57 twig enumeration before the hunt starts. Names,
+parties, term dates and districts are facts and are not copyrightable: extract the
+facts, follow the footnotes, do not copy the prose.
+
+It gives ROSTER depth, not KELLY depth. Photos, phones and campaign sites are
+still hunted — but a person who has not been named cannot be hunted at all.
+
+---
+
+### RULINGS 88 AND 89 — deliberately unassigned
+
+*Recorded 2026-08-22 (NJ Hunt 5). Not a missing entry.*
+
+The author adopted the ruling below as **RULING 90** in his own numbering. 88 and
+89 were never used. They are left open rather than closed by renumbering his
+ruling down, because a gap in an append-only sequence costs nothing and this
+document correcting the author about the number of his own law costs a great
+deal. If he later assigns 88 or 89, they slot in here.
+
+### RULING 90 — exhaustion must be argued, not asserted
+
+*Adopted 2026-08-22 (NJ Hunt 5, from the author's brief). Law: written into
+`CLAUDE.md` in the same commit with its rationale attached. **Supersedes
+nothing. It RAISES the bar RULING 61 set and RULING 84 ordered**, and it is the
+first rule in this file that constrains a session's IMAGINATION rather than its
+procedure.*
+
+"I walked every route in the manifest" is not exhaustion and never was.
+
+Five obligations, and the fifth is the one with teeth today:
+
+1. Per unfound field, the report answers *what would I try to find this if there
+   were no manifest at all?* — then tries it and reports what it returned.
+2. "Nothing further" is an assertion of exhaustion and is **prohibited**. The
+   item fails.
+3. The **meta-search is a first move**: where does this state publish candidate
+   information, where does this county publish officials, who covers these
+   races. One cheap search answering that beats hundreds answering nothing.
+4. A wall is a wall **around** something. Name what it is around and what other
+   road reaches it.
+5. **Every authenticated resource is walked before any unauthenticated one is
+   exhausted.** A key sitting unused while a session hits a public rate limit is
+   a defect and is reported as one.
+
+**Why a list could not have been the fix, which is the part worth keeping.**
+Wikipedia was a list. The caucus sites were a list. The API keys were a list.
+RULING 84 tiered the list; RULING 61 named it. Every one of those was a real
+improvement and none of them addressed the actual failure, which is that lists
+are finite and the thing that keeps getting missed is always outside the current
+one. The evidence is that it has been found the same way every time: the author,
+with a browser, in two clicks.
+
+*Measured the day it was adopted.* Seven credentials in `.env.local`; three had
+never been called by anything in the repo, confirmed by sweeping with `git grep
+-a --untracked` rather than by trusting `docs/sources.md`. One script returned 18
+sitting members of Congress with a photo and an official page each, 61 state
+legislators with emails, 137 federal candidates, 42 federal document collections
+— and the finding only a call could produce: **`CENSUS_API_KEY` is invalid**, the
+host refusing it with `X-DataWebAPI-KeyError: 1`. All of it sat available while
+the previous session measured how fast a free search engine would rate-limit it.
+
+---
+
 ---
 
 ## BACKFILL — RULINGS 52 THROUGH 56, RECORDED HERE LATE

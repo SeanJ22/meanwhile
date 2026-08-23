@@ -882,6 +882,16 @@ people-on-the-ledger against people-read-this-run.
 | `pnpm verify-stamps` | Audits `CLAUDE.md`'s Adopted dates against git history. |
 | `pnpm legiscan:fetch` | State-legislature roll calls for AZ/NJ/NH, hash-gated. `--force` re-downloads. |
 
+### The tiered-discovery toolkit (NJ Hunt 5, added 2026-08-22 — items 2, 3, 10 and 11)
+
+| Command | What it does |
+|---|---|
+| `pnpm wiki:muni --state NJ --county Morris [--confirm]` | **`wikipedia-municipality`, Tier A — the route six hunt sessions never walked.** One API read of a municipality's raw wikitext yields the form of government and what it implies about which bodies exist, the mayor with party and term, every council member with party, term and ward or at-large seat, the county governing body and constitutional officers via the transcluded officeholder templates, both districts, and the External links block. `--confirm` then FETCHES every footnote and asks the cited primary source whether it mentions the person, so each name comes back `CONFIRMED`, `LEAD`, `UNREACHABLE` or `NO_CITATION` — RULING 87: Wikipedia names the person, the citation proves them. Morris County: 39 of 39 municipalities, 843 official rows, 240 distinct officials, 768 citations confirmed, 726 distinct citation hosts. Writes `data/hunt/wikipedia-<universe>.json`. Ships NOTHING to a reader surface; it is a discovery record. Seams and failure modes in §8. |
+| `pnpm wiki:graph --zip 07866 --state "New Jersey" [--budget N]` | **`wikipedia-government-graph`, Tier A — a crawl, not a list.** Seeds from the municipality articles for a zip and follows every link that resolves to a governmental entity touching that zip, then follows again. No depth cap — a branch stops when it leaves government — bounded instead by a fetch budget whose binding is REPORTED with the unexpanded frontier named. Classifies by Wikipedia CATEGORY rather than by title, with a title fallback for the barely-categorised agency articles and a body-word guard so a cheap heuristic can never eat a whole class of body. Writes `data/hunt/wiki-graph-<zip>.json`: every node with its URL and entity type, every edge with its outcome, what each node yielded, and every branch that terminated with why — **including the nodes that returned nothing**, because a route that failed is as reusable as one that worked. §9. |
+| `pnpm nj:elec [--year Y] [--location NAME]` | **`filing-campaign-finance-local`, Tier A — the largest of `NH71`'s nine unwalked routes, closed.** The wall was on `elec.nj.gov` (Incapsula, not an app shell); the records are on `njelecefilesearch.com`, one hop away at rung 2. Reads the 1,215 location codes from the page's own option list rather than transcribing them, then queries the grid's own API at rung 7 with the DataTables form-encoded request shape. **Every location is paired with a control** and a response indistinguishable from the control is EMPTY — which is not a formality: the first working version used the wrong filter parameter, answered 200 with 326,271 records, and would have been recorded as a hit. §10. |
+| `pnpm keys:walk [--zip Z]` | **Every held credential, called.** RULING 90 item 5 — an authenticated resource is walked before any unauthenticated one is exhausted. Seven credentials; three had never been called by anything in the repo. Reports per key: called or not, status, what it returned, owed fields closed, and what it WOULD close — including the honest nothings. Does not follow redirects blindly, because that is how an invalid credential reads as an empty result. §11. |
+
+
 ### The New Jersey toolkit (NJ Hunt, added 2026-08-22 — items 2.3, 3 and 5)
 
 | Command | What it does |
@@ -3669,6 +3679,284 @@ sewerage authorities and municipal utilities authorities. That is an
 enumeration finding rather than a defect — but it means **a New Jersey zip is
 several times the work of a New Hampshire one at the same radius**, and the
 fire districts and MUAs are the largest single unreached class.
+
+
+---
+
+## 7. TIERED DISCOVERY — what Tier A returned that Tier C could not (NJ Hunt 5, 2026-08-22)
+
+**Arizona reads this section first.** It is the shortest path from "a new state"
+to "most of the roster, named", and it is written as a measurement rather than
+as advice.
+
+RULING 84 tiers every manifest route: **A** answers many entities at once, **B**
+is the entity's own official source, **C** is a per-entity search. The tiers are
+walked in order and a field may not reach Tier C until A and B are walked for it.
+Tiering the 42 routes that existed gave **A 14 · B 11 · C 17**; the session then
+added 11 more Tier A routes, ending at **53 routes, A 25 · B 11 · C 17**.
+
+### The measurement, stated as a pair
+
+| | Tier C (per-entity search) | Tier A (broad sources) |
+|---|---|---|
+| What was walked | 5 engines as a tree, 272 candidates | one Wikipedia read per municipality; seven credentials |
+| Cost | DuckDuckGo walled after **6** queries; Bing and Yahoo after ~**170** | 39 municipality reads; 7 API calls |
+| Returned | 148 of 272 candidates with at least one classified URL; **124 with none** | **240 distinct officials named**, 768 citations confirmed; **119 owed fields closed from credentials alone** |
+| What the 124 meant | a fact about one IP's rate ledger on one afternoon | — |
+
+**The 124 were never unreachable.** They were rate-limited, and the previous
+session's close-out named a paid search API as the constraint while a templated
+encyclopedia page listing nine council members sat unopened two clicks from a
+plain Google search. That is RULING 83, and this table is the evidence for it.
+
+### The order to walk a new state in
+
+1. **`Government of {state}`** — the structure article. Executive, legislative
+   and judicial branches, every executive department, each linked to its own
+   official `.gov`. This is RULING 87 at the STATE tier and it is the first
+   thing to read.
+2. **The county's Wikipedia article and every municipality's** — one parser,
+   roughly 19,000 US articles. §8 below.
+3. **The credentials already held** — RULING 90 item 5. An authenticated
+   resource is walked before any unauthenticated one is exhausted.
+4. **The state's own filing and campaign-finance systems**, found from the FEC
+   Combined Federal/State Directory rather than guessed.
+5. **The citation host map** the encyclopedia articles produce (§8), which is a
+   derived list of who actually covers this state's politics.
+6. **Only then** the per-entity search, for the fields Tier A structurally
+   cannot carry: photos, a candidate's own words, a domain nobody linked.
+
+---
+
+## 8. THE WIKIPEDIA ROUTE — what the template yields, and where it breaks (NJ Hunt 5, 2026-08-22)
+
+`lib/hunt/wikipedia.ts` · `pnpm wiki:muni --state NJ --county Morris --confirm`
+
+### What the template yields
+
+US municipality articles carry a `Local government` section with three sentences
+in a small number of shapes: a **form-of-government** sentence, a
+**body-composition** sentence, and a **roster** sentence. Plus a
+`Federal, state, and county representation` section that transcludes
+**officeholder templates** — and those templates are where the county governing
+body and the legislative delegation actually live.
+
+Morris County, 39 municipalities, one run:
+
+| | |
+|---|---|
+| municipalities reached | **37 of 39** on the first pass, **39 of 39** after two seed-title corrections |
+| governing body parsed | 36 of 37 |
+| roster parsed | 33 of 37 on the first pass |
+| official rows extracted | **843** |
+| distinct officials named | **240** |
+| citations CONFIRMED against a fetched primary source | **768** |
+| LEAD · UNREACHABLE · NO_CITATION | 40 · 16 · 19 |
+| distinct citation hosts | **726** |
+
+**The citation-confirmation rate is 768 of 843 — 91.1%.** RULING 87: Wikipedia
+names the person, the citation proves them, and the 40 LEADs are exactly the rows
+a session must not ship.
+
+### The officeholder templates are the prize
+
+`{{NJ Morris County Commissioners}}` carries the **seven county commissioners AND
+the three constitutional officers** — Clerk, Sheriff, Surrogate — in one prose
+list with a footnote. `{{NJ Legislative 25}}` carries the senator and both
+assembly members. `{{NJ Congress 11}}` and `{{NJ Senate}}` carry the federal
+delegation. One template serves every municipality in the county, so it is
+fetched once and cached, not 39 times.
+
+**Follow redirects.** `Template:NJ Morris County Commissioners` is a redirect to
+`Template:NJ Morris County commissioners`. A session that did not pass
+`redirects=1` would record seven county commissioners as unreachable on the
+strength of a capital letter.
+
+### Where the template breaks — every seam, named
+
+1. **The roster sentence has no reliable lead-in.** Rockaway Township says
+   *Members of the Township Council are*; Montville says *Montville's Township
+   Committee is comprised of*. Gating on a phrase list lost **4 of 39**. The fix
+   is to SCORE every sentence by how many member-shaped entries it yields — prose
+   scores zero, because prose has no `(R, 2027; Ward 4)` in it — and take the
+   best. The phrase list survives only as reporting.
+2. **The member parenthetical has at least four shapes.** `(R, 2027; At-large)`
+   · `(R, 2026)` · `(Ward 3; D, 2027)` — seat BEFORE party · `(R, term on
+   committee ends December 31, 2026; term as mayor ends 2024)` — two term
+   clauses. Choose the clause that CARRIES A YEAR first, then the one not about
+   holding an office.
+3. **Sentence splitting must mask `<ref>` bodies.** A footnote is full of
+   sentences that are not this sentence, and splitting inside one detaches every
+   citation. Symptom: every extracted person has zero citation URLs, and the
+   confirmation rate reads 0 of N for reasons that have nothing to do with
+   Wikipedia. Footnotes come AFTER the full stop and belong to the sentence, so
+   the end is pushed past any run of refs that follows.
+4. **`, Sr.` is not a separator.** Dover's `Marcos Tapia-Aguilar, Sr. (Ward 4; D,
+   2026)` produced a council member called `Sr.`.
+5. **Office titles are glued to names**, and longest-first matters: `Deputy
+   Director` before `Director`, or Morris County's deputy director enters the
+   record as a person called *Director John Krickus*.
+6. **The mayor sentence must be matched on RENDERED text.** `[[Mayor]] of
+   Rockaway Township is` does not match `mayor of` until the wikilink is
+   resolved. And the name may carry a middle initial — `Democrat James P. Dodd` —
+   so the full stop cannot be excluded from the name pattern.
+7. **Two seed titles were wrong, not two articles.** `Chatham, New Jersey` is an
+   AREA article covering borough and township with no government section;
+   `Mendham, New Jersey` is a redirect with no headings at all. The real titles
+   are `Chatham Borough, New Jersey` and `Mendham Borough, New Jersey`. **A
+   parser miss and a universe-list miss look identical in the output**, and
+   telling them apart is what the returned `headings` array is for.
+8. **A state whose municipality articles are not templated this way** has not
+   been met yet. New England towns and New Jersey municipalities both parse.
+   Alaska boroughs, Louisiana parishes and Arizona's unincorporated county
+   territory are RULING 60's warning and are expected to need sub-branches.
+
+### The citation host map — a derived press list, not a guessed one
+
+An article's reference list is a bibliography of who publishes about this place,
+assembled by people with no stake in our hunt. Counted across a county's articles
+it ranks the outlets worth querying directly. Morris County's top non-archival,
+non-government hosts: **nj.com (88), dailyrecord.com (78), northjersey.com (55),
+newjerseyhills.com (44)**, with `nytimes.com` at 138 and
+`njdatabook.rutgers.edu` at 75. That is the `press-outlet-map` route's raw
+material, and it is strictly better than asking a general engine and hoping.
+
+---
+
+## 9. THE GOVERNMENT GRAPH — crawl it, do not list it (NJ Hunt 5, 2026-08-22)
+
+`lib/hunt/wiki-graph.ts` · `pnpm wiki:graph --zip 07866 --state "New Jersey"`
+
+**A list cannot be the fix, because the failure is that lists are finite** —
+RULING 90. `wikipedia-municipality` reads NAMED pages, so it finds exactly what
+the person who wrote the list thought of. It will never surface the New Jersey
+Department of Banking and Insurance, whose rulemaking hearings on mortgages,
+insurance premiums and pawnbroker licensing are precisely the *there is a hearing
+Tuesday, go* surface this product exists for.
+
+So the crawler seeds from the municipality articles for a zip and follows every
+link that resolves to a governmental entity touching that zip, and follows again.
+
+### The traversal rules Arizona inherits
+
+- **Classify by CATEGORY, never by title.** Wikipedia's category graph is
+  maintained by people with no stake in this. `Category:New Jersey state
+  agencies` IS a state agency. Titles are used only to reject cheaply BEFORE a
+  fetch, and every title rejection is RECORDED so a bad heuristic is visible.
+- **A title heuristic must never be able to eat a class of body.**
+  `/\bSchool\b/` is a sensible way to skip an article about a high school and a
+  catastrophic way to skip `Rockaway Township Public Schools`. Any title
+  containing a body word — District, Commission, Board, Authority, Department,
+  Government, Council, County, Township, Borough, Court, Legislature, Senate,
+  Assembly, Bureau, Agency — is never title-rejected.
+- **Some agency articles are barely categorised at all.** `New Jersey Department
+  of State` carries exactly one substantive category, `Secretaries of state of
+  New Jersey`. A title fallback rescues these, and disqualifying categories still
+  run first and still win.
+- **The state article does not say "government" anywhere in its categories.**
+  `New Jersey` carries `States of the United States`. Without a pattern for that,
+  the crawl stops one hop short of `Government of {state}` — the richest node in
+  the graph. Seed the structure article directly as well.
+- **Scope is stated, not inferred.** A node is in scope if its state matches, or
+  if it is one of the specific federal titles this zip's own representation
+  section named. Without a scope test the crawl walks out through `United States`
+  into every government on earth.
+- **No depth cap. A FETCH BUDGET instead.** A depth cap silently decides the
+  graph is three deep. A budget that binds is reported with the unexpanded
+  frontier named, so the clip is a stated number rather than implied
+  completeness.
+
+### The artifact, and why failed nodes are kept
+
+`data/hunt/wiki-graph-<zip>.json` records the graph AS WALKED — every node with
+its Wikipedia URL and entity type, every edge with its outcome (`FOLLOWED`,
+`ALREADY_VISITED`, `TITLE_REJECTED`, `NOT_GOVERNMENTAL`, `OUT_OF_SCOPE`,
+`BUDGET_EXHAUSTED`, `FETCH_FAILED`), what each node yielded, and every branch
+that terminated with why.
+
+**Nodes that returned nothing are kept.** A route that failed is as reusable as
+one that worked, and keeping it is what stops the next state paying for the same
+discovery twice — RULING 63 applied to a traversal rather than to a branch.
+
+---
+
+## 10. NJ ELEC — the wall was on a different host (NJ Hunt 5, 2026-08-22)
+
+`lib/hunt/nj-elec.ts` · `pnpm nj:elec`
+
+`NH71` recorded `filing-campaign-finance-local` as *the single highest-value
+unwalked route in this state*, with the reason: **`elec.nj.gov` answers 212 bytes
+to a plain client, which is a JavaScript application shell — rung 6 is owed.**
+
+Both halves of that were wrong, and RULING 52 predicts both:
+
+1. **It is not an app shell. It is an Imperva/Incapsula bot-management
+   challenge** — `<META NAME="robots" CONTENT="noindex,nofollow">` plus an
+   `/_Incapsula_Resource` script, served identically for every path on the host.
+2. **The records are not on that host.** `elec.nj.gov` is the agency's brochure
+   site. The filings live on **`njelecefilesearch.com`**, which answers **rung
+   2** at HTTP 200 with 166 KB of server-rendered HTML and no challenge at all.
+
+It was reached by walking **rung 5** against the walled host — the reader-service
+rendering listed the search links — and then simply asking the host they pointed
+at. *A wall on one host had been recorded as a wall on the fact.*
+
+### Rung 7 — the grid's own API, and the shape
+
+`/api/VWEntity/Entities20`, **form-encoded** POST carrying the standard
+DataTables server-side request (`draw`, `columns[i][data]`, `order`, `start`,
+`length`, `search`) plus the filters. A JSON body is rejected with
+`{"errors":{"Columns":["The Columns field is required."]}}`. The real filter is
+`LocationCodes`, and the 1,215 location codes are READ from the page's own
+`<option>` list rather than transcribed.
+
+### RULING 68 caught a false hit here, and it is worth stating exactly
+
+The first working request used `CountyCode` — which is the parameter that
+POPULATES THE MUNICIPALITY DROPDOWN and is not a filter on the entity search at
+all. The API accepted it and answered **HTTP 200, 47,737 bytes,
+`recordsTotal: 326271`**, first row a union PAC from 1995.
+
+Without a control that would have been recorded as *200 filed campaign-finance
+entities for Rockaway Township*. The control — the same request with a location
+code that cannot exist — returned **byte-identical** output. With the right
+parameter: Rockaway Township **8**, Rockaway Borough **11**, both controls **0**.
+
+---
+
+## 11. THE HELD CREDENTIALS — walk them first (NJ Hunt 5, 2026-08-22)
+
+`pnpm keys:walk` · RULING 90 item 5.
+
+Seven data credentials in `.env.local`. **Three had never been called by anything
+in this repo**, confirmed by sweeping the tree with `git grep -a --untracked`
+rather than by trusting the register. One run:
+
+| Key | Status | Returned | Owed fields closed |
+|---|---|---|---:|
+| `CONGRESS_API_KEY` | WIRED | 18 sitting members, NJ + NH, each with the chamber's own portrait and an official page | **36** |
+| Open States / Plural | committed BULK file, no quota | 61 legislators for these two zips, out of 7,976 rows | **61** |
+| `FEC_API_KEY` | WIRED | 77 federal candidates; committee records carry treasurer, street, zip and agent phone | **22** |
+| `DATA_GOV_API_KEY` | never called | 42 govinfo collections; `CDIR` carries member offices and phones | 0 |
+| `CENSUS_API_KEY` | never called | **INVALID — the host refuses it** with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too | 0 |
+| `LDA_API_KEY` | never called | the API answers, and closes **nothing** at either zip — it is federal lobbying only, with no county or municipal layer | 0 |
+| `LEGISCAN_API_KEY` | WIRED, daily | bills and roll calls; closes no Kelly field about a person | 0 |
+
+**119 owed fields closed from credentials alone**, all of it available while the
+previous session was measuring how fast a free search engine would rate-limit it.
+
+### Two traps, both of which produced a false zero first
+
+- **The FEC candidate LIST endpoint carries no address.** `/v1/candidates/`
+  returns 24 fields and every one is identity or status. `/v1/committees/`
+  carries `treasurer_name`, `street_1`, `city`, `zip` and
+  `designated_agent_phone_number`.
+- **Do not follow redirects blindly.** The Census API answers a bad key with
+  `302` + `X-DataWebAPI-KeyError: 1` + `Location: .../invalid_key.html`. Follow
+  it and you get HTTP 200 and a page of HTML, which parses as **zero rows** — and
+  a zero-row extraction reported as an empty result is the failure the
+  constitution names five separate times. The key was not missing data. The key
+  was rejected.
 
 
 ## Index by question (RULING 63)

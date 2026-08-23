@@ -287,11 +287,38 @@ export function planMoves({ working, sections, actor = "session", resolutionAuth
     const section = (row.Section ?? "").trim();
     const author = resolutionAuthor[id] ?? actor;
 
-    if (onlySean.has(section) && author !== "sean") {
+    /*
+     * **RULING 79 (2026-08-22) — a ruling closes the row it answers.**
+     *
+     * This amends RULING 37 narrowly and deliberately. RULING 37 stands for a
+     * row awaiting his judgement. What it did not anticipate is the row he has
+     * ALREADY ANSWERED: he rules in conversation, the ruling is recorded in
+     * `docs/rulings.md` and shipped, and the row that asked the question sits
+     * open waiting for him to say the same thing a second time in a
+     * spreadsheet. Needs Sean stood at 54 open and an unknown share were
+     * already answered — the accumulation the section exists to prevent.
+     *
+     * `"ruling"` is a THIRD author, not a session pretending to be him. The
+     * move script only sets it after checking that the named ruling exists in
+     * `docs/rulings.md`, it records the ruling number on the row, and every
+     * such close is reported individually so he can reverse any the session got
+     * wrong. Ambiguity is not a licence: a row no ruling answers stays open.
+     */
+    if (onlySean.has(section) && author !== "sean" && author !== "ruling") {
       refusals.push(
         `RULING 37 — ${id} is in "${section}" and only Sean closes a row there. ` +
           `A session may open one and may work it; it may never mark it ` +
-          `"${(row.Resolution ?? "").trim()}" or move it out, however finished it looks.`,
+          `"${(row.Resolution ?? "").trim()}" or move it out, however finished it looks. ` +
+          `RULING 79 is the one exception and it needs a dated ruling in docs/rulings.md ` +
+          `that demonstrably answers this row, named with --ruling ${id}=<number>.`,
+      );
+      continue;
+    }
+    if (author === "ruling" && !/RULING \d+/.test(row.Resolution ?? "") && !/RULING \d+/.test(row.Notes ?? "")) {
+      refusals.push(
+        `RULING 79 — ${id} is being closed by a ruling and the row does not name which. ` +
+          `The ruling number is the whole of the authority for the close, and a close ` +
+          `he cannot trace is a close he cannot reverse.`,
       );
       continue;
     }

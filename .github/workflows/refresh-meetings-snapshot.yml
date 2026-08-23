@@ -21,8 +21,16 @@ name: Refresh meetings snapshot
 
 on:
   schedule:
-    # Minute 17 to stay off the busy top of the hour.
-    - cron: "17 */6 * * *"
+    # ONCE DAILY, 09:17 UTC. Minute 17 to stay off the busy top of the hour.
+    #
+    # RULING 78 (2026-08-22, NJ Hunt 4 item 2): this ran every six hours — four
+    # runs a day, more than half of all scheduled minutes this repo spent — and
+    # that share of an exhausted Actions balance is what produced `NS04`'s
+    # zero-step jobs. A meetings snapshot whose serving window is measured in
+    # days does not need four reads of the same calendars every day. RULING 53's
+    # clocks are 7 and 14 days; the clerk filing keeps its own daily cadence in
+    # `refresh-nj-filing.yml` because a filing deadline moves in hours.
+    - cron: "17 9 * * *"
   workflow_dispatch:
     inputs:
       simulate_change:

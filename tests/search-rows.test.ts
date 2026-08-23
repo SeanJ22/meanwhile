@@ -3,6 +3,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { buildSearchIndex } from "@/lib/search/index";
+import { bodyFromRow, resolveBodyRow } from "@/lib/search/body-row";
+import type { CoveredBody } from "@/lib/registry/coverage";
 import { groupByVenue } from "@/lib/meetings/venues";
 import type { Meeting } from "@/lib/sources/types";
 
@@ -49,6 +51,27 @@ import type { Meeting } from "@/lib/sources/types";
  * the reader choose, which is the only resolution of a one-to-many that does
  * not invent an answer about who speaks for a jurisdiction.
  */
+
+/**
+ * A covered body, for the PU02 resolution tests. Only the fields the resolver
+ * reads are meaningful; the rest are filled with the registry's own defaults so
+ * the fixture is a real `CoveredBody` rather than a cast.
+ */
+function coveredBody(over: Partial<CoveredBody> & { bodyId: string }): CoveredBody {
+  return {
+    bodyId: over.bodyId,
+    ocdId: over.ocdId ?? null,
+    name: over.name ?? null,
+    divisionLabel: over.divisionLabel ?? "Pima County, AZ",
+    divisionType: over.divisionType ?? "county",
+    bodyClass: over.bodyClass ?? "GOVERNING",
+    coverageStatus: over.coverageStatus ?? "NOT_ATTEMPTED",
+    homepageUrl: over.homepageUrl ?? null,
+    agendaSourceRef: over.agendaSourceRef ?? null,
+    lookedAt: over.lookedAt ?? false,
+    tier: over.tier ?? "local",
+  };
+}
 
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 
@@ -232,32 +255,99 @@ test("the place card elects nobody to stand for the place", () => {
 
 test("a body row's card is refused rather than guessed when the match is ambiguous", () => {
   /*
-   * The distinctness rule, applied to a join that can collapse. Several bodies
-   * share one division — 85701 resolves 60 covered bodies against one point —
-   * and `CoveredBody.name` is null on derived rows, so a match on ocdId alone
-   * would open one body's card from another body's row. The handler matches on
-   * division AND name, accepts an ocdId-only match only where the division
-   * holds exactly one body, and otherwise opens nothing.
+   * THE REFUSAL SURVIVES; THE MATCHER WAS REPLACED. (PU02 / M135, NJ Hunt 4
+   * item 3, 2026-08-22.)
    *
-   * That refusal is the reason one row of 227 is still silent, and it is the
-   * right trade: no card is strictly worse than the wrong card, and the wrong
-   * card is a false claim about a government.
+   * This test used to assert the handler's source text contained
+   * `b.name === item.label`. That assertion passed for four days while the
+   * comparison behind it did essentially nothing: read off production at four
+   * zips, the name match succeeded ONCE across twenty body rows, and at 03255
+   * not one of the first five rows opened a card. A regex over source is a weak
+   * instrument — it can only see that a line exists, never that it works — so
+   * the guard now tests the RESOLVER, with the real strings that defeated it.
+   *
+   * What has not changed is the rule: several bodies share one division (85701
+   * resolves 60 covered bodies against one point) and `CoveredBody.name` is
+   * null on derived rows, so a match on ocdId alone would open one body's card
+   * from another body's row. Ambiguity is still refused.
    */
-  const pick = searchPickSource();
+  const bodies = [
+    coveredBody({ bodyId: "a", name: null, ocdId: PIMA }),
+    coveredBody({ bodyId: "b", name: "Board of Adjustment (BAJ)", ocdId: PIMA }),
+    coveredBody({ bodyId: "c", name: "Citizens' Water Advisory Committee (CWAC)", ocdId: PIMA }),
+  ];
 
-  assert.match(pick, /b\.name === item\.label/, "the name is part of the match");
-  assert.match(
-    pick,
-    /named\.length === 1/,
-    "a named match is accepted only when it is unique",
-  );
-  assert.match(
-    pick,
-    /candidates\.length === 1/,
-    "an ocdId-only match is accepted only when the division holds one body",
-  );
-  assert.ok(
-    !/candidates\[0\]\s*;?\s*$/m.test(pick.replace(/candidates\.length === 1[\s\S]*?candidates\[0\]/, "")),
-    "there is no unguarded fall-through to the first candidate",
-  );
+  // The same name written differently resolves, and says it did so by
+  // normalising rather than by luck.
+  const normalised = resolveBodyRow({ label: "Board of Adjustment", ocdId: PIMA }, bodies);
+  assert.equal(normalised?.body.bodyId, "b");
+  assert.equal(normalised?.how, "normalised");
+
+  // A different body on the same division is NOT matched to it.
+  assert.equal(resolveBodyRow({ label: "Board of Supervisors", ocdId: PIMA }, bodies), null);
+
+  // One body on the division is still accepted on the division alone.
+  const only = resolveBodyRow({ label: "Anything At All", ocdId: "ocd-division/country:us/state:az/place:marana" }, [
+    coveredBody({ bodyId: "d", name: null, ocdId: "ocd-division/country:us/state:az/place:marana" }),
+  ]);
+  assert.equal(only?.how, "only-body-on-division");
+
+  // A row on a division the registry does not hold resolves to nothing here —
+  // and the handler answers it from the row, which is the next assertion.
+  assert.equal(resolveBodyRow({ label: "Selectboard", ocdId: "ocd-division/country:us/state:nh/place:sutton_town" }, bodies), null);
+});
+
+test("PU02: a body row the registry cannot resolve still opens a card, built from the row", () => {
+  /*
+   * The half of PU02 that no matcher could have fixed. Sutton, Wilmot, Warner,
+   * Amphitheater Unified and Sunnyside Unified all publish meetings this
+   * product holds, and the registry carries NO body row on those divisions —
+   * so there is nothing to match against, and the row answered a click with
+   * silence. The reader clicked a row naming the body; the body is the row.
+   *
+   * Everything in the built body is READ. Nothing is filled in: no homepage, no
+   * agenda source, and `lookedAt` false, so the card renders those as the gaps
+   * they are rather than as findings.
+   */
+  const SUTTON = "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town";
+  const built = bodyFromRow({ label: "Select Board", ocdId: SUTTON, jurisdiction: "Sutton, NH" });
+
+  assert.equal(built.name, "Select Board", "the name is the row's own label, not a guess");
+  assert.equal(built.ocdId, SUTTON);
+  assert.equal(built.divisionLabel, "Sutton, NH");
+  assert.equal(built.homepageUrl, null, "no site is invented");
+  assert.equal(built.agendaSourceRef, null, "no agenda source is invented");
+  assert.equal(built.lookedAt, false, "it does not claim anybody has hunted this body");
+
+  // And the handler reaches for it, rather than opening nothing.
+  const pick = searchPickSource();
+  assert.match(pick, /resolveBodyRow\(/, "the row is resolved through the shared resolver");
+  assert.match(pick, /bodyFromRow\(/, "an unresolved row is answered from the row itself");
+  assert.match(pick, /bodySubject\(/, "and it opens the same card every other door onto a body opens");
+});
+
+test("PU02 class sweep: no surface joins a snapshot body name to a registry name by ===", () => {
+  /*
+   * A named instance is a class-wide defect. The autocomplete's exact-string
+   * join had two siblings, both joining `Meeting.bodyName` (whatever a portal
+   * published) to `CoveredBody.name` (what a hunt read off the body's page):
+   * the Bodies door's "next sitting" lookup, and the place card's per-body
+   * sitting count — which prints nothing at zero, so its undercount rendered as
+   * "sits never".
+   *
+   * Found 3, fixed 3, all at the shared path. This guard fails if a fourth
+   * appears.
+   */
+  for (const file of ["components/map/map-entry.tsx", "components/map/door-overlay.tsx"]) {
+    const text = readFileSync(file, "utf8");
+    const offenders = text
+      .split("\n")
+      .filter((line) => !line.trim().startsWith("*") && !line.trim().startsWith("//"))
+      .filter((line) => /m[.]bodyName ===|bodyName === [(]?b[.]name|[.]name === item[.]label/.test(line));
+    assert.deepEqual(
+      offenders,
+      [],
+      `${file} joins a published body name to a registry name with ===; use sameName()`,
+    );
+  }
 });

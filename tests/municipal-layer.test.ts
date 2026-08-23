@@ -133,14 +133,55 @@ test("the map's municipal shapes reconcile against the registry's municipal bodi
       /no committed geometry:/.test(d.provenance?.sourceOrg ?? ""),
   );
 
+  /*
+   * **RULING 80 TURNED THE EQUALITY INTO A CONTAINMENT, AND THE PAIR STAYS.**
+   * (NJ Hunt 4 item 4, 2026-08-22.)
+   *
+   * The clip widened from one county per state to that county plus every county
+   * adjacent to it, measured. The map therefore now draws municipalities this
+   * registry holds no body for — 470 municipal shapes against 127 municipal
+   * bodies — and that is the ruling working rather than a defect: a unit this
+   * product names is a unit the map can draw, and drawing a town's outline
+   * claims nothing about it beyond where it is.
+   *
+   * The claim that must survive is the one this test was written for, and it
+   * survives INTACT: **no municipal government the registry holds is missing
+   * from the map.** Stated as a containment plus its stated pair, rather than
+   * as an equality that could only ever hold while the two sets were the same
+   * size by coincidence of the clip.
+   */
+  const drawnIds = new Set(kept.map((f) => f.properties.ocdId));
+  const undrawableIds = new Set(undrawable.map((d: { ocdId: string }) => d.ocdId));
+  const lost = municipalBodies.filter(
+    (b: { ocdId: string | null }) => !drawnIds.has(b.ocdId!) && !undrawableIds.has(b.ocdId!),
+  );
+
+  assert.deepEqual(
+    lost.map((b: { ocdId: string | null }) => b.ocdId),
+    [],
+    "these municipal governments are in the registry, are not drawn, and no curated " +
+      "division states why they have no polygon — either a shape was lost or an id drifted",
+  );
+
+  // No shape drawn twice. The other half of the original equality.
   assert.equal(
-    kept.length + undrawable.length,
-    municipalBodies.length,
-    `${kept.length} drawn + ${undrawable.length} held-without-geometry = ` +
-      `${kept.length + undrawable.length}, against ${municipalBodies.length} ` +
-      "municipal bodies. These must reconcile: a shortfall that is not " +
-      "accounted for by a curated division stating why it has no polygon is " +
-      "either a shape drawn twice or a government the map has silently lost.",
+    drawnIds.size,
+    kept.length,
+    `${kept.length - drawnIds.size} municipal shape(s) are drawn more than once`,
+  );
+
+  /*
+   * THE PAIR, STATED. Collection and rendering diverge here by construction, so
+   * both numbers are printed and reconciled rather than one standing in for the
+   * other. The standing figure is what is HELD.
+   */
+  const heldAndDrawn = municipalBodies.filter((b: { ocdId: string | null }) =>
+    drawnIds.has(b.ocdId!),
+  ).length;
+  console.log(
+    `municipal layer: ${kept.length} drawn · ${municipalBodies.length} held · ` +
+      `${heldAndDrawn} both · ${undrawable.length} held without geometry · ` +
+      `${kept.length - heldAndDrawn} drawn with no body here yet (RULING 80 extent)`,
   );
 
   // Every undrawable one is NAMED, so the limit is legible rather than a

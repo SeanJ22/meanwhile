@@ -265,9 +265,9 @@
         "attemptedAt": "2026-08-13"
       },
       "campaign": {
-        "url": "https://corybooker.com",
-        "verification": "Verified 2026-08-14 (campaign-sites.ts): 'Stand with Cory Booker'.",
-        "attemptedAt": "2026-08-14"
+        "url": "https://corybooker.com/",
+        "verification": "Fetched 2026-08-22 at https://corybooker.com/about-cory/ — the page carries \"Cory Booker\" and the race.",
+        "attemptedAt": "2026-08-22"
       }
     },
     "ballot-nj-morris:us-senate:fernandez": {
@@ -289,9 +289,9 @@
     "ballot-nj-morris:us-house-11:hathaway": {
       "official": null,
       "campaign": {
-        "url": "https://www.joehathawayforcongress.com",
-        "verification": "Fetched 2026-08-13: 'Joe Hathaway for Congress'.",
-        "attemptedAt": "2026-08-13"
+        "url": "https://www.joehathawayforcongress.com/",
+        "verification": "Fetched 2026-08-22 at https://www.joehathawayforcongress.com/platform — the page carries \"Joe Hathaway\" and the race.",
+        "attemptedAt": "2026-08-22"
       }
     },
     "ballot-nj-morris:us-house-11:mejia": {
@@ -313,9 +313,9 @@
         "attemptedAt": "2026-08-13"
       },
       "campaign": {
-        "url": "https://www.selenformorriscounty.com",
-        "verification": "Fetched 2026-08-13: 'Tayfun Selen for Morris County Commissioner'.",
-        "attemptedAt": "2026-08-13"
+        "url": "https://www.selenformorriscounty.com/",
+        "verification": "Fetched 2026-08-22 at https://www.selenformorriscounty.com/ — the page carries \"Tayfun Selen\" and the race.",
+        "attemptedAt": "2026-08-22"
       }
     },
     "ballot-nh-merrimack:governor:warmington-cinde": {
@@ -650,6 +650,158 @@
         "url": "https://www.facebook.com/people/Steven-Endres-for-Merrimack-County-Attorney/61573266140508/",
         "verification": "Read in a live browser 2026-08-21. The page self-identifies as 'Steven Endres for Merrimack County Attorney', is categorised by Facebook as 'Page - Political Candidate', and its Intro names the filed candidate name, the office and the cycle: 'I am an attorney who has been practicing criminal law for over 25 years, and I am proud to be running for the position of Merrimack County Attorney in 2026.' Filed name, office and cycle all match the Secretary of State cumulative filing this contest is built from. Reached as the top self-identified match, which the campaign-site rule names as an authoritative trail. Labeled as the campaign's Facebook page and never dressed as a website; it supplies NO photo, because social-media images are prohibited at every door of the photo rule.",
         "attemptedAt": "2026-08-21"
+      }
+    },
+    "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond": {
+      "official": {
+        "url": "https://www.butlerborough.com/cn/contactinfo/?did=584",
+        "verification": "Read 2026-08-22: butlerborough.com — the municipality's own page for its governing body — carries \"Raymond Verdonik, Council President a = 'rverdonik'; b = 'butlerborough.com'; document.wri\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc": {
+      "official": {
+        "url": "https://www.butlerborough.com/cn/contactinfo/?did=584",
+        "verification": "Read 2026-08-22: butlerborough.com — the municipality's own page for its governing body — carries \"Marc Piccirillo, Councilman a = 'mpiccirillo'; b = 'butlerborough.com'; document.write(\" \"\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer": {
+      "official": {
+        "url": "https://chathamtownship.org/government/mayor-township-committee/",
+        "verification": "Read 2026-08-22: chathamtownship.org — the municipality's own page for its governing body — carries \"Updates on Storm Recovery Efforts from Mayor Jennifer Rowland\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover:wittner-sandra": {
+      "official": {
+        "url": "https://www.dover.nj.us/cn/TownCouncil/?tpid=2310",
+        "verification": "Read 2026-08-22: dover.nj.us — the municipality's own page for its governing body — carries \"Sandra Wittner Council Member - First Ward (December 31, 2026)\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa": {
+      "official": {
+        "url": "https://www.jeffersontownship.net/304/Town-Council",
+        "verification": "Read 2026-08-22: jeffersontownship.net — the municipality's own page for its governing body — carries \"Melissa Senatore Councilwoman Melissa Senatore Contact Information (R) Term Expires 12/31/\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean": {
+      "official": {
+        "url": "https://www.kinnelonboro.org/cn/ContactInfo/?tpid=8664",
+        "verification": "Read 2026-08-22: kinnelonboro.org — the municipality's own page for its governing body — carries \"Sean Mabey, Councilman a = 'smabey'; b = 'kinnelonboro.org'; document.write(\" \"); // docum\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:frank-cynthia": {
+      "official": {
+        "url": "https://www.kinnelonboro.org/cn/ContactInfo/?tpid=8664",
+        "verification": "Read 2026-08-22: kinnelonboro.org — the municipality's own page for its governing body — carries \"Cynthia Frank, Councilwoman a = 'cfrank'; b = 'kinnelonboro.org'; document.write(\" \"); // \".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn": {
+      "official": {
+        "url": "https://www.mendhamnj.org/cn/TownCouncil/?tpid=9705",
+        "verification": "Read 2026-08-22: mendhamnj.org — the municipality's own page for its governing body — carries \"Dr. Marilyn Althoff Council President and Public Safety Committee Chair & Board of Health \".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary": {
+      "official": {
+        "url": "https://www.mendhamtownship.org/directory.aspx",
+        "verification": "Read 2026-08-22: mendhamtownship.org — the municipality's own page for its governing body — carries \"Gary Kapner At-Large Member\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia": {
+      "official": {
+        "url": "https://www.mendhamtownship.org/directory.aspx",
+        "verification": "Read 2026-08-22: mendhamtownship.org — the municipality's own page for its governing body — carries \"Amalia Duarte Mendham Township Committee Rep\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s": {
+      "official": {
+        "url": "https://www.montvillenj.org/242/Township-Committee",
+        "verification": "Read 2026-08-22: montvillenj.org — the municipality's own page for its governing body — carries \"Matthew S. Kayne, Deputy Mayor\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:witty-june-b": {
+      "official": {
+        "url": "https://www.montvillenj.org/242/Township-Committee",
+        "verification": "Read 2026-08-22: montvillenj.org — the municipality's own page for its governing body — carries \"June Witty, Committeewoman\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa": {
+      "official": {
+        "url": "https://mountarlingtonnj.org/boroughcouncil/",
+        "verification": "Read 2026-08-22: mountarlingtonnj.org — the municipality's own page for its governing body — carries \"Melissa Fostle\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa": {
+      "official": {
+        "url": "https://mountainlakes.gov/mtn-lakes-borough-council/",
+        "verification": "Read 2026-08-22: mountainlakes.gov — the municipality's own page for its governing body — carries \"Melissa Muilenburg was elected to Borough Council in 2022. She and her husband Bob moved t\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa": {
+      "official": {
+        "url": "https://rockawayborough.org/departments/council/",
+        "verification": "Read 2026-08-22: rockawayborough.org — the municipality's own page for its governing body — carries \"Melissa Burnside Council President Phone Number: 973-627-2000 email: burnsiderb@rockawaybo\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick": {
+      "official": {
+        "url": "https://rockawayborough.org/departments/directory/",
+        "verification": "Read 2026-08-22: rockawayborough.org — the municipality's own page for its governing body — carries \"Patrick McDonald\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana": {
+      "official": {
+        "url": "https://www.whartonnj.com/index.php/borough/governing-body",
+        "verification": "Read 2026-08-22: whartonnj.com — the municipality's own page for its governing body — carries \"Ana Jones Ana Jones- ajones@whartonnj.com\".",
+        "attemptedAt": "2026-08-22"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca": {
+      "official": null,
+      "campaign": {
+        "url": "https://rebeccabennettforcongress.com/",
+        "verification": "Fetched 2026-08-22 at https://rebeccabennettforcongress.com/ — the page carries \"Rebecca Bennett\" and the race.",
+        "attemptedAt": "2026-08-22"
+      }
+    },
+    "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:hodas-david": {
+      "official": null,
+      "campaign": {
+        "url": "https://www.davidhodas4boe.org/",
+        "verification": "Fetched 2026-08-22 at https://www.davidhodas4boe.org/ — the page carries \"David Hodas\" and the race.",
+        "attemptedAt": "2026-08-22"
       }
     }
   },
@@ -1499,6 +1651,138 @@
       "name": "Vincent S. Ribas",
       "note": "MISS — NH Hunt 4, 2026-08-21. Two independent branches for this person. BRANCH 1 — the NH Secretary of State's 2026 cumulative filing, which places him in Franklin. BRANCH 2 — the City of Franklin's own site, which publishes his councilor page, portrait and phone. A THIRD route was walked and failed for a reason worth recording: franklinnh.org, the domain the search index still carries, redirects to www.franklinnh.org, which no resolver this project can reach answers for, and the apex serves a certificate for a different name. The town's live site is franklinnh.GOV. A campaign site and a blurb are still owed for him, and the NH Campaign Finance System holds no 2026 registration under this name.",
       "attemptedAt": "2026-08-21"
+    },
+    {
+      "key": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond",
+      "name": "Raymond Verdonik",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from javascript-concatenated (rung 8). No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc",
+      "name": "Marc Piccirillo",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from javascript-concatenated (rung 8). No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
+      "name": "Jennifer Rowland",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. A portrait whose filename carries the surname is queued for the author's review under RULING 55. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover:wittner-sandra",
+      "name": "Sandra Wittner",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa",
+      "name": "Melissa Senatore",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. A portrait whose filename carries the surname is queued for the author's review under RULING 55. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
+      "name": "Sean Mabey",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from javascript-concatenated (rung 8). No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:frank-cynthia",
+      "name": "Cynthia Frank",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from javascript-concatenated (rung 8). No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn",
+      "name": "Marilyn Althoff",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. A portrait whose filename carries the surname is queued for the author's review under RULING 55. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary",
+      "name": "Gary Kapner",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+      "name": "Amalia Duarte",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
+      "name": "Matthew Kayne",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:witty-june-b",
+      "name": "June Witty",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
+      "name": "Melissa Fostle",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa",
+      "name": "Melissa Muilenburg",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. No email is published in this person's block on that page. A portrait whose filename carries the surname is queued for the author's review under RULING 55. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
+      "name": "Melissa Burnside",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from mailto. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick",
+      "name": "Patrick McDonald",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from mailto. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana",
+      "name": "Ana Jones",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster. The county's own Cities-and-Towns index (morriscountynj.gov) gave the municipality's official site; the site's own links gave the governing-body page; the page was re-read and only this person's own block was used. Email from prose. No portrait attributable to this person was found on that page. Campaign site and own words still owed — search-index walked, no campaign domain returned for this person on this date.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
+      "name": "Jennifer Rowland",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa",
+      "name": "Melissa Senatore",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
+      "name": "Sean Mabey",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn",
+      "name": "Marilyn Althoff",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
+      "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa",
+      "name": "Melissa Muilenburg",
+      "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
+      "attemptedAt": "2026-08-22"
     }
   ]
 }

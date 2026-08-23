@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **210 open**, 324 resolved.
-- **54 waiting on Sean** — the first section below.
+- **208 open**, 333 resolved.
+- **46 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**54 open · 11 resolved.**
+**46 open · 20 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -45,11 +45,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
   Pending review.
 
-**JOB01** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32543652154 and 32543393133), both at: A source failed for a JOB reason — this run is red, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
-
 **NH31** — The refresh commits only if every source succeeded. One source producing zero rows from a non-zero fetch fails the run, so the snapshot does not move - even when carry-forward already saved that source's rows and every other source was fine. Today that is 14 failures of 37 runs. At national volume it means the snapshot never commits again, and the decision to make the gate per-source rather than per-run is yours.
-
-**NS04** — Every job on d0e0e34 completed in three to four seconds with ZERO steps recorded, twice, including an explicit `gh run rerun`. Runs 32600684167 and its re-run both died before any step reported and the logs were not retrievable. It was not the tree: f20e1e9, twenty minutes earlier, passed all three checks, d0e0e34 differed from it only by documents and one capture script, and locally the suite was 1704/1704 with lint clean, tsc clean and both build modes green. RESOLVED ITSELF WITHIN THE HOUR, and that is recorded rather than the row being dropped. The next commit, 3186eb2, went GREEN on all three checks at the first attempt. So the condition was TRANSIENT -- a runner allocation failure rather than a standing minutes or spending cap. This is left open at a lower priority because a transient failure that nobody looked at is how the meetings refresh degraded for eight days, and because the account settings that would confirm or rule out a cap are ones a session cannot see: `gh api /settings/billing/actions` returns 404 for me. What is worth Sean's minute: whether the Actions minutes balance or spending limit is anywhere near its ceiling, because if it is, this will recur and the next occurrence will look identical. Nothing needs fixing in the repo. scripts/main-green.mjs was corrected in the same session to tell this apart from a genuinely red main -- before that fix it reported "main is broken and production will not deploy", which would have sent a session hunting a defect that did not exist.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -61,10 +57,6 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows.
 
-**NH12** — The New Hampshire Secretary of State publishes a mailing address for every candidate on the ballot, and for most of them it is where they live. It is a public record, the state prints it, and it is the only working contact we hold for about half of the forty-seven people on Newbury's ballot. I have recorded all forty-seven in the hunt notes and rendered none of them, because putting a named person's home street address on a consumer app is a different act from a state PDF and I did not want to make that call on my own.
-
-**NH13** — The constitution records a wall that is not there. Two paragraphs - the source register in CLAUDE.md and the curator note in the New Hampshire ballot data - say gc.nh.gov 'refuses every client this project has, browsers included'. It answers a plain fetch at HTTP 200. Only you change CLAUDE.md, so this is a correction routed to you rather than made.
-
 **NH26** — RULING 55 says every photo is reviewed by you and only an approved photo renders. Gating on an empty store would have blanked every portrait in the product the moment the rule shipped, so the 48 photos already shipping were recorded APPROVED with decidedBy grandfathered - which means SHIPPING BEFORE THE RULE EXISTED, NOT APPROVED BY YOU. They are labelled that way in data/photos/review.json and carry a decision date, so pnpm stale surfaces them on RULING 53 clock. What is owed is your eye on them. The 5 refusals are already recorded REJECTED with their reasons - the flag stock photo alt-texted Victor Orlando, the scanned 1978 Grand Jury manual served as a campaign og:image, the Karishma Manzur banner-with-wordmark, the photographer-credited Monkman file, and the Ayotte WinRed graphic from 2026-08-14. One row per session listing N photos, never one row per photo: 47 candidates plus 90 officials would otherwise flood this queue.
 
 **NH30** — RULING 55 says only a photo you have approved renders. Three were hunted on 2026-08-21 and are PENDING: Meg Hagaman (Merrimack County Attorney, door 3), Jon Raiche (Merrimack County Attorney, door 3) and Vincent S. Ribas (Merrimack County Commissioner D2, door 2). Each one was read as an image before it shipped and each is a clean solo portrait; the cards render initials until you say yes. Nothing else about any of the three is affected.
@@ -73,15 +65,9 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
-**NH44** — A structural decision that belongs to you rather than to a hunt. The committed TIGER geometry is clipped to one county per state - public/geo/*.geojson says clippedTo 04019/34027/33013 on its own face - and 03255's first-rung circle crosses three counties. Six New Hampshire towns inside that circle are now in the registry with their boards and have NO POLYGON, so the map cannot draw them.
-
-**NH63** — RULING 69 says the session fetches the FEC's Combined Federal/State Disclosure and Election Directory into data/reference/, 'including its PDF (~2.2 MB)'. RULING 20 says portraits and PDF corpora do not go in git — they are content-addressed outside the repo with their hashes committed, while reference data and provenance stay in git. Both are yours and they point different ways for this file.
+**NH65** — RULING 55 says only a photo you have approved renders. Five were hunted on 2026-08-22 from Morris County municipalities' own websites and are PENDING, so those five cards show initials until you say yes. Every one is door 2 - the picture the government publishes to identify its own member - and every one was read as an image before it shipped, in one contact sheet at screenshots/nj-hunt4-portraits.png. Jennifer Rowland (Chatham Township Committee, chathamtownship.org, file named jen_rowland.jpg). Melissa Senatore (Jefferson Township Council, jeffersontownship.net). Sean Mabey (Kinnelon Borough Council, kinnelonboro.org, file named thumb.Mabey 400.jpg). Marilyn Althoff (Mendham Borough Council, mendhamnj.org, file named thumb.Althoff1.png). Melissa Muilenburg (Mountain Lakes Borough Council, mountainlakes.gov, file named Muilenburg-Photo-scaled.jpg).
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
-
-**NS02** — The Stack section states "Five workflows push main -- the four governed-artifact refreshes plus the intake tripwire". Since then job-watch.yml was added (NH Hunt 3, RULING 56) and refresh-nj-filing.yml was added today (NJ Hunt 3 item 2.3, the county filing on a one-day RULING 53 clock). tests/push-main.test.ts now asserts seven. CLAUDE.md is law and is changed only by the author, so this is routed rather than edited. The sentence is a factual count rather than a rule, and the rule it sits inside -- that every main-pushing workflow rebases and retries through scripts/push-main.mjs -- is unchanged and still true of all seven.
-
-**NS03** — RULING 75 -- a close-out commit is gated like any other commit to main. Close-out records were pushed straight to main through no gate at all, by every session in this repo's history, and that put a red suite on main twice. pnpm closeout is the gated door, pnpm main:green asks GitHub what happened to the tip rather than asking the working tree, and pnpm handoff now fails on a RED main. RULING 76 -- session-dated capture scripts stay committed and stay held to every standard; there are 34 of them and all 34 are committed. Both are written into docs/rulings.md with their reasoning. Neither is in CLAUDE.md, because that file is law and only the author changes it. If either should be law, it wants his hand on it.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -128,8 +114,6 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH11** — Shaun Fife is running for Governor. He has no campaign website and no campaign Facebook page. What he has is a candidate page on a political party's own site, carrying his name, the office, his own words and a contact address. Two of our rules point in opposite directions about it and the third makes it worse, so it is yours to settle.
 
 **NH33** — Lake Todd Village District governs territory in Bradford AND Newbury. The New London-Springfield Water System Precinct serves New London AND Springfield. A body id here is <division>#<slot>, so each of them ships as two rows carrying the same name. They are one body wearing two ids, not two districts, and every count that walks the registry counts them twice.
-
-**NH55** — Steven Endres is an Assistant Merrimack County Attorney and a candidate for County Attorney. The only working contact any manifest route reached for him is his office of record — Four Court Street, Concord, (603) 228-0529 — published on courts.nh.gov in his own filed comment and on the county's own department page. Meg Hagaman's card already carries the same number, because she is an attorney in the same office. Two candidates in one race now show one phone. That is a true fact about the office rather than a join collapsing, and it is shipped; but whether a reader is well served by a switchboard that reaches a candidate's EMPLOYER is a judgement about the product, not about the data.
 
 **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
 
@@ -273,7 +257,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**16 open · 1 resolved.**
+**20 open · 1 resolved.**
 
 ### P1
 
@@ -282,6 +266,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 ### P2
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
+
+**NH66** — 44 of the 90 Morris County contests are Boards of Education, and the municipal-roster branch built this session reaches municipalities only. A school district publishes its board members on its own site exactly as a borough publishes its council, so the same branch should reach them - what is missing is the INDEX step: there is no equivalent of the county's Cities-and-Towns page listing every district's website.
+
+**NH67** — search-index was made mechanically walkable this session and walked all 272 candidates: 148 came back with at least one classified URL and 124 came back with none, because Bing and Yahoo both began refusing after roughly 170 queries. That 124 is a fact about one IP's rate ledger on one afternoon, not about those 124 people, and it may never be read as an absence.
 
 **NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
@@ -308,6 +296,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 ### P3
 
 **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
+
+**NH68** — Robert Strobel is a Board of Education candidate and strobelforschoolboard.com answered HTTP 200 to a plain fetch with no mention of his name anywhere in the HTML. That is the classic JavaScript-rendered page: a false miss at rung 2, not a wall and not an absence. The extractor recorded it EMPTY, which is honest about the fetch and wrong about the candidate.
+
+**NH71** — The branch manifest names 41 routes. This session walked search-index, filing-county, body-roster-page, gov-staff-directory, campaign-site, campaign-social, candidate-platform, local-newspaper, web-archive and domain-search. The rest were not walked and each one's reason is recorded here rather than left as a silence, because a route nobody names is a route the next session rediscovers as new.
 
 **NJ04** — RULING 65's footer-address branch wired seven Sutton bodies on 2026-08-22, and three were deliberately left out because each has better evidence about itself than the town's footer has about it. Ad Hoc Speed Sign Committee: its own feed titles read 'Ad Hoc Speed Sign Committee - Zoom Mtg', so it meets on Zoom and pinning it at 93 Main Street would send a reader to an empty building; the playbook already records that a Zoom URL in LOCATION is a fact and not a building, and this is the same rule read from a title. Warner River Local Advisory Committee: its titles read 'WRLAC Mtg @ Pillsbury Library', a venue this session could not resolve to a coordinate, and it is a multi-town river committee so Sutton's town hall is a poor guess; the work is to resolve Pillsbury Library. Sutton Free Library Board of Trustees: its page states its own meeting arrangement, so it is a STATES A VENUE case. Each has four future sittings, two, and an unknown respectively.
 
@@ -369,7 +361,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**64 open · 81 resolved.**
+**65 open · 81 resolved.**
 
 ### P1
 
@@ -476,6 +468,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH53** — The walker covers 7 of the 36 manifest routes mechanically. Per field that leaves 4 of 7 photo routes, 8 of 10 blurb, 29 of 35 contact, 10 of 14 campaign site and 6 of 8 verified page needing a person — reported by name on every run, never counted as walked. Each route automated is a whole class of candidate the manifest can be exhausted against without a session reading pages one at a time.
 
 **NH54** — A statewide New Hampshire candidate-and-results database exists at electiondatabase.nhpr.org and nh.electionstats.com. Every /candidates/view/<Name> URL from the search index returns the SPA's 404 shell — 41,148 bytes, identical for a known-good name — and rung 6 confirms a genuine 'Page Not Found'. The path has moved. It would serve many candidates at once if found: prior candidacies, districts, and results.
+
+**NH70** — New Jersey has two places named Silver Lake, Census GEOIDs 3467590 and 3467650, and placeIdentity keys on state plus name, so both slug to state:nj/place:silver_lake. The widened geometry clip surfaced it and the build refused to write, correctly - a duplicate join key is a join that collapses. It is fixed for the build by suffixing EVERY side of a collision with its Census GEOID, and the underlying identifier convention is still not unique.
 
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
@@ -615,13 +609,15 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**7 open · 56 resolved.**
+**8 open · 56 resolved.**
 
 ### P2
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
 
 **NH64** — RULING 37 says a session marks its own completed work Resolved and moves it, in every section except Needs Sean. scripts/tracker.mjs has no mode or flag that does it. Resolution, Condition and Notes are read ONLY out of docs/tracker.xlsx, and anything found there is attributed to Sean.
+
+**NH69** — Every tracker run this session ended with THE WORKBOOK IS STALE and exit code 3: docs/tracker.xlsx is locked (docs/~$tracker.xlsx exists, which is Excel's own lock file). The two CSV stores are authoritative and were written correctly, and docs/tracker.md and docs/log.md regenerated from them - but the workbook Sean edits is showing the tracker as it was before this session, and saving it would write those older rows back over the stores.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 

@@ -163,6 +163,29 @@ async function loadDivisions(now: string): Promise<Division[]> {
  * appears not to carry New Jersey's townships. This records how well the two
  * agree so a low-confidence match is a review item rather than a silent join.
  */
+/** The Census layer an OCD identifier names — the scope a GEOID is unique within. */
+const LAYER_SEGMENTS = ["school_district", "place", "county", "cd", "sldu", "sldl"] as const;
+
+/**
+ * The LAST recognised segment type in an identifier — the layer whose numbering
+ * space its GEOID belongs to.
+ *
+ * The last, not the first, and the difference is total: the canonical identifier
+ * for Rockaway Township is
+ * `.../state:nj/county:morris/place:rockaway_township`, and reading the FIRST
+ * match called it a county, which threw away every one of the 513 GEOID matches
+ * in one edit. Caught because the build prints its counts — the operation-count
+ * rule, doing exactly its job.
+ */
+function layerOf(ocdId: string): string {
+  const segments = ocdId.split("/").slice(1);
+  for (let i = segments.length - 1; i >= 0; i--) {
+    const key = segments[i].split(":")[0];
+    if ((LAYER_SEGMENTS as readonly string[]).includes(key)) return key;
+  }
+  return "other";
+}
+
 async function reconcile(divisions: Division[]): Promise<void> {
   let text: string;
   try {
@@ -204,9 +227,26 @@ async function reconcile(divisions: Division[]): Promise<void> {
     if (geoidColumn < 0) continue;
     const geoid = columns[geoidColumn]?.trim();
     if (!geoid) continue;
-    const list = byGeoid.get(geoid) ?? [];
+    /*
+     * **THE GEOID IS SCOPED BY LAYER, AND THE FIRST VERSION WAS NOT.**
+     * (RULING 80's widened clip, NJ Hunt 4, 2026-08-22.)
+     *
+     * A Census place GEOID is state(2) + place(5) and a school-district GEOID is
+     * state(2) + district(5). They are drawn from different numbering spaces and
+     * they collide: `0404190` is both Buckshot CDP in Arizona and St. David
+     * Unified District. Indexed on the bare GEOID, both claimed the same
+     * canonical identifier — a join that collapses, which is precisely the
+     * failure the distinctness rule in `CLAUDE.md` was written for, and it went
+     * unseen only because the clipped universe held neither of them.
+     *
+     * The layer is read off the canonical identifier's own segment, so the key
+     * is (layer, geoid) and a place can never match a school district.
+     */
+    const layer = layerOf(id);
+    const key = `${layer}:${geoid}`;
+    const list = byGeoid.get(key) ?? [];
     list.push(id);
-    byGeoid.set(geoid, list);
+    byGeoid.set(key, list);
   }
   console.log(
     `  canonical identifiers: ${canonical.size}, of which ${byGeoid.size} carry a census_geoid`,
@@ -241,7 +281,10 @@ async function reconcile(divisions: Division[]): Promise<void> {
      * treatment a multi-candidate slug match takes, never a first-wins pick
      * dressed as certainty.
      */
-    const geoidHits = division.geoid ? (byGeoid.get(division.geoid) ?? []) : [];
+    const divisionLayer = layerOf(division.ocdId);
+    const geoidHits = division.geoid
+      ? (byGeoid.get(`${divisionLayer}:${division.geoid}`) ?? [])
+      : [];
     if (geoidHits.length === 1) {
       division.canonicalOcdId = geoidHits[0];
       division.canonicalMatch = "geoid";
@@ -250,6 +293,7 @@ async function reconcile(divisions: Division[]): Promise<void> {
     if (geoidHits.length > 1) {
       division.canonicalOcdId = geoidHits[0];
       division.canonicalMatch = "low";
+      division.canonicalGap = gapReason(division);
       continue;
     }
 
@@ -285,13 +329,37 @@ async function reconcile(divisions: Division[]): Promise<void> {
       id.includes(`/${stateSegment}/`),
     );
 
-    if (candidates.length === 1) {
-      // Same terminal segment, same state, different nesting. Confident.
-      division.canonicalOcdId = candidates[0];
-      division.canonicalMatch = "high";
-    } else if (candidates.length > 1) {
-      division.canonicalOcdId = candidates[0];
-      division.canonicalMatch = "low";
+    if (candidates.length >= 1) {
+      /*
+       * **A SLUG SIMILARITY IS A REVIEW ITEM AND NEVER A JOIN, AND THIS IS
+       * WHERE THAT RULE IS MADE TRUE RATHER THAN CHECKED.**
+       * (RULING 80's widened clip, NJ Hunt 4, 2026-08-22.)
+       *
+       * D24 left this branch matching on "same terminal segment, same state"
+       * and rated it `high` for one candidate and `low` for several.
+       * `tests/canonical-reconciliation.test.ts` forbids BOTH outright — a name
+       * comparison is exactly what `CLAUDE.md` refuses to join geographic
+       * entities on — and the guard passed for weeks only because the clipped
+       * universe happened to contain no such case.
+       *
+       * The widened clip produced fifteen of them at once, and two show why the
+       * guard is right rather than strict. `state:nj/place:springfield` is a
+       * Census designated place; the canonical id it "matched" was
+       * `state:nj/county:burlington/place:springfield`, a different
+       * municipality in a different county sixty miles away. And Princeton
+       * appears twice — once as the real consolidated municipality and once as
+       * the FICTITIOUS county-subdivision row Census draws over the same ground
+       * — and both claimed the same canonical identifier, which is the
+       * collapsing join the distinctness rule exists to catch.
+       *
+       * So the near-match is not recorded as a match at all. The division keeps
+       * its own identifier, states its gap, and appears in the reconciliation
+       * report as unmatched — which is true, and which is what gets it looked
+       * at.
+       */
+      division.canonicalOcdId = null;
+      division.canonicalMatch = "none";
+      division.canonicalGap = gapReason(division);
     } else {
       division.canonicalOcdId = null;
       division.canonicalMatch = "none";
@@ -344,6 +412,24 @@ function canonicalIdFromCensusName(division: Division): string | null {
 function gapReason(division: Division): CanonicalGap {
   switch (division.funcstat) {
     case "S":
+      return "NOT_A_GOVERNMENT";
+    /*
+     * **I — INACTIVE.** (RULING 80's widened clip, NJ Hunt 4, 2026-08-22.)
+     *
+     * Census FUNCSTAT `I` is an entity that EXISTED and has no active
+     * government now. Livermore town, Grafton County, New Hampshire is the case
+     * that surfaced it: a town the legislature dissolved in 1951, still carried
+     * as a county subdivision because the territory still has to belong to
+     * something, `CLASSFP T9`, population nil, no board and no meeting.
+     *
+     * It is NOT_A_GOVERNMENT for the same reason a CDP is: the canonical list is
+     * a list of governments, and a body that no longer governs is correctly
+     * absent from it. Leaving it UNDETERMINED would have said "a layer was added
+     * whose reason nobody worked out", which is exactly what this switch exists
+     * to prevent, and it would have put a dissolved town in the denominator this
+     * product measures its own coverage against.
+     */
+    case "I":
       return "NOT_A_GOVERNMENT";
     case "F":
       return "FICTITIOUS";

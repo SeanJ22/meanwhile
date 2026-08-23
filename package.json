@@ -158,6 +158,11 @@
     "nj:ballot": "tsx scripts/build-nj-morris-ballot.mts",
     "nj:filing:check": "tsx scripts/check-nj-filing.mts",
     "nj:fields": "tsx scripts/nj-candidate-fields.mts",
+    "nj:search": "tsx scripts/nj-hunt4-search.mts",
+    "nj:rosters": "tsx scripts/nj-hunt4-rosters.mts",
+    "nj:extract": "tsx scripts/nj-hunt4-extract.mts",
+    "nj:portraits": "tsx scripts/nj-hunt4-portrait-sheet.mts",
+    "nj4:shots": "tsx scripts/shoot-nj-hunt4-0822.mts",
     "fec:directories": "tsx scripts/fetch-fec-directories.mts"
   },
   "dependencies": {

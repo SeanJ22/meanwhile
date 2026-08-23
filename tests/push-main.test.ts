@@ -255,7 +255,23 @@ test("F25: the gate step and the browser install it needs are each bounded", () 
  */
 test("RULING 13: the PR-gating workflow runs the suite, lint and types on Linux", () => {
   const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
-  assert.match(text, /on:\s*\n\s*push:\s*\n\s*pull_request:/, "still PR-gating");
+  /*
+   * RULING 78 (2026-08-22, NJ Hunt 4 item 2) narrowed the push trigger to
+   * `main`. The trigger this test cares about is the PULL REQUEST — RULING 13
+   * is about the suite running on Linux before a change is merged — and the
+   * `main` push is the second half, which is what makes a close-out commit
+   * (RULING 75) get gated too. Both are asserted by name so neither can be
+   * dropped quietly, and the BRANCH FILTER is asserted as well, because a
+   * `push:` with no filter is the triple-build that exhausted the Actions
+   * balance and produced `NS04`.
+   */
+  assert.match(text, /\n\s*pull_request:/, "still PR-gating");
+  assert.match(text, /\n\s*push:\s*\n\s*branches: \[main\]/, "and the main push is gated too");
+  assert.doesNotMatch(
+    text,
+    /\n\s*push:\s*\n\s*pull_request:/,
+    "an unfiltered push trigger builds three times per merge — RULING 78",
+  );
   assert.match(text, /run: corepack pnpm test\b/, "build-check.yml runs the suite");
   assert.match(text, /run: corepack pnpm lint\b/, "build-check.yml runs lint");
   assert.match(text, /run: corepack pnpm exec tsc --noEmit/, "build-check.yml type-checks");

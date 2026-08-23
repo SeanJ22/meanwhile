@@ -167,8 +167,32 @@ export interface ManifestRoute {
  * exists. So every `campaign-social` absence Newbury recorded re-opens
  * automatically, without anyone having to remember to go back for it — which is
  * the entire reason exhaustion is versioned rather than dated.
+ *
+ * ## v2 → v3 (2026-08-22, NJ Hunt 4 item 5)
+ *
+ * **One route added: `candidate-platform`** — a civic platform carrying a page
+ * per candidate, of which GoodParty.org is the live case. It is named because it
+ * came back for **76 of Morris County's 272 filed candidates**, more than any
+ * other single host, and a route reaching a quarter of a county's ballot belongs
+ * in the list whether or not it turns out to be worth much.
+ *
+ * **What it is worth is recorded with it, because the first read of it was
+ * wrong.** A GoodParty candidate page looks self-published and is not: its
+ * headshots are served from `assets.civicengine.com`, which is BallotReady's
+ * vendor CDN, so the page is an AGGREGATOR republishing somebody else's data.
+ * That puts it in RULING 70's family rather than in the campaign-site rule's —
+ * it is `forbiddenFor` photo and blurb, and what it actually yields is a social
+ * link and an incumbency claim: a LEAD to be verified elsewhere, never a field.
+ *
+ * **Nothing else new was needed, and checking that first is the point.** The New
+ * Jersey municipal-roster branch this session built is `body-roster-page` and
+ * `gov-staff-directory` made mechanical for one state; the search-engine tree is
+ * `search-index` made mechanical. Both are enrichments of existing routes,
+ * recorded as sub-branches under RULING 60. RULING 63 makes building a branch
+ * that already exists a reported defect, and this session committed one — see
+ * `searchableSurname` in `lib/ballot/name-case.ts`.
  */
-export const MANIFEST_VERSION = "v2";
+export const MANIFEST_VERSION = "v3";
 
 export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The filed record ─────────────────────────────────────────────────── */
@@ -503,6 +527,32 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     forbiddenFor: ["photo", "contact"],
     expectedToTravel:
       "Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all.",
+  },
+  {
+    id: "candidate-platform",
+    what: "A civic platform carrying a page per candidate — GoodParty.org is the live case",
+    how: "The platform's own candidate URL, reached from a search index rather than guessed; read at rung 2",
+    yields:
+      "A social link, a party label and an incumbency claim. NOT a photo and NOT the candidate's own words — see below.",
+    rung: "2",
+    through: "the platform",
+    fields: ["campaignSite"],
+    forbiddenFor: ["photo", "blurb"],
+    /*
+     * **IT LOOKS SELF-PUBLISHED AND IT IS NOT.** A GoodParty candidate page
+     * reads like a campaign's own profile, and its headshots are served from
+     * `assets.civicengine.com` — BallotReady's vendor CDN. So the portrait is a
+     * third party's file under a licence nobody here has read, and the prose is
+     * an aggregator's summary rather than a person's own words. Both are
+     * forbidden here for the same reason RULING 70 keeps Ballotpedia out: this
+     * is a licensing conversation, not a scrape.
+     *
+     * What survives is the link field and the LEAD, and that is real: it reached
+     * 76 of 272 Morris County candidates on 2026-08-22, and the social page it
+     * names is often the only campaign presence a small-race candidate has.
+     */
+    expectedToTravel:
+      "Nationally in principle — the platform lists races in every state — and its COVERAGE per race is unknown outside Morris County, where it was 28% of the ballot. Treat that as a measurement to be re-taken, never as a property of the route.",
   },
   {
     id: "donation-platform",

@@ -380,6 +380,28 @@ both previous versions were found.
 **Status: LAW.** Written into `CLAUDE.md` on 2026-08-20.
 **Implemented:** `components/ballot/incumbency-note.tsx`.
 
+### RULING 22 — recorded by description, and dead
+
+*Written 2026-08-22 (NJ Hunt 4 item 1), to close the last gap in this file.
+Nothing here is new: RULING 22 was never given an entry of its own, and both
+places that mention it already say why.*
+
+RULING 22 is the Prompt D brief’s number for **Prompt B’s field-presence
+gating** — the rule that made a contest’s candidate cards conditional on every
+Kelly field being present. Prompt C recorded it only as the “strict-equality
+implementation” it superseded, so this file carried the thing without carrying
+the number.
+
+**Status: DEAD.** Superseded IN FULL by RULING 26 (2026-08-20), together with
+RULING 7’s display half and RULING 18. Under field-presence gating a
+minor-party or write-in candidate with no campaign site could never match an
+incumbent’s four fields, so their contest was withheld permanently by their own
+circumstances. **It does not return in any form**, and RULING 27 makes that
+checkable: no suppression path may exist in the codebase at all.
+
+It is entered here for the same reason RULING 11 is — so a later session does
+not go looking for it, and so the numbering of this file is whole.
+
 ### RULING 23 — the four-state field is data, not a gate
 `FOUND` / `NOT_HUNTED` / `VERIFIED_ABSENT` / `NOT_APPLICABLE` stays on the
 candidate record as the work queue `HD01`–`HD30` were sized against. Nothing
@@ -1300,7 +1322,7 @@ SESSION and resolves every surface that could have used it.
 
 ### RULING 75 — a close-out commit is gated like any other commit to `main`
 
-*Adopted 2026-08-22 (NJ Hunt 3 item 1.5). Not yet law — routed to the author.*
+*Adopted 2026-08-22 (NJ Hunt 3 item 1.5). **LAW** as of 2026-08-22 — written into `CLAUDE.md` by NJ Hunt 4 item 1.3, which closed `NS03`.*
 
 The merge-cadence rule in `CLAUDE.md` permits a session to ship its code once and
 then write CLOSE-OUT RECORDS as separate named commits, because a document cannot
@@ -1346,7 +1368,7 @@ problem — it cannot be absent, and it costs one API call.
 
 ### RULING 76 — session-dated scripts are COMMITTED, and held to every standard
 
-*Adopted 2026-08-22 (NJ Hunt 3 item 1.7). Not yet law — routed to the author.*
+*Adopted 2026-08-22 (NJ Hunt 3 item 1.7). **LAW** as of 2026-08-22 — written into `CLAUDE.md` by NJ Hunt 4 item 1.3, which closed `NS03`.*
 
 A session-dated capture or walk script — `shoot-nj-hunt2-0822.mts`,
 `tester-walk-0819.mts`, `nh6-shots.mts` — photographs one session's work and will
@@ -1383,3 +1405,271 @@ that only grows, and it holds the extraction toolkit, `twig:pair`,
 parameterised one would do. A shooter that takes a zip and a list of contests is
 worth more than the eleventh `shoot-<date>.mts`, and the preference is stated
 here so the count of 34 is a fact about the past rather than a target.
+
+### RULING 77 — verify locally, ship once
+
+*Adopted 2026-08-22 (NJ Hunt 4, the session brief). **LAW** — written into
+`CLAUDE.md` in the same session.*
+
+**Never ship and then verify. Verify, confirm it works, then ship.**
+
+Almost nothing needs production. Screenshots at 430×932, `pnpm walk:all`, the
+card checks, the who-governs pill and the whole ballot page all run against a
+LOCAL PRODUCTION BUILD. Only the deploy-SHA confirmation and `/api/build`
+require the live site, because only those two are questions about what the
+server is serving rather than about what the code does.
+
+One planned deploy, one merge; close-out records are part of that commit where
+they can be. **A defect found in local verification is fixed BEFORE the ship.**
+
+The merge-cadence rule's second-merge exception survives — a live walk that
+catches a regression must be allowed to fix it — but a session that could have
+caught the defect locally and did not has spent the exception on its own
+carelessness, and the report says so.
+
+*What it supersedes:* nothing. It is the merge-cadence rule's missing half. That
+rule said how many times a session may ship; this says when.
+
+*The cost it removes:* between the ship and the verification, production was
+serving the defect to readers. NJ Hunt 3 spent four of its seven code merges
+exactly there. A local production build is the same bytes.
+
+### RULING 78 — CI runs where it earns its cost
+
+*Adopted 2026-08-22 (NJ Hunt 4, the session brief). **LAW** — written into
+`CLAUDE.md` in the same session.*
+
+**A gate that runs three times for one merge is one gate and two copies of it.**
+
+Build check was firing on the branch push, again on the pull request, and again
+on the merge to `main` — three runs plus a Netlify deploy each, on top of the
+scheduled refreshes. That exhausted the Actions balance, and an exhausted
+balance does not fail loudly: it produced completed jobs with ZERO STEPS
+recorded, which read as a broken tree for a whole session (`NS04`).
+
+- Build check runs on the **pull request** and on **`main`**. The branch-push
+  trigger is removed.
+- Scheduled refresh workflows run **once daily**, except the clerk filing near a
+  filing deadline, which keeps its one-day RULING 53 clock.
+- **Nothing stops gating.** Every branch that matters becomes a pull request and
+  every merge lands on `main`, so the two surviving triggers cover what the
+  third covered. A cadence change that dropped coverage would be the budget
+  raised to fit the change it was supposed to catch, wearing another costume.
+
+### RULING 79 — a ruling closes the Needs Sean row it answers
+
+*Adopted 2026-08-22 (NJ Hunt 4, the session brief). **LAW** — written into
+`CLAUDE.md` in the same session. **Amends RULING 37**, narrowly and
+deliberately.*
+
+RULING 37 says only the author closes a Needs Sean row. That stands for rows
+awaiting his judgement. What it did not anticipate is the row he has ALREADY
+ANSWERED: he rules in conversation, the ruling is recorded here and shipped, and
+the row that asked the question sits open waiting for him to say the same thing
+a second time in a spreadsheet. Needs Sean stood at 54 open and an unknown share
+of those were already answered — the accumulation the section was built to
+prevent.
+
+- Where a dated ruling in this file **demonstrably** answers a Needs Sean row,
+  the session marks it Resolved, records the ruling number and the shipping SHA
+  on the row, and moves it.
+- **Every such close is reported individually** with its ruling and SHA, so he
+  can reverse any the session got wrong.
+- Where no ruling answers the row, **it stays open and is named individually**.
+  Ambiguity is not a licence to close.
+- Rows that are genuinely his judgement and carry no ruling — a naming decision,
+  a business call, a visual preference — stay open regardless of how long they
+  have been there.
+
+RULING 37's second half is untouched: **sessions still OPEN Needs Sean rows**,
+and routing something to his attention remains the session's job.
+
+### RULING 80 — the committed geometry follows the reader, not the county
+
+*Adopted 2026-08-22 (NJ Hunt 4 item 4, the session brief). **LAW** — written
+into `CLAUDE.md` in the same session. Answers `NH44`.*
+
+**The TIGER geometry clip widens to the adjacent counties. A unit this product
+names is a unit the map can draw.**
+
+The committed geometry was clipped to ONE county per state — `public/geo/*.geojson`
+says `clippedTo` on its own face. A zip's first-rung circle crosses county lines:
+3 of 4 pilot zips do, and 184 of 279 measured. So towns inside the circle were
+entering the registry with their boards, their rosters and their meetings, and
+no polygon. RULING 57 says a body is NAMED FIRST and hunted second; a body that
+cannot be DRAWN because a build-time clip was convenient is that rule losing to a
+file format.
+
+- The clip is **the county plus its adjacent counties**, per state.
+- The vector-tiling threshold is a real constraint and is **measured, not
+  assumed**: the feature count is stated before and after against it, and a tile
+  over its budget is a finding rather than a rounding error.
+- A unit that reads "no division of its own" AFTER the widening is a different
+  finding from one that read it before, and the pair is stated.
+
+*What it does not do:* it does not make geometry a precondition for naming a
+body. `lib/registry/curated-divisions.ts` supplies a division with no polygon and
+that stays legal, because RULING 57 outranks the map.
+
+### RULING 81 — an exhausted Actions balance is not a broken tree
+
+*Adopted 2026-08-22 (NJ Hunt 4 item 1, from the author's brief). Answers
+`NS04`.*
+
+Every job on `d0e0e34` completed in three to four seconds with ZERO STEPS
+recorded, twice, including an explicit `gh run rerun`. The runs died before any
+step reported and the logs were not retrievable. It was not the tree: `f20e1e9`,
+twenty minutes earlier, passed all three checks; `d0e0e34` differed from it only
+by documents and one capture script; and the suite was green locally.
+
+**The cause was the Actions minutes balance, exhausted by RULING 78's triple
+build.** The author has upgraded and the balance is restored.
+
+The diagnostic that came out of it stands and is the durable part: **a completed
+job with no steps NEVER RAN**, and `job-watch` reports that as `CANNOT TELL`
+rather than as a failure. RULING 24 — a check that cannot reach its subject must
+never print like a passing one — and its mirror image, which is that a check
+that never started must never print like a failing one.
+
+### RULING 82 — the job watcher's sampling was the defect, not its logic
+
+*Adopted 2026-08-22 (NJ Hunt 4 item 1, from the author's brief). Answers
+`JOB01`.*
+
+`JOB01` was opened because `refresh-meetings-snapshot.yml` failed twice
+consecutively and recovered unexamined. NH Hunt 3 established there was no single
+cause: **three distinct causes across four failures, at a rate of 17 of 40
+completed runs**, and the refresh death was a JOB reason — `total` was read off
+`served`, the array before the second collapse pass, while the rows came from
+`finalRows`. That was found and fixed, and proven live at `381 + 74 = 455`, 11 of
+11 sources read, 0 walled, 0 job-failed.
+
+**The watcher never fired on any of it, and that was SAMPLING, not logic.** It
+looked at too narrow a window to see a 17-in-40 rate. The window was widened and
+`JOB01` was itself opened from live data by the widened detector — which is the
+detector working.
+
+The row asked why the job broke. It is answered: the cause was found, named,
+fixed and proven, and the instrument that missed it was corrected.
+
+---
+
+## BACKFILL — RULINGS 52 THROUGH 56, RECORDED HERE LATE
+
+*Written 2026-08-22 (NJ Hunt 4 item 1). **Nothing here is new.** Each of these
+was adopted on the date it names and each is already binding; what was missing is
+their entry in THIS file, which the constitution calls "the append-only record of
+every ruling that is not law".*
+
+**The gap, stated plainly.** This file runs 1, 2, 3 … 51, and then 57. Rulings 52
+through 56 were adopted on 2026-08-21 and written into `CLAUDE.md` (52, 53) and
+into `docs/state.md` (54, 55, 56) instead. Every one of them is cited by later
+work and by open tracker rows, so nothing was lost — but a session asking this
+file "what did he rule about filed addresses" got no answer, and RULING 79 makes
+that gap operational: it closes a Needs Sean row only on a ruling recorded here.
+
+Each entry below says where its authoritative text lives and quotes what it
+decided. No text is invented, reordered or paraphrased into something new.
+
+### RULING 52 — discovery is a tree, not a ladder
+
+*Adopted 2026-08-21 (NH Hunt 3). **LAW** — the authoritative text is the section
+of that name in `CLAUDE.md`, which is where it was written and which governs.
+Recorded here 2026-08-22 to close the gap in this file.*
+
+**Branches to the same fact are independent. A branch returning empty is one
+measurement on one date, never a verdict about the fact.** The hunt does not
+stop when a branch fails; it takes another branch. Where no branch exists, one is
+built. A ladder produces the answer "unreachable" because a ladder has one
+direction; a tree does not have that answer available to it.
+
+Adopted over three walls this repo had written down as permanent, all three of
+which fell in one session: `gc.nh.gov` (recorded as refusing every client, and
+answering rung 2 at HTTP 200 on re-walk), `sos.nh.gov` (walled host-wide from
+2026-08-13 until somebody walked rung 5), and Kearsarge's nine board emails
+(sitting in the page's own `href`s after two sessions recorded them as honest
+absences).
+
+### RULING 53 — recorded absences expire
+
+*Adopted 2026-08-21 (NH Hunt 3). **LAW** — authoritative text in `CLAUDE.md`.
+Recorded here 2026-08-22 to close the gap in this file.*
+
+**An absence is a measurement with a shelf life, not a conclusion.** Candidate
+fields 7 days; bodies, rosters and officials 14 days; walled sources 14 days,
+regardless of how emphatically the wall was recorded. Past its window a record is
+STALE and is re-walked before it is relied on. Stale is not wrong and a stale
+record is never deleted. Staleness is a state the data carries, not a note in a
+document.
+
+### RULING 54 — the filed mailing address renders
+
+*Adopted 2026-08-21 (NH Hunt 3), answering `NH12`. Authoritative account:
+`docs/state.md`, the section of this name. Shipped in
+`lib/ballot/candidate-cards.ts` and `components/ballot/candidate-card.tsx`.*
+
+**Public information is shown, and that includes the mailing address a candidate
+filed with the state.**
+
+All 47 of Newbury's filed addresses had been hunted, recorded, and written into a
+prose `note` that nothing rendered — so the product HELD the only working contact
+for about half of those people and showed none of them. Kathleen Donnelly and
+Cynthia Rusis had no way to be reached at all while their opponents showed phones
+and sites. That is the information asymmetry the equal-effort rule exists to
+catch, produced by our own reticence.
+
+**It renders as a FACT, not an affordance**: no `href`, because a `mailto:` is an
+invitation to act now and a named person's home address dressed as a tappable
+control overstates what it is.
+
+*The bug it caught, kept because it is the more useful half:* two separate lifts
+reported success and lifted 4 of 47 — a parse anchored on a period, and then a
+`.find` over a 175-record array against 92 cards. Clean exit, wrong number, both
+times. Found by asking for the COUNT rather than the exit code.
+
+### RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE
+
+*Adopted 2026-08-21 (NH Hunt 3). Authoritative account: `docs/state.md`, the
+section of this name. Shipped as `data/photos/review.json`,
+`scripts/photo-review.mts` and `tests/photo-review.test.ts`.*
+
+**Every photo is reviewed by the author, and only an approved photo renders.**
+
+63 photos held, 63 render, 0 dropped. Gating on an empty store would have blanked
+every portrait in the product the moment the rule shipped, so the 48 already
+shipping are `APPROVED` with `decidedBy: "grandfathered"` — labelled honestly as
+*shipping before the rule existed, NOT individually approved by the author* — and
+carrying a decision date so RULING 53's clock runs on them.
+
+**It is a CORRECTNESS gate on one field, never a completeness gate on a card**,
+and `tests/photo-review.test.ts` asserts a person renders fully with a photo
+pending. That assertion is what stops it drifting into the suppression path
+RULING 27 forbids.
+
+**A decision is about an IMAGE, not about a person.** A store keyed per person
+meant recording that one candidate's WinRed banner was refused also withheld her
+public-domain U.S. Senate portrait.
+
+**One tracker row per session listing N photos**, never one row per photo — 47
+candidates plus 90 officials would otherwise flood the queue.
+
+### RULING 56 — a scheduled job that fails tells someone
+
+*Adopted 2026-08-21 (NH Hunt 3). Authoritative account: `docs/state.md`. Shipped
+as `lib/ops/job-watch.ts`, `scripts/watch-workflows.mts` and
+`.github/workflows/job-watch.yml`.*
+
+**A degrading data path may not be a page nobody watches.**
+
+The measurement that produced it: `refresh-meetings-snapshot` had failed **14 of
+36** runs, `intake-tripwire` 2 of 8, `refresh-dotgov-snapshot` 1 of 8 — a third
+nobody had named. The watcher runs daily at 15:40 UTC, after the other jobs have
+had their slot. **Two consecutive failures opens a Needs Sean row. It never
+resolves one.**
+
+Proved without breaking anything to prove it: `--asof` holds the detector against
+a window whose outcome is already known.
+
+*Later measurement, NJ Hunt 4 (2026-08-22):* the detector's sampling was too
+narrow to see a 17-in-40 failure rate and was widened — see RULING 82, which
+closes `JOB01`.

@@ -1,6 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
+import { sameName } from "@/lib/search/body-row";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -180,8 +181,26 @@ function BodiesDoor({
     <ul className="mt-3 space-y-2">
       {coverage.bodies.map((body) => {
         const label = body.name ?? body.divisionLabel;
+        /*
+         * PU02's class sweep (NJ Hunt 4 item 3, 2026-08-22). This is the same
+         * defect as the autocomplete's: an EXACT string join between the
+         * meetings snapshot's `bodyName`, which is whatever a portal published,
+         * and the registry's `name`, which a hunt read off the body's own page.
+         * `Selectboard` against `Select Board`, `Board of Adjustment` against
+         * `Board of Adjustment (BAJ)` — the same body, no match, and a row that
+         * reads as having no next sitting while its sittings are in the file.
+         *
+         * Fixed at the shared path: `sameName` in `lib/search/body-row.ts`,
+         * which normalises two spellings of one name and refuses anything
+         * looser. The division is checked too — a body name alone is not a key,
+         * and "Planning Board" exists in every town in the county.
+         */
         const next = meetings.find(
-          (m) => m.bodyName === body.name && m.status === "SCHEDULED",
+          (m) =>
+            m.status === "SCHEDULED" &&
+            m.ocdId === body.ocdId &&
+            body.name !== null &&
+            sameName(m.bodyName, body.name),
         );
         return (
           <li

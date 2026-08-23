@@ -74,9 +74,24 @@ test("a state with no chamber-title entry reports rather than inventing one", ()
 });
 
 test("a district outside the clipped coverage is reported, not dropped silently", () => {
+  /*
+   * **THE FIXTURE MOVED BECAUSE THE CLIP DID.** (RULING 80, NJ Hunt 4 item 4,
+   * 2026-08-22.)
+   *
+   * This used Arizona's district 2, which was outside the one-county clip and
+   * is inside the widened one — the registry now carries all thirty of
+   * Arizona's lower-house districts. That is the ruling working, and it left
+   * this test asserting the opposite of what is now true.
+   *
+   * The claim under test is unchanged and is not about any particular district:
+   * a legislator whose district this build cannot draw is KEPT and the miss is
+   * REPORTED, never silently dropped. District 31 does not exist in Arizona, so
+   * it is outside any clip this project could ever ship, and the assertion
+   * stops depending on where the clip happens to stop.
+   */
   const index = indexDivisions(DIVISIONS);
   const set = normalize(
-    [person({ id: "ocd-person/y", state: "az", current_district: "2" })],
+    [person({ id: "ocd-person/y", state: "az", current_district: "31" })],
     index,
     "2026-08-12T00:00:00.000Z",
     "04",

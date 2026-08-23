@@ -104,9 +104,9 @@ deeper as the country gets stranger.
 
 <!-- BEGIN GENERATED ROUTES — written by `corepack pnpm manifest:doc`, never by hand -->
 
-## The routes — manifest v2
+## The routes — manifest v3
 
-**41 routes named**, across 37 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
+**42 routes named**, across 38 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
 
 **Routes per field type — this is the bar for `VERIFIED_ABSENT`:**
 
@@ -115,7 +115,7 @@ deeper as the country gets stranger.
 | Photo | 7 |
 | In their own words | 14 |
 | Contact | 39 |
-| Campaign site | 18 |
+| Campaign site | 19 |
 | Specific verified page | 8 |
 
 > This manifest is incomplete and always will be. Reaching the end of it is not proof that a fact does not exist — it is proof that these named routes returned nothing on this date. We do not know what we do not know; there are always more ways.
@@ -195,7 +195,7 @@ deeper as the country gets stranger.
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 | `records-request` | The body's own public-records request path, walked as a named route | The statutory request, filed and recorded with its date | What the body holds and has not published | 13 | the body's records officer |
 
-### Campaign site — 18 routes
+### Campaign site — 19 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -208,6 +208,7 @@ deeper as the country gets stranger.
 | `social-archive` | An archived capture of the campaign's social page | The Internet Archive against the exact page URL, at rung 11 — lawful to read, and frequently carrying the About block intact | The About section's contact block, the link field, and the campaign's own self-description as it stood on the capture date | 11 | web.archive.org |
 | `social-mirror` | The same content cross-posted to a platform that is not walled | Instagram, X, Bluesky, LinkedIn, Nextdoor, linktree and the campaign's own newsletter — small campaigns push identical content to several at once | The same words, the same link field, and a contact block, from a host that answers | 2, then 6 | the mirroring platform |
 | `news-embed` | Local news coverage that quotes, embeds or screenshots the social page | The paper's site searched by candidate name plus the platform, at rung 2 and rung 11 | The candidate's own words as posted, quoted by a publisher that is not walled — and the page's existence and identity corroborated by a third party | 2 and 11 | the local press |
+| `candidate-platform` | A civic platform carrying a page per candidate — GoodParty.org is the live case | The platform's own candidate URL, reached from a search index rather than guessed; read at rung 2 | A social link, a party label and an incumbency claim. NOT a photo and NOT the candidate's own words — see below. | 2 | the platform |
 | `donation-platform` | The donation page — ActBlue, WinRed, Anedot, or the committee's own | The platform's candidate page, and the committee disclosure block on it | A committee mailing address, a contact email, and confirmation the campaign is live | 2 | the donation platform |
 | `domain-search` | A direct search for a campaign domain by candidate name | Name-plus-office and name-plus-year domain guesses, plus the search index at rung 10 | A site nothing links to | 2 and 10 | the search index |
 | `local-newspaper` | The local newspaper's coverage | The town or county paper's site, searched by name; rung 11 where the archive is paywalled or gone | The candidate quoted in their own words; the announcement piece; a campaign contact the paper prints | 2 and 11 | the local press |
@@ -257,6 +258,7 @@ A branch proven in one place is proven for that shape, not for everywhere. The r
 | `social-archive` | Everywhere the page has been captured, which is uneven for small campaigns and good for anything that drew attention. A capture is DATED and says so — it is evidence about that date, never about today. |
 | `social-mirror` | Broadly, and it is the single most useful of these five in practice. A campaign posting only to Facebook is real and is the case this route does not reach. |
 | `news-embed` | Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all. |
+| `candidate-platform` | Nationally in principle — the platform lists races in every state — and its COVERAGE per race is unknown outside Morris County, where it was 28% of the ballot. Treat that as a measurement to be re-taken, never as a property of the route. |
 | `donation-platform` | Nationally. Absent in races too small to raise money. |
 | `domain-search` | Everywhere. Cheap, and the one route that finds an unlinked site. |
 | `local-newspaper` | Everywhere there is still a paper, which is the shrinking part. Where the paper is dead, rung 11 is the route. |

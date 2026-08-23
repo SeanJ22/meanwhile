@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { test } from "node:test";
 
-import { CURATED_DIVISIONS } from "../lib/registry/curated-divisions.ts";
+import { CURATED_DIVISIONS, RETIRED_CURATED_ROWS } from "../lib/registry/curated-divisions.ts";
 import registry from "../lib/registry/registry.json" with { type: "json" };
 
 /**
@@ -113,11 +113,38 @@ test("every curated division reaches the built registry", () => {
     [],
     "a curated division that never lands is a hunt nobody can see the result of",
   );
-  // The zero-row check: a list that silently emptied would pass every
-  // assertion above by having nothing to assert about.
+  /*
+   * **THE ZERO-ROW CHECK MOVED, AND IT DID NOT WEAKEN.** (RULING 80, NJ Hunt 4
+   * item 4, 2026-08-22.)
+   *
+   * It used to be `CURATED_DIVISIONS.length > 0` — a list that silently emptied
+   * would otherwise pass every assertion above by having nothing to assert
+   * about. That was right for as long as the overlay was carrying thirteen New
+   * Hampshire governments the one-county clip could not draw.
+   *
+   * RULING 80 widened the clip and all thirteen now have real TIGER geometry.
+   * `scripts/build-registry.ts` refuses a curated row that shadows a polygon,
+   * correctly, so the overlay HAD to empty — an empty overlay is now the
+   * correct state and the old assertion would have failed forever.
+   *
+   * The check that replaces it is stronger, not weaker: the thirteen retired
+   * rows are still in the file, and every one of them must be IN THE GEOMETRY.
+   * A clip that narrows again — a vintage change, a build-size decision — puts
+   * thirteen real governments back out of reach, and it fails here rather than
+   * being noticed by a reader at 03255.
+   */
+  const geometryIds = new Set(DIVISIONS.map((d) => d.ocdId));
   assert.ok(
-    CURATED_DIVISIONS.length > 0,
-    "the overlay is empty — that is an error state, not a clean board",
+    RETIRED_CURATED_ROWS.length > 0,
+    "the retired list is empty — the record of what the narrow clip could not draw is gone",
+  );
+  const backOutOfReach = RETIRED_CURATED_ROWS.filter((r) => !geometryIds.has(r.ocdId));
+  assert.deepEqual(
+    backOutOfReach.map((r) => r.ocdId),
+    [],
+    "these governments were retired from the curated overlay because the widened clip " +
+      "draws them, and the registry no longer carries them — the clip has narrowed and " +
+      "thirteen real governments are unreachable again",
   );
 });
 

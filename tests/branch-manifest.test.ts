@@ -104,6 +104,8 @@ const V1_ROUTES = [
   "social-archive",
   "social-mirror",
   "news-embed",
+  /* v3, NJ Hunt 4 (2026-08-22): the civic platform carrying a page per candidate. */
+  "candidate-platform",
 ];
 
 const ids = MANIFEST_ROUTES.map((r) => r.id);

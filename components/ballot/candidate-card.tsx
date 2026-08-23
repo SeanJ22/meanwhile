@@ -1,3 +1,4 @@
+import { hostOf } from "@/lib/officials/verification";
 import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
@@ -137,7 +138,14 @@ export function CandidateCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={card.photoUrl}
-            alt={`${name} — ${card.photoSource ?? "photo"}`}
+            /*
+             * **NO INVENTED DESCRIPTOR** (2026-08-23, item 3). This read
+             * `?? "photo"`, which put a word we did not have into the place
+             * the photo's SOURCE belongs. Where the source is recorded it is
+             * named; where it is not, the alt text is the person's name and
+             * nothing else.
+             */
+            alt={card.photoSource ? `${name} — ${card.photoSource}` : name}
             title={card.photoSource ?? undefined}
             loading="lazy"
           />
@@ -168,7 +176,16 @@ export function CandidateCard({
                 rel="noreferrer"
                 className="text-muted underline decoration-dotted underline-offset-2 hover:text-link"
               >
-                {card.bioSourceLabel ?? "source"}
+                {/*
+                  **THE LINK NAMES WHERE IT CAME FROM** (2026-08-23, item 3).
+                  This read `?? "source"`, which is the shape of a source class
+                  without being one — the blurb rule requires prose about a
+                  real person to NAME where it came from, and the word
+                  "source" names nothing. The host is read off the URL that is
+                  already on the row, so it is derived from the evidence
+                  rather than supplied in place of it.
+                */}
+                {card.bioSourceLabel ?? hostOf(card.bioSourceUrl)}
               </a>
             )}
           </p>

@@ -1,11 +1,21 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 195,
-    "named": 1807,
+    "files": 198,
+    "named": 1823,
     "dynamic": 6
   },
   "files": {
+    "tests/absence-defaults.test.ts": {
+      "names": [
+        "a single-token type default is not a claim and is not flagged",
+        "every baseline entry carries a reason, and none is a placeholder",
+        "no unrecorded sentence-shaped render default exists",
+        "the baseline only shrinks — a recorded entry that is gone must be removed",
+        "the shape catches every instance the class was named from"
+      ],
+      "dynamic": 0
+    },
     "tests/agenda-documents.test.ts": {
       "names": [
         "a PDF that cannot be parsed records the failure and keeps the link",
@@ -170,6 +180,7 @@
     },
     "tests/ballot.test.ts": {
       "names": [
+        "AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it is a labelled pill",
         "F21: the ballot page renders the polling-place pointer exactly once, in the dates header",
         "NJ01: a 07866 reader sees Rockaway BOROUGH's government, not only the Township's",
         "a Newbury voter (03255) sees the November slate, and March is stated, not hidden",
@@ -502,6 +513,16 @@
         "0C: an ordinary 200 still comes back exactly as before",
         "NHHUNT: the ambiguous marks keep their floor, so a real page stays a page",
         "NHHUNT: the modern managed challenge is caught at 30 KB, not missed"
+      ],
+      "dynamic": 0
+    },
+    "tests/chromium-pin.test.ts": {
+      "names": [
+        "an absent browser refuses rather than reads as a pass",
+        "playwright is pinned to an exact version, not a range",
+        "the browser resolution is stated, never silent",
+        "the browsers root honours the environment's override",
+        "the committed revision is the one playwright actually wants"
       ],
       "dynamic": 0
     },
@@ -2089,6 +2110,16 @@
         "one host's refusal does not empty the bodies on the other hosts",
         "the client meta names the carried rows and the day they were last reached",
         "the composite carries a partial refusal through to its report"
+      ],
+      "dynamic": 0
+    },
+    "tests/refusal-copy.test.ts": {
+      "names": [
+        "comments are never swept, so recording a fix cannot become a defect",
+        "every shape states in plain words what it looks for",
+        "no honest named gap is ever flagged as a refusal",
+        "no refusal copy survives anywhere a reader can reach",
+        "the shapes catch the two refusals this product actually shipped"
       ],
       "dynamic": 0
     },

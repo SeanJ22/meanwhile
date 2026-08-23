@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-23.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
 Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 121 recorded
+## Rulings — 123 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -391,6 +391,8 @@ from. Each entry there names what it supersedes.
 - RULING 106 — no generated file has a size limit
 - RULING 107 — a freshness date is written only by the code that read the source
 - RULING 108 — anything a session must read at the start lives in the repository
+- RULING 109 — a brief says what it needs to run, and the session checks before item one
+- RULING 110 — a search that finds nothing must show it looked in the right FORM
 
 ## P0 tracker rows — 93 of 456 rows
 

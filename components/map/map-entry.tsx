@@ -222,6 +222,18 @@ function MapEntryInner() {
   // something specific (2h) — a pin, a list row, a filter — and comes back on
   // a tap or a new area.
   const [noticeCollapsed, setNoticeCollapsed] = useState(false);
+  /**
+   * **LAY-1 (item 4, 2026-08-23) — which card holds the left column.**
+   *
+   * One expanded at a time. The other collapses to pills and every pill stays
+   * a door, so nothing becomes unreachable by being collapsed. The default is
+   * the who-governs card, because it is the answer the reader came for and
+   * defaulting to the counts would bury it one press deep on arrival.
+   *
+   * Only consulted where the rail is a COLUMN. In the drawer form the card
+   * keeps its place over the map and this is inert.
+   */
+  const [columnCard, setColumnCard] = useState<"stats" | "wgh">("wgh");
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -1394,7 +1406,6 @@ function MapEntryInner() {
    * rule states — a large battlecard is not a parameter, so with one open the
    * cluster is on the map.
    */
-  const wghOpen = Boolean(shown) && !noticeCollapsed;
   const sidebarVisible = useSidebarVisible(sidebarState);
   /*
    * F01 10.3 — is the rail a SIDE panel covering part of the map, or a
@@ -1407,6 +1418,35 @@ function MapEntryInner() {
    * inset applies only where the rail is genuinely a 364px column.
    */
   const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
+  /*
+   * **LAY-1 (item 4, 2026-08-23) — the who-governs card lives in the LEFT
+   * COLUMN wherever the rail IS a column.**
+   *
+   * The author's instruction: everything in the left column, NESTED rather
+   * than stacked open. The counts card sets the column width, this sits
+   * directly beneath it, and expanding one collapses the other to pills — one
+   * expanded at a time.
+   *
+   * `railIsAColumn` is the existing boolean for "the rail is a 364px side
+   * panel rather than a full-width drawer", and it is exactly the condition
+   * this turns on: below it the rail is a drawer, and a who-governs card that
+   * had to be opened out of a drawer would be the buried entry point the
+   * friction rule forbids. There it keeps its place over the map, unchanged.
+   */
+  const wghInColumn = railIsAColumn && Boolean(shown);
+  /*
+   * Is the who-governs card OPEN, on whichever surface it is on?
+   *
+   * Two different collapse mechanisms answer to one question, and the cluster
+   * placement depends on the answer rather than on which mechanism produced
+   * it: over the map it is `noticeCollapsed`, and in the column it is which
+   * card holds the column. Reading only the first would have put the cluster
+   * on the map while a fully open card sat in the rail carrying its own slot,
+   * which is the two-doors-onto-one-surface defect 4e closed.
+   */
+  const wghOpen = wghInColumn
+    ? columnCard === "wgh"
+    : Boolean(shown) && !noticeCollapsed;
   const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
@@ -1458,6 +1498,58 @@ function MapEntryInner() {
    */
   const clusterRendered = Boolean(clusterZip && /^\d{5}$/.test(clusterZip));
 
+  /*
+   * **LAY-1: the same card, rendered into the rail's own column.**
+   *
+   * One constructor, two placements — the props are identical, because a
+   * second construction is a second component that drifts. The only
+   * difference is `onMinimize`: over the map it shrinks to the floating
+   * "Who governs here" button, and in the column it hands the column back to
+   * the counts card, which is what "collapse to a pill" means here.
+   */
+  const columnNotice =
+    wghInColumn && shown ? (
+      <div className="sidebar-wgh">
+        <CoverageNotice
+        tier={shown.tier}
+        zip={shown.zip}
+        radiusKm={shown.radiusKm}
+        requestedRadiusKm={shown.requestedRadiusKm}
+        count={shown.meetings.length}
+        coverage={shown.coverage}
+        refreshing={refreshing}
+        failedSourceOcdIds={
+          shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
+        }
+        /* F01 7.2: what the MAP is actually showing, so the card
+           cannot say “may be missing” about a body whose pins the
+           reader can see. Read off the same meeting array the pins
+           are drawn from — a second derivation is how two surfaces
+           come to disagree, which is the defect this closes. */
+        ocdIdsWithMeetings={[
+          ...new Set(
+            (shown.meetings ?? []).flatMap((m) =>
+              m.ocdId ? [m.ocdId] : [],
+            ),
+          ),
+        ]}
+        onOpenOfficial={openOfficial}
+        onOpenBody={(body) =>
+          openLarge({
+            kind: "entity",
+            subject: bodySubject(body, shown.meetings ?? []),
+          })
+        }
+        onMinimize={() => setColumnCard("stats")}
+        onNarrowApplied={onNarrowApplied}
+        onStreetPoint={onStreetPoint}
+        /* 4e: the WGH slot, which wins over the other two. */
+        pillCluster={clusterAt === "wgh" ? cluster : null}
+        clusterElsewhere={clusterRendered}
+      />
+      </div>
+    ) : null;
+
   return (
     <DataProvider value={data}>
       {/*
@@ -1490,6 +1582,29 @@ function MapEntryInner() {
              become a second door onto the same surface. */
           pillCluster={clusterAt === "sidebar" ? cluster : null}
           clusterElsewhere={clusterRendered}
+          /* LAY-1: the who-governs card, nested directly under the counts.
+             Expanded it holds the column; collapsed it is a pill, and the
+             pill is the door back — a collapsed card that stopped being
+             reachable would be a hidden entry point. */
+          whoGoverns={
+            wghInColumn
+              ? columnCard === "wgh"
+                ? columnNotice
+                : (
+                    <div className="sidebar-wgh-pill">
+                      <button
+                        type="button"
+                        className="stat-pill"
+                        onClick={() => setColumnCard("wgh")}
+                      >
+                        Who governs here
+                      </button>
+                    </div>
+                  )
+              : null
+          }
+          statsCollapsed={wghInColumn && columnCard === "wgh"}
+          onExpandStats={() => setColumnCard("stats")}
         />
 
         {/* F01 9.4 (2026-08-19, the author): *"I don't like that I have to open
@@ -1728,6 +1843,7 @@ function MapEntryInner() {
             )}
 
             {shown &&
+              !wghInColumn &&
               (noticeCollapsed ? (
                 // Shrunk out of the way (2h), not gone: one tap brings the
                 // full card back. Rendered off `shown` rather than `current`

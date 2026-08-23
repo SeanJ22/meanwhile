@@ -63,6 +63,38 @@ const EXPAND: Record<string, string> = {
   CENT: "CENTRAL",
   CTR: "CENTER",
   SUPV: "SUPERVISORY",
+  /*
+   * Added 2026-08-23 (item 2), each from a district the join missed and a
+   * human then found by hand in the Census file:
+   *   DT      "BRIDGEWATER-RARITAN REG SCH DT"        (NJ)
+   *   FT      "FT THOMAS SCHOOL DISTRICT 7"           (AZ)
+   *   COOPERATN "HILLSBORO DEERING COOPERATN SCH DIST" (NH)
+   *   CNTY    "PASSAIC CNTY-MANCHESTER REG SCHOOL DIST" (NJ)
+   *   MTN/MTS "WHITE MTS REGIONAL SCH DIST"           (NH)
+   *   DISRICT "ROUND VALLEY UNIFIED SCHOOL DISRICT 10" — a TYPO in the
+   *           Census of Governments' own file. It is corrected here rather
+   *           than in the committed source, because the source is evidence
+   *           and evidence is not edited.
+   */
+  DT: "DISTRICT",
+  FT: "FORT",
+  COOPERATN: "COOPERATIVE",
+  /*
+   * Directional single letters. `CALDWELL-W CALDWELL SCH DIST` is the Census's
+   * name for the district the registry calls `Caldwell-West Caldwell`. A single
+   * letter that is really an initial would be expanded wrongly here, and the
+   * one-to-one rule in `census-school-systems.ts` is what makes that safe: a
+   * key that then resolves to two rows answers nothing rather than guessing.
+   */
+  N: "NORTH",
+  S: "SOUTH",
+  E: "EAST",
+  W: "WEST",
+  DISRICT: "DISTRICT",
+  CNTY: "COUNTY",
+  MTN: "MOUNTAIN",
+  MTNS: "MOUNTAINS",
+  MTS: "MOUNTAINS",
 };
 
 const ACRONYM: Record<string, string> = {
@@ -130,7 +162,15 @@ export type NormalizedName = {
 export function normalizeName(raw: string): NormalizedName {
   const cleaned = raw
     .toUpperCase()
-    .replace(/[.,'"()/]/g, " ")
+    /*
+     * **An apostrophe CLOSES rather than splits** (corrected 2026-08-23,
+     * item 2). Replacing it with a space turned `Hart's Location School
+     * District` into `HART S LOCATION` while the Census wrote `HARTS
+     * LOCATION SCHOOL DIST 236`, and the two never met. Every other
+     * punctuation mark here separates two words; an apostrophe is inside one.
+     */
+    .replace(/['\u2018\u2019\u02bc]/g, "")
+    .replace(/[.,"()/]/g, " ")
     .replace(/&/g, " AND ")
     .replace(/-/g, " ")
     .replace(/\s+/g, " ")

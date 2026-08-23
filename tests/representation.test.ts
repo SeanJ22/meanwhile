@@ -270,6 +270,10 @@ test("a failed fetch renders couldn't-check, never confident zeros", async () =>
   const stats = {
     meetings: 0,
     bodies: 0,
+    // Item 6 (2026-08-23): the Bodies tile now states its unit and splits the
+    // pair. Zero bodies has no pair to state, so this is 0 rather than null —
+    // null is "coverage could not answer", which this fixture is not.
+    governingBodies: 0,
     districts: 10,
     governingDistricts: null,
     officials: 0,

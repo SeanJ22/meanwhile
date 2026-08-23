@@ -189,7 +189,9 @@
     "dupes": "tsx scripts/duplicate-implementations.mts",
     "shoot:visual": "tsx scripts/shoot-visual-0823.mts",
     "tracker:resolve": "node scripts/tracker.mjs resolve",
-    "morris:portraits": "tsx scripts/hunt-morris-portraits-0823.mts"
+    "morris:portraits": "tsx scripts/hunt-morris-portraits-0823.mts",
+    "sweep:refusal": "tsx scripts/sweep-refusal-copy.mts",
+    "sweep:absence-defaults": "tsx scripts/sweep-absence-defaults.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
@@ -214,7 +216,7 @@
     "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
-    "playwright": "^1.62.1",
+    "playwright": "1.62.1",
     "tailwindcss": "^4",
     "tsx": "^4.20.7",
     "typescript": "^5",

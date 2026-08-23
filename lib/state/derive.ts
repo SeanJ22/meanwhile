@@ -195,6 +195,22 @@ export function applyFilters({
 export interface ShellStats {
   meetings: number;
   bodies: number;
+  /**
+   * **How many of `bodies` are GOVERNING bodies.** (Item 6, 2026-08-23.)
+   *
+   * The 07866 tile read `12 Bodies` while the panel two inches to its right
+   * read *"4 of the 8 bodies that govern the area around 07866"*. Both were
+   * right and neither said which unit it was counting: the tile counts every
+   * body covering the point and the panel counts the governing ones, and the
+   * remaining 4 are the boards and committees the panel names in its own next
+   * sentence. Two numbers standing beside each other with no stated
+   * relationship is how "1,079" happened.
+   *
+   * Null when no coverage answered, for the same reason `bodies` becomes
+   * "—" there: a counter whose surface cannot say who governs may not state
+   * a number, and 0 is a number.
+   */
+  governingBodies: number | null;
   /** Null when the overlay is off: nothing is drawn, so there is no count. */
   districts: number | null;
   /**
@@ -254,6 +270,7 @@ export function computeStats(input: {
   return {
     meetings: meetings.length,
     bodies: coverage ? coverage.bodies.length : 0,
+    governingBodies: coverage ? coverage.counts.governing.total : null,
     districts: drawnDistricts ? drawnDistricts.length : null,
     governingDistricts:
       atAddress && coverage ? coverage.divisions.length : null,
@@ -361,9 +378,34 @@ export function districtDoorRows(
   }));
 }
 
+/**
+ * The Bodies pair, in the reader's words, or null when there is no pair.
+ *
+ * **Stated N equals rendered rows** applies to both halves: `bodies` is the
+ * length of the list the Bodies door renders, and `governingBodies` is the
+ * count the Who Governs Here panel speaks about. Neither is re-derived here.
+ */
+function bodiesSecondary(stats: ShellStats): string | null {
+  if (!stats.coverageAnswered) return null;
+  const governing = stats.governingBodies;
+  if (governing === null) return null;
+  const other = stats.bodies - governing;
+  if (other <= 0) return null;
+  return `${governing} govern here · ${other} board${other === 1 ? "" : "s"} and committee${
+    other === 1 ? "" : "s"
+  }`;
+}
+
 export interface StatsView {
   meetings: number | "—";
   bodies: number | "—";
+  /**
+   * The Bodies tile's second line — the pair, reconciled on the tile itself.
+   *
+   * Null when there is nothing to reconcile: no coverage answered, or every
+   * body here governs, in which case a breakdown would be noise.
+   */
+  bodiesSecondary: string | null;
   districts: number | "—" | "Off";
   officials: number | "—";
   /**
@@ -473,6 +515,7 @@ export function deriveStatsView(
     return {
       meetings: "—",
       bodies: "—",
+      bodiesSecondary: null,
       officials: "—",
       // A failed search cannot have resolved an address point, so this falls
       // back to the drawn count — the overlay draws from committed files and
@@ -488,6 +531,7 @@ export function deriveStatsView(
     // A counter whose surface says "we couldn't resolve who governs here"
     // may not state a number, and 0 is a number (the failed-operation rule).
     bodies: stats.coverageAnswered ? stats.bodies : "—",
+    bodiesSecondary: bodiesSecondary(stats),
     officials: stats.coverageAnswered ? stats.officials : "—",
     districts,
     districtsLabel,

@@ -717,25 +717,25 @@ export default async function BallotPage({
                 />
               </p>
               <ul className="mt-2.5 space-y-1.5 text-[0.875rem]">
+                {/*
+                  **AZ-3, AZ-4 and AZ-5 (item 5, 2026-08-23) — the deadline is
+                  a DATE here, and the action is the pill below.**
+
+                  The registration destination reached the reader three times
+                  inside about ten lines: an inline link on this line, the
+                  Secretary of State named beneath it, and a third box below
+                  the card repeating the same words. The author's ruling is
+                  one prominent pill, and a repeated identical control makes a
+                  reader wonder which one is the real one — the same reasoning
+                  F21 applied to the polling-place pointer, applied to its
+                  sibling.
+                */}
                 {regStep && (
                   <li>
                     Register to vote by{" "}
                     <span className="font-mono text-[0.8125rem] font-semibold">
                       {formatDateMDY(regStep.date)}
                     </span>
-                    {reg && (
-                      <>
-                        {" — "}
-                        <a
-                          href={reg.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                        >
-                          {reg.label} →
-                        </a>
-                      </>
-                    )}
                   </li>
                 )}
                 {earlyStep && (
@@ -812,15 +812,72 @@ export default async function BallotPage({
                   been warned about — and that warning belongs wherever the
                   pointer now is.
                 */}
-                {polls && (
-                  <li>
-                    <WhereToVote fallback={polls} />
-                    <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
-                      {polls.note}
-                    </p>
-                  </li>
-                )}
               </ul>
+
+              {/*
+                **AZ-3 (item 5, 2026-08-23, the author's ruling) — the DATES
+                are a list and the ACTIONS are pills.**
+
+                *The voting section is five separate items — next election, add
+                to calendar, check registration, where can I vote, search the
+                Secretary of State's tool — and should read as next election,
+                2026, early voting. Cut the rest of the noise.*
+
+                The noise was that two ACTIONS were sitting in a list of DATES,
+                so a reader scanning for when had to read past what-to-do, and
+                a reader looking for what-to-do had to find it among dates. The
+                list above is now dates only — election day, the registration
+                deadline, early voting — and the two things a reader does are
+                pills beneath it. Nothing was deleted: the polling-place
+                pointer is still exactly once per page (F21), with the note
+                about what the state's tool asks for still attached to it.
+              */}
+              {(polls || reg) && (
+                <div className="mt-3 flex flex-col gap-3">
+                  {polls && (
+                    <div>
+                      <WhereToVote fallback={polls} />
+                      <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
+                        {polls.note}
+                      </p>
+                    </div>
+                  )}
+              {/*
+                **ONE PILL, AT THE MOMENT OF NEED** (AZ-4 and AZ-5, the
+                author's ruling, 2026-08-23).
+
+                *The Secretary of State is the only authoritative source for
+                registration status and polling location; the app cannot
+                answer either, and a reader who trusts an in-app answer and
+                does not check loses their vote.* Keeping readers in the app
+                is right for everything except the two actions where the state
+                is the system of record — so this one leaves, deliberately,
+                and says so at the point of the tap.
+
+                It sits inside the next-election box rather than in a separate
+                card below it, which is where it was buried: the moment of
+                need is beside the deadline, not four sections down.
+              */}
+                  {reg && (
+                    <div>
+                      <a
+                        href={reg.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        data-leaves-app
+                        data-registration-pill
+                        className="voting-open-button"
+                      >
+                        {reg.label}
+                      </a>
+                      <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
+                        The {reg.sourceOrg} is the only place this can be
+                        checked — that opens in a new tab and leaves this app.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
               {/* The tester's exact confusion, answered in one line. The
                   propositions sentence renders only where propositions
                   actually share the ballot. */}
@@ -876,41 +933,23 @@ export default async function BallotPage({
         </p>
       )}
 
-      {/* 2c: the registration checker, prominent — the first thing a voter
-          needs to know is whether they can vote at all. */}
-      {dates && set && (() => {
-        const reg = registrationLinkFor(set.election.state);
-        return reg ? (
-          <div className="mt-6 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]">
-            {reg && (
-              <p className="text-[0.9375rem]">
-                <a
-                  href={reg.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-medium text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                >
-                  {reg.label} →
-                </a>{" "}
-                <span className="text-[0.75rem] text-muted">
-                  on the {reg.sourceOrg}&apos;s site
-                </span>
-              </p>
-            )}
-            {/* F21 (2026-08-20, the author's ruling): the polling-place
-                pointer USED TO RENDER HERE TOO, and no longer does. Item 6
-                (2026-08-15) required it in the dates header AND this box,
-                which was right while the two were links with different
-                surrounding context; item 15 made both the same in-app pill,
-                and a repeated identical control makes a reader wonder which
-                one is the real one. The ruling: once per page, in the dates
-                header. This box keeps the registration half, which is a
-                different question with a different answer. The note about
-                what the state's tool asks for moved UP with the pointer
-                rather than being lost with the duplicate. */}
-          </div>
-        ) : null;
-      })()}
+      {/*
+        **THE SEPARATE REGISTRATION CHECKER BOX IS GONE** (AZ-4 and AZ-5, the
+        author's ruling, item 5, 2026-08-23; it was `2c`, 2026-08-15).
+
+        It was the THIRD appearance of one destination inside about ten lines
+        — an inline link on the deadline line, the Secretary of State named
+        beneath it, and this box repeating the same words in a card of its
+        own. Its stated purpose, *prominent — the first thing a voter needs to
+        know is whether they can vote at all*, is exactly right and is now
+        served better: the single pill sits INSIDE the next-election box,
+        beside the deadline it belongs to, rather than four sections below it.
+
+        This is F21's reasoning applied to registration. F21 removed the
+        duplicate polling-place pointer from this same box and left the
+        registration half standing, because at the time it was the only copy
+        that had a card to itself. It was still a duplicate.
+      */}
 
       {/* 4a: the private election-day list — renders only once something
           is marked. Device-local; the component says so itself. */}
@@ -1312,9 +1351,26 @@ export default async function BallotPage({
                             <>
                               {/* 3a: display only, colored per the palette;
                                   no-affiliation stays gray. */}
-                              <span style={{ color: partyColorVar(cand.partyLabel) }}>
-                                {cand.partyLabel ?? "No party label filed"}
-                              </span>
+                              {/*
+                                **A MISSING PARTY LABEL RENDERS NOTHING**
+                                (2026-08-23, item 3). This read `?? "No party
+                                label filed"`, which is a specific, checkable
+                                claim about a named person's FILING — made from
+                                a null that far more often means nobody has
+                                collected the party yet. It is the render-
+                                default rule exactly: our gap becoming their
+                                fact. RULING 28 says a field with no data
+                                renders nothing, and every other party surface
+                                in this product already does — the officials
+                                popup, the entity modal, the coverage notice
+                                and the identity chip all guard on the value.
+                                This was the outlier.
+                              */}
+                              {cand.partyLabel !== null && (
+                                <span style={{ color: partyColorVar(cand.partyLabel) }}>
+                                  {cand.partyLabel}
+                                </span>
+                              )}
                               {cand.slogan && (
                                 <>
                                   {" "}
@@ -1350,7 +1406,7 @@ export default async function BallotPage({
                           battlecardSlot={
                             <BallotBattlecard
                               name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
-                              partyLine={cand.partyLabel ?? "No party label filed"}
+                              partyLine={cand.partyLabel}
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               federal={isFederalContest(contest)}

@@ -1532,6 +1532,83 @@ handoff no longer returns early.
 **The artifact: `docs/context.md`, 44,383 bytes, uncapped, carrying the
 `## DISCOVERY CONDUCT` block verbatim from this file.**
 
+## TWO RULINGS OF 2026-08-23 — THE REMOTE SESSION
+
+(Adopted 2026-08-23, the author's remote visual-tail brief, item 8.
+**RULINGS 109 and 110.** `docs/rulings.md` carries both in plain language,
+because a ruling the author cannot read is a ruling that does not bind him.)
+
+### RULING 109 — A BRIEF DECLARES THE ENVIRONMENT IT REQUIRES, AND THE SESSION VERIFIES IT BEFORE ITEM ONE
+
+(Adopted 2026-08-23, item 8.)
+
+**Every brief declares which of two kinds it is, and the session confirms it
+before item one.**
+
+- **LOCAL-REQUIRED** — the work needs credentials, live network, or
+  production.
+- **REMOTE-CAPABLE** — every item runs against committed data and a local
+  production build.
+- **A HUNT IS ALWAYS LOCAL-REQUIRED**, because a hunt is by definition
+  retrieval.
+
+**A session in the wrong environment says so IMMEDIATELY and does the subset it
+can**, rather than discovering the constraint partway down a ladder.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+remote session of 2026-08-23 opened by answering four questions — is
+`.env.local` present, is any host but `github.com` reachable, is Playwright's
+Chromium usable, does a local production build run — and had all four inside a
+minute. Without that opening the same facts arrive one at a time, each as a
+failure in the middle of some other item, and each costs the time it takes to
+decide whether it is a broken tree or a deliberate boundary. `NH92`'s wall was
+established the expensive way, across rungs 2, 3, 4 and 6, by a session with no
+way to know it was policy.
+
+**Where a required input is unreachable, that is RULING 104's defect to report
+— never a permitted outcome.** Declaring the environment is what makes the
+difference visible before the ladder is walked.
+
+### RULING 110 — A SEARCH THAT RETURNS NOTHING MUST SHOW IT LOOKED IN THE RIGHT FORM, NOT ONLY THE RIGHT PLACE
+
+(Adopted 2026-08-23, item 8. **It is RULING 100's lesson moved from extraction
+to search**: that ruling catches a reader that came back with SOME of a
+document and reported all of it; this catches a search that came back with none
+of a thing and reported it absent.)
+
+**Absence of a match is not absence of the thing. A sweep reports the SHAPES it
+searched, not only the terms.**
+
+- **A shape is the pattern the thing takes, not the letters it is spelled
+  with** — *a sentence announcing we will not describe something*, never *the
+  string "we're not going to describe it"*.
+- **The instrument is shown catching the real instance.** A sweep that cannot
+  find the defect it was written for is a sweep reporting green about nothing,
+  and the test that proves it carries the shipped copy verbatim.
+- **The report states N found, N removed, and the search forms used.**
+
+*The rationale stays attached.* On 2026-08-23 a session reported the
+*"we haven't read the law"* refusal gone from the repo. It had grepped one
+string. The copy was alive in `lib/ballot/battlecard-sections.ts` under
+different wording, **on the FIRST and MANDATORY section of every candidate
+card** — so while the product counted 214 bodies with no definition, every
+candidate on every ballot opened with the app declining to describe the office
+they were standing for. **That report was not dishonest**; it searched in the
+wrong form, and nothing in the process asked it to prove otherwise.
+
+**The half that is easy to get wrong would delete a rule rather than enforce
+one.** A refusal and a NAMED GAP use nearly the same words. *"We haven't
+recorded this chamber's vote on this yet"* is REQUIRED by the render-default
+rule. What is forbidden is announcing that we will therefore say nothing. Every
+shape is tested against the honest lines this product ships (`KNOWN_GOOD` in
+`lib/text/refusal-shapes.ts`), because an instrument that flagged them would
+become pressure to delete the attribution rule instead of the refusal.
+
+The machinery is `lib/text/refusal-shapes.ts`, `pnpm sweep:refusal` and
+`tests/refusal-copy.test.ts`; its sibling for render defaults is
+`lib/text/absence-defaults.ts`, `pnpm sweep:absence-defaults` and
+`tests/absence-defaults.test.ts`.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

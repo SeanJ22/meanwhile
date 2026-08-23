@@ -38,6 +38,25 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    /*
+     * **Registered 2026-08-23 (item 2), and it was generated all along.**
+     *
+     * `pnpm schools:classify` writes the INDEPENDENT / DEPENDENT stamp every
+     * school-district card's class definition is chosen from. It was not in
+     * this register, so RULING 102's digest never watched it — and item 2
+     * rewrote its generator wholesale, replacing an intersection lookup that
+     * had been returning `UNCLASSIFIED` for 219 of 514 districts. That is
+     * exactly the event the digest exists to catch: a generator moves and its
+     * committed output silently does not.
+     *
+     * Pure: both Census files and the crosswalk are committed, so it reads no
+     * network and no clock beyond `pnpm stamp`'s date.
+     */
+    path: "data/derived/school-district-dependency.json",
+    command: "corepack pnpm schools:classify",
+    pure: true,
+  },
+  {
     path: "lib/registry/rosters-nj-morris.ts",
     command: "corepack pnpm nj:wire",
     pure: true,

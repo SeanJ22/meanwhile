@@ -2386,3 +2386,35 @@ This is the second time in two sessions. The first was a folder of screenshots a
 The repository copy is now the one that gets written, it is written first, and nothing is allowed to stop it. The Drive copy is written afterwards, as a convenience for the author, and if it fails that is a note about the Drive rather than a reason to produce nothing. **The file is 44 KB, in the repository, with the conduct rules in it word for word.**
 
 *Why the order is the rule and not a detail.* If the Drive write came first and threw, the repository copy would never happen — which is the failure this ruling exists to end, rebuilt inside the fix for it.
+
+---
+
+### RULING 109 — a brief says what it needs to run, and the session checks before item one
+
+*Adopted 2026-08-23 (the remote visual-tail session, item 8). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing.*
+
+**Every brief says up front which of two kinds it is, and the session confirms that before it starts item one.**
+
+**Local-required** means the work needs credentials, a live network, or the production site. **Remote-capable** means every item can be done from what is committed in the repository. **A hunt is always local-required**, because a hunt is by definition a thing that goes and fetches.
+
+**A session that finds itself in the wrong environment says so immediately and does the part it can**, rather than discovering the constraint partway down a ladder, three items in, having already spent an hour of its window finding out.
+
+*Why this is worth a rule.* Today's session opened by checking four things — is there a credentials file, is anything other than GitHub reachable, is the browser usable, does a production build run — and had the answer in about a minute. Without that check the same facts arrive one at a time, each as a failure in the middle of some other piece of work, and each one costs the time it takes to work out whether it is a broken machine or a deliberate boundary. The 2026-08-23 wall against every host but GitHub was established the hard way, across four separate retrieval attempts, by a session that had no way of knowing it was policy rather than breakage.
+
+**The check itself is cheap and the answer is reported in one line each.** What it prevents is a session spending its scarce attention proving something the brief could have told it in a sentence.
+
+---
+
+### RULING 110 — a search that finds nothing must show it looked in the right FORM
+
+*Adopted 2026-08-23 (the remote visual-tail session, item 8). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing. It is RULING 100's lesson moved from extraction to searching: that ruling caught a reader that came back with SOME of a document and called it all of it; this catches a search that came back with none of a thing and called it absent.*
+
+**Not finding a match is not the same as the thing not being there. A report that says "it is gone" has to say what SHAPES it searched for, not only what words.**
+
+On 2026-08-23 a session reported a particular piece of copy — the app telling a reader it would not describe an office — gone from the whole repository. It had searched for one exact sentence. The copy was alive, in different words, on the **first and mandatory section of every candidate card**: so while the product was counting 214 bodies it could not describe, every candidate on every ballot was opening with the app declining to describe the office they were standing for.
+
+**That first report was not dishonest.** It searched in the wrong form, and nothing in the process asked it to prove otherwise.
+
+So: **report the shapes, not just the terms.** A shape is the pattern the thing takes rather than the letters it happens to be spelled with — *a sentence that announces we will not describe something*, rather than *the words "we're not going to describe it"*. And the instrument has to be shown catching the real thing: a sweep that cannot find the defect it was written for is a sweep reporting green about nothing.
+
+*The half that is easy to get wrong, and it would delete a rule rather than enforce one.* A refusal and an honest named gap use nearly the same words. *"We haven't recorded this chamber's vote on this yet"* is **required** — it names our gap and attributes it to us. What is forbidden is announcing that we will therefore say nothing. Any instrument built for this has to pass every honest line this product ships, or it becomes pressure to delete the attribution rule instead of the refusal.

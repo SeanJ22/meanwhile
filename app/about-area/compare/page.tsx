@@ -65,6 +65,77 @@ function Cell({ cell }: { cell: ComparisonCell }) {
   );
 }
 
+/**
+ * One pill per selected state, each removing itself; the rest offered to add.
+ *
+ * `?a=` and `?b=` are the whole state of this page, so every pill is a plain
+ * `Link` and there is nothing to keep in sync — a client component holding a
+ * mirrored copy of the selection is how two surfaces come to disagree about
+ * what is selected.
+ */
+function StatePills({
+  a,
+  b,
+  zip,
+}: {
+  a: string | undefined;
+  b: string | undefined;
+  zip: string | undefined;
+}) {
+  const chosen = [a, b].filter((x): x is string => Boolean(x)).map((x) => x.toUpperCase());
+  const keep = (usps: string) => {
+    const rest = chosen.filter((c) => c !== usps);
+    const params = new URLSearchParams();
+    if (rest[0]) params.set("a", rest[0]);
+    if (rest[1]) params.set("b", rest[1]);
+    if (zip) params.set("zip", zip);
+    const q = params.toString();
+    return q ? `/about-area/compare?${q}` : "/about-area/compare";
+  };
+  const add = (usps: string) => {
+    const next = [...chosen, usps];
+    const params = new URLSearchParams();
+    if (next[0]) params.set("a", next[0]);
+    if (next[1]) params.set("b", next[1]);
+    if (zip) params.set("zip", zip);
+    return `/about-area/compare?${params.toString()}`;
+  };
+  const unchosen = COVERED.filter((s) => !chosen.includes(s.usps));
+
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      {chosen.map((usps) => {
+        const state = COVERED.find((s) => s.usps === usps);
+        return (
+          <Link
+            key={usps}
+            href={keep(usps)}
+            data-state-pill
+            data-selected="true"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--link)] bg-[color-mix(in_srgb,var(--link)_10%,transparent)] px-3 py-1 text-[0.75rem] text-paper hover:bg-[color-mix(in_srgb,var(--link)_18%,transparent)]"
+          >
+            {state?.name ?? usps}
+            <span aria-hidden="true">×</span>
+            <span className="sr-only">Remove from the comparison</span>
+          </Link>
+        );
+      })}
+      {chosen.length < 2 &&
+        unchosen.map((state) => (
+          <Link
+            key={state.usps}
+            href={add(state.usps)}
+            data-state-pill
+            className="inline-flex items-center gap-1.5 rounded-full border border-[var(--panel-border)] px-3 py-1 text-[0.75rem] text-muted hover:text-paper"
+          >
+            <span aria-hidden="true">+</span>
+            {state.name}
+          </Link>
+        ))}
+    </div>
+  );
+}
+
 export default async function CompareStatesPage({
   searchParams,
 }: {
@@ -75,18 +146,27 @@ export default async function CompareStatesPage({
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-8 text-paper">
+      {/*
+        **AZ-2 (item 5, 2026-08-23, the author's ruling) — Back goes to the
+        MAP.**
+
+        It went to `/about-area?state=AZ` — one state, alone, which is neither
+        where the reader came from nor where they were trying to get to. The
+        author: *Back returns to Arizona alone when the expected destination is
+        the map.* The map is the product's home surface and the only
+        destination that is right from every path into this page.
+
+        Changing which comparison is on screen is the PILLS' job now, not
+        Back's — see the row below. Two controls that both change what is being
+        compared, one of them by navigating away, is the friction that made the
+        destination feel wrong in the first place.
+      */}
       <p className="text-[0.8125rem]">
         <Link
-          href={
-            zip
-              ? `/about-area?zip=${zip}`
-              : a
-                ? `/about-area?state=${a.toUpperCase()}`
-                : "/about-area"
-          }
+          href={zip ? `/?zip=${zip}` : "/"}
           className="text-muted underline decoration-dotted underline-offset-2 hover:text-signal"
         >
-          ← Back
+          ← Back to the map
         </Link>
       </p>
       <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
@@ -97,6 +177,24 @@ export default async function CompareStatesPage({
           ? `${comparison.left.name} and ${comparison.right.name}, side by side`
           : "Two states, side by side"}
       </h1>
+
+      {/*
+        **AZ-2 — the selected states are PILLS in the title bar, and
+        deselecting one drops it from the comparison.**
+
+        The author's instruction, and the reason it beats a reset link: a
+        comparison holding one pair at a time is right, but the reader had no
+        way to say *keep Arizona, swap the other one* except by going back and
+        starting over. A pill that removes its own state leaves the other one
+        selected and the picker open beneath it, which is the gesture the
+        product already teaches everywhere else.
+
+        Playful register — this is an interaction surface, not a claim
+        surface. Nothing here orders the states by anything but the manifest's
+        own onboarding order (`COVERED`), because an ordering derived from the
+        content would be a ranking wearing an ordering.
+      */}
+      <StatePills a={a} b={b} zip={zip} />
       <p className="mt-3 max-w-2xl text-[0.8125rem] leading-relaxed text-paper-dim">
         {COMPARISON_INTRO}
       </p>

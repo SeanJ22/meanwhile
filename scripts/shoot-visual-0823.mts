@@ -237,19 +237,176 @@ const MEASURE = `(selector) => {
   await context.close();
 }
 
-/* ------------------------------------------- LBL-2: the role string --- */
+/* ---------------------------- LBL-2: the Morris County card, measured --- */
+
+/**
+ * **`VF03` was closed as "0 found, could not reproduce, did not guess". It is
+ * reopened here** (RULING 97: when the author finds something the sessions did
+ * not, the defect is in the discovery procedure).
+ *
+ * The previous session read the STYLESHEET, found no `nowrap` and no ellipsis
+ * on either role selector, and stopped. That was the wrong instrument: it
+ * asked whether a rule existed to clip the text, when the question is whether
+ * the text is clipped — which only a rendered box can answer. Refusing to
+ * guess at a fix was right; stopping without measuring was not.
+ *
+ * So this opens the card the author's capture is OF, at the widths his capture
+ * was taken at, and measures every role string against its own box.
+ */
 for (const viewport of [PHONE, DESKTOP]) {
   const { context, page } = await open(viewport);
+
+  // Who Governs Here → the Morris County row → the Representation tab.
+  const opened = await page.evaluate(
+    `(() => {
+      const rows = Array.from(document.querySelectorAll("button"));
+      const morris = rows.find((b) => (b.textContent || "").trim() === "Morris");
+      if (!morris) return false;
+      morris.click();
+      return true;
+    })()`,
+  );
+  if (!opened) {
+    console.log(`\n=== LBL-2 at ${viewport.width}x${viewport.height}: NO Morris row — nothing measured ===`);
+    await context.close();
+    continue;
+  }
+  await page.waitForSelector(".account-modal", { timeout: 15000 });
+  await page.waitForTimeout(1200);
+  /*
+   * The Morris row in Who Governs Here opens the BODY battlecard, whose seven
+   * sections start collapsed — not the tabbed division card the author's
+   * capture is of. Both carry role strings and both are measured: every
+   * section is opened, and the Representation tab is clicked if a tab strip
+   * exists at all.
+   */
+  await page.evaluate(
+    `(() => {
+      // ONE AT A TIME: the sections are a GROUP, so opening one closes the
+      // last. Clicking them all in a loop leaves only Sources open, which is
+      // what the first run of this measured and reported as "roles".
+      const wanted = Array.from(document.querySelectorAll(".card-section-header"))
+        .find((b) => /who sits on it/i.test(b.textContent || ""));
+      if (wanted && wanted.getAttribute("aria-expanded") !== "true") wanted.click();
+      const tab = Array.from(document.querySelectorAll(".account-modal-tab"))
+        .find((t) => (t.textContent || "").trim().startsWith("Representation"));
+      if (tab) tab.click();
+    })()`,
+  );
+  await page.waitForTimeout(1500);
+
   const measured = await page.evaluate(
-    MEASURE,
-    ".person-row-office, .id-person-office, .account-modal-person-office, .person-office",
+    `(() => {
+      const body = document.querySelector(".account-modal-body") || document.querySelector(".account-modal");
+      const tabs = document.querySelector(".account-modal-tabs");
+      const tabsBottom = tabs ? tabs.getBoundingClientRect().bottom : null;
+      const bodyBox = body ? body.getBoundingClientRect() : null;
+
+      /*
+       * Every element carrying a ROLE on this card, by the class or shape it
+       * actually renders with — not by a guess at a selector name. The
+       * previous attempt measured three selectors that do not exist on this
+       * surface and reported "undefined", which is an instrument returning
+       * nothing about itself.
+       */
+      const roleNodes = [];
+      // "Who runs it" — <p><button>Name</button><span> — Presides</span></p>
+      for (const p of document.querySelectorAll(".account-modal-body p")) {
+        const muted = p.querySelector("span.text-muted");
+        if (muted && /^\\s*—/.test(muted.textContent || "")) roleNodes.push(["who-runs-it", muted, p]);
+      }
+      // The roster rows — the uppercase office title on the right.
+      for (const el of document.querySelectorAll(".account-modal-person span, .card-section-body span, .person-row-office")) {
+        const cs = getComputedStyle(el);
+        if (cs.textTransform === "uppercase" && (el.textContent || "").trim().length > 2) {
+          roleNodes.push(["roster-office", el, el.parentElement]);
+        }
+      }
+
+      const whatItDoes = (() => {
+        for (const sec of document.querySelectorAll(".card-section")) {
+          const t = sec.querySelector(".card-section-title");
+          if (t && /what this body does/i.test(t.textContent || "")) {
+            const b = sec.querySelector(".card-section-body");
+            return b ? (b.textContent || "").replace(/s+/g, " ").trim().slice(0, 400) : null;
+          }
+        }
+        return null;
+      })();
+
+      return {
+        whatItDoes,
+        tabsBottom,
+        bodyTop: bodyBox ? Math.round(bodyBox.top) : null,
+        bodyScrollTop: body ? body.scrollTop : null,
+        roles: roleNodes.map(([kind, el, row]) => {
+          const box = el.getBoundingClientRect();
+          const cs = getComputedStyle(el);
+          return {
+            kind,
+            text: (el.textContent || "").trim(),
+            width: Math.round(box.width),
+            scrollWidth: el.scrollWidth,
+            /* HORIZONTAL clip: the string is wider than the box holding it. */
+            clippedHorizontally: el.scrollWidth > Math.ceil(box.width) + 1,
+            /* VERTICAL clip: the line sits above the scroll container's top,
+               which is what the author's capture actually shows. */
+            clippedByChrome: tabsBottom !== null && box.top < tabsBottom - 1,
+            whiteSpace: cs.whiteSpace,
+            overflow: cs.overflow,
+            textOverflow: cs.textOverflow,
+            rowOverflow: row ? getComputedStyle(row).overflow : null,
+            rowWidth: row ? Math.round(row.getBoundingClientRect().width) : null,
+            rowScrollWidth: row ? row.scrollWidth : null,
+          };
+        }),
+      };
+    })()`,
   );
-  console.log(
-    `\n=== LBL-2 · role strings measured at ${viewport.width}x${viewport.height} ===`,
-  );
+  console.log(`\n=== LBL-2 · Morris County card at ${viewport.width}x${viewport.height} ===`);
   console.log(JSON.stringify(measured, null, 2));
+  await page.screenshot({
+    path: join(OUT, `morris-representation-${viewport.width}.png`),
+  });
   await context.close();
 }
 
+
+/* ------------------------------- NH-1: one line per person at 03255 --- */
+
+/**
+ * The Who Governs Here roster rows took TWO lines each because the source
+ * mark sat under the name. Captured at the zip the author was looking at,
+ * and MEASURED: a row that is one line has a height close to its own line
+ * box, and a two-line row is roughly double it.
+ */
+{
+  const { context, page } = await open(PHONE, "03255");
+  const rows = await page.evaluate(
+    `(() => {
+      const out = [];
+      for (const row of Array.from(document.querySelectorAll(".person-row")).slice(0, 8)) {
+        const box = row.getBoundingClientRect();
+        const name = row.querySelector(".person-row-name");
+        const nameBox = name ? name.getBoundingClientRect() : null;
+        out.push({
+          text: (row.textContent || "").replace(/\\s+/g, " ").trim(),
+          height: Math.round(box.height),
+          nameHeight: nameBox ? Math.round(nameBox.height) : null,
+          /* Roughly how many name-line-boxes tall the row is. One is the fix. */
+          lines: nameBox
+            ? Math.round((box.height / Math.max(nameBox.height, 1)) * 10) / 10
+            : null,
+          direction: getComputedStyle(row).flexDirection,
+        });
+      }
+      return out;
+    })()`,
+  );
+  console.log("\n=== NH-1 · Who Governs Here rows at 03255, 430x932 ===");
+  console.log(JSON.stringify(rows, null, 2));
+  await page.screenshot({ path: join(OUT, "wgh-03255-phone.png") });
+  await context.close();
+}
 await browser.close();
 console.log(`\nwritten to ${OUT}`);

@@ -356,7 +356,7 @@ function LinkLadder({
             // read as a citation sitting in a list of sourced links.
             <span
               title="Built from coordinates we hold — not a source"
-              className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
+              className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted"
             >
               derived
             </span>

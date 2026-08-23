@@ -2412,10 +2412,32 @@ label:has(> input[type="checkbox"]) {
  * them. This is the class fix — `.person-row` is the shared row on the
  * who-governs card AND the map's district popup, so both surfaces change
  * together, which is the point. */
+/*
+ * NH-1 (2026-08-23, the author's 8/22 walkthrough; tracker `NH77`).
+ *
+ * This was `flex-direction: column`, so the party and the source mark sat on
+ * their own line UNDER the name and every person in Who Governs Here took two
+ * rows. At 03255 that is Kristen Schultz, Scott Wheeler and Sandra Warde each
+ * occupying twice the height they need, and the panel holds far more people
+ * than three.
+ *
+ * A row, wrapping. The name, its party and its source read as one line, and a
+ * name long enough to need a second line still gets one rather than
+ * truncating — a truncated name is a different person's name.
+ *
+ * `.person-row` is the SHARED row on the who-governs card and the map's
+ * district popup, so both surfaces change together. That was already the
+ * stated point of this class and it is why the fix lands here rather than on
+ * the one panel the author was looking at.
+ */
 .person-row {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  column-gap: 8px;
+  row-gap: 2px;
   padding: 5px 0;
 }
 
@@ -5528,4 +5550,40 @@ main[data-sidebar="closed"] .map-top-row {
 .al-group-jurisdiction {
   padding: 8px 22px 4px;
   margin: 0;
+}
+
+/* ---------------------------------------------------------------------- *
+ * LBL-2 — LETTER-SPACED UPPERCASE LOSES ITS LAST LETTER AT AN EDGE
+ * (`VF03`, reopened 2026-08-23 under RULING 97.)
+ *
+ * `letter-spacing` adds its space AFTER the final glyph, not between glyphs
+ * only. A run set at `0.15em` is therefore about one seventh of a character
+ * wider than the characters in it, and every one of that width lands past the
+ * last letter. Wherever such a run meets a right edge that clips — a flex item
+ * at its container's boundary, an `overflow: hidden` ancestor, a rounded pill
+ * — the clip takes the trailing space first and then bites into the glyph. The
+ * result reads exactly as the author described it: the role loses its final
+ * letter.
+ *
+ * The compensation is the standard one and it is not a nudge: the trailing
+ * space is REMOVED from the layout box with a negative margin equal to the
+ * tracking, so the box is the width of the glyphs it contains. Nothing moves
+ * visually except that the last letter now has room.
+ *
+ * Applied at the shared classes rather than at the one row the author saw,
+ * because the cause is the tracking and every letter-spaced uppercase run in
+ * this product has it. `tests/label-tracking.test.ts` sweeps for new ones.
+ * ---------------------------------------------------------------------- */
+
+.t-eyebrow,
+.text-label,
+.notice-eyebrow,
+.card-section-meta,
+.jurisdiction-badge {
+  margin-inline-end: -0.15em;
+}
+
+/* The utility form, for a letter-spaced run written inline with Tailwind. */
+.trailing-space-trimmed {
+  margin-inline-end: -0.15em;
 }

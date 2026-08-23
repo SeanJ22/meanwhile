@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 192,
-    "named": 1774,
+    "files": 193,
+    "named": 1777,
     "dynamic": 6
   },
   "files": {
@@ -1350,6 +1350,14 @@
         "the chamber rule: a House card never shows a Senate-only entry as a vote",
         "the criteria sentence is verbatim and renders ON the surface",
         "the list is the author's: 20 law rows (April 2024 as four siblings) and 16 nominations"
+      ],
+      "dynamic": 0
+    },
+    "tests/label-tracking.test.ts": {
+      "names": [
+        "LBL-2: a letter-spaced run pinned with shrink-0 trims its trailing space",
+        "LBL-2: the shared letter-spaced label classes trim their trailing space",
+        "LBL-2: the sweep reaches the tree it claims to"
       ],
       "dynamic": 0
     },

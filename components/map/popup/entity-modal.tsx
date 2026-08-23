@@ -359,7 +359,7 @@ function PlaceSections({
                   {body.name}
                 </span>
                 <span
-                  className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
+                  className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
                   style={{ color: `var(--accent-${body.tier})` }}
                 >
                   {TIER_LABEL[body.tier]}
@@ -904,7 +904,11 @@ function Representation({
                 holder.name
               )}
             </span>
-            <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            {/* LBL-2 (2026-08-23): the tracking adds its space AFTER the last
+                letter, and this span sits hard against the row edge with
+                shrink-0 — so a right-edge clip takes the space and then the
+                glyph. trailing-space-trimmed removes the space from the box. */}
+            <span className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
               {holder.officeTitle}
             </span>
           </div>

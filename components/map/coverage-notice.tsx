@@ -633,7 +633,7 @@ function CoverageBody({
               */}
               {body.couldGovern && <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />}
               <span
-                className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
+                className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
                 {/* A derived row is the division's government and tags by
                     division type. A curated row tags by what it is — the PHA

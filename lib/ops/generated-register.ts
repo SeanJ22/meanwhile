@@ -39,6 +39,28 @@ export const GENERATED: GeneratedArtifact[] = [
   },
   {
     /*
+     * The question set as a document (2026-08-23, the questionnaire brief).
+     * A HAND-WRITTEN copy of the questions is a second copy that can disagree
+     * with the one candidates are actually asked, which is the drift the
+     * constitution names when it says a stale copy is worse than a short one.
+     * Pure: it reads `lib/questionnaire/instrument.ts` and nothing else.
+     */
+    path: "docs/candidate-questionnaire.md",
+    command: "corepack pnpm questionnaire:doc --write",
+    pure: true,
+  },
+  {
+    /*
+     * The symmetric invitation list (2026-08-23, the questionnaire brief).
+     * Pure: it reads the committed ballot and contacts files. It sends nothing,
+     * and every row it writes carries `invitedOn: null`.
+     */
+    path: "data/questionnaire/invitations-nj-morris-2026.json",
+    command: "corepack pnpm questionnaire:invitations --write",
+    pure: true,
+  },
+  {
+    /*
      * **Registered 2026-08-23 (item 2), and it was generated all along.**
      *
      * `pnpm schools:classify` writes the INDEPENDENT / DEPENDENT stamp every
@@ -54,6 +76,16 @@ export const GENERATED: GeneratedArtifact[] = [
      */
     path: "data/derived/school-district-dependency.json",
     command: "corepack pnpm schools:classify",
+    pure: true,
+  },
+  {
+    /*
+     * The form stamp (2026-08-23, the questionnaire brief item 3). Pure: it
+     * reads the committed registry, TIGER's legal type codes and the committed
+     * Census school-dependency stamp. No network, no clock, no statute read.
+     */
+    path: "data/derived/body-forms.json",
+    command: "corepack pnpm forms:stamp --write",
     pure: true,
   },
   {

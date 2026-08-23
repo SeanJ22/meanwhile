@@ -54,31 +54,15 @@ import { join } from "node:path";
 
 import { lookupZcta } from "./zcta.ts";
 import { parseCsv } from "../reference/index.ts";
+// NH79: one even-odd implementation for the whole repo. Four copies of this
+// arithmetic existed, and a ray-casting bug returns a WRONG answer rather than
+// throwing — a confident claim about which government covers a reader's street.
+import { containsPoint, type RingGeometry } from "./polygon.ts";
 
-type Ring = number[][];
-type Geom = { type: string; coordinates: unknown };
+type Geom = RingGeometry;
 
-function ringsOf(geom: Geom): Ring[] {
-  const out: Ring[] = [];
-  if (geom.type === "Polygon") out.push(...(geom.coordinates as Ring[]));
-  else if (geom.type === "MultiPolygon")
-    for (const poly of geom.coordinates as Ring[][]) out.push(...poly);
-  return out;
-}
-
-function contains(point: [number, number], geom: Geom): boolean {
-  let inside = false;
-  for (const ring of ringsOf(geom)) {
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-      const [xi, yi] = ring[i]!;
-      const [xj, yj] = ring[j]!;
-      if (yi > point[1] !== yj > point[1] && point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi) {
-        inside = !inside;
-      }
-    }
-  }
-  return inside;
-}
+const contains = (point: [number, number], geom: Geom): boolean =>
+  containsPoint(point, geom);
 
 function readJson<T>(rel: string): T {
   return JSON.parse(readFileSync(join(process.cwd(), rel), "utf8")) as T;

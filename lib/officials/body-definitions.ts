@@ -1,5 +1,5 @@
-import type { BodyBlurb, BodyDivisionType } from "./body-blurbs";
-import { blurbForBody } from "./body-blurbs";
+import type { BodyBlurb, BodyDivisionType } from "./body-blurbs.ts";
+import { blurbForBody } from "./body-blurbs.ts";
 
 /**
  * **WHAT THIS BODY DOES — TWO LAYERS, AND NO CARD SHIPS EMPTY.**
@@ -367,11 +367,35 @@ export function classKeyFor(input: {
       if (input.schoolDependency === "INDEPENDENT") return "school_district_independent";
       return "school_district_unclassified";
     case "place":
-      // Census LSAD 43 is "Township". Everything else in the place/cousub space
-      // — borough, town, city, village — is a municipality for the purpose of
-      // describing what it is, and the CHARTER is what distinguishes them,
-      // which is layer two's job rather than this one's.
-      return input.lsad === "43" ? "township" : "municipality";
+      /*
+       * **LSAD 44 IS "township". LSAD 43 IS "town", AND THEY ARE NOT THE SAME
+       * THING.** (Corrected 2026-08-23, the questionnaire-and-corpora brief
+       * item 3, found while stamping forms.)
+       *
+       * This read `input.lsad === "43" ? "township" : "municipality"` on the
+       * belief that 43 was Township. It is not: in TIGER, 43 is the `town`
+       * suffix and 44 is the `township` suffix, and the registry's own labels
+       * say so outright — *"Frankford township"* carries 44, *"Madbury town"*
+       * carries 43, and New Jersey's Newton, Boonton, Morristown, Kearny and
+       * seven more carry 43 because **they are Towns**, one of New Jersey's
+       * five municipal types.
+       *
+       * So the swap put the New Jersey township definition — *"in New Jersey a
+       * township is a TYPE of municipality"* — on the cards of **11 named
+       * governments that are not townships**, and gave the 114 that ARE
+       * townships the generic municipality line instead. A wrong claim about a
+       * named government is the one failure this product cannot survive, and it
+       * was live on every one of those cards.
+       *
+       * A `town` gets no class key of its own: in all three pilot states a Town
+       * is a municipality by another name — New Jersey's is a municipal type,
+       * Arizona incorporates as City or Town, and New Hampshire's town is
+       * covered by the New Hampshire municipality row written about exactly
+       * those towns. What distinguishes them is the CHARTER, which is layer
+       * two's job. `township` stays a key because New Jersey's law genuinely
+       * says something different about it.
+       */
+      return input.lsad === "44" ? "township" : "municipality";
     default:
       return null;
   }
@@ -484,4 +508,133 @@ export function definitionsForBody(input: {
     // an apology with no description above it is the refusal again.
     unreadNote: classDefinition !== null && formDefinition === null ? CHARTER_UNREAD_LINE : null,
   };
+}
+
+/* ========================================================================== *
+ * DI04 — A SEAT IS NOT A BODY, AND IT NEEDS ITS OWN PATH.
+ * (2026-08-23, the questionnaire-and-corpora brief item 4.)
+ *
+ * ## Why closing the class layer to 1,253 of 1,253 did not describe a governor
+ *
+ * `definitionsForBody` takes a `BodyDivisionType` and is reached only from the
+ * BODIES list — and `lib/registry/coverage.ts` keeps SEATS in a separate array
+ * on purpose, because *a legislative district is not a body that meets; it
+ * elects a seat in a chamber sitting elsewhere.* That separation is correct and
+ * it is why three class keys — `governor`, `state_house`, `state_senate` — have
+ * been declared since the layer was built and have never had a row: **nothing
+ * could ever have asked for one.** The coverage number was honest and complete
+ * about bodies while a reader looking at their state senator saw nothing.
+ *
+ * So seats get their own entry point. It resolves the same `ClassKey` space, so
+ * a definition written once serves both paths and neither can drift from the
+ * other.
+ *
+ * ## What this closes today, and what it does not
+ *
+ * `cd` and a U.S. Senate seat resolve to rows that already exist and are
+ * already citation-verified, so those two are closed by the path alone.
+ * `governor`, `state_house` and `state_senate` still have NO ROW — they need a
+ * state constitution read per state, which needs network, and this session's
+ * environment is REMOTE-CAPABLE with no live network but `github.com`
+ * (RULING 109). **An unverified citation is worse than a missing one**, which
+ * is DI04's own finding, so nothing is written for them here. They are named,
+ * dated and still owed.
+ * ========================================================================== */
+
+/** The division types that elect a seat rather than constituting a body. */
+export type SeatDivisionType = "cd" | "sldu" | "sldl";
+
+/**
+ * A statewide elected executive is not a district at all — there is no
+ * geography narrower than the state — so it is named rather than typed off a
+ * division.
+ */
+export type SeatKind = SeatDivisionType | "us_senate" | "governor";
+
+/**
+ * Which class describes this seat.
+ *
+ * Total over `SeatKind`, so a new seat kind cannot be added without deciding
+ * what it is — the same reason `classKeyFor` returns `null` rather than a
+ * default.
+ */
+export function classKeyForSeat(kind: SeatKind): ClassKey {
+  switch (kind) {
+    case "cd":
+      return "congressional_district";
+    case "us_senate":
+      return "us_senate_seat";
+    case "sldu":
+      return "state_senate";
+    case "sldl":
+      return "state_house";
+    case "governor":
+      return "governor";
+  }
+}
+
+/**
+ * The whole answer for one seat.
+ *
+ * Mirrors `definitionsForBody` deliberately, including returning a complete
+ * shape with nulls rather than throwing: a seat whose class has no row yet is a
+ * gap that renders as our gap, never a crash and never a substituted claim.
+ */
+export function definitionsForSeat(input: {
+  kind: SeatKind;
+  /** The seat's own division, or the state for a statewide office. */
+  ocdId: string | null;
+}): BodyDefinitions {
+  const classKey = classKeyForSeat(input.kind);
+  const state = input.ocdId?.match(/\/state:([a-z]{2})\b/)?.[1] ?? null;
+
+  const classDefinition =
+    CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === null)?.definition ??
+    (state
+      ? (CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === state)
+          ?.definition ?? null)
+      : null);
+
+  /*
+   * A seat has no charter to read. The unread note exists for a BODY whose own
+   * governing document we have not seen, and printing it here would name a
+   * document that does not exist for this kind of thing.
+   */
+  return {
+    classDefinition,
+    formDefinition: null,
+    classKey,
+    unreadNote: null,
+  };
+}
+
+/**
+ * The class keys that are DECLARED and have no definition row anywhere.
+ *
+ * Exported so the measurement is read off the library rather than maintained by
+ * hand in a report — a hand-kept list of what is missing is a list that stops
+ * being true the first time somebody fixes one.
+ */
+export function classKeysWithNoRow(): ClassKey[] {
+  const declared: ClassKey[] = [
+    "school_district_independent",
+    "school_district_dependent",
+    "school_district_unclassified",
+    "county",
+    "municipality",
+    "township",
+    "state_house",
+    "state_senate",
+    "congressional_district",
+    "us_senate_seat",
+    "governor",
+  ];
+  const special: ReadonlySet<ClassKey> = new Set<ClassKey>([
+    // These two do not live in CLASS_DEFINITIONS — they are single constants.
+    "school_district_dependent",
+    "school_district_unclassified",
+  ]);
+  return declared.filter(
+    (key) => !special.has(key) && !CLASS_DEFINITIONS.some((r) => r.classKey === key),
+  );
 }

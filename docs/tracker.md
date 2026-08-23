@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **237 open**, 358 resolved.
+- **240 open**, 360 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**52 open · 22 resolved.**
+**52 open · 23 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -59,6 +59,8 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **B01** — The product is called Meanwhile on screen while the real name is decided. Nothing a reader sees changes until Sean settles it; when he does, one file changes and the whole site follows.
 
+**NH105** — Opened 2026-08-23. The instrument is built and the invitation list is generated - 272 of 272 Morris County candidacies, every row carrying invitedOn: null because nothing has been sent. The message is docs/candidate-questionnaire-invitation.md, quoted in full, plus a reminder message. FOUR THINGS ARE YOURS AND NONE OF THEM IS A SESSION'S CALL: (1) the message itself - it goes out under this product's name to 272 named people asking for votes; (2) a monitored reply address a person actually reads, which the message promises three times and which does not exist yet; (3) the schedule - one send date, two reminder dates and a deadline, which are constants at the top of scripts/questionnaire-invitations.mts and are quoted in full in that file and in data/questionnaire/invitations-nj-morris-2026.json; one edit moves all 272 symmetrically; (4) whether sparkwtp.netlify.app comes off its password wall first, because a candidate following the link today hits a password prompt. RULING 112 governs everything about the instrument itself; this row is only the decision to contact real people.
+
 **NH26** — RULING 55 says every photo is reviewed by you and only an approved photo renders. Gating on an empty store would have blanked every portrait in the product the moment the rule shipped, so the 48 photos already shipping were recorded APPROVED with decidedBy grandfathered - which means SHIPPING BEFORE THE RULE EXISTED, NOT APPROVED BY YOU. They are labelled that way in data/photos/review.json and carry a decision date, so pnpm stale surfaces them on RULING 53 clock. What is owed is your eye on them. The 5 refusals are already recorded REJECTED with their reasons - the flag stock photo alt-texted Victor Orlando, the scanned 1978 Grand Jury manual served as a campaign og:image, the Karishma Manzur banner-with-wordmark, the photographer-credited Monkman file, and the Ayotte WinRed graphic from 2026-08-14. One row per session listing N photos, never one row per photo: 47 candidates plus 90 officials would otherwise flood this queue.
 
 **NH30** — RULING 55 says only a photo you have approved renders. Three were hunted on 2026-08-21 and are PENDING: Meg Hagaman (Merrimack County Attorney, door 3), Jon Raiche (Merrimack County Attorney, door 3) and Vincent S. Ribas (Merrimack County Commissioner D2, door 2). Each one was read as an image before it shipped and each is a clean solo portrait; the cards render initials until you say yes. Nothing else about any of the three is affected.
@@ -72,8 +74,6 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH78** — OFF-1 photo review — the seven Morris County commissioner portraits. All seven are sourced, all seven were READ AS IMAGES, and none has been shipped. Your decision keys to the ASSET, not to the person. Every one is on morriscountynj.gov, a .gov host, and ships under DOOR 2: the portrait a government body publishes to identify its own member, with attribution to Morris County and remove-on-request. Tayfun Selen's already shipped this way on 2026-08-15, so the six join him under the same door rather than arriving under a different rule. The record with every URL, alt text, byte count and per-row judgment is docs/evidence/off1-morris-commissioner-portraits-0823.json. What is owed from you: yes or no per asset, after which the session writes them into the photo store. Worth knowing WHY they were missing: the 2026-08-15 hunt walked the board INDEX page twice for six of seven and recorded 0 candidate images, while the seventh was walked at his own page and returned a portrait immediately. Each commissioner's own page URL was already in the registry as websiteUrl. That is RULING 52's shape - a defensible rung history behind a route nobody varied - and it is why the new script DISCOVERS the member pages from the board index rather than guessing them.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
-
-**NS05** — Your NJ Hunt 5 brief adopted the free-source floor, the tiered manifest, the two-click test, per-state source enumeration and the Wikipedia route as RULINGS 81 through 85. Both of those numbers were already taken by NJ Hunt 4 earlier the same day, from your previous brief: RULING 81 is the exhausted Actions balance (it closed NS04) and RULING 82 is the job watcher's sampling (it closed JOB01), and both are cited by id in the resolved tracker store and inside docs/rulings.md itself. docs/rulings.md is append-only, so renumbering what already shipped would leave dangling references in the one record whose whole value is that it does not move. THE SESSION'S CALL: the five took 83 through 87 in your order, each carrying your number beside it, with a mapping table at the head of the block in both CLAUDE.md and docs/rulings.md. Nothing about the content changed. REVERSE IT IF YOU WANT YOUR NUMBERING TO WIN - the alternative is renumbering the two that shipped and accepting the dangling references, and that is your call rather than a session's. Separately: your RULING 90 was used exactly as you gave it, and 88 and 89 are recorded as deliberately unassigned rather than closed by renumbering you down.
 
 **NS06** — The Census key has sat in .env.local since before this session and had never been called by anything in the repo - confirmed by sweeping the tree with git grep -a --untracked rather than by trusting docs/sources.md. Called for the first time on 2026-08-22 it returns HTTP 302 with X-DataWebAPI-KeyError: 1 and Location: api.census.gov/data/invalid_key.html. A call with no key at all returns the same 302 pointing at missing_key.html, so the API cannot be reached without a working credential. WHAT IT COSTS: the demographic layer behind a zip - population, median household income, median home value. It closes no Kelly field about a person, so nothing in the hunt is blocked; what is blocked is any zip surface that wants context about a place. WHAT IS NEEDED FROM YOU: request a replacement key at api.census.gov/data/key_signup.html and put it in .env.local. The route is in the manifest as census-acs-api with the wall recorded as a dated measurement on the CREDENTIAL, never as a property of the source.
 
@@ -391,7 +391,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**73 open · 86 resolved.**
+**74 open · 87 resolved.**
 
 ### P1
 
@@ -435,8 +435,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH93** — The class layer is closed — 1,253 of 1,253 bodies now carry a class definition, up from 1,013 — and the twelve New Hampshire county rows that were the last gap now have one. Its TEXT is sound and its substance is this project's own 03255 hunt, recorded in docs/zip-playbook.md section 1 on 2026-08-22 and read out of the repo today: a New Hampshire county runs the jail, the nursing home, the sheriff, the registry of deeds and the county attorney, runs no roads, schools, zoning or land use, and its legislative body is the county convention of state representatives rather than the commissioners. WHAT IS OWED: the statute URLs. basisUrl is NULL on that row, deliberately, because the 2026-08-23 remote session could reach no host but github.com and writing a URL it had not opened would be RULING 107's defect — a read that did not happen. A session with network confirms the live paths for RSA 24 (county conventions) and RSA 28 (county commissioners), sets basisUrl, and adds their control strings to scripts/definitions-verify.mts. NH90's own note records that gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 while every county-chapter path tried returned 404, so the path hunt is the work rather than the fetch.
 
-**NH94** — lib/registry/coverage.ts line 310 reads `divisionType: division?.divisionType ?? "place"` for a body that has NO division — the Southeast Regional Council case the comment beside it names. The default was harmless while nothing read it as a finding. Closing the class layer on 2026-08-23 made it live: a divisionType of "place" resolves to the municipality class, so such a body would have rendered "This is a New Jersey municipality — the layer of government closest to a resident" about a body nobody has established is a municipality. It is guarded at the definitions path today — definitionsForBody returns nothing for a null ocdId — which closes the false claim without touching the type. THE UPSTREAM FIX is making divisionType nullable on CoveredBody, which is 39 call sites and was out of this session's scope. Until then the placeholder is still a placeholder wearing a value's clothes, and the next thing that reads it as a finding will not have a guard waiting.
-
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
 **PB02** — Nobody publishes boundaries for special districts — fire, water, irrigation, library — so the product cannot tell a reader whether they live in one. They are 43.55% of every government in the country, and this is the largest single hole in the coverage promise.
@@ -469,6 +467,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **M123** — Six towns around Newbury hold meetings inside the radius a reader at 03255 sees. The routes to their calendars have been walked and written down; none of them is wired, so those meetings do not appear.
 
+**NH101** — Measured 2026-08-23 by corepack pnpm congress:corpus. 437 of 537 sitting members already carry a portrait; 97 more are owed and unitedstates/images HOLDS ALL 97. Every one was retrieved over git and VERIFIED - real JPEG, dimensions read, SHA-256 and byte count recorded in data/hunt/congress-corpus-walk.json (14,676,605 bytes total; 91 are the nominal 450x550 and 6 are 440x550 or 419x550, which the corpus README says varies). Licence is CC0 1.0 Universal, confirmed from the repository's own LICENSE file, and the photographs are GPO works the GPO has confirmed are public domain - door 1 of the photo rule, an explicit recorded licence. WHY 0 SHIPPED: RULING 20 keeps portrait bytes out of git and tests/asset-store.test.ts enforces it against data/assets/manifest.json, whose content-addressed store is a local path on the author's machine. This is BLOCKED ON R57 and on nothing else - the retrieval, the licence and the provenance are done. WHAT IS OWED: once R57 lands, run corepack pnpm officials:photos (which now walks the git rung when the Pages host refuses) and pnpm assets migrate.
+
+  Waiting on where the asset store lives so a netlify build can restore from it (R57).
+
 **PB03** — A reader for agenda data hidden inside a page's HTML rather than published at an address. Without it, whole families of school and municipal sites come back empty and look like places with no meetings.
 
   Waiting on body enumeration per unit - the missing second layer of the who-governs denominator (HUNT02).
@@ -496,6 +498,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **DI02** — The wikipedia-government-graph crawl enumerates governing bodies the registry has never held, most of them state executive departments, agencies, boards and commissions. Each carries its own official site harvested from the article's infobox and External links block. What is NOT yet done is the second hop: fetching each of those official sites and finding the meeting, agenda, hearing or calendar page on it, so the body becomes a reader surface rather than a name in a file. The crawl records meetingLinks where Wikipedia itself linked one, which is rare - an encyclopedia links a department's home page, not its hearing calendar. The work is a pass over data/hunt/wiki-graph-07866.json that walks each harvested official site for the schedule, and then wiring what it finds into the meetings composite the same way every other source is wired. Whether appointed officials RENDER is a separate question and is on a Needs Sean row; their meetings are not in question.
 
 **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it.
+
+**NH102** — Found 2026-08-23 walking unitedstates/images at commit aec3e4a88af843b282c0576f420b930f6a9a46ad. H001104 Jon Husted, A000383 Alan Armstrong and G000608 Darline Graham are sitting members and the GPO pictorial-directory corpus carries no file for any of them. This is a FINDING about that corpus on that date, not an absence of a photograph: the photo rule's doors 2, 3 and 4 are unwalked for these three, and RULING 53 puts the corpus itself on a 14-day re-walk. NOT a gap-ledger row because it names three PEOPLE and a route, not a body's coverage.
 
 **NH16** — Bradford, New Hampshire publishes every agenda and minute set on a vendor platform this product has never seen. Its own town website carries no boards index and no calendar, so the vendor is the only route to the town's meetings.
 
@@ -571,7 +575,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**22 open · 135 resolved.**
+**23 open · 135 resolved.**
 
 ### P1
 
@@ -580,6 +584,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
   Waiting on candidate info (D05).
 
 ### P2
+
+**NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -653,9 +659,11 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**11 open · 61 resolved.**
+**12 open · 61 resolved.**
 
 ### P2
+
+**NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
 

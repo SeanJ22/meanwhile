@@ -1609,6 +1609,121 @@ The machinery is `lib/text/refusal-shapes.ts`, `pnpm sweep:refusal` and
 `lib/text/absence-defaults.ts`, `pnpm sweep:absence-defaults` and
 `tests/absence-defaults.test.ts`.
 
+## TWO RULINGS OF 2026-08-23 — THE QUESTIONNAIRE AND THE CORPORA
+
+(Adopted 2026-08-23, the author's questionnaire-and-corpora brief, item 5.
+**RULINGS 111 and 112.** `docs/rulings.md` carries both in plain language,
+because a ruling the author cannot read is a ruling that does not bind him.)
+
+### RULING 111 — A JOIN IS NEVER A LOOKUP FOR A FACT THAT LIVES ON ONLY ONE SIDE
+
+(Adopted 2026-08-23, item 5. It is **RULING 100's failure moved from reading a
+document to reading a database**: that ruling catches an extraction that came
+back with SOME of a document and reported all of it; this catches a query that
+came back with some of a table and reported all of it.)
+
+**Before querying a joined source, state which SIDE holds the fact and whether
+the join can DROP ROWS. Where it can, query the side that holds it.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* A
+join drops the rows that fail to match, and **a dropped row is returned as
+nothing — which is the same shape as a genuine absence.** No instrument in this
+repo can tell those apart, because every instrument asks whether something came
+back.
+
+The district classifier asked the Census–NCES crosswalk whether a school system
+is INDEPENDENT or DEPENDENT. **Only the Census file carries that fact**; NCES
+does not. So a question one file could answer completely was put to two files
+stapled together, and the crosswalk's own report states the cost outright:
+**4,083 of 13,859 Census school systems have no NCES match and are absent from
+it entirely** — 3,373 of 12,546 independent districts and 710 of 1,313
+dependent ones. Every one of those vanished silently and read exactly like an
+honest `UNCLASSIFIED`.
+
+**The join was not built badly, and that is the point.** The two files share no
+identifier at all: NCES publishes a Census ID only on the F-33 fiscal survey,
+which is a separate acquisition. The crosswalk therefore matches on state code
+plus normalised name, one-to-one, and counts an ambiguous name as UNMATCHED
+rather than resolving it. That is the correct method and it still loses 29.46%.
+**A correctly-built join that drops three rows in ten is not a lookup table**,
+and no amount of improving it makes it one.
+
+- **Which side holds the fact is stated before the query**, not discovered
+  afterwards.
+- **Whether the join can drop rows is stated.** A join on names always can.
+- **Where it can, the query goes to the side that holds the fact.**
+
+### RULING 112 — A FIRST-PARTY INSTRUMENT IS SYMMETRIC BY CONSTRUCTION, OR IT IS NOT SHIPPED
+
+(Adopted 2026-08-23, item 5. It is the **equal-effort rule's other half**: that
+rule governs how hard we look at what already exists, and this governs what we
+create.)
+
+**Identical questions, identical word limits, identical deadline, identical
+reminders, identical rendering of non-response. Answers publish VERBATIM and are
+never summarized.**
+
+*The rationale is hardcoded here so it is not re-litigated.* An incumbent always
+has more public material than a challenger. **Hunting harder makes that gap
+WIDER, not narrower**, because there is more to find on the incumbent — so the
+equal-effort rule, which is a discipline about retrieval, cannot fix an
+asymmetry that lives in the source material itself. No amount of hunting closes
+it, and the correct response to that is not more hunting; it is an instrument
+that does not have the asymmetry to begin with.
+
+A first-party questionnaire is the only one this product can build. Every
+candidate in a contest gets the same blank page on the same day. It is also
+original data owned outright, which is the ANSWER to the Ballotpedia licensing
+question RULING 70 governs rather than a workaround for it.
+
+- **The contest is the unit and it is ALL-OR-NONE.** Every candidate in a
+  contest is invited or none is. A contest where the well-covered candidates
+  were asked and the thin ones were not is the equal-effort failure in its
+  purest form, committed by the instrument built to prevent it. Enforced in
+  `lib/questionnaire/invitations.ts` rather than left to a caller to remember.
+- **Nothing is ever truncated.** An over-limit answer is REFUSED at submit time
+  with its own word count shown, and the candidate decides what to cut. Silent
+  truncation favours whoever writes short, invisibly.
+- **Answers publish verbatim.** No summarization, no paraphrase, no LLM
+  compression, no fact-check annotation inside the answer, no editorial note, no
+  rating. **The Citizens Clean Elections Commission's *in their own words* is
+  the model.** Enforced by ABSENCE — there is no summary field on the response
+  record and no summarising call under `lib/questionnaire/`, and
+  `tests/questionnaire.test.ts` sweeps for both BY SHAPE (RULING 110), with
+  plants proving the sweep catches a real one.
+- **Non-response is neutral and factual and identical for everyone**: invited on
+  this date, reminded on these dates, no response yet. **Never evasion,
+  avoidance, refusal or declining.** A candidate owes us nothing, and a sentence
+  implying otherwise is this product scoring them for silence — the
+  recommendation it does not make, delivered by implication. The banned shapes
+  are held in `tests/questionnaire.test.ts` with plants.
+- **A withdrawal returns the candidate to the NEUTRAL INVITED STATE**, never
+  "responded then withdrew". Neutrality wins over completeness here, and it is
+  the author's call recorded as one. `renderableResponse` returns the same
+  `null` for a withdrawn record as for an unanswered one, so the calling surface
+  cannot tell them apart and therefore cannot render them differently.
+- **The question set is VERSIONED and the version travels with every answer.**
+  Changing it mid-cycle across candidates who answered the old version breaks
+  symmetry — two people in one contest would have answered two different
+  instruments and their answers would render side by side as though they had
+  not. `docs/candidate-questionnaire.md` is GENERATED from
+  `lib/questionnaire/instrument.ts` so a second copy cannot disagree with the
+  one candidates are actually asked.
+- **The plan and the act are different fields** (RULING 107, pointed outward). A
+  generated invitation carries `invitedOn: null` and an empty `remindedOn` until
+  the code path that actually sends stamps them. Stamping a schedule as a send
+  would put a date on an act nobody performed, and the Positions empty state
+  reads exactly those two fields to decide whether to tell a reader we asked.
+- **Authentication adds no identifier to this product.** A single-use expiring
+  token to the email already on the certified filing; no account, no password,
+  no new identifier; only `sha256(token)` is stored. **Candidate responses are
+  published civic content, not reader data** — they live in the content store,
+  and the n-stores rule is untouched: nothing lands on the search log or the
+  reactions store.
+
+**Asymmetry in an instrument we control is worse than asymmetry in the world,
+because we chose it.**
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

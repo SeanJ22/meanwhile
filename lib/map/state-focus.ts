@@ -1,4 +1,5 @@
 import type { FilterSpecification } from "maplibre-gl";
+import { pointInRings } from "../geo/polygon.ts";
 
 /**
  * **The state rises out of the map** — M91, rebuilt for g4 item 2 after the
@@ -133,19 +134,9 @@ export function stateAbbrFromOcdId(ocdId: string | null): string | null {
  * handles both without the caller having to know which is which — New Jersey
  * ships three rings.
  */
-function pointInPolygon(x: number, y: number, rings: number[][][]): boolean {
-  let inside = false;
-  for (const ring of rings) {
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-      const [xi, yi] = ring[i];
-      const [xj, yj] = ring[j];
-      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) {
-        inside = !inside;
-      }
-    }
-  }
-  return inside;
-}
+/** NH79: the repo's one even-odd implementation. See lib/geo/polygon.ts. */
+const pointInPolygon = (x: number, y: number, rings: number[][][]): boolean =>
+  pointInRings(x, y, rings);
 
 export interface ScreenPoint {
   x: number;

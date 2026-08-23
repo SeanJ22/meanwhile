@@ -4,6 +4,7 @@ import { useCallback, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
 import { lookupZcta } from "@/lib/geo/zcta";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * The zip the reader is currently looking at.
@@ -85,17 +86,13 @@ function parse(raw: string | null): StoredLocation | null {
   }
 }
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  // Keeps two tabs in step for the recents write; sessionStorage itself is
-  // per-tab, so this only ever fires for the localStorage half.
-  window.addEventListener("storage", onStoreChange);
 
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+/*
+ * `sessionStorage` itself is per-tab, so the cross-tab `storage` event this
+ * shares only ever fires for the localStorage half (the recents write).
+ */
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 function getSnapshot(): LocationSnapshot {
   const raw = readRaw();

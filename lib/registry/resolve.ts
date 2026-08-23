@@ -1,4 +1,5 @@
 import type { Body, Division } from "./types.ts";
+import { polygonContains } from "../geo/polygon.ts";
 
 /**
  * Point → divisions → bodies.
@@ -24,27 +25,11 @@ export interface GeoFeature {
     | { type: "MultiPolygon"; coordinates: Ring[][] };
 }
 
-function inRing(point: [number, number], ring: Ring): boolean {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [xi, yi] = ring[i];
-    const [xj, yj] = ring[j];
-    if (
-      yi > point[1] !== yj > point[1] &&
-      point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi
-    ) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
-
-function inPolygon(point: [number, number], poly: Polygon): boolean {
-  // Exterior ring first, then holes: a point inside a hole is outside.
-  if (!inRing(point, poly[0])) return false;
-  for (let h = 1; h < poly.length; h++) if (inRing(point, poly[h])) return false;
-  return true;
-}
+// NH79: one even-odd implementation for the whole repo (lib/geo/polygon.ts).
+// EXTERIOR-THEN-HOLES is preserved exactly — this path decides which
+// government covers a reader's point, and its semantics were not changed.
+const inPolygon = (point: [number, number], poly: Polygon): boolean =>
+  polygonContains(point, poly);
 
 export function contains(point: [number, number], feature: GeoFeature): boolean {
   const polys =

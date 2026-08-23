@@ -798,3 +798,115 @@ export const writeAlarm = pgTable("write_alarm", {
   check("write_alarm_store_known", sql`${t.store} IN ('search_log', 'reactions')`),
   index("write_alarm_raised_at_idx").on(t.raisedAt),
 ]);
+
+/* ===================================================================== *
+ * THE CANDIDATE QUESTIONNAIRE — A CONTENT STORE, NOT A COLLECTION STORE.
+ * (2026-08-23, the questionnaire-and-corpora brief, item 1. RULING 112.)
+ *
+ * ## Why these three tables are not governed by the n-stores rule
+ *
+ * The n-stores rule governs the SEARCH LOG, the REACTIONS store and the future
+ * subscription store — the things that describe READERS and that are sold.
+ * `tests/db-schema.test.ts` names them in `COLLECTION_STORES` and asserts they
+ * share no joinable column.
+ *
+ * **A candidate's answers are none of those.** They are published civic content
+ * that a public candidate wrote FOR publication, in the same class as a
+ * roll-call vote, a filing or a campaign finance report — and they key on
+ * `candidacy_id`, which is a row in a county clerk's certified filing rather
+ * than anything about a person who reads this site. So they live beside the
+ * ballot content, and:
+ *
+ * - **No column is added to `search_log` or to `reactions` by this feature**,
+ *   and nothing here reads either. Asserted by name in
+ *   `tests/questionnaire.test.ts` rather than left to be noticed.
+ * - **These tables must never be added to `COLLECTION_STORES`.** Doing so would
+ *   be claiming a candidate's published words are reader data, which is the
+ *   opposite mistake but still a mistake.
+ * - **The token digest is not an identifier for a person.** It is the SHA-256
+ *   of a single-use link keyed to a public candidacy id, it expires, and the
+ *   token itself is never stored — a leaked database hands nobody a working
+ *   link.
+ * ===================================================================== */
+
+/**
+ * One invitation. Generated symmetrically per contest; **`invited_on` is NULL
+ * until the send path stamps it** (RULING 107 — a date is written only by the
+ * code that performed the act, and a plan is not an act).
+ */
+export const questionnaireInvitations = pgTable(
+  "questionnaire_invitations",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    /** The public ballot candidacy. Content key, never a reader key. */
+    candidacyId: text("candidacy_id").notNull(),
+    contestId: text("contest_id").notNull(),
+    /** The filed email from the certified record. Held to send; never rendered. */
+    email: text("email").notNull(),
+    instrumentVersion: text("instrument_version").notNull(),
+    officeClass: text("office_class").notNull(),
+    /** The schedule. Identical for every candidate in the contest. */
+    plannedInvitedOn: text("planned_invited_on").notNull(),
+    plannedRemindersOn: jsonb("planned_reminders_on").$type<string[]>().notNull(),
+    deadline: text("deadline").notNull(),
+    /** Stamped by the send path only. */
+    invitedOn: text("invited_on"),
+    remindedOn: jsonb("reminded_on").$type<string[]>().notNull(),
+    /** Provenance of the email, so the record can be checked. */
+    contactSourceUrl: text("contact_source_url").notNull(),
+    contactSourceOrg: text("contact_source_org").notNull(),
+    contactCollectedAt: text("contact_collected_at").notNull(),
+  },
+  (t) => [
+    uniqueIndex("questionnaire_invitations_candidacy_idx").on(t.candidacyId),
+    index("questionnaire_invitations_contest_idx").on(t.contestId),
+  ],
+);
+
+/**
+ * One submitted version. **Append-only** — an edit writes a new row, and the
+ * highest `version` for a candidacy renders. Earlier versions are retained for
+ * the same reason signal snapshots are immutable: a record that can be silently
+ * rewritten cannot prove what it said.
+ *
+ * `answers` holds the candidate's own words, verbatim. **There is deliberately
+ * no summary, excerpt, abstract or preview column**, and there never may be.
+ */
+export const questionnaireResponses = pgTable(
+  "questionnaire_responses",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    candidacyId: text("candidacy_id").notNull(),
+    version: integer("version").notNull(),
+    submittedAt: timestamp("submitted_at", { withTimezone: true, mode: "string" }).notNull(),
+    instrumentVersion: text("instrument_version").notNull(),
+    officeClass: text("office_class").notNull(),
+    /** `[{ questionId, text }]`. **Verbatim. Never truncated, never summarised.** */
+    answers: jsonb("answers").$type<Array<{ questionId: string; text: string }>>().notNull(),
+    /**
+     * Set when the candidate withdraws. **Internal only** — the card renders the
+     * neutral invited state and never says a withdrawal happened.
+     */
+    withdrawnAt: timestamp("withdrawn_at", { withTimezone: true, mode: "string" }),
+  },
+  (t) => [
+    uniqueIndex("questionnaire_responses_candidacy_version_idx").on(t.candidacyId, t.version),
+  ],
+);
+
+/**
+ * One single-use link. **The token itself is never stored** — only
+ * `sha256("questionnaire-token:" + token)`, minted in `lib/questionnaire/auth.ts`.
+ */
+export const questionnaireTokens = pgTable(
+  "questionnaire_tokens",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    tokenDigest: text("token_digest").notNull(),
+    candidacyId: text("candidacy_id").notNull(),
+    issuedAt: timestamp("issued_at", { withTimezone: true, mode: "string" }).notNull(),
+    expiresAt: timestamp("expires_at", { withTimezone: true, mode: "string" }).notNull(),
+    usedAt: timestamp("used_at", { withTimezone: true, mode: "string" }),
+  },
+  (t) => [uniqueIndex("questionnaire_tokens_digest_idx").on(t.tokenDigest)],
+);

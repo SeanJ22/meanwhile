@@ -187,13 +187,18 @@ test("every body the who-governs card counts is reachable on the map with defaul
     const coverage = await coverageAt(lat, lng, 1);
     for (const body of coverage.bodies) {
       if (!body.ocdId) continue; // division-less curated bodies have no layer
+      // NH94: `divisionType` is null for a division-less body rather than the
+      // placeholder "place". The `ocdId` guard above already skips those; this
+      // narrows the type as well, and skipping the two together is the same set.
+      if (!body.divisionType) continue;
       // Hoisted: the narrowing above does not survive into the closure below,
       // because `body.ocdId` is a mutable property.
       const ocdId = body.ocdId;
-      const layers = LAYERS_FOR_DIVISION[body.divisionType];
+      const divisionType = body.divisionType;
+      const layers = LAYERS_FOR_DIVISION[divisionType];
       assert.ok(
         layers,
-        `${zip}: body ${body.ocdId} has divisionType ${body.divisionType} with no mapped layer`,
+        `${zip}: body ${body.ocdId} has divisionType ${divisionType} with no mapped layer`,
       );
       for (const layer of layers) {
         assert.ok(
@@ -689,7 +694,7 @@ test("no division card denies people another surface renders", async () => {
       }
     }
     for (const body of coverage.bodies) {
-      if (!body.ocdId) continue;
+      if (!body.ocdId || !body.divisionType) continue;
       const roster = governingRosterHoldersForDivision(body.ocdId);
       if (roster.length === 0) continue;
       const prior = divisions.get(body.ocdId);

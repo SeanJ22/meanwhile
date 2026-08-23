@@ -1,6 +1,7 @@
 "use client";
 
 import type { FeedbackSurface } from "./shape.ts";
+import { getOrCreateBrowserKey } from "../state/browser-key.ts";
 
 /**
  * The browser half of the feedback form (R40, 2026-08-17).
@@ -18,25 +19,13 @@ import type { FeedbackSurface } from "./shape.ts";
 
 const KEY_STORAGE = "wtp.feedback_key";
 
-let memoryKey: string | null = null;
 
-function mintKey(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 export function getOrCreateFeedbackKey(): string {
-  try {
-    const existing = window.localStorage.getItem(KEY_STORAGE);
-    if (existing && /^[A-Za-z0-9_-]{16,64}$/.test(existing)) return existing;
-    const minted = mintKey();
-    window.localStorage.setItem(KEY_STORAGE, minted);
-    return minted;
-  } catch {
-    memoryKey ??= mintKey();
-    return memoryKey;
-  }
+  // NH79: one audited implementation. The STORAGE KEY is what keeps this
+  // store apart from the other one — see lib/state/browser-key.ts, which
+  // carries why the in-memory fallback must not be shared.
+  return getOrCreateBrowserKey(KEY_STORAGE);
 }
 
 export type SubmitOutcome =

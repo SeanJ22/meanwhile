@@ -173,11 +173,58 @@ parse as data*, never *did the call succeed*.
   LegiScan attribution, because the chambers' XML is not LegiScan's data.
 
 ### unitedstates/congress-legislators — the federal directory
-- **Last walked:** 2026-08-20
+- **Last walked:** 2026-08-23 — read by `corepack pnpm congress:corpus`, which
+  performed the clone. (RULING 107: a freshness date is written only by the code
+  path that performed the read.)
 - **Status:** WIRED as a source of record for what it covers.
   `data/congress-legislators/`, SHA-pinned.
+- **Tier:** A (RULING 84) — one fetch answers for all 537 sitting members.
+- **Access method:** `git clone --filter=blob:none --no-checkout` over
+  `github.com`, read at a pinned commit through `lib/hunt/github-corpus.ts`.
+  **This is the road that works where the HTTP one does not** — see the note
+  under `unitedstates/images` below, which is the same finding.
 - **Auth:** none.
-- **Licence:** CC0 / public domain.
+- **Licence:** **CC0 1.0 Universal**, confirmed 2026-08-23 by reading the
+  repository's own `LICENSE` file at commit
+  `750c0608efb6ef1fc3257ba72c99af3771d35088` — not assumed from the
+  organisation name. No attribution obligation.
+- **Count assertion (RULING 100):** the file states its own membership by
+  carrying one top-level entry per sitting member. Walked 2026-08-23:
+  **stated 537, extracted 537, MATCHED.**
+
+### unitedstates/images — the GPO pictorial-directory portraits
+- **Last walked:** 2026-08-23 — read by `corepack pnpm congress:corpus`, which
+  performed the clone.
+- **Status:** WIRED for portraits. `scripts/fetch-official-photos.mts` writes
+  `lib/registry/official-photos.json`.
+- **Tier:** A — one clone enumerates every portrait the corpus holds.
+- **Access method — AND THE FINDING THAT MATTERS:** the fetcher's original and
+  only route was `https://unitedstates.github.io/images/…`, a **GitHub Pages**
+  host. That is a different host from `github.com`, and an egress can refuse the
+  first while permitting the second. Measured both ways in the same minute on
+  2026-08-23: the Pages read returned `000`, and
+  `git show HEAD:congress/450x550/C000127.jpg` returned 114,839 bytes of valid
+  450x550 JPEG. **The wall was around a host, never around the data.** The git
+  road is now a permanent rung in the fetcher, walked before any absence is
+  recorded, and it is the better citation regardless because it is pinned to a
+  commit.
+- **Auth:** none.
+- **Licence:** **CC0 1.0 Universal**, confirmed 2026-08-23 by reading the
+  repository's own `LICENSE` file at commit
+  `aec3e4a88af843b282c0576f420b930f6a9a46ad`. The repository's `README` states
+  separately that the photographs are Government Printing Office works the GPO
+  has confirmed are public domain — which is what makes them **door 1** under
+  the photo rule, an explicit recorded licence, rather than door 2.
+- **Count assertion (RULING 100):** `git ls-tree` states the corpus size before
+  a byte of image data moves. Walked 2026-08-23: **stated 1,297, extracted
+  1,297, MATCHED.**
+- **Measured 2026-08-23:** 437 of 537 sitting members already had a portrait
+  here; **97 were owed and the corpus holds all 97** (retrieved and verified —
+  real JPEG, dimensions and SHA-256 each — in `data/hunt/congress-corpus-walk.json`);
+  **3 are owed and the corpus does not carry them** (`H001104` Jon Husted,
+  `A000383` Alan Armstrong, `G000608` Darline Graham). **0 of the 97 are
+  committed**, because RULING 20 keeps portrait bytes out of git and the
+  content-addressed store is `R57`.
 
 ### LegiScan — state bills and roll calls
 - **Last walked:** 2026-08-20

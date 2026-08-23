@@ -9,11 +9,6 @@
   ],
   "groups": [
     {
-      "id": "exact:components/map/tutorial-overlay.tsx#subscribe,hooks/use-district-layer.ts#subscribe,hooks/use-narrowing.ts#subscribe,hooks/use-recent-zips.ts#subscribe,hooks/use-stored-theme.ts#subscribe,hooks/use-stored-zip.ts#subscribe",
-      "disposition": "OWED",
-      "reason": "Six byte-identical useSyncExternalStore subscribe callbacks. A shared subscribeToStorage helper is the fix. The largest group in the tree and the one most likely to drift, because a fix to one is invisible from the other five."
-    },
-    {
       "id": "exact:lib/ballot/dated-events.ts#phoenixToday,scripts/doc-dates.mjs#today",
       "disposition": "ALLOWED",
       "reason": "A .mjs helper run under plain node cannot import TypeScript, and scripts/tracker.mjs, scripts/handoff.mjs and the pre-commit hook all run without tsx. Consolidating would either break the hook or move the date rule into a module the hook cannot read. Both bodies compute the Phoenix day identically and tests/doc-dates.test.ts pins the rule itself."
@@ -22,36 +17,6 @@
       "id": "exact:lib/ballot/zip-divisions.ts#index,lib/geo/zip-certainty.ts#index",
       "disposition": "OWED",
       "reason": "Two copies of the same derived-index loader. One lazy loader for the zip-division index."
-    },
-    {
-      "id": "exact:lib/feedback/client.ts#mintKey,lib/reactions/client.ts#mintKey",
-      "disposition": "ALLOWED",
-      "reason": "CLAUDE.md: the collection stores never join, and the continuity key exists on the reactions table alone. Two independent key paths that cannot be refactored into one are the enforcement of that rule in code, not an oversight. tests/db-schema.test.ts asserts the schemas share no joinable column; a shared minting path would be the first step toward one."
-    },
-    {
-      "id": "exact:lib/feedback/client.ts#getOrCreateFeedbackKey,lib/reactions/client.ts#getOrCreateReactionKey",
-      "disposition": "ALLOWED",
-      "reason": "Same rule as mintKey above, one layer up. These read different storage keys into different stores and must stay unable to converge."
-    },
-    {
-      "id": "exact:lib/geo/zip-geography.ts#ringsOf,scripts/zip-universe.mts#ringsOf",
-      "disposition": "OWED",
-      "reason": "Ring extraction from GeoJSON, duplicated between the library and a script. The script should import it."
-    },
-    {
-      "id": "exact:lib/map/state-focus.ts#pointInPolygon,scripts/fetch-zcta-outlines.mts#pointInPolygon",
-      "disposition": "OWED",
-      "reason": "Point-in-polygon, twice. A geometry primitive with two implementations is a geometry primitive that can disagree with itself about whether a reader is inside a district."
-    },
-    {
-      "id": "exact:lib/registry/resolve.ts#inRing,scripts/fetch-districts.ts#inRing,tests/district-hits.test.ts#inRing",
-      "disposition": "OWED",
-      "reason": "THE WORST OF THE SET: the TEST carries its own copy of the function it exists to check. A test that reimplements its subject proves the test's copy works and says nothing about the shipped one."
-    },
-    {
-      "id": "exact:lib/registry/resolve.ts#inPolygon,tests/district-hits.test.ts#inPolygon",
-      "disposition": "OWED",
-      "reason": "Same as inRing above — the test reimplements its subject."
     },
     {
       "id": "exact:lib/registry/resolve.ts#contains,tests/district-hits.test.ts#contains",
@@ -128,5 +93,11 @@
       "disposition": "OWED",
       "reason": "Two database-verification scripts each print their own verdict. A shared reporter keeps the four-verdict discipline (green, red, pending, could-not-tell) identical between them."
     }
-  ]
+  ],
+  "consolidatedOn2026-08-23-questionnaire-and-corpora": {
+    "closed": 7,
+    "from": 24,
+    "to": 17,
+    "note": "NH79, the questionnaire-and-corpora session. Seven groups consolidated: the six byte-identical useSyncExternalStore subscribers into lib/state/subscribe-to-storage.ts; the two browser-key minters and their get-or-create into lib/state/browser-key.ts (with the in-memory fallback kept PER STORAGE KEY, because one shared cell would have made the feedback key and the reaction key identical in the private-window path and two identifier-free stores holding one identical value are two stores that join); and four copies of even-odd point-in-polygon arithmetic into lib/geo/polygon.ts, which keeps exterior-minus-holes as its own named function rather than folding it into the flattening one, because lib/registry/resolve.ts decides which government covers a reader point and its semantics were not changed. Zero new groups were introduced."
+  }
 }

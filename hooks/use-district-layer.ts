@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * Whether the congressional district overlay is showing.
@@ -49,16 +50,8 @@ function readRaw(): string | null {
   }
 }
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  // Keeps two tabs in step.
-  window.addEventListener("storage", onStoreChange);
-
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 function getSnapshot(): DistrictLayerSnapshot {
   const raw = readRaw();

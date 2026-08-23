@@ -87,8 +87,12 @@ export function groupOfficials(coverage: CoverageSummary): TieredOfficials {
   // then curated boards in the summary's own order.
   const bodiesByScope = [...coverage.bodies].sort(
     (a, b) =>
-      (LOCAL_SCOPE_RANK[a.divisionType] ?? 3) -
-      (LOCAL_SCOPE_RANK[b.divisionType] ?? 3),
+      // NH94: a body with no division sorts with the unranked, which is where
+      // an unknown division type already sorted. The `?? 3` was always the
+      // honest branch; what changed is that null now reaches it instead of
+      // being turned into "place" upstream.
+      ((a.divisionType && LOCAL_SCOPE_RANK[a.divisionType]) ?? 3) -
+      ((b.divisionType && LOCAL_SCOPE_RANK[b.divisionType]) ?? 3),
   );
   for (const body of bodiesByScope) {
     for (const holder of rosterHoldersForBody(body.bodyId)) {

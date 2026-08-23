@@ -73,7 +73,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { normalizeName } from "./school-name-key";
+import { normalizeName } from "./school-name-key.ts";
 
 export type SchoolDependency = "INDEPENDENT" | "DEPENDENT" | "UNCLASSIFIED";
 

@@ -2418,3 +2418,100 @@ On 2026-08-23 a session reported a particular piece of copy — the app telling 
 So: **report the shapes, not just the terms.** A shape is the pattern the thing takes rather than the letters it happens to be spelled with — *a sentence that announces we will not describe something*, rather than *the words "we're not going to describe it"*. And the instrument has to be shown catching the real thing: a sweep that cannot find the defect it was written for is a sweep reporting green about nothing.
 
 *The half that is easy to get wrong, and it would delete a rule rather than enforce one.* A refusal and an honest named gap use nearly the same words. *"We haven't recorded this chamber's vote on this yet"* is **required** — it names our gap and attributes it to us. What is forbidden is announcing that we will therefore say nothing. Any instrument built for this has to pass every honest line this product ships, or it becomes pressure to delete the attribution rule instead of the refusal.
+
+---
+
+### RULING 111 — a join is never a lookup for a fact that lives on only one side
+
+*Adopted 2026-08-23 (the questionnaire-and-corpora session, item 5). Law:
+`CLAUDE.md`, **Data model conventions**. Supersedes nothing.*
+
+**Before you ask a joined-up file a question, say which of the two files
+actually holds the answer — and whether joining them can lose rows. If it can,
+ask the file that holds the answer.**
+
+A join puts two lists side by side by matching them on something. When the match
+fails, the row does not come back at all — and a row that does not come back
+looks exactly like a row where the answer was genuinely "nothing". **Those are
+two completely different things and nothing in the output tells them apart.**
+
+That is what happened here. The school-district classifier asked the
+Census–NCES crosswalk whether a district is independent or run by another
+government. **Only the Census file knows that.** NCES does not carry it. So the
+question could have been asked of the Census file directly, and instead it was
+asked of the two files stapled together — and the crosswalk's own report says,
+in as many words, that **4,083 of 13,859 Census school systems have no NCES
+match and are absent from it entirely.** Every one of those disappeared
+silently, and the disappearance looked identical to a real answer of "we do not
+know".
+
+The reason the two files cannot be matched cleanly is worth stating, because it
+is not a bug anyone can fix: **the two files share no identifier at all.** The
+join is on state code plus a normalised district name, one-to-one, and a name
+that matches more than one row on either side is thrown out rather than guessed
+at. That is the correct way to do it and it still loses nearly three in ten.
+
+So:
+
+- **Say which side holds the fact, before querying.**
+- **Say whether the join can drop rows.** A join on names always can.
+- **If it can, query the side that holds the fact.**
+
+*Why this is a ruling and not just a fixed bug.* Every instrument in this
+project asks whether something came back. A dropped join row comes back as
+nothing, and nothing is the same shape as an honest absence — so no existing
+guard could ever have caught it. It is RULING 100's failure moved from reading a
+document to reading a database: **a result that adds up is not a result that is
+correct.**
+
+---
+
+### RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped
+
+*Adopted 2026-08-23 (the questionnaire-and-corpora session, item 5). Law:
+`CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing.*
+
+**Anything we ask candidates ourselves must be identical for every candidate in
+a contest — the same questions, the same word limit, the same deadline, the same
+number of reminders, and the same way of showing that somebody did not answer.
+Their answers publish word for word and are never shortened or summarised.**
+
+*The reason, and it is the whole point of building the thing.* An incumbent
+always has more public material about them than a challenger does. **Looking
+harder makes that gap wider, not narrower**, because there is simply more to
+find on the incumbent. So the rule that we hunt equally hard for everybody —
+which is right, and stays — cannot fix this on its own. It is a problem in the
+world, not in our effort.
+
+A questionnaire we write ourselves is the one thing that can be fair by
+construction. Everybody gets the same blank page. The candidate who has been in
+office twenty years and the candidate who filed last month are handed the
+identical five questions on the identical day with the identical limit, and
+whatever comes back is theirs.
+
+Which means the asymmetries we would introduce are the ones that matter most:
+
+- **The same questions.** Not a longer set for the incumbent, not an easier set
+  for anybody.
+- **The same word limit, and nothing is ever cut.** If an answer is over the
+  limit the candidate is told before they send it and they decide what to
+  remove. Cutting it for them quietly favours whoever writes short.
+- **The same deadline and the same reminders**, sent on the same days to
+  everyone who has not answered.
+- **Answers publish exactly as written.** No summarising, no shortening, no
+  rewriting, no putting a machine over them, no fact-check inside the answer, no
+  rating. The moment we compress somebody's words we have replaced their framing
+  with ours — and doing that across a contest is the exact unfairness the
+  instrument exists to remove.
+- **Not answering is a plain fact and reads the same for everyone.** *We sent
+  these questions on this date, followed up on these dates, and have not had an
+  answer.* Never that they refused, declined, avoided or ignored us. **A
+  candidate owes us nothing**, and a sentence implying otherwise would be this
+  product scoring somebody for silence.
+- **Withdrawing puts a candidate back where they started.** Not "answered and
+  then withdrew", which invites a reader to wonder what was taken back and would
+  make answering risky.
+
+**Unfairness in an instrument we control is worse than unfairness in the world,
+because we chose it.** The world's version is a fact to work around. Ours would
+be a decision, made by us, about named people asking for votes.

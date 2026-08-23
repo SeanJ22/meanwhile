@@ -2370,12 +2370,22 @@ function bodySubject(
     // body — content where the product holds it, the section's own honest
     // absence line where it does not, and never a hidden section.
     bodyCard: {
-      whatItDoes: definitionsForBody({
-        ocdId: body.ocdId,
-        divisionType: body.divisionType,
-        lsad: body.lsad,
-        schoolDependency: schoolDependency(body.ocdId),
-      }),
+      /*
+       * NH94: a body with NO division gets no class definition, and now it
+       * cannot even be ASKED for one — `divisionType` is null rather than the
+       * placeholder `"place"` that used to be handed in here. The guard inside
+       * `definitionsForBody` (null `ocdId` returns nothing) stays; this is the
+       * cause rather than the symptom.
+       */
+      whatItDoes:
+        body.divisionType === null
+          ? { classDefinition: null, formDefinition: null, classKey: null, unreadNote: null }
+          : definitionsForBody({
+              ocdId: body.ocdId,
+              divisionType: body.divisionType,
+              lsad: body.lsad,
+              schoolDependency: schoolDependency(body.ocdId),
+            }),
       isSchoolDistrict: body.divisionType === "school_district",
       // The superintendent is HIRED by the board, so they are not in the
       // elected roster and have to be asked for separately. Null renders as
@@ -2538,7 +2548,7 @@ function typeFromOcdId(ocdId: string): string {
 
 /** A body's own kind where it is curated; its division's kind where derived. */
 function BODY_TYPE_LABEL(body: CoveredBody): string {
-  const DIVISION: Record<CoveredBody["divisionType"], string> = {
+  const DIVISION: Record<NonNullable<CoveredBody["divisionType"]>, string> = {
     county: "County",
     place: "Municipal",
     school_district: "School district",
@@ -2553,7 +2563,11 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
     REGIONAL: "Regional body",
     PRIVATE_ASSOCIATION: "Private association",
   };
-  return body.name === null ? DIVISION[body.divisionType] : CLASS[body.bodyClass];
+  // NH94: no division means no division noun. "Municipal" was a placeholder
+  // claiming a kind of government nobody had established.
+  return body.name === null && body.divisionType !== null
+    ? DIVISION[body.divisionType]
+    : CLASS[body.bodyClass];
 }
 
 function districtSubject(

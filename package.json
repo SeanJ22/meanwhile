@@ -191,7 +191,11 @@
     "tracker:resolve": "node scripts/tracker.mjs resolve",
     "morris:portraits": "tsx scripts/hunt-morris-portraits-0823.mts",
     "sweep:refusal": "tsx scripts/sweep-refusal-copy.mts",
-    "sweep:absence-defaults": "tsx scripts/sweep-absence-defaults.mts"
+    "sweep:absence-defaults": "tsx scripts/sweep-absence-defaults.mts",
+    "questionnaire:invitations": "tsx scripts/questionnaire-invitations.mts",
+    "questionnaire:doc": "tsx scripts/questionnaire-doc.mts",
+    "congress:corpus": "tsx scripts/congress-corpus-walk.mts",
+    "forms:stamp": "tsx scripts/stamp-body-forms.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

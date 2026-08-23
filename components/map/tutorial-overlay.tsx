@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * First-run tutorial, v1 (6c, wall clock 2026-08-14 second session): a
@@ -39,14 +40,8 @@ const STEPS: { title: string; body: string }[] = [
 
 const listeners = new Set<() => void>();
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  window.addEventListener("storage", onStoreChange);
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 function readSeen(): boolean {
   try {

@@ -51,26 +51,18 @@
  * Exit code 1 if any shape-1 or shape-2 hit survives, so the sweep is a gate
  * rather than a report. `tests/refusal-copy.test.ts` runs the same shapes.
  */
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
+import { sourceFilesUnder } from "../lib/ops/repo-files.ts";
 import { REFUSAL_SHAPES, refusalHitsIn } from "../lib/text/refusal-shapes.ts";
 
 const ROOT = process.cwd();
 const ROOTS = ["app", "components", "lib", "data"];
 
-function walk(dir: string, out: string[]): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) {
-      if (entry === "node_modules" || entry === ".next") continue;
-      walk(full, out);
-    } else if ([".ts", ".tsx"].includes(extname(entry))) out.push(full);
-  }
-  return out;
-}
-
-const files = ROOTS.flatMap((r) => walk(join(ROOT, r), []));
+// RULING 103: one shared walker, and it reads what would be COMMITTED
+// rather than what is on disk — see `lib/ops/repo-files.ts`.
+const files = sourceFilesUnder(ROOT, ROOTS);
 let hits = 0;
 
 console.log(`\nrefusal-copy sweep — ${files.length} files under ${ROOTS.join(", ")}\n`);
@@ -79,10 +71,10 @@ for (const s of REFUSAL_SHAPES) console.log(`  ${s.id.padEnd(24)} ${s.what}`);
 console.log("");
 
 for (const file of files) {
-  const found = refusalHitsIn(readFileSync(file, "utf8"));
+  const found = refusalHitsIn(readFileSync(join(ROOT, file), "utf8"));
   for (const hit of found) {
     hits++;
-    console.log(`  ${relative(ROOT, file)}:${hit.line}  [${hit.shape}]`);
+    console.log(`  ${file}:${hit.line}  [${hit.shape}]`);
     console.log(`    ${hit.text}`);
   }
 }

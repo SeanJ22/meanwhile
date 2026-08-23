@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
+import { sourceFilesUnder } from "../lib/ops/repo-files.ts";
 import { RENDER_ROOTS, absenceDefaultsIn } from "../lib/text/absence-defaults.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -30,24 +31,14 @@ interface Entry {
   reason: string;
 }
 
-function walk(dir: string, out: string[]): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) {
-      if (entry === "node_modules" || entry === ".next") continue;
-      walk(full, out);
-    } else if ([".ts", ".tsx"].includes(extname(entry))) out.push(full);
-  }
-  return out;
-}
-
 function sweep(): { file: string; text: string }[] {
-  const files = RENDER_ROOTS.flatMap((r) => walk(join(ROOT, r), []));
+  // RULING 103: the shared walker — see `lib/ops/repo-files.ts`.
+  const files = sourceFilesUnder(ROOT, RENDER_ROOTS);
   assert.ok(files.length > 50, `expected the sweep to reach the tree, saw ${files.length} files`);
   const out: { file: string; text: string }[] = [];
   for (const file of files) {
-    for (const hit of absenceDefaultsIn(readFileSync(file, "utf8"))) {
-      out.push({ file: relative(ROOT, file), text: hit.text });
+    for (const hit of absenceDefaultsIn(readFileSync(join(ROOT, file), "utf8"))) {
+      out.push({ file, text: hit.text });
     }
   }
   return out;

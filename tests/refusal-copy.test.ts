@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
-import { extname, join, relative } from "node:path";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
+import { sourceFilesUnder } from "../lib/ops/repo-files.ts";
 import {
   KNOWN_GOOD,
   REFUSAL_SHAPES,
@@ -27,25 +28,17 @@ const ROOTS = ["app", "components", "lib", "data"];
  * against string literals across every reader-facing root, gating the build.
  */
 
-function walk(dir: string, out: string[]): string[] {
-  for (const entry of readdirSync(dir)) {
-    const full = join(dir, entry);
-    if (statSync(full).isDirectory()) {
-      if (entry === "node_modules" || entry === ".next") continue;
-      walk(full, out);
-    } else if ([".ts", ".tsx"].includes(extname(entry))) out.push(full);
-  }
-  return out;
-}
-
 test("no refusal copy survives anywhere a reader can reach", () => {
-  const files = ROOTS.flatMap((r) => walk(join(ROOT, r), []));
+  // RULING 103: the shared walker, which reads what would be COMMITTED rather
+  // than what is on disk. Four copies of a hand-rolled recursion were what the
+  // duplicate sweep caught here — `lib/ops/repo-files.ts` carries the account.
+  const files = sourceFilesUnder(ROOT, ROOTS);
   assert.ok(files.length > 300, `expected the sweep to reach the tree, saw ${files.length} files`);
 
   const hits: string[] = [];
   for (const file of files) {
-    for (const hit of refusalHitsIn(readFileSync(file, "utf8"))) {
-      hits.push(`${relative(ROOT, file)}:${hit.line} [${hit.shape}] ${hit.text}`);
+    for (const hit of refusalHitsIn(readFileSync(join(ROOT, file), "utf8"))) {
+      hits.push(`${file}:${hit.line} [${hit.shape}] ${hit.text}`);
     }
   }
   assert.deepEqual(hits, [], `refusal copy found:\n${hits.join("\n")}`);

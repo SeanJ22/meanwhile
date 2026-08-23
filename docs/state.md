@@ -4,9 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-23 — **Eight rulings that ask a session what it found off
-the list, and one address form where there were two.** The Discovery Conduct
-session. Its record is the last section of this file.
+Last updated: 2026-08-23 — **The captures were in the repo this time, and reading
+them found the fix.** Hunt 6 hardening and the 8/22 visual pass. Its record is the
+last section of this file.
 
 The section below is the previous entry, kept: **Rockaway Borough was never
 missing from this product's data. It was invisible to five instruments that
@@ -17487,3 +17487,172 @@ over BODIES and reported 0 of 1,253 suppressed, which reads as *the fix does
 nothing*. A congressional district has no body row at all, so a body-shaped
 denominator cannot contain the cards the rule is about. **A number that
 reconciles is not a number that is correct.**
+
+---
+
+## Hunt 6 hardening and the 8/22 visual pass, 2026-08-23 — the captures were in the repo this time, and reading them found the fix
+
+**Code SHA `d0f2831`, Netlify deploy `6a8acefd4394a100080cf1a9`, PR
+[#161](https://github.com/SeanJ22/We-The-People/pull/161). `pnpm walk:all` — 377
+passed, 0 regressions, 2 could not run. Tests 1816 passing, lint 0 errors with
+12 warnings.**
+
+### The one-sentence version
+
+The 8/22 walkthrough captures moved from a Google Drive folder no session can
+open into `docs/feedback/2026-08-22/`, **all 21 were read as images**, and the
+reading is what produced the work: three of the fixes in this session exist
+because a picture showed something no DOM assertion was ever going to.
+
+### What the previous session could not reach, and why that was the brief's fault
+
+The 8/22 brief pointed at a Drive folder. A session has a shell and a repo and
+no Google credentials, so the input was unreachable BY CONSTRUCTION — and the
+brief then said *if the folder is unreachable, proceed and report that*, which
+is permission to skip. The session took it and honestly reported that it had not
+tried. **`LBL-2` came back "0 found, could not reproduce, did not guess" while
+the image showing it sat in a folder nobody had opened.**
+
+That is RULING 104 now: an artifact he places in the repo is an input a session
+must reach, and unreachable is a defect to report rather than a permitted
+outcome. It extends RULING 94 to visual sessions, which were outside its stated
+scope.
+
+### The four guards, which are the durable half
+
+**RULING 100 — a partial answer that adds up is still a wrong answer.** A
+council page says *nine members*; the reader came back with five; every
+instrument said healthy, because every instrument was asking *did anything come
+back*. Extraction now carries a count assertion against what the SOURCE states,
+`EXTRACTED` downgrades to `PARTIAL` when it falls short, and a document stating
+no count records `NOT_ASSERTABLE` rather than passing silently. The second state
+is the load-bearing half.
+
+**RULING 101 — our own identifier never leaves our own origin.** `VF02` found
+two things and fixed one. The strip existed as four lines inside a harness that
+nothing could test and nothing would miss; it is
+`lib/ops/origin-confinement.ts` now, walked across all **14 of 14** third-party
+hosts these pages reach.
+
+**RULING 102 — fixing a generator is not finished until its output is
+regenerated and diffed.** Each generator's whole source closure is digested into
+`tests/generator-digests.json`; a moved digest fails the build. The git sweep
+found **2 of 10** artifacts behind their generator. `tier-directories.json` was
+behind its own dedicated script and was regenerated — content byte-identical,
+only the walk date moved. `directory-source.ts` is behind a date helper shared
+by nine generators and was deliberately NOT regenerated, because re-running it
+restamps a `collectedAt` of 2026-08-16 without re-reading the data. That is
+`NH80`.
+
+**RULING 103 — a class sweep covers duplicated implementations.** Three copies
+of an initials function rendered *Thomas J. Haynes III* as **"TI"**, and
+grepping a symptom cannot find a second implementation of the same logic.
+`pnpm dupes` reads **2,114** declarations across 806 files and finds 26 groups.
+**Its own first version read 241 and reported one** — a sweep announcing nothing
+found without having looked, in the instrument. Four copies of the outbound
+User-Agent and two of the person-name normaliser are now one each; the other 24
+are a baseline that only shrinks (`NH79`).
+
+### What reading the pictures actually caught
+
+**`MTG-1`.** The jurisdiction pill painted over the meeting date in every row of
+the 48-meetings list. A flex gap fixed the overlap — **and the capture then
+showed the real problem**: the wider honest pill had squeezed the body name down
+to *"Rockaway Tow…"*, which is worse than the overlap it replaced. The badge
+left the metadata line entirely.
+
+**`MTG-2`, three instances of one rule.** The row printed the body name and the
+jurisdiction twice, reordered. The popup printed the body name under a headline
+that already said it. And the group heading said **ROCKAWAY TOWNSHIP, NJ**
+before nineteen rows repeated it, so the ellipsis fell on the one fact that
+distinguished them. The rule is the same at every level of nesting: only what
+the enclosing context has not already said.
+
+**`JUR-4`.** Nineteen consecutive *Could govern you* pills became **one**, under
+the group heading, where every row shares the answer.
+
+### `JUR-2` — the card stops asserting jurisdiction from a zip
+
+The Rockaway Township card read **"Governs your area"** with **"Your address is
+inside the area this body governs"** underneath it, to a reader who had given
+nothing but a zip. 07866 holds three municipalities; the card picked one.
+
+The badge gains a fourth state that says what is actually known, and offers the
+one address prompt. The partial-division set comes from the same lattice
+measurement the ballot page's RULING 71 pill already reads, so the two surfaces
+cannot disagree — and **Morris County still reads "Governs your area", because a
+county covers the whole zip.** Wired through a context rather than a dozen
+component signatures, because a surface that renders the pill must not be able
+to forget to wire it: the last dead pill happened exactly that way.
+
+### `LBL-2`, reopened under RULING 97 and found
+
+The previous session read the STYLESHEET, found no `nowrap` and no ellipsis, and
+stopped. That instrument answers *is there a rule to clip this* when the
+question is *is this clipped*.
+
+**The cause is a property of `letter-spacing`, not of one card.** It adds its
+space AFTER the final glyph, so a `0.15em` run is about a seventh of a character
+wider than its own characters and all of it sits past the last letter. Against a
+clipping right edge — and `shrink-0` puts one there — the clip takes the space
+and then bites the glyph. **6 sites across 4 files, found by sweeping the shape
+rather than the symptom, all 6 compensated at the shared classes.**
+
+### `OFF-1` — 7 of 7, and why 6 were missing
+
+Seven Morris County commissioners, one portrait between them. The photo store
+records, for six of the seven, *"door 2, rungs walked 2026-08-15 —
+`…/Board-of-County-Commissioners`: 0 candidate image(s); `…/Board-of-County-
+Commissioners`: 0 candidate image(s)"* — **the same URL twice, recorded as two
+rungs, and it is the board's INDEX page.** The seventh was walked at his own page
+and returned a portrait immediately. Every commissioner's own page URL was
+already in the registry as `websiteUrl`.
+
+**7 of 7 sourced, 7 of 7 read as images**, every one a clean solo portrait.
+Nothing shipped: `NH78` is the review row and the decision keys to the asset.
+
+The script discovers the member pages from the board index rather than building
+them from names, because **this session's first attempt guessed and lost three
+of seven to HTTP 404** — the county keeps the period after a middle initial.
+Three absences entirely of the hunt's own making, which is the same shape one
+level down.
+
+### `NS09` — there are no caps anywhere
+
+`context.md` was capped at 20 KB and dropped its whole tracker-change section;
+the cap was raised to 40 KB; by today the same cascade was dropping the same
+section again and walking P0 notes from 130 characters to 90. **A cap forces
+silent trimming, and silent trimming is RULING 100's failure one floor up.**
+
+The cascade is deleted rather than loosened. **`context.md` is 45.1 KB with its
+tracker-change section whole at 10 of 10 rows and its notes at full length**, and
+`docs/log.md` — which clipped its lists to twelve rows each with an *"and N
+more"* line — grew from 156,520 to 181,347 bytes.
+
+What replaces a cap: every section states where it came from, and any block
+claimed verbatim is tested against its source. **That sweep immediately found a
+real gap** — the pinned conduct block named its source only at the END, after
+the whole thing.
+
+### `NH64` — the session-side resolve, built and used
+
+`pnpm tracker:resolve <ID> --session=<label> --evidence <file>` writes the
+resolution and stamps the closer as a SESSION, so the RULING 37 gate keeps
+refusing a Needs Sean row while allowing everything else. It also requires
+evidence and refuses a row the author opened. **Honestly stated: `tracker:move
+--resolve=` already set a resolution.** What was missing and is now there is the
+evidence requirement, the session-record entry, the RULING 41 refusal, and a
+refusal that fires BEFORE anything is written rather than after.
+
+Exercised on `VF03`, `PU04`, `NH77` — and on two rows this session opened in
+error from a stale scratch file, which were resolved rather than hidden, because
+only he deletes.
+
+### What this session did not reach, and it is named rather than implied
+
+`LAY-1` and `LAY-2`, `ASK-1` and `NH-3`, every Arizona item, `JUR-3`'s national
+crosswalk, `JUR-4` on the ballot page, and the DEF completion. Six rows carry
+them forward — `NH79` through `NH84` — each with what is owed and why it was not
+done. **The layout work in particular must be built against the post-Hunt-6
+panel: the registry held 12 bodies when the walkthrough was taken and holds 174
+now.**

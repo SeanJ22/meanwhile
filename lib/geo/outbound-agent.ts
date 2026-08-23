@@ -17,3 +17,16 @@
  */
 export const OUTBOUND_USER_AGENT =
   "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)";
+
+/**
+ * The contact address ALONE, so a caller that needs a different product string
+ * can compose one without writing the address a second time.
+ *
+ * Added 2026-08-22 (NJ Hunt 5). `lib/hunt/wikipedia.ts` needs an identified
+ * `User-Agent` for the Wikipedia API and for the primary sources it fetches to
+ * confirm citations, and it copied the literal — which is exactly the mistake
+ * the note above records `/api/voting-sites` making, and the guard caught it
+ * the same way. The fix is the same one: compose from here, do not widen the
+ * exemption.
+ */
+export const OUTBOUND_CONTACT = "seanj22@gmail.com";

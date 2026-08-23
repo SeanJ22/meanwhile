@@ -104,23 +104,23 @@ deeper as the country gets stranger.
 
 <!-- BEGIN GENERATED ROUTES — written by `corepack pnpm manifest:doc`, never by hand -->
 
-## The routes — manifest v3
+## The routes — manifest v5
 
-**42 routes named**, across 38 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
+**53 routes named**, across 47 distinct dependencies. A route may serve several fields; a route is counted once per field it can actually produce, and a route forbidden for a field (a newspaper photograph, for one) is not counted there at all.
 
 **Routes per field type — this is the bar for `VERIFIED_ABSENT`:**
 
 | Field | Routes that must be walked |
 | --- | ---: |
-| Photo | 7 |
-| In their own words | 14 |
-| Contact | 39 |
-| Campaign site | 19 |
-| Specific verified page | 8 |
+| Photo | 8 |
+| In their own words | 15 |
+| Contact | 50 |
+| Campaign site | 21 |
+| Specific verified page | 12 |
 
 > This manifest is incomplete and always will be. Reaching the end of it is not proof that a fact does not exist — it is proof that these named routes returned nothing on this date. We do not know what we do not know; there are always more ways.
 
-### Photo — 7 routes
+### Photo — 8 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -131,8 +131,9 @@ deeper as the country gets stranger.
 | `campaign-site` | The campaign's own domain | Home, About and Contact pages; `pnpm probe:site` reads what a campaign site publishes about its own candidate | A self-published portrait (door 3), the candidate's own words, an email, a phone, the site itself | 2, then 6 where the site is a JavaScript build | the campaign's own domain |
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
+| `congress-api` | The Congress.gov API — sitting members of the federal delegation | `/v3/member/congress/{congress}/{state}?currentMember=true`, authenticated with the Congress.gov credential | Every sitting member for a state in one call, each with the chamber's own portrait URL and attribution and a specific verified page on congress.gov | 2 | the Library of Congress |
 
-### In their own words — 14 routes
+### In their own words — 15 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -150,8 +151,9 @@ deeper as the country gets stranger.
 | `announcement-archive` | The announcement — the 'X announces a run' item, wherever it landed | The paper, the party's own release, the candidate's first social post, rung 11 for a dead page | The campaign's opening self-description, a launch contact, the site as first published | 2 and 11 | the announcement publisher |
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
+| `press-outlet-map` | The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine | Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name | Coverage of a named candidate from a publisher that actually covers this state's politics | 2 and 7 | the state's political press |
 
-### Contact — 39 routes
+### Contact — 50 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -194,8 +196,19 @@ deeper as the country gets stranger.
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 | `records-request` | The body's own public-records request path, walked as a named route | The statutory request, filed and recorded with its date | What the body holds and has not published | 13 | the body's records officer |
+| `wikipedia-municipality` | The Wikipedia article for the municipality, read as a TEMPLATED ROSTER | `action=query&prop=revisions&rvslots=main` for the article's raw wikitext, then the Local government and Federal/state/county representation sections; the officeholder templates those sections transclude are fetched the same way | The form of government and what it implies about which bodies exist; the mayor with party and term; every council member with party, term and ward or at-large seat; the county governing body; the constitutional officers; the legislative and congressional districts; and the External links block — every one carrying the footnote it came from | 2 | the Wikimedia Foundation |
+| `wikipedia-election` | The Wikipedia article for the state's election in this cycle | The same API read, against `<year> <state> <office> election`, plus the per-district sub-articles it links | Declared candidates for federal and state legislative office, with their party, and the External links block that is often the only place a small campaign's own domain is written down | 2 | the Wikimedia Foundation |
+| `press-outlet-map` | The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine | Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name | Coverage of a named candidate from a publisher that actually covers this state's politics | 2 and 7 | the state's political press |
+| `nces-district-directory` | The NCES public-school-district directory record for a school district | The CCD district file, joined on LEA id; the same record the coverage denominator already comes from | The district's mailing address, phone and superintendent name — one file covering every district in the country | 1 and 2 | the National Center for Education Statistics |
+| `wikipedia-government-graph` | The government GRAPH, crawled — not a list of named articles but every link that resolves to a governmental entity touching this zip, followed again from each | Seed from the municipality articles for the zip, classify each outbound link by its Wikipedia CATEGORIES, expand the governmental in-scope ones, and keep going; `pnpm wiki:graph --zip <zip> --state <state>` | Bodies no list would have named — executive departments, agencies, boards, commissions and courts — each with its official site, its structure, its named officials, and the meeting or hearing schedule that makes it a reader surface | 2 | the Wikimedia Foundation |
+| `congress-api` | The Congress.gov API — sitting members of the federal delegation | `/v3/member/congress/{congress}/{state}?currentMember=true`, authenticated with the Congress.gov credential | Every sitting member for a state in one call, each with the chamber's own portrait URL and attribution and a specific verified page on congress.gov | 2 | the Library of Congress |
+| `fec-committee-contact` | The FEC committee record behind a federal candidate — treasurer, address, agent phone | `/v1/candidates/?state=..` for the list, then `/v1/committees/?candidate_id=..` per candidate; the FEC credential | A filed street address, city, zip and designated-agent phone for the committee — a real contact, filed by the person, on a federal form | 2 | the Federal Election Commission |
+| `openstates-bulk` | The Open States / Plural BULK legislator file, already committed to this repo | Read `data/reference/openstates_legislators.csv` — 7,976 rows — and filter by jurisdiction and district. No API call, no quota. | Every state legislator with chamber, district, party and an official email address | 1 | Open States / Plural |
+| `govinfo-cdir` | govinfo — the federal document collections, including the Congressional Directory | `api.govinfo.gov/collections` and the `CDIR` package, fronted by the api.data.gov credential | Member offices, phones and staff for the federal delegation, as the government publishes them | 2 | the Government Publishing Office |
+| `census-acs-api` | The Census ACS API — the demographic layer behind a zip | `api.census.gov/data/{year}/acs/acs5`, authenticated with the Census credential | Population, median household income and median home value for a ZCTA | 2 | the Census Bureau |
+| `lda-filings` | The Senate Lobbying Disclosure Act database | `lda.senate.gov/api/v1/filings/`, with the LDA credential | Federal lobbying registrants, their clients, and the offices they lobby. Recorded here because a credential with no route is a credential nobody decides about. | 2 | the United States Senate |
 
-### Campaign site — 19 routes
+### Campaign site — 21 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -218,8 +231,10 @@ deeper as the country gets stranger.
 | `professional-directory` | LinkedIn and general professional directories | The public profile, read at rung 6 | An employer, a history, occasionally a site link; rarely a direct contact | 6 | the professional directory |
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
+| `wikipedia-election` | The Wikipedia article for the state's election in this cycle | The same API read, against `<year> <state> <office> election`, plus the per-district sub-articles it links | Declared candidates for federal and state legislative office, with their party, and the External links block that is often the only place a small campaign's own domain is written down | 2 | the Wikimedia Foundation |
+| `press-outlet-map` | The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine | Harvest every citation host from the state's municipality and election articles, rank by frequency, then query each outlet's own search endpoint by candidate name | Coverage of a named candidate from a publisher that actually covers this state's politics | 2 and 7 | the state's political press |
 
-### Specific verified page — 8 routes
+### Specific verified page — 12 routes
 
 | id | What it is | How it is reached | What it yields | Rung | Through |
 | --- | --- | --- | --- | --- | --- |
@@ -231,6 +246,10 @@ deeper as the country gets stranger.
 | `search-index` | The search index itself, worked as a route rather than as a reflex | Quoted name plus office, plus town, plus `site:` against each candidate host in turn | A page no other route names | 10 | the search index |
 | `web-archive` | The Internet Archive, of any route above that is now dead | Snapshot URLs at rung 11, against the exact dead path | A page that existed and stopped — a lapsed campaign site, a removed roster, a moved portrait | 11 | web.archive.org |
 | `records-request` | The body's own public-records request path, walked as a named route | The statutory request, filed and recorded with its date | What the body holds and has not published | 13 | the body's records officer |
+| `wikipedia-municipality` | The Wikipedia article for the municipality, read as a TEMPLATED ROSTER | `action=query&prop=revisions&rvslots=main` for the article's raw wikitext, then the Local government and Federal/state/county representation sections; the officeholder templates those sections transclude are fetched the same way | The form of government and what it implies about which bodies exist; the mayor with party and term; every council member with party, term and ward or at-large seat; the county governing body; the constitutional officers; the legislative and congressional districts; and the External links block — every one carrying the footnote it came from | 2 | the Wikimedia Foundation |
+| `wikipedia-government-graph` | The government GRAPH, crawled — not a list of named articles but every link that resolves to a governmental entity touching this zip, followed again from each | Seed from the municipality articles for the zip, classify each outbound link by its Wikipedia CATEGORIES, expand the governmental in-scope ones, and keep going; `pnpm wiki:graph --zip <zip> --state <state>` | Bodies no list would have named — executive departments, agencies, boards, commissions and courts — each with its official site, its structure, its named officials, and the meeting or hearing schedule that makes it a reader surface | 2 | the Wikimedia Foundation |
+| `congress-api` | The Congress.gov API — sitting members of the federal delegation | `/v3/member/congress/{congress}/{state}?currentMember=true`, authenticated with the Congress.gov credential | Every sitting member for a state in one call, each with the chamber's own portrait URL and attribution and a specific verified page on congress.gov | 2 | the Library of Congress |
+| `govinfo-cdir` | govinfo — the federal document collections, including the Congressional Directory | `api.govinfo.gov/collections` and the `CDIR` package, fronted by the api.data.gov credential | Member offices, phones and staff for the federal delegation, as the government publishes them | 2 | the Government Publishing Office |
 
 ### Whether each route travels — RULING 60
 
@@ -280,6 +299,17 @@ A branch proven in one place is proven for that shape, not for everywhere. The r
 | `search-index` | Everywhere. Cheapest route in the manifest, and never sufficient on its own. |
 | `web-archive` | Everywhere. It has already produced a shipped portrait here (Harold French's Senate portrait, from a 2022 capture). |
 | `records-request` | Every state has a records law. It is SLOW, which is a reason to file it early in a hunt and never a reason to skip it. |
+| `wikipedia-municipality` | Roughly 19,000 US municipality articles share this template, so one parser reads all of them. New England town articles and New Jersey municipality articles both parse. Where it will break is a place with no article at all, and the smallest twigs RULING 57 exists for are exactly those. |
+| `wikipedia-election` | Federal and statewide races are covered in every state. County and municipal races are almost never covered, so this route is broad and SHALLOW where the ballot is deep. |
+| `press-outlet-map` | The METHOD travels to every state; the LIST does not, and is rebuilt per state. That is the point of it — it is a curated map of who covers this state, derived rather than guessed. |
+| `nces-district-directory` | Every state. It is a federal collection with a uniform schema, which is why it is already the coverage denominator for school districts. |
+| `wikipedia-government-graph` | The METHOD travels everywhere — every state has a Government of {state} article and roughly 19,000 municipalities have one. What does NOT travel is the category vocabulary: a state whose agencies are categorised differently needs its patterns added, and that is a sub-branch rather than a failure. |
+| `congress-api` | Every state and every cycle. It is a federal API with a uniform schema. |
+| `fec-committee-contact` | Every state, FEDERAL office only. It reaches nothing below Congress, which is most of a county ballot. |
+| `openstates-bulk` | All fifty states — it is one national file. It carries NO photo and NO bio, which is what the caucus walk is for; the caucus walk is not for assembling the roster, because the roster is already here. |
+| `govinfo-cdir` | Federal only, every state. |
+| `census-acs-api` | Every zip in the country — WHEN the credential works. Walked 2026-08-22 and the host refused the held key with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too. Recorded as a dated wall on the CREDENTIAL, never as a property of the source. |
+| `lda-filings` | Federal only, and it closes NOTHING at a county or municipal ballot — stated plainly rather than softened, because the register's job is to let the author decide whether a credential earns its place. |
 
 ### Sub-branches grown so far
 

@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **204 open**, 337 resolved.
-- **46 waiting on Sean** — the first section below.
+- **211 open**, 337 resolved.
+- **50 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**46 open · 20 resolved.**
+**50 open · 20 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -68,6 +68,12 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH65** — RULING 55 says only a photo you have approved renders. Five were hunted on 2026-08-22 from Morris County municipalities' own websites and are PENDING, so those five cards show initials until you say yes. Every one is door 2 - the picture the government publishes to identify its own member - and every one was read as an image before it shipped, in one contact sheet at screenshots/nj-hunt4-portraits.png. Jennifer Rowland (Chatham Township Committee, chathamtownship.org, file named jen_rowland.jpg). Melissa Senatore (Jefferson Township Council, jeffersontownship.net). Sean Mabey (Kinnelon Borough Council, kinnelonboro.org, file named thumb.Mabey 400.jpg). Marilyn Althoff (Mendham Borough Council, mendhamnj.org, file named thumb.Althoff1.png). Melissa Muilenburg (Mountain Lakes Borough Council, mountainlakes.gov, file named Muilenburg-Photo-scaled.jpg).
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
+
+**NS05** — Your NJ Hunt 5 brief adopted the free-source floor, the tiered manifest, the two-click test, per-state source enumeration and the Wikipedia route as RULINGS 81 through 85. Both of those numbers were already taken by NJ Hunt 4 earlier the same day, from your previous brief: RULING 81 is the exhausted Actions balance (it closed NS04) and RULING 82 is the job watcher's sampling (it closed JOB01), and both are cited by id in the resolved tracker store and inside docs/rulings.md itself. docs/rulings.md is append-only, so renumbering what already shipped would leave dangling references in the one record whose whole value is that it does not move. THE SESSION'S CALL: the five took 83 through 87 in your order, each carrying your number beside it, with a mapping table at the head of the block in both CLAUDE.md and docs/rulings.md. Nothing about the content changed. REVERSE IT IF YOU WANT YOUR NUMBERING TO WIN - the alternative is renumbering the two that shipped and accepting the dangling references, and that is your call rather than a session's. Separately: your RULING 90 was used exactly as you gave it, and 88 and 89 are recorded as deliberately unassigned rather than closed by renumbering you down.
+
+**NS06** — The Census key has sat in .env.local since before this session and had never been called by anything in the repo - confirmed by sweeping the tree with git grep -a --untracked rather than by trusting docs/sources.md. Called for the first time on 2026-08-22 it returns HTTP 302 with X-DataWebAPI-KeyError: 1 and Location: api.census.gov/data/invalid_key.html. A call with no key at all returns the same 302 pointing at missing_key.html, so the API cannot be reached without a working credential. WHAT IT COSTS: the demographic layer behind a zip - population, median household income, median home value. It closes no Kelly field about a person, so nothing in the hunt is blocked; what is blocked is any zip surface that wants context about a place. WHAT IS NEEDED FROM YOU: request a replacement key at api.census.gov/data/key_signup.html and put it in .env.local. The route is in the manifest as census-acs-api with the wall recorded as a dated measurement on the CREDENTIAL, never as a property of the source.
+
+**NS07** — The government graph crawl enumerates New Jersey's executive departments as governing bodies under RULING 57 - each with its own official site, and each holding public meetings and rulemaking hearings. The Department of Banking and Insurance sets rules on mortgages, insurance premiums and pawnbrokers, and those hearings are exactly the there-is-a-hearing-Tuesday surface this product exists for. THE QUESTION IS NARROW AND IT IS YOURS: their MEETINGS are plainly in scope and the session is wiring them. What is not settled is whether an APPOINTED cabinet secretary or department head renders to a reader as someone who governs them, the way an elected mayor or council member does. The who-governs card's verb is GOVERN, which is a stronger claim than is-responsible-for-this-area, and a session widening it would be making a product decision about what that word means. Nothing is blocked either way - the departments are enumerated and their meetings are hunted regardless of how you rule.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -114,6 +120,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH11** — Shaun Fife is running for Governor. He has no campaign website and no campaign Facebook page. What he has is a candidate page on a political party's own site, carrying his name, the office, his own words and a contact address. Two of our rules point in opposite directions about it and the third makes it worse, so it is yours to settle.
 
 **NH33** — Lake Todd Village District governs territory in Bradford AND Newbury. The New London-Springfield Water System Precinct serves New London AND Springfield. A body id here is <division>#<slot>, so each of them ships as two rows carrying the same name. They are one body wearing two ids, not two districts, and every count that walks the registry counts them twice.
+
+**NS08** — Arizona's entry in the FEC Combined Federal/State Directory names SIX offices, and one of them is the Navajo Nation Ethics and Rules Office - listed alongside the states as a jurisdiction that holds administrative hearings, ethics clearances, standards of conduct and investigations under the Navajo Ethics in Government Law. No municipality list, no county roster and no state register would have produced it. The Navajo Nation, the Tohono O'odham Nation and the Pascua Yaqui Tribe all hold territory in or adjacent to Pima County, which is where 85641 and 85701 are. RULING 57 says the twig is as relevant as the trunk, and a sovereign nation is not a twig - it is a trunk this product has never touched. This product has no vocabulary for a sovereign government that is neither federal nor state nor local, and a session inventing one would be making a decision about how this product describes a nation. Raised now, before the Arizona hunt, because the enumeration step under RULING 86 surfaced it and the hunt should not start without your answer. Recorded in docs/arizona-source-enumeration.md.
 
 **R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
 
@@ -257,7 +265,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**18 open · 3 resolved.**
+**20 open · 3 resolved.**
 
 ### P2
 
@@ -274,6 +282,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ08** — The other half of the 52. Fire districts, sewerage authorities and a power authority -- ROCKAWAY VALLEY REGIONAL SEWAGE AUTHORITY, five PARSIPPANY-TROY HILLS TOWNSHIP FIRE DISTRICTs, three MONTVILLE TOWNSHIP FIRE DISTRICTs, HANOVER TOWNSHIP FIRE DISTRICTs 2 and 3, PEQUANNOCK RIVER BASIN REGIONAL SEWERAGE AUTHORITY, NEW JERSEY PUBLIC POWER AUTHORITY, SOUTHEAST MORRIS COUNTY MUNICIPAL UTILITIES AUTHORITY, PEQUANNOCK-LINCOLN PARK-FAIRFIELD SEWERAGE AUTH, WANAQUE VALLEY REGIONAL SEWERAGE AUTHORITY, MUSCONETCONG SEWERAGE AUTHORITY. No TIGER polygon exists for any of them at any vintage, so no geometry pipeline will ever reach them. RULING 57 says a body is NAMED FIRST and hunted second, and that a body with no source and no site is still entered and still rendered. scripts/twig-pair.mts already has divisionlessBodyFor(), so the mechanism exists in one place and has not been generalised. Eleven of the eighteen publish a website, listed in the twig:pair output.
 
 **NJ09** — Measured 2026-08-22, not assumed. Across all 272 Morris candidacies: contact 272 of 272, ballot slogan 70 of 272, campaign site 0 of 272, photo 0 of 272. Both of the fields that are held come from ONE route -- filing-county, one county-clerk PDF -- and that document carries no portrait, no prose about a candidate and no URL. So New Jersey's mechanical contact windfall is a property of that DOCUMENT and does not generalise to the other three fields. pnpm nj:fields walks a contest and reports per route; the Rockaway Borough Council four were walked (Burnside, McDonald, Dawkins Jr., Natale) and returned filing-county empty, campaign-site not walkable, domain-search one lead (patrickmcdonald.com, capped at a lead under RULING 68 because the identifier was guessed) and three empty. 86 of the 90 contests are unwalked, and no candidate anywhere has had the full named route list walked, so no absence has been earned for anybody in either zip.
+
+**NJ11** — The wikipedia-municipality parser reads 39 of 39 Morris County municipalities and parses a roster for most of them. Jefferson Township and Pequannock Township return zero council members while their Local government sections plainly carry one, and both are Faulkner Act municipalities. Chatham Borough and Montville parse a roster but return no form-of-government string. These are parser seams rather than absences and must never be reported as absences about those bodies. The seams already found and fixed are written up in docs/zip-playbook.md section 8 - the roster sentence has no reliable lead-in so every sentence is scored, ref bodies must be masked before sentence splitting or every citation detaches, generational suffixes are not separators, and office titles are glued to names longest-first. These two are the next ones. The diagnostic is the headings array the parser returns on every record.
+
+**NJ12** — Carries forward what NH71 recorded, minus what this session closed and plus what tiering revealed. CLOSED THIS SESSION: filing-campaign-finance-local (NJ ELEC) - the wall was on elec.nj.gov and the records are on njelecefilesearch.com at rung 2; 19 filed entities across the two 07866 municipalities with both controls clean. STILL OWED, with tier: lwv-questionnaire (Tier A) - onyourballot.vote411.org returned candidate-detail pages in search results last session and none has been opened, and it is the highest-value unwalked Tier A route left because one ballot page answers a whole contest. party-committee-roster (Tier A) - the Morris County Republican and Democratic committees publish slates and neither has been walked. filing-prior-candidacy (Tier A) - the manifest calls it the most under-used route in the list and it is under-used again. bar-directory and licensing-board (Tier C) - two candidates surfaced as attorneys through their firms' own sites and njcourts.gov has never been asked. records-request (Tier B) - rung 13, not reached. announcement-archive (Tier C). ad-library (Tier A) - NS01 is tabled by Sean and was not touched. press-outlet-map (Tier A) - the route was BUILT this session and its host list DERIVED from 726 distinct citation hosts, but the outlets' own site searches have not yet been queried.
 
 **HD06** — Three people are running for the Rockaway Township Board of Education and twelve things about them have never been looked for.
 
@@ -355,7 +367,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**65 open · 81 resolved.**
+**66 open · 81 resolved.**
 
 ### P1
 
@@ -446,6 +458,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D69** — The Montana school-district disagreement, recorded as its own investigation. Named separately from the row above so the discrepancy has somewhere to be resolved rather than being carried as a caveat forever.
 
 **DI01** — pnpm nj:filing reports 42 seats a party filed nobody for, and entry 28 is "Morristown Town -- NO LOCAL ELECTION (Democratic)". NO LOCAL ELECTION is a jurisdiction-level statement in the clerk's document, not an office, so a row carrying it as an office is a bleed between two record types the parser already separates elsewhere -- the same class NJ2 playbook entry 7 describes. It does not reach a reader (the 42 are a finding stated in the report, not a rendered surface) and the total still reconciles, which is why this is P3. The count of 42 should be read as 41 unfilled seats plus one parser artifact until it is fixed.
+
+**DI02** — The wikipedia-government-graph crawl enumerates governing bodies the registry has never held, most of them state executive departments, agencies, boards and commissions. Each carries its own official site harvested from the article's infobox and External links block. What is NOT yet done is the second hop: fetching each of those official sites and finding the meeting, agenda, hearing or calendar page on it, so the body becomes a reader surface rather than a name in a file. The crawl records meetingLinks where Wikipedia itself linked one, which is rare - an encyclopedia links a department's home page, not its hearing calendar. The work is a pass over data/hunt/wiki-graph-07866.json that walks each harvested official site for the schedule, and then wiring what it finds into the meetings composite the same way every other source is wired. Whether appointed officials RENDER is a separate question and is on a Needs Sean row; their meetings are not in question.
 
 **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it.
 

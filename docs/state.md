@@ -16480,3 +16480,287 @@ The first `nj4-governs-*` shots were captioned "the who-governs surface at
 first draft guessed the `sessionStorage` keys instead of reading them off
 `walk:all`. A capture whose claim does not match its contents is worse than no
 capture.
+
+---
+
+# NJ HUNT 5 — 2026-08-22
+
+**Every figure below is read out of the repo by `pnpm nj5:ledger` before this
+was written.** NJ Hunt 4 shipped estimated headline numbers and corrected them in
+a second commit; that is what the ledger script exists to stop.
+
+## THE HEADLINE
+
+**The previous session named a paid search API as the constraint. The constraint
+was that nobody had opened the page.**
+
+| | |
+|---|---|
+| Officials named in Morris County, from ONE Tier A route | **261 distinct**, 898 rows |
+| Their citations, FETCHED and confirmed against the primary source | **818 of 898 — 91.1%** |
+| Governing bodies the government-graph crawl found | **174**, of which **171 the registry does not hold** (it holds 12) |
+| Owed fields closed from credentials that had never been called | **119** |
+| Officials confirmed on their body's OWN site, with a specific verified page | **121 of 245** |
+| Total cost | zero paid resources |
+
+At **07866** specifically: **45 distinct person/body pairs named, 34 with a
+confirmed citation**, across the mayor, the township council, the borough
+council, the county governing body, the three county constitutional officers,
+both legislative delegations and the federal delegation. The registry held
+essentially none of them.
+
+## Say the shape plainly: this session COLLECTED, it did not RENDER
+
+**The two-numbers rule (D68) applies to the session itself.** Collection and
+rendering are different measurements and one number may not stand in front of
+both.
+
+| | Collected this session | Rendering to a reader today |
+|---|---:|---:|
+| Morris officials named | 261 | 0 |
+| Officials with a verified page on their body's own site | 121 | 0 |
+| Owed fields closed from credentials | 119 | 0 |
+| NJ candidacies with a card | — | 34 of 272 |
+| NJ candidacies with a link record | — | 25 of 272 |
+
+**Nothing collected this session reached a reader surface, and that is stated
+rather than smoothed.** RULING 87 is why: Wikipedia is a DISCOVERY source and
+every name it produces is a `LEAD` until its own citation has been read. 818 of
+them now have that reading and are eligible; wiring them into the officials and
+ballot data is the next session's first job and is not something to do at the end
+of a long one. The 792-owed figure the brief opened with is **unchanged as a
+rendering number**. What changed is that the material to close it now exists,
+measured, in the repo.
+
+## Item 1 — the process rulings are law
+
+`CLAUDE.md` **98,905 → 112,380 bytes**. `docs/rulings.md` 90,461 → 99,651.
+
+**A numbering collision, named rather than resolved silently.** The brief adopted
+five rulings as 81–85. Both numbers were already spent by NJ Hunt 4 earlier the
+same day, from the previous brief — RULING 81 (`NS04`, the exhausted Actions
+balance) and RULING 82 (`JOB01`, the job watcher's sampling) — and both are cited
+by id in the resolved tracker store and inside `docs/rulings.md`. That file is
+append-only, so renumbering what shipped would leave dangling references in the
+one record whose value is that it does not move.
+
+**The five took 83–87 in the brief's order**, each carrying the brief's number
+beside it and a mapping table at the head of the block in both files. `NS05` is
+open for the author to reverse it.
+
+- **RULING 83** — the free-source floor.
+- **RULING 84** — the manifest is tiered and walked in order.
+- **RULING 85** — the two-click test.
+- **RULING 86** — per-state source enumeration precedes the hunt.
+- **RULING 87** — Wikipedia is a Tier A discovery source, never a source of record.
+- **RULING 90** — exhaustion must be argued, not asserted. **Used exactly as the
+  author numbered it.** 88 and 89 are recorded as *deliberately unassigned*
+  rather than closed by renumbering him down, and the ruling-gap guard now
+  accepts a DECLARED gap while still failing a silent one.
+
+Every one carries its full rationale, including the Rockaway Township example
+verbatim.
+
+## Item 2 — the manifest is tiered
+
+**41 → 53 routes, v3 → v5.**
+
+| | Tier A | Tier B | Tier C |
+|---|---:|---:|---:|
+| the 42 that existed, tiered | 14 | 11 | 17 |
+| after this session's 11 additions | **25** | **11** | **17** |
+
+Enforcement is in `lib/hunt/branch-manifest.ts`: `tier` is required on every
+route and the build fails without it; `nextTierOwed` answers *may I run a
+per-person search now* with `"A"` until every Tier A route for the field is
+walked; `judgeTierOrder` names the cheaper routes a walk skipped, as a work list;
+and `judgeManifestWalk` carries both on its verdict. Eight new guards in
+`tests/branch-manifest.test.ts`.
+
+### The nine `NH71` routes, each with what it returned
+
+1. **`filing-campaign-finance-local` (NJ ELEC) — CLOSED.** See below.
+2. **`lwv-questionnaire`** — not walked. Highest-value Tier A route still owed;
+   one Vote411 ballot page answers a whole contest. `NJ12`.
+3. **`party-committee-roster`** — not walked. `NJ12`.
+4. **`filing-prior-candidacy`** — not walked. `NJ12`.
+5. **`bar-directory`** — not walked; `njcourts.gov` still never asked. `NJ12`.
+6. **`licensing-board`** — not walked. `NJ12`.
+7. **`records-request`** — not walked; rung 13. `NJ12`.
+8. **`announcement-archive`** — not walked. `NJ12`.
+9. **`ad-library`** — not touched. `NS01` is tabled by the author.
+
+### NJ ELEC — the wall was on a different host
+
+`NH71` recorded it as *212 bytes to a plain client, a JavaScript application
+shell, rung 6 owed*. **Both halves were wrong.** It is an Imperva/Incapsula
+bot-management challenge, not an app shell — and the records are not on that
+host at all. `elec.nj.gov` is the agency's brochure site; the filings live on
+**`njelecefilesearch.com`**, which answers **rung 2** at HTTP 200 with 166 KB and
+no challenge. It was reached by walking **rung 5** against the walled host and
+then asking the host the rendering pointed at.
+
+**1,215 location codes read from the page's own option list. Rockaway Township 8
+filed entities, Rockaway Borough 11, control 0 rows.**
+
+**RULING 68 caught a false hit here.** The first working request used
+`CountyCode` — which populates the municipality dropdown and is not a filter on
+the entity search. The API answered **HTTP 200, 47,737 bytes, `recordsTotal:
+326271`**, first row a union PAC from 1995. The control returned **byte-identical
+output**, which is what named it. Without the control it would have been recorded
+as 200 filed entities for Rockaway Township.
+
+## Item 3 — the Wikipedia parser
+
+`lib/hunt/wikipedia.ts` · `pnpm wiki:muni`
+
+**39 of 39 Morris municipalities reached. 898 official rows, 261 distinct
+officials, 818 citations CONFIRMED (91.1%), 45 LEAD, 16 UNREACHABLE, 19
+NO_CITATION, 751 distinct citation hosts.**
+
+The officeholder templates are the prize: `{{NJ Morris County Commissioners}}`
+carries **seven commissioners and the three constitutional officers** — Clerk,
+Sheriff, Surrogate — in one footnoted list, fetched once and cached rather than
+39 times.
+
+**Form of government as twig enumerator (RULING 87), stated as a pair: 176 seats
+PREDICTED across 29 municipalities, 171 NAMED.**
+
+**Six parser seams found and fixed, each written into the playbook §8.** The one
+worth repeating: **sentence splitting must mask `<ref>` bodies**, or the sentence
+ends inside its own footnote and every extracted person comes back with zero
+citations — a confirmation rate of 0 of N for reasons that have nothing to do
+with Wikipedia.
+
+**And a defect of my own, caught by a guard that already existed.** A `" "`
+written into `lib/hunt/wikipedia.ts` came out as a **literal NUL byte**, so the
+ref mask replaced footnotes with NULs, `\s` did not match them, and the sentence
+splitter silently failed. `tests/nul-bytes.test.ts` would have failed the build.
+Class sweep: 1,073 tracked files checked, 1 found, 1 fixed, 0 others.
+
+**Two misses were the SEED LIST, not the parser.** `Chatham, New Jersey` is an
+area article with no government section; `Mendham, New Jersey` is a redirect with
+no headings. A parser miss and a universe-list miss look identical in the output,
+which is what the returned `headings` array is for.
+
+## Items 10 and 11 — the two the author added mid-session
+
+### The government graph — crawl it, do not list it
+
+`lib/hunt/wiki-graph.ts` · `pnpm wiki:graph`
+
+**174 entities, 118 official sites → 70 after a correctness fix, depth 7, 15,718
+edges recorded, 268 followed, 3,936 left unexpanded and NAMED.**
+
+**171 governing bodies the graph found that the registry does not hold**, against
+a registry holding 12: **14 executive departments** (Banking and Insurance,
+Environmental Protection, Education, Transportation, Health, Human Services,
+Community Affairs, Law and Public Safety, Treasury, Agriculture, Corrections,
+Children and Families, Military and Veterans Affairs, Labor), **40 agencies,
+boards and commissions** (the Turnpike Authority, the Cannabis Regulatory
+Commission, the Meadowlands Commission, the Delaware River Basin Commission, the
+Motor Vehicle Commission…), **6 courts**, **12 legislative bodies**, **80
+legislative districts**, **14 congressional districts**, **4 school districts**.
+
+**The priority frontier is the finding.** A plain breadth-first queue spent the
+whole budget at depth 1 — 260 fetches, 48 entities, 4,769 links unexpanded —
+because a municipality article carries 150–350 outbound links. Capping depth is
+the thing this crawler exists NOT to do; ordering is the fix. Expanding
+departments, commissions, boards and courts ahead of the next municipality took
+it from **48 entities at depth 1 to 174 at depth 7 on the same budget**.
+
+**A correctness fix that COST a number, stated as a pair.** `infoboxWebsite`
+matched the first `|url=` anywhere in the article and put a `nytimes.com` story
+forward as the Division of Criminal Justice's official site. Citation templates
+are now cut before the search and the result must be an official host: **118
+"official sites" → 70 real ones.** Calling a newspaper article a government's own
+page is a provenance error, not a cosmetic one.
+
+**`meetingSchedulesFound` is 0, and that is honest rather than disappointing.**
+An encyclopedia links a department's home page, not its hearing calendar. The
+second hop — walking each harvested official site for its schedule and wiring it
+into the meetings composite — is `DI02`.
+
+### Every held credential, called
+
+`pnpm keys:walk` · RULING 90 item 5.
+
+**Three of seven had never been called by anything in this repo**, confirmed by
+sweeping with `git grep -a --untracked` rather than by trusting the register.
+
+| Key | Called | Returned | Closed |
+|---|---|---|---:|
+| `CONGRESS_API_KEY` | 200 | 18 sitting members, NJ + NH, each with the chamber's own portrait and an official page | **36** |
+| Open States / Plural | committed bulk, no quota | 61 legislators for these zips, of 7,976 rows | **61** |
+| `FEC_API_KEY` | 200 | 77 federal candidates; committee records carry treasurer, street, zip, agent phone | **22** |
+| `DATA_GOV_API_KEY` | 200 | 42 govinfo collections; `CDIR` carries member offices and phones | 0 |
+| `CENSUS_API_KEY` | **302** | **THE KEY IS INVALID** — `X-DataWebAPI-KeyError: 1`; a keyless call is refused too. `NS06`. | 0 |
+| `LDA_API_KEY` | 200 | answers, and closes **nothing** at either zip — federal lobbying only, no local layer | 0 |
+| `LEGISCAN_API_KEY` | wired, daily | bills and roll calls; no Kelly field about a person | 0 |
+
+**Two traps, each of which produced a false zero first.** The FEC candidate LIST
+endpoint carries no address — the contact is on `/v1/committees/`. And
+**following a redirect blindly hides an invalid credential**: the Census 302
+resolves to an HTML error page that parses as zero rows, which is the
+zero-row-extraction failure the constitution names five times.
+
+## Item 5 — officials, and RULING 90's first real test
+
+`scripts/officials-contact.mts` · **121 of 245 officials found on their body's
+own site, 34 with an email, 40 with a phone, 7 walls.**
+
+**RULING 90 in one example.** Rockaway Township's nine council members came back
+from the manifest walk as `NO_CITATION` — Wikipedia names all nine and attaches
+no footnote. Under RULING 87 they are LEADs and may not ship. The ruling asks the
+question the manifest cannot: *what would I try if there were no manifest at
+all?* Open the township's website and click Township Council. One fetch of
+`rockawaytownship.org/157/Township-Council` returns **all nine with a term
+expiry, a direct phone extension and an official email address each** — and the
+page is itself the specific verified page RULING 45 asks for.
+
+**Rockaway Township: 10 of 10 named, 9 emails, 10 phones.**
+
+**RULING 63 was honoured and it changed the build.** `scripts/nj-hunt4-rosters.mts`
+already walks these sites — it is a CANDIDATE hunt, matching page text against
+the clerk's filed list, which is why no sitting official ever matched it. This is
+the same two route ids with a different name list, recorded as an enrichment. It
+also takes its index from Wikipedia's External links (**39 of 39**) rather than
+Morris County's Cities-and-Towns page (**30 of 39**, missing Rockaway Township
+itself).
+
+## Item 6 — Arizona's source enumeration, written and not hunted
+
+`docs/arizona-source-enumeration.md`. The FEC directory names **six** Arizona
+offices and all six are reproduced there. Two matter now:
+
+- **The Citizens Clean Elections Commission publishes a Candidate Statement
+  Pamphlet** — *in their own words*, from a state agency, for every publicly
+  financed candidate. That is the field this project has moved least, and it has
+  no New Jersey equivalent.
+- **The Navajo Nation Ethics and Rules Office** is listed alongside the states as
+  a records-holding jurisdiction. This product has no vocabulary for a sovereign
+  nation and a session must not invent one. `NS08`.
+
+Fourteen Tier A routes in walk order, plus five things expected to BREAK in
+Arizona recorded in advance — unincorporated territory where the county IS the
+municipal government, Recorder vs Elections Department, an elected Corporation
+Commission, sovereign tribal government, and legislative districts electing two
+House members.
+
+## Gates
+
+| | |
+|---|---|
+| test | **1719 of 1719 pass, 0 fail** (1709 before — 10 guards added) |
+| lint | **0 errors**, 15 warnings (all pre-existing unused-import warnings) |
+| tsc | clean |
+| guard census | 183 files, **1689 named guards**, 6 dynamic |
+| NUL sweep | 1,073 files, 1 found, 1 fixed |
+
+## Tracker
+
+204 → 211 open. Seven rows opened: `NS05` (the ruling numbering, for reversal),
+`NS06` (the invalid Census key), `NS07` (do appointed executive officials
+render), `NS08` (sovereign tribal government), `NJ11` (two municipalities whose
+roster still will not parse), `NJ12` (the eight routes still unwalked, each with
+its tier), `DI02` (wire the graph's bodies' meetings). **`NS01` untouched.**

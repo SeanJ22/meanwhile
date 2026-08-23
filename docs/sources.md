@@ -47,6 +47,58 @@ be for, because a credential with no row is a credential nobody decides about.
 
 ---
 
+---
+
+## The credentials, RE-MEASURED AND CALLED — 2026-08-22 (NJ Hunt 5)
+
+**The 2026-08-20 enumeration above asked which files READ each key. This one
+asks what happens when each key is CALLED**, which is a different question and
+the one RULING 90 item 5 makes mandatory: *every authenticated resource is walked
+before any unauthenticated one is exhausted, and a key sitting unused while a
+session hits a public rate limit is a defect.*
+
+The reader status was re-confirmed by sweeping the tree with
+`git grep -a --untracked` — not ripgrep, because a NUL byte and a hidden path
+each make ripgrep report nothing found without having looked. The register above
+was accurate. What it could not tell anyone is whether the credentials work.
+
+`pnpm keys:walk` is the instrument. It writes `data/hunt/api-keys-walk.json`.
+
+| Key | Read by | Called 2026-08-22 | What it returned | Owed fields closed |
+|---|---|---|---|---:|
+| `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` — **WIRED** | HTTP 200 | **18 sitting members** across NJ and NH, each with the chamber's own portrait URL, its attribution, and a specific verified page on congress.gov | **36** |
+| `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** |
+| `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** |
+| `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` — **WIRED**, daily | not re-walked | Bills and roll calls. Closes no Kelly field about a person; it is a positions source. | 0 |
+| `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 |
+| `CENSUS_API_KEY` | **nothing** — `SRC01` | **HTTP 302, `X-DataWebAPI-KeyError: 1`** | **THE KEY IS INVALID.** The host redirects to `invalid_key.html`. A call with NO key redirects to `missing_key.html`, so the API cannot be reached at all until the credential is replaced. `NS06`. | 0 |
+| `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 |
+
+**119 owed fields closed from credentials alone, in one run.** Every one of them
+was available while the previous session was measuring how fast a free search
+engine would rate-limit it. That is the defect RULING 90 item 5 names, and this
+table is the measurement behind it.
+
+### Two traps that each produced a FALSE ZERO first
+
+- **The FEC candidate LIST endpoint carries no address.** `/v1/candidates/`
+  returns 24 fields and every one of them is identity or status — no street, no
+  phone, no agent. The contact is on `/v1/committees/`. The first run reported
+  *137 federal candidates, 0 fields closed*, which was true and useless.
+- **Following a redirect blindly hides an invalid credential.** The Census API
+  answers a bad key with `302` + a header naming the problem + a `Location`
+  pointing at an HTML error page. Follow it and you get HTTP 200 and a page of
+  HTML, which parses as **zero rows**. A zero-row extraction reported as an empty
+  result is the failure the constitution names five separate times, and here it
+  would have hidden a dead credential behind a shrug about ZCTA geography.
+
+### Routes added to the manifest from this walk
+
+`congress-api`, `fec-committee-contact`, `openstates-bulk`, `govinfo-cdir`,
+`census-acs-api` and `lda-filings` — all **Tier A** under RULING 84, all
+recorded with what they actually return, including the two that return nothing
+useful. A credential with no route is a credential nobody decides about.
+
 ## Wired sources
 
 ### Congress.gov — federal bills, members, House roll calls

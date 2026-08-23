@@ -1034,6 +1034,26 @@ test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
   const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
   const numbers = [...text.matchAll(/^### RULING (\d+)\b/gm)].map((m) => Number(m[1]));
   const seen = new Set(numbers);
+
+  /*
+   * **A DECLARED gap is accounted for; a SILENT one is still a failure.**
+   * (Added 2026-08-22, NJ Hunt 5.)
+   *
+   * The author adopted the exhaustion ruling as RULING 90 in his own numbering
+   * and 88 and 89 were never used. Renumbering his ruling down to close the hole
+   * would be this repository correcting him about the number of his own law, and
+   * silently tolerating any hole would give up the thing this guard is for.
+   *
+   * So a gap is legal only when the file NAMES it — `### RULINGS 88 AND 89 —
+   * deliberately unassigned` — which is a diff a reader can see and argue with.
+   * The failure mode this guard exists to catch is a ruling that lives in
+   * `CLAUDE.md` and never reached this file, and that failure produces no such
+   * heading, so it still fails.
+   */
+  for (const m of text.matchAll(/^### RULINGS? ([\d, ]+(?:AND\s+\d+)?)\s+—\s+deliberately unassigned/gim)) {
+    for (const n of m[1].match(/\d+/g) ?? []) seen.add(Number(n));
+  }
+
   const highest = Math.max(...numbers);
   const missing: number[] = [];
   for (let n = 1; n <= highest; n++) if (!seen.has(n)) missing.push(n);
@@ -1041,8 +1061,35 @@ test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
     missing,
     [],
     `docs/rulings.md is missing RULING ${missing.join(", ")} — every ruling is recorded here, ` +
-      "and a number that is only in CLAUDE.md or state.md cannot close a Needs Sean row",
+      "and a number that is only in CLAUDE.md or state.md cannot close a Needs Sean row. " +
+      "If a number is deliberately unassigned, say so with a `### RULINGS N AND M — " +
+      "deliberately unassigned` heading, which is a visible decision rather than a hole.",
   );
+});
+
+test("RULING 79: a deliberately-unassigned ruling number is DECLARED, never merely absent", () => {
+  /*
+   * The exemption above is itself guarded. Without this, the escape hatch would
+   * be a way to make any future gap legal by writing one heading, and nobody
+   * would notice that the heading had stopped describing anything real.
+   */
+  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
+  const declarations = [
+    ...text.matchAll(/^### RULINGS? ([\d, ]+(?:AND\s+\d+)?)\s+—\s+deliberately unassigned/gim),
+  ];
+  const numbers = new Set([...text.matchAll(/^### RULING (\d+)\b/gm)].map((m) => Number(m[1])));
+
+  for (const d of declarations) {
+    const declared = (d[1].match(/\d+/g) ?? []).map(Number);
+    assert.ok(declared.length > 0, "a deliberately-unassigned heading names no numbers");
+    for (const n of declared) {
+      assert.ok(
+        !numbers.has(n),
+        `RULING ${n} is declared deliberately unassigned AND recorded as a ruling. ` +
+          "One of the two is wrong, and a reader cannot tell which.",
+      );
+    }
+  }
 });
 
 test("RULING 37's first half has a path, and it does not reach Needs Sean", () => {

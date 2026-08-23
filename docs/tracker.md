@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **236 open**, 345 resolved.
-- **52 waiting on Sean** — the first section below.
+- **240 open**, 347 resolved.
+- **53 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**52 open · 21 resolved.**
+**53 open · 21 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -70,6 +70,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH65** — RULING 55 says only a photo you have approved renders. Five were hunted on 2026-08-22 from Morris County municipalities' own websites and are PENDING, so those five cards show initials until you say yes. Every one is door 2 - the picture the government publishes to identify its own member - and every one was read as an image before it shipped, in one contact sheet at screenshots/nj-hunt4-portraits.png. Jennifer Rowland (Chatham Township Committee, chathamtownship.org, file named jen_rowland.jpg). Melissa Senatore (Jefferson Township Council, jeffersontownship.net). Sean Mabey (Kinnelon Borough Council, kinnelonboro.org, file named thumb.Mabey 400.jpg). Marilyn Althoff (Mendham Borough Council, mendhamnj.org, file named thumb.Althoff1.png). Melissa Muilenburg (Mountain Lakes Borough Council, mountainlakes.gov, file named Muilenburg-Photo-scaled.jpg).
 
 **NH78** — OFF-1 photo review — the seven Morris County commissioner portraits. All seven are sourced, all seven were READ AS IMAGES, and none has been shipped. Your decision keys to the ASSET, not to the person. Every one is on morriscountynj.gov, a .gov host, and ships under DOOR 2: the portrait a government body publishes to identify its own member, with attribution to Morris County and remove-on-request. Tayfun Selen's already shipped this way on 2026-08-15, so the six join him under the same door rather than arriving under a different rule. The record with every URL, alt text, byte count and per-row judgment is docs/evidence/off1-morris-commissioner-portraits-0823.json. What is owed from you: yes or no per asset, after which the session writes them into the photo store. Worth knowing WHY they were missing: the 2026-08-15 hunt walked the board INDEX page twice for six of seven and recorded 0 candidate images, while the seventh was walked at his own page and returned a portrait immediately. Each commissioner's own page URL was already in the registry as websiteUrl. That is RULING 52's shape - a defensible rung history behind a route nobody varied - and it is why the new script DISCOVERS the member pages from the board index rather than guessing them.
+
+**NH92** — Recording this for your judgement because it decides what a session can be asked to do. In the 2026-08-23 remote container every outbound host except github.com is refused at the egress gateway with HTTP 403 to CONNECT. This was established by walking the ladder rather than assuming it: rung 2 plain fetch 403, rung 3 full browser header set 403, rung 4 a different client - curl, node fetch and wget each - 403, rung 6 the live browser via Playwright net::ERR_TUNNEL_CONNECTION_FAILED. Rung 5, a different egress, is the rung that would answer it and is not available; the environment's own documentation states that a policy denial must be reported rather than routed around. Rung 1, the committed snapshot, is open and is where the 2026-08-23 session did its hunting. WHAT THIS COSTS, stated rather than implied: no source can be fetched, no absence can be re-tested on its RULING 53 clock, no credential can be proven by calling under RULING 95 (and .env.local is not in the repo either, so that is doubly blocked), no lead can get its control check, and walk:all cannot reach production. THE DECISION: whether hunt sessions should run somewhere with egress, or whether hunt briefs aimed at a container should be scoped to rung 1 and to the analysis, extraction and guard work that does not need the network. A brief that asks a walled session to hunt gets an honest report of a wall where it wanted rows.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
 
@@ -193,7 +195,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**30 open · 4 resolved.**
+**31 open · 4 resolved.**
 
 ### P1
 
@@ -226,6 +228,8 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 **NH59** — Sutton's calendar titles the committee's sittings 'WRLAC Mtg @ Pillsbury Library'. Its own page on suttonnh.gov carries only the site footer, so the body names a venue the page does not. Two sittings are held out of the product because of it.
 
 **NH60** — pnpm venue:hunt --town sutton_town reads 18 of Sutton's board pages and cannot reach seven: Municipal Budget Committee, Supervisors of the Checklist, Trustees of the Trust Funds, Website Committee, Ad Hoc Waste Reduction Advisory Committee, Ad Hoc Grist Mill Bridge Committee, and the 26 Grist Mill Street Committee. suttonnh.gov/boards-committees itself answers 404.
+
+**NH90** — Measured 2026-08-23 with pnpm exec tsx scripts/measure-definitions-0823.mts: class 1013 of 1253 bodies, form-specific 216 of 1253, NEITHER 214 of 1253. The 214 break down as 12 county body rows - 7 unique counties, EVERY ONE OF THEM NEW HAMPSHIRE, so there is simply no NH county class definition in lib/officials/body-definitions.ts - and 202 school-district rows, 195 unique, of which 90 are NH and 105 NJ. The machinery is complete and the two-layer shape works; what is missing is the EVIDENCE each row is required to carry. Every definition in that file ships with the statute that creates the class, its URL and the date it was read, and the 2026-08-23 session could not reach any statute publisher - gencourt.state.nh.us and law.justia.com are both refused at the egress. Writing a definition with a plausible citation and a plausible read date is the fabrication rule, so none was written. What is owed: RSA Title II chapters 23-31 for the NH county class, read and cited; and the independent-versus-dependent stamp for the 195 school districts, which decides whether the card can say who governs the schools.
 
 **HD01** — Eleven people are running for United States Senator in New Hampshire and forty-one things about them have never been looked for — faces, their own words, a way to reach them, a website.
 
@@ -269,7 +273,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**25 open · 3 resolved.**
+**27 open · 3 resolved.**
 
 ### P2
 
@@ -282,6 +286,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH72** — NJ Hunt 6 wired 19 of 39 Morris municipalities' governing bodies. The other 20 are OWED, not absent, and `corepack pnpm nj:wire --dry` names every one with its reason. Three reasons, in order of frequency: (1) the confirmed member count does not reach the seat count the municipality's own form of government declares, so a partial list would state a false composition; (2) the form-of-government line states no seat count at all, so completeness cannot be checked; (3) the county clerk's certified winners do not reach the municipality, so the SEATS' partisanship is unsettled under M62. Every one of these is closed by more hunting, not by loosening the gate. The nearest wins: Boonton (7 of 8 confirmed), Dover (5 of 8), Netcong (4 of 6), Long Hill (4 of 5).
 
 **NH73** — Denville Township's article listed Angela Cote and Christopher Golinski on the council. The Morris County Clerk's certified 2025 winners name Adrienne Zimmermann and Mark Venis in those seats, and the township's own council page confirms Zimmermann and Venis and does not name Cote or Golinski. This is RULING 87 working exactly as written - the encyclopedia named, the primary source proved, and the primary source disagreed. What is OWED is the sweep: how many of the other 38 Morris municipalities carry a stale encyclopedia roster that the certified winners contradict? `data/hunt/nj-morris-certified-winners.json` holds 263 certified winners and the comparison is a script, not a hunt.
+
+**NH88** — data/hunt/wiki-graph-07866.json holds 80 leader entries harvested on 2026-08-22, and 5 of the 72 usable ones store the Wikipedia link syntax as part of the person's name - "Joseph Jackson ([[Republican Party (United States)" is what the file actually contains for the Mayor of Rockaway Township, and one office title is stored as "[[City manager". A consumer reading the name field straight out gets a string that is not a name. NOTHING WENT RED, because nothing was empty: this is RULING 100's shape, an extraction that came back with some rather than none, and only reading the rows shows it. The fix belongs in the graph's own generator per RULING 92, and that generator reads Wikipedia over the network, so the artifact is owed a regeneration when egress is available. scripts/mine-wiki-leaders.mts cleans the markup at read time as a stopgap and exports cleanWikiText; it is a workaround, not the fix.
+
+**NH89** — The 2026-08-23 session mined two committed corpora that had never been read for the fields they answer, and produced leads it could not confirm because every outbound host was refused at that environment's egress. data/hunt/campaign-site-leads-nj-morris.json holds 12 campaign-site leads across 12 of 272 candidates, 8 of them STRONG (selenformorriscounty.com, joehathawayforcongress.com, strobelforschoolboard.com, rebeccabennettforcongress.com, corybooker.com and three more) against a field that stood at 0 of 272. data/hunt/wiki-leader-leads-07866.json holds 9 New Jersey municipal roster leads - mayor, manager and clerk for Rockaway Township, Rockaway Borough and Denville - none currently held as an officeholder. EVERY ROW IS A LEAD AND NOT A HIT: a domain matching a candidate's name is a guessed identifier, and Wikipedia names a person while the citation proves them (RULING 87). What is owed is the control check - fetch each, confirm the page self-identifies with the filed name, the office and the cycle - which is one fetch per lead for a session that has egress. Regenerate the leads with pnpm mine:campaign-sites and pnpm mine:wiki-leaders.
 
 **NJ02** — The official-universe pair at 07866, measured 2026-08-22 against the 2022 Census of Governments: 178 units within the first radius rung, 5 held, 173 with no body, 13 bodies held across those five. Compare 03255, which is 48 of 48. The five held are Township of Rockaway (9 bodies), County of Morris, Morris County Soil Conservation District, Morris Hills Regional District and Rockaway Township School District. Every un-held unit is named in the twig:pair output rather than counted, per RULING 57. This is the enumeration finding, not a defect: the New Jersey universe is simply much larger inside 25 km than Newbury's, because northern New Jersey is dense with boroughs, townships, fire districts and regional authorities. The work is to name and reach them, one shape at a time, and the fire districts and municipal utilities authorities are the biggest single class.
 
@@ -391,7 +399,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**71 open · 81 resolved.**
+**71 open · 82 resolved.**
 
 ### P1
 
@@ -511,7 +519,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH70** — New Jersey has two places named Silver Lake, Census GEOIDs 3467590 and 3467650, and placeIdentity keys on state plus name, so both slug to state:nj/place:silver_lake. The widened geometry clip surfaced it and the build refused to write, correctly - a duplicate join key is a join that collapses. It is fixed for the build by suffixing EVERY side of a collision with its Census GEOID, and the underlying identifier convention is still not unique.
 
-**NH80** — The pnpm regen git sweep on 2026-08-23 found two of ten registered artifacts committed older than something in their generator's source closure. data/hunt/tier-directories.json was behind its own dedicated script and was regenerated - the content came back byte-identical and only the walk date moved. The other is lib/officials/directory-source.ts, behind scripts/doc-dates.mjs, a date helper shared by nine generators, so that edit cannot have changed what congress:migrate produces. It was deliberately NOT regenerated: re-running it moves a pinned upstream commit SHA and restamps a collectedAt of 2026-08-16, which is the date the data was actually read, and restamping a provenance date without re-reading the data is the fabrication rule. What is owed is a decision about whether a shared-helper edit should mark an artifact stale at all. The tool already distinguishes a source dedicated to one generator from one shared by nine and prints which, so the answer may be no more than making the sweep act on the distinction it already reports.
+**NH87** — RULING 107's wider sweep found this and it is the one site of 31 that is a real restamp rather than a reading path. scripts/ship-staged-portraits.mts writes collectedAt: new Date() on every portrait it commits (lines ~175 and ~193), but the collection happened earlier, when the portrait was STAGED from Wikimedia Commons. The ship step is not the read. It cannot be fixed where it stands, because the staged ResultRow carries no collection date to carry forward - so the fix is in the STAGING step, which has to start recording one, and then the ship step carries it rather than minting. Until then the provenance date on every Commons portrait is the day somebody ran the shipper. Pinned in tests/freshness-provenance.test.ts as the single entry of KNOWN_UNDECLARED, a baseline that may only shrink; run pnpm freshness:audit --all to see it.
 
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
@@ -567,7 +575,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**24 open · 133 resolved.**
+**23 open · 134 resolved.**
 
 ### P1
 
@@ -580,8 +588,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
 **NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions.
-
-**NH81** — Carried forward unchanged from PU03. The 2026-08-23 session spent its run on the four guards and the meeting and jurisdiction surfaces and did not reach this. Ask for the next meeting still answers with a heading and nothing to tap, and asking when school starts still answers that no sourced owner is routed for the topic when the school district plainly owns it. The standard for both is NH-2, which he named as the thing to replicate: coverage disclosure with denominators, honest gaps, the relevant record surfaced, and a named human with a phone number and an email. He called the contact details the best part.
 
 **NH84** — Carried forward from PU06. The MAP surfaces are done: the who-governs panel went from six full sentences to six asterisks and one pill, and the 2026-08-23 session took the meetings list from nineteen consecutive Could govern you pills down to one per jurisdiction group, both read as images. The BALLOT page is untouched at twelve instances across nine contests, because it renders the pill per contest heading, which RULING 28 permits and which he nonetheless called the headline UX problem of the New Jersey pass. What is owed is the same treatment - one page-level annotation with marks on the affected contests - and wherever the sentence survives, making it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
 
@@ -653,7 +659,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**10 open · 59 resolved.**
+**11 open · 59 resolved.**
 
 ### P2
 
@@ -668,6 +674,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 ### P3
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
+
+**NH91** — In the 2026-08-23 remote container, corepack pnpm test reports 1829 pass / 3 fail, and all three failures are the same thing: browserType.launch cannot find chromium_headless_shell-1234, because the image ships build 1194 at /opt/pw-browsers while package.json pins playwright 1.62.1. The three are tests/beacon-guard.test.ts's origin-confinement and beacon guards. THEY ARE A COULD-NOT-RUN, NOT A FAILURE, and the distinction is the one pnpm walk:all already makes - an unreachable service is not a missing feature. They pass in CI, which installs its own browsers. What is owed is a decision: either pin the browser build alongside the library so a fresh container is deterministic, or have the harness launch with executablePath against whatever build is present, which is what the environment's own guidance suggests. Until then any session in a container reports three red lines that are about the image.
 
 **PD02** — The local development database is eight migrations behind production, so nothing can be tried locally against the real schema.
 

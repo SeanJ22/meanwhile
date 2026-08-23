@@ -1435,6 +1435,103 @@ source so divergence fails the build.**
 immediately found a real gap: the pinned conduct block named its source only at
 the END, after the whole thing, rather than where a reader arrives.
 
+## TWO RULINGS OF 2026-08-23 — THE VISUAL TAIL AND REHUNT SESSION
+
+(Adopted 2026-08-23, the author's visual-tail-and-rehunt brief, items 1, 2 and
+10. **RULINGS 107 and 108.** `docs/rulings.md` carries both in plain language,
+because a ruling the author cannot read is a ruling that does not bind him.)
+
+### RULING 107 — A FRESHNESS DATE IS WRITTEN ONLY BY THE CODE PATH THAT PERFORMED THE READ
+
+(Adopted 2026-08-23, item 1. **Closes `NH80`.** It is the enforcement half
+**RULING 96** was missing: that ruling made last-walked dates the instrument
+deciding whether a source is re-walked, and had no way to distinguish a date
+somebody earned from a date a program printed.)
+
+**A stamp that updates without a read is not a freshness record. It is the
+suppression of one.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* A
+missing date sends a session back to the source. A confident wrong date stops
+it, permanently — so a restamp does not merely fail to help, **it suppresses
+the re-walk that would have caught the staleness**, which is worse than
+`UNKNOWN`. RULING 53 already says a record that cannot say when it was measured
+reads as stale rather than fresh, because defaulting the other way is how a bad
+date buys permanent trust. This is that reasoning applied one layer down, to the
+generators that WRITE the dates rather than the register that holds them.
+
+*What `NH80` feared, and what was actually there.* `NH80` left
+`lib/officials/directory-source.ts` un-regenerated on the belief that
+`pnpm congress:migrate` would restamp a `collectedAt` of 2026-08-16 without
+re-reading. Regenerated against the committed snapshot it came back
+**BYTE-IDENTICAL** — it propagates `snapshot.source.collectedAt`, the day the
+data was genuinely read, and was already honest. **The defect was one file
+over.** `docs/congress-legislators-diff.md` moved its header from
+*Generated 2026-08-16* to *Generated 2026-08-23* with nothing read, because the
+value feeding it was a clock call named `collectedAt`.
+
+- **Two kinds of date, named apart and typed apart.** A **read stamp** answers
+  *how current is this DATA* and is mintable only from evidence of a read, or
+  CARRIED forward from a prior read — which is what propagation is, and is
+  honest, because the date still names the day somebody looked. A **run stamp**
+  answers *when did this PROGRAM run*, comes from the clock, and **may never be
+  written into a freshness field.**
+- **Where no read is evidenced the answer is `UNKNOWN`**, which reads as stale.
+  There is no `--today` escape, for the reason `scripts/sources-freshness.mts`
+  already gives: stamping an entry with today's date without having called it is
+  the fabrication rule.
+- **An adapter that stamps the moment it fetched is NOT restamping**, and that
+  carve-out is DECLARED rather than inferred — a file states
+  `@freshness-reads-here` when its clock stamps sit in the reading path.
+  Declaring costs a diff, which is the same mechanism `tests/guard-census.json`
+  uses to let a guard leave. **A carve-out nobody has to write down is a
+  carve-out that grows.**
+
+The machinery is `lib/ops/freshness.ts` (branded types, so the mistake cannot be
+written in new code) and `lib/ops/freshness-audit.ts` (a source sweep, because a
+plain string assigned a plain string type-checks perfectly). `pnpm freshness:audit`
+reports; `tests/freshness-provenance.test.ts` enforces the registered generators
+and pins the wider class to a baseline that **only shrinks**.
+
+**Measured on adoption: 10 of 10 registered generators audited, 1 able to
+restamp without reading and now 0; 523 files swept, 31 clock-fed sites found,
+29 verified by hand as reading paths and declared, 1 fixed, 1 a tracker row.**
+
+### RULING 108 — ANYTHING A SESSION MUST READ AT SESSION START LIVES IN THE REPO
+
+(Adopted 2026-08-23, item 2. **Generalises RULING 104**, which said an artifact
+the author places in the repo is an input the session must reach. This says
+where it has to be placed for that to be possible at all.)
+
+**A session has a shell and a clone. The Drive mirror is a convenience for the
+author, never a channel to a session.**
+
+- **The repo copy is the PRIMARY output, written FIRST, and never guarded.**
+- **A mirror failure is a warning about the mirror**, never a reason to produce
+  nothing.
+
+*The rationale stays attached.* `context.md` — the orientation file every
+session is told to open first — was written to the Drive mirror ONLY, and
+`scripts/handoff.mjs` **returned early when the mirror was absent**, which it is
+on every machine that is not the author's. So on a session's machine the file
+was not merely unreachable: it was never written. Every improvement made to it
+landed where no session could see — RULING 106's uncapping, the tracker-change
+section restored to ten of ten rows, P0 notes restored to full length.
+
+**This is the second time in two sessions.** The first was the 8/22 visual
+brief's Google Drive folder, which RULING 104 was adopted over, and the shape is
+identical: something is left for a session in a place only a person can reach,
+and the session honestly reports that it did not look.
+
+*Why the ORDER is the rule and not a detail.* A mirror write that came first and
+threw would leave the repo copy unwritten — the failure this ruling ends,
+rebuilt inside the fix for it. `tests/context-pinned-conduct.test.ts` asserts the
+repo write precedes the mirror write in the generator's own source, and that
+handoff no longer returns early.
+
+**The artifact: `docs/context.md`, 44,383 bytes, uncapped, carrying the
+`## DISCOVERY CONDUCT` block verbatim from this file.**
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

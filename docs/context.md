@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 119 recorded
+## Rulings — 121 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -389,6 +389,8 @@ from. Each entry there names what it supersedes.
 - RULING 104 — a file you put in the repo is something a session must go and read
 - RULING 105 — say what is rendering, what is out of scope, and what is still dark
 - RULING 106 — no generated file has a size limit
+- RULING 107 — a freshness date is written only by the code that read the source
+- RULING 108 — anything a session must read at the start lives in the repository
 
 ## P0 tracker rows — 93 of 456 rows
 

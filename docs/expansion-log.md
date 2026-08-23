@@ -118,3 +118,81 @@ uncomfortable half of the finding.
 result, and every commissioner's name on it is a link to their own page with
 their portrait on it. **Two clicks.** That is the whole route, and it had been
 recorded as an absence for eight days.
+
+## visual-tail-and-rehunt-0823 · 2026-08-23
+
+**The wall this session hunted behind, stated first because it decides how every
+route below reads.** Every outbound host except `github.com` is refused at this
+environment's egress gateway with `403` to `CONNECT`. That was established by
+walking the ladder rather than assuming it: **rung 2** (plain fetch) `403`,
+**rung 3** (full browser header set) `403`, **rung 4** (a different client —
+`curl`, `node` fetch and `wget` each) `403`, **rung 6** (the live browser,
+Chromium via Playwright) `net::ERR_TUNNEL_CONNECTION_FAILED`. **Rung 5** — a
+different egress — is the one that would answer it and is not available here;
+the environment's own documentation forbids routing around a policy denial and
+requires it be reported instead, so it is reported. **Rung 1, the committed
+snapshot, is open**, and every route below is walked there.
+
+This is an EGRESS wall in the g3 sense — a rung is `(client, headers, URL,
+egress)` — and it is a fact about this session's machine on this date, never a
+fact about any source. Nothing below is recorded as an absence.
+
+### Mine the committed search corpus for campaign-site domains
+
+- **Conceived:** an inventory mismatch rather than a research idea. NJ Hunt 4
+  spent its entire search budget on 272 candidates and committed the result;
+  `campaignSite` then stood at **0 of 272**. Both cannot be true of a corpus
+  doing its job — 858 hits with URLs, titles and snippets had been collected to
+  answer this field and never read for it. RULING 90's question, *what would I
+  try if there were no manifest at all?*, answers here with: read what is
+  already in the tree before going back out.
+- **Query:** `data/hunt/nj-hunt4-search.json`, mined by `pnpm mine:campaign-sites`
+  (`scripts/mine-campaign-sites.mts`). No network call.
+- **Returned:** **12 leads across 12 of 272 candidates — 8 STRONG, 4 WEAK**,
+  from 858 hits, with 598 excluded as known aggregators/news/social by name and
+  25 as government hosts. The strong set includes `selenformorriscounty.com`
+  (Tayfun Selen), `joehathawayforcongress.com`, `strobelforschoolboard.com`,
+  `rebeccabennettforcongress.com`, `corybooker.com`.
+- **Every row is a LEAD, never a HIT.** A domain matching a candidate's name is
+  a guessed identifier, and the control check — fetch it, confirm the page
+  self-identifies with the filed name, the office and the cycle — is exactly
+  what the egress wall prevents. The artifact says so in its own header.
+- **Generalises:** **yes**, to any jurisdiction where a per-entity search corpus
+  has been committed. The classifier is name-shape plus an excluded-host list,
+  neither of which is New Jersey-specific.
+
+### Mine the committed government graph's `leaders` for roster rows
+
+- **Conceived:** `data/hunt/wiki-graph-07866.json` is 4.5 MB committed on
+  2026-08-22 — 280 nodes, 174 entities, 171 bodies the registry does not hold.
+  Its per-node `leaders` array had never been read by anything. `NH72` records
+  rosters as OWED for 20 of 39 Morris municipalities while three of them sat in
+  this file.
+- **Query:** `pnpm mine:wiki-leaders` (`scripts/mine-wiki-leaders.mts`) over the
+  committed graph. No network call.
+- **Returned:** **72 rows recovered from 80 leader entries**, 8 too short to be
+  a name. **9 are New Jersey municipal rows** and all nine are for the three
+  municipalities of 07866 — Rockaway Township, Rockaway Borough and Denville —
+  giving mayor, manager and clerk for each. None is currently held as an
+  officeholder (checked against 1,157 names in `lib/registry/officeholders-*.json`).
+- **A RULING 100 finding fell out of it.** The committed graph stores leader
+  names **with Wikipedia markup still attached** — `"Joseph Jackson ([[Republican
+  Party (United States)"` — on 5 of 72 rows. Nothing was empty, so no zero-row
+  check ever fired; the rows were simply not names, and only reading them shows
+  it. The fix belongs in the graph's generator under RULING 92, that generator
+  reads Wikipedia over the network, and the artifact is owed a regeneration.
+  Tracker row opened.
+- **Every row is a LEAD, never a FOUND.** RULING 87: Wikipedia names the person
+  and the citation proves them. Not one footnote could be fetched.
+- **Generalises:** **yes**, to every zip with a committed government graph. The
+  markup-cleaning is Wikipedia-wide, not article-specific.
+
+### What both routes have in common, and it is the finding worth keeping
+
+Neither is clever. Both are the same observation twice: **this project had
+already paid for the bytes and had not read them.** 858 search hits and 80
+leader entries were sitting in the tree, committed, while the fields they answer
+were recorded at zero — and the previous session's conclusion from its exhausted
+search quota was that the constraint was money. That is RULING 83's failure
+recurring in a new place, and the cheapest route in the manifest is still the
+one nobody walked.

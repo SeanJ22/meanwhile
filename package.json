@@ -52,6 +52,8 @@
     "hunt:roster": "tsx scripts/hunt-roster.mts",
     "image:view": "tsx scripts/image-view.mts",
     "ingest": "tsx scripts/ingest.ts",
+    "mine:campaign-sites": "tsx scripts/mine-campaign-sites.mts",
+    "mine:wiki-leaders": "tsx scripts/mine-wiki-leaders.mts",
     "intake:tripwire": "tsx scripts/intake-tripwire.mts",
     "key-votes:fetch": "tsx scripts/fetch-key-votes.mts",
     "key-votes:positions": "tsx scripts/fetch-key-vote-positions.mts",

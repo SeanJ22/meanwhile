@@ -2350,3 +2350,39 @@ The orientation file every session opens was capped at 20 KB and dropped its ent
 Two limits were found and removed. The orientation file now runs to 44 KB with its recent-changes section whole at ten of ten rows and its notes at full length. The session log clipped its finished and still-open lists to twelve rows each with an *"and N more"* line beneath — the same trim wearing a polite face — and grew by 25 KB when that came out.
 
 **What replaces a limit.** Without one, a generated summary can drift toward reproducing the constitution and leave two documents that disagree about the law. The answer is not a cap: **every section says where its content came from, and any block that claims to be word-for-word is tested against the original**, so a difference fails the build instead of sitting there. That sweep immediately found a real gap — the pinned rules block said where it came from only at the END, after the whole thing, rather than at the point a reader arrives.
+
+---
+
+### RULING 107 — a freshness date is written only by the code that read the source
+
+*Adopted 2026-08-23 (the visual tail and rehunt session, item 1). Law: `CLAUDE.md`, **Non-negotiables in code**. **Supersedes nothing. It closes `NH80`**, and it is the enforcement half RULING 96 was missing: RULING 96 made last-walked dates the instrument that decides what gets re-checked, and had no way to tell a date somebody earned from a date a program printed.*
+
+**When we write down the date something was last checked, that date has to come from actually checking it. A program that stamps today's date every time it runs is not recording freshness. It is erasing it.**
+
+A note in the tracker said we should not re-run one of our programs, because re-running it would move a date from 16 August to today without anybody re-reading the thing the date is about. So it was left alone.
+
+**Re-running it turned out to be safe, and something else was not.** The file everyone was worried about came back **identical, byte for byte** — it copies its date from the snapshot it reads, which is the day somebody genuinely looked. That program was already honest.
+
+The one nobody was watching sat next to it. A report it also writes had *"Generated 16 August"* at the top, and re-running moved that to *"Generated 23 August"* **with nothing read at all**. Anyone scanning that document for how current it is — a person or a program — would have read week-old data as a day old.
+
+**And that is worse than having no date.** A missing date sends somebody back to check. A confident wrong one stops them, and stops them permanently. So the two kinds of date are now different things that cannot be mixed up: one says *when we read this*, and can only be produced by a read or copied from an earlier one; the other says *when this program ran*, and is never allowed to sit in a freshness field. Where nothing was read, the answer is `UNKNOWN`, which reads as stale.
+
+*What the sweep found across everything else.* Of the ten programs that write files for us, **one** could stamp a date without reading, and it is fixed. Reading every file under `scripts/` and `lib/` — 523 of them — turned up **31** places where a date came off the clock. **Twenty-nine were legitimate and are now marked as such**: a program that fetches a page and stamps the moment it fetched is doing exactly the right thing, and each was checked by hand before being marked. One is fixed. **One remains** and is a tracker row: it stamps a portrait with today's date when the portrait was actually collected earlier, and the earlier date was never recorded, so fixing it needs the collecting step to start recording one.
+
+---
+
+### RULING 108 — anything a session must read at the start lives in the repository
+
+*Adopted 2026-08-23 (the visual tail and rehunt session, item 2). Law: `CLAUDE.md`, **Repo layout**. **Supersedes nothing. It generalises RULING 104**, which said an artifact the author places in the repo is an input a session must reach; this says where the author has to place it for that to be possible.*
+
+**A session has a terminal and a copy of the repository. It has no way into a shared drive. So anything we expect a session to read before it starts work has to be in the repository, or we have not given it to them.**
+
+The orientation file — the one every session is told to open first — was being written to the shared Drive folder and nowhere else. Worse, the program that writes it **gave up entirely when the Drive folder was missing**, which is always, on any machine that is not the author's. So on a session's machine the file was not merely out of reach: it was never written at all.
+
+**Everything done to improve it had landed somewhere no session could look.** The size limit that had been quietly cutting its contents was removed, its recent-changes section was restored to its full ten rows, and its notes were put back to full length — all of it, into a folder no session has ever been able to open.
+
+This is the second time in two sessions. The first was a folder of screenshots a visual session was told to look at and could not, which is what RULING 104 was adopted over. The pattern is the same both times: **something is left for a session in a place only a person can reach**, and the session honestly reports it did not look.
+
+The repository copy is now the one that gets written, it is written first, and nothing is allowed to stop it. The Drive copy is written afterwards, as a convenience for the author, and if it fails that is a note about the Drive rather than a reason to produce nothing. **The file is 44 KB, in the repository, with the conduct rules in it word for word.**
+
+*Why the order is the rule and not a detail.* If the Drive write came first and threw, the repository copy would never happen — which is the failure this ruling exists to end, rebuilt inside the fix for it.

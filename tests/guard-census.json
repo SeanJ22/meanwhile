@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 193,
-    "named": 1786,
+    "files": 194,
+    "named": 1797,
     "dynamic": 6
   },
   "files": {
@@ -636,6 +636,10 @@
         "RULING 106: the shrink cascade is gone from the generator's source",
         "RULING 106: the tracker-change section renders all ten rows",
         "RULING 106: there is no cap, and nothing is trimmed to meet one",
+        "RULING 108: an unreachable mirror does not stop the repo copy",
+        "RULING 108: the generator writes the repo copy first and never guards it",
+        "RULING 108: the repo copy carries the pinned conduct block verbatim",
+        "RULING 108: the repo copy of context.md exists",
         "a block claimed VERBATIM is tested against its source, and divergence fails",
         "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
         "every section of context.md states where it came from"
@@ -1066,6 +1070,18 @@
         "a sitting title with no body name gets the jurisdiction in front",
         "dates render mm/dd/yyyy, including inside ranges",
         "the address renders once when the source publishes it as the venue name"
+      ],
+      "dynamic": 0
+    },
+    "tests/freshness-provenance.test.ts": {
+      "names": [
+        "RULING 107: a run date never renders as a data date",
+        "RULING 107: a stamp cannot be minted without evidence of a read",
+        "RULING 107: carrying a prior read date forward is honest; inventing one is not",
+        "RULING 107: no registered generator can restamp a freshness date without reading",
+        "RULING 107: the declaration is what separates a reading path from a restamp",
+        "RULING 107: the sweep sees a stamp broken across two lines",
+        "RULING 107: the wider class of stamp sites only shrinks"
       ],
       "dynamic": 0
     },

@@ -48,8 +48,8 @@
     "regeneratedOn": "2026-08-23"
   },
   "lib/officials/directory-source.ts": {
-    "digest": "a5b1ee73dc73c871846df3c162fc7ef49bb0c0ba04d49e391706c70a17040112",
-    "files": 3,
+    "digest": "a37c4ecb873c9e6042fcfafa2a698ab7fd1743aff8afea92fb94faed2c92dd5e",
+    "files": 2,
     "entry": "scripts/migrate-congress-directory.mts",
     "regeneratedOn": "2026-08-23"
   },

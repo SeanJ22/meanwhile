@@ -31,10 +31,10 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { buildContext, CAP_BYTES } from "../scripts/context-file.mjs";
+import { buildContext, CAP_BYTES, CONTEXT_REPO_PATH, writeContext } from "../scripts/context-file.mjs";
 
 const ROOT = process.cwd();
 
@@ -232,4 +232,78 @@ test("a block claimed VERBATIM is tested against its source, and divergence fail
   }
   // And the whole-block form: a paraphrase of the pinned heading fails.
   assert.ok(!law.includes("## DISCOVERY CONDUCT AND EXPANSION"));
+});
+
+/* ========================================================================== */
+/* RULING 108 — anything a session must read at session start lives in the repo */
+/* ========================================================================== */
+
+test("RULING 108: the repo copy of context.md exists", () => {
+  /*
+   * The file every session is told to open first was written to the Drive
+   * mirror ONLY. A session has a shell and a clone and no way into Drive, so
+   * the orientation document was unreadable by every session that was told to
+   * read it — and the work of uncapping it, restoring its tracker-change
+   * section and restoring P0 notes to full length all landed where none of them
+   * could see it.
+   */
+  const abs = join(ROOT, CONTEXT_REPO_PATH);
+  assert.ok(existsSync(abs), `${CONTEXT_REPO_PATH} is absent — a session cannot read the mirror`);
+  const bytes = readFileSync(abs, "utf8").length;
+  assert.ok(bytes > 10_000, `${CONTEXT_REPO_PATH} is ${bytes} bytes — that is not the orientation file`);
+});
+
+test("RULING 108: the repo copy carries the pinned conduct block verbatim", () => {
+  /*
+   * The same provenance discipline the built text is already held to, applied
+   * to the COMMITTED copy. A repo file that has drifted from CLAUDE.md is two
+   * authorities that disagree about the law, which is the failure RULING 106
+   * named when it removed the cap.
+   */
+  const committed = readFileSync(join(ROOT, CONTEXT_REPO_PATH), "utf8");
+  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const start = law.indexOf("## DISCOVERY CONDUCT");
+  assert.ok(start > 0, "CLAUDE.md no longer carries a DISCOVERY CONDUCT section");
+  // A handful of load-bearing sentences from the section, each of which must
+  // survive the copy byte-for-byte.
+  for (const line of [
+    "**Every hunt report carries an EXPANSION section listing routes that did not",
+    "**A hunt report with an empty expansion section FAILS THE ITEM**",
+    "**A recorded absence with no stuck-protocol block is VOID and the field returns",
+  ]) {
+    assert.ok(law.includes(line), `CLAUDE.md no longer carries: ${line}`);
+    assert.ok(committed.includes(line), `${CONTEXT_REPO_PATH} has drifted from CLAUDE.md at: ${line}`);
+  }
+});
+
+test("RULING 108: the generator writes the repo copy first and never guards it", () => {
+  /*
+   * The behavioural test above passes on a stale committed file. This reads the
+   * source: the repo write must be unguarded and must come BEFORE the mirror,
+   * so an unreachable Drive cannot cost a session its orientation file.
+   */
+  const src = readFileSync(join(ROOT, "scripts", "context-file.mjs"), "utf8");
+  const repoWrite = src.indexOf(`writeFileSync(join(ROOT, CONTEXT_REPO_PATH)`);
+  const mirrorWrite = src.indexOf(`writeFileSync(join(mirrorDir, "context.md")`);
+  assert.ok(repoWrite > 0, "the generator no longer writes a repo copy");
+  assert.ok(mirrorWrite > 0, "the generator no longer writes the mirror copy");
+  assert.ok(repoWrite < mirrorWrite, "the mirror is written before the repo copy — the order is the ruling");
+
+  const handoff = readFileSync(join(ROOT, "scripts", "handoff.mjs"), "utf8");
+  assert.doesNotMatch(
+    handoff,
+    /if \(!existsSync\(MIRROR\)\) \{\s*warn\("context"[\s\S]{0,120}?return;/,
+    "handoff returns early when the mirror is absent — that is the bug, and it wrote no file at all",
+  );
+});
+
+test("RULING 108: an unreachable mirror does not stop the repo copy", async () => {
+  /*
+   * The exact condition a session runs under: no Drive. The repo write must
+   * still happen and the mirror failure must be REPORTED rather than thrown.
+   */
+  const built = await writeContext(null, OPTIONS);
+  assert.equal(built.repoPath, CONTEXT_REPO_PATH);
+  assert.equal(built.mirrored, false, "no mirror was given, so none may be reported as written");
+  assert.ok(existsSync(join(ROOT, CONTEXT_REPO_PATH)), "the repo copy was not written");
 });

@@ -38,6 +38,7 @@
     "extract": "tsx scripts/extract.mts",
     "fec:directories": "tsx scripts/fetch-fec-directories.mts",
     "fec:fetch": "tsx scripts/fetch-fec.mts",
+    "freshness:audit": "tsx scripts/freshness-audit.mts",
     "feedback:read": "tsx scripts/read-feedback.mts",
     "fix:official-pages": "tsx scripts/fix-stale-official-pages.mts",
     "geocode": "tsx scripts/geocode.mts",

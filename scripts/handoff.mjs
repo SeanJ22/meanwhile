@@ -546,12 +546,17 @@ if (CHECK_ONLY) {
  * could block a session from ending would be worse than not having it.
  */
 async function writeContextFile(note) {
-  if (!existsSync(MIRROR)) {
-    warn("context", "mirror drive not reachable — context.md not written");
-    return;
-  }
+  /*
+   * RULING 108 (2026-08-23). This used to RETURN here when the mirror was
+   * absent, so a machine with no Drive produced no context.md at all — and a
+   * session, which never has Drive, was told to open a file that was never
+   * written for it. The repo copy is the primary output now and is written
+   * whether or not the mirror exists; an unreachable mirror is a warning about
+   * the mirror, not a reason to skip the file.
+   */
+  const mirrorReachable = existsSync(MIRROR);
   try {
-    const built = await writeContext(MIRROR, {
+    const built = await writeContext(mirrorReachable ? MIRROR : null, {
       gitFacts,
       // R18: the generated-at line on a generated DOCUMENT is Eastern.
       // `stampToday` below stays America/Phoenix — different question, and
@@ -575,7 +580,11 @@ async function writeContextFile(note) {
     const counts =
       `${built.counts.phases} phase(s), ${built.counts.p0} P0 row(s), ` +
       `${built.counts.ripcords} ripcord(s), ${built.counts.statusChanges} status change(s)`;
-    ok("context", `context.md ${note} — ${kb} KB, uncapped, ${counts}`);
+    const where = built.mirrored
+      ? `${built.repoPath} and the mirror`
+      : `${built.repoPath} (mirror not reachable — the repo copy is the one a session reads)`;
+    ok("context", `context.md ${note} — ${where}, ${kb} KB, uncapped, ${counts}`);
+    if (built.mirrorError) warn("context", `mirror copy not written — ${built.mirrorError}`);
     for (const line of built.truncation) warn("context", line);
   } catch (error) {
     warn("context", `context.md not written — ${error.message}`);
@@ -585,7 +594,7 @@ async function writeContextFile(note) {
 if (CHECK_ONLY) {
   ok("context", "skipped (--check)");
 } else {
-  await writeContextFile("written to the mirror");
+  await writeContextFile("written");
 }
 
 /* ---------------------------------------------------------- dev server --- */

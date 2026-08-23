@@ -1,4 +1,12 @@
 /**
+ * @freshness-reads-here
+ *
+ * RULING 107 — the clock stamps in this file are minted by the code path that
+ * performs the read: the freshness date is taken at the moment of the fetch,
+ * which is what the ruling asks for rather than what it forbids. Verified
+ * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ */
+/**
  * **How big is the silently-failed-extraction blind spot?** — F01-continued
  * session 2, item 0C (2026-08-19). **SIZING ONLY.** RULING 12: no extractor
  * is built here.

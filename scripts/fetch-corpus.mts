@@ -1,4 +1,12 @@
 /**
+ * @freshness-reads-here
+ *
+ * RULING 107 — the clock stamps in this file are minted by the code path that
+ * performs the read: the freshness date is taken at the moment of the fetch,
+ * which is what the ruling asks for rather than what it forbids. Verified
+ * 2026-08-23 by reading each stamp site against the retrieval it sits in.
+ */
+/**
  * Fill the statement corpus (3e): fetch each verified campaign site and each
  * wired official's official page into `data/corpus/statements.json`.
  *

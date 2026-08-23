@@ -171,6 +171,16 @@ const RECORD_FILES = new Set([
   // that banned the record of a deletion would erase the reason anybody knows
   // not to rebuild the thing.
   "docs/amendment-history.md",
+  /*
+   * RULING 108 (2026-08-23) put the orientation file in the repo, where a
+   * session can read it. It is GENERATED from `CLAUDE.md`, `docs/rulings.md`
+   * and `docs/tracker.csv` — every one of which is already exempt directly
+   * above — so it quotes their historical account of the removed gate by
+   * construction. Scanning it is scanning the same text a second time, and the
+   * text that matters is still swept at its source. This exemption adds no
+   * unscanned prose to the repo.
+   */
+  "docs/context.md",
 ]);
 
 /** The sentences the two dead gates were specified in, before any code. */

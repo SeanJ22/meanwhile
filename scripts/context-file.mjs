@@ -670,9 +670,53 @@ export async function buildContext({
   };
 }
 
-/** Write it into the mirror. Returns what was written, for the checklist. */
+/**
+ * Where the REPO copy lives. Repo-relative.
+ *
+ * **RULING 108 — anything a session must read at session start lives in the
+ * repo.** (Adopted 2026-08-23.) This file is the orientation document every
+ * session opens on, and until today it was written to the Drive mirror ONLY.
+ * A session has a shell and a clone; it has no way into Drive. So the file
+ * every session was told to read first was, by construction, unreadable by any
+ * of them — and the work of uncapping it, restoring its tracker-change section
+ * to ten of ten rows and restoring P0 notes to full length all landed somewhere
+ * no session could see.
+ *
+ * That is the second time in two sessions an orientation input lived only in
+ * Drive; the 8/22 visual captures were the first, and RULING 104 was adopted
+ * over them.
+ */
+export const CONTEXT_REPO_PATH = "docs/context.md";
+
+/**
+ * Write it — **the repo copy first, the mirror second.**
+ *
+ * The order is the ruling. The repo write is the one that must not fail, and
+ * it happens before the mirror is touched so an unreachable Drive cannot cost
+ * a session its orientation file. A mirror failure is REPORTED on the return
+ * value rather than thrown: Drive is a convenience for the author, and losing
+ * a convenience may not take the primary output down with it.
+ *
+ * Returns what was written, for the checklist.
+ */
 export async function writeContext(mirrorDir, options) {
   const built = await buildContext(options);
-  writeFileSync(join(mirrorDir, "context.md"), built.text, "utf8");
-  return built;
+
+  // PRIMARY — the repo copy. Written first, and never guarded by a try/catch:
+  // if this fails the run has not produced the thing it exists to produce.
+  writeFileSync(join(ROOT, CONTEXT_REPO_PATH), built.text, "utf8");
+
+  // SECOND — the author's mirror. Best-effort by design.
+  let mirrored = false;
+  let mirrorError = null;
+  if (mirrorDir) {
+    try {
+      writeFileSync(join(mirrorDir, "context.md"), built.text, "utf8");
+      mirrored = true;
+    } catch (err) {
+      mirrorError = err instanceof Error ? err.message : String(err);
+    }
+  }
+
+  return { ...built, repoPath: CONTEXT_REPO_PATH, mirrored, mirrorError };
 }

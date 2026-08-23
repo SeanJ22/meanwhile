@@ -77,8 +77,25 @@ export const BATTLECARD_SECTIONS: readonly BattlecardSectionSpec[] = [
   {
     id: "office",
     title: "What this office does",
+    /*
+     * **The refusal clause is gone** (2026-08-23, item 4). This read *"...so we
+     * can't describe it here"*, which is the sentence the two-layer definition
+     * ruling deleted from the body cards on 2026-08-22 and which survived here
+     * because this file was never swept with them — a named instance whose
+     * sibling nobody looked for.
+     *
+     * It is the worst place in the product for it. This section is FIRST and is
+     * mandatory for every candidate and every elected official, so the refusal
+     * was the first thing a reader met on the card of a person asking for their
+     * vote.
+     *
+     * What replaces it names OUR gap and then points at what IS there, which is
+     * the shape `NO_BODY_BLURB_LINE` already uses in `lib/officials/body-blurbs.ts`.
+     * A card may say it has not read the law. It may not say it will therefore
+     * tell the reader nothing.
+     */
     emptyLine:
-      "We haven't yet read the law that says what this office decides, so we can't describe it here.",
+      "We haven't yet read the law that says what this office decides. What we do hold about it is below.",
   },
   {
     id: "positions",

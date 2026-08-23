@@ -44,6 +44,28 @@
 /** The in-app surfaces a destination may point at. Closed on purpose. */
 export type DestinationSurface = "BALLOT" | "MEETINGS" | "DISTRICTS" | "CONTACT";
 
+/**
+ * **ASK-1 (2026-08-23): a destination that opens IN PLACE still has to be
+ * tappable.**
+ *
+ * Three of the four destinations carried `href: null`, meaning "a surface that
+ * opens in place" — and the ask box renders its link only when `href` is set.
+ * So *"when is the next meeting?"* returned a heading, a label and a sentence
+ * explaining that the map shows collected meetings, **with nothing for the
+ * reader to click or tap.** The reader was told where to look and then left to
+ * find it, which is the reader-friction rule's definition of a defect: an
+ * unnecessary step between a reader and the answer they came for.
+ *
+ * An in-place destination now names the UI action that opens it, so the box can
+ * render a real control. These are the SAME actions the map's own stats bar
+ * dispatches (`components/shell/stats-bar.tsx`) — the ask box opens the door the
+ * reader would otherwise have gone and found, rather than a second way in that
+ * can drift from the first.
+ */
+export type DestinationAction =
+  | { readonly kind: "LIST_OPEN" }
+  | { readonly kind: "DOOR_OPEN"; readonly door: "bodies" | "districts" | "officials" };
+
 export interface DestinationRoute {
   id: string;
   surface: DestinationSurface;
@@ -57,6 +79,13 @@ export interface DestinationRoute {
   statement: string;
   /** The in-app route, or null for a surface that opens in place. */
   href: string | null;
+  /**
+   * The UI action that opens this surface in place. Exactly one of `href` and
+   * `action` is set — a destination with neither is a heading with nothing to
+   * tap, which is the ASK-1 defect, and `tests/ask-destinations.test.ts`
+   * refuses one.
+   */
+  action: DestinationAction | null;
   /**
    * Phrases that route here. Multi-word ONLY — see the header. Each is
    * matched whole, against normalized text, exactly as the topic matcher
@@ -80,6 +109,7 @@ export const DESTINATION_ROUTES: readonly DestinationRoute[] = [
       // did.
       "The ballot page lists the contests and measures we have found for the address you give it, each one sourced.",
     href: "/ballot",
+    action: null,
     phrases: [
       "on my ballot",
       "on the ballot",
@@ -103,6 +133,7 @@ export const DESTINATION_ROUTES: readonly DestinationRoute[] = [
     statement:
       "The map shows the upcoming meetings and hearings we have collected around you, with the date, the body and where it sits. Each one says when we last checked it.",
     href: null,
+    action: { kind: "LIST_OPEN" },
     phrases: [
       "next meeting",
       "upcoming meetings",
@@ -127,6 +158,7 @@ export const DESTINATION_ROUTES: readonly DestinationRoute[] = [
     statement:
       "A zip is not a district — it crosses them. The districts view draws the boundaries over your area and names the ones the map is currently showing.",
     href: null,
+    action: { kind: "DOOR_OPEN", door: "districts" },
     phrases: [
       "what district am i in",
       "which district am i in",
@@ -148,6 +180,7 @@ export const DESTINATION_ROUTES: readonly DestinationRoute[] = [
     statement:
       "Open any official on the map to see the contact details their own office publishes — a phone number, an office address, or the form they ask you to use. We only list what they have published.",
     href: null,
+    action: { kind: "DOOR_OPEN", door: "officials" },
     phrases: [
       "how do i contact",
       "how do i reach",

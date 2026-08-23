@@ -670,13 +670,45 @@ export function AskBox({
           <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
             {asked.destination.destination.statement}
           </p>
-          {asked.destination.destination.href && (
+          {/*
+            ASK-1 (2026-08-23): THE READER GETS SOMETHING TO TAP, ALWAYS.
+
+            This used to render only when `href` was set, and three of the four
+            destinations open IN PLACE and carry no href — so "when is the next
+            meeting?" returned a heading, a label and a sentence about what the
+            map shows, with nothing to click. The reader was told where to look
+            and left to go find it.
+
+            Both branches render the same control at the same size. `min-h-11`
+            is 44px, the tap target a thumb needs; the old link was a 12px
+            underlined string, which is a mouse affordance rendered on a phone.
+          */}
+          {asked.destination.destination.href ? (
             <a
               href={asked.destination.destination.href}
-              className="mt-1.5 inline-block text-[0.75rem] text-link underline decoration-dotted underline-offset-2"
+              data-ask-destination-go
+              className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 text-[0.8125rem] font-semibold text-link no-underline"
             >
               {asked.destination.destination.label}
             </a>
+          ) : (
+            asked.destination.destination.action && (
+              <button
+                type="button"
+                data-ask-destination-go
+                onClick={() => {
+                  const action = asked.destination!.destination.action!;
+                  if (action.kind === "LIST_OPEN") {
+                    dispatch({ type: "list/open", open: true });
+                  } else {
+                    dispatch({ type: "door/open", door: action.door });
+                  }
+                }}
+                className="mt-2 inline-flex min-h-11 items-center rounded-md border border-[var(--signal)]/45 bg-[var(--signal)]/10 px-3 text-[0.8125rem] font-semibold text-link"
+              >
+                {asked.destination.destination.label}
+              </button>
+            )
           )}
         </div>
       )}

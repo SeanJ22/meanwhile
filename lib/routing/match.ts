@@ -25,6 +25,27 @@ const TOPIC_KEYWORDS: Readonly<Record<string, readonly string[]>> = {
   "schools-policy": [
     "curriculum", "closing", "boundaries", "build", "building", "built",
     "construction", "opening", "calendar",
+    /*
+     * NH-3 (2026-08-23). *"when does school start?"* was REFUSED — it hit the
+     * bare anchor "school" once for each school topic and nothing else, so it
+     * sat below the two-hit strong-match threshold and the reader was told no
+     * sourced owner had been routed for the topic. The school district plainly
+     * owns it.
+     *
+     * These are PHRASES, not the bare word "start". Adding "start" alone would
+     * route "when does the meeting start" and "when does early voting start" to
+     * the school board, which is the single-word failure the threshold ruling
+     * exists to stop — a word carries a topic's vocabulary, not its intent.
+     * Each phrase below already contains the anchor, so a hit here is a second
+     * distinct hit rather than the same evidence counted twice.
+     *
+     * It routes to POLICY rather than operations because the school calendar is
+     * adopted by the board: N.J.S.A. 18A:36-2 in New Jersey, RSA 189:1 in New
+     * Hampshire. The superintendent runs the year the board sets.
+     */
+    "school start", "school starts", "school starting",
+    "school year", "school calendar", "first day of school",
+    "school begin", "school begins",
   ],
   libraries: ["library", "libraries", "librarian"],
   "zoning-development": [

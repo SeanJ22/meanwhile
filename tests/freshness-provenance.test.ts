@@ -49,12 +49,11 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readdirSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { join } from "node:path";
 
 import { GENERATED } from "../lib/ops/generated-register.ts";
 import { entryFor, repoPath, sourceClosure } from "../lib/ops/generator-digest.ts";
-import { judge, sitesIn, sweep } from "../lib/ops/freshness-audit.ts";
+import { judge, sitesIn, sourceFilesUnder, sweep } from "../lib/ops/freshness-audit.ts";
 import {
   NEVER_READ,
   carried,
@@ -79,16 +78,6 @@ const KNOWN_UNDECLARED = [
   // row opened 2026-08-23 rather than fixed here, per the scope rule.
   "scripts/ship-staged-portraits.mts",
 ];
-
-function walk(dir: string, out: string[] = []): string[] {
-  for (const name of readdirSync(dir)) {
-    if (name === "node_modules" || name === ".git" || name === ".next") continue;
-    const abs = join(dir, name);
-    if (statSync(abs).isDirectory()) walk(abs, out);
-    else if (/\.(?:ts|mts|tsx|mjs)$/.test(name)) out.push(relative(ROOT, abs).split(sep).join("/"));
-  }
-  return out;
-}
 
 test("RULING 107: no registered generator can restamp a freshness date without reading", () => {
   let audited = 0;
@@ -116,7 +105,7 @@ test("RULING 107: no registered generator can restamp a freshness date without r
 });
 
 test("RULING 107: the wider class of stamp sites only shrinks", () => {
-  const files = [...walk(join(ROOT, "scripts")), ...walk(join(ROOT, "lib"))];
+  const files = sourceFilesUnder(ROOT, ["scripts", "lib"]);
   assert.ok(files.length > 400, `the sweep read only ${files.length} files — it is not looking`);
   const undeclared = [...new Set(judge(sweep(ROOT, files)).restamping.map((s) => s.file))].sort();
   const added = undeclared.filter((f) => !KNOWN_UNDECLARED.includes(f));

@@ -35,7 +35,8 @@
  * carve-out nobody has to write down is a carve-out that grows.
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 
 import { CLOCK_EXPRESSIONS, FRESHNESS_FIELDS } from "./freshness.ts";
 
@@ -133,4 +134,29 @@ export function judge(sites: StampSite[]): AuditVerdict {
     reading: sites.filter((s) => s.declaredReading),
     restamping: sites.filter((s) => !s.declaredReading),
   };
+}
+
+/**
+ * Every TypeScript-ish source file under `dirs`, repo-relative and
+ * forward-slashed.
+ *
+ * It lives here rather than in the script and the test separately because
+ * RULING 103's own guard caught those two copies the moment they were written
+ * — a sweep that compares the SHAPE of code with identifiers set aside, doing
+ * exactly what it was built for, to the session that built it.
+ */
+export function sourceFilesUnder(root: string, dirs: string[]): string[] {
+  const out: string[] = [];
+  const walk = (dir: string): void => {
+    for (const name of readdirSync(dir)) {
+      if (name === "node_modules" || name === ".git" || name === ".next") continue;
+      const abs = join(dir, name);
+      if (statSync(abs).isDirectory()) walk(abs);
+      else if (/\.(?:ts|mts|tsx|mjs)$/.test(name)) {
+        out.push(relative(root, abs).split(sep).join("/"));
+      }
+    }
+  };
+  for (const d of dirs) walk(join(root, d));
+  return out;
 }

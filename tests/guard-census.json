@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 194,
-    "named": 1797,
+    "named": 1803,
     "dynamic": 6
   },
   "files": {
@@ -104,12 +104,16 @@
         "4d: exactly the four categories the rule names, and no fifth",
         "4d: the longest phrase wins, so more evidence is never a tie",
         "4d: the promised categories are DERIVED from what routes, never written beside it",
+        "ASK-1: every destination can actually be opened",
+        "ASK-1: the ask box renders a control for both kinds of destination",
         "the ruling's cost is named: the weak-by-design questions decline, and say what they had"
       ],
       "dynamic": 0
     },
     "tests/ask-matcher.test.ts": {
       "names": [
+        "NH-3: the school calendar routes to the school district",
+        "NH-3: the school cues are phrases, so they cannot capture other topics",
         "PROVING CASE, end to end: with no classifier the weather question is REFUSED, not routed",
         "PROVING CASE: the weather question does not route on the keyword layer",
         "a weak match with a classifier topic routes; the same match without one refuses",
@@ -2654,6 +2658,8 @@
         "an exhausted New Hampshire search says the law does not require an agenda",
         "footnotes that differ stay separate, in the panel's own order",
         "identical footnotes collapse to one, naming every distinct body",
+        "item 4: no reader surface refuses to describe a body or an office",
+        "item 4: the office and body absence lines keep their whose-gap attribution",
         "outside New Hampshire an exhausted search owns the gap",
         "outside a no-agenda state, an unsearched body gets no note at all",
         "the state comes off the identifier, never off a label",

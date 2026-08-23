@@ -26,26 +26,20 @@
  * wider sweep is REPORTED rather than enforced, so the number is visible
  * without the guard failing on files nobody has triaged yet.
  */
-import { readdirSync, statSync } from "node:fs";
-import { join, relative, sep } from "node:path";
+import { join } from "node:path";
 
 import { GENERATED } from "../lib/ops/generated-register.ts";
 import { entryFor, repoPath, sourceClosure } from "../lib/ops/generator-digest.ts";
-import { judge, sweep, type StampSite } from "../lib/ops/freshness-audit.ts";
+import {
+  judge,
+  sourceFilesUnder,
+  sweep,
+  type StampSite,
+} from "../lib/ops/freshness-audit.ts";
 
 const ROOT = process.cwd();
 const strict = process.argv.includes("--strict");
 const all = process.argv.includes("--all");
-
-function walk(dir: string, out: string[] = []): string[] {
-  for (const name of readdirSync(dir)) {
-    if (name === "node_modules" || name === ".git" || name === ".next") continue;
-    const abs = join(dir, name);
-    if (statSync(abs).isDirectory()) walk(abs, out);
-    else if (/\.(?:ts|mts|tsx|mjs)$/.test(name)) out.push(relative(ROOT, abs).split(sep).join("/"));
-  }
-  return out;
-}
 
 function show(sites: StampSite[], label: string): void {
   if (sites.length === 0) return;
@@ -85,7 +79,7 @@ console.log(`  able to restamp w/o reading ${offending.size} of ${auditable}`);
 for (const [path, sites] of offending) show(sites, `${path}:`);
 
 if (all) {
-  const files = [...walk(join(ROOT, "scripts")), ...walk(join(ROOT, "lib"))];
+  const files = sourceFilesUnder(ROOT, ["scripts", "lib"]);
   const verdict = judge(sweep(ROOT, files));
   const readingFiles = new Set(verdict.reading.map((s) => s.file));
   const restampFiles = new Set(verdict.restamping.map((s) => s.file));

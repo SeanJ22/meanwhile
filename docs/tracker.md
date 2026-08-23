@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **240 open**, 347 resolved.
+- **239 open**, 348 resolved.
 - **53 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -575,7 +575,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**23 open · 134 resolved.**
+**22 open · 135 resolved.**
 
 ### P1
 
@@ -588,8 +588,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
 **NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions.
-
-**NH84** — Carried forward from PU06. The MAP surfaces are done: the who-governs panel went from six full sentences to six asterisks and one pill, and the 2026-08-23 session took the meetings list from nineteen consecutive Could govern you pills down to one per jurisdiction group, both read as images. The BALLOT page is untouched at twelve instances across nine contests, because it renders the pill per contest heading, which RULING 28 permits and which he nonetheless called the headline UX problem of the New Jersey pass. What is owed is the same treatment - one page-level annotation with marks on the affected contests - and wherever the sentence survives, making it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
 
 **PU01** — Read as an image on production 2026-08-22 at 430x932. The map at 07866 shows a panel reading "BASEMAP UNAVAILABLE -- Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use". That is an environment variable name and a dotfile path rendered to a reader, which the plain-language rule forbids outside a technical-details disclosure: identifiers, enum values and internal keys never render to a reader. The honest half of the message -- that tiles did not load and pins still work -- is right and should stay. Two questions for whoever takes it: whether the key is simply unset on the production deploy (in which case the message is doing its job for the wrong audience), and what a reader should see instead.
 

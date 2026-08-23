@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 194,
-    "named": 1803,
+    "files": 195,
+    "named": 1807,
     "dynamic": 6
   },
   "files": {
@@ -1350,6 +1350,15 @@
         "the regression itself: every ask-box answer at every covered zip is free of another state's content and links",
         "the sourced Pima library fact reaches Pima readers and nobody else",
         "topic explainer templates name no covered place — per-place truth lives only in divisionWhy"
+      ],
+      "dynamic": 0
+    },
+    "tests/jurisdiction-note.test.ts": {
+      "names": [
+        "JUR-4: UNKNOWN is counted and never named as partial",
+        "JUR-4: the full pill no longer renders per contest on the ballot page",
+        "JUR-4: the page-level block names bodies, never offices",
+        "JUR-4: the unplaceable sentence says whose gap it is"
       ],
       "dynamic": 0
     },

@@ -71,7 +71,7 @@ interface Node {
  */
 export function cleanWikiText(raw: string): string {
   return raw
-    .replace(/\(\[\[.*$/s, "")
+    .replace(/\(\[\[[\s\S]*$/, "")
     .replace(/\[\[|\]\]/g, "")
     .replace(/\s+/g, " ")
     .trim()

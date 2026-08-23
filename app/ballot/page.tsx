@@ -25,7 +25,8 @@ import {
   cardForNominee,
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
-import { CouldGovernPill } from "@/components/ballot/could-govern-pill";
+import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
+import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
 import { photosFirst } from "@/lib/ballot/photo-order";
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
@@ -989,6 +990,46 @@ export default async function BallotPage({
         </section>
       )}
 
+      {/*
+        JUR-4 (`NH84`, 2026-08-23): the jurisdiction answer ONCE, above the
+        contests, instead of eleven words repeated down the page. The list is
+        built from the same `needsPill` decision each contest heading uses, so
+        the block and the marks can never disagree about which contests are
+        affected — a second query would be free to.
+      */}
+      {set && matched && certainty && (
+        <JurisdictionNote
+          /*
+           * UNKNOWN is COUNTED, not named — see the component. Naming a
+           * division we hold no boundary for would turn our missing polygon
+           * into a claim about that district's geography.
+           */
+          unplaceable={
+            candidacyContests.filter(
+              (contest) => certainty.certaintyOf(contest.ocdId) === "UNKNOWN",
+            ).length
+          }
+          jurisdictions={[
+            ...new Set(
+              candidacyContests
+                .filter((contest) => certainty.certaintyOf(contest.ocdId) === "AMBIGUOUS")
+                /*
+                 * The BODY, not the OFFICE. The first version of this block
+                 * mapped `contest.title` and told the reader the governments
+                 * covering part of their zip were "Member of the Borough
+                 * Council, Member of the Board of Education, Member of the
+                 * Board of Education — Unexpired Term" — three job titles, two
+                 * of them identical, which a reader who knows their own town
+                 * cannot use. Naming the jurisdictions is the whole point of
+                 * the block; caught by reading the rendered page.
+                 */
+                .map((contest) => jurisdictionNameFromOcdId(contest.ocdId))
+                .filter((name): name is string => name !== null),
+            ),
+          ]}
+        />
+      )}
+
       {set &&
         matched &&
         candidacyContests.map((contest) => {
@@ -1031,13 +1072,17 @@ export default async function BallotPage({
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {contest.title}
                   {/*
-                    RULING 71: the pill, on bodies whose territory covers only
-                    PART of this zip. Not a completeness marker — our data is
-                    complete and the reader's location is not. See the
-                    component for why that distinction is load-bearing.
+                    RULING 71, as JUR-4 leaves it (2026-08-23). The full
+                    eleven-word pill rendered here twelve times across nine
+                    contests, which is the repetition the author named the
+                    headline UX problem of the New Jersey pass. It is one short
+                    mark now, tied to the single page-level block above. Still
+                    NOT a completeness marker: our data is complete and the
+                    reader's location is not. See the component for why that
+                    distinction is load-bearing.
                   */}
                   {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
-                    <CouldGovernPill jurisdiction={contest.title} />
+                    <JurisdictionMark />
                   )}
                   {/* RULING 28: the one buried annotation, on contests that
                       actually render candidate cards. */}

@@ -629,7 +629,7 @@ function CoverageBody({
                 It is an INVITATION, not a disclosure of our incompleteness: we
                 hold Rockaway Borough's government and Rockaway Township's, both
                 in full, and what is unsettled is which is the reader's. RULING
-                44 is not weakened; see components/ballot/could-govern-pill.tsx.
+                44 is not weakened; see components/ballot/jurisdiction-note.tsx.
               */}
               {body.couldGovern && <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />}
               <span

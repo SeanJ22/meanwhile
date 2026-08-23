@@ -251,7 +251,7 @@ export interface ManifestRoute {
  * every absence earned under v3 re-opens automatically, because four routes that
  * did not exist when it was earned now do.
  */
-export const MANIFEST_VERSION = "v5";
+export const MANIFEST_VERSION = "v6";
 
 export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
   /* ── The filed record ─────────────────────────────────────────────────── */
@@ -432,6 +432,12 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
         where: "Kearsarge Regional School District, 2026-08-21",
         on: "the roster page's visible cells carry no email",
         instead: "read the cell's own href — nine board emails were in mailto: links (rung 4)",
+      },
+      {
+        where: "Morris County, New Jersey municipalities, 2026-08-22",
+        on: "nothing failed — this entry records TOOLING built for an existing route, not a new route. `pnpm roster:hunt` walks this branch across an index of sites instead of one body at a time, and `lib/hunt/roster-page.ts` reads the roster off the page",
+        instead:
+          "39 sites walked, 13 returned a roster, 11 of those on a page whose OWN heading names a governing body — the control that matters, because anchor text alone chose Chatham Township's Mayors Wellness Advisory Committee as its governing body. The page carries what the encyclopedia never does: a ward, a term, a direct extension and an email per member. Two defects worth carrying forward: `<br id=\"isPasted\">` is what a WYSIWYG editor emits and a `<br>`-only pattern silently glues names to emails (four of Rockaway's nine members vanished that way), and a page may disagree with itself — Rockaway's council page shows one address over a `mailto:` for a different one.",
       },
     ],
   },
@@ -1068,6 +1074,55 @@ export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
     forbiddenFor: ["photo", "blurb", "campaignSite", "verifiedPage"],
     expectedToTravel:
       "Federal only, and it closes NOTHING at a county or municipal ballot — stated plainly rather than softened, because the register's job is to let the author decide whether a credential earns its place.",
+  },
+  /* ── RULING 93 — the directory the tier above publishes ───────────────── */
+  {
+    id: "tier-directory-federal",
+    tier: "A",
+    what: "USA.gov's directories of the tier below it — every state's government, election office, governor and local-government directory",
+    how: "`pnpm tier:directory`. `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}`. Plain GET, no key.",
+    yields:
+      "The state's own official entry points, named by the federal government. On 2026-08-22: 227 entities across seven routes, including the URL of New Jersey's own directory of all 564 municipalities.",
+    rung: "2",
+    through: "USAGov (federal)",
+    fields: ["contact", "verifiedPage"],
+    expectedToTravel:
+      "NATIONAL BY CONSTRUCTION — this is one federal publication covering all fifty states, which is the whole point of RULING 93. What it points AT differs per state, and that is the next route down.",
+  },
+  {
+    id: "tier-directory-state-localgov",
+    tier: "A",
+    what: "A state's own directory of its counties and municipalities, with each one's official website",
+    how: "`pnpm tier:directory --route <state>-localgov`. New Jersey: `nj.gov/nj/gov/county/localgov.shtml`. Reached from the federal route above rather than searched for.",
+    yields:
+      "Every county and municipality in the state with its official site. New Jersey returned 624 entities — 569 distinct general-purpose units — including the nine Morris municipalities the county's own page omitted.",
+    rung: "2",
+    through: "the state government",
+    fields: ["contact", "verifiedPage"],
+    expectedToTravel:
+      "The INSTITUTION is near-universal — a state that does not publish a list of its own municipalities is rare. The URL, the shape and the completeness are per-state and unknown until walked. New Jersey's is one page of `<li><a>`; nothing says the next one is.",
+    subBranches: [
+      {
+        where: "New Jersey, 2026-08-22",
+        on: "`nj.gov/nj/gov/county/` — the path USA.gov itself publishes — answers HTTP 200 with a styled 'Page not found' body",
+        instead:
+          "the document is at `/nj/gov/county/localgov.shtml`. Found by walking path variants at rungs 2 and 3. This is why every directory route declares a control string: a status check alone reads the dead path as a success.",
+      },
+    ],
+  },
+  {
+    id: "usmayors-directory",
+    tier: "A",
+    what: "The US Conference of Mayors' directory of member cities and their mayors",
+    how: "`usmayors.org`, plain GET. **RECORDED, DELIBERATELY NOT WALKED AS A SOURCE OF RECORD.**",
+    yields:
+      "Mayor names for member cities — as a DISCOVERY SURFACE only. It is a nonprofit's compilation, not a government publication, so RULING 70's Ballotpedia question governs it rather than public-domain status. Nothing from it may be cited to a reader; it names who to go and confirm against the city's own record.",
+    rung: "2",
+    through: "US Conference of Mayors (nonprofit)",
+    fields: ["contact"],
+    forbiddenFor: ["photo", "blurb"],
+    expectedToTravel:
+      "Member cities only — it is a membership organisation, so its universe is self-selected and skews large. A small township is not in it, which is precisely the coverage this product exists to reach.",
   },
 ] as const;
 

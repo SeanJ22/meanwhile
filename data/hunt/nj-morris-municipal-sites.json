@@ -4,20 +4,32 @@
   "sourceOrg": "Morris County, New Jersey",
   "sites": [
     {
-      "municipality": "boonton_township",
+      "municipality": "boonton",
       "url": "https://www.boonton.org/"
+    },
+    {
+      "municipality": "boonton_township",
+      "url": "https://www.boontontownship.com/"
     },
     {
       "municipality": "butler",
       "url": "https://www.butlerborough.com/"
     },
     {
-      "municipality": "chatham_township",
+      "municipality": "chatham",
       "url": "https://www.chathamborough.org/"
     },
     {
-      "municipality": "chester_township",
+      "municipality": "chatham_township",
+      "url": "https://chathamtownship.org/"
+    },
+    {
+      "municipality": "chester",
       "url": "https://www.chesterborough.org/"
+    },
+    {
+      "municipality": "chester_township",
+      "url": "https://www.chestertownship.org/"
     },
     {
       "municipality": "dover",
@@ -56,16 +68,28 @@
       "url": "https://www.longhillnj.gov/"
     },
     {
-      "municipality": "mendham_township",
+      "municipality": "mendham",
       "url": "https://www.mendhamnj.org/"
+    },
+    {
+      "municipality": "mendham_township",
+      "url": "https://www.mendhamtownship.org/"
     },
     {
       "municipality": "montville_township",
       "url": "https://www.montvillenj.org/"
     },
     {
-      "municipality": "morris_township",
+      "municipality": "morris_plains",
       "url": "https://www.morrisplainsboro.org/"
+    },
+    {
+      "municipality": "morris_township",
+      "url": "https://www.morristwp.com/"
+    },
+    {
+      "municipality": "morristown",
+      "url": "https://www.townofmorristown.org/"
     },
     {
       "municipality": "mount_arlington",

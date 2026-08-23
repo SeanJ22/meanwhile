@@ -1,5 +1,6 @@
 "use client";
 
+import { personInitials } from "@/lib/officials/person-name";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
@@ -53,12 +54,7 @@ interface OfficialPopupProps {
   onClose?: () => void;
 }
 
-function initialsOf(name: string): string {
-  const parts = name.split(/\s+/).filter(Boolean);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
+const initialsOf = personInitials;
 
 /**
  * The four recorded states, as FILLED PILLS (item 5, 2026-08-16).

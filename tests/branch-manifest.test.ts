@@ -124,6 +124,10 @@ const V1_ROUTES = [
   "govinfo-cdir",
   "census-acs-api",
   "lda-filings",
+  // NJ Hunt 6 — RULING 93, the directory the tier above publishes.
+  "tier-directory-federal",
+  "tier-directory-state-localgov",
+  "usmayors-directory",
 ];
 
 const ids = MANIFEST_ROUTES.map((r) => r.id);

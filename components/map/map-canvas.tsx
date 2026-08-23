@@ -148,6 +148,20 @@ interface MapCanvasProps {
   onSelectVenue: (venue: Venue) => void;
   onTileError: () => void;
   /**
+   * **The basemap is drawing again** (`VF02`, NJ Hunt 6).
+   *
+   * `onTileError` had no counterpart, so the notice it raises was a one-way
+   * door: one transient error — a single tile 404, a glyph range that timed
+   * out, a worker that died with an empty message — latched *Basemap
+   * unavailable* over a map that then loaded perfectly and kept drawing for the
+   * rest of the session.
+   *
+   * That is why 371 walk checks and every DOM assertion were content while a
+   * capture showed the notice: nothing was broken by the time anything looked,
+   * and the notice was a fact about a moment that had passed.
+   */
+  onTilesRecovered?: () => void;
+  /**
    * The reader panned or zoomed and the map came to rest (2i). Fired only for
    * gestures — never for flyTo/fitBounds the app itself issued — and only
    * after a debounce, never mid-gesture. The parent decides whether to act
@@ -241,6 +255,7 @@ export function MapCanvas({
   onDistrictClick,
   onSelectVenue,
   onTileError,
+  onTilesRecovered,
   onViewportSettle,
   allowAutoFrame,
   focusStateOcdId = null,
@@ -456,6 +471,44 @@ export function MapCanvas({
         map.setStyle(FALLBACK_STYLE);
       }
     });
+
+    /**
+     * **And the way back** (`VF02`). The notice states a present-tense fact
+     * about the reader's screen — *the basemap is unavailable* — so it may only
+     * stand while that is true. A map that has gone idle with a real style
+     * loaded is a map that is drawing, and the reader can see that it is; the
+     * notice contradicting their own eyes is worse than no notice at all.
+     *
+     * `idle` rather than `load`: it fires every time the map comes to rest, so
+     * a recovery after the first paint is caught too, which is the common case
+     * — the failing request is usually a glyph range fetched when a label first
+     * comes into view.
+     */
+    map.on("idle", () => {
+      if (!map.isStyleLoaded()) return;
+      // The fallback draws ground colour and nothing else. Recovering INTO it
+      // would clear the notice while the reader still has no basemap.
+      const layers = map.getStyle()?.layers ?? [];
+      if (layers.length <= FALLBACK_STYLE.layers.length) return;
+      onTilesRecovered?.();
+    });
+
+    /*
+     * **A read-only handle for the walk** (`VF02`, NJ Hunt 6).
+     *
+     * `pnpm walk:all` needs to answer "is a real basemap drawing, or is this
+     * the plain-ground fallback?", and that question has no answer in the DOM —
+     * which is exactly why a broken basemap was invisible to 371 checks and
+     * every DOM assertion. The style's layer count answers it, and the style
+     * lives inside the MapLibre instance.
+     *
+     * Deliberately the instance itself rather than a snapshot: a snapshot goes
+     * stale the moment the theme swaps the style, and a stale reading is how a
+     * check starts passing about a map that is no longer on screen. Nothing in
+     * the app reads this, and it grants a page script nothing it could not
+     * already reach through the canvas.
+     */
+    (window as unknown as { __wtpMap?: MapLibreMap }).__wtpMap = map;
 
     mapRef.current = map;
     const pool = poolRef.current;
@@ -707,6 +760,10 @@ export function MapCanvas({
       window.removeEventListener("keydown", onKeyDown);
       map.off("styledata", ensureDistricts);
       map.remove();
+      // A removed map left on `window` is a handle the walk would read a style
+      // off after the instance was disposed — a stale reading, which is the one
+      // failure mode a check like this must not have.
+      delete (window as unknown as { __wtpMap?: MapLibreMap }).__wtpMap;
       mapRef.current = null;
       hereRef.current = null;
       destroyMarkerPool(pool);

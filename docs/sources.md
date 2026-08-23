@@ -99,6 +99,59 @@ table is the measurement behind it.
 recorded with what they actually return, including the two that return nothing
 useful. A credential with no route is a credential nobody decides about.
 
+---
+
+## THE KEYLESS SOURCES — recorded because a source walked and never recorded is one the next session re-derives
+
+**Added 2026-08-22 (NJ Hunt 6), the author's instruction.** The register above
+enumerates CREDENTIALS. That left every keyless public route — which is most of
+what this product actually reads — recorded nowhere, so each new session
+rediscovered it. **`docs/sources.md` is the source of record for what resources
+exist**, keyed or not, and `CLAUDE.md` now says so.
+
+Every row carries its **status**, **access method**, **licence status** and the
+**tier** it sits at under RULING 84. Each is also a ROUTE in
+`docs/branch-manifest.md`: this file answers *what exists and what may we use*,
+the manifest answers *what do we walk and in what order*.
+
+| Source | Access | Licence | Tier | Status |
+|---|---|---|---|---|
+| **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities |
+| **State of New Jersey local-government directory** — `nj.gov/nj/gov/county/localgov.shtml` | plain GET, no key | **US state government work — public domain** | **A** | **WIRED** — `pnpm tier:directory --route nj-localgov`. **624 entities: all 21 counties and all 564 municipalities with their official websites.** Note the live URL: `/nj/gov/county/` answers HTTP 200 with a "Page not found" body |
+| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`. **DISCOVERY ONLY, never a source of record** |
+| **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither |
+| **FEC Combined Federal/State Disclosure Directory** | committed at `data/reference/fec_combined_federal_state_disclosure_directory.csv`; re-fetch with `pnpm fec:directories` | **US federal government work — public domain** | **A** | **WIRED.** 349 offices across 56 jurisdictions with records-held, URL, email and phone |
+| **2022 Census of Governments** | committed at `data/reference/census_govt_units_2022.csv` | **US federal government work — public domain** | **A** | **WIRED.** The OFFICIAL UNIVERSE every coverage claim is measured against |
+| **NCES CCD LEA directory** | committed at `data/reference/nces_ccd_lea_directory_2025_26.csv` | **US federal government work — public domain** | **A** | **WIRED.** The official universe for school districts |
+| **Open States bulk legislators** | committed at `data/reference/openstates_legislators.csv` | **CC-0** | **A** | **WIRED.** 7,976 state legislators with official emails; no quota spent |
+| **Legislative caucus sites** — e.g. `assemblydems.com`, senate/assembly Republican caucus sites | plain GET, no key | **Party organisation sites, NOT government publications.** Usable for a member's own published contact and photo under the campaign-site and photo doors; never as a source of record for a position | **B** | **EVALUATED** — reached via `websiteUrl` on Open States rows |
+| **usmayors.org** (US Conference of Mayors) | plain GET, no key | **NONPROFIT — not a government body.** RULING 70's Ballotpedia question applies; **not** public domain | **A (discovery)** | **RECORDED, NOT WALKED AS A SOURCE OF RECORD.** Discovery surface only, by the author's instruction, NJ Hunt 6 |
+| **api.gsa.gov site-scanning** | `DATA_GOV_API_KEY` | **US federal government work — public domain** | **A** | **EVALUATED, WRONG TIER.** The key answers HTTP 200 with data, but the corpus is FEDERAL executive-branch sites only and its `agency` filter is ignored — it returned `va.gov` for `agency=New Jersey`. It does not reach municipal domains |
+| **api.usa.gov contacts v1** | `DATA_GOV_API_KEY` | — | — | **DEAD.** HTTP 404 `NOT_FOUND` on 2026-08-22. Recorded as dead rather than deleted, per the External-sources law |
+
+### The Census key, re-measured 2026-08-22 (NJ Hunt 6)
+
+NJ Hunt 5 found `CENSUS_API_KEY` invalid. The author issued a **new key** and
+uploaded it. **It was called, and it is also refused.**
+
+| | |
+|---|---|
+| New key present in `.env.local` | yes — 40 hex characters, well-formed |
+| `api.census.gov/data/2023/acs/acs5` **with** the key | HTTP 200 whose body is `<title>Invalid Key</title>` |
+| The same endpoint **with no key at all** | HTTP 200 whose body is `<title>Missing Key</title>` |
+| `api.census.gov/.../variables/B01003_001E.json` (needs no key) | HTTP 200 **with real data** |
+
+**The endpoint is reachable and the request is well-formed** — the keyless
+variables call proves both. The credential is the thing being refused. Census
+API keys require **activation via a link the Census emails**, and an unactivated
+key presents exactly this way. `NS06` stays OPEN with this measurement on it.
+
+**Note the shape change since NJ Hunt 5**: the host used to answer `302` with
+`X-DataWebAPI-KeyError: 1`. It now answers **200 with an HTML error page and no
+such header**. A check written against the status code or that header would now
+read this dead credential as healthy — which is why the control is *did the body
+parse as data*, never *did the call succeed*.
+
 ## Wired sources
 
 ### Congress.gov — federal bills, members, House roll calls

@@ -1069,6 +1069,72 @@ for (const { zip } of FOUR) {
 
   check("0814c", `${zip}: the map answers with something about this place`, text.length > 200);
 
+  /*
+   * **`VF02` — a broken basemap was invisible to every instrument.**
+   * (NJ Hunt 6, 2026-08-22.)
+   *
+   * NJ Hunt 5's captures showed *Basemap unavailable* on production while 371
+   * walk checks and every DOM assertion were content. The cause was that
+   * `tilesFailed` had no way back to false: one transient tile or glyph error
+   * latched the notice for the rest of the session, over a map that was
+   * drawing perfectly by the time anything looked at it.
+   *
+   * This is the instrument that would have caught it, and it deliberately
+   * checks the RENDERED NOTICE rather than the tile requests. Whether a
+   * request failed is our business; whether the reader is being TOLD the map
+   * is broken is theirs, and that is the claim on screen.
+   */
+  const basemapNotice = await page.evaluate(
+    () => document.body.innerText.includes("Basemap unavailable"),
+  );
+  check(
+    "njhunt6",
+    `${zip}: the reader is not told the basemap is unavailable`,
+    !basemapNotice,
+    basemapNotice ? "the notice is on screen — VF02 has regressed" : "",
+  );
+
+  /*
+   * And the other half, because the notice being absent is not the same as the
+   * map drawing. A basemap that silently fails to the plain ground colour shows
+   * no notice at all — which is the render-default rule pointed at a map.
+   */
+  /*
+   * The map mounts in an effect and its style arrives over the network, so the
+   * handle is not there the moment the who-governs card is. Waiting for it is
+   * the difference between a check that runs and a check that reports CANNOT
+   * RUN at three zips out of four — honest, and useless.
+   */
+  await page
+    .waitForFunction(
+      () =>
+        ((window as unknown as { __wtpMap?: { getStyle?: () => { layers?: unknown[] } } }).__wtpMap
+          ?.getStyle?.()
+          ?.layers?.length ?? 0) > 0,
+      undefined,
+      { timeout: 25_000 },
+    )
+    .catch(() => undefined);
+  const styleLayers = await page.evaluate(() => {
+    const w = window as unknown as { __wtpMap?: { getStyle?: () => { layers?: unknown[] } } };
+    return w.__wtpMap?.getStyle?.()?.layers?.length ?? -1;
+  });
+  if (styleLayers < 0) {
+    cannotRun(
+      "njhunt6",
+      `${zip}: the basemap style has real layers`,
+      "the page exposes no map handle to read a layer count from — a check that CANNOT RUN, " +
+        "reported apart from one that failed (RULING 24)",
+    );
+  } else {
+    check(
+      "njhunt6",
+      `${zip}: the basemap style has real layers`,
+      styleLayers > 1,
+      `${styleLayers} layer(s); the plain-ground fallback has 1`,
+    );
+  }
+
   // M60 — the mojibake sweep. It has recurred often enough to be permanent.
   //
   // The pattern comes from `lib/text/mojibake.ts` rather than being written
@@ -5334,17 +5400,42 @@ if (previous === null) {
   }
 }
 
-writeFileSync(
-  CHECKS_FILE,
-  `# The identity of every check pnpm walk:all ran, one per line, sorted.\n` +
+/**
+ * **A LOCAL WALK DOES NOT WRITE THE BASELINE.** (NJ Hunt 6, 2026-08-22.)
+ *
+ * RULING 77 says verify locally and ship once, so this suite now runs against
+ * `http://localhost:3100` before a merge — and a local run legitimately cannot
+ * reach the production store, so its production-only checks report COULD NOT
+ * RUN and are correctly left out of the file.
+ *
+ * Committing that file would then DELETE those identities from the baseline,
+ * and the next production run would report them as newly ADDED rather than as
+ * restored — which is the check dying quietly, arriving through the very file
+ * written to prevent it.
+ *
+ * The baseline is a claim about what the PRODUCTION suite runs. Only a
+ * production run may make it.
+ */
+const AGAINST_PRODUCTION = /sparkwtp\.netlify\.app|wethepeople/i.test(BASE);
+if (!AGAINST_PRODUCTION) {
+  console.log(
+    `\n  docs/walk-checks.txt NOT written — this run targeted ${BASE}, not production.\n` +
+      `  The baseline records what the PRODUCTION suite runs, and a local run cannot\n` +
+      `  reach every check. Diffing still happened above, against the committed file.`,
+  );
+} else {
+  writeFileSync(
+    CHECKS_FILE,
+    `# The identity of every check pnpm walk:all ran, one per line, sorted.\n` +
     `# Written by scripts/walk-all.mts on every run and COMMITTED, so the next run\n` +
     `# diffs against it by set difference instead of subtracting two totals — a run\n` +
     `# that loses three checks and gains seven reports +4 either way, and the check\n` +
     `# dying quietly is the failure this suite exists to catch.\n` +
     `# Checks that COULD NOT RUN are not here: they did not run, and recording them\n` +
     `# as present would be the same lie in the other direction.\n` +
-    `${ranNow.join("\n")}\n`,
-  "utf8",
-);
+      `${ranNow.join("\n")}\n`,
+    "utf8",
+  );
+}
 
 if (failures.length > 0) process.exit(1);

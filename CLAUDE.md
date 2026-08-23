@@ -820,6 +820,54 @@ call could produce — `CENSUS_API_KEY` is INVALID**, refused by the host with
 have surfaced. Every one of those was available while the previous session was
 measuring how fast a free search engine would rate-limit it.
 
+### RULING 93 — ASK WHAT THE TIER ABOVE PUBLISHES ABOUT THE TIER BELOW
+
+(Adopted 2026-08-22, the author's ruling, NJ Hunt 6.)
+
+**The federal government publishes directories of state governments. States
+publish directories of their counties and municipalities. Counties publish
+directories of their towns, school districts and special districts. Before
+hunting any tier, walk the directory the tier above publishes about it.**
+
+**This is a general principle, not a list.** It inverts discovery from guessing
+sideways to descending a hierarchy, and it is **Tier A by construction** under
+RULING 84 — a directory answers for everything below it in one fetch, where a
+per-entity route costs once per entity.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* Every
+route this project had built before it went sideways: search a name, guess a
+host, read an encyclopedia article about one municipality at a time. Morris
+County's own *Cities and Towns* page reached **30 of 39** municipalities and the
+nine it missed included **Rockaway Township, the governing body of the target
+zip**. Six sessions hunted municipal sites that way.
+
+New Jersey had published the list the whole time — all 21 counties and all 564
+municipalities, with each one's official website, at
+`nj.gov/nj/gov/county/localgov.shtml`. And the tier above THAT names it:
+`usa.gov/states/new-jersey` links straight to it under the heading *Local
+governments*. Two fetches from the top of the hierarchy to a complete answer,
+against six sessions of sideways guessing.
+
+- **The route is walked before the tier below it is hunted**, and the
+  enumeration it produces is reconciled against the official universe as a
+  PAIR — never blended. Two official enumerations that disagree is a FINDING
+  (RULING 57).
+- **A directory that has moved is a branch that failed on a date, never a
+  missing directory.** `nj.gov/nj/gov/county/` answers **HTTP 200 with a styled
+  "Page not found"**, which a status check alone reads as success. The document
+  is at `localgov.shtml`. Control strings are mandatory on directory routes for
+  exactly this reason: a 200 whose content is not about the thing asked for is
+  not a document.
+- **`usmayors.org` is a DISCOVERY SURFACE, never a source of record.** It is a
+  nonprofit's directory, not a government publication, so the Ballotpedia
+  question of RULING 70 governs it rather than public-domain status.
+
+The machinery is `scripts/tier-directory.mts` (`pnpm tier:directory`), whose
+routes each declare **who publishes it**, **which tier it is about**, and the
+**control string** that must appear. Every route in it is a `.gov`
+publication: US government work, public domain, no attribution obligation and
+no terms to accept.
+
 ### WHAT IS LAW HERE, AND WHAT IS A RULING
 
 (Adopted 2026-08-20, Prompt C item 5.)
@@ -1029,6 +1077,17 @@ Every externally sourced record stores `source_url`, `source_org`, `collected_at
 Signal snapshots are immutable and timestamped. Calibration depends on being able to prove what the data said before an outcome was known. Never backfill or amend a published snapshot — write a correction record instead.
 
 ## External sources
+
+**`docs/sources.md` IS THE SOURCE OF RECORD FOR WHAT RESOURCES EXIST.**
+(Stated 2026-08-22, the author's instruction, NJ Hunt 6.) Every source is
+recorded there, not only the keyed ones — a keyless public route is a source
+and a source walked but never recorded is a source the next session
+re-derives. Each row carries its **status**, its **access method**, its
+**licence status** (`.gov` public domain, CC BY-SA, nonprofit terms), and the
+**tier** it sits at under RULING 84. **And each is also a route in
+`docs/branch-manifest.md`: `docs/sources.md` answers *what exists and what may
+we use*, the manifest answers *what do we walk and in what order*. Both, every
+time.**
 
 **The register is `docs/sources.md`, and this section is the law that governs
 it.** (Rewritten 2026-08-20, Prompt C items 4.3 and 9.5.) A table of sources

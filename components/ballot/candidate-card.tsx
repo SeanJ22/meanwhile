@@ -1,3 +1,4 @@
+import { personInitials } from "@/lib/officials/person-name";
 import { type CandidateCardData } from "@/lib/ballot/candidate-cards";
 import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
 
@@ -15,14 +16,14 @@ import type { CandidateLinks } from "@/lib/ballot/candidate-sites";
  * data file); nothing here ranks, scores, or recommends.
  */
 
-function initials(name: string): string {
-  return name
-    .split(/\s+/)
-    .filter((w) => /^[A-Za-z]/.test(w))
-    .slice(0, 2)
-    .map((w) => w[0]!.toUpperCase())
-    .join("");
-}
+/*
+ * The initials live in `lib/officials/person-name.ts`. This file used to carry
+ * its own, which took the first TWO alphabetic tokens — so `Thomas J. Haynes`
+ * initialled a middle name and rendered `TJ`. Three surfaces each held a
+ * different version of this function; keeping a retired copy here is how the
+ * fourth one gets written.
+ */
+const initials = personInitials;
 
 export function CandidateCard({
   name,

@@ -1,5 +1,6 @@
 "use client";
 
+import { personInitials } from "@/lib/officials/person-name";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
@@ -36,12 +37,9 @@ import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
  * a geometric claim here as much as an editorial one.
  */
 
-function initialsOf(name: string): string {
-  const parts = name.split(/\s+/).filter(Boolean);
-  const first = parts[0]?.[0] ?? "";
-  const last = parts.length > 1 ? (parts[parts.length - 1][0] ?? "") : "";
-  return (first + last).toUpperCase();
-}
+// The initials live in lib/officials/person-name.ts — one implementation for
+// the three surfaces that used to each carry their own.
+const initialsOf = personInitials;
 
 export function IdentityChip({
   children,

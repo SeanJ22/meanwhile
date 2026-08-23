@@ -1372,5 +1372,13 @@
       "NH83",
       "NH84"
     ]
+  },
+  {
+    "session": "hunt6-hardening-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH85",
+      "NH86"
+    ]
   }
 ]

@@ -16444,12 +16444,35 @@ floor exactly.
 **Rows this run created:** 76 search-log GETs and 67 ask/log requests, every one
 declared SYNTHETIC; no reaction tapped. **Organic 163, delta 0.**
 
-**Screenshots: 8 of 8 read as images.** The portrait contact sheet (six faces,
-one look, one refused on a filename that says FRANKS where the page says FRANK),
-both ballot pages shrunk to 34% so they could be read at all, and both `PU02`
-captures — the first body row at 03255 opens *Ad Hoc Sutton Connects! Committee*
-with 13 upcoming meetings, which is `bodyFromRow` doing its job for a division
-the registry holds no body on.
+**Screenshots: 8 of 8 read as images**, and one caption corrected on reading it.
+
+- The portrait contact sheet — six faces in one look, one refused on a filename
+  that says FRANKS where the page says FRANK.
+- Both ballot pages, shrunk to 34% so they could be read at all.
+- Both `PU02` captures. The first body row at 03255 opens *Ad Hoc Sutton
+  Connects! Committee* with 13 upcoming meetings, and at 85701 *Amphitheater
+  Unified School District Governing Board* with 5 members and 3 sources — both
+  divisions the registry holds no body on, both cards built by `bodyFromRow`.
+- **The three map captures were captioned "the who-governs surface" and that is
+  not what they show.** The script minimises the coverage notice before shooting,
+  so the card is CLOSED and what is on screen is the map with the *Who governs
+  here* button at the foot of it. The caption is corrected here rather than left
+  to stand.
+
+**What those three DO show is better evidence for RULING 80 than the caption
+promised.** At 03255 the map now draws Grantham, Croydon, Newport, Springfield,
+Wilmot, Sunapee, Goshen, Windsor, Stoddard, Danbury and Enfield towns — including
+five of the six that NH Hunt 5 entered by hand precisely because the one-county
+clip could not draw them. At 07866 it draws Hamburg, Franklin, Hardyston,
+Ogdensburg, West Milford, Kinnelon, Boonton township, Mountain Lakes,
+Parsippany-Troy Hills, Morris township, Florham Park, Madison, Harding and
+Chatham.
+
+All three also carry **BASEMAP UNAVAILABLE — "Map tiles didn't load. Set
+NEXT_PUBLIC_MAPTILER_KEY in .env.local"**. That is a LOCAL condition: the key is
+not in the environment `pnpm start` ran with. Production serves tiles, and the
+message is the map doing the right thing about a missing key rather than
+rendering an empty world.
 
 **And three captures that were thrown away, which is the point of reading them.**
 The first `nj4-governs-*` shots were captioned "the who-governs surface at

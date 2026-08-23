@@ -344,12 +344,34 @@ export function definitionsForBody(input: {
   if (classKey === "school_district_dependent") {
     classDefinition = DEPENDENT_SCHOOL_DEFINITION;
   } else if (classKey) {
-    classDefinition =
-      CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === null)?.definition ??
-      (state
-        ? (CLASS_DEFINITIONS.find((r) => r.classKey === classKey && r.state === state)?.definition ??
-          null)
-        : null);
+    /*
+     * **A TOWNSHIP FALLS BACK TO ITS STATE'S MUNICIPALITY DEFINITION, and that
+     * is the New Jersey definition's own point rather than a fudge.**
+     * (Added 2026-08-23, from measuring the first version's coverage.)
+     *
+     * `township` is a REFINEMENT of `municipality`, not a sibling of it: the NJ
+     * row says so in as many words — *in New Jersey a township is a TYPE of
+     * municipality, not a form of government*. So a state that has not written
+     * a township-specific row is not a state with nothing to say about its
+     * townships; it is a state whose municipality definition is true of them.
+     *
+     * It was found by measurement, not by reading. Census LSAD 43 is
+     * "Township", and **388 of the registry's 1,011 place divisions carry it —
+     * including all of New Hampshire's towns.** The first version resolved
+     * every one of them to `township`, found no `nh` township row, and returned
+     * NOTHING for 364 New Hampshire bodies while a New Hampshire definition
+     * written about exactly those towns sat one key away.
+     */
+    const chain: ClassKey[] = classKey === "township" ? ["township", "municipality"] : [classKey];
+    for (const key of chain) {
+      classDefinition =
+        CLASS_DEFINITIONS.find((r) => r.classKey === key && r.state === null)?.definition ??
+        (state
+          ? (CLASS_DEFINITIONS.find((r) => r.classKey === key && r.state === state)?.definition ??
+            null)
+          : null);
+      if (classDefinition) break;
+    }
   }
 
   const formDefinition = blurbForBody(input.ocdId, input.divisionType);

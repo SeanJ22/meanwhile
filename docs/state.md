@@ -17451,3 +17451,39 @@ warnings, all unused imports, proven pre-existing by stashing every change in
 this session. All five fixed. `RO02` is open for the shape rather than the fix:
 this check is not in `build-check.yml`, so a gate sessions run by hand had been
 red for an unknown number of runs with nothing reporting it.
+
+
+## The coverage numbers the contract asks for, measured after the ship
+
+`pnpm exec tsx scripts/measure-definitions-0823.mts`, over all **1,253 bodies**
+the registry holds a division for:
+
+| | |
+|---|---|
+| carrying a CLASS definition | **1,013 of 1,253** |
+| carrying a FORM-SPECIFIC definition | **216 of 1,253** |
+| carrying NEITHER | **214 of 1,253** — 202 unclassified school districts (`DI03`) and 12 counties, of which the New Hampshire ones are `DI04` |
+
+**The first run of that measurement said 636, and the 377-body difference was a
+real defect it found.** Census LSAD 43 is "Township", and **388 of the 1,011
+place divisions carry it — including every New Hampshire town.** All of them
+resolved to the `township` class key, found no `nh` township row, and returned
+nothing, while a New Hampshire definition written about exactly those towns sat
+one key away under `municipality`. A township is a REFINEMENT of a municipality
+rather than a sibling of it — which is what the New Jersey row says in as many
+words — so `township` now falls back to its state's municipality definition.
+Found by measuring, not by reading.
+
+**LBL-1, over all 2,267 divisions:** the "Who runs it" field renders on **1,549**
+and is **SUPPRESSED on 718** — 441 congressional districts, 201 state house
+districts and 76 state senate districts. Nobody runs a district and nobody runs a
+Senate seat; the field is removed there rather than renamed, and the
+representation the card already shows is the correct account of that
+relationship.
+
+**The measurement script got its own denominator wrong first**, and it is worth
+recording because it is the shape this project keeps finding: it counted LBL-1
+over BODIES and reported 0 of 1,253 suppressed, which reads as *the fix does
+nothing*. A congressional district has no body row at all, so a body-shaped
+denominator cannot contain the cards the rule is about. **A number that
+reconciles is not a number that is correct.**

@@ -357,6 +357,14 @@
 [hotfix-0817] 03255: no carried row is claimed to be as fresh as the snapshot
 [hotfix-0817] 03255: only rows from a source that reported a gap carry a mark
 [hotfix-0817] 03255: the footer does not speak for the carried rows
+[njhunt6] 03255: the basemap style has real layers
+[njhunt6] 03255: the reader is not told the basemap is unavailable
+[njhunt6] 07866: the basemap style has real layers
+[njhunt6] 07866: the reader is not told the basemap is unavailable
+[njhunt6] 85641: the basemap style has real layers
+[njhunt6] 85641: the reader is not told the basemap is unavailable
+[njhunt6] 85701: the basemap style has real layers
+[njhunt6] 85701: the reader is not told the basemap is unavailable
 [promptB] /ballot renders no coverage note at 03255 (RULING 59)
 [promptB] /ballot renders no coverage note at 07866 (RULING 59)
 [promptB] /ballot renders no coverage note at 85641 (RULING 59)

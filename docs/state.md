@@ -16898,3 +16898,315 @@ know existed, and 119 fields closed from credentials that were sitting unused �
 none of it paid for, and all of it from routes that were available the whole time.
 
 **NJ Hunt 5 is not closed. 07866 is not done.**
+
+
+# NJ HUNT 6 — 2026-08-22
+
+**Code `d7bded5` → PR #159 → production `797dae4`, deploy
+`6a8a93dfffd4a90008ec835b`. `main` GREEN. One planned merge, no second.**
+
+## THE HEADLINE, and it is a RENDERING number
+
+The previous session collected 261 officials and rendered none of them. This one
+put them on the screen.
+
+| | Collected | **Rendering to a reader** |
+|---|---:|---:|
+| Morris County governing bodies with a roster | 39 asked | **19** |
+| People on those bodies | 270 named | **126** |
+| Of those, with an email | — | **102** |
+| Of those, with a party from a CERTIFIED ELECTION RESULT | — | **98** |
+| Bodies still OWED, each named with its reason | — | 20 |
+
+**At 07866 specifically: 15 people who were invisible now render.** Rockaway
+Borough Council (7) and Denville Township Council (8). The zip's who-governs
+card holds 12 bodies; **5 of them now carry people, against 3 before** — Morris
+County (7), Rockaway Township (10), Rockaway Township School District (7) and
+the two new ones. **39 people across 5 bodies, against 24 across 3.**
+
+Read as an image on production, deploy `6a8a93dfffd4a90008ec835b`: Denville
+township, *Who sits on it · 8*, Thomas W. Andes as Mayor under WHO RUNS IT, then
+Buie (Ward 3), Kovacs (Ward 1), Borowiec (Ward 4), Zimmermann (Ward 2), Venis
+(At-Large), Simpson (At-Large), Maffei (At-Large) — each with **Republican** and
+a **source** link. Every party on that card came from the Morris County Clerk's
+certified winners, and from nothing else.
+
+## `VF02`: the instrument was breaking the thing it was measuring
+
+**The basemap was never broken for a reader. It was broken for US, in every
+capture and every walk this repo has ever taken.**
+
+Playwright's `extraHTTPHeaders` applies to EVERY request a context makes, third
+parties included. MapTiler's CORS preflight does not allow
+`x-wtp-synthetic-run`:
+
+```
+Access to fetch at 'https://api.maptiler.com/maps/.../style.json'
+has been blocked by CORS policy: Request header field
+x-wtp-synthetic-run is not allowed by Access-Control-Allow-Headers
+```
+
+So the style request was refused, the map fell to the plain ground colour, and
+the notice fired. **No reader ever sent that header.** That is why NJ Hunt 5's
+photographs and its 371 walk checks disagreed: both were honest, and they were
+looking at different pages. It was also handing our run identifier to every
+third-party host the page touched.
+
+**WALL or JOB: a JOB, and ours.** Fixed at the shared path in
+`scripts/browser.mts` — the marker goes to our origin and is stripped from every
+cross-origin request.
+
+Two more defects fell out of the same investigation, both real on their own:
+
+- **The notice had no way down.** `setTilesFailed(true)` was the only writer, so
+  one transient error latched *Basemap unavailable* for the rest of a session
+  over a map that then drew perfectly. `onTilesRecovered` now fires on `idle`
+  with a real style loaded.
+- **It told a reader to edit `.env.local`.** The notice named
+  `NEXT_PUBLIC_MAPTILER_KEY` on a civic map. Rewritten to say what they can see,
+  what still works, and that reloading often fixes it.
+
+**The walk checks that now catch it — two per zip, because they are different
+questions.** *The reader is not told the basemap is unavailable* is the claim on
+screen; *the basemap style has real layers* is there because a silent fall to the
+fallback shows no notice at all. **All eight pass on production, 54 layers at
+every zip against the fallback's 1.**
+
+## RULING 93 — ask what the tier above publishes about the tier below
+
+Adopted by the author mid-session and **written into `CLAUDE.md` as law**.
+
+Morris County's own *Cities and Towns* page reached **30 of 39** municipalities
+and the nine it missed included **Rockaway Township, the governing body of the
+target zip**. New Jersey had published all 21 counties and all 564 municipalities
+with their official websites the whole time, and `usa.gov/states/new-jersey`
+links straight to it.
+
+`pnpm tier:directory`: **8 routes, 8 answering, 851 entities.** The New Jersey
+state directory alone carried **624**.
+
+**Reconciled against the official universe, as a pair, never blended:**
+
+| | |
+|---|---:|
+| Distinct general-purpose units the STATE's directory names | **569** |
+| Distinct general-purpose units the 2022 CENSUS OF GOVERNMENTS names | **538** |
+| In the Census, absent from the state's own directory | **27** |
+| In the directory, absent from the Census general-purpose universe | **58** |
+
+Both directions are findings. The 58 are police departments, fire companies,
+utilities authorities and county 9-1-1 centres — **twigs the Census
+general-purpose list does not carry and the state does**.
+
+**And the rung that taught the control-string rule:** `nj.gov/nj/gov/county/` —
+the URL USA.gov itself publishes — answers **HTTP 200 with a styled "Page not
+found"**. The document is at `/nj/gov/county/localgov.shtml`.
+
+## RULING 92, and the sweep it demanded: found 1, fixed 1
+
+`RO01`'s caption fix is confirmed **in the tool**, not only in `state.md`.
+
+The sweep found `data/hunt/nj-morris-municipal-sites.json` **stale against a
+generator that had already been fixed**. The committed artifact pointed five
+municipalities at the wrong government's website —
+
+| slug | pointed at | should be |
+|---|---|---|
+| `morris_township` | morrisplainsboro.org | morristwp.com |
+| `chatham_township` | chathamborough.org | chathamtownship.org |
+| `chester_township` | chesterborough.org | chestertownship.org |
+| `boonton_township` | boonton.org | boontontownship.com |
+| `mendham_township` | mendhamnj.org | mendhamtownship.org |
+
+— and omitted six municipalities outright. Every downstream hunt read it as
+current. Regenerating corrected all five and added the six: **24 rows → 30**.
+
+**The guard: `tests/generated-artifacts.test.ts`.** Every registered artifact
+exists and names a runnable generator; every file that DECLARES itself generated
+is in the register; and every PURE generator's artifact is byte-identical to what
+it produces right now. **It found an unregistered generated file on its first
+run** (`lib/officials/directory-source.ts`).
+
+## Six silent partials, and every one of them reported success
+
+None of these threw. Each returned a plausible number that was wrong.
+
+| What it did | What it cost |
+|---|---|
+| `<br id="isPasted">` doesn't match a `<br>`-only pattern | **4 of Rockaway Township's 9 council members deleted**; the run reported 5 rows and no error |
+| A roster filter kept only entries carrying a party, term or seat | **The 2 members Wikipedia says least about, deleted** — the equal-effort failure in miniature |
+| The copula list knew `is` and not `was` | **Pequannock's 5-member council read as a body with no roster** |
+| A seat count spelled out — *the seven-member township council* | **11 of 39 municipalities had a null denominator**, so the completeness gate could not run |
+| Three copies of the initials function, three behaviours | **Thomas J. Haynes III rendered `TI`**, found only by reading a capture |
+| `roster:hunt --only` wrote a one-site artifact | **38 bodies quietly stopped existing**, and the run's own counts were truthful |
+
+**The Boonton case is the one worth keeping.** Its article runs
+`…Lopez (Ward 4; D, 2027) Kimberly Mazzei (Ward 3; D, 2027) John P. Meehan…` —
+three members, no comma. Mazzei and Meehan did not exist and Lopez inherited the
+wrong ward: two sitting council members deleted and one misdescribed, from a
+missing punctuation mark.
+
+**Guarded**: `tests/wikipedia-parser.test.ts` (10) and
+`tests/person-initials.test.ts` (4), fixture-driven from the articles' own text.
+
+## Wikipedia's Denville roster was stale, and the primary source proved it
+
+The article listed Angela Coté and Christopher Golinski on the council. The
+Clerk's certified 2025 winners name **Adrienne Zimmermann** and **Mark Venis** in
+those seats, and the township's own council page confirms Zimmermann and Venis
+and does not name Coté or Golinski.
+
+**This is RULING 87 working exactly as written** — the encyclopedia named, the
+primary source proved, and the primary source disagreed. `NH73` holds the sweep:
+how many of the other 38 carry the same staleness?
+
+## The strongest record in the New Jersey hunt
+
+`pnpm nj:winners` reads the Morris County Clerk's certified *Winners of the
+General Election*: **263 winners across three cycles, 242 with an email, 246 with
+a filed street address, across 34 municipalities** — party, contact and filed
+address in one born-digital PDF per cycle, certified by the election authority.
+
+That is M62's rung, and it is what makes 98 party labels on this session's cards
+sourced rather than inferred. **Robert DeVito renders with no party**, because
+the certified record does not reach him — silence, not a guess.
+
+## The gate that refuses a partial roster, and why it is not RULING 26 suppression
+
+A roster is a claim about **who sits on a body**. Four of six members is not an
+under-stated field; it is a **false composition**, and the two it drops are
+invisible rather than marked missing.
+
+So wiring is gated on the member count reaching the seat count the
+municipality's own form of government declares. **Every member found is still
+held, still in the artifacts, still hunted on its RULING 53 clock**, and
+`pnpm nj:wire --dry` names all 20 gated-out bodies with the reason. The nearest
+wins: Boonton 7 of 8, Dover 5 of 8, Netcong 4 of 6, Long Hill 4 of 5.
+
+And a body with no roster renders the honest named gap, read as an image:
+**"We know this body governs here because its division exists. We haven't sourced
+who sits on it."** — a fact about US, not an assertion about them.
+
+## `NS06`: the new Census key is ALSO refused
+
+`pnpm census:key` is now a committed tool so this is one command next time.
+
+| | |
+|---|---|
+| ACS endpoint **with** the new key | HTTP 200, body is `<title>Invalid Key</title>` |
+| The same endpoint **with no key** | HTTP 200, body is `<title>Missing Key</title>` |
+| An endpoint needing **no key at all** | HTTP 200 **with real data** |
+
+The third line is the control: the host is up, the endpoint is right, the request
+is well-formed. **The credential is the only thing being refused**, and the key is
+40 well-formed hex characters.
+
+**Offered as a guess, and marked as one:** a Census API key must be ACTIVATED
+from a link the Census emails when it is issued. An unactivated key presents
+exactly like this.
+
+**And the failure mode CHANGED** — NJ Hunt 5 saw `302` with
+`X-DataWebAPI-KeyError: 1`; it is now `200` with an HTML error page and no such
+header. A check written against either symptom would now read this dead
+credential as healthy. The committed tool asks whether the response is the DATA
+requested, which survives both. **`NS06` stays open.**
+
+## `NS05` — answered, and deliberately not closed by the session
+
+The author confirmed the renumber in his brief. The row is left OPEN with his
+confirmation on its Session record: RULING 37 says only he closes a Needs Sean
+row, and what answers this one is a brief rather than a dated ruling anyone can
+check later. **One keystroke from him closes it.**
+
+The ruling-gap guard caught something while this was being recorded: **RULINGS 91
+and 92 had been in force since his brief and were recorded nowhere.** Both are
+now in `docs/rulings.md`, so the sequence runs 1–93 with 88 and 89 declared
+unassigned.
+
+## Branches inherited against branches newly built
+
+**Inherited 53. Newly built 3. Enriched 2.**
+
+The RULING 63 check **caught a duplicate before it was built**: `body-roster-page`
+already existed, so the roster tooling is recorded as an ENRICHMENT of that route
+rather than as `body-own-page-roster`, a new one. The Wikipedia external-links
+route is likewise an enrichment of `wikipedia-municipality` — same publisher,
+same dependency, so it is not an independent branch.
+
+Manifest **v5 → v6**: routes **53 → 56**, tiers **A 25 → 28**, B 11, C 17.
+
+## The gates
+
+| | |
+|---|---|
+| `pnpm test` | **1736 / 1736**, 0 failed (1719 → 1736: +17 guards) |
+| `pnpm lint` | **0 errors**, 16 warnings (all pre-existing) |
+| `pnpm exec tsc --noEmit` | clean |
+| `pnpm build`, default mode | green |
+| `pnpm build`, standalone mode | green |
+| `pnpm main:green` | **GREEN** at `797dae4`, 3 checks passed |
+
+**Budgets, read from `scripts/bundle-budget.json`, both modes:**
+
+| | measured | baseline | ceiling |
+|---|---:|---:|---:|
+| App trace, largest manifest | 206 files | 195 | 220 |
+| Framework runtime, standalone | 1130 files | 1138 | 1300 |
+| Framework runtime, default | 927 files | 935 | 1050 |
+| Client initial JS, raw | 2,759.3 KB | 2,716,714 B | 3,100,000 B |
+| Client initial JS, gzip | 814.6 KB | 818,445 B | 940,000 B |
+
+**No ceiling moved.** The client figure rose 2,653.0 → 2,759.3 KB against a
+ceiling of 3,027.3 KB. CI run for the committed baselines: GitHub Actions
+32202237032, job 95918284374.
+
+## The walk, and the no-regression figures
+
+**`pnpm walk:all` against production: 379 checks, 0 failed, 0 GONE, 0 silent.**
+Baseline 371, added 8 — all eight the new basemap checks.
+
+**Run locally FIRST**, per RULING 77, against a local production build on :3100:
+378 checks, 0 failed, 0 silent, 1 declared COULD NOT RUN (the production store,
+correctly unreachable from localhost).
+
+**That local run exposed one more defect and it is fixed**: a local walk was
+WRITING `docs/walk-checks.txt`, deleting the production-only checks it could not
+run. The next production run would then have reported them as newly ADDED rather
+than restored — **the check dying quietly, arriving through the very file written
+to prevent it.** Only a production run may write the baseline now.
+
+**No regression, measured across all four zips: 118 candidate cards, 61
+contests** — the floor exactly.
+
+Production rows this run created: **76 search-log GETs and 64 ask/log requests**,
+every one declared synthetic via `x-wtp-synthetic-run`. **No reaction was
+tapped.** No organic rows were investigated (RULING 3).
+
+## Screenshots — 7 of 7 read as images, and every one showed what it claimed
+
+Three of NJ Hunt 5's seven lied. **None of these did**, and the shooter is why:
+`pnpm shoot:officials` REFUSES rather than capture a body it cannot find, and it
+prints the row it clicked and the page text after opening, so the claim and the
+contents are checkable against each other.
+
+1. `njhunt6-map-07866` — the map at 430×932, basemap drawing, no notice.
+2. `njhunt6-about-07866` — `/about-area`, which is the living-here explainer and
+   **not** an officials surface. Recorded because it is what ruled that page out.
+3. `njhunt6-denville` — 8 people, local build.
+4. `njhunt6-rockaway-borough` — 7 people, and the initials fix confirmed: **TH**.
+5. `njhunt6-rockaway-boro` — the school district, showing the honest named gap.
+6. `njhunt6-map-03255` — no regression: 200 meetings, 12 venues, 6 bodies, the
+   Newbury Selectboard's three members.
+7. `njhunt6-prod-denville` — **production**, deploy `6a8a93dfffd4a90008ec835b`.
+
+## What a reader at 07866 can see now that they could not before
+
+They can open **Rockaway Borough** and find Mayor Thomas Mulligan and Council
+President Melissa Burnside and five council members, each with a party read from
+a certified election result and a source link. They can open **Denville
+township** and find Mayor Thomas W. Andes and seven council members with their
+wards. **Fifteen named people, on two governments, where the card previously
+opened onto nothing.**
+
+And the map behind that card draws, which it did in every reader's browser all
+along — but nobody could photograph it, so nobody could prove it.

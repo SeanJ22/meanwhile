@@ -16764,3 +16764,137 @@ House members.
 render), `NS08` (sovereign tribal government), `NJ11` (two municipalities whose
 roster still will not parse), `NJ12` (the eight routes still unwalked, each with
 its tier), `DI02` (wire the graph's bodies' meetings). **`NS01` untouched.**
+
+## The ship, and what production is serving
+
+**Code SHA `c2cb26f`, PR #158, one planned merge. Production deploy
+`6a8a606851610e0008305901`, serving `93748b8` (the merge commit). `main` GREEN —
+3 checks passed.** Confirmed by `/api/build` with a cache-busting header.
+
+`pnpm walk:all` against production: **371 check(s) passed, 0 regressions, 0 could
+not run.** Check identities **371 distinct of 371**, baseline 371, **added 0,
+GONE 0, silent 0** — the same set, exactly. Production rows this run created: **76
+search-log GETs** (every `/api/meetings` GET writes one) and **65 ask/log
+requests**. No reaction was tapped.
+
+Builds: default and standalone both clean, **no ceiling moved** — client cost for
+`/` is 2699.2 KB raw / 809.8 KB gzip against a ceiling of 3027.3 / 918.0, and the
+largest app trace is 205 files against a ceiling of 220. This session changed no
+reader-facing code, and the numbers are identical to the previous build, which is
+the expected result and is stated rather than assumed.
+
+## Screenshots — 7 of 7 read as images, and 3 of them lied
+
+RULING 2. Every capture was opened and read, against production.
+
+**Matched their claim (4):**
+
+- `nj4-ballot-07866.png` — the ballot at 07866, 9 contests and 26 candidate rows,
+  portraits, campaign blurbs with their source class, filed addresses, the
+  reaction prompt and the per-race pick row all rendering.
+- `nj4-ballot-03255.png` — the ballot at 03255, 12 contests and 47 rows.
+- `nj4-pu02-03255.png` — the first body row clicked opens the large card for the
+  *Ad Hoc Sutton Connects! Committee* with all six sections.
+- `nj4-pu02-85701.png` — the same for the *Amphitheater Unified School District
+  Governing Board*, 5 members, 1 upcoming meeting, 3 sources.
+
+**Did NOT match their claim (3), and this is a finding rather than a slip.** The
+three `nj4-governs-*.png` captures were labelled *the who-governs surface* and
+every one shows the MAP with the card minimised to its pill — because the shooter
+minimises it four lines before it captures.
+
+**NJ Hunt 4 found exactly this, on exactly these captures, and corrected the
+CAPTION IN `state.md` without touching the string in the script.** So the next
+run produced the same wrong captions, plus a fourth for 85701. **A correction
+written into prose and not into the instrument is a correction that recurs.** The
+caption is fixed in `scripts/shoot-nj-hunt4-0822.mts` this time, and `RO01` asks
+for a sweep of other corrections recorded in `state.md` whose tool was never
+touched.
+
+## One thing the captures surfaced that nothing else did
+
+All three map captures show the app's own fallback panel: **BASEMAP UNAVAILABLE —
+Map tiles didn't load.** On production.
+
+What was checked, so nobody re-checks it: the MapTiler key **is** baked into the
+production client bundle (`38lr8y2ek8t22.js` carries the style URL with a real
+key), and that style endpoint answers **HTTP 200 with 62,975 bytes** of valid
+JSON from this network. Neither the key's presence nor its validity is the cause.
+
+**What is not known is whether a real reader sees this.** The capture is headless
+Chromium and the fallback may be a race against the tile load rather than a
+failure. It is recorded as unresolved in that direction rather than dismissed —
+`VF02` names the check that would settle it. This is the case RULING 2 exists
+for: a DOM assertion and a live walk were both happy, and only reading the image
+raised the question.
+
+## Tracker
+
+**204 → 213 open.** Nine rows opened, every one verified present:
+
+| id | section | what |
+|---|---|---|
+| `NS05` | Needs Sean | the ruling numbering, for reversal |
+| `NS06` | Needs Sean | `CENSUS_API_KEY` is invalid |
+| `NS07` | Needs Sean | do appointed executive officials render as who-governs |
+| `NS08` | Needs Sean | sovereign tribal government — the FEC directory names the Navajo Nation |
+| `NJ11` | New Jersey hunt | two municipalities whose roster still will not parse |
+| `NJ12` | New Jersey hunt | the eight routes still unwalked, each with its tier |
+| `DI02` | Data infrastructure | wire the graph's bodies' meetings |
+| `VF02` | Visual feedback | production renders BASEMAP UNAVAILABLE |
+| `RO01` | Repo & ops | a correction written into prose and not into the tool recurred |
+
+**`NS01` untouched.** Needs Sean 46 → 50; **P1 still 3**, so the five-P1 cap is
+not approached. No row was resolved by this session: RULING 37 forbids closing a
+Needs Sean row, and the work rows this session opened are all genuinely open.
+
+## Every item's ending, stated individually
+
+| Item | Ending |
+|---|---|
+| 1 — process rulings into law | **DONE.** 83–87 and 90, with rationale, in `CLAUDE.md` and `docs/rulings.md`, plus the numbering collision named and a Needs Sean row for reversal. Guard added and the gap guard tightened rather than loosened. |
+| 2 — tiered manifest | **DONE.** 41→53 routes, v3→v5, tiers enforced in code and guarded. Eight of nine `NH71` routes remain unwalked and are named individually with their tier in `NJ12`; the largest, NJ ELEC, is closed. |
+| 3 — the Wikipedia parser | **DONE.** 39 of 39 municipalities, 261 officials, 818 of 898 citations confirmed, six seams recorded, the citation host map derived. |
+| 4 — the hunt, 792 fields | **NOT DONE, and it is the honest gap.** The material to close it exists and is measured; nothing was written to a reader surface. See the collection-against-rendering table above. |
+| 5 — officials to the Kelly standard | **PARTIAL.** 121 of 245 found on their own site, 34 emails, 40 phones; Rockaway Township 10 of 10. Not yet written into the officials data. |
+| 6 — Arizona's source enumeration | **DONE.** `docs/arizona-source-enumeration.md`, all six FEC-directory offices in full, 14 Tier A routes in walk order, 5 expected breakages recorded in advance. No Arizona entity was hunted. |
+| 7 — verify locally, ship once | **DONE.** One planned merge, PR #158. Local suite, lint, tsc and both builds green before the push. |
+| 8 — playbook and manifest | **DONE.** `docs/zip-playbook.md` +19.0 KB across five new sections and a tool table. |
+| 9 — file the work | **DONE.** Nine rows, gap ledger unchanged, `NS01` untouched. |
+| 10 — the government graph | **DONE.** 174 entities at depth 7, 171 bodies the registry lacks. The meetings hop is `DI02`. |
+| 11 — every held credential | **DONE.** All seven called, 119 fields closed, one invalid key found. |
+
+## Branches inherited against branches newly built
+
+**Inherited and used unchanged: 4** — `nj-municipal-roster` (its site index and
+its page-walk), the JS-concatenated mailto rung, the filename-as-attribution
+rule, and the county-clerk filing branch.
+
+**Newly built: 5** — `wikipedia-municipality`, `wikipedia-government-graph`, the
+NJ ELEC rung-2-plus-rung-7 route, the officials-side enrichment of
+`body-roster-page`, and the credential walk.
+
+**Duplicates built: 0.** `nj-hunt4-rosters` was checked BEFORE the officials
+extractor was written, which is what RULING 63 asks for, and the check changed the
+build: the existing tool is a candidate hunt matching against the clerk's filed
+list, so no sitting official could ever have matched it. The new script reuses its
+link vocabulary and its page-walk and is recorded as an enrichment of the same two
+route ids rather than as a new route. **Its index also came from Wikipedia (39 of
+39) rather than from the county's Cities-and-Towns page (30 of 39, missing
+Rockaway Township itself).**
+
+## Is 07866 done?
+
+**No, and it is not close.** The brief asked whether every field at 07866 is found
+or properly exhausted. Neither. `VERIFIED_ABSENT` is **0**, unchanged, and was not
+forced — eight manifest routes are still unwalked, so under RULING 61 no field
+can be exhausted, and under RULING 90 no session may say *nothing further*
+regardless.
+
+What changed is the denominator's other side. The previous session ended with 124
+candidates unreachable and a recommendation to buy a search API. This one ends
+with 261 officials named, 818 citations confirmed, 171 bodies the registry did not
+know existed, and 119 fields closed from credentials that were sitting unused —
+none of it paid for, and all of it from routes that were available the whole time.
+
+**NJ Hunt 5 is not closed. 07866 is not done.**

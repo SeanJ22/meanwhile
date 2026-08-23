@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **211 open**, 337 resolved.
+- **213 open**, 337 resolved.
 - **50 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -349,13 +349,15 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**3 open · 34 resolved.**
+**4 open · 34 resolved.**
 
 ### P1
 
 **F01** — Sean's full walk of the product on 2026-08-18, forty-odd findings across cards, meeting order, votes, the ask box, the ballot and the map. The parent row that keeps the whole batch together; the individual findings became their own rows.
 
 ### P2
+
+**VF02** — Three captures read as images on 2026-08-22 against production deploy 6a8a606851610e0008305901 - the map at 07866, 03255 and 85701 - all show the app's own fallback panel: BASEMAP UNAVAILABLE, Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use MapTiler. WHAT WAS CHECKED, so the next session does not re-check it: the key IS baked into the production client bundle - chunk 38lr8y2ek8t22.js carries api.maptiler.com/maps/${i}/style.json?key= with a real key - and that style endpoint answers HTTP 200 with 62,975 bytes of valid style JSON from this network. So neither the key's presence nor its validity is the cause. WHAT IS NOT KNOWN: whether a real reader sees this. The capture is a headless Chromium run and the fallback may be a race against the tile load rather than a failure, which would make it a capture artifact and not a defect. It is recorded as UNRESOLVED in that direction rather than dismissed, because the district geometry and the pins render either way and the fallback panel is the only thing that distinguishes the two cases. THE CHECK THAT WOULD SETTLE IT: read the network requests to api.maptiler.com from a real browser session on production, and check whether the style request is issued at all, refused, or simply slower than the capture window.
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
 
@@ -609,7 +611,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**7 open · 57 resolved.**
+**8 open · 57 resolved.**
 
 ### P2
 
@@ -626,6 +628,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PD05** — The production walk creates rows under two different run labels and then counts only one of them, so it under-reports how many rows it wrote.
 
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
+
+**RO01** — NJ Hunt 4's close-out reported that three of its captures claimed to show the who-governs surface and actually showed the map, because the shooter minimises the card before capturing. It corrected the caption in docs/state.md. It did not change the string in scripts/shoot-nj-hunt4-0822.mts. NJ Hunt 5 ran the same shooter against production, read all seven captures as images per RULING 2, and found the same three wrong captions - now four, since 85701 was added. The caption is fixed in the tool this time. THE GENERAL POINT, which is why this is a row rather than a footnote: a correction recorded in a document describes what one session believed on one day; a correction written into the instrument changes what every later run produces. Where a session finds a defect in something a tool emits, the fix belongs in the tool, and the document records that it was fixed there. Worth a sweep for other corrections recorded in state.md whose instrument was never touched.
 
 **R54** — A standing mechanism rather than a job: every portrait Sean needs to eyeball collects into one list he can work through, regenerated rather than hand-kept.
 

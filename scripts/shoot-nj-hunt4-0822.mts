@@ -111,7 +111,27 @@ for (const zip of ["07866", "03255", "85701"]) {
 
   const card = join(OUT, `nj4-governs-${zip}.png`);
   await page.screenshot({ path: card });
-  shots.push({ file: card, shows: `the who-governs surface at ${zip} at 430×932` });
+  /*
+   * **THE CAPTION SAYS WHAT THE CAPTURE SHOWS, AND THIS ONE HAD TO BE FIXED
+   * TWICE.** (Corrected 2026-08-22, NJ Hunt 5.)
+   *
+   * NJ Hunt 4 found that three captures claimed "the who-governs surface" and
+   * showed the map, because the shooter MINIMISES the card four lines above
+   * this. It corrected the caption in `state.md` and left the string here
+   * untouched — so the next run produced the same three wrong captions, and
+   * NJ Hunt 5 read them as images and found the same defect.
+   *
+   * **A correction written into prose and not into the tool is a correction
+   * that recurs.** The caption now describes the minimised state, which is what
+   * this capture is actually of and is genuinely what it is for: the map with
+   * the district geometry drawn and the pill collapsed.
+   */
+  shots.push({
+    file: card,
+    shows:
+      `the MAP at ${zip} at 430×932, with the who-governs card MINIMISED to its ` +
+      `pill — district geometry, meeting pins and the meetings/venues count visible`,
+  });
 
   /* PU02: open the ask panel, type, and click the FIRST body row. */
   if ((await page.locator("[data-ask-panel]").count()) === 0) {

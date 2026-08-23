@@ -1430,5 +1430,12 @@
       "NH104",
       "NH105"
     ]
+  },
+  {
+    "session": "questionnaire-and-corpora-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH106"
+    ]
   }
 ]

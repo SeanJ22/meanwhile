@@ -2246,3 +2246,107 @@ find the rule. That is the shape every amendment takes from here.
 comes back as drift. Something in this project reads it, cites it, or reasons
 from it, and nothing says it was overturned — which is the exact failure
 `docs/rulings.md` was created to end.
+
+---
+
+### RULING 100 — a partial answer that adds up is still a wrong answer
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 3). Law: `CLAUDE.md`, **Non-negotiables in code**. **Supersedes nothing. It is the missing half of the zero-row-extraction rule**, which catches a reader that came back with nothing and cannot see one that came back with some.*
+
+**When a document says how many people are on a body, and we read fewer than that, we have not read the document. That is a failure, and the machine now says so.**
+
+A council page says *nine members*. Our reader came back with five. Every check we had said this was fine, because every check was asking *did anything come back* — and five is not nothing. The five were real people, correctly read. The four who were missing were simply not there, and nothing anywhere noticed.
+
+**When the source states no number, we now say that out loud too.** "We read four people and the page never said how many there should be" is a different and much weaker statement than "we read four and the page says four", and a report that ran the two together would be telling you it had checked something it had not.
+
+*What this cost to learn, three times in one session.* A stray piece of formatting in Rockaway Township's page cut its council list short: **four of nine members vanished and the run reported five rows and finished clean.** A filter meant to keep out stray text deleted the two Mount Olive members the page says least about — the two least-documented people on the body, which is the fairness problem this project has rules about, pointed the other way. And Pequannock's page used *was composed of* where the reader only knew *is composed of*: **five sitting council members read as an empty body.**
+
+Only the third of those was visible before today. The first two are the reason this ruling exists.
+
+---
+
+### RULING 101 — our own identifier never leaves our own site
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 4). Law: `CLAUDE.md`, **The collection stores never join**. **Supersedes nothing. It finishes `VF02`**, where one of two findings was fixed and the other was written down and left.*
+
+**When our own tools walk the site, they attach a label saying "this is us, not a reader". That label must never be sent to anyone else's server.**
+
+Two things went wrong and only one was fixed. The first: the map provider's server refuses any request carrying a header it does not recognise, so attaching our label to the map's own request meant **the map failed in every screenshot and every automated walk this project has ever taken.** That is why one session's photographs showed a broken map while its 371 checks were green — both were honest, and they were looking at different pages, because the instrument was breaking the thing it was measuring.
+
+The second was recorded and never enforced: **the label was going to every outside company the page touches.** Nothing sensitive is in it — it names a walk, not a person — but a marker identifying our infrastructure arriving at servers we do not control is the wrong shape for a product whose central promise is that its records cannot be joined together.
+
+The rule is now a piece of code with its own test rather than four lines inside a tool, which is the difference between something enforced and something remembered. It is checked against every outside service these pages reach, by name, so the list has a stated size rather than one example.
+
+---
+
+### RULING 102 — fixing the recipe is not finished until you re-cook the dish
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 5). Law: `CLAUDE.md`, **Repo layout**. **Amends RULING 92** by giving it an end: RULING 92 says fix the generator and never the output, and had no answer to "how do I know I am done".*
+
+**When a program writes a file for us, fixing the program is only half the job. The file has to be written again and compared, and the number that changed has to be reported.**
+
+A file listing every municipality's official website pointed **five towns at the wrong government** — one township at the neighbouring town's site, another at the borough's. The program that writes that file had **already been fixed**. Somebody did the right thing and stopped. The wrong file stayed where it was, every later piece of work read it as current, and nothing anywhere went red, because "fix the generator" was satisfied the moment the generator was fixed.
+
+So each program now has a fingerprint taken of its own code, recorded next to the file it writes. **Change the program and the build fails until the file is written again.** Fixing a generator now costs a re-run, which is what finishing the job always was.
+
+The fingerprint is taken of the PROGRAM, not the file, and that is the whole design. A changed file tells you it changed; it cannot tell you it SHOULD have changed. A program that reads a government's website will legitimately produce a different file when that government moves its site — but the program itself only changes when a person edits it, and that is exactly the moment a re-run is owed.
+
+---
+
+### RULING 103 — a sweep looks for the same code twice, not just the same symptom
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 6). Law: `CLAUDE.md`, **A named instance is an example of a class-wide defect**. **Amends that rule** by naming the blind spot in its own instruction.*
+
+**When something is wrong in one place, we already look for the same symptom everywhere. We now also look for the same code, written out more than once.**
+
+Three separate copies of the same small routine turned **Thomas J. Haynes III** into the initials **"TI"** — each took the first letter of the first word and the first letter of the last, and the last word was *III*. Fixing the copy that was complained about left two copies of the same fault standing.
+
+Searching for the symptom cannot find them. They are not the same text, and they do not use the same names for things. So the sweep now also compares the SHAPE of the code, with the names set aside, which is what makes a renamed copy show up as a copy.
+
+The existing rule's own instruction is where the gap was. *Fix at the shared code path* assumes there is one.
+
+The first version of the new tool read 241 pieces of code across 806 files and reported one duplicate — which is a sweep announcing nothing found without having looked, the failure this project names most often. It now reads 2,114 and found 26 groups. Four copies of "who is calling", which is a claim this project makes law, are now one. Two copies of "is this the same person" are now one, and one of them was in the tool that CHECKS whether the same person is shown twice — it had been checking with a different definition of a person than the thing it was checking.
+
+---
+
+### RULING 104 — a file you put in the repo is something a session must go and read
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 15). Law: `CLAUDE.md`, **Non-negotiables in code**. **Extends RULING 94 to visual sessions explicitly**, which were outside its stated scope.*
+
+**When you leave something for a session to look at, it goes in the repository, and the session must reach it. Not reaching it is a fault to report, never an acceptable outcome.**
+
+The 8/22 visual brief pointed at a shared Drive folder. A session has a terminal and a copy of the repository; it has no way into that folder. The input was unreachable by construction. The brief then said *if the folder is unreachable, proceed and report that — it is not a blocker*, which is permission to skip, and the session took it and honestly reported that it had not tried.
+
+Both halves were the brief's fault, and the cost was specific: one issue came back *"could not reproduce"* while the picture showing it sat in a folder the session never opened. Refusing to guess at a fix was right. Stopping with the evidence unread was not.
+
+RULING 94 already says an obstacle you did not attempt is not an obstacle. It was written for hunting. It applies here too.
+
+---
+
+### RULING 105 — say what is rendering, what is out of scope, and what is still dark
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 15). Law: `CLAUDE.md`, **Where collection and rendering can diverge**. **Supersedes nothing. It extends the two-numbers rule** from a pair to a three-way split.*
+
+**A count of what we are showing is not a report. Three numbers are: what is rendering, what is deliberately out of scope and why, and what is in scope and still missing.**
+
+*"174 bodies render"* sounds complete and says nothing about the ones that do not. The middle number is the one that keeps a report honest, because without it there is no way to tell a body we decided not to cover from a body we failed to reach — and those need completely different responses. One is a decision. The other is work.
+
+Each of the three carries its own denominator, so the three add up to something a reader can check.
+
+---
+
+### RULING 106 — no generated file has a size limit
+
+*Adopted 2026-08-23 (Hunt 6 hardening, item 16, `NS09` — the author ruled C and extended it: there are no caps anywhere). Law: `CLAUDE.md`, **Repo layout**. **Supersedes the 40 KB cap** set on 2026-08-17 and the 20 KB one before it.*
+
+**A file this project writes for itself is as long as it needs to be. Nothing trims it to fit.**
+
+A size limit forces quiet trimming, and quiet trimming produces a file that says less than it knows while reading as complete — the same failure as RULING 100's partial answer, one floor up.
+
+The orientation file every session opens was capped at 20 KB and dropped its entire recent-changes section. The cap was raised to 40 KB. By today it was dropping the same section again and shortening notes from 130 characters to 90. Raising a limit is treating a symptom; the third time it happens, the limit is the problem.
+
+**When a generated file grows, the answer is to remove repetition from what feeds it — never to cut the output.**
+
+Two limits were found and removed. The orientation file now runs to 44 KB with its recent-changes section whole at ten of ten rows and its notes at full length. The session log clipped its finished and still-open lists to twelve rows each with an *"and N more"* line beneath — the same trim wearing a polite face — and grew by 25 KB when that came out.
+
+**What replaces a limit.** Without one, a generated summary can drift toward reproducing the constitution and leave two documents that disagree about the law. The answer is not a cap: **every section says where its content came from, and any block that claims to be word-for-word is tested against the original**, so a difference fails the build instead of sitting there. That sweep immediately found a real gap — the pinned rules block said where it came from only at the END, after the whole thing, rather than at the point a reader arrives.

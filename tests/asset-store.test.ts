@@ -43,8 +43,30 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const BINARY = /\.(jpg|jpeg|png|webp|gif|pdf)$/i;
 
-/** Repo furniture, never a corpus. Mirrors STAYS_IN_REPO in scripts/assets.mts. */
-const STAYS_IN_REPO = [/^public\/favicon/i, /^public\/icons?\//i, /^app\//, /^components\//];
+/**
+ * Repo furniture, never a corpus. Mirrors `STAYS_IN_REPO` in
+ * `scripts/assets.mts`.
+ *
+ * **`docs/feedback/` was added 2026-08-23 (RULING 104).** These are the
+ * author's own walkthrough captures, and they are an INPUT a session must
+ * reach — the 8/22 brief pointed at a Google Drive folder no shell can open,
+ * the session honestly reported that it had not attempted it, and `LBL-2` came
+ * back "could not reproduce" while the image showing it sat unopened. Putting
+ * them in the repo is what makes them reachable, and a guard that refused them
+ * would push them back out to a place the next session cannot get to.
+ *
+ * They are not the class RULING 20 governs. That rule is about an
+ * INGEST-VOLUME corpus — every agenda PDF for every body, re-fetched forever.
+ * This is a fixed set of one afternoon's screenshots, 4 MB, that will never be
+ * re-fetched because the walkthrough happened once.
+ */
+const STAYS_IN_REPO = [
+  /^public\/favicon/i,
+  /^public\/icons?\//i,
+  /^app\//,
+  /^components\//,
+  /^docs\/feedback\//,
+];
 
 interface Manifest {
   rows: { path: string; sha256: string; bytes: number }[];

@@ -1,4 +1,5 @@
 import { decodeEntities } from "../sources/http.ts";
+import { statedCountIn } from "./count-assertion.ts";
 import { extracted, zeroRows, cannotRun } from "./types.ts";
 import type { ExtractResult } from "./types.ts";
 
@@ -248,9 +249,28 @@ export function extractRosterTables(
       { tables: tablesSeen, tablesRejected },
     );
   }
-  return extracted<RosterRow>(LAYER, source, inputBytes, rows, {
-    tables: tablesSeen,
-    tablesRejected,
-    people: rows.length,
-  });
+  /*
+   * **RULING 100 — what does the PAGE say is there?** A body's own page
+   * usually says, in prose above the table: *the nine-member Board of
+   * Education*, *the Council is composed of five members*. Where it does, that
+   * sentence is the only denominator worth having, and a table read that comes
+   * back with four people against it is a failed extraction whatever the row
+   * count looks like.
+   *
+   * Read out of the page TEXT rather than out of the table structure on
+   * purpose. A `<tr>` count is not a claim by the source — spacer rows, header
+   * rows inside `<tbody>` and layout rows are all legitimately skipped, and
+   * asserting against them would fail correct extractions.
+   */
+  const stated = statedCountIn(textOf(html));
+  return extracted<RosterRow>(
+    LAYER,
+    source,
+    inputBytes,
+    rows,
+    { tables: tablesSeen, tablesRejected, people: rows.length },
+    stated ??
+      "the page carries no sentence stating how many people sit on this body, " +
+        "so the table read cannot be checked against a denominator",
+  );
 }

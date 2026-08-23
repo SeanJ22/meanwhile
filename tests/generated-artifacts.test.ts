@@ -42,101 +42,15 @@ import { execSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import {
+  DIGEST_FILE,
+  GENERATED,
+  type DigestFile,
+} from "../lib/ops/generated-register.ts";
+import { checkArtifact } from "../lib/ops/generator-digest.ts";
+
 const ROOT = process.cwd();
 
-interface GeneratedArtifact {
-  /** Repo-relative path of the committed output. */
-  path: string;
-  /** The command that writes it. A reader must be able to run this verbatim. */
-  command: string;
-  /**
-   * True when every input is committed, so the output is reproducible and this
-   * guard re-runs it. False for a generator that reads the network or a clock.
-   */
-  pure: boolean;
-  /** Why it is not pure, when it is not. Stated rather than implied. */
-  impurity?: string;
-}
-
-/**
- * **The register.** Adding a generator means adding a row here, in the same
- * commit — the same discipline `tests/guard-census.json` applies to guards.
- */
-const GENERATED: GeneratedArtifact[] = [
-  {
-    path: "docs/branch-manifest.md",
-    command: "corepack pnpm manifest:doc",
-    pure: true,
-  },
-  {
-    path: "lib/registry/rosters-nj-morris.ts",
-    command: "corepack pnpm nj:wire",
-    pure: true,
-  },
-  {
-    path: "data/hunt/nj-morris-municipal-sites.json",
-    command: "corepack pnpm nj:rosters --index",
-    pure: false,
-    impurity:
-      "reads the county's Cities-and-Towns page over the network. THE ARTIFACT THIS " +
-      "GUARD WAS BUILT OVER: it sat five municipalities deep in wrong governments while " +
-      "its generator had already been fixed.",
-  },
-  {
-    path: "data/hunt/muni-sites-nj-morris.json",
-    command:
-      "corepack pnpm muni:sites --wiki data/hunt/wikipedia-nj-morris.json " +
-      "--state-directory data/hunt/tier-directories.json --county data/hunt/nj-morris-municipal-sites.json " +
-      "--out data/hunt/muni-sites-nj-morris.json",
-    pure: false,
-    impurity: "control-checks every candidate URL live — a municipality's site may move or refuse",
-  },
-  {
-    path: "data/hunt/roster-pages-muni-sites-nj-morris.json",
-    command: "corepack pnpm roster:hunt --index data/hunt/muni-sites-nj-morris.json",
-    pure: false,
-    impurity: "walks each body's own site — the roster changes when the body changes",
-  },
-  {
-    path: "data/hunt/tier-directories.json",
-    command: "corepack pnpm tier:directory",
-    pure: false,
-    impurity: "walks USA.gov and the state directories live",
-  },
-  {
-    path: "data/hunt/nj-morris-certified-winners.json",
-    command: "corepack pnpm nj:winners",
-    pure: false,
-    impurity: "fetches the county clerk's certified PDFs; a new cycle adds a document",
-  },
-  {
-    path: "data/hunt/wikipedia-nj-morris.json",
-    command: "corepack pnpm wiki:muni --state NJ --county Morris --confirm",
-    pure: false,
-    impurity: "reads the encyclopedia and fetches every citation — both move",
-  },
-  {
-    /*
-     * FOUND BY THIS GUARD ON ITS FIRST RUN — it declared itself generated and
-     * was in no register, which is precisely the state a hand-edit becomes
-     * permanent in.
-     */
-    path: "lib/officials/directory-source.ts",
-    command: "corepack pnpm congress:migrate",
-    pure: false,
-    impurity:
-      "pins a SHA of the unitedstates/congress-legislators repository and stamps the date it " +
-      "was read; re-running it legitimately moves both.",
-  },
-  {
-    path: "docs/evidence/njhunt6-morris-rosters.jsonl",
-    command: "corepack pnpm nj:wire",
-    pure: false,
-    impurity:
-      "a retrieval ledger records the bytes a body sent on a DATE. Regenerating it from " +
-      "today's artifacts is correct; demanding byte-equality with a past walk is not.",
-  },
-];
 
 test("RULING 92: every registered generated artifact exists and names its generator", () => {
   for (const a of GENERATED) {
@@ -202,5 +116,85 @@ test("RULING 92: a PURE generator's artifact is byte-identical to what it produc
       // Never leave the tree changed by a test, whatever the outcome.
       writeFileSync(full, committed, "utf8");
     }
+  }
+});
+
+/* ========================================================================== */
+/* RULING 102 — a generator fix is incomplete until its output is regenerated */
+/* ========================================================================== */
+
+/**
+ * RULING 92 has no end. `data/hunt/nj-morris-municipal-sites.json` pointed
+ * five municipalities at the wrong government's website **with its generator
+ * already fixed** — somebody had done the RULING 92 thing, correctly, and
+ * stopped. Nothing went red, because "fix the generator" was satisfied the
+ * moment the generator was fixed.
+ *
+ * The completion condition: each generator's SOURCE CLOSURE is digested into
+ * `tests/generator-digests.json`, and a generator whose digest has moved fails
+ * here until its artifact is regenerated and `pnpm regen --write` records the
+ * new digest.
+ *
+ * The digest is over the GENERATOR, not the artifact, and that is the whole
+ * design. An artifact hash tells you the artifact changed; it cannot tell you
+ * the artifact SHOULD have changed. A network generator's output legitimately
+ * moves when a government moves its website — the generator's source moves
+ * only when somebody edits it, which is exactly the event after which a re-run
+ * is owed.
+ */
+
+test("RULING 102: every registered artifact records its generator's digest", () => {
+  const full = join(ROOT, DIGEST_FILE);
+  assert.ok(existsSync(full), `${DIGEST_FILE} is missing — run \`pnpm regen --write\``);
+  const recorded = JSON.parse(readFileSync(full, "utf8")) as DigestFile;
+
+  const missing = GENERATED.filter((a) => recorded[a.path] === undefined).map((a) => a.path);
+  assert.deepEqual(
+    missing,
+    [],
+    "these artifacts have no recorded generator digest, so nothing can tell whether their " +
+      "generator has been fixed since they were written. Run `pnpm regen --write`.",
+  );
+});
+
+test("RULING 102: no generator has moved since its artifact was last regenerated", () => {
+  const recorded = JSON.parse(readFileSync(join(ROOT, DIGEST_FILE), "utf8")) as DigestFile;
+  const stale: string[] = [];
+  const unresolvable: string[] = [];
+  for (const a of GENERATED) {
+    const check = checkArtifact(ROOT, a, recorded[a.path]?.digest ?? null);
+    if (check.verdict === "STALE" || check.verdict === "UNRECORDED") stale.push(a.path);
+    if (check.verdict === "UNRESOLVABLE") unresolvable.push(`${a.path} — ${a.command}`);
+  }
+  assert.deepEqual(
+    unresolvable,
+    [],
+    "these commands do not resolve to a repo file, so no completion condition can be " +
+      "computed for them. A generator with no completion condition is the state RULING 102 ends.",
+  );
+  assert.deepEqual(
+    stale,
+    [],
+    "the generator behind each of these has changed since the artifact was last " +
+      "regenerated. RULING 102: regenerate the artifact, diff it, then `pnpm regen --write`. " +
+      "Recording the digest WITHOUT regenerating makes this guard agree with a stale file.",
+  );
+});
+
+test("RULING 102: the digest is sensitive to a change anywhere in the closure", () => {
+  /*
+   * Proof the instrument works, rather than a claim that it does. The closure
+   * is the entry script PLUS every repo-local module it imports, transitively
+   * — so a fix landing in `lib/hunt/wikipedia.ts` moves the digest of every
+   * generator downstream of it, which is correct: those artifacts are owed a
+   * re-run whether or not anyone remembered they existed.
+   */
+  const recorded = JSON.parse(readFileSync(join(ROOT, DIGEST_FILE), "utf8")) as DigestFile;
+  for (const a of GENERATED) {
+    const rec = recorded[a.path];
+    assert.ok(rec, a.path);
+    assert.ok(rec.files >= 1, `${a.path}: the source closure collapsed to ${rec.files} file(s)`);
+    assert.match(rec.digest, /^[0-9a-f]{64}$/, `${a.path}: not a sha256`);
+    assert.match(rec.regeneratedOn, /^\d{4}-\d{2}-\d{2}$/, `${a.path}: no regeneration date`);
   }
 });

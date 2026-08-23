@@ -77,6 +77,11 @@
  * start.
  */
 
+import {
+  assertCount,
+  statedCountIn,
+  type CountAssertion,
+} from "../extract/count-assertion.ts";
 import { OUTBOUND_CONTACT } from "../geo/outbound-agent.ts";
 
 /* ────────────────────────────── Retrieval ────────────────────────────────── */
@@ -761,6 +766,21 @@ export interface RosterParse {
   /** Which lead-in matched, so a new state's shape can be added by name. */
   leadIn: string | null;
   citationUrls: string[];
+  /**
+   * **What the ARTICLE says the body's size is, against what parsed** —
+   * RULING 100, 2026-08-23.
+   *
+   * This is the field that would have caught Rockaway Township. The article's
+   * composition sentence states *nine members*; a stray `<br id="isPasted">`
+   * ended the roster sentence after five; the parse returned five rows and
+   * every instrument in the repo read that as a success. Nothing was throwing
+   * and nothing was zero — which is precisely why the row count could not see
+   * it and the article's own denominator can.
+   *
+   * `NOT_ASSERTABLE` where the article states no size. That is the common case
+   * for smaller bodies and it is reported rather than passed.
+   */
+  count: CountAssertion;
 }
 
 /**
@@ -788,7 +808,32 @@ export const ROSTER_LEAD_INS = [
  * removes them, so the citation set travels with the roster it belongs to.
  */
 export function parseRoster(localGovernment: string, bodyName: string | null): RosterParse {
-  const empty: RosterParse = { officials: [], sentence: null, leadIn: null, citationUrls: [] };
+  /*
+   * **The denominator, read BEFORE the roster** — RULING 100.
+   *
+   * Two independent readings of the same claim, in order of specificity:
+   * `parseGoverningBody`'s composition sentence, which is the shape New Jersey
+   * articles use and is already tested; then the generic membership shapes in
+   * `lib/extract/count-assertion.ts`, which reach the states whose articles
+   * word it differently. Either may be null and neither is guessed at.
+   */
+  const seats = parseGoverningBody(localGovernment).seats;
+  const generic = statedCountIn(plain(localGovernment));
+  const stated = seats ?? generic?.count ?? null;
+  const statedBy =
+    seats !== null
+      ? "the article's composition sentence, via parseGoverningBody"
+      : generic !== null
+        ? `${generic.shape}: “${generic.evidence}”`
+        : "the article states no size for this body";
+
+  const empty: RosterParse = {
+    officials: [],
+    sentence: null,
+    leadIn: null,
+    citationUrls: [],
+    count: assertCount(0, stated, statedBy),
+  };
 
   /**
    * **A lead-in is not enough, and this is the defect that taught it.** The
@@ -873,10 +918,15 @@ export function parseRoster(localGovernment: string, bodyName: string | null): R
       sentence: s.text,
       leadIn,
       citationUrls,
+      // Filled in below, once the winning sentence is known. A placeholder
+      // here rather than a partial assertion per candidate sentence: the
+      // assertion is about the parse that WON, not about each attempt.
+      count: assertCount(0, stated, statedBy),
     };
   }
 
-  return best ?? empty;
+  if (best === null) return empty;
+  return { ...best, count: assertCount(best.officials.length, stated, statedBy) };
 }
 
 /**

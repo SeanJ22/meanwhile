@@ -57,6 +57,7 @@ import type {
 } from "playwright";
 
 import { makeRunId, syntheticRunHeaders, SYNTHETIC_RUN_HEADER } from "../lib/db/run-marker.ts";
+import { confine } from "../lib/ops/origin-confinement.ts";
 
 /**
  * The init script, as a string rather than a function.
@@ -191,23 +192,24 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
      * the only place it belongs. Same-origin requests pass through untouched
      * and keep it; cross-origin requests have it stripped.
      */
+    /*
+     * **The decision itself lives in `lib/ops/origin-confinement.ts`**
+     * (RULING 101, 2026-08-23), because four lines inside a harness are
+     * REMEMBERED rather than ENFORCED: nothing failed if they were deleted,
+     * and nothing could test them without launching a browser.
+     *
+     * `confine` is a pure function over (requestUrl, frameUrl, headers), so
+     * `tests/origin-confinement.test.ts` walks it across every third-party
+     * host this product's pages actually reach and states the denominator.
+     */
     await context.route("**/*", async (route) => {
       const request = route.request();
-      let sameOrigin = true;
-      try {
-        sameOrigin = new URL(request.url()).origin === new URL(request.frame().url()).origin;
-      } catch {
-        // An opaque or about:blank frame. Treat as cross-origin and strip —
-        // failing safe means not leaking, never leaking to be safe.
-        sameOrigin = false;
-      }
-      if (sameOrigin) {
+      const decision = confine(request.url(), request.frame().url(), request.headers(), headers);
+      if (decision.verdict === "SAME_ORIGIN_KEPT") {
         await route.continue();
         return;
       }
-      const stripped = { ...request.headers() };
-      for (const name of Object.keys(headers)) delete stripped[name.toLowerCase()];
-      await route.continue({ headers: stripped });
+      await route.continue({ headers: decision.headers });
     });
 
     await context.addInitScript(KILL_BEACON);

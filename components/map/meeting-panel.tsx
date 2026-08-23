@@ -9,6 +9,7 @@ import {
   formatRelativeDay,
   locationLine,
   meetingHeadline,
+  meetingSubline,
 } from "@/lib/map/format";
 import {
   attributionNotesFor,
@@ -16,7 +17,8 @@ import {
 } from "@/lib/meetings/list-attribution";
 import { relativeAge } from "@/lib/meetings/freshness";
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
-import { BADGE_COPY, badgeFor } from "@/lib/meetings/jurisdiction-badge";
+import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
+import { badgeFor } from "@/lib/meetings/jurisdiction-badge";
 import { useShellData } from "@/lib/state/data";
 import type { Venue } from "@/lib/meetings/venues";
 import { commentAccessFor } from "@/lib/registry/comment-access";
@@ -200,8 +202,8 @@ function MeetingEntry({
   onOpen?: (meeting: Meeting) => void;
 }) {
   const concluded = meeting.status === "CONCLUDED";
-  const { governing } = useShellData();
-  const jurisdiction = badgeFor(meeting, governing);
+  const { governing, zipPartial, basis, location } = useShellData();
+  const jurisdiction = badgeFor(meeting, governing, basis, zipPartial);
 
   return (
     <article className="px-5 py-4">
@@ -232,20 +234,33 @@ function MeetingEntry({
       </div>
 
       {/* Some sources title a sitting with the body's own name — one line
-          then, not the same words twice. */}
-      {meeting.title !== meeting.bodyName && (
+          then, not the same words twice.
+
+          MTG-2 (2026-08-23): the guard was `title !== bodyName`, which is
+          true for "Board of County Commissioners – Work Session" and printed
+          the body's name straight back under a headline that already said it.
+          `meetingSubline` asks the question that matters — what does the
+          headline NOT already say — and answers "Work Session". */}
+      {meetingSubline(meeting) && (
         <p className="mt-1 pl-[1rem] text-sm leading-snug text-paper-dim">
-          {meeting.title}
+          {meetingSubline(meeting)}
         </p>
       )}
 
       {/* M81. Every meeting card and list row says which it is — this is the
           third such surface, and all three read the SAME resolved division
-          set, so they cannot disagree with each other. */}
+          set, so they cannot disagree with each other.
+
+          JUR-2 (2026-08-23): and all three now read the same PILL, so the
+          claim and the way out of it cannot drift apart on one of them. The
+          detail sentence is off here — this is a dense list of sittings, and
+          the row already carries the body's name above it. */}
       <p className="mt-2 pl-4">
-        <span className="jurisdiction-badge" data-badge={jurisdiction}>
-          {BADGE_COPY[jurisdiction].label}
-        </span>
+        <JurisdictionPill
+          badge={jurisdiction}
+          zip={location?.zip ?? null}
+          detail={false}
+        />
       </p>
 
       <dl className="mt-3 pl-4 font-mono text-[0.8125rem] tabular-nums">
@@ -421,11 +436,38 @@ export function HowToBeHeard({
     access.attend,
   ].filter((l): l is string => Boolean(l));
 
+  /*
+   * **MTG-5 (2026-08-23, the author's 8/22 walkthrough) — collapsed, and the
+   * content is kept word for word.**
+   *
+   * The Tucson Unified and Morris County captures both show this block fully
+   * expanded to four and five paragraphs, so the reader scrolls past all of it
+   * to reach the next meeting on the card. Tucson's runs to 180 words about
+   * Requests to Address the Board.
+   *
+   * The prose is good and none of it is cut — the author said so explicitly.
+   * What changes is that it waits to be asked for. This is not the honesty
+   * exception the friction rule protects: those three are the disclosure at
+   * reaction capture, the optionality of the narrowing prompt, and consent to
+   * collection. A body's standing comment rules are a reference the reader
+   * opens when they are deciding whether to go, and a reference nobody asked
+   * for sitting between them and the next meeting date is friction.
+   *
+   * `<details>` rather than React state: it works before hydration, it is
+   * keyboard-operable and screen-reader-announced without any of it being
+   * written here, and the summary is the disclosure whether or not a script
+   * runs. The chevron is CSS.
+   *
+   * Register: the summary is an EXPANDER, which the voice doctrine puts on the
+   * interaction side — but every word inside it is a claim about a real
+   * government's rules and stays level. That seam is the rule, not an
+   * exception to it.
+   */
   return (
-    <div className="mt-3 pl-4">
-      <p className="font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+    <details className="how-to-be-heard mt-3 pl-4">
+      <summary className="how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
-      </p>
+      </summary>
       <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
         {lines.map((line) => (
           <li key={line}>{line}</li>
@@ -439,6 +481,6 @@ export function HowToBeHeard({
       >
         source
       </a>
-    </div>
+    </details>
   );
 }

@@ -2,7 +2,7 @@
   "ruling": "RULING 93 — ask what the tier above publishes about the tier below",
   "tier": "A",
   "licence": "Every route is a .gov publication: US government work, public domain, no attribution obligation and no terms to accept. usmayors.org is deliberately excluded — a nonprofit directory is a discovery surface under RULING 70, never a source of record.",
-  "walkedAt": "2026-08-22",
+  "walkedAt": "2026-08-23",
   "totals": {
     "routesWalked": 8,
     "routesAnswering": 8,
@@ -62,7 +62,7 @@
       ],
       "linksSeen": 58,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-local-governments",
@@ -136,7 +136,7 @@
       ],
       "linksSeen": 111,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-state-election-office",
@@ -285,7 +285,7 @@
       ],
       "linksSeen": 103,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-state-governor",
@@ -479,7 +479,7 @@
       ],
       "linksSeen": 120,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-agency-index",
@@ -1078,7 +1078,7 @@
       ],
       "linksSeen": 202,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-state-new-jersey",
@@ -1162,7 +1162,7 @@
       ],
       "linksSeen": 55,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "usagov-state-arizona",
@@ -1241,7 +1241,7 @@
       ],
       "linksSeen": 54,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     },
     {
       "route": "nj-localgov",
@@ -1249,7 +1249,7 @@
       "aboutTier": "all 21 counties and all 564 municipalities",
       "url": "https://www.nj.gov/nj/gov/county/localgov.shtml",
       "status": 200,
-      "bytes": 113985,
+      "bytes": 114119,
       "controlPassed": true,
       "entities": [
         {
@@ -4375,7 +4375,7 @@
       ],
       "linksSeen": 662,
       "failure": null,
-      "walkedAt": "2026-08-22"
+      "walkedAt": "2026-08-23"
     }
   ]
 }

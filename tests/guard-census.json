@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 188,
-    "named": 1719,
+    "files": 193,
+    "named": 1786,
     "dynamic": 6
   },
   "files": {
@@ -323,7 +323,8 @@
         "no reader surface carries the old name",
         "no reader surface hardcodes the new name either",
         "the product name is a constant, and the title helper uses it",
-        "the repo's off-site identity is deliberately unchanged"
+        "the repo's off-site identity is deliberately unchanged",
+        "the three adapters that lost their copy still SEND the repo-derived token"
       ],
       "dynamic": 0
     },
@@ -630,9 +631,14 @@
     },
     "tests/context-pinned-conduct.test.ts": {
       "names": [
+        "RULING 106: P0 notes render at their full length",
+        "RULING 106: a stated size is REPORTED and never acted on",
+        "RULING 106: the shrink cascade is gone from the generator's source",
+        "RULING 106: the tracker-change section renders all ten rows",
+        "RULING 106: there is no cap, and nothing is trimmed to meet one",
+        "a block claimed VERBATIM is tested against its source, and divergence fails",
         "context.md carries the Discovery conduct block verbatim from CLAUDE.md",
-        "the shrink cascade never reaches the pinned block, even at a punishing cap",
-        "what the pinned block costs is stated, not silent"
+        "every section of context.md states where it came from"
       ],
       "dynamic": 0
     },
@@ -684,6 +690,29 @@
         "RULING 74: nothing about the address reaches the server or a store",
         "RULING 74: the narrowing surface reads the session before it prompts",
         "RULING 74: the session store keeps the OUTCOME, never the address"
+      ],
+      "dynamic": 0
+    },
+    "tests/count-assertion.test.ts": {
+      "names": [
+        "PARTIAL is not complete, and a caller testing EXTRACTED alone would miss it",
+        "a bare count in unrelated prose is NOT read as a seat count",
+        "a matching count reports EXTRACTED and records that it was CHECKED",
+        "a source stating no count is NOT_ASSERTABLE — a named state, never a pass",
+        "a stated count that beats the row count reports PARTIAL, not EXTRACTED",
+        "an empty roster parse still carries the denominator it failed against",
+        "assertionLine is printable on every verdict",
+        "describe() prints the assertion on every line, including NOT_ASSERTABLE",
+        "every constructor carries an assertion — there is no result without one",
+        "extractRosterTables asserts against the page's own membership sentence",
+        "extractRosterTables with no membership sentence names what it looked for",
+        "implausible counts are refused rather than asserted",
+        "more rows than the source states is OVER — reported, never silent, never a failure",
+        "numberFrom reads digits and English number words, and nothing else",
+        "parseRoster carries an assertion against the article's own composition sentence",
+        "parseRoster on an article stating no size reports NOT_ASSERTABLE, not a pass",
+        "statedCountIn reads the shapes a body's own page actually uses",
+        "the census counts what could be checked at all"
       ],
       "dynamic": 0
     },
@@ -920,6 +949,20 @@
       ],
       "dynamic": 0
     },
+    "tests/duplicate-implementations.test.ts": {
+      "names": [
+        "a recorded group that has been consolidated leaves the baseline",
+        "every recorded group carries a disposition and a reason",
+        "no duplicate implementation exists that the baseline does not record",
+        "stripComments preserves length and newlines, so line numbers stay true",
+        "the extractor reads the signatures a regex over \\\\([^)]*\\\\) loses",
+        "the named instance is fixed: ONE initials implementation, and it keeps the surname",
+        "the shape hash collides on a rename and not on different logic",
+        "the sweep actually scans the tree — a collapsed scan reports nothing found",
+        "two copies in the SAME file are not a cross-file duplicate"
+      ],
+      "dynamic": 0
+    },
     "tests/duplicate-sittings.test.ts": {
       "names": [
         "a division-less body keys on its jurisdiction, so two places cannot collide",
@@ -1102,6 +1145,9 @@
     },
     "tests/generated-artifacts.test.ts": {
       "names": [
+        "RULING 102: every registered artifact records its generator's digest",
+        "RULING 102: no generator has moved since its artifact was last regenerated",
+        "RULING 102: the digest is sensitive to a change anywhere in the closure",
         "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
         "RULING 92: a file declaring itself GENERATED is registered here",
         "RULING 92: every registered generated artifact exists and names its generator"
@@ -1255,12 +1301,20 @@
       "names": [
         "JUR-1: no surface builds a Governs row without going through the one claim",
         "JUR-1: the two claims are mutually exclusive, by construction",
+        "JUR-2: NEARBY is the same over-claim pointed the other way, and collapses too",
+        "JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'",
+        "JUR-2: a division covering the WHOLE zip still answers normally",
+        "JUR-2: a failed resolution still beats everything — NO_BOUNDARY wins",
+        "JUR-2: a partial division resolved from a ZIP is COULD_GOVERN, never GOVERNS",
+        "JUR-2: a resolved ADDRESS answers GOVERNS and NEARBY as before",
+        "JUR-2: the COULD_GOVERN wording is the RULING 71 wording, not a second one",
+        "JUR-2: the census counts the fourth state",
         "M81: a FAILED lookup is not an empty answer",
         "M81: a body whose division contains the reader governs them",
         "M81: a body with no published boundary gets its OWN state",
         "M81: the API sends the resolved divisions, and null when it failed",
         "M81: the badge derives from the map's own geometry, never a second source",
-        "M81: the census states all three numbers, never one",
+        "M81: the census states every number, never one",
         "M81: the copy is level register, geometry only, no editorialising"
       ],
       "dynamic": 0
@@ -1301,6 +1355,14 @@
         "the chamber rule: a House card never shows a Senate-only entry as a vote",
         "the criteria sentence is verbatim and renders ON the surface",
         "the list is the author's: 20 law rows (April 2024 as four siblings) and 16 nominations"
+      ],
+      "dynamic": 0
+    },
+    "tests/label-tracking.test.ts": {
+      "names": [
+        "LBL-2: a letter-spaced run pinned with shrink-0 trims its trailing space",
+        "LBL-2: the shared letter-spaced label classes trim their trailing space",
+        "LBL-2: the sweep reaches the tree it claims to"
       ],
       "dynamic": 0
     },
@@ -1464,6 +1526,19 @@
         "everything upcoming comes before everything past",
         "ordering never drops or duplicates a row",
         "the input array is not mutated"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-subline.test.ts": {
+      "names": [
+        "MTG-2: a bare generic noun is not a fact, and renders as nothing",
+        "MTG-2: no surface builds the old bodyName-plus-jurisdiction line",
+        "MTG-2: the jurisdiction renders below only where the headline left it out",
+        "MTG-2: the subline never repeats what the headline already said",
+        "MTG-2: the three ways a source writes the body name into the title",
+        "MTG-4: a created event carries the venue in its location field",
+        "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
+        "MTG-4: an online meeting's event still carries no invented address"
       ],
       "dynamic": 0
     },
@@ -1664,6 +1739,19 @@
       "names": [
         "every curated bio names its source class",
         "funding surfaces never characterize an organization"
+      ],
+      "dynamic": 0
+    },
+    "tests/origin-confinement.test.ts": {
+      "names": [
+        "EVERY third-party host this product's pages reach is stripped",
+        "a localhost production build is its own origin and keeps the marker",
+        "a subdomain is a different origin, and so is a scheme change",
+        "an unreadable origin fails SAFE — stripped, and named as its own verdict",
+        "marker names are matched case-insensitively",
+        "scripts/browser.mts routes every request through confine()",
+        "the MapTiler style request — the exact call that failed — carries no custom header",
+        "the marker travels to our own origin"
       ],
       "dynamic": 0
     },
@@ -2340,6 +2428,10 @@
     },
     "tests/tracker-stores.test.ts": {
       "names": [
+        "NH64: a SESSION-authored resolution is still refused on a Needs Sean row",
+        "NH64: a resolution requires evidence, and a thin file is refused",
+        "NH64: the resolve mode refuses a row the AUTHOR opened, in any section",
+        "NH64: tracker resolve exists, and refuses without a session label",
         "RULING 29: three priority levels on every open row, and no fourth",
         "RULING 30: a section over the five-P1 cap is REPORTED as stopped, never trimmed",
         "RULING 31: Needs Sean is first, and the order comes from the list not from a number",

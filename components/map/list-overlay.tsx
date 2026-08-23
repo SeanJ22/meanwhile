@@ -5,8 +5,17 @@ import { useEffect, useMemo, useState } from "react";
 import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
-import { formatMeetingDate, formatMiles, meetingHeadline } from "@/lib/map/format";
-import { BADGE_COPY, badgeFor } from "@/lib/meetings/jurisdiction-badge";
+import {
+  formatMeetingDate,
+  formatMiles,
+  meetingRowTitle,
+  meetingSubline,
+} from "@/lib/map/format";
+import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
+import {
+  badgeFor,
+  type JurisdictionBadge,
+} from "@/lib/meetings/jurisdiction-badge";
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
@@ -71,7 +80,7 @@ export function ListOverlay({
 }: {
   onPickMeeting: (meeting: Meeting) => void;
 }) {
-  const { meetings, location, result, governing } = useShellData();
+  const { meetings, location, result, governing, zipPartial, basis } = useShellData();
   const ui = useUi();
   const dispatch = useUiDispatch();
   const [limit, setLimit] = useState(PAGE);
@@ -274,6 +283,19 @@ export function ListOverlay({
           // Closed unless the reader opened it (g4 item 11).
           const collapsed = !ui.expandedGroups.includes(group.key);
 
+          /*
+           * The group's jurisdiction answer, where every meeting in it gets
+           * the same one. Null where they disagree, or where the list is
+           * ungrouped — in both cases the rows carry their own.
+           */
+          const groupBadges = group.key
+            ? new Set(
+                group.items.map((m) => badgeFor(m, governing, basis, zipPartial)),
+              )
+            : new Set<JurisdictionBadge>();
+          const groupBadge: JurisdictionBadge | null =
+            groupBadges.size === 1 ? [...groupBadges][0] : null;
+
           return (
             <div key={group.key || "all"}>
               {group.key && (
@@ -289,6 +311,31 @@ export function ListOverlay({
                   {group.key}
                   <span className="al-group-count">{group.items.length}</span>
                 </button>
+              )}
+
+              {/*
+                JUR-4 (2026-08-23) — said ONCE per group rather than on every
+                row.
+
+                Read as an image at 430×932: nineteen consecutive rows under
+                ROCKAWAY TOWNSHIP, NJ each carrying "Could govern you". That is
+                the repetition the author named the headline UX problem of the
+                New Jersey pass, and the WGH panel already fixed it the same
+                way — one pill for the whole panel, not one per row.
+
+                Only where the group AGREES. A group whose meetings do not all
+                get the same answer cannot be answered once, and collapsing it
+                would be a claim about rows that do not carry it — so those
+                keep their per-row badges and this renders nothing.
+              */}
+              {!collapsed && groupBadge !== null && (
+                <p className="al-group-jurisdiction">
+                  <JurisdictionPill
+                    badge={groupBadge}
+                    zip={location?.zip ?? null}
+                    detail={false}
+                  />
+                </p>
               )}
 
               {!collapsed &&
@@ -319,12 +366,47 @@ export function ListOverlay({
                         {/* 3a: what-first, said once — sources that title a
                             sitting with the body's own name must not read
                             the same words twice. */}
-                        {meetingHeadline(meeting)}
-                        <span className="al-row-sub">
-                          {meeting.bodyName !== meeting.title
-                            ? `${meeting.bodyName} · ${meeting.jurisdiction}`
-                            : meeting.jurisdiction}
-                        </span>
+                        {meetingRowTitle(meeting, {
+                          jurisdictionShown: ui.listGroupBy === "jurisdiction",
+                        })}
+                        {/* MTG-2 (2026-08-23): only what the headline does not
+                            already say. Twenty Morris County rows each printed
+                            the same two facts twice, reordered — the old guard
+                            asked whether the sitting had a distinct title, when
+                            the question is whether the HEADLINE already carries
+                            the words about to go under it. An empty subline
+                            renders nothing rather than an empty line. */}
+                        {meetingSubline(meeting) && (
+                          <span className="al-row-sub">{meetingSubline(meeting)}</span>
+                        )}
+                        {/*
+                          MTG-1, second pass (2026-08-23). The badge used to
+                          live in the meta line beside the date, where it
+                          painted over it. Giving the meta line a flex gap
+                          stopped the overlap and revealed the real problem:
+                          "Could govern you" is wider than "Governs your area"
+                          was, and at 430px it squeezed the body name down to
+                          "Rockaway Tow…" — READ AS AN IMAGE, which is the only
+                          way that was ever going to be caught.
+
+                          A truncated body name is worse than the overlap it
+                          replaced: a reader scanning nineteen rows cannot tell
+                          which body is meeting. So the badge leaves the meta
+                          line entirely and sits under the title, where the
+                          meeting panel has always put it, and the title gets
+                          the width back.
+                        */}
+                        {/* Only where the GROUP could not answer for all of
+                            its rows — see the group pill above. */}
+                        {groupBadge === null && (
+                          <span className="al-row-jurisdiction">
+                            <JurisdictionPill
+                              badge={badgeFor(meeting, governing, basis, zipPartial)}
+                              zip={location?.zip ?? null}
+                              detail={false}
+                            />
+                          </span>
+                        )}
                       </span>
                       <span className="al-row-meta">
                         {/*
@@ -365,12 +447,6 @@ export function ListOverlay({
                           mileage, and the mileage stays as the secondary
                           fact it should always have been.
                         */}
-                        <span
-                          className="jurisdiction-badge"
-                          data-badge={badgeFor(meeting, governing)}
-                        >
-                          {BADGE_COPY[badgeFor(meeting, governing)].label}
-                        </span>
                         {when}
                         {km !== null &&
                           // Anything under a mile rounds to 0, which reads as

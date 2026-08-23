@@ -27,17 +27,19 @@ interface PhotoRow {
   key: string;
 }
 
-/** Suffixes, accents and punctuation are not identity. */
-export function normalizePersonName(name: string): string {
-  return name
-    .toUpperCase()
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .replace(/[^A-Z ]/g, " ")
-    .replace(/\b(JR|SR|II|III|IV|V)\b/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
+/*
+ * **ONE implementation of person identity** (RULING 103, 2026-08-23).
+ *
+ * This script carried a byte-identical copy of `personKey` under a different
+ * name. Two normalisers for the same question is the shape that let three
+ * copies of an initials function render Thomas J. Haynes III as "TI" — and
+ * here it is worse, because the audit that CHECKS one-person-one-photo would
+ * have been checking with a different definition of a person than the resolver
+ * it audits.
+ */
+import { personKey } from "../lib/photos/person.ts";
+
+export { personKey as normalizePersonName };
 
 export function collectPhotoRows(root = ROOT): PhotoRow[] {
   const rows: PhotoRow[] = [];
@@ -101,7 +103,7 @@ export interface PersonPhotoClash {
 export function findPersonPhotoClashes(rows: PhotoRow[]): PersonPhotoClash[] {
   const byPerson = new Map<string, PhotoRow[]>();
   for (const row of rows) {
-    const key = normalizePersonName(row.person);
+    const key = personKey(row.person);
     if (!key) continue;
     const list = byPerson.get(key);
     if (list) list.push(row);
@@ -131,7 +133,7 @@ if (process.argv[1] && process.argv[1].endsWith("photo-person-audit.mts")) {
   const clashes = findPersonPhotoClashes(rows);
   console.log("");
   console.log(`photo rows walked: ${rows.length}`);
-  const people = new Set(rows.map((r) => normalizePersonName(r.person)));
+  const people = new Set(rows.map((r) => personKey(r.person)));
   console.log(`distinct people: ${people.size}`);
   console.log(`people wearing more than one photo: ${clashes.length}`);
   console.log("");

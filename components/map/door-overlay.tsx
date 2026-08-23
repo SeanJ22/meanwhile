@@ -222,7 +222,7 @@ function BodiesDoor({
               >
                 {label}
               </button>
-              <span className="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
+              <span className="trailing-space-trimmed shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
                 {body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}
               </span>
             </div>
@@ -415,7 +415,7 @@ function DistrictRows({
         >
           <div className="flex items-baseline justify-between gap-3">
             <p className="text-[0.8125rem]">{row.label}</p>
-            <span className="shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
+            <span className="trailing-space-trimmed shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
               {row.typeLabel}
             </span>
           </div>

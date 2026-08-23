@@ -18,6 +18,118 @@ export function meetingHeadline(meeting: Meeting): string {
 }
 
 /**
+ * **The headline for a row inside a group that already names the
+ * jurisdiction.** (`MTG-2`, third instance, 2026-08-23.)
+ *
+ * Read as an image at 430×932: the 48-meetings list grouped by jurisdiction
+ * put **ROCKAWAY TOWNSHIP, NJ** on the group heading and then *Rockaway
+ * Township, NJ — Township …* on every row beneath it, so the body name — the
+ * one fact distinguishing nineteen rows from each other — was the part that
+ * got the ellipsis.
+ *
+ * It is the doubled label one level up: the enclosing context said it, and the
+ * row said it again. The rule is the same one `meetingSubline` applies, and it
+ * applies at every level of nesting.
+ *
+ * `jurisdictionShown` false gives the full headline back, so the ungrouped
+ * list and every other surface are untouched.
+ */
+export function meetingRowTitle(
+  meeting: Meeting,
+  { jurisdictionShown }: { jurisdictionShown: boolean },
+): string {
+  if (!jurisdictionShown) return meetingHeadline(meeting);
+  const what = meeting.bodyName || meeting.title;
+  /*
+   * The body's OWN name, never a string surgery on the headline. Trimming
+   * "Rockaway Township, NJ — " off the front would work until a source
+   * publishes a body name that contains the jurisdiction, at which point it
+   * would cut into the name itself.
+   */
+  return what;
+}
+
+/**
+ * **The second line, carrying only what the headline does NOT already say.**
+ * (`MTG-2`, 2026-08-23, the author's 8/22 walkthrough.)
+ *
+ * ## What the capture showed
+ *
+ * The 48-meetings list at 07866, twenty rows of Morris County, every one of
+ * them:
+ *
+ *   Morris County, NJ — Board of County Commissioners
+ *   Board of County Commissioners · Morris County, NJ
+ *
+ * The same two facts, in the same row, reordered. Nothing was wrong with
+ * either line on its own: the headline is `meetingHeadline`, and the sub was
+ * built as `bodyName · jurisdiction` guarded by `bodyName !== title`. The
+ * guard was asking the wrong question — whether the sitting had a distinct
+ * title — when the question that matters is whether the HEADLINE already
+ * carries the words about to be printed under it.
+ *
+ * ## What it carries instead
+ *
+ * The part of the sitting title that is not the body's name — *Work Session*,
+ * *Regular Meeting* — which is the one fact a reader scanning twenty rows of
+ * one body actually needs, and the fact the doubled label was burying. Plus
+ * the jurisdiction, but only where the headline left it out.
+ *
+ * An empty string is a legitimate answer and means the headline said
+ * everything. The caller renders nothing rather than an empty line.
+ */
+export function meetingSubline(meeting: Meeting): string {
+  const headline = meetingHeadline(meeting).toLowerCase();
+  const body = (meeting.bodyName ?? "").trim();
+  const title = (meeting.title ?? "").trim();
+  const parts: string[] = [];
+
+  /*
+   * Strip the body's name off the sitting title wherever it sits. Sources
+   * write it three ways — "Township Council Regular Meeting" (prefix),
+   * "Board of County Commissioners – Work Session" (prefix with a separator),
+   * and "Regular Meeting of the Township Council" (suffix) — and all three
+   * leave the same words on the screen twice.
+   */
+  let sitting = title;
+  if (body.length > 0) {
+    const at = sitting.toLowerCase().indexOf(body.toLowerCase());
+    if (at !== -1) {
+      sitting = `${sitting.slice(0, at)} ${sitting.slice(at + body.length)}`;
+    }
+  }
+  // Leading and trailing separators left behind by the strip, and the dangling
+  // "of the" a suffix form leaves.
+  sitting = sitting
+    .replace(/\s+/g, " ")
+    .replace(/^[\s–—·:,-]+/, "")
+    .replace(/[\s–—·:,-]+$/, "")
+    .replace(/\s+(?:of|for)\s+the\s*$/i, "")
+    .trim();
+
+  /*
+   * A bare generic noun is not a fact about this sitting. "Board of Adjustment
+   * Meeting" reduces to "Meeting", which tells a reader looking at a list of
+   * meetings nothing at all — it is the doubled label again, shorter. "Regular
+   * Meeting" and "Work Session" survive, because those distinguish one sitting
+   * of a body from another.
+   */
+  const GENERIC = /^(?:meeting|session|sitting|agenda)$/i;
+  if (
+    sitting.length > 0 &&
+    !GENERIC.test(sitting) &&
+    !headline.includes(sitting.toLowerCase())
+  ) {
+    parts.push(sitting);
+  }
+
+  const jurisdiction = meeting.jurisdiction?.trim();
+  if (jurisdiction && !headline.includes(jurisdiction.toLowerCase())) parts.push(jurisdiction);
+
+  return parts.join(" · ");
+}
+
+/**
  * Venue name and address as ONE line, never the same text twice (3a). Some
  * sources publish the address as the venue name, so the two fields can be
  * identical or one can contain the other — in either case the longer string

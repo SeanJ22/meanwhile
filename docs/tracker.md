@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **230 open**, 339 resolved.
+- **233 open**, 345 resolved.
 - **51 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**51 open · 20 resolved.**
+**51 open · 21 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -67,6 +67,8 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **NH65** — RULING 55 says only a photo you have approved renders. Five were hunted on 2026-08-22 from Morris County municipalities' own websites and are PENDING, so those five cards show initials until you say yes. Every one is door 2 - the picture the government publishes to identify its own member - and every one was read as an image before it shipped, in one contact sheet at screenshots/nj-hunt4-portraits.png. Jennifer Rowland (Chatham Township Committee, chathamtownship.org, file named jen_rowland.jpg). Melissa Senatore (Jefferson Township Council, jeffersontownship.net). Sean Mabey (Kinnelon Borough Council, kinnelonboro.org, file named thumb.Mabey 400.jpg). Marilyn Althoff (Mendham Borough Council, mendhamnj.org, file named thumb.Althoff1.png). Melissa Muilenburg (Mountain Lakes Borough Council, mountainlakes.gov, file named Muilenburg-Photo-scaled.jpg).
 
+**NH78** — OFF-1 photo review — the seven Morris County commissioner portraits. All seven are sourced, all seven were READ AS IMAGES, and none has been shipped. Your decision keys to the ASSET, not to the person. Every one is on morriscountynj.gov, a .gov host, and ships under DOOR 2: the portrait a government body publishes to identify its own member, with attribution to Morris County and remove-on-request. Tayfun Selen's already shipped this way on 2026-08-15, so the six join him under the same door rather than arriving under a different rule. The record with every URL, alt text, byte count and per-row judgment is docs/evidence/off1-morris-commissioner-portraits-0823.json. What is owed from you: yes or no per asset, after which the session writes them into the photo store. Worth knowing WHY they were missing: the 2026-08-15 hunt walked the board INDEX page twice for six of seven and recorded 0 candidate images, while the seventh was walked at his own page and returned a portrait immediately. Each commissioner's own page URL was already in the registry as websiteUrl. That is RULING 52's shape - a defensible rung history behind a route nobody varied - and it is why the new script DISCOVERS the member pages from the board index rather than guessing them.
+
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
 
 **NS05** — Your NJ Hunt 5 brief adopted the free-source floor, the tiered manifest, the two-click test, per-state source enumeration and the Wikipedia route as RULINGS 81 through 85. Both of those numbers were already taken by NJ Hunt 4 earlier the same day, from your previous brief: RULING 81 is the exhausted Actions balance (it closed NS04) and RULING 82 is the job watcher's sampling (it closed JOB01), and both are cited by id in the resolved tracker store and inside docs/rulings.md itself. docs/rulings.md is append-only, so renumbering what already shipped would leave dangling references in the one record whose whole value is that it does not move. THE SESSION'S CALL: the five took 83 through 87 in your order, each carrying your number beside it, with a mapping table at the head of the block in both CLAUDE.md and docs/rulings.md. Nothing about the content changed. REVERSE IT IF YOU WANT YOUR NUMBERING TO WIN - the alternative is renumbering the two that shipped and accepting the dangling references, and that is your call rather than a session's. Separately: your RULING 90 was used exactly as you gave it, and 88 and 89 are recorded as deliberately unassigned rather than closed by renumbering you down.
@@ -74,8 +76,6 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS06** — The Census key has sat in .env.local since before this session and had never been called by anything in the repo - confirmed by sweeping the tree with git grep -a --untracked rather than by trusting docs/sources.md. Called for the first time on 2026-08-22 it returns HTTP 302 with X-DataWebAPI-KeyError: 1 and Location: api.census.gov/data/invalid_key.html. A call with no key at all returns the same 302 pointing at missing_key.html, so the API cannot be reached without a working credential. WHAT IT COSTS: the demographic layer behind a zip - population, median household income, median home value. It closes no Kelly field about a person, so nothing in the hunt is blocked; what is blocked is any zip surface that wants context about a place. WHAT IS NEEDED FROM YOU: request a replacement key at api.census.gov/data/key_signup.html and put it in .env.local. The route is in the manifest as census-acs-api with the wall recorded as a dated measurement on the CREDENTIAL, never as a property of the source.
 
 **NS07** — The government graph crawl enumerates New Jersey's executive departments as governing bodies under RULING 57 - each with its own official site, and each holding public meetings and rulemaking hearings. The Department of Banking and Insurance sets rules on mortgages, insurance premiums and pawnbrokers, and those hearings are exactly the there-is-a-hearing-Tuesday surface this product exists for. THE QUESTION IS NARROW AND IT IS YOURS: their MEETINGS are plainly in scope and the session is wiring them. What is not settled is whether an APPOINTED cabinet secretary or department head renders to a reader as someone who governs them, the way an elected mayor or council member does. The who-governs card's verb is GOVERN, which is a stronger claim than is-responsible-for-this-area, and a session widening it would be making a product decision about what that word means. Nothing is blocked either way - the departments are enumerated and their meetings are hunted regardless of how you rule.
-
-**NS09** — Item 8 of your Discovery Conduct brief says the Discovery conduct block is pinned in context.md and never trimmed, and that if the cap forces trimming the generator trims elsewhere and reports exactly what it trimmed. Built, and it does. MEASURED: the file lands at 40,254 bytes against the 40 KB cap, and the price is the whole tracker-change section — all 10 recovered status changes dropped — plus the P0 notes clipped from 130 to 90 characters. Both are stated in the file itself, so nothing is silent. THE DECISION IS YOURS because you have already made the opposite one once: on 2026-08-17, item 8c, when 20 KB was cutting this same section to nothing, you ruled RAISE THE CAP RATHER THAN CUT ROWS. Following that precedent here means raising the cap to about 56 KB. Following the brief literally means keeping 40 KB and losing the section. The session followed the brief and is telling you what it cost.
 
 **R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
 
@@ -191,7 +191,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**31 open · 3 resolved.**
+**30 open · 4 resolved.**
 
 ### P1
 
@@ -263,8 +263,6 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 **NH41** — The Lake Todd Village District's own site, which the Census of Governments records as laketoddvillagedistrict.us, answers HTTP 404 at rungs 2, 3, 4, 5 and 6, and so does the Town of Bradford's news item for its meeting. The Internet Archive - rung 11, and the rung that produced this district's own words for an earlier session - answered 'Temporarily Offline' on 2026-08-21.
 
-**NH77** — From the 8/22 walkthrough, NOT STARTED this session. Each person's row in Who Governs Here wraps to two lines because the SOURCE link renders beneath their name. One line per person: shift the names left so the name and its source fit on a single row. Verify at 430x932 against a local production build and read the capture as an image.
-
 ## New Jersey hunt
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
@@ -329,13 +327,15 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**14 open · 0 resolved.**
+**15 open · 0 resolved.**
 
 ### P2
 
 **AZ01** — NOT STARTED this session. AZ-1: "Know the basics" needs more topics — hunting and fishing ("Am I allowed to hunt or fish?", a common question when somebody moves states) and state abortion law. Both contentious, which is exactly why a clear factual account of where the state stands is owed: state what the law is, cite it, take no position. AZ-2: the state comparison holds one comparison at a time, which is right, but Back returns to Arizona alone when the expected destination is the map — either a reset pill or state pills in the title bar, with deselecting a state dropping it from the comparison, and the same pill pattern on the ballot. AZ-3 (applies across the board, Arizona is only the example): the voting section is five separate items — next election, add to calendar, check registration, where can I vote, search the Secretary of State's tool — and should read as next election, 2026, early voting, with the rest of the noise cut. AZ-4 and AZ-5 (ruled together): three links to the same registration destination inside about ten lines deduplicate to ONE prominent pill, "Check whether you're registered to vote", pointing at the reader's Secretary of State; same pattern for polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-6 is positive: the federal-representative pill system works and stays.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
+
+**NH83** — Carried forward unchanged from AZ01. The 2026-08-23 session did not reach Arizona. Read as an image from the 8/22 capture of the ballot near 85701, the registration destination appears three times inside about ten lines: Check whether you're registered to vote as an inline link, the Secretary of State's own tool named beneath it, and a third box below the card repeating Check whether you're registered to vote. They deduplicate to ONE prominent pill pointing at the reader's Secretary of State, and the same pattern applies to polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-1 also still needs hunting and fishing and state abortion law in Know the basics, both written to the plain-language register with the law stated, its source named and a fetch date, and no position taken.
 
 **HD07** — Four people are running for Arizona's 19th state house district and ten things about them have never been looked for.
 
@@ -365,7 +365,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**6 open · 35 resolved.**
+**6 open · 37 resolved.**
 
 ### P1
 
@@ -373,7 +373,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 ### P2
 
-**VF03** — From the 8/22 walkthrough. Morris County's "Who runs it: [name], president" loses the last letter of the role. NOT FIXED this session, and the reason is stated rather than guessed at: the CSS for the two places a role renders (.person-row-office in the small card, and the inline span in the large one) both wrap rather than clip, and no ellipsis or nowrap rule reaches either. Reading the stylesheet did not find the cause, and guessing at a fix for a visual defect nobody has reproduced would be a change with no evidence behind it. WHAT IS OWED: reproduce it at 430x932 against a local production build with the Morris County card open, read the capture as an image, and fix at whichever bound is actually clipping. Class-wide once found — sweep every place a role or office title renders and report count found and count fixed.
+**NH82** — Carried forward unchanged from VF04. LAY-1: the left column cards sprawl and should nest, one expanded at a time with the others collapsed to pills, and the existing sidebar behaviour untouched. LAY-2: the sidebar filters are off-centre and crammed when opened. Both want a capture read as an image before and after, and both must be built against the post-Hunt-6 panel: the registry held 12 bodies when the walkthrough was taken and holds 174 now, so a layout that reads well at 12 is not evidence that it reads well at all.
 
 **VF04** — From the 8/22 walkthrough, NOT STARTED this session. LAY-1: the main card (Meetings / Bodies / Districts / View Officials, the one showing 48 meetings and 4 venues) sets the column width, Who Governs Here sits beneath it, and clicking any one should make it take over the left column while the others collapse to pills — one expanded at a time, nested under each other. The existing main sidebar behaviour stays as it works today. LAY-2: the sidebar filters are off-centre, crammed and sloppy when opened; a dedicated screenshot exists in the 8.22 Drive folder. Both are layout work that wants a capture read as an image before and after.
 
@@ -389,7 +389,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**69 open · 81 resolved.**
+**71 open · 81 resolved.**
 
 ### P1
 
@@ -430,6 +430,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH46** — One of the three coverageNotes in data/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 
 **NH75** — Playwright's extraHTTPHeaders applies to EVERY request a context makes, third parties included. MapTiler's CORS preflight does not allow x-wtp-synthetic-run, so the basemap style request was refused in every capture and every walk. That is why NJ Hunt 5's captures showed BASEMAP UNAVAILABLE against a production site serving readers a working map. Fixed at the shared path in scripts/browser.mts. This row is open for the QUESTION IT RAISES rather than the fix: what else has an instrument of ours been breaking while measuring it? The shape - a synthetic marker leaking into a third-party request - is worth sweeping for beyond the browser.
+
+**NH79** — pnpm dupes reads 2114 function bodies across 806 files and finds 26 groups where the same logic lives in more than one file. Two were consolidated on 2026-08-23: four copies of the outbound User-Agent, which CLAUDE.md makes law, and two of the person-name normaliser, one of which sat inside the tool that CHECKS whether the same person is shown twice - so the audit was using a different definition of a person from the resolver it audits. The other 24 are recorded in tests/duplicate-implementations.json with a disposition and a reason each. Six are ALLOWED for reasons that hold: the two intake key paths must stay unable to converge because the stores may never join, React context accessors are three identical lines by construction, and the .mjs date helper cannot import TypeScript because the pre-commit hook runs without tsx. Eighteen are OWED. The guard fails on a NEW group, so the class cannot grow while the backlog is worked, and the baseline only shrinks. The heaviest three: six byte-identical useSyncExternalStore subscribe callbacks across the hooks, four separate CSV parsers with the tracker stores downstream of two of them, and - the worst of the set - tests/district-hits.test.ts carrying its own copies of inRing, inPolygon and contains, so the test that checks point-in-district geometry proves its own copy works and says nothing at all about the shipped one.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
@@ -507,6 +509,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH70** — New Jersey has two places named Silver Lake, Census GEOIDs 3467590 and 3467650, and placeIdentity keys on state plus name, so both slug to state:nj/place:silver_lake. The widened geometry clip surfaced it and the build refused to write, correctly - a duplicate join key is a join that collapses. It is fixed for the build by suffixing EVERY side of a collision with its Census GEOID, and the underlying identifier convention is still not unique.
 
+**NH80** — The pnpm regen git sweep on 2026-08-23 found two of ten registered artifacts committed older than something in their generator's source closure. data/hunt/tier-directories.json was behind its own dedicated script and was regenerated - the content came back byte-identical and only the walk date moved. The other is lib/officials/directory-source.ts, behind scripts/doc-dates.mjs, a date helper shared by nine generators, so that edit cannot have changed what congress:migrate produces. It was deliberately NOT regenerated: re-running it moves a pinned upstream commit SHA and restamps a collectedAt of 2026-08-16, which is the date the data was actually read, and restamping a provenance date without re-reading the data is the fabrication rule. What is owed is a decision about whether a shared-helper edit should mark an artifact stale at all. The tool already distinguishes a source dedicated to one generator from one shared by nine and prints which, so the answer may be no more than making the sweep act on the distinction it already reports.
+
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
 **P12** — Showing readers what other readers answered. Sean tabled this: it anchors the next respondent and corrupts the very data being sold. Recorded so nobody builds it by accident.
@@ -561,7 +565,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**23 open · 132 resolved.**
+**24 open · 133 resolved.**
 
 ### P1
 
@@ -575,11 +579,13 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 
 **NH61** — RULING 70. Ballotpedia's Candidate Connection works because candidates volunteer answers and identity is verified before publication. The mechanism is not licensed and is worth more than the content: a questionnaire on this product's own site is original data with no licence, no copyleft and no dependency, and it is symmetric by construction because every candidate in a contest gets the same invitation and the same questions.
 
+**NH81** — Carried forward unchanged from PU03. The 2026-08-23 session spent its run on the four guards and the meeting and jurisdiction surfaces and did not reach this. Ask for the next meeting still answers with a heading and nothing to tap, and asking when school starts still answers that no sourced owner is routed for the topic when the school district plainly owns it. The standard for both is NH-2, which he named as the thing to replicate: coverage disclosure with denominators, honest gaps, the relevant record surfaced, and a named human with a phone number and an email. He called the contact details the best part.
+
+**NH84** — Carried forward from PU06. The MAP surfaces are done: the who-governs panel went from six full sentences to six asterisks and one pill, and the 2026-08-23 session took the meetings list from nineteen consecutive Could govern you pills down to one per jurisdiction group, both read as images. The BALLOT page is untouched at twelve instances across nine contests, because it renders the pill per contest heading, which RULING 28 permits and which he nonetheless called the headline UX problem of the New Jersey pass. What is owed is the same treatment - one page-level annotation with marks on the affected contests - and wherever the sentence survives, making it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
+
 **PU01** — Read as an image on production 2026-08-22 at 430x932. The map at 07866 shows a panel reading "BASEMAP UNAVAILABLE -- Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use". That is an environment variable name and a dotfile path rendered to a reader, which the plain-language rule forbids outside a technical-details disclosure: identifiers, enum values and internal keys never render to a reader. The honest half of the message -- that tiles did not load and pins still work -- is right and should stay. Two questions for whoever takes it: whether the key is simply unset on the production deploy (in which case the message is doing its job for the wrong audience), and what a reader should see instead.
 
 **PU03** — NOT STARTED this session. ASK-1: "When is the next meeting?" returns "Where to look: Meetings near you" and explains that the map shows collected meetings, with nothing to click. Give the reader a control right there, tappable on mobile. NH-3: "When does school start again?" returns "we don't have a sourced answer for who owns this topic yet" — the school district owns this and it must be routed. THE STANDARD FOR BOTH is NH-2, which Sean called out as the thing to replicate: coverage disclosure with denominators (35 agendas read, 9 more held but unreadable and therefore excluded), honest gaps, the relevant record surfaced, and a NAMED HUMAN with a phone number and an email. He called the contact details the best part.
-
-**PU04** — From the 8/22 walkthrough. The Rockaway Township Municipal Building / Township Council regular meeting is labelled "nearby — different jurisdiction", and a ZIP CANNOT ESTABLISH THAT. NOT DONE this session: the address prompt it needs (WGH-5) is built and shipped, so what remains is wiring the meeting badge to it — the badge becomes clickable, opens the same one prompt, and everything re-resolves from the answer, exactly as the who-governs pill now does. The badge module already keeps GOVERNS, NEARBY and NO_BOUNDARY apart correctly; what it has no route to is the reader settling which applies to them.
 
 **PU05** — The 8/22 brief said to fetch the Census ZCTA-to-congressional-district relationship file — free, keyless, national. MEASURED 2026-08-23: NO SUCH FILE EXISTS for the current Congress, and four Census directories were walked to establish it. rel2020/zcta520/ holds six files and none of them is CD. rel/ holds only zcta_cd111_rel_10.txt, the 111th Congress with 2010 ZCTAs — two rounds of redistricting stale. rel2022/ and rel2024/ hold Connecticut-only files. baf2020/'s CD assignment file is dated 2020-12-11 (116th) and baf/'s is dated 2011-01-21. WHAT IS OWED, and the machinery for it already exists: scripts/build-zip-governments.mts samples every ZCTA on a 0.01-degree lattice against TIGER cartographic boundary layers and has been verified across all 33,791 zips. Adding a cd layer to its LAYERS list gives per-zip congressional-district sample counts nationally, and the existing partial-versus-whole arithmetic then answers "one district or more than one" for every zip in the country by exactly the method the who-governs pill already trusts. 07866 itself is settled independently: it sits entirely within NJ-11, confirmed against the House zip lookup.
 
@@ -645,7 +651,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**8 open · 58 resolved.**
+**8 open · 59 resolved.**
 
 ### P2
 

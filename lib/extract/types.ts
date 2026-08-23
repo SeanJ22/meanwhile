@@ -37,6 +37,16 @@
  * mode is not, and it is invisible from every layer above it.
  */
 
+import {
+  assertCount,
+  assertionLine,
+  notAssertable,
+  type CountAssertion,
+  type StatedCount,
+} from "./count-assertion.ts";
+
+export type { CountAssertion } from "./count-assertion.ts";
+
 /** What an extraction did, whether or not it produced anything. */
 export type ExtractOutcome =
   /** Rows were produced. `rows > 0` is guaranteed. */
@@ -52,7 +62,18 @@ export type ExtractOutcome =
    * looked and found nothing" and "I could not look" are different facts, and
    * a surface that rendered them alike would be the render-default defect.
    */
-  | "CANNOT_RUN";
+  | "CANNOT_RUN"
+  /**
+   * The layer ran, produced rows, and produced FEWER than the source itself
+   * states are there. **RULING 100, 2026-08-23** — a partial extraction that
+   * reconciles.
+   *
+   * The row count is non-zero, so `ZERO_ROWS` cannot see it and neither can
+   * any caller that only asks whether something came back. It is a FAILED
+   * extraction. `items` still carries what was found — throwing the rows away
+   * would destroy evidence — but the outcome says the document was not read.
+   */
+  | "PARTIAL";
 
 export interface ExtractResult<T> {
   layer: "TEXT_LAYER" | "TABLES" | "OCR" | "EMBEDDED_PAYLOAD" | "ROSTER_TABLE";
@@ -72,6 +93,17 @@ export interface ExtractResult<T> {
    * candidate grids rejected. Always integers, always stated.
    */
   counts: Record<string, number>;
+  /**
+   * **What the SOURCE says is there, against what came back** — RULING 100.
+   *
+   * Never optional and never absent. A layer that cannot read a stated count
+   * out of its document returns `NOT_ASSERTABLE` and names what it looked at,
+   * which is a reportable state rather than a silent pass. Making the field
+   * REQUIRED is the whole mechanism: a new layer cannot be written without
+   * answering the question, and the answer "I could not ask" is legal while
+   * the answer "I did not consider it" is not expressible.
+   */
+  count: CountAssertion;
 }
 
 export function extracted<T>(
@@ -80,6 +112,17 @@ export function extracted<T>(
   inputBytes: number,
   items: T[],
   counts: Record<string, number> = {},
+  /**
+   * **What the source states, and how it was read** — RULING 100.
+   *
+   * A `StatedCount` turns this into a checked extraction. The string form is
+   * the honest other half: it names what was looked at when nothing stated a
+   * count, and it is what a layer passes when its document simply does not
+   * carry a denominator. There is no third option and no default that means
+   * "did not consider" — omitting the argument produces the generic
+   * `NOT_ASSERTABLE`, which still shows up in the census as unchecked.
+   */
+  stated: StatedCount | string | null = null,
 ): ExtractResult<T> {
   /*
    * The refusal is INSIDE the constructor, so a layer cannot report success
@@ -98,8 +141,40 @@ export function extracted<T>(
         "not an empty document",
       source,
       counts,
+      count: notAssertable(0, "the extraction produced nothing, so there is nothing to reconcile"),
     };
   }
+
+  const count =
+    stated !== null && typeof stated === "object"
+      ? assertCount(items.length, stated.count, `${stated.shape}: “${stated.evidence}”`)
+      : notAssertable(
+          items.length,
+          typeof stated === "string"
+            ? stated
+            : "this layer was given no stated count to check against",
+        );
+
+  /*
+   * **The downgrade, and it is the whole ruling.** A non-zero row count that
+   * falls short of the document's own number is not a success with a caveat;
+   * it is a failed extraction whose failure happens to be invisible to every
+   * instrument that asks "did anything come back".
+   */
+  if (count.verdict === "SHORT") {
+    return {
+      layer,
+      outcome: "PARTIAL",
+      items,
+      rows: items.length,
+      inputBytes,
+      reason: count.reason,
+      source,
+      counts,
+      count,
+    };
+  }
+
   return {
     layer,
     outcome: "EXTRACTED",
@@ -109,6 +184,7 @@ export function extracted<T>(
     reason: "",
     source,
     counts,
+    count,
   };
 }
 
@@ -119,7 +195,17 @@ export function zeroRows<T>(
   reason: string,
   counts: Record<string, number> = {},
 ): ExtractResult<T> {
-  return { layer, outcome: "ZERO_ROWS", items: [], rows: 0, inputBytes, reason, source, counts };
+  return {
+    layer,
+    outcome: "ZERO_ROWS",
+    items: [],
+    rows: 0,
+    inputBytes,
+    reason,
+    source,
+    counts,
+    count: notAssertable(0, "the extraction produced nothing, so there is nothing to reconcile"),
+  };
 }
 
 export function cannotRun<T>(
@@ -128,7 +214,17 @@ export function cannotRun<T>(
   reason: string,
   counts: Record<string, number> = {},
 ): ExtractResult<T> {
-  return { layer, outcome: "CANNOT_RUN", items: [], rows: 0, inputBytes: 0, reason, source, counts };
+  return {
+    layer,
+    outcome: "CANNOT_RUN",
+    items: [],
+    rows: 0,
+    inputBytes: 0,
+    reason,
+    source,
+    counts,
+    count: notAssertable(0, "the layer could not run, so nothing was read to reconcile against"),
+  };
 }
 
 /** One line of a report, in the form every adapter already reports counts. */
@@ -137,5 +233,35 @@ export function describe<T>(r: ExtractResult<T>): string {
     .map(([k, v]) => `${k}=${v}`)
     .join(" ");
   const head = `${r.layer} ${r.outcome} rows=${r.rows} bytes=${r.inputBytes}`;
-  return [head, counts, r.reason ? `— ${r.reason}` : ""].filter(Boolean).join("  ");
+  // The assertion is printed on EVERY line, including NOT_ASSERTABLE. A
+  // census of what could not be checked is the half of RULING 100 that a
+  // report would otherwise never see.
+  return [head, assertionLine(r.count), counts, r.reason ? `— ${r.reason}` : ""]
+    .filter(Boolean)
+    .join("  ");
+}
+
+/**
+ * **Did this extraction get what the document says is there?**
+ *
+ * `EXTRACTED` alone is not the question — a `PARTIAL` carries rows too. Call
+ * sites that used to test `outcome === "EXTRACTED"` should test this, and
+ * `tests/count-assertion.test.ts` pins the distinction.
+ */
+export function isComplete<T>(r: ExtractResult<T>): boolean {
+  return r.outcome === "EXTRACTED";
+}
+
+/** The census a report prints: how many extractions could be checked at all. */
+export function assertionCensus<T>(
+  results: ReadonlyArray<ExtractResult<T>>,
+): Record<CountAssertion["verdict"], number> {
+  const census: Record<CountAssertion["verdict"], number> = {
+    MATCHED: 0,
+    SHORT: 0,
+    OVER: 0,
+    NOT_ASSERTABLE: 0,
+  };
+  for (const r of results) census[r.count.verdict] += 1;
+  return census;
 }

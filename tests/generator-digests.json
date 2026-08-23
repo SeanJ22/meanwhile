@@ -1,0 +1,62 @@
+{
+  "data/hunt/muni-sites-nj-morris.json": {
+    "digest": "2fa8a4c9e92de5d75de9c5f79d70660cdea36a6b9dbfe805c2103e5d7da77ef1",
+    "files": 3,
+    "entry": "scripts/muni-site-index.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/hunt/nj-morris-certified-winners.json": {
+    "digest": "1896bd51ef11f04c8950c115db2205ab79b5708cd36ae7885ed45bcc923e4cfe",
+    "files": 5,
+    "entry": "scripts/nj-certified-winners.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/hunt/nj-morris-municipal-sites.json": {
+    "digest": "11ebfc6859e850dba3c0765bd19ec83a782a8c482f97381b4986d937ffc16edc",
+    "files": 4,
+    "entry": "scripts/nj-hunt4-rosters.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/hunt/roster-pages-muni-sites-nj-morris.json": {
+    "digest": "d5064adcd19d394bc5d8fd50ab900ae4eefb315c522e476d2039821b50d3e2d6",
+    "files": 3,
+    "entry": "scripts/roster-hunt.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/hunt/tier-directories.json": {
+    "digest": "e0a210dbd594762c9eebf0eac80613b78c2f57d2ef83894df5f28c0ac5effc62",
+    "files": 3,
+    "entry": "scripts/tier-directory.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/hunt/wikipedia-nj-morris.json": {
+    "digest": "a0b3cabc08da6b55b46a82734281709f455112d1217b3ffe8f4a260b02a2dfd5",
+    "files": 5,
+    "entry": "scripts/wiki-municipality.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "docs/branch-manifest.md": {
+    "digest": "2cbc83868ddaf2f773ea4ce240e9cf3e7ad2847894fecbe12c6e03cfdf4decfc",
+    "files": 3,
+    "entry": "scripts/branch-manifest-doc.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "docs/evidence/njhunt6-morris-rosters.jsonl": {
+    "digest": "59569e3ec7ce3c1b8d9946ecc0827e1766b77e67af63af8b792f5d3dcf01a701",
+    "files": 2,
+    "entry": "scripts/build-nj-rosters.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "lib/officials/directory-source.ts": {
+    "digest": "a5b1ee73dc73c871846df3c162fc7ef49bb0c0ba04d49e391706c70a17040112",
+    "files": 3,
+    "entry": "scripts/migrate-congress-directory.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "lib/registry/rosters-nj-morris.ts": {
+    "digest": "59569e3ec7ce3c1b8d9946ecc0827e1766b77e67af63af8b792f5d3dcf01a701",
+    "files": 2,
+    "entry": "scripts/build-nj-rosters.mts",
+    "regeneratedOn": "2026-08-23"
+  }
+}

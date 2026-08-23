@@ -5,7 +5,7 @@ import type {
   OfficialSource,
 } from "../../officials/types.ts";
 
-import { notADocument } from "../http.ts";
+import { notADocument, sourceUserAgent } from "../http.ts";
 
 /**
  * The US Congress roster. Phase 5.2 tier 1, tracker **D02**.
@@ -117,7 +117,7 @@ export const congressSource: OfficialSource<CongressLegislator> = {
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
       const response = await fetch(BULK_URL, {
         headers: {
-          "User-Agent": userAgent(),
+          "User-Agent": sourceUserAgent(),
           Accept: "application/json",
         },
       });
@@ -233,13 +233,5 @@ export const congressSource: OfficialSource<CongressLegislator> = {
   },
 };
 
-/** Matches the meeting adapters — identify the caller, give them a contact. */
-function userAgent(): string {
-  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
-  const suffix = contact
-    ? `contact: ${contact}`
-    : "https://github.com/SeanJ22/we-the-people";
-  return `we-the-people civic meeting index (${suffix})`;
-}
 
 export { BULK_URL, SOURCE_ORG };

@@ -84,7 +84,18 @@ const BINARY = /\.(jpg|jpeg|png|webp|gif|pdf)$/i;
  * rule is about CORPORA — 900 portraits and an ingest-volume document set —
  * and a rule applied past its reason costs more than it saves.
  */
-const STAYS_IN_REPO = [/^public\/favicon/i, /^public\/icons?\//i, /^app\//, /^components\//];
+/*
+ * `docs/feedback/` added 2026-08-23 (RULING 104) — the author's walkthrough
+ * captures are an INPUT a session must reach, not a corpus. Mirrored in
+ * `tests/asset-store.test.ts`, which carries the full reasoning.
+ */
+const STAYS_IN_REPO = [
+  /^public\/favicon/i,
+  /^public\/icons?\//i,
+  /^app\//,
+  /^components\//,
+  /^docs\/feedback\//,
+];
 
 interface ManifestRow {
   path: string;

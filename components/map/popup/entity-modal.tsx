@@ -31,6 +31,8 @@ import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 
 import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
+import { venueLink } from "@/lib/registry/links";
+
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
@@ -357,7 +359,7 @@ function PlaceSections({
                   {body.name}
                 </span>
                 <span
-                  className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
+                  className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em]"
                   style={{ color: `var(--accent-${body.tier})` }}
                 >
                   {TIER_LABEL[body.tier]}
@@ -705,6 +707,23 @@ export function EntityModal({
                   );
                 })()}
 
+              {/*
+                MTG-3 (2026-08-23, the author's 8/22 walkthrough). Add to
+                Calendar lived on the Meetings tab and nowhere else, and
+                Directions lived on the venue panel and nowhere else — so the
+                large battlecard, which is the surface a reader lands on when
+                they click a meeting, had neither. A reader deciding whether to
+                go needs both, on whichever tab they are standing on.
+
+                The Location row above is the Directions link. This is the
+                other half.
+              */}
+              {subject.agenda &&
+                subject.meetings.length === 1 &&
+                subject.meetings[0].status === "SCHEDULED" && (
+                  <CalendarLinks meeting={subject.meetings[0]} />
+                )}
+
               {subject.agenda && (
                 <>
                   <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
@@ -885,7 +904,11 @@ function Representation({
                 holder.name
               )}
             </span>
-            <span className="shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+            {/* LBL-2 (2026-08-23): the tracking adds its space AFTER the last
+                letter, and this span sits hard against the row edge with
+                shrink-0 — so a right-edge clip takes the space and then the
+                glyph. trailing-space-trimmed removes the space from the box. */}
+            <span className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
               {holder.officeTitle}
             </span>
           </div>
@@ -977,10 +1000,33 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                 {formatMeetingTime(meeting)}
               </p>
               {/* 3i (2026-08-19): calendar links on every upcoming-meeting
-                  surface, this tab included. */}
+                  surface, this tab included.
+
+                  MTG-3 (2026-08-23): and Directions beside them. The two
+                  belong together — a reader who has just added a meeting to
+                  their calendar is the reader who next wants to know how to
+                  get to it — and the author found Meetings carrying one of
+                  them while Overview carried neither. */}
               {meeting.status === "SCHEDULED" && (
                 <CalendarLinks meeting={meeting} />
               )}
+              {meeting.location &&
+                meeting.status !== "CONCLUDED" &&
+                (() => {
+                  const directions = venueLink(meeting.location);
+                  if (!directions) return null;
+                  return (
+                    <a
+                      href={directions.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      title={directions.hint}
+                      className="mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                    >
+                      Directions
+                    </a>
+                  );
+                })()}
             </div>
           ))}
         </section>

@@ -93,7 +93,6 @@
 [F01C2] 07866: the in-app voting panel opens on the ballot
 [F01C2] 07866: the placeholder address names no region
 [F01C2] 07866: the polling-place affordance is an in-app pill, not a link out
-[F01C2] 07866: the positions search finds a term from the card's own text
 [F01C2] 85701: a multi-day window carries the affordance too
 [F01C2] 85701: every candidate row carries a battlecard pill
 [F01C2] 85701: every dated voting event can be calendared
@@ -101,7 +100,6 @@
 [F01C2] 85701: the in-app voting panel opens on the ballot
 [F01C2] 85701: the placeholder address names no region
 [F01C2] 85701: the polling-place affordance is an in-app pill, not a link out
-[F01C2] 85701: the positions search finds a term from the card's own text
 [F01C] 03255: after a clear, no surface still reflects a pick
 [F01C] 03255: after a clear, the stored picks file holds none
 [F01C] 03255: the picks tally's denominator equals the pick controls on the page

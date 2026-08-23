@@ -4,10 +4,14 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-22 — **Rockaway Borough was never missing from this
-product's data. It was invisible to five instruments that agreed with
-themselves about the wrong answer.** NJ Hunt 2, Rockaway Township and Rockaway
-Borough (07866).
+Last updated: 2026-08-23 — **Eight rulings that ask a session what it found off
+the list, and one address form where there were two.** The Discovery Conduct
+session. Its record is the last section of this file.
+
+The section below is the previous entry, kept: **Rockaway Borough was never
+missing from this product's data. It was invisible to five instruments that
+agreed with themselves about the wrong answer.** NJ Hunt 2, Rockaway Township
+and Rockaway Borough (07866).
 
 Zip 07866 covers two municipalities. The ballot page resolved a zip to its ZCTA
 CENTROID, which falls inside the Township, so a Rockaway Borough resident
@@ -17210,3 +17214,240 @@ opened onto nothing.**
 
 And the map behind that card draws, which it did in every reader's browser all
 along — but nobody could photograph it, so nobody could prove it.
+
+
+---
+
+# 2026-08-23 — Discovery Conduct: eight rulings that ask a session what it found off the list, and one address form where there were two
+
+**Code SHA `87868c9` → PR #160 → `main` at `764758f`.** Production is serving
+`764758f`, deploy `6a8aaa348a8df100081af031`, confirmed on `/api/build`. Close-out
+records follow as their own commits and are labelled as such.
+
+Gates at the close: **test 1749 pass / 0 fail · lint 0 errors, 11 allowlisted ·
+`pnpm build` clean, the same command Netlify runs · `pnpm main:green` GREEN ·
+`pnpm walk:all` 377 passed, 0 regressions, 2 could not run.**
+
+**Rows this run wrote to production, named:** 76 search-log GETs (every
+`/api/meetings` GET writes one), 69 ask/log requests, of which **9 rows landed**
+carrying run id `walk-all-local@2026-08-23T08:18:43.814Z`. No reaction was
+tapped. Two earlier local runs carried
+`measure-battlecards-0823@2026-08-23T07:5*` and `shoot-conduct-0823@...` and ran
+against a LOCAL production build, so they wrote nothing to the sold store.
+
+## Part 1 — the diagnosis, and why more principles were not going to fix it
+
+**Sessions walk the routes the brief names and no others, and that is what the
+system asks for.** Scope is a ceiling by rule, the branch manifest is a checklist
+with a completion condition, and the discipline rules correctly make speculative
+moves feel like confessable defects. What nothing had noticed is the missing
+half: **no report contract has ever asked a session what it found that was NOT
+on the list.** A session that walked eleven known routes and one that invented
+three produced identically-shaped reports and were graded the same.
+
+**RULINGS 88, 89, 94, 95, 96, 97, 98 and 99** are law, in `CLAUDE.md` under
+*Discovery conduct* and in `docs/rulings.md` with their rationale attached. 88
+and 89 were held open on 2026-08-22 so the author could claim them rather than
+have `docs/rulings.md` renumber a ruling of his; he claimed them here, and the
+paragraph explaining why they were held is left standing with a dated `CLAIMED`
+line beneath it.
+
+| The brief called it | It is law as | Its name |
+| --- | --- | --- |
+| A | RULING 88 | The expansion requirement |
+| B | RULING 89 | Expansion is not a side quest |
+| C | RULING 94 | The stuck protocol |
+| D | RULING 95 | Credentials are proven, not assumed |
+| E | RULING 96 | Sources have freshness |
+| F | RULING 97 | A founder find is a class-wide defect |
+| G | RULING 98 | Exploration holds a guaranteed position in item order |
+| H | RULING 99 | The amendment procedure |
+
+**`docs/report-contract.md` did not exist and that is the finding.** The brief
+asked this session to AMEND the close-out contract template every hunt session
+uses. There was no template: the contract has been rewritten by the chat in each
+brief, every time — which is precisely why the one figure that would have caught
+the discovery failure had never appeared in it. **A contract that is rewritten
+every session cannot accumulate.** It is now a file, it carries the seven
+required figures with their denominators, and a brief may add to it but not
+subtract from it.
+
+**`docs/credential-ledger.md` — 14 of 15 credentials PROVEN by calling.** The
+bar is all four of: the call was made, the transport succeeded, the body carried
+the **control fact** saying it is about the subject asked for, and a deliberately
+bogus **control query** came back different. Three of the fifteen rows failed on
+the first run and **all three were this generator's own bugs, not the
+credential's** — `NEXT_PUBLIC_MAPTILER_STYLE` holds a style NAME rather than a
+URL, and `WTP_DB_ROLE` is a DECLARATION of what `DATABASE_URL` points at rather
+than a Postgres role. Both are now proven through the app's own code path.
+
+The one real failure is **`CENSUS_API_KEY`**, refused again on 2026-08-22 with
+`302` to `invalid_key.html`. `NS06` already holds it and stays open; no new row
+was minted, because duplication is worse than a gap.
+
+Two things worth carrying forward. **`DATABASE_URL` authenticates now** — the
+recorded belief that it could not (a role made on the production branch not
+existing on a sibling) is stale. And **10 of the 15 had never been proven by a
+call in any session's walk**: the three MapTiler variables, `PLURAL_API_KEY`,
+`ANTHROPIC_API_KEY`, all three connection strings, `WTP_DB_ROLE`, and
+`LEGISCAN_API_KEY`, which runs daily in CI but had not been session-walked.
+
+**`docs/sources.md` now carries a last-walked date on every entry** — 45 of 54
+recovered from git history by `pnpm sources:freshness --seed`, 9 `UNKNOWN`, and
+`UNKNOWN` reads as stale rather than fresh. **9 of 54 are past expiry, and every
+one of them is an UNKNOWN**: no dated entry is out of window. The fifteen
+credential rows point at the ledger's date rather than this file's, because a
+date here that disagreed with the ledger would be the register guessing about a
+measurement the ledger actually made.
+
+**`docs/expansion-log.md`** is append-only and guarded. `tests/expansion-log.test.ts`
+reads the newest session in `docs/log.md` and fails when no entry carries that
+session id. **It was proven to fail before it was wired**: with `njhunt6` on top
+and no entry, it failed by name with the full RULING 88 text in the message. The
+non-hunt exemption is claimed by the marker `-nonhunt` IN THE SESSION ID and is
+never inferred — a test that inferred exemption would excuse a hunt session whose
+label happened to look like housekeeping.
+
+**The pinned block, and what it cost.** `scripts/context-file.mjs` reads
+`CLAUDE.md`'s *Discovery conduct* section verbatim and it is exempt from the
+shrink cascade — asserted at a 16 KB cap in `tests/context-pinned-conduct.test.ts`,
+because an exemption that has never been exercised is one nobody has tested.
+`context.md` lands at **40,924 bytes of a 40 KB cap**, and the price is stated
+rather than discovered: **the whole tracker-change section (10 of 10 rows) and
+the P0 notes clipped from 130 to 90 characters**, both printed in the file
+itself. `NS09` puts the trade in front of the author, because on 2026-08-17 he
+ruled the opposite way — *raise the cap rather than cut rows* — on this same
+section.
+
+## Part 2 — the 8/22 build
+
+**WGH-5 first, because everything else depended on it.** Two implementations of
+the address feature shipped on the same screen and disagreed about the one thing
+in it: the map's narrowing chip promised, verbatim, that *no house or apartment
+number* was ever needed, while the ballot's form refused to submit without one.
+
+There is now **one resolver, one component, one promise**, and the resolver
+returns **three states rather than two**. The interesting part is how ambiguity
+is measured. The old `CROSSES` case decided it by **how far apart the sampled
+points were in kilometres** — a proxy, and a bad one: a long straight street
+inside one township is spread out and perfectly unambiguous, and a short street
+on a municipal line is compact and genuinely split. `lib/geo/address-resolution.ts`
+asks the question ambiguity is actually about — **do the sampled points land in
+the same divisions** — **per level, independently**. So a street unambiguous at
+county and municipal level and split at the congressional level **confirms the
+first two immediately** and hedges only the congressional row.
+
+The house number is used for one geocode and dropped in a `finally`. Coordinates
+reach the browser only as a STREET midpoint and only when the street is
+unambiguous. The footer promise was rewritten to the keepable one, and the guard
+that pinned the absolute version was **rewritten to the same strength rather
+than deleted** — three guards where there was one.
+
+**WGH-1, measured and read as an image.** At 07866 the who-governs card went from
+six rows each carrying *"Could govern you — add your address to confirm"* to
+**six asterisks and ONE pill** between the Local listing and the State listing.
+The old pill was dead — clicking it did nothing. This one opens the prompt.
+
+**BC-1 to BC-4 — the P1 of Part 2, and the measurement is the report.** Every
+person on the ballot page now gets the same seven drop-downs: *What this office
+does · Positions · Committees · Offices near you · Campaign money · Voting record
+· Sources*. **26 of 26 people at 07866 are reachable**, and four cards were opened
+and read: Cory Booker, **Veronica Fernandez**, Justin Murphy and Joanne
+Kuniansky, each carrying **exactly seven**. Fernandez is the one the author said
+had *no way in at all* — an independent with no voting history, therefore no
+voting-record link, therefore nothing. Her card was captured at 430×932 and read
+as an image.
+
+**The reachability number was 26 of 26 before AND after, and that is stated
+rather than smoothed.** The pill always rendered; what was wrong was what it
+opened. Booker's card showed campaign finance because the record lived behind a
+SECOND modal — *"See their voting record"* — inside the first. The record is now
+IN the card, and `IncumbentRecord` and its door are gone.
+
+**BC-2's two empty states.** An empty voting record on somebody who has never
+held the office and an empty one on an incumbent we have not collected are
+different facts. Rendering them as one sentence is a null becoming an assertion,
+and it makes a challenger's card read as thinner than an incumbent's **because
+of copy rather than data** — the information asymmetry the equal-effort rule
+exists to catch, pointed the other way.
+
+**DEF-1 to DEF-4 — the refusal copy is gone.** *"We haven't yet read the law that
+defines what this body can decide, so we're not going to describe it"* does not
+ship again. Two layers: a CLASS definition that always renders, and the
+form-specific one beneath it. **15 of 15 citations were fetched and confirmed
+against a control string** (`pnpm definitions:verify`), and getting there walked
+the ladder: rung 2 got 403 from `constitution.congress.gov`, `law.justia.com` and
+`codelibrary.amlegal.com`; **rung 3, the full browser header set, got the same
+403**; **rung 4, curl with the identical User-Agent, got 200 from all three**.
+Reporting that as a wall would have put *we could not read the U.S. Constitution*
+in this repo.
+
+The class definitions are **state-scoped wherever the class varies, which is
+nearly always** — a New Jersey township is a municipal TYPE and not a form of
+government, Connecticut and Rhode Island have no county government at all, and a
+single national county definition is false in some of the four pilot states
+before this scales anywhere. **School districts were classified from the Census's
+own INDEPENDENT/DEPENDENT split**: 291 independent, 4 dependent, **219
+unclassified**, 2 TIGER pseudo-entities skipped. An unclassified district
+deliberately gets no class definition — guessing independent on a base rate would
+be a claim about who governs a reader's schools.
+
+**JUR-1 swept as a class.** Morris County rendered *"Governs your area"* and
+*"Boundary not published"* at the same time. `badgeFor` was never the defect — it
+returns exactly one value. A SECOND path built the `Governs` row straight off the
+division label with no reference to whether a boundary existed. **1 found, 1
+fixed at the shared path**, and a guard now refuses any other site that builds
+one.
+
+**The brief was wrong about one string and it is stated plainly:** *"boundary not
+defined"* does not exist in this repo — `git grep -a --untracked` returns 0. The
+string is *"Boundary not published"*.
+
+**JUR-3: there is no current-Congress ZCTA-to-district crosswalk, and the Census
+does not publish one.** Four directories walked on 2026-08-23: `rel2020/zcta520/`
+holds six files and none is CD; `rel/` holds only the **111th Congress** file
+with 2010 ZCTAs; `rel2022/` and `rel2024/` are Connecticut-only; `baf2020/`'s CD
+file is dated **2020-12-11** and `baf/`'s **2011-01-21**. `PU05` records the
+route that does work and it needs no new machinery: adding a `cd` layer to
+`scripts/build-zip-governments.mts` gives per-zip district counts nationally by
+the same 0.01° lattice the who-governs pill already trusts.
+
+## The regression the live walk caught, and it was mine
+
+`pnpm walk:all` printed one NAMED REGRESSION: **g3's five-point scale separators
+at 85701**. It was not undone — BC-1 put the funding block inside a collapsed
+`CardSection`, and **a collapsed section does not render its children at all**,
+so `.scale-sep` was absent from the DOM rather than merely hidden. This is the
+SECOND time this check has followed the funding block: item 12 moved it off the
+row into the card, and BC-1 moved it one layer deeper. The check now opens the
+Campaign money section, and finds **4 separators on card 16 of 20**.
+
+## Read as images — 2 of 2
+
+Both captures were opened and read, and both showed what they claimed.
+
+| Capture | What it claimed | What it showed |
+| --- | --- | --- |
+| `battlecard-fernandez.png` | Fernandez's card carrying the same seven every card carries | Confirmed — Candidate / Veronica Fernandez / Independent, all seven pills, and the page-level collection line at the foot |
+| `who-governs-07866.png` | the card at 07866 with 6 row marks and 1 notice pill | Confirmed — asterisks on the six part-covering bodies, nothing on Morris County or Morris Hills Regional, one pill between Local and State, and the basemap rendering |
+
+Captures live in `screenshots/`, which is gitignored: they are evidence a human
+reads, and RULING 20 keeps binaries out of git. The first version of the shooter
+wrote to `data/audit/`, which IS tracked, and `tests/no-new-binaries.test.ts`
+refused the commit — correctly.
+
+## Two instrument defects found while closing out
+
+**`docs/log.md` sorted the newest session last.** A session that only OPENS rows
+— every session that finds more than it finishes — had no date at all: rows
+carry `Resolved on` and nothing else dated, `Opened by` is a bare label, and a
+modern label has no ISO date to fall back on. `docs/tracker-opened.json` has
+recorded the date all along and nothing read it. Fixed in the generator, ISO
+values only, because 89 of the ledger's 111 entries record
+`reconstructed-2026-08-21` and that string sorts above every real date.
+
+**The lint-allowlist gate was refusing on a clean `main`.** Five unlisted
+warnings, all unused imports, proven pre-existing by stashing every change in
+this session. All five fixed. `RO02` is open for the shape rather than the fix:
+this check is not in `build-check.yml`, so a gate sessions run by hand had been
+red for an unknown number of runs with nothing reporting it.

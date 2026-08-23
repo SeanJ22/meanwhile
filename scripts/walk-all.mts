@@ -1589,7 +1589,27 @@ section("D. The ballot page (0814c, D53, g3)");
       .then(() => true)
       .catch(() => false);
     searched = i + 1;
-    if (up) separators = await page.locator(".scale-sep").count();
+    if (up) {
+      /*
+       * THE SURFACE MOVED A SECOND TIME (BC-1, 2026-08-23), and the claim still
+       * did not. Item 12 moved the funding block off the row and into the card;
+       * BC-1 then gave the card a FIXED SET OF SEVEN DROP-DOWNS, so the block
+       * now sits inside a collapsed "Campaign money" section. A collapsed
+       * `CardSection` does not render its children at all, so `.scale-sep`
+       * is not merely hidden — it is absent from the DOM until the section is
+       * opened, and the first run after BC-1 shipped reported 0 and printed
+       * g3's win as UNDONE for the second time in this check's life.
+       *
+       * It was not undone either time. The check follows the surface again: it
+       * opens the section, which is the one extra tap a reader now makes.
+       */
+      const money = page.locator("[data-battlecard-body] button:has-text('Campaign money')");
+      if (await money.count()) {
+        await money.first().click().catch(() => {});
+        await page.locator(".scale-sep").first().waitFor({ state: "attached", timeout: 4_000 }).catch(() => {});
+      }
+      separators = await page.locator(".scale-sep").count();
+    }
     if (separators > 0) break;
     await page.keyboard.press("Escape");
     await page

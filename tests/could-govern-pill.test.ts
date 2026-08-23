@@ -271,7 +271,13 @@ test("RULING 74: an address given for one zip does not answer for another", () =
 });
 
 test("RULING 74: the narrowing surface reads the session before it prompts", () => {
-  const narrowing = codeOf("components", "ballot", "ballot-narrowing.tsx");
+  /*
+   * WGH-5 (2026-08-22): the ballot page and the map card had two separate
+   * address forms; there is now ONE, and the session read lives in it. The
+   * guard follows the behaviour rather than the file — same claim, same
+   * strength, and it now covers every surface at once instead of one.
+   */
+  const narrowing = codeOf("components", "address", "address-prompt.tsx");
   assert.match(narrowing, /sessionAddressFor\(zip\)/, "it asks what the session already holds");
   assert.match(narrowing, /writeSessionAddress\(/, "and it records its own answer for the others");
   assert.match(
@@ -377,13 +383,26 @@ test("3.3: the who-governs card carries the pill, per body", () => {
    * trades one wrong answer for a longer one: eight bodies listed identically,
    * when two govern everyone at 07866 and six govern some readers and not
    * others. The pill is what tells them apart.
+   *
+   * WGH-1 (2026-08-22): the SENTENCE moved off the rows and is said once,
+   * between the Local listing and the State listing; the rows carry an
+   * asterisk. What this guard defends is unchanged and is the part that
+   * matters — the marking is still PER BODY, from the body's own flag, never
+   * per card and never per page — so it checks the mark and the single notice
+   * rather than the retired per-row pill.
    */
   const card = codeOf("components", "map", "coverage-notice.tsx");
-  assert.match(card, /CouldGovernPill/, "the card renders the pill");
+  assert.match(card, /CouldGovernMark/, "the card marks the affected rows");
   assert.match(
     card,
     /body\.couldGovern\s*&&/,
     "per BODY, from the body's own flag — never per card and never per page",
+  );
+  assert.match(card, /<CouldGovernNotice/, "and the sentence is said ONCE, between Local and State");
+  assert.equal(
+    (card.match(/<CouldGovernNotice/g) ?? []).length,
+    1,
+    "once means once — a second notice is the repetition this replaced",
   );
 });
 

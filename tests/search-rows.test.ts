@@ -64,6 +64,7 @@ function coveredBody(over: Partial<CoveredBody> & { bodyId: string }): CoveredBo
     name: over.name ?? null,
     divisionLabel: over.divisionLabel ?? "Pima County, AZ",
     divisionType: over.divisionType ?? "county",
+    lsad: over.lsad ?? null,
     bodyClass: over.bodyClass ?? "GOVERNING",
     coverageStatus: over.coverageStatus ?? "NOT_ATTEMPTED",
     homepageUrl: over.homepageUrl ?? null,

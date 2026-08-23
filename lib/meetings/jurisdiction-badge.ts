@@ -83,6 +83,49 @@ export const BADGE_COPY: Readonly<Record<JurisdictionBadge, BadgeCopy>> = {
 };
 
 /**
+ * **JUR-1 — A BODY MAY NOT BOTH GOVERN YOU AND HAVE NO BOUNDARY.**
+ * (2026-08-22, the author's 8/22 walkthrough, item 12.)
+ *
+ * Morris County's Board of County Commissioners rendered *"Governs your area"*
+ * and *"Boundary not published"* **at the same time**. Those are not two facts
+ * that can both be true: if no boundary is published, the question of whether
+ * it governs the reader cannot be asked, which is exactly what `NO_BOUNDARY`
+ * was created to say.
+ *
+ * The badge above was never the problem — `badgeFor` returns exactly one value.
+ * The contradiction came from a SECOND surface: the body card built a
+ * `Governs: <division>` row unconditionally, from the division label, with no
+ * reference to whether a boundary existed. Two code paths, one subject, and
+ * nothing making them agree.
+ *
+ * So the claim is made in ONE place. A body with no division cannot produce a
+ * `Governs` row, structurally, and there is no branch left where it could.
+ *
+ * `tests/jurisdiction-badge.test.ts` asserts the two are mutually exclusive.
+ */
+export type JurisdictionClaim =
+  | { kind: "GOVERNS"; label: string; value: string }
+  | { kind: "NO_BOUNDARY"; label: string; value: string };
+
+export function jurisdictionClaim(body: {
+  ocdId: string | null;
+  divisionLabel: string;
+}): JurisdictionClaim {
+  // No division id, or a division with no label, is the same situation from the
+  // reader's side: there is no published area to be inside of. Naming it is the
+  // whole of the fix — the previous code rendered "Governs:" with an empty
+  // value, which reads as a finding rather than as the gap it is.
+  if (body.ocdId === null || body.divisionLabel.trim().length === 0) {
+    return {
+      kind: "NO_BOUNDARY",
+      label: BADGE_COPY.NO_BOUNDARY.label,
+      value: BADGE_COPY.NO_BOUNDARY.detail,
+    };
+  }
+  return { kind: "GOVERNS", label: "Governs", value: body.divisionLabel };
+}
+
+/**
  * The badge for one meeting, given the divisions the reader's point is in.
  *
  * `divisionsAtPoint` is the caller's already-resolved answer. An EMPTY set is

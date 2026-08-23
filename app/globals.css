@@ -5177,3 +5177,229 @@ main[data-sidebar="closed"] .map-top-row {
 .state-crossing-secondary {
   color: var(--text-dim);
 }
+
+/* ---------------------------------------------------------------------------
+   THE ADDRESS PROMPT — one component, every surface (WGH-5, 2026-08-22).
+
+   Replaces two divergent implementations of the same feature: the map's
+   narrowing chip and the ballot's bottom box, which disagreed on the screen
+   about whether a house number was ever needed.
+
+   Dashed borders mean DEVICE-LOCAL in this system, and that is exactly what a
+   resolved address is here: it lives in one tab, in sessionStorage, and is
+   stored nowhere else.
+   --------------------------------------------------------------------------- */
+
+.address-prompt-trigger {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.address-prompt-trigger:hover {
+  text-decoration-style: solid;
+}
+
+.address-prompt {
+  margin-top: 10px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius);
+  background: var(--panel-bg);
+  padding: 13px 14px;
+}
+
+.address-prompt-ask {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text);
+  font-weight: 500;
+  display: block;
+}
+
+.address-prompt-fields {
+  margin-top: 9px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.address-prompt-fields input {
+  min-width: 0;
+  flex: 1;
+  border: 1px solid var(--panel-border);
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 9px 11px;
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+/* The house-number field is short and monospaced — it is a number, and it
+   should not look like it is asking for as much as the street field does. */
+.address-prompt-split .address-prompt-fields input {
+  width: 5.5rem;
+  flex: 0 0 auto;
+  font-family: var(--font-mono);
+}
+
+.address-prompt-fields input:focus {
+  outline: none;
+  border-color: var(--link);
+}
+
+.address-prompt-fields button {
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--action);
+  background: var(--action);
+  color: var(--action-on);
+  padding: 9px 13px;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.address-prompt-fields button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Declining stays the effortless default — friction-rule exception (2). It is
+   a quiet link beside the action, never a second button competing with it. */
+.address-prompt-skip,
+.address-prompt-fields .address-prompt-skip {
+  border: 0;
+  background: none;
+  padding: 0;
+  font-weight: 400;
+  font-size: 0.75rem;
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+.address-prompt-error {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--danger);
+}
+
+/* The promise is at the point of asking rather than in a policy —
+   friction-rule exception (3), consent to collection. */
+.address-prompt-promise {
+  margin-top: 9px;
+  font-size: 0.6875rem;
+  line-height: 1.6;
+  color: var(--voice);
+}
+
+/* What is already settled reads as settled, above the extra question. Partial
+   ambiguity resolves partially, and the reader can see which half is done. */
+.address-prompt-confirmed {
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.address-prompt-kept {
+  color: var(--voice);
+}
+
+.address-prompt-settled {
+  border-style: dashed;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.address-prompt-undo {
+  color: var(--link);
+  font-size: 0.75rem;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------------
+   WGH-1 (2026-08-22) — the ROW MARK and the ONE NOTICE.
+
+   Who Governs Here used to print the whole sentence "Could govern you — add
+   your address to confirm" on every affected row. At 12 bodies that was noise;
+   the registry now holds 174, and the repetition is what made the product look
+   like it was ballparking — the author's headline UX finding of the New Jersey
+   pass, not a cosmetic note.
+
+   So the rows carry a mark and the sentence is said once. The mark is the LINK
+   colour, not a warning colour and not the named-gap register: nothing here is
+   absent and nothing here is wrong. It is an offer.
+   --------------------------------------------------------------------------- */
+
+.could-govern-mark {
+  display: inline;
+  margin-left: 3px;
+  color: var(--link);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: super;
+  cursor: default;
+}
+
+/* Sits between the Local listing and the State listing — where the author put
+   it, and where a mark two rows above is still in view. */
+.could-govern-notice {
+  margin-top: 10px;
+}
+
+/* JUR-4: where the sentence appears now, it appears ONCE and it is deliberate
+   — bolder and more explicit than the small annotation it replaced, because a
+   thing said once may be said properly. It is a button, because the old pill
+   was dead: clicking it did nothing at all. */
+.could-govern-notice-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 5px 12px;
+  border: 1px solid var(--link);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--link);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.could-govern-notice-pill:hover {
+  background: color-mix(in srgb, var(--link) 12%, transparent);
+}
+
+.could-govern-notice-mark {
+  font-weight: 700;
+}
+
+/* The action half is never hidden, at any width. The first version of the old
+   pill dropped it under 460px and a production capture read as an image showed
+   the result: "Could govern you" alone beside a body's name, which is the bare
+   uncertainty marker RULING 44 deleted rather than the offer RULING 71
+   specifies. It wraps instead. */
+@media (max-width: 460px) {
+  .could-govern-notice-pill {
+    display: block;
+    border-radius: var(--radius);
+    white-space: normal;
+  }
+}

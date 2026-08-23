@@ -1016,6 +1016,230 @@ Guarded: `tests/no-suppression.test.ts` fails the build if a per-card completene
 
 **A zero-row extraction is a FAILED extraction, never an empty document.** (Adopted 2026-08-20.) A parser that returns nothing has told you about itself, not about the document. Every extraction layer reports rows found against what it was given, and zero rows is an error state that names the document, the layer and the reason — never a clean exit. This is the sibling of the operation-count rule above, and it exists because the same shape has now been sighted five times: an empty RSS feed recorded as working, a zero-match join presented as a clean build, a scripted edit that edited nothing and exited 0, a portal returning 200 with zero meetings recorded as a HIT, and rendered prose extracted from an Apptegy page that never contained the byline the page was fetched for.
 
+## DISCOVERY CONDUCT
+
+(Adopted 2026-08-22, the author's Discovery Conduct brief, item 3. Eight rulings
+adopted together — **RULINGS 88, 89, 94, 95, 96, 97, 98 and 99** — held in full
+here rather than as pointers. `docs/rulings.md` carries them with the same text
+and the letter-to-number mapping the brief's A-through-H lettering maps onto.)
+
+**Why this section exists, and it is a diagnosis rather than an exhortation.**
+
+Sessions walk the routes the brief names and no others. **This is not
+disobedience; it is what the system asks for.** Scope is a ceiling by rule, the
+branch manifest is a checklist with a completion condition, the discipline rules
+correctly make speculative moves feel like confessable defects, and — the part
+nothing had noticed — **no report contract has ever asked a session what it
+found that was NOT on the list.** A session that walked eleven known routes and
+a session that invented three new ones produced identically-shaped reports and
+were graded the same.
+
+The consequences are measured, not asserted. **Wikipedia as a Tier A source was
+identified by the author, not by a session**, and when finally walked it
+returned 261 officials, 898 rows, 818 citations confirmed against primary
+sources (91.1%), and 174 governing bodies against a registry holding 12. **API
+credentials the author personally obtained sat uncalled** until NJ Hunt 5 called
+several and closed 119 owed fields in one run; the Census key was invalid and
+that was found only because something finally hit it. **A paid search API was
+recommended** while Wikipedia's Rockaway Township page — two clicks from a plain
+Google search, carrying the mayor, nine council members, seven county
+commissioners and the county constitutional officers, all footnoted — had never
+been opened.
+
+**More principles will not fix this.** RULING 90 and RULING 93 are principles and
+behaviour did not change. What changes behaviour is **a required output that
+cannot be produced by walking a list**. That is RULING 88. The other seven make
+it real.
+
+### RULING 88 — THE EXPANSION REQUIREMENT
+
+**Every hunt report carries an EXPANSION section listing routes that did not
+exist at session start.** For each one: **how it was conceived**, **the literal
+query or URL** that produced it (not a description of the search — the text that
+was typed), **what it returned including zero**, and **whether it generalises to
+a class of entities**.
+
+**A hunt report with an empty expansion section FAILS THE ITEM** — exactly as
+"nothing further" already fails an exhaustion claim under RULING 90.
+
+**A newly conceived route that returns nothing is a REPORTED SUCCESS, not a
+defect. The invention is the deliverable, not the yield.** This clause is
+load-bearing and it is the one most likely to be quietly ignored, because every
+other rule in this file rewards rows found. A session that conceives four routes
+and gets zero from all four has done what this asks, and its report says so
+without apology.
+
+*Why a required output rather than another principle.* A principle can be
+satisfied by a session that believes it complied. This cannot: either there is a
+route in the section that did not exist this morning, or there is not.
+
+### RULING 89 — EXPANSION IS NOT A SIDE QUEST
+
+**Expansion is a NEW ROUTE TO A FIELD ALREADY OWED on the item list. A side
+quest is a new capability, a new surface, new infrastructure, or work on a zip
+that is not the current zip.**
+
+Expansion is **required**. Side quests remain **forbidden** and become tracker
+rows — writing the row is the whole response, unchanged. **A session citing
+RULING 88 while building infrastructure has committed a scope breach and reports
+it as one.**
+
+*Why this ships in the same breath as RULING 88.* "You must invent new routes"
+is one sentence away from "you may build anything you can justify", and that
+reading would undo the scope discipline that keeps a session finishing what it
+started. The test is about the DESTINATION, not the technique: does this route
+end at a field the item list already owes?
+
+### RULING 94 — THE STUCK PROTOCOL
+
+**When a field is unfound after Tier A and Tier B — before any absence is
+recorded, and before Tier C per-entity search begins — run five moves and record
+the literal query text or URL and the result for each.**
+
+1. **What would a person with a browser type right now?** Type it.
+2. **What does the tier above publish about the tier below?** Federal publishes
+   states; states publish counties and municipalities; counties publish towns
+   and districts. Descend; do not guess sideways. (RULING 93.)
+3. **What did entities of this same shape do?** If one township posts a clerk's
+   PDF, the other twenty may. **Test the shape, not the instance.**
+4. **Who else needed this badly enough to have compiled it already?** Courts,
+   local news, League of Women Voters, unions, chambers of commerce, libraries,
+   universities.
+5. **One lateral query phrased exactly as "where else can I find this"** for the
+   specific fact, on a general search engine.
+
+Phrased as QUESTIONS rather than fixed URLs so they cannot go stale — and so
+they cannot be completed, since the answer differs in every state.
+
+**A recorded absence with no stuck-protocol block is VOID and the field returns
+to owed.**
+
+*Where it sits, exactly, and why.* After Tier A and Tier B, BEFORE Tier C. That
+placement is the whole economy of it: per-entity search is the expensive tier,
+and four of these five moves are broad routes that may answer for fifty entities
+at once. NJ Hunt 4 spent its entire search budget on 272 individuals and never
+once asked where all 272 live.
+
+### RULING 95 — CREDENTIALS ARE PROVEN, NOT ASSUMED
+
+**Every hunt session regenerates `docs/credential-ledger.md` at session start by
+CALLING each key.** A key not called this session is reported as **unproven** —
+not assumed working, not carried forward from the last session's table. **An
+invalid key opens a Needs Sean P1 row the same session.**
+
+*Why calling and not reading.* The register can only say which files reference a
+key. It cannot say whether the key works, and the difference has cost real
+findings: `CENSUS_API_KEY` was invalid and nothing discovered it until something
+finally hit the endpoint.
+
+*And why the bar is "is the body ABOUT the thing asked for".* The Census host
+answers a rejected key with **HTTP 200 and an HTML page titled "Invalid Key"**,
+so a check written against the status code reads a dead credential as healthy.
+The control is that the body parsed as the data requested, plus a deliberately
+bogus second request that must come back DIFFERENT (RULING 68).
+
+The generator is `scripts/credential-ledger.mts` (`pnpm credentials`), and the
+artifact is never hand-edited (RULING 92).
+
+### RULING 96 — SOURCES HAVE FRESHNESS
+
+**`docs/sources.md` carries a LAST-WALKED DATE on every entry, keyed or not**,
+with the expiry discipline that already governs absences under RULING 53:
+**candidate fields 7 days, bodies and rosters 14, walled sources 14.**
+
+**A source past expiry is re-walked or reported STALE with its date. A source
+walked but not recorded is a DEFECT**, because the next session re-derives it.
+
+*Why sources and not just absences.* RULING 53 made an absence a measurement
+with a shelf life. A source is the same kind of claim wearing a friendlier face
+— *this endpoint answers, this licence permits, this is where the list lives* —
+and every one of those can stop being true without anything here noticing. A
+register with no dates cannot tell a session which of its rows are observations
+and which are folklore.
+
+### RULING 97 — A FOUNDER FIND IS A CLASS-WIDE DEFECT
+
+**When the author finds a source, route, or fact the sessions did not, that is a
+DEFECT IN THE DISCOVERY PROCESS**, handled like a named instance of a class-wide
+defect in code. The next session answers three questions in its report:
+
+1. **What procedure would have found this without him?**
+2. **Why did that procedure not run?**
+3. **What changed so it runs next time?**
+
+**Absorbing the find as a new manifest entry and moving on is not an adequate
+response** — that is fixing the named instance and reporting it closed, which
+the named-instance rule already forbids everywhere else. **Manifest growth that
+comes only from the author is the failure this ruling names.**
+
+### RULING 98 — EXPLORATION HOLDS A GUARANTEED POSITION IN ITEM ORDER
+
+**In every hunt brief, expansion work is its own NUMBERED ITEM and is NEVER
+LAST. This binds the chat writing briefs as much as the session executing
+them.**
+
+*The reason, stated plainly because it is a fact about how this system actually
+behaves.* Whatever sits at item 1 eats the run. Expansion placed at the tail
+never happens, because it is scheduled to begin after exhaustion — and
+exhaustion never arrives, by design, since RULING 90 exists precisely to stop a
+session declaring it. **A brief that puts exploration last has not
+deprioritised it; it has cancelled it, while appearing to require it.**
+
+### RULING 99 — THE AMENDMENT PROCEDURE
+
+**Every ruling is amendable. A ruling is changed only by a LATER DATED RULING
+that names the number it supersedes, states what changed and why, and adds a
+mapping line in BOTH `docs/rulings.md` and `CLAUDE.md`.**
+
+**Rulings are never edited in place and never silently dropped.** A superseded
+ruling stays in the file marked superseded, carrying its successor's number.
+
+*The precedent, and the format.* On 2026-08-22 a brief adopted five rulings as
+81 through 85 while a session earlier the same day had already spent 81 and 82.
+Renumbering the two that shipped would have left dangling references in an
+append-only record whose whole value is that it does not move. The five took 83
+through 87 with a mapping table in both files. Every amendment takes that shape.
+
+*Why the file and not memory.* A superseded ruling that is deleted comes back as
+drift — something reads it, cites it, or reasons from it, and nothing says it
+was overturned. That is the exact failure `docs/rulings.md` was created to end.
+
+### THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED
+
+(Adopted 2026-08-22, the same brief, item 5.) **`docs/report-contract.md` is the
+close-out contract every hunt session answers.** A brief may ADD to it; a brief
+does not subtract from it.
+
+**What was found when this was written:** there was no template. The contract
+lived in each session's own brief, rewritten by the chat every time — which is
+precisely why the one figure that would have caught the discovery failure had
+never appeared in it. **A contract that is rewritten every session cannot
+accumulate.**
+
+It enumerates seven required figures, each with its denominator: **expansion
+routes conceived**, **routes returning rows (N of N)**, **routes returning zero
+(N of N)**, **stuck protocols run**, **fields returned to owed for a missing
+stuck protocol**, **credentials proven (N of M)**, and **sources past expiry
+(N of M)**. **A report missing any of these is INCOMPLETE and the session says
+so about itself.**
+
+### THE MAPPING TABLE — the brief's letters against the numbers they carry
+
+| The brief called it | It is law as | Its name |
+| --- | --- | --- |
+| A | **RULING 88** | The expansion requirement |
+| B | **RULING 89** | Expansion is not a side quest |
+| C | **RULING 94** | The stuck protocol |
+| D | **RULING 95** | Credentials are proven, not assumed |
+| E | **RULING 96** | Sources have freshness |
+| F | **RULING 97** | A founder find is a class-wide defect |
+| G | **RULING 98** | Exploration holds a guaranteed position in item order |
+| H | **RULING 99** | The amendment procedure |
+
+**88 and 89 were held open on 2026-08-22** so the author could claim them rather
+than have `docs/rulings.md` renumber a ruling of his. He claimed them here. C
+through H continue from 93, the highest then in use.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

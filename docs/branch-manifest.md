@@ -1,5 +1,19 @@
 # The branch manifest
 
+> **THIS MANIFEST IS A FLOOR AND NOT A CEILING.** Walking every entry in it is
+> **not exhaustion**. Exhaustion is **argued in the report** — RULING 90 — and
+> is never satisfied by completing this file. A session that walked the whole
+> list and found nothing has established that these named routes returned
+> nothing on this date, which is a much smaller claim than the one it is
+> tempting to write down. **The routes you did not think of are not in here,
+> and they are the ones that have been right every time.**
+>
+> *(Added 2026-08-22, the author's Discovery Conduct brief, item 6. It sits at
+> the top rather than in the body because the failure it names happens to a
+> session that is reading this file for a route, not to one reading it for its
+> philosophy. See RULING 88: every hunt report lists the routes that did not
+> exist at session start, and an empty expansion section fails the item.)*
+
 **RULING 61, adopted 2026-08-21 (NH Hunt 6). It supersedes RULING 58's
 two-branch bar.**
 

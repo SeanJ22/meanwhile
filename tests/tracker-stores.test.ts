@@ -1082,11 +1082,36 @@ test("RULING 79: a deliberately-unassigned ruling number is DECLARED, never mere
   for (const d of declarations) {
     const declared = (d[1].match(/\d+/g) ?? []).map(Number);
     assert.ok(declared.length > 0, "a deliberately-unassigned heading names no numbers");
+    /*
+     * **A HELD NUMBER MAY BE CLAIMED, AND THE CLAIM IS A DATED LINE.**
+     * (2026-08-22, the Discovery Conduct session.)
+     *
+     * 88 and 89 were held open on 2026-08-22 so the author could take them
+     * rather than have `docs/rulings.md` renumber a ruling of his. He took
+     * them. The original paragraph is left standing — the reason the gap was
+     * held is the reason it was worth holding — and a `CLAIMED <date>` line was
+     * appended beneath it.
+     *
+     * So the guard's question changes from *is this number used* to *is its
+     * use ACCOUNTED FOR*. An unclaimed number that turns up as a ruling is
+     * still the contradiction this test was written for, and still fails.
+     */
+    const block = text.slice(d.index ?? 0, text.indexOf("\n### ", (d.index ?? 0) + 5));
+    const claimed = /\*\*CLAIMED \d{4}-\d{2}-\d{2}/.test(block);
     for (const n of declared) {
+      if (claimed) {
+        assert.ok(
+          new RegExp(`RULING ${n}\\b`).test(block),
+          `the CLAIMED note does not say what RULING ${n} became — a claim that names no successor ` +
+            "is the same silence the declaration was written to prevent",
+        );
+        continue;
+      }
       assert.ok(
         !numbers.has(n),
         `RULING ${n} is declared deliberately unassigned AND recorded as a ruling. ` +
-          "One of the two is wrong, and a reader cannot tell which.",
+          "One of the two is wrong, and a reader cannot tell which. If it was CLAIMED, " +
+          "say so with a dated **CLAIMED <date>** line naming what it became.",
       );
     }
   }

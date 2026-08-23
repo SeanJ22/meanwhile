@@ -57,25 +57,55 @@ export function MemberDirectory({ holder }: { holder: SeatHolder }) {
   return <MemberDirectoryInner key={holder.id} holder={holder} />;
 }
 
-function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
-  // The fetch moved to hooks/use-member-directory.ts when g4 item 8 gave the
-  // contact pill row a use for the same payload — one request, one arrival,
-  // and no way for the two surfaces to disagree about whether it landed.
+
+/**
+ * **THE SAME TWO SECTIONS, AS CONTENT ONLY** (BC-1, 2026-08-22, item 14).
+ *
+ * The ballot page battlecard renders a FIXED set of seven drop-downs and owns
+ * the headers itself, so it needs what goes INSIDE Committees and Offices near
+ * you rather than two more collapsible sections nested inside its own.
+ *
+ * Both return null where the member is outside the source scope — sitting
+ * federal members only — and a null slot renders the battlecard own honest
+ * empty line. For a school-board candidate that is the correct answer: not
+ * "no committees", but nothing on record from a source that does not reach
+ * them.
+ */
+export function MemberCommitteesContent({ holder }: { holder: SeatHolder }) {
+  return <DirectoryContent key={holder.id} holder={holder} only="committees" />;
+}
+
+export function MemberOfficesContent({ holder }: { holder: SeatHolder }) {
+  return <DirectoryContent key={holder.id} holder={holder} only="offices" />;
+}
+
+/**
+ * The two section BODIES, with no headers of their own.
+ *
+ * One implementation, two callers: the officials modal wraps these in its own
+ * CardSections below, and the ballot battlecard drops them straight into its
+ * fixed seven. A second copy of either body is a second place for the loading,
+ * failed and empty branches to drift apart.
+ */
+function DirectoryContent({
+  holder,
+  only,
+}: {
+  holder: SeatHolder;
+  only: "committees" | "offices";
+}) {
   const { directory, failed } = useMemberDirectory(holder.id);
   const offices = directory?.districtOffices ?? null;
   const committees = directory?.committees ?? null;
 
-  // The source's scope is sitting federal members. A state legislator or a
-  // school-board member renders nothing here rather than an empty
-  // "Committees" heading, which would read as "this person sits on none".
+  // The source scope is sitting federal members. A state legislator or a
+  // school-board member renders nothing here rather than an empty heading,
+  // which would read as "this person sits on none".
   if (!holder.id.startsWith("congress:")) return null;
 
-  return (
-    <>
-      <CardSection
-        title="Committees"
-        meta={committees ? String(committees.length) : null}
-      >
+  if (only === "committees") {
+    return (
+      <>
         {failed ? (
           <p className="text-[0.75rem] leading-relaxed text-muted">
             Couldn&apos;t load the committee record just now.
@@ -116,12 +146,11 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
             ))}
           </ul>
         )}
-      </CardSection>
-
-      <CardSection
-        title="Offices near you"
-        meta={offices ? String(offices.length) : null}
-      >
+      </>
+    );
+  }
+  return (
+    <>
         {failed ? (
           <p className="text-[0.75rem] leading-relaxed text-muted">
             Couldn&apos;t load the office list just now.
@@ -201,6 +230,33 @@ function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
             </ul>
           </>
         )}
+    </>
+  );
+}
+
+/** How many rows a section has, for the header meta. Null while loading. */
+function useDirectoryCounts(holder: SeatHolder): {
+  committees: number | null;
+  offices: number | null;
+} {
+  const { directory } = useMemberDirectory(holder.id);
+  return {
+    committees: directory?.committees?.length ?? null,
+    offices: directory?.districtOffices?.length ?? null,
+  };
+}
+
+function MemberDirectoryInner({ holder }: { holder: SeatHolder }) {
+  const counts = useDirectoryCounts(holder);
+  if (!holder.id.startsWith("congress:")) return null;
+  return (
+    <>
+      <CardSection title="Committees" meta={counts.committees === null ? null : String(counts.committees)}>
+        <DirectoryContent holder={holder} only="committees" />
+      </CardSection>
+
+      <CardSection title="Offices near you" meta={counts.offices === null ? null : String(counts.offices)}>
+        <DirectoryContent holder={holder} only="offices" />
       </CardSection>
     </>
   );

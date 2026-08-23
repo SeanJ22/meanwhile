@@ -30,6 +30,14 @@ import { photosFirst } from "@/lib/ballot/photo-order";
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
+import {
+  MemberCommitteesContent,
+  MemberOfficesContent,
+} from "@/components/officials/member-directory";
+import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { RecentVotes } from "@/components/map/popup/official-popup";
+import { personCardSources } from "@/lib/officials/card-sources";
+import type { SeatHolder } from "@/lib/officials/lookup";
 import { CandidateCard } from "@/components/ballot/candidate-card";
 import {
   CandidatePositions,
@@ -48,7 +56,6 @@ import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
 import {
   IncumbentNameLink,
-  IncumbentRecordLink,
 } from "@/components/ballot/incumbent-record-link";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { formatDateMDY } from "@/lib/map/format";
@@ -228,20 +235,19 @@ function isFederalContest(contest: Contest): boolean {
   return /:us-senate$|:us-house-\d+$/.test(contest.id);
 }
 
-/** 4 (2026-08-19): the incumbent's voting-record link, where the exact-key
- *  join holds — an incumbent on a ballot IS an official we hold. No join,
- *  no link; never a wrong one. */
-async function IncumbentRecord({
-  targetKey,
-  context,
-}: {
-  targetKey: string;
-  context: { zip: string; lat: number; lng: number } | null;
-}) {
-  const holder = await incumbentHolderFor(targetKey);
-  if (!holder) return null;
-  return <IncumbentRecordLink holder={holder} context={context} />;
-}
+/*
+ * BC-3 (2026-08-22): `IncumbentRecord` is GONE, and the door it opened with it.
+ *
+ * It rendered "See their voting record →", which opened a SECOND modal from
+ * inside the battlecard — so clicking Battlecard for Cory Booker showed his
+ * campaign finance and the actual record was one more click down. The record
+ * now renders INSIDE the battlecard's own Voting record drop-down, on the same
+ * card as everything else, for every person on the page.
+ *
+ * The incumbency disclosure it carried is not lost: RULING 28's contest-level
+ * footnote says the same thing once per contest instead of once per incumbent,
+ * and it is untouched.
+ */
 
 /**
  * The candidate's NAME as the door to their large battlecard (g3 item 7) —
@@ -301,6 +307,129 @@ function CandidateFunding({
     </div>
   );
 }
+
+
+/**
+ * **ONE BATTLECARD BUILDER FOR EVERY PERSON ON THE BALLOT.**
+ * (BC-1, BC-2, BC-3, BC-4, 2026-08-22, the author's 8/22 walkthrough, items 13
+ * and 14.)
+ *
+ * ## What was wrong, in his words
+ *
+ * *"Right now there is no way to see data about a candidate from the ballot
+ * page."* Clicking **Battlecard** for Cory Booker opened his campaign finance;
+ * the actual battlecard was reachable only by clicking *"See their voting
+ * record"* — a second modal, one more click down, inside the first. And
+ * **Veronica Fernandez**, an independent running for the U.S. Senate with no
+ * voting history, therefore had no voting-record link, therefore no way in at
+ * all: no candidate info, no contact info, no campaign site, nothing.
+ *
+ * ## What this is
+ *
+ * The two contest branches — the party lineup and the filed candidacies — each
+ * assembled their own battlecard children, with a comment noting that they
+ * "must carry the same sections in the same order" and nothing enforcing it.
+ * There is now ONE builder and both branches call it, so they cannot diverge.
+ *
+ * Every person gets the same seven drop-downs
+ * (`lib/ballot/battlecard-sections.ts`), always, whatever we hold. **Being a
+ * candidate is sufficient; a voting record is not a prerequisite for having a
+ * card.**
+ *
+ * ## The record is IN the card now
+ *
+ * BC-3. Where a person holds or has held the office, their roll-call record
+ * renders inside the Voting record drop-down rather than behind a link to a
+ * second modal. Where they have not, the section says so in its own words —
+ * which is a fact about their situation, not about our research, and BC-2 keeps
+ * those two sentences apart.
+ */
+async function BallotBattlecard({
+  name,
+  partyLine,
+  targetKey,
+  contestTitle,
+  federal,
+  context,
+}: {
+  name: string;
+  partyLine: React.ReactNode;
+  /** The candidate key — `${contest.id}|${nominee.name}` or a candidacy id. */
+  targetKey: string;
+  contestTitle: string;
+  /** Whether the contest is federal, which decides whether FEC money applies. */
+  federal: boolean;
+  context: { zip: string; lat: number; lng: number } | null;
+}) {
+  /*
+   * ONE lookup, used for three things: whether the record section has content,
+   * which of BC-2's two empty states it shows, and whether the committee and
+   * office sections have a holder to read. Resolved here rather than inside
+   * each section so the card cannot say "no voting record" in one place and
+   * render committees for the same person in another.
+   */
+  const holder = await incumbentHolderFor(targetKey);
+  const officeBlurb = blurbForContestTitle(contestTitle);
+  const positions = positionsFor(targetKey);
+
+  return (
+    <CandidateBattlecard
+      name={name}
+      partyLine={partyLine}
+      subjectId={targetKey}
+      /*
+       * BC-2. A fact about the PERSON — do they hold or have they held this
+       * office — never about how much we happen to hold on them. Without the
+       * distinction a challenger's card reads as thinner than an incumbent's
+       * because of COPY rather than data, which is the information asymmetry
+       * the equal-effort rule exists to catch.
+       */
+      holdsOrHeldTheOffice={holder !== null}
+      sections={{
+        /* BC-6: mandatory for every candidate and every elected official.
+           Somebody voting for governor needs to know what a governor does. */
+        office: officeBlurb ? (
+          <>
+            <p className="text-[0.8125rem] leading-relaxed text-voice">{officeBlurb.text}</p>
+            {officeBlurb.basis && (
+              <p className="mt-1.5 text-[0.6875rem] text-muted">{officeBlurb.basis}</p>
+            )}
+          </>
+        ) : null,
+        positions:
+          positions.length > 0 ? (
+            <CandidatePositions headline={positionsHeadline(positions)} positions={positions} />
+          ) : null,
+        committees: holder ? <MemberCommitteesContent holder={holder} /> : null,
+        offices: holder ? <MemberOfficesContent holder={holder} /> : null,
+        money: federal ? <CandidateFunding targetKey={targetKey} context={context} /> : null,
+        /* BC-3: the record, in the card. Not `columns` — the two-column form
+           builds its own top-level sections, which would compete with the
+           seven this card owns. */
+        record: holder ? (
+          <RecentVotes holder={holder} reactionContext={context} />
+        ) : null,
+        sources: holder ? <CandidateSources holder={holder} /> : null,
+      }}
+    />
+  );
+}
+
+/**
+ * The card's answer to "says who?", for a person we hold an officeholder
+ * record for.
+ *
+ * Money and votes are deliberately absent from the list: those sections cite
+ * themselves on the row, and the same claim in two registers reads as two
+ * claims. Same assembler as the map's person card — one function, so the two
+ * surfaces cannot disagree about provenance.
+ */
+function CandidateSources({ holder }: { holder: SeatHolder }) {
+  const sources = personCardSources(holder, []);
+  if (sources.length === 0) return null;
+  return <CardSourcesList sources={sources} />;
+}
+
 
 export default async function BallotPage({
   searchParams,
@@ -1044,41 +1173,18 @@ export default async function BallotPage({
                            the boundary as children, which is why they are
                            written here rather than inside the pill. */
                         battlecardSlot={
-                          <CandidateBattlecard
+                          <BallotBattlecard
                             name={nominee.name}
                             partyLine={nominee.partyLabel}
-                            subjectId={`${contest.id}|${nominee.name}`}
-                          >
-                            {/* P02 + D05 (2026-08-19, g20): their own words,
-                                per issue, sourced. The SAME issue list for
-                                every candidate in the contest — that is the
-                                equal-effort rule made visible, and the header
-                                states the denominator before any count. */}
-                            <CandidatePositions
-                              headline={positionsHeadline(
-                                positionsFor(`${contest.id}|${nominee.name}`),
-                              )}
-                              positions={positionsFor(`${contest.id}|${nominee.name}`)}
-                            />
-                            <IncumbentRecord
-                              targetKey={`${contest.id}|${nominee.name}`}
-                              context={
-                                centroid && zip
-                                  ? { zip, lat: centroid.lat, lng: centroid.lng }
-                                  : null
-                              }
-                            />
-                            {isFederalContest(contest) && (
-                              <CandidateFunding
-                                targetKey={`${contest.id}|${nominee.name}`}
-                                context={
-                                  centroid && zip
-                                    ? { zip, lat: centroid.lat, lng: centroid.lng }
-                                    : null
-                                }
-                              />
-                            )}
-                          </CandidateBattlecard>
+                            targetKey={`${contest.id}|${nominee.name}`}
+                            contestTitle={contest.title}
+                            federal={isFederalContest(contest)}
+                            context={
+                              centroid && zip
+                                ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                : null
+                            }
+                          />
                         }
                       />
                       {/* 3d: reader expression, never a recommendation — the
@@ -1197,34 +1303,18 @@ export default async function BallotPage({
                              accident, which is the note the positions call
                              already carried and applies to the whole card. */
                           battlecardSlot={
-                            <CandidateBattlecard
+                            <BallotBattlecard
                               name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
                               partyLine={cand.partyLabel ?? "No party label filed"}
-                              subjectId={cand.id}
-                            >
-                              <CandidatePositions
-                                headline={positionsHeadline(positionsFor(cand.id))}
-                                positions={positionsFor(cand.id)}
-                              />
-                              <IncumbentRecord
-                                targetKey={cand.id}
-                                context={
-                                  centroid && zip
-                                    ? { zip, lat: centroid.lat, lng: centroid.lng }
-                                    : null
-                                }
-                              />
-                              {isFederalContest(contest) && (
-                                <CandidateFunding
-                                  targetKey={cand.id}
-                                  context={
-                                    centroid && zip
-                                      ? { zip, lat: centroid.lat, lng: centroid.lng }
-                                      : null
-                                  }
-                                />
-                              )}
-                            </CandidateBattlecard>
+                              targetKey={cand.id}
+                              contestTitle={contest.title}
+                              federal={isFederalContest(contest)}
+                              context={
+                                centroid && zip
+                                  ? { zip, lat: centroid.lat, lng: centroid.lng }
+                                  : null
+                              }
+                            />
                           }
                         />
                         {/* 3d: reader expression, never a recommendation.

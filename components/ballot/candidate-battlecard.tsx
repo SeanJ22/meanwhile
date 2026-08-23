@@ -4,6 +4,12 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
+import {
+  BATTLECARD_SECTIONS,
+  votingRecordEmptyLine,
+  type BattlecardSectionId,
+} from "@/lib/ballot/battlecard-sections";
+import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { PositionsSection } from "@/components/officials/positions-section";
 
 /**
@@ -58,7 +64,8 @@ export function CandidateBattlecard({
   name,
   partyLine,
   subjectId,
-  children,
+  sections,
+  holdsOrHeldTheOffice = false,
 }: {
   name: string;
   /** Already-formatted party text. Display only — nothing here ranks. */
@@ -75,7 +82,18 @@ export function CandidateBattlecard({
    * and `lib/corpus/unified.ts` indexes both key spaces.
    */
   subjectId: string;
-  children: React.ReactNode;
+  /**
+   * BC-1 (2026-08-22): the SEVEN sections, by id. A slot that is absent or
+   * null renders the section anyway, with its own honest empty line inside —
+   * the SET never varies, only what is in it.
+   */
+  sections?: Partial<Record<BattlecardSectionId, React.ReactNode>>;
+  /**
+   * BC-2: which of the two Voting record empty states applies. A fact about
+   * the PERSON — do they hold or have they held this office — never about how
+   * much we happen to hold on them.
+   */
+  holdsOrHeldTheOffice?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -155,18 +173,63 @@ export function CandidateBattlecard({
             </header>
 
             <div className="account-modal-body" data-battlecard-body>
-              {children}
               {/*
-                ITEM 13: the searchable positions surface, on EVERY
-                candidate's card.
+                **BC-1 — THE SAME SEVEN DROP-DOWNS, ON EVERY CARD, ALWAYS.**
+                (2026-08-22, the author's 8/22 walkthrough, item 14.)
 
-                It sits below the moved sections deliberately. Those are what
-                we hold, laid out; this is the reader asking their own
-                question of the same person's pages. A search box above the
-                evidence invites a reader to search before knowing there is
-                anything to search.
+                What was here before: whatever the ballot page happened to pass
+                as `children`. For Cory Booker that was a funding block and a
+                link, so clicking "Battlecard" opened what read as a campaign
+                finance page — the author's BC-3 — and the actual record was one
+                more click away behind "See their voting record". For Veronica
+                Fernandez, an independent with no voting history and no federal
+                filing, it was very nearly nothing at all.
+
+                The SET is now fixed. A section with no content renders its
+                header and its own honest line inside. Hiding the empty ones
+                would make a well-covered person's card taller and more
+                substantial than a thin one's, which is a layout asymmetry
+                tracking incumbency rather than anything about the people.
               */}
-              <PositionsSection subjectId={subjectId} subjectName={name} />
+              <CardSectionGroup>
+                {BATTLECARD_SECTIONS.map((spec) => {
+                  const content = sections?.[spec.id] ?? null;
+                  return (
+                    <CardSection key={spec.id} title={spec.title}>
+                      {content ?? (
+                        <p className="text-[0.8125rem] leading-relaxed text-voice">
+                          {/*
+                            BC-2: two distinct empty states on the record, same
+                            pill. Without the distinction a challenger's card
+                            reads as thinner than an incumbent's because of
+                            COPY rather than data.
+                          */}
+                          {spec.id === "record"
+                            ? votingRecordEmptyLine(holdsOrHeldTheOffice)
+                            : spec.emptyLine}
+                        </p>
+                      )}
+                      {/*
+                        ITEM 13: the searchable positions surface, on EVERY
+                        candidate's card.
+
+                        It used to sit BELOW the sections as a surface of its
+                        own, and BC-1 gave the card a drop-down already called
+                        Positions — so a reader opening this card saw the word
+                        twice, four inches apart, meaning two different things.
+                        It now lives INSIDE the Positions section, under what we
+                        hold: those are the evidence laid out, and this is the
+                        reader asking their own question of the same person's
+                        pages. A search box above the evidence invites a reader
+                        to search before knowing there is anything to search.
+                      */}
+                      {spec.id === "positions" && (
+                        <PositionsSection subjectId={subjectId} subjectName={name} />
+                      )}
+                    </CardSection>
+                  );
+                })}
+              </CardSectionGroup>
 
               {/*
                 RULING 51 (2026-08-21, his note on `PE04`): *"That one line

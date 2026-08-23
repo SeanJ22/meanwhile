@@ -157,6 +157,11 @@ export function bodyFromRow(row: {
     name: row.label,
     divisionLabel: row.jurisdiction,
     divisionType,
+    // A search row carries no Census LSAD — the row came from a search index,
+    // not from a boundary file. Null is the honest value and it means the
+    // definitions library falls back to the generic municipality class rather
+    // than claiming this is a township.
+    lsad: null,
     /*
      * `BodyClass` has no "we are not saying" member, and every member it does
      * have is a CLAIM: GOVERNING, ADVISORY, COMMISSION, REGIONAL and

@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { readFile, readdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { test } from "node:test";
@@ -8,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { CLIP_COUNTIES } from "../lib/coverage/artifacts.ts";
 import { resolveZip } from "../lib/geo/zcta.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
-import { contains, type GeoFeature } from "../lib/registry/resolve.ts";
+import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 
 /**
@@ -75,7 +74,7 @@ const COG_BY_COUNTY: Record<string, number> = {
 const bodyOcdIds = new Set(registry.bodies.map((b) => b.ocdId));
 
 /** Average of every exterior-ring vertex. Good enough to place a municipality in its county. */
-function centroid(feature: GeoFeature): [number, number] {
+function _centroid(feature: GeoFeature): [number, number] {
   const polys =
     feature.geometry.type === "Polygon"
       ? [feature.geometry.coordinates]

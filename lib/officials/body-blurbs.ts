@@ -124,7 +124,7 @@ export const DIVISION_BODY_BLURBS: ReadonlyArray<{
  * contest — has no equivalent here.
  */
 export const NO_BODY_BLURB_LINE =
-  "We haven't yet read the law that defines what this body can decide, so we're not going to describe it.";
+  "We haven't yet read the law that says what this body decides. What we do hold about it is below.";
 
 /**
  * The blurb for a body, or null. The division override wins, because it exists

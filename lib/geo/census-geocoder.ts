@@ -252,6 +252,26 @@ export interface GeocodeOptions {
  * Returns `null` for every failure mode there is, which is what makes the
  * caller's fallback a single branch instead of a matrix.
  */
+/**
+ * Exported for WGH-5 (2026-08-22): `/api/address/resolve` needs the RAW
+ * sampled points, not their midpoint.
+ *
+ * Every caller before it wanted one point, so the midpoint was computed
+ * immediately and the samples thrown away — and the samples are the whole
+ * evidence for whether a street is split. `lib/geo/address-resolution.ts`
+ * measures ambiguity by asking which DIVISIONS each sample lands in, which the
+ * kilometre spread could only ever approximate.
+ */
+export async function sampleStreetPoints(
+  street: string,
+  zip: string,
+  options: GeocodeOptions = {},
+): Promise<{ lat: number; lng: number }[]> {
+  const cleaned = streetOnly(street);
+  if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return [];
+  return sampleStreet(cleaned, zip, options);
+}
+
 async function sampleStreet(
   cleaned: string,
   zip: string,

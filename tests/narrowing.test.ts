@@ -10,20 +10,84 @@ import test from "node:test";
 
 const ROOT = join(import.meta.dirname, "..");
 
-test("the approved wording is verbatim in the component — never paraphrased", () => {
+/**
+ * **WGH-5 REPLACED THE WORDING THIS GUARD USED TO PIN** (2026-08-22, the
+ * author's 8/22 walkthrough, item 9.8).
+ *
+ * What it asserted before, and why it could not stay: the M26 prompt promised,
+ * verbatim, that no house or apartment number was ever needed — absolutely —
+ * while the same component rendered a house-number input on the crossing path
+ * and the ballot page's separate form REFUSED to submit without one. A guard
+ * pinning an absolute promise the product could not keep was holding the wrong
+ * line.
+ *
+ * The removal is deliberate and is recorded here rather than done quietly:
+ * RULING 62 says a test file may not lose guards silently, so this is REWRITTEN
+ * to the same strength against the copy that replaced it, not deleted. Three
+ * guards where there was one, and the claim they defend is the keepable one —
+ * street first, a house number only when the street itself crosses a boundary.
+ */
+test("the address prompt asks for a STREET by default, and says so", () => {
   const source = readFileSync(
-    join(ROOT, "components", "map", "narrowing-prompt.tsx"),
+    join(ROOT, "components", "address", "address-prompt.tsx"),
     "utf8",
   );
-  // The two approved sentences (docs/state.md §9). The counts are computed,
-  // so the first sentence appears as its template parts around them.
-  assert.ok(source.includes(". Do you want to narrow it?"));
+  assert.ok(
+    source.includes("What street do you live on?"),
+    "the default ask must be for a street",
+  );
   assert.ok(
     source.includes(
-      "What&apos;s the street you live on? That will help us narrow it",
+      "We ask for your street, and for a house number only when the street itself crosses a",
     ),
+    "the promise must be the keepable one, not the absolute one",
   );
-  assert.ok(source.includes("no house or apartment number needed"));
+  // The absolute promise may never come back: it was false on the same screen
+  // as a form asking for the thing it said was never needed.
+  assert.ok(
+    !source.includes("no house or apartment number needed"),
+    "the absolute never-a-house-number promise is retired and must not return",
+  );
+});
+
+test("the house-number field exists ONLY on the split path, and names its reason", () => {
+  const source = readFileSync(
+    join(ROOT, "components", "address", "address-prompt.tsx"),
+    "utf8",
+  );
+  const houseInput = source.indexOf('aria-label="House number"');
+  const streetAsk = source.indexOf("What street do you live on?");
+  assert.ok(houseInput > 0 && streetAsk > 0, "both asks must exist");
+  // The split branch returns before the street ask, so the house-number input
+  // is unreachable unless the reader's own street turned out to be split.
+  assert.ok(
+    houseInput < streetAsk,
+    "the house-number input must live in the split branch, above the street ask",
+  );
+  assert.ok(
+    source.includes("houseNumberReason(split)"),
+    "the ask must name which boundary is split and which office it decides",
+  );
+  // An apartment FIELD, not the word: the component's own docblock says there
+  // is no apartment field, and a guard that banned the word would fail on the
+  // sentence promising it.
+  assert.ok(
+    !/(aria-label|placeholder)="[^"]*(apartment|apt\b|unit)[^"]*"/i.test(source),
+    "there is no apartment field — not optional, not collapsed, absent",
+  );
+});
+
+test("the house number is dropped whatever the request returned", () => {
+  const source = readFileSync(
+    join(ROOT, "components", "address", "address-prompt.tsx"),
+    "utf8",
+  );
+  const finallyAt = source.indexOf("} finally {");
+  assert.ok(finallyAt > 0, "the send path must have a finally block");
+  assert.ok(
+    source.slice(finallyAt, finallyAt + 300).includes('setHouseNumber("")'),
+    "item 9.6: resolve, store the jurisdiction ids, discard the number",
+  );
 });
 
 test("the street index exists for the exemplar zips, ambiguity computed", () => {

@@ -1,13 +1,17 @@
 "use client";
 
-import { CouldGovernPill } from "@/components/ballot/could-govern-pill";
+import { AddressPrompt } from "@/components/address/address-prompt";
+import {
+  CouldGovernMark,
+  CouldGovernNotice,
+} from "@/components/address/could-govern-notice";
 import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
 import { formatMiles } from "@/lib/map/format";
 
-import { NarrowingPrompt } from "./narrowing-prompt";
+
 import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
@@ -100,6 +104,13 @@ interface CoverageNoticeProps {
   onNarrowApplied?: () => void;
   /** D53: the narrowed street resolved to a point. Passed straight through. */
   onStreetPoint?: (point: StreetPoint) => void;
+  /**
+   * WGH-5 (2026-08-22): the reader settled their address on ANY surface, so
+   * every jurisdiction on the page re-resolves and the hedges drop.
+   */
+  onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
+  /** They asked for the whole area back. */
+  onAddressCleared?: () => void;
   /**
    * 4e: the single pill cluster, when this card is the surface on screen.
    * Null otherwise — this card never constructs one, because a second
@@ -305,6 +316,8 @@ function CoverageBody({
   onOpenBody,
   onNarrowApplied,
   onStreetPoint,
+  onAddressResolved,
+  onAddressCleared,
 }: {
   zip: string;
   coverage: CoverageSummary;
@@ -315,6 +328,10 @@ function CoverageBody({
   onOpenBody?: (body: CoveredBody) => void;
   onNarrowApplied?: () => void;
   onStreetPoint?: (point: StreetPoint) => void;
+  /** WGH-5: the reader settled their address, on any surface. */
+  onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
+  /** They asked for the whole area back. */
+  onAddressCleared?: () => void;
 }) {
   const {
     bodies,
@@ -614,7 +631,7 @@ function CoverageBody({
                 in full, and what is unsettled is which is the reader's. RULING
                 44 is not weakened; see components/ballot/could-govern-pill.tsx.
               */}
-              {body.couldGovern && <CouldGovernPill jurisdiction={body.name ?? body.divisionLabel} />}
+              {body.couldGovern && <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />}
               <span
                 className={`shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
@@ -733,6 +750,24 @@ function CoverageBody({
           */}
         </ul>
       )}
+
+      {/*
+        WGH-1 and WGH-2 (2026-08-22): ONE pill for the whole panel, between
+        the Local listing and the State listing, exactly where the author put
+        it. Every affected row above carries an asterisk and nothing more.
+
+        What was here before: the full sentence "Could govern — add your
+        address to confirm" on EVERY affected row. At 12 bodies that was
+        noise; the registry now holds 174, and the repetition is what made the
+        product look like it was ballparking. The old pill was also DEAD —
+        clicking it did nothing. This one opens the address prompt.
+      */}
+      <CouldGovernNotice
+        zip={zip}
+        count={shown.filter((body) => body.couldGovern === true).length}
+        onResolved={onAddressResolved}
+        onCleared={onAddressCleared}
+      />
 
       {/*
         G05 RULE 4b (2026-08-17): three things left this position.
@@ -1014,13 +1049,26 @@ function CoverageBody({
         4b's preserve-and-report tail: the two affordances the rule KEEPS,
         placed after Local/State/Federal exactly as G05 words it. Neither is a
         new element and neither changed — only where they sit.
+
+        WGH-3 and WGH-4 (2026-08-22): "Narrow to this area?" used to expand into
+        a pitch — *"07866 covers 4 municipalities and 3 school districts. Do you
+        want to narrow it?"* — with a municipality picker and its own street
+        input, and it was the SECOND implementation of the address feature on a
+        screen that already had one. Both are gone. This is the same component
+        the pill above opens and the ballot page uses: street only, and a house
+        number only when the reader's own street crosses a line.
       */}
       {/^\d{5}$/.test(zip) && (
-        <NarrowingPrompt
+        <AddressPrompt
           key={zip}
           zip={zip}
-          onApplied={onNarrowApplied}
-          onPoint={onStreetPoint}
+          trigger="Narrow to this area"
+          onPoint={onStreetPoint ? (pt) => onStreetPoint({ ...pt, street: "", samples: 1, spreadKm: 0 }) : undefined}
+          onResolved={(scope) => {
+            onAddressResolved?.(scope);
+            onNarrowApplied?.();
+          }}
+          onCleared={onAddressCleared}
         />
       )}
 
@@ -1054,6 +1102,8 @@ export function CoverageNotice({
   onMinimize,
   onNarrowApplied,
   onStreetPoint,
+  onAddressResolved,
+  onAddressCleared,
   pillCluster,
   clusterElsewhere = false,
 }: CoverageNoticeProps) {
@@ -1199,6 +1249,8 @@ export function CoverageNotice({
           onOpenBody={onOpenBody}
           onNarrowApplied={onNarrowApplied}
           onStreetPoint={onStreetPoint}
+          onAddressResolved={onAddressResolved}
+          onAddressCleared={onAddressCleared}
         />
       ) : (
         !coverage &&

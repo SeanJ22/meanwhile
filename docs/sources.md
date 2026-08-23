@@ -24,23 +24,25 @@ corrected in place.
 forgotten about is exactly what a code-first sweep cannot surface, because a
 key nothing reads leaves no trace in the code.
 
-| # | Key | Reads it | Status |
-|---|---|---|---|
-| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** |
-| 2 | `NEXT_PUBLIC_MAPTILER_STYLE` | `lib/map/style.ts` | **WIRED** |
-| 3 | `NEXT_PUBLIC_MAPTILER_STYLE_LIGHT` | `lib/map/style.ts` | **WIRED** |
-| 4 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | **WIRED** |
-| 5 | `WTP_DB_ROLE` | `lib/db/write-guard.ts`, `/api/build` | **WIRED** |
-| 6 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | `lib/db/write-handle.ts`, `pnpm db:apply` | **WIRED** |
-| 7 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | `scripts/walk-all.mts`, the census scripts | **WIRED** |
-| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` | **WIRED** |
-| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` | **WIRED** |
-| 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** |
-| 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** |
-| 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** |
-| 13 | `CENSUS_API_KEY` | **nothing** | **NOT IN USE** — row `SRC01` |
-| 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) |
-| 15 | `DATA_GOV_API_KEY` | **nothing** — named only in `PB13`'s own prose | **NOT IN USE** — row `SRC03` |
+**The `Last walked` column on this table is the CREDENTIAL LEDGER's date, not this file's.** Every one of these fifteen was CALLED on 2026-08-22 by `pnpm credentials`, and `docs/credential-ledger.md` carries what each returned. A date here that disagreed with the ledger would be this file guessing about a measurement the ledger actually made.
+
+| # | Key | Reads it | Status | Last walked |
+|---|---|---|---|---|
+| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** | 2026-08-22 |
+| 2 | `NEXT_PUBLIC_MAPTILER_STYLE` | `lib/map/style.ts` | **WIRED** | 2026-08-22 |
+| 3 | `NEXT_PUBLIC_MAPTILER_STYLE_LIGHT` | `lib/map/style.ts` | **WIRED** | 2026-08-22 |
+| 4 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | **WIRED** | 2026-08-22 |
+| 5 | `WTP_DB_ROLE` | `lib/db/write-guard.ts`, `/api/build` | **WIRED** | 2026-08-22 |
+| 6 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | `lib/db/write-handle.ts`, `pnpm db:apply` | **WIRED** | 2026-08-22 |
+| 7 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | `scripts/walk-all.mts`, the census scripts | **WIRED** | 2026-08-22 |
+| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` | **WIRED** | 2026-08-22 |
+| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` | **WIRED** | 2026-08-22 |
+| 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** | 2026-08-22 |
+| 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** | 2026-08-22 |
+| 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** | 2026-08-22 |
+| 13 | `CENSUS_API_KEY` | **nothing** | **NOT IN USE** — row `SRC01` | 2026-08-22 |
+| 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) | 2026-08-22 |
+| 15 | `DATA_GOV_API_KEY` | **nothing** — named only in `PB13`'s own prose | **NOT IN USE** — row `SRC03` | 2026-08-22 |
 
 **Three keys are held and unread.** Each has a tracker row saying what it would
 be for, because a credential with no row is a credential nobody decides about.
@@ -64,15 +66,15 @@ was accurate. What it could not tell anyone is whether the credentials work.
 
 `pnpm keys:walk` is the instrument. It writes `data/hunt/api-keys-walk.json`.
 
-| Key | Read by | Called 2026-08-22 | What it returned | Owed fields closed |
-|---|---|---|---|---:|
-| `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` — **WIRED** | HTTP 200 | **18 sitting members** across NJ and NH, each with the chamber's own portrait URL, its attribution, and a specific verified page on congress.gov | **36** |
-| `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** |
-| `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** |
-| `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` — **WIRED**, daily | not re-walked | Bills and roll calls. Closes no Kelly field about a person; it is a positions source. | 0 |
-| `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 |
-| `CENSUS_API_KEY` | **nothing** — `SRC01` | **HTTP 302, `X-DataWebAPI-KeyError: 1`** | **THE KEY IS INVALID.** The host redirects to `invalid_key.html`. A call with NO key redirects to `missing_key.html`, so the API cannot be reached at all until the credential is replaced. `NS06`. | 0 |
-| `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 |
+| Key | Read by | Called 2026-08-22 | What it returned | Owed fields closed | Last walked |
+|---|---|---|---|---:|---|
+| `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` — **WIRED** | HTTP 200 | **18 sitting members** across NJ and NH, each with the chamber's own portrait URL, its attribution, and a specific verified page on congress.gov | **36** | 2026-08-22 |
+| `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` — **WIRED** | HTTP 200 | **77 federal candidates**; their committee records carry treasurer name, street, city, zip and designated-agent phone | **22** | 2026-08-22 |
+| `PLURAL_API_KEY` | `lib/sources/plural/index.ts` — **WIRED** | not needed | The **committed BULK file** `data/reference/openstates_legislators.csv` holds 7,976 state legislators with official emails; **61** of them serve these two zips. No API call, no quota spent. | **61** | 2026-08-22 |
+| `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` — **WIRED**, daily | not re-walked | Bills and roll calls. Closes no Kelly field about a person; it is a positions source. | 0 | 2026-08-22 |
+| `DATA_GOV_API_KEY` | **nothing** — `SRC03` | HTTP 200 | **42 govinfo collections.** The `CDIR` collection is the Congressional Directory and carries member offices, phones and staff — a real contact route, and the reason this key is worth keeping. | 0 | 2026-08-22 |
+| `CENSUS_API_KEY` | **nothing** — `SRC01` | **HTTP 302, `X-DataWebAPI-KeyError: 1`** | **THE KEY IS INVALID.** The host redirects to `invalid_key.html`. A call with NO key redirects to `missing_key.html`, so the API cannot be reached at all until the credential is replaced. `NS06`. | 0 | 2026-08-22 |
+| `LDA_API_KEY` | **nothing** — `SRC02` | HTTP 200 | The API answers, and it closes **nothing** at either zip. Stated plainly rather than softened: the LDA database is FEDERAL lobbying only — registrants, clients, and the House and Senate offices they lobby. It has no county, municipal or school-district layer. Where it would earn its place is a later who-is-lobbying-my-delegation surface, which is not a hunt question. | 0 | 2026-08-22 |
 
 **119 owed fields closed from credentials alone, in one run.** Every one of them
 was available while the previous session was measuring how fast a free search
@@ -114,20 +116,20 @@ Every row carries its **status**, **access method**, **licence status** and the
 `docs/branch-manifest.md`: this file answers *what exists and what may we use*,
 the manifest answers *what do we walk and in what order*.
 
-| Source | Access | Licence | Tier | Status |
-|---|---|---|---|---|
-| **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities |
-| **State of New Jersey local-government directory** — `nj.gov/nj/gov/county/localgov.shtml` | plain GET, no key | **US state government work — public domain** | **A** | **WIRED** — `pnpm tier:directory --route nj-localgov`. **624 entities: all 21 counties and all 564 municipalities with their official websites.** Note the live URL: `/nj/gov/county/` answers HTTP 200 with a "Page not found" body |
-| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`. **DISCOVERY ONLY, never a source of record** |
-| **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither |
-| **FEC Combined Federal/State Disclosure Directory** | committed at `data/reference/fec_combined_federal_state_disclosure_directory.csv`; re-fetch with `pnpm fec:directories` | **US federal government work — public domain** | **A** | **WIRED.** 349 offices across 56 jurisdictions with records-held, URL, email and phone |
-| **2022 Census of Governments** | committed at `data/reference/census_govt_units_2022.csv` | **US federal government work — public domain** | **A** | **WIRED.** The OFFICIAL UNIVERSE every coverage claim is measured against |
-| **NCES CCD LEA directory** | committed at `data/reference/nces_ccd_lea_directory_2025_26.csv` | **US federal government work — public domain** | **A** | **WIRED.** The official universe for school districts |
-| **Open States bulk legislators** | committed at `data/reference/openstates_legislators.csv` | **CC-0** | **A** | **WIRED.** 7,976 state legislators with official emails; no quota spent |
-| **Legislative caucus sites** — e.g. `assemblydems.com`, senate/assembly Republican caucus sites | plain GET, no key | **Party organisation sites, NOT government publications.** Usable for a member's own published contact and photo under the campaign-site and photo doors; never as a source of record for a position | **B** | **EVALUATED** — reached via `websiteUrl` on Open States rows |
-| **usmayors.org** (US Conference of Mayors) | plain GET, no key | **NONPROFIT — not a government body.** RULING 70's Ballotpedia question applies; **not** public domain | **A (discovery)** | **RECORDED, NOT WALKED AS A SOURCE OF RECORD.** Discovery surface only, by the author's instruction, NJ Hunt 6 |
-| **api.gsa.gov site-scanning** | `DATA_GOV_API_KEY` | **US federal government work — public domain** | **A** | **EVALUATED, WRONG TIER.** The key answers HTTP 200 with data, but the corpus is FEDERAL executive-branch sites only and its `agency` filter is ignored — it returned `va.gov` for `agency=New Jersey`. It does not reach municipal domains |
-| **api.usa.gov contacts v1** | `DATA_GOV_API_KEY` | — | — | **DEAD.** HTTP 404 `NOT_FOUND` on 2026-08-22. Recorded as dead rather than deleted, per the External-sources law |
+| Source | Access | Licence | Tier | Status | Last walked |
+|---|---|---|---|---|---|
+| **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities | UNKNOWN |
+| **State of New Jersey local-government directory** — `nj.gov/nj/gov/county/localgov.shtml` | plain GET, no key | **US state government work — public domain** | **A** | **WIRED** — `pnpm tier:directory --route nj-localgov`. **624 entities: all 21 counties and all 564 municipalities with their official websites.** Note the live URL: `/nj/gov/county/` answers HTTP 200 with a "Page not found" body | 2026-08-22 |
+| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`. **DISCOVERY ONLY, never a source of record** | UNKNOWN |
+| **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither | UNKNOWN |
+| **FEC Combined Federal/State Disclosure Directory** | committed at `data/reference/fec_combined_federal_state_disclosure_directory.csv`; re-fetch with `pnpm fec:directories` | **US federal government work — public domain** | **A** | **WIRED.** 349 offices across 56 jurisdictions with records-held, URL, email and phone | 2026-08-22 |
+| **2022 Census of Governments** | committed at `data/reference/census_govt_units_2022.csv` | **US federal government work — public domain** | **A** | **WIRED.** The OFFICIAL UNIVERSE every coverage claim is measured against | 2026-08-22 |
+| **NCES CCD LEA directory** | committed at `data/reference/nces_ccd_lea_directory_2025_26.csv` | **US federal government work — public domain** | **A** | **WIRED.** The official universe for school districts | 2026-08-22 |
+| **Open States bulk legislators** | committed at `data/reference/openstates_legislators.csv` | **CC-0** | **A** | **WIRED.** 7,976 state legislators with official emails; no quota spent | 2026-08-22 |
+| **Legislative caucus sites** — e.g. `assemblydems.com`, senate/assembly Republican caucus sites | plain GET, no key | **Party organisation sites, NOT government publications.** Usable for a member's own published contact and photo under the campaign-site and photo doors; never as a source of record for a position | **B** | **EVALUATED** — reached via `websiteUrl` on Open States rows | UNKNOWN |
+| **usmayors.org** (US Conference of Mayors) | plain GET, no key | **NONPROFIT — not a government body.** RULING 70's Ballotpedia question applies; **not** public domain | **A (discovery)** | **RECORDED, NOT WALKED AS A SOURCE OF RECORD.** Discovery surface only, by the author's instruction, NJ Hunt 6 | UNKNOWN |
+| **api.gsa.gov site-scanning** | `DATA_GOV_API_KEY` | **US federal government work — public domain** | **A** | **EVALUATED, WRONG TIER.** The key answers HTTP 200 with data, but the corpus is FEDERAL executive-branch sites only and its `agency` filter is ignored — it returned `va.gov` for `agency=New Jersey`. It does not reach municipal domains | 2026-08-22 |
+| **api.usa.gov contacts v1** | `DATA_GOV_API_KEY` | — | — | **DEAD.** HTTP 404 `NOT_FOUND` on 2026-08-22. Recorded as dead rather than deleted, per the External-sources law | 2026-08-22 |
 
 ### The Census key, re-measured 2026-08-22 (NJ Hunt 6)
 
@@ -155,6 +157,7 @@ parse as data*, never *did the call succeed*.
 ## Wired sources
 
 ### Congress.gov — federal bills, members, House roll calls
+- **Last walked:** 2026-08-20
 - **Status:** WIRED. `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts`,
   `lib/sources/congress/`.
 - **Auth:** `CONGRESS_API_KEY`. **Not** `DATA_GOV_API_KEY` — api.data.gov issues
@@ -163,18 +166,21 @@ parse as data*, never *did the call succeed*.
 - **Licence:** US federal government work. Public domain.
 
 ### clerk.house.gov / senate.gov — authoritative roll-call XML
+- **Last walked:** 2026-08-20
 - **Status:** WIRED, no key.
 - **Licence:** public domain. **Never credited to a vendor.**
   `tests/legiscan.test.ts` asserts a federal member's payload carries no
   LegiScan attribution, because the chambers' XML is not LegiScan's data.
 
 ### unitedstates/congress-legislators — the federal directory
+- **Last walked:** 2026-08-20
 - **Status:** WIRED as a source of record for what it covers.
   `data/congress-legislators/`, SHA-pinned.
 - **Auth:** none.
 - **Licence:** CC0 / public domain.
 
 ### LegiScan — state bills and roll calls
+- **Last walked:** 2026-08-20
 - **Status:** WIRED. `scripts/fetch-legiscan.mts`, weekly Sunday refresh,
   `dataset_hash`-gated so an unchanged dataset is never re-downloaded.
 - **Auth:** `LEGISCAN_API_KEY`.
@@ -185,11 +191,13 @@ parse as data*, never *did the call succeed*.
   end.
 
 ### Plural Open (ex-Open States) — state legislators
+- **Last walked:** 2026-08-20
 - **Status:** WIRED. `lib/sources/plural/`.
 - **Auth:** `PLURAL_API_KEY` via open.pluralpolicy.com.
 - **Licence:** the bulk CSV this repo reads is CC0.
 
 ### OpenFEC — federal contributions and independent expenditures
+- **Last walked:** 2026-08-20
 - **Status:** WIRED for committee TOTALS only. `scripts/fetch-fec.mts`,
   `refresh-fec-snapshot.yml`.
 - **Auth:** `FEC_API_KEY`.
@@ -201,6 +209,7 @@ parse as data*, never *did the call succeed*.
   `ripcord.fundingReactionsInAggregates`).
 
 ### Census TIGER/Line, ZCTA and the Census of Governments
+- **Last walked:** 2026-08-20
 - **Status:** WIRED, and the denominator behind every coverage claim.
   `data/reference/census_govt_units_2022.csv`, the national cartographic
   boundary files, `scripts/resolve-census-territory.mts`.
@@ -211,12 +220,14 @@ parse as data*, never *did the call succeed*.
   present a ZCTA-derived answer as a ZIP-code answer without saying so.
 
 ### NCES Common Core of Data — school districts
+- **Last walked:** 2026-08-20
 - **Status:** WIRED as reference data.
   `data/reference/nces_ccd_lea_directory_2025_26.csv`, 19,711 LEA records.
 - **Auth:** none.
 - **Licence:** US federal government work. Public domain.
 
 ### CISA `.gov` registry (cisagov/dotgov-data)
+- **Last walked:** UNKNOWN
 - **Status:** WIRED. `data/dotgov/snapshot.json`, SHA-pinned,
   `pnpm dotgov:fetch`.
 - **Auth:** none.
@@ -224,6 +235,7 @@ parse as data*, never *did the call succeed*.
 - It is **a rung, never a denominator** — see `docs/zip-playbook.md`.
 
 ### Anthropic API — the ask-box classifier
+- **Last walked:** 2026-08-20
 - **Status:** WIRED. `lib/routing/classifier.ts`.
 - **Auth:** `ANTHROPIC_API_KEY`.
 - **Constraint:** nothing it produces is a reader-facing claim. Routing only.
@@ -231,10 +243,12 @@ parse as data*, never *did the call succeed*.
   never-generate rule binds here exactly as everywhere else.
 
 ### MapTiler — vector tiles
+- **Last walked:** 2026-08-20
 - **Status:** WIRED. Not Google Maps.
 - **Auth:** `NEXT_PUBLIC_MAPTILER_KEY` (public by design — it is a tile key).
 
 ### The agenda vendors — Legistar, OnBase, NovusAgenda, Diligent/BoardDocs, iCompass/CivicWeb, Apptegy, BoardBook, IQM2, Revize, CivicPlus, clerksboards
+- **Last walked:** 2026-08-20
 - **Status:** WIRED as adapters under `lib/sources/<name>/`. One directory per
   source; adding a source never edits shared ingestion logic.
 - **Auth:** none. Every one of these serves public records a public body is
@@ -255,23 +269,28 @@ parse as data*, never *did the call succeed*.
 ## Evaluated, not wired
 
 ### Google Civic — Divisions
+- **Last walked:** 2026-08-20
 - **Status:** EVALUATED. Address → OCD-ID.
 - **The Representatives endpoint SHUT DOWN in April 2025.** Any code or doc
   referencing it is dead. Recorded rather than deleted, so the next session does
   not rediscover it.
 
 ### Democracy Works Elections
+- **Last walked:** 2026-08-20
 - **Status:** EVALUATED. Elections and ballots to sub-municipal level.
 - **Auth:** licensed, contact required. An ask-before.
 
 ### Vote Smart — candidate questionnaires
+- **Last walked:** 2026-08-20
 - **Status:** EVALUATED. API key required.
 
 ### GovTrack
+- **Last walked:** 2026-08-20
 - **Status:** EVALUATED, and possibly discontinued in summer 2026. **Verify
   before adding any dependency on it.**
 
 ### Polarization Research Lab
+- **Last walked:** 2026-08-20
 - **Status:** EVALUATED — `D62`, the author's find. `lib/sources/prl/` exists;
   the build brief has not been settled.
 
@@ -280,16 +299,19 @@ parse as data*, never *did the call succeed*.
 ## Not in use — the three held keys
 
 ### `CENSUS_API_KEY` — `SRC01`
+- **Last walked:** UNKNOWN
 The Census **API**, as distinct from the bulk files this repo already reads. It
 would answer per-zip demography and geography questions the committed files
 cannot. Nothing reads it today.
 
 ### `LDA_API_KEY` — `SRC02`
+- **Last walked:** UNKNOWN
 Lobbying Disclosure Act filings. `PB12` is the client row; this is the
 credential. Nothing reads it today, and `PB12` records that this source is
 currently fetching NOTHING.
 
 ### `DATA_GOV_API_KEY` — `SRC03`
+- **Last walked:** UNKNOWN
 api.data.gov's umbrella key, which fronts OpenFEC and govinfo among others.
 This repo's FEC path holds its own key against the same upstream and the
 govinfo collections are not fetched at all. Held, unread. **RULING 21 records

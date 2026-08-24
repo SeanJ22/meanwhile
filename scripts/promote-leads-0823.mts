@@ -56,6 +56,11 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { ControlledProbe, type ProbeOutcome } from "../lib/hunt/control-query.ts";
+import {
+  nameForms,
+  OFFICE_EVIDENCE,
+  verdictFor,
+} from "../lib/hunt/candidate-evidence.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -65,139 +70,6 @@ const OUT = join(ROOT, "data/hunt/lead-promotion-0823.json");
 
 /** Today, passed in rather than read from a clock. `pnpm stamp` is the source. */
 const STAMP = process.env.WTP_STAMP ?? "";
-
-/* -------------------------------------------------------------------------- */
-/* THE SEARCH FORMS — RULING 110                                              */
-/* -------------------------------------------------------------------------- */
-
-/**
- * Diminutives that appear on campaign material for a filed legal name.
- *
- * Short, and short on purpose: every entry is one this project has actually
- * needed. `Thomas H. Kean` files as Thomas and campaigns as **Tom Kean**, which
- * is a live row in this very lead set. A speculative list would be a guess
- * dressed as coverage, and a miss caused by a name not on it is reported as a
- * miss with the forms shown, so the gap is visible rather than silent.
- */
-const DIMINUTIVES = new Map<string, string[]>([
-  ["thomas", ["tom", "tommy"]],
-  ["robert", ["bob", "rob", "bobby"]],
-  ["william", ["will", "bill", "billy"]],
-  ["richard", ["rick", "dick", "rich"]],
-  ["michael", ["mike"]],
-  ["joseph", ["joe", "joey"]],
-  ["james", ["jim", "jimmy"]],
-  ["charles", ["charlie", "chuck"]],
-  ["edward", ["ed", "eddie", "ted"]],
-  ["anthony", ["tony"]],
-  ["christopher", ["chris"]],
-  ["daniel", ["dan", "danny"]],
-  ["matthew", ["matt"]],
-  ["nicholas", ["nick"]],
-  ["patrick", ["pat"]],
-  ["stephen", ["steve"]],
-  ["steven", ["steve"]],
-  ["kenneth", ["ken"]],
-  ["donald", ["don"]],
-  ["ronald", ["ron"]],
-  ["gerald", ["jerry"]],
-  ["lawrence", ["larry"]],
-  ["frederick", ["fred"]],
-  ["benjamin", ["ben"]],
-  ["samuel", ["sam"]],
-  ["elizabeth", ["liz", "beth", "betsy"]],
-  ["katherine", ["kate", "kathy", "katie"]],
-  ["catherine", ["cate", "kathy", "katie"]],
-  ["margaret", ["maggie", "peggy", "meg"]],
-  ["deborah", ["deb", "debbie"]],
-  ["patricia", ["pat", "patty", "tricia"]],
-  ["jennifer", ["jen", "jenny"]],
-  ["rebecca", ["becca", "becky"]],
-  ["susan", ["sue", "susie"]],
-  ["barbara", ["barb"]],
-  ["theresa", ["terry", "teri"]],
-  ["andrew", ["andy", "drew"]],
-]);
-
-/**
- * The generational suffixes that are NOT part of a surname.
- *
- * RULING 103's initials defect came from treating `III` as the last name; the
- * same tokens have to be stripped before a surname is extracted here, or the
- * surname searched for `Thomas J. Haynes III` would be `iii`.
- */
-const SUFFIXES = new Set(["jr", "jr.", "sr", "sr.", "ii", "iii", "iv", "v"]);
-
-interface NameForm {
-  /** What was searched for. Printed on every row, matched or not. */
-  form: string;
-  /** Why this form exists — read by a human looking at a miss. */
-  kind: "filed" | "given-surname" | "diminutive-surname" | "surname";
-}
-
-/** Every form of a filed name worth searching a page for, each labelled. */
-export function nameForms(filed: string): NameForm[] {
-  const cleaned = filed.replace(/["']/g, "").trim();
-  const tokens = cleaned
-    .split(/\s+/)
-    .filter((t) => t.length > 0 && !SUFFIXES.has(t.toLowerCase().replace(/[.,]/g, "")));
-  /* A single-token name has no given/surname split to make, and inventing one
-   * would search for a form the person does not have. */
-  const forms: NameForm[] = [{ form: cleaned.toLowerCase(), kind: "filed" }];
-  if (tokens.length < 2) return forms;
-
-  const given = tokens[0].toLowerCase().replace(/[.,]/g, "");
-  const surname = tokens[tokens.length - 1].toLowerCase().replace(/[.,]/g, "");
-  forms.push({ form: `${given} ${surname}`, kind: "given-surname" });
-  for (const d of DIMINUTIVES.get(given) ?? []) {
-    forms.push({ form: `${d} ${surname}`, kind: "diminutive-surname" });
-  }
-  /* The surname alone is the weakest form and is never sufficient by itself —
-   * see `verdict()`, which requires office or cycle evidence alongside it. */
-  forms.push({ form: surname, kind: "surname" });
-
-  const seen = new Set<string>();
-  return forms.filter((f) => (seen.has(f.form) ? false : (seen.add(f.form), true)));
-}
-
-/**
- * Evidence that a page is about STANDING FOR OFFICE rather than merely
- * mentioning a person.
- *
- * **WORD-BOUNDED, AND THE FIRST VERSION WAS NOT — which manufactured two
- * findings before anything shipped.**
- *
- * The first list was bare substrings including `elect`, `vote`, `campaign` and
- * `2026`. `elect` is inside *selected* and *electronic*; `2026` is inside a
- * copyright line. Measured against the ten pages, that list promoted **Rita C.
- * Chipperson** on `chippersonlaw.com` — titled *"Morristown Law Firm,
- * Chipperson Law Group, P.C."* — and **Clifford D. Dawkins** on a page titled
- * *"D&W Law Group"*. Both are law-firm attorney bios. Neither is a campaign
- * site, and labelling one as this candidate's campaign site would be a claim
- * about a named person that the page does not support.
- *
- * A law-firm bio is not worthless — the manifest's `bar-directory` route
- * exists precisely because a lawyer's firm page carries an office address and
- * a direct line. It serves the **contact** field. It is not evidence of a
- * candidacy, and the two fields are not interchangeable.
- *
- * So a page must carry at least one of these to be promoted. `paid for by` is
- * the strongest of them by a distance: it is the campaign-finance disclaimer,
- * a legal obligation on campaign material, and no law firm carries it.
- */
-const OFFICE_EVIDENCE: [string, RegExp][] = [
-  ["paid-for-by disclaimer", /paid for by/],
-  [
-    "for <office>",
-    /\bfor (congress|senate|mayor|council|assembly|commissioner|sheriff|school board|township committee|borough council|freeholder|board of education)\b/,
-  ],
-  ["candidate for", /\bcandidate for\b/],
-  ["elect / re-elect", /\bre-?elect\b/],
-  ["vote for", /\bvote for\b/],
-  ["running for", /\brunning for\b/],
-  ["on the ballot", /\bon the ballot\b/],
-  ["this campaign", /\b(my|our|the|this) campaign\b/],
-];
 
 /* -------------------------------------------------------------------------- */
 /* THE WALK                                                                   */
@@ -228,55 +100,6 @@ async function readBody(url: string): Promise<{ status: number; body: string }> 
     const status = (e as { status?: number }).status ?? 0;
     return { status, body: "" };
   }
-}
-
-/**
- * The promotion decision, and the two bars it applies in order.
- *
- * Kept as its own function so the rule is readable in one place rather than
- * spread through the loop, and so a later session can see exactly what `HIT`
- * was allowed to mean on this date.
- */
-function verdict(
-  probeOutcome: ProbeOutcome,
-  forms: { form: string; kind: string; matched: boolean }[],
-  office: string[],
-): { outcome: ProbeOutcome; detail: string } {
-  if (probeOutcome !== "LEAD" && probeOutcome !== "HIT") {
-    return { outcome: probeOutcome, detail: "did not clear the control" };
-  }
-  const strong = forms.some((f) => f.matched && f.kind !== "surname");
-  const surnameOnly = forms.some((f) => f.matched && f.kind === "surname");
-  if (strong && office.length > 0) {
-    return {
-      outcome: "HIT",
-      detail:
-        `the page names the candidate (${forms.filter((f) => f.matched).map((f) => f.form).join(", ")}) ` +
-        `and identifies itself as a campaign (${office.join(", ")})`,
-    };
-  }
-  if (strong) {
-    return {
-      outcome: "LEAD",
-      detail:
-        "the page names the candidate but carries no word showing it is about standing for office — " +
-        "whose page it is remains unestablished",
-    };
-  }
-  if (surnameOnly) {
-    return {
-      outcome: "LEAD",
-      detail:
-        "only the SURNAME matched, which a page about any relative or namesake would also do. " +
-        "A surname alone never promotes.",
-    };
-  }
-  return {
-    outcome: "LEAD",
-    detail:
-      `the page cleared the control but carries NONE of the ${forms.length} name forms searched ` +
-      `(${forms.map((f) => f.form).join(", ")}) — it is a live host, not this person's site`,
-  };
 }
 
 async function walk(): Promise<void> {
@@ -337,7 +160,7 @@ async function walk(): Promise<void> {
       matched: hay.includes(f.form),
     }));
     const office = OFFICE_EVIDENCE.filter(([, re]) => re.test(hay)).map(([label]) => label);
-    const v = verdict(p.outcome, forms, office);
+    const v = verdictFor(p.outcome, forms, office);
 
     rows.push({
       set: "campaign-site",

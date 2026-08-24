@@ -722,7 +722,11 @@
         "verification": "Read 2026-08-22: mendhamtownship.org — the municipality's own page for its governing body — carries \"Gary Kapner At-Large Member\".",
         "attemptedAt": "2026-08-22"
       },
-      "campaign": null
+      "campaign": {
+        "url": "http://garykapner.com/",
+        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (gary kapner, kapner) and identifies itself as a campaign (for <place> <office>). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was http://garykapner.com.",
+        "attemptedAt": "2026-08-23"
+      }
     },
     "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia": {
       "official": {

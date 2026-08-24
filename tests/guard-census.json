@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 206,
-    "named": 1936,
+    "files": 207,
+    "named": 1960,
     "dynamic": 6
   },
   "files": {
@@ -453,6 +453,35 @@
         "P02: no composite score exists — not a number, not an order, not a comparison",
         "P02: no issue phrase is a single loose word that turns a search into noise",
         "P02: the headline is provenance and carries no count at all"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-evidence.test.ts": {
+      "names": [
+        "catches the real instance: `for <place> <office>` on garykapner.com",
+        "catches the real instance: morrisdems.org's own title and first line",
+        "does not fire on a candidate's own site that merely names their party",
+        "does not fire on the law-firm bios that manufactured two findings",
+        "does not list a domain that turned out to be a campaign's own",
+        "does not manufacture evidence out of unrelated prose",
+        "does not treat a generational suffix as the surname",
+        "expands a filed name into the forms a campaign actually uses",
+        "givenSurnamePair",
+        "holds the providers the filing corpus actually contains",
+        "is symmetric across parties, which is a rule and not a courtesy",
+        "name forms — RULING 110",
+        "never promotes something that did not clear the control",
+        "office evidence",
+        "party-organ self-identification",
+        "promotes only when the page NAMES the person AND says it is a campaign",
+        "records every form searched, matched or not",
+        "refuses to promote a page that names the person with no office evidence",
+        "refuses to promote on a surname alone",
+        "still catches the bare form it was widened from",
+        "strips a quoted nickname and a comma suffix",
+        "strips the parenthetical nickname that made the slate test find nothing",
+        "the freemail list",
+        "the promotion verdict — RULING 68's two bars"
       ],
       "dynamic": 0
     },

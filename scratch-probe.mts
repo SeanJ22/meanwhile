@@ -1,13 +1,13 @@
-import { readFileSync } from "node:fs";
-const c = JSON.parse(readFileSync("data/ballot/nj-morris-2026-contacts.json", "utf8"));
-console.log("keys:", Object.keys(c).join(", "));
-const arr = c.contacts ?? c.rows ?? c;
-console.log("rows:", Array.isArray(arr) ? arr.length : Object.keys(arr).length);
-const first = Array.isArray(arr) ? arr[0] : Object.values(arr)[0];
-console.log("sample:", JSON.stringify(first, null, 1).slice(0, 900));
-const urls = new Set<string>();
-for (const r of (Array.isArray(arr) ? arr : Object.values(arr)) as any[]) {
-  const u = r?.provenance?.sourceUrl ?? r?.sourceUrl; if (u) urls.add(u);
+import { politeGetText } from "@/lib/sources/http";
+import { flattenForEvidence, officeEvidenceIn, OFFICE_EVIDENCE } from "@/lib/hunt/candidate-evidence";
+const r = await politeGetText("http://garykapner.com", { profile: "browser" });
+console.log("status", r.status, "bytes", r.text.length);
+const hay = flattenForEvidence(r.text);
+console.log("flattened length", hay.length);
+console.log("has 'gary kapner':", hay.includes("gary kapner"));
+for (const [label, re] of OFFICE_EVIDENCE) console.log(`  ${label.padEnd(26)} ${re.test(hay)}`);
+for (const probe of ["candidate for", "township committee", "paid for by", "your candidate"]) {
+  const i = hay.indexOf(probe);
+  console.log(`  "${probe}" at ${i}${i >= 0 ? " :: " + hay.slice(Math.max(0, i - 60), i + 80) : ""}`);
 }
-console.log("\ndistinct source urls:", urls.size);
-for (const u of urls) console.log("  " + u);
+console.log("\nfirst 400 of flattened:", hay.slice(0, 400));

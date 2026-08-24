@@ -62,6 +62,7 @@ import { politeGetText } from "../lib/sources/http.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PROMOTION = join(ROOT, "data/hunt/lead-promotion-0823.json");
+const EMAIL_ROUTE = join(ROOT, "data/hunt/nj-filed-email-domain.json");
 const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
 const LINKS = join(ROOT, "data/ballot/candidate-links-2026.json");
 
@@ -197,6 +198,38 @@ async function main(): Promise<void> {
   const hits = promotion.rows.filter((r) => r.set === "campaign-site" && r.outcome === "HIT");
   const leads = promotion.rows.filter((r) => r.set === "campaign-site" && r.outcome === "LEAD");
 
+  /*
+   * THE SECOND SOURCE — the `filed-email-domain` route (2026-08-23).
+   *
+   * It is read HERE rather than given a wiring script of its own. Two scripts
+   * writing the same `campaign` slot would be two implementations of one
+   * decision, which is RULING 103's defect built deliberately, and the second
+   * copy is always the one that forgets the suffix handling and the
+   * root-preference below.
+   *
+   * Its rows carry `candidacyId` outright — the route walks the contact ledger,
+   * which is already keyed to the ballot — so they need no surname join at all
+   * and skip the failure mode the block below exists to catch. RULING 111's
+   * question, *which side holds the fact*, answers itself here.
+   *
+   * Only `CAMPAIGN_SITE` rows are taken. `SLATE_OR_PARTY` and `OFFICIAL_HOST`
+   * are real finds for OTHER fields and wiring either into a candidate's
+   * campaign slot would put a county committee's homepage, or a township's,
+   * behind a named person's name.
+   */
+  const emailRoute = JSON.parse(readFileSync(EMAIL_ROUTE, "utf8")) as {
+    summary: { CAMPAIGN_SITE: number };
+    rows: (PromotionRow & { candidacyId: string; kind: string })[];
+  };
+  const emailHits = emailRoute.rows.filter((r) => r.kind === "CAMPAIGN_SITE");
+  if (emailHits.length !== emailRoute.summary.CAMPAIGN_SITE) {
+    throw new Error(
+      `count assertion FAILED: the filed-email-domain summary states ` +
+        `${emailRoute.summary.CAMPAIGN_SITE} campaign sites and its rows hold ` +
+        `${emailHits.length} (RULING 100).`,
+    );
+  }
+
   /* RULING 100: the source states its counts; yielding fewer FAILS. */
   if (hits.length !== promotion.summary.campaignSite.HIT) {
     throw new Error(
@@ -255,6 +288,25 @@ async function main(): Promise<void> {
     );
   }
 
+  // The email-route rows join by candidacy id, so they are appended after the
+  // surname join has been asserted rather than being pushed through it.
+  const ballotIds = new Set(ballot.candidacies.map((c) => c.id));
+  const emailUnresolved: string[] = [];
+  for (const h of emailHits) {
+    if (!ballotIds.has(h.candidacyId)) {
+      emailUnresolved.push(`${h.subject} — candidacy ${h.candidacyId} is not on the ballot`);
+      continue;
+    }
+    if (resolved.some((r) => r.id === h.candidacyId)) continue;
+    resolved.push({ row: h, id: h.candidacyId });
+  }
+  if (emailUnresolved.length > 0) {
+    throw new Error(
+      `JOIN FAILED for ${emailUnresolved.length} filed-email-domain hit(s) — refusing to ` +
+        `write a partial (RULING 111):\n  ${emailUnresolved.join("\n  ")}`,
+    );
+  }
+
   let added = 0;
   let alreadyHeld = 0;
   const addedRows: string[] = [];
@@ -309,7 +361,19 @@ async function main(): Promise<void> {
     else links.hunts.push(row);
   }
 
-  console.log(`\npromoted HITs resolved to a candidacy   ${resolved.length} of ${hits.length}`);
+  /*
+   * Both sources, stated as a pair rather than summed behind one denominator.
+   * The first version of this line printed `12 of 8` — the merged numerator
+   * against one source's total — which is the data-destruction pattern the
+   * two-numbers rule names: a single figure standing in front of two
+   * measurements, concealing which one moved.
+   */
+  console.log(
+    `\nlead-promotion HITs                     ${hits.length}` +
+      `\nfiled-email-domain campaign sites       ${emailHits.length}` +
+      `\n  resolved to a candidacy (both)        ${resolved.length} of ${hits.length + emailHits.length}` +
+      "\n  (the two sources overlap: a site found by both is resolved once)",
+  );
   console.log(`  newly wired                           ${added}`);
   addedRows.forEach((r) => console.log(`    + ${r}`));
   console.log(`  already held a campaign link          ${alreadyHeld}`);

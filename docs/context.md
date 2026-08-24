@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 127 recorded
+## Rulings — 129 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -397,6 +397,8 @@ from. Each entry there names what it supersedes.
 - RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped
 - RULING 113 — a step that reports success is asked whether it did the thing
 - RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence
+- RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one
+- RULING 116 — a guard may pin an invariant or a direction, never the size of a gap
 
 ## P0 tracker rows — 93 of 456 rows
 

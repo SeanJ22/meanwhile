@@ -9,6 +9,7 @@ import {
   failedTwiceConsecutively,
   failedTwiceInWindow,
   failureRate,
+  runsOnOwnCadence,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
 
@@ -237,4 +238,61 @@ test("1c: the MOST RECENT pair is the one returned", () => {
 test("1c: a window with fewer than two runs says nothing rather than healthy", () => {
   assert.equal(failedTwiceInWindow([]), null);
   assert.equal(failedTwiceInWindow([run(1, "failure", "2026-08-22T18:00:00Z")]), null);
+});
+
+/* -------------------------------------------------------------------------- */
+/* A DRILL IS NOT A FAILURE — closing JOB02's diagnosis (2026-08-24)          */
+/* -------------------------------------------------------------------------- */
+
+test("JOB02: two manual dispatches do NOT raise a row", () => {
+  // The real case, from the run list read on 2026-08-23: runs 32543393133 and
+  // 32543652154, five minutes apart, both workflow_dispatch, both carrying
+  // WTP_INGEST_FORCE_JOB_FAILURE. The ingest's own log says "No vendor failed.
+  // No source failed." The watcher raised a P1 Needs Sean row on a drill.
+  const drills: WorkflowRun[] = [
+    { databaseId: 32543652154, conclusion: "failure", status: "completed", createdAt: "2026-08-22T01:30:53Z", event: "workflow_dispatch" },
+    { databaseId: 32543393133, conclusion: "failure", status: "completed", createdAt: "2026-08-22T01:25:44Z", event: "workflow_dispatch" },
+    { databaseId: 1, conclusion: "success", status: "completed", createdAt: "2026-08-21T01:25:44Z", event: "schedule" },
+  ];
+  const cadence = runsOnOwnCadence(drills);
+  assert.equal(cadence.dispatchedSetAside, 2);
+  assert.equal(failedTwiceConsecutively(cadence.kept), null);
+  assert.equal(failedTwiceInWindow(cadence.kept), null);
+});
+
+test("a real scheduled double failure STILL raises a row", () => {
+  // The half that matters more. Narrowing the input must not have narrowed the
+  // detector: this is the case the watcher exists for and it must survive.
+  const real: WorkflowRun[] = [
+    { databaseId: 3, conclusion: "failure", status: "completed", createdAt: "2026-08-22T01:30:00Z", event: "schedule" },
+    { databaseId: 2, conclusion: "failure", status: "completed", createdAt: "2026-08-21T01:30:00Z", event: "schedule" },
+    { databaseId: 1, conclusion: "success", status: "completed", createdAt: "2026-08-20T01:30:00Z", event: "schedule" },
+  ];
+  const cadence = runsOnOwnCadence(real);
+  assert.equal(cadence.dispatchedSetAside, 0);
+  assert.notEqual(failedTwiceConsecutively(cadence.kept), null);
+});
+
+test("an unknown trigger is NOT treated as a drill", () => {
+  // Fail in the direction that keeps the alarm. A run whose trigger we cannot
+  // read must never be able to silence the watcher — that is the direction
+  // that loses a real failure, and it is the one a missing field would take by
+  // default if `undefined` counted as a dispatch.
+  const unknown: WorkflowRun[] = [
+    { databaseId: 2, conclusion: "failure", status: "completed", createdAt: "2026-08-22T01:30:00Z" },
+    { databaseId: 1, conclusion: "failure", status: "completed", createdAt: "2026-08-21T01:30:00Z" },
+  ];
+  assert.equal(runsOnOwnCadence(unknown).dispatchedSetAside, 0);
+  assert.notEqual(failedTwiceConsecutively(runsOnOwnCadence(unknown).kept), null);
+});
+
+test("the drill filter does not change the RATE, which is a fact about the workflow", () => {
+  const mixed: WorkflowRun[] = [
+    { databaseId: 3, conclusion: "failure", status: "completed", createdAt: "2026-08-22T02:00:00Z", event: "workflow_dispatch" },
+    { databaseId: 2, conclusion: "failure", status: "completed", createdAt: "2026-08-22T01:00:00Z", event: "schedule" },
+    { databaseId: 1, conclusion: "success", status: "completed", createdAt: "2026-08-21T01:00:00Z", event: "schedule" },
+  ];
+  // The rate counts everything; only the row-raising test is narrowed.
+  assert.deepEqual(failureRate(mixed), { failures: 2, completed: 3 });
+  assert.equal(runsOnOwnCadence(mixed).dispatchedSetAside, 1);
 });

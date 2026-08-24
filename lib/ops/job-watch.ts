@@ -16,6 +16,74 @@ export interface WorkflowRun {
   conclusion: string | null;
   status: string;
   createdAt: string;
+  /**
+   * What triggered it — `schedule`, `workflow_dispatch`, `push`.
+   *
+   * Optional so a caller that does not ask for it still type-checks, and so a
+   * fixture written before this existed still parses. `undefined` is treated as
+   * NOT a drill: an unknown trigger must never be able to silence the watcher,
+   * because that is the direction that loses a real failure.
+   */
+  event?: string;
+}
+
+/**
+ * **A DRILL IS NOT A FAILURE, AND IT MUST NOT RAISE A ROW.**
+ * (2026-08-23, closing the diagnosis on `JOB02`.)
+ *
+ * `JOB02` records that `refresh-meetings-snapshot` failed on two CONSECUTIVE
+ * runs and healed, and reasons — correctly, by the rule as it stood — that two
+ * in a row is evidence the cause is ours rather than a host refusing on a
+ * schedule. The watcher raised a P1 Needs Sean row and asked somebody to find
+ * out why.
+ *
+ * **Both runs were deliberate drills.** Read on 2026-08-23: runs 32543393133
+ * and 32543652154, five minutes apart, both `workflow_dispatch`, both carrying
+ * `WTP_INGEST_FORCE_JOB_FAILURE: true`, and both logging the ingest's own
+ * sentence — *"This failure is FORCED … No vendor failed. No source failed. The
+ * snapshot written above is unchanged."* Somebody was testing this very
+ * watcher, and it worked.
+ *
+ * That is the defect. **An alarm that cannot tell a drill from a fire spends
+ * the credibility of the next real one**, and the Needs Sean queue is exactly
+ * where that cost lands: a P1 row nobody can act on teaches a reader to skim.
+ *
+ * ## Why the trigger, rather than reading the log for the forced flag
+ *
+ * The flag lives in the run's INPUTS, which the run list does not carry, so
+ * finding it means fetching a log per run — forty logs to answer one question.
+ * The trigger is already in the list.
+ *
+ * And it is the better question anyway. **The watcher exists to catch this job
+ * breaking on its own cadence.** A `workflow_dispatch` is a person doing
+ * something deliberate — a drill, a backfill, a debug run against a branch —
+ * and none of those is the cadence. The workflow file already refuses the force
+ * flag unless the run is a dispatch, so every drill is a dispatch by
+ * construction.
+ *
+ * ## Nothing is dropped silently
+ *
+ * A dispatched failure is still information and it is still counted and
+ * printed; it is excluded only from the CONSECUTIVE test that raises a row, and
+ * the number excluded is stated. A deliberate clip that reads as a clean run is
+ * the shape this repo names most often.
+ */
+export function isDrillTrigger(run: WorkflowRun): boolean {
+  return run.event === "workflow_dispatch";
+}
+
+/**
+ * The runs the consecutive test may reason about: scheduled and pushed only.
+ *
+ * Returns the kept runs AND the count set aside, so the caller can print the
+ * pair rather than a single number standing in front of two measurements.
+ */
+export function runsOnOwnCadence(runs: WorkflowRun[]): {
+  kept: WorkflowRun[];
+  dispatchedSetAside: number;
+} {
+  const kept = runs.filter((r) => !isDrillTrigger(r));
+  return { kept, dispatchedSetAside: runs.length - kept.length };
 }
 
 /**

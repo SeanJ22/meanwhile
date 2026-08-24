@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 209,
-    "named": 1983,
+    "named": 1987,
     "dynamic": 6
   },
   "files": {
@@ -2842,13 +2842,17 @@
         "1c: a window with fewer than two runs says nothing rather than healthy",
         "1c: alternating failures are not a pair — the rule is still ADJACENT",
         "1c: the MOST RECENT pair is the one returned",
+        "JOB02: two manual dispatches do NOT raise a row",
+        "a real scheduled double failure STILL raises a row",
         "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
+        "an unknown trigger is NOT treated as a drill",
         "asOf hides later runs, so the detector can be held against known history",
         "cancelled is not failure — a cancelled run is nobody's diagnosis",
         "every scheduled workflow in the repo is on the watch list",
         "one failure is not a finding — a wall does not usually repeat",
         "runs out of order are sorted before the top two are read",
+        "the drill filter does not change the RATE, which is a fact about the workflow",
         "the rate is a pair, never a bare percentage",
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",

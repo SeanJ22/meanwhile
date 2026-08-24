@@ -13,6 +13,8 @@ const forms = JSON.parse(
 ) as {
   counts: {
     bodiesWithADivision: number;
+    /** The other half of the pair. A single figure in front of two measurements hides one. */
+    alreadyCarryingAFormDefinition: number;
     owedAFormDefinition: number;
     stamped: number;
     unstampable: number;

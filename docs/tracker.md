@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **244 open**, 362 resolved.
+- **243 open**, 363 resolved.
 - **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -579,7 +579,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**24 open · 135 resolved.**
+**23 open · 136 resolved.**
 
 ### P1
 
@@ -590,8 +590,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
-
-**NH109** — AZ-1 added two topics to Know the basics — Am I allowed to hunt or fish, and what the law on abortion is. Both are cited to the state's own source with a fetch date and neither takes a position. Arizona now carries nine topics; New Jersey and New Hampshire carry seven. A reader who moves to New Jersey gets no answer to either question, and a reader who moves to Arizona does. That asymmetry is not a defect in the Arizona work — it is the work being ahead — but it is an information gap that tracks which state a session happened to be briefed on rather than anything about the reader, which is the shape the equal-effort rule exists to catch, pointed at states instead of candidates.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

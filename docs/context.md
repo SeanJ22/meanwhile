@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 125 recorded
+## Rulings — 127 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -395,6 +395,8 @@ from. Each entry there names what it supersedes.
 - RULING 110 — a search that finds nothing must show it looked in the right FORM
 - RULING 111 — a join is never a lookup for a fact that lives on only one side
 - RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped
+- RULING 113 — a step that reports success is asked whether it did the thing
+- RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -532,11 +534,22 @@ position; each flag can be flipped without a deploy via its environment variable
 - Open question: Operational, not legal: held open for live-attack response — is the store currently under an attack that per-device limits cannot absorb?
 - Closer: The author — pulled during an attack, restored when the attack ends
 
-## Last 0 tracker status change(s), most recent first
+## Last 10 tracker status change(s), most recent first
 
-Source: git history of `docs/tracker.csv` (first-parent), 1 commit(s) walked of 1 available. 0 row(s) first appeared in those commits and are not listed — a new row has no status to have changed.
+Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of 30 available. 96 row(s) first appeared in those commits and are not listed — a new row has no status to have changed.
 
-_No status change recovered in the commits walked._
+| Date | ID | From → To | Commit |
+|---|---|---|---|
+| 2026-08-20 | R58 | Not started → Done | `7cc7d4c` Merge pull request #120 from SeanJ22/claude/promptd-r… |
+| 2026-08-20 | F02 | Not started → In progress | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
+| 2026-08-20 | D70 | Not started → Blocked on the author | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
+| 2026-08-20 | PB14 | Blocked on the author → Done | `ae720a9` Merge pull request #119 from SeanJ22/claude/promptc-g… |
+| 2026-08-20 | F25 | Not started → Done | `3bc8834` Merge pull request #116 from SeanJ22/claude/promptb-d… |
+| 2026-08-20 | R48 | Open → Done | `3bc8834` Merge pull request #116 from SeanJ22/claude/promptb-d… |
+| 2026-08-20 | F21 | Not started → Done | `9028521` Merge pull request #115 from SeanJ22/claude/f22-refre… |
+| 2026-08-19 | F01 | Not started → In progress | `a119578` Merge pull request #108 from SeanJ22/claude/f01-walkt… |
+| 2026-08-19 | D47 | Not started → Done | `b6dc706` Merge pull request #104 from SeanJ22/claude/g21-final… |
+| 2026-08-19 | D52 | Not started → In progress | `b6dc706` Merge pull request #104 from SeanJ22/claude/g21-final… |
 
 ## Git
 

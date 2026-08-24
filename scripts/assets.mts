@@ -102,6 +102,10 @@ const STAYS_IN_REPO = [
   /^app\//,
   /^components\//,
   /^docs\/feedback\//,
+  // Joined 2026-08-24: the portrait review sheet — one regenerated file with a
+  // stable name that overwrites itself. Mirrors `STAYS_IN_REPO` in
+  // `tests/asset-store.test.ts`, which carries the reasoning.
+  /^docs\/photo-review\//,
 ];
 
 interface ManifestRow {

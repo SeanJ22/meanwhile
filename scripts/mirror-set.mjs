@@ -40,6 +40,29 @@ import { join } from "node:path";
  * it is copied from, or `null` when the file is generated into the mirror.
  */
 export const MIRRORED_DOCS = [
+  /*
+   * **JOINED 2026-08-24, all four on Sean's instruction.** These are mirror
+   * documents this repo PRODUCES, not files the author put in the folder — so
+   * they belong in the canonical set rather than in `DECLARED_EXTRAS`, which
+   * exists for things nothing here should touch.
+   *
+   * The questionnaire instrument and its invitation are here because he asked
+   * to read them anywhere before anything sends, and nothing has been sent.
+   * The transparency draft is here for the same reason. The portrait sheet is
+   * how he now approves photographs: he glances at it and replies with numbers.
+   *
+   * `portraits-pending.png` carries a STABLE name on purpose. A dated filename
+   * would grow a file a day and make him work out which one is live; the date
+   * is printed inside the image, where a reader of the image will see it.
+   */
+  { mirrorName: "candidate-questionnaire.md", repoPath: "docs/candidate-questionnaire.md" },
+  {
+    mirrorName: "candidate-questionnaire-invitation.md",
+    repoPath: "docs/candidate-questionnaire-invitation.md",
+  },
+  { mirrorName: "transparency-draft.md", repoPath: "docs/transparency-draft.md" },
+  { mirrorName: "portraits-pending.png", repoPath: "docs/photo-review/portraits-pending.png" },
+
   { mirrorName: "CLAUDE.md", repoPath: "CLAUDE.md" },
   { mirrorName: "abuse-policy.md", repoPath: "docs/abuse-policy.md" },
   { mirrorName: "vendor-review.md", repoPath: "docs/vendor-review.md" },

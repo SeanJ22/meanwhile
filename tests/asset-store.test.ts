@@ -66,6 +66,20 @@ const STAYS_IN_REPO = [
   /^app\//,
   /^components\//,
   /^docs\/feedback\//,
+  /*
+   * **Joined 2026-08-24: the portrait review sheet.** ONE regenerated file with
+   * a STABLE name, which overwrites itself rather than accumulating.
+   *
+   * Sean approves photographs by looking at it and replying with numbers, and a
+   * session reads it to know what is pending — RULING 108 says an input a
+   * session must reach lives in the repo, and a guard that pushed this out to
+   * the asset store would put it somewhere neither of them can open.
+   *
+   * It is not the class RULING 20 governs. That rule is about an INGEST-VOLUME
+   * corpus — every agenda PDF for every body, re-fetched forever. This is a
+   * single file that replaces itself.
+   */
+  /^docs\/photo-review\//,
 ];
 
 interface Manifest {

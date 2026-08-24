@@ -158,7 +158,13 @@ const page = await browser.page({ viewport: { width: 1180, height: 900 } });
 await page.goto(`file:///${pagePath.replace(/\\/g, "/")}`);
 await page.waitForLoadState("networkidle");
 
-const pngPath = join(OUT_DIR, `portraits-pending-${TODAY}.png`);
+/*
+ * A STABLE filename, deliberately. Sean approves photos by glancing at Drive,
+ * so what he wants there is THE CURRENT SHEET — not an archive that grows a
+ * file a day and makes him work out which one is live. The date is printed
+ * inside the image, where it belongs, and git history keeps every version.
+ */
+const pngPath = join(OUT_DIR, "portraits-pending.png");
 await page.screenshot({ path: pngPath, fullPage: true });
 await browser.close();
 
@@ -181,7 +187,7 @@ if (bytes.length < 1000 || bytes[0] !== 0x89 || bytes[1] !== 0x50) {
 console.log(`  wrote ${pngPath} — ${bytes.length} bytes, real PNG`);
 
 if (existsSync(MIRROR)) {
-  const dest = join(MIRROR, `portraits-pending-${TODAY}.png`);
+  const dest = join(MIRROR, "portraits-pending.png");
   copyFileSync(pngPath, dest);
   console.log(`  mirrored to ${dest}`);
 } else {

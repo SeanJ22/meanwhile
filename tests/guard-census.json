@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 214,
-    "named": 2033,
+    "named": 2039,
     "dynamic": 6
   },
   "files": {
@@ -3018,6 +3018,12 @@
         "6.4: every sold-store write path raises on the alarm path",
         "6.4: the alarm is raised on the SAME catch that swallows, in every route",
         "6.5: the alarm is not left as an unawaited promise",
+        "NH32: a cyclic error chain does not hang the alarm",
+        "NH32: a genuinely absent code is still null — the widening did not invent one",
+        "NH32: an AggregateError's real failures are reached",
+        "NH32: the code is found under originalError",
+        "NH32: the code is found under sourceError, not only under cause",
+        "NH32: the reader names the gap instead of printing dashes",
         "PD04: no sold-store WRITE is left as a floating promise either",
         "PD04: the alarm reads SQLSTATE and the reason from the CAUSE, not the wrapper",
         "PD04: the chain walk terminates on a cycle and on a bare error"

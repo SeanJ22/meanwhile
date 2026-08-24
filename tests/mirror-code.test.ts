@@ -47,7 +47,12 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Nineteen since 2026-08-20 (Prompt E): the tracker stopped being one CSV
   // and became a workbook plus three generated views, and all four are things
   // the author opens.
-  assert.equal(MIRRORED_DOCS.length, 19, "the canonical set changed size — was that a decision?");
+  // TWENTY-THREE since 2026-08-24, and it was Sean's decision: the candidate
+  // questionnaire and its invitation so he can read them anywhere before
+  // anything sends, the transparency draft for the same reason, and the
+  // portrait review sheet, which is how he now approves photographs — he
+  // glances at it in Drive and replies with numbers.
+  assert.equal(MIRRORED_DOCS.length, 23, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -83,7 +88,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Twelve copied, two generated. The generated pair have no repo counterpart,
   // which is why they cannot be drift-checked and must not be counted as if
   // they could. (Eleven until session-map.md joined on 2026-08-17, R33.)
-  assert.equal(COPIED_DOCS.length, 17);
+  // Twenty-one copied since 2026-08-24: the four Sean added all have repo
+  // counterparts, so all four are drift-checkable, which is the point of
+  // putting them in the canonical set rather than declaring them extras.
+  assert.equal(COPIED_DOCS.length, 21);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 

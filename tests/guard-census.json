@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 209,
-    "named": 1987,
+    "named": 1988,
     "dynamic": 6
   },
   "files": {
@@ -1278,6 +1278,7 @@
         "RULING 102: every registered artifact records its generator's digest",
         "RULING 102: no generator has moved since its artifact was last regenerated",
         "RULING 102: the digest is sensitive to a change anywhere in the closure",
+        "RULING 92 + RULING 107: no PURE generator reads the clock",
         "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
         "RULING 92: a file declaring itself GENERATED is registered here",
         "RULING 92: every registered generated artifact exists and names its generator"

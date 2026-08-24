@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-23",
+  "generatedAt": "2026-08-20",
   "generator": "pnpm schools:classify (scripts/classify-school-districts.mts)",
   "source": "data/reference/census_govt_units_2022.csv (gov_type = SCHOOL DISTRICT) and data/reference/census_govt_units_2022_dependent_school_systems.csv — the 2022 Census of Governments' own INDEPENDENT/DEPENDENT classification, read directly. data/derived/census-nces-crosswalk.csv supplies NCES name aliases only.",
   "note": "A district with no match is UNCLASSIFIED and gets no class definition. Guessing INDEPENDENT on a base rate would be a claim about who governs a reader's schools.",

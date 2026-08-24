@@ -45,10 +45,44 @@ import { join } from "node:path";
 
 import { buildCensusSchoolIndex } from "../lib/registry/census-school-systems.ts";
 import type { MatchBranch } from "../lib/registry/census-school-systems.ts";
-import { today } from "./doc-dates.mjs";
+import { carriedSourceStamp } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
-const AS_OF: string = today();
+
+/**
+ * **THE STAMP IS CARRIED FROM THE SOURCE, NOT READ OFF THE CLOCK.**
+ * (2026-08-24. It was `today()`, and that made this artifact unreproducible.)
+ *
+ * Every input to this generator is a COMMITTED file — the 2022 Census of
+ * Governments and its dependent-school-systems companion. Nothing it reads can
+ * change without a commit. So a clock call in the output meant two things, both
+ * wrong:
+ *
+ * 1. **The artifact differed every day**, which broke RULING 92's byte-identity
+ *    check the first time a date rolled over mid-session. A "pure" generator
+ *    whose output moves on its own is not pure, and the test was right.
+ * 2. **The date claimed a currency the data does not have.** RULING 107: a READ
+ *    stamp answers *how current is this DATA* and is mintable only from
+ *    evidence of a read, or CARRIED forward from one. A RUN stamp answers *when
+ *    did this PROGRAM run* and may never be written into a freshness field.
+ *    `generatedAt` on a file about 2022 data was a run stamp doing a read
+ *    stamp's job — printing today over a dataset nobody had re-read.
+ *
+ * Carrying it from the source's own last commit is the honest form: it is the
+ * day this data entered the repo, it moves only when the data does, and it is
+ * the same on every machine.
+ *
+ * **There is no clock fallback.** Where git cannot answer, this FAILS rather
+ * than stamping today — filling in a plausible date is the fabrication rule,
+ * and it is exactly what the old line did every time it ran.
+ */
+const SOURCE_FILES = [
+  "data/reference/census_govt_units_2022.csv",
+  "data/reference/census_govt_units_2022_dependent_school_systems.csv",
+] as const;
+
+const AS_OF: string = carriedSourceStamp(SOURCE_FILES);
+
 
 
 const FIPS: Record<string, string> = {};

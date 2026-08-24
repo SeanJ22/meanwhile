@@ -12,7 +12,7 @@
     "regeneratedOn": "2026-08-24"
   },
   "data/derived/school-district-dependency.json": {
-    "digest": "131b9c976935b81c77f0384e5142575714ca4a63dde2215f0a2f458a64beaa5a",
+    "digest": "5bc0564d03f05879ba2127d17fbd90f707c7883dcf8950bbca10a3fcf988cadf",
     "files": 4,
     "entry": "scripts/classify-school-districts.mts",
     "regeneratedOn": "2026-08-24"
@@ -72,7 +72,7 @@
     "regeneratedOn": "2026-08-24"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "854f5a0e86f15e8c8e74ac24286d26cc5cf1bb022c7ac82eadb530f58ad27141",
+    "digest": "d86c0a9feda9031966c407ce8529d7b5650092eedc667e3eae59fd1453e150f3",
     "files": 2,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-24"
@@ -84,7 +84,7 @@
     "regeneratedOn": "2026-08-24"
   },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "854f5a0e86f15e8c8e74ac24286d26cc5cf1bb022c7ac82eadb530f58ad27141",
+    "digest": "d86c0a9feda9031966c407ce8529d7b5650092eedc667e3eae59fd1453e150f3",
     "files": 2,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-24"

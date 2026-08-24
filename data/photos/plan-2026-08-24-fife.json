@@ -1,0 +1,16 @@
+[
+  {
+    "key": "ballot-nh-merrimack:governor:fife-shaun",
+    "name": "Shaun Fife",
+    "bio": {
+      "text": "Shaun Fife For New Hampshire Governor's Office. The Peoples Candidate. Simplify & Making New Hampshire America Again! Hometown Solutions. New Hampshire First! The Lord as our Cornerstone. When your Constitution's foundation is resting on the Bible, you can stand tall.",
+      "sourceUrl": "https://majiparty.org/nh-governor-shaun-fife",
+      "sourceLabel": "In his own words on the page MAJI Party publishes about him — majiparty.org, read 2026-08-24"
+    },
+    "email": "Action4NH@gmail.com",
+    "hunt": {
+      "note": "RULING 122 (Sean's decision of 2026-08-24, closing NH11): Fife has no campaign domain and no campaign social page; his only public presence is the candidate page his party publishes. Sean ruled it counts as his verified page AND his contact, labelled party-hosted. Re-walked live at rung 2 on 2026-08-24: HTTP 200, 225,889 bytes, control strings 'Shaun Fife' x4 / 'Governor' x2 / the address x2, negative control 0. The words are quoted verbatim from that page and the address is a real mailto: on it (mailto:Action4NH@gmail.com). The blurb carries the PARTY as its source class rather than 'the campaign', because that is whose page it is — a description without its true source class is treated as a generated claim.",
+      "attemptedAt": "2026-08-24"
+    }
+  }
+]

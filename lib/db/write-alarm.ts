@@ -77,15 +77,45 @@ interface PgLikeError {
  */
 const CAUSE_DEPTH = 5;
 
+/**
+ * **`.cause` IS NOT THE ONLY PLACE A DRIVER HIDES ITS ERROR.** (`NH32`,
+ * widened 2026-08-24.)
+ *
+ * The chain walk was added because the Neon HTTP driver carries no `code` of
+ * its own and puts the real failure one link down `.cause`. It was correct and
+ * it was not enough: the alarm of 2026-08-21 still recorded no SQLSTATE, so
+ * the report printed five dashes where the reason belonged.
+ *
+ * Drivers in this family nest the underlying error under several different
+ * names — `sourceError` (pg-pool), `originalError` (several wrappers), and
+ * `errors[0]` (an AggregateError, which is what a pooled driver raises when
+ * every connection in the pool fails). Walking only `.cause` finds none of
+ * them, and the failure mode is silent: a null SQLSTATE looks exactly like a
+ * database that declined to give one.
+ *
+ * Breadth-first over every known link name, still depth-capped, because a
+ * cyclic reference is a hang and a hang inside an alarm takes down the path
+ * the alarm is watching.
+ */
+const LINK_NAMES = ["cause", "sourceError", "originalError", "error"] as const;
+
 function chainOf(error: unknown): PgLikeError[] {
   const out: PgLikeError[] = [];
   const seen = new Set<unknown>();
-  let node: unknown = error;
-  while (node !== null && node !== undefined && out.length < CAUSE_DEPTH) {
-    if (seen.has(node)) break;
+  const queue: unknown[] = [error];
+  while (queue.length > 0 && out.length < CAUSE_DEPTH) {
+    const node = queue.shift();
+    if (node === null || node === undefined) continue;
+    if (seen.has(node)) continue;
     seen.add(node);
     out.push(node as PgLikeError);
-    node = (node as PgLikeError).cause;
+    const record = node as Record<string, unknown>;
+    for (const name of LINK_NAMES) {
+      if (record[name] !== undefined && record[name] !== null) queue.push(record[name]);
+    }
+    // An AggregateError carries its real failures in `errors`.
+    const aggregated = record.errors;
+    if (Array.isArray(aggregated)) for (const one of aggregated.slice(0, CAUSE_DEPTH)) queue.push(one);
   }
   return out;
 }

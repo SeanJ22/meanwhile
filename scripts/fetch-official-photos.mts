@@ -133,38 +133,99 @@ for (const d of us.divisions) {
   const m = /^ocd-division\/country:us\/state:(\w\w)$/.exec(d.ocdId);
   if (m && localTierStates.has(m[1].toUpperCase())) renderable.add(d.officeholderId);
 }
-const federal = us.officeholders.filter(
-  (o) => renderable.has(o.id) && o.id.startsWith("congress:"),
-);
+/**
+ * **EVERY SITTING MEMBER IS WALKED, NOT ONLY THE ONES A ZIP CAN REACH TODAY.**
+ * (`NH101`, 2026-08-24.)
+ *
+ * This used to filter on `renderable` — a member whose seat is wired to a
+ * division. That is a MAPPING fact, and it was silently deciding a PHOTO
+ * question: 97 sitting members of Congress whose portraits are sitting in a
+ * CC0 corpus were never even attempted, because their seat is not wired yet.
+ *
+ * The two gaps are different and are counted separately below. A portrait held
+ * for an unwired seat costs one row and renders the day the seat is wired; a
+ * portrait never fetched has to be discovered all over again.
+ */
+const federal = us.officeholders.filter((o) => o.id.startsWith("congress:"));
+const renderableFederal = federal.filter((o) => renderable.has(o.id));
 
 console.log(
-  `${federal.length} renderable federal officials (of ${us.officeholders.length} in the roster) — fetching from the pictorial directory`,
+  `${federal.length} sitting federal officials (of ${us.officeholders.length} in the roster) — fetching from the pictorial directory`,
+);
+console.log(
+  `  of those, ${renderableFederal.length} are wired to a division a zip reaches; ` +
+    `${federal.length - renderableFederal.length} are held for a seat not yet mapped ` +
+    "(a MAPPING gap, never a photo gap)",
 );
 
 await mkdir(OUT_DIR, { recursive: true });
 
-// Rows owned by other tiers survive a Tier 1 rerun untouched.
+/**
+ * **A ROW IS OWNED BY WHOEVER SUPPLIED IT, NEVER BY ITS ID PREFIX.**
+ * (`NH118`, found and fixed 2026-08-24.)
+ *
+ * This filtered on `officeholderId.startsWith("congress:")` and rebuilt that
+ * whole prefix from ONE source. Ten sitting members of Congress —  Barrett,
+ * Begich III, Bell, Fuller, Grijalva, Gallagher, Menefee, Mejia, Van Epps and
+ * Walkinshaw — carried portraits found on a DIFFERENT branch (Wikimedia
+ * Commons, House Creative Services, door 1, public domain, collected
+ * 2026-08-15). The pictorial directory does not hold any of the ten, because
+ * they are recent arrivals. So every run of this script deleted ten rows whose
+ * bytes were still sitting on disk, and reported it as ten clean misses.
+ *
+ * That is two rules at once. RULING 52: a branch coming back empty is one
+ * measurement on one route, and this route's emptiness was being written over
+ * another route's finding. And the carry-forward rule: a failed retrieval may
+ * never be written into the data as an absence.
+ *
+ * So ownership is now PROVENANCE. A row this script did not produce is not
+ * this script's to delete, whatever its id says.
+ */
+/**
+ * BOTH FORMS of the same corpus count as ours: the Pages URL when HTTP served
+ * it, and the pinned github.com blob URL when the git rung did. A check that
+ * knew only one of them would read this script's own git-retrieved rows as
+ * somebody else's and preserve them forever, which is a different bug in the
+ * safe direction — and it would make the counts below lie.
+ */
+const OURS = (sourceUrl: string) =>
+  sourceUrl.startsWith(SOURCE_BASE) ||
+  sourceUrl.startsWith(`https://github.com/${CORPUS_SLUG}/blob/`);
+
 let preservedPhotos: PhotoRecord[] = [];
 let preservedMissing: MissingRecord[] = [];
+/** Rows we DID supply before and could not re-fetch this run. Carried forward. */
+let previouslyOurs: PhotoRecord[] = [];
+/** What the registry held before this run, so a shrink cannot pass unremarked. */
+let priorTotal: number | null = null;
 try {
   const existing = (await read("lib/registry/official-photos.json")) as {
     photos: PhotoRecord[];
     missing: MissingRecord[];
   };
   preservedPhotos = existing.photos.filter(
-    (p) => !p.officeholderId.startsWith("congress:"),
+    (p) => !p.officeholderId.startsWith("congress:") || !OURS(p.sourceUrl),
+  );
+  previouslyOurs = existing.photos.filter(
+    (p) => p.officeholderId.startsWith("congress:") && OURS(p.sourceUrl),
   );
   preservedMissing = existing.missing.filter(
     (m) => !m.officeholderId.startsWith("congress:"),
   );
+  priorTotal = existing.photos.length;
 } catch {
   // First run: nothing to preserve.
 }
+const preservedFromOtherBranches = preservedPhotos.filter((p) =>
+  p.officeholderId.startsWith("congress:"),
+).length;
 
 const photos: PhotoRecord[] = [];
 const missing: MissingRecord[] = [];
 const now = new Date().toISOString();
 let strippedCount = 0;
+/** Rows kept alive because neither road answered today. Reported, never silent. */
+let carriedForward = 0;
 
 // Serialized, identified — the public-records fetch discipline.
 for (const { id, name } of federal) {
@@ -188,6 +249,23 @@ for (const { id, name } of federal) {
   } else {
     const fromGit = portraitOverGit(bioguide);
     if (!fromGit) {
+      /*
+       * **CARRY FORWARD BEFORE RECORDING AN ABSENCE.** A row this script
+       * supplied on an earlier run, whose bytes are still on disk, is not
+       * unmade by today's fetch failing — that would be a retrieval failure
+       * written into the data as an absence, which is the one thing the
+       * refresh corollary forbids. The row keeps its ORIGINAL `collectedAt`,
+       * never restamped as fresh (RULING 107).
+       */
+      const carried = previouslyOurs.find((p) => p.officeholderId === id);
+      if (carried) {
+        photos.push(carried);
+        carriedForward += 1;
+        console.log(
+          `  CARRY ${bioguide} ${name} — neither road answered today; keeping the row collected ${carried.collectedAt.slice(0, 10)}`,
+        );
+        continue;
+      }
       missing.push({
         officeholderId: id,
         name,
@@ -257,12 +335,41 @@ await writeFile(
   ) + "\n",
 );
 
+const wroteTotal = photos.length + preservedPhotos.length;
+
 console.log(
-  `federal: ${photos.length} fetched of ${federal.length} attempted; ${missing.length} recorded misses; ` +
-    `${strippedCount} carried metadata that was stripped; ` +
-    `${preservedPhotos.length} photos + ${preservedMissing.length} misses from other tiers preserved → ${MANIFEST}`,
+  `federal: ${photos.length} rows of ${federal.length} attempted ` +
+    `(${photos.length - carriedForward} fetched this run, ${carriedForward} carried forward); ` +
+    `${missing.length} recorded misses; ` +
+    `${strippedCount} carried metadata that was stripped`,
 );
+console.log(
+  `  preserved untouched: ${preservedPhotos.length} photo row(s), of which ` +
+    `${preservedFromOtherBranches} are congress: rows THIS SCRIPT DID NOT SUPPLY ` +
+    "(a different branch found them; they are not this route's to delete)",
+);
+console.log(`  registry total: ${wroteTotal} photo row(s) + ${missing.length + preservedMissing.length} miss row(s) → ${MANIFEST}`);
+
 if (photos.length === 0) {
   console.error("zero photos fetched — that is a finding, check the source");
   process.exit(1);
 }
+
+/*
+ * **A RUN MAY NOT SHRINK THE REGISTRY WITHOUT SAYING SO.** This is the guard
+ * that would have caught `NH118` on the day it was introduced instead of nine
+ * days later: ten rows vanished under a run that reported itself healthy,
+ * because "427 fetched of 437 attempted" is a true sentence about a run that
+ * had just deleted somebody's face.
+ */
+if (priorTotal !== null && wroteTotal < priorTotal) {
+  console.error(
+    `REFUSED: the registry went from ${priorTotal} photo row(s) to ${wroteTotal}. ` +
+      "A retrieval failure may never be written into the data as an absence. " +
+      "If rows genuinely retired, say which and why.",
+  );
+  process.exit(1);
+}
+console.log(
+  `  row count: ${priorTotal ?? "—"} → ${wroteTotal} (never allowed to fall silently)`,
+);

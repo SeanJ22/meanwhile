@@ -1,0 +1,16 @@
+[
+  {
+    "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+    "name": "Paige Beauchemin",
+    "campaignUrl": "https://www.paigefornh.com/",
+    "bio": {
+      "text": "Paige is a mom of three, registered nurse, and New Hampshire State Representative. She knows what housing instability, rising costs, and an unaffordable healthcare system do to working families because she has lived it. She has fought for working people in the State House. Now she is running to fight for us in Congress.",
+      "sourceUrl": "https://www.paigefornh.com/",
+      "sourceLabel": "In the campaign's words — paigefornh.com, read 2026-08-24"
+    },
+    "hunt": {
+      "note": "TIER A FIRST (RULING 84). The site came from the Wikipedia article '2026 United States House of Representatives elections in New Hampshire', walked 2026-08-24 via the MediaWiki parse API with a control (a nonexistent title returns missingtitle). Under RULING 87 an encyclopedia NAMES and the primary source PROVES, so it was a LEAD until paigefornh.com itself was fetched: HTTP 200, 546,058 bytes, control strings 'Beauchemin' x24, 'Paige' x62, 'Congress' x19, negative control 0. Her FEC committee C00921882 (PAIGE BEAUCHEMIN FOR CONGRESS) corroborates the candidacy. Six sessions of per-entity search had not found this site; one Tier A article did.",
+      "attemptedAt": "2026-08-24"
+    }
+  }
+]

@@ -1473,5 +1473,26 @@
     "ids": [
       "NH112"
     ]
+  },
+  {
+    "session": "rulings-sweep-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH113",
+      "NH114",
+      "NH115",
+      "NH116",
+      "NH117",
+      "NS10"
+    ]
+  },
+  {
+    "session": "rulings-sweep-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH118",
+      "NH119",
+      "NH120"
+    ]
   }
 ]

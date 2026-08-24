@@ -1,0 +1,32 @@
+[
+  {
+    "key": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+    "name": "Dan Nicholson",
+    "photo": {
+      "url": "https://static.wixstatic.com/media/89dba8_086f424ca27843ea858299a8da6fb0b1~mv2.png/v1/fill/w_504,h_509,al_c,lg_1,q_85,enc_avif,quality_auto/20251123_133816_001%5B1%5D.png",
+      "door": 3,
+      "source": "the campaign's own self-published portrait from its own site — dannicholsonfornh.com, read 2026-08-24 — labelled campaign-provided, remove-on-request. Identity corroborated by his FEC committee filing C00946699 (DAN NICHOLSON FOR CONGRESS), which names this domain as the committee's website.",
+      "judgment": "READ AS AN IMAGE 2026-08-24 on the NH contact sheet, tile 12 of 22: a clean solo head-and-shoulders portrait against a plain interior wall. He is the unambiguous sole subject, the face is unobstructed, and there is no wordmark, banner or third party in frame. The largest of three copies of the same shot on the site (504x509). PENDING Sean under RULING 55.",
+      "file": "nh-merrimack-us-house-2-nicholson-dan.png"
+    },
+    "hunt": {
+      "note": "Door-3 campaign-site walk at 03255, 2026-08-24, using the branch INHERITED from NH111 (scripts/hunt-campaign-photos.mts) rather than a new one. 3 images staged from his own site, all 3 read as images on one contact sheet before any verdict.",
+      "attemptedAt": "2026-08-24"
+    }
+  },
+  {
+    "key": "ballot-nh-merrimack:us-house-2:orlando-victor",
+    "name": "Victor Orlando",
+    "photo": {
+      "url": "https://votevdo.com/images/headshots/vdo-blue-transparent.png",
+      "door": 3,
+      "source": "the campaign's own self-published portrait from its own site — votevdo.com, read 2026-08-24 — labelled campaign-provided, remove-on-request. Identity corroborated by his FEC committee filing C00934919 (VOTE VDO VICTOR D ORLANDO), which names votevdo.com as the committee's website.",
+      "judgment": "READ AS AN IMAGE 2026-08-24 on the NH contact sheet, tile 15 of 22: a clean solo portrait of the sole subject, facing camera, on a transparent ground. THE TRANSPARENCY IS STATED rather than smoothed over — it will take the card background rather than a photographic one, and whether that reads correctly is worth Sean seeing. THIS IS A DIFFERENT FILE from the one refused on 2026-08-21 (that was a stock photograph of a US flag served from the same /images/headshots/ path, which is why a path is never evidence of a face). A refusal of one image never blocks another. PENDING Sean under RULING 55.",
+      "file": "nh-merrimack-us-house-2-orlando-victor.png"
+    },
+    "hunt": {
+      "note": "Door-3 campaign-site walk at 03255, 2026-08-24. 4 images staged from his own site and all 4 read as images. Image 1 was the SAME class as the 2026-08-21 refusal — a US flag under /images/headshots/ — and was refused again on sight.",
+      "attemptedAt": "2026-08-24"
+    }
+  }
+]

@@ -52,6 +52,36 @@ function rawPhotoUrl(key: string): string | null {
 const asRows = process.argv.includes("--rows");
 const toTracker = process.argv.includes("--tracker");
 
+/**
+ * **`--zip=<zip>` SCOPES THE REPORT TO ONE BALLOT.** (Added 2026-08-24.)
+ *
+ * Without it this reports across every zip the product covers, which is the
+ * right default — and it is why THREE different numbers have been quoted for
+ * 03255 in three different reports: 182 of 368, 249 of 368, and 85. A
+ * denominator that moves with whichever contests a session happened to look at
+ * is not a denominator.
+ *
+ * Scoping is a FILTER on the same computation rather than a second
+ * implementation of it (RULING 103), so the per-zip figure and the whole-product
+ * figure can never disagree about what a field is or when one is owed.
+ */
+const ZIP_PREFIX: Record<string, string> = {
+  "03255": "ballot-nh-",
+  "07866": "ballot-nj-",
+  "85641": "ballot-az-",
+  "85701": "ballot-az-",
+};
+const zipArg = process.argv.find((a) => a.startsWith("--zip="))?.split("=")[1];
+const zipPrefix = zipArg ? ZIP_PREFIX[zipArg] : undefined;
+if (zipArg && !zipPrefix) {
+  console.error(
+    `CANNOT RUN: no ballot-source prefix is recorded for ${zipArg}. ` +
+      `Known: ${Object.keys(ZIP_PREFIX).join(", ")}. Guessing one would report a ` +
+      "denominator about the wrong ballot.",
+  );
+  process.exit(1);
+}
+
 /** Plain names for a report a person reads. Internal, never reader-facing. */
 const FIELD_NAME: Record<KellyField, string> = {
   photo: "Photo",
@@ -119,6 +149,9 @@ function record(
   source: string,
   people: { name: string; states: Record<KellyField, HuntState> }[],
 ): void {
+  // Scoped to one ballot when asked. Filtered HERE so every count below — seen,
+  // clear, owed, and the state census — is about the same population.
+  if (zipPrefix && !contestId.startsWith(zipPrefix)) return;
   contestsSeen += 1;
   candidatesSeen += people.length;
   const owed: { name: string; fields: string[] }[] = [];
@@ -201,10 +234,14 @@ for (const contest of getGeneralLineup()?.contests ?? []) {
 
 if (contestsSeen === 0) {
   console.error(
-    "REFUSED: zero contests enumerated. A zero-contest report is a failed read, " +
-      "never a clean board.",
+    `REFUSED: zero contests enumerated${zipArg ? ` for ${zipArg}` : ""}. A zero-contest ` +
+      "report is a failed read, never a clean board.",
   );
   process.exit(1);
+}
+
+if (zipArg) {
+  console.log(`SCOPED TO ${zipArg} — contests matching ${zipPrefix}`);
 }
 
 /* ---- output --------------------------------------------------------------- */

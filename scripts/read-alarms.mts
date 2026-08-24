@@ -90,9 +90,36 @@ for (const r of rows) byStore.set(r.store, (byStore.get(r.store) ?? 0) + 1);
 console.error("\nALARMS RAISED — a sold store refused a write:");
 for (const [store, n] of byStore) console.error(`  ${store.padEnd(12)} ${n}`);
 console.error("");
+/**
+ * **`NH32` — FIVE DASHES WHERE THE REASON SHOULD BE.** (Fixed 2026-08-24.)
+ *
+ * This printed `r.error_code ?? "-----"`. The alarm on 2026-08-21 at 00:28 UTC
+ * therefore read `search_log  -----  Failed query: insert into "search_log"…`
+ * — and the one thing needed to diagnose it was the one thing not said.
+ *
+ * `-----` is a render default converting an absence into a placeholder that
+ * makes no claim at all, which is the shape the render-default rule exists to
+ * stop: a null renders as its NAMED GAP, and the name says WHOSE gap it is.
+ *
+ * There are two different facts behind a missing SQLSTATE and they demand
+ * opposite responses:
+ *
+ * - **the driver never gave one** — a fact about the DRIVER. The Neon HTTP
+ *   driver wraps a failure as the query plus its params and carries no `code`
+ *   of its own, so the code lives one or more links down `.cause`. If it is
+ *   absent through the whole chain, that is worth saying out loud, because it
+ *   means the alarm is describing itself rather than the database.
+ * - **the row predates the fix** that made the alarm walk the cause chain, so
+ *   there was never a code to record.
+ *
+ * Neither is "-----".
+ */
+const NO_CODE =
+  "no SQLSTATE — the driver gave none anywhere in the cause chain (a fact about the driver, not about the database)";
+
 for (const r of rows.slice(0, 20)) {
   console.error(
-    `  ${r.raised_at}  ${r.store.padEnd(12)} ${r.error_code ?? "-----"}  ${r.error_message ?? ""}`,
+    `  ${r.raised_at}  ${r.store.padEnd(12)} ${r.error_code ?? NO_CODE}  ${r.error_message ?? "no message recorded"}`,
   );
 }
 if (rows.length > 20) console.error(`  … ${rows.length - 20} more not printed`);

@@ -406,3 +406,135 @@ the invention is the deliverable, not the yield.**
 - **Generalises:** the PRINCIPLE does and is the durable part — count search
   dependencies by whose INDEX they are, not by how many brand names sit in
   front of it.
+
+---
+
+## rulings-sweep-0824 · 2026-08-24
+
+Six routes that did not exist at session start. **Two returned rows, four
+returned zero**, and RULING 88 counts all six: the invention is the deliverable,
+not the yield.
+
+### wikipedia-nh-election-articles — RETURNED ROWS
+
+- **Conceived:** RULING 83 was adopted over a Rockaway Township encyclopedia
+  page that six sessions never opened. The same reasoning had never been pointed
+  at New Hampshire, where the owed set at 03255 is 19 candidates with no known
+  campaign site — and the binding constraint is the SITE, because a site
+  unlocks the photo, the blurb and the contact together. Hunting 19 individuals
+  is Tier C; asking what one article says about all of them is Tier A.
+- **Query, literally:**
+  `https://en.wikipedia.org/w/api.php?action=parse&page=2026_United_States_House_of_Representatives_elections_in_New_Hampshire&prop=wikitext&format=json&redirects=1`
+  and the same for `2026_United_States_Senate_election_in_New_Hampshire` and
+  `2026_New_Hampshire_gubernatorial_election`. **Control:**
+  `…&page=2026_Zzqxwv_Nonexistent_election…`, which returned
+  `{"error":{"code":"missingtitle"}}` — so a 200 here is a document rather than
+  a styled apology.
+- **Returned:** **one campaign site this project did not hold** —
+  `https://www.paigefornh.com/` for Paige Beauchemin. Treated as a LEAD under
+  RULING 87 and PROVED by fetching the site itself: HTTP 200, 546,058 bytes,
+  control strings `Beauchemin` ×24, `Paige` ×62, `Congress` ×19, negative
+  control 0. That closed **three** owed fields for her — site, blurb and photo
+  — from one Tier A read.
+  A systematic sweep of every external link in all three articles, filtered
+  against hosts already held and against news/PAC/aggregator domains, produced
+  **no further site for anyone on the 03255 ballot**. The remaining
+  candidate-shaped hosts belong to other New Hampshire districts.
+- **Generalises:** yes, and it is the strongest route in this log. Every state
+  has these articles, they are templated, and one parser reads all of them.
+
+### fec-committee-contacts — RETURNED ROWS
+
+- **Conceived:** RULING 90.5 — every AUTHENTICATED resource is walked before any
+  unauthenticated one is exhausted. `FEC_API_KEY` is proven and 12 of the 31
+  owed candidates at 03255 are federal. The candidate record carries a filed
+  ADDRESS, which is not a contact; the COMMITTEE record carries the campaign's
+  own filed email and website, which is.
+- **Query, literally:**
+  `https://api.open.fec.gov/v1/candidates/?state=NH&cycle=2026&per_page=100&sort=name&api_key=…`
+  then `https://api.open.fec.gov/v1/candidate/<ID>/committees/?api_key=…` for
+  each match.
+- **Returned:** 65 New Hampshire 2026 candidates; **5 confirmed matches** to the
+  owed set, each with a filed committee email and, for four of them, a website:
+  Manzur, Nicholson, Orlando, Martin, Beauchemin. Most of those fields were
+  already held, so the direct yield was corroboration rather than new rows —
+  and the corroboration is what let two door-3 portraits ship with an
+  independent check on identity.
+- **The near-misses are the reason this is written down.** `SMITH, KEVIN H.` is
+  not Sabrina Ann Smith, and `SAAL, MAXWELL LEAVY` is not Mary Maxwell — the
+  surname sitting in the given-name field. A guessed identifier is a LEAD, and
+  a route that matched on surname alone would have shipped two wrong people.
+- **Generalises:** to every federal candidate in the country.
+
+### sos-nh-rung-3 — RETURNED ROWS (a wall that fell)
+
+- **Conceived:** the NH filings this product renders come from a Secretary of
+  State PDF dated **7.16.26**, five weeks old with a September 8 primary. Under
+  RULING 53 that is a document worth re-testing, and `sos.nh.gov` was recorded
+  as needing rung 5.
+- **Query, literally:** `https://www.sos.nh.gov/elections/candidates` at rung 2
+  with an identified client — **403**. The same URL at **rung 3**, the full
+  browser header set (`User-Agent` Chrome 151, `Accept`, `Accept-Language`,
+  `Sec-Fetch-Dest/Mode/Site/User`, `Upgrade-Insecure-Requests`) — **200,
+  232,664 bytes.** The committed filing PDF likewise: 403 at rung 2, **200 and
+  473,945 bytes of real `application/pdf` at rung 3**.
+- **Returned:** the host, which was recorded as needing a different EGRESS on
+  2026-08-21, **answers at rung 3 today**. That is a rung, and it is cheaper
+  than the one on record.
+- **Generalises:** to every Drupal-hosted state government site that refuses a
+  bare client. Recorded so no session pays rung 5's price for a rung 3 wall.
+
+### nhjournal-filing-compilation — RETURNED ZERO OWED FIELDS
+
+- **Conceived:** the stuck protocol's fourth move — *who else needed this badly
+  enough to have compiled it already?* Local political press covers a filing
+  deadline candidate by candidate, which is precisely the enumeration the owed
+  set needs.
+- **Query, literally:**
+  `https://nhjournal.com/2026-candidate-filing-update-whos-in-whos-out/`
+- **Returned:** **ZERO owed fields.** HTTP 200, 61,397 bytes; 4 of 19 owed names
+  present. It gives home towns — Jarvis of Manchester, Sabrina Ann Smith of
+  Pittsfield, Alciere of Hudson — and no website, email or photograph for
+  anybody. The towns are worth having as a disambiguator for a later search and
+  they close nothing.
+- **Generalises:** the SHAPE does — every state has this outlet. The yield
+  should be expected to be identity corroboration rather than contact detail.
+
+### gc-roster-cross-match — RETURNED ZERO, AND RE-CONFIRMED AN OLD FINDING
+
+- **Conceived:** the stuck protocol's third move — *test the shape, not the
+  instance.* County-office candidates in New Hampshire are frequently sitting
+  state representatives, and a sitting member has an official page, a
+  `@gc.nh.gov` address and a chamber portrait. If the shape holds, one join
+  closes contacts and photos for several people at once.
+- **Query, literally:** a surname-and-given-name match of the 03255 owed set
+  against the 7,977 rows of `data/reference/openstates_legislators.csv`,
+  filtered to New Hampshire.
+- **Returned:** **ZERO owed fields, and the reason is the finding.** Five
+  apparent hits, four of them surname collisions with different given names —
+  Arnie Davis and Fred Davis are not Erica S. Davis, Bryan Morse is not Samantha
+  Morse, Tanya Donnelly is not Kathleen Donnelly. The fifth, Karen Ebel, is
+  real and her contact was already held. This **re-confirms on 2026-08-24**
+  what `NH49` recorded on 2026-08-21: the General Court roster reaches none of
+  the county challengers. An expired absence, re-tested rather than trusted.
+- **Generalises:** the technique does. The negative result is specific to this
+  ballot and has a shelf life.
+
+### certified-winners-against-rosters — RETURNED ROWS
+
+- **Conceived:** `NH73`. One stale encyclopedia roster was found by hand; a
+  defect found by name is the start of a class sweep and never the end of one.
+- **Query, literally:** `pnpm roster:stale` — 263 certified winners from the
+  Morris County Clerk against the 271 people this project holds on Morris body
+  rosters, matched on a hard-normalised first-and-last name.
+- **Returned:** a **three-way** split over 234 municipal winners — 99 CONFIRMED,
+  **45 POSSIBLY STALE**, 90 NO ROSTER HELD.
+- **The first version of this route was wrong and the correction is the point.**
+  It reported 135 MISSING, which read as 135 stale rosters. It is not: for 90 of
+  them this project holds **no roster for that municipality at all**, which is a
+  COVERAGE gap and not a correctness defect. Denville — the instance `NH73` was
+  opened over — is in that 90: Zimmermann, Venis and Cote are absent because
+  there is nothing there, not because what is there is wrong. Reporting one
+  number would have been RULING 105's failure exactly.
+- **Generalises:** to any county publishing certified winners, which is all of
+  them.

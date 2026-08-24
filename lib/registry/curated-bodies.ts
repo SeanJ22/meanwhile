@@ -1707,6 +1707,11 @@ function twigRows(): Body[] {
     "https://www.nheconomy.com/getmedia/f087979c-98b8-41b5-a2e0-1808faaa8ffe/village-districts-locations-addresses.csv";
   const rows: Array<{
     division: string;
+    /**
+     * The OTHER divisions this one body also governs (RULING 121, 2026-08-24).
+     * One body, one id, rendered under every town it covers.
+     */
+    alsoServes?: string[];
     slug: string;
     name: string;
     status: "LIVE" | "KNOWN_UNCOVERED";
@@ -1723,18 +1728,12 @@ function twigRows(): Body[] {
     // the Bradford Area Community Center and two at the Town Hall meeting room.
     {
       division: `${NH}/county:merrimack/place:newbury_town`,
-      slug: "lake-todd-village-district",
-      name: "Lake Todd Village District",
-      status: "LIVE",
-      sourceType: "ICAL",
-      sourceRef:
-        "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-      homepage: "https://bradfordnh.gov/pages/calendar",
-      sourceUrl: REGISTER,
-      org: "Lake Todd Village District",
-    },
-    {
-      division: `${NH}/county:merrimack/place:bradford_town`,
+      // RULING 121: ONE body, governing territory in Bradford AND Newbury. The
+      // state register lists it twice — once under each town — and the
+      // district's own archived history page says the same in its own words.
+      // It shipped as two rows until 2026-08-24 and every registry count
+      // counted it twice.
+      alsoServes: [`${NH}/county:merrimack/place:bradford_town`],
       slug: "lake-todd-village-district",
       name: "Lake Todd Village District",
       status: "LIVE",
@@ -1766,17 +1765,11 @@ function twigRows(): Body[] {
     // KNOWN_UNCOVERED.
     {
       division: `${NH}/county:merrimack/place:new_london_town`,
-      slug: "water-system-precinct",
-      name: "New London-Springfield Water System Precinct Board of Commissioners",
-      status: "KNOWN_UNCOVERED",
-      sourceType: "NONE",
-      sourceRef: null,
-      homepage: "https://www.nlswp.com/board-of-commissioners",
-      sourceUrl: "https://www.nlswp.com/board-of-commissioners",
-      org: "New London-Springfield Water System Precinct",
-    },
-    {
-      division: `${NH}/county:sullivan/place:springfield_town`,
+      // RULING 121: ONE body. Its own name carries both towns, and its
+      // territory crosses a COUNTY line as well as a municipal one —
+      // Merrimack and Sullivan — which is why the pair rule cannot be a
+      // same-county shortcut.
+      alsoServes: [`${NH}/county:sullivan/place:springfield_town`],
       slug: "water-system-precinct",
       name: "New London-Springfield Water System Precinct Board of Commissioners",
       status: "KNOWN_UNCOVERED",
@@ -1866,6 +1859,10 @@ function twigRows(): Body[] {
   return rows.map((row) => ({
     id: `${row.division}#${row.slug}`,
     ocdId: row.division as Body["ocdId"],
+    // RULING 121 — one body, one id, rendered under every town it governs.
+    ...(row.alsoServes
+      ? { alsoServesOcdIds: row.alsoServes as unknown as Body["alsoServesOcdIds"] }
+      : {}),
     name: row.name,
     bodyClass: "GOVERNING" as const,
     bodyOrigin: "CURATED" as const,

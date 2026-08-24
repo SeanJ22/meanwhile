@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { isFederalMember, useMemberDirectory } from "@/hooks/use-member-directory";
 import type { SeatHolder } from "@/lib/officials/lookup";
+import { campaignLinkKind, campaignLinkLabel } from "@/lib/officials/campaign-link-label";
 import { phoneChoicesFor, telHref } from "@/lib/officials/phone-numbers";
 
 import { PhoneChoiceModal } from "./phone-choice-modal";
@@ -279,16 +280,20 @@ export function ContactPills({
       <Pill
         key="campaign"
         href={holder.campaignUrl}
-        // Labeled as the campaign's, always. The Facebook-as-campaign-site
-        // rule names its own label when the campaign's presence IS a page.
-        label={
-          /facebook\.com/i.test(holder.campaignUrl)
-            ? "The campaign's Facebook page"
-            : "Campaign site"
-        }
+        /*
+         * Labelled as what it actually is, always. The Facebook-as-campaign-site
+         * rule and RULING 122's party-hosted page both name their own label,
+         * because a page on somebody ELSE'S site presented as "Campaign site"
+         * is a false claim about whose site it is.
+         */
+        label={campaignLinkLabel(holder.campaignUrl)}
         title={hostOf(holder.campaignUrl)}
         mark={
-          /facebook\.com/i.test(holder.campaignUrl) ? <FacebookMark /> : <GlobeMark />
+          campaignLinkKind(holder.campaignUrl) === "FACEBOOK" ? (
+            <FacebookMark />
+          ) : (
+            <GlobeMark />
+          )
         }
       />,
     );

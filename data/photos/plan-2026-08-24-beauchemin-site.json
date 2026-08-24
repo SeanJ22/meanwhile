@@ -1,0 +1,15 @@
+[
+  {
+    "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+    "name": "Paige Beauchemin",
+    "campaign": {
+      "url": "https://www.paigefornh.com/",
+      "verification": "Fetched 2026-08-24 at rung 2: HTTP 200, 546,058 bytes, final URL paigefornh.com. Control strings present — 'Beauchemin' x24, 'Paige' x62, 'Congress' x19; a negative control returned 0. og:title 'Paige Beauchemin for New Hampshire | Join the Movement Today'. The site self-identifies with the filed name, the office and the cycle. Her FEC committee C00921882 (PAIGE BEAUCHEMIN FOR CONGRESS) corroborates the candidacy independently.",
+      "attemptedAt": "2026-08-24"
+    },
+    "hunt": {
+      "note": "TIER A (RULING 84/87): named by the Wikipedia NH US House 2026 article, PROVED by fetching the site itself with control strings. A lead until the primary source confirmed it.",
+      "attemptedAt": "2026-08-24"
+    }
+  }
+]

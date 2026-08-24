@@ -62,11 +62,18 @@ import {
 } from "node:fs";
 import { dirname, extname, join, resolve } from "node:path";
 
+import { assetRemoteBase, fetchAssetFromRemote } from "../lib/ops/asset-remote.ts";
 import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { today } from "./doc-dates.mjs";
 
 const MODE = process.argv[2];
 const DRY = process.argv.includes("--dry");
+/**
+ * `--no-remote` keeps a restore purely local. The default is remote-enabled,
+ * because a restore path that has to be asked for is a restore path a Netlify
+ * build will not take (`R57`, Sean's decision of 2026-08-24).
+ */
+const NO_REMOTE = process.argv.includes("--no-remote");
 
 const STORE = resolve(
   process.env.WTP_ASSET_STORE ?? join(process.cwd(), "..", "we-the-people-assets"),
@@ -247,27 +254,63 @@ if (MODE === "migrate") {
   }
   let restored = 0;
   let alreadyRight = 0;
+  let fromRemote = 0;
   const unavailable: string[] = [];
+  const refusals: string[] = [];
   for (const row of manifest.rows) {
-    const src = storePath(row.sha256, extname(row.path));
-    if (!existsSync(src)) {
-      unavailable.push(row.path);
-      continue;
-    }
+    const ext = extname(row.path);
+    const src = storePath(row.sha256, ext);
+
     if (existsSync(row.path) && sha256(row.path) === row.sha256) {
       alreadyRight += 1;
       continue;
     }
+
+    if (existsSync(src)) {
+      if (!DRY) {
+        mkdirSync(dirname(row.path), { recursive: true });
+        copyFileSync(src, row.path);
+      }
+      restored += 1;
+      continue;
+    }
+
+    /*
+     * Not in the local store. THE REMOTE IS A RUNG, not a fallback that
+     * silently changes what the run means: it is reported on its own line with
+     * its own count, and every byte it returns is proved against the hash the
+     * row was requested under before anything is written.
+     */
+    if (NO_REMOTE) {
+      unavailable.push(row.path);
+      continue;
+    }
+    const remote = await fetchAssetFromRemote(row.sha256, ext);
+    if (!remote.ok || !remote.body) {
+      unavailable.push(row.path);
+      refusals.push(`${row.path}: ${remote.refusal ?? "no body"}`);
+      continue;
+    }
     if (!DRY) {
       mkdirSync(dirname(row.path), { recursive: true });
-      copyFileSync(src, row.path);
+      writeFileSync(row.path, remote.body);
+      const dest = storePath(row.sha256, ext);
+      mkdirSync(dirname(dest), { recursive: true });
+      writeFileSync(dest, remote.body);
     }
     restored += 1;
+    fromRemote += 1;
   }
   console.log(`RESTORE${DRY ? " (DRY — nothing written)" : ""}`);
   console.log(`  rows:                ${manifest.rows.length}`);
   console.log(`  already correct:     ${alreadyRight}`);
   console.log(`  restored:            ${restored}`);
+  console.log(
+    `  — of those, remote:  ${fromRemote}` +
+      (NO_REMOTE
+        ? "  (--no-remote: the remote rung was not walked)"
+        : `  from ${assetRemoteBase()}`),
+  );
   console.log(
     `  NOT IN THE STORE:    ${unavailable.length}` +
       (unavailable.length
@@ -275,7 +318,65 @@ if (MODE === "migrate") {
           "never a decision to serve nothing."
         : ""),
   );
+  for (const refusal of refusals.slice(0, 10)) console.log(`    REFUSED  ${refusal}`);
+} else if (MODE === "prove-remote") {
+  /*
+   * **The restore path is PROVEN, not assumed** (`R57`, Sean's decision of
+   * 2026-08-24; RULING 113 — a step whose product is observable is observed at
+   * the step).
+   *
+   * A sample of real manifest rows is fetched from the public store and each
+   * one is verified BY HASH, plus a CONTROL: a well-formed hash the store does
+   * not hold, which must be REFUSED. Without the control this would be a check
+   * that passes because the host answers, rather than because the host answers
+   * with the right thing.
+   */
+  const manifest = readManifest();
+  if (!manifest) {
+    console.error(`CANNOT RUN: no manifest at ${MANIFEST}.`);
+    process.exit(1);
+  }
+  const sample = Number(process.argv.find((a) => a.startsWith("--sample="))?.split("=")[1] ?? 7);
+  const bySize = [...manifest.rows].sort((a, b) => a.bytes - b.bytes);
+  const picks = [
+    bySize[0],
+    bySize[Math.floor(bySize.length / 2)],
+    bySize[bySize.length - 1],
+    ...manifest.rows.filter((_, i) => i % Math.max(1, Math.floor(manifest.rows.length / sample)) === 0),
+  ]
+    .filter((r): r is NonNullable<typeof r> => Boolean(r))
+    .slice(0, Math.max(3, sample));
+
+  console.log(`PROVE-REMOTE  ${assetRemoteBase()}`);
+  let ok = 0;
+  let refused = 0;
+  let bytes = 0;
+  for (const row of picks) {
+    const result = await fetchAssetFromRemote(row.sha256, extname(row.path));
+    if (result.ok) {
+      ok += 1;
+      bytes += result.bytes;
+      console.log(`  OK       ${String(result.bytes).padStart(9)}  ${row.path}`);
+    } else {
+      refused += 1;
+      console.log(`  REFUSED  ${row.path} — ${result.refusal}`);
+    }
+  }
+  console.log(`  fetched and HASH-VERIFIED: ${ok} of ${picks.length}; refused ${refused}; ${bytes} byte(s)`);
+
+  // The control. A hash of the right SHAPE that the store does not hold.
+  const control = `${"0".repeat(63)}1`;
+  const controlResult = await fetchAssetFromRemote(control, ".jpg");
+  console.log(
+    `  CONTROL (a hash the store does not hold): ok=${controlResult.ok} ` +
+      `status=${controlResult.status} — ${controlResult.refusal ?? "answered!"}`,
+  );
+  if (controlResult.ok) {
+    console.error("REFUSED: the store answered for a hash it does not hold — this check proves nothing.");
+    process.exit(1);
+  }
+  if (refused > 0 || ok === 0) process.exit(1);
 } else {
-  console.error("usage: pnpm assets <migrate|verify|restore> [--dry]");
+  console.error("usage: pnpm assets <migrate|verify|restore|prove-remote> [--dry] [--no-remote]");
   process.exit(2);
 }

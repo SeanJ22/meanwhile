@@ -1,11 +1,12 @@
 {
   "note": "RULING 55 (2026-08-21) — a photo never blocks anything, and every photo is reviewed by Sean. Only an APPROVED photo renders; a PENDING one renders initials, which this product treats as a success. Nothing else on the card is affected by any of this: name, party, blurb, contacts, filed address, funding and votes render exactly as they would if no photo had ever been found. This is a CORRECTNESS gate on one field, never a completeness gate on a card — see lib/photos/review.ts for why the distinction is the rule. A REJECTED photo is a branch result under RULING 52: this image is not this person, and nothing about whether a correct portrait exists.",
-  "builtAt": "2026-08-21",
+  "builtAt": "2026-08-24",
   "counts": {
-    "rejected": 5,
-    "grandfathered": 48,
-    "people": 51,
-    "decisions": 53
+    "rejected": 6,
+    "approvedEnBlocBySean": 51,
+    "approvedBySeanPerAsset": 10,
+    "people": 65,
+    "decisions": 67
   },
   "reviews": {
     "VICTOR ORLANDO": [
@@ -28,9 +29,9 @@
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-county-sheriff-gerhard-jason.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "KARISHMA MANZUR": [
@@ -62,423 +63,549 @@
       {
         "state": "APPROVED",
         "url": "/officials/statewide-nh-governor.png",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      }
+    ],
+    "TOBIN MENARD": [
+      {
+        "state": "REJECTED",
+        "url": "https://img1.wsimg.com/isteam/ip/a891f544-c975-41d1-bb8a-f622f4686df8/blob-0bec72c.png",
+        "reason": "Read as an image 2026-08-21: a clean studio portrait of the sole subject holding a pair of scales, with 'Accountability Responsibility' overlaid in red across the lower third. Sean affirmed the refusal on 2026-08-24 — \"no campaign slogans or anything like that\". The composition standard names a wordmark, and it never moves at any door. He renders honest initials, which this product treats as a success; the hunt for a clean portrait of him continues.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, affirming the refusal)"
+      }
+    ],
+    "MEG HAGAMAN": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-attorney-hagaman-meg.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH30). Door 3 — the campaign's own self-published portrait (meg-for-merrimack.com/about). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "JON RAICHE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-attorney-raiche-jon.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH30). Door 3 — the campaign's own self-published portrait (votejonraiche.com). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "VINCENT S RIBAS": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-commissioner-2-ribas-vincent-s.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH30). Door 2 — the portrait the City of Franklin publishes of its own councillor (franklinnh.gov). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "JENNIFER ROWLAND": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-chatham-township-committee-rowland-jennifer.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH65). Door 2 — Chatham Township's own portrait of its committee member (chathamtownship.org). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "MELISSA SENATORE": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-jefferson-township-council-senatore-melissa.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH65). Door 2 — Jefferson Township's own portrait (jeffersontownship.net). Attribution is BY POSITION: the image sits inside the council card naming her and nobody else, and the file path carries no name. Stated rather than smoothed. Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "SEAN MABEY": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-kinnelon-borough-council-mabey-sean.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH65). Door 2 — Kinnelon Borough's own portrait (kinnelonboro.org). FULL-LENGTH rather than head-and-shoulders; he is the unambiguous sole subject in the borough's council chamber, and it is the only picture Kinnelon publishes of him. Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "MARILYN ALTHOFF": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-mendham-borough-council-althoff-marilyn.png",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH65). Door 2 — Mendham Borough's own portrait (mendhamnj.org). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "MELISSA MUILENBURG": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-mountain-lakes-borough-council-muilenburg-melissa.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH65). Door 2 — Mountain Lakes Borough's own portrait (mountainlakes.gov). Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "LANA LEGUIA": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-house-7-leguia-lana.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH111). Door 3 — the campaign's own self-published portrait (lanaleguia.com), labelled campaign-provided. Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
+      }
+    ],
+    "JOE HATHAWAY": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-house-11-hathaway-joe.jpg",
+        "reason": "Read as an image before it was proposed, and APPROVED BY SEAN on 2026-08-24 (NH111). Door 3 — the campaign's own self-published portrait (joehathawayforcongress.com), labelled campaign-provided. THREE-QUARTER LENGTH rather than head-and-shoulders; the reservation was put to Sean as a reservation and he approved it. Remove-on-request.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, per asset)"
       }
     ],
     "CINDE WARMINGTON": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-governor-warmington-cinde.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "CHRIS PAPPAS": [
       {
         "state": "APPROVED",
         "url": "/officials/P000614.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "P SCOTT BROWN": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-senate-brown-scott-p-.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "E JOHN SUNUNU": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-senate-sununu-john-e-.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "LILY WILLIAMS TANG": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-house-2-tang-williams-lily.png",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "M GREGORY SARGENT": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-state-house-merrimack-7-sargent-gregory-m-.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "KAREN HILL LIOT": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-executive-council-2-liot-hill-karen.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "BOOKER": [
       {
         "state": "APPROVED",
         "url": "/candidates/nj-morris-us-senate-booker.png",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "MURPHY": [
       {
         "state": "APPROVED",
         "url": "/candidates/nj-morris-us-senate-murphy.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      }
+    ],
+    "HATHAWAY": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-house-11-hathaway-joe.jpg",
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "MEJIA": [
       {
         "state": "APPROVED",
         "url": "/officials/M001246.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "SELEN": [
       {
         "state": "APPROVED",
         "url": "/candidates/nj-morris-county-commissioner-selen.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "KATIE HOBBS": [
       {
         "state": "APPROVED",
         "url": "/officials/statewide-az-governor.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ANDY BIGGS": [
       {
         "state": "APPROVED",
         "url": "/officials/B001302.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "MAGGIE GOODLANDER": [
       {
         "state": "APPROVED",
         "url": "/officials/G000604.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "DAVID SCHWEIKERT": [
       {
         "state": "APPROVED",
         "url": "/officials/S001183.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "JUAN CISCOMANI": [
       {
         "state": "APPROVED",
         "url": "/officials/C001133.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ADRIAN FONTES": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-secretary-of-state-fontes-adrian.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "KRIS MAYES": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-attorney-general-mayes-kris.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "GAIL GRIFFIN": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-1e39adcf-868d-4722-a07b-09fcd36ad9ed.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ALMA HERNANDEZ": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-6dba6afa-b274-4273-b8c6-270d27214eee.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "LUPE DIAZ": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-bc52f516-a13b-4490-a12c-7b98fa3969e5.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "DAVID GOWAN": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-51520de4-0e87-475b-91d2-99aa18addf72.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ANN SALLY GONZALES": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "SALLY ANN GONZALES": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-state-house-20-gonzales-sally-ann.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "BETTY VILLEGAS": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-81d12f3a-b635-4111-be8d-a71d2f7565f2.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ADELITA GRIJALVA": [
       {
         "state": "APPROVED",
         "url": "/officials/G000606.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "WARREN PETERSEN": [
       {
         "state": "APPROVED",
         "url": "/officials/plural-66e496a4-a407-4af1-add3-ef6899b89807.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "KIMBERLY YEE": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-superintendent-yee-kimberly.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ALEXANDER KOLODIN": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-secretary-of-state-kolodin-alexander.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "TOM HORNE": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-superintendent-horne-tom.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "NICK MANSOUR": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-state-treasurer-Nick-Mansour.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "TERESA LEYBA RUIZ": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "FERNANDEZ": [
       {
         "state": "APPROVED",
         "url": "/candidates/nj-morris-us-senate-fernandez.png",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "TERESA RUIZ LEYBA": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-superintendent-Teresa-Leyba-Ruiz.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "TERI ANN HOURIHAN": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-governor-hourihan-teri-ann.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "WALTER LES PRESMYK": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-mine-inspector-presmyk-walter-les.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "RISA LOMBARDO": [
       {
         "state": "APPROVED",
         "url": "/candidates/az-pima-governor-lombardo-risa.png",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "SAMANTHA MORSE": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-register-of-deeds-morse-samantha.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "E DANIEL INNIS": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-state-senate-7-innis-daniel.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "ELIZABETH KAREN EBEL": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-state-house-merrimack-7-ebel-karen.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "PETER SHEPHARD": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-county-sheriff-shephard-peter.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "L MAXWELL SAAL": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-senate-saal-maxwell.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "F HAROLD FRENCH": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-county-commissioner-2-french-harold.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "SARAH ROGERS": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-county-attorney-rogers-sarah.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "SKY DANLEY": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-senate-danley-sky.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ],
     "TOM ALCIERE": [
       {
         "state": "APPROVED",
         "url": "/candidates/nh-merrimack-us-senate-alciere-tom.jpg",
-        "reason": "GRANDFATHERED — shipping before RULING 55 existed, NOT individually approved by the author. On RULING 53's clock from this date and surfaced by `pnpm stale`; the Needs Sean row names the count.",
-        "decidedAt": "2026-08-21",
-        "decidedBy": "grandfathered"
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      }
+    ],
+    "S VINCENT RIBAS": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nh-merrimack-county-commissioner-2-ribas-vincent-s.jpg",
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
+      }
+    ],
+    "LANA A LEGU": [
+      {
+        "state": "APPROVED",
+        "url": "/candidates/nj-morris-us-house-7-leguia-lana.jpg",
+        "reason": "APPROVED BY SEAN EN BLOC on 2026-08-24, in his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. Previously recorded `grandfathered`, which meant shipping before RULING 55 existed and approved by nobody. En bloc is recorded rather than per-asset because that is what happened — he did not read forty-eight images one at a time, and saying he had would be the unread-evidence problem this rule exists to end. Remove-on-request, and any single one comes out the moment he names it.",
+        "decidedAt": "2026-08-24",
+        "decidedBy": "Sean (his decision of 2026-08-24, en bloc)"
       }
     ]
   }

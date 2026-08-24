@@ -16,6 +16,7 @@ import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
+import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
   hasRepresentation,
@@ -151,13 +152,14 @@ const DIVISION_NOUN: Record<NonNullable<CoveredBody["divisionType"]>, string> = 
   sldl: "State house",
 };
 
-const BODY_CLASS_NOUN: Record<CoveredBody["bodyClass"], string> = {
-  GOVERNING: "Governing",
-  ADVISORY: "Advisory",
-  COMMISSION: "Commission",
-  REGIONAL: "Regional",
-  PRIVATE_ASSOCIATION: "Private",
-};
+/*
+ * One source for these labels (RULING 118 / RULING 119, 2026-08-24). This was
+ * one of THREE copies; the third was a binary that called anything not
+ * GOVERNING "Advisory", which would have labelled a sovereign tribal nation
+ * advisory the day one shipped.
+ */
+const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
+  bodyClassShort(bodyClass);
 
 /**
  * Item 5, the palette pass (2026-08-15). These were `text-local` /
@@ -646,7 +648,7 @@ function CoverageBody({
                     about the body rather than a guess about its division. */}
                 {body.name === null && body.divisionType !== null
                   ? DIVISION_NOUN[body.divisionType]
-                  : BODY_CLASS_NOUN[body.bodyClass]}
+                  : BODY_CLASS_NOUN(body.bodyClass)}
               </span>
             </li>
           ))}

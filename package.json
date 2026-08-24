@@ -204,7 +204,12 @@
     "nj:slogan-audit": "tsx scripts/audit-nj-slogan-field.mts",
     "nj:email-domain": "tsx scripts/hunt-filed-email-domain.mts",
     "wiki:citation": "tsx scripts/hunt-wikipedia-citation.mts",
-    "questionnaire:seed-local": "tsx scripts/seed-questionnaire-local.mts"
+    "questionnaire:seed-local": "tsx scripts/seed-questionnaire-local.mts",
+    "ship:approved": "tsx scripts/ship-approved-portraits.mts",
+    "bodies:spanning": "tsx scripts/multi-division-bodies.mts",
+    "photo:sheet": "tsx scripts/photo-review-sheet.mts",
+    "demo:sweep": "tsx scripts/demo-sweep.mts",
+    "roster:stale": "tsx scripts/stale-roster-sweep.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

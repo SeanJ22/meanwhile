@@ -1,6 +1,6 @@
 # The gap ledger
 
-Generated 2026-08-23 (America/Phoenix, `corepack pnpm stamp`).
+Generated 2026-08-24 (America/Phoenix, `corepack pnpm stamp`).
 Rebuild with `corepack pnpm ledger:build`.
 
 **This is what the digging sessions work, front to back.** Every entry names
@@ -107,7 +107,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -183,7 +183,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -263,7 +263,7 @@ These are Census STATISTICAL entities — a CDP is a name the Census gives a pop
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 | District | Where its office is | State | Census id |
 |---|---|---|---|
@@ -358,7 +358,7 @@ TIGER publishes no boundary for a special district, so geometry cannot answer th
 
 Each of these is a real government — a fire district, a water district, an irrigation or library district — that the federal Census counts, in a county over this zip. Nobody publishes a map of where any of them starts and stops, so we cannot say whether it reaches this zip. **That is a work item and never a no**: recording one as "does not govern here" because we could not find its boundary would be inventing an answer.
 
-**The last thing tried, and when.** The national boundary join of 2026-08-23, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
+**The last thing tried, and when.** The national boundary join of 2026-08-24, run against every published boundary vintage. It resolved 47,834 of the country's 90,837 governments and **not one special district** — the boundaries are not published anywhere in that data at all. Nothing has been tried on these districts individually yet; the four routes that have not been walked are listed at the top of this file.
 
 None. No county over this zip holds a special district.
 

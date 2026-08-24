@@ -456,3 +456,76 @@ test("PD04: the chain walk terminates on a cycle and on a bare error", () => {
   assert.equal(errorMessageOf(null), null);
   assert.equal(errorMessageOf(new Error("plain")), "plain");
 });
+
+/* ========================================================================== */
+/* NH32 — the SQLSTATE is looked for everywhere a driver hides it             */
+/* ========================================================================== */
+
+test("NH32: the code is found under sourceError, not only under cause", () => {
+  /*
+   * The alarm of 2026-08-21 recorded no SQLSTATE and the report printed five
+   * dashes where the reason belonged. Walking only `.cause` was the reason:
+   * pooled drivers in this family nest the real error under other names.
+   */
+  const inner = Object.assign(new Error('column "coverage_tier" does not exist'), {
+    code: "42703",
+  });
+  const outer = Object.assign(new Error("Failed query: insert into search_log"), {
+    sourceError: inner,
+  });
+  assert.equal(errorCodeOf(outer), "42703");
+});
+
+test("NH32: the code is found under originalError", () => {
+  const inner = Object.assign(new Error("duplicate key value violates unique constraint"), {
+    code: "23505",
+  });
+  const outer = Object.assign(new Error("wrapper"), { originalError: inner });
+  assert.equal(errorCodeOf(outer), "23505");
+});
+
+test("NH32: an AggregateError's real failures are reached", () => {
+  /*
+   * What a pooled driver raises when every connection in the pool fails. Its
+   * own message says nothing; each entry in `errors` is a real database error.
+   */
+  const real = Object.assign(new Error("terminating connection due to administrator command"), {
+    code: "57P01",
+  });
+  const aggregate = Object.assign(new Error("all connections failed"), { errors: [real] });
+  assert.equal(errorCodeOf(aggregate), "57P01");
+});
+
+test("NH32: a cyclic error chain does not hang the alarm", () => {
+  /*
+   * A hang inside an alarm takes down the path the alarm is watching, which is
+   * strictly worse than the missing code it was trying to find.
+   */
+  const a = Object.assign(new Error("a"), { cause: undefined as unknown });
+  const b = Object.assign(new Error("b"), { cause: a });
+  (a as { cause: unknown }).cause = b;
+  assert.equal(errorCodeOf(a), null);
+  assert.ok(typeof errorMessageOf(a) === "string");
+});
+
+test("NH32: a genuinely absent code is still null — the widening did not invent one", () => {
+  /*
+   * The direction that matters. A chain walk that started returning a code for
+   * an error that carries none would be worse than five dashes: it would put a
+   * confident wrong SQLSTATE in front of whoever is diagnosing.
+   */
+  const outer = Object.assign(new Error("Failed query: insert into search_log"), {
+    sourceError: new Error("no code on this one either"),
+  });
+  assert.equal(errorCodeOf(outer), null);
+});
+
+test("NH32: the reader names the gap instead of printing dashes", () => {
+  const source = readFileSync(join(ROOT, "scripts", "read-alarms.mts"), "utf8");
+  assert.doesNotMatch(
+    source.replace(/\/\*[\s\S]*?\*\//g, ""),
+    /\?\?\s*"-----"/,
+    'a null SQLSTATE must render as a NAMED gap, never as "-----"',
+  );
+  assert.match(source, /no SQLSTATE/, "the gap says what is missing and whose gap it is");
+});

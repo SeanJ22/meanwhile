@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { sameName } from "@/lib/search/body-row";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
 import type { DrawnDistrict } from "@/lib/map/districts";
@@ -223,7 +224,16 @@ function BodiesDoor({
                 {label}
               </button>
               <span className="trailing-space-trimmed shrink-0 font-mono text-[0.625rem] uppercase tracking-[0.15em] text-muted">
-                {body.bodyClass === "GOVERNING" ? "Governing" : "Advisory"}
+                {/*
+                  **THIS WAS A BINARY, AND THAT WAS THE DEFECT** (RULING 118 /
+                  RULING 119, 2026-08-24). `GOVERNING ? "Governing" :
+                  "Advisory"` calls EVERY other kind of body advisory — a
+                  commission, a private association, an executive department,
+                  and, the day one shipped, a sovereign tribal nation. A
+                  sovereign government labelled "Advisory" is a false claim
+                  about a nation, not a cosmetic slip.
+                */}
+                {bodyClassShort(body.bodyClass)}
               </span>
             </div>
             {next && (

@@ -1,0 +1,32 @@
+[
+  {
+    "key": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana",
+    "name": "Lana Leguía",
+    "photo": {
+      "url": "https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=1024,h=1029,fit=crop/rA7ITuvn9Z4FkKg7/516448091_593701297140431_1657478900419083303_n-6nsrtJWzjNiYnYKe.jpg",
+      "door": 3,
+      "source": "the campaign's own self-published portrait from its own site — lanaleguia.com, read 2026-08-23 — labelled campaign-provided, remove-on-request",
+      "judgment": "Read as an image 2026-08-23 on contact sheet sheet-nj-2.png: a clean solo head-and-shoulders portrait on a plain ground; she is the unambiguous sole subject. The larger of two copies of the same image. APPROVED BY SEAN 2026-08-24 (NH111).",
+      "file": "nj-morris-us-house-7-leguia-lana.jpg"
+    },
+    "hunt": {
+      "note": "NH111: every candidate holding a verified campaign site was walked for an og:image and the page own img elements — 7 candidates, 25 images staged, ALL 25 read as images on two contact sheets before any verdict. This one PASSED the composition standard. Sean approved it 2026-08-24.",
+      "attemptedAt": "2026-08-23"
+    }
+  },
+  {
+    "key": "ballot-nj-morris:us-house-11:hathaway",
+    "name": "Joe Hathaway",
+    "photo": {
+      "url": "https://static.wixstatic.com/media/f28da3_dbca9cf2512b46d8be63577bdef7f7c1~mv2.jpg/v1/crop/x_712,y_354,w_4858,h_3636/fill/w_341,h_269,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/8599_500.jpg",
+      "door": 3,
+      "source": "the campaign's own self-published portrait from its own site — joehathawayforcongress.com, read 2026-08-23 — labelled campaign-provided, remove-on-request",
+      "judgment": "Read as an image 2026-08-23 on contact sheet sheet-nj-2.png: solo, outdoors, three-quarter length with a flag behind him; he is the unambiguous sole subject and the frame is clean. NOT a head-and-shoulders portrait, and that reservation was stated to Sean rather than smoothed over. He APPROVED it 2026-08-24 (NH111).",
+      "file": "nj-morris-us-house-11-hathaway-joe.jpg"
+    },
+    "hunt": {
+      "note": "NH111: 6 of 6 of his other staged images failed the composition standard (a wordmark banner among them). This one passed with a stated reservation about framing, which was put to Sean as a reservation and approved on 2026-08-24.",
+      "attemptedAt": "2026-08-23"
+    }
+  }
+]

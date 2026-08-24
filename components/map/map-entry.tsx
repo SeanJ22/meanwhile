@@ -44,6 +44,7 @@ import {
   meetingCardSources,
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import { bodyClassLong } from "@/lib/registry/body-class-labels";
 import {
   governingRosterHoldersForDivision,
   rosterHoldersForBody,
@@ -2556,18 +2557,13 @@ function BODY_TYPE_LABEL(body: CoveredBody): string {
     sldu: "State senate",
     sldl: "State house",
   };
-  const CLASS: Record<CoveredBody["bodyClass"], string> = {
-    GOVERNING: "Governing body",
-    ADVISORY: "Advisory body",
-    COMMISSION: "Commission",
-    REGIONAL: "Regional body",
-    PRIVATE_ASSOCIATION: "Private association",
-  };
+  // One source for these labels — RULING 118 / RULING 119, 2026-08-24.
+  const CLASS = (bodyClass: CoveredBody["bodyClass"]): string => bodyClassLong(bodyClass);
   // NH94: no division means no division noun. "Municipal" was a placeholder
   // claiming a kind of government nobody had established.
   return body.name === null && body.divisionType !== null
     ? DIVISION[body.divisionType]
-    : CLASS[body.bodyClass];
+    : CLASS(body.bodyClass);
 }
 
 function districtSubject(

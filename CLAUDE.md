@@ -2084,6 +2084,211 @@ this file depends on each one existing and being run:
   this repo can reach. It is how a schema change reaches production, and
   `--target=production` is required to touch it.
 
+## FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND THE NATIONS
+
+(Adopted 2026-08-24, the author's decisions of that day. **RULINGS 117, 118,
+119, 121 and 122.** RULING 120 is the business constraint below.
+`docs/rulings.md` carries all six in plain language, because a ruling the author
+cannot read is a ruling that does not bind him.)
+
+### RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A RESTORE IS VERIFIED BY HASH
+
+(Adopted 2026-08-24, the author's ruling, closing `R57`. **It finishes RULING
+20**, which moved portrait bytes out of git and could not say where they land.)
+
+**The content-addressed store lives in a dedicated PUBLIC repository —
+`github.com/SeanJ22/wtp-assets` — and every restored byte is proved against the
+hash it was requested under.**
+
+RULING 20 was right and could not finish. The store was a local path on the
+author's machine, so Netlify could not reach it; the committed portraits were
+therefore deliberately NOT deleted, because removing them would have blanked
+every candidate and official card in production. The repo carried both the
+bytes and the mechanism built to replace them.
+
+**The cost was never only repository size.** `NH101` held **97 sitting members
+of Congress** whose portraits were retrieved over git, licence-confirmed (CC0
+1.0 Universal, GPO works, door 1) and byte-verified on 2026-08-23, and could not
+ship, because there was nowhere to put them a build could read.
+
+- **PUBLIC is the correct posture, not a convenience.** Everything in the store
+  was already published — by a government body, by a campaign about itself, or
+  under an explicit open licence. A private store needs a credential in the
+  build, and a credential is a thing that expires, leaks, or sits unused beside
+  a rate limit (RULING 90.5). There is nothing here that publication has not
+  already given away.
+- **The hash is the check, and the status code is not trusted.** A 200 that is
+  not the thing is not a document. Content-addressing makes the control total
+  and free: the NAME of the file is the hash of its correct contents, so bytes
+  that do not hash to the name they were requested under are refused whatever
+  the transport said. A refusal is a **CANNOT RUN for that row** (RULING 24),
+  never a decision to serve nothing.
+- **The README carries the four-door provenance discipline and
+  remove-on-request**, where a person pictured there would look for it.
+
+The machinery is `lib/ops/asset-remote.ts` and `pnpm assets restore` /
+`pnpm assets prove-remote`, guarded in `tests/asset-remote.test.ts` — whose
+load-bearing case is the one a live call would almost never exercise: **HTTP 200
+carrying the wrong bytes must be REFUSED.**
+
+### RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVERN VERB
+
+(Adopted 2026-08-24, the author's ruling, closing `NS07`.)
+
+**Appointed people never carry the govern verb, and neither does any role
+description.** The author's words for what to say instead: **"runs the
+department," "chair," "president of the committee."**
+
+New Jersey's executive departments are enumerated as bodies under RULING 57,
+and their rulemaking hearings are exactly the there-is-a-hearing-Tuesday surface
+this product exists for. **Their MEETINGS were never in question and are
+unaffected.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+who-governs card's verb is GOVERN, and that is a claim about the READER'S OWN
+POWER over a person — that they chose them and can unchoose them. A
+commissioner of a state department was appointed. A reader did not elect them
+and cannot vote them out, so *governs you* describes a relationship that does
+not exist. **This is not a softer version of the same sentence.** *Runs the
+department* is accurate and useful and tells a reader who is responsible for
+something that reaches them; *governs you* is false about the reader.
+
+The machinery is `governVerbMayAttach` in `lib/registry/body-class-labels.ts`,
+which is asked ONCE rather than re-decided per surface — and that is the point,
+because the three label maps this replaced included a BINARY
+(`GOVERNING ? "Governing" : "Advisory"`) that would have labelled every other
+kind of body advisory. Guarded in `tests/body-class-labels.test.ts`.
+
+### RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGORY OF GOVERNMENT
+
+(Adopted 2026-08-24, the author's ruling, closing `NS08`. **This unblocks the
+Arizona hunt's start condition.**)
+
+**Tribal nations are their own specific category of government — SOVEREIGN,
+neither federal nor state nor local — with their own label and their own body
+class. Nationally, not an Arizona special case.** The author named New Mexico,
+Oklahoma and Texas as coming.
+
+**How it was found is the part worth keeping.** Nothing in this product's
+enumeration would have produced it. It came out of the **FEC Combined
+Federal/State Directory**, whose Arizona entry names six offices — one of them
+the **Navajo Nation Ethics and Rules Office**, listed alongside the states as a
+jurisdiction holding administrative hearings, ethics clearances and
+investigations under the Navajo Ethics in Government Law. No municipality list,
+no county roster and no state register carries it. That is RULING 93's
+descend-the-hierarchy move earning its place.
+
+- **A new class, not a flag on an old one.** `GOVERNING` inside a state
+  hierarchy makes a nation a subdivision of that state, which is precisely what
+  it is not; every other existing value is worse. RULING 57 says the twig is as
+  relevant as the trunk — **a sovereign nation is not a twig, it is a trunk this
+  product had never touched.**
+- **THE GOVERN VERB DOES NOT ATTACH, and that is honesty rather than caution.**
+  Tribal jurisdiction turns on tribal membership and on land status, not only on
+  where a reader is standing, and this product resolves a reader by geography
+  alone. The nation, its government and its meetings are named; the governing
+  relationship is not ours to assert.
+- **The identifier is PROJECT-MINTED and says so.** The canonical
+  `opencivicdata/ocd-division-ids` registry carries **no tribal division type at
+  all** — read 2026-08-24, its complete top-level vocabulary is `state:`,
+  `district:`, `territory:` and `court_of_appeals:`. There was nothing to look
+  up. The ids are keyed on the **Census AIANNH code** with the ANSI code beside
+  them, read from a keyless `.gov` publication with a control search. **A minted
+  id whose basis is an authoritative federal code is a different thing from a
+  guessed identifier**, and the distinction is recorded so nobody re-derives it.
+
+The three nations holding territory in or adjacent to Pima County are wired:
+the **Navajo Nation**, the **Tohono O'odham Nation** and the **Pascua Yaqui
+Tribe** (`lib/registry/tribal-nations.ts`).
+
+### RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RENDERED UNDER BOTH
+
+(Adopted 2026-08-24, the author's ruling, closing `NH33`.)
+
+**A body governing territory in more than one division is ONE body with ONE id,
+rendered for readers in every division it covers.**
+
+Lake Todd Village District governs territory in Bradford AND Newbury. The New
+London–Springfield Water System Precinct serves New London AND Springfield.
+Because a body id was `<division>#<slot>`, each shipped as TWO rows carrying the
+same name — one body wearing two ids — and every count that walked the registry
+counted them twice.
+
+**Filing each under one division only would be worse**, because it hides a real
+body from readers in the other town, who are governed by it just the same.
+
+**This is the first pair of many, not a curiosity.** Village districts,
+precincts, fire districts and regional school committees routinely cross
+municipal lines, and a product that reaches the smallest bodies (RULING 57) will
+meet this constantly.
+
+### RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDATE'S PAGE, WITH THE HOST LABELLED
+
+(Adopted 2026-08-24, the author's ruling, closing `NH11`. **It extends the
+campaign-that-lives-on-Facebook rule** to the same shape on a party's site.)
+
+**Where a candidate's only public presence is a page on their party's own site
+carrying their NAME, the OFFICE, their OWN WORDS and a CONTACT, it renders as
+their verified page and their contact — with the host labelled.**
+
+A candidate for Governor had no campaign website and no campaign social page.
+What he had was a party-hosted page with his name, the office, a sentence in his
+own words and an email address. Recording that as *no campaign site found* hides
+a real, findable thing from a reader — **and it does it to the candidate with
+the fewest resources**, which is the information asymmetry the equal-effort rule
+exists to catch.
+
+**The HOST LABEL is what keeps this inside the organizations-render-as-filed
+rule.** This product never characterises an organization's politics. Presenting
+a party's website under a bare "Campaign site" label would blur exactly that
+line. It renders as *the page his party publishes about him* — the source named
+plainly, the reader left to judge it, which is what this product does with every
+other source. It supplies no prose beyond the labelled self-description the
+blurb rule already governs, and it **never supplies a photo**.
+
+## THE BUSINESS CONSTRAINTS
+
+(Adopted 2026-08-24, the author's decisions of that day. `docs/rulings.md`
+carries each in plain language, because a ruling the author cannot read is a
+ruling that does not bind him.)
+
+### RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER COMPOSITION IS NOT
+
+(Adopted 2026-08-24, the author's ruling, closing `T04`. **His words are the
+ruling and are recorded verbatim**, because a paraphrase of a business
+commitment is a different commitment.)
+
+> **"We will never sell exclusively. I will solicit equally. Whether they buy
+> is up to them — if 65% of buyers end up on one side, that is not something I
+> can control so long as the solicitation was equal."**
+
+**The data is never sold exclusively to one buyer.** Not to a campaign, not to
+a party, not to a committee, not to a vendor acting for any of them, and not
+for a window of time. There is no price at which exclusivity is available.
+
+**The obligation is EQUAL SOLICITATION, and it is the half this product
+controls.** The offer goes out equally. That is a real, specific, checkable
+commitment: who was approached, when, and on what terms.
+
+**Buyer composition is NOT an obligation, and pretending otherwise would be
+worse than useless.** If the buyers who accept skew heavily one way, that is a
+fact about the market. The only ways to "fix" it would be to refuse customers
+on the basis of their politics, or to claim a control nobody has — and both are
+further from neutrality than the honest number is.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+neutrality claim does not survive selling exclusively, and it survives selling
+equally, and the difference between those two is the whole of this section. An
+exclusive sale is an advantage this product HANDED to one side; a skewed set of
+buyers is an advantage this product OBSERVED. The first is our act and the
+second is the world, and a business that confuses them ends up either
+politically screening its customers or lying about what it can promise.
+
+**What follows operationally:** the solicitation record is the artifact that
+proves this, not the sales record. And every export continues to report its
+confidence mix, which is a separate obligation and is untouched by this one.
+
+
 ## Ask before
 
 Adding a user data field. Adding an external source. Anything that ranks, scores, or orders candidates. Anything that renders one user's input — or any aggregate of it — back to users. Anything that changes how reactions are bucketed or exported.

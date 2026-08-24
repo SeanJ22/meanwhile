@@ -239,6 +239,17 @@ test("no module reads search_log without the organic filter", async () => {
       // pattern, because an exception that lives in code can be argued with
       // and a silent one cannot.
       "scripts/verify-local-write.mts",
+      // `T10`, 2026-08-24: the demo deletion. Its window predicate is
+      // `occurred_at`, and it MUST NOT filter to ORGANIC — the promise Sean
+      // made to the tester was that everything collected during the demo goes,
+      // and a deletion that spared the synthetic and session rows would be
+      // keeping exactly the rows nobody was promised would be kept. It emits
+      // no aggregate: it prints a per-store count of what it removed, which is
+      // the audit record of a deletion rather than a number about readers.
+      // Declared with its reason, the DECLARED_EXTRAS pattern, because an
+      // exception that lives in code can be argued with and a silent one
+      // cannot.
+      "lib/db/demo-deletion.ts",
       // R36/R42, 2026-08-17 (g11): the run-id census. It is the command form
       // of `runClassCensusQuery()`, whose documented job is to describe the
       // WHOLE table INCLUDING the part that is ours — the one read that

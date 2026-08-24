@@ -178,15 +178,56 @@ test("grandfathered is labelled as what it is, and is not counted as reviewed", 
    * `grandfathered` means SHIPPING BEFORE THE RULE EXISTED, NOT INDIVIDUALLY
    * APPROVED BY THE AUTHOR. Reporting these as reviewed would be exactly the
    * unread-evidence problem RULING 2 and RULING 55 both exist to end.
+   *
+   * **THIS GUARD USED TO ASSERT `g.length > 20`, AND RULING 116 IS WHY IT NO
+   * LONGER DOES.** That is a frozen measurement of how much work is LEFT, so
+   * it went red on 2026-08-24 for the one reason a guard must never go red:
+   * somebody did the work. Sean approved the 48 en bloc, the grandfathered set
+   * emptied, and the suite failed while nothing whatever was wrong.
+   *
+   * What is worth holding still is the SHAPE of the claim, never its size:
+   * every record that still calls itself grandfathered must still be honest
+   * about what that means, and the set may shrink to nothing — which is the
+   * direction the whole product is trying to travel.
    */
   const g = grandfathered();
-  assert.ok(g.length > 20, `expected the grandfathered set, found ${g.length}`);
   for (const r of g) {
     assert.equal(r.decidedBy, "grandfathered");
     assert.match(r.reason ?? "", /NOT individually/i, `${r.personKey} does not say it is unreviewed`);
     // On RULING 53's clock, so `pnpm stale` surfaces it rather than it sitting
     // approved forever on nobody's decision.
     assert.match(r.decidedAt ?? "", /^\d{4}-\d{2}-\d{2}$/);
+  }
+});
+
+test("every approval names a decider, and an en-bloc decision says so", () => {
+  /*
+   * The INVARIANT that replaces the frozen count. An approved photo renders,
+   * so every one of them must be able to say WHO decided it — and a decision
+   * taken over a whole set must say that it was, rather than reading as
+   * forty-eight separate readings that never happened.
+   */
+  const store = JSON.parse(
+    readFileSync(join(ROOT, "data", "photos", "review.json"), "utf8"),
+  ) as { reviews: Record<string, { state: string; decidedBy?: string; reason?: string }[]> };
+
+  const approvals = Object.values(store.reviews)
+    .flat()
+    .filter((r) => r.state === "APPROVED");
+  assert.ok(approvals.length > 0, "an empty store would make this guard vacuous");
+
+  for (const a of approvals) {
+    assert.ok(
+      (a.decidedBy ?? "").length > 0,
+      "an approved photo renders, so it must name who decided it",
+    );
+    if (/en bloc/i.test(a.decidedBy ?? "")) {
+      assert.match(
+        a.reason ?? "",
+        /en bloc/i,
+        "an en-bloc decision must say so in its reason, not only in its decidedBy",
+      );
+    }
   }
 });
 

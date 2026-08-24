@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 04:34:52 EDT.
-Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
+Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 981 KB `state.md`. **Nothing in it is composed** — every line is read
+the 986 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 129 recorded
+## Rulings — 136 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -399,6 +399,13 @@ from. Each entry there names what it supersedes.
 - RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence
 - RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one
 - RULING 116 — a guard may pin an invariant or a direction, never the size of a gap
+- RULING 117 — the asset store has a public address, and a restore is proved by hash
+- RULING 118 — an appointed official never carries the govern verb
+- RULING 119 — a sovereign tribal nation is its own category of government
+- RULING 120 — equal solicitation is the obligation; who buys is not
+- RULING 121 — one body that spans two towns has one identity, and renders in both
+- RULING 122 — a page on a party's own site can be a candidate's page, with the host named
+- RULING 123 — the author's decisions of 2026-08-24, recorded as a batch
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -557,19 +564,5 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-```
-generated: 2026-08-24 04:34:51 EDT
-branch: claude/fix-shallow-clone-stamp
-head sha: fb081314cb629d2dff51208f72badf0cb3df2f17
-head subject: main was red: my own stamp fix committed the failure its docstring warns about
-origin/main sha: 277c3df64f969193323a3f725b58bbce3a752633
-origin/main subject: Merge pull request #165 from SeanJ22/claude/fix-shallow-clone-stamp
-local main sha: 277c3df64f969193323a3f725b58bbce3a752633
-local main matches origin/main: yes
-working tree: dirty — 1 changed file(s)
-open prs: none
-last recorded tests: 1442 (fail)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:14339
-```
+_No git facts available this run._
+

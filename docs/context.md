@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 14:35:55 EDT.
+Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -564,5 +564,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-24 14:35:55 EDT
+branch: main
+head sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
+head subject: The live walk caught a regression: 03255 states 201 meetings and its groups add to 200
+origin/main sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
+origin/main subject: The live walk caught a regression: 03255 states 201 meetings and its groups add to 200
+local main sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
+local main matches origin/main: yes
+working tree: clean
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14431
+```

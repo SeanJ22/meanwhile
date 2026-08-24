@@ -167,3 +167,144 @@ export function parseLocationCodes(html: string): Map<string, string> {
   }
   return out;
 }
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * THE SECOND HOP — WHERE THE MONEY ACTUALLY IS.
+ * (Added 2026-08-24, the state-campaign-money session. A NEW ROUTE: it did not
+ * exist at session start, and it is recorded in `docs/expansion-log.md`.)
+ *
+ * ## The false zero this closes, and it would have shipped
+ *
+ * The entity listing above returns `TOT_CONT_AMT` and `TOT_EXP_AMT` on every
+ * row. **They are ALWAYS ZERO.** Not sometimes, and not only for the current
+ * cycle: measured across ROCKAWAY TOWNSHIP, RANDOLPH TOWNSHIP and MORRIS COUNTY
+ * for 2026, 2025, 2024 and 2023 — twelve location-years, 158 rows — **every
+ * single one reads 0**, including cycles that finished years ago and whose
+ * candidates demonstrably raised six figures.
+ *
+ * The fields exist, they parse, they are numbers, and they mean nothing. A
+ * reader would have been shown *raised $0* on 202 named candidates' cards.
+ * That is not a missing figure; it is a **false claim about a real person's
+ * campaign**, and every instrument in this repo would have called it healthy,
+ * because the extraction returned a number.
+ *
+ * The money is one hop further on, per entity, at
+ * `/api/VWEntity/GetEntityFilingData` — the same page's own network call
+ * (ladder rung 7). Ann Grossi's 2019 committee returns 26 filings summing
+ * $204,571.68 in receipts; the entity row for the same committee says $0.
+ *
+ * ## AMENDMENTS ARE WHY THIS CANNOT BE A `SUM()`
+ *
+ * A filed report can be amended, and the amendment is a SEPARATE ROW for the
+ * same form and the same period. Ann Grossi's 2023 committee files `R-1`
+ * period 3 twice — the same $9,265 in receipts, different disbursements — so a
+ * naive sum reports $237,109 where the truth is lower. **A total that
+ * reconciles is not a total that is correct** (RULING 100).
+ *
+ * So the rows are collapsed to one per `(FormName, PERIOD)`, keeping the
+ * highest `AMEND_NO` and breaking ties on the latest `DATE_RECEIVED`, and the
+ * surviving periods are summed.
+ *
+ * ## AND THE PERIOD/CUMULATIVE QUESTION IS ANSWERED BY MEASUREMENT
+ *
+ * Summing periods is only correct if each report states its OWN period rather
+ * than a running total. It does, and the evidence is in the data rather than in
+ * an assumption: Paul DeGroot's 2023 `R-1` period 5 reports $24,977.25 while
+ * his period 3 reports $39,777.95. A cumulative series cannot decrease.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+/** One filed report, as ELEC's own filing endpoint returns it. */
+export interface ElecFiling {
+  entityId: number;
+  /** Reporting period within the form. */
+  period: number;
+  /** 0 is the original; higher numbers are amendments of the same period. */
+  amendNo: number;
+  dateReceived: string | null;
+  formName: string;
+  amountReceived: number;
+  amountDisbursed: number;
+}
+
+export const ELEC_FILING_ENDPOINT =
+  `${ELEC_SEARCH_HOST}/api/VWEntity/GetEntityFilingData`;
+
+export function elecFilingUrl(entityId: string, mode: "EntityOnly" | "CommitteeOnly" = "EntityOnly"): string {
+  return `${ELEC_FILING_ENDPOINT}?ENTITY_S=${encodeURIComponent(entityId)}&${mode}=true`;
+}
+
+export function normalizeElecFiling(row: Record<string, unknown>): ElecFiling {
+  const num = (v: unknown): number => {
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  return {
+    entityId: num(row.ENTITY_S),
+    period: num(row.PERIOD),
+    amendNo: num(row.AMEND_NO),
+    dateReceived: typeof row.DATE_RECEIVED === "string" ? row.DATE_RECEIVED : null,
+    formName: typeof row.FormName === "string" ? row.FormName : "",
+    amountReceived: num(row.AMT_REC),
+    amountDisbursed: num(row.AMT_DISB),
+  };
+}
+
+export interface ElecMoneyTotal {
+  receipts: number;
+  disbursements: number;
+  /** Reports counted AFTER amendments are collapsed. */
+  reportsCounted: number;
+  /**
+   * Of those, how many are MONEY-BEARING — anything but a `D-1`.
+   *
+   * This is the difference between a committee that exists and a committee
+   * that has reported. A `D-1` is a certificate of organization: it registers
+   * the committee and says nothing whatever about money. A candidate whose
+   * only filing is a D-1 has NOT reported raising nothing; they have reported
+   * nothing at all, and rendering `$0` for them is the same false claim the
+   * entity listing's always-zero columns would have made, one floor down.
+   */
+  moneyReports: number;
+  /** Reports read before collapsing — the pair, so the collapse is visible. */
+  reportsRead: number;
+  /** The most recent `DATE_RECEIVED` among the counted reports. */
+  latestFiling: string | null;
+  /** Forms that contributed, so the figure can be checked against ELEC. */
+  forms: string[];
+}
+
+/**
+ * Collapse amendments, then sum. See the amendment note above.
+ *
+ * `D-1` is the certificate of organization — it registers a committee and
+ * reports no money — so it is counted as a report on file and contributes
+ * nothing to the totals. Excluding it from the SUM but not from the COUNT is
+ * the distinction between "has this committee filed anything" and "how much has
+ * it reported", and those are different questions a card asks separately.
+ */
+export function totalElecMoney(filings: readonly ElecFiling[]): ElecMoneyTotal {
+  const latestPerPeriod = new Map<string, ElecFiling>();
+  for (const f of filings) {
+    const key = `${f.formName}#${f.period}`;
+    const held = latestPerPeriod.get(key);
+    if (
+      !held ||
+      f.amendNo > held.amendNo ||
+      (f.amendNo === held.amendNo && (f.dateReceived ?? "") > (held.dateReceived ?? ""))
+    ) {
+      latestPerPeriod.set(key, f);
+    }
+  }
+  const counted = [...latestPerPeriod.values()];
+  const money = counted.filter((f) => f.formName !== "D-1");
+  const dates = counted.map((f) => f.dateReceived).filter((d): d is string => Boolean(d)).sort();
+  return {
+    receipts: money.reduce((a, f) => a + f.amountReceived, 0),
+    disbursements: money.reduce((a, f) => a + f.amountDisbursed, 0),
+    reportsCounted: counted.length,
+    moneyReports: money.length,
+    reportsRead: filings.length,
+    latestFiling: dates.length ? dates[dates.length - 1].slice(0, 10) : null,
+    forms: [...new Set(counted.map((f) => f.formName))].filter(Boolean).sort(),
+  };
+}

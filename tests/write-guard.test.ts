@@ -333,7 +333,9 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   // reads a county clerk's public PDFs and rebuilds a committed JSON file; it
   // touches no database, which is why it appears here only as a count and not
   // in `withDatabase` below.
-  assert.equal(workflows.length, 8, `the workflow set changed: ${workflows.join(", ")}`);
+  // NINE as of 2026-08-24 (RULING 124): the eight below plus refresh-daily.yml,
+  // the one orchestrated run that now carries every source's cron.
+  assert.equal(workflows.length, 9, `the workflow set changed: ${workflows.join(", ")}`);
 
   const withDatabase: string[] = [];
   for (const file of workflows) {

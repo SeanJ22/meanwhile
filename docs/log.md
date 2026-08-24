@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **129 sessions.**
+Newest first. **130 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,23 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## state-money-0824 · 2026-08-24
+
+**What it finished.** 1 row(s).
+
+- **NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red.
+
+**What it started.** 6 row(s) opened, 6 still open.
+
+- **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these. *(open)*
+- **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it. *(open)*
+- **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool. *(open)*
+- **NH122** — cfs.sos.nh.gov ANSWERS: Node fetch gets HTTP 200 and 65,928 bytes. But the page is an Angular single-page app whose HTML is a shell, and the campaign-finance data endpoints were not found. Rung 6 (a live browser, which would reveal the calls) is REFUSED with 403 by the edge — curl is also refused, and only Node's fetch passes, which inverts the usual assumption that the browser is the strongest rung. Reading the served JS bundles (a new route, recorded in the expansion log) surfaced only lobbyist paths; the campaign-finance routes are in lazy chunks this pass did not locate. *(open)*
+- **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions. *(open)*
+- **NJ14** — Of the 07866 ballot's 272 candidacies, 235 resolved to an ELEC location and 37 did not. Fifteen of the 37 are correctly out of scope: US Senate and two congressional districts file with the FEC, and the state-level contest files elsewhere. The rest are REGIONAL SCHOOL DISTRICTS — West Morris Regional, Morris Hills Regional, Hanover Park Regional — plus Long Hill Township and Parsippany-Troy Hills, whose names did not resolve against the ELEC dropdown under any of the six municipal suffixes tried. *(open)*
+
+**Needs Sean.** NS11, NS12, NS13
 
 ## rulings-sweep-0824 · 2026-08-24
 
@@ -56,7 +73,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH119** — docs/photo-review.md carried the sentence 'The two sides now cross exactly, which is what says the ledger is closed' with two figures interpolated into fixed prose. It was true when written and became false the moment the two sides diverged - which is what shipping NH101's 97 congressional portraits did on 2026-08-24: reachable rose by 91 and the rendered slot count did not move at all, while the sentence went on claiming they were equal. Found and fixed the same day.
 - **NH120** — refresh-dotgov-snapshot run 32714838553 lost its work on 2026-08-24. It committed its snapshot, the push was rejected by a concurrent bot push - the only situation the R48 retry exists for - and then the rebase refused with 'cannot rebase: You have unstaged changes'. The run reported that as 'rebase onto origin/main conflicted', so the sentence a reader got described two bots fighting over one artifact when what had actually happened is that our own run left files it generated unstaged. Found and fixed 2026-08-24.
 
-**What it started.** 10 row(s) opened, 7 still open.
+**What it started.** 10 row(s) opened, 6 still open.
 
 - **NH113** — The scheduled NJ filing refresh rebuilds data/ballot/nj-morris-2026.json and the file comes back reordered even when nothing about the ballot has changed. Run 32711668624 on 2026-08-24 showed 1,013 insertions against 1,013 deletions across two files while the clerk's own totals were identical - 272 candidacies, 90 contests, both PDFs still dated 08-21-26. So the workflow reports 'data/ballot/ CHANGED' and runs the full gate on every single run. That is not just noise: a real republish by the clerk will look exactly like the churn, and the one signal that would tell somebody the ballot actually moved is the one being spent every day on nothing. *(open)*
 - **NH114** — data/hunt/nj-morris-certified-winners.json holds 263 rows and some of them carry an office that is plainly not an office. Carolyn Dempsey's reads 'DEMPSEY', Robert Simpson's reads 'SIMPSON' - the surname landing in the office field - and several read null outright, among them Robert H. Conley, Howard Kritz, Maria Cote, Louis R. Maffei and James A. Lynch. The row count is right and the names are right, so every count over this file reconciles and reports success. *(open)*
@@ -64,7 +81,6 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH116** — He is running for US Senate and is owed a photo at 03255. His campaign site publishes exactly one picture of him: a clean solo studio portrait, refused on 2026-08-24 on two stated grounds rather than on composition. The file is named 'Picture Trinity campaign shot high def 2007 001.jpg' - the publisher dating it to 2007, nineteen years ago - and it is served at 220px in 5,699 bytes, which is below any size this product could render as a portrait. *(open)*
 - **NH117** — pnpm bodies:spanning, built 2026-08-24 for RULING 121, finds bodies carrying the same name under more than one division. Two were merged this session because Sean ruled on them by name - Lake Todd Village District and the New London-Springfield Water System Precinct. Ten more share a name and have NOT been merged, because a shared name is not proof of a shared body: a Master Plan Committee in Wilmot and one in Grantham are almost certainly two committees, not one. *(open)*
 - **NS10** — RULING 119 gives tribal nations their own category, and they needed identifiers. The canonical national list of government identifiers - opencivicdata/ocd-division-ids - has no tribal category at all: read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal, and searching it for the three nations by name returns only Navajo COUNTY, Arizona. So this project minted its own, built on the Census Bureau's own codes for tribal areas with the federal code recorded beside each one. *(open)*
-- **NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red. *(open)*
 
 **Needs Sean.** NS10
 

@@ -82,6 +82,14 @@ import {
 
 /** The scheduled workflows that push `main`, plus the tripwire. */
 const WATCHED = [
+  /*
+   * RULING 124 (2026-08-24): the ONE daily orchestrated refresh. Every source's
+   * cron moved onto it, so if this is unwatched then nothing scheduled that
+   * touches reader data is watched at all — a strictly worse position than the
+   * five separate workflows it replaced. The five below keep their entries
+   * because they keep their `workflow_dispatch`.
+   */
+  "refresh-daily.yml",
   "intake-tripwire.yml",
   "refresh-meetings-snapshot.yml",
   "refresh-dotgov-snapshot.yml",

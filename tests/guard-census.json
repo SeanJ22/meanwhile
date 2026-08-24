@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 214,
-    "named": 2039,
+    "files": 218,
+    "named": 2071,
     "dynamic": 6
   },
   "files": {
@@ -448,6 +448,20 @@
         "an all-day event crossing a month boundary ends on the right day",
         "filenames are safe",
         "the google url carries the same dates"
+      ],
+      "dynamic": 0
+    },
+    "tests/campaign-finance-firewall.test.ts": {
+      "names": [
+        "RULING 126 wall 1: no database table holds campaign-finance data",
+        "RULING 126 wall 2: the aggregation layer imports no campaign-finance module",
+        "RULING 126 wall 2: the sweep would catch a real import rather than reporting green about nothing",
+        "RULING 126 wall 3: a future money table would share no column with a collection store",
+        "a LEAD never renders; a sourced absence does",
+        "a match needs name, office AND year — two of three is a LEAD",
+        "office agreement bridges the two vocabularies, and refuses across classes",
+        "one shared surname is never agreement",
+        "the split counts CANDIDACIES, and the record count is a separate number"
       ],
       "dynamic": 0
     },
@@ -1000,6 +1014,19 @@
         "the deletion runs only against the production WRITE handle",
         "the promise covers exactly the two sold stores, named rather than discovered",
         "the wall is still up TODAY — nothing has been deleted"
+      ],
+      "dynamic": 0
+    },
+    "tests/deploy-paths.test.ts": {
+      "names": [
+        "a docs-only commit cancels; one shipping path anywhere in it builds",
+        "an uncomputable diff BUILDS and says so, and is never a cancel",
+        "an unknown path is SHIPPING — the allowlist direction is the rule",
+        "every non-shipping prefix carries a stated reason",
+        "no file under a non-shipping prefix is traced into the deploy",
+        "previews and branch deploys cancel without needing a diff",
+        "the paperwork paths ARE on the allowlist",
+        "the shipping directories are NOT on the allowlist"
       ],
       "dynamic": 0
     },
@@ -2341,13 +2368,25 @@
         "2d: no module reads reference data from any path outside data/reference",
         "2d: the loader resolves every dataset inside data/reference",
         "Open States reconciles: 7,439 state/territory/DC + 537 federal = 7,976",
-        "data/reference holds 18 files: 9 data files and 9 provenance notes",
+        "data/reference holds 20 files: 10 data files and 10 provenance notes",
         "every provenance note says something about its data file",
         "every reference data file is paired with its provenance note, both ways",
         "every reference file holds the row count it is expected to",
         "the CSV reader survives quoted commas, escaped quotes and embedded newlines",
         "the Census type breakdown sums to the unit total",
         "the Census workbook reconciles: 90,837 units + 1,313 dependent = 92,150"
+      ],
+      "dynamic": 0
+    },
+    "tests/refresh-cadence.test.ts": {
+      "names": [
+        "a source with no elevation is unaffected by the election date",
+        "every source states a cadence reason and what it governs",
+        "every source the orchestrator knows about governs a path under data/",
+        "exactly three workflows are scheduled, and only one can cost a build",
+        "the election elevation expires ON its stated date, not around it",
+        "the five decronned refreshers keep workflow_dispatch and lost their schedule",
+        "weekly runs on Monday only; monthly on the 1st only"
       ],
       "dynamic": 0
     },
@@ -2538,6 +2577,19 @@
         "onSearchPick opens a card for the rows it cannot fly to",
         "the place card elects nobody to stand for the place",
         "the rows that carry neither venue nor geometry are exactly the kinds with a card fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/secret-redaction.test.ts": {
+      "names": [
+        "NEXT_PUBLIC_* is published by design and is set aside by PREFIX, never by a hand-list",
+        "THE ACTUAL LEAK CHANNEL: a key inside a URL curl echoed back is redacted",
+        "a connection string is redacted whole, not left half-recognisable",
+        "a percent-encoded value is redacted too",
+        "findSecrets reports the credential, the count and the line numbers",
+        "no real credential value appears anywhere in the repository",
+        "parsing takes long values, skips comments, and drops short configuration",
+        "the placeholder names WHICH credential, so the line stays diagnostic"
       ],
       "dynamic": 0
     },
@@ -3003,7 +3055,7 @@
         "F22: every governed-artifact refresh gates on the same full suite",
         "R45: no workflow pins an action major that targets Node 20",
         "R45: setup-node never tries to restore a cache before pnpm exists",
-        "the workflow set is still the eight this rule was audited against"
+        "the workflow set is still the nine this rule was audited against"
       ],
       "dynamic": 0
     },

@@ -154,7 +154,21 @@ test("every scheduled workflow in the repo is on the watch list", () => {
     return /^\s*schedule:/m.test(readFileSync(join(dir, f), "utf8"));
   });
 
-  assert.ok(scheduled.length >= 5, `expected the known scheduled jobs — found ${scheduled.length}`);
+  /*
+   * RULING 116: a guard may pin an INVARIANT or a DIRECTION, never the size of
+   * a set that legitimately moves. This asserted `>= 5` and went red on
+   * 2026-08-24 because RULING 124 consolidated five scheduled refreshes into
+   * one — the guard failed on the day the work was done, which is precisely
+   * the shape that trains a reader to edit the constant.
+   *
+   * The invariant is the second assertion and it never needed the first: EVERY
+   * scheduled workflow is watched. The floor stays at 1 only so that a repo
+   * with no schedules at all cannot pass this vacuously.
+   */
+  assert.ok(
+    scheduled.length >= 1,
+    "no scheduled workflow found at all — this guard would pass without looking",
+  );
   const missing = scheduled.filter((f) => !watcher.includes(f));
   assert.deepEqual(missing, [], `scheduled workflows nothing watches: ${missing.join(", ")}`);
 });

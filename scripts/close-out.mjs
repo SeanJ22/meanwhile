@@ -29,19 +29,44 @@
  * price; the alternative is a gate that guesses which commits are "just docs",
  * and the commit that caused this looked exactly like just docs.
  *
- * Usage:
- *   pnpm closeout              gate, push main, then WAIT for the tip to go green
- *   pnpm closeout --dry-run    gate only; push nothing
- *   pnpm closeout --no-wait    gate and push; report the tip without waiting
+ * ─────────────────────────────────────────────────────────────────────────────
+ * 2026-08-24 — RULING 124 item 5: THIS TOOL NO LONGER PUSHES.
  *
- * There is deliberately no skip flag, for the reason `buildGate()` in
- * handoff.mjs already gives: an escape hatch on a gate is how the gate stops
- * meaning anything.
+ * Sean's instruction: *the close-out tool refuses a separate push to `main`;
+ * records ship inside the PR or not at all.* The gate above was the right
+ * answer to the wrong half of the problem — it made the separate push SAFE, and
+ * left it costing a full production build and deploy to serve a paperwork diff.
+ * Three of the five production builds before 5 AM on 2026-08-24 were exactly
+ * that.
+ *
+ * The objection the merge-cadence rule raises is real and is answered rather
+ * than waved past: **a document cannot name the commit that contains it.** That
+ * was true while the two facts a close-out record could not know in advance
+ * were the deploy SHA and the `walk:all` numbers. RULING 125 moves every walk,
+ * screenshot and card check onto a LOCAL production build, so the walk numbers
+ * are now knowable BEFORE the ship — they are a measurement of the same bytes.
+ * What remains genuinely unknowable in advance is the deploy SHA, and that is
+ * an operational fact read from Netlify's deploy record after the merge. It
+ * does not need to live in a commit at all.
+ *
+ * So the residual conflict is narrow, it is named in `docs/tracker-working.csv`
+ * as a Needs Sean row, and until he rules the refusal stands — because the
+ * alternative shape is an escape hatch, and `buildGate()` in `handoff.mjs`
+ * already gives the reason those do not exist here.
+ *
+ * Usage:
+ *   pnpm closeout              gate, then REPORT whether anything is unpushed
+ *   pnpm closeout --dry-run    gate only
+ *   pnpm closeout --no-wait    ask the server about main without waiting
+ *
+ * There is deliberately no skip flag and no `--push`.
  */
 
 import { execSync, spawnSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { gitFor } from "./git-lite.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -49,10 +74,8 @@ function say(mark, label, detail) {
   console.log(`${mark} ${label.padEnd(22)} ${detail}`);
 }
 
-function git(...args) {
-  const r = spawnSync("git", args, { cwd: ROOT, encoding: "utf8" });
-  return r.status === 0 ? (r.stdout ?? "").trim() : null;
-}
+/* `git` is `gitFor(ROOT)` from ./git-lite.mjs — one copy (RULING 103). */
+const git = gitFor(ROOT);
 
 /**
  * The build gate, with the two failure modes kept apart.
@@ -110,29 +133,42 @@ if (dirty) {
 }
 
 const ahead = Number(git("rev-list", "--count", "origin/main..HEAD") ?? "0");
-say("·", "to push", `${ahead} commit(s) ahead of origin/main`);
+
+/*
+ * THE REFUSAL — RULING 124 item 5.
+ *
+ * Anything sitting unpushed on local `main` at close-out time is, by
+ * definition, a record that did not ship inside the PR. Naming the commits is
+ * the point: "you have 2 unpushed commits" is a fact nobody can act on, and
+ * "these two touch only `docs/`, so they belonged in the PR" is.
+ */
+if (ahead > 0) {
+  const subjects = git("log", "--format=%h %s", "origin/main..HEAD") ?? "";
+  say("✗", "unpushed", `${ahead} commit(s) ahead of origin/main — THIS TOOL DOES NOT PUSH`);
+  console.log(subjects.split("\n").map((l) => `    ${l}`).join("\n"));
+  console.log("");
+  console.log("  Close-out records ship INSIDE the session's pull request (RULING 124 item 5).");
+  console.log("  A separate push to main costs a full production build and deploy to serve a");
+  console.log("  paperwork diff — three of the five production builds before 5 AM on 2026-08-24");
+  console.log("  were exactly that.");
+  console.log("");
+  console.log("  What to do with these commits, in order of what is usually right:");
+  console.log("    · squash them into the session branch and let `pnpm handoff --ship` carry them;");
+  console.log("    · or, if the branch is already merged, open a second PR — the merge is the door.");
+  console.log("");
+  console.log("  The walk numbers no longer need the ship to be knowable: RULING 125 runs every");
+  console.log("  walk against a LOCAL production build. The deploy SHA is read from Netlify's");
+  console.log("  deploy record afterwards and does not belong in a commit.");
+  process.exit(1);
+}
+
+say("✓", "unpushed", "0 commits ahead of origin/main — nothing tried to bypass the PR");
 
 if (!gate()) process.exit(1);
 
 if (dryRun) {
-  say("·", "push", "skipped (--dry-run)");
+  say("·", "server check", "skipped (--dry-run)");
   process.exit(0);
-}
-
-if (ahead === 0) {
-  say("·", "push", "nothing to push");
-} else {
-  // Through push-main.mjs, which rebases and retries — the five scheduled
-  // workflows push `main` too and their windows genuinely collide (R48).
-  const push = spawnSync(process.execPath, [join(ROOT, "scripts", "push-main.mjs")], {
-    cwd: ROOT,
-    stdio: "inherit",
-  });
-  if (push.status !== 0) {
-    say("✗", "push", `push-main.mjs exited ${push.status} — nothing reached main`);
-    process.exit(1);
-  }
-  say("✓", "push", "records on origin/main");
 }
 
 /*

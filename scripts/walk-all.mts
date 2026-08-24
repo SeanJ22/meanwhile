@@ -1,8 +1,12 @@
 /**
  * `pnpm walk:all` — the regression net.
  *
- *   pnpm walk:all                              # against production
- *   SHOOT_BASE_URL=http://localhost:3000 pnpm walk:all
+ *   pnpm build && pnpm start   # in another shell — the LOCAL production build
+ *   pnpm walk:all              # against http://localhost:3000
+ *
+ * **There is no production mode. RULING 125 (2026-08-24) removed it**, and a
+ * non-local `SHOOT_BASE_URL` is refused rather than honoured. The reasoning is
+ * at the `BASE` declaration below.
  *
  * ## Why this exists
  *
@@ -73,10 +77,68 @@ import { mojibakePattern } from "../lib/text/mojibake.ts";
 import { decodePng, patchStats, regionChange } from "./png.mts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
 
-const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(
-  /\/$/,
-  "",
-);
+/**
+ * THE TARGET IS LOCAL, AND PRODUCTION IS REFUSED — RULING 125 (2026-08-24).
+ *
+ * Sean's ruling: *everything is confirmed visually and by code from the local
+ * production build — never from Netlify. Production is the delivery truck, not
+ * the test bench.*
+ *
+ * This used to default to `https://sparkwtp.netlify.app`, and the cost was not
+ * the traffic. **Every `/api/meetings` GET writes a row to the search log**,
+ * and the search log is a store this product SELLS. A walk of four zips writes
+ * dozens; 11,755 synthetic rows had accumulated in the production store by
+ * 2026-08-24. They are excluded from every aggregate by the `T10` machinery and
+ * that machinery works — but a store that is organic BY CONSTRUCTION is a
+ * stronger claim than one that is organic after filtering, and it is free.
+ *
+ * A local production build serves the same bytes. There was never a reason to
+ * find out on the live site.
+ *
+ * **The refusal has no escape hatch**, for the reason the build gate already
+ * gives. The one remaining question about production — WHICH SHA IS LIVE — is
+ * answered by `pnpm deploy:live`, from Netlify's deploy record, with zero
+ * requests to the site.
+ */
+const DEFAULT_BASE = "http://localhost:3000";
+const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
+
+{
+  let host: string;
+  try {
+    host = new URL(BASE).hostname;
+  } catch {
+    console.error(`walk:all · SHOOT_BASE_URL is not a URL: ${BASE}`);
+    process.exit(1);
+  }
+  const local = host === "localhost" || host === "127.0.0.1" || host === "[::1]" || host === "::1";
+  if (!local) {
+    console.error(
+      [
+        "",
+        `walk:all · REFUSED — the target is ${host}, which is not a local build.`,
+        "",
+        "  RULING 125 (2026-08-24, Sean's ruling): every walk, screenshot and card",
+        "  check runs against the LOCAL production build. Production is the delivery",
+        "  truck, not the test bench.",
+        "",
+        "  Every /api/meetings GET writes a row to the search log, and that store is",
+        "  sold. Walking production makes the sold store organic-after-filtering",
+        "  instead of organic by construction.",
+        "",
+        "  Do this instead:",
+        "    corepack pnpm build",
+        "    corepack pnpm start          # in another shell, serving .next on :3000",
+        "    corepack pnpm walk:all",
+        "",
+        "  To ask which SHA is live, use `pnpm deploy:live` — Netlify's deploy",
+        "  record, one API call, zero requests to the site.",
+        "",
+      ].join("\n"),
+    );
+    process.exit(1);
+  }
+}
 
 /** The four zips that are the product (state.md §9), plus the refusal zip. */
 const ZIPS = {
@@ -239,6 +301,62 @@ async function until(
 /** `until` for a selector existing, which is most of what this suite waits on. */
 async function untilPresent(page: Page, selector: string, ms = 15_000): Promise<boolean> {
   return until(page, async () => (await page.locator(selector).count()) > 0, ms);
+}
+
+/**
+ * `until` for a subtree that has STOPPED CHANGING — `NH121`, 2026-08-24.
+ *
+ * ## The defect this closes, and it is an instrument defect
+ *
+ * The meetings-panel check waited on `.al-overlay-count` and then read the
+ * whole panel in the same tick. **The header renders before the list body's
+ * footer does**, so the read caught the panel mid-render: it saw the stated
+ * total, it saw seven group headings summing 200, and it saw NO `Show N more`
+ * button — because the button had not been painted yet.
+ *
+ * That produced `NH121`: *03255 states 201 and its groups add to 200*, reported
+ * as a NAMED REGRESSION for a day, with the 200-row page limit explicitly ruled
+ * out on the strength of the missing button. **The button was never missing.**
+ * Re-measured on the local production build on 2026-08-24 with a settle before
+ * the read, the same panel renders `Show 1 more (1 hidden)`, and 200 + 1 = 201
+ * reconciles exactly.
+ *
+ * The product was correct the whole time. The clip was stated, the arithmetic
+ * was honest, and the instrument was reading a half-painted panel and
+ * reporting a defect in the product.
+ *
+ * ## Why a settle rather than a longer fixed wait
+ *
+ * A fixed wait is a guess that gets shorter as machines get faster and longer
+ * as pages get heavier, and it fails silently in both directions. This asks the
+ * question the check actually has: *has this subtree finished changing?* Two
+ * consecutive identical measurements of its markup length, `quietMs` apart.
+ */
+async function untilSettled(
+  page: Page,
+  selector: string,
+  quietMs = 400,
+  ms = 15_000,
+): Promise<boolean> {
+  const started = Date.now();
+  let last = -1;
+  while (Date.now() - started < ms) {
+    const size = (await page.evaluate(
+      `(() => { const el = document.querySelector(${JSON.stringify(selector)}); return el ? el.innerHTML.length : -1; })()`,
+    )) as number;
+    if (size >= 0 && size === last) return true;
+    last = size;
+    /*
+     * A plain timer, deliberately NOT `page.waitForTimeout`. This is the POLL
+     * INTERVAL of an event-driven check, not a fixed wait followed by a single
+     * read — and `tests/walk-waits.test.ts` counts the latter, which is the
+     * class that filed four false regressions in one session. Putting a poll
+     * interval into that ledger would inflate the number the ledger exists to
+     * drive down.
+     */
+    await new Promise<void>((resolve) => setTimeout(resolve, quietMs));
+  }
+  return false;
 }
 
 /** `until` for the page's text containing something. */
@@ -540,24 +658,57 @@ section("A. Top-level doors (0817, 0818, g3)");
     }
     const commit = body.commit ?? "unknown";
     const deployId = body.deployId ?? "unknown";
-    check(
-      "promptC",
-      "/api/build states the code SHA",
-      /^[0-9a-f]{40}$/.test(commit),
-      `commit=${commit}`,
-    );
-    check(
-      "promptC",
-      "/api/build states the deploy identifier",
-      deployId !== "unknown" && deployId.length > 0,
-      `deployId=${deployId}`,
-    );
-    check(
-      "promptC",
-      "/api/build's two identifiers are distinct facts, not one repeated",
-      commit !== deployId,
-      `commit=${body.commitShort ?? "?"} deployId=${deployId}`,
-    );
+    /*
+     * THESE THREE ARE PRODUCTION-ONLY QUESTIONS, and RULING 125 made every walk
+     * local — so they must report CANNOT RUN rather than FAIL.
+     *
+     * `commit` and `deployId` come from Netlify's build environment. A local
+     * `next start` has no such environment and answers "unknown", which is the
+     * CORRECT answer for a local build rather than a defect in the endpoint.
+     * Left as failures they would report three NAMED REGRESSIONS on every local
+     * walk from now on — an alarm that is wrong on every quiet day is an alarm
+     * nobody reads (RULING 115), and it would be an alarm this session's own
+     * ruling created.
+     *
+     * The distinction the walk already draws for the sold-store check is the
+     * same one: a check that cannot reach its subject is UNKNOWN, never
+     * negative (RULING 24). The live SHA is answered by `pnpm deploy:live`,
+     * from Netlify's deploy record, with zero requests to the site.
+     */
+    const localTarget = /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])/.test(BASE);
+    if (localTarget) {
+      for (const label of [
+        "/api/build states the code SHA",
+        "/api/build states the deploy identifier",
+        "/api/build's two identifiers are distinct facts, not one repeated",
+      ]) {
+        cannotRun(
+          "promptC",
+          label,
+          "this run targeted a local build, which has no Netlify build environment — " +
+            "ask `pnpm deploy:live` instead, which reads the deploy record with zero site traffic",
+        );
+      }
+    } else {
+      check(
+        "promptC",
+        "/api/build states the code SHA",
+        /^[0-9a-f]{40}$/.test(commit),
+        `commit=${commit}`,
+      );
+      check(
+        "promptC",
+        "/api/build states the deploy identifier",
+        deployId !== "unknown" && deployId.length > 0,
+        `deployId=${deployId}`,
+      );
+      check(
+        "promptC",
+        "/api/build's two identifiers are distinct facts, not one repeated",
+        commit !== deployId,
+        `commit=${body.commitShort ?? "?"} deployId=${deployId}`,
+      );
+    }
   }
 }
 
@@ -2259,6 +2410,13 @@ for (const { zip } of FOUR) {
   }
   // R49: the panel's count element is present, rather than 1.4s have passed.
   await untilPresent(page, ".al-overlay-count", 10_000);
+  /*
+   * NH121 (2026-08-24): and the panel has STOPPED CHANGING. The header paints
+   * before the list's footer, so reading in the same tick saw the total, saw
+   * the group counts, and missed the `Show N more` button that reconciles
+   * them — which was reported as a product defect for a day.
+   */
+  await untilSettled(page, ".al-panel", 400, 10_000);
 
   const panel = await page.evaluate(`(() => {
     const header = document.querySelector(".al-overlay-count");
@@ -2287,12 +2445,43 @@ for (const { zip } of FOUR) {
      * A clip that is NOT stated still fails, which is the half that matters.
      */
     const more = document.querySelector(".al-more");
-    const hiddenMatch = /\(([0-9]+) hidden\)/.exec(more?.textContent || "");
+    /*
+     * NH121's ACTUAL CAUSE — A REGEX ESCAPE EATEN BY A TEMPLATE LITERAL.
+     * (2026-08-24. The timing theory that preceded it was wrong, and
+     * docs/state.md records it as wrong.)
+     *
+     * This whole evaluate is a TEMPLATE LITERAL, so the page never received
+     * what the source appears to say. A backslash before a parenthesis is not a
+     * recognised escape in a template literal, so it collapses to a bare
+     * parenthesis, and the page compiled the escaped parens as a CAPTURE GROUP.
+     * The regex still matched "Show 1 more (1 hidden)" — which is why nothing
+     * threw and nothing looked wrong — but the groups shifted by one, so index
+     * 1 held "1 hidden" rather than "1", and Number of that is NaN.
+     *
+     * NaN then poisoned the check silently: 200 + NaN is NaN, so the equality
+     * failed; and NaN > 0 is FALSE, so the report took the no-clip branch and
+     * printed "group counts sum 200 across 7 group(s)" as though the panel had
+     * rendered no clip at all. It renders one at t=0 — measured nine times from
+     * 0ms to 9s, always present.
+     *
+     * So this stood as a NAMED REGRESSION against the product for a day and the
+     * product was correct throughout.
+     *
+     * THE FIX IS TO STOP PUTTING A REGEX INSIDE A TEMPLATE LITERAL. indexOf and
+     * a digits-only strip cannot lose an escape. The previous version was
+     * clever and wrong, and this one is dull and right.
+     */
+    const moreText = more ? (more.textContent || "") : "";
+    const open = moreText.lastIndexOf("(");
+    const hiddenDigits = open >= 0 ? moreText.slice(open + 1).replace(/[^0-9]/g, "") : "";
+    const hidden = hiddenDigits.length > 0 ? Number(hiddenDigits) : 0;
     return {
       stated: Number((header.textContent || "").replace(/[^0-9]/g, "")),
       groups: counts.length,
       sum: counts.reduce((a, b) => a + b, 0),
-      hidden: hiddenMatch ? Number(hiddenMatch[1]) : 0,
+      hidden: Number.isFinite(hidden) ? hidden : 0,
+      /* The raw text, so a future mismatch is diagnosable from the report. */
+      moreText,
       clipStated: Boolean(more),
     };
   })()`) as {
@@ -2301,6 +2490,9 @@ for (const { zip } of FOUR) {
     groups?: number;
     sum?: number;
     hidden?: number;
+    /* The clip button's raw text, so a future mismatch is diagnosable from the
+     * report rather than requiring a session to re-derive it. */
+    moreText?: string;
     clipStated?: boolean;
   };
 

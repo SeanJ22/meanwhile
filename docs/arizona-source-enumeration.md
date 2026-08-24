@@ -254,3 +254,84 @@ all four or none.
 - **What it is NOT:** an endorsement list. A ROSTER is a record; an endorsement
   is somebody's judgement about a candidate, and this product does not carry
   judgements about candidates.
+
+---
+
+## The 2026-08-24 addition — SeeTheMoney walked, and what it actually is
+
+*(Item 6 of the state-campaign-money session. The enumeration above NAMED the
+Secretary of State as holding state campaign-finance reports; this records what
+happens when the door is actually opened, so the Arizona hunt inherits a walked
+route rather than a name — RULING 63.)*
+
+### 20. SeeTheMoney — the portal, and it is NOT at the address the enumeration implies
+
+**`https://seethemoney.az.gov` — HTTP 200, 109,107 bytes, title `SeeTheMoney`,
+walked 2026-08-24 at rung 2 (a plain fetch).** No wall, no challenge page, no
+credential.
+
+The enumeration above points at `azsos.gov` because that is what the FEC
+directory names, and the FEC directory is right about the AUTHORITY. It is not
+the address of the DATA. Two facts worth carrying forward:
+
+- **`https://azsos.gov/elections/campaign-finance` answers HTTP 404** — walked
+  2026-08-24. The path a person would guess from the directory does not exist.
+  The status code is honest here, which is worth saying because
+  `nj.gov/nj/gov/county/` answers 200 with a "Page not found" body and RULING 93
+  exists because of it.
+- **The portal is its own host.** `seethemoney.az.gov` is where the filings are,
+  and nothing on the Secretary of State's own campaign-finance route names it in
+  a machine-readable way.
+
+### What its shape is, measured rather than assumed
+
+| Fact | Measured 2026-08-24 |
+| --- | --- |
+| Entry page | `https://seethemoney.az.gov/Reporting/Explore` — HTTP 200, 109,107 bytes |
+| Data endpoint | **`POST https://seethemoney.az.gov/Reporting/GetNEWTableData` — HTTP 200** |
+| A near-miss endpoint | `POST /Reporting/GetDetailedTableData` — **HTTP 404**, so the name matters |
+| `robots.txt` | **HTTP 404** — there is no robots file to honour or violate |
+| A terms-of-use page at the guessed path | `/PublicResources/TermsOfUse` — HTTP 404 |
+
+**The endpoint is LIVE and its PARAMETER SHAPE IS NOT YET KNOWN.** Posted with a
+guessed body it answers `200` with a two-byte empty payload — which is the exact
+shape RULING 100 warns about, and it is recorded here as *not determined* rather
+than as *returns nothing*. A 200 with an empty body is a statement about our
+request, not about Arizona's records.
+
+The next rungs for it, named so the AZ hunt does not re-derive them:
+
+- **Rung 7, properly** — the page's own network calls, observed in a live
+  browser. This is the obvious route and it was not walked here only because the
+  session's scope for Arizona was the enumeration rather than the extraction.
+- **Rung 12** — the vendor underneath. The response shell is ASP.NET MVC
+  (`The resource cannot be found.` is the stock IIS 404 page), so the endpoint
+  is a controller action and its parameters are the action's own argument names.
+- **Rung 13** — the Secretary of State's own public-records path, already
+  enumerated above with `sosadmin@azsos.gov`.
+
+### Terms, recorded with their date
+
+**There is no terms-of-use document at the portal, and there is no
+`robots.txt`.** Both were asked for on 2026-08-24 and both answered 404. That is
+a measurement, not a permission: the absence of a stated restriction is not the
+same as a stated allowance, and the four standing limits in the public-records
+rule govern regardless — no authentication, no circumvention, no rate that
+degrades service, nothing not already published.
+
+**The records themselves are Arizona public records** held by a state agency, and
+`.gov` publications by a US state are not subject to federal copyright the way a
+vendor's compilation would be. **RULING 126 governs what may be done with them
+once retrieved: they render for readers and never enter anything sold.**
+
+### The Citizens Clean Elections Commission, walked
+
+**`https://www.azcleanelections.gov` — HTTP 200, 26,249 bytes**, walked
+2026-08-24 at rung 2. Named in the FEC directory as holding *Full Public Funding
+to Statewide and Legislative* records and the *Candidate Statement Pamphlet*.
+
+That pamphlet is worth naming as a route in its own right, and not for money:
+**it is candidates' own words, published by the state, symmetrically, on
+identical terms** — which is the same instrument RULING 112 describes and cites
+this Commission as the model for. It is a `in their own words` route as much as
+a `filing-campaign-finance-state` one.

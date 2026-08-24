@@ -14,6 +14,20 @@
 [build]
   command = "corepack enable && corepack pnpm run build"
   publish = ".next"
+  # THE DEPLOY FILTER — RULING 124 (2026-08-24, Sean's instruction, item 1.2).
+  #
+  # Exit 0 CANCELS the build; non-zero lets it run. Inverted from every other
+  # exit code in this repo, which is why it is stated at both ends.
+  #
+  # Three of the five production builds before 5 AM on 2026-08-24 rebuilt and
+  # redeployed a byte-identical application to serve paperwork: an intake
+  # report, and two close-out commits touching only `docs/`. The allowlist and
+  # the measured evidence for it live in `lib/ops/deploy-paths.ts`, and
+  # `tests/deploy-paths.test.ts` reads the built trace manifests and fails if
+  # any file under a non-shipping prefix is actually needed by the deploy.
+  #
+  # Every failure path here BUILDS. A wasted build is the cheap failure.
+  ignore = "node scripts/netlify-ignore.mjs"
 
 [build.environment]
   # package.json pins packageManager pnpm@10.33.0; corepack honours it.
@@ -40,6 +54,23 @@
 # ubuntu in both modes and its log is readable without a Netlify login, which
 # is the check the preview was standing in for.
 [context.deploy-preview]
+  ignore = "exit 0"
+
+# BRANCH DEPLOYS DO NOT BUILD EITHER (RULING 124, 2026-08-24, item 1.1).
+#
+# The preview context was closed in g17 and the branch context was not, which
+# left the same duplicate build running under a different name — and invisible
+# in the production deploy list, so nothing counted it. The overnight session of
+# 2026-08-24 alone pushed 15 branch commits.
+#
+# `exit 0` rather than the filter script: there is no path-based question to ask
+# here. A branch deploy of this repo is never looked at by anyone, in any
+# context, and `.github/workflows/build-check.yml` already runs the literal
+# build command on every pull request with a log readable without a Netlify
+# login. The dashboard toggles for both contexts are named in the session report
+# rather than claimed — the connector this repo has exposes no build-settings
+# write, so this file is the half that can be enforced from the repo.
+[context.branch-deploy]
   ignore = "exit 0"
 
 [functions]

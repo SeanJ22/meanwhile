@@ -17748,3 +17748,305 @@ them forward — `NH79` through `NH84` — each with what is owed and why it was
 done. **The layout work in particular must be built against the post-Hunt-6
 panel: the registry held 12 bodies when the walkthrough was taken and holds 174
 now.**
+
+---
+
+## State campaign money, 2026-08-24 — the drop-down that structurally could not fill
+
+*Session `state-money-0824`. Branch `claude/state-money-0824`. Sean's ruling of
+2026-08-24: campaign-finance data for state, county and local candidates is
+collected and rendered now, with election counsel reviewing afterwards on `B05`.*
+
+**Four rulings adopted: 124, 125, 126, 127.** `docs/rulings.md` carries all four;
+124, 125 and 126 are written into `CLAUDE.md` as law.
+
+### The gap, stated as a fact about a card
+
+Every Campaign money surface in this product was FEC-fed, and the FEC is
+federal-only. `app/ballot/page.tsx` read `money: federal ? <CandidateFunding/> :
+null` — so a Morris County commissioner candidate, who files with the New Jersey
+Election Law Enforcement Commission, had a section that **could not fill.** Not
+"had no data yet": there was no code path. At 07866 that was 235 of 272
+candidacies.
+
+### NJ ELEC — the three-way split, with denominators
+
+| | Count |
+| --- | ---: |
+| Candidacies on the certified ballot | 272 |
+| In ELEC's scope (a municipal or county location code) | **235** |
+| Out of ELEC's scope (federal office, or unresolved) | 37 |
+| **FILED — candidacies with money rendered** | **58 of 235** |
+| …backed by committee records | 65 |
+| **NO REPORTS ON FILE — sourced and dated** | **177 of 235** |
+| **LEAD — does not render** | 1 |
+| Unresolved | **0 of 235** |
+
+37 locations walked, 429 committees read, **0 SHORT extractions** against ELEC's
+own stated `recordsTotal`. 297 second-hop filing calls, 0 failures. Contests
+walked 90 of 90 — the loop iterates the certified ballot, so equal effort is
+enforced by the loop rather than by intention.
+
+### THE FALSE ZERO, which would have shipped
+
+ELEC's committee listing returns `TOT_CONT_AMT` on every row. **Every value is
+zero.** Not for the current cycle — for every cycle: measured across three
+locations and four election years, twelve location-years and 158 rows, including
+cycles finished years ago whose candidates demonstrably raised six figures.
+
+The first working version of this collector recorded **202 candidacies as FILED
+with $0 raised.** That is not a missing figure; it is a false claim about 202
+named people's campaigns, and every instrument in this repo would have called it
+healthy, because the extraction returned a number.
+
+The money is one hop further on, at `GetEntityFilingData` — the page's own
+network call, ladder rung 7. Two further traps inside it, both found by reading
+rather than summing:
+
+- **Amendments are separate rows.** Ann Grossi's 2023 committee files `R-1`
+  period 3 twice. A naive sum reports $237,109 and is wrong. Rows collapse to
+  the highest `AMEND_NO` per `(form, period)`.
+- **A `D-1` is a certificate of organization, not a financial report.** After
+  the filing endpoint landed, 63 of 73 records still read $0 because their only
+  filing was a registration. Five more candidacies moved out of `FILED` into a
+  sourced absence.
+
+*And the period-versus-cumulative question was settled by measurement rather than
+assumption: DeGroot's `R-1` period 5 is $24,977.25 against period 3's $39,777.95,
+and a cumulative series cannot decrease.*
+
+### What renders — read as images, 2 of 2
+
+`screenshots/state-money-07866-card.png` — Tayfun Selen, Morris County
+commissioner: **Raised $225,026 · Spent $229,526 · 14 reports on file, most
+recently 22 June 2026 · Filed with the New Jersey Election Law Enforcement
+Commission — see this candidate's filings. Read 24 August 2026.**
+
+`screenshots/state-money-07866-absence.png` — Dino F. Cappello: **"No reports on
+file with the New Jersey Election Law Enforcement Commission as of 24 August
+2026."** with the reason beneath it, and never `$0`.
+
+**Reading the first capture caught a defect the DOM was happy about**: the report
+line printed ELEC's own form codes and a raw ISO date — *"14 reports on file ·
+72/24 HR, D-1, R-1, RQ-2024, RQ-2025 through 2026-06-22"*. `72/24 HR` is an
+internal filing-form identifier and `2026-06-22` is a machine date. Both were
+removed before the second capture. That is exactly what the screenshot rule
+exists for; a DOM assertion would have passed.
+
+### New Hampshire and Arizona — reached, not extracted, and the difference is stated
+
+**Neither is an absence claim.** Both are walls with dates and rung histories.
+
+- **`cfs.sos.nh.gov` ANSWERS** — Node `fetch` gets HTTP 200 and 65,928 bytes.
+  The app is an Angular SPA whose data endpoints were not located. **Rung 6, the
+  live browser, is REFUSED 403 by the edge**, and so is curl; only Node's fetch
+  passes. That inverts an assumption this project has carried — the ladder
+  describes rung 6 as the rung a wall falls to, and here it is the rung that
+  trips the wall.
+- **`seethemoney.az.gov/Reporting/GetNEWTableData` is LIVE** (HTTP 200) and its
+  parameter shape is not determined. `GetDetailedTableData` is a 404, so the
+  name is exact. `robots.txt` and the terms path are both 404 — recorded as
+  measurements, never as permissions.
+
+`NH122` and `AZ02` carry them forward with the next branches named.
+`docs/arizona-source-enumeration.md` gains the walked door so the AZ hunt
+inherits a route rather than a name.
+
+### The RULING 97 accounting — why the FEC directory was never walked
+
+**What procedure would have found this without Sean?** *Read the reference data
+already in the tree.* The FEC Combined Federal/State Disclosure Directory has
+been committed at `data/reference/` since 2026-08-22 — 349 offices across 56
+jurisdictions, public domain, no terms.
+
+**Why did it not run?** Because nothing ever asked. The manifest tells a session
+which ROUTES to walk and `docs/sources.md` tells it which SOURCES exist; no
+report contract, no gate and no rule asked a session what `data/reference/`
+already held. It was committed as evidence for a different question and then sat
+there.
+
+**What changed so it runs?** `pnpm cf:agencies` exists and its output is a
+registered reference dataset, so it is now in the row-count gate, the pairing
+gate and the regeneration register — three guards that go red if it rots.
+
+*And the brief's own premise was wrong in the same direction, which is worth
+recording.* It proposed seeding the directory from CFI's `stateLinks` page.
+`cfinst.org/state/stateLinks.aspx` answers **HTTP 404** and `www.cfinst.org`
+does not complete a TLS handshake. The seed does not exist; the better source
+was already here.
+
+### The directory — 56 jurisdictions, link-verified
+
+`data/reference/state-cf-agencies.csv`: **56 of 56 jurisdictions have a
+campaign-finance office named. 43 agency URLs alive, 43 control-matched, 12 dead
+or refused** — the twelve named individually, six of them 403/503 to a rapid
+sequential sweep and recorded as refusals-with-a-date rather than as walls.
+
+**And it caught a partial that added up.** The directory files its FEDERAL
+offices under the jurisdiction `WASHINGTON`, meaning Washington DC — and
+Washington State is also `WASHINGTON`. A first-match search gave Washington
+State the **Federal Election Commission** as its campaign-finance authority,
+shadowing the **Public Disclosure Commission**. It reported *56 of 56* and named
+the wrong government for one state. RULING 100 in a single row.
+
+### Deploy minimalism — RULING 124
+
+Six production deploys landed before 5 AM on 2026-08-24. Reading the commits:
+`cdb5ce2` and `ccda6ea` moved data a reader sees and deserved their builds.
+`ba0947c`, `2a7e825` and `ae5b178` moved only `docs/` — **three of five builds
+rebuilt and redeployed a byte-identical application to serve paperwork.**
+
+| Change | State |
+| --- | --- |
+| Deploy previews | already off (g17) |
+| **Branch deploys** | **now off** — `netlify.toml`, the same duplicate under another name |
+| **Path filter** | `scripts/netlify-ignore.mjs`, predicate in `lib/ops/deploy-paths.ts` |
+| **Scheduled workflows** | **7 → 3**, and only ONE can cost a build |
+| **Close-out push to `main`** | **refused** |
+
+The allowlist claim is **measured, not asserted**: `tests/deploy-paths.test.ts`
+reads the built `.nft.json` trace manifests and fails if any file under a
+non-shipping prefix is traced. **31 manifests, 234 traced repo files, 0
+offenders.**
+
+Proven against the real commits: `336a3eb..ae5b178` (docs only) → **CANCEL**;
+`2a7e825..cdb5ce2` (meetings data) → **BUILD**; deploy-preview context →
+**CANCEL**; no cached ref → **CANNOT-TELL, builds**.
+
+**Projected: at most 1 bot build a day and only when data moved, 1 per shipping
+session, 0 previews.** Against a measured 6 production builds plus 15 branch
+pushes on 2026-08-24 alone.
+
+### Credentials — the leak was nine, not one
+
+The brief named the Census key. A sweep **by value** — not by pattern, because a
+Census key is forty hex characters and so is every git SHA — found **nine
+distinct credentials** in plaintext across the Drive mirror and the local
+transcripts, including all three database connection strings and the
+**production write** credential.
+
+**Nobody pasted a key.** `curl -w '%{url_effective}'` printed the resolved URL
+back, and several of these APIs carry the key as a query parameter. **The Census
+rotation leaked by the same mechanism** — the replacement was in the same file,
+twice.
+
+Old key proven **DEAD** (HTTP 200 with an HTML page titled *Invalid Key* — RULING
+95's exact case). New key proven **LIVE**. Drive mirror **scrubbed: 6 → 0**,
+verified by re-read. Repository: **0, before and after.** Local transcripts hold
+all nine and were deliberately not edited. `NS11` is the P1 — **rotation is the
+fix; scrubbing is cleanup.**
+
+### `NH121` — the product was right, and the instrument had a NaN in it
+
+03255 states 201 meetings and its group headings sum to 200. Reproduced on the
+local build: the panel renders **`Show 1 more (1 hidden)`**, so 200 + 1 = 201 and
+the clip is stated. The product was correct throughout.
+
+**THE CAUSE IS A REGEX ESCAPE EATEN BY A TEMPLATE LITERAL**, and it is worth
+stating precisely because two diagnoses before it were wrong.
+
+`walk:all` reads the clip with `/(([0-9]+) hidden)/` — written inside a
+`page.evaluate` TEMPLATE LITERAL. A backslash before a parenthesis is not a
+recognised escape there, so it collapses, and the page compiled the escaped
+parens as a **capture group**. The regex still matched, so nothing threw and
+nothing looked wrong — but the groups shifted by one, index 1 held `"1 hidden"`
+rather than `"1"`, and `Number("1 hidden")` is **NaN**.
+
+NaN then poisoned the check in two directions at once. `200 + NaN` is NaN, so
+the equality failed. And **`NaN > 0` is FALSE**, so the report took the no-clip
+branch and printed *"group counts sum 200 across 7 group(s)"* — as though the
+panel had rendered no clip at all. That is what the previous session read as
+"renders NO more-button, measured not assumed", and it is why the 200-row page
+limit was ruled out on the strength of a button that was there the whole time.
+
+**Two wrong diagnoses are recorded here rather than tidied away**, because the
+pattern in them is the finding. The previous session's was *the page limit is
+ruled out*. **Mine was a timing race** — that the header painted before the
+footer, fixed by settling. It is a plausible story, I wrote `untilSettled` for
+it, and it was **wrong**: measured nine times from 0ms to 9s after the door
+click, the button is present at every single reading, including t=0. Both
+diagnoses came from reasoning about the symptom instead of instrumenting the
+instrument.
+
+`untilSettled` stays — it is a real robustness improvement and it costs
+nothing — but **it fixed nothing**, and this document says so rather than
+letting a shipped helper imply it was the answer.
+
+The fix is to stop putting a regex inside a template literal: `indexOf` plus a
+digits-only strip cannot lose an escape. Proven on four inputs including the two
+that matter, with the old extraction shown returning NaN on the same text.
+
+Newly ruled out by measurement: not an empty-key group — 0 of 456 snapshot
+meetings have a blank jurisdiction, across 19 distinct values.
+
+### One process mistake this session made, named rather than smoothed
+
+I ran `pnpm run build` **while a walk was in flight against the running
+server**. `next start` serves `.next` from disk, so rebuilding under it
+replaces the chunks the walk is mid-way through reading — the failure mode is a
+server that 500s its own assets and a walk whose results mean nothing.
+
+The run was **discarded rather than reported**, the server was killed, the build
+was run to completion first, and the walk was re-run clean. It cost about twenty
+minutes and no correctness. It is recorded because a walk result is only worth
+what the conditions it ran under were worth, and a session that quietly kept a
+contaminated run would have reported numbers it could not stand behind.
+
+### Gates
+
+`test 2087 of 2087` · `lint 0 errors` (13 pre-existing warnings, none in a file
+this session wrote) · `tsc --noEmit` clean · `pnpm build` green ·
+`pnpm regen` 15 of 15 current · `pnpm credentials` **15 of 15 proven**.
+
+**`pnpm walk:all` against the LOCAL production build (RULING 125): 368 checks
+ran, 0 NAMED REGRESSIONS, 11 declared COULD NOT RUN, 0 silent.**
+
+Three of the eleven are new and are this session's doing, correctly: the
+`/api/build` SHA, deploy-id and distinctness checks ask PRODUCTION-ONLY
+questions, and a local build has no Netlify environment. Left as failures they
+would have reported three NAMED REGRESSIONS on every local walk from now on —
+an alarm created by this session's own ruling, wrong on every quiet day. They
+report CANNOT RUN and name `pnpm deploy:live` as the way to ask.
+
+`docs/walk-checks.txt` is deliberately NOT rewritten: the baseline records what
+the PRODUCTION suite runs and a local walk cannot reach every check. The diff
+still ran against the committed file, and the 11 unreachable checks are named
+individually rather than counted.
+
+**One flaky check, named rather than claimed as fixed.** *85701: north Tucson
+renders crisp, not muted, at city zoom* failed on two earlier runs of this
+session (delta 8.62 against a 2.5 bar) and PASSED on the clean one. Nothing in
+this session touched that surface. It is recorded as flaky under a contaminated
+build rather than as something this work repaired.
+
+### The sold store, measured — and the brief was off by a factor of nineteen
+
+`pnpm census:runs --target=production`, read-only, 2026-08-24:
+
+| Store | organic | synthetic | unknown | author | total |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `search_log` | **260** | **11,755** | 2,845 | 17 | 14,877 |
+| `reactions` | 0 | 1 | 38 | 0 | 39 |
+| `feedback` | 0 | 3 | 0 | 0 | 3 |
+
+**Every store RECONCILES** — 14,877 of 14,877, 39 of 39, 3 of 3 — and the `T10`
+machinery excludes all 14,617 non-organic search-log rows from the reader count.
+It works.
+
+**But the brief's figure was 618, and the store holds 11,755.** 618 is a true
+number about ONE session's rows (`docs/state.md` §409 records it); it is not the
+accumulated total. **Organic is 260 of 14,877 rows — 1.7%.**
+
+That makes RULING 125's case far stronger than the brief made it. The reason to
+stop walking production was never the marginal row; it is that our own automated
+runs outnumber readers **forty-five to one** in the store this business sells.
+Nothing is wrong with the data — every one of those rows is correctly marked and
+correctly excluded — but *organic by construction* and *organic after filtering
+out 98.3% of the table* are different claims, and only one of them is the one the
+transparency page implies.
+
+**The shipped SHA and the deploy id are read from Netlify's deploy record after
+the merge, with zero requests to the site (RULING 125).** They are not in this
+document because they cannot be, and `NS12` records that no Netlify credential
+exists on this machine yet — so this session's verdict for them is
+**CANNOT-TELL**, which is not a pass.

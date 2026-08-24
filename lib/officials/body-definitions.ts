@@ -299,6 +299,128 @@ export const CLASS_DEFINITIONS: ReadonlyArray<ClassRow> = [
       readOn: "2026-08-23",
     },
   },
+
+  /* ------------------------------- the three state seats, DI04 (2026-08-24) --
+   *
+   * Governor, state house seat and state senate seat had no definition row, so
+   * a reader looking at the most consequential names on their ballot got the
+   * least explanation. Every citation below was fetched and control-checked on
+   * 2026-08-24 (`pnpm definitions:verify`).
+   *
+   * **Per state, not national**, and that is the finding rather than a
+   * formality: these offices are creatures of each state's own constitution and
+   * they genuinely differ. A New Hampshire House seat represents about 3,400
+   * people; a New Jersey Assembly seat represents about 120,000. Writing one
+   * national definition would have been readable, wrong, and unsourceable.
+   *
+   * **New Hampshire is cited to its STATUTES rather than its constitution**,
+   * and the reason is recorded so it does not read as a lower standard. The NH
+   * constitution is published on `nh.gov` and `sos.nh.gov`, and both refuse
+   * this client with HTTP 403 — measured 2026-08-24. `gencourt.state.nh.us`
+   * answers, and RSA Title I is where the General Court's own composition and
+   * the governor's powers are set out. An unverifiable citation is worse than a
+   * verifiable one at a different rung, so the statute is what ships.
+   */
+  {
+    state: "nj",
+    classKey: "governor",
+    definition: {
+      text:
+        "The Governor of New Jersey is the only official the whole state elects, and the office is one of the strongest in the country: the governor appoints the attorney general, the secretary of state, every cabinet officer and every judge, subject to the Senate agreeing. The governor signs or vetoes every bill the Legislature passes, and can strike out single spending lines rather than having to reject a whole budget. Four years at a time, and no more than two terms in a row.",
+      basis: "New Jersey Constitution, Article V (Executive)",
+      basisUrl: "https://www.njleg.state.nj.us/constitution",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "nj",
+    classKey: "state_house",
+    definition: {
+      text:
+        "A New Jersey General Assembly seat is one of 80. The state is divided into 40 legislative districts and each one elects TWO Assembly members together, so your district has two of them and you vote for two. They serve two years. The Assembly writes state law and passes the state budget, which is where the money for schools, roads, courts and health programs is set — and it alone can start impeachment.",
+      basis: "New Jersey Constitution, Article IV (Legislative)",
+      basisUrl: "https://www.njleg.state.nj.us/constitution",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "nj",
+    classKey: "state_senate",
+    definition: {
+      text:
+        "A New Jersey Senate seat is one of 40 — one for each legislative district, the same districts that elect two Assembly members. Senators serve four years, except once a decade when they serve two so terms line up with new district lines after the census. The Senate passes state law and the state budget alongside the Assembly, and it alone confirms the governor's appointments: cabinet officers, judges and prosecutors.",
+      basis: "New Jersey Constitution, Article IV (Legislative)",
+      basisUrl: "https://www.njleg.state.nj.us/constitution",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "nh",
+    classKey: "governor",
+    definition: {
+      text:
+        "The Governor of New Hampshire is elected by the whole state for two years, and shares executive power with a five-member Executive Council elected by district. That sharing is the thing to know: contracts, most senior appointments and judicial nominations need the Council's agreement as well as the governor's, so a New Hampshire governor cannot appoint or spend alone. The governor signs or vetoes bills the General Court passes.",
+      basis:
+        "New Hampshire RSA Chapter 4, Powers of the Governor and Council in Certain Cases",
+      basisUrl: "https://www.gencourt.state.nh.us/rsa/html/I/4/4-mrg.htm",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "nh",
+    classKey: "state_house",
+    definition: {
+      text:
+        "A New Hampshire House seat is one of 400 — one of the largest legislatures in the English-speaking world, for one of the smaller states. Each member speaks for roughly 3,400 people, so the seat is unusually close to the people in it, and members are paid $100 a year. They serve two years. The House writes state law and starts every money bill, and New Hampshire has no general sales or income tax, so what it does about revenue is felt in local property tax bills.",
+      basis: "New Hampshire RSA Chapter 14, Legislative Officers and Proceedings",
+      basisUrl: "https://www.gencourt.state.nh.us/rsa/html/I/14/14-mrg.htm",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "nh",
+    classKey: "state_senate",
+    definition: {
+      text:
+        "A New Hampshire Senate seat is one of 24, so each senator speaks for roughly 57,000 people — about seventeen times as many as a House member. Senators serve two years and are paid $100 a year, like the House. The Senate passes state law and the state budget with the House, and because there are so few of them, a New Hampshire senator has considerably more individual weight over a bill than a House member does.",
+      basis: "New Hampshire RSA Chapter 14, Legislative Officers and Proceedings",
+      basisUrl: "https://www.gencourt.state.nh.us/rsa/html/I/14/14-mrg.htm",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "az",
+    classKey: "governor",
+    definition: {
+      text:
+        "The Governor of Arizona is elected by the whole state for four years, and no more than two terms in a row. The governor signs or vetoes every bill the Legislature passes and can strike single spending lines out of a budget. Arizona has no lieutenant governor on the ballot with the governor: if the office falls vacant the Secretary of State takes over, which is why that race matters more here than its name suggests.",
+      basis: "Arizona Constitution, Article 5, Section 1 (Executive department)",
+      basisUrl: "https://www.azleg.gov/const/5/1.htm",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "az",
+    classKey: "state_house",
+    definition: {
+      text:
+        "An Arizona House of Representatives seat is one of 60. The state is divided into 30 legislative districts and each one elects TWO House members and ONE senator, so your district has two representatives and you vote for two. They serve two years. The House writes state law and passes the state budget with the Senate, and it decides how much of the state's money goes to the school districts your local board then spends.",
+      basis: "Arizona Constitution, Article 4, Part 2, Section 1 (Senate; house of representatives)",
+      basisUrl: "https://www.azleg.gov/const/4/1.p2.htm",
+      readOn: "2026-08-24",
+    },
+  },
+  {
+    state: "az",
+    classKey: "state_senate",
+    definition: {
+      text:
+        "An Arizona Senate seat is one of 30 — one for each legislative district, the same district that elects two House members. Senators serve two years. The Senate passes state law and the state budget alongside the House, and it alone confirms the governor's appointments to state boards and agencies.",
+      basis: "Arizona Constitution, Article 4, Part 2, Section 1 (Senate; house of representatives)",
+      basisUrl: "https://www.azleg.gov/const/4/1.p2.htm",
+      readOn: "2026-08-24",
+    },
+  },
 ];
 
 /**

@@ -1,6 +1,6 @@
 {
   "data/derived/body-forms.json": {
-    "digest": "d2863712932995fffc0e0cd314e9cf634f0f2e12212898e0ec19ec8b6ec4a9ca",
+    "digest": "b80c25b17847f173300ac7f72b9d5112a3b4f6353796e5b0f9dca5397ae0e8d6",
     "files": 6,
     "entry": "scripts/stamp-body-forms.mts",
     "regeneratedOn": "2026-08-24"

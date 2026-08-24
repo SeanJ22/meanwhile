@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **245 open**, 361 resolved.
+- **244 open**, 362 resolved.
 - **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -397,7 +397,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**74 open · 88 resolved.**
+**73 open · 89 resolved.**
 
 ### P1
 
@@ -416,8 +416,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **D50** — The second pass at candidate and official photographs, now that the author has opened the door for portraits a government body publishes about its own members. More faces on cards, each one carrying the door it came through.
 
 **D52** — Turning each state's campaign-finance filing vocabulary into words a fifteen-year-old reads. Every state files differently, so this is a programme with one adapter per state rather than a single job.
-
-**DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F".
 
 **F02** — The product renders 186 congressional committee rows with no description of what any of them does. The text does not exist in the upstream file, so it has to come from somewhere else.
 

@@ -25,6 +25,18 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
+## overnight-depth-0824 · 2026-08-24
+
+**What it finished.** 1 row(s).
+
+- **DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F".
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH111** — Photos at 07866 stood at 0 of 272. Every candidate holding a verified campaign site was walked for an og:image and the page's own img elements: 7 candidates, 25 images staged, and ALL 25 were READ AS IMAGES on two contact sheets before any verdict was written. Two cleared the composition standard and both ship under DOOR 3 - the campaign's own self-published portrait from its own site, labelled campaign-provided, source recorded, remove-on-request. Nothing has shipped. The decision keys to the ASSET, not the person, and it is yours. *(open)*
+
+**Needs Sean.** NH111
+
 ## visual-tail-and-rehunt-0823 · 2026-08-23
 
 **What it finished.** 3 row(s).
@@ -81,14 +93,6 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 **Needs Sean.** NH105
 
-## overnight-depth-0824 · 2026-08-23
-
-**What it started.** 1 row(s) opened, 1 still open.
-
-- **NH111** — Photos at 07866 stood at 0 of 272. Every candidate holding a verified campaign site was walked for an og:image and the page's own img elements: 7 candidates, 25 images staged, and ALL 25 were READ AS IMAGES on two contact sheets before any verdict was written. Two cleared the composition standard and both ship under DOOR 3 - the campaign's own self-published portrait from its own site, labelled campaign-provided, source recorded, remove-on-request. Nothing has shipped. The decision keys to the ASSET, not the person, and it is yours. *(open)*
-
-**Needs Sean.** NH111
-
 ## hunt6-hardening-0823 · 2026-08-23
 
 **What it finished.** 6 row(s).
@@ -112,7 +116,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## discovery-conduct-0823-nonhunt · 2026-08-23
 
-**What it started.** 14 row(s) opened, 8 still open.
+**What it started.** 14 row(s) opened, 7 still open.
 
 - **VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim. *(open)*
 - **PU03** — NOT STARTED this session. ASK-1: "When is the next meeting?" returns "Where to look: Meetings near you" and explains that the map shows collected meetings, with nothing to click. Give the reader a control right there, tappable on mobile. NH-3: "When does school start again?" returns "we don't have a sourced answer for who owns this topic yet" — the school district owns this and it must be routed. THE STANDARD FOR BOTH is NH-2, which Sean called out as the thing to replicate: coverage disclosure with denominators (35 agendas read, 9 more held but unreadable and therefore excluded), honest gaps, the relevant record surfaced, and a NAMED HUMAN with a phone number and an email. He called the contact details the best part. *(open)*
@@ -120,7 +124,6 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NJ13** — From the 8/22 walkthrough, NOT STARTED this session (no hunting was in scope). Morris County has solid representation data and most commissioners have no photo — the first-listed and one other have none, a third does. If one commissioner has an image the rest are findable by the same route. WHAT IS OWED: source photos for every official on that body through the four doors, then open ONE photo review row for Sean. Photos never block anything: every other field renders immediately, photos-first ordering is presentation and not a completeness gate (RULING 50), and a photo decision keys to the ASSET rather than the person — refusing a bad banner once withheld a good Senate portrait. *(open)*
 - **PU05** — The 8/22 brief said to fetch the Census ZCTA-to-congressional-district relationship file — free, keyless, national. MEASURED 2026-08-23: NO SUCH FILE EXISTS for the current Congress, and four Census directories were walked to establish it. rel2020/zcta520/ holds six files and none of them is CD. rel/ holds only zcta_cd111_rel_10.txt, the 111th Congress with 2010 ZCTAs — two rounds of redistricting stale. rel2022/ and rel2024/ hold Connecticut-only files. baf2020/'s CD assignment file is dated 2020-12-11 (116th) and baf/'s is dated 2011-01-21. WHAT IS OWED, and the machinery for it already exists: scripts/build-zip-governments.mts samples every ZCTA on a 0.01-degree lattice against TIGER cartographic boundary layers and has been verified across all 33,791 zips. Adding a cd layer to its LAYERS list gives per-zip congressional-district sample counts nationally, and the existing partial-versus-whole arithmetic then answers "one district or more than one" for every zip in the country by exactly the method the who-governs pill already trusts. 07866 itself is settled independently: it sits entirely within NJ-11, confirmed against the House zip lookup. *(open)*
 - **PU06** — Measured 2026-08-23 at 07866 against a local production build: TWELVE instances across NINE contests on /ballot, unchanged by this session. The MAP panel was fixed — six rows each carrying the full sentence became six asterisks and ONE pill, read as an image — but the ballot page renders the pill per contest heading, which RULING 28 permits and which Sean nonetheless called the headline UX problem of the New Jersey pass. WHAT IS OWED: decide whether the ballot page takes the same treatment (one page-level pill, marks on the affected contests) and, wherever the sentence survives, make it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page. *(open)*
-- **DI04** — lib/officials/body-definitions.ts ships eleven CLASS definitions across federal, New Jersey, New Hampshire and Arizona, and every citation was fetched and confirmed against a control string (15 of 15, pnpm definitions:verify). Four class keys are declared and have no row: governor, state_house, state_senate, and a New Hampshire COUNTY. NH counties in particular could not be cited this session — gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 but every path tried for the county chapters returned 404, and an unverified citation is worse than a missing one. WHAT IS OWED: find the NH county chapters' live paths, write the four class definitions with citations, and add their control strings to scripts/definitions-verify.mts. Also owed: FORM-specific definitions for the New Jersey bodies, which is what turns "in New Jersey a township may run under either of two charters" into "this one runs under Faulkner Act Plan F". *(open)*
 - **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it. *(open)*
 
 **Needs Sean.** Nothing.

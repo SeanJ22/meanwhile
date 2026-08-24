@@ -95,6 +95,18 @@ const CONTROLS: Record<string, string[]> = {
   "https://www.azleg.gov/ars/15/00341.htm": ["15-341"],
   "https://www.census.gov/programs-surveys/cog.html": ["Census of Governments"],
   "https://codelibrary.amlegal.com/codes/tucson/latest/tucson_az_charter": ["Tucson"],
+  /*
+   * DI04's three state seats (2026-08-24). Each control is a phrase from the
+   * document's OWN text, never the article number: a number alone would pass on
+   * an index that merely lists it, and this project has already been caught by
+   * a styled "Page not found" answering HTTP 200 — azleg.gov serves exactly
+   * that, 78 KB of it, carrying the word "legislative" eight times.
+   */
+  "https://www.njleg.state.nj.us/constitution": ["The executive power"],
+  "https://www.gencourt.state.nh.us/rsa/html/I/4/4-mrg.htm": ["GOVERNOR AND COUNCIL"],
+  "https://www.gencourt.state.nh.us/rsa/html/I/14/14-mrg.htm": ["LEGISLATIVE OFFICERS"],
+  "https://www.azleg.gov/const/5/1.htm": ["Executive department"],
+  "https://www.azleg.gov/const/4/1.p2.htm": ["house of representatives"],
 };
 
 /**

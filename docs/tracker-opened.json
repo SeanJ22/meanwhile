@@ -1419,5 +1419,38 @@
       "NH99",
       "NH100"
     ]
+  },
+  {
+    "session": "questionnaire-and-corpora-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH101",
+      "NH102",
+      "NH103",
+      "NH104",
+      "NH105"
+    ]
+  },
+  {
+    "session": "questionnaire-and-corpora-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH106"
+    ]
+  },
+  {
+    "session": "ci-browser-and-depth-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH107"
+    ]
+  },
+  {
+    "session": "ci-browser-and-depth-0823",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH108",
+      "NH109"
+    ]
   }
 ]

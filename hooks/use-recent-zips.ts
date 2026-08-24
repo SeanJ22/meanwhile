@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * The zips this device has looked at, most recent first (item 3, 2026-08-15).
@@ -67,14 +68,8 @@ function getServerSnapshot(): string[] {
   return EMPTY;
 }
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  window.addEventListener("storage", onStoreChange);
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 /** Write outside React, so the zip store can record a visit as it happens. */
 export function recordRecentZip(zip: string) {

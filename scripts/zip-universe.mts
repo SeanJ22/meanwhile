@@ -54,6 +54,7 @@ import { RADIUS_LADDER_KM } from "../lib/meetings/constants.ts";
 import { lookupZcta, resolveZip } from "../lib/geo/zcta.ts";
 import { assertEnumerationGeography, geographyLine } from "../lib/geo/zip-geography.ts";
 import { parseCsv } from "../lib/reference/index.ts";
+import { containsPoint, ringsOf } from "../lib/geo/polygon.ts";
 
 const GUS = "data/audit/gus-2022-merrimack-sullivan-hillsborough.json";
 const GEO = (layer: string) => `public/geo/${layer}.geojson`;
@@ -70,30 +71,12 @@ type GusRow = {
   zip?: string;
 };
 
-type Ring = number[][];
 
-function ringsOf(geom: { type: string; coordinates: unknown }): Ring[] {
-  const out: Ring[] = [];
-  if (geom.type === "Polygon") out.push(...(geom.coordinates as Ring[]));
-  else if (geom.type === "MultiPolygon")
-    for (const poly of geom.coordinates as Ring[][]) out.push(...poly);
-  return out;
-}
-
-/** Even-odd point-in-polygon over every ring, holes included. */
-function contains(point: [number, number], geom: { type: string; coordinates: unknown }): boolean {
-  let inside = false;
-  for (const ring of ringsOf(geom)) {
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-      const [xi, yi] = ring[i];
-      const [xj, yj] = ring[j];
-      if (yi > point[1] !== yj > point[1] && point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi) {
-        inside = !inside;
-      }
-    }
-  }
-  return inside;
-}
+/** NH79: the repo's one even-odd implementation, holes included. */
+const contains = (
+  point: [number, number],
+  geom: { type: string; coordinates: unknown },
+): boolean => containsPoint(point, geom);
 
 /** Shortest great-circle distance from a point to any vertex of a shape. */
 function nearestVertexKm(lat: number, lng: number, geom: { type: string; coordinates: unknown }): number {

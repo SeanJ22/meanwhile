@@ -74,6 +74,21 @@ const CONTROLS: Record<string, string[]> = {
   "https://law.justia.com/codes/new-jersey/title-40/section-40-69a-1/": ["40:69A-1"],
   "https://law.justia.com/codes/new-jersey/title-40/section-40-41a-26/": ["40:41A-26"],
   "https://www.gencourt.state.nh.us/rsa/html/III/31/31-1.htm": ["31:1"],
+  /*
+   * `NH93`, closed 2026-08-23. The control is a PHRASE from the statute's own
+   * text rather than the section number, because the section number alone
+   * would pass on a chapter index that merely lists it. What the definition
+   * claims — that the county's legislative body is the convention of state
+   * representatives and not the commissioners — is what this string proves the
+   * document actually says.
+   *
+   * Counties are RSA Title **II**. The `III/` shape every other New Hampshire
+   * citation here uses 404s on them, which cost three attempts before the
+   * index was read instead of guessed.
+   */
+  "https://www.gencourt.state.nh.us/rsa/html/II/24/24-1.htm": [
+    "county convention consists of the state representatives",
+  ],
   "https://www.gencourt.state.nh.us/rsa/html/XV/189/189-1-a.htm": ["189:1-a"],
   "https://www.azleg.gov/ars/9/00499-15.htm": ["9-499.15"],
   "https://www.azleg.gov/ars/11/00251.htm": ["11-251"],

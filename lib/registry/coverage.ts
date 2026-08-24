@@ -72,15 +72,34 @@ export interface CoveredBody {
    */
   name: string | null;
   divisionLabel: string;
-  divisionType: DivisionType;
+  /**
+   * **NULL WHERE THE BODY HAS NO DIVISION** (`NH94`, closed 2026-08-23).
+   *
+   * This was `DivisionType` and was filled with `"place"` for a body that has
+   * no division at all — the Southeast Regional Council case. That default was
+   * a PLACEHOLDER chosen for the type's convenience, and closing the class
+   * layer on 2026-08-23 made it a finding: `"place"` resolves to the
+   * municipality class, so such a body would have rendered *"This is a New
+   * Jersey municipality — the layer of government closest to a resident"*
+   * about a body nobody has established is a municipality.
+   *
+   * `definitionsForBody` guards the symptom by returning nothing for a null
+   * `ocdId`, and that guard stays. **This closes the cause**: a placeholder
+   * wearing a value's clothes, waiting for the next thing that reads it as a
+   * finding without a guard in place. The render-default rule, one layer below
+   * a component.
+   */
+  divisionType: DivisionType | null;
   /**
    * The Census legal/statistical area description, carried through from the
    * division (DEF-1, 2026-08-22).
    *
-   * It is what tells a New Jersey TOWNSHIP from a borough without matching on
-   * a name string — LSAD 43 is "Township" in the Census own coding — and the
-   * two are different claims about what kind of thing the body is. It was
-   * already on `Division` and was being dropped here.
+   * It is what tells a New Jersey TOWNSHIP from a Town without matching on a
+   * name string, and the two are different claims about what kind of thing the
+   * body is. **LSAD 44 is `township` and LSAD 43 is `town`** — this comment
+   * said 43 was Township until 2026-08-23, which is the same wrong fact that
+   * put New Jersey's township definition on eleven Towns' cards. It was already
+   * on `Division` and was being dropped here.
    */
   lsad: string | null;
   bodyClass: BodyClass;
@@ -307,7 +326,9 @@ export function summarizeCoverage(
       // A body with no division is the Southeast Regional Council case: real,
       // hyperlocal, and not a division. Nothing populates that path yet.
       divisionLabel: division?.label ?? "",
-      divisionType: division?.divisionType ?? "place",
+      // NH94: NULL, never a placeholder. A body with no division is the
+      // Southeast Regional Council case — real, hyperlocal, and not a division.
+      divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,
       bodyClass: body.bodyClass,
       coverageStatus: body.coverageStatus,

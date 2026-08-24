@@ -35,6 +35,7 @@ import {
 } from "../lib/ocd/divisions.ts";
 import { CLIP_COUNTIES, COVERED_FIPS } from "../lib/coverage/artifacts.ts";
 import { districtIdentity } from "../lib/ocd/fips.ts";
+import { polygonContains } from "../lib/geo/polygon.ts";
 
 const VINTAGE = "2025";
 const CONGRESS = "119";
@@ -529,27 +530,9 @@ function bboxesOverlap(a: Bbox, b: Bbox): boolean {
   return !(a[2] < b[0] || b[2] < a[0] || a[3] < b[1] || b[3] < a[1]);
 }
 
-/** Ray casting against a polygon's exterior ring, minus its holes. */
-function pointInPolygon(point: [number, number], poly: Polygon): boolean {
-  const inRing = (ring: Ring) => {
-    let inside = false;
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-      const [xi, yi] = ring[i];
-      const [xj, yj] = ring[j];
-      if (
-        yi > point[1] !== yj > point[1] &&
-        point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi
-      ) {
-        inside = !inside;
-      }
-    }
-    return inside;
-  };
-
-  if (!inRing(poly[0])) return false;
-  for (let h = 1; h < poly.length; h++) if (inRing(poly[h])) return false;
-  return true;
-}
+/** NH79: the repo's one exterior-minus-holes implementation. */
+const pointInPolygon = (point: [number, number], poly: Polygon): boolean =>
+  polygonContains(point, poly);
 
 /**
  * Whether two multipolygons share any area.

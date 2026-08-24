@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * The chosen theme.
@@ -50,16 +51,8 @@ function parse(raw: string | null): Theme {
   return raw === "light" ? "light" : "dark";
 }
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  // Keeps two tabs in step.
-  window.addEventListener("storage", onStoreChange);
-
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 function getSnapshot(): ThemeSnapshot {
   const raw = readRaw();

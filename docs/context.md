@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 123 recorded
+## Rulings — 125 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -393,6 +393,8 @@ from. Each entry there names what it supersedes.
 - RULING 108 — anything a session must read at the start lives in the repository
 - RULING 109 — a brief says what it needs to run, and the session checks before item one
 - RULING 110 — a search that finds nothing must show it looked in the right FORM
+- RULING 111 — a join is never a lookup for a fact that lives on only one side
+- RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped
 
 ## P0 tracker rows — 93 of 456 rows
 

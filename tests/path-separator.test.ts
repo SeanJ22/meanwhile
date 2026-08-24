@@ -169,3 +169,80 @@ test("RULING 14: the coverage manifest allowlists correctly on this platform", (
     "coverage-manifest.test.ts no longer keeps its own copy of the normalizer",
   );
 });
+
+/**
+ * **`NH106`, 2026-08-23 — RULING 14's family: a URL PATHNAME IS NOT A
+ * FILESYSTEM PATH.**
+ *
+ * `new URL(import.meta.url).pathname` returns a URL component, and on Windows
+ * that component is `/C:/Users/seanj/dev/we-the-people/scripts` — leading
+ * slash, drive letter inside. Feed it to `join(..., "..")` and the result is
+ * relative-looking, so it resolves against the working directory and produces
+ *
+ * ```
+ * C:\C:\Users\seanj\dev\we-the-people\data\ballot\nj-morris-2026.json
+ * ```
+ *
+ * which is what `pnpm test` threw on before this guard existed. It is invisible
+ * on Linux, where the pathname happens to be a valid absolute path, so CI is
+ * structurally unable to catch it — the same asymmetry RULING 14 was adopted
+ * over, pointing the other way.
+ *
+ * Four files carried it, all four written the same day, while some forty other
+ * files in the same directory used `fileURLToPath`. That is the class shape:
+ * not one mistake, one HABIT, and a habit needs a guard rather than four edits.
+ *
+ * `fileURLToPath` is the decoder — it strips the leading slash, handles the
+ * drive letter, and percent-decodes a path containing a space, which the
+ * pathname form also gets wrong and which nobody would notice until this repo
+ * lived under a directory with a space in its name.
+ */
+test("RULING 14: no file URL is used as a path without fileURLToPath", () => {
+  /*
+   * Assembled from pieces rather than written as one literal, for the reason
+   * the guards above are: a text-scanning guard written the obvious way
+   * matches ITSELF, and the first run of this one duly reported this file as
+   * the only offender in the repo. The pattern reaches the pathname of ANY URL
+   * built from a file URL, not only `import.meta.url` — a variable holding one
+   * is the same defect under a different name, and this guard exists because
+   * the shape was a habit rather than a slip.
+   */
+  const BANNED = new RegExp(String.raw`new URL\([^)]*\)\.` + "pathname");
+
+  const offenders: string[] = [];
+  for (const abs of sourceFiles()) {
+    const rel = posixRelative(ROOT, abs);
+    const code = codeOnly(readFileSync(abs, "utf8"));
+    if (BANNED.test(code)) {
+      offenders.push(`${rel}: a file URL component used as a filesystem path`);
+    }
+  }
+
+  assert.deepEqual(
+    offenders,
+    [],
+    "a URL pathname is not a filesystem path: on Windows it is `/C:/...`, which " +
+      "join() then resolves against the working directory into `C:\C:\...`. " +
+      "Use fileURLToPath from node:url, as the rest of scripts/ already does.",
+  );
+});
+
+/**
+ * The denominator for the guard above, stated rather than implied.
+ *
+ * A ban is only worth what the population it swept is worth, and this one is
+ * cheap to state: the sanctioned decoder should be in wide use, so a run where
+ * it has almost vanished means the sweep is looking at the wrong tree rather
+ * than that the repo got cleaner.
+ */
+test("RULING 14: the sanctioned file-URL decoder is the established idiom", () => {
+  let users = 0;
+  for (const abs of sourceFiles()) {
+    if (/fileURLToPath\(/.test(codeOnly(readFileSync(abs, "utf8")))) users += 1;
+  }
+  assert.ok(
+    users > 30,
+    `only ${users} file(s) use fileURLToPath — expected it to be the established ` +
+      "idiom across scripts/. A collapse here means this sweep is not reaching the tree.",
+  );
+});

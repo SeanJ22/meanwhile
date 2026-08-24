@@ -35,7 +35,7 @@
  * test that cannot run is reported apart from a test that failed (RULING 24),
  * and neither is allowed to read like a pass.
  */
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 /**
@@ -55,22 +55,131 @@ export const EXPECTED_CHROMIUM_REVISION = "1234";
  */
 export type BrowserEnv = Readonly<Record<string, string | undefined>>;
 
-/** Where Playwright looks for browsers, honouring the environment's override. */
-export function browsersRoot(env: BrowserEnv = process.env): string {
-  return env.PLAYWRIGHT_BROWSERS_PATH?.trim() || join(env.HOME ?? "", ".cache", "ms-playwright");
+/**
+ * Where Playwright looks for browsers, honouring the environment's override.
+ *
+ * **`NH106`, 2026-08-23 — the default is PER PLATFORM, and assuming the POSIX
+ * one is how this returned a directory that has never existed on Windows.**
+ * Playwright's own default is `~/.cache/ms-playwright` on Linux,
+ * `~/Library/Caches/ms-playwright` on macOS and `%LOCALAPPDATA%\ms-playwright`
+ * on Windows. `HOME` is not even set on Windows, so the old single-line
+ * fallback resolved to `\.cache\ms-playwright` off the process drive — a path
+ * that cannot exist, read as "no browser installed".
+ *
+ * This is RULING 14's family: a path comparison may not assume a separator,
+ * and a path CONSTRUCTION may not assume a filesystem layout.
+ */
+export function browsersRoot(env: BrowserEnv = process.env, platform: string = process.platform): string {
+  const override = env.PLAYWRIGHT_BROWSERS_PATH?.trim();
+  if (override) return override;
+  if (platform === "win32") {
+    return join(env.LOCALAPPDATA ?? join(env.USERPROFILE ?? "", "AppData", "Local"), "ms-playwright");
+  }
+  const home = env.HOME ?? env.USERPROFILE ?? "";
+  if (platform === "darwin") return join(home, "Library", "Caches", "ms-playwright");
+  return join(home, ".cache", "ms-playwright");
+}
+
+/**
+ * The binary inside one `chromium-<n>` build directory, or `undefined`.
+ *
+ * **`NH106`, 2026-08-23 — this is the defect that put `main` red, and the
+ * shape of the fix is the whole lesson.** The old line was
+ *
+ * ```ts
+ * const exe = join(root, entry, "chrome-linux", "chrome");
+ * ```
+ *
+ * `chrome-linux/chrome` is Playwright's LEGACY layout. From the Chrome for
+ * Testing packaging the binary is at `chrome-linux64/chrome` on Linux,
+ * `chrome-win64/chrome.exe` on Windows and inside a `.app` bundle on macOS. So
+ * the detector matched nothing on ANY platform with the pinned Playwright, and
+ * CI reported `NO CHROMIUM INSTALLED. ... searched /home/runner/.cache/ms-playwright`
+ * about a directory whose install log two screens earlier read
+ * `Chrome for Testing 151.0.7922.34 ... downloaded to /home/runner/.cache/ms-playwright/chromium-1234`.
+ * **The install was never the problem. The reader was.**
+ *
+ * A corrected hardcoded list would be the same defect with a longer life, so
+ * nothing here predicts the directory's NAME. Playwright puts the binary under
+ * exactly one `chrome-*` directory per build; this finds that directory and
+ * looks for the platform's executable inside it, including through a macOS
+ * `.app` bundle. A future repackaging that renames `chrome-linux64` again does
+ * not break it.
+ */
+function executableIn(buildDir: string, platform: string = process.platform): string | undefined {
+  let entries: string[];
+  try {
+    entries = readdirSync(buildDir);
+  } catch {
+    return undefined;
+  }
+  for (const entry of entries) {
+    if (!entry.startsWith("chrome-")) continue;
+    const dir = join(buildDir, entry);
+    if (platform === "darwin") {
+      /* The bundle name has changed too — `Chromium.app` in the legacy
+       * packaging, `Google Chrome for Testing.app` in Chrome for Testing — so
+       * the bundle is found rather than named. */
+      let inner: string[];
+      try {
+        inner = readdirSync(dir);
+      } catch {
+        continue;
+      }
+      for (const app of inner) {
+        if (!app.endsWith(".app")) continue;
+        const macos = join(dir, app, "Contents", "MacOS");
+        let bins: string[];
+        try {
+          bins = readdirSync(macos);
+        } catch {
+          continue;
+        }
+        for (const bin of bins) {
+          const candidate = join(macos, bin);
+          try {
+            if (statSync(candidate).isFile()) return candidate;
+          } catch {
+            /* A dangling entry is not a browser. */
+          }
+        }
+      }
+      continue;
+    }
+    const exe = join(dir, platform === "win32" ? "chrome.exe" : "chrome");
+    if (existsSync(exe)) return exe;
+  }
+  return undefined;
 }
 
 export type ChromiumResolution =
-  /** The wanted build is installed. Playwright finds it unaided. */
-  | { kind: "EXPECTED"; revision: string }
+  /**
+   * The wanted build is installed. Playwright finds it unaided.
+   *
+   * `executablePath` is carried even though the launch does not need it, so a
+   * test can compare this resolution against Playwright's own
+   * `chromium.executablePath()`. That comparison is the drift check `NH106`
+   * was missing: the two agreed on the DIRECTORY and disagreed on the binary
+   * inside it, and nothing was asking.
+   */
+  | { kind: "EXPECTED"; revision: string; executablePath: string }
   /**
    * A DIFFERENT complete Chromium is installed and will be used by explicit
    * path. The substitution is named so a report can state it rather than
    * quietly claiming the pinned build ran.
    */
   | { kind: "SUBSTITUTED"; revision: string; executablePath: string }
-  /** Nothing usable is installed. The caller must fail, never skip. */
-  | { kind: "ABSENT"; searched: string };
+  /**
+   * Nothing usable is installed. The caller must fail, never skip.
+   *
+   * `sawBuildDirs` names the `chromium-<n>` directories that ARE there with no
+   * binary found inside. `NH106` is exactly that case and the old message did
+   * not have a word for it: CI said "NO CHROMIUM INSTALLED" about a directory
+   * holding a freshly downloaded Chromium, so every reader of that line went
+   * looking at the install step, which was fine. An absence that can name what
+   * it did see points at the reader instead of the writer.
+   */
+  | { kind: "ABSENT"; searched: string; sawBuildDirs: string[] };
 
 /**
  * Every complete Chromium under the browsers root, newest build first.
@@ -78,14 +187,17 @@ export type ChromiumResolution =
  * `chromium-<n>` only — the headless-shell packages are a separate download
  * and a launch pointed at one of those is not the browser these tests drive.
  */
-function installedChromiums(root: string): { revision: string; executablePath: string }[] {
+function installedChromiums(
+  root: string,
+  platform: string = process.platform,
+): { revision: string; executablePath: string }[] {
   if (!existsSync(root)) return [];
   const out: { revision: string; executablePath: string }[] = [];
   for (const entry of readdirSync(root)) {
     const m = /^chromium-(\d+)$/.exec(entry);
     if (m === null) continue;
-    const exe = join(root, entry, "chrome-linux", "chrome");
-    if (existsSync(exe)) out.push({ revision: m[1], executablePath: exe });
+    const exe = executableIn(join(root, entry), platform);
+    if (exe !== undefined) out.push({ revision: m[1], executablePath: exe });
   }
   return out.sort((a, b) => Number(b.revision) - Number(a.revision));
 }
@@ -98,14 +210,30 @@ function installedChromiums(root: string): { revision: string; executablePath: s
  * as fatal. Returning the state is what lets a report say *which* of the three
  * happened, which a thrown error at this depth cannot.
  */
-export function resolveChromium(env: BrowserEnv = process.env): ChromiumResolution {
-  const root = browsersRoot(env);
-  const installed = installedChromiums(root);
-  if (installed.some((c) => c.revision === EXPECTED_CHROMIUM_REVISION)) {
-    return { kind: "EXPECTED", revision: EXPECTED_CHROMIUM_REVISION };
+export function resolveChromium(
+  env: BrowserEnv = process.env,
+  platform: string = process.platform,
+): ChromiumResolution {
+  const root = browsersRoot(env, platform);
+  const installed = installedChromiums(root, platform);
+  const expected = installed.find((c) => c.revision === EXPECTED_CHROMIUM_REVISION);
+  if (expected !== undefined) {
+    return {
+      kind: "EXPECTED",
+      revision: EXPECTED_CHROMIUM_REVISION,
+      executablePath: expected.executablePath,
+    };
   }
   const fallback = installed[0];
-  if (fallback === undefined) return { kind: "ABSENT", searched: root };
+  if (fallback === undefined) {
+    let sawBuildDirs: string[] = [];
+    try {
+      sawBuildDirs = readdirSync(root).filter((e) => /^chromium-\d+$/.test(e));
+    } catch {
+      /* An unreadable root is the plain ABSENT case; the empty list says so. */
+    }
+    return { kind: "ABSENT", searched: root, sawBuildDirs };
+  }
   return {
     kind: "SUBSTITUTED",
     revision: fallback.revision,
@@ -123,10 +251,21 @@ export function describeChromium(r: ChromiumResolution): string {
         `chromium ${r.revision} — SUBSTITUTED for the pinned ${EXPECTED_CHROMIUM_REVISION}, ` +
         `which is not installed. Launching ${r.executablePath}`
       );
-    case "ABSENT":
+    case "ABSENT": {
+      /* The two cases read differently on purpose. An empty root is a missing
+       * install; a root holding build directories with no binary found inside
+       * is THIS code failing to read a browser that is sitting right there,
+       * which is `NH106`. Sending both to the same sentence is what sent a
+       * session to the install step for a defect in the reader. */
+      const saw =
+        r.sawBuildDirs.length > 0
+          ? ` The root DOES hold ${r.sawBuildDirs.join(", ")} — a build directory with no binary found ` +
+            "inside it means this resolver, not the install, is what failed."
+          : " The root holds no chromium build directory at all; run `pnpm exec playwright install chromium`.";
       return (
-        `NO CHROMIUM INSTALLED. Wanted build ${EXPECTED_CHROMIUM_REVISION}; searched ${r.searched}. ` +
+        `NO CHROMIUM INSTALLED. Wanted build ${EXPECTED_CHROMIUM_REVISION}; searched ${r.searched}.${saw} ` +
         "Nothing that needs a browser can run, and nothing here may report a pass."
       );
+    }
   }
 }

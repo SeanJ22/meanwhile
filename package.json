@@ -19,7 +19,9 @@
     "census:zip": "tsx scripts/census-who-governs.mts",
     "chrome:sweep": "tsx scripts/chrome-sweep.mts",
     "closeout": "node scripts/close-out.mjs",
+    "class:sweep": "tsx scripts/class-stamp-sweep.mts",
     "definitions:verify": "tsx scripts/definitions-verify.mts",
+    "assert:browser": "tsx scripts/assert-browser.mts",
     "credentials": "tsx scripts/credential-ledger.mts",
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",
@@ -92,6 +94,8 @@
     "nj:extract": "tsx scripts/nj-hunt4-extract.mts",
     "nj:fields": "tsx scripts/nj-candidate-fields.mts",
     "nj:filing": "tsx scripts/nj-filing.mts",
+    "leads:promote": "tsx scripts/promote-leads-0823.mts",
+    "leads:wire": "tsx scripts/wire-campaign-sites-0823.mts",
     "nj:filing:check": "tsx scripts/check-nj-filing.mts",
     "nj:portraits": "tsx scripts/nj-hunt4-portrait-sheet.mts",
     "nj:rosters": "tsx scripts/nj-hunt4-rosters.mts",
@@ -191,7 +195,11 @@
     "tracker:resolve": "node scripts/tracker.mjs resolve",
     "morris:portraits": "tsx scripts/hunt-morris-portraits-0823.mts",
     "sweep:refusal": "tsx scripts/sweep-refusal-copy.mts",
-    "sweep:absence-defaults": "tsx scripts/sweep-absence-defaults.mts"
+    "sweep:absence-defaults": "tsx scripts/sweep-absence-defaults.mts",
+    "questionnaire:invitations": "tsx scripts/questionnaire-invitations.mts",
+    "questionnaire:doc": "tsx scripts/questionnaire-doc.mts",
+    "congress:corpus": "tsx scripts/congress-corpus-walk.mts",
+    "forms:stamp": "tsx scripts/stamp-body-forms.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

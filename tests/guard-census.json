@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 198,
-    "named": 1823,
+    "files": 205,
+    "named": 1929,
     "dynamic": 6
   },
   "files": {
@@ -250,6 +250,24 @@
       ],
       "dynamic": 0
     },
+    "tests/body-form.test.ts": {
+      "names": [
+        "forms: LSAD 44 is a township and LSAD 43 is not",
+        "forms: a New Jersey township and a New Hampshire town are DIFFERENT forms",
+        "forms: a body with no division is unstampable rather than defaulted",
+        "forms: a place with no legal type code is unstampable, never named from its label",
+        "forms: an unclassified school district is unstampable, never assumed independent",
+        "forms: every stamp names which committed input decided it",
+        "forms: every stamped form carries a reader-facing label",
+        "forms: every unstampable body carries a reason naming the missing input",
+        "forms: stateOf reads the state structurally and refuses a nameless id",
+        "forms: the collapse is real — far fewer distinct forms than bodies",
+        "forms: the eleven New Jersey Towns are stamped as Towns, not townships",
+        "forms: the same LSAD in two states never produces one national form",
+        "forms: the stamped and unstampable account for every owed body (RULING 100)"
+      ],
+      "dynamic": 0
+    },
     "tests/body-name-match.test.ts": {
       "names": [
         "a Census GOVERNMENT matches the BODY inside it (RULING 9)",
@@ -348,6 +366,17 @@
         "nothing anywhere in the repo constructs a browser outside the shared site",
         "scripts/browser.mts is the only place a browser is constructed",
         "the shared site guards every context it makes"
+      ],
+      "dynamic": 0
+    },
+    "tests/browser-key.test.ts": {
+      "names": [
+        "browser key: a malformed stored value is re-minted rather than trusted",
+        "browser key: a minted key is 128 bits of hex and never repeats",
+        "browser key: neither client keeps its own copy of the minting any more",
+        "browser key: the two storage keys are still two different strings",
+        "browser key: the two stores get DIFFERENT keys when localStorage THROWS",
+        "browser key: the two stores get DIFFERENT keys when localStorage works"
       ],
       "dynamic": 0
     },
@@ -518,11 +547,26 @@
     },
     "tests/chromium-pin.test.ts": {
       "names": [
+        "a build directory with no binary in it blames the reader, not the installer",
+        "a chrome-for-testing layout is found on every platform, not just the legacy one",
         "an absent browser refuses rather than reads as a pass",
         "playwright is pinned to an exact version, not a range",
         "the browser resolution is stated, never silent",
+        "the browsers root default is per platform, and windows has no HOME",
         "the browsers root honours the environment's override",
-        "the committed revision is the one playwright actually wants"
+        "the committed revision is the one playwright actually wants",
+        "what this repo resolves is the file playwright would actually launch"
+      ],
+      "dynamic": 0
+    },
+    "tests/class-stamp-sweep.test.ts": {
+      "names": [
+        "RULING 114: NO-SOURCE says why, and never reads as agreement",
+        "RULING 114: a real second authority was actually consulted",
+        "RULING 114: an adjudicated disagreement carries the branch that settled it",
+        "RULING 114: no class stamp disagrees with its source of record",
+        "RULING 114: the sweep covers every stamped body, not a sample",
+        "RULING 114: the three outcomes are a partition, and none is a subtraction"
       ],
       "dynamic": 0
     },
@@ -1039,6 +1083,22 @@
       ],
       "dynamic": 0
     },
+    "tests/extraction-partials.test.ts": {
+      "names": [
+        "partials: NOT_ASSERTABLE is a named state, distinguishable from a checked pass",
+        "partials: OVER is reported and is NOT a failure by itself",
+        "partials: PARTIAL is not complete, and its rows are kept as evidence",
+        "partials: a past-tense copula is still a body that exists",
+        "partials: a prose page CANNOT RUN this layer rather than reading as an empty board",
+        "partials: a roster sentence cut short by stray markup still reads every member",
+        "partials: a table with no roster in it is ZERO_ROWS, and names the next rung",
+        "partials: every extract result states its counts as integers",
+        "partials: the census separates what could be checked from what was",
+        "partials: the guard would CATCH a truncation — it is not green about nothing",
+        "partials: the least-documented members are not filtered out for being thin"
+      ],
+      "dynamic": 0
+    },
     "tests/federal-roster.test.ts": {
       "names": [
         "item 5: every dropped division is recorded with the id it could not find",
@@ -1222,6 +1282,21 @@
       ],
       "dynamic": 0
     },
+    "tests/github-corpus.test.ts": {
+      "names": [
+        "corpora: 537 of 537 sitting members match people we already hold",
+        "corpora: RULING 100 — both count assertions MATCHED, neither is NOT_ASSERTABLE",
+        "corpora: RULING 20 holds — no portrait byte was committed to the repo",
+        "corpora: a portrait fetched over git is cited to git, not to the Pages URL",
+        "corpora: every owed portrait was retrieved AND verified as a real image",
+        "corpora: sources.md records both repositories with licence, tier and access method",
+        "corpora: the licence reader identifies CC0 and refuses to guess",
+        "corpora: the licence was read from each repository's OWN LICENSE file",
+        "corpora: the members the corpus genuinely does not carry are NAMED, not counted",
+        "corpora: the photo fetcher walks the git road before recording an absence"
+      ],
+      "dynamic": 0
+    },
     "tests/guard-census.test.ts": {
       "names": [
         "RULING 62 — a dynamically-named guard is counted, not named",
@@ -1252,6 +1327,25 @@
         "every direct network read in a source adapter checks it got a document",
         "notADocument reads the marker, not the content type",
         "the exemption cannot be claimed by a pass that set nothing aside"
+      ],
+      "dynamic": 0
+    },
+    "tests/http-retrieval.test.ts": {
+      "names": [
+        "http: &amp; is decoded LAST, so &amp;lt; does not become a tag",
+        "http: a 404 is NOT retried — it is an answer, not a wobble",
+        "http: a 429 is retried, and Retry-After is honoured rather than the default backoff",
+        "http: a 500 is retried on exponential backoff when no Retry-After is given",
+        "http: a rung is a number from the CLAUDE.md ladder, and never a `blocked` string",
+        "http: an injected fetchImpl is never routed around, even on a 403",
+        "http: entity decoding covers decimal AND hex, which is how ’ reached a reader",
+        "http: every wall records the RUNG it stopped at, never a terminal blocked state",
+        "http: politeGetJson asks for JSON and parses it",
+        "http: politeGetJson on a blank 200 is a WALL, not an empty object",
+        "http: retries are BOUNDED — a permanently failing host is not hammered",
+        "http: the browser profile carries a real browser header set, not just a User-Agent",
+        "http: the client identifies itself, and a contact address survives the browser rung",
+        "http: the content type is carried through, never inferred from the body"
       ],
       "dynamic": 0
     },
@@ -1835,9 +1929,11 @@
     },
     "tests/path-separator.test.ts": {
       "names": [
+        "RULING 14: no file URL is used as a path without fileURLToPath",
         "RULING 14: no path is inverted from POSIX into platform separators",
         "RULING 14: no repo-path literal uses a backslash as its separator",
         "RULING 14: the coverage manifest allowlists correctly on this platform",
+        "RULING 14: the sanctioned file-URL decoder is the established idiom",
         "RULING 14: the shared normalizer exists and normalizes both directions",
         "the sweep reaches the source tree it claims to"
       ],
@@ -2010,6 +2106,51 @@
         "R48: every workflow that pushes main goes through the protected push",
         "R48: two runs pushing into the same window both land their work",
         "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
+      ],
+      "dynamic": 0
+    },
+    "tests/questionnaire.test.ts": {
+      "names": [
+        "questionnaire: 272 of 272 NJ candidacies have an invitation, and none claims a send",
+        "questionnaire: a WITHDRAWAL is indistinguishable from never having answered",
+        "questionnaire: a contest with one unreachable candidate invites NOBODY",
+        "questionnaire: a generated invitation claims NO send that has not happened",
+        "questionnaire: a minted token is never the stored value",
+        "questionnaire: a title that matches nothing falls to `other`, never to a guess",
+        "questionnaire: a token is single-use, and reuse is told apart from expiry",
+        "questionnaire: an answer at exactly the limit is accepted",
+        "questionnaire: an edit adds a version and the LATEST renders",
+        "questionnaire: an over-limit answer is REFUSED with its own count, never cut",
+        "questionnaire: answering again clears a withdrawal",
+        "questionnaire: each refusal reason gets its own sentence",
+        "questionnaire: every candidate for an office class is asked the IDENTICAL five questions",
+        "questionnaire: every office class has exactly two class questions",
+        "questionnaire: every one of the 90 NJ contests classifies, and none falls back",
+        "questionnaire: every question id is unique across the whole instrument",
+        "questionnaire: every question passes the 15-year-old test",
+        "questionnaire: five to seven questions maximum, and it asks five",
+        "questionnaire: no empty-state sentence reads as evasion",
+        "questionnaire: no shipped question matches a leading shape",
+        "questionnaire: nothing new lands on the search log or the reactions store",
+        "questionnaire: nothing under lib/questionnaire/ can shorten a candidate's words",
+        "questionnaire: office class is read from the DIVISION wherever it can be",
+        "questionnaire: the PLURAL is part of the shape — Commissioners resolves",
+        "questionnaire: the asked state names the dates and the symmetry",
+        "questionnaire: the committed question-set document is what the generator writes",
+        "questionnaire: the compression shapes catch a real compression",
+        "questionnaire: the core three are asked of every office class, unchanged",
+        "questionnaire: the default asserts nothing about whether we hold a contact",
+        "questionnaire: the document carries every question the instrument asks",
+        "questionnaire: the evasion shapes catch a real prejudicial sentence",
+        "questionnaire: the invitation message never implies an obligation to answer",
+        "questionnaire: the leading-question shapes catch real leading questions",
+        "questionnaire: the questionnaire tables carry no foreign key to any store",
+        "questionnaire: the questionnaire tables key on public ballot ids, never on a reader",
+        "questionnaire: the response table has no summary-shaped column",
+        "questionnaire: the symmetry check catches an asymmetric contest",
+        "questionnaire: the three Positions empty states are distinguishable",
+        "questionnaire: the word limit is ONE number, identical everywhere",
+        "questionnaire: two mints of the same candidacy produce different tokens"
       ],
       "dynamic": 0
     },

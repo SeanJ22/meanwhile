@@ -1,5 +1,5 @@
 {
-  "curatedAt": "2026-08-19",
+  "curatedAt": "2026-08-23",
   "note": "Hunted-and-verified links for every rendered ballot candidate (session 2026-08-13, item 2b). Every URL in `links` was fetched this session and the page read to confirm it names the person and the race or office; the `verification` sentence records what was seen. Official pages read from a legislature's server-rendered member roster carry that chain in the sentence. `hunts` records every candidate for whom no link ships: MISS means a search was run and nothing verifiable was found; NOT_ATTEMPTED means the hunt is queued and no claim of absence is made. CORRECTED 2026-08-21 under RULING 52: this note used to say 'gc.nh.gov member pages cannot be verified from this pipeline (TLS wall, docs/source-ladder.md) and are recorded in hunts rather than shipped unverified.' That was a measurement taken 2026-08-17 written as a standing property. Re-walked 2026-08-21: gc.nh.gov answers rung 2 at HTTP 200 and member pages verify from this pipeline. Rows still sitting in `hunts` on the strength of that wall are owed a re-walk, not treated as settled.",
   "links": {
     "ballot-az-pima:governor|Katie Hobbs": {
@@ -802,6 +802,30 @@
         "url": "https://www.davidhodas4boe.org/",
         "verification": "Fetched 2026-08-22 at https://www.davidhodas4boe.org/ — the page carries \"David Hodas\" and the race.",
         "attemptedAt": "2026-08-22"
+      }
+    },
+    "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h": {
+      "official": null,
+      "campaign": {
+        "url": "https://tomkean.com/",
+        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (tom kean, kean) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, this campaign). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: already the site root.",
+        "attemptedAt": "2026-08-23"
+      }
+    },
+    "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana": {
+      "official": null,
+      "campaign": {
+        "url": "https://lanaleguia.com/",
+        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (lana leguía, leguía) and identifies itself as a campaign (this campaign). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was https://lanaleguia.com/interviews.",
+        "attemptedAt": "2026-08-23"
+      }
+    },
+    "ballot-nj-morris:mendham-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:strobel-robert": {
+      "official": null,
+      "campaign": {
+        "url": "https://www.strobelforschoolboard.com/",
+        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (rob strobel, strobel) and identifies itself as a campaign (for <office>, elect / re-elect, vote for, on the ballot). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was https://www.strobelforschoolboard.com/index.php.",
+        "attemptedAt": "2026-08-23"
       }
     }
   },
@@ -1783,6 +1807,30 @@
       "name": "Melissa Muilenburg",
       "note": "MISS — NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
       "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "promotion-0823:Alice Plastoris",
+      "name": "Alice Plastoris",
+      "note": "MISS — https://www.plastoris.com/ cleared a control query but is NOT wired: only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes. Forms searched: alice plastoris, plastoris. Still owed, and re-hunted on its RULING 53 clock — this is not an absence.",
+      "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "promotion-0823:Rita C. Chipperson",
+      "name": "Rita C. Chipperson",
+      "note": "MISS — https://www.chippersonlaw.com/attorneys/rita-c-chipperson/ cleared a control query but is NOT wired: the page names the candidate but carries no word showing it is about standing for office — whose page it is remains unestablished Forms searched: rita c. chipperson, rita chipperson, chipperson. Still owed, and re-hunted on its RULING 53 clock — this is not an absence.",
+      "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "promotion-0823:Meghan Lynch",
+      "name": "Meghan Lynch",
+      "note": "MISS — https://meghan-lynch-njsn.squarespace.com/ cleared a control query but is NOT wired: only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes. Forms searched: meghan lynch, lynch. Still owed, and re-hunted on its RULING 53 clock — this is not an absence.",
+      "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "promotion-0823:Clifford D. Dawkins",
+      "name": "Clifford D. Dawkins",
+      "note": "MISS — https://www.dawkinswarrington.com/clifford-d-dawkins-esq cleared a control query but is NOT wired: the page names the candidate but carries no word showing it is about standing for office — whose page it is remains unestablished Forms searched: clifford d. dawkins, clifford dawkins, dawkins. Still owed, and re-hunted on its RULING 53 clock — this is not an absence.",
+      "attemptedAt": "2026-08-23"
     }
   ]
 }

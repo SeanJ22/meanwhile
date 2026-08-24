@@ -1609,6 +1609,223 @@ The machinery is `lib/text/refusal-shapes.ts`, `pnpm sweep:refusal` and
 `lib/text/absence-defaults.ts`, `pnpm sweep:absence-defaults` and
 `tests/absence-defaults.test.ts`.
 
+## TWO RULINGS OF 2026-08-23 — THE QUESTIONNAIRE AND THE CORPORA
+
+(Adopted 2026-08-23, the author's questionnaire-and-corpora brief, item 5.
+**RULINGS 111 and 112.** `docs/rulings.md` carries both in plain language,
+because a ruling the author cannot read is a ruling that does not bind him.)
+
+### RULING 111 — A JOIN IS NEVER A LOOKUP FOR A FACT THAT LIVES ON ONLY ONE SIDE
+
+(Adopted 2026-08-23, item 5. It is **RULING 100's failure moved from reading a
+document to reading a database**: that ruling catches an extraction that came
+back with SOME of a document and reported all of it; this catches a query that
+came back with some of a table and reported all of it.)
+
+**Before querying a joined source, state which SIDE holds the fact and whether
+the join can DROP ROWS. Where it can, query the side that holds it.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* A
+join drops the rows that fail to match, and **a dropped row is returned as
+nothing — which is the same shape as a genuine absence.** No instrument in this
+repo can tell those apart, because every instrument asks whether something came
+back.
+
+The district classifier asked the Census–NCES crosswalk whether a school system
+is INDEPENDENT or DEPENDENT. **Only the Census file carries that fact**; NCES
+does not. So a question one file could answer completely was put to two files
+stapled together, and the crosswalk's own report states the cost outright:
+**4,083 of 13,859 Census school systems have no NCES match and are absent from
+it entirely** — 3,373 of 12,546 independent districts and 710 of 1,313
+dependent ones. Every one of those vanished silently and read exactly like an
+honest `UNCLASSIFIED`.
+
+**The join was not built badly, and that is the point.** The two files share no
+identifier at all: NCES publishes a Census ID only on the F-33 fiscal survey,
+which is a separate acquisition. The crosswalk therefore matches on state code
+plus normalised name, one-to-one, and counts an ambiguous name as UNMATCHED
+rather than resolving it. That is the correct method and it still loses 29.46%.
+**A correctly-built join that drops three rows in ten is not a lookup table**,
+and no amount of improving it makes it one.
+
+- **Which side holds the fact is stated before the query**, not discovered
+  afterwards.
+- **Whether the join can drop rows is stated.** A join on names always can.
+- **Where it can, the query goes to the side that holds the fact.**
+
+### RULING 112 — A FIRST-PARTY INSTRUMENT IS SYMMETRIC BY CONSTRUCTION, OR IT IS NOT SHIPPED
+
+(Adopted 2026-08-23, item 5. It is the **equal-effort rule's other half**: that
+rule governs how hard we look at what already exists, and this governs what we
+create.)
+
+**Identical questions, identical word limits, identical deadline, identical
+reminders, identical rendering of non-response. Answers publish VERBATIM and are
+never summarized.**
+
+*The rationale is hardcoded here so it is not re-litigated.* An incumbent always
+has more public material than a challenger. **Hunting harder makes that gap
+WIDER, not narrower**, because there is more to find on the incumbent — so the
+equal-effort rule, which is a discipline about retrieval, cannot fix an
+asymmetry that lives in the source material itself. No amount of hunting closes
+it, and the correct response to that is not more hunting; it is an instrument
+that does not have the asymmetry to begin with.
+
+A first-party questionnaire is the only one this product can build. Every
+candidate in a contest gets the same blank page on the same day. It is also
+original data owned outright, which is the ANSWER to the Ballotpedia licensing
+question RULING 70 governs rather than a workaround for it.
+
+- **The contest is the unit and it is ALL-OR-NONE.** Every candidate in a
+  contest is invited or none is. A contest where the well-covered candidates
+  were asked and the thin ones were not is the equal-effort failure in its
+  purest form, committed by the instrument built to prevent it. Enforced in
+  `lib/questionnaire/invitations.ts` rather than left to a caller to remember.
+- **Nothing is ever truncated.** An over-limit answer is REFUSED at submit time
+  with its own word count shown, and the candidate decides what to cut. Silent
+  truncation favours whoever writes short, invisibly.
+- **Answers publish verbatim.** No summarization, no paraphrase, no LLM
+  compression, no fact-check annotation inside the answer, no editorial note, no
+  rating. **The Citizens Clean Elections Commission's *in their own words* is
+  the model.** Enforced by ABSENCE — there is no summary field on the response
+  record and no summarising call under `lib/questionnaire/`, and
+  `tests/questionnaire.test.ts` sweeps for both BY SHAPE (RULING 110), with
+  plants proving the sweep catches a real one.
+- **Non-response is neutral and factual and identical for everyone**: invited on
+  this date, reminded on these dates, no response yet. **Never evasion,
+  avoidance, refusal or declining.** A candidate owes us nothing, and a sentence
+  implying otherwise is this product scoring them for silence — the
+  recommendation it does not make, delivered by implication. The banned shapes
+  are held in `tests/questionnaire.test.ts` with plants.
+- **A withdrawal returns the candidate to the NEUTRAL INVITED STATE**, never
+  "responded then withdrew". Neutrality wins over completeness here, and it is
+  the author's call recorded as one. `renderableResponse` returns the same
+  `null` for a withdrawn record as for an unanswered one, so the calling surface
+  cannot tell them apart and therefore cannot render them differently.
+- **The question set is VERSIONED and the version travels with every answer.**
+  Changing it mid-cycle across candidates who answered the old version breaks
+  symmetry — two people in one contest would have answered two different
+  instruments and their answers would render side by side as though they had
+  not. `docs/candidate-questionnaire.md` is GENERATED from
+  `lib/questionnaire/instrument.ts` so a second copy cannot disagree with the
+  one candidates are actually asked.
+- **The plan and the act are different fields** (RULING 107, pointed outward). A
+  generated invitation carries `invitedOn: null` and an empty `remindedOn` until
+  the code path that actually sends stamps them. Stamping a schedule as a send
+  would put a date on an act nobody performed, and the Positions empty state
+  reads exactly those two fields to decide whether to tell a reader we asked.
+- **Authentication adds no identifier to this product.** A single-use expiring
+  token to the email already on the certified filing; no account, no password,
+  no new identifier; only `sha256(token)` is stored. **Candidate responses are
+  published civic content, not reader data** — they live in the content store,
+  and the n-stores rule is untouched: nothing lands on the search log or the
+  reactions store.
+
+**Asymmetry in an instrument we control is worse than asymmetry in the world,
+because we chose it.**
+
+## TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS-ON LAYER
+
+(Adopted 2026-08-23, the CI-and-depth session, item 9. **RULINGS 113 and 114.**
+`docs/rulings.md` carries both in plain language, because a ruling the author
+cannot read is a ruling that does not bind him.)
+
+### RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER IT DID THE THING
+
+(Adopted 2026-08-23, item 9. It is the **operation-count rule** — *an operation
+that can return nothing must be asked what it returned* — pointed at a BUILD
+STEP rather than at a data fetch. Supersedes nothing.)
+
+**Where a step's product can be observed, observe it AT THE STEP, not at the
+first consumer.**
+
+`main` was red at `3d453fd` with four failures and one cause:
+`NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright`.
+The step before them, whose entire job is installing that browser, **reported
+success in 27 seconds** — and its own log, two screens above the failure, reads
+`Chrome for Testing 151.0.7922.34 ... downloaded to /home/runner/.cache/ms-playwright/chromium-1234`.
+
+**The install landed in exactly the directory the suite searched.** What failed
+was `lib/ops/chromium-pin.ts`, looking for the binary at the legacy
+`chrome-linux/chrome` while Chrome for Testing puts it at
+`chrome-linux64/chrome`. It had never worked on any platform with the pinned
+Playwright, the author's own Windows machine included.
+
+Two separable failures, and the second is the one that cost the time:
+
+1. **A step reported success with its product unchecked**, so the defect
+   surfaced eighty seconds later inside four unrelated tests, after a
+   2,000-test suite had already run.
+2. **The message named the wrong half.** *"NO CHROMIUM INSTALLED"* about a
+   directory holding a freshly installed Chromium sends every reader to the
+   installer, which was working perfectly. An absence that can name what it DID
+   see points at the reader instead of the writer.
+
+So: a step whose product is observable carries a check immediately after it,
+naming what it looked for, where, and what it found. **Where the product can be
+compared against what the TOOL ITSELF reports producing, compare them** — that
+is the drift check nothing had here, and the only one that could have failed.
+`scripts/assert-browser.mts` is the instance; the rule is the class.
+
+**The check has no skip flag**, for the reason the build gate already gives: an
+escape hatch on a gate is how the gate stops meaning anything. The one locally
+available "fix" — letting the guard pass with no browser — is what
+`scripts/browser.mts` forbids in as many words.
+
+### RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, BECAUSE COMPLETING IT REMOVED THE HONEST SILENCE
+
+(Adopted 2026-08-23, item 9. It is the **render-default rule** read forward in
+time: that rule forbids a default converting absence into an assertion, and
+this governs what happens when there are no absences left. Supersedes nothing.)
+
+**Every always-on stamp is asserted against a SOURCE OF RECORD, and a mismatch
+FAILS rather than renders.**
+
+`classKeyFor` had Census LSAD **43** and **44** reversed — 43 is `town`, 44 is
+`township` — so New Jersey's township definition rendered on **Morristown,
+Kearny, Dover, Newton, Boonton, Westfield, Clinton, Hackettstown, Phillipsburg,
+Harrison and Belvidere**. Not one of those is a township.
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is the whole rule.*
+
+**Closing the class layer to 1,253 of 1,253 is what made the swap dangerous.**
+While the layer was incomplete, a body with no definition rendered NOTHING —
+and nothing is never wrong. Completing it converted every misclassification
+into a false claim about how a reader is governed, silently, because **a wrong
+definition looks exactly as healthy as a right one.** Coverage went from a
+number that could only embarrass us to a number that can lie.
+
+**A completeness figure therefore needs a companion that can go red.**
+
+- **The check is against a DIFFERENT PUBLICATION.** Re-deriving a stamp from the
+  field it was stamped from proves only that the code is deterministic; it would
+  have agreed with the swap on all 1,253 rows, every day, for as long as the
+  swap lived. TIGER describes a POLYGON; the 2022 Census of Governments
+  describes a GOVERNMENT and names it in full — `TOWNSHIP OF ROCKAWAY`, `TOWN OF
+  MORRISTOWN`. The swap disagrees with the second on every row it touched.
+- **Joined on an identifier, never a name string**, and **gated on the KIND of
+  government as well as the code**. A school district's GEOID occupies the same
+  seven characters a place code does, and an ungated lookup joined six districts
+  to unrelated towns and cities.
+- **Two authorities disagreeing is a FINDING (RULING 57), closed by walking a
+  third branch and recording what it said** — never by editing the expectation.
+  Buckeye, Arizona is the live case: TIGER says city, the 2022 roster says `TOWN
+  OF BUCKEYE`, the body's own site is walled at rung 3, and rung 11's archived
+  capture carries *"City of Buckeye"* three times on its own homepage. The
+  roster name is stale. It is recorded as ADJUDICATED **with the route that
+  settled it**, and it still reports as a disagreement — an adjudication list is
+  not a suppression list.
+- **A row with nothing to compare against is counted SEPARATELY, by name, with a
+  reason, and never folded into the verified total.** A sweep that quietly
+  counted the unchecked as agreeing would report confidence it never measured —
+  RULING 100's partial, one floor up. And a floor is asserted on the verified
+  count, because a sweep whose source failed to load would report zero
+  mismatches and read green.
+
+The machinery is `scripts/class-stamp-sweep.mts` (`pnpm class:sweep`),
+`data/derived/class-stamp-sweep.json`, and `tests/class-stamp-sweep.test.ts`.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

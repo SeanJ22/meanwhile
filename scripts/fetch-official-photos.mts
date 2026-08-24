@@ -24,9 +24,11 @@
  * preserved untouched — this script owns only the `congress:` prefix.
  */
 import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { openCorpus, readBinaryFile, type CorpusHandle } from "../lib/hunt/github-corpus.ts";
 import { stripImageMetadata } from "./strip-image-metadata.mts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -34,6 +36,58 @@ const OUT_DIR = join(ROOT, "public", "officials");
 const MANIFEST = join(ROOT, "lib", "registry", "official-photos.json");
 
 const SOURCE_BASE = "https://unitedstates.github.io/images/congress/450x550";
+
+/**
+ * **RUNG 2 IS THE PAGES HOST. RUNG 4 IS `git`, AND IT IS THE SAME BYTES.**
+ * (Added 2026-08-23, the questionnaire-and-corpora brief item 2. RULING 88 —
+ * the route did not exist at session start; the ladder rule — a wall that falls
+ * becomes a permanent reusable step rather than a discovery spent and kept.)
+ *
+ * `unitedstates.github.io` is a GitHub PAGES host and `github.com` is not, and
+ * an egress that refuses the first can permit the second — which is exactly the
+ * case on the machine this was written on, measured both ways in the same
+ * minute:
+ *
+ * ```
+ * curl …/congress/450x550/C000127.jpg          → 000
+ * git show HEAD:congress/450x550/C000127.jpg   → 114,839 bytes, JPEG 450x550
+ * ```
+ *
+ * The wall was around a HOST, never around the data (RULING 90's fourth
+ * obligation). So an HTTP miss is no longer written down as a miss until the
+ * git road has also been walked: `MISS` here used to mean *the pictorial
+ * directory does not carry this person*, and on any refusing egress it silently
+ * meant *we could not reach the host*. Those are the two things this product
+ * exists never to confuse.
+ */
+const CORPUS_SLUG = "unitedstates/images";
+const CORPUS_PREFIX = "congress/450x550";
+
+/** Opened lazily, and only if an HTTP read actually fails — a clone is not free. */
+let corpus: CorpusHandle | null = null;
+let corpusFailure: string | null = null;
+
+function portraitOverGit(bioguide: string): { bytes: Buffer; sha: string } | null {
+  if (corpusFailure !== null) return null;
+  try {
+    corpus ??= openCorpus({
+      slug: CORPUS_SLUG,
+      cacheDir: join(process.env.WTP_CORPUS_CACHE ?? tmpdir(), "wtp-github-corpora"),
+    });
+    const bytes = readBinaryFile(corpus, `${CORPUS_PREFIX}/${bioguide}.jpg`);
+    return bytes.length > 0 ? { bytes, sha: corpus.sha } : null;
+  } catch (error) {
+    /*
+     * A failure to CLONE is a fact about the road and is recorded once, so 537
+     * members do not each pay for the same refusal. A failure to read one PATH
+     * is a fact about that person and is not — the corpus genuinely does not
+     * carry everybody.
+     */
+    const message = (error as Error).message ?? "";
+    if (corpus === null) corpusFailure = message.split("\n")[0];
+    return null;
+  }
+}
 const LICENSE =
   "Public domain (U.S. federal government work — GPO Congressional Pictorial Directory, via unitedstates/images)";
 
@@ -122,18 +176,37 @@ for (const { id, name } of federal) {
     },
   });
 
-  if (!response.ok) {
-    missing.push({
-      officeholderId: id,
-      name,
-      reason: `pictorial-directory image HTTP ${response.status}; Congress.gov depiction exists but is "Image courtesy of the Member" (unknown license — not shippable per D20)`,
-      attemptedAt: now,
-    });
-    console.log(`  MISS ${bioguide} ${name} — ${response.status}`);
-    continue;
+  /*
+   * THE SECOND ROAD, walked before an absence is recorded. See CORPUS_SLUG
+   * above: an HTTP refusal is a fact about a host and was being written into
+   * the manifest as a fact about a person.
+   */
+  let raw: Buffer;
+  let viaGit: string | null = null;
+  if (response.ok) {
+    raw = Buffer.from(await response.arrayBuffer());
+  } else {
+    const fromGit = portraitOverGit(bioguide);
+    if (!fromGit) {
+      missing.push({
+        officeholderId: id,
+        name,
+        reason:
+          `pictorial-directory image HTTP ${response.status} at ${SOURCE_BASE}, ` +
+          `and ${CORPUS_SLUG} at ${CORPUS_PREFIX}/${bioguide}.jpg over git ` +
+          `${corpusFailure === null ? "does not carry this bioguide" : `could not be cloned: ${corpusFailure}`}; ` +
+          `Congress.gov depiction exists but is "Image courtesy of the Member" ` +
+          `(unknown license — not shippable per D20)`,
+        attemptedAt: now,
+      });
+      console.log(`  MISS ${bioguide} ${name} — HTTP ${response.status}, and git found nothing`);
+      continue;
+    }
+    raw = fromGit.bytes;
+    viaGit = fromGit.sha;
+    console.log(`  GIT  ${bioguide} ${name} — HTTP ${response.status}, retrieved at ${fromGit.sha.slice(0, 8)}`);
   }
 
-  const raw = Buffer.from(await response.arrayBuffer());
   const { bytes, stripped, removed } = stripImageMetadata(raw);
   if (!stripped) {
     // An unrecognized container cannot be certified metadata-free — that
@@ -153,7 +226,18 @@ for (const { id, name } of federal) {
     officeholderId: id,
     name,
     url: `/officials/${bioguide}.jpg`,
-    sourceUrl,
+    /*
+     * **THE ROAD ACTUALLY WALKED, not the road we meant to walk.** A row that
+     * cited the Pages URL for bytes that arrived over git would be provenance
+     * naming a source nobody read — the same class of defect as a freshness
+     * stamp written by something that did not perform the read (RULING 107).
+     * The git form is also the stronger citation: it is pinned to a commit, so
+     * it is reproducible where a CDN read is not.
+     */
+    sourceUrl:
+      viaGit === null
+        ? sourceUrl
+        : `https://github.com/${CORPUS_SLUG}/blob/${viaGit}/${CORPUS_PREFIX}/${bioguide}.jpg`,
     license: LICENSE,
     attribution: null,
     collectedAt: now,

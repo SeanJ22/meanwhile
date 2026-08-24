@@ -1,6 +1,7 @@
 "use client";
 
 import { FREE_TEXT_CLOSED_HEADER } from "@/lib/signal/reactions";
+import { getOrCreateBrowserKey } from "../state/browser-key.ts";
 import type {
   ReactionTargetType,
   ReactionValue,
@@ -28,27 +29,15 @@ import type {
 const KEY_STORAGE = "wtp.reaction_key";
 const SELECTION_STORAGE = "wtp.reactions";
 
-let memoryKey: string | null = null;
 const memorySelections = new Map<string, ReactionValue>();
 
-function mintKey(): string {
-  const bytes = new Uint8Array(16);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
-}
 
 /** Minted on first use — call only from a reaction tap, never on load. */
 export function getOrCreateReactionKey(): string {
-  try {
-    const existing = window.localStorage.getItem(KEY_STORAGE);
-    if (existing && /^[A-Za-z0-9_-]{16,64}$/.test(existing)) return existing;
-    const minted = mintKey();
-    window.localStorage.setItem(KEY_STORAGE, minted);
-    return minted;
-  } catch {
-    memoryKey ??= mintKey();
-    return memoryKey;
-  }
+  // NH79: one audited implementation. The STORAGE KEY is what keeps this
+  // store apart from the other one — see lib/state/browser-key.ts, which
+  // carries why the in-memory fallback must not be shared.
+  return getOrCreateBrowserKey(KEY_STORAGE);
 }
 
 function selectionKey(targetType: ReactionTargetType, targetId: string): string {

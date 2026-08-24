@@ -46,6 +46,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { stamp } from "./stamp.mts";
+import { pointInRings } from "../lib/geo/polygon.ts";
 
 const SOURCE_ORG = "U.S. Census Bureau";
 const SERVICE =
@@ -84,19 +85,9 @@ const centroids = (
   ) as { centroids: Record<string, [number, number]> }
 ).centroids;
 
-function pointInPolygon(x: number, y: number, rings: number[][][]): boolean {
-  let inside = false;
-  for (const ring of rings) {
-    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-      const [xi, yi] = ring[i];
-      const [xj, yj] = ring[j];
-      if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi) {
-        inside = !inside;
-      }
-    }
-  }
-  return inside;
-}
+/** NH79: the repo's one even-odd implementation. See lib/geo/polygon.ts. */
+const pointInPolygon = (x: number, y: number, rings: number[][][]): boolean =>
+  pointInRings(x, y, rings);
 
 /** zips per state FIPS, decided by the map's own point-in-polygon. */
 const byState = new Map<string, string[]>();

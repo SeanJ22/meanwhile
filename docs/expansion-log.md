@@ -44,6 +44,107 @@ inference is how an exemption becomes a habit.
 
 ---
 
+## questionnaire-and-corpora-0823 · 2026-08-23
+
+**Item 2 is a hunt at rung 1 and this is its expansion section.** Four routes
+that did not exist at session start. **Two returned rows and two returned zero,
+and the two zeros are reported as successes** — the invention is the
+deliverable, not the yield (RULING 88).
+
+### The GitHub PAGES host and the GitHub host are different walls
+
+- **Conceived:** the brief declared the environment — no live network except
+  `github.com`. `scripts/fetch-official-photos.mts` had exactly ONE route to the
+  portraits, `https://unitedstates.github.io/images/congress/450x550/…`, and
+  that is a **Pages** host rather than `github.com`. The question that produced
+  the route was RULING 90's fourth obligation asked literally: *the wall is
+  around a HOST — what other road reaches the same repository?* The two serve
+  the same bytes out of the same tree.
+- **Query:** both roads, same file, same minute:
+  ```
+  curl -s -o /dev/null -w "%{http_code}" --max-time 25 \
+    https://unitedstates.github.io/images/congress/450x550/C000127.jpg
+  git clone --filter=blob:none --no-checkout https://github.com/unitedstates/images.git
+  git show HEAD:congress/450x550/C000127.jpg > C000127.jpg
+  ```
+- **Returned:** the Pages read returned **`000`**. The git read returned
+  **114,839 bytes, a valid progressive JPEG, 450x550**. Across the whole owed
+  set: **97 of 97 portraits retrieved and verified.**
+- **Generalises:** **YES, and widely — to every corpus published as a GitHub
+  repository, not to these two.** It is now `lib/hunt/github-corpus.ts` and a
+  permanent rung inside the photo fetcher, walked before any absence is
+  recorded. It is also strictly better than the HTTP road where both work,
+  because a clone is pinned to a commit and a CDN read is not.
+
+### `git ls-tree` is a free count assertion
+
+- **Conceived:** RULING 100 needs a source to state its own count, and a
+  portrait corpus does not have a sentence saying how many portraits it holds.
+  But a blobless partial clone carries the whole TREE and none of the blobs — so
+  the corpus states its size structurally, for nothing, before any image data
+  moves.
+- **Query:** `git ls-tree -r HEAD --name-only congress/450x550 | wc -l`
+- **Returned:** **1,297**, matched exactly by extraction — `MATCHED`, not
+  `NOT_ASSERTABLE`. The same shape on the directory:
+  `grep -c '^- id:$' legislators-current.yaml` → **537**, extracted 537,
+  `MATCHED`.
+- **Generalises:** **YES**, to any repository-hosted corpus whose members are
+  files. It converts a class of source from "we cannot assert a count" to
+  "the count is free", which is the difference RULING 100 exists over.
+
+### Ask the corpus for the fields we are missing, not for the fields we have
+
+- **Conceived:** the obvious use of a fresher directory is to re-read what it
+  already gave us. The more useful question is the inverse — *which sitting
+  members are we missing a field for, and does this corpus close it?* — because
+  that is the only version of the question whose answer is work.
+- **Query:** an anti-join of `data/congress-legislators/snapshot.json` and
+  `lib/registry/official-photos.json` against the corpus at
+  `750c0608efb6ef1fc3257ba72c99af3771d35088` and
+  `aec3e4a88af843b282c0576f420b930f6a9a46ad`, per field type.
+- **Returned:** **ZERO on every contact field** — phone 537 of 537 held, url
+  536 of 537, contact form 88 of 88, and **the corpus at today's commit carries
+  no value we do not already hold and none that differs.** Reported as a
+  success: the route was conceived, walked and answered, and the answer is that
+  the previous pipeline had already closed this. **Non-zero on portraits: 97
+  owed and available, 3 owed and genuinely not in the corpus.**
+- **Generalises:** **YES.** The anti-join first is the cheap general move for
+  any refresh of a source already wired — it turns a re-read of 537 rows into a
+  named list of what is actually owed.
+
+### Does the corpus hold what our own manifest calls MISSING?
+
+- **Conceived:** `lib/registry/official-photos.json` carries a `missing` list of
+  229 entries, each recording a person we tried and did not ship. Those were
+  written by a fetcher with only the HTTP road. If the wall was the host rather
+  than the person, some of those absences are not absences.
+- **Query:** intersect the 229 recorded `missing` officeholder ids against the
+  1,297 bioguides `git ls-tree` enumerates.
+- **Returned:** **ZERO.** The 229 recorded misses break down as **181
+  `plural:` and 48 `roster:` — and exactly 0 `congress:` rows**, so this corpus
+  was never going to answer for any of them. **None of the 97 owed portraits
+  appears in the missing list either**, and neither do the 3 the corpus
+  genuinely does not carry: all 100 had simply never been attempted. Reported
+  as a success, and the finding is the one worth keeping — **a gap that was
+  never attempted does not appear in a missing list**, so a missing list is a
+  register of ATTEMPTS and can never be read as the denominator of what is
+  owed. 100 federal portraits were owed and the register that exists to record
+  photo gaps said nothing about any of them.
+- **Generalises:** **YES**, and it is a caution rather than a route: any
+  "missing" register in this repo records attempts, never owed fields, and the
+  two must never be confused for one another.
+
+### What a person with a browser would have typed (RULING 94, move 1)
+
+`unitedstates images congress portraits github` — the first result is the
+repository itself, and its `README` states the URL pattern, the three sizes and
+the public-domain assurance from GPO in the first screen. **This route was
+already walked by an earlier session**, which is why 902 portraits were already
+here; what had never been asked is what happens when that URL pattern is
+refused.
+
+---
+
 ## discovery-conduct-0823-nonhunt · 2026-08-23
 
 **This session is marked `-nonhunt` and hunted nothing.** It has no expansion

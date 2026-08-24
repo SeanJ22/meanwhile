@@ -11,6 +11,11 @@ import {
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { PositionsSection } from "@/components/officials/positions-section";
+import {
+  positionsEmptyLine,
+  UNESTABLISHED,
+  type PositionsEmptyStateInput,
+} from "@/lib/questionnaire/positions-state";
 
 /**
  * **The candidate battlecard, and the pill that opens it** — F01-continued
@@ -66,6 +71,7 @@ export function CandidateBattlecard({
   subjectId,
   sections,
   holdsOrHeldTheOffice = false,
+  questionnaire = UNESTABLISHED,
 }: {
   name: string;
   /** Already-formatted party text. Display only — nothing here ranks. */
@@ -94,6 +100,23 @@ export function CandidateBattlecard({
    * much we happen to hold on them.
    */
   holdsOrHeldTheOffice?: boolean;
+  /**
+   * **THE THIRD EMPTY STATE ON POSITIONS** (2026-08-23, the questionnaire
+   * brief, item 1).
+   *
+   * BC-2 gave the Voting record section two empty states because *never held
+   * the office* and *we have not collected it* are different facts. The
+   * first-party questionnaire creates a third cause on Positions that neither
+   * covers: **we asked this person directly and have not heard back.**
+   *
+   * Three states, one pill, each attributing the gap to its actual cause —
+   * ours, the process's, or the public record's. None of them may read as
+   * evasion, and `tests/questionnaire.test.ts` holds the banned shapes.
+   *
+   * The default asserts nothing: `UNESTABLISHED` falls to the state that
+   * describes only our own gap.
+   */
+  questionnaire?: PositionsEmptyStateInput;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -206,7 +229,9 @@ export function CandidateBattlecard({
                           */}
                           {spec.id === "record"
                             ? votingRecordEmptyLine(holdsOrHeldTheOffice)
-                            : spec.emptyLine}
+                            : spec.id === "positions"
+                              ? positionsEmptyLine(questionnaire)
+                              : spec.emptyLine}
                         </p>
                       )}
                       {/*

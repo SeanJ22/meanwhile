@@ -173,6 +173,30 @@ jobs:
         timeout-minutes: 15
         run: corepack pnpm exec playwright install --with-deps chromium
 
+      # WHERE A STEP'S PRODUCT CAN BE OBSERVED, OBSERVE IT AT THE STEP
+      # (`NH106`, RULING 113, 2026-08-23).
+      #
+      # The step above reported SUCCESS IN 27 SECONDS at `3d453fd` and the suite
+      # then failed four times on `NO CHROMIUM INSTALLED ... searched
+      # /home/runner/.cache/ms-playwright` — a directory the install log, two
+      # screens earlier, said it had downloaded Chromium into. The install was
+      # fine; `lib/ops/chromium-pin.ts` was looking for the binary at the legacy
+      # `chrome-linux/chrome` while Chrome for Testing puts it at
+      # `chrome-linux64/chrome`.
+      #
+      # Eighty seconds and a 2,000-line suite stood between the install exiting
+      # and anyone learning that. This asks the question at the step: it lists
+      # the browsers root, every build directory in it and the contents of each,
+      # compares our resolution against Playwright's own `executablePath()`, and
+      # exits non-zero on either an absence or a disagreement.
+      #
+      # It has NO skip flag. An escape hatch on a gate is how the gate stops
+      # meaning anything, and letting the guard pass with no browser is the one
+      # "fix" `scripts/browser.mts` forbids in as many words.
+      - name: Prove the browser is actually there
+        timeout-minutes: 5
+        run: corepack pnpm run assert:browser
+
       # `if: always()` on the two that follow, so one red gate does not hide
       # the verdict of the others. A PR author gets all three answers from one
       # run rather than three round trips.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
+import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
  * The reader's narrowing choices — M26/4.6.3c, device-local by design.
@@ -89,14 +90,8 @@ function readFor(zip: string): NarrowingState {
   }
 }
 
-function subscribe(onStoreChange: () => void) {
-  listeners.add(onStoreChange);
-  window.addEventListener("storage", onStoreChange);
-  return () => {
-    listeners.delete(onStoreChange);
-    window.removeEventListener("storage", onStoreChange);
-  };
-}
+const subscribe = (onStoreChange: () => void) =>
+  subscribeToStorage(listeners, onStoreChange);
 
 function notify() {
   for (const listener of listeners) listener();

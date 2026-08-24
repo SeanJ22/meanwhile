@@ -1,6 +1,18 @@
 {
+  "data/derived/body-forms.json": {
+    "digest": "a859a906ab232f76ce23ce991f6401d3c1eda6f97335cc1f2f39d47dbe4c445c",
+    "files": 6,
+    "entry": "scripts/stamp-body-forms.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "data/derived/class-stamp-sweep.json": {
+    "digest": "539a8ddba7b5398f067e31ea313fc85477c8c327030507703e43819ab99a5aa4",
+    "files": 1,
+    "entry": "scripts/class-stamp-sweep.mts",
+    "regeneratedOn": "2026-08-23"
+  },
   "data/derived/school-district-dependency.json": {
-    "digest": "4545bb8c51b2bf28e2258bc7dc5e05e4e649df554b0b90cc41ad2d8956cab3b7",
+    "digest": "c9ae07fa6021ec3bbc3f2dfaae41f4218e3a8d354b753e420f9c810f5dc831c9",
     "files": 4,
     "entry": "scripts/classify-school-districts.mts",
     "regeneratedOn": "2026-08-23"
@@ -41,10 +53,22 @@
     "entry": "scripts/wiki-municipality.mts",
     "regeneratedOn": "2026-08-23"
   },
+  "data/questionnaire/invitations-nj-morris-2026.json": {
+    "digest": "4ac73f637e38a470265bc3093b11b028d9d495158c05bbcc4c0640ba98e88068",
+    "files": 4,
+    "entry": "scripts/questionnaire-invitations.mts",
+    "regeneratedOn": "2026-08-23"
+  },
   "docs/branch-manifest.md": {
     "digest": "2cbc83868ddaf2f773ea4ce240e9cf3e7ad2847894fecbe12c6e03cfdf4decfc",
     "files": 3,
     "entry": "scripts/branch-manifest-doc.mts",
+    "regeneratedOn": "2026-08-23"
+  },
+  "docs/candidate-questionnaire.md": {
+    "digest": "65c1cadf8471ca65ba292e40d9e68c8b6987dac19d0d460c3b4f7a0a1a25a68a",
+    "files": 2,
+    "entry": "scripts/questionnaire-doc.mts",
     "regeneratedOn": "2026-08-23"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {

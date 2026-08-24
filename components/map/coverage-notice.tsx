@@ -142,7 +142,7 @@ export type OpenOfficial = (
   ocdId: string | null,
 ) => void;
 
-const DIVISION_NOUN: Record<CoveredBody["divisionType"], string> = {
+const DIVISION_NOUN: Record<NonNullable<CoveredBody["divisionType"]>, string> = {
   county: "County",
   place: "Municipal",
   school_district: "School district",
@@ -639,7 +639,12 @@ function CoverageBody({
                     division type. A curated row tags by what it is — the PHA
                     board tagged "Municipal" would claim a second city
                     government, and a commission isn't a government at all. */}
-                {body.name === null
+                {/* NH94: a body with NO division has no division noun, and
+                    "Municipal" was the placeholder that used to appear there —
+                    a claim about what kind of government it is, made by a
+                    default. It renders its body class instead, which is a fact
+                    about the body rather than a guess about its division. */}
+                {body.name === null && body.divisionType !== null
                   ? DIVISION_NOUN[body.divisionType]
                   : BODY_CLASS_NOUN[body.bodyClass]}
               </span>

@@ -36,6 +36,14 @@ export interface AreaFactSet {
 }
 
 const FETCHED = "fetched 2026-08-14";
+/**
+ * The two `AZ-1` topics added 2026-08-23 carry their own date rather than
+ * sharing `FETCHED`, because they were read on a different day from a
+ * different session (RULING 107: a freshness date is written by the code path
+ * that performed the read, and a shared constant would date them to a fetch
+ * that never happened).
+ */
+const AZ_FETCHED = "fetched 2026-08-23";
 const NH_WALL =
   "NH state hosts 403 non-browser clients; page title verified in a real browser 2026-08-14";
 
@@ -249,6 +257,55 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceUrl: "https://azdor.gov/business/property-tax",
         sourceOrg: "Arizona Department of Revenue",
         verification: FETCHED,
+      },
+      /*
+       * `AZ-1` (2026-08-23). Two topics an outside reviewer asked for, and the
+       * second is the reason the register rule above is written the way it is.
+       *
+       * **Both are contentious, and that is the argument FOR carrying them
+       * rather than against.** A reader who has just moved states needs to know
+       * what the law IS. The rule is unchanged and it does all the work here:
+       * state the law, cite the official source, carry the fetch date, take no
+       * position, and use no word that presupposes a view. Nothing below says
+       * whether any of it is good.
+       */
+      {
+        topic: "hunting-fishing",
+        question: "Am I allowed to hunt or fish?",
+        answer:
+          "Yes, with a licence. Arizona Game and Fish requires anyone 10 or older — resident or " +
+          "not — to hold a valid licence to take wildlife, fish included. People who live in " +
+          "Arizona pay less for one than visitors do.",
+        sourceUrl:
+          "https://www.azgfd.com/hunting/hunt-draw-and-licenses/hunting-licenses/",
+        sourceOrg: "Arizona Game and Fish Department",
+        verification: AZ_FETCHED,
+      },
+      {
+        /*
+         * Read from the constitutional text itself rather than from any
+         * summary of it. `azleg.gov/const/2/8_1.htm` is the state legislature's
+         * own copy of Article 2 § 8.1.
+         *
+         * TWO WORDINGS WERE CHECKED AND ONE WAS DISCARDED. "Fetal viability"
+         * is the constitution's term and it is defined there — "a significant
+         * likelihood of the fetus's sustained survival outside the uterus" —
+         * but it fails the 15-year-old test as a bare phrase, and a reader who
+         * does not know it cannot tell what the sentence permits. It is
+         * therefore glossed in the constitution's own terms rather than either
+         * dropped or left standing.
+         */
+        topic: "abortion",
+        question: "What is the law on abortion?",
+        answer:
+          "Arizona's constitution gives every person a fundamental right to abortion. Before the " +
+          "point a treating health professional judges the fetus could survive outside the womb, " +
+          "the state may restrict it only for a compelling health reason. After that point, it " +
+          "may not block an abortion that professional judges necessary to protect the pregnant " +
+          "person's life or health.",
+        sourceUrl: "https://www.azleg.gov/const/2/8_1.htm",
+        sourceOrg: "Arizona State Legislature — Constitution, Article 2 § 8.1",
+        verification: AZ_FETCHED,
       },
     ],
   },

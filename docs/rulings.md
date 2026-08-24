@@ -2515,3 +2515,44 @@ Which means the asymmetries we would introduce are the ones that matter most:
 **Unfairness in an instrument we control is worse than unfairness in the world,
 because we chose it.** The world's version is a fact to work around. Ours would
 be a decision, made by us, about named people asking for votes.
+
+---
+
+### RULING 113 — a step that reports success is asked whether it did the thing
+
+*Adopted 2026-08-23 (the CI-and-depth session, item 9). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing. It is the operation-count rule pointed at a BUILD STEP rather than at a data fetch — that rule asks an operation what it returned, and this asks a step what it produced.*
+
+**Where a step's product can be looked at, look at it AT THE STEP. Not at the first thing that needs it.**
+
+`main` went red and stayed red. Four tests failed with one message: *no browser is installed; I looked in this folder and found nothing.* The step before them — the one whose whole job is installing that browser — **reported success, in twenty-seven seconds**. Its own log, two screens above the failure, said it had downloaded the browser into exactly the folder the tests then searched.
+
+The install was fine. **The thing doing the looking was broken**: it was looking for the browser file at the path an older version of the tool used, and the current version puts it somewhere else. It had been broken on every machine, including the author's own, for as long as it had existed.
+
+Two things went wrong and they are separable:
+
+- **A step reported success without its product being checked**, so the failure surfaced eighty seconds later, inside four unrelated tests, in a job that had already run a two-thousand-test suite.
+- **The failure message pointed at the wrong half of the problem.** "No browser is installed" about a folder containing a freshly installed browser sends every reader to the installer, which was working perfectly.
+
+So a step whose product can be observed gets a check right after it, and that check says what it looked for, where, and what it actually found. Where the thing the step produced can be compared against what the tool ITSELF says it produced, compare them — that comparison is what was missing here, and it is the only one that could have failed.
+
+**And the check has no skip flag.** An escape hatch on a gate is how a gate stops meaning anything, and the one "fix" available locally — letting the check pass with no browser — is the exact thing the harness forbids in as many words.
+
+---
+
+### RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence
+
+*Adopted 2026-08-23 (the CI-and-depth session, item 9). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing. It is the render-default rule read forward in time: that rule forbids a default turning a blank into a claim, and this is about what happens when there are no blanks left.*
+
+**When a layer covers everything, every mistake in it becomes a false statement instead of a gap. So every always-on stamp is checked against a source of record, and a disagreement fails rather than renders.**
+
+The product had a bug where two government-type codes were swapped: the code for *town* was being read as *township* and the other way round. The result was that **Morristown, Kearny, Dover, Newton, Boonton, Westfield, Clinton, Hackettstown, Phillipsburg, Harrison and Belvidere** were each shown an explanation of how a township works. Not one of them is a township.
+
+The bug is fixed. The lesson is not about the bug.
+
+**Completing the layer to cover all 1,253 bodies is what made the bug dangerous.** Before it was complete, a body with no description showed nothing — and nothing is never wrong. Finishing it meant every misclassification turned into a confident, wrong statement about how a reader is governed, and a wrong description looks exactly as healthy on the page as a right one. The coverage number went from something that could only embarrass us to something that could lie.
+
+**Checking the stamp against the same field it was stamped from proves nothing.** It only proves the code is consistent, and it would have agreed with the swap on all 1,253 rows every day for as long as the swap lived. So the check has to be against a *different publication*: one Census product describes the shape of a place, another describes the GOVERNMENT and writes out its full name — *Township of Rockaway*, *Town of Morristown*. The swap disagrees with the second one on every row it touched.
+
+*Where two authorities disagree, that is a FINDING and it is closed by going and looking.* One did: a Census roster from 2022 calls Buckeye, Arizona a town, and the map data calls it a city. Buckeye's own website refuses our requests, so an archived copy of it was read instead — it says **City of Buckeye**, three times, on its own front page. The roster is simply out of date. That disagreement is recorded with the route that settled it, and it stays visible; it is not quietly deleted.
+
+*And a check that cannot reach its subject may never read like a passing one.* A row with nothing to compare against is counted separately, by name, with a reason. It is never folded into the verified total, because a sweep that quietly counted the things it could not check would be reporting confidence it never measured.

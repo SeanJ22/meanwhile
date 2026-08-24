@@ -1724,6 +1724,108 @@ question RULING 70 governs rather than a workaround for it.
 **Asymmetry in an instrument we control is worse than asymmetry in the world,
 because we chose it.**
 
+## TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS-ON LAYER
+
+(Adopted 2026-08-23, the CI-and-depth session, item 9. **RULINGS 113 and 114.**
+`docs/rulings.md` carries both in plain language, because a ruling the author
+cannot read is a ruling that does not bind him.)
+
+### RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER IT DID THE THING
+
+(Adopted 2026-08-23, item 9. It is the **operation-count rule** — *an operation
+that can return nothing must be asked what it returned* — pointed at a BUILD
+STEP rather than at a data fetch. Supersedes nothing.)
+
+**Where a step's product can be observed, observe it AT THE STEP, not at the
+first consumer.**
+
+`main` was red at `3d453fd` with four failures and one cause:
+`NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright`.
+The step before them, whose entire job is installing that browser, **reported
+success in 27 seconds** — and its own log, two screens above the failure, reads
+`Chrome for Testing 151.0.7922.34 ... downloaded to /home/runner/.cache/ms-playwright/chromium-1234`.
+
+**The install landed in exactly the directory the suite searched.** What failed
+was `lib/ops/chromium-pin.ts`, looking for the binary at the legacy
+`chrome-linux/chrome` while Chrome for Testing puts it at
+`chrome-linux64/chrome`. It had never worked on any platform with the pinned
+Playwright, the author's own Windows machine included.
+
+Two separable failures, and the second is the one that cost the time:
+
+1. **A step reported success with its product unchecked**, so the defect
+   surfaced eighty seconds later inside four unrelated tests, after a
+   2,000-test suite had already run.
+2. **The message named the wrong half.** *"NO CHROMIUM INSTALLED"* about a
+   directory holding a freshly installed Chromium sends every reader to the
+   installer, which was working perfectly. An absence that can name what it DID
+   see points at the reader instead of the writer.
+
+So: a step whose product is observable carries a check immediately after it,
+naming what it looked for, where, and what it found. **Where the product can be
+compared against what the TOOL ITSELF reports producing, compare them** — that
+is the drift check nothing had here, and the only one that could have failed.
+`scripts/assert-browser.mts` is the instance; the rule is the class.
+
+**The check has no skip flag**, for the reason the build gate already gives: an
+escape hatch on a gate is how the gate stops meaning anything. The one locally
+available "fix" — letting the guard pass with no browser — is what
+`scripts/browser.mts` forbids in as many words.
+
+### RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, BECAUSE COMPLETING IT REMOVED THE HONEST SILENCE
+
+(Adopted 2026-08-23, item 9. It is the **render-default rule** read forward in
+time: that rule forbids a default converting absence into an assertion, and
+this governs what happens when there are no absences left. Supersedes nothing.)
+
+**Every always-on stamp is asserted against a SOURCE OF RECORD, and a mismatch
+FAILS rather than renders.**
+
+`classKeyFor` had Census LSAD **43** and **44** reversed — 43 is `town`, 44 is
+`township` — so New Jersey's township definition rendered on **Morristown,
+Kearny, Dover, Newton, Boonton, Westfield, Clinton, Hackettstown, Phillipsburg,
+Harrison and Belvidere**. Not one of those is a township.
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is the whole rule.*
+
+**Closing the class layer to 1,253 of 1,253 is what made the swap dangerous.**
+While the layer was incomplete, a body with no definition rendered NOTHING —
+and nothing is never wrong. Completing it converted every misclassification
+into a false claim about how a reader is governed, silently, because **a wrong
+definition looks exactly as healthy as a right one.** Coverage went from a
+number that could only embarrass us to a number that can lie.
+
+**A completeness figure therefore needs a companion that can go red.**
+
+- **The check is against a DIFFERENT PUBLICATION.** Re-deriving a stamp from the
+  field it was stamped from proves only that the code is deterministic; it would
+  have agreed with the swap on all 1,253 rows, every day, for as long as the
+  swap lived. TIGER describes a POLYGON; the 2022 Census of Governments
+  describes a GOVERNMENT and names it in full — `TOWNSHIP OF ROCKAWAY`, `TOWN OF
+  MORRISTOWN`. The swap disagrees with the second on every row it touched.
+- **Joined on an identifier, never a name string**, and **gated on the KIND of
+  government as well as the code**. A school district's GEOID occupies the same
+  seven characters a place code does, and an ungated lookup joined six districts
+  to unrelated towns and cities.
+- **Two authorities disagreeing is a FINDING (RULING 57), closed by walking a
+  third branch and recording what it said** — never by editing the expectation.
+  Buckeye, Arizona is the live case: TIGER says city, the 2022 roster says `TOWN
+  OF BUCKEYE`, the body's own site is walled at rung 3, and rung 11's archived
+  capture carries *"City of Buckeye"* three times on its own homepage. The
+  roster name is stale. It is recorded as ADJUDICATED **with the route that
+  settled it**, and it still reports as a disagreement — an adjudication list is
+  not a suppression list.
+- **A row with nothing to compare against is counted SEPARATELY, by name, with a
+  reason, and never folded into the verified total.** A sweep that quietly
+  counted the unchecked as agreeing would report confidence it never measured —
+  RULING 100's partial, one floor up. And a floor is asserted on the verified
+  count, because a sweep whose source failed to load would report zero
+  mismatches and read green.
+
+The machinery is `scripts/class-stamp-sweep.mts` (`pnpm class:sweep`),
+`data/derived/class-stamp-sweep.json`, and `tests/class-stamp-sweep.test.ts`.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

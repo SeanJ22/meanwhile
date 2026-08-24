@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **241 open**, 360 resolved.
-- **52 waiting on Sean** — the first section below.
+- **243 open**, 361 resolved.
+- **53 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**52 open · 23 resolved.**
+**53 open · 23 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
   Pending review.
 
 **JOB02** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32543652154 and 32543393133), both at: A source failed for a JOB reason — this run is red, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
+
+**NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
 **NH31** — The refresh commits only if every source succeeded. One source producing zero rows from a non-zero fetch fails the run, so the snapshot does not move - even when carry-forward already saved that source's rows and every other source was fine. Today that is 14 failures of 37 runs. At national volume it means the snapshot never commits again, and the decision to make the gate per-source rather than per-run is yours.
 
@@ -269,7 +271,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**27 open · 3 resolved.**
+**28 open · 3 resolved.**
 
 ### P2
 
@@ -314,6 +316,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **HD25** — One person is running for the Rockaway Township school board's unexpired term and four things about them have never been looked for.
 
 ### P3
+
+**NH107** — Promoting the rung-1 campaign-site leads turned up attorney bio pages for two Morris County candidates — chippersonlaw.com for Rita C. Chipperson and dawkinswarrington.com for Clifford D. Dawkins. Both were briefly and wrongly promoted as campaign sites by a first version of the evidence test, and both are correctly recorded as MISS for that field now: a law firm page is not evidence of a candidacy. But it IS a real find for a different field. The branch manifest already names the route — bar-directory, which it describes as reaching an office address and a direct line — and the manifest's own index says to try it first when a candidate is a lawyer. Nothing read these two pages for a phone or an address.
 
 **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
 
@@ -391,7 +395,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**74 open · 87 resolved.**
+**73 open · 88 resolved.**
 
 ### P1
 
@@ -432,8 +436,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH75** — Playwright's extraHTTPHeaders applies to EVERY request a context makes, third parties included. MapTiler's CORS preflight does not allow x-wtp-synthetic-run, so the basemap style request was refused in every capture and every walk. That is why NJ Hunt 5's captures showed BASEMAP UNAVAILABLE against a production site serving readers a working map. Fixed at the shared path in scripts/browser.mts. This row is open for the QUESTION IT RAISES rather than the fix: what else has an instrument of ours been breaking while measuring it? The shape - a synthetic marker leaking into a third-party request - is worth sweeping for beyond the browser.
 
 **NH79** — pnpm dupes reads 2114 function bodies across 806 files and finds 26 groups where the same logic lives in more than one file. Two were consolidated on 2026-08-23: four copies of the outbound User-Agent, which CLAUDE.md makes law, and two of the person-name normaliser, one of which sat inside the tool that CHECKS whether the same person is shown twice - so the audit was using a different definition of a person from the resolver it audits. The other 24 are recorded in tests/duplicate-implementations.json with a disposition and a reason each. Six are ALLOWED for reasons that hold: the two intake key paths must stay unable to converge because the stores may never join, React context accessors are three identical lines by construction, and the .mjs date helper cannot import TypeScript because the pre-commit hook runs without tsx. Eighteen are OWED. The guard fails on a NEW group, so the class cannot grow while the backlog is worked, and the baseline only shrinks. The heaviest three: six byte-identical useSyncExternalStore subscribe callbacks across the hooks, four separate CSV parsers with the tracker stores downstream of two of them, and - the worst of the set - tests/district-hits.test.ts carrying its own copies of inRing, inPolygon and contains, so the test that checks point-in-district geometry proves its own copy works and says nothing at all about the shipped one.
-
-**NH93** — The class layer is closed — 1,253 of 1,253 bodies now carry a class definition, up from 1,013 — and the twelve New Hampshire county rows that were the last gap now have one. Its TEXT is sound and its substance is this project's own 03255 hunt, recorded in docs/zip-playbook.md section 1 on 2026-08-22 and read out of the repo today: a New Hampshire county runs the jail, the nursing home, the sheriff, the registry of deeds and the county attorney, runs no roads, schools, zoning or land use, and its legislative body is the county convention of state representatives rather than the commissioners. WHAT IS OWED: the statute URLs. basisUrl is NULL on that row, deliberately, because the 2026-08-23 remote session could reach no host but github.com and writing a URL it had not opened would be RULING 107's defect — a read that did not happen. A session with network confirms the live paths for RSA 24 (county conventions) and RSA 28 (county commissioners), sets basisUrl, and adds their control strings to scripts/definitions-verify.mts. NH90's own note records that gencourt.state.nh.us answers RSA 31 and RSA 189 at rung 2 while every county-chapter path tried returned 404, so the path hunt is the work rather than the fetch.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
 
@@ -575,7 +577,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**23 open · 135 resolved.**
+**24 open · 135 resolved.**
 
 ### P1
 
@@ -586,6 +588,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
+
+**NH109** — AZ-1 added two topics to Know the basics — Am I allowed to hunt or fish, and what the law on abortion is. Both are cited to the state's own source with a fetch date and neither takes a position. Arizona now carries nine topics; New Jersey and New Hampshire carry seven. A reader who moves to New Jersey gets no answer to either question, and a reader who moves to Arizona does. That asymmetry is not a defect in the Arizona work — it is the work being ahead — but it is an information gap that tracks which state a session happened to be briefed on rather than anything about the reader, which is the shape the equal-effort rule exists to catch, pointed at states instead of candidates.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

@@ -203,19 +203,39 @@ export const CLASS_DEFINITIONS: ReadonlyArray<ClassRow> = [
      * around it and hiding that would be worse than the weakness.** The
      * substance is this project's own 03255 hunt, recorded in
      * `docs/zip-playbook.md` §1 on 2026-08-22 and read from the repo today.
-     * `basisUrl` is NULL because **this session had no egress beyond
-     * github.com** and could not open RSA 24 or RSA 28 — and a URL written
-     * without being opened is a read that did not happen (RULING 107).
-     * `DI05` carries the confirmation for the next session that has network,
-     * and `pnpm definitions:verify` is what will do it.
+     *
+     * **`NH93` CLOSED 2026-08-23 — the statute was opened and it says what
+     * the definition says.** The row existed only because the 2026-08-23
+     * remote session could reach no host but `github.com`, and writing a URL
+     * it had not opened would have been RULING 107's defect. This session has
+     * egress, so the read happened:
+     *
+     * > **RSA 24:1 Members.** *The county convention consists of the state
+     * > representatives of the representative districts of the county.*
+     *
+     * Read 2026-08-23 at rung 3 from
+     * `gencourt.state.nh.us/rsa/html/II/24/24-1.htm`. That single sentence is
+     * the definition's load-bearing and least-guessable claim — the
+     * commissioners are NOT the legislative body — and it is now cited to the
+     * statute rather than to our own hunt notes.
+     *
+     * **The path was found by reading, not by pattern-matching**, and the
+     * difference cost three 404s: counties are **RSA Title II**, not Title
+     * III, so the `III/<chapter>/` shape every other New Hampshire citation in
+     * this file uses does not reach them. Recorded here so the next session
+     * citing a New Hampshire county statute starts at `II/`.
+     *
+     * RSA 28 (county commissioners) and RSA 23 (powers as a corporate body)
+     * were opened in the same pass and both answer; `basis` names all three
+     * and `basisUrl` carries the one that proves the distinctive claim.
      */
     definition: {
       text:
         "A New Hampshire county does much less than a county does in most states. It runs the county jail, the county nursing home, the sheriff's office, the registry of deeds and the county attorney's office — and it does not run roads, schools, zoning or land use, all of which belong to the town. Its legislative body is not the county commissioners: it is the county convention, made up of every state representative elected from the county, sitting together to vote the county budget. The commissioners administer what the convention appropriates.",
       basis:
-        "RSA 24 (county conventions) and RSA 28 (county commissioners), as established by this project's 03255 hunt and recorded in docs/zip-playbook.md §1",
-      basisUrl: null,
-      readOn: "2026-08-22",
+        "New Hampshire RSA 24:1 (the county convention consists of the state representatives of the county's representative districts), with RSA 28 (county commissioners) and RSA 23 (powers as a corporate body)",
+      basisUrl: "https://www.gencourt.state.nh.us/rsa/html/II/24/24-1.htm",
+      readOn: "2026-08-23",
     },
   },
 

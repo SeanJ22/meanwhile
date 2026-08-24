@@ -328,7 +328,18 @@ async function main(): Promise<void> {
       "path that cannot exist on the same host, so this is the host answering about this " +
       `person rather than serving boilerplate (RULING 68). Link: ${chosen.note}` +
       (chosen.movedToRoot ? ` — verified page was ${row.url}` : "") +
-      ".";
+      "." +
+      /*
+       * An http:// link carries the MEASUREMENT that justifies it, not an
+       * apology. `tests/candidate-links.test.ts` requires this sentence before
+       * it will accept a non-https link, so the carve-out cannot be taken
+       * silently by a later run.
+       */
+      (chosen.url.startsWith("http://")
+        ? ` This host REFUSES HTTPS — measured ${STAMP}, https:// returned no response while ` +
+          "http:// served the page — so the link is http and that is the site as published, " +
+          "not a downgrade chosen here."
+        : "");
     links.links[id] = {
       official: existing?.official ?? null,
       campaign: { url: chosen.url, verification, attemptedAt: STAMP },

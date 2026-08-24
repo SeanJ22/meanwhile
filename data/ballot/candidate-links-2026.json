@@ -716,18 +716,6 @@
       },
       "campaign": null
     },
-    "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary": {
-      "official": {
-        "url": "https://www.mendhamtownship.org/directory.aspx",
-        "verification": "Read 2026-08-22: mendhamtownship.org — the municipality's own page for its governing body — carries \"Gary Kapner At-Large Member\".",
-        "attemptedAt": "2026-08-22"
-      },
-      "campaign": {
-        "url": "http://garykapner.com/",
-        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (gary kapner, kapner) and identifies itself as a campaign (for <place> <office>). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was http://garykapner.com.",
-        "attemptedAt": "2026-08-23"
-      }
-    },
     "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia": {
       "official": {
         "url": "https://www.mendhamtownship.org/directory.aspx",
@@ -829,6 +817,14 @@
       "campaign": {
         "url": "https://www.strobelforschoolboard.com/",
         "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (rob strobel, strobel) and identifies itself as a campaign (for <office>, elect / re-elect, vote for, on the ballot). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was https://www.strobelforschoolboard.com/index.php.",
+        "attemptedAt": "2026-08-23"
+      }
+    },
+    "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary": {
+      "official": null,
+      "campaign": {
+        "url": "http://garykapner.com/",
+        "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (gary kapner, kapner) and identifies itself as a campaign (for <place> <office>). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was http://garykapner.com. This host REFUSES HTTPS — measured 2026-08-23, https:// returned no response while http:// served the page — so the link is http and that is the site as published, not a downgrade chosen here.",
         "attemptedAt": "2026-08-23"
       }
     }

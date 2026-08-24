@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 207,
-    "named": 1960,
+    "files": 208,
+    "named": 1969,
     "dynamic": 6
   },
   "files": {
@@ -2853,6 +2853,20 @@
         "the click grammar: a person opens a small card, a body opens a large one",
         "the stated count and the rendered rows are the same expression, at any size",
         "wired counts are partitioned, never double-counted across the two sets"
+      ],
+      "dynamic": 0
+    },
+    "tests/wiki-citation-follow.test.ts": {
+      "names": [
+        "asserts no absence — an unconfirmed lead stays a lead",
+        "keeps a government source and a press source apart",
+        "names which branch answered, so two are visibly independent",
+        "never confirms from the encyclopedia itself",
+        "records WHY a host counted as official, on every row",
+        "requires the person AND the office together before confirming",
+        "states a date and a rung on every row, confirmed or not",
+        "the wikipedia-citation-follow route",
+        "walked every parked lead and produced a row for each"
       ],
       "dynamic": 0
     },

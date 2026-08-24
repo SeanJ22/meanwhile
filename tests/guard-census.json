@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 208,
-    "named": 1969,
+    "files": 209,
+    "named": 1983,
     "dynamic": 6
   },
   "files": {
@@ -2147,6 +2147,25 @@
         "R48: every workflow that pushes main goes through the protected push",
         "R48: two runs pushing into the same window both land their work",
         "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
+      ],
+      "dynamic": 0
+    },
+    "tests/questionnaire-store.test.ts": {
+      "names": [
+        "RULING 112 — verbatim, swept by SHAPE",
+        "carries the verbatim promise on the page a candidate actually reads",
+        "creates no new reader identifier",
+        "does not flag the honest copy the page actually ships",
+        "finds none of those shapes on the questionnaire path",
+        "has no mail transport, because NH108's send decisions are Sean's",
+        "imports no sold-store module",
+        "keeps the three token refusals apart rather than collapsing them",
+        "names none of the sold stores anywhere on the questionnaire path",
+        "nothing on this path sends email",
+        "renders no candidacy id or contest id at a reader",
+        "the answer page speaks plain language",
+        "the questionnaire store touches no sold store — asserted BY NAME",
+        "the sweep CATCHES a plant — otherwise it reports green about nothing"
       ],
       "dynamic": 0
     },

@@ -203,7 +203,8 @@
     "verify:migration": "tsx scripts/verify-migration-applied.mts",
     "nj:slogan-audit": "tsx scripts/audit-nj-slogan-field.mts",
     "nj:email-domain": "tsx scripts/hunt-filed-email-domain.mts",
-    "wiki:citation": "tsx scripts/hunt-wikipedia-citation.mts"
+    "wiki:citation": "tsx scripts/hunt-wikipedia-citation.mts",
+    "questionnaire:seed-local": "tsx scripts/seed-questionnaire-local.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

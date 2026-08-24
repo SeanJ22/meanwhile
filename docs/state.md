@@ -4,7 +4,11 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-23 — **The captures were in the repo this time, and reading
+Last updated: 2026-08-24 — **The county filed 202 empty cells, and the filed
+email was a campaign site nobody had read.** The overnight depth hunt; its record
+is the section directly below. The previous entry follows it.
+
+Previous: 2026-08-23 — **The captures were in the repo this time, and reading
 them found the fix.** Hunt 6 hardening and the 8/22 visual pass. Its record is the
 last section of this file.
 
@@ -316,6 +320,94 @@ whole again under stated duress. See §15. Before that, 2026-08-16: the
 correctness session (§14).
 
 ---
+
+## Overnight depth hunt, 2026-08-24 — the county filed 202 empty cells, and the filed email was a campaign site nobody had read
+
+**Shipped `a6c72a7` (14 commits), then `277c3df` (the regression fix). Production
+serving `277c3df`, deploy `6a8c01cc6b0d6e0008eba219`. `main` GREEN. `walk:all`
+372 passed · 0 regressions · 7 could-not-run. Tests 2011 of 2011, 0 skipped.**
+
+**Two merges, and the second is named rather than smoothed.** The merge-cadence
+exception permits a second code merge only to fix a regression, and this one was
+mine: `lib/ops/source-stamp.ts` derived a generator's date by asking git for
+each source's last commit — correct on a full clone, and wrong on CI, where
+`actions/checkout` uses `fetch-depth: 1` and `git log -1 -- <file>` returns the
+TIP's date for every file with no error. So **the fix for "a generator must not
+read the clock" produced a date that WAS effectively the clock**, wherever
+history is absent. The value is declared now, and the generator was re-run with
+git removed from `PATH` entirely to prove clone depth cannot reach it.
+
+### The two findings that changed what is owed
+
+**The slogan field at 07866 was never 202 owed. The county filed 202 empty
+cells.** It stood at 70 of 272, and by level that was 62 of 128 school-board
+against 3 of 131 municipal — an extraction succeeding forty times more often on
+one class of row, which is RULING 100's shape. Reading the source rather than
+re-counting the number settled it: an independent re-derivation of the clerk's
+own Slogan column, across BOTH certified PDFs, **agrees with what ships on 272
+of 272 rows**. New Jersey puts the designation in the Party column, so Slogan
+belongs to independents and to non-partisan school candidates. Those 202 are
+`NOT_APPLICABLE` with a reason and a date, not fields to hunt.
+
+*Four earlier versions of that reader each produced a total that reconciled to
+272 and was wrong* — 62 people reported as filing no slogan, `P.O. Box` read as
+Cory Booker's ballot slogan, a ZIP code read as a slogan. None errored. They are
+kept in the comments rather than tidied away.
+
+**Seven of the eleven campaign sites this project held were sitting inside an
+email address it had held since the filing was parsed.** Contact at 07866 is 272
+of 272 because the county clerk publishes every filed email, and nothing had
+ever read the right-hand side of the `@`. `tom@tomkean.com`.
+`rebecca@rebeccabennettforcongress.com`. The route found **Gary Kapner**, new;
+campaign sites 11 → 12 of 272, wired and rendering.
+
+### What the new routes exposed about the instruments
+
+- **The scheme is part of the route.** `garykapner.com` refuses HTTPS and serves
+  533 KB over plain HTTP. Recorded as `REFUSED` by the first version — one
+  measurement written down as a fact about the subject. Small campaigns on old
+  hosting are exactly the sites without a certificate.
+- **`for <place> <office>`.** The office pattern required `for` immediately
+  followed by the office. Local campaigns say *for Mendham Township Committee*.
+  It was under-detecting precisely the small local races.
+- **The party organ.** `morrisdems.org` cleared both of RULING 68's bars for
+  Christopher Russo — it names him and says *paid for by*, because the county
+  committee handles his mail. Two independent tests now catch it, and the
+  party self-identification test is symmetric across parties by construction.
+- **A New Jersey town's own site is often `.org`**, and a TLD test calls it
+  press. Three towns' homepages were filed that way. The State of New Jersey's
+  own directory of 564 municipalities — already committed under RULING 93 —
+  settles it, and caught a stale citation: Wikipedia cites `denvillenj.org`, the
+  state names `denvillenj.gov`.
+
+### Photos, and the og:image finding
+
+25 images staged across 7 candidates with a verified campaign site, **all 25
+read as images** on two contact sheets committed under `docs/feedback/`. Two
+cleared the composition standard — Lana Leguía and Joe Hathaway, the second with
+a stated reservation that it is not a headshot. `NH111` holds Sean's decision;
+nothing shipped.
+
+**An `og:image` is a social-share card and is DESIGNED to be a banner**, so it is
+the wrong first rung for a portrait: 7 of 7 failed, and both passes came from
+the page's own `<img>` elements. Gary Kapner's face exists only inside
+advertisements, so he stays at zero — cropping one out would be manufacturing an
+image the campaign never published.
+
+### The rest, briefly
+
+Migration `0016` applied to production and verified by reading the server's own
+catalog back, not the applier's OK lines: 28 of 28 columns, 4 of 4 indexes.
+Sources past expiry **9 of 55 → 0 of 55**, every one closed by a walk — including
+all four legislative caucus sites, three of whose hosts had never been written
+down and two of whose obvious guesses do not resolve. The questionnaire answer
+page is built, walked end to end, and **sends nothing**. Bodies carrying a
+form-specific definition **216 → 857 of 1,253**. `NH32` and `JOB02` diagnosed:
+both were instruments working correctly, and `JOB02`'s two "failures" were
+deliberate drills — which became RULING 115.
+
+**618 rows this session wrote to production, all SYNTHETIC, across 12 named run
+ids. Zero organic rows, zero reactions, zero questionnaire rows.**
 
 ## NJ Hunt, 2026-08-22 — New Jersey publishes the contact, and that is the whole difference
 

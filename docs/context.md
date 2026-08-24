@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 04:34:52 EDT.
+Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -557,5 +557,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-24 04:34:51 EDT
+branch: claude/fix-shallow-clone-stamp
+head sha: fb081314cb629d2dff51208f72badf0cb3df2f17
+head subject: main was red: my own stamp fix committed the failure its docstring warns about
+origin/main sha: 277c3df64f969193323a3f725b58bbce3a752633
+origin/main subject: Merge pull request #165 from SeanJ22/claude/fix-shallow-clone-stamp
+local main sha: 277c3df64f969193323a3f725b58bbce3a752633
+local main matches origin/main: yes
+working tree: dirty — 1 changed file(s)
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14339
+```

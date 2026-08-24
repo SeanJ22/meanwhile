@@ -220,11 +220,55 @@ if (!fetched) {
 
 const branch = git("rev-parse", "--abbrev-ref", "HEAD");
 
-const dirty = git("status", "--porcelain")
+/**
+ * THE TREE, WITH THIS TOOL'S OWN OUTPUT SET ASIDE — AND NAMED.
+ *
+ * `docs/context.md` is written BY THIS SCRIPT, a few steps below. The check
+ * runs first, so a run always sees the PREVIOUS run's output sitting
+ * uncommitted — and `ship()` refuses on any dirty entry. **The tool blocked its
+ * own door**: commit the file, run again, it writes a new one, refused again.
+ *
+ * That was survivable while a session could push close-out records to `main`
+ * separately. **RULING 124 item 5 removed that escape**, which turned an
+ * annoyance into a deadlock — found on 2026-08-24, the day the ruling shipped.
+ *
+ * So the generated artifact is excluded from the SHIP-BLOCKING set and stated
+ * rather than silently dropped. Everything else still blocks, and the entries
+ * are now NAMED: "1 uncommitted file(s)" is a number nobody can act on.
+ */
+const GENERATED_BY_THIS_TOOL = ["docs/context.md"];
+
+const allDirty = git("status", "--porcelain")
   .split("\n")
   .filter((l) => l.trim() !== "");
-if (dirty.length === 0) ok("working tree", "clean");
-else fail("working tree", `${dirty.length} uncommitted file(s)`);
+/*
+ * The PATH out of a porcelain line, without assuming a fixed prefix width.
+ *
+ * `git()` trims its whole output, which eats the FIRST line's leading space —
+ * so " M docs/context.md" arrives as "M docs/context.md" and a `slice(3)`
+ * reads "ocs/context.md". Caught on 2026-08-24 by the exclusion silently not
+ * excluding anything, which is the quiet direction for this to fail in.
+ */
+const porcelainPath = (line) => line.replace(/^\s*\S{1,2}\s+/, "").trim();
+const generatedHere = allDirty.filter((l) =>
+  GENERATED_BY_THIS_TOOL.includes(porcelainPath(l)),
+);
+const dirty = allDirty.filter((l) => !generatedHere.includes(l));
+
+if (dirty.length === 0) {
+  ok(
+    "working tree",
+    generatedHere.length === 0
+      ? "clean"
+      : `clean apart from ${generatedHere.length} file(s) this tool writes itself: ${generatedHere.map(porcelainPath).join(", ")}`,
+  );
+} else {
+  fail(
+    "working tree",
+    `${dirty.length} uncommitted file(s): ${dirty.map((l) => l.trim()).slice(0, 8).join(" · ")}` +
+      (dirty.length > 8 ? ` · … and ${dirty.length - 8} more` : ""),
+  );
+}
 
 // Reassigned by ship(), which creates the upstream when a new branch has none.
 let upstream = tryRun("git", [

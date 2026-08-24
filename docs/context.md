@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 17:51:51 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 17:55:54 EDT.
 Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -569,15 +569,15 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-24 17:51:51 EDT
+generated: 2026-08-24 17:55:54 EDT
 branch: claude/state-money-0824
-head sha: 25c9a80124a6d137da1e4d034fc1045eb5cef3ac
-head subject: State campaign money: the drop-down that structurally could not fill
+head sha: ad1ef217508a59d7d65fa1e49d92693b766c7ced
+head subject: Close-out: the regenerated context, inside the PR rather than pushed to main
 origin/main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
 origin/main subject: Close-out: context and the mirror regenerated at 336a3eb
 local main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
 local main matches origin/main: yes
-working tree: dirty — 1 changed file(s)
+working tree: dirty — 2 changed file(s)
 open prs: none
 last recorded tests: 1442 (fail)
 last recorded lint: not recorded

@@ -186,6 +186,20 @@ export function parseDtStart(
   // boundary — a fixed offset is right for half the year.
   const naive = Date.UTC(+y, +mo - 1, +d, +hh, +mi, +ss);
   const offset = zoneOffsetMs(naive, tzid);
+  /*
+   * A-007 · A ZONE WE COULD NOT INTERPRET PRODUCES NO TIMESTAMP.
+   *
+   * `zoneOffsetMs` used to answer `0` for a `TZID` `Intl` refused, and zero
+   * is not a missing offset — it is UTC, which is a confident claim about when
+   * a public meeting starts. Measured on the shipped code: a 7pm Eastern
+   * sitting rendered four hours early, and a 1am sitting on 8 September
+   * rendered as 9pm on the 7th. **The wrong DAY, from a catch block.**
+   *
+   * The caller counts this as `unplaceableInTime`, which is the disposition it
+   * has always had for an event whose start cannot be read. An event we cannot
+   * place in time is not an event at a plausible time.
+   */
+  if (offset === null) return null;
   return { iso: new Date(naive - offset).toISOString(), dayOnly };
 }
 
@@ -194,8 +208,23 @@ function splitOnce(s: string, sep: string): [string, string] {
   return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i + 1)];
 }
 
-/** How far the named zone was from UTC at `utcMs`, in milliseconds. */
-function zoneOffsetMs(utcMs: number, zone: string): number {
+/**
+ * How far the named zone was from UTC at `utcMs`, in milliseconds — or `null`
+ * when the zone cannot be interpreted at all.
+ *
+ * **A-007** (external correctness audit of `336a3eb`, remediated 2026-08-24).
+ * This returned `0` from its catch. Zero is a VALUE: it says the meeting is in
+ * UTC, and it says it with the same confidence as a zone we actually read. A
+ * feed carrying `TZID=US/Eastern-ish`, a typo, or a zone this runtime's ICU
+ * build does not carry would put a New Hampshire meeting four or five hours
+ * out and, near midnight, on the wrong day.
+ *
+ * That is the render-default rule in the time domain: a default may never
+ * manufacture a claim, and an absence must render as its named gap. `null`
+ * propagates to `unplaceableInTime`, which is a fact about the record rather
+ * than an assertion about the meeting.
+ */
+function zoneOffsetMs(utcMs: number, zone: string): number | null {
   try {
     const dtf = new Intl.DateTimeFormat("en-US", {
       timeZone: zone,
@@ -220,7 +249,8 @@ function zoneOffsetMs(utcMs: number, zone: string): number {
     );
     return asUtc - utcMs;
   } catch {
-    return 0;
+    // A-007: NOT `0`. See above — zero is UTC, and UTC is a claim.
+    return null;
   }
 }
 

@@ -69,13 +69,40 @@ interface Row {
   run_class: string;
   run_id: string | null;
   suspect_reason: string | null;
+  /** A-001 · resolved from the delivery store, and null on almost every row. */
+  reply_address: string | null;
 }
 
+/*
+ * **A-001 · THE ONE PLACE THE HANDLE IS RESOLVED, 2026-08-24.**
+ *
+ * The reply address used to sit on the feedback row as `reply_to`. It moved to
+ * `feedback_contact` because a raw email address in a reader collection store
+ * made the constitutional claim false — see `lib/db/identity-domains.ts`.
+ *
+ * Two things worth stating plainly rather than leaving to be inferred.
+ *
+ * **This query is a join, and the remediation brief said the delivery store
+ * would be "joined to nothing".** What it is joined by is a RANDOM handle this
+ * project minted, on the author's own read path, and nowhere else in the
+ * product. That is the only reason the handle exists. What the brief's phrase
+ * protects against — a value letting somebody match these rows to anything
+ * else — holds: the address shares no value space with any reader store, and
+ * the handle is meaningless outside these two tables.
+ *
+ * **And the address was never actually readable before.** This query did not
+ * select `reply_to`, so R41's reply address had been collected and never
+ * surfaced since the day it shipped. Moving it without reading it here would
+ * have left a reader who asked to be answered with a store nobody opens, which
+ * is the render-default failure one layer down.
+ */
 const rows = (await sql`
-  select id, received_at, message, surface, run_class, run_id, suspect_reason
-  from feedback
-  where (${since ?? null}::text is null or received_at >= ${since ?? null}::timestamptz)
-  order by received_at desc
+  select f.id, f.received_at, f.message, f.surface, f.run_class, f.run_id,
+         f.suspect_reason, c.address as reply_address
+  from feedback f
+  left join feedback_contact c on c.contact_ref = f.contact_ref
+  where (${since ?? null}::text is null or f.received_at >= ${since ?? null}::timestamptz)
+  order by f.received_at desc
 `) as Row[];
 
 const organic = rows.filter((r) => r.run_class === "ORGANIC");
@@ -101,6 +128,8 @@ function render(list: Row[], heading: string) {
       .join(" · ");
     console.log(`\n   ${row.received_at}  [${tags}]`);
     if (row.suspect_reason) console.log(`   quarantined: ${row.suspect_reason}`);
+    // Printed because a reader typed it into a field that said we would reply.
+    if (row.reply_address) console.log(`   reply to: ${row.reply_address}`);
     for (const line of row.message.split("\n")) console.log(`   | ${line}`);
   }
   console.log("");

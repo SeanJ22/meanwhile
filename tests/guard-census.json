@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 218,
-    "named": 2071,
+    "files": 221,
+    "named": 2123,
     "dynamic": 6
   },
   "files": {
@@ -768,6 +768,22 @@
       ],
       "dynamic": 0
     },
+    "tests/conservation.test.ts": {
+      "names": [
+        "A-002 · 100 in, 0 out, 1 recorded drop is a FAILURE, not an accounted run",
+        "A-002 · COULD_NOT_ASSERT is not CONSERVED, and nothing may read them alike",
+        "A-002 · a fractional or negative counter is refused before the sum is trusted",
+        "A-002 · a pass that cannot count records COULD_NOT_ASSERT — never a silent pass",
+        "A-002 · every one of the four dispositions counts toward the sum",
+        "A-002 · one document expanding into twenty events conserves",
+        "A-002 · the gap's SIGN is stated, because it says which way to look",
+        "A-002 · unretrieved DOCUMENTS are reported but never summed with logical records",
+        "RULING 43 survives A-002 — documents in hand and nothing out still throws",
+        "S-001 · the zero-row predicate has ONE implementation and both callers use it",
+        "S-001 · totalDropped sums the counters rather than asking whether any is set"
+      ],
+      "dynamic": 0
+    },
     "tests/contact-phone.test.ts": {
       "names": [
         "a Washington number that IS a district number is one number, not two",
@@ -968,6 +984,7 @@
     },
     "tests/db-schema.test.ts": {
       "names": [
+        "A-001 · the reader store holds an opaque handle, and the address is elsewhere",
         "a generated migration exists and creates every schema table",
         "every collection store is identifier-free and joins nothing",
         "every table carrying a division identifier carries a NOT NULL vintage",
@@ -976,7 +993,6 @@
         "search_log also pairs its division identifiers with a vintage",
         "the collection stores share no joinable column",
         "the feedback store holds no continuity key of any kind",
-        "the optional reply address exists on the feedback store and nowhere else",
         "the reaction continuity key exists only on the reactions table",
         "the schema exports tables at all — this suite is not vacuous",
         "the search log carries no identifier of any kind and no foreign keys"
@@ -1158,6 +1174,18 @@
         "the merge preserves order and never invents a row",
         "the same sitting from two sources becomes one row, and the agenda wins",
         "two sittings of one body from ONE source are left alone"
+      ],
+      "dynamic": 0
+    },
+    "tests/event-identity.test.ts": {
+      "names": [
+        "A-005 · a repeated UID is the FEED's statement and is counted apart",
+        "A-005 · both counters are reported as ZEROES when nothing collapsed",
+        "A-005 · identity carries no colon, because meeting ids are split on one",
+        "A-005 · identity changes with every field the feed published",
+        "A-005 · the same UID-less event published twice IS one meeting, and is COUNTED",
+        "A-005 · two UID-less events at the same instant are two meetings, not one",
+        "A-005 · whitespace and case differences are the same sitting"
       ],
       "dynamic": 0
     },
@@ -1433,6 +1461,12 @@
     },
     "tests/http-empty-success.test.ts": {
       "names": [
+        "A-003 · a rung-3 200 that IS the document still succeeds, and reports rung 3's bytes",
+        "A-003 · a rung-3 200 with an EMPTY body is a WALL — the case challengeIn cannot see",
+        "A-003 · a rung-3 browser-header 200 carrying the wrong format is a WALL, not a document",
+        "A-003 · injecting a fetchImpl alone still does NOT walk the ladder",
+        "A-003 · politeGetText has exactly ONE place a body becomes a return value",
+        "A-003 · the rung-4 curl fallback is validated too — it used to be returned raw",
         "a 200 in the wrong format is a WALL, and the wall names the format",
         "a caller that declares no format still gets the blank check",
         "a real document still passes, and is returned untouched",
@@ -1484,6 +1518,10 @@
     },
     "tests/ical-source.test.ts": {
       "names": [
+        "A-007 · a valid zone is unaffected, including across a DST boundary",
+        "A-007 · an uninterpretable TZID yields no timestamp at all",
+        "A-007 · an unreadable zone is counted as unplaceableInTime, not dropped silently",
+        "A-007 · the DATE-BOUNDARY case, which is the one that misleads a reader",
         "ICAL: CATEGORIES is what assigns a sitting to a board, not the title",
         "ICAL: a DATE-only value is DAY precision, never an invented hour",
         "ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source",
@@ -1498,6 +1536,19 @@
         "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
         "ICAL: the fixture parses to the events it actually contains",
         "ICAL: the wired boards produce meetings, and the counts are stated"
+      ],
+      "dynamic": 0
+    },
+    "tests/identity-boundary.test.ts": {
+      "names": [
+        "A-001 · a reader address lives in exactly one place, and it is not a collection store",
+        "A-001 · every COLUMN is classified, by value space, with no drift either way",
+        "A-001 · every digest column is in a different digest space from every other",
+        "A-001 · every table in the schema is classified, and nothing is classified twice",
+        "A-001 · no reader collection store holds a WORLD identity value",
+        "A-001 · no two reader collection stores share a joinable value space",
+        "A-001 · run_id is the one handle shared across reader stores, and it names a WALK",
+        "A-001 · the contact handle is minted at random, not derived from the address"
       ],
       "dynamic": 0
     },
@@ -1685,6 +1736,9 @@
     },
     "tests/main-green.test.ts": {
       "names": [
+        "A-008 · a real failure beside a stillborn check is still RED, and both are named",
+        "A-008 · a stillborn check beside work still running reports PENDING, naming both",
+        "A-008 · one passing check beside one stillborn REQUIRED check is not GREEN",
         "a check still running is PENDING, which is not green",
         "a genuinely failing check is still RED",
         "a long run with no steps is still judged on the steps, not the clock",
@@ -2392,6 +2446,12 @@
     },
     "tests/refresh-corollary.test.ts": {
       "names": [
+        "A-004 · REPRODUCTION: a source reporting plain success carries no concluded rows back",
+        "A-004 · a division-less body's archive failure is still scoped, not dropped",
+        "A-004 · a scoped ARCHIVE failure carries the concluded rows back",
+        "A-004 · a source with no partial scopes and no refusal still carries NOTHING",
+        "A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped",
+        "A-004 · the ical adapter no longer swallows a past-feed failure",
         "F01 7.2: a refused body with rows on screen is STALE, not missing",
         "F01 7.2: the card reads the SAME meeting array the pins are drawn from",
         "F22: every source whose rows outrun the serving window declares its own",
@@ -2587,6 +2647,8 @@
         "a connection string is redacted whole, not left half-recognisable",
         "a percent-encoded value is redacted too",
         "findSecrets reports the credential, the count and the line numbers",
+        "handoff scrubs the Drive mirror AFTER exporting transcripts into it",
+        "handoff's clean verdict comes from a re-read, not from the scrub's exit code",
         "no real credential value appears anywhere in the repository",
         "parsing takes long values, skips comments, and drops short configuration",
         "the placeholder names WHICH credential, so the line stays diagnostic"
@@ -2656,6 +2718,9 @@
     },
     "tests/source-adapters.test.ts": {
       "names": [
+        "A-006 · a walk that ends because the server stopped offering pages still succeeds",
+        "A-006 · legistar's page guard is a failure boundary too",
+        "A-006 · twelve full pages with a next pointer is a FAILURE, not the end of the data",
         "apptegy: board meetings filter from district calendars, coords from feed",
         "civicplus: a cancellation announced in the SUMMARY never says SCHEDULED",
         "civicplus: iCal parses and council sittings normalize with venues",
@@ -3121,6 +3186,8 @@
     },
     "tests/zero-row-contract.test.ts": {
       "names": [
+        "A-002 · COULD_NOT_ASSERT is used in exactly the place that cannot count",
+        "A-002 · every adapter's normalize declares logicalInput",
         "every adapter routes its normalize result through the factory",
         "nothing hand-attaches the brand to route around the factory",
         "the brand is a real runtime symbol on a returned result",

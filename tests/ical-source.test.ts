@@ -319,3 +319,97 @@ test("ICAL: every wired feed names the LIST view, never the default view", () =>
   }
   assert.ok(checked >= 13, `only ${checked} ICAL rows were checked`);
 });
+
+/* ======================================================================== *
+ *  A-007 · A ZONE WE COULD NOT INTERPRET PRODUCES NO TIMESTAMP
+ * ======================================================================== */
+
+/**
+ * **`catch { return 0 }` TURNED AN UNREADABLE TIMEZONE INTO A UTC ASSERTION.**
+ *
+ * External correctness audit of `336a3eb`, remediated 2026-08-24. Measured
+ * against the shipped code before it was touched:
+ *
+ *   TZID=Not/AZone:20260908T190000  →  2026-09-08T19:00:00.000Z
+ *   TZID=America/New_York:…         →  2026-09-08T23:00:00.000Z
+ *
+ * Four hours early. And a 1am sitting on 8 September came out as
+ * `2026-09-08T01:00:00.000Z`, which a reader in New York sees as **9pm on
+ * Monday the 7th** — the wrong DAY, from a catch block.
+ *
+ * Zero is not a missing offset. It is UTC, stated with exactly the confidence
+ * of a zone we actually read. This is the render-default rule in the time
+ * domain: a default may never manufacture a claim.
+ */
+
+test("A-007 · an uninterpretable TZID yields no timestamp at all", () => {
+  assert.equal(
+    parseDtStart("TZID=Not/AZone:20260908T190000", "America/New_York"),
+    null,
+    "a zone Intl refuses used to be silently treated as UTC",
+  );
+});
+
+test("A-007 · a valid zone is unaffected, including across a DST boundary", () => {
+  // In New York, 8 September is EDT (UTC-4) and 8 December is EST (UTC-5).
+  assert.equal(
+    parseDtStart("TZID=America/New_York:20260908T190000", "America/New_York")?.iso,
+    "2026-09-08T23:00:00.000Z",
+  );
+  assert.equal(
+    parseDtStart("TZID=America/New_York:20261208T190000", "America/New_York")?.iso,
+    "2026-12-09T00:00:00.000Z",
+  );
+  // Arizona does not observe DST, so both dates take the same offset.
+  assert.equal(
+    parseDtStart("TZID=America/Phoenix:20260908T190000", "America/Phoenix")?.iso,
+    "2026-09-09T02:00:00.000Z",
+  );
+  assert.equal(
+    parseDtStart("TZID=America/Phoenix:20261208T190000", "America/Phoenix")?.iso,
+    "2026-12-09T02:00:00.000Z",
+  );
+});
+
+test("A-007 · the DATE-BOUNDARY case, which is the one that misleads a reader", () => {
+  // 1am on the 8th. Under the old code this became 2026-09-08T01:00:00Z, which
+  // renders in New York as 9pm on the 7th — a meeting moved to the day before.
+  assert.equal(parseDtStart("TZID=Bad/Zone:20260908T010000", "America/New_York"), null);
+  assert.equal(
+    parseDtStart("TZID=America/New_York:20260908T010000", "America/New_York")?.iso,
+    "2026-09-08T05:00:00.000Z",
+    "and the correct answer is still an instant on the 8th",
+  );
+});
+
+test("A-007 · an unreadable zone is counted as unplaceableInTime, not dropped silently", () => {
+  const wiring = wiringForTypes(["ICAL"]).find((w) =>
+    w.config.feedUrl?.includes("wilmotnh.org"),
+  );
+  assert.ok(wiring, "no Wilmot row wired — this guard is stale");
+
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "BEGIN:VEVENT",
+    "UID:bad-zone-1",
+    "SUMMARY:Selectboard",
+    "DTSTART;TZID=Not/AZone:20260908T190000",
+    "LOCATION:Wilmot Town Office Building",
+    "CATEGORIES:Select Board",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].join("\r\n");
+
+  const source = makeIcalSource([wiring]);
+  const result = source.normalizeWithDrops(
+    [{ wiring, ics, collectedAt: "2026-08-24T12:00:00.000Z", sourceUrl: "x" }],
+    new Date("2026-08-24T12:00:00.000Z"),
+  );
+  assert.equal(result.meetings.length, 0, "a meeting was minted from a zone we could not read");
+  assert.equal(
+    result.drops.unplaceableInTime,
+    1,
+    "and the record must say so — a silent skip is the shape RULING 43 exists for",
+  );
+  assert.equal(result.accounting.outcome, "CONSERVED");
+});

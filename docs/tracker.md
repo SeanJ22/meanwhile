@@ -14,20 +14,20 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **233 open**, 390 resolved.
-- **39 waiting on Sean** — the first section below.
+- **253 open**, 390 resolved.
+- **40 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
   - Visual feedback — **1**
-  - Data infrastructure — **1**
-  - Product / UI — **1**
+  - Data infrastructure — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Product / UI — **2**
   - Constitution & rules — **1**
-  - Repo & ops — **1**
+  - Repo & ops — **2**
 
-No section is over the five-P1 cap.
+**1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
 ---
 
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**39 open · 42 resolved.**
+**40 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
   Pending review.
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
+
+**NH142** — NS11 recorded the mirror scrubbed and verified by re-read on 2026-08-24. A sweep at the start of this session found six occurrences of five live credentials back in it. Nothing un-scrubbed it: handoff re-runs the transcript exporter, which rewrites the mirror out of the local jsonl files, and those are deliberately never scrubbed. The mirror is scrubbed again and handoff now scrubs it immediately after every export and re-reads to confirm. ROTATION IS STILL THE FIX and only you can do it: 0 of the 9 credentials in NS11 are rotated as of this session, proven by the sweep still finding every current value in a leaked location.
 
 **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these.
 
@@ -377,9 +379,21 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**73 open · 92 resolved.**
+**83 open · 92 resolved.**
 
 ### P1
+
+**NH124** — accountedNormalize asked a boolean, droppedAny, which cannot tell one drop from ninety-nine. 100 logical inputs, 0 output and one recorded drop was branded clean. Replaced with an exact conservation invariant at the logical-record layer, with COULD_NOT_ASSERT as a named second state for the one adapter that genuinely cannot count.
+
+**NH126** — The 403 escalation returned a browser-header 200 without the notADocument check and returned the curl rung raw with neither check, so the same bytes were refused on rung 2 and accepted on rung 3. And the branch required no injected fetch, which made it unreachable by any test. One finalizer now, and a declared ladder seam.
+
+**NH127** — The past-feed failure was caught by an empty catch whose comment said the absence would be visible as a jurisdiction with no concluded meetings. The adapter reported success, carry-forward preserves rows only for a failed source or division, and every concluded meeting the previous snapshot held was deleted. Scoped partial results now exist and carry-forward preserves the failed scope only.
+
+**NH129** — Apptegy stopped at twelve pages with the API still advertising a next page: 240 events read, an unknown number left, no error and no partial marker. The sweep the finding required found the identical shape in legistar pageById. A cap is a failure boundary now, in both.
+
+**NH130** — catch return zero in the ical zone resolver. Measured against the shipped code: a 7pm Eastern sitting rendered four hours early, and a 1am sitting rendered on the previous day. The offset returns null now and the event is counted as unplaceable in time.
+
+**NH131** — feedback.reply_to and questionnaire_invitations.email share a value space and are equality-joinable, which falsifies the constitutional claim that the stores share no joinable column. The guard that was supposed to catch it checked column NAMES. The address moved to an isolated contact-delivery store behind a random handle, and the boundary is now proven over value spaces.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -406,6 +420,14 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH06** — Newbury's Selectboard and its three land-use boards are now read from two places at once: the vendor portals that carry agendas, and the town calendar that carries more dates. A merge decides which row a reader sees. That works, and nobody has measured whether it is the right arrangement over a few refreshes.
 
 **NH110** — walk:all against production on 2026-08-23, deploy 6a8ba907304b640008d06090, reports one regression: lib/db/migrations/0016_known_cerebro.sql is in the tree and has not been applied to the live database. It creates three tables and nothing else - questionnaire_invitations, questionnaire_responses and questionnaire_tokens - with no ALTER and no DROP, so it touches no existing data. It arrived with the questionnaire stack merged in 9399a69. NO READER IS AFFECTED TODAY: nothing has been sent, all 272 invitations carry invitedOn null, and the route catches the failed insert and still serves the page. It becomes blocking the moment a candidate can submit an answer, because the answer would have nowhere to land.
+
+**NH125** — The same predicate was written out again in the composite own zero-row check. A sweep for the shape found 2 sites and both now call one shared implementation, per RULING 103.
+
+**NH128** — Two sittings at the same instant in one wiring row collapsed to one id and the second vanished with every drop counter at zero. Identity is now every field the feed published, and duplicates are counted apart by who judged them — the feed repeated UID, or our own fallback.
+
+**NH135** — registry server.ts discovers geometry by readdir, including the 1.63 MB national congressional file whose per-state derivatives already exist, and the point resolver walks the full collection with exact polygon tests. Needs a generated resolver manifest and a build-time bounding-box index, gated on every supported zip resolving to an identical OCD-ID set.
+
+**NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -557,9 +579,11 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**23 open · 137 resolved.**
+**26 open · 137 resolved.**
 
 ### P1
+
+**NH133** — map-entry passes FILTERED venues into MapCanvas, whose venues effect rebuilds the marker pool — so a filter change is read as vanished data and markers are destroyed and recreated. The pool own comments document the opposite behaviour. Needs allVenues and visibleVenueKeys as separate effects, proven with operation counters.
 
 **P02** — Mapping candidates' stated positions onto the issues on a reader's ballot, every one carrying its source. Never a score, never a ranking — the positions side by side and the reader deciding.
 
@@ -590,6 +614,10 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **B18** — Sean asked for federal officials' town halls. There is no authoritative feed for them anywhere, so this row records what was checked and what it found rather than pretending a build is waiting.
 
 **M13** — The radius control broke twice — once blanking results, once refusing to switch off — and both times the tests only covered the logic underneath, not the control a reader touches.
+
+**NH136** — applySelection writes every pool entry on every selection and re-runs on venues changes. Store the selected key in the pool and diff to two writes. Ships with P-001 and is asserted by the same counters.
+
+**NH141** — Found by the A-007 sweep for catch-return-valid shapes. lib map districts.ts returns an empty array when queryRenderedFeatures throws, so an exception is indistinguishable from a viewport with no districts in it. Nine other sites of the same shape were assessed and fail closed; this one does not, and how it should behave is a visual decision.
 
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
@@ -641,15 +669,25 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**12 open · 64 resolved.**
+**18 open · 64 resolved.**
 
 ### P1
 
 **NH106** — Established 2026-08-23 by asking GitHub directly, because gh is absent from this container and corepack pnpm main:green therefore answers CANNOT TELL - which is the correct fourth verdict and says nothing about main. main's tip 3d453fd (the merge of PR #162, a HUMAN commit rather than the NH85 bot-tip shape) FAILED build check, run 32664443326, at 2026-08-23T20:30:04Z. IT IS NOT THE RULING 81 SHAPE: 19 steps ran and the Test step ran for 81 seconds before failing, so the runner started and the tree was really tested. Lint passed, tsc passed, and BOTH build jobs passed - only the gates job is red. THE CAUSE IS ONE THING, FOUR TIMES: tests 1853, pass 1848, fail 4, skip 1, and every one of the four is 'NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright.' - three in tests/beacon-guard.test.ts and one in tests/chromium-pin.test.ts. The workflow's 'Install the browser the suite needs' step (corepack pnpm exec playwright install --with-deps chromium) reported SUCCESS in 27 seconds and left nothing the suite can find. So the step's success is not evidence a browser exists, which is the same shape as a 200 that is not a document. WHY NO FIX WAS PUSHED. It reproduces identically on the base branch, so it is not any diff's failure and a session cannot verify a CI-only change from a container with no way to run CI. The one 'fix' available locally would be to let the guard pass with no browser, and scripts/browser.mts says in as many words that nothing here may report a pass - softening it would delete the guard rather than repair the runner. WHAT IS OWED: read the install step's own log for run 32664443326 (it is not in the tail this session could fetch), and decide between pinning the Playwright version the image can actually serve, caching ~/.cache/ms-playwright, or asserting the executable exists as its own workflow step so a silent no-op install fails where it happens rather than eighty seconds later inside the suite. RELATED BUT DIFFERENT: NH96 is the same class in the SESSION CONTAINER, where a substituted Chromium 1194 makes the same test report CANNOT RUN by name rather than fail. Locally the suite is 1947 / 1946 pass / 0 fail / 1 skipped. On the runner it is 4 failures. Same pin, two environments, two different answers.
 
+**NH123** — The release gate every session trusts under RULING 75 discarded its stillborn list unless EVERY check was stillborn, so one passing check beside one check that completed having executed nothing read as green. Its own test said in a comment that this is not green while asserting only that it is not red. Reproduced, fixed, and the last 20 GREEN readings on main audited.
+
 ### P2
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
+
+**NH132** — The systemic half of A-004 and A-006: a source that partly failed reported plain success, because the result shape had only two states. Closed by the scoped partial result and by the pagination failure boundary.
+
+**NH134** — Measured 2954773 raw and 852590 gzip across 14 chunks against the committed baseline 2716714 and 818445 across 12. Needs the attribution build to attribute the growth by module provenance, then async boundaries only where the rebuilt number actually falls. MapLibre stays on the critical path.
+
+**NH137** — pnpm perf measures FCP, LCP and frame timing on real Chrome and honestly refuses software-rendered numbers, and docs/perf-baseline.md is not committed. A thermometer with no recorded normal temperature measures nothing. Needs a run on hardware-accelerated Chrome, or an honest row saying this machine has none.
+
+**NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
 
@@ -662,6 +700,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 
 ### P3
+
+**NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

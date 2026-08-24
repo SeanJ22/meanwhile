@@ -5444,17 +5444,52 @@ if (!AGAINST_PRODUCTION) {
       `  reach every check. Diffing still happened above, against the committed file.`,
   );
 } else {
+  /*
+   * **THE BASELINE RECORDS WHICH CHECKS EXIST, NOT WHICH ONES RAN TODAY.**
+   * (`NH112`, fixed 2026-08-24.)
+   *
+   * This wrote `ranNow` alone, and a check that COULD NOT RUN pushes to
+   * `declinedIdentities` rather than `identities` — so on 2026-08-24 a
+   * production run deleted five check names from the baseline, taking it from
+   * 377 to 372, purely because a service was unreachable for ninety seconds.
+   *
+   * The old header defended this: *"they did not run, and recording them as
+   * present would be the same lie in the other direction."* That reasoning is
+   * right about an OUTCOME and wrong about this FILE. The baseline exists for
+   * exactly one purpose — to let the next run say **a check DIED** — and a
+   * check that could not run has not died. Dropping it means the next run
+   * inherits a baseline of 372, the five are simply absent, and nothing can
+   * ever report them gone again.
+   *
+   * That is RULING 62's failure — a guard vanishing under a green run — one
+   * layer above the test suite, and worse here because the instrument did it
+   * to itself. It is also the walk rule's own words: new walks APPEND, the
+   * suite only grows, and a check leaves it only when the author retires the
+   * claim behind it. **A could-not-run is not a retirement.**
+   *
+   * So the baseline is the UNION of what ran and what declared it could not.
+   * The per-run outcome is still reported separately and loudly above; this
+   * file is the census of what exists.
+   */
+  const everyIdentity = [...new Set([...identities, ...declinedIdentities])].sort();
+  const carriedDeclined = declinedIdentities.filter((d) => !identities.includes(d)).length;
   writeFileSync(
     CHECKS_FILE,
-    `# The identity of every check pnpm walk:all ran, one per line, sorted.\n` +
-    `# Written by scripts/walk-all.mts on every run and COMMITTED, so the next run\n` +
-    `# diffs against it by set difference instead of subtracting two totals — a run\n` +
-    `# that loses three checks and gains seven reports +4 either way, and the check\n` +
-    `# dying quietly is the failure this suite exists to catch.\n` +
-    `# Checks that COULD NOT RUN are not here: they did not run, and recording them\n` +
-    `# as present would be the same lie in the other direction.\n` +
-      `${ranNow.join("\n")}\n`,
+    `# The identity of every check pnpm walk:all HAS, one per line, sorted.\n` +
+    `# Written by scripts/walk-all.mts on every production run and COMMITTED, so the\n` +
+    `# next run diffs against it by set difference instead of subtracting two totals —\n` +
+    `# a run that loses three checks and gains seven reports +4 either way, and the\n` +
+    `# check dying quietly is the failure this suite exists to catch.\n` +
+    `# Checks that COULD NOT RUN this time ARE here (NH112, 2026-08-24). This file\n` +
+    `# records which checks EXIST, never which ones ran: a check that could not run\n` +
+    `# has not been retired, and dropping it would make it impossible to ever report\n` +
+    `# gone. The per-run outcome is reported separately, above, on every run.\n` +
+      `${everyIdentity.join("\n")}\n`,
     "utf8",
+  );
+  console.log(
+    `\n  docs/walk-checks.txt written — ${everyIdentity.length} identities ` +
+      `(${ranNow.length} ran, ${carriedDeclined} carried because they COULD NOT RUN).`,
   );
 }
 

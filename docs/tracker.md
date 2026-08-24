@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **244 open**, 363 resolved.
-- **54 waiting on Sean** — the first section below.
+- **227 open**, 389 resolved.
+- **36 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**54 open · 23 resolved.**
+**36 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -45,11 +45,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
   Pending review.
 
-**JOB02** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32543652154 and 32543393133), both at: A source failed for a JOB reason — this run is red, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
-
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
-
-**NH31** — The refresh commits only if every source succeeded. One source producing zero rows from a non-zero fetch fails the run, so the snapshot does not move - even when carry-forward already saved that source's rows and every other source was fine. Today that is 14 failures of 37 runs. At national volume it means the snapshot never commits again, and the decision to make the gate per-source rather than per-run is yours.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -63,35 +59,13 @@ Only Sean closes a row here. A session may open one and may work it.
 
 **NH105** — Opened 2026-08-23. The instrument is built and the invitation list is generated - 272 of 272 Morris County candidacies, every row carrying invitedOn: null because nothing has been sent. The message is docs/candidate-questionnaire-invitation.md, quoted in full, plus a reminder message. FOUR THINGS ARE YOURS AND NONE OF THEM IS A SESSION'S CALL: (1) the message itself - it goes out under this product's name to 272 named people asking for votes; (2) a monitored reply address a person actually reads, which the message promises three times and which does not exist yet; (3) the schedule - one send date, two reminder dates and a deadline, which are constants at the top of scripts/questionnaire-invitations.mts and are quoted in full in that file and in data/questionnaire/invitations-nj-morris-2026.json; one edit moves all 272 symmetrically; (4) whether sparkwtp.netlify.app comes off its password wall first, because a candidate following the link today hits a password prompt. RULING 112 governs everything about the instrument itself; this row is only the decision to contact real people.
 
-**NH111** — Photos at 07866 stood at 0 of 272. Every candidate holding a verified campaign site was walked for an og:image and the page's own img elements: 7 candidates, 25 images staged, and ALL 25 were READ AS IMAGES on two contact sheets before any verdict was written. Two cleared the composition standard and both ship under DOOR 3 - the campaign's own self-published portrait from its own site, labelled campaign-provided, source recorded, remove-on-request. Nothing has shipped. The decision keys to the ASSET, not the person, and it is yours.
-
-**NH26** — RULING 55 says every photo is reviewed by you and only an approved photo renders. Gating on an empty store would have blanked every portrait in the product the moment the rule shipped, so the 48 photos already shipping were recorded APPROVED with decidedBy grandfathered - which means SHIPPING BEFORE THE RULE EXISTED, NOT APPROVED BY YOU. They are labelled that way in data/photos/review.json and carry a decision date, so pnpm stale surfaces them on RULING 53 clock. What is owed is your eye on them. The 5 refusals are already recorded REJECTED with their reasons - the flag stock photo alt-texted Victor Orlando, the scanned 1978 Grand Jury manual served as a campaign og:image, the Karishma Manzur banner-with-wordmark, the photographer-credited Monkman file, and the Ayotte WinRed graphic from 2026-08-14. One row per session listing N photos, never one row per photo: 47 candidates plus 90 officials would otherwise flood this queue.
-
-**NH30** — RULING 55 says only a photo you have approved renders. Three were hunted on 2026-08-21 and are PENDING: Meg Hagaman (Merrimack County Attorney, door 3), Jon Raiche (Merrimack County Attorney, door 3) and Vincent S. Ribas (Merrimack County Commissioner D2, door 2). Each one was read as an image before it shipped and each is a clean solo portrait; the cards render initials until you say yes. Nothing else about any of the three is affected.
-
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
-**NH65** — RULING 55 says only a photo you have approved renders. Five were hunted on 2026-08-22 from Morris County municipalities' own websites and are PENDING, so those five cards show initials until you say yes. Every one is door 2 - the picture the government publishes to identify its own member - and every one was read as an image before it shipped, in one contact sheet at screenshots/nj-hunt4-portraits.png. Jennifer Rowland (Chatham Township Committee, chathamtownship.org, file named jen_rowland.jpg). Melissa Senatore (Jefferson Township Council, jeffersontownship.net). Sean Mabey (Kinnelon Borough Council, kinnelonboro.org, file named thumb.Mabey 400.jpg). Marilyn Althoff (Mendham Borough Council, mendhamnj.org, file named thumb.Althoff1.png). Melissa Muilenburg (Mountain Lakes Borough Council, mountainlakes.gov, file named Muilenburg-Photo-scaled.jpg).
-
-**NH78** — OFF-1 photo review — the seven Morris County commissioner portraits. All seven are sourced, all seven were READ AS IMAGES, and none has been shipped. Your decision keys to the ASSET, not to the person. Every one is on morriscountynj.gov, a .gov host, and ships under DOOR 2: the portrait a government body publishes to identify its own member, with attribution to Morris County and remove-on-request. Tayfun Selen's already shipped this way on 2026-08-15, so the six join him under the same door rather than arriving under a different rule. The record with every URL, alt text, byte count and per-row judgment is docs/evidence/off1-morris-commissioner-portraits-0823.json. What is owed from you: yes or no per asset, after which the session writes them into the photo store. Worth knowing WHY they were missing: the 2026-08-15 hunt walked the board INDEX page twice for six of seven and recorded 0 candidate images, while the seventh was walked at his own page and returned a portrait immediately. Each commissioner's own page URL was already in the registry as websiteUrl. That is RULING 52's shape - a defensible rung history behind a route nobody varied - and it is why the new script DISCOVERS the member pages from the board index rather than guessing them.
-
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
 
-**NS06** — The Census key has sat in .env.local since before this session and had never been called by anything in the repo - confirmed by sweeping the tree with git grep -a --untracked rather than by trusting docs/sources.md. Called for the first time on 2026-08-22 it returns HTTP 302 with X-DataWebAPI-KeyError: 1 and Location: api.census.gov/data/invalid_key.html. A call with no key at all returns the same 302 pointing at missing_key.html, so the API cannot be reached without a working credential. WHAT IT COSTS: the demographic layer behind a zip - population, median household income, median home value. It closes no Kelly field about a person, so nothing in the hunt is blocked; what is blocked is any zip surface that wants context about a place. WHAT IS NEEDED FROM YOU: request a replacement key at api.census.gov/data/key_signup.html and put it in .env.local. The route is in the manifest as census-acs-api with the wall recorded as a dated measurement on the CREDENTIAL, never as a property of the source.
-
-**NS07** — The government graph crawl enumerates New Jersey's executive departments as governing bodies under RULING 57 - each with its own official site, and each holding public meetings and rulemaking hearings. The Department of Banking and Insurance sets rules on mortgages, insurance premiums and pawnbrokers, and those hearings are exactly the there-is-a-hearing-Tuesday surface this product exists for. THE QUESTION IS NARROW AND IT IS YOURS: their MEETINGS are plainly in scope and the session is wiring them. What is not settled is whether an APPOINTED cabinet secretary or department head renders to a reader as someone who governs them, the way an elected mayor or council member does. The who-governs card's verb is GOVERN, which is a stronger claim than is-responsible-for-this-area, and a session widening it would be making a product decision about what that word means. Nothing is blocked either way - the departments are enumerated and their meetings are hunted regardless of how you rule.
-
-**R33** — Sean's map of the project's sessions lived outside the repo, so nothing could read it. It is now committed, and the row stays open until he confirms the copy in the repo is the one he wants used.
-
-**R55** — The document Sean's session prompts are generated from lived outside the repo. It is now committed, and this stays open until he confirms the committed copy is the one to use.
-
-**R57** — Portraits and PDF archives are too big for git, so they live in a content-addressed store. Where that store actually lives — so a deploy can restore from it — is Sean's call.
-
 **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true.
-
-**T10** — Sean told the tester that everything collected during the demo gets deleted when testing ends. This builds the deletion so it happens whether or not anybody remembers to do it.
 
 **B03** — What legal entity this becomes. An LLC now and a public benefit corporation after the buyer calls, rather than a plain C-corp.
 
@@ -113,25 +87,13 @@ Only Sean closes a row here. A session may open one and may work it.
 
   Waiting on reaction capture (P03).
 
-**T04** — Decide, and publish, whether this data is ever sold exclusively to one buyer. The neutrality claim does not survive a yes, so the answer shapes the business.
-
-  Waiting on five buyer calls (V01).
-
 ### P3
 
 **C01** — A sample of what a buyer actually receives: one Pima County measure broken into its provisions, with support per provision and counts by how well each answer was verified. Synthetic numbers, clearly labelled, built to show rather than to sell.
 
 **NH08** — The Town of Newbury publishes its whole calendar as a feed nobody had wired, and it has more meeting dates on it than the portals we were using. Both now ship, and when they both carry the same meeting the site shows the one with the agenda attached. That is a change to what you see at 03255 and it is worth a look.
 
-**NH10** — Tobin Menard is running for Executive Council in District 2, which covers Newbury. His campaign site publishes exactly one picture of him: a clean studio portrait with the words 'Accountability Responsibility' printed across it in red. The photo rule says a portrait, never a wordmark, and this is a portrait carrying one. I refused it, which means he shows initials on the ballot page while the sitting councillor beside him shows her face - and that is the visual asymmetry the equal-effort rule exists to stop. It is a call about how a real person looks on a reader's screen, so it is yours.
-
-**NH11** — Shaun Fife is running for Governor. He has no campaign website and no campaign Facebook page. What he has is a candidate page on a political party's own site, carrying his name, the office, his own words and a contact address. Two of our rules point in opposite directions about it and the third makes it worse, so it is yours to settle.
-
-**NH33** — Lake Todd Village District governs territory in Bradford AND Newbury. The New London-Springfield Water System Precinct serves New London AND Springfield. A body id here is <division>#<slot>, so each of them ships as two rows carrying the same name. They are one body wearing two ids, not two districts, and every count that walks the registry counts them twice.
-
-**NS08** — Arizona's entry in the FEC Combined Federal/State Directory names SIX offices, and one of them is the Navajo Nation Ethics and Rules Office - listed alongside the states as a jurisdiction that holds administrative hearings, ethics clearances, standards of conduct and investigations under the Navajo Ethics in Government Law. No municipality list, no county roster and no state register would have produced it. The Navajo Nation, the Tohono O'odham Nation and the Pascua Yaqui Tribe all hold territory in or adjacent to Pima County, which is where 85641 and 85701 are. RULING 57 says the twig is as relevant as the trunk, and a sovereign nation is not a twig - it is a trunk this product has never touched. This product has no vocabulary for a sovereign government that is neither federal nor state nor local, and a session inventing one would be making a decision about how this product describes a nation. Raised now, before the Arizona hunt, because the enumeration step under RULING 86 surfaced it and the hunt should not start without your answer. Recorded in docs/arizona-source-enumeration.md.
-
-**R56** — The old status page put 54% of the tracker in a section called "everything with no recorded prerequisite", which is not a place. Superseded by the rebuild this session, and it stays open until Sean says the new sections are right.
+**NS10** — RULING 119 gives tribal nations their own category, and they needed identifiers. The canonical national list of government identifiers - opencivicdata/ocd-division-ids - has no tribal category at all: read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal, and searching it for the three nations by name returns only Navajo COUNTY, Arizona. So this project minted its own, built on the Census Bureau's own codes for tribal areas with the federal code recorded beside each one.
 
 **V01** — Five conversations with the people who would buy the data — campaign consultants, party data staff, PAC data directors, at least one on each side. The question to put to them is exclusivity.
 
@@ -197,7 +159,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**30 open · 5 resolved.**
+**31 open · 5 resolved.**
 
 ### P1
 
@@ -263,6 +225,8 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 **NH03** — The town's own pages state terms ending 2021, 2022 and 2023 for its Cemetery Trustees, and March 2021 for one Planning Board alternate. Those are the town's current published words and they are up to five years out of date. We render them as published, which is honest, and a reader may still be looking at people who left.
 
+**NH116** — He is running for US Senate and is owed a photo at 03255. His campaign site publishes exactly one picture of him: a clean solo studio portrait, refused on 2026-08-24 on two stated grounds rather than on composition. The file is named 'Picture Trinity campaign shot high def 2007 001.jpg' - the publisher dating it to 2007, nineteen years ago - and it is served at 220px in 5,699 bytes, which is below any size this product could render as a portrait.
+
 **NH35** — Warner's own boards index names 26 governing bodies. Its calendar files sittings for 16 of them. The other ten are named in the registry and ship KNOWN_UNCOVERED: the Cemetery Trustees, the Community Power Committee, the Corridor Committee, the Economic Development Advisory Committee, the Groundwater Protection Committee, the Highway Safety Committee, the Housing Advisory Committee, the Joint Loss Management Committee, the Mink Hills Recreation Committee and the Record Preservation Committee.
 
 **NH36** — Wilmot's Master Plan Committee, its Safety Services Facility Committee and its Transfer Station Advisory Group all meet, and the town files their meetings under CATEGORIES:Planning Board and CATEGORIES:Select Board. A category-driven read cannot separate them and a title-driven row over the same feed would claim events that already belong to another body. All three are named and KNOWN_UNCOVERED.
@@ -273,9 +237,13 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**28 open · 3 resolved.**
+**30 open · 4 resolved.**
 
 ### P2
+
+**NH113** — The scheduled NJ filing refresh rebuilds data/ballot/nj-morris-2026.json and the file comes back reordered even when nothing about the ballot has changed. Run 32711668624 on 2026-08-24 showed 1,013 insertions against 1,013 deletions across two files while the clerk's own totals were identical - 272 candidacies, 90 contests, both PDFs still dated 08-21-26. So the workflow reports 'data/ballot/ CHANGED' and runs the full gate on every single run. That is not just noise: a real republish by the clerk will look exactly like the churn, and the one signal that would tell somebody the ballot actually moved is the one being spent every day on nothing.
+
+**NH115** — pnpm roster:stale, built 2026-08-24 for NH73, compares the Morris County Clerk's 263 certified winners against the 271 people this project holds on Morris body rosters. Of 234 municipal winners: 99 are confirmed in our rosters, 90 belong to municipalities we hold no roster for at all (a coverage gap), and 45 belong to places where we DO hold a roster that does not name them. Those 45 are the NH73 shape - a roster that may be showing a reader somebody who is not in the seat. Boonton Town has 13 of them and Chester Township 7.
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
 
@@ -284,8 +252,6 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH67** — search-index was made mechanically walkable this session and walked all 272 candidates: 148 came back with at least one classified URL and 124 came back with none, because Bing and Yahoo both began refusing after roughly 170 queries. That 124 is a fact about one IP's rate ledger on one afternoon, not about those 124 people, and it may never be read as an absence.
 
 **NH72** — NJ Hunt 6 wired 19 of 39 Morris municipalities' governing bodies. The other 20 are OWED, not absent, and `corepack pnpm nj:wire --dry` names every one with its reason. Three reasons, in order of frequency: (1) the confirmed member count does not reach the seat count the municipality's own form of government declares, so a partial list would state a false composition; (2) the form-of-government line states no seat count at all, so completeness cannot be checked; (3) the county clerk's certified winners do not reach the municipality, so the SEATS' partisanship is unsettled under M62. Every one of these is closed by more hunting, not by loosening the gate. The nearest wins: Boonton (7 of 8 confirmed), Dover (5 of 8), Netcong (4 of 6), Long Hill (4 of 5).
-
-**NH73** — Denville Township's article listed Angela Cote and Christopher Golinski on the council. The Morris County Clerk's certified 2025 winners name Adrienne Zimmermann and Mark Venis in those seats, and the township's own council page confirms Zimmermann and Venis and does not name Cote or Golinski. This is RULING 87 working exactly as written - the encyclopedia named, the primary source proved, and the primary source disagreed. What is OWED is the sweep: how many of the other 38 Morris municipalities carry a stale encyclopedia roster that the certified winners contradict? `data/hunt/nj-morris-certified-winners.json` holds 263 certified winners and the comparison is a script, not a hunt.
 
 **NH88** — data/hunt/wiki-graph-07866.json holds 80 leader entries harvested on 2026-08-22, and 5 of the 72 usable ones store the Wikipedia link syntax as part of the person's name - "Joseph Jackson ([[Republican Party (United States)" is what the file actually contains for the Mayor of Rockaway Township, and one office title is stored as "[[City manager". A consumer reading the name field straight out gets a string that is not a name. NOTHING WENT RED, because nothing was empty: this is RULING 100's shape, an extraction that came back with some rather than none, and only reading the rows shows it. The fix belongs in the graph's own generator per RULING 92, and that generator reads Wikipedia over the network, so the artifact is owed a regeneration when egress is available. scripts/mine-wiki-leaders.mts cleans the markup at read time as a stopgap and exports cleanWikiText; it is a workaround, not the fix.
 
@@ -320,6 +286,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 ### P3
 
 **NH107** — Promoting the rung-1 campaign-site leads turned up attorney bio pages for two Morris County candidates — chippersonlaw.com for Rita C. Chipperson and dawkinswarrington.com for Clifford D. Dawkins. Both were briefly and wrongly promoted as campaign sites by a first version of the evidence test, and both are correctly recorded as MISS for that field now: a law firm page is not evidence of a candidacy. But it IS a real find for a different field. The branch manifest already names the route — bar-directory, which it describes as reaching an office address and a direct line — and the manifest's own index says to try it first when a candidate is a lawyer. Nothing read these two pages for a phone or an address.
+
+**NH114** — data/hunt/nj-morris-certified-winners.json holds 263 rows and some of them carry an office that is plainly not an office. Carolyn Dempsey's reads 'DEMPSEY', Robert Simpson's reads 'SIMPSON' - the surname landing in the office field - and several read null outright, among them Robert H. Conley, Howard Kritz, Maria Cote, Louis R. Maffei and James A. Lynch. The row count is right and the names are right, so every count over this file reconciles and reports success.
 
 **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
 
@@ -397,7 +365,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**73 open · 89 resolved.**
+**73 open · 92 resolved.**
 
 ### P1
 
@@ -471,10 +439,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **M123** — Six towns around Newbury hold meetings inside the radius a reader at 03255 sees. The routes to their calendars have been walked and written down; none of them is wired, so those meetings do not appear.
 
-**NH101** — Measured 2026-08-23 by corepack pnpm congress:corpus. 437 of 537 sitting members already carry a portrait; 97 more are owed and unitedstates/images HOLDS ALL 97. Every one was retrieved over git and VERIFIED - real JPEG, dimensions read, SHA-256 and byte count recorded in data/hunt/congress-corpus-walk.json (14,676,605 bytes total; 91 are the nominal 450x550 and 6 are 440x550 or 419x550, which the corpus README says varies). Licence is CC0 1.0 Universal, confirmed from the repository's own LICENSE file, and the photographs are GPO works the GPO has confirmed are public domain - door 1 of the photo rule, an explicit recorded licence. WHY 0 SHIPPED: RULING 20 keeps portrait bytes out of git and tests/asset-store.test.ts enforces it against data/assets/manifest.json, whose content-addressed store is a local path on the author's machine. This is BLOCKED ON R57 and on nothing else - the retrieval, the licence and the provenance are done. WHAT IS OWED: once R57 lands, run corepack pnpm officials:photos (which now walks the git rung when the Pages host refuses) and pnpm assets migrate.
-
-  Waiting on where the asset store lives so a netlify build can restore from it (R57).
-
 **PB03** — A reader for agenda data hidden inside a page's HTML rather than published at an address. Without it, whole families of school and municipal sites come back empty and look like places with no meetings.
 
   Waiting on body enumeration per unit - the missing second layer of the who-governs denominator (HUNT02).
@@ -504,6 +468,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH07** — Merrimack County's department pages all load cleanly and all of them list their staff in a table our reader cannot understand. It is a different table shape from the one we built for. Nobody has looked at how many other counties use it.
 
 **NH102** — Found 2026-08-23 walking unitedstates/images at commit aec3e4a88af843b282c0576f420b930f6a9a46ad. H001104 Jon Husted, A000383 Alan Armstrong and G000608 Darline Graham are sitting members and the GPO pictorial-directory corpus carries no file for any of them. This is a FINDING about that corpus on that date, not an absence of a photograph: the photo rule's doors 2, 3 and 4 are unwalked for these three, and RULING 53 puts the corpus itself on a 14-day re-walk. NOT a gap-ledger row because it names three PEOPLE and a route, not a body's coverage.
+
+**NH117** — pnpm bodies:spanning, built 2026-08-24 for RULING 121, finds bodies carrying the same name under more than one division. Two were merged this session because Sean ruled on them by name - Lake Todd Village District and the New London-Springfield Water System Precinct. Ten more share a name and have NOT been merged, because a shared name is not proof of a shared body: a Master Plan Committee in Wilmot and one in Grantham are almost certainly two committees, not one.
 
 **NH16** — Bradford, New Hampshire publishes every agenda and minute set on a vendor platform this product has never seen. Its own town website carries no boards index and no calendar, so the vendor is the only route to the town's meetings.
 
@@ -663,7 +629,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**14 open · 61 resolved.**
+**12 open · 64 resolved.**
 
 ### P1
 
@@ -672,8 +638,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 ### P2
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
-
-**NH112** — A production run of pnpm walk:all rewrites docs/walk-checks.txt from the checks that RAN on that run. On 2026-08-24 that meant it deleted 5 check names because they reported COULD NOT RUN, taking the baseline from 377 to 372 in the working tree. The walk's own doctrine says a check that could not RUN is reported separately from one that FAILED, and its own output does exactly that - it printed all 7 under COULD NOT RUN. The defect is one step later: it then wrote a baseline as if they no longer exist.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
 
@@ -696,10 +660,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
-
-**R54** — A standing mechanism rather than a job: every portrait Sean needs to eyeball collects into one list he can work through, regenerated rather than hand-kept.
-
-  Waiting on photos round 2 - door 2 opens and the chamber tier ships (item 6b) (D50).
 
 ---
 

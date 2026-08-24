@@ -2596,3 +2596,124 @@ What is actually worth holding still is the shape of the accounting, not its cur
 - **The PAIR.** Both halves are asserted together, because "owed fell" on its own is also what it looks like when rows vanish.
 
 *The reason this is worth a ruling rather than a note.* A frozen coverage number does not fail loudly and get fixed — it fails on a day somebody made progress, and the cheapest way to make it green again is to edit the constant to match. Do that twice and the guard has become a record of what the coverage happens to be, which nobody reads, rather than a claim about what must always be true, which somebody would.
+
+---
+
+### RULING 117 — the asset store has a public address, and a restore is proved by hash
+
+*Adopted 2026-08-24 (Sean's decisions of that day, closing `R57`). Law: `CLAUDE.md`, **Repo layout**. Supersedes nothing. It finishes RULING 20, which moved portrait bytes out of git and could not say where they should land.*
+
+**The portraits and public-record PDFs live in their own public repository, and a restore checks the bytes rather than the status code.**
+
+RULING 20 moved the bytes out of git for a good reason: git keeps every version of every file forever, and the corpus this product wants is every agenda PDF for every body it watches. What it could not do was finish, because the store was a folder on Sean's own machine and a build server cannot reach a folder on somebody's machine. So the pictures stayed committed as well as stored, and the repo carried both the bytes and the machinery meant to replace them.
+
+That cost more than disk. **97 sitting members of Congress had portraits already retrieved, licence-checked and byte-verified, and could not ship, because there was nowhere to put them a build could read.**
+
+Sean ruled: a dedicated public repository, created automatically. It is `github.com/SeanJ22/wtp-assets`.
+
+**Public is the right posture, not a shortcut.** Everything in it was already published — by a government body, by a campaign about itself, or under an open licence. A private store would need a password in the build, and a password is a thing that expires, leaks, or sits unused while somebody hits a rate limit next to it.
+
+**Why the bytes get checked and the status code does not.** A file here is stored under a fingerprint of its own contents, so the name of the file *is* the answer to "are these the right bytes". A web server can answer "200 OK" and hand back an error page, a proxy notice, or half a file. Checking the fingerprint costs nothing and catches all of it. A file that fails is reported as "could not fetch this one", never as "this picture does not exist".
+
+---
+
+### RULING 118 — an appointed official never carries the govern verb
+
+*Adopted 2026-08-24 (Sean's decision of that day, closing `NS07`). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing.*
+
+**Say "runs the department", "chair", "president of the committee". Never "governs you".**
+
+New Jersey's executive departments are real bodies with real public hearings — the Department of Banking and Insurance sets rules on mortgages, insurance premiums and pawnbrokers, and those hearings are exactly the there-is-a-hearing-Tuesday thing this product exists for. **Their meetings were never in question.**
+
+The question was the person. A commissioner of a state department is appointed. A reader did not elect them and cannot vote them out. Telling that reader "this person governs you" describes a relationship that does not exist, and the whole claim of this product is that it does not do that.
+
+The distinction is not a softer version of the same sentence. *Runs the department* is accurate and useful — it tells a reader who is responsible for something that affects them. *Governs you* is a claim about the reader's own power over that person, and it would be false.
+
+Sean's ruling covers role descriptions too, not just the headline: **no wording anywhere may attach the govern verb to somebody appointed.**
+
+---
+
+### RULING 119 — a sovereign tribal nation is its own category of government
+
+*Adopted 2026-08-24 (Sean's decision of that day, closing `NS08`). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing.*
+
+**Tribal nations are their own specific category — neither federal nor state nor local — and this is national, not an Arizona special case.** Sean named New Mexico, Oklahoma and Texas as coming.
+
+Nothing in this product's ordinary enumeration would have found this. It came out of the federal directory of state election offices, whose Arizona entry lists six offices — and one of them is the Navajo Nation Ethics and Rules Office, sitting alongside the states as a place that holds hearings and investigations under the Navajo Nation's own ethics law. No list of towns, no county roster and no state register carries that.
+
+**Why a new category rather than a label on an old one.** Filing a nation as an ordinary governing body inside a state makes it a subdivision of that state, which is exactly what it is not. Every other existing category was worse. The rule that the smallest body matters as much as the biggest is about branches and twigs; a sovereign nation is not a twig, it is a trunk this product had never touched.
+
+**What is deliberately not claimed.** The govern verb does not attach here — and that is not a smaller claim, it is an honest one. Whether a tribal government has authority over a particular person turns on tribal membership and on the status of the land, not simply on where somebody is standing. This product locates a reader by geography alone. So it names the nation, its government and its meetings, and does not assert a governing relationship it has no way to establish.
+
+**The identifier had to be minted, and it says so.** The standard national list of government identifiers has no tribal category at all — read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal. There was nothing to look up. So the identifiers here are built on the Census Bureau's own codes for tribal areas, with the federal code recorded beside each one. That is a different thing from a guess, and the difference is written down so nobody has to work it out again. Whether this project should propose a tribal category to the people who maintain that national list is Sean's call, and it has a row.
+
+---
+
+### RULING 120 — equal solicitation is the obligation; who buys is not
+
+*Adopted 2026-08-24 (Sean's decision of that day, closing `T04`). Law: `CLAUDE.md`, business constraints. Supersedes nothing.*
+
+**In his words: "We will never sell exclusively. I will solicit equally. Whether they buy is up to them — if 65% of buyers end up on one side, that is not something I can control so long as the solicitation was equal."**
+
+This settles a question that had been open since the business section was first written: does the neutrality claim survive the data being sold?
+
+It survives, and the reason is a clean separation between the thing that can be controlled and the thing that cannot. **Selling exclusively to one buyer would be a choice this product made** — it would hand one side an advantage that came from us, and no amount of explaining would undo that. **Who chooses to buy is a fact about the market**, and holding ourselves responsible for it would mean either refusing customers based on their politics or pretending to a control nobody has.
+
+So the obligation is real, specific and checkable: **the offer goes out equally.** The composition of who accepts is reported honestly and is not steered.
+
+---
+
+### RULING 121 — one body that spans two towns has one identity, and renders in both
+
+*Adopted 2026-08-24 (Sean's decision of that day, closing `NH33`). Law: `CLAUDE.md`, **Data model conventions**. Supersedes nothing.*
+
+**A body that governs territory in more than one town is one body with one identity, listed for readers in every town it covers.**
+
+Lake Todd Village District governs land in both Bradford and Newbury. The New London–Springfield Water System Precinct serves both towns in its name. Because a body's identity was built out of the single town it was filed under, each of these shipped as two separate entries with the same name — one body wearing two identities. Every count that walked the list counted them twice.
+
+Filing each under one town only would have been worse: it hides a real body from readers in the other town, who are governed by it just the same.
+
+**Sean ruled one body, one identity, rendered under both.** This is the first pair of many rather than a curiosity — village districts, precincts, fire districts and regional school committees routinely cross town lines, and a product that reaches the smallest bodies will meet this constantly.
+
+---
+
+### RULING 122 — a page on a party's own site can be a candidate's page, with the host named
+
+*Adopted 2026-08-24 (Sean's decision of that day, closing `NH11`). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing. It extends the rule that a campaign living on Facebook still has a campaign site.*
+
+**Where a candidate's only public presence is a page on their party's own website that carries their name, the office, their own words and a way to contact them, it renders as their page — and the host is named.**
+
+A candidate for Governor had no campaign website and no campaign social page. What he had was a page on a party's site with his name, the office he is seeking, a sentence in his own words and an email address. Recording that as "no campaign presence found" would hide a real, findable thing from a reader — and it would do it to the candidate with the fewest resources, which is precisely the imbalance the equal-effort rule exists to catch.
+
+**The host is labelled, and that is what keeps this safe.** This product never characterises an organisation's politics. Presenting a party's website as though it were the candidate's own would blur exactly that line. Saying *the page his party publishes about him* names the source plainly and lets the reader judge it — which is what this product does with every other source.
+
+---
+
+### RULING 123 — the author's decisions of 2026-08-24, recorded as a batch
+
+*Adopted 2026-08-24 (Sean's decisions of that day, given in the session brief and in a mid-session correction). Law: none of it — these are decisions, not rules, which is exactly what this file is for. Supersedes nothing.*
+
+**Not every decision is a rule.** Most of what an author decides is a call about one thing on one day: this photograph ships, that one does not, this gate is the right shape, that document is the copy to use. Those decisions bind just as firmly as a rule does and they belong written down, because a decision that lives only in a chat window is one nobody can check later — which is the whole reason this file exists.
+
+This entry records the ones Sean made on 2026-08-24 that are not rules. The five that ARE rules became RULINGS 117 through 122 and have their own entries.
+
+**The photographs — all approved.**
+
+- **The seven Morris County commissioner portraits.** All seven from the county's own site, all seven read as images. Six shipped; the seventh was already shipping.
+- **The five New Jersey municipal portraits** — Rowland, Senatore, Mabey, Althoff, Muilenburg — each from the municipality's own website. Two carried stated reservations and he approved them with the reservations in view: Senatore's attribution is by POSITION on the page rather than by filename, and Mabey's is full-length rather than head-and-shoulders.
+- **The three New Hampshire county portraits** — Hagaman, Raiche, Ribas.
+- **The two campaign portraits at 07866** — Leguía and Hathaway. Hathaway's was put to him as a three-quarter-length shot rather than a portrait, stated as a reservation, and he took it.
+- **The forty-eight that were already shipping**, approved EN BLOC. In his words: he checked a few, and if one has issues later he will call it out specifically; otherwise good to go. They had been recorded as "grandfathered", which meant shipping before the rule existed and approved by nobody. They are his now. **The record says en bloc rather than per asset**, because that is what happened, and writing it the other way would claim he read forty-eight images one at a time.
+
+**Tobin Menard stays initials.** His campaign publishes exactly one picture of him and it carries the words "Accountability Responsibility" printed across it. His words: *no campaign slogans or anything like that.* The refusal is affirmed. He renders honest initials, which this product treats as a success, and the hunt for a clean portrait of him continues.
+
+**The other decisions of the day.**
+
+- **The meetings refresh gates per source, not per run** — one broken source may not throw away the work of the healthy ones. His condition: the broken source carries forward and is loudly identified for fixing.
+- **The demo-deletion promise is built**, with the wall coming down as the trigger: rows collected during the password-walled test period delete when the wall lifts, and the deletion is logged.
+- **The session map, the intent document and the rebuilt tracker sections are confirmed** — the committed copies are the ones to use.
+- **The candidate questionnaire is on HOLD.** He reviews the instrument and the invitation before anything sends. Nothing has been sent to anybody.
+- **The agenda-platform crawler is re-scoped rather than shelved**: it starts after the pilot zips are done rather than after the election, and its open design questions come to him before the first fetch.
+- **The Census API key was activated**, mid-session. It had been refused by the host as invalid; it now answers with real data.
+
+*Why one entry rather than a dozen.* These were given together, on one day, in one brief. Splitting them into separate numbered rulings would suggest each was reasoned about separately and would make the record longer without making it truer.

@@ -1,0 +1,17 @@
+[
+  {
+    "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+    "name": "Paige Beauchemin",
+    "photo": {
+      "url": "https://images.squarespace-cdn.com/content/v1/691ce9da468ad9254f978867/fe566953-e9a7-4f16-8604-52942a39f04f/paige-arm-cross.png",
+      "door": 3,
+      "source": "the campaign's own self-published portrait from its own site — paigefornh.com, read 2026-08-24 — labelled campaign-provided, remove-on-request",
+      "judgment": "READ AS AN IMAGE 2026-08-24, tile 2 of 6 on her contact sheet: a clean solo studio portrait on a plain black ground, arms folded, facing camera. She is the unambiguous sole subject and there is no wordmark, banner or third party in frame. The filename paige-arm-cross.png is the publisher saying whose face it is. WHAT WAS REFUSED, all 5: the og:image is a stylised silhouette graphic with no person in it; two are stock landscapes (one is literally named unsplash-image); one is a photograph of merchandise carrying a campaign wordmark; and one is a solo shot in which she wears a shirt printed with a political slogan, refused because a slogan across the subject is the same class as the overlay refused for Menard. PENDING Sean under RULING 55.",
+      "file": "nh-merrimack-us-house-2-beauchemin-paige.png"
+    },
+    "hunt": {
+      "note": "Door-3 walk of the site found at Tier A the same day. 6 images staged, 6 read as images on one contact sheet before any verdict.",
+      "attemptedAt": "2026-08-24"
+    }
+  }
+]

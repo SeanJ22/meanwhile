@@ -136,8 +136,8 @@
       "phoneLabel": null
     },
     "ballot-nj-morris:us-house-11:hathaway": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nj-morris-us-house-11-hathaway-joe.jpg",
+      "photoSource": "the campaign's own self-published portrait from its own site — joehathawayforcongress.com, read 2026-08-23 — labelled campaign-provided, remove-on-request",
       "bio": "Born and raised in a middle-class family in Clifton; he served as Mayor of Randolph in 2025 and on the Township Council since May 2022, and is a Yale graduate with over a decade in corporate communications.",
       "bioSourceUrl": "https://www.joehathawayforcongress.com",
       "bioSourceLabel": "From the candidate's site — joehathawayforcongress.com, read 2026-08-14",
@@ -724,11 +724,11 @@
       "phoneLabel": null
     },
     "ballot-nh-merrimack:us-house-2:beauchemin-paige": {
-      "photoUrl": null,
-      "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
+      "photoUrl": "/candidates/nh-merrimack-us-house-2-beauchemin-paige.png",
+      "photoSource": "the campaign's own self-published portrait from its own site — paigefornh.com, read 2026-08-24 — labelled campaign-provided, remove-on-request",
+      "bio": "Paige is a mom of three, registered nurse, and New Hampshire State Representative. She knows what housing instability, rising costs, and an unaffordable healthcare system do to working families because she has lived it. She has fought for working people in the State House. Now she is running to fight for us in Congress.",
+      "bioSourceUrl": "https://www.paigefornh.com/",
+      "bioSourceLabel": "In the campaign's words — paigefornh.com, read 2026-08-24",
       "email": "paige.beauchemin@gc.nh.gov",
       "phone": "(603) 296-5489",
       "filedAddress": "16 Hughey St, Nashua NH 03064",
@@ -784,8 +784,8 @@
       "phoneLabel": null
     },
     "ballot-nh-merrimack:us-house-2:orlando-victor": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nh-merrimack-us-house-2-orlando-victor.png",
+      "photoSource": "the campaign's own self-published portrait from its own site — votevdo.com, read 2026-08-24 — labelled campaign-provided, remove-on-request. Identity corroborated by his FEC committee filing C00934919 (VOTE VDO VICTOR D ORLANDO), which names votevdo.com as the committee's website.",
       "bio": "Those Who Know Vote VDO. Victor Orlando is running for U.S. House of Representatives, New Hampshire District 2 in 2026.",
       "bioSourceUrl": "https://votevdo.com/",
       "bioSourceLabel": "In the campaign's words — votevdo.com, read 2026-08-21",
@@ -796,8 +796,8 @@
       "phoneLabel": null
     },
     "ballot-nh-merrimack:us-house-2:nicholson-dan": {
-      "photoUrl": null,
-      "photoSource": null,
+      "photoUrl": "/candidates/nh-merrimack-us-house-2-nicholson-dan.png",
+      "photoSource": "the campaign's own self-published portrait from its own site — dannicholsonfornh.com, read 2026-08-24 — labelled campaign-provided, remove-on-request. Identity corroborated by his FEC committee filing C00946699 (DAN NICHOLSON FOR CONGRESS), which names this domain as the committee's website.",
       "bio": null,
       "bioSourceUrl": null,
       "bioSourceLabel": null,
@@ -930,10 +930,10 @@
     "ballot-nh-merrimack:governor:fife-shaun": {
       "photoUrl": null,
       "photoSource": null,
-      "bio": null,
-      "bioSourceUrl": null,
-      "bioSourceLabel": null,
-      "email": null,
+      "bio": "Shaun Fife For New Hampshire Governor's Office. The Peoples Candidate. Simplify & Making New Hampshire America Again! Hometown Solutions. New Hampshire First! The Lord as our Cornerstone. When your Constitution's foundation is resting on the Bible, you can stand tall.",
+      "bioSourceUrl": "https://majiparty.org/nh-governor-shaun-fife",
+      "bioSourceLabel": "In his own words on the page MAJI Party publishes about him — majiparty.org, read 2026-08-24",
+      "email": "Action4NH@gmail.com",
       "phone": null,
       "filedAddress": "PO Box 72, Epsom NH 03234",
       "filedAddressSource": "New Hampshire Secretary of State, 2026 candidate filing",
@@ -1380,6 +1380,15 @@
     "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:hodas-david": {
       "photoUrl": null,
       "photoSource": null,
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "email": null,
+      "phone": null
+    },
+    "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana": {
+      "photoUrl": "/candidates/nj-morris-us-house-7-leguia-lana.jpg",
+      "photoSource": "the campaign's own self-published portrait from its own site — lanaleguia.com, read 2026-08-23 — labelled campaign-provided, remove-on-request",
       "bio": null,
       "bioSourceUrl": null,
       "bioSourceLabel": null,
@@ -2671,6 +2680,54 @@
       "name": "Melissa Muilenburg",
       "note": "NJ Hunt 4 (2026-08-22), branch nj-municipal-roster, photo door 2. Portrait read as an image before it was proposed (screenshots/nj-hunt4-portraits.png) and shipped PENDING under RULING 55 — the card renders initials until the author approves it.",
       "attemptedAt": "2026-08-22"
+    },
+    {
+      "key": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana",
+      "name": "Lana Leguía",
+      "note": "NH111: every candidate holding a verified campaign site was walked for an og:image and the page own img elements — 7 candidates, 25 images staged, ALL 25 read as images on two contact sheets before any verdict. This one PASSED the composition standard. Sean approved it 2026-08-24.",
+      "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "ballot-nj-morris:us-house-11:hathaway",
+      "name": "Joe Hathaway",
+      "note": "NH111: 6 of 6 of his other staged images failed the composition standard (a wordmark banner among them). This one passed with a stated reservation about framing, which was put to Sean as a reservation and approved on 2026-08-24.",
+      "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "ballot-nh-merrimack:governor:fife-shaun",
+      "name": "Shaun Fife",
+      "note": "RULING 122 (Sean's decision of 2026-08-24, closing NH11): Fife has no campaign domain and no campaign social page; his only public presence is the candidate page his party publishes. Sean ruled it counts as his verified page AND his contact, labelled party-hosted. Re-walked live at rung 2 on 2026-08-24: HTTP 200, 225,889 bytes, control strings 'Shaun Fife' x4 / 'Governor' x2 / the address x2, negative control 0. The words are quoted verbatim from that page and the address is a real mailto: on it (mailto:Action4NH@gmail.com). The blurb carries the PARTY as its source class rather than 'the campaign', because that is whose page it is — a description without its true source class is treated as a generated claim.",
+      "attemptedAt": "2026-08-24"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:nicholson-dan",
+      "name": "Dan Nicholson",
+      "note": "Door-3 campaign-site walk at 03255, 2026-08-24, using the branch INHERITED from NH111 (scripts/hunt-campaign-photos.mts) rather than a new one. 3 images staged from his own site, all 3 read as images on one contact sheet before any verdict.",
+      "attemptedAt": "2026-08-24"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:orlando-victor",
+      "name": "Victor Orlando",
+      "note": "Door-3 campaign-site walk at 03255, 2026-08-24. 4 images staged from his own site and all 4 read as images. Image 1 was the SAME class as the 2026-08-21 refusal — a US flag under /images/headshots/ — and was refused again on sight.",
+      "attemptedAt": "2026-08-24"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "TIER A FIRST (RULING 84). The site came from the Wikipedia article '2026 United States House of Representatives elections in New Hampshire', walked 2026-08-24 via the MediaWiki parse API with a control (a nonexistent title returns missingtitle). Under RULING 87 an encyclopedia NAMES and the primary source PROVES, so it was a LEAD until paigefornh.com itself was fetched: HTTP 200, 546,058 bytes, control strings 'Beauchemin' x24, 'Paige' x62, 'Congress' x19, negative control 0. Her FEC committee C00921882 (PAIGE BEAUCHEMIN FOR CONGRESS) corroborates the candidacy. Six sessions of per-entity search had not found this site; one Tier A article did.",
+      "attemptedAt": "2026-08-24"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "TIER A (RULING 84/87): named by the Wikipedia NH US House 2026 article, PROVED by fetching the site itself with control strings. A lead until the primary source confirmed it.",
+      "attemptedAt": "2026-08-24"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "Door-3 walk of the site found at Tier A the same day. 6 images staged, 6 read as images on one contact sheet before any verdict.",
+      "attemptedAt": "2026-08-24"
     }
   ]
 }

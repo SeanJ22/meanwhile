@@ -44,7 +44,11 @@ export type BodyClass =
   | "ADVISORY"
   | "COMMISSION"
   | "REGIONAL"
-  | "PRIVATE_ASSOCIATION";
+  | "PRIVATE_ASSOCIATION"
+  /** Run by an appointed head, not an elected one — NS07, RULING 118. */
+  | "EXECUTIVE_AGENCY"
+  /** A sovereign nation: neither federal nor state nor local — NS08, RULING 119. */
+  | "SOVEREIGN_TRIBAL";
 
 /**
  * How much we actually know about this body's meetings.
@@ -298,6 +302,31 @@ export interface Body {
    * cares about most.
    */
   ocdId: OcdId | null;
+  /**
+   * **THE OTHER DIVISIONS THIS ONE BODY ALSO GOVERNS.** (RULING 121, Sean's
+   * decision of 2026-08-24, closing `NH33`.)
+   *
+   * A body id is `<ocdId>#<slot>`, which quietly assumed one body sits in one
+   * division. Lake Todd Village District governs territory in Bradford AND
+   * Newbury; the New London–Springfield Water System Precinct serves New London
+   * AND Springfield. Each therefore shipped as TWO rows carrying the same name
+   * — one body wearing two ids — and every count that walked the registry
+   * counted them twice.
+   *
+   * **Filing each under one division only would be worse**, because it hides a
+   * real body from readers in the other town, who are governed by it just the
+   * same.
+   *
+   * So the body keeps ONE id, in its primary division, and lists the others
+   * here. `bodiesAt` matches on either, so a reader in EITHER town sees it, and
+   * a count that walks the registry sees ONE body.
+   *
+   * **This is the first pair of many.** Village districts, precincts, fire
+   * districts and regional school committees routinely cross municipal lines,
+   * and a product that reaches the smallest bodies (RULING 57) meets this
+   * constantly.
+   */
+  alsoServesOcdIds?: readonly OcdId[];
   /**
    * **Null until sourced.** Names vary by state — supervisors in Arizona,
    * commissioners in New Jersey, select boards in New Hampshire — and minting a

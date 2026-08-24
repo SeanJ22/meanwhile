@@ -8,11 +8,11 @@ in one place he can work from. A portrait is the one thing in this product a
 machine cannot finally judge — every rung before this one exists to put a
 picture in front of a person who can say yes or no.
 
-Generated 2026-08-22. Manifest holds **902** portraits and
-**229** named misses.
+Generated 2026-08-24. Manifest holds **1005** portraits and
+**236** named misses.
 
-**557** of those **902** belong to a person some surface can
-reach, so a reader can find them. The other **345** belong to people
+**654** of those **1005** belong to a person some surface can
+reach, so a reader can find them. The other **351** belong to people
 no surface resolves — mostly state legislators whose seat is not wired to
 a district yet — and **nothing in the product renders them**. That is why a
 portrait can be in the manifest and impossible to find on screen, and it is a
@@ -20,21 +20,21 @@ MAPPING gap rather than a photo gap: the picture is fine, the seat is missing.
 
 ### The standing figure, and it reconciles
 
-Counted 2026-08-22 from `lib/registry/official-photos.json` against the
+Counted 2026-08-24 from `lib/registry/official-photos.json` against the
 shipped division mappings, the curated body rosters and the who-governs
 card. Every manifest row lands in exactly ONE of these, which is the point:
 
 | | Count | What it means |
 |---|---|---|
-| **Collected** | **902** | rows in the portrait manifest |
-| — reachable, via a division mapping | 531 | a zip resolves to the seat, so the face renders |
-| — reachable, via a curated body roster | 23 | no division seat, but a body card lists the person |
+| **Collected** | **1005** | rows in the portrait manifest |
+| — reachable, via a division mapping | 622 | a zip resolves to the seat, so the face renders |
+| — reachable, via a curated body roster | 29 | no division seat, but a body card lists the person |
 | — reachable, via the who-governs card | 3 | a statewide executive, on every zip in the state |
-| — reachable by nobody | 345 | held, judged, and on no surface a reader can get to |
+| — reachable by nobody | 351 | held, judged, and on no surface a reader can get to |
 
-**531 + 23 + 3 + 345 = 902.**
+**622 + 29 + 3 + 351 = 1005.**
 
-### The standing figure for PORTRAITS RENDERED is **609**, and everything else is derived from it
+### The standing figure for PORTRAITS RENDERED is **620**, and everything else is derived from it
 
 **Method.** `scripts/photo-census.mts` walks the SLOT side — every person
 the product can put on a screen — and asks of each whether the surface
@@ -44,21 +44,32 @@ PEOPLE WITH A FACE, not of manifest rows, and it is quoted from here.
 
 | Figure | Count | How it is obtained |
 |---|---|---|
-| **Portraits rendered (STANDING)** | **609** | slot side: people the product renders who have a portrait |
-| — drawn from this manifest | 557 | derived: the standing figure less the candidate-card portraits |
-| — drawn from `candidate-cards-2026.json` | 52 | derived: ballot-candidate portraits, which never enter this manifest |
-| People rendering initials | 472 | derived: the slot denominator less the standing figure |
-| Slot denominator | 1081 | every person the product renders |
+| **Portraits rendered (STANDING)** | **620** | slot side: people the product renders who have a portrait |
+| — drawn from this manifest | 563 | derived: the standing figure less the candidate-card portraits |
+| — drawn from `candidate-cards-2026.json` | 57 | derived: ballot-candidate portraits, which never enter this manifest |
+| People rendering initials | 587 | derived: the slot denominator less the standing figure |
+| Slot denominator | 1207 | every person the product renders |
 
-**The two sides now cross exactly**, which is what says the ledger is
-closed: 557 manifest rows are drawn by a rendered slot, and
-557 manifest rows are reachable — the same number.
+**THE TWO SIDES DISAGREE, AND THAT IS THE FINDING** — stated rather than
+smoothed, because a single figure standing in front of two measurements
+is a data-destruction pattern.
+
+- **563** manifest rows are drawn by a RENDERED SLOT — a person
+  attached to a division this product actually COVERS today.
+- **654** manifest rows are REACHABLE by the
+  broader reach map below, which counts any shipped division mapping.
+- The gap is **91**.
+
+**Neither number is wrong; they answer different questions.** Coverage is
+four pilot zips, so a member of Congress can hold a judged portrait, be
+mapped to a seat, and still sit on no page a reader can currently open.
+That is a COVERAGE gap, not a photo gap, and it closes when the zip does.
 
 **What the 37 was.** F01-continued session 1 set `531 + 23 + 348` beside
 `591 + 311` as though both partitioned the same 902 and reported that they
 disagreed by 37 about how many portraits reach a reader. They never
 partitioned the same population. `pnpm photo:reconcile` intersects the two
-universes by id and resolves the 37 with no residue: **52 of it is
+universes by id and resolves the 37 with no residue: **57 of it is
 ballot-candidate portraits**, which live in `candidate-cards-2026.json` and
 are not manifest rows at all, and **3 of it was a defect in this file** —
 the three governors render on the who-governs card at every zip in their

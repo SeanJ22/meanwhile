@@ -306,9 +306,43 @@ const lines: string[] = [
   `| People rendering initials | ${RENDERED_PEOPLE - RENDERED_PORTRAITS} | derived: the slot denominator less the standing figure |`,
   `| Slot denominator | ${RENDERED_PEOPLE} | every person the product renders |`,
   "",
-  "**The two sides now cross exactly**, which is what says the ledger is",
-  `closed: ${MANIFEST_DRAWN} manifest rows are drawn by a rendered slot, and`,
-  `${viaDivision + viaRoster + viaStatewide} manifest rows are reachable — the same number.`,
+  /*
+   * **THE RECONCILIATION IS COMPUTED, NEVER ASSERTED.** (`NH119`, 2026-08-24.)
+   *
+   * This block used to read "the two sides now cross exactly … the same
+   * number" as fixed prose with two figures interpolated into it. That was
+   * true on the day it was written and became false the moment the two sides
+   * diverged — which is exactly what shipping `NH101`'s 97 congressional
+   * portraits did: reachable rose by 91 and the rendered slot count did not
+   * move at all, while the sentence went on claiming they were equal.
+   *
+   * A generated document asserting a relationship it has not checked is the
+   * partial-that-reconciles failure (RULING 100) one floor up, and a
+   * disagreement between two authorities is a FINDING (RULING 57), never
+   * something to smooth over.
+   */
+  ...(MANIFEST_DRAWN === viaDivision + viaRoster + viaStatewide
+    ? [
+        "**The two sides cross exactly**, which is what says the ledger is",
+        `closed: ${MANIFEST_DRAWN} manifest rows are drawn by a rendered slot, and`,
+        `${viaDivision + viaRoster + viaStatewide} manifest rows are reachable — the same number.`,
+      ]
+    : [
+        "**THE TWO SIDES DISAGREE, AND THAT IS THE FINDING** — stated rather than",
+        "smoothed, because a single figure standing in front of two measurements",
+        "is a data-destruction pattern.",
+        "",
+        `- **${MANIFEST_DRAWN}** manifest rows are drawn by a RENDERED SLOT — a person`,
+        "  attached to a division this product actually COVERS today.",
+        `- **${viaDivision + viaRoster + viaStatewide}** manifest rows are REACHABLE by the`,
+        "  broader reach map below, which counts any shipped division mapping.",
+        `- The gap is **${viaDivision + viaRoster + viaStatewide - MANIFEST_DRAWN}**.`,
+        "",
+        "**Neither number is wrong; they answer different questions.** Coverage is",
+        "four pilot zips, so a member of Congress can hold a judged portrait, be",
+        "mapped to a seat, and still sit on no page a reader can currently open.",
+        "That is a COVERAGE gap, not a photo gap, and it closes when the zip does.",
+      ]),
   "",
   "**What the 37 was.** F01-continued session 1 set `531 + 23 + 348` beside",
   "`591 + 311` as though both partitioned the same 902 and reported that they",

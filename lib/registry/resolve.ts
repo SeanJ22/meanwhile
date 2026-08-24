@@ -108,5 +108,15 @@ export function bodiesAt(
 ): { divisions: Division[]; bodies: Body[] } {
   const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));
-  return { divisions: hit, bodies: bodies.filter((b) => b.ocdId && ids.has(b.ocdId)) };
+  /*
+   * **A BODY THAT SPANS TWO TOWNS IS FOUND FROM EITHER.** (RULING 121, Sean's
+   * decision of 2026-08-24, closing `NH33`.) One body, one id, rendered under
+   * every division it governs — see `alsoServesOcdIds` on `Body`. Matching only
+   * the primary id would hide Lake Todd from readers in Bradford, who are
+   * governed by it exactly as much as readers in Newbury.
+   */
+  const serves = (b: Body): boolean =>
+    (b.ocdId !== null && ids.has(b.ocdId)) ||
+    (b.alsoServesOcdIds ?? []).some((id) => ids.has(id));
+  return { divisions: hit, bodies: bodies.filter(serves) };
 }

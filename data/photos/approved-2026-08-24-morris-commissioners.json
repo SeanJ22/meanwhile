@@ -1,0 +1,83 @@
+{
+  "note": "NH78 — the seven Morris County commissioner portraits. All seven were sourced from morriscountynj.gov (a .gov host, door 2: the portrait a government body publishes to identify its own member) and all seven were READ AS IMAGES on 2026-08-23; the record with every URL, alt text, byte count and per-row judgment is docs/evidence/off1-morris-commissioner-portraits-0823.json. Sean approved all seven on 2026-08-24. Tayfun Selen already shipped this way on 2026-08-15, so the six here join him under the same door rather than arriving under a different rule. Attribution to Morris County; remove-on-request.",
+  "approvals": [
+    {
+      "officeholderId": "roster:morris#1",
+      "name": "Stephen H. Shaw",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/main-site/images/shaw-s-cc-022023_04-_pprc.jpg?w=1548&h=2043",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Stephen-H.-Shaw",
+      "fileName": "roster-morris-1.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, US flag behind, grey ground. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    },
+    {
+      "officeholderId": "roster:morris#2",
+      "name": "John Krickus",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/main-site/images/krickus-john-cc-022023_05-_pprc.jpg?w=1387&h=1920",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/John-Krickus",
+      "fileName": "roster-morris-2.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, US flag behind, grey ground. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    },
+    {
+      "officeholderId": "roster:morris#3",
+      "name": "Douglas R. Cabana",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/main-site/images/cabana-doug-commissioner_cropped-v.jpg?w=450&h=617",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Douglas-R.-Cabana",
+      "fileName": "roster-morris-3.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, bookshelf behind. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    },
+    {
+      "officeholderId": "roster:morris#4",
+      "name": "Thomas J. Mastrangelo",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/main-site/newsarchive-media/2020/tom-mastrangelo.jpg",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Thomas-J.-Mastrangelo",
+      "fileName": "roster-morris-4.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, plain dark ground. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    },
+    {
+      "officeholderId": "roster:morris#5",
+      "name": "Christine Myers",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/government/images/christine-myers-headshot-blurred-background.jpg?w=450&h=588",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Christine-Myers",
+      "fileName": "roster-morris-5.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, bookshelf behind. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    },
+    {
+      "officeholderId": "roster:morris#7",
+      "name": "Deborah Smith",
+      "imageUrl": "https://www.morriscountynj.gov/files/sharedassets/public/v/1/main-site/images/2025_01_cc_dsmith_headshot_05_dp-2x3.jpg?w=450&h=676",
+      "pageUrl": "https://www.morriscountynj.gov/Departments/Board-of-County-Commissioners/Deborah-Smith",
+      "fileName": "roster-morris-7.jpg",
+      "attribution": "Morris County",
+      "basis": "OFFICIAL_PORTRAIT",
+      "door": "official-government-portrait (door 2)",
+      "judgment": "clean solo portrait, head and shoulders, US flag behind. Single unambiguous subject.",
+      "approvedBy": "Sean (his decision of 2026-08-24, NH78)",
+      "approvedOn": "2026-08-24"
+    }
+  ]
+}

@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-24 (America/Phoenix). 91 stamp(s) audited.
+Run on 2026-08-24 (America/Phoenix). 99 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -110,21 +110,29 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
 | RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
 | RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, B… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
-| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 115 — A DRILL IS NOT A FAILURE | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | 2026-08-24 | **NOT FOUND** | — | — |
+| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
+| RULING 115 — A DRILL IS NOT A FAILURE | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
+| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 | The one exception, and it is the only one | 2026-08-20 | 2026-08-20 | 0 | `787e355` F22: the refresh was red on a path separator, and one vendor timeout emptied a township |
+| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | 2026-08-24 | **NOT FOUND** | — | — |
+| THE BUSINESS CONSTRAINTS | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | 2026-08-24 | **NOT FOUND** | — | — |
 
 ## What the deltas say
 
 - **3 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-24) — a date that had not happened when it was written.
-- **3 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **8 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -235,15 +243,23 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS… | none | 1 |
 | RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER… | none | 1 |
 | RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, B… | none | 1 |
-| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | none | 0 |
-| RULING 115 — A DRILL IS NOT A FAILURE | none | 0 |
-| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | none | 0 |
+| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | none | 1 |
+| RULING 115 — A DRILL IS NOT A FAILURE | none | 1 |
+| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | none | 1 |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | none | 1 |
 | RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | none | 1 |
 | One CODE merge per session; close-out records may follow … | none | 1 |
 | The one exception, and it is the only one | none | 1 |
+| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | none | 0 |
+| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | none | 0 |
+| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | none | 0 |
+| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | none | 0 |
+| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | none | 0 |
+| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | none | 0 |
+| THE BUSINESS CONSTRAINTS | none | 0 |
+| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | none | 0 |
 
 A `1` in the last column means the clause entered the file exactly once and
 the recovery is unambiguous. Anything higher means the string was touched more

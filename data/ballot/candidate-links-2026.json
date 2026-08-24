@@ -478,7 +478,11 @@
         "verification": "Read 2026-08-21 at rung 2 (HTTP 200): 'Representative Paige Beauchemin (D)', 'Hillsborough - District 3', 107 North Main Street Concord NH 03301, paige.beauchemin@gc.nh.gov, 603.296.5489.",
         "attemptedAt": "2026-08-21"
       },
-      "campaign": null
+      "campaign": {
+        "url": "https://www.paigefornh.com/",
+        "verification": "Fetched 2026-08-24 at rung 2: HTTP 200, 546,058 bytes, final URL paigefornh.com. Control strings present — 'Beauchemin' x24, 'Paige' x62, 'Congress' x19; a negative control returned 0. og:title 'Paige Beauchemin for New Hampshire | Join the Movement Today'. The site self-identifies with the filed name, the office and the cycle. Her FEC committee C00921882 (PAIGE BEAUCHEMIN FOR CONGRESS) corroborates the candidacy independently.",
+        "attemptedAt": "2026-08-24"
+      }
     },
     "ballot-nh-merrimack:register-of-probate:bradstreet-jane": {
       "official": {
@@ -827,6 +831,14 @@
         "verification": "Fetched 2026-08-23 at rung 3 (browser header set): the page names the candidate (gary kapner, kapner) and identifies itself as a campaign (for <place> <office>). Cleared a control query against a path that cannot exist on the same host, so this is the host answering about this person rather than serving boilerplate (RULING 68). Link: the root names the candidate and identifies itself as a campaign — verified page was http://garykapner.com. This host REFUSES HTTPS — measured 2026-08-23, https:// returned no response while http:// served the page — so the link is http and that is the site as published, not a downgrade chosen here.",
         "attemptedAt": "2026-08-23"
       }
+    },
+    "ballot-nh-merrimack:governor:fife-shaun": {
+      "campaign": {
+        "url": "https://majiparty.org/nh-governor-shaun-fife",
+        "verification": "Re-walked live 2026-08-24 at rung 2: HTTP 200, 225,889 bytes. Control strings present — 'Shaun Fife' x4, 'Governor' x2, the contact address action4nh@gmail.com x2; a negative control returned 0. RULING 122 (Sean's decision of 2026-08-24, closing NH11): a page on the candidate's PARTY's own site carrying his name, the office, his own words and a contact renders as his page WITH THE HOST LABELLED. It renders as 'The page MAJI Party publishes about them' and never as 'Campaign site' — presenting a party's site as his own would be false about whose site it is. It supplies NO photo: social and third-party images are prohibited at every door, and a door the campaign-site rule opens is not a door into the photo rule.",
+        "attemptedAt": "2026-08-24"
+      },
+      "official": null
     }
   },
   "hunts": [
@@ -1831,6 +1843,12 @@
       "name": "Clifford D. Dawkins",
       "note": "MISS — https://www.dawkinswarrington.com/clifford-d-dawkins-esq cleared a control query but is NOT wired: the page names the candidate but carries no word showing it is about standing for office — whose page it is remains unestablished Forms searched: clifford d. dawkins, clifford dawkins, dawkins. Still owed, and re-hunted on its RULING 53 clock — this is not an absence.",
       "attemptedAt": "2026-08-23"
+    },
+    {
+      "key": "ballot-nh-merrimack:us-house-2:beauchemin-paige",
+      "name": "Paige Beauchemin",
+      "note": "MISS — TIER A FIRST (RULING 84). The site came from the Wikipedia article '2026 United States House of Representatives elections in New Hampshire', walked 2026-08-24 via the MediaWiki parse API with a control (a nonexistent title returns missingtitle). Under RULING 87 an encyclopedia NAMES and the primary source PROVES, so it was a LEAD until paigefornh.com itself was fetched: HTTP 200, 546,058 bytes, control strings 'Beauchemin' x24, 'Paige' x62, 'Congress' x19, negative control 0. Her FEC committee C00921882 (PAIGE BEAUCHEMIN FOR CONGRESS) corroborates the candidacy. Six sessions of per-entity search had not found this site; one Tier A article did.",
+      "attemptedAt": "2026-08-24"
     }
   ]
 }

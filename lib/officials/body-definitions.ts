@@ -1,5 +1,7 @@
 import type { BodyBlurb, BodyDivisionType } from "./body-blurbs.ts";
 import { blurbForBody } from "./body-blurbs.ts";
+import { formFor } from "./body-form.ts";
+import { formDefinitionFor } from "./form-definitions.ts";
 
 /**
  * **WHAT THIS BODY DOES — TWO LAYERS, AND NO CARD SHIPS EMPTY.**
@@ -639,7 +641,30 @@ export function definitionsForBody(input: {
     }
   }
 
-  const formDefinition = blurbForBody(input.ocdId, input.divisionType);
+  /*
+   * LAYER TWO, in two steps and in this order.
+   *
+   * The FORM-specific definition first (item 6, 2026-08-24). 1,034 bodies carry
+   * a form stamp and they collapse to 15 distinct forms, so the statute read
+   * happens once per form rather than once per body — and the form is what
+   * distinguishes a New Jersey borough, whose mayor the whole town elects, from
+   * a township, whose mayor was picked by three colleagues. The class layer
+   * cannot say that: it is written precisely to avoid asserting the specific
+   * powers of a specific body.
+   *
+   * Then `blurbForBody`, unchanged, which carries the per-division overrides
+   * (Tucson's charter) and the older by-division entries. It goes SECOND so a
+   * hand-written override for one named division still wins over the general
+   * statute for its form, which is the whole reason those overrides exist.
+   */
+  const stamp = formFor({
+    ocdId: input.ocdId,
+    divisionType: input.divisionType,
+    lsad: input.lsad,
+    schoolDependency: input.schoolDependency,
+  });
+  const formDefinition =
+    blurbForBody(input.ocdId, input.divisionType) ?? formDefinitionFor(stamp.formKey);
 
   return {
     classDefinition,

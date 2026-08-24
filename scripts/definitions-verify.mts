@@ -27,6 +27,7 @@ import { execFileSync } from "node:child_process";
 
 import { CLASS_DEFINITIONS, DEPENDENT_SCHOOL_DEFINITION } from "../lib/officials/body-definitions.ts";
 import { BODY_BLURBS, DIVISION_BODY_BLURBS } from "../lib/officials/body-blurbs.ts";
+import { FORM_DEFINITIONS } from "../lib/officials/form-definitions.ts";
 
 const UA = "we-the-people/1.0 (civic data for a public-records product; seanj22@gmail.com)";
 
@@ -107,6 +108,20 @@ const CONTROLS: Record<string, string[]> = {
   "https://www.gencourt.state.nh.us/rsa/html/I/14/14-mrg.htm": ["LEGISLATIVE OFFICERS"],
   "https://www.azleg.gov/const/5/1.htm": ["Executive department"],
   "https://www.azleg.gov/const/4/1.p2.htm": ["house of representatives"],
+  /*
+   * Item 6's form layer (2026-08-24). The New Jersey controls are phrases from
+   * each chapter's OWN first sentence, because the section pages do not name
+   * the form anywhere — the chapter had to be opened and identified from what
+   * it says about itself. That is also how 40A:64 was ruled OUT as the village
+   * chapter: its section 1 is about Sunday sales.
+   */
+  "https://law.justia.com/codes/new-jersey/title-40a/section-40a-60-1/": ["several boroughs"],
+  "https://law.justia.com/codes/new-jersey/title-40a/section-40a-61-1/": ["several cities"],
+  "https://law.justia.com/codes/new-jersey/title-40a/section-40a-62-1/": ["several towns"],
+  "https://www.gencourt.state.nh.us/rsa/html/III/39/39-1.htm": ["39:1"],
+  "https://www.gencourt.state.nh.us/rsa/html/III/47/47-17.htm": ["47:17"],
+  "https://www.azleg.gov/ars/9/00101.htm": ["9-101"],
+  "https://www.azleg.gov/ars/9/00240.htm": ["9-240"],
 };
 
 /**
@@ -179,6 +194,9 @@ const targets: { what: string; url: string | null }[] = [
   { what: "class · national · school_district_dependent", url: DEPENDENT_SCHOOL_DEFINITION.basisUrl },
   ...BODY_BLURBS.map((r) => ({ what: `form · ${r.state} · ${r.divisionType}`, url: r.blurb.basisUrl })),
   ...DIVISION_BODY_BLURBS.map((r) => ({ what: `form · ${r.divisionOcdId}`, url: r.blurb.basisUrl })),
+  // Item 6's form layer. Every one of these is a statute read once per FORM
+  // rather than once per body — see lib/officials/form-definitions.ts.
+  ...FORM_DEFINITIONS.map((r) => ({ what: `form · ${r.formKey}`, url: r.definition.basisUrl })),
 ];
 
 const rows: Row[] = [];

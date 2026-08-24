@@ -160,3 +160,56 @@ test("no real credential value appears anywhere in the repository", () => {
     `a credential value is committed in this repository — it is in git history too, so rotation is mandatory: ${found.join("; ")}`,
   );
 });
+
+/**
+ * THE MIRROR IS RE-CONTAMINATED BY THE COMMAND THAT PUBLISHES IT.
+ *
+ * Found 2026-08-24, audit-remediation session. The mirror was scrubbed clean
+ * earlier the same day — `NS11` records it as verified by re-read — and carried
+ * six occurrences of five live credentials again a few hours later, across the
+ * next session's handoff. Nothing un-scrubbed it: `handoff` re-runs the
+ * transcript exporter,
+ * which rewrites the mirror out of the local `.jsonl` files — and those are
+ * deliberately never scrubbed (NS11).
+ *
+ * So a hand-run scrub is true only until the next handoff, and the redaction
+ * has to sit at the output channel itself (RULING 127). This asserts the ORDER
+ * in handoff's own source, the same mechanism `tests/context-pinned-conduct.ts`
+ * uses for RULING 108: the scrub must come AFTER the export, because a scrub
+ * that ran first would leave the freshly written file untouched — the failure
+ * this fixes, rebuilt inside the fix for it.
+ */
+test("handoff scrubs the Drive mirror AFTER exporting transcripts into it", () => {
+  const source = readFileSync(join(ROOT, "scripts", "handoff.mjs"), "utf8");
+
+  const exportAt = source.indexOf("EXPORTER, \"--out\"");
+  const scrubAt = source.indexOf("pnpm run secrets:scrub-mirror");
+  const rereadAt = source.indexOf("pnpm run secrets:sweep");
+
+  assert.ok(exportAt > 0, "handoff no longer runs the transcript exporter — this guard is stale");
+  assert.ok(
+    scrubAt > 0,
+    "handoff does not scrub the mirror; every handoff will republish the leaked values",
+  );
+  assert.ok(
+    scrubAt > exportAt,
+    "the scrub runs BEFORE the export, so the freshly written transcripts are never scrubbed",
+  );
+  assert.ok(
+    rereadAt > scrubAt,
+    "nothing re-reads the mirror after the scrub — RULING 113: observe the step's product at the step",
+  );
+});
+
+/**
+ * And the verdict may never be the scrub's EXIT STATUS. `secrets:sweep --scrub`
+ * exits non-zero whenever it FOUND anything, which is the normal, healthy path
+ * — a handoff reading that as failure would fail on every successful scrub.
+ */
+test("handoff's clean verdict comes from a re-read, not from the scrub's exit code", () => {
+  const source = readFileSync(join(ROOT, "scripts", "handoff.mjs"), "utf8");
+  assert.ok(
+    source.includes(String.raw`0 secret occurrence\(s\) across`),
+    "handoff does not test the re-read's own sentence; its verdict is coming from somewhere weaker",
+  );
+});

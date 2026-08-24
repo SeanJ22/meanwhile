@@ -28,6 +28,15 @@ const API_ROOT = "https://webapi.legistar.com/v1";
 /** Legistar caps a reply at 1000 rows regardless of what `$top` asks for. */
 const PAGE_SIZE = 1000;
 
+/**
+ * The runaway stop for `pageById`, named rather than inline — A-006.
+ *
+ * A number written into a loop condition cannot be referred to by the error
+ * that reports hitting it, and an error that cannot name its own limit sends a
+ * reader hunting for it.
+ */
+const MAX_PAGES = 100;
+
 /** Between requests to the same tenant. Serialized, never concurrent. */
 const REQUEST_SPACING_MS = 350;
 
@@ -152,9 +161,23 @@ async function pageById<T>(
   let cursor = 0;
   let guard = 0;
 
-  // 100 pages of 1000 is far past any real client-year; it is a runaway stop,
-  // not a coverage limit.
-  while (guard++ < 100) {
+  /*
+   * 100 pages of 1000 is far past any real client-year; it is a runaway stop,
+   * not a coverage limit.
+   *
+   * **A-006's class, found by the sweep that A-006 required** (external
+   * correctness audit of `336a3eb`, remediated 2026-08-24). The named finding
+   * was Apptegy's twelve-page cap ending the walk with a live next pointer and
+   * reporting clean success. This loop had the identical shape: it exits at
+   * 100 iterations whether or not the last page was full, and a full last page
+   * is precisely the server saying there is more.
+   *
+   * The comment above already asserted the distinction — "a runaway stop, not
+   * a coverage limit" — and nothing enforced it, which is the same gap the
+   * Apptegy comment had. A cap that is documented as unreachable and is
+   * silently reachable is worse than one nobody claimed anything about.
+   */
+  while (guard++ < MAX_PAGES) {
     const clauses = [`${idField} gt ${cursor}`];
     if (filter) clauses.push(filter);
 
@@ -170,6 +193,19 @@ async function pageById<T>(
     if (page.length < PAGE_SIZE) break;
 
     cursor = Math.max(...page.map(idOf));
+
+    // A-006 · the runaway stop, made a failure boundary. A FULL last page at
+    // the cap means the server has more and we stopped asking.
+    if (guard >= MAX_PAGES) {
+      throw new LegistarError(
+        `${path}: reached the ${MAX_PAGES}-page safety cap with a full page still ` +
+          `returning. ${collected.length} row(s) were read and an unknown number were ` +
+          `left unretrieved past ${idField} ${cursor}. A safety cap is a failure ` +
+          "boundary, never an implicit end of data (A-006).",
+        200,
+        path,
+      );
+    }
     await sleep(REQUEST_SPACING_MS);
   }
 

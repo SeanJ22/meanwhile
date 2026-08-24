@@ -74,10 +74,16 @@ export function makeSnapshotSource(
     normalizeWithDrops(raw: Meeting[], now?: Date) {
       // Drops were counted and recorded when the snapshot was generated; they
       // live in its per-source reports. Nothing is dropped on the read path.
-      return accountedNormalize("snapshot", raw, {
-        meetings: normalize(raw, now),
-        drops: { ...ZERO_DROPS },
-      });
+      // A-002 · `normalize` is a `map`: every snapshot row becomes exactly one
+      // meeting, and nothing is dropped on the read path. So the conservation
+      // check here is a real assertion that the read path stays total, and it
+      // is the cheapest place in the product to notice if it ever stops being.
+      return accountedNormalize(
+        "snapshot",
+        raw,
+        { meetings: normalize(raw, now), drops: { ...ZERO_DROPS } },
+        { logicalInput: raw.length },
+      );
     },
 
     async upsert(meetings: Meeting[]) {

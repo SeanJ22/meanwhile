@@ -127,8 +127,22 @@ export function verdictFromCheckRuns(checkRuns) {
   }
 
   /*
-   * Checked BEFORE anything else. A tree cannot be judged by runs that never
-   * executed, and if every run never started there is nothing here to judge.
+   * A-008 (external correctness audit of `336a3eb`, remediated 2026-08-24).
+   *
+   * This block used to discard the stillborn list unless EVERY check was
+   * stillborn, and the success path at the bottom then returned GREEN. So one
+   * check that passed with steps beside one required check that completed
+   * having executed nothing read as `green · 2 check(s) passed` — a count that
+   * was itself wrong, since one of the two passed.
+   *
+   * That is the exact failure this file was written to end, pointed the other
+   * way: the first version reported a runner GitHub could not allocate as a
+   * broken tree, and the correction over-swung into reporting it as a healthy
+   * one. **Both are the same defect — a check that could not reach its subject
+   * printing like a verdict about the subject.**
+   *
+   * The stillborn list is therefore computed once, kept, and consulted on the
+   * way to every verdict below rather than only on the all-stillborn path.
    */
   const stillborn = checkRuns.filter(neverStarted).map((c) => c.name);
   if (stillborn.length > 0 && stillborn.length === checkRuns.length) {
@@ -163,11 +177,55 @@ export function verdictFromCheckRuns(checkRuns) {
     )
     .map((c) => `${c.name} (${c.conclusion ?? "no conclusion"})`);
 
+  /*
+   * THE ORDER IS THE RULE, and each position is a decision.
+   *
+   * RED first. A check that actually ran and actually failed is the most
+   * actionable thing on the commit, and it stays the headline even when some
+   * other runner was never allocated — a named defect outranks an unknown.
+   *
+   * PENDING second. Work still in flight is a question about the future; it
+   * is not a wall, and saying "could not tell" about it would send a session
+   * looking for a cap that is not there.
+   *
+   * STILLBORN third, and it forces CANNOT-TELL. Nothing below this line may
+   * return GREEN while a required check sits with no verdict at all.
+   *
+   * GREEN last, and only when every check both RAN and passed. The count is
+   * the number of runs judged, which is now the same number as the runs there
+   * are — before A-008 it printed the array length while one of them had
+   * executed nothing.
+   */
   if (failed.length > 0) {
-    return { verdict: RED, why: `${failed.length} check(s) failing`, failed, pending };
+    return {
+      verdict: RED,
+      why: `${failed.length} check(s) failing`,
+      failed,
+      pending,
+      ...(stillborn.length > 0 ? { neverStarted: stillborn } : {}),
+    };
   }
   if (pending.length > 0) {
-    return { verdict: PENDING, why: `${pending.length} check(s) still running`, failed, pending };
+    return {
+      verdict: PENDING,
+      why: `${pending.length} check(s) still running`,
+      failed,
+      pending,
+      ...(stillborn.length > 0 ? { neverStarted: stillborn } : {}),
+    };
+  }
+  if (stillborn.length > 0) {
+    return {
+      verdict: UNKNOWN,
+      why:
+        `${stillborn.length} of ${checkRuns.length} check(s) completed with NO STEPS and were never ` +
+        `run — ${stillborn.join(", ")}. Nothing here says that check passed, so this is NOT green. ` +
+        "Usually an Actions minutes or spending cap, or a runner allocation failure; it is a WALL, " +
+        "not a JOB",
+      failed,
+      pending,
+      neverStarted: stillborn,
+    };
   }
   return { verdict: GREEN, why: `${checkRuns.length} check(s) passed`, failed, pending };
 }

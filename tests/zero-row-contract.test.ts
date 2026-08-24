@@ -208,3 +208,68 @@ test("the brand is a real runtime symbol on a returned result", () => {
     true,
   );
 });
+
+/**
+ * **A-002 · EVERY ADAPTER DECLARES ITS LOGICAL-RECORD COUNT, OR NAMES WHY IT
+ * CANNOT.**
+ *
+ * The conservation contract accepts `COULD_NOT_ASSERT` on purpose — a pass that
+ * genuinely cannot count must be able to say so rather than guess (RULING 100).
+ * The risk in that is obvious and is the whole reason for this sweep: silence
+ * is indistinguishable from honesty at the call site, so an adapter that simply
+ * never got updated would report `COULD_NOT_ASSERT` forever and read as a
+ * considered decision.
+ *
+ * So the sweep is by SHAPE (RULING 110) rather than by counting call sites: an
+ * `accountedNormalize` call must mention `logicalInput`, and the one adapter
+ * that passes `null` has to do it in a branch with a reason beside it.
+ */
+test("A-002 · every adapter's normalize declares logicalInput", () => {
+  const files = walk(SOURCES);
+  const missing: string[] = [];
+  const callers: string[] = [];
+
+  for (const file of files) {
+    const rel = relative(ROOT, file).split(sep).join("/");
+    if (rel.endsWith("normalize-account.ts")) continue;
+    const text = readFileSync(file, "utf8");
+    // Comment lines are stripped first: `types.ts` NAMES the factory in a doc
+    // block and calls nothing, and a sweep that counted that as a call site
+    // would be looking for the letters rather than for the thing (RULING 110).
+    const code = text
+      .split("\n")
+      .filter((line) => !/^\s*(\*|\/\/|\/\*)/.test(line))
+      .join("\n");
+    if (!code.includes("accountedNormalize(")) continue;
+    callers.push(rel);
+    if (!/logicalInput\s*:/.test(code)) missing.push(rel);
+  }
+
+  assert.ok(callers.length >= 12, `only ${callers.length} adapters swept — this would pass without looking`);
+  assert.deepEqual(
+    missing,
+    [],
+    "an adapter still reports COULD_NOT_ASSERT by omission rather than by decision",
+  );
+});
+
+/**
+ * And the one adapter that legitimately cannot count says so in a NAMED branch.
+ *
+ * `clerksboards` expands "the third Tuesday of each month" into sittings. Where
+ * the Clerk writes "Meets as required", one counted drop stands in for an
+ * unknowable number, and no honest number exists. That is the case
+ * `COULD_NOT_ASSERT` was built for, and it is pinned here so that removing the
+ * branch — or spreading it to an adapter that CAN count — is a visible diff.
+ */
+test("A-002 · COULD_NOT_ASSERT is used in exactly the place that cannot count", () => {
+  const files = walk(SOURCES);
+  const nullers: string[] = [];
+  for (const file of files) {
+    const rel = relative(ROOT, file).split(sep).join("/");
+    if (rel.endsWith("normalize-account.ts")) continue;
+    const text = readFileSync(file, "utf8");
+    if (/logicalInput\s*:[^,\n]*\bnull\b/.test(text)) nullers.push(rel);
+  }
+  assert.deepEqual(nullers, ["lib/sources/clerksboards/index.ts"]);
+});

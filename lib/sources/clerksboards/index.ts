@@ -518,6 +518,26 @@ export function makeClerksBoardsSource(
 
     const windowStart = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000);
     const windowEnd = new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000);
+    let keptButPlaceless = 0;
+
+    /*
+     * A-002 · THIS ADAPTER IS THE ONE THAT CANNOT ALWAYS COUNT, and it is why
+     * `COULD_NOT_ASSERT` exists rather than being a formality.
+     *
+     * The logical record here is a SCHEDULE INSTANCE — a sitting expanded out
+     * of "the third Tuesday of each month". Where the schedule expands, the
+     * count is exact. Where the Clerk writes "Meets as required", or writes a
+     * rule this parser does not know, ONE counted drop stands in for an
+     * unknowable number of sittings, and the comment below has said so since
+     * the adapter was written.
+     *
+     * An unknowable number cannot be conserved against. Guessing one would be
+     * worse than saying so, so the pass records that it could not assert a
+     * count — RULING 100's second state — and the report carries that rather
+     * than a number nobody measured.
+     */
+    let considered = 0;
+    let cannotAssert = false;
 
     for (const { wiring, html, collectedAt } of raw) {
       const page = parseBoardPage(html);
@@ -525,6 +545,7 @@ export function makeClerksBoardsSource(
 
       if (!page.scheduleText) {
         drops.unplaceableInTime++;
+        cannotAssert = true;
         continue;
       }
       const instances = expandSchedule(page.scheduleText, windowStart, windowEnd);
@@ -532,8 +553,10 @@ export function makeClerksBoardsSource(
         // "Meets as required", or a format this parser does not know. One
         // counted drop stands in for the unknowable number of sittings.
         drops.unplaceableInTime++;
+        cannotAssert = true;
         continue;
       }
+      considered += instances.length;
 
       const location = page.location?.trim() ?? "";
       if (!location) {
@@ -550,7 +573,12 @@ export function makeClerksBoardsSource(
       const online = isPlacelessLocation(location)
         ? { label: location, joinUrl: null }
         : null;
-      if (online) drops.placeless += instances.length;
+      if (online) {
+        drops.placeless += instances.length;
+        // A-002: these instances are all PRODUCED below (D18), so the tally is
+        // not a drop and must not be summed as one.
+        keptButPlaceless += instances.length;
+      }
       const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
       if (!online && !venue) {
         drops.unknownVenue += instances.length;
@@ -612,7 +640,10 @@ export function makeClerksBoardsSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
+      logicalInput: cannotAssert ? null : considered,
+      countedButProduced: keptButPlaceless,
+    });
   };
 
   return {

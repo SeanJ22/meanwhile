@@ -1,5 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
 import registryFile from "../lib/registry/registry.json" with { type: "json" };
@@ -438,5 +440,137 @@ test("civicweb: Newbury Selectboard names from the cited type map", () => {
   assert.equal(
     published?.agendaUrl,
     "https://newburynh.civicweb.net/Portal/MeetingInformation.aspx?Id=3370",
+  );
+});
+
+/* ======================================================================== *
+ *  A-006 · A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN IMPLICIT END OF DATA
+ * ======================================================================== */
+
+/**
+ * **TWELVE FULL PAGES WITH A LIVE NEXT POINTER USED TO REPORT CLEAN SUCCESS.**
+ *
+ * External correctness audit of `336a3eb`, remediated 2026-08-24. Apptegy's
+ * walk ran `for (let page = 0; url && page < MAX_PAGES; page++)`, so reaching
+ * the cap simply ended the loop: 240 events read, an unknown number left on
+ * the server, no error, no partial marker, no unretrieved count.
+ *
+ * The adapter's own comment already called the cap "a runaway stop, not a
+ * coverage cap". The code did not enforce the difference, and the sweep this
+ * finding required turned up the same shape in `legistar`'s `pageById`.
+ */
+test("A-006 · twelve full pages with a next pointer is a FAILURE, not the end of the data", async () => {
+  const { makeApptegySource, ApptegyPaginationError } = await import(
+    "../lib/sources/apptegy/index.ts"
+  );
+
+  let pages = 0;
+  // Every page full, every page advertising another. This is the server
+  // saying "there is more", twelve times.
+  const endless: typeof fetch = (async (input: RequestInfo | URL) => {
+    pages += 1;
+    const url = String(input);
+    const events = Array.from({ length: 20 }, (_, i) => ({
+      id: pages * 100 + i,
+      title: "Governing Board Regular Meeting",
+      start_at: "2026-08-25T23:00:00Z",
+      venue: "District Office",
+      latitude: "32.05",
+      longitude: "-110.7",
+      description: null,
+    }));
+    return new Response(
+      JSON.stringify({
+        events,
+        meta: { links: { next: `${url.split("&page_no")[0]}&page_no=${pages + 1}` } },
+      }),
+      { status: 200, headers: { "content-type": "application/json" } },
+    );
+  }) as unknown as typeof fetch;
+
+  const source = makeApptegySource(
+    [
+      {
+        ocdId: "ocd-division/country:us/state:az/school_district:vail",
+        jurisdiction: "Vail USD",
+        publishingOrg: "Vail Unified School District",
+        timeZone: "America/Phoenix",
+        type: "APPTEGY",
+        config: { apiBase: "https://example.test/api/v4/o/8164", slug: "vail", titleMatch: "Governing Board" },
+      } as never,
+    ],
+    endless,
+  );
+
+  await assert.rejects(
+    source.fetch({ lat: 32.05, lng: -110.7, radiusKm: 40 }),
+    (error: unknown) => {
+      assert.ok(error instanceof ApptegyPaginationError, "the cap ended the walk silently");
+      assert.equal(error.pagesFetched, 12);
+      assert.equal(error.eventsFetched, 240);
+      assert.match(error.nextUrl, /page_no=13/, "the URL not followed is named");
+      assert.match(error.message, /never an implicit end of data/);
+      return true;
+    },
+  );
+  assert.equal(pages, 12, "the cap still stops the runaway — it is a boundary, not a removal");
+});
+
+test("A-006 · a walk that ends because the server stopped offering pages still succeeds", async () => {
+  const { makeApptegySource } = await import("../lib/sources/apptegy/index.ts");
+  let pages = 0;
+  const twoPages: typeof fetch = (async () => {
+    pages += 1;
+    return new Response(
+      JSON.stringify({
+        events: [
+          {
+            id: pages,
+            title: "Governing Board Regular Meeting",
+            start_at: "2026-08-25T23:00:00Z",
+            venue: "District Office",
+            latitude: "32.05",
+            longitude: "-110.7",
+            description: null,
+          },
+        ],
+        meta: { links: { next: pages < 2 ? "https://example.test/next" : null } },
+      }),
+      { status: 200, headers: { "content-type": "application/json" } },
+    );
+  }) as unknown as typeof fetch;
+
+  const source = makeApptegySource(
+    [
+      {
+        ocdId: "ocd-division/country:us/state:az/school_district:vail",
+        jurisdiction: "Vail USD",
+        publishingOrg: "Vail Unified School District",
+        timeZone: "America/Phoenix",
+        type: "APPTEGY",
+        config: { apiBase: "https://example.test/api/v4/o/8164", slug: "vail", titleMatch: "Governing Board" },
+      } as never,
+    ],
+    twoPages,
+  );
+  const raw = await source.fetch({ lat: 32.05, lng: -110.7, radiusKm: 40 });
+  assert.equal(raw[0].events.length, 2, "both pages were read and neither cap fired");
+});
+
+/**
+ * The class, not the instance. `legistar`'s `pageById` carried the identical
+ * shape behind an identical comment, and the sweep A-006 required is what
+ * found it.
+ */
+test("A-006 · legistar's page guard is a failure boundary too", () => {
+  const source = readFileSync(
+    join(dirname(fileURLToPath(import.meta.url)), "..", "lib", "sources", "legistar", "client.ts"),
+    "utf8",
+  );
+  assert.match(source, /MAX_PAGES/, "the cap is still an unnamed literal in the loop condition");
+  assert.match(
+    source,
+    /never an implicit end of data/,
+    "hitting the cap with a full page still returning does not fail",
   );
 });

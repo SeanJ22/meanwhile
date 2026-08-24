@@ -12,12 +12,15 @@ import {
   UPCOMING_HORIZON_DAYS,
 } from "../../meetings/constants.ts";
 import { resolveVenue } from "../../meetings/venue-cache.ts";
+import { weakEventIdentity } from "../event-identity.ts";
 import { politeGetText } from "../http.ts";
 import type {
   Meeting,
   MeetingQuery,
   MeetingStatus,
+  DuplicateIdentityCounts,
   NormalizeDropCounts,
+  PartialScopeFailure,
   ReportingMeetingSource,
 } from "../types.ts";
 import {
@@ -84,6 +87,15 @@ export interface IcalRaw {
   collectedAt: string;
   /** This ROW's retrieval was refused and `ics` is empty. */
   refused?: boolean;
+  /**
+   * A-004 · the UPCOMING feed answered and the town's PAST feed did not.
+   *
+   * The row still produces its upcoming sittings, so it is not `refused`.
+   * What it is, is PARTIAL — and until A-004 there was no way to say that, so
+   * an archive outage read as a town with no history and carry-forward
+   * preserved nothing.
+   */
+  archiveRefused?: string;
   sourceUrl: string;
 }
 
@@ -227,6 +239,8 @@ export function makeIcalSource(
     meetings: Meeting[];
     drops: NormalizeDropCounts;
     unreachableOcdIds?: string[];
+    partialScopes?: PartialScopeFailure[];
+    duplicateIdentity?: DuplicateIdentityCounts;
   }> => {
     const meetings: Meeting[] = [];
     const drops: NormalizeDropCounts = {
@@ -239,11 +253,36 @@ export function makeIcalSource(
     const seen = new Set<string>();
     /** Events parsed and dated, then set aside as outside the served window. */
     let outOfWindow = 0;
+    /** A-002 · every event this pass looked at, across every feed in hand. */
+    let considered = 0;
+    /** A-002 · events whose identity had already been produced. */
+    let duplicates = 0;
+    /** A-005 · the feed published the same UID twice. Its own doing. */
+    let exactDuplicates = 0;
+    /**
+     * A-005 · two UID-less records this code judged to be the same sitting.
+     *
+     * Counted separately from an exact duplicate because it is OUR judgement
+     * rather than the feed's statement, and a judgement that starts firing is
+     * evidence the fallback identity is too weak for some town's feed.
+     */
+    let weakIdCollisions = 0;
+    /**
+     * A-004 · divisions whose ARCHIVE feed refused while their upcoming feed
+     * answered. Collected per cause so the report says what refused, not only
+     * that something did.
+     */
+    const archiveRefusals = new Map<string, (string | null)[]>();
 
     const from = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000);
     const to = new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000);
 
-    for (const { wiring, ics, collectedAt, refused, sourceUrl } of raw) {
+    for (const { wiring, ics, collectedAt, refused, archiveRefused, sourceUrl } of raw) {
+      if (archiveRefused) {
+        const at = archiveRefusals.get(archiveRefused) ?? [];
+        at.push(wiring.ocdId ?? null);
+        archiveRefusals.set(archiveRefused, at);
+      }
       if (refused) {
         // A refusal is reported as a refusal. It never becomes an empty
         // calendar for this body, and it never touches any other row.
@@ -296,6 +335,9 @@ export function makeIcalSource(
         .filter(Boolean);
 
       for (const event of parseIcs(ics)) {
+        // A-002 · the logical record here is the EVENT, never the document.
+        // One `.ics` file is one raw row and, at Newbury, 1,157 of these.
+        considered += 1;
         const cats = (event.categories ?? "")
           .split(",")
           .map((c) => c.trim().toLowerCase());
@@ -384,11 +426,51 @@ export function makeIcalSource(
           continue;
         }
 
-        const id = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid ?? start.iso}`;
-        if (seen.has(id)) continue;
+        const title = (event.summary ?? wiring.publishingOrg).trim();
+        /*
+         * A-005 · IDENTITY, WHEN THE FEED GIVES US NONE.
+         *
+         * A `UID` is the feed's own identifier and is the identity whenever it
+         * exists. The fallback used to be the START INSTANT ALONE — so two
+         * different boards of the same town, both sitting at 7pm on the same
+         * Tuesday, produced the same id and the second one vanished into the
+         * `seen` set without a counter, a drop, or a line anywhere.
+         *
+         * Same-night, same-time sittings are not an edge case in the towns
+         * this product exists for. They are the norm: a Zoning Board and a
+         * Conservation Commission on alternate Tuesdays at 7 in the same town
+         * hall is how small New England government schedules itself.
+         *
+         * So a UID-less event is identified by everything the feed DID publish
+         * about it — the body slug, the start, the summary, the location and
+         * the description. Two records that agree on all five are the same
+         * sitting published twice; two that differ anywhere are two sittings.
+         */
+        const fallbackIdentity = weakEventIdentity({
+          slug: wiring.config.slug,
+          startIso: start.iso,
+          summary: event.summary,
+          location: rawLocation,
+          description: null,
+        });
+        const id = `${SOURCE_NAME}:${wiring.config.slug}:${event.uid ?? fallbackIdentity}`;
+        if (seen.has(id)) {
+          /*
+           * A-002 and A-005 · this was a bare `continue` that left the record
+           * with no disposition at all. The two kinds are counted apart,
+           * because they mean different things: an EXACT duplicate is a feed
+           * publishing the same UID twice, and a WEAK-ID collision is two
+           * records this code decided were the same without the feed saying
+           * so. The second is the one worth watching, and pooling them would
+           * hide it inside the first.
+           */
+          duplicates += 1;
+          if (event.uid) exactDuplicates += 1;
+          else weakIdCollisions += 1;
+          continue;
+        }
         seen.add(id);
 
-        const title = (event.summary ?? wiring.publishingOrg).trim();
         meetings.push({
           id,
           ocdId: wiring.ocdId,
@@ -426,10 +508,36 @@ export function makeIcalSource(
         meetings,
         drops,
         ...(unreachable.length > 0 ? { unreachableOcdIds: unreachable } : {}),
+        // A-005 · reported always, including as zeroes. A counter that only
+        // appears when it fires cannot be read as "we looked and it was none".
+        duplicateIdentity: { exact: exactDuplicates, weakIdCollision: weakIdCollisions },
+        ...(archiveRefusals.size > 0
+          ? {
+              // A-004 · the third state, between `ok` and refused. The
+              // upcoming feed answered; the archive did not; and the two must
+              // not be reported as one.
+              partialScopes: [...archiveRefusals].map(([cause, ocdIds]) => ({
+                scope: "ARCHIVE" as const,
+                ocdIds,
+                cause,
+              })),
+            }
+          : {}),
       },
       // A refused row carries no document, so it is not one this pass could
       // have extracted from. See `accountedNormalize`.
-      { unretrieved: raw.filter((r) => r.refused).length, outOfWindow },
+      //
+      // A-002 · `unretrieved` is at the DOCUMENT layer and `logicalInput` is at
+      // the EVENT layer, and they are deliberately not added together: a
+      // refused feed contributes zero events to `considered`, so it is already
+      // absent from the conservation sum. It is passed on because the zero-row
+      // check below still asks a question about documents in hand.
+      {
+        unretrieved: raw.filter((r) => r.refused).length,
+        outOfWindow,
+        logicalInput: considered,
+        duplicates,
+      },
     );
   };
 
@@ -507,6 +615,7 @@ export function makeIcalSource(
            * the archive was unreachable would be the wrong trade.
            */
           let ics = res.text;
+          let archiveRefused: string | undefined;
           if (wiring.config.pastFeedUrl) {
             try {
               const past = await politeGetText(wiring.config.pastFeedUrl, {
@@ -517,10 +626,22 @@ export function makeIcalSource(
                 expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
               });
               ics += past.text;
-            } catch {
-              // Counted where it matters: this row still produces its
-              // upcoming sittings, and the archive's absence is visible as a
-              // jurisdiction with no concluded meetings.
+            } catch (error) {
+              /*
+               * A-004 · THIS CATCH USED TO BE EMPTY, and its comment said the
+               * absence would be "visible as a jurisdiction with no concluded
+               * meetings". That sentence is the render-default failure written
+               * down as a design note: an outage rendering as a fact about the
+               * town.
+               *
+               * The trade above it is still right — losing the upcoming
+               * calendar because the archive is down would be worse. What was
+               * missing is the third state between success and failure. The
+               * row now carries the cause, the normalize pass turns it into a
+               * scoped partial, and carry-forward preserves the CONCLUDED
+               * rows for this division and nothing else.
+               */
+              archiveRefused = String((error as Error)?.message ?? error);
             }
           }
           /*
@@ -570,6 +691,7 @@ export function makeIcalSource(
             wiring,
             ics,
             collectedAt: new Date().toISOString(),
+            ...(archiveRefused ? { archiveRefused } : {}),
             sourceUrl: url,
           });
         } catch {

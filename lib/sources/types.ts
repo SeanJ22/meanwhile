@@ -338,7 +338,68 @@ export interface ReportingMeetingSource<Raw = unknown>
      * remains the right report for it.
      */
     unreachableOcdIds?: string[];
+    /**
+     * **A PARTIAL SOURCE IS A FIRST-CLASS RESULT** — A-004 (external
+     * correctness audit of `336a3eb`, remediated 2026-08-24).
+     *
+     * `unreachableOcdIds` above says WHICH divisions were refused. It cannot
+     * say WHAT ABOUT THEM was refused, and that turned out to matter.
+     *
+     * `ical` fetches two feeds per row: the upcoming list and, where the town
+     * publishes one, the past-events feed. The archive's failure was caught
+     * and swallowed with a comment saying the absence would be "visible as a
+     * jurisdiction with no concluded meetings" — which is the render-default
+     * failure written down as a design note. The adapter reported success, so
+     * carry-forward (which only preserves rows for a source or division that
+     * FAILED) preserved nothing, and every concluded meeting the previous
+     * snapshot held for that town was deleted by an archive outage.
+     *
+     * Marking the whole division unreachable would be worse in the other
+     * direction: the upcoming feed answered perfectly, and carrying its rows
+     * forward would resurrect a sitting the town had just cancelled.
+     *
+     * So the result says which SCOPE failed, for which divisions, and why —
+     * and carry-forward preserves that scope and no other. Completeness is
+     * never inferred from `ok: true`.
+     */
+    partialScopes?: PartialScopeFailure[];
+    /**
+     * **A-005 · duplicates, split by WHO decided they were duplicates.**
+     *
+     * An EXACT duplicate is the publisher's own statement: the same `UID`
+     * twice in one feed. A WEAK-ID COLLISION is this code judging two records
+     * with no publisher identity to be the same sitting.
+     *
+     * Pooling them would hide the second inside the first, and the second is
+     * the one worth watching — it starting to fire is evidence that a town's
+     * feed publishes two genuinely different sittings our fallback identity
+     * cannot tell apart. Before A-005 neither was counted at all: the fallback
+     * identity was the START INSTANT ALONE, and two boards meeting at 7pm on
+     * the same night collapsed into one meeting silently.
+     */
+    duplicateIdentity?: DuplicateIdentityCounts;
   }>;
+}
+
+export interface DuplicateIdentityCounts {
+  /** The feed published the same publisher identity twice. */
+  exact: number;
+  /** Two records with no publisher identity that this code judged identical. */
+  weakIdCollision: number;
+}
+
+/** Which half of a two-feed source failed — see `partialScopes`. */
+export type SourceScope = "UPCOMING" | "ARCHIVE";
+
+export interface PartialScopeFailure {
+  scope: SourceScope;
+  /**
+   * The divisions affected. A division-less body has nothing to attribute to
+   * and appears as `null`, which is honest rather than absent.
+   */
+  ocdIds: (string | null)[];
+  /** What refused, in the terms the retrieval saw it. */
+  cause: string;
 }
 
 /**

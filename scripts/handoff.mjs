@@ -899,6 +899,49 @@ if (CHECK_ONLY) {
   }
 }
 
+/*
+ * THE EXPORT IS AN OUTPUT CHANNEL, AND RULING 127 PUTS REDACTION AT ONE.
+ *
+ * The mirror was scrubbed clean on 2026-08-24 and was dirty again the next
+ * morning — six occurrences of five live credentials. Nothing un-scrubbed it.
+ * The exporter simply re-wrote the same transcripts out of the local `.jsonl`
+ * files, which are deliberately NOT scrubbed: they are the runtime's own state,
+ * and corrupting them to remove a value that has already escaped pays a real
+ * cost for no security (tracker NS11).
+ *
+ * So a scrub run by hand can only ever be true until the next handoff. It has
+ * to sit HERE, immediately after the write, or the mirror — the surface that
+ * actually leaves this machine, RULING 108 — is re-contaminated by the very
+ * command whose job is to publish it.
+ *
+ * The scrub exits non-zero whenever it FOUND anything, scrubbed or not, so its
+ * exit status is not the signal. The verdict is a fresh re-read afterwards,
+ * which is RULING 113: observe the step's product at the step.
+ */
+if (!CHECK_ONLY && existsSync(MIRROR)) {
+  const quiet = { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] };
+  try {
+    execSync("pnpm run secrets:scrub-mirror", quiet);
+  } catch {
+    // Non-zero is the normal path — it means occurrences were found. Whether
+    // they are gone is answered by the re-read below, never by this status.
+  }
+  let verdict;
+  try {
+    verdict = execSync("pnpm run secrets:sweep", quiet);
+  } catch (error) {
+    verdict = `${error.stdout ?? ""}${error.stderr ?? ""}`;
+  }
+  if (/0 secret occurrence\(s\) across/.test(verdict ?? "")) {
+    ok("transcripts · secrets", "mirror re-read clean — 0 credential values");
+  } else {
+    fail(
+      "transcripts · secrets",
+      "the mirror still carries a credential value after the scrub — run pnpm secrets:sweep",
+    );
+  }
+}
+
 /* ---------------------------------------------------------------- ship --- */
 
 /**

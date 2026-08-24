@@ -167,10 +167,17 @@ export function makeBoardBookSource(
     const windowStart = now.getTime() - WINDOW_BACK_DAYS * 86_400_000;
     const windowEnd = now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000;
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one organization page and carries the body's whole archive.
+    let considered = 0;
+    let outOfWindow = 0;
+    let keptButPlaceless = 0;
+
     for (const { wiring, html, collectedAt } of raw) {
       const orgUrl = `${BASE}/Public/Organization/${wiring.config.orgId}`;
       const { rows, undated } = parseOrganizationPage(html);
       drops.unplaceableInTime += undated;
+      considered += rows.length + undated;
 
       for (const row of rows) {
         const startsAt = toZonedIso(
@@ -184,7 +191,11 @@ export function makeBoardBookSource(
         const t = Date.parse(startsAt);
         // The archive reaches back years; only the cascade's window ships.
         // An out-of-window row is a deliberate clip, not a drop to count.
-        if (t < windowStart || t > windowEnd) continue;
+        if (t < windowStart || t > windowEnd) {
+          // A-002: a deliberate clip is still a disposition and is counted.
+          outOfWindow += 1;
+          continue;
+        }
 
         const location = row.locationName ?? "";
         if (!location) {
@@ -202,7 +213,13 @@ export function makeBoardBookSource(
         const online = isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
-        if (online) drops.placeless += 1;
+        if (online) {
+          drops.placeless += 1;
+          // A-002: `placeless` TALLIES a meeting that is then PRODUCED just
+          // below (D18 keeps online-only sittings), so it is not a drop and
+          // must not be summed as one.
+          keptButPlaceless += 1;
+        }
         const venue = online ? null : resolveVenue(SOURCE_NAME, wiring.ocdId, location);
         if (!online && !venue) {
           drops.unknownVenue += 1;
@@ -245,7 +262,12 @@ export function makeBoardBookSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(
+      SOURCE_NAME,
+      raw,
+      { meetings, drops },
+      { logicalInput: considered, outOfWindow, countedButProduced: keptButPlaceless },
+    );
   };
 
   return {

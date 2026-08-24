@@ -48,8 +48,55 @@ const SOURCE_NAME = "apptegy";
  * reaching the future, and RTSD's is dense — it took 7 pages to reach October
  * from mid-May. Five pages would have silently clipped the upcoming meetings
  * this adapter already served, which is the wrong way to fix a gap.
+ *
+ * **A-006 · A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN IMPLICIT END OF
+ * DATA.** (External correctness audit of `336a3eb`, remediated 2026-08-24.)
+ *
+ * The sentence above already called this "a runaway stop, not a coverage cap",
+ * and the code did not enforce the difference: the loop condition was
+ * `url && page < MAX_PAGES`, so twelve full pages with a live `next` pointer
+ * simply ended the walk. No error, no partial marker, no unretrieved count —
+ * 240 events read, an unknown number left on the server, and a clean success
+ * reported.
+ *
+ * That is the empty-success shape with a full plate: every instrument in this
+ * repo asks whether something came back, and 240 events is emphatically
+ * something. It is RULING 100 at the transport layer — a total that reconciles
+ * is not a total that is correct.
+ *
+ * The cap stays, because a runaway stop is a real need. What changes is what
+ * hitting it MEANS: reaching it with a next page still advertised throws
+ * {@link ApptegyPaginationError}, which the composite routes to `JOB` and the
+ * run goes red. Raising the number is then a measured decision rather than the
+ * thing that silently happens.
  */
 const MAX_PAGES = 12;
+
+/**
+ * The walk reached its safety cap with the server still offering more.
+ *
+ * It carries the numbers a reader needs to decide whether to raise the cap or
+ * fix the walk: how many pages were fetched, how many events those held, and
+ * the exact URL that was not followed.
+ */
+export class ApptegyPaginationError extends Error {
+  readonly pagesFetched: number;
+  readonly eventsFetched: number;
+  readonly nextUrl: string;
+
+  constructor(org: string, pagesFetched: number, eventsFetched: number, nextUrl: string) {
+    super(
+      `apptegy: ${org} reached the ${pagesFetched}-page safety cap with the API still ` +
+        `advertising a next page. ${eventsFetched} event(s) were read and an unknown ` +
+        `number were left unretrieved at ${nextUrl}. A safety cap is a failure ` +
+        "boundary, never an implicit end of data (A-006).",
+    );
+    this.name = "ApptegyPaginationError";
+    this.pagesFetched = pagesFetched;
+    this.eventsFetched = eventsFetched;
+    this.nextUrl = nextUrl;
+  }
+}
 
 export interface ApptegyEvent {
   id: number;
@@ -132,11 +179,19 @@ export function makeApptegySource(
       notConfigured: 0,
     };
     const seen = new Set<string>();
+    /*
+     * A-002 · the pass's own count of the LOGICAL RECORDS it considered. One
+     * raw row is one API page and carries many events, so the unit here is the
+     * event, never the row.
+     */
+    let considered = 0;
+    let duplicates = 0;
 
     for (const { wiring, events, collectedAt, sourceUrl } of raw) {
       const titleMatch = wiring.config.titleMatch ?? "";
 
       for (const event of events) {
+        considered += 1;
         const title = (event.title ?? "").trim();
         if (!titleMatch || !title.includes(titleMatch)) {
           drops.notConfigured++;
@@ -146,7 +201,12 @@ export function makeApptegySource(
         const id = `${SOURCE_NAME}:${wiring.config.slug}:${event.id}`;
         // The API repeats events across pages at the boundary; one event is
         // one meeting regardless of how many pages carried it.
-        if (seen.has(id)) continue;
+        if (seen.has(id)) {
+          // A-002: this used to be a bare `continue`, so a record that was
+          // neither produced nor dropped left no trace at all.
+          duplicates += 1;
+          continue;
+        }
 
         if (!event.start_at || Number.isNaN(Date.parse(event.start_at))) {
           drops.unplaceableInTime++;
@@ -193,7 +253,10 @@ export function makeApptegySource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
+      logicalInput: considered,
+      duplicates,
+    });
   };
 
   return {
@@ -223,7 +286,12 @@ export function makeApptegySource(
         if (startDate) first.searchParams.set("start_date", startDate);
 
         let url: string | null = first.toString();
+        // A-006 · told apart from running out of pages, because only one of
+        // the two is an end of data.
+        let stoppedAtHorizon = false;
+        let pagesFetched = 0;
         for (let page = 0; url && page < MAX_PAGES; page++) {
+          pagesFetched += 1;
           const body: ApptegyResponse = await politeGetJson<ApptegyResponse>(
             url,
             { fetchImpl },
@@ -236,9 +304,24 @@ export function makeApptegySource(
           // keeps a 90-day lookback from turning into a walk to next May.
           const last = batch[batch.length - 1]?.start_at;
           if (last && Number.isFinite(horizonMs) && Date.parse(last) > horizonMs) {
+            stoppedAtHorizon = true;
             break;
           }
           url = body.meta?.links?.next ?? null;
+        }
+        /*
+         * A-006 · the loop can end three ways, and only two of them are an end
+         * of data: the server stopped offering a next page, or the calendar
+         * ran past the query's horizon. The third — the safety cap — is a
+         * FAILURE, and it used to be indistinguishable from the other two.
+         */
+        if (!stoppedAtHorizon && url && pagesFetched >= MAX_PAGES) {
+          throw new ApptegyPaginationError(
+            wiring.config.slug,
+            pagesFetched,
+            events.length,
+            url,
+          );
         }
         collected.push({
           wiring,

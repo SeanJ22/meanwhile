@@ -1,6 +1,6 @@
 import { CONCLUDED_LOOKBACK_DAYS, UPCOMING_HORIZON_DAYS } from "./constants.ts";
 import type { MeetingsSnapshot } from "./snapshot.ts";
-import type { Meeting } from "../sources/types.ts";
+import type { Meeting, PartialScopeFailure } from "../sources/types.ts";
 
 /**
  * The refresh corollary: **a failed fetch never silently empties a
@@ -63,6 +63,26 @@ export interface CarryForwardChild {
   ok: boolean;
   /** Divisions this source could not reach while otherwise succeeding. */
   unreachableOcdIds?: string[];
+  /**
+   * **A-004 · A SCOPE THAT FAILED INSIDE A SOURCE THAT SUCCEEDED.**
+   * (External correctness audit of `336a3eb`, remediated 2026-08-24.)
+   *
+   * The two conditions above are all-or-nothing about a body: either the whole
+   * source failed, or a named division did. `ical` fetches TWO feeds per body
+   * — upcoming and archive — and when only the archive refused, neither
+   * condition held. The source reported `ok: true`, this function carried
+   * nothing, and every CONCLUDED meeting the previous snapshot held for that
+   * town was deleted by an outage.
+   *
+   * Marking the division unreachable would have been wrong in the other
+   * direction: the upcoming feed answered, so carrying its rows forward would
+   * resurrect a sitting the town had just cancelled — the mirror-image lie
+   * this module's own doc warns about.
+   *
+   * So the scope is preserved and nothing else is. An `ARCHIVE` failure
+   * carries back only sittings that had already CONCLUDED at `now`.
+   */
+  partialScopes?: PartialScopeFailure[];
   /**
    * The source's own `MeetingSource.publishedLookbackDays` (g13, 2026-08-18).
    * `null` means the publisher's whole listed archive; omitted means the
@@ -139,13 +159,29 @@ export function carryForward(
     // succeeded loses only the divisions it says it could not reach.
     const wholeSource = !child.ok;
     const divisions = new Set(child.unreachableOcdIds ?? []);
-    if (!wholeSource && divisions.size === 0) continue;
+    /*
+     * A-004 · the divisions whose ARCHIVE refused while the source succeeded.
+     * `null` in the list is a division-less body, and it is kept as `null`
+     * rather than dropped — a body with no division still lost its history.
+     */
+    const archiveScopes = (child.partialScopes ?? []).filter((p) => p.scope === "ARCHIVE");
+    const archiveDivisions = new Set(archiveScopes.flatMap((p) => p.ocdIds));
+    if (!wholeSource && divisions.size === 0 && archiveDivisions.size === 0) continue;
 
     const windowStart = backEdgeFor(child);
     let count = 0;
     for (const meeting of previous.meetings) {
       if (meeting.id.split(":")[0] !== child.source) continue;
-      if (!wholeSource && !(meeting.ocdId && divisions.has(meeting.ocdId))) continue;
+      const inFailedDivision = wholeSource || Boolean(meeting.ocdId && divisions.has(meeting.ocdId));
+      /*
+       * The scoped case, and the clip is what keeps it honest: an ARCHIVE
+       * failure says nothing about the future, so only a sitting that had
+       * already concluded at `now` may be carried back on its account.
+       */
+      const inFailedScope =
+        archiveDivisions.has(meeting.ocdId ?? null) &&
+        Date.parse(meeting.startsAt) < now.getTime();
+      if (!inFailedDivision && !inFailedScope) continue;
       if (haveId.has(meeting.id)) continue;
       const at = Date.parse(meeting.startsAt);
       if (!Number.isFinite(at) || at < windowStart || at > windowEnd) continue;

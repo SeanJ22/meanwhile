@@ -137,6 +137,7 @@
     "rung6": "tsx scripts/rung6.mts",
     "searchlog:backmark": "tsx scripts/searchlog-backmark.mts",
     "secrets:sweep": "tsx scripts/secrets-sweep.mts",
+    "secrets:scrub-mirror": "tsx scripts/secrets-sweep.mts --scrub",
     "session:start": "node scripts/session-start.mjs",
     "sheet": "tsx scripts/contact-sheet.mts",
     "ship:candidate": "tsx scripts/ship-candidate-field.mts",

@@ -912,3 +912,198 @@ test("a source that fetched documents and DROPPED everything is left alone", asy
   assert.equal(child.ok, true, "a source that accounted for every row went red");
   assert.equal(child.drops.unknownVenue, 4, "the account survives into the report");
 });
+
+/* ======================================================================== *
+ *  A-004 · A PARTIAL SOURCE IS A FIRST-CLASS RESULT
+ * ======================================================================== */
+
+/**
+ * **AN ARCHIVE OUTAGE USED TO DELETE A TOWN'S HISTORY, SILENTLY.**
+ *
+ * External correctness audit of `336a3eb`, remediated 2026-08-24. `ical`
+ * fetches two feeds per body — the upcoming list and, where a town publishes
+ * one, the past-events feed. The past feed's failure was caught by an EMPTY
+ * `catch` whose comment read: *"this row still produces its upcoming sittings,
+ * and the archive's absence is visible as a jurisdiction with no concluded
+ * meetings."*
+ *
+ * That sentence is the render-default failure written down as a design note.
+ * The chain it produced:
+ *
+ *   archive refuses → adapter returns success → composite reports `ok: true`
+ *   → carry-forward preserves rows only for a source or division that FAILED
+ *   → every concluded meeting the previous snapshot held is deleted.
+ *
+ * The first assertion here is the reproduction: with the old two-state report
+ * — success or failure, nothing between — the concluded rows vanish. The rest
+ * hold the scoped result that fixes it, including the direction it must NOT
+ * over-carry: the upcoming feed answered, so a sitting the town cancelled
+ * today may not be resurrected by an archive outage.
+ */
+
+const TOWN = "ocd-division/country:us/state:nh/place:wilmot";
+
+function icalSitting(date: string, when: "past" | "future"): Meeting {
+  return {
+    id: `ical:wilmot:${date}`,
+    ocdId: TOWN,
+    bodyName: "Wilmot Selectboard",
+    title: "Selectboard",
+    startsAt: `${date}T22:00:00.000Z`,
+    timeZone: "America/New_York",
+    location: { name: "Town Office", address: "9 Kearsarge Valley Rd", lat: 43.44, lng: -71.91 },
+    agendaUrl: null,
+    jurisdiction: "Wilmot, NH",
+    status: when === "past" ? "CONCLUDED" : "SCHEDULED",
+    provenance: {
+      sourceUrl: "https://wilmotnh.org/events/list/?ical=1",
+      sourceOrg: "Town of Wilmot",
+      collectedAt: "2026-08-15T20:00:00.000Z",
+      verifiedAt: null,
+    },
+  };
+}
+
+function wilmotSnapshot(): MeetingsSnapshot {
+  return {
+    formatVersion: 1,
+    generatedAt: "2026-08-15T20:00:00.000Z",
+    counts: { fresh: 3, carried: 0, total: 3 },
+    sources: [
+      {
+        source: "ical",
+        ok: true,
+        error: null,
+        fetched: 1,
+        normalized: 3,
+        drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 },
+      },
+    ],
+    meetings: [
+      icalSitting("2026-07-15", "past"),
+      icalSitting("2026-06-17", "past"),
+      icalSitting("2026-09-16", "future"),
+    ],
+    agendaDocuments: [],
+  };
+}
+
+const A004_NOW = new Date("2026-08-20T12:00:00.000Z");
+
+test("A-004 · REPRODUCTION: a source reporting plain success carries no concluded rows back", () => {
+  // The old report shape. The upcoming feed produced its one future sitting;
+  // the archive produced nothing and said nothing.
+  const fresh = [icalSitting("2026-09-16", "future")];
+  const { meetings, carried } = carryForward(
+    [{ source: "ical", ok: true }],
+    fresh,
+    wilmotSnapshot(),
+    A004_NOW,
+  );
+  assert.equal(carried.get("ical"), undefined, "nothing was carried");
+  assert.equal(
+    meetings.filter((m) => m.status === "CONCLUDED").length,
+    0,
+    "both concluded sittings are gone — this is A-004, and it is what shipped",
+  );
+});
+
+test("A-004 · a scoped ARCHIVE failure carries the concluded rows back", () => {
+  const fresh = [icalSitting("2026-09-16", "future")];
+  const { meetings, carried } = carryForward(
+    [
+      {
+        source: "ical",
+        ok: true,
+        partialScopes: [
+          { scope: "ARCHIVE", ocdIds: [TOWN], cause: "HTTP 503 for the past feed" },
+        ],
+      },
+    ],
+    fresh,
+    wilmotSnapshot(),
+    A004_NOW,
+  );
+  assert.equal(carried.get("ical"), 2, "both concluded sittings come back");
+  const ids = meetings.map((m) => m.id).sort();
+  assert.deepEqual(ids, ["ical:wilmot:2026-06-17", "ical:wilmot:2026-07-15", "ical:wilmot:2026-09-16"]);
+  // And they say they were carried, with the date they were last actually seen.
+  const carriedRow = meetings.find((m) => m.id === "ical:wilmot:2026-07-15");
+  assert.equal(carriedRow?.carried?.source, "ical");
+  assert.equal(carriedRow?.carried?.lastFreshAt, "2026-08-15T20:00:00.000Z");
+});
+
+test("A-004 · an ARCHIVE failure never resurrects a FUTURE sitting the fresh run dropped", () => {
+  /*
+   * The direction that makes this a scope rather than a blunt division
+   * refusal. The upcoming feed answered perfectly. If the town cancelled its
+   * 16 September sitting between snapshots, the fresh run correctly omits it —
+   * and an archive outage must not put it back.
+   */
+  const { meetings, carried } = carryForward(
+    [
+      {
+        source: "ical",
+        ok: true,
+        partialScopes: [
+          { scope: "ARCHIVE", ocdIds: [TOWN], cause: "HTTP 503 for the past feed" },
+        ],
+      },
+    ],
+    [], // the upcoming feed answered and now lists nothing
+    wilmotSnapshot(),
+    A004_NOW,
+  );
+  assert.equal(carried.get("ical"), 2);
+  assert.equal(
+    meetings.some((m) => m.id === "ical:wilmot:2026-09-16"),
+    false,
+    "a cancelled future sitting came back — the scope is not being respected",
+  );
+});
+
+test("A-004 · a division-less body's archive failure is still scoped, not dropped", () => {
+  // `null` in `ocdIds` is a body with no division to attribute to. It still
+  // lost its history, and an implementation that filtered nulls out would
+  // silently exclude exactly the smallest bodies.
+  const placeless = { ...icalSitting("2026-07-15", "past"), id: "ical:precinct:2026-07-15", ocdId: null };
+  const previous: MeetingsSnapshot = {
+    ...wilmotSnapshot(),
+    meetings: [placeless],
+  };
+  const { carried } = carryForward(
+    [
+      {
+        source: "ical",
+        ok: true,
+        partialScopes: [{ scope: "ARCHIVE", ocdIds: [null], cause: "timeout" }],
+      },
+    ],
+    [],
+    previous,
+    A004_NOW,
+  );
+  assert.equal(carried.get("ical"), 1);
+});
+
+test("A-004 · a source with no partial scopes and no refusal still carries NOTHING", () => {
+  // The mirror-image lie stays forbidden: a town that genuinely stopped
+  // publishing must be allowed to go quiet.
+  const { carried } = carryForward([{ source: "ical", ok: true }], [], wilmotSnapshot(), A004_NOW);
+  assert.equal(carried.get("ical"), undefined);
+});
+
+test("A-004 · the ical adapter no longer swallows a past-feed failure", () => {
+  // RULING 110: the shape, not the string. A `catch` with nothing in it but a
+  // comment is the shape, and it is what shipped.
+  const source = readFileSync(join(ROOT, "lib", "sources", "ical", "index.ts"), "utf8");
+  assert.match(source, /archiveRefused/, "the row carries no partial marker");
+  assert.match(source, /partialScopes/, "the normalize pass reports no scoped failure");
+  const emptyCatch = /catch\s*\{\s*(\/\/[^\n]*\n\s*)*\}/g;
+  const swallowed = source.match(emptyCatch) ?? [];
+  assert.deepEqual(
+    swallowed,
+    [],
+    `a catch block that discards its error and continues: ${swallowed.join(" | ")}`,
+  );
+});

@@ -199,6 +199,12 @@ export function makeRevizeSource(
       notConfigured: 0,
     };
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one town's homepage plus its notices page, and both expand into many
+    // logical records — an upcoming-block item, or a dated document set.
+    let considered = 0;
+    let duplicates = 0;
+
     for (const { wiring, homepageHtml, agendaPageHtml, collectedAt } of raw) {
       const documents = parseAgendaDocuments(
         agendaPageHtml,
@@ -206,6 +212,7 @@ export function makeRevizeSource(
       );
 
       for (const item of parseUpcomingBlock(homepageHtml)) {
+        considered += 1;
         // Only the wired body's meetings; the block also lists bodies we have
         // not wired (Merrimack's Executive Committee is the county
         // delegation's, a different government).
@@ -312,10 +319,16 @@ export function makeRevizeSource(
       }
 
       for (const [key, docs] of dates) {
+        considered += 1;
         const id = `${SOURCE_NAME}:${wiring.config.slug}:${key}`;
         // A date the upcoming block already produced with a REAL time wins.
         // The archive never overwrites a known hour with an unknown one.
-        if (seen.has(id)) continue;
+        if (seen.has(id)) {
+          // A-002: the same sitting arriving a second way is a duplicate, not
+          // a record with no disposition.
+          duplicates += 1;
+          continue;
+        }
 
         if (!venue) {
           drops.unknownVenue++;
@@ -359,7 +372,12 @@ export function makeRevizeSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
+      logicalInput: considered,
+      duplicates,
+      // Every `placeless` here has a `continue` behind it, so this adapter's
+      // counter really is a drop (A-002).
+    });
   };
 
   return {

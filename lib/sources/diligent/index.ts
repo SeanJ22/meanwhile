@@ -124,7 +124,13 @@ export function makeDiligentSource(
       notConfigured: 0,
     };
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one tenant's service response and carries many meetings.
+    let considered = 0;
+    let keptButPlaceless = 0;
+
     for (const { wiring, meetings: rows, collectedAt } of raw) {
+      considered += rows.length;
       for (const m of rows) {
         const clock = /^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})/.exec(
           m.MeetingDateTime ?? "",
@@ -158,7 +164,12 @@ export function makeDiligentSource(
         const online = isPlacelessLocation(location)
           ? { label: location, joinUrl: null }
           : null;
-        if (online) drops.placeless++;
+        if (online) {
+          drops.placeless++;
+          // A-002: this TALLIES a meeting that is then PRODUCED below (D18),
+          // so it is not a drop and must not be summed as one.
+          keptButPlaceless += 1;
+        }
         // D31: the tenant is passed so a division-less body keys on itself
         // rather than on a null every other division-less body also has.
         const venue = online
@@ -205,7 +216,12 @@ export function makeDiligentSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(
+      SOURCE_NAME,
+      raw,
+      { meetings, drops },
+      { logicalInput: considered, countedButProduced: keptButPlaceless },
+    );
   };
 
   return {

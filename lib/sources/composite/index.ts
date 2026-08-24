@@ -1,8 +1,11 @@
+import { isZeroRowExtraction, totalDropped } from "../normalize-account.ts";
 import type {
+  DuplicateIdentityCounts,
   Meeting,
   MeetingQuery,
   MeetingSource,
   NormalizeDropCounts,
+  PartialScopeFailure,
   ReportingMeetingSource,
 } from "../types.ts";
 
@@ -98,6 +101,25 @@ export interface ChildRunReport {
    * `ok` flag to say".
    */
   unreachableOcdIds?: string[];
+  /**
+   * **PARTIAL BY SCOPE** — A-004 (external correctness audit of `336a3eb`,
+   * remediated 2026-08-24).
+   *
+   * `unreachableOcdIds` says which divisions were refused. This says WHAT
+   * ABOUT a division was refused, which is the distinction an `ical` archive
+   * outage falls through: the upcoming feed answered, the past feed did not,
+   * the source reported `ok: true`, and every concluded meeting the previous
+   * snapshot held for that town was deleted.
+   *
+   * Completeness is never inferred from `ok: true`.
+   */
+  partialScopes?: PartialScopeFailure[];
+  /**
+   * A-005 · duplicates split by who decided they were duplicates — the feed's
+   * own repeated identifier, or this code's judgement about two records that
+   * carried none. Absent when the child has nothing to say.
+   */
+  duplicateIdentity?: DuplicateIdentityCounts;
   /**
    * The child's own `publishedLookbackDays` (g13), forwarded verbatim so
    * carry-forward can judge a carried row against the window that child
@@ -441,7 +463,8 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
       }
 
       try {
-        const { meetings, drops, unreachableOcdIds } = child.normalizeWithDrops(
+        const { meetings, drops, unreachableOcdIds, partialScopes, duplicateIdentity } =
+          child.normalizeWithDrops(
           byChild.get(child.name) ?? [],
           now,
         );
@@ -497,8 +520,24 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
          * is the narrow case — a source that fetched and dropped everything
          * already tells you why, and is left alone.
          */
-        const droppedAny = Object.values(drops).some((n) => n > 0);
-        if (fetched.fetched > 0 && meetings.length === 0 && !droppedAny) {
+        /*
+         * S-001 (external correctness audit of `336a3eb`, remediated
+         * 2026-08-24). This was a second, independent `droppedAny` boolean —
+         * the same `.some((n) => n > 0)` written out again, which is a
+         * duplicate implementation of a predicate rather than a second check
+         * (RULING 103). It now calls the one in `normalize-account.ts`, so the
+         * defence in depth stays and the drift cannot.
+         *
+         * The sweep for the shape found 2 sites and replaced 2.
+         */
+        if (
+          isZeroRowExtraction({
+            documentsInHand: fetched.fetched,
+            produced: meetings.length,
+            dropped: totalDropped(drops),
+            outOfWindow: 0,
+          })
+        ) {
           children.push({
             source: child.name,
             ok: false,
@@ -529,6 +568,11 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           ...(unreachableOcdIds && unreachableOcdIds.length > 0
             ? { unreachableOcdIds }
             : {}),
+          // A-004 · a source can succeed at one scope and fail at another, and
+          // `ok: true` may not stand in for both. Forwarded verbatim so
+          // carry-forward can preserve the failed scope and no other.
+          ...(partialScopes && partialScopes.length > 0 ? { partialScopes } : {}),
+          ...(duplicateIdentity ? { duplicateIdentity } : {}),
           ...declaredWindow,
         });
       } catch (error) {

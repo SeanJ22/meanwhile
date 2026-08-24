@@ -13,6 +13,8 @@ const forms = JSON.parse(
 ) as {
   counts: {
     bodiesWithADivision: number;
+    /** The other half of the pair. A single figure in front of two measurements hides one. */
+    alreadyCarryingAFormDefinition: number;
     owedAFormDefinition: number;
     stamped: number;
     unstampable: number;
@@ -158,8 +160,36 @@ test("forms: the stamped and unstampable account for every owed body (RULING 100
     forms.counts.owedAFormDefinition,
     "a partial that reconciles is still a failure — account for every owed body",
   );
-  assert.equal(forms.counts.owedAFormDefinition, 1037);
-  assert.ok(forms.counts.stamped >= 1030, `only ${forms.counts.stamped} were stamped`);
+  /*
+   * **The owed count MOVES, and it moves DOWN.** (2026-08-24, item 6.)
+   *
+   * This asserted `owedAFormDefinition === 1037` and `stamped >= 1030`, which
+   * pinned the size of the GAP rather than the health of the stamp. Reading
+   * eight municipal statutes and writing `lib/officials/form-definitions.ts`
+   * took bodies carrying a form definition from 216 to 857, so owed fell to
+   * 396 — and a frozen number turns that into a red test, which trains a
+   * reader to raise the constant rather than to look.
+   *
+   * What is actually worth guarding is the INVARIANT above — every owed body is
+   * either stamped or named unstampable — plus the DIRECTION. The pair is
+   * stated rather than a single figure, because `owed` falling while `already`
+   * stays put would mean bodies had gone missing rather than been defined.
+   */
+  assert.equal(
+    forms.counts.alreadyCarryingAFormDefinition + forms.counts.owedAFormDefinition,
+    forms.counts.bodiesWithADivision,
+    "the pair does not reconcile: a body must be either carrying a form definition or owed one",
+  );
+  assert.ok(
+    forms.counts.owedAFormDefinition <= 1037,
+    `owed rose to ${forms.counts.owedAFormDefinition} from 1037 — bodies do not become LESS ` +
+      "defined on their own, so something was removed",
+  );
+  assert.ok(
+    forms.counts.unstampable <= 5,
+    `${forms.counts.unstampable} bodies are unstampable — each must be named with the input ` +
+      "that was missing, and a rising count is a finding rather than noise",
+  );
 });
 
 test("forms: the collapse is real — far fewer distinct forms than bodies", () => {

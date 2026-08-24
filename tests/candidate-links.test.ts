@@ -66,7 +66,36 @@ test("every link was fetch-verified: url, verification sentence, and date presen
     for (const side of ["official", "campaign"] as const) {
       const link = entry[side];
       if (link === null) continue;
-      assert.match(link.url, /^https:\/\//, `${key} ${side}`);
+      /*
+       * HTTPS, unless the site does not answer over it AND the verification
+       * sentence records that measurement.
+       *
+       * **The carve-out is DECLARED and evidenced rather than the rule being
+       * loosened**, which is the same mechanism `tests/guard-census.json` uses
+       * to let a guard leave: it costs a diff, and a diff is a thing somebody
+       * can read.
+       *
+       * It exists because `garykapner.com` refuses HTTPS and serves 533 KB of
+       * a real campaign site — *Gary Kapner for Mendham Township Committee* —
+       * over plain HTTP. A blanket HTTPS requirement does not make that site
+       * secure; it makes the site INVISIBLE, and the sites without a
+       * certificate are the small self-hosted ones, which is the equal-effort
+       * rule's concern arriving as a transport detail. Hiding the least
+       * resourced candidate's only web presence is the worse failure.
+       *
+       * The bar is that somebody MEASURED it. An http link may not simply
+       * appear; the row has to say that https was tried and refused, and on
+       * what date.
+       */
+      if (link.url.startsWith("http://")) {
+        assert.match(
+          link.verification,
+          /https refused|refuses https|no https|https did not answer/i,
+          `${key} ${side}: an http:// link must record that https was measured and refused`,
+        );
+      } else {
+        assert.match(link.url, /^https:\/\//, `${key} ${side}`);
+      }
       assert.ok(link.verification.length > 20, `${key} ${side}: verification sentence required`);
       assert.match(link.attemptedAt, /^\d{4}-\d{2}-\d{2}$/, `${key} ${side}`);
     }

@@ -1459,5 +1459,19 @@
     "ids": [
       "NH110"
     ]
+  },
+  {
+    "session": "overnight-depth-0824",
+    "opened": "2026-08-23",
+    "ids": [
+      "NH111"
+    ]
+  },
+  {
+    "session": "overnight-depth-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH112"
+    ]
   }
 ]

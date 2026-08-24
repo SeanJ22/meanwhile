@@ -145,3 +145,112 @@ Jersey municipalities.
   sovereign nation and a session must not invent one.
 - **`CENSUS_API_KEY` is invalid** and needs replacing before the Arizona
   demographic layer can be walked.
+
+---
+
+## The 2026-08-24 addition — five routes the first enumeration did not name
+
+**Written 2026-08-24, overnight depth hunt, item 9. NOTHING WAS WALKED to
+produce this**, per RULING 86 and the brief: enumeration is a written research
+step, and the Arizona hunt does not start until 07866 is done or the author
+says otherwise.
+
+**A note on where this lives, because the brief and the repo disagreed.** The
+brief asked for a new file, `docs/sources-az.md`. **This document already
+existed**, written 2026-08-22 under the same ruling, and it already named the
+Clean Elections Commission, the Secretary of State, the Pima County Recorder,
+the legislature, NCES and the Census. Creating a second Arizona source list
+would be the duplication RULING 63 calls worse than a gap — and two enumerations
+that disagree is exactly how a session ends up walking the older one. So the
+five routes the brief named that were genuinely absent are added HERE, and the
+discrepancy is reported rather than resolved silently.
+
+### 15. Pima County Legistar — VOTE TALLIES, not just agendas
+
+`pima.legistar.com`, and the part that matters is the API rather than the
+portal: **`/v1/{Client}/eventitems/{eventItemId}/votes` returns how each
+supervisor voted on each item.**
+
+That is a `RECORD`-tier evidence source under the data model's own tiering —
+how they voted, not what they said — and this product currently holds almost
+none of it below the federal level. New Jersey's counties gave us nothing
+equivalent.
+
+- **Tier:** A. One endpoint answers for every item of every meeting.
+- **Licence:** the records are Pima County's, published by the county. The
+  vendor hosts them and a vendor's terms are a route, not a wall — the
+  public-records rule governs.
+- **The shape to expect:** Legistar's API is `webapi.legistar.com/v1/{client}`
+  with the tenant slug in the path. The tenant slug is the thing to establish
+  first, and `D70` already records that certificate-transparency logs publish
+  every `*.legistar.com` subdomain, so the tenant list needs no crawl.
+- **What it does NOT reach:** anything below the county. Vail is a CDP with no
+  municipal government at all, so there is no municipal Legistar to find.
+
+### 16. Arizona Game and Fish Department
+
+`azgfd.com` and `azgfd.gov`. It answers the *am I allowed to hunt or fish*
+topic that `AZ-1` shipped and `NH109` now owes New Jersey and New Hampshire —
+so this is the AZ end of a route that has to exist in three states.
+
+- **Tier:** A for that one fact.
+- **Note:** the commission is APPOINTED, not elected, so it is a body this
+  product names and describes rather than a race it covers.
+
+### 17. TIGER/Line and the Census geography layers, named explicitly
+
+The first enumeration named the Census of Governments as the universe and did
+NOT name TIGER, which is a different thing doing a different job: TIGER
+supplies the POLYGONS the map draws and the LSAD legal-type codes the form
+stamp reads.
+
+**RULING 80 is the reason this is worth a line of its own**: the committed
+geometry is clipped to a county plus its adjacent counties, and a zip's
+first-rung circle crosses county lines in 184 of 279 measured cases. Pima
+County is adjacent to Pinal, Maricopa, Santa Cruz, Cochise, Graham and Yuma,
+and the clip must be checked BEFORE the hunt rather than discovered when a body
+renders with no polygon.
+
+**RULING 114 is the second reason**: LSAD 43 and 44 were reversed once, and
+Arizona is where the standing disagreement lives — TIGER says Buckeye is a
+city, the 2022 roster says `TOWN OF BUCKEYE`, and rung 11's archived capture of
+the town's own homepage says *"City of Buckeye"* three times. That is recorded
+as ADJUDICATED with the route that settled it, and it still reports as a
+disagreement.
+
+### 18. Municipal sites, via the tier ABOVE
+
+RULING 93: ask what the tier above publishes about the tier below. New Jersey's
+answer was `nj.gov/nj/gov/county/localgov.shtml` — all 21 counties and all 564
+municipalities with their official websites — and it reached 564 where six
+sessions of sideways guessing had reached 30 of 39.
+
+**The Arizona equivalent is not yet identified, and that is the first thing to
+establish rather than the thing to guess.** The route to it is
+`usa.gov/states/arizona`, which is already a walked route in
+`data/hunt/tier-directories.json` and already links Arizona's own local-government
+index. The League of Arizona Cities and Towns (`azleague.org`) publishes a
+directory of all 91 incorporated municipalities — **and it is a nonprofit, not a
+government**, so RULING 70's Ballotpedia question governs it exactly as it
+governs `usmayors.org`: a discovery surface, never a source of record.
+
+### 19. Both county party organs, and SYMMETRICALLY
+
+The Pima County Democratic Party and the Pima County Republican Party.
+
+**Symmetry here is a rule, not a courtesy**, and this session has already been
+bitten by its absence in a different place: the campaign-site instrument built
+tonight needed a party-organ test, and building one that recognised one party's
+committees and not the other's would have mislabelled one side's county sites
+as individual candidates' campaign sites. The same applies to walking them —
+**both or neither**, exactly as the four New Jersey legislative caucus sites are
+all four or none.
+
+- **Tier:** A. A county party publishes its whole slate in one page.
+- **Licence:** party organisation sites, NOT government publications. Usable
+  for a member's own published contact and photo under the campaign-site and
+  photo doors; **never as a source of record for a position**, which is the
+  advocacy-organisation prohibition in `CLAUDE.md`.
+- **What it is NOT:** an endorsement list. A ROSTER is a record; an endorsement
+  is somebody's judgement about a candidate, and this product does not carry
+  judgements about candidates.

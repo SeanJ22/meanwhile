@@ -2556,3 +2556,43 @@ The bug is fixed. The lesson is not about the bug.
 *Where two authorities disagree, that is a FINDING and it is closed by going and looking.* One did: a Census roster from 2022 calls Buckeye, Arizona a town, and the map data calls it a city. Buckeye's own website refuses our requests, so an archived copy of it was read instead — it says **City of Buckeye**, three times, on its own front page. The roster is simply out of date. That disagreement is recorded with the route that settled it, and it stays visible; it is not quietly deleted.
 
 *And a check that cannot reach its subject may never read like a passing one.* A row with nothing to compare against is counted separately, by name, with a reason. It is never folded into the verified total, because a sweep that quietly counted the things it could not check would be reporting confidence it never measured.
+
+---
+
+### RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one
+
+*Adopted 2026-08-24 (the overnight depth hunt, item 8, closing the diagnosis on `JOB02`). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing.*
+
+**An alarm must be able to tell an exercise from an event. One that cannot will eventually cry wolf, and the cost is not the false alarm — it is the real one nobody reads.**
+
+A watcher raised a priority-one row saying a scheduled job had failed twice in a row and recovered without anyone finding out why. That is exactly what the watcher is for, and two failures in a row is good evidence the cause is ours rather than the world's.
+
+**Both runs were deliberate tests.** They were five minutes apart, both started by hand rather than on the schedule, both carrying the flag whose only purpose is to make the job fail on purpose — and the job's own log said so in each: *"This failure is FORCED… No vendor failed. No source failed."* Somebody was testing this very watcher, and it worked.
+
+So the alarm did its job perfectly and produced a row nobody could act on. That is the failure this ruling names: **a queue that reaches a person is a scarce thing, and an item in it that turns out to be nothing teaches the reader to skim the next one.**
+
+Three things about the fix, and the second and third are the ones easy to get wrong:
+
+- **Only the test that RAISES a row is narrowed.** The failure RATE still counts every run, because the rate is a fact about the workflow and a drill really did fail.
+- **The number set aside is printed on every run.** A deliberate exclusion that reads as a clean result is the same shape as a silent trim, and this project names that failure more often than any other.
+- **An unknown trigger is NOT treated as a drill.** Where it cannot be told which kind a run was, the alarm still fires. That is the direction that costs a wasted look; the other direction loses a real failure.
+
+---
+
+### RULING 116 — a guard may pin an invariant or a direction, never the size of a gap
+
+*Adopted 2026-08-24 (the overnight depth hunt, item 6). Law: `CLAUDE.md`, **Non-negotiables in code**. Supersedes nothing. It is the two-numbers rule pointed at the test suite rather than at a report.*
+
+**A test that freezes how much work is left goes red when the work gets done. That trains a reader to raise the number instead of looking at what changed — which is the opposite of what a guard is for.**
+
+A check on the coverage of one layer asserted that 1,037 bodies were still owed a description. That was true on the day it was written. Reading eight statutes and writing the descriptions took the number of covered bodies from 216 to 857, so the number owed fell to 396 — **and the suite went red because the work had been done.**
+
+Nothing was wrong. The guard was measuring the size of the hole.
+
+What is actually worth holding still is the shape of the accounting, not its current value:
+
+- **The INVARIANT.** Every body is either described or counted as owed, and the two sides add up to the total. That stays true whatever the numbers are, and it is what catches a body going missing.
+- **The DIRECTION.** Coverage may improve and may not silently reverse. A number that went the wrong way means something was removed, which is a real finding; a number that went the right way is the point of the project.
+- **The PAIR.** Both halves are asserted together, because "owed fell" on its own is also what it looks like when rows vanish.
+
+*The reason this is worth a ruling rather than a note.* A frozen coverage number does not fail loudly and get fixed — it fails on a day somebody made progress, and the cheapest way to make it green again is to edit the constant to match. Do that twice and the guard has become a record of what the coverage happens to be, which nobody reads, rather than a claim about what must always be true, which somebody would.

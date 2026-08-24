@@ -76,6 +76,7 @@ import {
   failedTwiceConsecutively,
   failedTwiceInWindow,
   failureRate,
+  runsOnOwnCadence,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
 
@@ -148,7 +149,9 @@ function recentRuns(workflow: string, limit = 40): Run[] {
     "--limit",
     String(limit),
     "--json",
-    "databaseId,conclusion,status,createdAt",
+    // `event` is the trigger, and it is what separates a DRILL from a failure
+    // on this job's own cadence. See `runsOnOwnCadence`.
+    "databaseId,conclusion,status,createdAt,event",
   ]);
   return completedRuns(JSON.parse(raw) as Run[], AS_OF);
 }
@@ -224,10 +227,29 @@ for (const workflow of WATCHED) {
    * the same nothing. The row says WHICH kind it is; the marker keeps it to one
    * row per workflow either way.
    */
-  const atHead = failedTwiceConsecutively(runs);
+  /*
+   * A DRILL IS NOT A FAILURE (2026-08-24, closing `JOB02`'s diagnosis).
+   *
+   * `JOB02` was raised by two runs five minutes apart that were both manual
+   * dispatches carrying `WTP_INGEST_FORCE_JOB_FAILURE`, testing this very
+   * watcher. It worked, and it cost a P1 row nobody could act on.
+   *
+   * The RATE above still counts every run, because the rate is a fact about
+   * the workflow. Only the test that RAISES A ROW is narrowed, and the
+   * number set aside is printed rather than clipped silently.
+   */
+  const cadence = runsOnOwnCadence(runs);
+  if (cadence.dispatchedSetAside > 0) {
+    console.log(
+      "".padEnd(36) +
+        `${cadence.dispatchedSetAside} of ${runs.length} run(s) were manual dispatches — counted in the ` +
+        "rate, set aside for the consecutive test, because a drill is not this job's cadence",
+    );
+  }
+  const atHead = failedTwiceConsecutively(cadence.kept);
   // Only scanned when the head is clean, so `healed` comes from the one
   // detector that computes it rather than from an `in` narrowing over a union.
-  const inWindow = atHead ? null : failedTwiceInWindow(runs);
+  const inWindow = atHead ? null : failedTwiceInWindow(cadence.kept);
   const consecutive = atHead ?? inWindow;
   if (!consecutive) continue;
 

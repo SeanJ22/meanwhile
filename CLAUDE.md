@@ -1826,6 +1826,97 @@ number that could only embarrass us to a number that can lie.
 The machinery is `scripts/class-stamp-sweep.mts` (`pnpm class:sweep`),
 `data/derived/class-stamp-sweep.json`, and `tests/class-stamp-sweep.test.ts`.
 
+## TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP
+
+(Adopted 2026-08-24, the overnight depth hunt, items 6 and 8. **RULINGS 115 and
+116.** `docs/rulings.md` carries both in plain language, because a ruling the
+author cannot read is a ruling that does not bind him.)
+
+### RULING 115 — A DRILL IS NOT A FAILURE
+
+(Adopted 2026-08-24, item 8, closing the diagnosis on `JOB02`. Supersedes
+nothing.)
+
+**An alarm must be able to tell an EXERCISE from an EVENT. One that cannot will
+eventually cry wolf, and the cost is never the false alarm — it is the real one
+nobody reads.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.*
+`JOB02` recorded that `refresh-meetings-snapshot` failed on two CONSECUTIVE runs
+and healed unexamined, and reasoned — correctly, by the rule as it stood — that
+two in a row is evidence the cause is ours rather than a host refusing on a
+schedule. The watcher raised a **P1 Needs Sean row**.
+
+**Both runs were deliberate drills.** Runs `32543393133` and `32543652154`, five
+minutes apart, both `workflow_dispatch`, both carrying
+`WTP_INGEST_FORCE_JOB_FAILURE`, and both logging the ingest's own sentence:
+*"This failure is FORCED … No vendor failed. No source failed."* Somebody was
+testing this very watcher and it worked.
+
+So the alarm performed perfectly and produced a row nobody could act on. **The
+Needs Sean queue is precisely where that cost lands**: it is the one channel
+that reaches a person, and an item in it that turns out to be nothing teaches
+the reader to skim the next one.
+
+Three parts, and the last two are the ones easy to get wrong:
+
+- **Only the test that RAISES a row is narrowed.** The failure RATE still counts
+  every run, because the rate is a fact about the workflow and a drill did fail.
+- **The number set aside is PRINTED on every run.** A deliberate exclusion that
+  reads as a clean result is the silent-trim shape this file names more often
+  than any other.
+- **An UNKNOWN trigger is not a drill.** Where the kind of run cannot be read,
+  the alarm still fires. That direction costs a wasted look; the other loses a
+  real failure.
+
+*Why the trigger rather than the forced flag.* The flag lives in the run's
+INPUTS, which the run list does not carry, so reading it means a log fetch per
+run — forty logs to answer one question. The trigger is already in the list, and
+it is the better question anyway: **a watcher exists to catch a job breaking on
+its OWN CADENCE**, and a manual dispatch is a person doing something deliberate.
+The workflow already refuses the force flag unless the run is a dispatch, so
+every drill is a dispatch by construction.
+
+The machinery is `runsOnOwnCadence` in `lib/ops/job-watch.ts`, guarded in
+`tests/watch-workflows.test.ts` — including the case that matters more, *a real
+scheduled double failure STILL raises a row*, so narrowing the input cannot have
+narrowed the detector.
+
+### RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION, NEVER THE SIZE OF A GAP
+
+(Adopted 2026-08-24, item 6. Supersedes nothing. It is the **two-numbers rule**
+pointed at the test suite rather than at a report.)
+
+**A test that freezes how much work is LEFT goes red when the work gets done.
+That trains a reader to raise the constant instead of looking at what changed —
+which is the opposite of what a guard is for.**
+
+*The rationale stays attached.* `tests/body-form.test.ts` asserted
+`owedAFormDefinition === 1037`. That was true the day it was written. Reading
+eight municipal statutes and writing `lib/officials/form-definitions.ts` took
+bodies carrying a form definition from **216 to 857**, so owed fell to 396 —
+**and the suite went red because the work had been done.** Nothing was wrong.
+The guard was measuring the size of the hole.
+
+What is worth holding still is the SHAPE of the accounting, never its current
+value:
+
+- **The INVARIANT.** Every body is either described or counted as owed, and the
+  two sides sum to the total. True at any coverage, and it is what catches a
+  body going missing.
+- **The DIRECTION.** Coverage may improve and may not silently reverse. A number
+  going the wrong way is a real finding; going the right way is the point of the
+  project.
+- **The PAIR.** Both halves asserted together, because *owed fell* on its own is
+  also what it looks like when rows vanish.
+
+*Why this is a ruling rather than a note.* A frozen coverage number does not
+fail loudly and get fixed. **It fails on the day somebody made progress**, and
+the cheapest way to make it green is to edit the constant to match. Do that
+twice and the guard has become a record of what coverage happens to be — which
+nobody reads — rather than a claim about what must always be true, which
+somebody would.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

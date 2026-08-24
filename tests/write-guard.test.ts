@@ -114,6 +114,12 @@ test("every database write path asserts the guard", () => {
     // Prompt D item 6.2: the alarm is a write like any other, and the rule it
     // exists to protect does not exempt it from the rule beside it.
     "lib/db/write-alarm.ts",
+    // The questionnaire store (2026-08-23, NH104). A candidate's answer is
+    // published civic content rather than reader data, which changes which
+    // STORE it lands in and changes nothing about the guard: a write to
+    // production from a non-production runtime is refused here exactly as it
+    // is everywhere else.
+    "lib/db/questionnaire.ts",
   ];
   for (const path of writePaths) {
     const source = readFileSync(path, "utf8");
@@ -135,6 +141,7 @@ test("no write path outside the guarded set has appeared", () => {
     "intake-limiter.ts",
     "feedback.ts",
     "write-alarm.ts",
+    "questionnaire.ts",
   ]);
   const unguarded: string[] = [];
   for (const name of readdirSync("lib/db")) {

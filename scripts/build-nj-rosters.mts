@@ -63,10 +63,22 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { today } from "./doc-dates.mjs";
+import { carriedSourceStamp } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
-const AS_OF = today();
+
+/**
+ * Every input here is a COMMITTED file, so the stamp is CARRIED from them
+ * rather than read off the clock — see `lib/ops/source-stamp.ts` for the class
+ * this closes and why a clock call here was two defects, not one.
+ */
+const SOURCE_FILES = [
+  "data/hunt/wikipedia-nj-morris.json",
+  "data/hunt/roster-pages-muni-sites-nj-morris.json",
+  "data/hunt/nj-morris-certified-winners.json",
+  "lib/registry/registry.json",
+] as const;
+const AS_OF = carriedSourceStamp(SOURCE_FILES);
 const DRY = process.argv.includes("--dry");
 
 const WIKI = "data/hunt/wikipedia-nj-morris.json";

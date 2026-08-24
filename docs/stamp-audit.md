@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-22 (America/Phoenix). 58 stamp(s) audited.
+Run on 2026-08-24 (America/Phoenix). 91 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -42,6 +42,14 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 78 — CI RUNS WHERE IT EARNS ITS COST | 2026-08-22 | 2026-08-22 | 0 | `ee64a09` Nine Needs Sean rows a ruling already answered, and the clip that follows the reader |
 | RULING 79 — A RULING CLOSES THE NEEDS SEAN ROW IT ANSWERS | 2026-08-22 | 2026-08-22 | 0 | `ee64a09` Nine Needs Sean rows a ruling already answered, and the clip that follows the reader |
 | RULING 80 — THE COMMITTED GEOMETRY FOLLOWS THE READER, NO… | 2026-08-22 | 2026-08-22 | 0 | `ee64a09` Nine Needs Sean rows a ruling already answered, and the clip that follows the reader |
+| THE FIVE PROCESS RULINGS OF NJ HUNT 5 — AND THE NUMBERS T… | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 83 — THE FREE-SOURCE FLOOR | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 84 — THE MANIFEST IS TIERED, AND WALKED IN ORDER | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 85 — THE TWO-CLICK TEST | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 86 — PER-STATE SOURCE ENUMERATION PRECEDES THE HUNT | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 87 — WIKIPEDIA IS A TIER A DISCOVERY SOURCE, NEVER… | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 90 — EXHAUSTION MUST BE ARGUED, NOT ASSERTED | 2026-08-22 | 2026-08-22 | 0 | `c2cb26f` The route six sessions never walked, and 261 officials it named |
+| RULING 93 — ASK WHAT THE TIER ABOVE PUBLISHES ABOUT THE T… | 2026-08-22 | 2026-08-22 | 0 | `d7bded5` Nineteen governments now have people on them, and the instrument was breaking the map |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | 2026-08-17 | 2026-08-17 | 0 | `af766f5` The numbers stop contradicting each other, and our own robots stop counting as readers |
 | The design system is committed, not improvised. | 2026-08-15 | 2026-08-15 | 0 | `b8b6f7d` The system goes on the record |
@@ -80,6 +88,31 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | A session carries carryover and the deferred queue, and n… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | Where a tool does not exist to reach a public record, BUI… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
 | A zero-row extraction is a FAILED extraction, never an em… | 2026-08-20 | 2026-08-20 | 0 | `07fcce1` Prompt C: the gate measures hunts, the sold stores start recording again, and the rulings get a home |
+| DISCOVERY CONDUCT | 2026-08-22 | 2026-08-23 | -1 d | `87868c9` Eight rulings that ask a session what it found off the list, and one address form where there were two |
+| THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATH… | 2026-08-22 | 2026-08-23 | -1 d | `87868c9` Eight rulings that ask a session what it found off the list, and one address form where there were two |
+| HUNT 6 HARDENING — SEVEN RULINGS OF 2026-08-23 | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 100 — A PARTIAL ANSWER THAT ADDS UP IS STILL A WRO… | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 101 — OUR OWN IDENTIFIER NEVER LEAVES OUR OWN ORIG… | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 102 — FIXING A GENERATOR IS NOT FINISHED UNTIL ITS… | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 103 — A CLASS SWEEP COVERS DUPLICATED IMPLEMENTATI… | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 104 — AN ARTIFACT THE AUTHOR PLACES IN THE REPO IS… | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 105 — RENDERING IS REPORTED AS A THREE-WAY SPLIT | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| RULING 106 — NO GENERATED DOCUMENT CARRIES A SIZE CAP | 2026-08-23 | 2026-08-23 | 0 | `95577d4` Seven rulings, seven commissioner portraits, and the session-side resolve NH64 has been owed |
+| TWO RULINGS OF 2026-08-23 — THE VISUAL TAIL AND REHUNT SE… | 2026-08-23 | 2026-08-23 | 0 | `feb1caf` The hunt at rung 1: two corpora we already paid for and had never read |
+| RULING 107 — A FRESHNESS DATE IS WRITTEN ONLY BY THE CODE… | 2026-08-23 | 2026-08-23 | 0 | `feb1caf` The hunt at rung 1: two corpora we already paid for and had never read |
+| RULING 108 — ANYTHING A SESSION MUST READ AT SESSION STAR… | 2026-08-23 | 2026-08-23 | 0 | `feb1caf` The hunt at rung 1: two corpora we already paid for and had never read |
+| TWO RULINGS OF 2026-08-23 — THE REMOTE SESSION | 2026-08-23 | 2026-08-23 | 0 | `aac8220` The class layer closes at 1253 of 1253, and a refusal found by shape |
+| RULING 109 — A BRIEF DECLARES THE ENVIRONMENT IT REQUIRES… | 2026-08-23 | 2026-08-23 | 0 | `aac8220` The class layer closes at 1253 of 1253, and a refusal found by shape |
+| RULING 110 — A SEARCH THAT RETURNS NOTHING MUST SHOW IT L… | 2026-08-23 | 2026-08-23 | 0 | `aac8220` The class layer closes at 1253 of 1253, and a refusal found by shape |
+| TWO RULINGS OF 2026-08-23 — THE QUESTIONNAIRE AND THE COR… | 2026-08-23 | 2026-08-23 | 0 | `214d51d` The candidate questionnaire, two corpora over git, and 1,037 bodies collapsed into 15 forms |
+| RULING 111 — A JOIN IS NEVER A LOOKUP FOR A FACT THAT LIV… | 2026-08-23 | 2026-08-23 | 0 | `214d51d` The candidate questionnaire, two corpora over git, and 1,037 bodies collapsed into 15 forms |
+| RULING 112 — A FIRST-PARTY INSTRUMENT IS SYMMETRIC BY CON… | 2026-08-23 | 2026-08-23 | 0 | `214d51d` The candidate questionnaire, two corpora over git, and 1,037 bodies collapsed into 15 forms |
+| TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
+| RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
+| RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, B… | 2026-08-23 | 2026-08-23 | 0 | `0fc9ab8` RULINGS 113 and 114, the two AZ-1 topics, and NH93 closed by opening the statute |
+| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 115 — A DRILL IS NOT A FAILURE | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | 2026-08-24 | **NOT FOUND** | — | — |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
@@ -89,9 +122,9 @@ lying. The recovered dates come from the unfiltered pickaxe.
 
 ## What the deltas say
 
-- **1 stamp(s) disagree with git history.**
-- **0 stamp(s) are still later than today** (2026-08-22) — a date that had not happened when it was written.
-- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **3 stamp(s) disagree with git history.**
+- **0 stamp(s) are still later than today** (2026-08-24) — a date that had not happened when it was written.
+- **3 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -107,12 +140,14 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 
 | Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:645` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
-| `CLAUDE.md:646` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:932` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:933` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:656` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:943` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:1021` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:1209` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -132,6 +167,14 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 78 — CI RUNS WHERE IT EARNS ITS COST | none | 1 |
 | RULING 79 — A RULING CLOSES THE NEEDS SEAN ROW IT ANSWERS | none | 1 |
 | RULING 80 — THE COMMITTED GEOMETRY FOLLOWS THE READER, NO… | none | 1 |
+| THE FIVE PROCESS RULINGS OF NJ HUNT 5 — AND THE NUMBERS T… | none | 1 |
+| RULING 83 — THE FREE-SOURCE FLOOR | none | 1 |
+| RULING 84 — THE MANIFEST IS TIERED, AND WALKED IN ORDER | none | 1 |
+| RULING 85 — THE TWO-CLICK TEST | none | 1 |
+| RULING 86 — PER-STATE SOURCE ENUMERATION PRECEDES THE HUNT | none | 1 |
+| RULING 87 — WIKIPEDIA IS A TIER A DISCOVERY SOURCE, NEVER… | none | 1 |
+| RULING 90 — EXHAUSTION MUST BE ARGUED, NOT ASSERTED | none | 1 |
+| RULING 93 — ASK WHAT THE TIER ABOVE PUBLISHES ABOUT THE T… | none | 1 |
 | WHAT IS LAW HERE, AND WHAT IS A RULING | none | 1 |
 | THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSID… | none | 1 |
 | The design system is committed, not improvised. | none | 1 |
@@ -170,6 +213,31 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | A session carries carryover and the deferred queue, and n… | none | 1 |
 | Where a tool does not exist to reach a public record, BUI… | none | 1 |
 | A zero-row extraction is a FAILED extraction, never an em… | none | 1 |
+| DISCOVERY CONDUCT | none | 2 |
+| THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATH… | none | 1 |
+| HUNT 6 HARDENING — SEVEN RULINGS OF 2026-08-23 | none | 1 |
+| RULING 100 — A PARTIAL ANSWER THAT ADDS UP IS STILL A WRO… | none | 1 |
+| RULING 101 — OUR OWN IDENTIFIER NEVER LEAVES OUR OWN ORIG… | none | 1 |
+| RULING 102 — FIXING A GENERATOR IS NOT FINISHED UNTIL ITS… | none | 1 |
+| RULING 103 — A CLASS SWEEP COVERS DUPLICATED IMPLEMENTATI… | none | 1 |
+| RULING 104 — AN ARTIFACT THE AUTHOR PLACES IN THE REPO IS… | none | 1 |
+| RULING 105 — RENDERING IS REPORTED AS A THREE-WAY SPLIT | none | 1 |
+| RULING 106 — NO GENERATED DOCUMENT CARRIES A SIZE CAP | none | 1 |
+| TWO RULINGS OF 2026-08-23 — THE VISUAL TAIL AND REHUNT SE… | none | 1 |
+| RULING 107 — A FRESHNESS DATE IS WRITTEN ONLY BY THE CODE… | none | 1 |
+| RULING 108 — ANYTHING A SESSION MUST READ AT SESSION STAR… | none | 1 |
+| TWO RULINGS OF 2026-08-23 — THE REMOTE SESSION | none | 1 |
+| RULING 109 — A BRIEF DECLARES THE ENVIRONMENT IT REQUIRES… | none | 1 |
+| RULING 110 — A SEARCH THAT RETURNS NOTHING MUST SHOW IT L… | none | 1 |
+| TWO RULINGS OF 2026-08-23 — THE QUESTIONNAIRE AND THE COR… | none | 1 |
+| RULING 111 — A JOIN IS NEVER A LOOKUP FOR A FACT THAT LIV… | none | 1 |
+| RULING 112 — A FIRST-PARTY INSTRUMENT IS SYMMETRIC BY CON… | none | 1 |
+| TWO RULINGS OF 2026-08-23 — THE GREEN STEP AND THE ALWAYS… | none | 1 |
+| RULING 113 — A STEP THAT REPORTS SUCCESS IS ASKED WHETHER… | none | 1 |
+| RULING 114 — A LAYER THAT ALWAYS RENDERS MUST BE RIGHT, B… | none | 1 |
+| TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | none | 0 |
+| RULING 115 — A DRILL IS NOT A FAILURE | none | 0 |
+| RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | none | 0 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | none | 1 |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | none | 1 |

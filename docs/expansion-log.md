@@ -297,3 +297,112 @@ were recorded at zero — and the previous session's conclusion from its exhaust
 search quota was that the constraint was money. That is RULING 83's failure
 recurring in a new place, and the cheapest route in the manifest is still the
 one nobody walked.
+
+---
+
+## overnight-depth-0824 · 2026-08-24
+
+**Five routes that did not exist at session start. Three returned rows, two
+returned zero, and the two that returned zero are reported here as successes —
+the invention is the deliverable, not the yield.**
+
+### filed-email-domain — the right-hand side of the `@`
+
+- **Conceived:** not from the manifest. From asking what data this project
+  ALREADY HOLDS says beyond the field it was collected for. Contact at 07866
+  stands at 272 of 272 because the Morris County Clerk publishes every
+  candidate's filed email. Reading eight of them in a row: `tom@tomkean.com`,
+  `rebecca@rebeccabennettforcongress.com`, `info@analiliafornj.com`,
+  `bookerteam@corybooker.com`. **Seven of the eleven campaign sites this
+  project already held were sitting inside an email address it had held since
+  the filing was parsed.** Nothing had ever read the right-hand side of the `@`.
+- **Query:** `data/ballot/nj-morris-2026-contacts.json` → for each of 272 rows,
+  `https://<domain-of-filed-email>` where the domain is not a mailbox provider
+  (33 of 272), plus `https://<campaign-shaped-local-part>.{com,org,net}` where
+  the local part carries an office word (12 of 272). 69 URLs probed, each
+  control-paired. Run: `WTP_STAMP=$(pnpm stamp) pnpm nj:email-domain`.
+- **Returned:** 9 campaign sites, 1 official host, 1 party organ, 16
+  not-a-candidacy, 42 no-answer. **One NEW: Gary Kapner**, 11 → 12 of 272.
+- **Generalises:** to every jurisdiction whose filing carries an email — which
+  is a state-by-state question, not a national one. New Jersey county clerks
+  publish one; New Hampshire publishes a name and a town, so this route does
+  not travel there and that is recorded rather than assumed.
+
+### wikipedia-citation-follow — the footnote, not the article
+
+- **Conceived:** by reading RULING 87 against the manifest and finding a gap
+  between them. That ruling says *Wikipedia names the person; the citation
+  proves them*. The manifest holds three Wikipedia routes and **every one reads
+  the ARTICLE** — not one walks the footnote. So the ruling names a confirming
+  step nothing was built to take, and nine municipal officials had sat at LEAD
+  since 2026-08-23 waiting for it.
+- **Query:** `https://en.wikipedia.org/w/api.php?action=query&redirects=1&prop=revisions&rvprop=content&rvslots=main&format=json&formatversion=2&titles=<article>`,
+  then the `<ref>` URLs attached to the SENTENCE naming the person — never the
+  article's whole reference list, which would confirm any person against any
+  citation. Run: `WTP_STAMP=$(pnpm stamp) pnpm wiki:citation`.
+- **Returned:** 9 of 9 leads walked. 2 CONFIRMED_OFFICIAL, 1 PRESS_CONFIRMED,
+  4 CITATION_SILENT, 2 NO_CITATION.
+- **Generalises:** to roughly 19,000 templated US municipality articles. The
+  scoping-to-the-sentence is the portable part; what does not travel is which
+  hosts count as official, which is answered per state.
+
+### state-directory-as-official-host — an authority outside us
+
+- **Conceived:** three towns' OWN homepages were being filed as press. A New
+  Jersey municipality's site is very often on `.org`, and a TLD test calls that
+  a newspaper. `CLAUDE.md` already anticipates it: official is decided against
+  something outside us, including *the hosts the source wiring itself types as
+  a body's own page*. The State of New Jersey publishes a directory of all 564
+  municipalities with each one's website — already committed under RULING 93,
+  and never used for this.
+- **Query:** `data/hunt/tier-directories.json`, route `nj-localgov` — 624
+  entities, 592 distinct hosts, read as the set of state-designated official
+  hosts.
+- **Returned:** `rockawaytownship.org` and `rockawayborough.org` reclassified
+  from PRESS to OFFICIAL. It also caught a STALE citation: Wikipedia cites
+  `denvillenj.org`; the state names `denvillenj.gov`.
+- **Generalises:** to every state that publishes a municipal directory. The
+  METHOD travels; the directory does not, and is enumerated per state.
+
+### crt.sh certificate-transparency domain search — RETURNED ZERO
+
+- **Conceived:** the previous session's constraint was a rate-limited search
+  engine. Certificate transparency logs are a completely different dependency:
+  every HTTPS domain issued a certificate appears in public CT logs, so
+  "does this candidate have a site" can be asked of the logs instead of an
+  engine — and CT finds UNLINKED sites, which is exactly the gap `domain-search`
+  describes. D70 names the technique for enumerating Legistar tenants; nothing
+  had used it for campaign-site discovery.
+- **Query:** `https://crt.sh/?q=selenformorriscounty.com&output=json`
+- **Returned:** **ZERO. `crt.sh` answers HTTP 502 from nginx**, twice, minutes
+  apart. Its public Postgres interface is the other door and this repo has no
+  Postgres client and no `psql`; adding one is a dependency, which is a side
+  quest under RULING 89, so it was not taken. SSLMate's CertSpotter answers at
+  200 and confirms a KNOWN domain, but takes no wildcard, so it cannot do
+  discovery — which is the thing this route was invented for.
+- **Generalises:** the idea does, to every candidate anywhere, if a
+  wildcard-capable CT source can be reached. **Recorded as a wall around a
+  known thing** (RULING 90.4): what is on the other side is the set of domains
+  registered under a candidate's name, and the roads to it are crt.sh's web
+  front end (502), its Postgres interface (no client), and a paid API (refused
+  under RULING 83's free-source floor).
+
+### mojeek-independent-index — RETURNED ZERO
+
+- **Conceived:** RULING 52 says two routes that fail for the same reason are
+  one route wearing two names. DuckDuckGo, Bing and Yahoo all walled the
+  previous session — and all three are Bing-backed, so they were ONE
+  dependency counted as three. Mojeek runs its own crawler, so it is a
+  genuinely independent index.
+- **Query:** `https://www.mojeek.com/search?q=%22Selen+for+Morris+County%22`,
+  paired with the control `https://www.mojeek.com/search?q=%22Zzqxwvnonexistent99+for+Morris+County%22`
+- **Returned:** **ZERO, and the CONTROL is what caught it.** Real and control
+  came back 5,518 and 5,532 bytes — indistinguishable. Reading the page: *"You
+  need to enable JavaScript"* over a **Captcha**. A byte-count check alone
+  would have recorded a wall as a clean empty result. Captcha walls are NAMED,
+  not defeated. Marginalia answers with real content and its index is small and
+  non-commercial; Stract 404s; Brave and DDG-lite answer and were not walked
+  further this session.
+- **Generalises:** the PRINCIPLE does and is the durable part — count search
+  dependencies by whose INDEX they are, not by how many brand names sit in
+  front of it.

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 205,
-    "named": 1929,
+    "files": 209,
+    "named": 1988,
     "dynamic": 6
   },
   "files": {
@@ -453,6 +453,35 @@
         "P02: no composite score exists — not a number, not an order, not a comparison",
         "P02: no issue phrase is a single loose word that turns a search into noise",
         "P02: the headline is provenance and carries no count at all"
+      ],
+      "dynamic": 0
+    },
+    "tests/candidate-evidence.test.ts": {
+      "names": [
+        "catches the real instance: `for <place> <office>` on garykapner.com",
+        "catches the real instance: morrisdems.org's own title and first line",
+        "does not fire on a candidate's own site that merely names their party",
+        "does not fire on the law-firm bios that manufactured two findings",
+        "does not list a domain that turned out to be a campaign's own",
+        "does not manufacture evidence out of unrelated prose",
+        "does not treat a generational suffix as the surname",
+        "expands a filed name into the forms a campaign actually uses",
+        "givenSurnamePair",
+        "holds the providers the filing corpus actually contains",
+        "is symmetric across parties, which is a rule and not a courtesy",
+        "name forms — RULING 110",
+        "never promotes something that did not clear the control",
+        "office evidence",
+        "party-organ self-identification",
+        "promotes only when the page NAMES the person AND says it is a campaign",
+        "records every form searched, matched or not",
+        "refuses to promote a page that names the person with no office evidence",
+        "refuses to promote on a surname alone",
+        "still catches the bare form it was widened from",
+        "strips a quoted nickname and a comma suffix",
+        "strips the parenthetical nickname that made the slate test find nothing",
+        "the freemail list",
+        "the promotion verdict — RULING 68's two bars"
       ],
       "dynamic": 0
     },
@@ -1249,6 +1278,7 @@
         "RULING 102: every registered artifact records its generator's digest",
         "RULING 102: no generator has moved since its artifact was last regenerated",
         "RULING 102: the digest is sensitive to a change anywhere in the closure",
+        "RULING 92 + RULING 107: no PURE generator reads the clock",
         "RULING 92: a PURE generator's artifact is byte-identical to what it produces now",
         "RULING 92: a file declaring itself GENERATED is registered here",
         "RULING 92: every registered generated artifact exists and names its generator"
@@ -1806,6 +1836,18 @@
       ],
       "dynamic": 0
     },
+    "tests/nj-slogan-audit.test.ts": {
+      "names": [
+        "agrees with the shipped parser on every row",
+        "carries a walked date, so the reading can go stale rather than stay true forever",
+        "holds the finding the 202 rest on: an EMPTY cell, not a failed hunt",
+        "matched every candidacy to a source record",
+        "read BOTH clerk documents, not just the general one",
+        "states its count assertion rather than passing quietly",
+        "the NJ slogan audit at 07866"
+      ],
+      "dynamic": 0
+    },
     "tests/no-suppression.test.ts": {
       "names": [
         "RULING 23: no page or component imports the hunt-state work queue",
@@ -2106,6 +2148,25 @@
         "R48: every workflow that pushes main goes through the protected push",
         "R48: two runs pushing into the same window both land their work",
         "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
+      ],
+      "dynamic": 0
+    },
+    "tests/questionnaire-store.test.ts": {
+      "names": [
+        "RULING 112 — verbatim, swept by SHAPE",
+        "carries the verbatim promise on the page a candidate actually reads",
+        "creates no new reader identifier",
+        "does not flag the honest copy the page actually ships",
+        "finds none of those shapes on the questionnaire path",
+        "has no mail transport, because NH108's send decisions are Sean's",
+        "imports no sold-store module",
+        "keeps the three token refusals apart rather than collapsing them",
+        "names none of the sold stores anywhere on the questionnaire path",
+        "nothing on this path sends email",
+        "renders no candidacy id or contest id at a reader",
+        "the answer page speaks plain language",
+        "the questionnaire store touches no sold store — asserted BY NAME",
+        "the sweep CATCHES a plant — otherwise it reports green about nothing"
       ],
       "dynamic": 0
     },
@@ -2782,13 +2843,17 @@
         "1c: a window with fewer than two runs says nothing rather than healthy",
         "1c: alternating failures are not a pair — the rule is still ADJACENT",
         "1c: the MOST RECENT pair is the one returned",
+        "JOB02: two manual dispatches do NOT raise a row",
+        "a real scheduled double failure STILL raises a row",
         "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
+        "an unknown trigger is NOT treated as a drill",
         "asOf hides later runs, so the detector can be held against known history",
         "cancelled is not failure — a cancelled run is nobody's diagnosis",
         "every scheduled workflow in the repo is on the watch list",
         "one failure is not a finding — a wall does not usually repeat",
         "runs out of order are sorted before the top two are read",
+        "the drill filter does not change the RATE, which is a fact about the workflow",
         "the rate is a pair, never a bare percentage",
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",
@@ -2812,6 +2877,20 @@
         "the click grammar: a person opens a small card, a body opens a large one",
         "the stated count and the rendered rows are the same expression, at any size",
         "wired counts are partitioned, never double-counted across the two sets"
+      ],
+      "dynamic": 0
+    },
+    "tests/wiki-citation-follow.test.ts": {
+      "names": [
+        "asserts no absence — an unconfirmed lead stays a lead",
+        "keeps a government source and a press source apart",
+        "names which branch answered, so two are visibly independent",
+        "never confirms from the encyclopedia itself",
+        "records WHY a host counted as official, on every row",
+        "requires the person AND the office together before confirming",
+        "states a date and a rung on every row, confirmed or not",
+        "the wikipedia-citation-follow route",
+        "walked every parked lead and produced a row for each"
       ],
       "dynamic": 0
     },

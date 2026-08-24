@@ -199,7 +199,12 @@
     "questionnaire:invitations": "tsx scripts/questionnaire-invitations.mts",
     "questionnaire:doc": "tsx scripts/questionnaire-doc.mts",
     "congress:corpus": "tsx scripts/congress-corpus-walk.mts",
-    "forms:stamp": "tsx scripts/stamp-body-forms.mts"
+    "forms:stamp": "tsx scripts/stamp-body-forms.mts",
+    "verify:migration": "tsx scripts/verify-migration-applied.mts",
+    "nj:slogan-audit": "tsx scripts/audit-nj-slogan-field.mts",
+    "nj:email-domain": "tsx scripts/hunt-filed-email-domain.mts",
+    "wiki:citation": "tsx scripts/hunt-wikipedia-citation.mts",
+    "questionnaire:seed-local": "tsx scripts/seed-questionnaire-local.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

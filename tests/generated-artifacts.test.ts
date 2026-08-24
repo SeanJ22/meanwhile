@@ -198,3 +198,74 @@ test("RULING 102: the digest is sensitive to a change anywhere in the closure", 
     assert.match(rec.regeneratedOn, /^\d{4}-\d{2}-\d{2}$/, `${a.path}: no regeneration date`);
   }
 });
+
+test("RULING 92 + RULING 107: no PURE generator reads the clock", () => {
+  /*
+   * **The class, closed rather than the two instances fixed.**
+   *
+   * 2 of the 7 PURE generators called `today()`, so their artifacts moved every
+   * day on their own and the byte-identity test above could only pass on the
+   * day somebody last ran them. It failed the first time a date rolled over
+   * mid-session, which is how the class was found — and fixing only the
+   * generator that happened to fail would have left the other standing.
+   *
+   * Two defects, one line of code each:
+   *
+   *   1. A "pure" generator whose output changes without its inputs changing is
+   *      not pure, and a byte-identity test over it fails for the wrong reason
+   *      and gets ignored.
+   *   2. RULING 107 — a RUN stamp printed over committed data claims a currency
+   *      the data does not have. `build-nj-rosters.mts` had the sharper form:
+   *      `collectedAt: page?.walkedAt ?? AS_OF`, a FRESHNESS field falling back
+   *      to the clock.
+   *
+   * The fix is `lib/ops/source-stamp.ts`, which carries the stamp from the
+   * newest commit across the generator's committed inputs. This guard is what
+   * stops a third appearing.
+   *
+   * IMPURE generators are untouched: one that fetches is genuinely a run, its
+   * artifact legitimately moves, and it is registered with a reason.
+   */
+  const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+  const CLOCK = /\btoday\(\)|\bnew Date\(\)|\bDate\.now\(\)/;
+
+  const offenders: string[] = [];
+  let pureChecked = 0;
+  let unresolved = 0;
+
+  for (const a of GENERATED.filter((x) => x.pure)) {
+    const name = /pnpm ([a-z:0-9-]+)/i.exec(a.command)?.[1];
+    const target = name ? pkg.scripts[name] : undefined;
+    const file = target ? /scripts\/[A-Za-z0-9._-]+\.m?[tj]s/.exec(target)?.[0] : undefined;
+    if (!file) {
+      // A generator this test cannot locate is reported, never counted as
+      // clean — a sweep that quietly skips what it cannot reach is one
+      // reporting green about nothing.
+      unresolved += 1;
+      continue;
+    }
+    pureChecked += 1;
+    const src = readFileSync(join(ROOT, file), "utf8")
+      .replace(/\/\*[\s\S]*?\*\//g, " ")
+      .replace(/^\s*\/\/.*$/gm, " ");
+    if (CLOCK.test(src)) offenders.push(`${a.path} <- ${file}`);
+  }
+
+  assert.equal(
+    unresolved,
+    0,
+    `${unresolved} PURE generator(s) could not be located from their command — this sweep did ` +
+      "not look at them, and that is a fact about the sweep",
+  );
+  assert.ok(pureChecked >= 5, `expected the sweep to reach the pure set, saw ${pureChecked}`);
+  assert.deepEqual(
+    offenders,
+    [],
+    "a PURE generator reads the clock, so its artifact cannot be reproducible and its date " +
+      "claims a currency its committed inputs do not have. Carry the stamp with " +
+      "`carriedSourceStamp` from lib/ops/source-stamp.ts, or register the generator as impure " +
+      "with a reason.",
+  );
+});

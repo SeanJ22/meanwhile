@@ -86,6 +86,16 @@ const nextConfig: NextConfig = {
       // honest missing data, which is why it is named per route.
       "./data/derived/zip-division-ids.json",
     ],
+    /*
+     * THE QUESTIONNAIRE PAGE RESOLVES AN ID TO A NAME, through `process.cwd()`.
+     *
+     * `lib/questionnaire/candidacy-display.ts` reads the committed ballot files
+     * to turn a candidacy id into what the person is actually called. Untraced,
+     * the read throws, the catch returns null, and every candidate lands on the
+     * neutral fallback — which reads as a deliberate choice rather than as a
+     * missing file, and is exactly the failure that made this list necessary.
+     */
+    "/questionnaire/[token]": ["./data/ballot/*.json"],
     "/about-area": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/reactions": ["./data/derived/zip-coverage-tiers-runtime.json"],
     "/api/log": ["./data/derived/zip-coverage-tiers-runtime.json"],

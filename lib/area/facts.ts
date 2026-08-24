@@ -115,6 +115,38 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceOrg: "New Jersey Division of Taxation",
         verification: FETCHED,
       },
+      /*
+       * NH109, 2026-08-24. The two topics AZ-1 added, brought to the other two
+       * states so a reader who moves gets the same questions answered.
+       *
+       * Both are cited to the STATUTE rather than to an agency page, and that
+       * is a decision rather than a convenience: dep.nj.gov's licence page
+       * answers HTTP 200 and flattens to almost no prose, because it is
+       * JavaScript-rendered. A statute says the same thing, says it in the
+       * state's own words, and does not move when a department redesigns.
+       */
+      {
+        topic: "hunting-fishing",
+        question: "Am I allowed to hunt or fish?",
+        answer:
+          "Yes, with a licence. New Jersey law requires a licence to hunt or trap at any age, and " +
+          "anyone over 16 needs one to fish the state's fresh waters with a rod and line. Saltwater " +
+          "fishing is registered separately rather than licensed.",
+        sourceUrl: "https://law.justia.com/codes/new-jersey/title-23/section-23-3-1/",
+        sourceOrg: "New Jersey Revised Statutes 23:3-1 (Licence for hunting, fishing, trapping)",
+        verification: FETCHED,
+      },
+      {
+        topic: "abortion",
+        question: "What is the law on abortion?",
+        answer:
+          "New Jersey law states a fundamental right to choose whether to carry a pregnancy, to " +
+          "give birth, or to end one. The Freedom of Reproductive Choice Act sets no time limit " +
+          "and requires no waiting period.",
+        sourceUrl: "https://law.justia.com/codes/new-jersey/title-10/section-10-7-2/",
+        sourceOrg: "New Jersey Revised Statutes 10:7-2 (Freedom of Reproductive Choice Act)",
+        verification: FETCHED,
+      },
     ],
   },
   {
@@ -187,6 +219,38 @@ export const AREA_FACTS: AreaFactSet[] = [
         sourceUrl: "https://www.revenue.nh.gov/",
         sourceOrg: "New Hampshire Department of Revenue Administration",
         verification: NH_WALL,
+      },
+      /*
+       * NH109, 2026-08-24.
+       *
+       * **wildlife.nh.gov refuses this client with HTTP 403** — measured
+       * 2026-08-24, on both the licence page and the site root. That is a wall
+       * around a known thing (RULING 90 item 4), and the other road to the same
+       * fact is the statute the department administers, on gencourt, which
+       * answers at rung 2. The wall is named here rather than becoming an
+       * absence.
+       */
+      {
+        topic: "hunting-fishing",
+        question: "Am I allowed to hunt or fish?",
+        answer:
+          "Yes, with a licence. New Hampshire law says nobody may fish, hunt or trap in the state " +
+          "without first getting a valid licence, and it has to be carried while you are doing it. " +
+          "The same chapter sets out the exceptions, including some for young people.",
+        sourceUrl: "https://www.gencourt.state.nh.us/rsa/html/XVIII/214/214-1.htm",
+        sourceOrg: "New Hampshire RSA 214:1 (Licence Required)",
+        verification: FETCHED,
+      },
+      {
+        topic: "abortion",
+        question: "What is the law on abortion?",
+        answer:
+          "New Hampshire allows abortion up to 24 weeks of pregnancy. From 24 weeks a provider may " +
+          "not perform one except in a medical emergency, and must first determine the likely " +
+          "gestational age. There is no time limit written into state law before that point.",
+        sourceUrl: "https://www.gencourt.state.nh.us/rsa/html/XXX/329/329-44.htm",
+        sourceOrg: "New Hampshire RSA 329:44 (Fetal Life Protection Act — Prohibition)",
+        verification: FETCHED,
       },
     ],
   },

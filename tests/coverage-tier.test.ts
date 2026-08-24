@@ -226,6 +226,24 @@ test("item 8.4: every write path into a sold store states a tier", () => {
     [
       "lib/db/feedback.ts",
       "lib/db/intake-limiter.ts",
+      /*
+       * **RULED ON, 2026-08-23 (`NH104`): `questionnaire_responses` is NOT a
+       * sold aggregate record and carries no coverage tier.**
+       *
+       * The coverage tier exists so a BUYER of an aggregate is told how well
+       * researched the place behind a row is. A questionnaire answer is not in
+       * any aggregate and is not sold: it is published civic content, written
+       * by a named public person about their own candidacy, for the express
+       * purpose of being shown verbatim under their name (RULING 112). The
+       * reader who sees it is reading the candidate, not a statistic derived
+       * from readers.
+       *
+       * It also holds no zip. A candidacy belongs to a CONTEST, and a contest
+       * spans whatever geography the office does — so there is no single place
+       * whose coverage depth could honestly be stated, and inventing one to
+       * satisfy a column would be a fabricated fact rather than a missing one.
+       */
+      "lib/db/questionnaire.ts",
       "lib/db/reactions.ts",
       "lib/db/search-log.ts",
       /*

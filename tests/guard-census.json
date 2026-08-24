@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 205,
-    "named": 1929,
+    "files": 206,
+    "named": 1936,
     "dynamic": 6
   },
   "files": {
@@ -1803,6 +1803,18 @@
         "no candidate is filed under document furniture instead of a place",
         "the document yields a real number of candidates, not merely no error",
         "the four Rockaway Borough council candidates parse with their filed contact"
+      ],
+      "dynamic": 0
+    },
+    "tests/nj-slogan-audit.test.ts": {
+      "names": [
+        "agrees with the shipped parser on every row",
+        "carries a walked date, so the reading can go stale rather than stay true forever",
+        "holds the finding the 202 rest on: an EMPTY cell, not a failed hunt",
+        "matched every candidacy to a source record",
+        "read BOTH clerk documents, not just the general one",
+        "states its count assertion rather than passing quietly",
+        "the NJ slogan audit at 07866"
       ],
       "dynamic": 0
     },

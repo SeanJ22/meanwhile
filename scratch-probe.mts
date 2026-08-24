@@ -1,13 +1,51 @@
-import { politeGetText } from "@/lib/sources/http";
-import { flattenForEvidence, officeEvidenceIn, OFFICE_EVIDENCE } from "@/lib/hunt/candidate-evidence";
-const r = await politeGetText("http://garykapner.com", { profile: "browser" });
-console.log("status", r.status, "bytes", r.text.length);
-const hay = flattenForEvidence(r.text);
-console.log("flattened length", hay.length);
-console.log("has 'gary kapner':", hay.includes("gary kapner"));
-for (const [label, re] of OFFICE_EVIDENCE) console.log(`  ${label.padEnd(26)} ${re.test(hay)}`);
-for (const probe of ["candidate for", "township committee", "paid for by", "your candidate"]) {
-  const i = hay.indexOf(probe);
-  console.log(`  "${probe}" at ${i}${i >= 0 ? " :: " + hay.slice(Math.max(0, i - 60), i + 80) : ""}`);
+import { readFileSync } from "node:fs";
+
+/** A minimal RFC4180 reader — the corpus quotes fields containing commas. */
+function parseCsv(text: string): string[][] {
+  const rows: string[][] = [];
+  let row: string[] = [];
+  let field = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i += 1) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i += 1; } else quoted = false;
+      } else field += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
+    else if (c !== "\r") field += c;
+  }
+  if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+  return rows;
 }
-console.log("\nfirst 400 of flattened:", hay.slice(0, 400));
+
+const rows = parseCsv(readFileSync("data/reference/openstates_legislators.csv", "utf8"));
+const head = rows[0];
+const col = (n: string) => head.indexOf(n);
+const iName = col("name"), iEmail = col("email"), iJur = col("jurisdiction"), iCh = col("chamber"), iD = col("district"), iEnd = col("role_end_date");
+const nh = rows.slice(1).filter((c) => (c[iJur] ?? "").trim().toUpperCase() === "NH");
+console.log("NH legislators in the committed corpus:", nh.length);
+console.log("  with an email:", nh.filter((c) => (c[iEmail] ?? "").includes("@")).length);
+console.log("  sample:", nh[0] ? `${nh[0][iName]} | ${nh[0][iCh]}-${nh[0][iD]} | ${nh[0][iEmail]}` : "none");
+
+const ballot = JSON.parse(readFileSync("data/ballot/nh-merrimack-2026.json", "utf8"));
+const cands: any[] = ballot.candidacies ?? [];
+const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z ]/g, " ").replace(/\s+/g, " ").trim();
+const byName = new Map<string, string[]>();
+for (const c of nh) {
+  const k = norm(c[iName] ?? "");
+  if (k) byName.set(k, c);
+  const p = k.split(" ");
+  if (p.length > 2) byName.set(`${p[0]} ${p[p.length - 1]}`, c);
+}
+let hits = 0;
+for (const c of cands) {
+  const full = norm(`${c.givenName ?? ""} ${c.familyName ?? ""}`);
+  const p = full.split(" ");
+  const short = p.length > 2 ? `${p[0]} ${p[p.length - 1]}` : full;
+  const m = byName.get(full) ?? byName.get(short);
+  if (m) { hits++; console.log(`  MATCH ${(`${c.givenName} ${c.familyName}`).padEnd(32)} ${m[iCh]}-${m[iD]}  email=${m[iEmail] || "(none)"}`); }
+}
+console.log(`\nNH merrimack candidacies matched to a sitting legislator: ${hits} of ${cands.length}`);

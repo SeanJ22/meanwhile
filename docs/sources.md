@@ -24,25 +24,25 @@ corrected in place.
 forgotten about is exactly what a code-first sweep cannot surface, because a
 key nothing reads leaves no trace in the code.
 
-**The `Last walked` column on this table is the CREDENTIAL LEDGER's date, not this file's.** Every one of these fifteen was CALLED on 2026-08-22 by `pnpm credentials`, and `docs/credential-ledger.md` carries what each returned. A date here that disagreed with the ledger would be this file guessing about a measurement the ledger actually made.
+**The `Last walked` column on this table is the CREDENTIAL LEDGER's date, not this file's.** Every one of these fifteen was CALLED again on **2026-08-23** by `pnpm credentials` — **14 proven, 1 failed** — and `docs/credential-ledger.md` carries what each returned. A date here that disagreed with the ledger would be this file guessing about a measurement the ledger actually made.
 
 | # | Key | Reads it | Status | Last walked |
 |---|---|---|---|---|
-| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** | 2026-08-22 |
-| 2 | `NEXT_PUBLIC_MAPTILER_STYLE` | `lib/map/style.ts` | **WIRED** | 2026-08-22 |
-| 3 | `NEXT_PUBLIC_MAPTILER_STYLE_LIGHT` | `lib/map/style.ts` | **WIRED** | 2026-08-22 |
-| 4 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | **WIRED** | 2026-08-22 |
-| 5 | `WTP_DB_ROLE` | `lib/db/write-guard.ts`, `/api/build` | **WIRED** | 2026-08-22 |
-| 6 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | `lib/db/write-handle.ts`, `pnpm db:apply` | **WIRED** | 2026-08-22 |
-| 7 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | `scripts/walk-all.mts`, the census scripts | **WIRED** | 2026-08-22 |
-| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` | **WIRED** | 2026-08-22 |
-| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` | **WIRED** | 2026-08-22 |
-| 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** | 2026-08-22 |
-| 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** | 2026-08-22 |
-| 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** | 2026-08-22 |
-| 13 | `CENSUS_API_KEY` | **nothing** | **NOT IN USE** — row `SRC01` | 2026-08-22 |
-| 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) | 2026-08-22 |
-| 15 | `DATA_GOV_API_KEY` | **nothing** — named only in `PB13`'s own prose | **NOT IN USE** — row `SRC03` | 2026-08-22 |
+| 1 | `NEXT_PUBLIC_MAPTILER_KEY` | `lib/map/style.ts`, `components/map/map-entry.tsx` | **WIRED** | 2026-08-23 |
+| 2 | `NEXT_PUBLIC_MAPTILER_STYLE` | `lib/map/style.ts` | **WIRED** | 2026-08-23 |
+| 3 | `NEXT_PUBLIC_MAPTILER_STYLE_LIGHT` | `lib/map/style.ts` | **WIRED** | 2026-08-23 |
+| 4 | `DATABASE_URL` | the whole app, via `lib/db/index.ts` | **WIRED** | 2026-08-23 |
+| 5 | `WTP_DB_ROLE` | `lib/db/write-guard.ts`, `/api/build` | **WIRED** | 2026-08-23 |
+| 6 | `WTP_PRODUCTION_DATABASE_URL_WRITE` | `lib/db/write-handle.ts`, `pnpm db:apply` | **WIRED** | 2026-08-23 |
+| 7 | `WTP_PRODUCTION_DATABASE_URL_READONLY` | `scripts/walk-all.mts`, the census scripts | **WIRED** | 2026-08-23 |
+| 8 | `CONGRESS_API_KEY` | `scripts/fetch-votes.mts`, `scripts/fetch-law-votes.mts` | **WIRED** | 2026-08-23 |
+| 9 | `FEC_API_KEY` | `scripts/fetch-fec.mts`, `refresh-fec-snapshot.yml` | **WIRED** | 2026-08-23 |
+| 10 | `PLURAL_API_KEY` | `lib/sources/plural/index.ts` | **WIRED** | 2026-08-23 |
+| 11 | `LEGISCAN_API_KEY` | `scripts/fetch-legiscan.mts`, `refresh-legiscan-snapshot.yml` | **WIRED** | 2026-08-23 |
+| 12 | `ANTHROPIC_API_KEY` | `lib/routing/classifier.ts` | **WIRED** | 2026-08-23 |
+| 13 | `CENSUS_API_KEY` | **nothing** | **NOT IN USE** — row `SRC01` | 2026-08-23 |
+| 14 | `LDA_API_KEY` | **nothing** | **NOT IN USE** — row `SRC02` (`PB12` is the client) | 2026-08-23 |
+| 15 | `DATA_GOV_API_KEY` | **nothing** — named only in `PB13`'s own prose | **NOT IN USE** — row `SRC03` | 2026-08-23 |
 
 **Three keys are held and unread.** Each has a tracker row saying what it would
 be for, because a credential with no row is a credential nobody decides about.
@@ -118,16 +118,16 @@ the manifest answers *what do we walk and in what order*.
 
 | Source | Access | Licence | Tier | Status | Last walked |
 |---|---|---|---|---|---|
-| **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities | UNKNOWN |
+| **USA.gov** — `usa.gov/elected-officials`, `/local-governments`, `/state-election-office`, `/state-governor`, `/agency-index`, `/states/{state}` | plain GET, no key, no rate wall observed | **US government work — public domain.** No attribution obligation, no terms to accept | **A** | **WIRED** — `pnpm tier:directory`. RULING 93's federal tier. 7 routes, all answering, 227 entities. Re-read 2026-08-23 out of the committed walk at `data/hunt/tier-directories.json`, whose `nj-localgov` route carries 624 entities and 592 distinct hosts — that directory is what settled `rockawaytownship.org` and `rockawayborough.org` as OFFICIAL rather than press | 2026-08-23 |
 | **State of New Jersey local-government directory** — `nj.gov/nj/gov/county/localgov.shtml` | plain GET, no key | **US state government work — public domain** | **A** | **WIRED** — `pnpm tier:directory --route nj-localgov`. **624 entities: all 21 counties and all 564 municipalities with their official websites.** Note the live URL: `/nj/gov/county/` answers HTTP 200 with a "Page not found" body | 2026-08-22 |
-| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`. **DISCOVERY ONLY, never a source of record** | UNKNOWN |
-| **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither | UNKNOWN |
+| **Wikipedia** — municipality and election articles | `en.wikipedia.org/w/api.php`, no key, identified User-Agent, spaced 400 ms | **CC BY-SA.** Facts — names, parties, term dates, districts — are **not copyrightable** and are what is extracted; the prose is never copied. RULING 87 | **A** | **WIRED** — `pnpm wiki:muni`, `pnpm wiki:graph`, and **`pnpm wiki:citation` (new 2026-08-23)**, which walks the FOOTNOTE rather than the article. Walked 2026-08-23 against three Morris municipality articles; 9 of 9 parked leads resolved to a branch result. **DISCOVERY ONLY, never a source of record** | 2026-08-23 |
+| **Each body's own website** — municipal, county, district | plain GET, identified User-Agent, spaced 700 ms, ceiling on pages per site | Public records published by the body. The public-records rule governs | **B** | **WIRED** — `pnpm roster:hunt`. The route that carries phone and email where the encyclopedia carries neither. Walked 2026-08-23 against `rockawaytownship.org`, `rockawayborough.org` and `denvillenj.gov`, each control-paired; two confirmed a sitting mayor by name and office | 2026-08-23 |
 | **FEC Combined Federal/State Disclosure Directory** | committed at `data/reference/fec_combined_federal_state_disclosure_directory.csv`; re-fetch with `pnpm fec:directories` | **US federal government work — public domain** | **A** | **WIRED.** 349 offices across 56 jurisdictions with records-held, URL, email and phone | 2026-08-22 |
 | **2022 Census of Governments** | committed at `data/reference/census_govt_units_2022.csv` | **US federal government work — public domain** | **A** | **WIRED.** The OFFICIAL UNIVERSE every coverage claim is measured against | 2026-08-22 |
 | **NCES CCD LEA directory** | committed at `data/reference/nces_ccd_lea_directory_2025_26.csv` | **US federal government work — public domain** | **A** | **WIRED.** The official universe for school districts | 2026-08-22 |
 | **Open States bulk legislators** | committed at `data/reference/openstates_legislators.csv` | **CC-0** | **A** | **WIRED.** 7,976 state legislators with official emails; no quota spent | 2026-08-22 |
-| **Legislative caucus sites** — e.g. `assemblydems.com`, senate/assembly Republican caucus sites | plain GET, no key | **Party organisation sites, NOT government publications.** Usable for a member's own published contact and photo under the campaign-site and photo doors; never as a source of record for a position | **B** | **EVALUATED** — reached via `websiteUrl` on Open States rows | UNKNOWN |
-| **usmayors.org** (US Conference of Mayors) | plain GET, no key | **NONPROFIT — not a government body.** RULING 70's Ballotpedia question applies; **not** public domain | **A (discovery)** | **RECORDED, NOT WALKED AS A SOURCE OF RECORD.** Discovery surface only, by the author's instruction, NJ Hunt 6 | UNKNOWN |
+| **Legislative caucus sites — ALL FOUR NAMED**: `assemblydems.com` · `njassemblygop.com` · `njsendems.org` · `senatenj.com` | plain GET, no key | **Party organisation sites, NOT government publications.** Usable for a member's own published contact and photo under the campaign-site and photo doors; never as a source of record for a position | **B** | **WALKED 2026-08-23, all four answered HTTP 200** (170 KB · 101 KB · 110 KB · 1.14 MB). Three of the four hosts had never been written down — the row said `assemblydems.com` and gestured at "senate/assembly Republican caucus sites", so a session walking the all-four-or-none rule had one host and three guesses. **`njsendems.com` does not resolve; the Senate Democrats are on `njsendems.org`**, and `njassemblyrepublicans.com` does not resolve either — the Assembly Republicans are on `njassemblygop.com` | 2026-08-23 |
+| **usmayors.org** (US Conference of Mayors) | plain GET, no key | **NONPROFIT — not a government body.** RULING 70's Ballotpedia question applies; **not** public domain | **A (discovery)** | **RECORDED, NOT WALKED AS A SOURCE OF RECORD.** Discovery surface only, by the author's instruction, NJ Hunt 6. Reachability re-measured 2026-08-23: `usmayors.org/mayors/` answers HTTP 200 at 528 KB with the control string present. **Reachability is not permission** and this stays a discovery surface until the author rules | 2026-08-23 |
 | **api.gsa.gov site-scanning** | `DATA_GOV_API_KEY` | **US federal government work — public domain** | **A** | **EVALUATED, WRONG TIER.** The key answers HTTP 200 with data, but the corpus is FEDERAL executive-branch sites only and its `agency` filter is ignored — it returned `va.gov` for `agency=New Jersey`. It does not reach municipal domains | 2026-08-22 |
 | **api.usa.gov contacts v1** | `DATA_GOV_API_KEY` | — | — | **DEAD.** HTTP 404 `NOT_FOUND` on 2026-08-22. Recorded as dead rather than deleted, per the External-sources law | 2026-08-22 |
 
@@ -274,7 +274,7 @@ parse as data*, never *did the call succeed*.
 - **Licence:** US federal government work. Public domain.
 
 ### CISA `.gov` registry (cisagov/dotgov-data)
-- **Last walked:** UNKNOWN
+- **Last walked:** 2026-08-23 — `raw.githubusercontent.com/cisagov/dotgov-data/main/current-full.csv` answered HTTP 200 at 1.41 MB with the `Domain name` header present as a control string
 - **Status:** WIRED. `data/dotgov/snapshot.json`, SHA-pinned,
   `pnpm dotgov:fetch`.
 - **Auth:** none.
@@ -346,19 +346,19 @@ parse as data*, never *did the call succeed*.
 ## Not in use — the three held keys
 
 ### `CENSUS_API_KEY` — `SRC01`
-- **Last walked:** UNKNOWN
+- **Last walked:** 2026-08-23 — CALLED by `pnpm credentials` and **REFUSED again**: HTTP 302 to `invalid_key.html`. It remains the one failing credential of fifteen. `NS06` is the author's action and this session did not re-diagnose it
 The Census **API**, as distinct from the bulk files this repo already reads. It
 would answer per-zip demography and geography questions the committed files
 cannot. Nothing reads it today.
 
 ### `LDA_API_KEY` — `SRC02`
-- **Last walked:** UNKNOWN
+- **Last walked:** 2026-08-23 — CALLED by `pnpm credentials`, HTTP 200, 5 rows. PROVEN and still unread by anything in the repo
 Lobbying Disclosure Act filings. `PB12` is the client row; this is the
 credential. Nothing reads it today, and `PB12` records that this source is
 currently fetching NOTHING.
 
 ### `DATA_GOV_API_KEY` — `SRC03`
-- **Last walked:** UNKNOWN
+- **Last walked:** 2026-08-23 — CALLED by `pnpm credentials`, HTTP 200, 42 rows. PROVEN and still unread by anything in the repo
 api.data.gov's umbrella key, which fronts OpenFEC and govinfo among others.
 This repo's FEC path holds its own key against the same upstream and the
 govinfo collections are not fetched at all. Held, unread. **RULING 21 records

@@ -5,6 +5,12 @@
     "entry": "scripts/stamp-body-forms.mts",
     "regeneratedOn": "2026-08-23"
   },
+  "data/derived/class-stamp-sweep.json": {
+    "digest": "539a8ddba7b5398f067e31ea313fc85477c8c327030507703e43819ab99a5aa4",
+    "files": 1,
+    "entry": "scripts/class-stamp-sweep.mts",
+    "regeneratedOn": "2026-08-23"
+  },
   "data/derived/school-district-dependency.json": {
     "digest": "c9ae07fa6021ec3bbc3f2dfaae41f4218e3a8d354b753e420f9c810f5dc831c9",
     "files": 4,

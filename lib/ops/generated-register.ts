@@ -89,6 +89,23 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    /*
+     * The class-stamp sweep (`NH106`, 2026-08-23, RULING 114). Pure: it reads
+     * the committed stamp file, the committed registry and the committed 2022
+     * Census of Governments roster. No network and no clock — the date is
+     * passed in from `pnpm stamp`.
+     *
+     * Registered here rather than merely runnable, because
+     * `tests/class-stamp-sweep.test.ts` asserts against the ARTIFACT. Without
+     * a digest on the sweep's own source, an edit to the comparison logic
+     * would leave the suite grading a verdict the current code no longer
+     * produces — a guard checking a stale answer, which reads green.
+     */
+    path: "data/derived/class-stamp-sweep.json",
+    command: "corepack pnpm class:sweep",
+    pure: true,
+  },
+  {
     path: "lib/registry/rosters-nj-morris.ts",
     command: "corepack pnpm nj:wire",
     pure: true,

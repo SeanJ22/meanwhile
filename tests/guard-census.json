@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 204,
-    "named": 1923,
+    "files": 205,
+    "named": 1929,
     "dynamic": 6
   },
   "files": {
@@ -556,6 +556,17 @@
         "the browsers root honours the environment's override",
         "the committed revision is the one playwright actually wants",
         "what this repo resolves is the file playwright would actually launch"
+      ],
+      "dynamic": 0
+    },
+    "tests/class-stamp-sweep.test.ts": {
+      "names": [
+        "RULING 114: NO-SOURCE says why, and never reads as agreement",
+        "RULING 114: a real second authority was actually consulted",
+        "RULING 114: an adjudicated disagreement carries the branch that settled it",
+        "RULING 114: no class stamp disagrees with its source of record",
+        "RULING 114: the sweep covers every stamped body, not a sample",
+        "RULING 114: the three outcomes are a partition, and none is a subtraction"
       ],
       "dynamic": 0
     },

@@ -44,6 +44,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 
 import { assertCount, assertionLine } from "../lib/extract/count-assertion.ts";
@@ -56,7 +57,7 @@ import {
   readTextFile,
 } from "../lib/hunt/github-corpus.ts";
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data/hunt/congress-corpus-walk.json");
 const CACHE = join(process.env.WTP_CORPUS_CACHE ?? tmpdir(), "wtp-github-corpora");
 

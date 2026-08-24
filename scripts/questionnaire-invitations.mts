@@ -35,6 +35,7 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import {
   INSTRUMENT_VERSION,
@@ -49,7 +50,7 @@ import {
 } from "../lib/questionnaire/invitations.ts";
 import { officeClassFor } from "../lib/questionnaire/office-class.ts";
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BALLOT = join(ROOT, "data/ballot/nj-morris-2026.json");
 const CONTACTS = join(ROOT, "data/ballot/nj-morris-2026-contacts.json");
 const OUT = join(ROOT, "data/questionnaire/invitations-nj-morris-2026.json");

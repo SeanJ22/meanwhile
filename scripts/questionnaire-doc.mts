@@ -21,6 +21,7 @@
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import {
   CLASS_QUESTIONS,
@@ -31,7 +32,7 @@ import {
   WORD_LIMIT,
 } from "../lib/questionnaire/instrument.ts";
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const DOC = join(ROOT, "docs/candidate-questionnaire.md");
 
 const CLASS_TITLES: Record<string, string> = {

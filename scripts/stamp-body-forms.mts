@@ -24,13 +24,14 @@
 
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { definitionsForBody } from "../lib/officials/body-definitions.ts";
 import { formFor, knownForms, type FormStamp } from "../lib/officials/body-form.ts";
 import type { BodyDivisionType } from "../lib/officials/body-blurbs.ts";
 import { schoolDependency } from "../lib/officials/school-dependency.ts";
 
-const ROOT = join(dirname(new URL(import.meta.url).pathname), "..");
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data/derived/body-forms.json");
 
 interface Division {

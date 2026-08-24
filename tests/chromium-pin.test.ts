@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
@@ -98,5 +99,134 @@ test("the browsers root honours the environment's override", () => {
   assert.equal(
     browsersRoot({ PLAYWRIGHT_BROWSERS_PATH: "/opt/pw-browsers" }),
     "/opt/pw-browsers",
+  );
+});
+
+/*
+ * ---------------------------------------------------------------------------
+ * `NH106` (2026-08-23) — THE GUARDS THAT WOULD HAVE CAUGHT `main` GOING RED.
+ *
+ * The four failures at `3d453fd` were one defect: `resolveChromium()` looked
+ * for the binary at `chrome-linux/chrome`, Playwright's LEGACY layout, while
+ * the pinned Playwright downloads Chrome for Testing to `chrome-linux64/chrome`.
+ * CI reported `NO CHROMIUM INSTALLED ... searched /home/runner/.cache/ms-playwright`
+ * about a directory its own install log said it had put a Chromium in.
+ *
+ * Everything above this line passed throughout. The pin was checked, the
+ * exactness of the version was checked, the refusal-on-absence was checked —
+ * and not one of them compared what this repo resolves against what Playwright
+ * itself would launch, which is the only comparison that could have failed.
+ * ---------------------------------------------------------------------------
+ */
+
+test("what this repo resolves is the file playwright would actually launch", async () => {
+  const resolved = resolveChromium();
+  if (resolved.kind === "ABSENT") {
+    assert.fail(`${describeChromium(resolved)}\nNothing that needs a browser can run on this machine.`);
+  }
+  if (resolved.kind === "SUBSTITUTED") {
+    /* A stated substitution is the deliberate case: the pinned build is absent
+     * and another is launched by explicit path. The two SHOULD differ there,
+     * and asserting equality would turn a working fallback into a failure. */
+    return;
+  }
+  const { chromium } = await import("playwright");
+  assert.equal(
+    resolved.executablePath,
+    chromium.executablePath(),
+    "this repo's resolver and playwright disagree about which binary is the pinned build. " +
+      "They agreed on the DIRECTORY and disagreed on the file inside it for as long as this pin " +
+      "existed, which is how a green install step and a red suite coexisted at 3d453fd.",
+  );
+});
+
+test("a chrome-for-testing layout is found on every platform, not just the legacy one", () => {
+  /*
+   * The fixture is a real directory tree rather than a mock, because the
+   * defect was `existsSync` returning false for a path that was never going to
+   * exist. A mocked filesystem would have agreed with the bug.
+   *
+   * Both packagings per platform: `chrome-linux64` is Chrome for Testing and
+   * `chrome-linux` is what Playwright shipped before it, and a machine can
+   * hold either. Nothing here predicts the directory NAME — that is the point
+   * of the fix, so the test states the names it expects to be tolerant of and
+   * the code finds them by shape.
+   */
+  const cases: { platform: string; layout: string; binary: string }[] = [
+    { platform: "linux", layout: "chrome-linux64", binary: "chrome" },
+    { platform: "linux", layout: "chrome-linux", binary: "chrome" },
+    { platform: "win32", layout: "chrome-win64", binary: "chrome.exe" },
+    { platform: "win32", layout: "chrome-win", binary: "chrome.exe" },
+  ];
+
+  for (const c of cases) {
+    const root = mkdtempSync(join(tmpdir(), "wtp-chromium-"));
+    try {
+      const dir = join(root, `chromium-${EXPECTED_CHROMIUM_REVISION}`, c.layout);
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(join(dir, c.binary), "");
+      const resolved = resolveChromium({ PLAYWRIGHT_BROWSERS_PATH: root }, c.platform);
+      assert.equal(
+        resolved.kind,
+        "EXPECTED",
+        `${c.platform} ${c.layout}/${c.binary} was not recognised as an installed browser — ` +
+          `describeChromium said: ${describeChromium(resolved)}`,
+      );
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  }
+});
+
+test("a build directory with no binary in it blames the reader, not the installer", () => {
+  /*
+   * `NH106`'s message defect, guarded. CI said "NO CHROMIUM INSTALLED" about a
+   * root holding `chromium-1234`, so every reader of that line went and looked
+   * at the install step, which was working perfectly. An absence that can name
+   * what it DID see points at the right half of the problem.
+   */
+  const root = mkdtempSync(join(tmpdir(), "wtp-chromium-"));
+  try {
+    mkdirSync(join(root, `chromium-${EXPECTED_CHROMIUM_REVISION}`, "chrome-mars99"), {
+      recursive: true,
+    });
+    const resolved = resolveChromium({ PLAYWRIGHT_BROWSERS_PATH: root }, "linux");
+    assert.equal(resolved.kind, "ABSENT");
+    const line = describeChromium(resolved);
+    assert.match(line, new RegExp(`chromium-${EXPECTED_CHROMIUM_REVISION}`));
+    assert.match(line, /this resolver, not the install, is what failed/);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("the browsers root default is per platform, and windows has no HOME", () => {
+  /*
+   * The sibling defect found in the same file, and it is RULING 14's family:
+   * the fallback was `join(env.HOME ?? "", ".cache", "ms-playwright")` on every
+   * platform. `HOME` is not set on Windows, so that resolved to a `.cache`
+   * directory off the process drive — a path that has never existed — and the
+   * resolver was therefore wrong on the author's own machine too, for a second
+   * independent reason, the whole time.
+   */
+  assert.equal(
+    browsersRoot({ HOME: "/home/runner" }, "linux"),
+    join("/home/runner", ".cache", "ms-playwright"),
+  );
+  assert.equal(
+    browsersRoot({ HOME: "/Users/x" }, "darwin"),
+    join("/Users/x", "Library", "Caches", "ms-playwright"),
+  );
+  assert.equal(
+    browsersRoot({ LOCALAPPDATA: "C:\\Users\\x\\AppData\\Local" }, "win32"),
+    join("C:\\Users\\x\\AppData\\Local", "ms-playwright"),
+  );
+  assert.equal(
+    browsersRoot({ USERPROFILE: "C:\\Users\\x" }, "win32"),
+    join("C:\\Users\\x", "AppData", "Local", "ms-playwright"),
+  );
+  assert.ok(
+    !browsersRoot({ USERPROFILE: "C:\\Users\\x" }, "win32").includes(".cache"),
+    "the windows default must not be the POSIX one",
   );
 });

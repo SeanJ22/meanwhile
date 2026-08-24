@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 204,
-    "named": 1917,
+    "named": 1923,
     "dynamic": 6
   },
   "files": {
@@ -547,11 +547,15 @@
     },
     "tests/chromium-pin.test.ts": {
       "names": [
+        "a build directory with no binary in it blames the reader, not the installer",
+        "a chrome-for-testing layout is found on every platform, not just the legacy one",
         "an absent browser refuses rather than reads as a pass",
         "playwright is pinned to an exact version, not a range",
         "the browser resolution is stated, never silent",
+        "the browsers root default is per platform, and windows has no HOME",
         "the browsers root honours the environment's override",
-        "the committed revision is the one playwright actually wants"
+        "the committed revision is the one playwright actually wants",
+        "what this repo resolves is the file playwright would actually launch"
       ],
       "dynamic": 0
     },
@@ -1914,9 +1918,11 @@
     },
     "tests/path-separator.test.ts": {
       "names": [
+        "RULING 14: no file URL is used as a path without fileURLToPath",
         "RULING 14: no path is inverted from POSIX into platform separators",
         "RULING 14: no repo-path literal uses a backslash as its separator",
         "RULING 14: the coverage manifest allowlists correctly on this platform",
+        "RULING 14: the sanctioned file-URL decoder is the established idiom",
         "RULING 14: the shared normalizer exists and normalizes both directions",
         "the sweep reaches the source tree it claims to"
       ],

@@ -20,6 +20,7 @@
     "chrome:sweep": "tsx scripts/chrome-sweep.mts",
     "closeout": "node scripts/close-out.mjs",
     "definitions:verify": "tsx scripts/definitions-verify.mts",
+    "assert:browser": "tsx scripts/assert-browser.mts",
     "credentials": "tsx scripts/credential-ledger.mts",
     "congress:fetch": "tsx scripts/fetch-congress-legislators.mts",
     "congress:migrate": "tsx scripts/migrate-congress-directory.mts",

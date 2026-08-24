@@ -1,6 +1,6 @@
 {
   "data/derived/body-forms.json": {
-    "digest": "4e5f0c86c5bd6faec29a061195986805d4d88d2e9abf0e784554c5140943bc00",
+    "digest": "9bd74a836ef37fbc22e3880f1edfe350e6f48db0283d80fe2bc32645d5d4759c",
     "files": 6,
     "entry": "scripts/stamp-body-forms.mts",
     "regeneratedOn": "2026-08-23"
@@ -48,7 +48,7 @@
     "regeneratedOn": "2026-08-23"
   },
   "data/questionnaire/invitations-nj-morris-2026.json": {
-    "digest": "d5f12de17babb5c4c21d2848241ecc2ffe16ee70d14c9d59df8225486e1b8003",
+    "digest": "4ac73f637e38a470265bc3093b11b028d9d495158c05bbcc4c0640ba98e88068",
     "files": 4,
     "entry": "scripts/questionnaire-invitations.mts",
     "regeneratedOn": "2026-08-23"
@@ -60,7 +60,7 @@
     "regeneratedOn": "2026-08-23"
   },
   "docs/candidate-questionnaire.md": {
-    "digest": "0dd4fbe1eb1115667e12648d02e35ca40e77c61f0de3c5ea5ef8b8fbfc5d6ce2",
+    "digest": "65c1cadf8471ca65ba292e40d9e68c8b6987dac19d0d460c3b4f7a0a1a25a68a",
     "files": 2,
     "entry": "scripts/questionnaire-doc.mts",
     "regeneratedOn": "2026-08-23"

@@ -1,0 +1,181 @@
+# THE ONE DAILY REFRESH — RULING 124 items 3 and 4 (2026-08-24, Sean's
+# instruction that deploys be cut to the floor).
+#
+# This replaces the SCHEDULES of five workflows: refresh-meetings-snapshot,
+# refresh-fec-snapshot, refresh-legiscan-snapshot, refresh-dotgov-snapshot and
+# refresh-nj-filing. Each of those kept its `workflow_dispatch` so a single
+# source can still be run and debugged by hand; none of them is on a cron any
+# more, and the reason is on each one.
+#
+# WHAT THE FIVE WERE COSTING. They committed separately, so three of them firing
+# on 2026-08-24 produced three commits, three production builds and three
+# deploys before 5 AM — all shipping the same application. This runs once, gates
+# once, and COMMITS ONCE however many sources moved.
+#
+# A QUIET DAY COSTS ZERO COMMITS AND ZERO BUILDS. Not a ceremonial
+# "refreshed, no changes" commit — Sean's words, and the diff step below is
+# where they are enforced.
+#
+# CADENCE lives in `lib/ops/refresh-cadence.ts` with a stated reason per source,
+# and is decided from the RUN'S CALENDAR DATE rather than from when an artifact
+# last changed. That is deliberate: per-file `git log` returns the tip date for
+# every file in a shallow clone, with no error, so a weekly source would read as
+# refreshed-today every day forever and nothing would go red.
+name: Refresh (daily, all sources)
+
+on:
+  schedule:
+    # 09:11 UTC — before the old meetings slot at :17, and off the top of the
+    # hour where every cron in the world lands.
+    - cron: "11 9 * * *"
+  workflow_dispatch:
+    inputs:
+      all_sources:
+        description: >-
+          Ignore the cadence and run every source, whatever today's date is.
+          For proving a source end-to-end without waiting for its Monday.
+        type: boolean
+        default: false
+      simulate_change:
+        description: >-
+          Exercise the CHANGED path — run the full gate as though an artifact
+          had moved, and commit nothing. Exists so the branch that guards real
+          data can be proven to execute without waiting for the data to move.
+        type: boolean
+        default: false
+
+concurrency:
+  # Two runs of this pushing `main` at once is R48's data loss with a shorter
+  # window. One at a time; a queued run picks up whatever the first committed.
+  group: refresh-daily
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes, and a job that sits at a gate
+    # until GitHub kills it reports no step name at all.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          # The orchestrator does not read per-file history — that is why the
+          # cadence is calendar-driven — but `push-main.mjs` rebases, and a
+          # depth-1 clone cannot.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      # PER-SOURCE ISOLATION (NH31, one size larger).
+      #
+      # Consolidating five workflows into one creates exactly the failure NH31
+      # was adopted over, scaled up: one throwing source would now discard FOUR
+      # healthy sources' work. So the orchestrator catches per source and the
+      # exit codes carry the distinction:
+      #   0  every due source clean
+      #   1  nothing usable was written — stop, commit nothing
+      #   2  written WITH named failures — commit the survivors, THEN go red
+      - name: Refresh every due source
+        id: refresh
+        env:
+          INGEST_CONTACT_EMAIL: ${{ vars.INGEST_CONTACT_EMAIL }}
+          LEGISCAN_API_KEY: ${{ secrets.LEGISCAN_API_KEY }}
+          FEC_API_KEY: ${{ secrets.FEC_API_KEY }}
+        run: |
+          set +e
+          corepack pnpm refresh:daily ${{ inputs.all_sources && '--all' || '' }}
+          code=$?
+          set -e
+          echo "refresh_exit=$code" >> "$GITHUB_OUTPUT"
+          case "$code" in
+            0) echo "every due source ran clean." ;;
+            2) echo "::warning title=NH31 partial progress::One or more sources failed. The healthy sources' data continues to the gate and the commit; this job is FAILED at the end, after it is safely on main." ;;
+            *) echo "nothing usable was written — there is nothing to commit. Stopping here."; exit "$code" ;;
+          esac
+
+      # The diff sits AHEAD of the gate (AUD-07): running a full suite against
+      # data byte-identical to what is already committed and already validated
+      # proves nothing, on a schedule.
+      #
+      # `docs/refresh-run.md` is deliberately NOT in this list. It changes every
+      # single day (it carries the run date), so including it would make every
+      # day look like a change and reintroduce the ceremonial commit this
+      # workflow exists to end. It is committed only alongside data that moved.
+      - name: Diff the governed artifacts
+        id: diff
+        run: |
+          if [ "${{ inputs.simulate_change }}" = "true" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "simulated=true" >> "$GITHUB_OUTPUT"
+            echo "SIMULATED CHANGE (dispatch input): the gate below runs in full, and nothing commits."
+            exit 0
+          fi
+          if git diff --quiet -- data/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No governed artifact under data/ moved."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Governed artifacts CHANGED — the full gate runs before anything commits."
+            git diff --stat -- data/
+          fi
+
+      - name: Unchanged — stating what was skipped and why
+        if: steps.diff.outputs.changed != 'true'
+        run: |
+          echo "Every due source ran and no governed artifact moved."
+          echo ""
+          echo "SKIPPED: the browser install, corepack pnpm test, and the commit."
+          echo "COMMITS THIS RUN: 0.  PRODUCTION BUILDS THIS RUN: 0."
+          echo ""
+          echo "This is a stated early exit, not a silent one, and it is not a pass"
+          echo "of the gate: the gate did not run because there was nothing to gate."
+          echo "A quiet day costs nothing — RULING 124."
+
+      # Chromium only on the path that runs the suite: tests/beacon-guard.test.ts
+      # proves the synthetic-run guard by running a real browser (R50, g17).
+      - name: Install the browser the gate needs
+        if: steps.diff.outputs.changed == 'true'
+        timeout-minutes: 15
+        run: corepack pnpm exec playwright install --with-deps chromium
+
+      - name: Assert the browser landed where the suite looks
+        if: steps.diff.outputs.changed == 'true'
+        run: corepack pnpm exec tsx scripts/assert-browser.mts
+
+      - name: Validate before committing
+        if: steps.diff.outputs.changed == 'true'
+        timeout-minutes: 25
+        run: corepack pnpm test
+
+      # ONE COMMIT, however many sources moved. This is the whole saving.
+      - name: Commit
+        if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
+        run: |
+          if git diff --quiet -- data/; then
+            echo "unchanged at commit time — nothing to commit"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/ docs/refresh-run.md
+          git commit -m "Daily refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
+          node scripts/push-main.mjs
+
+      # Code 2 fails the job HERE — after the healthy sources' data is safely on
+      # main. The run is red, the broken source is named in the log and in
+      # docs/refresh-run.md, and RULING 12 still holds.
+      - name: Go red for the failed sources
+        if: steps.refresh.outputs.refresh_exit == '2'
+        run: |
+          echo "One or more sources failed this run. Their names are in the step log above and in docs/refresh-run.md."
+          exit 1

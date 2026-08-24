@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 14:35:55 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 17:55:54 EDT.
 Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 986 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1002 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 136 recorded
+## Rulings — 140 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -406,6 +406,10 @@ from. Each entry there names what it supersedes.
 - RULING 121 — one body that spans two towns has one identity, and renders in both
 - RULING 122 — a page on a party's own site can be a candidate's page, with the host named
 - RULING 123 — the author's decisions of 2026-08-24, recorded as a batch
+- RULING 124 — a commit that cannot change what a reader sees does not cost a deploy
+- RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench
+- RULING 126 — campaign-finance data renders for readers and never enters anything sold
+- RULING 127 — no tool prints a credential value, and the guard is the values themselves
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -565,15 +569,15 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-24 14:35:55 EDT
-branch: main
-head sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
-head subject: The live walk caught a regression: 03255 states 201 meetings and its groups add to 200
-origin/main sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
-origin/main subject: The live walk caught a regression: 03255 states 201 meetings and its groups add to 200
-local main sha: 336a3ebdc17f4b441b248f6f54ee8098da08b0e0
+generated: 2026-08-24 17:55:54 EDT
+branch: claude/state-money-0824
+head sha: ad1ef217508a59d7d65fa1e49d92693b766c7ced
+head subject: Close-out: the regenerated context, inside the PR rather than pushed to main
+origin/main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
+origin/main subject: Close-out: context and the mirror regenerated at 336a3eb
+local main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
 local main matches origin/main: yes
-working tree: clean
+working tree: dirty — 2 changed file(s)
 open prs: none
 last recorded tests: 1442 (fail)
 last recorded lint: not recorded

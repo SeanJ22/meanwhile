@@ -85,6 +85,18 @@ const nextConfig: NextConfig = {
       // Borough disappears again — a regression that looks exactly like
       // honest missing data, which is why it is named per route.
       "./data/derived/zip-division-ids.json",
+      /*
+       * STATE, COUNTY AND LOCAL CAMPAIGN MONEY (RULING 126, 2026-08-24).
+       *
+       * `lib/funding/state-snapshot.ts` reads these through `process.cwd()`, so
+       * the tracer has no static reference to follow. Untraced, the read
+       * returns nothing, `stateMoneyForTarget` answers with an empty array, and
+       * every state, county and local candidate's Campaign money section goes
+       * back to rendering NOTHING — which is indistinguishable from the gap
+       * this ruling was adopted to close, and would look exactly like honest
+       * missing data.
+       */
+      "./data/funding/*.json",
     ],
     /*
      * THE QUESTIONNAIRE PAGE RESOLVES AN ID TO A NAME, through `process.cwd()`.

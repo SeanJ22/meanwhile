@@ -538,3 +538,131 @@ not the yield.
   number would have been RULING 105's failure exactly.
 - **Generalises:** to any county publishing certified winners, which is all of
   them.
+
+## state-money-0824 · 2026-08-24
+
+Seven routes conceived that did not exist at session start. **Three returned
+rows, four returned zero, and all seven are reported** — the invention is the
+deliverable.
+
+### The NJ ELEC per-entity filing endpoint — where the money actually is
+
+- **Conceived:** by disbelieving a number rather than by walking a list. The
+  committee listing returns `TOT_CONT_AMT` on every row and every value was
+  `0`. Instead of recording that as "these candidates raised nothing", the
+  question asked was *is this field ever non-zero for anybody, ever?* — so a
+  COMPLETED cycle was used as a control, which is a question no route in the
+  manifest tells you to ask.
+- **Query:** `POST https://www.njelecefilesearch.com/api/VWEntity/Entities20`
+  for location codes `1435`, `1432` and `1400` across election years `2026`,
+  `2025`, `2024` and `2023` — twelve location-years — then
+  `GET https://www.njelecefilesearch.com/api/VWEntity/GetEntityFilingData?ENTITY_S=399070&EntityOnly=true`
+- **Returned:** the control proved the field is **always zero, in all twelve
+  location-years, 158 rows**, including cycles finished years ago whose
+  candidates demonstrably raised six figures. The filing endpoint then returned
+  **26 filings for entity 399070 summing $204,571.68**. Across the session:
+  **297 calls, 0 failures, 58 candidacies with real figures.**
+- **Generalises:** YES, to every NJ ELEC entity and therefore to every New
+  Jersey candidate at every level. It is the difference between the whole route
+  being a false zero and the whole route working.
+
+### The amendment collapse — a total that reconciles is not a total that is correct
+
+- **Conceived:** by reading the filing rows rather than summing them. Ann
+  Grossi's 2023 committee shows `R-1 period 3` **twice**, same receipts,
+  different disbursements. A `SUM()` over that is wrong and looks perfect.
+- **Query:** `GET .../GetEntityFilingData?ENTITY_S=449927&EntityOnly=true`, then
+  the same for `446812`, comparing `(FormName, PERIOD, AMEND_NO)` tuples.
+- **Returned:** naive summing gives Grossi **$237,109.54**; collapsing to the
+  highest `AMEND_NO` per `(form, period)` is lower and correct. Also settled the
+  period-vs-cumulative question by measurement — DeGroot's `R-1` period 5 is
+  **$24,977.25** against period 3's **$39,777.95**, and a cumulative series
+  cannot decrease.
+- **Generalises:** YES, to any filing system that publishes amendments as
+  separate rows, which is most of them.
+
+### The D-1-only committee — registered is not reported
+
+- **Conceived:** from the same disbelief, one floor down. After the filing
+  endpoint landed, **63 of 73 records still read $0**. A `D-1` is a certificate
+  of organization; it registers a committee and says nothing about money.
+- **Query:** grouping the returned filings by `FormName` across all 297 entities.
+- **Returned:** **5 candidacies moved out of `FILED`** and into a sourced
+  absence. Small, and it is five named people who would have been shown "raised
+  $0" when they had reported nothing at all.
+- **Generalises:** YES — every state has a registration form distinct from its
+  financial reports, and counting it as a financial report is the same error.
+
+### Reading a walled SPA's API out of its own JavaScript bundle
+
+- **Conceived:** rung 6 is refused at `cfs.sos.nh.gov`, so the page's own
+  network calls cannot be OBSERVED — but the bundle that would make them is
+  served at rung 2, and it names its endpoints in plain text.
+- **Query:** `GET https://cfs.sos.nh.gov/main-AHN3BUTJ.js` and each of the
+  thirteen `chunk-*.js` files named in `index.html`, searched for `/api/`.
+- **Returned:** **ZERO API paths.** The bundles surfaced only
+  `/GetEventLogDetails`, `/dashboard` and three `/lobbyist/...` routes. The
+  campaign-finance endpoints are in lazy route chunks this pass did not locate.
+- **Generalises:** YES as a TECHNIQUE — it is rung 7 obtained without rung 6,
+  which matters for every JS-rendered source behind an edge filter. It did not
+  work here and it is reported as invented rather than as successful.
+
+### The client-fingerprint inversion — the browser is not always the strongest rung
+
+- **Conceived:** by noticing a contradiction in my own measurements rather than
+  picking one. curl said 403 and Node's `fetch` said 200 against the same host
+  minutes apart, so the variable had to be the client.
+- **Query:** the same URL, `https://cfs.sos.nh.gov/`, through four clients —
+  `curl` with a browser UA, Node `fetch` bare, Node `fetch` with the full
+  browser header set, and Playwright Chromium — plus a header-isolation control
+  sending and withholding `x-wtp-synthetic-run`.
+- **Returned:** **curl 403 · Playwright Chromium 403 · Node `fetch` 200 (65,928
+  bytes), with or without our header.** The ladder's rung 6 is the WEAKEST rung
+  against this edge and rung 4 is the strongest.
+- **Generalises:** YES, and it inverts an assumption this project has been
+  carrying. Rung 6 is described as the rung a wall falls to; here it is the rung
+  that trips the wall.
+
+### The AZ SeeTheMoney data endpoint
+
+- **Conceived:** by asking where the portal's own table gets its rows, given the
+  Secretary of State's campaign-finance path is a 404.
+- **Query:** `POST https://seethemoney.az.gov/Reporting/GetNEWTableData` and
+  `POST .../GetDetailedTableData`, plus `/robots.txt` and
+  `/PublicResources/TermsOfUse`.
+- **Returned:** `GetNEWTableData` **HTTP 200 with a two-byte empty body** —
+  live, parameters not determined. `GetDetailedTableData` **404**, so the name
+  is exact. `robots.txt` **404** and the terms path **404**.
+- **Generalises:** to Arizona, and the ASP.NET MVC shell it exposes predicts the
+  parameter names are the controller action's own argument names.
+
+### The FEC directory as the 50-state agency seed
+
+- **Conceived:** by refusing the brief's premise. It proposed seeding a
+  directory from CFI's `stateLinks` page. Before fetching it, the question was
+  *what does the tier above already publish about this* (RULING 93) — and the
+  answer had been sitting in `data/reference/` since 2026-08-22.
+- **Query:** `GET http://www.cfinst.org/state/stateLinks.aspx`, then parsing the
+  committed `fec_combined_federal_state_disclosure_directory.csv`.
+- **Returned:** CFI's page is **HTTP 404** and `www.cfinst.org` fails TLS
+  entirely — the proposed seed does not exist. The committed directory yielded
+  **56 jurisdictions, 56 with a campaign-finance office named, 45 URLs alive,
+  44 control-matched, 10 refused or dead.**
+- **Generalises:** YES, to all 56 jurisdictions and to every future state hunt.
+
+### The stuck protocol, where it ran
+
+Run for the two fields that ended the session unfound — **NH per-candidate
+totals** and **AZ per-candidate totals**. Both are recorded with their literal
+queries in `docs/sources.md` and
+`docs/arizona-source-enumeration.md`. **2 stuck protocols run; 0 fields
+returned to owed for a missing one.**
+
+*What would I try if there were no manifest at all?* For New Hampshire: type
+`nh campaign finance reports search` into a search box and click the first
+government result. That is what produced
+`https://sos.nh.gov/elections/campaign-finance/` — **HTTP 200, 2.95 MB** — which
+carries the reporting-law notice, the contribution-limit schedule, and
+**individual filed reports published directly as PDFs**. The PDF series is a
+route to New Hampshire's money that does not go through the walled application
+at all, and it is named here as the next branch rather than walked.

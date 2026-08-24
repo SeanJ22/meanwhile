@@ -31,6 +31,8 @@ import { photosFirst } from "@/lib/ballot/photo-order";
 import { COLLECTION_NOTE } from "@/lib/ballot/collection-note";
 import { FilingNote } from "@/components/ballot/filing-note";
 import { CandidateBattlecard } from "@/components/ballot/candidate-battlecard";
+import { StateMoneySection } from "@/components/funding/state-money-section";
+import { stateMoneyForTarget } from "@/lib/funding/state-snapshot";
 import {
   MemberCommitteesContent,
   MemberOfficesContent,
@@ -372,6 +374,17 @@ async function BallotBattlecard({
   const holder = await incumbentHolderFor(targetKey);
   const officeBlurb = blurbForContestTitle(contestTitle);
   const positions = positionsFor(targetKey);
+  /*
+   * RULING 126 (2026-08-24). Until this line existed, `money` was `null` for
+   * every non-federal candidate — so a Morris County commissioner candidate,
+   * who files with the New Jersey Election Law Enforcement Commission rather
+   * than with the FEC, had a Campaign money section that STRUCTURALLY could
+   * not fill. Not "no data yet": no code path.
+   *
+   * LEADs are already filtered out inside `stateMoneyForTarget`, so this
+   * surface cannot render an unproven committee even by accident.
+   */
+  const stateMoney = stateMoneyForTarget(targetKey);
 
   return (
     <CandidateBattlecard
@@ -403,7 +416,11 @@ async function BallotBattlecard({
           ) : null,
         committees: holder ? <MemberCommitteesContent holder={holder} /> : null,
         offices: holder ? <MemberOfficesContent holder={holder} /> : null,
-        money: federal ? <CandidateFunding targetKey={targetKey} context={context} /> : null,
+        money: federal ? (
+          <CandidateFunding targetKey={targetKey} context={context} />
+        ) : stateMoney.length > 0 ? (
+          <StateMoneySection records={stateMoney} bare />
+        ) : null,
         /* BC-3: the record, in the card. Not `columns` — the two-column form
            builds its own top-level sections, which would compete with the
            seven this card owns. */

@@ -43,19 +43,19 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ---- 2a / 2d.4: the inventory and its pairings ---------------------------- */
 
-test("data/reference holds 18 files: 9 data files and 9 provenance notes", () => {
+test("data/reference holds 20 files: 10 data files and 10 provenance notes", () => {
   const files = referenceFiles();
   const data = files.filter((f) => f.endsWith(".csv"));
   const notes = files.filter((f) => f.endsWith(".md"));
 
   assert.equal(
     files.length,
-    18,
-    `expected 14 files, found ${files.length}: ${files.join(", ")} — a file going ` +
+    20,
+    `expected 20 files, found ${files.length}: ${files.join(", ")} — a file going ` +
       "missing narrows a denominator, and a narrowed denominator flatters our coverage",
   );
-  assert.equal(data.length, 9, `expected 9 data files, found ${data.length}`);
-  assert.equal(notes.length, 9, `expected 9 provenance notes, found ${notes.length}`);
+  assert.equal(data.length, 10, `expected 10 data files, found ${data.length}`);
+  assert.equal(notes.length, 10, `expected 10 provenance notes, found ${notes.length}`);
 });
 
 test("every reference data file is paired with its provenance note, both ways", () => {
@@ -69,13 +69,13 @@ test("every reference data file is paired with its provenance note, both ways", 
   // The other direction: a note describing a file nobody committed is a
   // claim about data this product does not have.
   for (const file of files) {
-    const stem = file.replace(/\.(csv|md)$/, "");
+    const stem = file.replace(/\.(csv|json|md)$/, "");
     if (!(REFERENCE_DATASETS as readonly string[]).includes(stem)) {
       unpaired.push(`${file} is not a declared dataset`);
     }
   }
 
-  assert.deepEqual(unpaired, [], "the reference set is not a clean 9 pairs");
+  assert.deepEqual(unpaired, [], "the reference set is not a clean 10 pairs");
 });
 
 test("every provenance note says something about its data file", () => {

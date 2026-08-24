@@ -378,3 +378,87 @@ candidates.
 It is an **ask-before**, listed in `CLAUDE.md`. A new source is a standing
 commitment to a third party, and at least one of them is a legal question
 wearing an API key.
+
+---
+
+## STATE, COUNTY AND LOCAL CAMPAIGN FINANCE — walked 2026-08-24
+
+*(The state-campaign-money session. **RULING 126** governs everything in this
+section: it renders for readers and never enters an export, an aggregate, or
+anything sold — from ANY source, not only the FEC. Every row carries its
+last-walked date under RULING 96.)*
+
+### The register
+
+| Source | Status | Access | Licence / terms | Tier | Last walked |
+| --- | --- | --- | --- | --- | --- |
+| **NJ ELEC search — `njelecefilesearch.com`** | **WIRED** | Keyless `POST /api/VWEntity/Entities20` (committees) and `GET /api/VWEntity/GetEntityFilingData` (the money) | New Jersey public records held by a state agency. No terms-of-use document and no `robots.txt` encountered on the search host | A | 2026-08-24 |
+| **NJ ELEC official site — `elec.nj.gov`** | **WALLED, and it is only the WEBSITE** | Imperva/Incapsula challenge — **HTTP 200 with a challenge page**, so a status check reads it as healthy | — | A | 2026-08-24 |
+| **NH CFS — `cfs.sos.nh.gov`** | **REACHABLE, data endpoints NOT located** | Node `fetch` gets HTTP 200; **curl and Playwright Chromium both get 403** | New Hampshire public records | A | 2026-08-24 |
+| **NH SOS campaign finance — `sos.nh.gov/elections/campaign-finance/`** | **REACHABLE** | Plain fetch, HTTP 200, 2.95 MB | New Hampshire public records; individual filed reports published as PDFs | A | 2026-08-24 |
+| **AZ SeeTheMoney — `seethemoney.az.gov`** | **REACHABLE, parameters NOT determined** | `POST /Reporting/GetNEWTableData` answers HTTP 200 | Arizona public records. **No `robots.txt` and no terms page** — both 404 on 2026-08-24 | A | 2026-08-24 |
+| **AZ Citizens Clean Elections — `azcleanelections.gov`** | **REACHABLE, not yet wired** | Plain fetch, HTTP 200 | Arizona public records | A | 2026-08-24 |
+| **FEC Combined Federal/State Disclosure Directory** | **WIRED** (committed since 2026-08-22) | `data/reference/fec_combined_federal_state_disclosure_directory.csv` | **United States government work — public domain.** No attribution obligation, no terms to accept | A | 2026-08-24 |
+| **FollowTheMoney.org / OpenSecrets** | **RESTRICTED — DO NOT USE** | — | **CC BY-NC-SA. The non-commercial clause bars this product**, which sells anonymized aggregates | — | 2026-08-24 |
+| **CFI `stateLinks` — `cfinst.org/state/stateLinks.aspx`** | **DEAD** | — | — | — | 2026-08-24 |
+| **CFI law database — `cfinst.github.io`** | **REACHABLE, not wired** | GitHub Pages, HTTP 200 | **GPL-3.0**, quoted below | B | 2026-08-24 |
+
+### The licensing facts, settled
+
+**FollowTheMoney.org / OpenSecrets — RESTRICTED, and the bar is the licence
+rather than the quality.** Their state data is licensed **CC BY-NC-SA**, and the
+**NC** clause is dispositive here: this product sells anonymized aggregates,
+which is a commercial use however carefully the underlying data is firewalled.
+It is the Ballotpedia class exactly — **a licensing conversation that is Sean's
+to have, never a scrape**. Recorded here so no later session re-derives the
+question and reaches a friendlier answer.
+
+**CFI's `stateLinks` page is not stale — it is GONE.** Walked 2026-08-24:
+`http://www.cfinst.org/state/stateLinks.aspx` answers **HTTP 404**, and
+`https://www.cfinst.org` does not complete a TLS handshake at all. The seed the
+brief proposed no longer exists, so the 50-state directory is built from the FEC
+Combined Directory instead — which was already committed in this repo, is
+fresher, and is public domain. `data/reference/state-cf-agencies.json`.
+
+**`cfinst.github.io` — GPL-3.0, quoted from the repository itself** as RULING 87
+requires rather than inferred from a badge. `https://api.github.com/repos/cfinst/cfinst.github.io`
+reports `"spdx_id": "GPL-3.0"`, and the `LICENSE` file at the repository root
+opens:
+
+> "GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007"
+
+**What that means for us, stated rather than assumed.** GPL-3.0 is a SOFTWARE
+licence and its copyleft reaches derivative works of the CODE. This product would
+take neither: what CFI's database holds that is useful is **contribution limits
+by state by year**, and a statutory limit is a fact about a statute. Facts are
+not copyrightable — the same reasoning RULING 87 applies to Wikipedia's
+municipality tables. **So it is usable as a Tier B discovery source for law
+context, never as a source of record, and none of its code is copied.** If a
+later session wants the repository's tooling rather than its facts, GPL-3.0
+governs and that is a different question.
+
+**Each state portal's own terms, read before extraction:**
+
+- **NJ `njelecefilesearch.com`** — no terms-of-use document and no `robots.txt`
+  encountered on the search host. The records are New Jersey public records.
+  Requests were serialised at roughly one per second with an identified
+  `User-Agent` carrying a contact address.
+- **AZ `seethemoney.az.gov`** — **`robots.txt` is HTTP 404** and
+  `/PublicResources/TermsOfUse` is HTTP 404. There is no stated restriction, and
+  the absence of one is recorded as a measurement rather than as a permission.
+- **NH `cfs.sos.nh.gov`** — not reached far enough to read terms. Recorded as
+  such, with the date, rather than as absent.
+
+### The wall at `elec.nj.gov`, and the distinction that matters
+
+`elec.nj.gov` was recorded Imperva-walled on 2026-08-19 and re-confirmed on
+2026-08-22. **Re-walked 2026-08-24 at rung 3: still walled.** The refusal
+answers **HTTP 200** carrying an Incapsula challenge page, which is why the
+first probe of this session read it as healthy — a 200 that is not the thing is
+not a document.
+
+**And it does not matter, which is the point.** NJ Hunt 5 established that it is
+ELEC'S WEBSITE that is walled and not ELEC's RECORDS: the filings are on
+`njelecefilesearch.com`, one hop away, answering at rung 2. A host being walled
+and a body being unreachable are different facts, and collapsing them is what
+RULING 52 exists to prevent.

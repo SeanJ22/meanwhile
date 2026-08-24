@@ -165,7 +165,14 @@ test("R48: every workflow that pushes main goes through the protected push", () 
   );
   assert.equal(
     pushers.length,
-    7,
+    8,
+    // Eight as of 2026-08-24 (RULING 124): the seven below plus
+    // refresh-daily.yml, the ONE orchestrated run that now carries every
+    // source's cron. The other five keep their push-main call because they keep
+    // their `workflow_dispatch` — a source must still be runnable by hand — so
+    // the count went UP while the number of SCHEDULED pushers went from seven
+    // to three, and only one of those three can cost a production build.
+    //
     // Seven as of NJ Hunt 3 (2026-08-22): the six below plus
     // refresh-nj-filing.yml, which rebuilds the Morris County ballot daily from
     // the clerk's current filing and commits when it moves.

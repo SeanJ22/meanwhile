@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **228 open**, 389 resolved.
-- **36 waiting on Sean** — the first section below.
+- **233 open**, 390 resolved.
+- **39 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**36 open · 42 resolved.**
+**39 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
   Pending review.
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
+
+**NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -64,6 +66,10 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
+
+**NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it.
+
+**NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool.
 
 **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true.
 
@@ -159,7 +165,7 @@ Only Sean closes a row here. A session may open one and may work it.
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**31 open · 5 resolved.**
+**32 open · 5 resolved.**
 
 ### P1
 
@@ -176,6 +182,8 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 **NH04** — We now hold all three county commissioners, the delegation's officers and every department head by name. What the county publishes for reaching any of them is one main number. The Kelly standard asks for a working contact per person and the county does not print one.
 
 **NH05** — Ten Newbury boards now read their meetings off the town's own calendar, and the town has not posted a single upcoming date for any of them. Seventy-eight of their past sittings are on that calendar, so they do meet. A reader who wants to attend one cannot find out when from anything the town publishes.
+
+**NH122** — cfs.sos.nh.gov ANSWERS: Node fetch gets HTTP 200 and 65,928 bytes. But the page is an Angular single-page app whose HTML is a shell, and the campaign-finance data endpoints were not found. Rung 6 (a live browser, which would reveal the calls) is REFUSED with 403 by the edge — curl is also refused, and only Node's fetch passes, which inverts the usual assumption that the browser is the strongest rung. Reading the served JS bundles (a new route, recorded in the expansion log) surfaced only lobbyist paths; the campaign-finance routes are in lazy chunks this pass did not locate.
 
 **NH34** — Sutton has 18 governing bodies, all named in the registry and all shipping KNOWN_UNCOVERED. Its CivicPlus calendar exports 1,312 events - 47 of them upcoming - and every single one has an empty LOCATION field. Nothing this session reached states a meeting venue for any Sutton body, so wiring them would have produced 18 bodies whose every sitting drops.
 
@@ -237,7 +245,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**30 open · 4 resolved.**
+**31 open · 4 resolved.**
 
 ### P2
 
@@ -303,15 +311,19 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 **NJ10** — Read as an image on production 2026-08-22. With the zip-area widening in place the card at 07866 lists both municipalities, and the Borough's row reads "Rockaway  MUNICIPAL" while the Township's reads "Rockaway township  MUNICIPAL". A reader cannot tell which is which, which is the exact confusion RULING 71 exists to remove -- borough and township are coequal forms and these are two separate governments sharing a name. The label comes from the division's own name in the registry, which for the place layer is the Census's "Rockaway" for the CDP-style entry. The fix is a labelling decision about which of the two committed names a row shows, and it wants a look at the other states before it is made.
 
+**NJ14** — Of the 07866 ballot's 272 candidacies, 235 resolved to an ELEC location and 37 did not. Fifteen of the 37 are correctly out of scope: US Senate and two congressional districts file with the FEC, and the state-level contest files elsewhere. The rest are REGIONAL SCHOOL DISTRICTS — West Morris Regional, Morris Hills Regional, Hanover Park Regional — plus Long Hill Township and Parsippany-Troy Hills, whose names did not resolve against the ELEC dropdown under any of the six municipal suffixes tried.
+
 ## Arizona hunt
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**15 open · 0 resolved.**
+**16 open · 0 resolved.**
 
 ### P2
 
 **AZ01** — NOT STARTED this session. AZ-1: "Know the basics" needs more topics — hunting and fishing ("Am I allowed to hunt or fish?", a common question when somebody moves states) and state abortion law. Both contentious, which is exactly why a clear factual account of where the state stands is owed: state what the law is, cite it, take no position. AZ-2: the state comparison holds one comparison at a time, which is right, but Back returns to Arizona alone when the expected destination is the map — either a reset pill or state pills in the title bar, with deselecting a state dropping it from the comparison, and the same pill pattern on the ballot. AZ-3 (applies across the board, Arizona is only the example): the voting section is five separate items — next election, add to calendar, check registration, where can I vote, search the Secretary of State's tool — and should read as next election, 2026, early voting, with the rest of the noise cut. AZ-4 and AZ-5 (ruled together): three links to the same registration destination inside about ten lines deduplicate to ONE prominent pill, "Check whether you're registered to vote", pointing at the reader's Secretary of State; same pattern for polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-6 is positive: the federal-representative pill system works and stays.
+
+**AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -545,7 +557,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**24 open · 136 resolved.**
+**23 open · 137 resolved.**
 
 ### P1
 
@@ -556,8 +568,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
-
-**NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

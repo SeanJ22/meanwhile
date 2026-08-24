@@ -49,9 +49,14 @@ const SETUP_NODE_STEP = /-\s*uses:\s*actions\/setup-node@/;
 
 const workflows = readdirSync(DIR).filter((f) => f.endsWith(".yml"));
 
-test("the workflow set is still the eight this rule was audited against", () => {
+test("the workflow set is still the nine this rule was audited against", () => {
   assert.equal(
     workflows.length,
+    // NINE as of 2026-08-24 (RULING 124): refresh-daily.yml joined the set, the
+    // one orchestrated run that now carries every source's cron. Its pins were
+    // audited here at the same time — checkout@v7 and setup-node@v7, matching
+    // every other workflow.
+    //
     // Eight as of NJ Hunt 3 (2026-08-22): refresh-nj-filing.yml joined the set.
     // Its pins were audited here at the same time — checkout@v7 and
     // setup-node@v7, matching every other workflow.
@@ -59,7 +64,7 @@ test("the workflow set is still the eight this rule was audited against", () => 
     // Seven as of NH Hunt 3 (2026-08-21): job-watch.yml joined the set under
     // RULING 56. Its pins were audited here at the same time — checkout@v7 and
     // setup-node@v7, matching every other workflow.
-    8,
+    9,
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -80,7 +85,10 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    18,
+    20,
+    // 20 as of 2026-08-24 (RULING 124), when refresh-daily.yml added its own
+    // checkout + setup-node pair.
+    //
     // 18 as of NJ Hunt 3 (2026-08-22), when refresh-nj-filing.yml added its own
     // checkout + setup-node pair.
     //
@@ -88,7 +96,9 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
     // job build-check.yml grew in Prompt B item 1c (the Linux gate) with its
     // own pair. 16 as of NH Hunt 3, when job-watch.yml added its pair. Counted
     // rather than assumed, so a new job without pins is caught.
-    `expected 18 Node-runtime action pins across the workflow set, found ${pins}`,
+    // TWENTY as of 2026-08-24 (RULING 124): refresh-daily.yml adds a checkout
+    // and a setup-node, both pinned at the majors this guard requires.
+    `expected 20 Node-runtime action pins across the workflow set, found ${pins}`,
   );
   assert.deepEqual(
     stale,
@@ -225,6 +235,12 @@ test("AUD-07: both refresh workflows diff before they gate, and still gate befor
  * A fifth refresh workflow added without the gate fails here, by name.
  */
 const REFRESH_WORKFLOWS = [
+  /*
+   * RULING 124 (2026-08-24). The consolidated daily run is a governed-artifact
+   * refresh like any other and gates like one — it diffs `data/`, runs the full
+   * suite on the changed path only, and commits once.
+   */
+  "refresh-daily.yml",
   "refresh-meetings-snapshot.yml",
   "refresh-dotgov-snapshot.yml",
   "refresh-fec-snapshot.yml",

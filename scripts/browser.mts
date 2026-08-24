@@ -224,9 +224,34 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
      * `tests/origin-confinement.test.ts` walks it across every third-party
      * host this product's pages actually reach and states the denominator.
      */
+    /*
+     * `request.frame()` THROWS for a request issued before its frame exists.
+     *
+     * Playwright says so in as many words: *"Frame for this navigation request
+     * is not available, because the request was issued before the frame is
+     * created."* It happens on a navigation a click starts, and it killed a
+     * capture run on 2026-08-24 — the crash surfaced in a screenshot script and
+     * the defect was here, in the shared path every guarded browser in this repo
+     * goes through (RULING 103: fix at the shared path, not at the symptom).
+     *
+     * **The fallback FAILS SAFE, and the decision is still `confine`'s.** With
+     * no frame there is nothing to compare an origin against, so the frame url
+     * becomes `about:blank` — which cannot match our origin, so `confine`
+     * strips. Stripping the headers here by hand would put a second copy of the
+     * confinement rule back in the harness, which is precisely what RULING 101
+     * moved OUT of this file, and `tests/origin-confinement.test.ts` refuses it.
+     */
+    const frameUrlOf = (request: { frame: () => { url: () => string } }): string => {
+      try {
+        return request.frame().url();
+      } catch {
+        return "about:blank";
+      }
+    };
+
     await context.route("**/*", async (route) => {
       const request = route.request();
-      const decision = confine(request.url(), request.frame().url(), request.headers(), headers);
+      const decision = confine(request.url(), frameUrlOf(request), request.headers(), headers);
       if (decision.verdict === "SAME_ORIGIN_KEPT") {
         await route.continue();
         return;

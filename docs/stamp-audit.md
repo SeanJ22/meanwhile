@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-24 (America/Phoenix). 99 stamp(s) audited.
+Run on 2026-08-24 (America/Phoenix). 104 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -119,20 +119,25 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | One CODE merge per session; close-out records may follow … | 2026-08-19 | 2026-08-19 | 0 | `bd4b05b` F01-continued items 1-11: the numbers reconcile, and four reader-facing defects close |
 | The one exception, and it is the only one | 2026-08-20 | 2026-08-20 | 0 | `787e355` F22: the refresh was red on a path separator, and one vendor timeout emptied a township |
-| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | 2026-08-24 | **NOT FOUND** | — | — |
-| THE BUSINESS CONSTRAINTS | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | 2026-08-24 | **NOT FOUND** | — | — |
+| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| THE BUSINESS CONSTRAINTS | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
+| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | 2026-08-24 | **NOT FOUND** | — | — |
 
 ## What the deltas say
 
 - **3 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-24) — a date that had not happened when it was written.
-- **8 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **5 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -148,14 +153,14 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 
 | Line | Claimed | Recovered | Delta | Why this is expected |
 |---|---|---|---|---|
-| `CLAUDE.md:932` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
-| `CLAUDE.md:933` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:949` | 2026-08-13 | 2026-08-15 | -2 d | photo door 1, adopted 2026-08-13; the four-door restructure wrote it into CLAUDE.md two days later. Author-ruled expected 2026-08-17. |
+| `CLAUDE.md:950` | 2026-08-14 | 2026-08-15 | -1 d | photo door 2, adopted 2026-08-14; same restructure commit the day after. Author-ruled expected 2026-08-17. |
 
 | Line | Claimed | Recovered | Delta | Note |
 |---|---|---|---|---|
-| `CLAUDE.md:943` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
-| `CLAUDE.md:1021` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
-| `CLAUDE.md:1209` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:960` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:1038` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:1226` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -252,14 +257,19 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 41 — THE AUTHOR WRITES ROWS TOO, AND A SESSION NEV… | none | 1 |
 | One CODE merge per session; close-out records may follow … | none | 1 |
 | The one exception, and it is the only one | none | 1 |
-| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | none | 0 |
-| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | none | 0 |
-| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | none | 0 |
-| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | none | 0 |
-| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | none | 0 |
-| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | none | 0 |
-| THE BUSINESS CONSTRAINTS | none | 0 |
-| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | none | 0 |
+| FIVE RULINGS OF 2026-08-24 — THE FACES, THE VERBS, AND TH… | none | 1 |
+| RULING 117 — THE ASSET STORE HAS A PUBLIC ADDRESS, AND A … | none | 1 |
+| RULING 118 — AN APPOINTED OFFICIAL NEVER CARRIES THE GOVE… | none | 1 |
+| RULING 119 — A SOVEREIGN TRIBAL NATION IS ITS OWN CATEGOR… | none | 1 |
+| RULING 121 — ONE BODY THAT SPANS TWO TOWNS HAS ONE ID, RE… | none | 1 |
+| RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | none | 1 |
+| THE BUSINESS CONSTRAINTS | none | 1 |
+| RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | none | 1 |
+| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | none | 0 |
+| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | none | 0 |
+| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | none | 0 |
+| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | none | 0 |
+| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | none | 0 |
 
 A `1` in the last column means the clause entered the file exactly once and
 the recovery is unambiguous. Anything higher means the string was touched more

@@ -2717,3 +2717,86 @@ This entry records the ones Sean made on 2026-08-24 that are not rules. The five
 - **The Census API key was activated**, mid-session. It had been refused by the host as invalid; it now answers with real data.
 
 *Why one entry rather than a dozen.* These were given together, on one day, in one brief. Splitting them into separate numbered rulings would suggest each was reasoned about separately and would make the record longer without making it truer.
+
+### RULING 124 — a commit that cannot change what a reader sees does not cost a deploy
+
+*Adopted 2026-08-24 (Sean's instruction of that day, escalated twice: deploys are burning credits, cut them to the floor). Law: `CLAUDE.md`, **Stack**. Amends RULING 78, which set every scheduled refresh to once daily; the ORCHESTRATOR now runs once daily and each SOURCE runs at the rate its own data moves.*
+
+**Six production deploys landed before 5 AM on 2026-08-24. Three of them rebuilt and redeployed a byte-identical application in order to serve paperwork.**
+
+Reading the commits rather than counting them is what makes the finding obvious. `cdb5ce2` moved the meetings snapshot and `ccda6ea` moved the FEC snapshot — both are data a reader sees, and both deserved their build. `ba0947c` moved an intake report. `2a7e825` and `ae5b178` moved `docs/context.md` and `docs/state.md`. Nothing a reader can reach changed in any of those three, and each cost a full Next build and a deploy.
+
+And that is only the visible half. Deploy previews are Netlify's default, so **every push to every session branch has been building too** — invisible in the production deploy list, and never looked at by anybody. The overnight session of 2026-08-24 alone pushed 15 branch commits.
+
+**Five changes, and the last one closes the class:**
+
+1. **Previews and branch deploys do not build.** The preview context was already closed in g17; the branch context was not, which left the same duplicate build running under a different name. Both are closed in `netlify.toml` now. `.github/workflows/build-check.yml` already runs the literal build command on every pull request, with a log readable without a Netlify login — which is the check the preview was standing in for.
+2. **A path-keyed deploy filter.** `scripts/netlify-ignore.mjs` cancels a production build when every changed path is one that cannot change what a reader sees. The allowlist is `lib/ops/deploy-paths.ts`, with a stated reason per entry.
+3. **One daily orchestrated refresh.** Five workflows on five crons committing five times becomes `refresh-daily.yml`: one run, per-source isolation, one gate, and **one commit however many sources moved**. A quiet day commits nothing at all — not a ceremonial "refreshed, no changes" commit, which is what was quietly being spent.
+4. **Cadence matched to each source's real rate of change**, each with its reason stated on the entry: meetings and the NJ clerk filing daily through the election, FEC and LegiScan weekly, the federal `.gov` register monthly. Refreshing a barely-moving federal register every day burns a build to learn nothing.
+5. **The close-out tool refuses a separate push to `main`.** Records ship inside the pull request. `scripts/close-out.mjs` had been made SAFE — it gates the build — and was still costing a full production deploy to serve a paperwork diff.
+
+**THE ALLOWLIST DIRECTION IS THE RULE, and it keeps the cheap failure the only one available.** A path is paperwork only if it matches a named prefix. Everything else — every directory added tomorrow, every path this list has never heard of — is shipping, and builds. An unknown directory wrongly built costs one wasted build. An unknown directory wrongly classified as paperwork serves stale data to readers with nothing going red. Those are not comparable.
+
+**`scripts/` is deliberately SHIPPING**, and it is the entry most likely to look like a mistake. Nothing under it reaches a reader — but `pnpm build` type-checks everything `tsconfig.json` includes, `scripts/` included, and RULING 76 exists because a session script broke the build. Cancelling that build would move the failure onto whichever unrelated commit built next.
+
+**Every failure path builds.** No cached ref, a shallow clone, a git failure, the predicate failing to load — every one of them lets the build run and says why. RULING 24: a check that cannot reach its subject must never print like a passing one.
+
+**The claim is measured rather than asserted.** `tests/deploy-paths.test.ts` reads the built `.nft.json` trace manifests — Next's own statement of which repo files each server bundle actually needs — and fails if any file under a non-shipping prefix appears in one. Re-deriving the classification from the list it was written from would prove only that the code is deterministic, which is RULING 114's lesson exactly. Measured on adoption: **31 trace manifests, 233 traced repo files, 0 under any non-shipping prefix.**
+
+**And the cadence is calendar-driven on purpose.** The obvious implementation asks when an artifact last changed, with `git log -1 -- <path>`. That is wrong on CI and it fails silently: in a shallow clone, per-file `git log` returns the tip date for every file with no error, so a weekly source would read as refreshed-today every day forever.
+
+---
+
+### RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench
+
+*Adopted 2026-08-24 (Sean's ruling of that day). Law: `CLAUDE.md`, **Non-negotiables in code**. It is RULING 77 — verify locally, ship once — carried to its conclusion: that ruling said WHEN to verify, and this says WHERE.*
+
+**Every walk, every screenshot and every card check runs against a local production build. `walk:all` loses its production mode entirely.**
+
+RULING 77 already established that almost nothing needs production, because a local production build is the same bytes. What it left standing was the habit: `walk:all` still defaulted to `https://sparkwtp.netlify.app`, and every session ended by walking the live site.
+
+**The cost was never the traffic.** Every `/api/meetings` GET writes a row to the search log, and **the search log is a store this product sells.** A four-zip walk writes dozens; **11,755 synthetic rows** had accumulated in the production store by 2026-08-24. They are excluded from every aggregate by the `T10` machinery and that machinery works — but *organic by construction* is a stronger claim than *organic after filtering*, it is the claim the transparency page implies, and it costs nothing to have.
+
+**The one remaining production fact is which SHA is live**, and it is read from **Netlify's deploy record via the API — one call, zero requests to the site.** Asking `/api/build` answers the same question while writing reader-indistinguishable traffic into a sold store, which is the thing this ruling exists to stop.
+
+**And it is compared against the last DEPLOY-ELIGIBLE commit, never the tip of `main`.** Under RULING 124 a docs-only commit correctly never builds, so `main`'s tip is routinely a commit Netlify was right to ignore. A check comparing against the tip would report "production is behind" every time a close-out lands, forever — and an alarm that is wrong on every quiet day is an alarm nobody reads (RULING 115). `pnpm deploy:live` walks back to the newest commit the filter would have built, and compares that one.
+
+**Four verdicts, and `cannot-tell` exits non-zero.** No Netlify credential is not a pass.
+
+---
+
+### RULING 126 — campaign-finance data renders for readers and never enters anything sold
+
+*Adopted 2026-08-24 (Sean's ruling of that day). Law: `CLAUDE.md`, **The collection stores never join**. It EXTENDS the existing FEC posture to every source; it narrows nothing.*
+
+**Campaign-finance data, from any source — the FEC, a state agency, a county clerk, or anything else — renders for readers and never enters an export, an aggregate, or anything sold. There is no source of campaign-finance data to which this does not apply.**
+
+Two separate reasons, and either alone would be enough.
+
+**The legal one.** Federal law restricts the commercial use of FEC contributor information — 52 U.S.C. § 30111(a)(4), which is the open question `ripcord.fecContributorDisplay` has been held against since 2026-08-13. **Several states restrict theirs analogously**, and a product about to ingest New Jersey's, New Hampshire's and Arizona's filings would otherwise acquire that question three more times without noticing.
+
+**The product one, which binds even where the law does not.** What this product licenses is **reader-attention signal** — anonymous reactions, opinions about displays. That is the ruling the author already made on 2026-08-15 for `ripcord.fundingReactionsInAggregates`, and it generalises exactly: a buyer receives opinions, never records. Campaign-finance data is a public record we retrieved and republished; reselling it is a different business from the one described on the transparency page.
+
+**So the firewall is ARCHITECTURE, not policy.** A rule that lives only in a document is a rule the next join breaks by accident. Campaign-finance rows live in the reader-content stores, and the n-stores-never-join discipline is asserted against them by a test that fails if a joinable column ever appears — the same instrument `tests/db-schema.test.ts` already points at the search log, the reactions store and the intake limiter.
+
+*Sean's decision of 2026-08-24 also settled the other half of this — that the data is COLLECTED AND RENDERED NOW, with election counsel reviewing afterwards, riding with `B05`. That supersedes the older render-after-review posture for STATE data. It changes nothing about this firewall, which is the condition the collection proceeds under rather than a question deferred alongside it.*
+
+---
+
+### RULING 127 — no tool prints a credential value, and the guard is the values themselves
+
+*Adopted 2026-08-24 (Sean's instruction of that day, item 3). Law: `CLAUDE.md`, **External sources**. Supersedes nothing.*
+
+**A credential value never reaches a transcript, a log, a report or a committed file. The check is not a pattern that looks credential-shaped — it is the actual values in `.env.local`.**
+
+The Census API key was printed in plaintext into a session transcript. That transcript mirrors to Drive, and an external audit tool can read it. The key was rotated.
+
+**The instance is not the finding.** A pattern-based scan for credential-shaped strings is the RULING 110 failure waiting to happen: it searches for the FORM a secret takes rather than for the secret, and every secret that does not match the pattern passes. The only sweep that cannot be wrong about this reads the values themselves and looks for those.
+
+- **Nothing a tool prints may contain a value from `.env.local`.** Not a script's output, not an error message that helpfully echoes its input, not a URL carrying the key in a query string — which is how this one escaped, since several of these APIs take the key as a parameter.
+- **The redaction layer is applied at the point of output**, so a value cannot leak through a code path nobody thought to check.
+- **The sweep covers the repo AND the Drive-mirrored artifacts**, because RULING 108 established that the mirror is a place things land, and this is the same surface pointed the other way: what a session writes there leaves the machine.
+- **A rotated key is proven dead, and the new one proven live**, by calling both. RULING 95's bar applies to the corpse as much as to the replacement: a host that answers a rejected key with HTTP 200 and an HTML error page will report a dead credential as healthy.
+
+---

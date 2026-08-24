@@ -26,11 +26,23 @@
 
 name: Refresh LegiScan snapshot
 
+# CRON REMOVED 2026-08-24 — RULING 124 item 3.
+#
+# This workflow no longer runs on a schedule. Its source is refreshed by
+# `.github/workflows/refresh-daily.yml`, the ONE daily orchestrated run, which
+# runs every source that is due, gates once, and COMMITS ONCE however many
+# sources moved. Five separate schedules committing separately is what produced
+# three commits, three production builds and three deploys before 5 AM on
+# 2026-08-24, all shipping the same application.
+#
+# The workflow is KEPT, and `workflow_dispatch` is kept with it, so this one
+# source can still be run and debugged by hand without waiting for the
+# orchestrator's window. Deleting it would delete that, and would delete the
+# reasoning recorded above it — which is the rung this repo does not spend.
+#
+# Cadence for this source, with its stated reason, is `lib/ops/refresh-cadence.ts`.
+
 on:
-  schedule:
-    # Sundays 11:41 UTC — after LegiScan's own Sunday dataset rebuild, and
-    # off the top of the hour where every other cron in the world lands.
-    - cron: "41 11 * * 0"
   workflow_dispatch:
     inputs:
       simulate_change:

@@ -35,6 +35,14 @@ export const REFERENCE_DIR = join(process.cwd(), "data", "reference");
  */
 export const REFERENCE_DATASETS = [
   "boarddocs_tenants",
+  /*
+   * RULING 86 and the RULING 97 accounting (2026-08-24, the state-campaign-money
+   * session). Which office in a state holds CAMPAIGN-FINANCE reports, for all 56
+   * jurisdictions the FEC directory covers, link-verified with a date.
+   *
+   * DERIVED from the FEC directory below rather than hand-kept.
+   */
+  "state-cf-agencies",
   "census_govt_units_2022",
   "census_govt_units_2022_dependent_school_systems",
   "civicplus_tenants",
@@ -75,6 +83,13 @@ export const REFERENCE_ROW_COUNTS: Record<ReferenceDataset, number> = {
   openstates_legislators: 7_976,
   fec_state_election_offices: 58,
   fec_combined_federal_state_disclosure_directory: 349,
+  /*
+   * One row per jurisdiction the FEC directory covers — the 50 states, DC, and
+   * the five territories. It is a DERIVED file, so this figure is a fact about
+   * the directory rather than about a fetch: it moves only when the FEC
+   * publishes a new edition covering a different set of jurisdictions.
+   */
+  "state-cf-agencies": 56,
 };
 
 export function dataPath(dataset: ReferenceDataset): string {

@@ -45,7 +45,7 @@ import { join } from "node:path";
 
 import { buildCensusSchoolIndex } from "../lib/registry/census-school-systems.ts";
 import type { MatchBranch } from "../lib/registry/census-school-systems.ts";
-import { carriedSourceStamp } from "../lib/ops/source-stamp.ts";
+import { declaredSourceStamp } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
 
@@ -81,7 +81,20 @@ const SOURCE_FILES = [
   "data/reference/census_govt_units_2022_dependent_school_systems.csv",
 ] as const;
 
-const AS_OF: string = carriedSourceStamp(SOURCE_FILES);
+const AS_OF: string = declaredSourceStamp({
+  /*
+   * DECLARED, not derived. The first version asked git for the sources' last
+   * commit date, which is right on a full clone and WRONG on CI: actions/checkout
+   * uses fetch-depth 1, so `git log -1 -- <file>` returns the TIP's date for
+   * every file, with no error. main went red at a6c72a7 over exactly that.
+   *
+   * Both source files last changed on 2026-08-20. When one is replaced, this
+   * line is changed in the same commit — which is a diff a reviewer can see, and
+   * is the same mechanism tests/guard-census.json uses to let a guard leave.
+   */
+  readOn: "2026-08-20",
+  sources: SOURCE_FILES,
+});
 
 
 

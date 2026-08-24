@@ -1,5 +1,5 @@
 /**
- * **A GENERATOR'S STAMP IS CARRIED FROM ITS SOURCES, NEVER READ OFF THE CLOCK.**
+ * **A GENERATOR'S STAMP IS DECLARED AND VERIFIED, NEVER READ OFF THE CLOCK.**
  * (2026-08-24. RULING 107, applied to the generators rather than to the
  * register they write into.)
  *
@@ -32,39 +32,115 @@
  * exists because a confident wrong date is worse than `UNKNOWN`: a missing date
  * sends a session back to the source, and a wrong one stops it permanently.
  *
- * ## Why the git commit date
+ * ## THE FIRST FIX WAS WRONG IN THE SAME WAY, AND CI CAUGHT IT
  *
- * It is the day the data entered this repo — which for a committed corpus IS
- * the carried read stamp, because nothing about the file has changed since. It
- * is deterministic, identical on every machine, and it moves only when the data
- * moves. That is exactly the property the purity check needs and exactly the
- * meaning the freshness rule wants.
+ * This function originally asked git: `git log -1 --format=%ad -- <file>`, the
+ * day the data last changed in the repo. That is the right IDEA and it produced
+ * the right answer on a developer's machine.
  *
- * ## There is no clock fallback, and that is the point
+ * **`actions/checkout` clones with `fetch-depth: 1`.** On a shallow clone there
+ * is exactly one commit in history, so `git log -1 -- <any file>` returns the
+ * TIP's date for every file — today's — and returns it with no error and no
+ * warning. `main` went red at `a6c72a7` with the artifact stamped `2026-08-20`
+ * locally and regenerated as `2026-08-24` on the runner.
  *
- * Where git cannot answer, this THROWS. Filling in a plausible date is the
- * fabrication rule, and it is precisely what the lines this replaces did on
- * every single run.
+ * **So the first fix committed the exact failure its own docstring warns
+ * about**: a confident wrong date, produced by a mechanism that cannot tell it
+ * is wrong. The lesson is not "check for shallow clones". It is that **a stamp
+ * derived from the environment can be wrong in an environment nobody tested**,
+ * and a stamp that is DECLARED cannot.
+ *
+ * ## What it does now
+ *
+ * The date is **declared beside the sources it describes**, in the generator,
+ * as a constant. It is deterministic on every machine and in every clone depth
+ * because it is not derived from anything.
+ *
+ * `verifyAgainstGit` is the belt: where full history IS available it checks the
+ * declaration against what git says and reports a disagreement. It **returns a
+ * verdict rather than throwing**, and it says `UNVERIFIABLE` on a shallow clone
+ * instead of guessing — which is the whole distinction this file is about.
  */
 import { execFileSync } from "node:child_process";
 
+/** A declared source-read stamp: the day the committed inputs were read. */
+export interface DeclaredStamp {
+  /** `YYYY-MM-DD`. Declared, never derived. */
+  readOn: string;
+  /** The committed files it describes, repo-relative. */
+  sources: readonly string[];
+}
+
 /**
- * The newest commit date across a generator's committed inputs, `YYYY-MM-DD`.
+ * The declared stamp, shape-checked.
  *
- * The NEWEST, because an artifact is only as current as its most recently
- * updated input — taking the oldest would understate it and taking an average
- * would be a number describing nothing.
+ * The only thing that can go wrong with a declared constant is that somebody
+ * types it wrong, so that is the only thing checked — and it FAILS rather than
+ * coercing, because a malformed date silently becoming a valid-looking one is
+ * how this whole class of defect works.
  */
-export function carriedSourceStamp(files: readonly string[], cwd = process.cwd()): string {
-  if (files.length === 0) {
+export function declaredSourceStamp(stamp: DeclaredStamp): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(stamp.readOn)) {
     throw new Error(
-      "carriedSourceStamp was given no source files. A stamp carried from nothing is a stamp " +
-        "invented, which is the failure this function exists to prevent.",
+      `declared source stamp "${stamp.readOn}" is not a YYYY-MM-DD date. It is DECLARED rather ` +
+        "than derived precisely so it cannot be wrong by accident, and a malformed one is not " +
+        "rounded into a plausible one (CLAUDE.md, the date rule).",
     );
   }
+  if (stamp.sources.length === 0) {
+    throw new Error(
+      "a declared source stamp names no source files. A stamp that describes nothing is a stamp " +
+        "nobody can check.",
+    );
+  }
+  return stamp.readOn;
+}
 
+export type GitVerdict =
+  /** Git has full history and agrees with the declaration. */
+  | { kind: "AGREES"; newest: string }
+  /** Git has full history and disagrees. The declaration still wins; this reports. */
+  | { kind: "DISAGREES"; newest: string; declared: string }
+  /**
+   * Git cannot answer, so nothing is claimed either way.
+   *
+   * A shallow clone is the live case and it is NOT an error: `actions/checkout`
+   * uses `fetch-depth: 1` by default, so CI is always here. Reporting
+   * `UNVERIFIABLE` is the point — the alternative is a check that reads as
+   * passing while measuring nothing (RULING 24's could-not-tell).
+   */
+  | { kind: "UNVERIFIABLE"; why: string };
+
+/** Whether this clone has enough history for a per-file `git log` to mean anything. */
+export function isShallowClone(cwd = process.cwd()): boolean {
+  try {
+    return (
+      execFileSync("git", ["rev-parse", "--is-shallow-repository"], {
+        cwd,
+        encoding: "utf8",
+      }).trim() === "true"
+    );
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Check a declared stamp against git, where git can answer.
+ *
+ * Deliberately NOT used to produce the value. It exists so a declaration that
+ * has drifted from its data can be noticed on a machine that has the history,
+ * without the artifact's contents ever depending on clone depth.
+ */
+export function verifyAgainstGit(stamp: DeclaredStamp, cwd = process.cwd()): GitVerdict {
+  if (isShallowClone(cwd)) {
+    return {
+      kind: "UNVERIFIABLE",
+      why: "this is a shallow clone — `git log -1 -- <file>` returns the TIP's date for every file here",
+    };
+  }
   const dates: string[] = [];
-  for (const file of files) {
+  for (const file of stamp.sources) {
     let out: string;
     try {
       out = execFileSync("git", ["log", "-1", "--format=%ad", "--date=short", "--", file], {
@@ -72,19 +148,17 @@ export function carriedSourceStamp(files: readonly string[], cwd = process.cwd()
         encoding: "utf8",
       }).trim();
     } catch (e) {
-      throw new Error(
-        `could not ask git for the commit date of ${file}: ${(e as Error).message}. ` +
-          "There is no clock fallback here — a plausible date is a fabrication " +
-          "(CLAUDE.md, the date rule).",
-      );
+      return { kind: "UNVERIFIABLE", why: `git failed on ${file}: ${(e as Error).message}` };
     }
     if (!/^\d{4}-\d{2}-\d{2}$/.test(out)) {
-      throw new Error(
-        `git returned no commit date for ${file}. Either the path is wrong or the file is ` +
-          "untracked; both are worth knowing about, and neither is worth a guessed date.",
-      );
+      return { kind: "UNVERIFIABLE", why: `git returned no commit date for ${file}` };
     }
     dates.push(out);
   }
-  return dates.sort()[dates.length - 1];
+  // The NEWEST, because an artifact is only as current as its most recently
+  // updated input.
+  const newest = dates.sort()[dates.length - 1];
+  return newest === stamp.readOn
+    ? { kind: "AGREES", newest }
+    : { kind: "DISAGREES", newest, declared: stamp.readOn };
 }

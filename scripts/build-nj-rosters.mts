@@ -63,7 +63,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { carriedSourceStamp } from "../lib/ops/source-stamp.ts";
+import { declaredSourceStamp } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
 
@@ -78,7 +78,17 @@ const SOURCE_FILES = [
   "data/hunt/nj-morris-certified-winners.json",
   "lib/registry/registry.json",
 ] as const;
-const AS_OF = carriedSourceStamp(SOURCE_FILES);
+const AS_OF = declaredSourceStamp({
+  /*
+   * DECLARED, not derived — see `lib/ops/source-stamp.ts`. A clock call here
+   * made the artifact unreproducible; asking git made it depend on clone depth,
+   * which CI does not have. The newest of these four inputs last changed on
+   * 2026-08-22, and this line changes in the same commit as the next one that
+   * does.
+   */
+  readOn: "2026-08-22",
+  sources: SOURCE_FILES,
+});
 const DRY = process.argv.includes("--dry");
 
 const WIKI = "data/hunt/wikipedia-nj-morris.json";

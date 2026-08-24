@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 209,
-    "named": 1988,
+    "files": 210,
+    "named": 1995,
     "dynamic": 6
   },
   "files": {
@@ -2566,6 +2566,18 @@
         "every wired adapter has a human calendar name",
         "no label is an internal id wearing a label's clothes",
         "no reader-facing component interpolates an internal source id"
+      ],
+      "dynamic": 0
+    },
+    "tests/source-stamp.test.ts": {
+      "names": [
+        "REFUSES a malformed date rather than coercing it",
+        "REFUSES a stamp that describes no sources",
+        "a declared stamp cannot be wrong by accident",
+        "accepts a well-formed declaration",
+        "every declared stamp in the tree AGREES with git, where git can answer",
+        "git verification reports rather than guesses",
+        "says UNVERIFIABLE on a shallow clone instead of returning the tip's date"
       ],
       "dynamic": 0
     },

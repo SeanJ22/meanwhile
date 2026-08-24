@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **227 open**, 389 resolved.
+- **228 open**, 389 resolved.
 - **36 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -545,7 +545,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**23 open · 136 resolved.**
+**24 open · 136 resolved.**
 
 ### P1
 
@@ -556,6 +556,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
+
+**NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

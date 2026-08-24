@@ -1,10 +1,12 @@
-# The identity of every check pnpm walk:all ran, one per line, sorted.
-# Written by scripts/walk-all.mts on every run and COMMITTED, so the next run
-# diffs against it by set difference instead of subtracting two totals — a run
-# that loses three checks and gains seven reports +4 either way, and the check
-# dying quietly is the failure this suite exists to catch.
-# Checks that COULD NOT RUN are not here: they did not run, and recording them
-# as present would be the same lie in the other direction.
+# The identity of every check pnpm walk:all HAS, one per line, sorted.
+# Written by scripts/walk-all.mts on every production run and COMMITTED, so the
+# next run diffs against it by set difference instead of subtracting two totals —
+# a run that loses three checks and gains seven reports +4 either way, and the
+# check dying quietly is the failure this suite exists to catch.
+# Checks that COULD NOT RUN this time ARE here (NH112, 2026-08-24). This file
+# records which checks EXIST, never which ones ran: a check that could not run
+# has not been retired, and dropping it would make it impossible to ever report
+# gone. The per-run outcome is reported separately, above, on every run.
 [0814b] 03255: no deliberation label anywhere on the map
 [0814b] 07866: no deliberation label anywhere on the map
 [0814b] 85641: no deliberation label anywhere on the map
@@ -93,6 +95,7 @@
 [F01C2] 07866: the in-app voting panel opens on the ballot
 [F01C2] 07866: the placeholder address names no region
 [F01C2] 07866: the polling-place affordance is an in-app pill, not a link out
+[F01C2] 07866: the positions search finds a term from the card's own text
 [F01C2] 85701: a multi-day window carries the affordance too
 [F01C2] 85701: every candidate row carries a battlecard pill
 [F01C2] 85701: every dated voting event can be calendared
@@ -100,6 +103,7 @@
 [F01C2] 85701: the in-app voting panel opens on the ballot
 [F01C2] 85701: the placeholder address names no region
 [F01C2] 85701: the polling-place affordance is an in-app pill, not a link out
+[F01C2] 85701: the positions search finds a term from the card's own text
 [F01C] 03255: after a clear, no surface still reflects a pick
 [F01C] 03255: after a clear, the stored picks file holds none
 [F01C] 03255: the picks tally's denominator equals the pick controls on the page

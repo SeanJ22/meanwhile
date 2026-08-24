@@ -2268,12 +2268,41 @@ for (const { zip } of FOUR) {
       const n = Number((h.querySelector(".al-group-count")?.textContent || "").trim());
       if (Number.isFinite(n)) counts.push(n);
     }
+    /*
+     * **THE PANEL PAGES AT 200, SO THE CLIP BELONGS IN THE ARITHMETIC.**
+     * (NH121, 2026-08-24.)
+     *
+     * The list renders the first 200 and states what it is holding back —
+     * Show N more (N hidden) — so above 200 the group counts and the header
+     * legitimately differ, and a check that did not read the hidden count
+     * would report a NAMED REGRESSION over a surface telling the truth.
+     *
+     * **THIS IS NOT THE EXPLANATION FOR THE 03255 FAILURE OF 2026-08-24**, and
+     * saying so matters more than the code. That panel states 201, sums 200
+     * across 7 groups, and renders NO more-button at all — measured, not
+     * assumed — so the one missing row is NOT a paging clip and is not yet
+     * understood. NH121 carries it. This block was written while that failure
+     * was being diagnosed; it is correct on its own terms and it fixed nothing.
+     *
+     * A clip that is NOT stated still fails, which is the half that matters.
+     */
+    const more = document.querySelector(".al-more");
+    const hiddenMatch = /\(([0-9]+) hidden\)/.exec(more?.textContent || "");
     return {
       stated: Number((header.textContent || "").replace(/[^0-9]/g, "")),
       groups: counts.length,
       sum: counts.reduce((a, b) => a + b, 0),
+      hidden: hiddenMatch ? Number(hiddenMatch[1]) : 0,
+      clipStated: Boolean(more),
     };
-  })()`) as { reason?: string; stated?: number; groups?: number; sum?: number };
+  })()`) as {
+    reason?: string;
+    stated?: number;
+    groups?: number;
+    sum?: number;
+    hidden?: number;
+    clipStated?: boolean;
+  };
 
   if (panel.reason) {
     cannotRun("g6", `${where}: the meetings count agrees with itself`, panel.reason);
@@ -2286,17 +2315,30 @@ for (const { zip } of FOUR) {
   const chipNote = numbers.chipVisible
     ? `chip ${numbers.chip}`
     : `chip not rendered at this width (sm: and up only)`;
-  const comparable = [numbers.sidebar, panel.stated, panel.sum].concat(
+  /*
+   * The RENDERED rows plus what the panel says it is hiding must equal the
+   * total every other surface states. That is the same reconciliation the
+   * two-numbers rule asks a REPORT for, asked of a screen.
+   */
+  const hidden = panel.hidden ?? 0;
+  const rendered = (panel.sum ?? 0) + hidden;
+  const comparable = [numbers.sidebar, panel.stated, rendered].concat(
     numbers.chipVisible ? [numbers.chip] : [],
   );
   const allEqual = comparable.every((n) => n !== null && n === comparable[0]);
+  // A clip that is NOT stated is still a failure: an unexplained short list is
+  // the thing this check exists to catch.
+  const clipHonest = hidden === 0 || panel.clipStated === true;
+  const clipNote =
+    hidden > 0
+      ? `, group counts sum ${panel.sum} + ${hidden} the panel SAYS it is hiding = ${rendered}`
+      : `, group counts sum ${panel.sum} across ${panel.groups} group(s)`;
 
   check(
     "g6",
     `${where}: the meetings count agrees with itself`,
-    allEqual && (panel.stated ?? 0) >= 0,
-    `sidebar ${numbers.sidebar}, ${chipNote}, panel header ${panel.stated}, ` +
-      `group counts sum ${panel.sum} across ${panel.groups} group(s)`,
+    allEqual && clipHonest && (panel.stated ?? 0) >= 0,
+    `sidebar ${numbers.sidebar}, ${chipNote}, panel header ${panel.stated}${clipNote}`,
   );
 
   await page.context().close();

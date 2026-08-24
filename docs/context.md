@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-24 17:51:51 EDT.
+Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1000 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1002 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -568,5 +568,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-24 17:51:51 EDT
+branch: claude/state-money-0824
+head sha: 25c9a80124a6d137da1e4d034fc1045eb5cef3ac
+head subject: State campaign money: the drop-down that structurally could not fill
+origin/main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
+origin/main subject: Close-out: context and the mirror regenerated at 336a3eb
+local main sha: ae5b17831ef2a54254d3879721e0bf411d70e26d
+local main matches origin/main: yes
+working tree: dirty — 1 changed file(s)
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14431
+```

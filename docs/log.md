@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **127 sessions.**
+Newest first. **128 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -80,6 +80,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH106** — Established 2026-08-23 by asking GitHub directly, because gh is absent from this container and corepack pnpm main:green therefore answers CANNOT TELL - which is the correct fourth verdict and says nothing about main. main's tip 3d453fd (the merge of PR #162, a HUMAN commit rather than the NH85 bot-tip shape) FAILED build check, run 32664443326, at 2026-08-23T20:30:04Z. IT IS NOT THE RULING 81 SHAPE: 19 steps ran and the Test step ran for 81 seconds before failing, so the runner started and the tree was really tested. Lint passed, tsc passed, and BOTH build jobs passed - only the gates job is red. THE CAUSE IS ONE THING, FOUR TIMES: tests 1853, pass 1848, fail 4, skip 1, and every one of the four is 'NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright.' - three in tests/beacon-guard.test.ts and one in tests/chromium-pin.test.ts. The workflow's 'Install the browser the suite needs' step (corepack pnpm exec playwright install --with-deps chromium) reported SUCCESS in 27 seconds and left nothing the suite can find. So the step's success is not evidence a browser exists, which is the same shape as a 200 that is not a document. WHY NO FIX WAS PUSHED. It reproduces identically on the base branch, so it is not any diff's failure and a session cannot verify a CI-only change from a container with no way to run CI. The one 'fix' available locally would be to let the guard pass with no browser, and scripts/browser.mts says in as many words that nothing here may report a pass - softening it would delete the guard rather than repair the runner. WHAT IS OWED: read the install step's own log for run 32664443326 (it is not in the tail this session could fetch), and decide between pinning the Playwright version the image can actually serve, caching ~/.cache/ms-playwright, or asserting the executable exists as its own workflow step so a silent no-op install fails where it happens rather than eighty seconds later inside the suite. RELATED BUT DIFFERENT: NH96 is the same class in the SESSION CONTAINER, where a substituted Chromium 1194 makes the same test report CANNOT RUN by name rather than fail. Locally the suite is 1947 / 1946 pass / 0 fail / 1 skipped. On the runner it is 4 failures. Same pin, two environments, two different answers. *(open)*
 
 **Needs Sean.** NH105
+
+## overnight-depth-0824 · 2026-08-23
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH111** — Photos at 07866 stood at 0 of 272. Every candidate holding a verified campaign site was walked for an og:image and the page's own img elements: 7 candidates, 25 images staged, and ALL 25 were READ AS IMAGES on two contact sheets before any verdict was written. Two cleared the composition standard and both ship under DOOR 3 - the campaign's own self-published portrait from its own site, labelled campaign-provided, source recorded, remove-on-request. Nothing has shipped. The decision keys to the ASSET, not the person, and it is yours. *(open)*
+
+**Needs Sean.** NH111
 
 ## hunt6-hardening-0823 · 2026-08-23
 

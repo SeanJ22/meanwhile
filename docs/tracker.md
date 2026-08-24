@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **243 open**, 363 resolved.
+- **244 open**, 363 resolved.
 - **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -663,7 +663,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**13 open · 61 resolved.**
+**14 open · 61 resolved.**
 
 ### P1
 
@@ -672,6 +672,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 ### P2
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
+
+**NH112** — A production run of pnpm walk:all rewrites docs/walk-checks.txt from the checks that RAN on that run. On 2026-08-24 that meant it deleted 5 check names because they reported COULD NOT RUN, taking the baseline from 377 to 372 in the working tree. The walk's own doctrine says a check that could not RUN is reported separately from one that FAILED, and its own output does exactly that - it printed all 7 under COULD NOT RUN. The defect is one step later: it then wrote a baseline as if they no longer exist.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
 

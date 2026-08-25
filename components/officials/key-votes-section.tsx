@@ -320,7 +320,7 @@ function KeyVoteGroupBlock({
                           href={ref.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+                          className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
                         >
                           the roll call
                         </a>

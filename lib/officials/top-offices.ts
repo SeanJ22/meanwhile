@@ -223,3 +223,42 @@ export function runsSomething(divisionType: string | null | undefined): boolean 
   if (divisionType === null || divisionType === undefined) return false;
   return RUNS_SOMETHING.has(divisionType);
 }
+
+/**
+ * **OFF-4 (2026-08-24, the author's walkthrough) — THE SUPERINTENDENT RENDERS
+ * AT THE TOP, BOARD MEMBERS BENEATH. ALL DISTRICTS.**
+ *
+ * His capture `12-05-31` is the Tucson Unified battlecard, Representation tab:
+ * five board members, and then Dr. Gabriel Trujillo, Superintendent, LAST.
+ *
+ * The order was the body's own published roster order, which is the correct
+ * default and the wrong answer here for the reason the precedence table above
+ * already gives: a published roster order answers "who was elected when", not
+ * "who runs this". The person who runs the district day to day arriving after
+ * five people who do not is the same defect `topOfficesFor` was written for,
+ * one list further down the card.
+ *
+ * **It reuses the EXECUTIVE table above rather than matching /superintendent/
+ * here.** A second pattern list would drift from the first the moment a state
+ * publishes a title neither of them expected — and the author's rule is about
+ * the ROLE, not the word: a county administrator and a town manager are the
+ * same fact about a different body, and both should lead their list for the
+ * same reason.
+ *
+ * Everything else keeps its published order exactly. This is a stable partition
+ * into two groups, never a sort — CLAUDE.md's never-rank rule is about ordering
+ * people by fit or merit, and "the appointed executive first" is a neutral
+ * structural criterion of the kind that rule explicitly permits.
+ */
+export function rosterInReadingOrder<T extends { officeTitle: string | null }>(
+  holders: readonly T[],
+): T[] {
+  const isExecutive = (holder: T) => {
+    const title = holder.officeTitle ?? "";
+    if (DEPUTY.test(title)) return false;
+    return EXECUTIVE.some((pattern) => pattern.test.test(title));
+  };
+  const executives = holders.filter(isExecutive);
+  const rest = holders.filter((holder) => !isExecutive(holder));
+  return [...executives, ...rest];
+}

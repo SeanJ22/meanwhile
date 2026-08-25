@@ -20,6 +20,8 @@
  * all rather than guessing.
  */
 
+import { formatDateLong } from "../text/format-date.ts";
+
 /**
  * The age at a given instant, from a birth date.
  *
@@ -55,11 +57,17 @@ export function ageFrom(birthDate: string | null, now: Date): number | null {
  */
 export function inSeatUntil(termEnd: string | null): string | null {
   if (!termEnd) return null;
-  const full = /^(\d{4})-(\d{2})-(\d{2})$/.exec(termEnd);
-  if (full) {
-    const [, y, m, d] = full;
-    return `${m}/${d}/${y}`;
-  }
+  /*
+   * **BC-12 (2026-08-24) — the author's literal instance.** His words: *"in
+   * seat until January 3rd, 2029," never "01-03-2029."* This built the
+   * numeric form by hand off its own regex, so it was a SECOND date-format
+   * implementation that `formatDateMDY` could be fixed without touching —
+   * the duplicate shape RULING 103 exists for. Both call one formatter now.
+   */
+  const spelled = formatDateLong(termEnd);
+  if (spelled) return spelled;
+  // A year on its own is all some sources publish, and a year is already
+  // "spelled out" — there is no month or day to expand and none is invented.
   const yearOnly = /^(\d{4})$/.exec(termEnd.trim());
   return yearOnly ? yearOnly[1] : null;
 }

@@ -4460,9 +4460,28 @@ button.jurisdiction-badge-action:focus-visible {
   font-size: 11px;
 }
 
+/* ---------------------------------------------------------------------------
+   BC-7 (2026-08-24) — THE SPURIOUS BLANK LINE, AND WHAT IT ACTUALLY WAS.
+
+   The author red-boxed an empty band between "Upcoming 5" and "Who runs it" on
+   the Tucson Unified small card (`12-06-33`). Nothing was rendering there. It
+   is TWO RULES: the last `.popup-row` draws a `border-bottom`, and the section
+   label immediately below draws a `border-top` 20px later, so the card shows a
+   pair of hairlines with a band of nothing between them — which reads as a
+   dropped row rather than as a divider.
+
+   A row followed by a section label hands the divider to the label, which is
+   the one that means something: the label IS the break. The `:last-child` rule
+   above cannot reach this, because the row is not the last child — the section
+   label is.
+   --------------------------------------------------------------------------- */
+.popup-row:has(+ .popup-section-label) {
+  border-bottom: none;
+}
+
 .popup-section-label {
-  margin-top: 12px;
-  padding-top: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid var(--panel-border);
   /* Structural label (design pass): organizes, so it carries weight. */
   font-family: var(--font-mono);
@@ -5664,6 +5683,55 @@ main[data-sidebar="closed"] .map-top-row {
 /* The utility form, for a letter-spaced run written inline with Tailwind. */
 .trailing-space-trimmed {
   margin-inline-end: -0.15em;
+}
+
+/* ---------------------------------------------------------------------------
+   OFF-2 (2026-08-24) — THE SAME DEFECT, OUTSIDE THE SWEPT CLASS.
+
+   THE RECONCILIATION, because the brief asks for it rather than for a fix.
+   `LBL-2` was closed 2026-08-23 at "6 found, 6 fixed" and it did NOT regress:
+   all six still carry their compensation. What was wrong was the PREDICATE.
+   It tested for `shrink-0` ON THE ELEMENT — one way of pinning a run against a
+   container's right edge — and the author's 8/24 capture `12-06-33` shows the
+   role column clipped on the TUSD small card, where the run is pinned by its
+   PARENT instead: `.person-row` is `justify-content: flex-end`, in this
+   stylesheet, where a line-based grep over `.tsx` cannot see it.
+
+   Measured: 23 letter-spaced runs in `app/` and `components/`; 6 inside the
+   old predicate, 17 outside it and uncompensated — including all four
+   `.source-tag` sites, one of which is the row he photographed.
+
+   SO THE PREDICATE IS RETIRED RATHER THAN WIDENED. Every way of pinning an
+   element at an edge would have to be enumerated, and the next one nobody
+   thought of would be the next `OFF-2`. The physics does not need the
+   enumeration: `letter-spacing` adds its space after the FINAL glyph, always,
+   so that space is spurious on every uppercase letter-spaced run whether or
+   not anything clips it today. Compensating unconditionally has no blind spot
+   to have.
+
+   One utility per tracking value in use, so the trim MATCHES its run — a
+   -0.15em compensation on a 0.1em run would pull the label 0.05em into
+   whatever precedes it, which is a smaller version of the same carelessness.
+   --------------------------------------------------------------------------- */
+
+.trailing-space-trimmed-10 {
+  margin-inline-end: -0.1em;
+}
+
+.trailing-space-trimmed-14 {
+  margin-inline-end: -0.14em;
+}
+
+.trailing-space-trimmed-15 {
+  margin-inline-end: -0.15em;
+}
+
+.trailing-space-trimmed-16 {
+  margin-inline-end: -0.16em;
+}
+
+.trailing-space-trimmed-18 {
+  margin-inline-end: -0.18em;
 }
 
 /* ---------------------------------------------------------------------------

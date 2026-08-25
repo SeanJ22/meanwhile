@@ -12,7 +12,9 @@ import {
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
-import { TOP_OFFICES_GAP, runsSomething, topOfficesFor } from "@/lib/officials/top-offices";
+import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
+  rosterInReadingOrder,
+} from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -55,7 +57,6 @@ export type ModalTab =
   | "representation"
   | "meetings"
   | "activity"
-  | "notes"
   | "sources";
 
 const TABS: { id: ModalTab; label: string }[] = [
@@ -63,7 +64,6 @@ const TABS: { id: ModalTab; label: string }[] = [
   { id: "representation", label: "Representation" },
   { id: "meetings", label: "Meetings" },
   { id: "activity", label: "Activity" },
-  { id: "notes", label: "Notes" },
   { id: "sources", label: "Sources" },
 ];
 
@@ -768,13 +768,6 @@ export function EntityModal({
             </Empty>
           )}
 
-          {tab === "notes" && (
-            <Empty>
-              Notes arrive in Phase 7. They stay on this device — never synced,
-              never shown to another reader, never exported.
-            </Empty>
-          )}
-
           {tab === "sources" && <Sources sources={subject.sources} />}
         </div>
         </>
@@ -806,7 +799,10 @@ function Representation({
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
-  const topOffices = showTopOffices ? topOfficesFor(holders) : [];
+  // OFF-4 (2026-08-24): the appointed executive leads the list. See
+  // rosterInReadingOrder for why it reuses the precedence table above.
+  const ordered = rosterInReadingOrder(holders);
+  const topOffices = showTopOffices ? topOfficesFor(ordered) : [];
   // One person in the list IS the top office; a heading over a duplicate of
   // the only row is furniture, not information.
   const leadsWorthShowing = topOffices.length > 0 && holders.length > 1;
@@ -854,7 +850,7 @@ function Representation({
           {TOP_OFFICES_GAP}
         </p>
       )}
-      {holders.map((holder) => (
+      {ordered.map((holder) => (
         <div key={holder.id} className="account-modal-person flex items-start gap-3">
           {/*
             F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
@@ -1017,7 +1013,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                       target="_blank"
                       rel="noreferrer"
                       title={directions.hint}
-                      className="mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
                     </a>

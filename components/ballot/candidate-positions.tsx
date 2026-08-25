@@ -63,7 +63,7 @@ export function CandidatePositions({
 
   return (
     <div className="mt-3" data-candidate-positions>
-      <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+      <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
         In their own words
       </p>
       {/* Provenance, not arithmetic: where these passages came from. */}

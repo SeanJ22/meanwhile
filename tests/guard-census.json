@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 225,
-    "named": 2153,
+    "named": 2155,
     "dynamic": 6
   },
   "files": {
@@ -1299,9 +1299,9 @@
     },
     "tests/format.test.ts": {
       "names": [
+        "BC-12: dates spell out, including inside ranges",
         "a body name already carrying the jurisdiction stands alone",
         "a sitting title with no body name gets the jurisdiction in front",
-        "dates render mm/dd/yyyy, including inside ranges",
         "the address renders once when the source publishes it as the venue name"
       ],
       "dynamic": 0
@@ -1676,9 +1676,11 @@
     },
     "tests/label-tracking.test.ts": {
       "names": [
-        "LBL-2: a letter-spaced run pinned with shrink-0 trims its trailing space",
         "LBL-2: the shared letter-spaced label classes trim their trailing space",
-        "LBL-2: the sweep reaches the tree it claims to"
+        "LBL-2: the sweep reaches the tree it claims to",
+        "OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinned ones",
+        "OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed",
+        "OFF-2: the trim MATCHES its run's tracking, never a near-enough value"
       ],
       "dynamic": 0
     },

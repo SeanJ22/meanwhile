@@ -314,13 +314,13 @@ function MeetingEntry({
             href={meeting.agendaUrl}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
+            className="trailing-space-trimmed-14 inline-flex items-center gap-1.5 border-b border-signal-dim pb-0.5 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-signal transition-colors hover:border-signal"
           >
             Read the agenda
             <ExternalLink className="size-3" aria-hidden="true" />
           </a>
         ) : (
-          <p className="font-mono text-[0.75rem] uppercase tracking-[0.14em] text-muted">
+          <p className="trailing-space-trimmed-14 font-mono text-[0.75rem] uppercase tracking-[0.14em] text-muted">
             No agenda posted yet
           </p>
         )}
@@ -431,7 +431,7 @@ export function HowToBeHeard({
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
           {/* Item 4 (2026-08-14 second session): renamed to a call to
               action — the tester's words, verbatim. */}
-          <span className="uppercase tracking-[0.14em] text-paper-dim">
+          <span className="trailing-space-trimmed-14 uppercase tracking-[0.14em] text-paper-dim">
             Make your voice heard
           </span>
           <br />
@@ -487,7 +487,7 @@ export function HowToBeHeard({
    */
   return (
     <details className="how-to-be-heard mt-3 pl-4">
-      <summary className="how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
+      <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-paper-dim">
         Make your voice heard
       </summary>
       <ul className="mt-1 space-y-1 text-[0.75rem] leading-relaxed text-paper-dim">
@@ -499,7 +499,7 @@ export function HowToBeHeard({
         href={access.sourceUrl}
         target="_blank"
         rel="noreferrer noopener"
-        className="mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+        className="trailing-space-trimmed-14 mt-1 inline-block font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
       >
         source
       </a>

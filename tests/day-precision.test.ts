@@ -80,7 +80,9 @@ test("M59: a date-only meeting renders the honest line where the clock goes", ()
   );
 
   // The DATE still renders in full — that half is known and is the point.
-  assert.match(formatMeetingDate(dayOnly), /^Tue 06\/09\/2026$/);
+  // BC-12 (2026-08-24): the author's convention is spelled out, product-wide.
+  // The weekday stays: "is that a Tuesday" is half of deciding to attend.
+  assert.match(formatMeetingDate(dayOnly), /^Tue, June 9th, 2026$/);
 });
 
 test("M59: a normal meeting is untouched by the new shape", () => {

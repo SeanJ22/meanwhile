@@ -93,7 +93,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
             setError(null);
             setEditing(true);
           }}
-          className="border-l border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:bg-ink-raised hover:text-signal"
+          className="trailing-space-trimmed-16 border-l border-rule-soft px-4 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-paper-dim transition-colors hover:bg-ink-raised hover:text-signal"
         >
           Change
         </button>
@@ -103,7 +103,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
 
   return (
     <div className="panel pointer-events-auto w-[19rem] p-4">
-      <p className="mb-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
+      <p className="trailing-space-trimmed-18 mb-2.5 font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-muted">
         New zip code
       </p>
 

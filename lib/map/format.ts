@@ -1,4 +1,5 @@
 import type { Meeting } from "@/lib/sources/types";
+import { formatDateLong, spellOutDates } from "@/lib/text/format-date";
 
 /**
  * The WHAT of a meeting, jurisdiction-qualified (3a, 2026-08-16).
@@ -231,14 +232,19 @@ export function meetingEntryTitle(
   return what || meetingHeadline(meeting);
 }
 
-/** Every plain date renders mm/dd/yyyy (3h). ISO dates in, 08/16/2026 out. */
+/**
+ * **BC-12 (2026-08-24): every plain date SPELLS OUT.** ISO dates in,
+ * "August 16th, 2026" out.
+ *
+ * It rendered `mm/dd/yyyy` from 3h until the author's 8/24 walkthrough. The
+ * NAME is deliberately kept rather than renamed across twenty-odd call sites:
+ * what changed is a convention, not a contract, and a rename would have put
+ * the convention change inside a diff of import churn. The work happens in
+ * `lib/text/format-date.ts` — the ONE formatter, which `inSeatUntil` now calls
+ * too. See that file for the duplicate implementation this closed (RULING 103).
+ */
 export function formatDateMDY(iso: string): string {
-  // Replace each ISO date token so ranges ("2026-10-24 – 2026-11-01") and
-  // annotated strings pass through with every date converted.
-  return iso.replace(
-    /(\d{4})-(\d{2})-(\d{2})/g,
-    (_, y: string, m: string, d: string) => `${m}/${d}/${y}`,
-  );
+  return spellOutDates(iso);
 }
 
 /**
@@ -253,20 +259,30 @@ export function formatMeetingDate(
   // a second date formatter that would drift from the author's convention.
   meeting: Pick<Meeting, "startsAt" | "timeZone">,
 ): string {
-  // Weekday plus mm/dd/yyyy — the author's date convention (3h), with the
-  // weekday kept because "is that a Tuesday" is half of deciding to attend.
+  /*
+   * **BC-12 (2026-08-24): the date SPELLS OUT here too.** The author's rule is
+   * product-wide, and a meetings list is where a reader meets the most dates —
+   * exempting the densest surface would leave the convention true everywhere
+   * it did not matter.
+   *
+   * The weekday stays, because "is that a Tuesday" is half of deciding to
+   * attend, and the calendar date is resolved in the MEETING'S zone before it
+   * is spelled out. Slicing the ISO string instead would read whatever offset
+   * the string happens to carry and put a Tucson evening meeting on the
+   * previous day.
+   */
   const d = new Date(meeting.startsAt);
   const weekday = new Intl.DateTimeFormat("en-US", {
     timeZone: meeting.timeZone,
     weekday: "short",
   }).format(d);
-  const mdy = new Intl.DateTimeFormat("en-US", {
+  const local = new Intl.DateTimeFormat("en-CA", {
     timeZone: meeting.timeZone,
+    year: "numeric",
     month: "2-digit",
     day: "2-digit",
-    year: "numeric",
   }).format(d);
-  return `${weekday} ${mdy}`;
+  return `${weekday}, ${formatDateLong(local) ?? local}`;
 }
 
 /**

@@ -294,11 +294,6 @@ export function MeetingPopup({
         </p>
       )}
 
-      <PopupSectionLabel>Notes</PopupSectionLabel>
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-        Notes arrive in Phase 7. They stay on this device — never synced, never
-        shown to another reader.
-      </p>
     </PopupCard>
   );
 }

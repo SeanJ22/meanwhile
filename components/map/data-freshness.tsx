@@ -27,7 +27,7 @@ export function DataFreshness({ snapshot }: { snapshot: SnapshotStatus }) {
   // the bottom of the stack. A failed source still speaks in signal color.
   return (
     <p className="pointer-events-auto max-w-md text-[0.625rem] leading-relaxed text-muted">
-      <span className="font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
+      <span className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em]">
         Last checked
       </span>{" "}
       <time dateTime={snapshot.generatedAt} title={when.toLocaleString()}>

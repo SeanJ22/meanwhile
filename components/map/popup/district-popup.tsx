@@ -2,7 +2,9 @@
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
-import { TOP_OFFICES_GAP, runsSomething, topOfficesFor } from "@/lib/officials/top-offices";
+import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
+  rosterInReadingOrder,
+} from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
 import type { DistrictHit } from "@/lib/map/districts";
 import { representationNoteFor } from "@/lib/registry/representation";
@@ -73,6 +75,12 @@ interface DistrictPopupProps {
   upcomingMeetings: number | null;
   /** Opens the rep popup (3c) for a clicked name. */
   onOpenOfficial?: (holder: SeatHolder) => void;
+  /**
+   * **BC-8 (2026-08-24).** Minimizes this card and shows this body's upcoming
+   * meetings. Absent, the count renders as plain text — a door with nowhere to
+   * go is worse than a number.
+   */
+  onShowMeetings?: () => void;
   onExpand?: () => void;
   onClose?: () => void;
 }
@@ -83,6 +91,7 @@ export function DistrictPopup({
   representationNoteState = "gap",
   upcomingMeetings,
   onOpenOfficial,
+  onShowMeetings,
   onExpand,
   onClose,
 }: DistrictPopupProps) {
@@ -96,7 +105,10 @@ export function DistrictPopup({
    * a governing entity.
    */
   const showsWhoRunsIt = runsSomething(district.type);
-  const topOffices = showsWhoRunsIt ? topOfficesFor(representation) : [];
+  // OFF-4 (2026-08-24): the appointed executive leads the list here too — the
+  // small card and the large one may not order one roster two ways.
+  const ordered = rosterInReadingOrder(representation);
+  const topOffices = showsWhoRunsIt ? topOfficesFor(ordered) : [];
 
   return (
     <PopupCard
@@ -112,9 +124,31 @@ export function DistrictPopup({
       <PopupRow label="Type">{district.typeLabel}</PopupRow>
       <PopupRow label="Tier">{TIER_LABEL[district.tier]}</PopupRow>
 
+      {/*
+        **BC-8 (2026-08-24) — THE COUNT IS A DOOR.**
+
+        The author: clicking the upcoming count minimizes this card and returns
+        to that body's upcoming-meetings view. It is the same grammar the four
+        sidebar tiles already carry — every number on a surface opens the list
+        it counts — and this was the one counter still rendering as furniture.
+
+        A count of zero is NOT a door: there is nothing on the other side, and a
+        control that opens an empty list is the reader friction the rule names.
+        "Couldn't check" is not a door either, for a stronger reason — a failed
+        fetch may not be dressed as a browsable result (2a).
+      */}
       <PopupRow label="Upcoming" mono>
         {upcomingMeetings === null ? (
           <NoValue>couldn&apos;t check</NoValue>
+        ) : onShowMeetings && upcomingMeetings > 0 ? (
+          <button
+            type="button"
+            onClick={onShowMeetings}
+            className="cursor-pointer text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+            aria-label={`Show the ${upcomingMeetings} upcoming meetings for ${district.label}`}
+          >
+            {upcomingMeetings}
+          </button>
         ) : (
           upcomingMeetings
         )}
@@ -192,7 +226,7 @@ export function DistrictPopup({
          * always eventually starve its value. So the row is STACKED — name
          * first at full width, office beneath it — and nothing competes.
          */
-        representation.map((holder) => (
+        ordered.map((holder) => (
           <div key={holder.id} className="person-row">
             <span className="person-row-name">
               {onOpenOfficial ? (
@@ -228,7 +262,7 @@ export function DistrictPopup({
                     target="_blank"
                     rel="noreferrer"
                     title="Where this record was read from"
-                    className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-link"
+                    className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-link"
                   >
                     src
                   </a>
@@ -246,11 +280,6 @@ export function DistrictPopup({
         </p>
       )}
 
-      <PopupSectionLabel>Notes</PopupSectionLabel>
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-        Notes arrive in Phase 7. They stay on this device — never synced, never
-        shown to another reader.
-      </p>
     </PopupCard>
   );
 }

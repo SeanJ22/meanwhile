@@ -2005,6 +2005,14 @@ function MapEntryInner() {
                         m.status === "SCHEDULED",
                     ).length
               }
+              /* BC-8: minimize the card, scope the list to this body, open it.
+                 Three dispatches rather than a new action, because each one
+                 already exists and already means exactly this. */
+              onShowMeetings={() => {
+                dispatch({ type: "scope/body", ocdId: districtPopup.ocdId });
+                dispatch({ type: "select/district", ocdId: null, districtType: null });
+                dispatch({ type: "list/open", open: true });
+              }}
               onClose={() =>
                 dispatch({ type: "select/district", ocdId: null, districtType: null })
               }

@@ -217,10 +217,19 @@ const partials = ranSources.filter((o) => !o.ok && o.partial);
  * would go stale the day the cadence table names a different election, and it
  * would go stale SILENTLY — as a red run at 09:11 UTC that nobody is awake for.
  */
-function declareFutureDates(line: string, asOf: Date): string {
-  const today = asOf.toISOString().slice(0, 10);
+function declareFutureDates(line: string, asOfDay: string): string {
+  /*
+   * **THE THRESHOLD IS `dayName`, NEVER A UTC SLICE**, and the first version of
+   * this used one — caught by `tests/generated-doc-dates.test.ts` before it
+   * could ship, which is that guard doing exactly its job.
+   *
+   * `toISOString().slice(0, 10)` reads a day AHEAD of America/Phoenix after 5pm
+   * local, so on those evenings it would have treated today's own date as a
+   * future one and annotated a line that needed no annotation. `dayName` is
+   * `today()`, the source every other stamp in this project comes from.
+   */
   const dates = line.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
-  const future = [...new Set(dates.filter((d) => d > today))];
+  const future = [...new Set(dates.filter((d) => d > asOfDay))];
   if (future.length === 0) return line;
   return `${line} <!-- expected-future: ${future.join(", ")} — an election date carried in a cadence reason, not a stamp -->`;
 }
@@ -260,7 +269,7 @@ for (const s of REFRESH_SOURCES) {
   const elevated = s.elevatedUntil
     ? ` (elevated to ${s.elevatedUntil.cadence} until ${s.elevatedUntil.until})`
     : "";
-  lines.push(declareFutureDates(`- **\`${s.id}\`** — ${s.cadence}${elevated}. ${s.why}`, runDate));
+  lines.push(declareFutureDates(`- **\`${s.id}\`** — ${s.cadence}${elevated}. ${s.why}`, dayName));
 }
 lines.push("");
 

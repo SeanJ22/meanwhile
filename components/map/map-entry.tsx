@@ -73,7 +73,7 @@ import type { DistrictType } from "@/lib/state/types";
 import { jurisdictionClaim } from "@/lib/meetings/jurisdiction-badge";
 
 import { CoverageNotice } from "./coverage-notice";
-import { DataFreshness } from "./data-freshness";
+import { SiteFootnote } from "./site-footnote";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
@@ -232,7 +232,13 @@ function MapEntryInner() {
    * for one card is how `wghOpen` came to need a conditional to work out
    * which of two booleans it was asking about.
    */
-  const [noticeCollapsed, setNoticeCollapsed] = useState(false);
+  /*
+   * WGH-8 (2026-08-25): the card starts COLLAPSED, so the default paint is the
+   * rail up and Who Governs Here sitting as its pill beneath it — which is the
+   * state the author annotated as correct in `08-53-15`. It began `false`,
+   * which is why the first paint carried both surfaces at once.
+   */
+  const [noticeCollapsed, setNoticeCollapsed] = useState(true);
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -832,7 +838,31 @@ function MapEntryInner() {
     const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
     if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
       shownAreaKey.current = current.zip;
-      setNoticeCollapsed(false);
+      /*
+       * **WGH-8 (2026-08-25) — ARRIVING AT A ZIP NO LONGER OPENS THE CARD, and
+       * this SUPERSEDES the expanding half of 3h (2026-08-19).**
+       *
+       * 3h let a typed-zip view re-expand the who-governs card, launch
+       * included, and that was right while the rail and the card could share
+       * the column. They can no longer: the author's rule is that exactly one
+       * of the two is up, so auto-expanding on arrival does not add a card —
+       * it CLOSES THE RAIL, on every launch, before the reader has asked for
+       * anything.
+       *
+       * His annotated capture `08-53-15` is the state being specified, and it
+       * is unambiguous: the rail up and running the full height of the column,
+       * with Who Governs Here sitting beneath it as a pill. So arrival is the
+       * rail, and the card is one click away.
+       *
+       * **`noticeShouldExpand` is deliberately still called and its answer is
+       * still recorded in `shownAreaKey`.** The pure rule and its test are
+       * untouched, and the zip/settled distinction it draws still matters —
+       * what changed is only what this component DOES with the answer. Ripping
+       * the call out would delete the record of which area the card has
+       * already answered for, and the district effect below relies on that
+       * bookkeeping staying honest.
+       */
+      setNoticeCollapsed(true);
     }
   }, [current]);
 
@@ -1499,7 +1529,28 @@ function MapEntryInner() {
    * Is the who-governs card OPEN? One mechanism now, at every width.
    */
   const wghOpen = Boolean(shown) && !noticeCollapsed;
-  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
+  /**
+   * **WGH-8 / LAY-7 (2026-08-25) — EXACTLY ONE OF THE TWO IS UP. NEVER BOTH.**
+   *
+   * The author, on the popup WGH-6 shipped: *"hate the way it looks."* His
+   * capture `09-11-14` is the other half and it is the one that names the
+   * defect — the rail is up at 07866 AND the who-governs card is expanded
+   * underneath it, both scrolling internally, on a 2048px screen.
+   *
+   * **`openSurface` was not the problem and it never was.** It has enforced
+   * this since 4c: opening WGH sets `sidebarState` to `"closed"`. What it
+   * cannot enforce is the state nobody opened — `noticeCollapsed` began
+   * `false` and `sidebarState` began `"default"`, so the FIRST PAINT had both
+   * up, at every width, before any reader touched anything.
+   *
+   * That is the shape this repo names most often: a rule enforced by every
+   * path that calls it, and a default that never calls it. So the exclusion
+   * is DERIVED here rather than maintained by handlers — `sidebarUp` cannot be
+   * true while the card is open, whatever route the state arrived by, and
+   * there is no branch left where both can paint.
+   */
+  const sidebarUp = sidebarVisible && !wghOpen;
+  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarUp });
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
@@ -1676,8 +1727,10 @@ function MapEntryInner() {
         ))}
 
       {/* Provenance, not headline (3): "Last checked" demotes to a
-          footnote below the who-governs card. */}
-      {shown?.snapshot && <DataFreshness snapshot={shown.snapshot} />}
+          footnote below the who-governs card — and LAY-8 (2026-08-25) sends
+          the rail’s "What this site collects / Feedback" block down to sit
+          beside it, which is where the author’s dotted arrow lands. */}
+      <SiteFootnote snapshot={shown?.snapshot ?? null} />
     </>
   );
 
@@ -1697,7 +1750,10 @@ function MapEntryInner() {
       >
       <main
         className="relative h-dvh w-full overflow-hidden"
-        data-sidebar={sidebarState}
+        /* WGH-8: the attribute carries the DERIVED state, not the raw one.
+           Every CSS rule that hides the rail keys on this, so the exclusion is
+           true in the stylesheet as well as in the tree. */
+        data-sidebar={wghOpen ? "closed" : sidebarState}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**

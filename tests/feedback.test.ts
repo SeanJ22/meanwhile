@@ -123,11 +123,30 @@ test("the address is in no built client chunk", (t) => {
 });
 
 test("the sidebar's Feedback link points at the in-app route, not a mail client", () => {
-  const sidebar = readFileSync(join(ROOT, "components", "shell", "sidebar.tsx"), "utf8");
-  assert.ok(!/href="mailto:/.test(sidebar), "no mailto: link may remain in the sidebar");
+  /*
+   * **THE CLAIM IS THE ROUTE, NOT THE FILE.** This read only
+   * `components/shell/sidebar.tsx` and went red on 2026-08-25 when LAY-8 moved
+   * the footnote block to the foot of the page. The link was not removed and
+   * no mailto came back; the guard was asserting a location.
+   *
+   * Both halves are kept and both are widened to the shell: NO component of it
+   * may carry a `mailto:` (R40 — the author's personal address left the
+   * product), and at least one must carry `/feedback`.
+   */
+  const shellFiles = [
+    join(ROOT, "components", "shell", "sidebar.tsx"),
+    join(ROOT, "components", "map", "site-footnote.tsx"),
+    join(ROOT, "components", "map", "map-entry.tsx"),
+  ].filter((file) => existsSync(file));
+  assert.ok(shellFiles.length > 0, "the map shell corpus is empty — this guard would pass without looking");
+
+  const withMailto = shellFiles.filter((file) => /href="mailto:/.test(readFileSync(file, "utf8")));
+  assert.deepEqual(withMailto, [], "no mailto: link may remain in the map shell");
+
+  const linking = shellFiles.filter((file) => /href="\/feedback"/.test(readFileSync(file, "utf8")));
   assert.ok(
-    /href="\/feedback"/.test(sidebar),
-    "the sidebar must link to the in-app /feedback route",
+    linking.length > 0,
+    `no component of the map shell links the in-app /feedback route — checked ${shellFiles.join(", ")}`,
   );
   const transparency = readFileSync(join(ROOT, "app", "transparency", "page.tsx"), "utf8");
   assert.ok(

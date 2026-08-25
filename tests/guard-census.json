@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 232,
-    "named": 2246,
+    "named": 2260,
     "dynamic": 6
   },
   "files": {
@@ -2558,6 +2558,7 @@
         "A-004 · the ical adapter no longer swallows a past-feed failure",
         "F01 7.2: a refused body with rows on screen is STALE, not missing",
         "F01 7.2: the card reads the SAME meeting array the pins are drawn from",
+        "F22: a day of clock-gap slack does not reach a real undeclared archive",
         "F22: every source whose rows outrun the serving window declares its own",
         "a fresh row always beats a carried one, and a healthy source carries nothing",
         "a refused source keeps the calendar it had, and says how many rows are stale",
@@ -2741,7 +2742,7 @@
         "detail bags that could name a person are rejected, not laundered",
         "event types are a closed set",
         "logging and the transparency page exist together",
-        "the transparency page is linked from the welcome overlay and the sidebar footer"
+        "the transparency page is linked from the welcome overlay and from the map shell"
       ],
       "dynamic": 0
     },
@@ -3209,17 +3210,30 @@
         "1c: alternating failures are not a pair — the rule is still ADJACENT",
         "1c: the MOST RECENT pair is the one returned",
         "JOB02: two manual dispatches do NOT raise a row",
+        "a PASSING TEST is never surfaced as a cause, however cause-shaped its name",
+        "a cause already visible in the tail is not repeated above it",
+        "a clip is STATED with both numbers, never implied",
+        "a log that COULD NOT BE READ never reads like a run that printed nothing",
+        "a long single line is capped rather than carried whole",
         "a real scheduled double failure STILL raises a row",
+        "a stack frame is never mistaken for the naming of a failure",
         "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
+        "an unclipped tail does not claim to be clipped",
         "an unknown trigger is NOT treated as a drill",
         "asOf hides later runs, so the detector can be held against known history",
         "cancelled is not failure — a cancelled run is nobody's diagnosis",
         "every scheduled workflow in the repo is on the watch list",
         "one failure is not a finding — a wall does not usually repeat",
+        "post-job git cleanup is filtered out — a tail made of it has told the reader nothing",
         "runs out of order are sorted before the top two are read",
+        "the cause line is surfaced even when it sits far above the tail",
         "the drill filter does not change the RATE, which is a fact about the workflow",
         "the rate is a pair, never a bare percentage",
+        "the real recorded run names its cause, not only its stack",
+        "the scaffolding comes off: no job column, no step column, no ISO timestamp",
+        "the tail carries the REAL cause line off the real recorded run",
+        "the watcher composes the tail into the row it opens",
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",
         "two failures separated by a success is not a finding"

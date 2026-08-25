@@ -248,37 +248,24 @@ export function Sidebar({
           onToggleDistricts={onToggleDistricts}
         />
 
-        {/* The sidebar's footer: the disclosure link and the feedback path.
-            One line each — the transparency page carries the substance. */}
-        {/* 4f: `mt-auto` is gone. It pushed this block to the bottom of a
-            full-height column, which is precisely the dead space the rule
-            says must not exist — the card now ends where its content ends, so
-            the footer simply follows the last section. */}
-        {/* LAY-5 (2026-08-24): the footer was two bare underlined links on
-            nothing, which is where the author's "degrades into unstyled raw
-            text" ends. It takes the same section chrome every block above it
-            now carries — one treatment down the whole column. */}
-        <div className="rail-section mb-3 text-[0.6875rem] leading-relaxed text-muted">
-          <p>
-            <a
-              href="/transparency"
-              className="underline decoration-dotted underline-offset-2 hover:text-signal"
-            >
-              What this site collects
-            </a>
-          </p>
-          {/* R40 (2026-08-17): the author's personal address left the product.
-              It is one in-app route now — nothing leaves the app to reach
-              him, and no scraper reads an address off a shipped page. */}
-          <p className="mt-1">
-            <a
-              href="/feedback"
-              className="underline decoration-dotted underline-offset-2 hover:text-signal"
-            >
-              Feedback
-            </a>
-          </p>
-        </div>
+        {/*
+          **LAY-8 (2026-08-25) — the footer LEFT this column.**
+
+          The author's annotated capture `08-53-15` draws a red DOTTED ARROW
+          from this block down past the bottom of the rail to the "Last
+          checked" line at the foot of the page. It is now rendered there, in
+          `components/map/site-footnote.tsx`, beside the freshness line rather
+          than inside the rail.
+
+          Why it belongs there and not here: both are the same KIND of thing —
+          quiet standing provenance about the product itself, read once and
+          then ignored — and the rail is the column a reader is trying to get
+          THROUGH. Two footnotes in two places is one of them nobody finds.
+
+          The links are unchanged and neither was deleted. The block is only
+          gone from this component; see `site-footnote.tsx` for why it renders
+          unconditionally there.
+        */}
       </div>
     </aside>
   );

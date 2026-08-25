@@ -86,26 +86,38 @@ export function NearMeControl({
           onChange={(e) => request(e.target.checked)}
         />
         <span className="prox-slider" />
-        <span className="prox-label">Near me</span>
+        <span className="prox-label">Near Me</span>
       </label>
 
-      <div className="prox-radius-wrap">
-        <p className="prox-note">
-          Approximate — a browser&apos;s location is a rough fix, not your
-          doorstep. We use it to find your districts and then drop it from the
-          page.
-        </p>
-        {error && (
+      {/*
+        **LAY-10 (2026-08-25, the author's walkthrough) — THE CONTROL READS
+        "Near Me" AND NOTHING ELSE.**
+
+        Three lines of explanation stood permanently under a switch nobody had
+        touched yet, on the entry surface, in the column a reader is trying to
+        get past. His capture `08-47-06` is the case: the note is taller than
+        the control it explains and taller than the collapsed Filters box
+        beside it.
+
+        **What was removed is an EXPLANATION, not a disclosure.** The substance
+        — that a browser fix is approximate, that it resolves districts and is
+        then dropped — is the transparency page's, and the link to it is at the
+        foot of this rail. Nothing this product collects went unstated; a
+        paragraph explaining a switch before the switch is used did.
+
+        The ERROR stays. A permission refusal or a failed fix is a thing that
+        HAPPENED to the reader, and a control that silently does nothing is the
+        click-that-does-nothing defect. The standing coordinate readout goes
+        with the note: it was a debug line wearing a reader's clothes, and it
+        printed the reader's own position back at them for no purpose.
+      */}
+      {error && (
+        <div className="prox-radius-wrap">
           <p className="prox-note" style={{ color: "var(--danger)" }}>
             {error}
           </p>
-        )}
-        {ui.nearMe && (
-          <p className="prox-count">
-            {ui.nearMe.lat.toFixed(3)}, {ui.nearMe.lng.toFixed(3)}
-          </p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

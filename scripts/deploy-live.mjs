@@ -38,6 +38,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { gitFor } from "./git-lite.mjs";
+import { loadEnvLocal } from "./load-env-local.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 /**
@@ -62,18 +63,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  */
 const SITE = process.env.NETLIFY_SITE_ID || "sparkwtp.netlify.app";
 
-function loadEnvLocal() {
-  const p = join(ROOT, ".env.local");
-  if (!existsSync(p)) return;
-  for (const line of readFileSync(p, "utf8").split("\n")) {
-    const m = /^\s*([A-Z0-9_]+)\s*=\s*(.*)$/.exec(line);
-    if (!m) continue;
-    const [, k, raw] = m;
-    if (process.env[k] === undefined) {
-      process.env[k] = raw.trim().replace(/^["']|["']$/g, "");
-    }
-  }
-}
+/* `loadEnvLocal` moved to ./load-env-local.mjs on 2026-08-25 — the handoff
+   needed the same thing and two copies is the thing that can disagree. */
 loadEnvLocal();
 
 /* `git` is `gitFor(ROOT)` from ./git-lite.mjs — one copy (RULING 103). */
@@ -254,18 +245,46 @@ async function main() {
     say("?", "verdict", `CANNOT-TELL — ${eligible.reason}`);
     process.exit(3);
   }
-  if (live.commit_ref === eligible.sha) {
-    say("✓", "verdict", "CURRENT — production is serving the last deploy-eligible commit");
+
+  /*
+   * ── ASK ABOUT THE COMMIT, NOT ABOUT THE NEWEST READY DEPLOY ──────────────
+   *
+   * This compared `eligible.sha` against whichever deploy was newest AND ready,
+   * and reported the git distance between them. That is the NJ25 defect in its
+   * original home, and it survived NJ25's fix because the fix went into the
+   * `--sha` mode beside it and nobody swept the sibling — the named-instance
+   * failure, in the same file as the instance.
+   *
+   * Measured 2026-08-25: `5ae234a` was mid-build, so the newest READY deploy was
+   * five commits older and this printed **BEHIND by 5 deploy-eligible
+   * commit(s)** — an alarm about production being stale, for a deploy that
+   * completed successfully a minute later. *Behind* and *still building* are
+   * the state that demands action and the state that demands patience, and they
+   * read identically here.
+   *
+   * `verdictForDeploys` asks the only question that separates them: what
+   * happened to the deploy carrying THIS commit.
+   */
+  const verdict = verdictForDeploys(deploys, eligible.sha);
+  const short = eligible.sha.slice(0, 7);
+  if (verdict.kind === "SUCCESS") {
+    say("✓", "verdict", `CURRENT — production is serving ${short}. ${verdict.why}`);
     process.exit(0);
   }
-  const onMain = git("merge-base", "--is-ancestor", live.commit_ref ?? "", "main") !== null;
-  if (!onMain) {
-    say("✗", "verdict", `AHEAD/UNKNOWN — the live commit ${(live.commit_ref ?? "?").slice(0, 7)} is not an ancestor of main`);
+  if (verdict.kind === "CANCELLED-BY-FILTER") {
+    say("✓", "verdict", `${short} was correctly NOT built — ${verdict.why}`);
+    process.exit(0);
+  }
+  if (verdict.kind === "FAILED") {
+    say("✗", "verdict", `${short} FAILED to deploy — ${verdict.why}`);
+    process.exit(1);
+  }
+  if (verdict.kind === "PENDING") {
+    say("·", "verdict", `PENDING — ${verdict.why}. Not stale; not yet verified.`);
     process.exit(2);
   }
-  const behindBy = git("rev-list", "--count", `${live.commit_ref}..${eligible.sha}`) ?? "?";
-  say("✗", "verdict", `BEHIND by ${behindBy} deploy-eligible commit(s)`);
-  process.exit(2);
+  say("?", "verdict", `CANNOT-TELL — ${verdict.why}`);
+  process.exit(3);
 }
 
 await main();

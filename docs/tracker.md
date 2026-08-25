@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **257 open**, 416 resolved.
-- **43 waiting on Sean** — the first section below.
+- **266 open**, 416 resolved.
+- **47 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**43 open · 45 resolved.**
+**47 open · 45 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -70,6 +70,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool.
 
 **NS14** — Your brief said to read VOTE411's terms from its own site before extracting anything and to treat it as restricted until the terms say otherwise. There are no terms. Read 2026-08-24: /terms-use, /terms-of-use and /privacy-policy are all HTTP 404 on vote411.org, lwv.org/terms-use is HTTP 404, and neither the homepage nor its footer links a terms document — the only assertion anywhere is the footer's copyright notice. Its robots.txt permits crawling everything except admin, user and search paths, but a crawl permission is not a licence. So nothing was extracted and it stays RESTRICTED. The judgement that is yours: an absent terms document is not a permissive one, and VOTE411 is a nonprofit's compilation about public records rather than a government publication — the same question RULING 70 asks of Ballotpedia and RULING 93 asks of usmayors.org. If you want it walked, say so and it will be.
+
+**NS16** — The brief for 2026-08-25 names docs/feedback/we-the-people-feedback-2026-08-25.md as AUTHORITATIVE and says its carryover table is law. That file is not in the repo, not in the Drive mirror root, and not in the Drive screenshots folder — searched all three at session start. The 17 captures ARE committed and were read; only the document is missing. The same is true of the 8/24 document: the LAY, BC, WGH and ASK ids exist in briefs and commit messages and in no committed file, so a session cannot check an id against anything. RULING 108 is exactly this: anything a session must read at session start lives in the repo, because a session has a shell and a clone. This session worked from the brief's prose plus the captures and says so rather than pretending it had the document. THE QUESTION: would you rather (a) paste the feedback doc into docs/feedback/<date>/ as part of each walkthrough, so a session can diff its ids against something, or (b) keep it in chat and accept that ids are only ever as good as the brief that quotes them? If (a), it is one paste and nothing else changes.
 
 **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true.
 
@@ -108,6 +110,12 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH166** — OFF-3 asked for the superintendent's photo from the TUSD site, queued for your review under the photo rules, with the rest of the board swept alongside. NOT DONE this session and reported as not done rather than smoothed. Two things you may want to rule on. First, the four-door rule: a district's own site publishing a portrait of its own superintendent is door 2, an official government-published portrait, and TUSD is not a .gov host - so whether door 2 reaches a school district's own domain is your call and not a session's. Second, the app spells him Gabriel Trujillo; the 8/24 brief dictated Gabrielle. The naming rule says the app's spelling is authoritative, so nothing was changed - but if the app is wrong, that is a data fix and it wants your word first. The board's other five members already carry portraits; he is the one initials circle on that card.
 
 **NS10** — RULING 119 gives tribal nations their own category, and they needed identifiers. The canonical national list of government identifiers - opencivicdata/ocd-division-ids - has no tribal category at all: read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal, and searching it for the three nations by name returns only Navajo COUNTY, Arizona. So this project minted its own, built on the Census Bureau's own codes for tribal areas with the federal code recorded beside each one.
+
+**NS17** — BC-14 says sources live in the large battlecard and the small card lists names and nothing else. Four .source-tag render sites existed; three are removed (district-popup, coverage-notice, official-popup — all three render into .popup-card, so all three are small cards). The fourth is components/officials/key-votes-section.tsx and it is DELIBERATELY LEFT. A roster row is an identity; a vote is a CLAIM about how a named person voted, and the no-claim-without-a-source rule attaches the source to the claim rather than to the card. RULING 138 says display consolidates sources to one line and the record is never deleted — but it does not say where a VOTE's consolidated line goes, and the small card has no such line today. THE QUESTION: (a) leave the per-vote source where it is, (b) remove it and add one consolidated source line to the bottom of the small card, or (c) remove it because the large card already carries every vote's source. (b) is the most work and the most consistent with RULING 138.
+
+**NS18** — You asked whether Mark Kelly's two sources are capped or filtered. NEITHER. sourceCountLabel is computed from the same array the tab maps over, so the stated N equals the rendered rows by construction; mergeSources merges by (org, url), which is a dedupe of identical publishers rather than a cap; and there is no slice, limit or threshold anywhere in the path. The 2 is a true count of what the tab was handed, and personCardSources is handed exactly two things: the identity spine, and the congress-legislators directory. THE GAP, and it is a design question rather than a defect: his card also renders CAMPAIGN MONEY from the FEC and a VOTING RECORD from roll calls, and both cite their own publisher inline at the claim rather than joining the Sources tab. So the tab is honest about what it was given and is not a complete list of what the card is sourced from. THE QUESTION: should the Sources tab be (a) the card's COMPLETE citation list, which means passing the FEC and the roll-call publishers into it, or (b) what it is now — the identity sources, with each section citing its own? (a) makes the count larger and more useful; (b) keeps every citation next to the claim it supports.
+
+**NS19** — Built nothing, as the brief directs. THE EVIDENCE: the ballot page at 07866 now carries THREE pill treatments in one screen. (1) The two top pills — Narrow this to where you live, Moving here? Know the basics — at 40px tall, lavender-tinted, 1px border, semibold, added this session for BAL-11. (2) The election-box pills — Where can I vote?, Check whether you're registered — taller, more saturated lavender, and set on their own lines rather than in a row. (3) View Battlecard, now deep navy and filled, 522px wide, one per candidate. A fourth exists on the map: the two map pills, which this session made agree with each other for WGH-9 at 224x42 with a mono face. THE PROPOSAL: one pill scale with three named roles — PRIMARY (filled, the one thing a surface most wants done: View Battlecard, Speak Your Mind), SECONDARY (tinted outline, a real action that is not the main one: the top two, the election box's two), and COUNT (mono, a readout that happens to be pressable: the map's meetings and who-governs pills). Same height and padding within a role, at every surface. THE QUESTION: is that the right three roles, and do you want the election-box pair to become a ROW like the top two, or stay stacked?
 
 **V01** — Five conversations with the people who would buy the data — campaign consultants, party data staff, PAC data directors, at least one on each side. The question to put to them is exclusivity.
 
@@ -587,7 +595,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**26 open · 140 resolved.**
+**28 open · 140 resolved.**
 
 ### P1
 
@@ -630,6 +638,10 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
 **PU06** — Measured 2026-08-23 at 07866 against a local production build: TWELVE instances across NINE contests on /ballot, unchanged by this session. The MAP panel was fixed — six rows each carrying the full sentence became six asterisks and ONE pill, read as an image — but the ballot page renders the pill per contest heading, which RULING 28 permits and which Sean nonetheless called the headline UX problem of the New Jersey pass. WHAT IS OWED: decide whether the ballot page takes the same treatment (one page-level pill, marks on the affected contests) and, wherever the sentence survives, make it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
+
+**PU07** — Measured 2026-08-25 against a local production build at 07866. The SERVER is fast — TTFB 22-94 ms — and the browser sees FCP 1,760 ms on the first cold navigation against 156-164 ms warm, DOMContentLoaded 62 ms, load 185 ms. So there is nothing to fix in the render path and the number that matters is the cold first paint, which is the size of the document: 386 KB of server-rendered HTML for 90+ contests and 276 candidacies. app/ballot/loading.tsx ships as the visible loading state the item required regardless. Reducing the document is the actual fix and is a bigger change than one item: candidate cards are fully rendered for every contest whether or not a reader ever scrolls to them, so the obvious lever is rendering contests below the fold on demand. That trades against the page being one server-rendered document a reader can search and a crawler can read, which is worth keeping.
+
+**PU08** — Found 2026-08-25 while measuring BC-16. Counting .panel elements whose text contains PUBLIC MEETINGS returns 2 when one venue panel is open, and the entity modal's title renders twice in its own innerText ('Rockaway township' followed by 'Rockaway township'). Only one of each is visible, so this is not a reader-facing defect today — it is almost certainly the desktop and mobile placements both rendering with one hidden by CSS, which is the same pattern .rail-floaters and .map-bottom-stack use deliberately. It is a row because it made a measurement wrong: the BC-16 harness reported two panels open before anything had been clicked, and a duplicate node is a thing every future DOM count will have to know about.
 
 **A03** — Answering "is there a data center coming?" by searching pending zoning, permits and agenda items near an address. The same machinery answers warehouses, rezonings and road projects.
 
@@ -677,7 +689,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**18 open · 71 resolved.**
+**21 open · 71 resolved.**
 
 ### P1
 
@@ -695,6 +707,10 @@ CI, tests, workflows, storage, the machinery the project runs on.
 
 **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run.
 
+**NH177** — Read from Netlify's deploy API on 2026-08-25 while answering Item 6's verdict (a). Of the last 60 production deploys, these reached state 'error' and were never published: 3449eb8 (PR #177), 41113c1 (PR #171), 55d3047 (PR #170) and e0f6426 (this morning's intake tripwire). Three are real CODE merges. Each was covered by a later successful merge so nothing was permanently lost — but between the merge and that later deploy production was serving older code, and no instrument in this repo reports it. This is NJ25's shape still alive. It did NOT cause any of the six recurrences in Item 6 (all three testable claims were live in d43adf7 during Sean's walk), which is why it is a row rather than part of that verdict. RULING 152 now says a reader-facing DONE names the deploy that carries it; what is still missing is something that NOTICES an errored deploy without being asked. pnpm deploy:live answers for the tip only.
+
+**NH179** — Item 13's machinery shipped 2026-08-25: lib/ops/flake-quarantine.ts classifies a check from N runs of one unchanged build, walk:all consults docs/walk-flakes.json and reports a quarantined check as its own fourth outcome that is never counted passing, and pnpm flake:sweep runs the walk N times and writes the verdict. 8 guards, including NH176's four real runs replayed. WHAT IS NOT DONE: the sweep has not been run, so docs/walk-flakes.json does not exist and nothing is quarantined yet. The classifier is deliberately unable to call anything flaky from one run — it takes a PASS on the same unchanged tree — so a single walk cannot populate it. Run pnpm flake:sweep --runs=3 --write against one local production build and the quarantine fills itself; until then walk:all behaves exactly as it did before, which is the honest state rather than a silent one.
+
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
 **NH47** — pnpm test reported 1561 passing, 0 failing, while EIGHT guard tests had stopped running entirely. A deleted test and a passing test are indistinguishable in that output; the only instrument that can see the difference is the COUNT, and nothing checks it.
@@ -710,6 +726,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 ### P3
 
 **NH171** — Run 32840268606, 2026-08-25 11:03 UTC. push-main.mjs retried five times and every attempt came back 'remote: fatal error in commit_refs' with '! [remote rejected] HEAD -> main (failure)'. That is a GitHub-side error rather than a rejected fast-forward — a rebase-and-retry cannot fix it and correctly did not. Nothing in this repo is broken by it and nothing was lost: the tripwire commits only under docs/, which the deploy filter classifies as non-shipping. Recorded so a SECOND occurrence is recognised as a pattern rather than diagnosed from scratch, and because RULING 24 says a check that could not run is reported separately from one that failed. If it recurs, the question is whether push-main should distinguish a remote-side fatal from a rejected push and stop retrying.
+
+**NH178** — Reproduced 2026-08-25. deploy:live reads Netlify correctly and prints the full verdict — site, main tip, last deployable, live deploy id and state, live commit, and CURRENT — and then dies with 'Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src/win/async.c, line 94' and ELIFECYCLE exit code 3221226505. That is a libuv teardown crash on Windows, after the work is done. It matters because RULING 125 makes this the ONE production question a close-out asks, and any caller that gates on its exit code reads a successful read as a failure — the exact shape of the defect NJ25 is about. The verdict itself is trustworthy; the exit code is not.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

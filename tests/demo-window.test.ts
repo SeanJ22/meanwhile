@@ -32,15 +32,34 @@ test("the wall is still up TODAY — nothing has been deleted", () => {
   assert.equal(demoSweepVerdict().state, "WALL_STILL_UP");
 });
 
-test("an unbounded window REFUSES rather than deleting from the beginning of time", () => {
-  const v = demoSweepVerdict(null, "2026-09-01");
-  assert.equal(v.state, "CANNOT_RUN");
-  assert.match(v.reason, /beginning of time|fabricated/);
+test("an unset WALL_UP means the lower bound is THE BEGINNING, and the verdict says so in words", () => {
   /*
-   * This is the case that matters most. The wall coming down without a start
-   * date recorded would, on a naive build, delete every row the stores hold —
-   * real reader signal included, unrecoverably.
+   * RULING 142 — the line in the sand. This test REPLACES
+   * "an unbounded window REFUSES rather than deleting from the beginning of
+   * time", which asserted the opposite and was correct until Sean ruled.
+   *
+   * The old reasoning was that deleting from the beginning would take real
+   * reader rows with it. The ruling removes the premise: nothing collected
+   * before the wall comes down is ever sold or shown as signal, so there are no
+   * real reader rows below this bound to protect.
+   *
+   * What is guarded here is the half that could still go wrong — a `from` of
+   * `null` meaning *the beginning* must never be confused with a bound somebody
+   * failed to establish, which is why the verdict carries a sentence.
    */
+  const v = demoSweepVerdict(null, "2026-09-01");
+  assert.equal(v.state, "READY");
+  assert.equal(v.state === "READY" && v.from, null);
+  assert.equal(v.state === "READY" && v.to, "2026-09-01");
+  assert.match(v.state === "READY" ? v.lowerBound : "", /beginning/);
+  assert.match(v.state === "READY" ? v.lowerBound : "", /RULING 142/);
+});
+
+test("a null lower bound is a BOUND, and never reads the same as an unusable window", () => {
+  const beginning = demoSweepVerdict(null, "2026-09-01");
+  const backwards = demoSweepVerdict("2026-09-10", "2026-09-01");
+  assert.notEqual(beginning.state, backwards.state);
+  assert.equal(backwards.state, "CANNOT_RUN");
 });
 
 test("a backwards window is not a window", () => {

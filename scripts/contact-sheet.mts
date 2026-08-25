@@ -1,90 +1,106 @@
+#!/usr/bin/env tsx
 /**
- * `pnpm sheet <dir> [--filter=<substring>] [--out=<png>]` — a numbered contact
- * sheet from a directory of staged images.
+ * `pnpm sheet <dir> <out.png> [--filter=<substring>]` — **many staged images,
+ * one look.**
  *
- * **A portrait is judged by being LOOKED AT** (RULING 2: a capture is evidence
- * only once it has been read as an image). Reading twenty files one at a time
- * is twenty reads; one sheet is one. The tile carries the candidate key, so a
- * verdict can be written against the right person rather than the right
- * position in a list.
+ * RULING 2 says a capture is evidence only once it has been READ AS AN IMAGE,
+ * and the photo rule says nothing ships without the eyeball pass. Both are
+ * about a human — or a session — actually looking, and looking at fifty-five
+ * files one at a time is how a pass gets skipped.
  *
- * Parameterised rather than dated, per RULING 76 — a shooter that takes a
- * directory and a filter is worth more than the eleventh `sheet-<date>.mts`.
+ * So this lays them out on a numbered grid with each file's name under it. One
+ * image, one read, every staged candidate visible at once, and the numbers are
+ * what a refusal or an approval refers to.
+ *
+ * **It decides nothing.** It draws. Composition, identity and the four doors
+ * are judgements about a real person's face and this makes no part of them.
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+
+import { existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 
 import { launchGuarded } from "./browser.mts";
 
-const dir = process.argv[2];
-if (!dir) {
-  console.error("usage: pnpm sheet <dir> [--filter=sub] [--out=file.png]");
-  process.exit(1);
+const [dirArg, outArg] = process.argv.slice(2).filter((a) => !a.startsWith("--"));
+if (!dirArg || !outArg) {
+  console.error("usage: pnpm sheet <dir> <out.png> [--filter=<substring>]");
+  process.exit(2);
 }
-const filter = process.argv.find((a) => a.startsWith("--filter="))?.split("=")[1] ?? "";
-const out =
-  process.argv.find((a) => a.startsWith("--out="))?.split("=")[1] ??
-  join(process.cwd(), "docs", "photo-review", "contact-sheet.png");
+const filter = (process.argv.find((a) => a.startsWith("--filter=")) ?? "").slice("--filter=".length);
 
+const dir = resolve(dirArg);
+const out = resolve(outArg);
 const files = readdirSync(dir)
   .filter((f) => /\.(jpe?g|png|webp|gif)$/i.test(f))
   .filter((f) => (filter ? f.includes(filter) : true))
   .sort();
 
 if (files.length === 0) {
-  console.error(`CANNOT RUN: no images in ${dir}${filter ? ` matching ${filter}` : ""}.`);
-  process.exit(1);
+  console.error(`sheet · CANNOT RUN — no image files in ${dir}${filter ? ` matching "${filter}"` : ""}.`);
+  process.exit(2);
 }
 
-const mimeOf = (f: string): string =>
-  /\.png$/i.test(f) ? "image/png" : /\.webp$/i.test(f) ? "image/webp" : "image/jpeg";
+/*
+ * **THE IMAGES ARE INLINED, NOT LINKED.**
+ *
+ * The first version pointed each `<img>` at a `file://` URL and the sheet
+ * photographed sixteen empty boxes: a page built with `setContent` has an
+ * opaque origin, and `file://` is cross-origin to it. The decode counter is
+ * what caught that — it reported `0 decoded to a real image` rather than
+ * writing a plausible-looking PNG of nothing, which is the whole reason it
+ * counts rather than assuming.
+ */
+const MIME: Record<string, string> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+  gif: "image/gif",
+};
 
-const tiles = files
+const cells = files
   .map((f, i) => {
-    const b64 = readFileSync(join(dir, f)).toString("base64");
-    const label = f.replace(/\.(jpe?g|png|webp|gif)$/i, "").replace(/_/g, " ");
-    return (
-      `<figure><div class="n">${i + 1}</div>` +
-      `<img src="data:${mimeOf(f)};base64,${b64}">` +
-      `<figcaption>${label.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</figcaption></figure>`
-    );
+    const ext = (f.split(".").pop() ?? "").toLowerCase();
+    const src = `data:${MIME[ext] ?? "application/octet-stream"};base64,${readFileSync(join(dir, f)).toString("base64")}`;
+    /* The label is the FILE NAME, not a prettified one. A sheet whose captions
+       have been tidied cannot be used to name which file to refuse. */
+    return `<figure><span class="n">${i + 1}</span><img src="${src}" alt=""><figcaption>${f
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")}</figcaption></figure>`;
   })
-  .join("");
+  .join("\n");
 
-const style =
-  "body{margin:0;padding:20px;background:#0f1016;color:#e8e8ee;font:12px ui-sans-serif,system-ui,sans-serif}" +
-  ".grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}" +
-  "figure{margin:0;background:#1a1b24;border:1px solid #2c2d3a;border-radius:8px;overflow:hidden;position:relative}" +
-  ".n{position:absolute;top:6px;left:6px;z-index:2;background:#f0b429;color:#12131a;font-weight:700;" +
-  "font-size:14px;min-width:24px;height:24px;border-radius:5px;display:flex;align-items:center;" +
-  "justify-content:center;padding:0 5px}" +
-  "img{width:100%;height:270px;object-fit:contain;display:block;background:#000}" +
-  "figcaption{padding:6px 8px;font-size:10.5px;color:#b8b8c6;word-break:break-all;line-height:1.35}";
-
-const html =
-  `<!doctype html><meta charset="utf-8"><style>${style}</style>` +
-  `<div class="grid">${tiles}</div>`;
-
-mkdirSync(join(process.cwd(), "docs", "photo-review"), { recursive: true });
-const pagePath = join(process.cwd(), "docs", "photo-review", "contact-sheet.html");
-writeFileSync(pagePath, html);
+const COLUMNS = 5;
+const html = `<!doctype html><meta charset="utf-8"><style>
+  body { margin: 0; background: #111; color: #eee; font: 11px/1.35 ui-sans-serif, system-ui, sans-serif; }
+  h1 { font-size: 15px; margin: 14px 16px 4px; }
+  p.sub { margin: 0 16px 12px; color: #999; }
+  .grid { display: grid; grid-template-columns: repeat(${COLUMNS}, 1fr); gap: 10px; padding: 0 16px 20px; }
+  figure { margin: 0; background: #1b1b1b; border: 1px solid #333; border-radius: 6px; padding: 6px; position: relative; }
+  .n { position: absolute; top: 4px; left: 6px; background: #000c; padding: 1px 5px; border-radius: 4px; font-weight: 700; }
+  img { display: block; width: 100%; height: 190px; object-fit: contain; background: #000; }
+  figcaption { margin-top: 5px; color: #bbb; word-break: break-all; font-size: 9px; }
+</style>
+<h1>Staged portraits — ${files.length} image(s)</h1>
+<p class="sub">${dir}${filter ? ` · filter "${filter}"` : ""}. Nothing here has been approved; this is the pool to look at.</p>
+<div class="grid">${cells}</div>`;
 
 const browser = await launchGuarded({ label: "contact-sheet" });
-const page = await browser.page({ viewport: { width: 1280, height: 900 } });
-await page.goto(`file:///${pagePath.split("\\").join("/")}`);
-await page.waitForLoadState("networkidle");
+const page = await browser.page({ viewport: { width: 1500, height: 1000 }, deviceScaleFactor: 1 });
+await page.setContent(html, { waitUntil: "load" });
+/* Every image decoded before the shot, or the sheet photographs empty boxes —
+ * a capture that reports success with its product unchecked (RULING 113). */
+const decoded = (await page.evaluate(`(async () => {
+  const imgs = Array.from(document.images);
+  await Promise.all(imgs.map(i => i.decode().catch(() => null)));
+  return imgs.filter(i => i.naturalWidth > 0).length;
+})()`)) as number;
+mkdirSync(dirname(out), { recursive: true });
 await page.screenshot({ path: out, fullPage: true });
 await browser.close();
 
-// RULING 113 — observe the product at the step.
-if (!existsSync(out)) {
-  console.error("REFUSED: the screenshot step reported success and wrote no file.");
-  process.exit(1);
+console.log(`sheet · ${files.length} file(s) laid out, ${decoded} decoded to a real image`);
+if (decoded < files.length) {
+  console.log(`  ${files.length - decoded} did NOT decode and appear as empty cells — they are not readable images.`);
 }
-const bytes = readFileSync(out);
-if (bytes.length < 1000 || bytes[0] !== 0x89 || bytes[1] !== 0x50) {
-  console.error(`REFUSED: ${out} is ${bytes.length} byte(s) and is not a PNG.`);
-  process.exit(1);
-}
-console.log(`contact sheet — ${files.length} image(s) → ${out} (${bytes.length} bytes)`);
-files.forEach((f, i) => console.log(`  ${String(i + 1).padStart(3)}  ${f}`));
+console.log(`  wrote ${out}${existsSync(out) ? "" : "  (MISSING — the screenshot did not land)"}`);

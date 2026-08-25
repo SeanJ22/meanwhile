@@ -18214,3 +18214,295 @@ sixteen captures unread; there were none, and git cannot track an empty
 directory. The refinement it was meant to unblock is law anyway — RULING 135, a
 fence bars acting on content and never registering the author's artifacts — so
 the next batch lands without the collision.
+
+---
+
+## NJ depth, 2026-08-24 — the search engines are closed, so the newspapers answered instead
+
+**Session `nj-depth-0824`, branch `claude/nj-depth-0824`.** The item list was
+campaign sites for 272, photos riding those sites, Morris rosters, the New
+Hampshire tail, expansion, and two carried defects. What actually decided the
+night was a measurement taken in the first hour: **every general web index this
+project is permitted to walk is walled**, and two of the five moves of the stuck
+protocol are literally *type this into a search box*.
+
+### The environment, and the rotations — Item 1
+
+Six checks, all green: `.env.local` present (20 assignments), network beyond
+`github.com` reachable, Playwright Chromium 151.0.7922.34 usable, a local
+production build runs, the tree clean at `26b357d`, and **15 of 15 credentials
+proven by calling** (`pnpm credentials`).
+
+**All nine `NS11` credentials are ROTATED, and both halves are proven.** The new
+half was already available; the old half was not, because the old values exist
+nowhere except the transcripts that leaked them. `pnpm rotation:prove` is new: it
+reads them back out of 187 transcript files, calls each one, and prints **only a
+verdict** — no value, old or new, reaches the output. **18 old values proven
+dead, 0 still live.**
+
+Its first run reported *"no old value in the transcripts"* for four of the nine.
+That was RULING 110's wrong-form search **inside the instrument written to
+answer a rotation**: the extractor was anchored on `?api_key=` in a resolved
+URL, and those four had leaked as `NAME=value` instead. A name-anchored second
+form found all four. `pnpm secrets:sweep --transcripts`: **0 secret occurrences
+across 2,919 files.**
+
+### The wall, measured host by host — and what replaced it
+
+`pnpm search:rung` is new and it exists so the next session reads this rather
+than rediscovering it across four rungs.
+
+**Compliance is decided before the ladder starts, from each host's own
+`robots.txt`.** Mojeek, Brave, Ecosia, Startpage and Bing all `Disallow:
+/search`, so they are **not walked at any rung** — `CLAUDE.md` says a
+`robots.txt` disallow gets a COMPLIANT ROUTE to the same information, never a
+cleverer client. `html.duckduckgo.com` and `lite.duckduckgo.com` publish
+`Allow: /` and answer **HTTP 202 with a ~14 KB challenge page** at rungs 2 and 3.
+Rung 6 — a live browser with JavaScript executed — renders the sentence
+**"Unfortunately, bots use DuckDuckGo too."**
+
+That is a WALL, recorded as one. **No field moves toward absence on it**, which
+is why this session produced **zero argued absences** rather than a convenient
+pile of them.
+
+The compliant route to the same information turned out to be the obvious one
+once the question was asked properly: **a newspaper is not a search engine, and
+it publishes a search over exactly the facts we want.** Both local outlets run
+WordPress and expose `/wp-json/wp/v2/search` — the publisher's own documented
+interface, ladder rung 7. The control was measured before use: an impossible
+term returns `[]` on both hosts.
+
+### The routes, and what each returned
+
+**Seven routes conceived tonight**, four returning rows and three returning zero
+or a wall; `docs/expansion-log.md` carries every one with its literal query.
+
+| route | what it returned |
+|---|---|
+| the county party's municipal-committee index, via its own WordPress REST API | **85 pages in ONE request**, an index of 39 municipal committees linking **22 distinct committee sites** |
+| the same descent for the other party | **25 of 25 pages read, 0 leads** — and the finding is the asymmetry itself |
+| the local press's own search API | **258 surnames × 2 outlets = 516 questions → 4,056 distinct articles** |
+| Certificate Transparency (`crt.sh`) | control clean, **3 of 4 real queries HTTP 502** — a wall on those queries, owed a re-walk |
+| Common Crawl's index | a real oracle with a real control (404 `No Captures found`); **coverage of the local press measured at 6–98 URLs per host**, which is the honest disappointment |
+| Marginalia's public API | answers, **CC-BY-NC-SA so DISCOVERY ONLY**, and returned encyclopedia noise on its first probe |
+| the site's own sitemap, for municipal rosters | **Denville 0 → 7 members**, plus Chester Township 5, Hanover 6, Harding 3 |
+
+**The two county party committees publish completely different things.** The
+Democratic committee publishes a municipal index; the Republican committee
+publishes a page sitemap, a blog and no index at all. That is RULING 60's
+sub-branch rule arriving **inside one county** rather than across states: a route
+proven on one party's site is proven for that PUBLISHER, not for the office. The
+session's answer was to turn the shape the Democratic index revealed into a
+guessed-domain route applied to **both parties with the same patterns and the
+same number of guesses each** — symmetric by construction rather than by
+intention.
+
+### Three defects the campaign-site hunt found in itself
+
+Each was found by running the route rather than by reasoning about the code, and
+each is the kind that reports success:
+
+1. **One WordPress shortlink was promoted as the campaign site of THREE different
+   people.** A shortlink redirects to a post that names them and carries office
+   evidence, so it cleared the control *and* the self-identification bar,
+   honestly. Both bars were working as written. The fix is a host class, not a
+   stricter bar.
+2. **The control was comparing a host against itself.** `ControlledProbe` calls
+   one `make` twice and compares; mine ignored its argument and returned the lead
+   URL both times, so every page came back `EMPTY` as *"indistinguishable from
+   this host's own answer for a name that cannot exist"* — which it trivially
+   was. Worse, `controlSize` caches by HOSTNAME, so the one page that did promote
+   was promoted against whichever path on that host happened to be probed first.
+   **An order-dependent verdict about a named person, produced by the instrument
+   RULING 68 built to prevent one.**
+3. **The prove loop fetched once per LEAD rather than once per URL.** 1,654 leads
+   over 249 distinct URLs — those hosts would have been asked 1,654 times for the
+   same pages. Not a speed problem: the public-records rule says never request at
+   a rate that degrades service.
+
+### The Kelly scoreboard, because a finish line has to be computable
+
+RULING 143 says the distance to done is reported as a number every session, and
+nothing could compute one — the five fields live in four files with four shapes,
+and argued absences lived nowhere. `pnpm kelly` derives it rather than storing
+it, because a `kellyDepth` column would go stale the moment any of those files
+moved with nothing noticing.
+
+**Measured 2026-08-24, both zips, HELD / ARGUED ABSENT / OWED:**
+
+| field | 07866 (of 272) | 03255 (of 47) |
+|---|---|---|
+| photo | 12 / 0 / 260 | 25 / 0 / 22 |
+| phone | 2 / 0 / 270 | 24 / 0 / 23 |
+| contact | 272 / 0 / 0 | 22 / 0 / 25 |
+| verified page | 19 / 0 / 253 | 11 / 0 / 36 |
+| campaign site | 12 / 0 / 260 | 29 / 0 / 18 |
+| **at Kelly depth** | **0 of 272** | **4 of 47** |
+
+**The brief's "photos ~2 of 272" is short against the repo, which holds 12 with
+the asset on disk.** And the five Kelly fields are NOT the four-field
+denominator earlier NH reports used (photo, own words, contact, site) — two
+measurements of different things, stated rather than reconciled. The NH photo
+and campaign-site numbers match the brief's exactly.
+
+### Photos — 55 staged, 31 read as images, 28 refused, 3 queued, 0 shipped
+
+`pnpm sheet` is new and it exists so the eyeball pass actually happens: 55 files
+opened one at a time is how a pass gets skipped. Its first version pointed each
+`<img>` at a `file://` URL and photographed **sixteen empty boxes** — a page
+built with `setContent` has an opaque origin. **The decode counter caught it**
+and reported `0 decoded to a real image` rather than writing a plausible PNG of
+nothing.
+
+**New Jersey is 16 of 16 refused and the pattern is the finding**: logo
+line-art, a vendor badge, a signature, two campaign flyers, a policy list, a
+group of four, and a lake with no person in it. Not one of the sixteen is a clean
+solo portrait. New Hampshire queues two people. `docs/photo-staging-2026-08-24.md`
+carries every image with its verdict and reason.
+
+### The two carried defects
+
+**`NH144` was not walk noise — it was a reader-facing defect, and it is fixed.**
+`.wtp-pin[data-spiderfied="true"] { position: relative }` made the element a
+containing block for the leader-line pseudo-elements, and also took the marker
+out of MapLibre's absolute positioning into normal flow. MapLibre then applied
+its transform **on top of the flow offset**. Measured, four pins in one stack:
+drift 0, +36, +72, +108 — 36px is the pin's own height, one per preceding
+sibling. The geometry was never wrong; two pairs landed **19.1px apart on
+screen**, closer than before the fan. After: all six pairs 57.5–95.1px, and
+`walk:all`'s `g9` check passes.
+
+**`P-005`: acceleration was ON the whole time, and the frame recorder never
+ran.** `chrome://gpu` renders inside a shadow root, so `document.body.innerText`
+returned **zero characters** and every run this project ever took printed
+*"hardware acceleration: OFF or UNKNOWN"*. Read through the shadow roots it
+yields 96,674 characters saying WebGL, Canvas and Rasterization are all hardware
+accelerated. Separately, the frame recorder was installed by `addInitScript` as a
+FUNCTION; esbuild had wrapped its named arrow as `__name(...)`, which does not
+exist in the page, so it threw before `requestAnimationFrame` — every median
+frame, worst frame and LCP was `NaN` because **the instrument was never running,
+not failing.**
+
+**`docs/perf-baseline.md` is committed**, the first this project has had: three
+cold runs against a LOCAL production build at 07866, acceleration ON, **FCP 208
+ms, LCP 660 ms, median frame 16.7 ms, worst 185.6 ms, 36 dropped of 2,194
+sampled.** No budget is asserted — RULING 134 leaves that to Sean.
+
+### `tracker:add`, fixed at the tool rather than at the operator
+
+The identical duplicate-row accident has happened twice for the same reason: the
+confirmation printed BEFORE the long views summary, so the operator could not see
+the add had landed and ran it again. Now the confirmation prints LAST, a
+byte-identical add is REFUSED and **the refusal names the id the earlier run
+assigned**, and per RULING 113 the store is re-read from disk after the write.
+Proven by doing it — `NJ15` was opened, the second identical add was refused
+naming `NJ15`, and `NJ15` carries that account as its evidence.
+
+### The one thing this session found that nobody was looking for
+
+`pnpm walk:all` failed one check: **the production database was missing two
+committed migrations**, `0019_next_scarlet_witch` and `0020_dazzling_deathbird`,
+both of which create and extend the `speak_your_mind` table. They merged this
+morning with the feature and were never applied. **The surface is LIVE** — it
+renders inside the official and entity modals and `/api/speak` answers — so on
+production every insert failed, the route caught it, and the page served
+normally. **A reader typing what they would say to their representative got no
+error and their words were dropped.**
+
+The session applied them rather than opening a row and waiting: live data loss on
+a collection surface, migrations additive and authored to be applied. Six
+statements, **journal now 21 of 21 committed and 0 pending**, verified by a
+second dry run. `NS15` is open because Sean should know a session wrote to the
+production database, and because the half that needs his judgement is what to do
+about whatever was typed in between.
+
+### Gates
+
+`test` **2,199 of 2,199 pass, 0 fail** · `lint` 0 errors, 17 warnings · `build`
+the literal `netlify.toml` command, exit 0 · `tsc --noEmit` clean ·
+`walk:all` against a **local** production build (RULING 125) **372 ok · 1 fail ·
+14 could-not-run · 373 of 373 identities distinct, 0 silent** — the one failure
+being the unapplied migrations, now applied.
+
+Four of those suite failures were the session's own and all four were fixed
+rather than loosened: a raw NUL byte that would make `ripgrep` and `git grep`
+skip `scripts/tracker.mjs` silently; a type named `CandidateDepth`, which is a
+RETIRED suppression symbol; three scripts keeping a private copy of the Phoenix
+formatter; and a declared source stamp whose input this session moved.
+
+**And one the suite caught that the GATE should have caught first.** The new
+sitemap branch reached Hanover Township's page, which is a department-portfolio
+table — *Director of Public Works*, *Building Department and Property
+Maintenance Director* — and the extractor read the portfolios as office titles;
+one "member" came back as `Krista DiGiorgio / Bid Committee Members` with six
+other names in its term note. `tests/top-offices.test.ts` refused it. The
+generator refuses it now too, with a stated reason, because **a defect the suite
+catches is a defect that already shipped into the artifact.**
+
+### Item 3, stated as the number rather than as the effort
+
+**The campaign-site field did not move. It stood at 12 of 272 at session start
+and it stands at 12 of 272 now**, measured by `pnpm kelly` against
+`candidate-links-2026.json`, which is the file that decides what a reader sees.
+
+That is the finding, and every other number in this section is an explanation of
+it rather than a substitute for it.
+
+| route | pages read | leads | HIT | new campaign sites |
+|---|---:|---:|---:|---:|
+| the county Democratic committee's municipal index | 24 of 28 | 57 | — | 0 |
+| the county Republican committee | 25 of 25 | 0 | 0 | 0 |
+| the local press's own search API | **1,474 of 4,056** | 2,526 | 1 | **0** |
+
+The one HIT the press route earned is `joehathawayforcongress.com`, **which this
+product already held.** 4,056 articles were named by 516 surname searches; 1,474
+were read; 453 of those named somebody on this ballot; and not one of them
+carried a link to a campaign site this project did not already have.
+
+**The classifier is why that number is 1 and not 33, and the sequence is the
+part worth keeping.** Three successive bars, each measured:
+
+1. `verdictFor` alone — the generic bar: the page names the candidate and says
+   it is about standing for office. **33 HITs across 8 candidacies, of which 31
+   were news sites** — `govtrack.us`, `cnn.com`, `nypost.com`, `jewishinsider.com`,
+   `dailysabah.com`, `theintercept.com`. Every one of those is a TRUE statement
+   about the page and a FALSE claim about the field. *Bennett for Congress* is
+   exactly the phrase the office test looks for, and it appears in every story
+   written about her.
+2. Host-carries-the-name **or** a paid-for-by disclaimer — **10 HITs, every
+   newspaper gone**, and `morrisdems.org` left standing as one candidate's
+   campaign site and `workingfamilies.org` as another's. Both carry a real
+   disclaimer; neither is a disclaimer about the CANDIDATE.
+3. The disclaimer must NAME the candidate, plus a given-name-beside-a-campaign-word
+   host form — **1 HIT.**
+
+**A host blocklist could not have closed this class** — there are more
+newspapers than anyone can list — so the discriminator is positive rather than
+negative: a campaign site is a place the campaign PUBLISHES, evidenced by its
+own name in the host or its own disclaimer on the page.
+
+**And the tightening has a cost, named rather than hidden.** It rejects at least
+one true campaign site: `analiliafornj.com` is Analilia Mejia's, already held and
+verified, and the host carries her GIVEN name rather than her surname. A
+rejected true site becomes a `LEAD` a human looks at, which is the correct
+direction to fail — RULING 68 exists so a guessed identity never reaches a
+reader — but it is still a failure and it is written down here.
+
+**What is owed**: 2,582 of the 4,056 articles are unharvested, stated on the
+artifact as a CLIP with both numbers rather than as an end of data, and the disk
+cache means the next run does not re-request a single page it already has.
+
+**The party routes, final, under the corrected classifier:** 24 distinct URLs
+from 57 leads, **0 HIT · 33 LEAD · 15 EMPTY · 9 REFUSED**, conservation closes
+at 57 of 57. Thirty-three leads is thirty-three pages a person could look at,
+which is a real deliverable and is not a campaign site.
+
+**`party-committee-domain-shape` was walked and NOT finished, and the reason is
+a defect in how it was built.** It guesses 580 municipal committee domains, five
+suffix patterns per party per municipality, symmetric by construction. Most do
+not resolve — and the rung escalation added earlier this session runs the FULL
+ladder on every one that fails: curl, then plain HTTP, then an Internet Archive
+lookup. That is right for a link read off a real page and wrong for a guess,
+where `NXDOMAIN` is the expected answer rather than a wall to climb. It was
+stopped rather than left running, and the fix is to escalate a GUESSED
+identifier differently from a READ one.

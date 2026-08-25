@@ -52,6 +52,33 @@ const UA =
   "we-the-people/1.0 (civic data for a public-records product; contact: hello@wethepeople.vote)";
 const SPACING_MS = 700;
 /** Candidate pages fetched per site. A ceiling that is STATED, never silent. */
+/*
+ * **MEASURED, AND THE RAISE WAS REVERTED — RULING 133.**
+ *
+ * The sitemap branch surfaced 215 scored candidates on one municipal site and
+ * 102 on another, and the run reported "6 candidate page(s) of 215". That is a
+ * clip stated honestly and it is still a clip, so the ceiling was raised to 10
+ * to see what it was hiding.
+ *
+ * **It was hiding nothing.** Three runs against the same 39 sites:
+ *
+ * | run | sites with a roster | members | pages fetched |
+ * |---|---|---|---|
+ * | anchors only, ceiling 6 | 14 | 57 | 128 |
+ * | + sitemap, ceiling 6 | 17 | 82 | 169 |
+ * | + sitemap, ceiling 10, scores >= 8 | 17 | 82 | 180 |
+ *
+ * The sitemap branch is worth three municipalities and 25 members. The ceiling
+ * raise is worth ZERO and costs eleven more requests at somebody else's
+ * expense, so it goes back. RULING 133 says a change is kept only if the
+ * rebuilt number fell, and a change kept because it sounded right is what that
+ * ruling forbids.
+ *
+ * What DOES stay is the score filter on sitemap candidates, which is why the
+ * ceiling stopped binding: a slug matching "government" fits dozens of pages,
+ * and letting those compete for the slots is how 215 candidates crowded out
+ * the one page named "Township Council".
+ */
 const CANDIDATE_CEILING = 6;
 
 function arg(flag: string): string | undefined {
@@ -116,6 +143,87 @@ interface Candidate {
   url: string;
   text: string;
   score: number;
+}
+
+/**
+ * **RUNG 10 — the site's own sitemap, scored the same way as its anchors.**
+ * (Added 2026-08-24, the NJ depth session.)
+ *
+ * The homepage-anchor branch reached 14 of 39 Morris municipalities. It depends
+ * on the HOMEPAGE naming the council in link text, and a script-built menu
+ * defeats it completely: Dover's anchor list read *Annual Rabies*, *Body Art*
+ * and *Death Certificates*, and the branch correctly scored none of them.
+ *
+ * A sitemap does not care what the menu does. It is the site's own enumeration
+ * of its own pages, published for exactly this purpose, and it fails for
+ * entirely different reasons than the anchor branch does — which is what makes
+ * the two INDEPENDENT under RULING 52 rather than one route wearing two names.
+ *
+ * The SLUG is scored with the SAME `LINK_SCORES` table, with separators turned
+ * into spaces, so `/157/Township-Council` scores the way the words *Township
+ * Council* already do. One scoring table, never two.
+ *
+ * A sitemap index (a sitemap of sitemaps) is followed one level, capped, since
+ * a large municipal site can publish dozens.
+ */
+async function sitemapCandidates(
+  baseUrl: string,
+  fetcher: (url: string) => Promise<Fetched>,
+): Promise<Candidate[]> {
+  const origin = (() => {
+    try {
+      return new URL(baseUrl).origin;
+    } catch {
+      return null;
+    }
+  })();
+  if (!origin) return [];
+
+  const seenMaps = new Set<string>();
+  const urls = new Set<string>();
+
+  const readMap = async (mapUrl: string, depth: number): Promise<void> => {
+    if (depth > 1 || seenMaps.size >= 6 || seenMaps.has(mapUrl)) return;
+    seenMaps.add(mapUrl);
+    const res = await fetcher(mapUrl);
+    await sleep(SPACING_MS);
+    if (res.status !== 200 || res.body.length === 0) return;
+    const isIndex = /<sitemapindex/i.test(res.body);
+    for (const m of res.body.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/gi)) {
+      const loc = m[1];
+      if (isIndex) {
+        await readMap(loc, depth + 1);
+      } else if (urls.size < 5_000) {
+        urls.add(loc);
+      }
+    }
+  };
+
+  for (const name of ["/sitemap.xml", "/sitemap_index.xml", "/sitemap-index.xml"]) {
+    await readMap(`${origin}${name}`, 0);
+    if (urls.size > 0) break;
+  }
+
+  const out: Candidate[] = [];
+  for (const u of urls) {
+    let path: string;
+    try {
+      const parsed = new URL(u);
+      if (parsed.hostname.replace(/^www\./, "") !== new URL(baseUrl).hostname.replace(/^www\./, "")) continue;
+      path = decodeURIComponent(parsed.pathname);
+    } catch {
+      continue;
+    }
+    if (/\.(?:pdf|jpe?g|png|gif|docx?|xlsx?|zip)$/i.test(path)) continue;
+    /* The slug, read as the words it is made of. */
+    const words = path.replace(/[/_+.-]+/g, " ").replace(/\d+/g, " ").replace(/\s+/g, " ").trim();
+    if (!words) continue;
+    let score = 0;
+    for (const rule of LINK_SCORES) if (rule.pattern.test(words)) score = Math.max(score, rule.score);
+    if (score === 0) continue;
+    out.push({ url: u, text: `${words} (from the sitemap)`, score });
+  }
+  return out.sort((a, b) => b.score - a.score);
 }
 
 function candidates(html: string, baseUrl: string): Candidate[] {
@@ -274,6 +382,38 @@ async function walkSite(municipality: string, siteUrl: string): Promise<SiteResu
   ];
 
   const found = candidates(home.body, home.finalUrl);
+  /*
+   * **A SECOND, INDEPENDENT BRANCH TO THE SAME FACT — the site's own SITEMAP.**
+   * (Added 2026-08-24, the NJ depth session. Ladder rung 10.)
+   *
+   * The homepage-anchor branch reached **14 of 39** Morris municipalities and
+   * reported the other 25 as failed extractions, honestly. RULING 52: a branch
+   * returning empty is one measurement on one route, never a verdict about the
+   * fact — and these two routes fail for genuinely different reasons, which is
+   * what makes them independent rather than one route wearing two names.
+   *
+   * The anchor branch depends on the HOMEPAGE naming the council in link text.
+   * Dover's homepage does not: its governing-body link lives behind a
+   * script-built menu, so the branch saw an anchor list of *Annual Rabies*,
+   * *Body Art* and *Death Certificates* and correctly scored none of them.
+   * A sitemap does not care what the menu does — it is the site's own
+   * enumeration of its own pages, published for exactly this purpose.
+   *
+   * The SLUG is scored with the SAME `LINK_SCORES`, with separators turned into
+   * spaces, so `/157/Township-Council` and `/mayor-and-council` score the way
+   * the words *Township Council* and *Mayor and Council* already do. One
+   * scoring table, not two — RULING 103's predicate applied before there is
+   * anything to sweep.
+   */
+  /* Only the SPECIFIC patterns from the sitemap. A slug matching "government"
+   * (score 3) or "mayor" (score 5) fits dozens of pages on a large municipal
+   * site, and letting those compete for the ceiling is how 215 candidates crowd
+   * out the one page named "Township Council". The anchor branch keeps its full
+   * range, because anchor TEXT is written by a human describing a link. */
+  const fromSitemap = (await sitemapCandidates(home.finalUrl, get)).filter((c) => c.score >= 8);
+  const seen = new Set(found.map((c) => c.url));
+  for (const c of fromSitemap) if (!seen.has(c.url)) found.push(c);
+  found.sort((a, b) => b.score - a.score);
   result.candidatesSeen = found.length;
 
   for (const candidate of found.slice(0, CANDIDATE_CEILING)) {

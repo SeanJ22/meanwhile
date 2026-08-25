@@ -1647,5 +1647,46 @@
     "ids": [
       "NH169"
     ]
+  },
+  {
+    "session": "nj-depth-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NJ15"
+    ]
+  },
+  {
+    "session": "nj-depth-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NJ16",
+      "NJ17",
+      "NJ18",
+      "NJ19",
+      "NJ20",
+      "NJ21",
+      "NS14"
+    ]
+  },
+  {
+    "session": "nj-depth-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NS15"
+    ]
+  },
+  {
+    "session": "nj-depth-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NJ22"
+    ]
+  },
+  {
+    "session": "nj-depth-0824",
+    "opened": "2026-08-25",
+    "ids": [
+      "NJ23"
+    ]
   }
 ]

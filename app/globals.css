@@ -4279,9 +4279,42 @@ button.jurisdiction-badge-action:focus-visible {
   pointer-events: none;
 }
 
-/* The pin is a grid container; the legs are positioned against it. */
+/*
+ * **`NH144` — THIS RULE WAS THE FAN COLLAPSING, AND IT SAID `relative`.**
+ * (Diagnosed and fixed 2026-08-24, the NJ depth session.)
+ *
+ * The legs need this element to be a containing block, which is all the rule
+ * was ever for. `relative` gives that — and it also takes the marker OUT OF
+ * MAPLIBRE'S ABSOLUTE POSITIONING and drops it into normal flow, where each
+ * marker sits one pin-height below the previous sibling. MapLibre then applies
+ * its transform ON TOP of that flow offset.
+ *
+ * Measured at 85701 against a local production build, a stack of four:
+ *
+ * | pin | MapLibre's transform | painted box | drift |
+ * |---|---|---|---|
+ * | 1st fanned | 764, 429 | 764, 429 | 0 |
+ * | 2nd | 808, 475 | 808, 511 | +36 |
+ * | 3rd | 859, 434 | 859, 506 | +72 |
+ * | 4th | 822, 390 | 822, 498 | +108 |
+ *
+ * 36px is the pin's own height, and the drift is exactly one pin-height per
+ * preceding sibling. The fan geometry was never wrong — `fanOffsets` puts four
+ * pins on a 46px circle, 65px apart at the nearest pair — but two pairs landed
+ * **19.1px apart on screen**, which is closer than they were before the fan.
+ * That is the defect the fan exists to fix, reintroduced by the fan.
+ *
+ * `absolute` is what MapLibre sets on an unfanned marker (measured: computed
+ * `position` is `absolute` on every pin until this rule fires), and it is
+ * equally a containing block for the two pseudo-elements. So the legs keep
+ * working and the marker keeps its own positioning.
+ *
+ * The walk check `g9` has been failing on this since it was written; it was
+ * reported as carried-in and pre-existing, and it was a real reader-facing
+ * defect the whole time.
+ */
 .wtp-pin[data-spiderfied="true"] {
-  position: relative;
+  position: absolute;
 }
 
 /* The zip centroid. Deliberately unlike a pin — it is not a place you can go,

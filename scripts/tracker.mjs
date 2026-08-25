@@ -1035,10 +1035,43 @@ function modeAdd(working, resolved, sections) {
     added.push(built);
   }
 
+  /*
+   * **A BYTE-IDENTICAL ADD IS REFUSED.** (2026-08-24, the NJ depth session.)
+   *
+   * The identical duplicate-row accident has now happened twice — 2026-08-21
+   * and 2026-08-24 — for the same reason both times, and the reason is not
+   * carelessness. `add` printed its confirmation FIRST and then handed off to
+   * the views summary, which is long; the operator saw the summary scroll past,
+   * could not see whether the add had landed, and ran it again. **Fix the tool,
+   * not the operator.**
+   *
+   * Two changes, and this is the first. A row whose Section, Title and
+   * description already exist in the working store is the same row: an id has
+   * been minted for it and printing a second one is how a tracker acquires two
+   * rows for one thing, which silently breaks every lookup by id.
+   *
+   * The match is on CONTENT rather than on id, because the whole failure is
+   * that the second run has not been given the first run's id.
+   */
+  const fingerprint = (r) =>
+    [r.Section ?? "", r.Title ?? "", r["What this is"] ?? ""]
+      .map((s) => String(s).trim().replace(/\s+/g, " ").toLowerCase())
+      .join("\u0000");
+  const alreadyOpen = new Map(working.map((r) => [fingerprint(r), r.ID]));
+  const duplicates = added.filter((r) => alreadyOpen.has(fingerprint(r)));
+  for (const d of duplicates) {
+    refusals.push(
+      `"${d.Title}": this row is ALREADY OPEN as ${alreadyOpen.get(fingerprint(d))} — same section, ` +
+        "same title, same description. Nothing was written. If the earlier add is the one you " +
+        "could not see land, that id is the answer; if this is genuinely a different row, change " +
+        "the title or the description so the two can be told apart.",
+    );
+  }
+
   console.log(`\ntracker add — ${STAMP}\n`);
   console.log(`  requested              ${requested.length}`);
   console.log(`  refused                ${refusals.length}`);
-  console.log(`  ids assigned           ${added.map((r) => r.ID).join(", ") || "none"}`);
+  console.log(`  already open           ${duplicates.length}`);
 
   if (refusals.length) {
     console.log("\n  REFUSED — nothing written:\n");
@@ -1048,9 +1081,7 @@ function modeAdd(working, resolved, sections) {
   }
 
   const nextWorking = [...working, ...added];
-  console.log(`  working store          ${working.length} -> ${nextWorking.length}`);
   writeFileSync(join(ROOT, WORKING_CSV), writeStore(nextWorking), "utf8");
-  console.log(`\n  written  ${WORKING_CSV}`);
 
   /*
    * THE LEDGER, appended in the same run that assigns the ids (item 1.4).
@@ -1072,9 +1103,48 @@ function modeAdd(working, resolved, sections) {
   });
   writeFileSync(ledgerPath, JSON.stringify(ledger, null, 2) + "\n", "utf8");
   const claimed = ledger.reduce((n, e) => n + e.ids.length, 0);
-  console.log(`  written  ${OPENED_JSON}  (${ledger.length} entries, ${claimed} ids claimed)`);
+  /*
+   * **RULING 113 — OBSERVE THE STEP'S PRODUCT AT THE STEP.**
+   *
+   * The write above reports success by not throwing. That is a step reporting
+   * success with its product unchecked, and the ruling is explicit: where a
+   * step's product can be observed, observe it AT the step rather than at the
+   * first consumer. Here the product is a file on disk, and reading it back
+   * costs one syscall.
+   */
+  const onDisk = readStore(WORKING_CSV);
+  const landed = added.filter((r) => onDisk.some((d) => (d.ID ?? "").trim() === r.ID));
+  if (landed.length !== added.length) {
+    const missing = added.filter((r) => !landed.includes(r)).map((r) => r.ID);
+    console.error(
+      `\n  THE WRITE DID NOT LAND. ${landed.length} of ${added.length} id(s) are in ${WORKING_CSV} ` +
+        `after writing it; missing: ${missing.join(", ")}. This is reported as a failure rather ` +
+        "than as a successful add, because a step whose product cannot be observed has not " +
+        "been observed.",
+    );
+    process.exit(1);
+  }
 
-  return { working: nextWorking, resolved };
+  /*
+   * **THE CONFIRMATION IS RETURNED, NOT PRINTED.** (2026-08-24.)
+   *
+   * The second half of the duplicate-row fix. `add` is followed by the views
+   * summary, which is long; a confirmation printed here scrolls out of sight
+   * before the operator can read it, and twice now the response to not seeing
+   * it was to run `add` again. So the dispatcher prints this AFTER the views
+   * summary, where it is the last thing on the screen.
+   */
+  return {
+    working: nextWorking,
+    resolved,
+    confirmation: [
+      "",
+      `  ids assigned           ${added.map((r) => r.ID).join(", ")}`,
+      `  working store          ${working.length} -> ${nextWorking.length}, re-read from disk and all ${landed.length} present`,
+      `  written                ${WORKING_CSV} and ${OPENED_JSON} (${ledger.length} entries, ${claimed} ids claimed)`,
+      "",
+    ].join("\n"),
+  };
 }
 
 
@@ -1598,8 +1668,12 @@ if (MODE === "open") {
   ({ working, resolved } = modeResolve(working, resolved, sections));
   modeViews(working, resolved, sections);
 } else if (MODE === "add") {
-  ({ working, resolved } = modeAdd(working, resolved, sections));
+  let confirmation;
+  ({ working, resolved, confirmation } = modeAdd(working, resolved, sections));
   modeViews(working, resolved, sections);
+  /* LAST, on purpose — see modeAdd. The views summary is long and a
+   * confirmation printed before it is a confirmation the operator cannot see. */
+  console.log(confirmation);
 } else if (MODE === "reopen") {
   ({ working, resolved } = modeReopen(working, resolved, sections));
   modeViews(working, resolved, sections);

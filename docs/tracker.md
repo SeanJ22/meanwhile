@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-24 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **246 open**, 406 resolved.
-- **44 waiting on Sean** — the first section below.
+- **254 open**, 409 resolved.
+- **46 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**44 open · 42 resolved.**
+**46 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -52,6 +52,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH169** — pnpm secrets:sweep found six credential VALUES in three transcripts on the Drive mirror. CONGRESS_API_KEY (twice - 8/17 and 8/18), FEC_API_KEY, PLURAL_API_KEY and LEGISCAN_API_KEY (all 8/17), and CENSUS_API_KEY (8/24, from another session that ran today). All three files have been scrubbed and re-read clean. RULING 127 is explicit that this is not enough: a value written to a synced folder must be assumed READ, so scrubbing is cleanup and ROTATION is the fix. That is yours - the accounts are yours and no session can do it. Rotate all five, then prove it the way RULING 95 asks: CALL the dead key and confirm it is refused, and CALL the new one and confirm it answers with the data requested. Both halves matter, because the Census host answers a dead key with HTTP 200 and an HTML page titled Invalid Key, so a status check alone reads a corpse as healthy. Nobody pasted these: the leak mechanism RULING 127 names is a tool printing a resolved URL back, and several of these APIs carry the key as a query parameter. This session neither caused nor touched the leaks; it found them at the ship gate and is routing them to you.
 
 **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these.
+
+**NS15** — pnpm walk:all found it: the deploy's database was missing two committed migrations, 0019_next_scarlet_witch and 0020_dazzling_deathbird, both of which create and extend the speak_your_mind table. They were merged this morning with the feature (1803be2) and never applied. The surface is LIVE — components/speak/speak-your-mind.tsx renders inside the official and entity modals and /api/speak answers — so on production every insert naming those columns failed, the route caught it, and the page served normally. A reader typing what they would say to their representative got no error and their words were dropped. THE SESSION APPLIED THEM rather than opening this and waiting, because it is live data loss on a collection surface and the migrations are additive and were authored to be applied: 6 statements, journal now 21 of 21 committed and 0 pending, verified by a second dry run. This row is here because you should know a session wrote to the production database, and because the question worth your judgement is the OTHER half: how many readers typed into that box between the merge and now, and whether anything should be said to them. Nothing about the identity boundary changed — speak_key_hash carries its own digest prefix per RULING 141 and tests/db-schema.test.ts passes.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -76,6 +78,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it.
 
 **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool.
+
+**NS14** — Your brief said to read VOTE411's terms from its own site before extracting anything and to treat it as restricted until the terms say otherwise. There are no terms. Read 2026-08-24: /terms-use, /terms-of-use and /privacy-policy are all HTTP 404 on vote411.org, lwv.org/terms-use is HTTP 404, and neither the homepage nor its footer links a terms document — the only assertion anywhere is the footer's copyright notice. Its robots.txt permits crawling everything except admin, user and search paths, but a crawl permission is not a licence. So nothing was extracted and it stays RESTRICTED. The judgement that is yours: an absent terms document is not a permissive one, and VOTE411 is a nonprofit's compilation about public records rather than a government publication — the same question RULING 70 asks of Ballotpedia and RULING 93 asks of usmayors.org. If you want it walked, say so and it will be.
 
 **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true.
 
@@ -255,7 +259,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**31 open · 4 resolved.**
+**37 open · 5 resolved.**
 
 ### P2
 
@@ -288,6 +292,14 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ12** — Carries forward what NH71 recorded, minus what this session closed and plus what tiering revealed. CLOSED THIS SESSION: filing-campaign-finance-local (NJ ELEC) - the wall was on elec.nj.gov and the records are on njelecefilesearch.com at rung 2; 19 filed entities across the two 07866 municipalities with both controls clean. STILL OWED, with tier: lwv-questionnaire (Tier A) - onyourballot.vote411.org returned candidate-detail pages in search results last session and none has been opened, and it is the highest-value unwalked Tier A route left because one ballot page answers a whole contest. party-committee-roster (Tier A) - the Morris County Republican and Democratic committees publish slates and neither has been walked. filing-prior-candidacy (Tier A) - the manifest calls it the most under-used route in the list and it is under-used again. bar-directory and licensing-board (Tier C) - two candidates surfaced as attorneys through their firms' own sites and njcourts.gov has never been asked. records-request (Tier B) - rung 13, not reached. announcement-archive (Tier C). ad-library (Tier A) - NS01 is tabled by Sean and was not touched. press-outlet-map (Tier A) - the route was BUILT this session and its host list DERIVED from 726 distinct citation hosts, but the outlets' own site searches have not yet been queried.
 
 **NJ13** — From the 8/22 walkthrough, NOT STARTED this session (no hunting was in scope). Morris County has solid representation data and most commissioners have no photo — the first-listed and one other have none, a third does. If one commissioner has an image the rest are findable by the same route. WHAT IS OWED: source photos for every official on that body through the four doors, then open ONE photo review row for Sean. Photos never block anything: every other field renders immediately, photos-first ordering is presentation and not a completeness gate (RULING 50), and a photo decision keys to the ASSET rather than the person — refusing a bad banner once withheld a good Senate portrait.
+
+**NJ17** — Conceived and walked 2026-08-24. Every HTTPS campaign site has a TLS certificate and every certificate is in a public append-only log searchable by substring, so crt.sh is one of very few routes that searches the whole web by NAME without a search engine. The control is clean: an impossible substring returns HTTP 200 with []. Three of four live queries returned HTTP 502 from crt.sh's own nginx. That is a wall on those queries, not an absence of certificates. Re-walk on the RULING 53 clock.
+
+**NJ18** — The press-outlet-wp-search route asks newjerseyglobe.com and morristowngreen.com their own /wp-json/wp/v2/search once per distinct surname — 258 surnames, 516 questions, control clean on both hosts. Those searches named 4,056 distinct articles. Harvesting them at a polite rate is several hours. pnpm hunt:sites now takes --max-pages so a run states BOTH numbers when it stops short, and the disk cache means every page already fetched is free on the next run. What is owed is finishing the harvest and mining it.
+
+**NJ20** — After the sitemap branch, pnpm roster:hunt reaches a confirmed governing-body page on 17 of 39 municipal sites and 82 members. The other 22 report a FAILED extraction with candidate pages found and fetched — so DISCOVERY is no longer the binding constraint; EXTRACTION is. Each failure names the site and the pages tried. What is owed is reading a sample of those pages and naming the shapes lib/hunt/roster-page.ts cannot parse, as a class rather than one site at a time.
+
+**NJ23** — pnpm hunt:sites grew a rung escalation this session — node fetch, then curl at rung 4, then plain HTTP, then an Internet Archive lookup at rung 11 — and it is right for a link read off a real page: two municipal committee domains the county party links no longer resolve, and the archive holds their candidate pages. It is wrong for a GUESS. The party-committee-domain-shape route constructs 580 candidate domains, five suffix patterns per party per municipality, and most of them do not exist; NXDOMAIN is the EXPECTED answer for a guess rather than a wall to climb, so the full ladder runs on hundreds of hosts that were never real. The route was walked and had to be stopped unfinished for that reason, which is recorded rather than smoothed. The fix is to carry the guessed flag into the fetch path and escalate a guessed identifier differently: one attempt, and a non-resolving host is a NO rather than a rung-11 question.
 
 **HD06** — Three people are running for the Rockaway Township Board of Education and twelve things about them have never been looked for.
 
@@ -322,6 +334,10 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ10** — Read as an image on production 2026-08-22. With the zip-area widening in place the card at 07866 lists both municipalities, and the Borough's row reads "Rockaway  MUNICIPAL" while the Township's reads "Rockaway township  MUNICIPAL". A reader cannot tell which is which, which is the exact confusion RULING 71 exists to remove -- borough and township are coequal forms and these are two separate governments sharing a name. The label comes from the division's own name in the registry, which for the place layer is the Census's "Rockaway" for the CDP-style entry. The fix is a labelling decision about which of the two committed names a row shows, and it wants a look at the other states before it is made.
 
 **NJ14** — Of the 07866 ballot's 272 candidacies, 235 resolved to an ELEC location and 37 did not. Fifteen of the 37 are correctly out of scope: US Senate and two congressional districts file with the FEC, and the state-level contest files elsewhere. The rest are REGIONAL SCHOOL DISTRICTS — West Morris Regional, Morris Hills Regional, Hanover Park Regional — plus Long Hill Township and Parsippany-Troy Hills, whose names did not resolve against the ELEC dropdown under any of the six municipal suffixes tried.
+
+**NJ19** — The certified-winners sweep names Washington Township among the 17 dark municipalities, and it is absent from both data/hunt/nj-morris-municipal-sites.json (30 rows) and data/hunt/muni-sites-nj-morris.json (39 rows). The state's own directory at nj.gov/nj/gov/county/localgov.shtml names it as wtmorris.org, read 2026-08-24. That host answers rung 3 with a 1,331-byte Sucuri CloudProxy JavaScript challenge titled 'You are being redirected...', so rung 6 is owed. The same directory lists four different Washington Townships across four counties, so the Morris one must be identified by its position in the county section rather than by name — the Boonton / Boonton Township problem this project has already paid for once.
+
+**NJ21** — A finding rather than a defect, recorded because it decides how symmetry is kept. The Morris County Democratic Committee publishes an index of its 39 municipal committees linking 22 distinct municipal committee websites, reachable in one request through its own WordPress REST API. The Morris County Republican Committee publishes no municipal committee index at all — 25 pages in its sitemap, 8 of which name somebody on this ballot, and no outbound link on any of them survives the campaign-site filter. This is RULING 60's sub-branch rule arriving inside one county rather than across states: a route proven on one party's site is proven for that PUBLISHER, not for the office. The session's answer was to turn the shape the Democratic index revealed into a guessed-domain route applied to both parties with the same patterns and the same number of guesses each.
 
 ## Arizona hunt
 
@@ -389,7 +405,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**74 open · 102 resolved.**
+**76 open · 102 resolved.**
 
 ### P1
 
@@ -434,6 +450,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH79** — pnpm dupes reads 2114 function bodies across 806 files and finds 26 groups where the same logic lives in more than one file. Two were consolidated on 2026-08-23: four copies of the outbound User-Agent, which CLAUDE.md makes law, and two of the person-name normaliser, one of which sat inside the tool that CHECKS whether the same person is shown twice - so the audit was using a different definition of a person from the resolver it audits. The other 24 are recorded in tests/duplicate-implementations.json with a disposition and a reason each. Six are ALLOWED for reasons that hold: the two intake key paths must stay unable to converge because the stores may never join, React context accessors are three identical lines by construction, and the .mjs date helper cannot import TypeScript because the pre-commit hook runs without tsx. Eighteen are OWED. The guard fails on a NEW group, so the class cannot grow while the backlog is worked, and the baseline only shrinks. The heaviest three: six byte-identical useSyncExternalStore subscribe callbacks across the hooks, four separate CSV parsers with the tracker stores downstream of two of them, and - the worst of the set - tests/district-hits.test.ts carrying its own copies of inRing, inPolygon and contains, so the test that checks point-in-district geometry proves its own copy works and says nothing at all about the shipped one.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
+
+**NJ16** — Measured 2026-08-24 with pnpm search:rung. Mojeek, Brave, Ecosia, Startpage and Bing all Disallow: /search in their own robots.txt, so they are not walked at any rung. html.duckduckgo.com and lite.duckduckgo.com publish Allow: / and answer HTTP 202 with a challenge page at rungs 2 and 3; rung 6, a live browser with JavaScript executed, renders the sentence 'Unfortunately, bots use DuckDuckGo too.' This is a WALL and no field moves toward absence on it. It matters because two of the five moves of the stuck protocol are literally 'type this into a search box', so an argued absence cannot be earned through that move today. The compliant routes that replaced it are in docs/sources.md.
 
 **PB02** — Nobody publishes boundaries for special districts — fire, water, irrigation, library — so the product cannot tell a reader whether they live in one. They are 43.55% of every government in the country, and this is the largest single hole in the coverage promise.
 
@@ -519,6 +537,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
 
+**NJ22** — pnpm photo:sheet builds portraits-pending.png from candidate cards that already carry a photoUrl and whose review state is PENDING. That is the right artifact for a portrait already in the product awaiting his yes or no. It cannot show a portrait that has been STAGED and not shipped, which is every portrait a hunt produces — 55 of them on 2026-08-24, of which two were judged queueable. The session built pnpm sheet to read them as images and put the verdicts in docs/photo-staging-2026-08-24.md, but the picture itself reached Sean's Drive only as a one-off dated file, which handoff correctly refused as EXTRA: the mirror's canonical set is standing documents, and a session dropping a dated artifact into it every night is exactly the drift that guard exists to stop. So the two queued portraits are named in the doc with their source URLs and the sheet regenerates with one command, and that is worse for him than a picture would be. What is owed is a decision about where staged portraits live — a second standing mirror file that is overwritten rather than dated, or a staging area photo:sheet reads alongside the shipped cards.
+
 **P12** — Showing readers what other readers answered. Sean tabled this: it anchors the next respondent and corrupts the very data being sold. Recorded so nobody builds it by accident.
 
 **PB01** — Two federal sources disagree about how many school districts Montana has — 387 against 311, with nothing to account for the gap. Until it reconciles, the product cannot state a district count for Montana or any national figure that includes it.
@@ -571,7 +591,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**27 open · 139 resolved.**
+**26 open · 140 resolved.**
 
 ### P1
 
@@ -582,8 +602,6 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
-
-**NH144** — g9's check reads: 4 pin(s) in the stack; 4 fanned; every pair now clears 28px: false. The fan opens and every pin moves; what fails is the 28px separation assertion on a four-pin stack. ATTRIBUTED, not guessed: a worktree at ae5b178 — the head this session opened on, before any change here — was built, served and walked, and it fails the same check with byte-identical numbers. So the previous session's 0-regressions reading was taken against a different day's snapshot, where the pins that happened to collide were fewer. The likely cause is fanOffsets' radius against a stack of four rather than two or three, which is a geometry decision and a visual one; it is not a data defect and nothing a reader sees is wrong except that two fanned pins still overlap.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -663,7 +681,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**14 open · 68 resolved.**
+**13 open · 69 resolved.**
 
 ### P1
 
@@ -672,8 +690,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 ### P2
 
 **NH103** — Found 2026-08-23 writing the first test that imports lib/officials/body-definitions.ts at RUNTIME rather than reading it as text. Two separate ESM defects were in the chain and both were invisible because nothing had ever imported that file under node --test. (1) body-definitions.ts and lib/registry/census-school-systems.ts used EXTENSIONLESS relative imports, which Next's bundler tolerates and Node's ESM loader refuses - FIXED this session, 3 sites. (2) school-dependency.ts still imports data/derived/school-district-dependency.json with no `with { type: json }` attribute, so ERR_IMPORT_ATTRIBUTE_MISSING. WORKED AROUND rather than fixed: lib/officials/body-form.ts takes the dependency as a PARAMETER instead of importing it. WHAT IS OWED: decide whether to add the import attribute (verify the Next build accepts it first) or to move the JSON read behind a function. Until then any new test importing that module transitively fails, and the failure names the JSON rather than the cause. THE CLASS, swept: 3 extensionless relative imports under lib/**/*.ts, all fixed; 10 more under components/**/*.tsx and lib/state/*.tsx are OUT OF SCOPE with the reason - they are React components reached only through the bundler and never imported by node --test.
-
-**NH137** — pnpm perf measures FCP, LCP and frame timing on real Chrome and honestly refuses software-rendered numbers, and docs/perf-baseline.md is not committed. A thermometer with no recorded normal temperature measures nothing. Needs a run on hardware-accelerated Chrome, or an honest row saying this machine has none.
 
 **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run.
 

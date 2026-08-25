@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 225,
-    "named": 2155,
+    "files": 227,
+    "named": 2183,
     "dynamic": 6
   },
   "files": {
@@ -1030,7 +1030,8 @@
         "NO NEW COLUMN was added to either sold store",
         "a backwards window is not a window",
         "a bounded window with the wall down is READY, and carries its bounds",
-        "an unbounded window REFUSES rather than deleting from the beginning of time",
+        "a null lower bound is a BOUND, and never reads the same as an unusable window",
+        "an unset WALL_UP means the lower bound is THE BEGINNING, and the verdict says so in words",
         "deleting requires TWO explicit flags, and report is the default",
         "nothing deletes while the wall is still up, and that is a REAL answer",
         "the deletion re-counts the window afterwards and refuses to report a partial",
@@ -1646,6 +1647,19 @@
         "JUR-4: UNKNOWN is counted and never named as partial",
         "JUR-4: the full pill no longer renders per contest on the ballot page",
         "JUR-4: the page-level block names bodies, never offices"
+      ],
+      "dynamic": 0
+    },
+    "tests/kelly-depth.test.ts": {
+      "names": [
+        "a complete, reached, unexpired protocol STANDS",
+        "a move with no literal query, or no result, is VOID — a description is not the text that was typed",
+        "addDays reads the calendar date from the string and never round-trips a local Date",
+        "an absence EXPIRES on the RULING 53 clock, and stale is not wrong",
+        "fewer than five moves is VOID — RULING 94",
+        "five WALLS are five attempts and establish nothing — the field stays owed",
+        "five rows of the SAME move is one question asked five times, and is VOID",
+        "the five Kelly fields are exactly the five Sean named"
       ],
       "dynamic": 0
     },
@@ -2507,6 +2521,8 @@
     },
     "tests/refusal-copy.test.ts": {
       "names": [
+        "BAL-7: an apology and a confession are caught, and 'we haven't yet' is not",
+        "BAL-7: the shapes catch the failure-announcing copy this product shipped",
         "comments are never swept, so recording a fix cannot become a defect",
         "every shape states in plain words what it looks for",
         "no honest named gap is ever flagged as a refusal",
@@ -2805,6 +2821,28 @@
         "every declared stamp in the tree AGREES with git, where git can answer",
         "git verification reports rather than guesses",
         "says UNVERIFIABLE on a shallow clone instead of returning the tip's date"
+      ],
+      "dynamic": 0
+    },
+    "tests/speak-your-mind.test.ts": {
+      "names": [
+        "BC-11 RULE 1: no account, no email, no address reaches the write path",
+        "BC-11 RULE 1: the continuity key is in its OWN digest space",
+        "BC-11 RULE 1: the store holds a district and no way to reach a person",
+        "BC-11 RULE 2: the disclosure and the threat notice render AT the box",
+        "BC-11 RULE 2: the disclosure says MAY, says why there is no name, and names who",
+        "BC-11 RULE 3: a clean message exports verbatim, and that is the ordinary case",
+        "BC-11 RULE 3: a reader who introduces themselves is caught by the SHAPE",
+        "BC-11 RULE 3: an email, a phone and a street address are removed AND flagged",
+        "BC-11 RULE 3: naming the OFFICIAL is not self-disclosure",
+        "BC-11 RULE 3: the flag is carried on the ROW, not recomputed at export",
+        "BC-11 RULE 4: a threat is HELD, with the tier recorded and nobody notified",
+        "BC-11 RULE 4: every triage rule states in plain words what it looks for",
+        "BC-11 RULE 4: harsh political speech is NEVER held — the product asked for it",
+        "BC-11 RULE 4: nothing in the triage path can contact anybody",
+        "BC-11 RULE 4: the intake limiter's attestation applies to this surface",
+        "BC-11: nothing a reader writes here is rendered back to any reader",
+        "BC-11: the pill, the placeholder and the framing are the author's words"
       ],
       "dynamic": 0
     },

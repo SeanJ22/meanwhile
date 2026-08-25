@@ -66,8 +66,14 @@ export type DemoSweepVerdict =
   | { state: "WALL_STILL_UP"; reason: string }
   /** The wall is down but the window cannot be bounded. Refuses to delete. */
   | { state: "CANNOT_RUN"; reason: string }
-  /** Armed and bounded: these rows are the demo's. */
-  | { state: "READY"; from: string; to: string };
+  /**
+   * Armed and bounded: these rows are the demo's.
+   *
+   * `from` is `null` when the lower bound is **the beginning** — RULING 142.
+   * It is not an unknown wearing a null; the two are kept apart by
+   * `lowerBound`, which says which of them this is in words.
+   */
+  | { state: "READY"; from: string | null; to: string; lowerBound: string };
 
 /**
  * What the sweep should do, decided from the two dates and nothing else.
@@ -90,13 +96,28 @@ export function demoSweepVerdict(
     };
   }
   if (wallUp === null) {
+    /*
+     * RULING 142 — the line in the sand.
+     *
+     * This branch used to be a CANNOT_RUN, and the reasoning was right at the
+     * time: deleting from the beginning of time would take real reader rows
+     * with it. **Sean's ruling removes the premise.** Nothing collected before
+     * the wall comes down is ever sold or shown as signal, organic-looking or
+     * not — so there are no real reader rows below this bound to protect, and
+     * the lower bound is not an unknown. It is the beginning.
+     *
+     * The distinction is kept ON THE VERDICT rather than smoothed away: a
+     * `from` of `null` here means *everything up to wall-down*, and it must
+     * never read the same as a bound somebody failed to establish. That is why
+     * `lowerBound` is a sentence rather than a flag.
+     */
     return {
-      state: "CANNOT_RUN",
-      reason:
-        "The wall is down but WALL_UP is unset, so the demo window has no start. Deleting " +
-        "from the beginning of time would take real reader rows with it, and guessing a " +
-        "start date would decide an irreversible operation on a fabricated number. This is " +
-        "a CANNOT RUN, never an empty sweep.",
+      state: "READY",
+      from: null,
+      to: wallDown,
+      lowerBound:
+        "the beginning — WALL_UP is unset, and under RULING 142 nothing collected before " +
+        "the wall comes down is sellable, so every row up to WALL_DOWN is the demo's.",
     };
   }
   if (wallUp > wallDown) {
@@ -105,7 +126,12 @@ export function demoSweepVerdict(
       reason: `WALL_UP (${wallUp}) is after WALL_DOWN (${wallDown}), which is not a window.`,
     };
   }
-  return { state: "READY", from: wallUp, to: wallDown };
+  return {
+    state: "READY",
+    from: wallUp,
+    to: wallDown,
+    lowerBound: `WALL_UP (${wallUp}) — a bounded window, both ends established`,
+  };
 }
 
 /**

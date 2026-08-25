@@ -248,9 +248,30 @@ jobs:
       # hash, because that is the thing that decides which browser build is
       # wanted. `--with-deps` still runs: the system libraries are not in the
       # cache and are cheap.
+      # THE KEY IS READ FROM THE LOCKFILE, AND THE STEP REFUSES AN EMPTY ONE.
+      #
+      # The first version of this read `node_modules/playwright-core`, which
+      # pnpm does not hoist — the direct dependency is `playwright`. The read
+      # produced NOTHING, the key resolved to the bare prefix
+      # `playwright-Linux-`, and run 32794320409 shows it: "Cache not found for
+      # input keys: playwright-Linux-". Worse than a miss, it would then SAVE
+      # under a version-less key and restore a stale browser after every
+      # upgrade.
+      #
+      # So the step exits non-zero on an empty version rather than composing a
+      # key out of nothing. A cache key that cannot distinguish versions is not
+      # a cache key, and a step whose product is a string must be asked whether
+      # it produced one (RULING 113).
       - name: Playwright version (the cache key)
         id: pw
-        run: echo "version=$(node -p "require('./node_modules/playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          version="$(node -p "require(./node_modules/playwright/package.json).version")"
+          if [ -z "$version" ]; then
+            echo "could not read the Playwright version — refusing to build a version-less cache key" >&2
+            exit 1
+          fi
+          echo "playwright $version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache@v4
         with:

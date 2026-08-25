@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **239 open**, 405 resolved.
+- **238 open**, 406 resolved.
 - **40 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -647,7 +647,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**15 open · 67 resolved.**
+**14 open · 68 resolved.**
 
 ### P1
 
@@ -672,8 +672,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 
 ### P3
-
-**NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

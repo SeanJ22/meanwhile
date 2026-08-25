@@ -36,17 +36,44 @@ test("logging and the transparency page exist together", () => {
   assert.ok(existsSync(logRoute), "the client log route is missing");
 });
 
-test("the transparency page is linked from the welcome overlay and the sidebar footer", () => {
-  for (const file of [
+test("the transparency page is linked from the welcome overlay and from the map shell", () => {
+  /*
+   * **THE CLAIM IS REACHABILITY, NOT A FILE PATH.** This named
+   * `components/shell/sidebar.tsx` and went red on 2026-08-25 when LAY-8 moved
+   * the footnote block out of the rail to the foot of the page — the link was
+   * never removed, and the guard could not see that because it was asserting
+   * where the link lives rather than that a reader can reach it.
+   *
+   * That is the predicate-too-narrow shape the reconciliation of the same day
+   * named in three separate defects, so the fix is to widen the predicate
+   * rather than to repoint it at the new file and wait for the next move.
+   *
+   * The welcome overlay is asserted on its own because it is a different
+   * moment: the first screen, before any zip. The shell is asserted as a SET —
+   * at least one of the components that make up the persistent map furniture
+   * carries the link, whichever one currently owns the footnote.
+   */
+  const overlay = readFileSync(
     join(process.cwd(), "components", "map", "welcome-overlay.tsx"),
+    "utf8",
+  );
+  assert.ok(
+    overlay.includes('"/transparency"'),
+    "the welcome overlay does not link /transparency",
+  );
+
+  const shell = [
     join(process.cwd(), "components", "shell", "sidebar.tsx"),
-  ]) {
-    const source = readFileSync(file, "utf8");
-    assert.ok(
-      source.includes('"/transparency"'),
-      `${file} does not link /transparency`,
-    );
-  }
+    join(process.cwd(), "components", "map", "site-footnote.tsx"),
+    join(process.cwd(), "components", "map", "map-entry.tsx"),
+  ];
+  const linking = shell.filter(
+    (file) => existsSync(file) && readFileSync(file, "utf8").includes('"/transparency"'),
+  );
+  assert.ok(
+    linking.length > 0,
+    `no component of the map shell links /transparency — checked ${shell.length}: ${shell.join(", ")}`,
+  );
 });
 
 test("detail bags that could name a person are rejected, not laundered", () => {

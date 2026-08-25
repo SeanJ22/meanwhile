@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 
 import {
   answerQuestion,
@@ -1065,7 +1066,7 @@ export function AskBox({
                             {person.name}
                           </span>
                         )}
-                        <span className="text-muted"> · {person.officeTitle}</span>
+                        <span className="text-muted"> · {readerOfficeTitle(person.officeTitle)}</span>
                         {(person.phone || person.email || person.contactFormUrl) && (
                           <span className="ml-1 text-[0.75rem]">
                             {person.phone && (
@@ -1319,7 +1320,7 @@ function DigestAnswer({
             ) : (
               <span className="font-medium text-paper">{holder.name}</span>
             )}
-            <span className="text-muted"> · {holder.officeTitle}</span>
+            <span className="text-muted"> · {readerOfficeTitle(holder.officeTitle)}</span>
           </li>
         ))}
       </DigestSection>

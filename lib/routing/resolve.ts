@@ -1,6 +1,8 @@
 import type { CoverageSummary, CoveredBody } from "../registry/coverage.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { officeTypeForTitle } from "../officials/office-blurbs.ts";
+/* ASK-9: the one roster member Ask still names — whoever runs the body. */
+import { topOfficesFor } from "../officials/top-offices.ts";
 /* ASK-5 (2026-08-24): the SAME store the battlecard and the representation
    view read. See `peopleFor` below for what reading a different one cost. */
 import { rosterHoldersForBody } from "../registry/body-rosters.ts";
@@ -168,12 +170,57 @@ function peopleFor(
     holders.push(holder);
   };
 
-  // ASK-5: the body's own members lead, because they are the people the step
-  // is about. A school board's clerk is a better answer to "who decides when
-  // school starts" than the state representative who votes on the funding
-  // formula — and the second one is already the NEXT step of the route.
-  for (const body of bodies) {
-    for (const holder of rosterHoldersForBody(body.bodyId)) push(holder);
+  /*
+   * **ASK-9 / ASK-10 (2026-08-25) — ASK NAMES BODIES, NOT THEIR MEMBERS.**
+   *
+   * ASK-5 put the body's whole roster here and the reasoning was right as far
+   * as it went: a school board's clerk IS a better answer than a state
+   * representative who votes on the funding formula. What it produced is what
+   * the author boxed in red on `08-58-52` — six people under one sentence at
+   * Tucson, and, worse, on `09-22-18` at 07866: FOUR school districts named
+   * correctly, and then ONE of their rosters printed underneath as though it
+   * answered for all four. Every one of those seven addresses is `@rocktwp.net`.
+   * That is a specific false impression about who governs a reader, produced by
+   * a list that was individually accurate.
+   *
+   * So the roster does not come here. The BODY is named, the body is a click
+   * target, and its members are one click away on the card that can say which
+   * body they belong to. **This is not a coverage change** — nothing is
+   * dropped from the data or from the battlecard, and the equal-effort rule is
+   * untouched because it governs the hunt rather than the render.
+   *
+   * **The one exception is the person who RUNS the body**, and the author
+   * asked for it by name: the superintendent, described as running the
+   * district's operations day to day. One person, one role, and it is the
+   * answer to "who do I call" in a way a seven-name list is not.
+   *
+   * RULING 118 is why the DESCRIPTION matters and not just the name: an
+   * appointed official never carries the govern verb, and `topOfficesFor`
+   * already types this person as "Runs it day to day" rather than as anyone
+   * who governs the reader.
+   */
+  /*
+   * **AND ONLY WHERE THERE IS EXACTLY ONE BODY** — ASK-10's half, and it is
+   * the half that makes the rule safe rather than merely shorter.
+   *
+   * At 85701 the step resolves to ONE district, so "Dr. Gabriel Trujillo runs
+   * it day to day" is an unambiguous answer to who to call. At 07866 it
+   * resolves to FOUR — Morris Hills Regional, Rockaway Township, Denville
+   * Township and Rockaway Borough — and naming any person under a heading that
+   * covers all four says that person belongs to all four. That is exactly the
+   * false impression `09-22-18` records, and it would survive being cut from
+   * seven names to one; a single wrong attribution is not an improvement on
+   * seven, it is a harder one to notice.
+   *
+   * The author's instruction is literal: no names until the reader selects a
+   * district. With more than one body the step names the bodies, each of them
+   * a click target, and the names live on the card that can say whose they
+   * are.
+   */
+  if (bodies.length === 1) {
+    for (const top of topOfficesFor(rosterHoldersForBody(bodies[0].bodyId))) {
+      if (top.role === "Runs it day to day") push(top.holder);
+    }
   }
 
   if (!step.officeType) return holders;
@@ -216,7 +263,32 @@ export function resolveRouting(
     if (bodies.length === 0 && people.length === 0) {
       gap =
         "We don't yet know enough here to route this — the general owner of this topic is the body described above, and we haven't sourced it for this area yet.";
-    } else if (step.bodyTarget && bodies.length > 0 && people.length === 0) {
+    } else if (
+      step.bodyTarget &&
+      bodies.length > 0 &&
+      people.length === 0 &&
+      /*
+       * **ASK-9 / ASK-10 (2026-08-25): "no names shown" IS NOT "no names
+       * held", and this clause is what keeps the two apart.**
+       *
+       * Ask stopped printing body rosters the same day, so `people.length ===
+       * 0` became the NORMAL state for a step that names a council or several
+       * districts — and without this the answer would print *We haven't
+       * sourced who sits on this body yet* about a body whose members are on
+       * screen one click away. That is exactly the false absence ASK-5 was
+       * opened over, reintroduced through the front door by a change that had
+       * nothing to do with sourcing.
+       *
+       * `tests/routing.test.ts` caught it before it shipped, which is that
+       * guard doing its job — the assertion it makes is about the CLAIM
+       * ("nobody is sourced") rather than about the render, so trimming the
+       * render could not sneak past it.
+       *
+       * The gap is about OUR RECORD, so it is asked of our record: it renders
+       * only where the bodies genuinely hold nobody.
+       */
+      bodies.every((body) => rosterHoldersForBody(body.bodyId).length === 0)
+    ) {
       // The body exists; who sits on it is unsourced. Say which half.
       gap = "We haven't sourced who sits on this body yet.";
     }

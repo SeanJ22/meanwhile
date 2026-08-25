@@ -321,6 +321,39 @@ export default function TransparencyPage() {
           </p>
         </Section>
 
+        <Section title="Speak Your Mind">
+          <p>
+            Every battlecard carries a box asking what you would say to that
+            person or that body. What you write is stored with the office or
+            body it was written to, the district your zip resolved to, and the
+            time. <strong className="text-paper">It is stored without a
+            name, because this store does not have a column for one</strong> —
+            not an account, not an email, not an address, and nothing that
+            could connect it to your searches or your reactions.
+          </p>
+          <p>
+            {/* Kept on ONE source line, like the no-AI guarantee above it and
+                for the same reason: a guard pins this phrase, and a reflow
+                that split it across a newline would retire the commitment by
+                accident. It already did once, in the first draft of this
+                section. */}
+            What is written there{" "}
+            <strong className="text-paper">may be shared</strong> — without a
+            name, for the reason above — with campaigns, organizations and
+            researchers working to understand what people want. May, not will:
+            nothing has been shared, and a commitment that is not honoured on
+            every instance is worse than a reserved right.
+          </p>
+          <p>
+            Before anything is stored, the text is stripped of anything shaped
+            like a name you gave, a phone number, an email address or a street
+            address, and a submission carrying any of those is flagged and
+            never leaves verbatim. Nothing written there is displayed back — not
+            to you, not to anyone, not in aggregate. Threats of violence are
+            removed and may be reported to law enforcement.
+          </p>
+        </Section>
+
         <Section title="What happens to the data">
           <p>
             The plan for this product is to aggregate what people look up —

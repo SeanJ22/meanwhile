@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 232,
-    "named": 2246,
+    "files": 235,
+    "named": 2288,
     "dynamic": 6
   },
   "files": {
@@ -918,6 +918,17 @@
       ],
       "dynamic": 0
     },
+    "tests/coverage-matrix.test.ts": {
+      "names": [
+        "RULING 149: the matrix is never rendered to a reader",
+        "an ARGUED absence carries its expiry, because it is a measurement with a shelf life",
+        "every column carries a cell for every candidate — no silent blanks",
+        "the CSV that ships has a cell state and a source for every fact column",
+        "the asymmetry flag is a fact about a CONTEST, never a score on a candidate",
+        "the matrix and the scoreboard read the SAME loop, not two copies of it"
+      ],
+      "dynamic": 0
+    },
     "tests/coverage-tier.test.ts": {
       "names": [
         "6.2: a tier is all-or-nothing against its own denominator",
@@ -1318,6 +1329,19 @@
       ],
       "dynamic": 0
     },
+    "tests/flake-quarantine.test.ts": {
+      "names": [
+        "A QUARANTINED CHECK IS NEVER COUNTED AS PASSING",
+        "NH176's four real runs classify exactly as the row describes",
+        "a SINGLE failure is never FLAKY — that is the habit this exists to stop",
+        "a check ABSENT from a run did not pass — it did not run",
+        "a check that only ever COULD NOT RUN gets no verdict about the check",
+        "fails then passes on an unchanged tree is FLAKY, in either order",
+        "quarantine matches an identity EXACTLY, never loosely",
+        "walk:all prints the quarantined count on every run"
+      ],
+      "dynamic": 0
+    },
     "tests/format.test.ts": {
       "names": [
         "BC-12: dates spell out, including inside ranges",
@@ -1629,6 +1653,9 @@
       "names": [
         "JUR-1: no surface builds a Governs row without going through the one claim",
         "JUR-1: the two claims are mutually exclusive, by construction",
+        "JUR-2 third era: RULING 71 survives — a HIT on a zip basis still GOVERNS",
+        "JUR-2 third era: a caller that resolved NO partial set is unchanged",
+        "JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY",
         "JUR-2: NEARBY is the same over-claim pointed the other way, and collapses too",
         "JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'",
         "JUR-2: a division covering the WHOLE zip still answers normally",
@@ -2321,6 +2348,19 @@
       ],
       "dynamic": 0
     },
+    "tests/portrait-decode.test.ts": {
+      "names": [
+        "MAGIC BYTES ALONE ARE NOT ENOUGH: a PNG header with no image data is refused",
+        "a real PNG decodes, and reports its own dimensions",
+        "a truncated JPEG is TRUNCATED, which is not the same answer as NOT_AN_IMAGE",
+        "an icon-sized image is refused as TOO_SMALL, with both numbers stated",
+        "the record carries the decode DATE, because a decode is a measurement",
+        "the review queue REFUSES a row with no decode record, and says so out loud",
+        "the soft 404 that got through: an HTML error page is refused as NOT_AN_IMAGE",
+        "zero bytes is EMPTY — a failed fetch never reads as a bad image"
+      ],
+      "dynamic": 0
+    },
     "tests/portrait-pick.test.ts": {
       "names": [
         "REFUSES bytes and label that disagree, in either direction",
@@ -2558,6 +2598,7 @@
         "A-004 · the ical adapter no longer swallows a past-feed failure",
         "F01 7.2: a refused body with rows on screen is STALE, not missing",
         "F01 7.2: the card reads the SAME meeting array the pins are drawn from",
+        "F22: a day of clock-gap slack does not reach a real undeclared archive",
         "F22: every source whose rows outrun the serving window declares its own",
         "a fresh row always beats a carried one, and a healthy source carries nothing",
         "a refused source keeps the calendar it had, and says how many rows are stale",
@@ -2678,6 +2719,8 @@
     "tests/routing.test.ts": {
       "names": [
         "85723: no routed step ever names a body that isn't the division's own government",
+        "ASK-10: several districts name NO person from any of their rosters",
+        "ASK-9: one district names the superintendent and no board member",
         "a state-law topic grounds on the actual state legislators",
         "a thin area routes honestly: gaps stated, nothing guessed",
         "an unmapped topic returns the honest refusal, never a guess",
@@ -2741,7 +2784,7 @@
         "detail bags that could name a person are rejected, not laundered",
         "event types are a closed set",
         "logging and the transparency page exist together",
-        "the transparency page is linked from the welcome overlay and the sidebar footer"
+        "the transparency page is linked from the welcome overlay and from the map shell"
       ],
       "dynamic": 0
     },
@@ -2930,7 +2973,8 @@
         "BC-11 RULE 4: nothing in the triage path can contact anybody",
         "BC-11 RULE 4: the intake limiter's attestation applies to this surface",
         "BC-11: nothing a reader writes here is rendered back to any reader",
-        "BC-11: the pill, the placeholder and the framing are the author's words"
+        "BC-11: the pill, the placeholder and the framing are the author's words",
+        "BC-19: the fine print says MAY and says why there is no name"
       ],
       "dynamic": 0
     },
@@ -3209,17 +3253,30 @@
         "1c: alternating failures are not a pair — the rule is still ADJACENT",
         "1c: the MOST RECENT pair is the one returned",
         "JOB02: two manual dispatches do NOT raise a row",
+        "a PASSING TEST is never surfaced as a cause, however cause-shaped its name",
+        "a cause already visible in the tail is not repeated above it",
+        "a clip is STATED with both numbers, never implied",
+        "a log that COULD NOT BE READ never reads like a run that printed nothing",
+        "a long single line is capped rather than carried whole",
         "a real scheduled double failure STILL raises a row",
+        "a stack frame is never mistaken for the naming of a failure",
         "a workflow actually runs the watcher on a schedule",
         "an in-flight run cannot mask the failure before it",
+        "an unclipped tail does not claim to be clipped",
         "an unknown trigger is NOT treated as a drill",
         "asOf hides later runs, so the detector can be held against known history",
         "cancelled is not failure — a cancelled run is nobody's diagnosis",
         "every scheduled workflow in the repo is on the watch list",
         "one failure is not a finding — a wall does not usually repeat",
+        "post-job git cleanup is filtered out — a tail made of it has told the reader nothing",
         "runs out of order are sorted before the top two are read",
+        "the cause line is surfaced even when it sits far above the tail",
         "the drill filter does not change the RATE, which is a fact about the workflow",
         "the rate is a pair, never a bare percentage",
+        "the real recorded run names its cause, not only its stack",
+        "the scaffolding comes off: no job column, no step column, no ISO timestamp",
+        "the tail carries the REAL cause line off the real recorded run",
+        "the watcher composes the tail into the row it opens",
         "too little history returns null, which is not the same claim as healthy",
         "two failures at the top of the list is a finding",
         "two failures separated by a success is not a finding"

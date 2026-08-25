@@ -210,6 +210,43 @@ export function badgeFor(
   if (basis === "ZIP" && partialAtZip !== null && partialAtZip.has(meeting.ocdId)) {
     return "COULD_GOVERN";
   }
+
+  /*
+   * **JUR-2, THIRD ERA (2026-08-25) — `NEARBY` WAS THE OTHER HALF ALL ALONG.**
+   *
+   * The reasoning was already written, eleven lines above this one, in this
+   * module's own words:
+   *
+   *   *It is not `NEARBY` either — that asserts the body governs a DIFFERENT
+   *   area, which is the same unearned certainty pointed the other way.*
+   *
+   * And then it was applied to one branch. `COULD_GOVERN` replaced the
+   * `GOVERNS` assertion for a partial division and the `NEARBY` beside it went
+   * on asserting — *"This body meets near you, but it governs a different
+   * area"* — from a ZCTA centroid. That is a hard claim about where the reader
+   * is, from one point standing in for an area that crosses every kind of
+   * line there is.
+   *
+   * **A centroid MISS cannot rule a body out.** The point is one sample of a
+   * zip; a body governing the half of the zip the reader actually lives in
+   * looks exactly like a body governing somewhere else. So on a ZIP basis a
+   * miss is `COULD_GOVERN` too, and the reader is offered the address that
+   * would settle it.
+   *
+   * **RULING 71 is untouched and is why `GOVERNS` survives.** A division
+   * covering the WHOLE zip — a county, a regional district, a state — does not
+   * become uncertain because a zip crosses a municipal line, and a pill on
+   * things it obviously does not apply to is a pill readers learn to skip. A
+   * HIT still answers normally.
+   *
+   * The guard is `partialAtZip !== null`: it fires only for a caller that
+   * actually resolved the zip's partial set. A caller that passed nothing has
+   * told us nothing about zip overlap, and its behaviour is unchanged.
+   */
+  if (basis === "ZIP" && partialAtZip !== null && !divisionsAtPoint.has(meeting.ocdId)) {
+    return "COULD_GOVERN";
+  }
+
   return divisionsAtPoint.has(meeting.ocdId) ? "GOVERNS" : "NEARBY";
 }
 

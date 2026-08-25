@@ -1,0 +1,23 @@
+{
+  "what": "OFF-5 — why Rockaway shows no photos. The doc asked whether it is a fetch problem or nothing held. It is NOTHING HELD.",
+  "walkedAt": "2026-08-25",
+  "answer": "NOTHING HELD — the township publishes no portraits of its own council or mayor. This is NOT a fetch problem: both pages answered 200 with full content.",
+  "note": "This is a DATED MEASUREMENT, not an exhausted absence. RULING 94's five-move stuck protocol has not been run for these people, so nothing here is VERIFIED_ABSENT and the field stays OWED, re-walked on its RULING 53 cadence.",
+  "robots": "https://www.rockawaytownship.org/robots.txt read 2026-08-25 — the disallows are /activedit, /admin, /common/admin/, /OJA, /support, /currenteventsview.asp and /search.asp. Neither page walked is under any of them.",
+  "correction": "The 8/24 door-2 walk recorded two Rockaway rows and they are ROCKAWAY BOROUGH — Melissa Burnside and Patrick McDonald, on rockawayborough.org. Sean's 09-18-31 card is ROCKAWAY TOWNSHIP, a different government on a different domain. The borough's council page carries no member images either, so the answer is the same for both; what would have been wrong is reading the borough's walk as covering the township.",
+  "pages": [
+    {
+      "url": "https://www.rockawaytownship.org/157/Township-Council",
+      "status": 200,
+      "bytes": 112596,
+      "imagesFound": "3, and all three are site chrome: an emergency-alert dot (SVG), a search icon, and a PUBLIC NOTICES graphic. No image bears a member's name."
+    },
+    {
+      "url": "https://www.rockawaytownship.org/228/Mayor",
+      "status": 200,
+      "bytes": 106107,
+      "imagesFound": "2, both site chrome: the same alert dot and search icon. The mayor's own page carries no portrait of the mayor."
+    }
+  ],
+  "rows": []
+}

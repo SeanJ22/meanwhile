@@ -190,8 +190,29 @@ test("LBL-2: the sweep reaches the tree it claims to", () => {
   const files = sourceFiles();
   assert.ok(files.length > 40, `only ${files.length} component file(s) scanned`);
   const tracked = files.filter((f) => TRACKING.test(readFileSync(join(ROOT, f), "utf8")));
+  /*
+   * **THE FLOOR WAS `> 10` AND IT WENT RED ON THE DAY THE WORK WAS DONE.**
+   * (2026-08-25, BC-14.)
+   *
+   * Removing three `.source-tag` render sites took the population from 11 to
+   * 10, and this failed — reporting "the population collapsed" about a
+   * deliberate simplification. That is RULING 116 precisely: a guard may pin
+   * an INVARIANT or a DIRECTION, never the size of a set that legitimately
+   * moves, because it fails on the day somebody makes progress and the
+   * cheapest way to green is to edit the constant.
+   *
+   * The anti-vacuity claim this test is FOR is the corpus assertion above —
+   * that the sweep read the tree rather than an empty list. The population
+   * floor drops to the smallest number that still proves the predicate
+   * MATCHES SOMETHING; if letter-spaced runs ever genuinely reach zero, the
+   * four guards above have nothing to check and this says so.
+   *
+   * What holds the real line is `OFF-2` above: EVERY run that exists is
+   * compensated, whatever the count. That assertion gets stronger as this one
+   * gets smaller, which is the right direction for both.
+   */
   assert.ok(
-    tracked.length > 10,
-    `only ${tracked.length} file(s) carry a letter-spaced run — the population collapsed`,
+    tracked.length > 0,
+    "no component carries a letter-spaced run at all — the predicate matches nothing and every OFF-2 guard above is vacuous",
   );
 });

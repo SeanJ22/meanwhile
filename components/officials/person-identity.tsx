@@ -1,6 +1,7 @@
 "use client";
 
 import { personInitials } from "@/lib/officials/person-name";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { ageFrom, inSeatUntil } from "@/lib/officials/tenure";
@@ -162,7 +163,7 @@ export function PersonIdentity({
 
         {!identityOnly && (
           <p className="id-office">
-            {holder.officeTitle}
+            {readerOfficeTitle(holder.officeTitle)}
             {/* A seat label identical to the title ("Mayor · Mayor") is noise,
                 not information. */}
             {seatLabel && seatLabel !== holder.officeTitle ? ` · ${seatLabel}` : ""}

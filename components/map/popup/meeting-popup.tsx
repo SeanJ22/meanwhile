@@ -1,6 +1,7 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 
 import {
   formatMeetingDate,
@@ -282,7 +283,7 @@ export function MeetingPopup({
       <PopupSectionLabel>Representation</PopupSectionLabel>
       {representation.length > 0 ? (
         representation.map((holder) => (
-          <PopupRow key={holder.id} label={holder.officeTitle}>
+          <PopupRow key={holder.id} label={readerOfficeTitle(holder.officeTitle)}>
             {holder.name}
           </PopupRow>
         ))

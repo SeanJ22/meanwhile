@@ -1,6 +1,7 @@
 "use client";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import {
   CouldGovernMark,
   CouldGovernNotice,
@@ -253,17 +254,31 @@ function Holder({
             {holder.partyLabel}
           </span>
         )}
-        {holder.sourceUrl && (
-          <a
-            href={holder.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            title="Where this record was read from"
-            className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-          >
-            source
-          </a>
-        )}
+        {/*
+          **BC-14 (2026-08-25) — the same right-edge source link, on the same
+          class of surface, removed for the same reason.**
+
+          RULING 136: the author's id names an instance and the defect is the
+          class. He boxed the small battlecard; this is the who-governs card,
+          which carries the identical `· SOURCE` run at the right edge of every
+          holder row. Fixing only the row he photographed is what the last two
+          passes of BC-14 did.
+
+          Of the four `.source-tag` sites, THREE are removed: this one, the
+          district popup's, and `official-popup`'s. The first pass of this
+          sweep put `official-popup` in the large card on the strength of its
+          name and left it standing; it renders into `PopupCard`, so it is a
+          small card, and checking rather than assuming is what found it.
+
+          The fourth, `key-votes-section`, is DELIBERATELY LEFT and is a Needs
+          Sean row. A roster row is an identity; a vote is a CLAIM about how a
+          named person voted, and the no-claim-without-a-source rule attaches
+          the source to the claim. Removing that link needs a consolidated
+          source line for it to land in, which BC-14 does not specify for
+          votes — so it is his call rather than a session's.
+
+          `holder.sourceUrl` is untouched on the record (RULING 138).
+        */}
       </span>
     </div>
   );
@@ -711,7 +726,7 @@ function CoverageBody({
                   key={holder.id}
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
-                  <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
+                  <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                   <span className="block">
                     <Holder
                       holder={holder}
@@ -919,7 +934,7 @@ function CoverageBody({
                     key={holder.id}
                     className="text-[0.75rem] leading-snug"
                   >
-                    <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
+                    <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                     <span className="block">
                       <Holder
                         holder={holder}

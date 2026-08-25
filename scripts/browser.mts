@@ -288,3 +288,38 @@ export async function launchGuarded(options: GuardedOptions): Promise<GuardedBro
     close: () => browser.close(),
   };
 }
+
+/**
+ * **SEED THE ZIP BEFORE THE FIRST PAINT.** (Extracted 2026-08-25 under RULING
+ * 103, after `pnpm dupes` caught two copies of it in two shooters written the
+ * same evening.)
+ *
+ * `?zip=` does NOT seed the app: the map entry renders its welcome overlay and
+ * every capture behind it is a photograph of the overlay. The zip lives in
+ * `sessionStorage` under `wtp.approximate_location`, in the shape
+ * `use-stored-zip` writes, so it has to be there before the page runs.
+ *
+ * **This is a rung, which is why it is here rather than copied a third time.**
+ * A previous session used the WRONG KEY and reported four layout items correct
+ * while photographing the welcome card — every selector found what it was
+ * looking for, because the rail renders underneath. The tutorial flag is
+ * seeded alongside it: the first-run tour is its own check, not a thing every
+ * other capture has to dismiss.
+ */
+export async function seedZip(page: Page, zip: string): Promise<void> {
+  await page.addInitScript(
+    ({ zip: z }: { zip: string }) => {
+      try {
+        sessionStorage.setItem(
+          "wtp.approximate_location",
+          JSON.stringify({ zip: z, savedAt: new Date().toISOString() }),
+        );
+        localStorage.setItem("wtp.tutorial_seen", "1");
+      } catch {
+        // A browser refusing storage still renders; the capture will show the
+        // overlay and the reader of the report will see that it did.
+      }
+    },
+    { zip },
+  );
+}

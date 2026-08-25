@@ -197,6 +197,43 @@ const succeeded = ranSources.filter((o) => o.ok);
 const produced = ranSources.filter((o) => o.ok || o.partial);
 const partials = ranSources.filter((o) => !o.ok && o.partial);
 
+/**
+ * Annotate a generated line that legitimately names a date in the future.
+ *
+ * **This orchestrator's own report was failing the gate that runs immediately
+ * after it** (2026-08-25). Every source whose cadence is elevated through the
+ * election carries `2026-11-03` in its reason, `docs/refresh-run.md` printed
+ * those reasons verbatim, and `tests/doc-dates.test.ts` — which runs in the
+ * `Validate before committing` step — counted three future dates and refused.
+ * So the daily refresh could never commit, deterministically and forever, on a
+ * red it manufactured between writing its report and being asked to justify it.
+ *
+ * The date rule is right and is not being loosened: a date not read from the
+ * system clock is a fabrication. An ELECTION date is the documented exception,
+ * and the exception is declared inline, on the same line, exactly as a person
+ * writing the file by hand would have to declare it.
+ *
+ * It is computed rather than hardcoded on purpose. Pinning `2026-11-03` here
+ * would go stale the day the cadence table names a different election, and it
+ * would go stale SILENTLY — as a red run at 09:11 UTC that nobody is awake for.
+ */
+function declareFutureDates(line: string, asOfDay: string): string {
+  /*
+   * **THE THRESHOLD IS `dayName`, NEVER A UTC SLICE**, and the first version of
+   * this used one — caught by `tests/generated-doc-dates.test.ts` before it
+   * could ship, which is that guard doing exactly its job.
+   *
+   * `toISOString().slice(0, 10)` reads a day AHEAD of America/Phoenix after 5pm
+   * local, so on those evenings it would have treated today's own date as a
+   * future one and annotated a line that needed no annotation. `dayName` is
+   * `today()`, the source every other stamp in this project comes from.
+   */
+  const dates = line.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
+  const future = [...new Set(dates.filter((d) => d > asOfDay))];
+  if (future.length === 0) return line;
+  return `${line} <!-- expected-future: ${future.join(", ")} — an election date carried in a cadence reason, not a stamp -->`;
+}
+
 const lines: string[] = [];
 lines.push("# The daily refresh run");
 lines.push("");
@@ -232,7 +269,7 @@ for (const s of REFRESH_SOURCES) {
   const elevated = s.elevatedUntil
     ? ` (elevated to ${s.elevatedUntil.cadence} until ${s.elevatedUntil.until})`
     : "";
-  lines.push(`- **\`${s.id}\`** — ${s.cadence}${elevated}. ${s.why}`);
+  lines.push(declareFutureDates(`- **\`${s.id}\`** — ${s.cadence}${elevated}. ${s.why}`, dayName));
 }
 lines.push("");
 

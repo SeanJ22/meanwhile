@@ -3405,3 +3405,268 @@ equal-effort rule exists to catch, committed by the field definition itself.
   the page has a picture on it and the field beside it is empty.
 - **It supplies no prose** beyond the labelled self-description the blurb rule
   already governs.
+
+---
+
+## The six rulings of 2026-08-25 — the one-session brief
+
+*Five were written BEFORE the work they govern, which is the point of them: a
+rule adopted after a session is a rule that describes what the session already
+did. The sixth records Sean's tracker decisions of the same day as a batch, the
+way RULING 123 recorded his decisions of 2026-08-24.*
+
+### RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question
+
+(Adopted 2026-08-25, Sean's standing instruction, made law for every future
+session rather than repeated in every brief.)
+
+**Nobody is watching. A question asked is hours lost.**
+
+- A decision that is genuinely Sean's becomes a **Needs Sean row** and the
+  session keeps going. It never waits and it never ends its turn to ask.
+- **No command may be capable of prompting.** Non-interactive flags everywhere,
+  `GIT_TERMINAL_PROMPT=0`, `GH_PROMPT=disabled`, stdin closed, every
+  long-running command inside a timeout. Five silent minutes is a kill, a row,
+  and carry on.
+- **Ambiguity resolves against the repo.** The repo is the thing that can be
+  checked; a brief is a description of it written earlier.
+- **"Ran out of room" is not a blocker.** Neither is a wall, a refusal, or a
+  missing input — each is a finding with a row.
+
+*Why this is law and not a header.* It has been the top of every brief for days
+and it is a fact about how this project runs, not about one night's work. A rule
+that has to be restated every time is a rule that will eventually be left out of
+a brief, and the session that reads that brief will stop and wait.
+
+### RULING 147 — no reconciliation may compare a parser to itself
+
+(Adopted 2026-08-25. It is RULING 114's reasoning — *re-deriving a stamp from
+the field it was stamped from proves only that the code is deterministic* —
+made general and pointed at every check in the repo.)
+
+**Every reconciliation names its EXTERNAL ANCHOR: an authority we did not
+write. A check with no external side is decoration, and is deleted or rebuilt.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+MAYOR defect shipped **nine invisible contests and seven fabricated
+candidates** while `pnpm nj:filing:check` reported AGREES on 272 against 272.
+Both of those numbers came from our own parser reading the same document. The
+check was not lying and it was not broken; it was asking whether a thing equals
+itself, which it always does.
+
+- **The anchor is named on the check**, in words, so a reader can see what the
+  other side is without reading the code.
+- **A count published BY the authority is an anchor. A count we derived from
+  the authority's document is not.**
+- **Where no external anchor exists, the check says so** and reports
+  `COULD_NOT_ANCHOR` rather than `AGREES`. Two names for two different states,
+  because a check that cannot reach an authority must never print like one that
+  did (RULING 24).
+
+### RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session
+
+(Adopted 2026-08-25. It is the enforcement half of the permission rule the way
+RULING 107 was the enforcement half of RULING 96.)
+
+**The shared fetcher REFUSES any host whose recorded verdict is `no` or
+`unknown`. Permission is asked before the first byte, by the code, not by a
+person remembering to look.**
+
+*The rationale.* On 2026-08-25 two search engines went into a pool on the
+strength of the right two questions asked in the wrong order — *does it answer*
+and *does it pass a control query*. Both do. Both also carry `Disallow: /search`,
+which is the exact path a query goes to, and `docs/sources.md` had recorded that,
+dated, in a column headed *may we walk it*, with the answer **no**. The register
+was correct, the tracker row was correct, and the session opened the register and
+read the sections it expected to need rather than the one about the thing it was
+about to do. The run was stopped at 125 of 276 and its output discarded.
+
+- **`unknown` refuses.** A host nobody has ruled on is not a host we may walk;
+  that direction costs a lookup, and the other direction costs an apology.
+- **A DISALLOW is not a WALL.** A wall is a host refusing us and RULING 53 sends
+  a session back to re-walk it on a clock. A disallow is a host telling us not
+  to ask, and re-walking it on a clock is asking again after being told no.
+- **Proved with a planted forbidden host**, so the refusal is demonstrated
+  rather than asserted.
+
+### RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader
+
+(Adopted 2026-08-25, with the instrument it governs.)
+
+**`docs/coverage-matrix.csv` is written by `pnpm matrix`, regenerated every
+session, never hand-edited (RULING 92), and never rendered to a reader in any
+form.**
+
+*Why the last clause is constitutional rather than a preference.* The matrix is
+a grid of every candidate against every fact, with a state and a provenance in
+every cell. Put in front of a reader it is a **completeness score per
+candidate**, sorted — which is the composite match score this product does not
+compute, the per-card completeness marker RULING 42 deleted, and the equal-effort
+failure all at once. It is exactly as useful internally as it is forbidden
+externally.
+
+**It reads the stores and adds nothing to them.** The collection minimum is
+untouched: a measuring instrument that had to collect something in order to
+measure would have changed the thing it measures.
+
+### RULING 150 — a Needs Sean row states its ask as an answerable question, with options
+
+(Adopted 2026-08-25.)
+
+**A row in that section ends with a QUESTION Sean can answer, and the options he
+is choosing between. A row that cannot state one is misfiled and is rerouted to
+the section that owns the work.**
+
+*The rationale.* Needs Sean is the only channel that reaches a person, and it
+stood at 48 open. A row that describes a situation without asking anything
+cannot be closed by him — there is nothing to say — so it sits there forever,
+and every row like it makes the queue less likely to be read at all. That is the
+accumulation RULING 79 was adopted over, arriving through a different door.
+
+- **Not every long row is misfiled.** A row asking a genuine judgement call is
+  correct however long it is; what is misfiled is a row asking nobody anything.
+- **A rerouted row is never reworded** (RULING 41) and is never closed by the
+  reroute. It moves to the section that owns the work and stays open there.
+
+### RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch
+
+(Adopted 2026-08-25, Sean's instruction. Recorded the way RULING 123 recorded
+his decisions of 2026-08-24, so that a close has an authority which exists.)
+
+- **`NS11`, `NH142` and `NH169` are CLOSED on the rotation proof.** All nine
+  leaked credentials were rotated; `pnpm rotation:prove` called every old value
+  it could recover from the transcripts and returned **18 old values proven
+  dead, 0 still live**; `pnpm credentials` returned **15 of 15 proven**; and
+  `pnpm secrets:sweep` returned **0 secret occurrences across 2,813 files read**
+  across the repository and the Drive mirror.
+- **`B05` (find counsel) drops to P3 and is Sean-owned.** Its dependents are
+  noted as parked rather than closed.
+- **`T05` and `NH108` are annotated and LEFT OPEN.** The date he gave them is
+  2026-08-28. <!-- expected-future: 2026-08-28, the date Sean set for T05 and NH108 -->
+- **`JOB03` is REROUTED out of Needs Sean to the section that owns the work.**
+  It asked nobody anything — it recorded that a job broke and that nobody found
+  out why, which is work rather than a judgement call. It is RULING 150's first
+  application, and it was diagnosed the same day it moved.
+
+### RULING 152 — a reader-facing DONE names the production deploy that is serving it
+
+(Adopted 2026-08-25, earned by the reconciliation of Item 6. It is the
+merge-cadence rule's missing receipt.)
+
+**A session may not report a reader-facing item DONE without naming the
+production deploy that carries it and the state that deploy reached.** Not the
+merge, not the commit — the DEPLOY.
+
+- **The deploy id, its state, and the SHA it built.** Read from Netlify's deploy
+  API, which is one call and zero requests to the site (RULING 125).
+- **A deploy that never reached `ready` has not shipped anything**, however
+  green the merge was.
+- **Where the deploy record cannot be read, the item reports `COULD_NOT_TELL`**
+  and never DONE. RULING 24, applied to the last step.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+reconciliation of 2026-08-25 tested six DONEs against what production was
+actually serving during Sean's walk, and found **every claimed fix genuinely
+live** — so this rule is not written because a deploy ate one. It is written
+because ANSWERING the question took an afternoon and a Netlify token that was
+not there a day earlier, and because the same read turned up four production
+deploys in two days that reached `error` and were never published — `3449ef8`,
+`41113c1`, `55d3047` and `e0f6426`. Three were real code merges. Each was
+covered by a later merge so nothing was permanently lost, and **between the
+merge and that later deploy production served older code while nothing in this
+repo said so.** A receipt costs one API call and removes the question
+permanently.
+
+### RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
+
+(Adopted 2026-08-25, earned by the reconciliation of Item 6. It is RULING 147 —
+*no reconciliation may compare a parser to itself* — pointed at VERIFICATION
+rather than at reconciliation, and it is RULING 136's missing half: that ruling
+says a fix closes the class, and this says what it means to have checked.)
+
+**A verification states the READER'S ROUTE to the thing it verifies, and walks
+it. A test that exercises only the code path the fix introduced has proved that
+the code does what the code does.**
+
+*The rationale stays attached, because here the rationale is a measurement.* Six
+DONEs were disproved by Sean the next morning. Verdict (a) — never reached
+production — did not happen once; every fix was live. The five real recurrences
+share one mechanism, and it is not carelessness:
+
+- **`BAL-9`** built a camera store and restored from it correctly. The store is
+  written only after a user GESTURE — the code says so itself: *"flyTo, jumpTo
+  and fitBounds never [carry an originalEvent], so this stays silent through
+  every camera move the app makes itself."* Entering a zip flies the camera
+  programmatically, so a reader who types a zip and clicks through has nothing
+  remembered and gets the continent back. The fix works for a reader who
+  happened to pan first. **And `git grep BAL-9 -- tests/ scripts/` returns
+  nothing**: the words "done, verified" rested on no artifact this repo holds.
+- **`BC-14`** asserted the consolidation it had written, on the data type it had
+  written it for, and reported *4 surfaces, 0 footnote markers* — true, and
+  about the wrong four surfaces.
+- **`JUR-2`** asserted the new branch and not the branch beside it, while the
+  module's own documentation already said the branch beside it was wrong.
+
+Operationally:
+
+- **The route is stated in words** — *type a zip, open the ballot, press back* —
+  before the assertion is written, so a route that never touches the fix is
+  visible as one.
+- **A verification that cannot reach the reader's route says so** and the item
+  is a BOUNDARY STOP rather than a finish. That is a real ending and an honest
+  one.
+- **An assertion over stored state is not a verification of a rendered
+  outcome.** A history-state round-trip is not a restored viewport, and only a
+  capture read as an image is (the read-as-an-image rule).
+
+### RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
+
+(Adopted 2026-08-25, the author's ruling on `BC-19`. **It amends RULE 2 of
+RULING 141 and nothing else** — the other three rules of that ruling, and every
+other clause of rule 2, are untouched. RULING 99 is the procedure this follows.)
+
+**The disclosure PARAGRAPH comes out of the panel. The no-name commitment
+stays, enforced architecturally, stated in fine print at the box and in full on
+the transparency page.**
+
+*What RULING 141 rule 2 said, and it is quoted rather than paraphrased because
+this amends it:* "HONEST DISCLOSURE AT THE BOX. One line, plain language,
+before the reader types: what is written may be shared — without a name,
+because we do not hold one — with campaigns, organizations and researchers."
+
+*What changes:* the full sentence no longer renders inside the panel.
+
+*What does not change, and this is the load-bearing half:*
+
+- **The no-name commitment is ARCHITECTURE, not a promise.** `speak_your_mind`
+  has no column that could hold a name — no account reference, no email, no
+  address — which is the fact the paragraph was asserting. A schema with
+  nowhere to put a name cannot be talked out of it, and RULING 132's identity
+  boundary is asserted over value spaces rather than column names, so it cannot
+  be smuggled in under another heading either.
+- **"MAY", never "will."** The fine print carries it, for the same reason the
+  threat notice does: a stated commitment that is not honoured on every
+  instance is worse than a reserved right.
+- **The THREAT NOTICE does not move.** `CLAUDE.md` requires it adjacent to any
+  free-text field about named real people, and `BC-19` says nothing about it.
+- **The buyer classes are still named out loud**, in full, on
+  `/transparency` — campaigns, organizations and researchers, rather than "our
+  partners".
+
+*And it closes a gap that had nothing to do with the author's note.* The
+transparency page **had no Speak Your Mind section at all.** RULING 141 shipped
+a fourth reader-collection store on 2026-08-24, and the coupling rule — the
+transparency page changes in the same commit that ships the feature — was not
+met. Moving the disclosure is what made anyone look. The page now carries what
+is stored, that it is stored without a name and why, who it may be shared with,
+that the text is redacted and flagged for self-disclosed identifiers before
+storage, and that nothing written there is displayed back to anybody.
+
+*Why this is not a weakening.* The disclosure rule exists so a reader is not
+asked for something before being told what happens to it. A reader still is
+told, at the box, before typing. What is gone is a three-line paragraph
+standing between a person and a text field they had already decided to use —
+and the reader-friction rule counts that as a defect with the same standing as
+a wrong number, with exactly three exceptions, of which "consent to collection"
+is one. The fine print IS that consent line; the paragraph was the essay around
+it.

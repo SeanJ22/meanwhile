@@ -12,6 +12,7 @@ import {
   runsOnOwnCadence,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
+import { failureTail, renderFailureTail, shapeFailureTail } from "../lib/ops/job-watch-log.ts";
 
 /**
  * **RULING 56 — a scheduled job that fails tells someone.** (NH Hunt 3,
@@ -309,4 +310,151 @@ test("the drill filter does not change the RATE, which is a fact about the workf
   // The rate counts everything; only the row-raising test is narrowed.
   assert.deepEqual(failureRate(mixed), { failures: 2, completed: 3 });
   assert.equal(runsOnOwnCadence(mixed).dispatchedSetAside, 1);
+});
+
+/**
+ * ## The warm-log upgrade (2026-08-25, the one-session brief item 2)
+ *
+ * Sean's standing complaint is that night jobs keep tripping and nobody learns
+ * why. A row naming the run id and the failing step says WHERE to look; it does
+ * not say WHAT HAPPENED, so every diagnosis begins by fetching a log — which is
+ * the cost `JOB03` was opened over.
+ *
+ * These walk the shaping against a RECORDED EXCERPT of the real failing run
+ * (32833989579, the daily refresh of 2026-08-25 09:49 UTC). RULING 110: the
+ * instrument is shown catching the real instance, not a plausible one.
+ */
+
+const RECORDED_FAILING_LOG = readFileSync(
+  join(ROOT, "tests", "fixtures", "job-watch", "refresh-daily-32833989579-tail.txt"),
+  "utf8",
+);
+
+test("the tail carries the REAL cause line off the real recorded run", () => {
+  const shaped = shapeFailureTail(RECORDED_FAILING_LOG);
+  assert.notEqual(shaped, null);
+  const text = shaped!.lines.join("\n");
+  // The sentence a reader needs first. If the shaping ever drops it, this row
+  // is back to naming a run id and nothing else.
+  assert.match(text, /EVERY due source failed/);
+});
+
+test("the scaffolding comes off: no job column, no step column, no ISO timestamp", () => {
+  const shaped = shapeFailureTail(RECORDED_FAILING_LOG);
+  for (const line of shaped!.lines) {
+    assert.doesNotMatch(line, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z/, `timestamp survived: ${line}`);
+    assert.doesNotMatch(line, /^refresh\tUNKNOWN STEP/, `step column survived: ${line}`);
+  }
+});
+
+test("post-job git cleanup is filtered out — a tail made of it has told the reader nothing", () => {
+  const shaped = shapeFailureTail(RECORDED_FAILING_LOG);
+  const text = shaped!.lines.join("\n");
+  assert.doesNotMatch(text, /Post job cleanup/);
+  assert.doesNotMatch(text, /\[command\]\/usr\/bin\/git version/);
+});
+
+test("a clip is STATED with both numbers, never implied", () => {
+  const many = Array.from({ length: 60 }, (_, i) => `line ${i}`).join("\n");
+  const shaped = shapeFailureTail(many, { lines: 5 });
+  assert.equal(shaped!.clipped, true);
+  assert.equal(shaped!.totalLines, 60);
+  assert.equal(shaped!.lines.length, 5);
+  // The two-numbers rule applied to a log excerpt.
+  assert.match(renderFailureTail(shaped), /last 5 of 60 line\(s\)/);
+  // And the tail is the END, which is where a cause lives.
+  assert.match(renderFailureTail(shaped), /line 59/);
+});
+
+test("an unclipped tail does not claim to be clipped", () => {
+  const shaped = shapeFailureTail("only line\n");
+  assert.equal(shaped!.clipped, false);
+  assert.match(renderFailureTail(shaped), /All 1 line\(s\)/);
+});
+
+test("a log that COULD NOT BE READ never reads like a run that printed nothing", () => {
+  // RULING 24, inside the watcher. These are two different claims and the row
+  // must be able to tell a reader which one it is holding.
+  const unreadable = failureTail(1, () => {
+    throw new Error("gh: HTTP 502");
+  });
+  const empty = failureTail(1, () => "");
+  assert.match(unreadable, /COULD NOT BE READ/);
+  assert.match(unreadable, /not about the run/);
+  assert.match(empty, /carried no meaningful line/);
+  assert.notEqual(unreadable, empty);
+});
+
+test("a long single line is capped rather than carried whole", () => {
+  const shaped = shapeFailureTail(`${"x".repeat(5000)}\n`, { lineChars: 80 });
+  assert.equal(shaped!.lines[0].length, 80);
+  assert.match(shaped!.lines[0], /…$/);
+});
+
+test("the watcher composes the tail into the row it opens", () => {
+  // The wiring, asserted in the script's own source. A perfect shaper that
+  // nothing calls is the chromium-pin shape: a fix that cannot be observed.
+  const src = readFileSync(join(ROOT, "scripts", "watch-workflows.mts"), "utf8");
+  assert.match(src, /failureTail: failureTailOf\(consecutive\.newest\.databaseId\)/);
+  assert.match(src, /WHAT THE FAILING RUN PRINTED/);
+  // RULING 127: the tail is redacted before it can reach a committed row.
+  assert.match(src, /redactSecrets\(rendered, SECRETS\)/);
+});
+
+test("the cause line is surfaced even when it sits far above the tail", () => {
+  /*
+   * The first live run of this upgrade printed 1,842 lines and the last
+   * fourteen were a node stack trace, while the sentence a reader needs sat a
+   * screen above the window. A tail is where a failure ENDS; it is not
+   * reliably where a failure is EXPLAINED.
+   */
+  const log = [
+    "AssertionError [ERR_ASSERTION]: these files enumerate every covered state by hand",
+    ...Array.from({ length: 40 }, (_, i) => `    at Test.run (node:internal/test_runner/test:${i}:1)`),
+  ].join("\n");
+  const shaped = shapeFailureTail(log);
+  // The tail alone would carry only stack frames.
+  assert.ok(shaped!.lines.every((l) => l.trim().startsWith("at ")));
+  // The cause is surfaced regardless of where it sat.
+  assert.match(renderFailureTail(shaped), /enumerate every covered state by hand/);
+  assert.match(renderFailureTail(shaped), /NAME the failure/);
+});
+
+test("a stack frame is never mistaken for the naming of a failure", () => {
+  const shaped = shapeFailureTail(["    at Foo.bar (/x/y.js:1:1) Error: nope", "done"].join("\n"));
+  assert.deepEqual(shaped!.causes, []);
+});
+
+test("a cause already visible in the tail is not repeated above it", () => {
+  const shaped = shapeFailureTail("first\n##[error]Process completed with exit code 1.");
+  assert.match(shaped!.lines.join("\n"), /##\[error\]/);
+  assert.deepEqual(shaped!.causes, []);
+});
+
+test("the real recorded run names its cause, not only its stack", () => {
+  const rendered = renderFailureTail(shapeFailureTail(RECORDED_FAILING_LOG));
+  // Both halves of the real failure, from the real log.
+  assert.match(rendered, /extraction does not conserve/);
+  assert.match(rendered, /EVERY due source failed/);
+});
+
+test("a PASSING TEST is never surfaced as a cause, however cause-shaped its name", () => {
+  /*
+   * Found by running this against the real log, not by reasoning about it. The
+   * meetings refresh prints guard names like "a readonly connection string in
+   * the RIGHT variable is refused" — a perfect match for the `refused` shape,
+   * and a guard reporting SUCCESS. Four of them crowded out the real assertion.
+   */
+  const log = [
+    "✔ PLANTED: a readonly connection string in the RIGHT variable is refused (0.3ms)",
+    "✔ PLANTED: any other variable name is refused — there is no second door (1.6ms)",
+    "ℹ fail 1",
+    "  AssertionError [ERR_ASSERTION]: the real one",
+    // Pushed above the tail window, which is where this defect actually lives.
+    ...Array.from({ length: 20 }, (_, i) => `    at Test.run (node:internal/test_runner/test:${i}:1)`),
+  ].join("\n");
+  const causes = shapeFailureTail(log)!.causes;
+  assert.equal(causes.length, 1);
+  assert.match(causes[0], /the real one/);
+  assert.ok(!causes.some((c) => c.includes("PLANTED")), `a passing guard was surfaced: ${causes.join(" | ")}`);
 });

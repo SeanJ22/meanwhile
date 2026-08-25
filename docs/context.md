@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 158 recorded
+## Rulings — 167 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -428,6 +428,15 @@ from. Each entry there names what it supersedes.
 - RULING 143 — what DONE means for 07866, and it is per candidate
 - RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls
 - RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled
+- RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question
+- RULING 147 — no reconciliation may compare a parser to itself
+- RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session
+- RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader
+- RULING 150 — a Needs Sean row states its ask as an answerable question, with options
+- RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch
+- RULING 152 — a reader-facing DONE names the production deploy that is serving it
+- RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
+- RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
 
 ## P0 tracker rows — 93 of 456 rows
 

@@ -79,6 +79,8 @@ import {
   runsOnOwnCadence,
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
+import { failureTail } from "../lib/ops/job-watch-log.ts";
+import { loadSecrets, redactSecrets } from "../lib/ops/secret-redaction.ts";
 
 /** The scheduled workflows that push `main`, plus the tripwire. */
 const WATCHED = [
@@ -120,6 +122,12 @@ interface Finding {
   workflow: string;
   runs: Run[];
   failingStep: string;
+  /**
+   * The last lines the failing run actually printed, so a reader starts warm.
+   * A run whose log could NOT be read says so here rather than reading as a
+   * run that printed nothing (RULING 24).
+   */
+  failureTail: string;
   rate: { failures: number; completed: number };
   /** True when the pair is not at the head — it broke twice and recovered. */
   healed: boolean;
@@ -147,6 +155,29 @@ function failingStepOf(runId: number): string {
     // "could not read", which is not the same claim as "no step failed".
     return "(could not read the run's steps)";
   }
+}
+
+/**
+ * Every secret value this machine knows, so a log tail cannot carry one into a
+ * committed tracker row (RULING 127). On a CI runner `.env.local` does not
+ * exist and GitHub has already masked its own registered secrets as `***`;
+ * this is the second layer, for the local case where neither is true.
+ */
+const SECRETS = existsSync(join(process.cwd(), ".env.local")) ? loadSecrets(join(process.cwd(), ".env.local")) : [];
+
+/**
+ * The tail of what the failing run printed, so the row starts a reader warm.
+ *
+ * `--log-failed` is asked for first because it is the smaller and more
+ * relevant payload; a run that died before any step reported has no failed
+ * step, so `--log` is the fallback rather than the first choice.
+ */
+function failureTailOf(runId: number): string {
+  const rendered = failureTail(runId, (id) => {
+    const failed = gh(["run", "view", String(id), "--log-failed"]);
+    return failed.trim() === "" ? gh(["run", "view", String(id), "--log"]) : failed;
+  });
+  return redactSecrets(rendered, SECRETS);
 }
 
 function recentRuns(workflow: string, limit = 40): Run[] {
@@ -265,6 +296,7 @@ for (const workflow of WATCHED) {
     workflow,
     runs: [consecutive.newest, consecutive.previous],
     failingStep: failingStepOf(consecutive.newest.databaseId),
+    failureTail: failureTailOf(consecutive.newest.databaseId),
     rate,
     healed: inWindow?.healed ?? false,
   });
@@ -290,6 +322,7 @@ for (const f of findings) {
   const ids = f.runs.map((r) => r.databaseId).join(" and ");
   console.log(`    ${f.workflow} — runs ${ids}`);
   console.log(`      failing step: ${f.failingStep}`);
+  for (const line of f.failureTail.split("\n")) console.log(`      ${line}`);
   console.log(
     f.healed
       ? "      the pair is not at the head — it broke twice and has since recovered, and nobody found out why"
@@ -321,7 +354,11 @@ for (const f of findings) {
       `completed runs it has failed ${f.rate.failures} time(s). Two consecutive ` +
       "failures is evidence the cause is ours rather than a host refusing on a " +
       "schedule — a wall would not usually repeat exactly. RULING 56 opens this " +
-      `automatically so a degrading data path is not a page nobody watches. ${marker}`,
+      `automatically so a degrading data path is not a page nobody watches. ` +
+      // Sean, 2026-08-25: "night jobs keep tripping and nobody learns why".
+      // A row naming the run id says WHERE to look; this says WHAT HAPPENED,
+      // so the next diagnosis does not begin by fetching a log.
+      `\n\nWHAT THE FAILING RUN PRINTED (run ${f.runs[0].databaseId}). ${f.failureTail}\n\n${marker}`,
     Priority: "P1",
     prefix: "JOB",
   });

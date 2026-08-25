@@ -50,14 +50,35 @@ const SERVICE =
 /** FIPS for the states the product covers. Adding a state adds a code here. */
 const STATE_FIPS = COVERED_FIPS;
 
-/** Roughly half a kilometre. Stated, not tuned by eye — see the header. */
-const MAX_ALLOWABLE_OFFSET = 0.005;
+/**
+ * **MAP-1 (2026-08-25): 0.005 deg (~500 m) WAS VISIBLE, and the author saw it.**
+ *
+ * The header argued that "a reader cannot tell a half-kilometre error in a
+ * blur edge from the blur". His capture `09-24-22` disproves it in one red
+ * box: at Belvidere the New Jersey border IS the Delaware, and the river
+ * meanders about three kilometres west at Hartzells Ferry. New Jersey had 143
+ * vertices in total and 17 within a tenth of a degree of Belvidere — roughly
+ * one every two kilometres — so the whole meander fell BETWEEN two vertices
+ * and the raised-state edge cut a straight chord across the river, claiming a
+ * slab of Pennsylvania and dropping a slab of New Jersey.
+ *
+ * The original reasoning was sound about what this geometry is FOR — it
+ * answers no question, joins to nothing, and decides only which pixels are
+ * muted. What it got wrong is that a wrong edge is still a visible claim about
+ * where a state stops, and RULING 114 is the same lesson: completing a layer
+ * turns a quiet approximation into something that can lie.
+ *
+ * 0.0005 deg is roughly 50 metres, which is finer than the stroke is wide at
+ * any zoom this product reaches. The cost is measured and reported rather than
+ * assumed (RULING 133).
+ */
+const MAX_ALLOWABLE_OFFSET = 0.0005;
 
 const url =
   `${SERVICE}?where=${encodeURIComponent(
     `STATE IN (${STATE_FIPS.map((f) => `'${f}'`).join(",")})`,
   )}` +
-  `&outFields=STATE,NAME&returnGeometry=true&geometryPrecision=3` +
+  `&outFields=STATE,NAME&returnGeometry=true&geometryPrecision=5` +
   `&maxAllowableOffset=${MAX_ALLOWABLE_OFFSET}&outSR=4326&f=geojson`;
 
 console.log(`fetching ${url}`);

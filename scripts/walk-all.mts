@@ -58,6 +58,10 @@
  * ever tapped and no ask is ever submitted.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  outcomeFor,
+  type QuarantineFile,
+} from "../lib/ops/flake-quarantine.ts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -217,14 +221,46 @@ const CHECKS_FILE = join(process.cwd(), "docs", "walk-checks.txt");
  * is undone", which is the sentence the standing report needs and the one a
  * bare check name cannot produce.
  */
+/**
+ * **THE QUARANTINE LIST (`NH176`, 2026-08-25).**
+ *
+ * A check that has been shown to FAIL AND THEN PASS on an unchanged build is
+ * flaky, and a suite that fails one arbitrary check per run teaches a session
+ * to skim past the real one. Quarantined checks still RUN and still print —
+ * they are tracked and hunted, never deleted and never counted passing.
+ *
+ * Detection is rerun-based and lives in `pnpm flake:sweep`; this file is only
+ * the committed verdict, so a run cannot quarantine anything on its own.
+ */
+const QUARANTINE: QuarantineFile | null = (() => {
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), "docs", "walk-flakes.json"), "utf8"),
+    ) as QuarantineFile;
+  } catch {
+    return null;
+  }
+})();
+const quarantined: string[] = [];
+
 function check(session: string, name: string, ok: boolean, evidence = ""): boolean {
   census.set(session, (census.get(session) ?? 0) + 1);
-  identities.push(`[${session}] ${name}`);
-  if (ok) passed += 1;
-  else failures.push({ session, name, evidence });
-  console.log(
-    `  ${ok ? "ok  " : "FAIL"} [${session}] ${name}${evidence ? ` — ${evidence}` : ""}`,
-  );
+  const identity = `[${session}] ${name}`;
+  identities.push(identity);
+
+  /*
+   * FOUR outcomes, four different facts, and none may wear another's clothes
+   * (RULING 24). `outcomeFor` is what makes "never counted passing" true
+   * rather than promised: the only way to get PASS out of it is to have
+   * passed.
+   */
+  const outcome = outcomeFor(QUARANTINE, identity, ok);
+  if (outcome === "PASS") passed += 1;
+  else if (outcome === "FAIL") failures.push({ session, name, evidence });
+  else quarantined.push(`${identity}${evidence ? ` — ${evidence}` : ""}`);
+
+  const mark = outcome === "PASS" ? "ok  " : outcome === "FAIL" ? "FAIL" : "QUAR";
+  console.log(`  ${mark} ${identity}${evidence ? ` — ${evidence}` : ""}`);
   return ok;
 }
 
@@ -1216,6 +1252,28 @@ section("C. The map, who-governs, and the footnotes (0814c, 0815, e, g3)");
 
 for (const { zip } of FOUR) {
   const page = await openAt(browser, zip);
+  /*
+   * **THE WHO-GOVERNS CARD IS OPENED RATHER THAN ASSUMED (WGH-8, 2026-08-25).**
+   *
+   * Every check in this section reads `document.body.innerText` and asserts
+   * something the CARD says — the governor, the Local/State/Federal grouping,
+   * Kearsarge Regional, Newbury's no-mayor fact. All of them worked because
+   * arriving at a zip auto-expanded the card.
+   *
+   * The author's rule is now that exactly one of the rail and the card is up,
+   * and his `08-53-15` specifies that arrival gets the rail with Who Governs
+   * Here beneath it as a pill. So the card has to be REACHED, and the walk
+   * reaches it the way a reader does: by clicking the pill.
+   *
+   * Not a weakening of any check. Every assertion below is unchanged and still
+   * fails if the card stops saying what it says — what changed is that the
+   * walk now performs the click that used to happen by itself.
+   */
+  const wghPill = page.locator(".notice-fab").first();
+  if (await wghPill.isVisible().catch(() => false)) {
+    await wghPill.click();
+    await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+  }
   const text = await bodyText(page);
 
   check("0814c", `${zip}: the map answers with something about this place`, text.length > 200);
@@ -1789,6 +1847,16 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
 {
   const page = await openAt(browser, "85701");
 
+  /*
+   * WGH-8 (2026-08-25): the who-governs card no longer opens itself, so the
+   * row this clicks is behind the pill. Clicked the way a reader would.
+   */
+  const wghPill = page.locator(".notice-fab").first();
+  if (await wghPill.isVisible().catch(() => false)) {
+    await wghPill.click();
+    await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+  }
+
   // g3 item 5 — a read from the body's own official source IS verified.
   const opened = await page
     .locator('.coverage-notice button:has-text("Kelly")')
@@ -1797,7 +1865,19 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
     .then(() => true)
     .catch(() => false);
   if (!opened) {
-    cannotRun("g3", "the sources tab's vocabulary", "no official row on the who-governs card");
+    /*
+     * **R58: ALL THREE identities declare.** This block owned three and
+     * declared one before falling through, so two reported NOTHING — which
+     * R58 catches and calls a silent check. The shape was always here; WGH-8
+     * exposed it by making the row genuinely absent for the first time.
+     */
+    for (const identity of [
+      "the sources tab's vocabulary",
+      "an official-source read never says 'Verified: not yet'",
+      "the large card carries no duplicate 'How to reach them' accordion",
+    ]) {
+      cannotRun("g3", identity, "no official row on the who-governs card");
+    }
   } else {
     // R49: the popup card is on the page, rather than 900ms have passed.
     await untilPresent(page, ".popup-card", 10_000);
@@ -3657,7 +3737,28 @@ for (const { zip } of FOUR) {
     const label = wide ? "desktop" : "390px";
     const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);
     try {
-      // STATE 1 — WGH open (the card shows itself once per resolved area).
+      /*
+       * STATE 1 — WGH open.
+       *
+       * **THE CARD NO LONGER SHOWS ITSELF (WGH-8, 2026-08-25).** This comment
+       * used to read "the card shows itself once per resolved area", and that
+       * was true: arriving at a zip auto-expanded it. The author's rule is now
+       * that exactly ONE of the rail and the card is up, and his annotated
+       * `08-53-15` specifies which one arrival gets — the rail, full height,
+       * with Who Governs Here sitting beneath it as its pill.
+       *
+       * So this state has to be REACHED rather than assumed. The walk clicks
+       * the pill, which is also the reader's own route to it (RULING 153).
+       *
+       * The checks below are unchanged and still assert exactly what they did:
+       * one cluster, at the top of WGH, one ballot door, a concrete example on
+       * the Ask pill. What changed is the two lines that get there.
+       */
+      const wghPill = page.locator(".notice-fab").first();
+      if (await wghPill.isVisible().catch(() => false)) {
+        await wghPill.click();
+        await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+      }
       const wgh = await clusterCensus(page);
       check(
         "g12",
@@ -4132,15 +4233,32 @@ section("M136. Body battlecards reach person-card depth (g13)");
   for (const body of BODIES) {
     const page = await openAt(browser, body.zip);
     try {
+      /*
+       * WGH-8 (2026-08-25): the card no longer opens itself on arrival, so the
+       * row this looks for is behind the pill. Clicked the way a reader would.
+       */
+      const pill = page.locator(".notice-fab").first();
+      if (await pill.isVisible().catch(() => false)) {
+        await pill.click();
+        await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+      }
       const row = page
         .locator(`.coverage-notice button:has-text("${body.label}")`)
         .first();
       if ((await row.count()) === 0) {
-        cannotRun(
-          "g13",
+        /*
+         * **R58: BOTH checks declare, not just the first.** This block owns two
+         * identities and declared only one before `continue`, so the second
+         * reported NOTHING — which R58 catches and calls a silent check. The
+         * shape was always here; WGH-8 exposed it by making the row genuinely
+         * absent for the first time.
+         */
+        for (const identity of [
           `M136: ${body.label} (${body.what}) renders every section`,
-          `no who-governs row named "${body.label}" at ${body.zip}`,
-        );
+          `M136: ${body.label}'s card renders no internal identifier`,
+        ]) {
+          cannotRun("g13", identity, `no who-governs row named "${body.label}" at ${body.zip}`);
+        }
         continue;
       }
       await row.click();
@@ -4149,11 +4267,13 @@ section("M136. Body battlecards reach person-card depth (g13)");
 
       const card = page.locator(".account-modal").first();
       if ((await card.count()) === 0) {
-        cannotRun(
-          "g13",
+        // R58: both identities, for the reason above.
+        for (const identity of [
           `M136: ${body.label} (${body.what}) renders every section`,
-          "the row opened no battlecard",
-        );
+          `M136: ${body.label}'s card renders no internal identifier`,
+        ]) {
+          cannotRun("g13", identity, "the row opened no battlecard");
+        }
         continue;
       }
       const text = await card.innerText();
@@ -5749,6 +5869,31 @@ if (!AGAINST_PRODUCTION) {
   console.log(
     `\n  docs/walk-checks.txt written — ${everyIdentity.length} identities ` +
       `(${ranNow.length} ran, ${carriedDeclined} carried because they COULD NOT RUN).`,
+  );
+}
+
+/*
+ * **THE QUARANTINE IS PRINTED ON EVERY RUN, whether or not it caught
+ * anything.** (`NH176`, 2026-08-25.)
+ *
+ * A deliberate exclusion that reads as a clean result is the silent-trim shape
+ * this repo names more often than any other. The number set aside is stated,
+ * by name, beside the number that passed — so "372 passed" can never quietly
+ * mean "372 passed and 3 were not counted".
+ */
+if (quarantined.length > 0) {
+  console.log(
+    `
+  ${quarantined.length} check(s) QUARANTINED as flaky — tracked and hunted, NOT counted as passing:`,
+  );
+  for (const q of quarantined) console.log(`    ${q}`);
+  console.log(
+    "  Each carries a tracker row. Detection is pnpm flake:sweep; docs/walk-flakes.json is the verdict.",
+  );
+} else if (QUARANTINE && QUARANTINE.entries.length > 0) {
+  console.log(
+    `
+  quarantine list holds ${QUARANTINE.entries.length} check(s); none of them failed this run.`,
   );
 }
 

@@ -273,7 +273,15 @@
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on kyle, russell); the URL serves 4186 B of jpeg, served as image/jpeg"
+      "note": "name-matched portrait on their own page (name matched on kyle, russell); the URL serves 4186 B of jpeg, served as image/jpeg",
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 172,
+        "height": 252,
+        "bytes": 4186,
+        "decodedAt": "2026-08-25"
+      }
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
@@ -294,7 +302,15 @@
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on melissa, florance, lynch); the URL serves 7838 B of jpeg, served as image/jpeg"
+      "note": "name-matched portrait on their own page (name matched on melissa, florance, lynch); the URL serves 7838 B of jpeg, served as image/jpeg",
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 175,
+        "height": 244,
+        "bytes": 7838,
+        "decodedAt": "2026-08-25"
+      }
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",

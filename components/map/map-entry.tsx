@@ -73,7 +73,7 @@ import type { DistrictType } from "@/lib/state/types";
 import { jurisdictionClaim } from "@/lib/meetings/jurisdiction-badge";
 
 import { CoverageNotice } from "./coverage-notice";
-import { DataFreshness } from "./data-freshness";
+import { SiteFootnote } from "./site-footnote";
 import { DistrictPicker } from "./district-picker";
 import { MapCanvas, type CameraTarget, type MapFocus } from "./map-canvas";
 import { MeetingPanel } from "./meeting-panel";
@@ -232,7 +232,13 @@ function MapEntryInner() {
    * for one card is how `wghOpen` came to need a conditional to work out
    * which of two booleans it was asking about.
    */
-  const [noticeCollapsed, setNoticeCollapsed] = useState(false);
+  /*
+   * WGH-8 (2026-08-25): the card starts COLLAPSED, so the default paint is the
+   * rail up and Who Governs Here sitting as its pill beneath it — which is the
+   * state the author annotated as correct in `08-53-15`. It began `false`,
+   * which is why the first paint carried both surfaces at once.
+   */
+  const [noticeCollapsed, setNoticeCollapsed] = useState(true);
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -659,6 +665,8 @@ function MapEntryInner() {
       ocdId: string | null,
     ) => {
       setOfficialPopup({ holder, seatLabel, tier });
+      // BC-16: most recent click wins.
+      setPopupMeeting(null);
       // Author-approved (1d), disclosed on /transparency in the same change.
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
@@ -702,6 +710,9 @@ function MapEntryInner() {
    */
   const openMeeting = useCallback((meeting: Meeting) => {
     setPopupMeeting(meeting);
+    // BC-16: most recent click wins. See the effect below for the half of this
+    // that no opener can be relied on to do.
+    setOfficialPopup(null);
     setNoticeCollapsed(true);
     // A division-less body (null ocdId) logs the event with no division.
     logEvent("MEETING_OPENED", meeting.ocdId ? [meeting.ocdId] : [], {
@@ -832,9 +843,57 @@ function MapEntryInner() {
     const viewKind = current.viewKey.startsWith("zip:") ? "zip" : "settled";
     if (noticeShouldExpand(viewKind, current.zip, shownAreaKey.current)) {
       shownAreaKey.current = current.zip;
-      setNoticeCollapsed(false);
+      /*
+       * **WGH-8 (2026-08-25) — ARRIVING AT A ZIP NO LONGER OPENS THE CARD, and
+       * this SUPERSEDES the expanding half of 3h (2026-08-19).**
+       *
+       * 3h let a typed-zip view re-expand the who-governs card, launch
+       * included, and that was right while the rail and the card could share
+       * the column. They can no longer: the author's rule is that exactly one
+       * of the two is up, so auto-expanding on arrival does not add a card —
+       * it CLOSES THE RAIL, on every launch, before the reader has asked for
+       * anything.
+       *
+       * His annotated capture `08-53-15` is the state being specified, and it
+       * is unambiguous: the rail up and running the full height of the column,
+       * with Who Governs Here sitting beneath it as a pill. So arrival is the
+       * rail, and the card is one click away.
+       *
+       * **`noticeShouldExpand` is deliberately still called and its answer is
+       * still recorded in `shownAreaKey`.** The pure rule and its test are
+       * untouched, and the zip/settled distinction it draws still matters —
+       * what changed is only what this component DOES with the answer. Ripping
+       * the call out would delete the record of which area the card has
+       * already answered for, and the district effect below relies on that
+       * bookkeeping staying honest.
+       */
+      setNoticeCollapsed(true);
     }
   }, [current]);
+
+  /**
+   * **BC-16 (2026-08-25) — ONE SMALL CARD AT A TIME, ENFORCED WHERE NO OPENER
+   * CAN FORGET IT.**
+   *
+   * The author's `09-20-11` has the Rockaway Township venue card and the
+   * Morris County card open at once, overlapping, each scrolling inside itself.
+   *
+   * The venue/district half lives in the reducer, because both are transitions
+   * there. The two popups are React state on this component and cannot be, so
+   * the exclusion is an EFFECT keyed on the selection rather than a line
+   * inside every opener. WGH-8, earlier in this same file today, is why:
+   * `openSurface` had enforced its exclusion correctly since 4c and the FIRST
+   * PAINT still carried both surfaces, because a rule enforced by every path
+   * that calls it is not enforced on the path that does not call it.
+   *
+   * Selecting NOTHING is a close and clears nothing — dismissing one card must
+   * never dismiss the others with it.
+   */
+  useEffect(() => {
+    if (!ui.selectedVenueKey && !ui.selectedDistrictOcdId) return;
+    setPopupMeeting(null);
+    setOfficialPopup(null);
+  }, [ui.selectedVenueKey, ui.selectedDistrictOcdId]);
 
   // Clicking INTO a new district is a question about who governs there —
   // the card answers. Re-selecting the same district changes nothing.
@@ -1499,7 +1558,28 @@ function MapEntryInner() {
    * Is the who-governs card OPEN? One mechanism now, at every width.
    */
   const wghOpen = Boolean(shown) && !noticeCollapsed;
-  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
+  /**
+   * **WGH-8 / LAY-7 (2026-08-25) — EXACTLY ONE OF THE TWO IS UP. NEVER BOTH.**
+   *
+   * The author, on the popup WGH-6 shipped: *"hate the way it looks."* His
+   * capture `09-11-14` is the other half and it is the one that names the
+   * defect — the rail is up at 07866 AND the who-governs card is expanded
+   * underneath it, both scrolling internally, on a 2048px screen.
+   *
+   * **`openSurface` was not the problem and it never was.** It has enforced
+   * this since 4c: opening WGH sets `sidebarState` to `"closed"`. What it
+   * cannot enforce is the state nobody opened — `noticeCollapsed` began
+   * `false` and `sidebarState` began `"default"`, so the FIRST PAINT had both
+   * up, at every width, before any reader touched anything.
+   *
+   * That is the shape this repo names most often: a rule enforced by every
+   * path that calls it, and a default that never calls it. So the exclusion
+   * is DERIVED here rather than maintained by handlers — `sidebarUp` cannot be
+   * true while the card is open, whatever route the state arrived by, and
+   * there is no branch left where both can paint.
+   */
+  const sidebarUp = sidebarVisible && !wghOpen;
+  const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarUp });
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
@@ -1676,8 +1756,10 @@ function MapEntryInner() {
         ))}
 
       {/* Provenance, not headline (3): "Last checked" demotes to a
-          footnote below the who-governs card. */}
-      {shown?.snapshot && <DataFreshness snapshot={shown.snapshot} />}
+          footnote below the who-governs card — and LAY-8 (2026-08-25) sends
+          the rail’s "What this site collects / Feedback" block down to sit
+          beside it, which is where the author’s dotted arrow lands. */}
+      <SiteFootnote snapshot={shown?.snapshot ?? null} />
     </>
   );
 
@@ -1697,7 +1779,10 @@ function MapEntryInner() {
       >
       <main
         className="relative h-dvh w-full overflow-hidden"
-        data-sidebar={sidebarState}
+        /* WGH-8: the attribute carries the DERIVED state, not the raw one.
+           Every CSS rule that hides the rail keys on this, so the exclusion is
+           true in the stylesheet as well as in the tree. */
+        data-sidebar={wghOpen ? "closed" : sidebarState}
       >
         {/*
           **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
@@ -2771,12 +2856,36 @@ function bodyHomepageFacts(
   coverage: CoverageSummary | null,
   ocdId: string,
 ): { label: string; value: React.ReactNode }[] {
+  /*
+   * **BC-24 (2026-08-25) — DEDUPE ON WHAT THE READER SEES, NOT ON THE STORED
+   * STRING.**
+   *
+   * The author's `09-18-31`: Rockaway township's Overview renders
+   * `OFFICIAL SITE  rockawaytownship.org →` **five times**.
+   *
+   * The dedupe was here and it was working exactly as written — it just
+   * measured the wrong thing. It keyed on the raw `homepageUrl`, and a
+   * township's five bodies each carry a URL that differs by a `www.`, a
+   * trailing slash, or a path. Five DISTINCT keys, one identical rendered
+   * value, five rows a reader cannot tell apart.
+   *
+   * That is the distinctness rule pointed the other way. `CLAUDE.md` says
+   * identical payloads across distinct keys are presumed broken; here the keys
+   * were distinct and the PAYLOAD was identical, and nothing was asking. The
+   * only key that can be right is the one the reader can actually
+   * discriminate on — which is the rendered host, because the host is all this
+   * row renders.
+   *
+   * **A path is deliberately NOT part of the key.** Two bodies pointing at
+   * `/council` and `/planning-board` on one host still produce two rows
+   * reading `rockawaytownship.org`, which is the defect wearing a
+   * justification. Where a body's own page matters, it is on that body's own
+   * card, which its row opens.
+   */
   const seen = new Set<string>();
   const rows: { label: string; value: React.ReactNode }[] = [];
   for (const body of coverage?.bodies ?? []) {
     if (body.ocdId !== ocdId || !body.homepageUrl) continue;
-    if (seen.has(body.homepageUrl)) continue;
-    seen.add(body.homepageUrl);
     let host: string;
     try {
       host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
@@ -2784,6 +2893,8 @@ function bodyHomepageFacts(
       // A malformed stored URL renders no row rather than a broken link.
       continue;
     }
+    if (seen.has(host)) continue;
+    seen.add(host);
     rows.push({
       label: "Official site",
       value: (

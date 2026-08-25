@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
 import {
   SPEAK_CONFIRMATION,
-  SPEAK_DISCLOSURE,
+  SPEAK_FINE_PRINT,
   SPEAK_LABEL,
   SPEAK_PLACEHOLDER,
   SPEAK_THREAT_NOTICE,
@@ -76,6 +78,47 @@ export function SpeakYourMind({
   context?: { lat?: number | null; lng?: number | null };
 }) {
   const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  /*
+   * **BC-22 (2026-08-25) — IT MUST CLOSE. Today nothing dismisses it.**
+   *
+   * The author found the panel with no way out: the pill is replaced by the
+   * panel on open, so there is nothing left to re-click, and the panel has no
+   * control of its own. A surface a reader cannot dismiss is worse than one
+   * they cannot open.
+   *
+   * Three exits, which is what he asked for, and they are three because each
+   * covers a reader the others miss:
+   *
+   *  - **The pill stays and TOGGLES.** It is rendered above the panel now
+   *    rather than replaced by it, so "collapses to its pill" is literally
+   *    what happens. This is the discoverable exit.
+   *  - **Click-away**, through the same hook every card on the map uses. The
+   *    gesture a phone reader reaches for first.
+   *  - **A tab switch**, below.
+   *
+   * The explicit control STAYS — that hook doc says it in as many words: a
+   * gesture nobody discovers is not an exit at all.
+   */
+  useDismissOnOutside(rootRef, () => setOpen(false), open);
+
+  /*
+   * **BC-20 — A TAB SWITCH COLLAPSES IT.**
+   *
+   * The panel lives inside a tabbed card and inside a sectioned one. Moving
+   * away and back should not find half-typed text under a heading a reader
+   * has stopped looking at, so the subject changing collapses it — and
+   * `subjectId` changing is also what happens when a reader opens a
+   * different card entirely, which wants the same answer.
+   *
+   * The parent keys this component on the tab, so a tab change unmounts and
+   * remounts it; this effect is what makes the SUBJECT change do the same
+   * thing without depending on a key.
+   */
+  useEffect(() => {
+    setOpen(false);
+  }, [subjectId]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<SpeakResult | null>(null);
@@ -92,27 +135,45 @@ export function SpeakYourMind({
     if (outcome === "RECORDED") setText("");
   }
 
-  if (!open) {
-    return (
-      <div className="speak-block">
-        <button
-          type="button"
-          className="speak-pill"
-          data-speak-pill
-          onClick={() => setOpen(true)}
-        >
-          {SPEAK_LABEL}
-        </button>
-      </div>
-    );
-  }
+
+
+  /*
+   * **BC-18 (2026-08-25) — the framing branches, and it branches on data this
+   * component ALREADY HAS.**
+   *
+   * A person can stand in front of you; Tucson Unified District cannot.
+   * `subjectType` is already a required prop and already knows which of the
+   * two this is, so the branch is DERIVED rather than passed — no call site
+   * can forget it, and a new surface cannot ship the person sentence about a
+   * board by omission. A MEETING is a body speaking, so it takes the body
+   * form.
+   */
+  const framing = speakFraming(subject, subjectType === "OFFICIAL" ? "person" : "body");
 
   return (
-    <div className="speak-block" data-speak-open>
-      <p className="speak-framing">{speakFraming(subject)}</p>
+    <div
+      ref={rootRef}
+      className="speak-block"
+      {...(open ? { "data-speak-open": true } : {})}
+    >
+      {/* BC-22: the pill is always here, and it TOGGLES. Replacing it with the
+          panel is what left the reader with no way out. */}
+      <button
+        type="button"
+        className="speak-pill"
+        data-speak-pill
+        aria-expanded={open}
+        onClick={() => setOpen((wasOpen) => !wasOpen)}
+      >
+        {SPEAK_LABEL}
+      </button>
+
+      {!open ? null : (
+      <>
+      <p className="speak-framing">{framing}</p>
 
       <label className="sr-only" htmlFor={`speak-${subjectId}`}>
-        {speakFraming(subject)}
+        {framing}
       </label>
       <textarea
         id={`speak-${subjectId}`}
@@ -132,11 +193,24 @@ export function SpeakYourMind({
         }}
       />
 
-      {/* RULE 2 — the honest disclosure, at the box. Level register. */}
-      <p className="speak-disclosure">{SPEAK_DISCLOSURE}</p>
-      {/* CLAUDE.md: the threat notice, adjacent to the field. "May", never
-          "will" — a stated commitment not honoured on every instance is worse
-          than a reserved right. */}
+      {/*
+        **BC-19 (2026-08-25, the author's ruling) — THE DISCLOSURE PARAGRAPH
+        COMES OUT OF THE PANEL.** RULING 154 records the supersession; it
+        amends RULE 2 of RULING 141 and nothing else.
+
+        **THE COMMITMENT IS NOT WEAKENED, AND THIS IS THE CLAUSE MOST LIKELY
+        TO BE LOST.** The no-name promise is not a promise at all here — it is
+        ARCHITECTURE. `speak_your_mind` has no column that could hold a name,
+        which is the fact the paragraph was asserting, and a schema with
+        nowhere to put a name cannot be talked out of it. It is stated in the
+        fine print below, and in full on /transparency, which gained a Speak
+        Your Mind section in this same change — it had none, which was its own
+        gap and is now closed.
+
+        The THREAT NOTICE stays exactly where it was. `CLAUDE.md` requires it
+        adjacent to any free-text input about named real people, and BC-19 says
+        nothing about it.
+      */}
       <p className="speak-disclosure">{SPEAK_THREAT_NOTICE}</p>
 
       <div className="speak-actions">
@@ -152,6 +226,9 @@ export function SpeakYourMind({
         <span className="speak-count">{remaining}</span>
       </div>
 
+      {/* BC-19: the fine print. The full sentence is on /transparency. */}
+      <p className="speak-fine-print">{SPEAK_FINE_PRINT}</p>
+
       {result !== null && (
         <p className="speak-outcome" data-speak-outcome={result}>
           {result === "RECORDED"
@@ -162,6 +239,8 @@ export function SpeakYourMind({
                 ? "We're not taking submissions at the moment. Nothing was kept."
                 : "That didn't go through. Nothing was kept."}
         </p>
+      )}
+      </>
       )}
     </div>
   );

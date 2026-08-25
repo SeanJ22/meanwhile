@@ -1722,5 +1722,20 @@
     "ids": [
       "JOB03"
     ]
+  },
+  {
+    "session": "one-session-0825-nonhunt",
+    "opened": "2026-08-25",
+    "ids": [
+      "NS16",
+      "NH177",
+      "NS17",
+      "NS18",
+      "NS19",
+      "PU07",
+      "NH178",
+      "PU08",
+      "NH179"
+    ]
   }
 ]

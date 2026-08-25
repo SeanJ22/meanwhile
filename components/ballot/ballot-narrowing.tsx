@@ -36,7 +36,20 @@ import { AddressPrompt } from "@/components/address/address-prompt";
  * on a jurisdiction we are unsure of would hide contests they may actually vote
  * in.
  */
-export function BallotNarrowing({ zip }: { zip: string }) {
+export function BallotNarrowing({
+  zip,
+  /**
+   * BAL-11 (2026-08-25): the class the page wants on the TRIGGER, so the
+   * narrowing renders as one of the ballot pills rather than as an underlined
+   * link beside two of them. Passed down rather than set here — where this
+   * control sits, and therefore what it should look like, is the page's
+   * decision and not this component's.
+   */
+  className = "mt-2",
+}: {
+  zip: string;
+  className?: string;
+}) {
   /** How many contests the address set aside. Null means no narrowing applied. */
   const [setAside, setSetAside] = useState<number | null>(null);
 
@@ -89,7 +102,7 @@ export function BallotNarrowing({ zip }: { zip: string }) {
       <AddressPrompt
         zip={zip}
         trigger="Narrow this to where you live"
-        className="mt-2"
+        className={className}
         onResolved={({ contestIds }) => {
           // An empty confirmed list is a real answer and must not read as a
           // failure: the reader's street resolved nothing we hold a ballot for,

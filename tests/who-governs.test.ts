@@ -195,11 +195,31 @@ test("no external links on a row — the doors live inside the cards", () => {
     !/href=\{holder\.websiteUrl\}/.test(CARD),
     "a person row links straight out again; a person row opens their card",
   );
-  // The source mark is NOT an external link in this sense — it is the
-  // standing per-surface sourcing rule and it stays.
+  /*
+   * **THE SOURCE MARK IS GONE FROM THIS ROW (BC-14, 2026-08-25), and this
+   * assertion is INVERTED rather than deleted.**
+   *
+   * It read "the source mark must survive the density pass", which was right
+   * when the density pass was the only thing threatening it. The author's
+   * instruction is now explicit and is the opposite: *sources live in the
+   * large battlecard; the small card lists names and nothing else.* Three of
+   * the four `.source-tag` render sites came out.
+   *
+   * Asserting the ABSENCE rather than removing the assertion is what keeps
+   * this a guard: the mark cannot quietly come back, and the reason it left is
+   * attached to the line that would catch it.
+   *
+   * **What must never be confused with it, and what the guard above still
+   * holds:** the RECORD is untouched. `holder.sourceUrl` still travels on the
+   * row and still renders in the large card. RULING 138 says display
+   * consolidates and the record is never deleted, and
+   * `tests/source-consolidation.test.ts` asserts the provenance fields are
+   * identical before and after. "Remove the source annotations" and "remove
+   * the sources" are one careless edit apart.
+   */
   assert.ok(
-    /href=\{holder\.sourceUrl\}/.test(CARD),
-    "the source mark must survive the density pass",
+    !/href=\{holder\.sourceUrl\}/.test(CARD),
+    "the per-row source mark is back on the who-governs card — BC-14 puts sources in the large card",
   );
 });
 

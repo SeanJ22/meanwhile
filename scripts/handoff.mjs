@@ -703,7 +703,7 @@ if (CHECK_ONLY) {
  * job is to survive the loss of the repo; a generated convenience file that
  * could block a session from ending would be worse than not having it.
  */
-async function writeContextFile(note) {
+async function writeContextFile(note, { mirrorOnly = false } = {}) {
   /*
    * RULING 108 (2026-08-23). This used to RETURN here when the mirror was
    * absent, so a machine with no Drive produced no context.md at all — and a
@@ -721,6 +721,7 @@ async function writeContextFile(note) {
       // context.md deliberately carries both.
       generatedAt: generatedAtEastern(),
       stampToday: today(),
+      mirrorOnly,
     });
     const kb = (built.bytes / 1024).toFixed(1);
     /*
@@ -753,6 +754,43 @@ if (CHECK_ONLY) {
   ok("context", "skipped (--check)");
 } else {
   await writeContextFile("written");
+}
+
+/* ------------------------------------------------------- coverage matrix --- */
+
+/**
+ * **THE COVERAGE MATRIX IS REGENERATED EVERY SHIP.** (2026-08-25, RULING 149.)
+ *
+ * It is a generated artifact and RULING 92 applies: never hand-edited, and
+ * regenerated rather than trusted. A matrix that is only rebuilt when somebody
+ * remembers is a matrix that describes a ballot from some earlier week, and
+ * its whole value is that a cell can be believed.
+ *
+ * Regenerated BEFORE the ship, so it travels inside the pull request. A
+ * regeneration after the merge would be the dirty-tree defect this same
+ * session had to fix one function down.
+ */
+if (!CHECK_ONLY) {
+  try {
+    const out = execSync("pnpm run matrix", { cwd: ROOT, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
+    const wrote = /wrote docs\/coverage-matrix\.csv — (\d+) row\(s\), (\d+) column\(s\)/.exec(out);
+    const verdict = /Kelly verdict: (\d+) of (\d+) DONE/.exec(out);
+    ok(
+      "matrix",
+      wrote
+        ? `coverage-matrix.csv regenerated — ${wrote[1]} row(s), ${wrote[2]} column(s)` +
+          (verdict ? `, Kelly ${verdict[1]} of ${verdict[2]} DONE` : "")
+        : "coverage-matrix.csv regenerated",
+    );
+  } catch (error) {
+    /*
+     * A WARNING rather than a failure: the matrix is an internal measuring
+     * instrument, and a session that shipped good code should not be blocked
+     * by its thermometer. It is loud, and the reason is stated, so it cannot
+     * be mistaken for a clean run.
+     */
+    warn("matrix", `pnpm matrix did not run — ${String(error.message).split("\n")[0]}`);
+  }
 }
 
 /* ---------------------------------------------------------- dev server --- */
@@ -1567,7 +1605,52 @@ if (SHIP) {
     // the drift the mirror exists to prevent.
     const staleContext = results.findIndex((r) => r.label === "context");
     if (staleContext !== -1) results.splice(staleContext, 1);
-    await writeContextFile("rewritten after shipping");
+    /*
+     * Item 16 (2026-08-25): MIRROR ONLY. This write used to land in the
+     * working tree, so every session ended with a dirty tree and the next
+     * branch switch ambushed Sean with an uncommitted-changes dialog — a jam
+     * he has hand-cleared three times. The repo copy went into the pull
+     * request before the ship; this refreshes the copy he reads.
+     */
+    await writeContextFile("mirror rewritten after shipping", { mirrorOnly: true });
+  }
+}
+
+/* ------------------------------------------------- the terminal state --- */
+
+/**
+ * **A SESSION ENDS ON A CLEAN TREE.** (2026-08-25, Item 16.)
+ *
+ * Sean has hand-cleared the same jam three times: handoff regenerated
+ * `docs/context.md` as its last act, AFTER its own ship gate, so every session
+ * terminated with an uncommitted change and the next branch switch met him
+ * with a dialog.
+ *
+ * The write is mirror-only now, which is the fix. This is the ASSERTION that
+ * the fix holds — and it is the more important half, because the next thing
+ * somebody adds to the end of this script will have exactly the same shape and
+ * nothing else would notice. A gate that only fixes today's instance is the
+ * named-instance failure.
+ *
+ * It reports rather than throws: the ship has already happened by the time
+ * this runs, and a session that merged successfully and then crashed on a
+ * tidiness check would be reporting a worse outcome than it achieved. It fails
+ * the RUN, which is what makes it impossible to ignore.
+ */
+if (!CHECK_ONLY) {
+  const dirty = git("status", "--porcelain");
+  if (dirty === "") {
+    ok("clean tree", "nothing uncommitted — the next session starts without a dialog");
+  } else {
+    const files = dirty
+      .split("\n")
+      .map((line) => line.slice(3))
+      .filter(Boolean);
+    fail(
+      "clean tree",
+      `handoff finished with ${files.length} uncommitted change(s): ${files.slice(0, 6).join(", ")}` +
+        `${files.length > 6 ? ", …" : ""}. A session ends on a clean tree — commit them, or write them somewhere untracked.`,
+    );
   }
 }
 

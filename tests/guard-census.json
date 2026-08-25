@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 223,
-    "named": 2143,
+    "named": 2145,
     "dynamic": 6
   },
   "files": {
@@ -1795,6 +1795,8 @@
         "P-001 · a 500-to-480 filter creates and removes NOTHING",
         "P-001 · a 500-to-480 filter touches ~20 elements, the number the pool documents",
         "P-001 · a REAL data change still creates and removes, which is the whole point",
+        "P-001 · a marker created for a FILTERED-OUT venue is hidden, not visible",
+        "P-001 · a venue that arrives ALREADY filtered out never flashes visible",
         "P-001 · map-entry hands the map ALL venues and the visible keys separately",
         "P-001 · the before line: building the pool creates 500 and shows 500",
         "P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in separate effects",

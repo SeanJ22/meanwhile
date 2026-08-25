@@ -18187,6 +18187,28 @@ of the local `.jsonl` files that are deliberately never scrubbed. **A hand-run
 scrub was only ever true until the next handoff.** It scrubs at the output
 channel now and re-reads to confirm.
 
+### The walk, and one regression this session caused and one it did not
+
+`pnpm walk:all` against the local production build (RULING 125): **366 checks
+passed, 1 named regression, 12 declared could not run, 0 silent.**
+
+**The one I caused, and fixed before the session ended.** Moving the marker
+pool to hold every venue in the data is P-001's fix, and it left a hole at the
+other end: `applyVisibility` writes only the keys whose visibility CHANGED, so
+a marker created for a venue the current filter EXCLUDES was in neither loop —
+never written, `data-hidden` unset, and **visible on the map**. Twenty pins
+showing that should not have been. A new marker is created hidden now, and two
+guards assert it. **The counters could not see this**, which is the lesson worth
+keeping: they count WRITES, and the defect was the absence of one.
+
+**The one I did not, attributed rather than assumed.** g9's fan check reads *4
+pins in the stack; 4 fanned; every pair now clears 28px: false*. A worktree at
+`ae5b178` — the head this session opened on, before any change here — was built,
+served and walked, and **it fails the same check with byte-identical numbers.**
+The previous session's zero-regression reading was taken against a different
+day's snapshot, where fewer pins happened to collide. It is `NH144`, and the
+likely cause is the fan radius against a stack of four rather than two.
+
 **`docs/feedback/8.24/` was empty.** The session's first act was to be committing
 sixteen captures unread; there were none, and git cannot track an empty
 directory. The refinement it was meant to unblock is law anyway — RULING 135, a

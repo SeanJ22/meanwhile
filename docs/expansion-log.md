@@ -694,3 +694,157 @@ and drives a finding against the code AS SHIPPED, getting underneath a branch
 that is deliberately unreachable by injection. That is a technique for proving a
 defect existed, not a route to a public record, and it is registered in the
 playbook rather than here.
+
+---
+
+## nj-depth-0824 · 2026-08-24
+
+**Seven routes that did not exist at session start. Four returned rows, three
+returned zero or a wall, and the three are reported as successes** — the
+invention is the deliverable, not the yield (RULING 88). Every one of them ends
+at a field the item list already owes: campaign site, photo, or a municipal
+roster. None is a new capability, a new surface, or work on another zip
+(RULING 89).
+
+The question that produced most of them is the one the filed-email-domain route
+came from, asked again: **what does data we already hold say beyond the field it
+was collected for?** — and its sibling, asked because the obvious answer failed:
+**when the general web index is closed to us, who else publishes a search over
+the same facts?**
+
+### The county party's municipal-committee index, descended
+
+- **Conceived:** RULING 93 says ask what the tier above publishes about the tier
+  below, and it is stated as a general principle rather than a list. It had only
+  ever been applied to GOVERNMENT hierarchies. A political party is a hierarchy
+  too — a county committee is the tier above its municipal committees, and a
+  municipal committee is the tier above the candidates it runs.
+- **Query:** `https://morrisdems.org/wp-json/wp/v2/pages?per_page=100&_fields=id,link,title,content`
+- **Returned:** the county committee's **85 pages in one request**, including an
+  index of **39 municipal committee pages** linking **22 distinct municipal
+  committee websites**. 24 of 28 harvested at rungs 2, 4 and 11; 57 leads mined.
+- **Generalises:** **yes, to any county with an organised party committee**, and
+  the WordPress REST form generalises to any committee running WordPress, which
+  is most of them. **It does not generalise across parties in the same county**,
+  which is the finding below.
+
+### The same descent for the other party, and what it found instead
+
+- **Conceived:** the equal-effort rule is a hunt discipline, and a party-hosted
+  route walked for one party and not the other is that rule failing in the place
+  it was written for. So the identical question was put to the Republican county
+  committee before either result was used.
+- **Query:** `https://www.morrisgop.org/pages-sitemap.xml`, then each of its 25 pages
+- **Returned:** **25 of 25 pages read, 0 leads.** There is no municipal
+  committee index; the site publishes a page sitemap, `/officials`, `/clubs` and
+  a blog. Eight of its pages name somebody on this ballot and none of those
+  pages carries an outbound link that survives the campaign-site filter.
+- **Generalises:** the *finding* generalises and it is the useful part — **two
+  county committees of the same county publish completely different things**, so
+  a route proven on one party's site is proven for that publisher and not for
+  the office. This is RULING 60's sub-branch rule arriving somewhere nobody
+  expected it: not a different state, the same county.
+- **What was done about the asymmetry:** the shape the Democratic index revealed
+  was turned into a guessed-domain route applied to **both parties equally** —
+  the same five suffix patterns, the same municipalities, the same number of
+  guesses per party. Symmetric by construction rather than by intention.
+
+### The local newspaper's own search API, because the search engines are closed
+
+- **Conceived:** two of the five moves of the stuck protocol are literally *type
+  this into a search box*, and measuring that box first showed every general web
+  index is either walled or off-limits (below). RULING 52 says a branch failing
+  is one measurement and the fact gets another branch; `CLAUDE.md` says a
+  `robots.txt` disallow gets a COMPLIANT ROUTE to the same information rather
+  than a cleverer client. **A newspaper is not a search engine, and it publishes
+  a search over exactly the facts we want.**
+- **Query:** `https://newjerseyglobe.com/wp-json/wp/v2/search?search=<surname>&per_page=20`
+  and the same on `morristowngreen.com`, asked once per distinct surname
+- **Returned:** the control was measured before use — an impossible term returns
+  `[]` on both hosts. **258 distinct surnames × 2 outlets = 516 questions**, run
+  serialised at ~3.2 s each with an identified agent.
+- **Generalises:** **yes, very widely.** WordPress runs a large share of local
+  news, and `/wp-json/wp/v2/search` is its documented interface. This is ladder
+  rung 7 and rung 12 together, and it is the strongest single route this session
+  built.
+
+### Certificate Transparency as a domain index
+
+- **Conceived:** the question *where else does a campaign site leave a trace we
+  can search by NAME?* Every HTTPS site has a TLS certificate; every certificate
+  is published to a public append-only log; the log is searchable by substring.
+  A campaign that owns `kapnerformendham.com` put that string in a CT log the
+  day it turned on HTTPS.
+- **Query:** `https://crt.sh/?q=%25kapner%25&output=json` — and the control,
+  `https://crt.sh/?q=%25zzqxwvnonexistent99%25&output=json`
+- **Returned:** the **control is clean** (HTTP 200, `[]`), which is what makes
+  the route real. **Three of four live queries returned HTTP 502** from crt.sh's
+  own nginx and the fourth returned `[]`. So: a WALL on those queries, recorded
+  as one, never an absence of certificates. **Owed a re-walk on the RULING 53
+  clock.**
+- **Generalises:** yes, to any entity whose web presence is HTTPS, which is all
+  of them — and it is one of very few routes that searches the *whole web* by
+  name without a search engine.
+
+### Common Crawl's index as a domain-existence oracle and page enumerator
+
+- **Conceived:** the guessed-domain route needs to know whether a domain EXISTS
+  before spending a fetch on it, and the roster hunt needs to know what pages a
+  municipal site has when its menu is script-built.
+- **Query:** `https://index.commoncrawl.org/CC-MAIN-2026-34-index?url=votemtarlington.com%2F*&output=json`
+  and `…?url=morrisgop.org%2F*&output=json`
+- **Returned:** a real answer with a **real control** — an impossible host
+  returns **HTTP 404 `No Captures found`**. It enumerated 9 `morrisgop.org` URLs
+  and confirmed `votemtarlington.com` with three captures dated 2026-08-10.
+  **Measured coverage of the local press, which is the honest disappointment:**
+  6 URLs for `newjerseyglobe.com`, 98 for `morristowngreen.com`, 22 for
+  `tapinto.net`, 77 for `patch.com`, 7 for `dailyrecord.com`. It is not a
+  substitute for a keyword index and the numbers are recorded so nobody
+  re-measures to find that out.
+- **Generalises:** yes, to any host anywhere.
+
+### Marginalia's public API — an independent keyword index
+
+- **Conceived:** same question as the newspaper route. Marginalia indexes the
+  non-commercial web and publishes an API on a host separate from the `/search`
+  path its `robots.txt` disallows.
+- **Query:** `https://api.marginalia.nu/public/search/gary%20kapner`
+- **Returned:** HTTP 200, JSON, `"license":"CC-BY-NC-SA 4.0"`, 9 pages of
+  results — and for this particular name, **encyclopedia noise about an unrelated
+  screenwriter**. Zero useful rows on the first probe.
+- **Generalises:** yes as a route, with a hard limit stated: **the licence is
+  NON-COMMERCIAL, so it is a DISCOVERY source only.** It may point at a URL; the
+  URL is then fetched from the origin and proved there, exactly as RULING 87
+  governs Wikipedia. It may never be a source of record here.
+
+### The site's own sitemap as a second branch to a municipal roster
+
+- **Conceived:** the roster hunt reached 14 of 39 Morris municipalities and
+  reported the other 25 as failed extractions, honestly. Reading one of the
+  failures rather than the summary showed why: its discovery branch scores the
+  HOMEPAGE's anchor text, and Dover's homepage anchors read *Annual Rabies*,
+  *Body Art* and *Death Certificates* because its government menu is built by
+  script. The branch was working perfectly on a page that does not contain the
+  answer.
+- **Query:** `https://www.dover.nj.us/sitemap.xml` and the same for each of the
+  39 municipal sites, with the URL SLUG scored by the same table the anchor text
+  is scored by
+- **Returned:** rows immediately, including **Denville Township — the named
+  instance `NH73` was opened over — going from 0 members to 7**, plus Chester
+  Township 5, Hanover Township 6 and Harding Township 3 where all four had
+  previously returned nothing.
+- **Generalises:** **yes, to every municipal site anywhere.** It is ladder rung
+  10 and it fails for entirely different reasons than the anchor branch does,
+  which is what makes the two independent under RULING 52 rather than one route
+  wearing two names.
+
+### The route that was conceived and NOT built, recorded so it is not re-conceived
+
+**The filed ADDRESS as a route to a phone.** We hold 272 filed street addresses
+from the county clerk. A reverse-address lookup would reach a phone number for
+many of them, and phone stands at 2 of 272. **It was not built and it should not
+be.** The collection minimum is settled, a residential phone obtained by reverse
+lookup is not a campaign contact, and publishing one next to a private
+individual's name because they filed to run for the school board is the opposite
+of what this product is for. Recorded here so the next session recognises it as
+a decision rather than a gap.

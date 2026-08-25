@@ -59,6 +59,16 @@ export interface StuckStep {
   query: string;
   /** What came back, including zero. */
   result: string;
+  /**
+   * Did this move REACH its source, or was it refused?
+   *
+   * The distinction is the whole difference between an absence and a wall.
+   * `CLAUDE.md`: *no field may move toward `VERIFIED_ABSENT` on a route we were
+   * not allowed to walk.* A move that got a challenge page has been attempted
+   * and has not been walked, and an absence built on five of those is an
+   * absence built on nothing.
+   */
+  reached: boolean;
 }
 
 export interface ArguedAbsence {
@@ -135,6 +145,29 @@ export function absenceStands(
     return {
       stands: false,
       why: `VOID — ${empty.length} move(s) carry no literal query or no result. RULING 88 asks for the text that was typed, never a description of the search.`,
+    };
+  }
+  /*
+   * **A WALLED MOVE IS AN ATTEMPT, NOT A WALK.**
+   *
+   * `CLAUDE.md` is explicit that no field may move toward `VERIFIED_ABSENT` on a
+   * route we were not allowed to walk, and the general web index is exactly such
+   * a route at 07866: every host whose `robots.txt` permits walking answers this
+   * project's requests with a bot challenge. A protocol whose broad moves were
+   * all refused has recorded five honest attempts and established nothing about
+   * the fact.
+   *
+   * The bar is deliberately low — ONE move must have reached a source — because
+   * the alternative is a bar no small-town candidate could ever clear, and the
+   * point of an argued absence is that it can be earned.
+   */
+  const reached = absence.protocol.filter((s) => s.reached);
+  if (reached.length === 0) {
+    return {
+      stands: false,
+      why:
+        "VOID — all five moves were REFUSED and none reached a source. Five walls are five " +
+        "attempts, and no field moves toward absence on a route we were not allowed to walk.",
     };
   }
   if (absence.expiresOn < onDay) {

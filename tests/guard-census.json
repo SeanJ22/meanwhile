@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 226,
-    "named": 2175,
+    "files": 227,
+    "named": 2183,
     "dynamic": 6
   },
   "files": {
@@ -1647,6 +1647,19 @@
         "JUR-4: UNKNOWN is counted and never named as partial",
         "JUR-4: the full pill no longer renders per contest on the ballot page",
         "JUR-4: the page-level block names bodies, never offices"
+      ],
+      "dynamic": 0
+    },
+    "tests/kelly-depth.test.ts": {
+      "names": [
+        "a complete, reached, unexpired protocol STANDS",
+        "a move with no literal query, or no result, is VOID — a description is not the text that was typed",
+        "addDays reads the calendar date from the string and never round-trips a local Date",
+        "an absence EXPIRES on the RULING 53 clock, and stale is not wrong",
+        "fewer than five moves is VOID — RULING 94",
+        "five WALLS are five attempts and establish nothing — the field stays owed",
+        "five rows of the SAME move is one question asked five times, and is VOID",
+        "the five Kelly fields are exactly the five Sean named"
       ],
       "dynamic": 0
     },

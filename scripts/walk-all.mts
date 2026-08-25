@@ -1847,6 +1847,16 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
 {
   const page = await openAt(browser, "85701");
 
+  /*
+   * WGH-8 (2026-08-25): the who-governs card no longer opens itself, so the
+   * row this clicks is behind the pill. Clicked the way a reader would.
+   */
+  const wghPill = page.locator(".notice-fab").first();
+  if (await wghPill.isVisible().catch(() => false)) {
+    await wghPill.click();
+    await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+  }
+
   // g3 item 5 — a read from the body's own official source IS verified.
   const opened = await page
     .locator('.coverage-notice button:has-text("Kelly")')
@@ -1855,7 +1865,19 @@ section("E. Sources and officials (g3 items 5, 8, 9)");
     .then(() => true)
     .catch(() => false);
   if (!opened) {
-    cannotRun("g3", "the sources tab's vocabulary", "no official row on the who-governs card");
+    /*
+     * **R58: ALL THREE identities declare.** This block owned three and
+     * declared one before falling through, so two reported NOTHING — which
+     * R58 catches and calls a silent check. The shape was always here; WGH-8
+     * exposed it by making the row genuinely absent for the first time.
+     */
+    for (const identity of [
+      "the sources tab's vocabulary",
+      "an official-source read never says 'Verified: not yet'",
+      "the large card carries no duplicate 'How to reach them' accordion",
+    ]) {
+      cannotRun("g3", identity, "no official row on the who-governs card");
+    }
   } else {
     // R49: the popup card is on the page, rather than 900ms have passed.
     await untilPresent(page, ".popup-card", 10_000);
@@ -4211,15 +4233,32 @@ section("M136. Body battlecards reach person-card depth (g13)");
   for (const body of BODIES) {
     const page = await openAt(browser, body.zip);
     try {
+      /*
+       * WGH-8 (2026-08-25): the card no longer opens itself on arrival, so the
+       * row this looks for is behind the pill. Clicked the way a reader would.
+       */
+      const pill = page.locator(".notice-fab").first();
+      if (await pill.isVisible().catch(() => false)) {
+        await pill.click();
+        await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+      }
       const row = page
         .locator(`.coverage-notice button:has-text("${body.label}")`)
         .first();
       if ((await row.count()) === 0) {
-        cannotRun(
-          "g13",
+        /*
+         * **R58: BOTH checks declare, not just the first.** This block owns two
+         * identities and declared only one before `continue`, so the second
+         * reported NOTHING — which R58 catches and calls a silent check. The
+         * shape was always here; WGH-8 exposed it by making the row genuinely
+         * absent for the first time.
+         */
+        for (const identity of [
           `M136: ${body.label} (${body.what}) renders every section`,
-          `no who-governs row named "${body.label}" at ${body.zip}`,
-        );
+          `M136: ${body.label}'s card renders no internal identifier`,
+        ]) {
+          cannotRun("g13", identity, `no who-governs row named "${body.label}" at ${body.zip}`);
+        }
         continue;
       }
       await row.click();
@@ -4228,11 +4267,13 @@ section("M136. Body battlecards reach person-card depth (g13)");
 
       const card = page.locator(".account-modal").first();
       if ((await card.count()) === 0) {
-        cannotRun(
-          "g13",
+        // R58: both identities, for the reason above.
+        for (const identity of [
           `M136: ${body.label} (${body.what}) renders every section`,
-          "the row opened no battlecard",
-        );
+          `M136: ${body.label}'s card renders no internal identifier`,
+        ]) {
+          cannotRun("g13", identity, "the row opened no battlecard");
+        }
         continue;
       }
       const text = await card.innerText();

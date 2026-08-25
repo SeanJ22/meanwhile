@@ -253,22 +253,31 @@ export function DistrictPopup({
                 holder.name
               )}
             </span>
+            {/*
+              **BC-14 (2026-08-25, third pass) — THE RIGHT-EDGE SOURCE LINK IS
+              GONE FROM THE SMALL CARD.**
+
+              The author: *sources live in the large battlecard; the small card
+              lists names and nothing else.* His `09-01-39` boxes two rows on
+              this component wrapping onto two lines, and `09-20-11` shows the
+              Morris card scrolling sideways — the `· SRC` run is what was
+              pushing both.
+
+              **This is the instance the previous two passes could not see.**
+              The 8/24 close-out reported "4 surfaces, 0 footnote markers" and
+              it was TRUE — of meeting provenance, through
+              `sourceCreditFor(meetings)`. This is an OFFICE-HOLDER on a
+              different component with a different data type, so no predicate
+              built around meetings could ever reach it. See
+              `docs/reconciliation-2026-08-25.md`.
+
+              **`holder.sourceUrl` IS NOT DELETED** and nothing about the
+              record changed — RULING 138 says display consolidates and the
+              record is never deleted. The value still travels on the row and
+              still renders in the large card, which the name opens.
+            */}
             <span className="person-row-office">
               {readerOfficeTitle(holder.officeTitle)}
-              {holder.sourceUrl && (
-                <>
-                  {" · "}
-                  <a
-                    href={holder.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Where this record was read from"
-                    className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-link"
-                  >
-                    src
-                  </a>
-                </>
-              )}
             </span>
           </div>
         ))

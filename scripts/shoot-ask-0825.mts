@@ -28,7 +28,7 @@ import { fileURLToPath } from "node:url";
 
 import type { Page } from "playwright";
 
-import { launchGuarded } from "./browser.mts";
+import { launchGuarded, seedZip } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots", "visual-0825");
@@ -41,23 +41,6 @@ const record = (id: string, what: string, value: unknown): void => {
   findings.push({ id, what, value: String(value) });
   console.log(`  ${id.padEnd(10)} ${what}: ${String(value)}`);
 };
-
-async function seedZip(page: Page, zip: string): Promise<void> {
-  await page.addInitScript(
-    ({ zip: z }: { zip: string }) => {
-      try {
-        sessionStorage.setItem(
-          "wtp.approximate_location",
-          JSON.stringify({ zip: z, savedAt: new Date().toISOString() }),
-        );
-        localStorage.setItem("wtp.tutorial_seen", "1");
-      } catch {
-        /* the capture will show it */
-      }
-    },
-    { zip },
-  );
-}
 
 async function main(): Promise<void> {
   const browser = await launchGuarded({ label: "shoot-ask-0825" });

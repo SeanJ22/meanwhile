@@ -606,17 +606,22 @@ export function OfficialIdentity({
             </p>
           );
         })()}
-        {holder.sourceUrl && (
-          <a
-            href={holder.sourceUrl}
-            target="_blank"
-            rel="noreferrer"
-            title="Where this record was read from"
-            className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
-          >
-            source
-          </a>
-        )}
+        {/*
+          **BC-14 (2026-08-25) — the third instance, and it was nearly missed.**
+
+          This file renders inside `PopupCard`, so it IS a small card — the one
+          `walk-all` opens by clicking a name on the who-governs list. The
+          first pass of this sweep classified it as part of the LARGE card and
+          left the tag standing, on nothing better than the file's name.
+
+          Checking rather than assuming is what found it, and the check is
+          structural: `.popup-card` is the small card and `.account-modal` is
+          the large one, so the question is which primitive a file renders
+          into. All four `.source-tag` sites turn out to be on small surfaces.
+
+          `holder.sourceUrl` is untouched on the record (RULING 138) and still
+          renders in the large card.
+        */}
       </div>
     </div>
   );

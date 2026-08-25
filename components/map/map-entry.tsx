@@ -665,6 +665,8 @@ function MapEntryInner() {
       ocdId: string | null,
     ) => {
       setOfficialPopup({ holder, seatLabel, tier });
+      // BC-16: most recent click wins.
+      setPopupMeeting(null);
       // Author-approved (1d), disclosed on /transparency in the same change.
       // The holder id names the official opened, never the reader.
       logEvent("OFFICIAL_OPENED", ocdId ? [ocdId] : [], {
@@ -708,6 +710,9 @@ function MapEntryInner() {
    */
   const openMeeting = useCallback((meeting: Meeting) => {
     setPopupMeeting(meeting);
+    // BC-16: most recent click wins. See the effect below for the half of this
+    // that no opener can be relied on to do.
+    setOfficialPopup(null);
     setNoticeCollapsed(true);
     // A division-less body (null ocdId) logs the event with no division.
     logEvent("MEETING_OPENED", meeting.ocdId ? [meeting.ocdId] : [], {
@@ -865,6 +870,30 @@ function MapEntryInner() {
       setNoticeCollapsed(true);
     }
   }, [current]);
+
+  /**
+   * **BC-16 (2026-08-25) — ONE SMALL CARD AT A TIME, ENFORCED WHERE NO OPENER
+   * CAN FORGET IT.**
+   *
+   * The author's `09-20-11` has the Rockaway Township venue card and the
+   * Morris County card open at once, overlapping, each scrolling inside itself.
+   *
+   * The venue/district half lives in the reducer, because both are transitions
+   * there. The two popups are React state on this component and cannot be, so
+   * the exclusion is an EFFECT keyed on the selection rather than a line
+   * inside every opener. WGH-8, earlier in this same file today, is why:
+   * `openSurface` had enforced its exclusion correctly since 4c and the FIRST
+   * PAINT still carried both surfaces, because a rule enforced by every path
+   * that calls it is not enforced on the path that does not call it.
+   *
+   * Selecting NOTHING is a close and clears nothing — dismissing one card must
+   * never dismiss the others with it.
+   */
+  useEffect(() => {
+    if (!ui.selectedVenueKey && !ui.selectedDistrictOcdId) return;
+    setPopupMeeting(null);
+    setOfficialPopup(null);
+  }, [ui.selectedVenueKey, ui.selectedDistrictOcdId]);
 
   // Clicking INTO a new district is a question about who governs there —
   // the card answers. Re-selecting the same district changes nothing.

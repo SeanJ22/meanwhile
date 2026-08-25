@@ -177,14 +177,40 @@ export function uiReducer(state: UiState, action: UiAction): UiState {
     case "search/clear":
       return { ...state, search: { query: "", open: false, highlighted: -1 } };
 
+    /*
+     * **BC-16 (2026-08-25) — ONE SMALL CARD AT A TIME, MOST RECENT CLICK
+     * WINS.**
+     *
+     * The author's `09-20-11` has the Rockaway Township VENUE card and the
+     * Morris County DISTRICT card open at once, overlapping, each scrolling
+     * inside itself. Two answers to two different questions, one on top of the
+     * other, and the reader has to close one to read the other.
+     *
+     * The exclusion lives HERE rather than in the handlers for the same reason
+     * WGH-8's does: a rule enforced by every path that calls it is a rule the
+     * path nobody thought of does not follow. Opening either card is a
+     * transition in this reducer, so closing the other is part of the same
+     * transition and there is no ordering to get wrong.
+     *
+     * Selecting NOTHING (`key: null`, `ocdId: null`) is a close, not an open,
+     * and must not clear the other card — otherwise dismissing one would
+     * silently dismiss both.
+     */
     case "select/venue":
-      return { ...state, selectedVenueKey: action.key };
+      return {
+        ...state,
+        selectedVenueKey: action.key,
+        ...(action.key === null
+          ? {}
+          : { selectedDistrictOcdId: null, selectedDistrictType: null }),
+      };
 
     case "select/district":
       return {
         ...state,
         selectedDistrictOcdId: action.ocdId,
         selectedDistrictType: action.districtType,
+        ...(action.ocdId === null ? {} : { selectedVenueKey: null }),
         // Choosing closes the prompt that offered the choice.
         districtPick: null,
       };

@@ -34,7 +34,7 @@ import { fileURLToPath } from "node:url";
 
 import type { Page } from "playwright";
 
-import { launchGuarded } from "./browser.mts";
+import { launchGuarded, seedZip } from "./browser.mts";
 
 /** One elements measured box, as the page hands it back. */
 type Box = null | {
@@ -72,28 +72,12 @@ const record = (id: string, what: string, value: unknown): void => {
   console.log(`  ${id.padEnd(14)} ${what}: ${String(value)}`);
 };
 
-/**
- * `?zip=` does NOT seed the app — the map entry renders its welcome overlay
- * and every capture behind it is of the overlay. The key is
- * `wtp.approximate_location`; a previous session used the wrong one and
- * reported four items correct while photographing the welcome card.
+/*
+ * `seedZip` lived here, and in two other shooters written the same evening.
+ * `pnpm dupes` caught the three copies (RULING 103) and it is consolidated
+ * into `scripts/browser.mts` — the better home anyway, because the recipe is
+ * a rung rather than one script's detail. Its reasoning went with it.
  */
-async function seedZip(page: Page, zip: string): Promise<void> {
-  await page.addInitScript(
-    ({ zip: z }: { zip: string }) => {
-      try {
-        sessionStorage.setItem(
-          "wtp.approximate_location",
-          JSON.stringify({ zip: z, savedAt: new Date().toISOString() }),
-        );
-        localStorage.setItem("wtp.tutorial_seen", "1");
-      } catch {
-        /* A browser refusing storage still renders; the capture shows it. */
-      }
-    },
-    { zip },
-  );
-}
 
 async function shoot(page: Page, name: string): Promise<void> {
   await page.screenshot({ path: join(OUT, `${name}.png`) });

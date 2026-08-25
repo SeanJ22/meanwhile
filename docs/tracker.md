@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **252 open**, 409 resolved.
+- **253 open**, 409 resolved.
 - **46 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -403,7 +403,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**75 open · 102 resolved.**
+**76 open · 102 resolved.**
 
 ### P1
 
@@ -534,6 +534,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH95** — pnpm schools:classify reaches 510 of 514 rendered districts across five one-to-one branches, up from 295 of 514. The four it does not reach are named on every run and each was read by hand against the committed Census files: AZ Indian Oasis-Baboquivari Unified District, which the 2022 Census of Governments spells BABOQUIVARA; AZ Tonto Basin Elementary District, which the Census calls TONTO SCHOOL DISTRICT 33; AZ Union Elementary District, whose whole distinctive name is the word Union — a structural word in every district name in the country, so it cannot be keyed; and NH Prospect Mountain High School Joint Maintenance Agreement District, which is not in the 2022 Census of Governments at all and is therefore RULING 57's two-enumerations-disagree finding rather than a miss. None of the four renders a refusal: they carry the unclassified-school class definition, which describes what a school system is and names the open question rather than asserting who governs the schools. WHAT WOULD CLOSE IT: a hand-evidenced alias table, which needs a source a session can cite for each pairing — NCES state_leaid does not decode to the Census district number, so the join has to come from somewhere with network.
 
 **NJ05** — suttonnh.gov/sitemap.xml answers HTTP 200 with a valid sitemap containing exactly one URL: https://d9template1.civiccms.acsitefactory.com/ — the vendor's Drupal 9 template host, not the town. Rung 10 of the retrieval ladder is sitemaps and search-index caches, and on this CMS family that rung returns the vendor and none of the body's own pages. A session walking rung 10 here would read a well-formed sitemap, find no board pages in it, and have no signal that anything was wrong. Recorded 2026-08-22. Worth checking across the CivicPlus D9 tenants this project already knows before it is treated as one town's misconfiguration; data/reference/civicplus_tenants.csv is the list.
+
+**NJ22** — pnpm photo:sheet builds portraits-pending.png from candidate cards that already carry a photoUrl and whose review state is PENDING. That is the right artifact for a portrait already in the product awaiting his yes or no. It cannot show a portrait that has been STAGED and not shipped, which is every portrait a hunt produces — 55 of them on 2026-08-24, of which two were judged queueable. The session built pnpm sheet to read them as images and put the verdicts in docs/photo-staging-2026-08-24.md, but the picture itself reached Sean's Drive only as a one-off dated file, which handoff correctly refused as EXTRA: the mirror's canonical set is standing documents, and a session dropping a dated artifact into it every night is exactly the drift that guard exists to stop. So the two queued portraits are named in the doc with their source URLs and the sheet regenerates with one command, and that is worse for him than a picture would be. What is owed is a decision about where staged portraits live — a second standing mirror file that is overwritten rather than dated, or a staging area photo:sheet reads alongside the shipped cards.
 
 **P12** — Showing readers what other readers answered. Sean tabled this: it anchors the next respondent and corrupts the very data being sold. Recorded so nobody builds it by accident.
 

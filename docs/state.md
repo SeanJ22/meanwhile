@@ -18438,3 +18438,71 @@ one "member" came back as `Krista DiGiorgio / Bid Committee Members` with six
 other names in its term note. `tests/top-offices.test.ts` refused it. The
 generator refuses it now too, with a stated reason, because **a defect the suite
 catches is a defect that already shipped into the artifact.**
+
+### Item 3, stated as the number rather than as the effort
+
+**The campaign-site field did not move. It stood at 12 of 272 at session start
+and it stands at 12 of 272 now**, measured by `pnpm kelly` against
+`candidate-links-2026.json`, which is the file that decides what a reader sees.
+
+That is the finding, and every other number in this section is an explanation of
+it rather than a substitute for it.
+
+| route | pages read | leads | HIT | new campaign sites |
+|---|---:|---:|---:|---:|
+| the county Democratic committee's municipal index | 24 of 28 | 57 | — | 0 |
+| the county Republican committee | 25 of 25 | 0 | 0 | 0 |
+| the local press's own search API | **1,474 of 4,056** | 2,526 | 1 | **0** |
+
+The one HIT the press route earned is `joehathawayforcongress.com`, **which this
+product already held.** 4,056 articles were named by 516 surname searches; 1,474
+were read; 453 of those named somebody on this ballot; and not one of them
+carried a link to a campaign site this project did not already have.
+
+**The classifier is why that number is 1 and not 33, and the sequence is the
+part worth keeping.** Three successive bars, each measured:
+
+1. `verdictFor` alone — the generic bar: the page names the candidate and says
+   it is about standing for office. **33 HITs across 8 candidacies, of which 31
+   were news sites** — `govtrack.us`, `cnn.com`, `nypost.com`, `jewishinsider.com`,
+   `dailysabah.com`, `theintercept.com`. Every one of those is a TRUE statement
+   about the page and a FALSE claim about the field. *Bennett for Congress* is
+   exactly the phrase the office test looks for, and it appears in every story
+   written about her.
+2. Host-carries-the-name **or** a paid-for-by disclaimer — **10 HITs, every
+   newspaper gone**, and `morrisdems.org` left standing as one candidate's
+   campaign site and `workingfamilies.org` as another's. Both carry a real
+   disclaimer; neither is a disclaimer about the CANDIDATE.
+3. The disclaimer must NAME the candidate, plus a given-name-beside-a-campaign-word
+   host form — **1 HIT.**
+
+**A host blocklist could not have closed this class** — there are more
+newspapers than anyone can list — so the discriminator is positive rather than
+negative: a campaign site is a place the campaign PUBLISHES, evidenced by its
+own name in the host or its own disclaimer on the page.
+
+**And the tightening has a cost, named rather than hidden.** It rejects at least
+one true campaign site: `analiliafornj.com` is Analilia Mejia's, already held and
+verified, and the host carries her GIVEN name rather than her surname. A
+rejected true site becomes a `LEAD` a human looks at, which is the correct
+direction to fail — RULING 68 exists so a guessed identity never reaches a
+reader — but it is still a failure and it is written down here.
+
+**What is owed**: 2,582 of the 4,056 articles are unharvested, stated on the
+artifact as a CLIP with both numbers rather than as an end of data, and the disk
+cache means the next run does not re-request a single page it already has.
+
+**The party routes, final, under the corrected classifier:** 24 distinct URLs
+from 57 leads, **0 HIT · 33 LEAD · 15 EMPTY · 9 REFUSED**, conservation closes
+at 57 of 57. Thirty-three leads is thirty-three pages a person could look at,
+which is a real deliverable and is not a campaign site.
+
+**`party-committee-domain-shape` was walked and NOT finished, and the reason is
+a defect in how it was built.** It guesses 580 municipal committee domains, five
+suffix patterns per party per municipality, symmetric by construction. Most do
+not resolve — and the rung escalation added earlier this session runs the FULL
+ladder on every one that fails: curl, then plain HTTP, then an Internet Archive
+lookup. That is right for a link read off a real page and wrong for a guess,
+where `NXDOMAIN` is the expected answer rather than a wall to climb. It was
+stopped rather than left running, and the fix is to escalate a GUESSED
+identifier differently from a READ one.

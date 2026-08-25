@@ -834,6 +834,22 @@ for (const id of wanted) {
       `${pagesWithNoName} page(s) named nobody on this ballot`,
   );
 
+  /*
+   * **THE PAGE TEXT IS DROPPED THE MOMENT MINING IS DONE WITH IT.**
+   *
+   * The press route harvests 668 articles and the run held every one of their
+   * bodies in memory for the whole run, on top of every probe body. It died
+   * with V8's heap-limit allocation failure partway through the prove phase.
+   *
+   * Nothing downstream reads a SOURCE page again — the leads carry the URL and
+   * the publisher, and PROVE fetches the lead itself. So the text goes, and the
+   * disk cache means a later run does not re-request a single page for it.
+   */
+  for (const p of pages) {
+    p.text = "";
+    fetched.delete(p.url);
+  }
+
   allLeads.push(...routeLeads);
   routeReports.push({
     route: route.id,
@@ -885,6 +901,22 @@ const probed = new Map<string, { status: number; length: number }>();
 const probe = new ControlledProbe(async (url) => {
   const seen = probed.get(url);
   if (seen) return seen;
+  /* The same read-through disk cache the harvest uses. Fixing OUR classifier
+   * must not cost 249 hosts a second round of requests. */
+  if (!FRESH) {
+    const file = cachePath(`probe:${url}`);
+    if (existsSync(file)) {
+      try {
+        const disk = JSON.parse(readFileSync(file, "utf8")) as { status: number; text: string };
+        bodies.set(url, disk.text);
+        const hit = { status: disk.status, length: disk.text.length };
+        probed.set(url, hit);
+        return hit;
+      } catch {
+        /* a corrupt entry is not a document — fall through and fetch */
+      }
+    }
+  }
   await sleep(SPACING_MS);
   let result: { status: number; length: number };
   try {
@@ -900,8 +932,136 @@ const probe = new ControlledProbe(async (url) => {
     result = { status: 0, length: 0 };
   }
   probed.set(url, result);
+  if (result.status > 0) {
+    mkdirSync(CACHE_DIR, { recursive: true });
+    writeFileSync(cachePath(`probe:${url}`), JSON.stringify({ status: result.status, text: bodies.get(url) ?? "" }));
+  }
   return result;
 });
+
+/**
+ * **A PAGE ABOUT A CANDIDATE IS NOT A PAGE BY THE CANDIDATE.**
+ * (Found by running the press route, 2026-08-24.)
+ *
+ * `verdictFor` asks the right question for a GENERIC lead: does this page name
+ * the person and say it is about standing for office? A newspaper article
+ * answers yes to both, honestly — *Bennett for Congress* is exactly the phrase
+ * the office test looks for, and it appears in every story written about her.
+ *
+ * So the press route produced **33 rows clearing that bar, of which 31 were
+ * news sites**: `govtrack.us`, `cnn.com`, `nypost.com`, `jewishinsider.com`,
+ * `dailysabah.com`, `theintercept.com`. Every one of those is a true statement
+ * about the page and a false claim about the field, and shipping any of them
+ * under a reader-facing "campaign site" label would put a newspaper's byline
+ * where a candidate's own words belong.
+ *
+ * This is RULING 136's frame: the WordPress shortlink was an EXAMPLE, and the
+ * class is *a page that mentions somebody is not a page they publish*. A host
+ * blocklist cannot close a class — there are more newspapers than anyone can
+ * list — so the discriminator is positive rather than negative, and it is the
+ * two things that are true of a campaign site and of almost nothing else:
+ *
+ * 1. **The HOST carries the candidate's name or their slate's.** `tomkean.com`,
+ *    `analiliafornj.com`, `joehathawayforcongress.com`, `votemtarlington.com`.
+ * 2. **The page carries the PAID-FOR-BY disclaimer.** It is a legal obligation
+ *    on campaign material and no newspaper carries one about somebody else.
+ *
+ * Failing both does not make a page worthless — it makes it a `LEAD` with its
+ * reason recorded, which is what a news article genuinely is for this field.
+ */
+function asCampaignSite(
+  generic: { outcome: ProbeOutcome; detail: string },
+  lead: Lead,
+  forms: { form: string; kind: string; matched: boolean }[],
+  body: string,
+): { outcome: ProbeOutcome; detail: string } {
+  if (generic.outcome !== "HIT") return generic;
+
+  const host = (() => {
+    try {
+      return new URL(lead.siteUrl).hostname.replace(/^www\./, "").toLowerCase();
+    } catch {
+      return "";
+    }
+  })();
+  /* Letters only: `tomkean.com` has to match the form `tom kean`. */
+  const hostLetters = host.replace(/[^a-z]/g, "");
+  const named = forms.some((f) => {
+    if (f.kind === "surname") return false;
+    const squashed = f.form.replace(/[^a-z]/g, "");
+    return squashed.length >= 6 && hostLetters.includes(squashed);
+  });
+  if (named) {
+    return { outcome: "HIT", detail: `${generic.detail}; and the HOST itself carries the candidate's name` };
+  }
+
+  /*
+   * **A GIVEN NAME PLUS A CAMPAIGN WORD IS A HOST SAYING WHOSE IT IS.**
+   *
+   * Tightening to full-name-in-host rejected `analiliafornj.com`, which IS
+   * Analilia Mejia's campaign site and is already held and verified. The host
+   * carries her GIVEN name and the office, not her surname — and that shape is
+   * everywhere: `jerseyjustin4senate.com`, `veronicaforsenate.com`.
+   *
+   * A given name alone is far too weak, so it is required TOGETHER with a
+   * campaign word in the host. The page has already cleared the control, the
+   * name test and the office test to reach this line; this only decides whether
+   * the host is the candidate's own place or somebody else's.
+   *
+   * Recorded rather than smoothed: the first version of this function traded a
+   * false-positive class for a false-negative one, and a rejected true site is
+   * a `LEAD` a human looks at — which is the correct direction to fail, and
+   * still a failure worth naming.
+   */
+  const given = forms
+    .find((f) => f.kind === "given-surname" || f.kind === "diminutive-surname")
+    ?.form.split(" ")[0];
+  if (given && given.length >= 5 && hostLetters.includes(given) && /(?:for|vote|elect|team)/.test(host)) {
+    return {
+      outcome: "HIT",
+      detail: `${generic.detail}; and the HOST carries the candidate's given name beside a campaign word`,
+    };
+  }
+
+  /*
+   * **THE DISCLAIMER HAS TO NAME THIS CANDIDATE.**
+   *
+   * *Paid for by* alone was still too loose, and the run that proved it is
+   * recorded here rather than smoothed: tightening to "host names them OR the
+   * page carries a disclaimer" cut 33 rows to 10 and removed every newspaper —
+   * and left `morrisdems.org` standing as Christopher Russo's campaign site and
+   * `workingfamilies.org` as Analilia Mejia's. Both carry a real disclaimer.
+   * Neither is a disclaimer about the CANDIDATE: *Paid for by the Morris County
+   * Democratic Committee* is a committee identifying itself.
+   *
+   * So the surname must appear within a short window after the phrase. That is
+   * what a candidate committee's disclaimer looks like — *Paid for by Kapner for
+   * Mendham Township Committee* — and what a party's does not.
+   */
+  const flat = flattenForEvidence(body);
+  const surname = forms.find((f) => f.kind === "surname")?.form;
+  if (surname) {
+    for (const m of flat.matchAll(/paid for by/gi)) {
+      const window = flat.slice(m.index ?? 0, (m.index ?? 0) + 140);
+      if (window.includes(surname)) {
+        return {
+          outcome: "HIT",
+          detail:
+            `${generic.detail}; and the page carries a paid-for-by disclaimer NAMING this candidate ` +
+            `("${window.slice(0, 90).trim()}…"), which is their own campaign material`,
+        };
+      }
+    }
+  }
+
+  return {
+    outcome: "LEAD",
+    detail:
+      `the page names the candidate and is about the race, but the host (${host || "unreadable"}) does not ` +
+      "carry their name and the page carries no paid-for-by disclaimer. A page ABOUT a candidate is not a " +
+      "page BY the candidate — most often a news article, which is a real find for a different field.",
+  };
+}
 
 const proven: Proven[] = [];
 let hits = 0;
@@ -936,7 +1096,8 @@ for (const lead of allLeads) {
   const flat = flattenForEvidence(body);
   const forms = matchNameForms(filedName(ballot.candidacies.find((c) => c.id === lead.candidacyId)!), flat);
   const office = officeEvidenceIn(flat);
-  const v = verdictFor(r.outcome, forms, office);
+  const generic = verdictFor(r.outcome, forms, office);
+  const v = asCampaignSite(generic, lead, forms, body);
   if (v.outcome === "HIT") hits += 1;
   else if (v.outcome === "LEAD") leadsOut += 1;
   else if (v.outcome === "EMPTY") empties += 1;
@@ -952,6 +1113,19 @@ for (const lead of allLeads) {
     officeEvidence: office,
     attemptedAt: stamp,
   });
+
+  /*
+   * **ONLY A HIT KEEPS ITS BODY.**
+   *
+   * Slate propagation re-reads a PROVEN site to see whether it names anybody
+   * else in the contest, so those bodies have to survive the loop. The other
+   * ~1,900 do not, and retaining them is what killed two runs with V8 heap-limit
+   * allocation failures.
+   *
+   * The disk cache means dropping one costs nothing: a later run reads it back
+   * without asking the host again.
+   */
+  if (v.outcome !== "HIT") bodies.delete(lead.url);
 }
 
 const proveAccount = conserve("hunt:sites/prove", {

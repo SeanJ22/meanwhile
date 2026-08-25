@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-24 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **253 open**, 409 resolved.
+- **254 open**, 409 resolved.
 - **46 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -259,7 +259,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**36 open · 5 resolved.**
+**37 open · 5 resolved.**
 
 ### P2
 
@@ -298,6 +298,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NJ18** — The press-outlet-wp-search route asks newjerseyglobe.com and morristowngreen.com their own /wp-json/wp/v2/search once per distinct surname — 258 surnames, 516 questions, control clean on both hosts. Those searches named 4,056 distinct articles. Harvesting them at a polite rate is several hours. pnpm hunt:sites now takes --max-pages so a run states BOTH numbers when it stops short, and the disk cache means every page already fetched is free on the next run. What is owed is finishing the harvest and mining it.
 
 **NJ20** — After the sitemap branch, pnpm roster:hunt reaches a confirmed governing-body page on 17 of 39 municipal sites and 82 members. The other 22 report a FAILED extraction with candidate pages found and fetched — so DISCOVERY is no longer the binding constraint; EXTRACTION is. Each failure names the site and the pages tried. What is owed is reading a sample of those pages and naming the shapes lib/hunt/roster-page.ts cannot parse, as a class rather than one site at a time.
+
+**NJ23** — pnpm hunt:sites grew a rung escalation this session — node fetch, then curl at rung 4, then plain HTTP, then an Internet Archive lookup at rung 11 — and it is right for a link read off a real page: two municipal committee domains the county party links no longer resolve, and the archive holds their candidate pages. It is wrong for a GUESS. The party-committee-domain-shape route constructs 580 candidate domains, five suffix patterns per party per municipality, and most of them do not exist; NXDOMAIN is the EXPECTED answer for a guess rather than a wall to climb, so the full ladder runs on hundreds of hosts that were never real. The route was walked and had to be stopped unfinished for that reason, which is recorded rather than smoothed. The fix is to carry the guessed flag into the fetch path and escalate a guessed identifier differently: one attempt, and a non-resolving host is a NO rather than a rung-11 question.
 
 **HD06** — Three people are running for the Rockaway Township Board of Education and twelve things about them have never been looked for.
 

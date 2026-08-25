@@ -34,6 +34,8 @@ import { execFileSync, spawn } from "node:child_process";
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
+import { tryRun as sharedTryRun } from "./try-run.mjs";
+
 import {
   PORT,
   ROOT,
@@ -61,18 +63,14 @@ function git(...args) {
   return execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim();
 }
 
-function tryRun(cmd, args, opts = {}) {
-  try {
-    return execFileSync(cmd, args, {
-      cwd: ROOT,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      ...opts,
-    }).trim();
-  } catch {
-    return null;
-  }
-}
+/**
+ * `tryRun`, bound to this repo's root.
+ *
+ * The IMPLEMENTATION is `scripts/try-run.mjs` — it was written twice and
+ * `tests/duplicate-implementations.json` carried the pair (RULING 103). This is
+ * a binding rather than a copy: it supplies `cwd` and nothing else.
+ */
+const tryRun = (cmd, args, opts = {}) => sharedTryRun(cmd, args, { cwd: ROOT, ...opts });
 
 /* ----------------------------------------------------------- 1 stale main --- */
 

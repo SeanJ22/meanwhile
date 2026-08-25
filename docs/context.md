@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:48:51 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:57:01 EDT.
 Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -587,13 +587,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-25 13:48:51 EDT
+generated: 2026-08-25 13:57:01 EDT
 branch: claude/final-pass-0825
-head sha: 0527e634971dbc1f729d695050cd7fe220adaa73
-head subject: The handoff's own mirror gate was failing on a 1 MB buffer, and it had been for as long as state.md has been big
-origin/main sha: c4167eb791831be26c34aee207795f90bc71c8fe
-origin/main subject: Merge pull request #175 from SeanJ22/claude/final-pass-0825
-local main sha: c4167eb791831be26c34aee207795f90bc71c8fe
+head sha: a4a148cbdd4621a151a2bb74b5f38c616369329b
+head subject: The build gate caught a type error the test runner cannot see
+origin/main sha: 1c72c300dff11b23bc38e9108c936dcfce2829b1
+origin/main subject: Merge pull request #176 from SeanJ22/claude/final-pass-0825
+local main sha: 1c72c300dff11b23bc38e9108c936dcfce2829b1
 local main matches origin/main: yes
 working tree: clean
 open prs: none

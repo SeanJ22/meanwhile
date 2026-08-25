@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **245 open**, 406 resolved.
-- **43 waiting on Sean** — the first section below.
+- **246 open**, 406 resolved.
+- **44 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
@@ -27,7 +27,7 @@ and when. Nothing is ever deleted.
   - Constitution & rules — **1**
   - Repo & ops — **1**
 
-No section is over the five-P1 cap.
+**1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
 ---
 
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**43 open · 42 resolved.**
+**44 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -48,6 +48,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
 **NH142** — NS11 recorded the mirror scrubbed and verified by re-read on 2026-08-24. A sweep at the start of this session found six occurrences of five live credentials back in it. Nothing un-scrubbed it: handoff re-runs the transcript exporter, which rewrites the mirror out of the local jsonl files, and those are deliberately never scrubbed. The mirror is scrubbed again and handoff now scrubs it immediately after every export and re-reads to confirm. ROTATION IS STILL THE FIX and only you can do it: 0 of the 9 credentials in NS11 are rotated as of this session, proven by the sweep still finding every current value in a leaked location.
+
+**NH169** — pnpm secrets:sweep found six credential VALUES in three transcripts on the Drive mirror. CONGRESS_API_KEY (twice - 8/17 and 8/18), FEC_API_KEY, PLURAL_API_KEY and LEGISCAN_API_KEY (all 8/17), and CENSUS_API_KEY (8/24, from another session that ran today). All three files have been scrubbed and re-read clean. RULING 127 is explicit that this is not enough: a value written to a synced folder must be assumed READ, so scrubbing is cleanup and ROTATION is the fix. That is yours - the accounts are yours and no session can do it. Rotate all five, then prove it the way RULING 95 asks: CALL the dead key and confirm it is refused, and CALL the new one and confirm it answers with the data requested. Both halves matter, because the Census host answers a dead key with HTTP 200 and an HTML page titled Invalid Key, so a status check alone reads a corpse as healthy. Nobody pasted these: the leak mechanism RULING 127 names is a tool printing a resolved URL back, and several of these APIs carry the key as a query parameter. This session neither caused nor touched the leaks; it found them at the ship gate and is routing them to you.
 
 **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these.
 

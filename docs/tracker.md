@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **238 open**, 406 resolved.
+- **239 open**, 406 resolved.
 - **40 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -561,7 +561,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**24 open · 139 resolved.**
+**25 open · 139 resolved.**
 
 ### P1
 
@@ -572,6 +572,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
+
+**NH144** — g9's check reads: 4 pin(s) in the stack; 4 fanned; every pair now clears 28px: false. The fan opens and every pin moves; what fails is the 28px separation assertion on a four-pin stack. ATTRIBUTED, not guessed: a worktree at ae5b178 — the head this session opened on, before any change here — was built, served and walked, and it fails the same check with byte-identical numbers. So the previous session's 0-regressions reading was taken against a different day's snapshot, where the pins that happened to collide were fewer. The likely cause is fanOffsets' radius against a stack of four rather than two or three, which is a geometry decision and a visual one; it is not a data defect and nothing a reader sees is wrong except that two fanned pins still overlap.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

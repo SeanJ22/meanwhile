@@ -308,3 +308,50 @@ test("P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in se
     "selection re-runs on venues again — 500 writes per data change",
   );
 });
+
+/**
+ * **THE REGRESSION P-001 ITSELF INTRODUCED**, found by `pnpm walk:all` and
+ * fixed before the session ended.
+ *
+ * Moving the pool from the filtered venues to ALL venues is the fix — and it
+ * left a hole at the other end. `applyVisibility` writes only the keys whose
+ * visibility CHANGED, so a marker created for a venue the current filter
+ * EXCLUDES was in neither loop: never written, `data-hidden` unset, and
+ * visible on the map. The pool was right and twenty pins were showing that
+ * should not have been.
+ *
+ * The counters could not see it, which is the lesson worth keeping: they count
+ * WRITES, and the defect was the absence of one.
+ */
+test("P-001 · a marker created for a FILTERED-OUT venue is hidden, not visible", () => {
+  const pool = createMarkerPool();
+  rebuildMarkerPool(pool, MAP, ALL, () => {}, FACTORY);
+  applyVisibility(pool, new Set(KEPT.map((v) => v.key)));
+
+  const hidden = [...pool.entries.values()].filter(
+    (e) => e.element.dataset.hidden === "true",
+  ).length;
+  const shown = [...pool.entries.values()].filter(
+    (e) => e.element.dataset.hidden === "false",
+  ).length;
+
+  assert.equal(shown, 480, "the visible venues must read hidden=false");
+  assert.equal(hidden, 20, "the filtered-out venues must read hidden=true, not unset");
+  assert.equal(
+    [...pool.entries.values()].filter((e) => e.element.dataset.hidden === undefined).length,
+    0,
+    "a marker with no data-hidden renders — that is the regression",
+  );
+});
+
+test("P-001 · a venue that arrives ALREADY filtered out never flashes visible", () => {
+  // The stricter case: the venue is created on a run where it is not visible.
+  // Nothing later hides it, so its initial state is the only thing that can.
+  const pool = createMarkerPool();
+  rebuildMarkerPool(pool, MAP, ALL, () => {}, FACTORY);
+  assert.equal(
+    pool.entries.get("venue-499")?.element.dataset.hidden,
+    "true",
+    "a freshly constructed marker must not be visible before visibility is applied",
+  );
+});

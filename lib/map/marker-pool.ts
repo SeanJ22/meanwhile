@@ -431,6 +431,31 @@ export function rebuildMarkerPool(
     }
 
     const element = factory.createElement(venue);
+    /*
+     * **A NEW MARKER IS HIDDEN UNTIL `applyVisibility` SAYS OTHERWISE** —
+     * found by `pnpm walk:all` on 2026-08-24, after P-001 shipped, and it is
+     * the regression P-001 itself introduced.
+     *
+     * The pool used to hold only the FILTERED venues, so every marker in it
+     * was by definition visible and an unset `data-hidden` was correct. P-001
+     * made the pool hold every venue in the data — which is the whole point —
+     * and `applyVisibility` writes only the keys whose visibility CHANGED. A
+     * marker created for a venue the current filter excludes was therefore in
+     * neither loop: never written, `data-hidden` unset, and **visible on the
+     * map**.
+     *
+     * The walk named it two ways at once: g9's fan check saw four pins in a
+     * stack where the filter should have left fewer, and the geometry
+     * assertion failed on a stack that should not have existed.
+     *
+     * Defaulting to hidden is correct at both ends. A venue the filter
+     * excludes stays hidden because nothing shows it; a venue it includes is
+     * written `false` on the next pass, because a fresh key is not in
+     * `previouslyVisibleKeys`. It is deliberately NOT counted as a visibility
+     * write — it is part of constructing the marker, and counting it would
+     * make the 500-to-480 assertion report creations as filter work.
+     */
+    element.dataset.hidden = "true";
     const entry: MarkerPoolEntry = {
       element,
       venue,

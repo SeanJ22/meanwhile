@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 233,
-    "named": 2271,
+    "files": 234,
+    "named": 2277,
     "dynamic": 6
   },
   "files": {
@@ -915,6 +915,17 @@
         "the client module exports ONLY what the browser reads",
         "the exported lists equal the derivation of the live manifest",
         "the manifest's generated artifacts are all committed on disk"
+      ],
+      "dynamic": 0
+    },
+    "tests/coverage-matrix.test.ts": {
+      "names": [
+        "RULING 149: the matrix is never rendered to a reader",
+        "an ARGUED absence carries its expiry, because it is a measurement with a shelf life",
+        "every column carries a cell for every candidate — no silent blanks",
+        "the CSV that ships has a cell state and a source for every fact column",
+        "the asymmetry flag is a fact about a CONTEST, never a score on a candidate",
+        "the matrix and the scoreboard read the SAME loop, not two copies of it"
       ],
       "dynamic": 0
     },

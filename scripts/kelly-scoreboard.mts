@@ -39,15 +39,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { today } from "./doc-dates.mjs";
 
-import {
-  KELLY_FIELDS,
-  absenceStands,
-  kellyFieldHeld,
-  type ArguedAbsence,
-  type KellyReading,
-  type FieldState,
-  type KellyField,
-} from "../lib/hunt/kelly-depth.ts";
+import { KELLY_FIELDS, type KellyReading, type KellyField } from "../lib/hunt/kelly-depth.ts";
+import { BALLOTS, kellyRows, loadKellyInputs } from "../lib/hunt/coverage-matrix.ts";
 
 const ROOT = process.cwd();
 
@@ -61,117 +54,29 @@ const ROOT = process.cwd();
  */
 const TODAY = today();
 
-interface Candidacy {
-  id: string;
-  contestId: string;
-  familyName: string;
-  givenName: string;
-}
-
 /**
- * WHICH BALLOT. Defaults to 07866, because RULING 143 is about 07866 and the
- * number this prints is the one that decides when Arizona starts.
+ * **THE LOADING AND THE LOOP MOVED TO `lib/hunt/coverage-matrix.ts`.**
+ * (2026-08-25, Item 12.)
  *
- * It takes an argument because the alternative is a SECOND scoreboard for New
- * Hampshire, and RULING 103 is explicit that a renamed copy of a function is a
- * duplicate implementation — the two would drift the first time one of them was
- * fixed.
+ * `pnpm matrix` must produce a Kelly verdict equal to this scoreboard's
+ * EXACTLY. Two programs computing one judgement is the thing that can disagree
+ * — RULING 103 — and `kellyFieldHeld`'s own note records that two such
+ * implementations already did disagree once here. So there is one loader and
+ * one loop, and both callers use them; the matrix does not agree with this
+ * scoreboard, it IS this scoreboard.
  */
-const BALLOTS: Record<string, { file: string; label: string; contacts?: string }> = {
-  "07866": {
-    file: "nj-morris-2026.json",
-    label: "07866 (Morris County, New Jersey)",
-    contacts: "nj-morris-2026-contacts.json",
-  },
-  "03255": { file: "nh-merrimack-2026.json", label: "03255 (Merrimack County, New Hampshire)" },
-};
-const ZIP = (process.argv.find((a) => a.startsWith("--zip=")) ?? "--zip=07866").slice("--zip=".length);
-const CHOSEN = BALLOTS[ZIP];
-if (!CHOSEN) {
+const ZIP = (process.argv.find((a) => a.startsWith("--zip=")) ?? "--zip=07866").slice(
+  "--zip=".length,
+);
+if (!BALLOTS[ZIP]) {
   console.error(`pnpm kelly --zip=<${Object.keys(BALLOTS).join("|")}>`);
   process.exit(2);
 }
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", CHOSEN.file), "utf8")) as {
-  contests: { id: string; title: string }[];
-  candidacies: Candidacy[];
-};
-
-const cards = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "candidate-cards-2026.json"), "utf8"),
-) as {
-  cards: Record<string, { photoUrl?: string | null; phone?: string | null; email?: string | null }>;
-};
-
-const links = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "candidate-links-2026.json"), "utf8"),
-) as { links: Record<string, { official?: { url: string }; campaign?: { url: string } }> };
-
-/* A contacts file is a per-zip artifact and not every zip has one; where it is
-   absent the card is the only source, which is a smaller claim honestly made. */
-const contactsPath = CHOSEN.contacts ? join(ROOT, "data", "ballot", CHOSEN.contacts) : null;
-const filedEmail = new Map<string, string | null>(
-  contactsPath && existsSync(contactsPath)
-    ? (JSON.parse(readFileSync(contactsPath, "utf8")) as {
-        contacts: { candidacyId: string; email?: string | null }[];
-      }).contacts.map((c) => [c.candidacyId, c.email ?? null])
-    : [],
-);
-
-const ABSENCE_FILE = join(ROOT, "data", "hunt", `argued-absences-${ZIP}.json`);
-const absences: ArguedAbsence[] = existsSync(ABSENCE_FILE)
-  ? (JSON.parse(readFileSync(ABSENCE_FILE, "utf8")) as { rows: ArguedAbsence[] }).rows
-  : [];
-const absenceFor = new Map<string, ArguedAbsence>();
-for (const a of absences) absenceFor.set(`${a.candidacyId}|${a.field}`, a);
-
-/**
- * The decision lives in `lib/hunt/kelly-depth.ts` and is shared with the absence
- * generator. Two implementations of one judgement is the thing that can
- * disagree, and these two did — see `kellyFieldHeld`'s own note.
- */
-function held(id: string, field: KellyField): { yes: boolean; evidence: string } {
-  return kellyFieldHeld(field, {
-    card: cards.cards[id],
-    links: links.links[id],
-    filedEmail: filedEmail.get(id) ?? null,
-    photoOnDisk: (url) => existsSync(join(ROOT, "public", url.replace(/^\//, ""))),
-  });
-}
-
-const rows: KellyReading[] = [];
-for (const c of ballot.candidacies) {
-  const fields = {} as Record<KellyField, FieldState>;
-  const owed: KellyField[] = [];
-  for (const f of KELLY_FIELDS) {
-    const h = held(c.id, f);
-    if (h.yes) {
-      fields[f] = { state: "HELD", evidence: h.evidence };
-      continue;
-    }
-    const a = absenceFor.get(`${c.id}|${f}`);
-    if (a) {
-      const verdict = absenceStands(a, TODAY);
-      if (verdict.stands) {
-        fields[f] = { state: "ARGUED_ABSENT", at: a.at, expiresOn: a.expiresOn };
-        continue;
-      }
-      fields[f] = { state: "OWED", why: verdict.why };
-      owed.push(f);
-      continue;
-    }
-    fields[f] = { state: "OWED", why: h.evidence };
-    owed.push(f);
-  }
-  rows.push({
-    candacyId: c.id,
-    subject: `${c.givenName} ${c.familyName}`.replace(/\s+/g, " ").trim(),
-    contestId: c.contestId,
-    fields,
-    done: owed.length === 0,
-    owed,
-  });
-}
+const inputs = loadKellyInputs(ROOT, ZIP);
+const ballot = { contests: inputs.contests, candidacies: inputs.candidacies };
+const rows: KellyReading[] = kellyRows(inputs, TODAY);
+const absencesOnFile = inputs.absenceCount;
 
 if (process.argv.includes("--json")) {
   console.log(JSON.stringify({ measuredOn: TODAY, total: rows.length, rows }, null, 1));
@@ -179,7 +84,7 @@ if (process.argv.includes("--json")) {
 }
 
 const done = rows.filter((r) => r.done).length;
-console.log(`KELLY DEPTH at ${CHOSEN.label} — RULING 143, measured ${TODAY}\n`);
+console.log(`KELLY DEPTH at ${inputs.label} — RULING 143, measured ${TODAY}\n`);
 console.log(
   "  The five Kelly fields are photo, phone, contact, a specific verified page and a\n" +
     "  campaign site. That is NOT the four-field denominator earlier NH reports used\n" +
@@ -205,7 +110,7 @@ const voided = rows.flatMap((r) =>
   }).map((f) => ({ subject: r.subject, field: f, why: (r.fields[f] as { why: string }).why })),
 );
 console.log(
-  `\n  absence records on file: ${absences.length} · returned to OWED as void or stale: ${voided.length}`,
+  `\n  absence records on file: ${absencesOnFile} · returned to OWED as void or stale: ${voided.length}`,
 );
 for (const v of voided.slice(0, 20)) console.log(`    ${v.subject} · ${v.field} · ${v.why.slice(0, 90)}`);
 

@@ -733,9 +733,32 @@ export const CONTEXT_REPO_PATH = "docs/context.md";
 export async function writeContext(mirrorDir, options) {
   const built = await buildContext(options);
 
-  // PRIMARY — the repo copy. Written first, and never guarded by a try/catch:
-  // if this fails the run has not produced the thing it exists to produce.
-  writeFileSync(join(ROOT, CONTEXT_REPO_PATH), built.text, "utf8");
+  /*
+   * **`mirrorOnly` — THE POST-SHIP REWRITE, AND WHY IT SKIPS THE REPO.**
+   * (2026-08-25, Item 16.)
+   *
+   * `handoff` regenerates this file AFTER the merge, so it can carry the git
+   * facts the merge produced. That write landed in the working tree, so every
+   * session in this repo's history ENDED WITH A DIRTY TREE — and the next
+   * branch switch ambushed Sean with an uncommitted-changes dialog. He has
+   * hand-cleared that jam three times.
+   *
+   * The repo copy is still PRIMARY and is still written first (RULING 108) —
+   * it is written BEFORE the ship, so it travels inside the pull request and a
+   * session can always read it from a clone. What the post-ship pass updates
+   * is the MIRROR, which is untracked and is where the author reads it.
+   *
+   * What this costs, stated rather than hidden: the committed copy does not
+   * name the merge SHA. That is the same regress the merge-cadence rule
+   * already documents — a document cannot name the commit that contains it —
+   * and chasing it is what would merge forever.
+   */
+  if (!options?.mirrorOnly) {
+    // PRIMARY — the repo copy. Written first, and never guarded by a
+    // try/catch: if this fails the run has not produced the thing it exists
+    // to produce.
+    writeFileSync(join(ROOT, CONTEXT_REPO_PATH), built.text, "utf8");
+  }
 
   // SECOND — the author's mirror. Best-effort by design.
   let mirrored = false;

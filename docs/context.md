@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 166 recorded
+## Rulings — 167 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -436,6 +436,7 @@ from. Each entry there names what it supersedes.
 - RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch
 - RULING 152 — a reader-facing DONE names the production deploy that is serving it
 - RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
+- RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
 
 ## P0 tracker rows — 93 of 456 rows
 

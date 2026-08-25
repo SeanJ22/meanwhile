@@ -6292,19 +6292,51 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   margin-top: 12px;
 }
 
+/* ---------------------------------------------------------------------------
+   BC-21 (2026-08-25) — THE PILL IS THE SAME BAR AS THE SECTIONS AROUND IT.
+
+   The author: *pill width matches Voting record and Campaign money exactly;
+   navy and white stay.* On `09-06-08` it sits under six full-width section
+   bars as a short navy tab about a third their length, reading as a stray
+   control rather than as the next thing in the list.
+
+   So every geometric value below is `.card-section-header`'s, deliberately and
+   line for line — width, min-height, padding, radius, gap, alignment. What
+   does NOT come from it is the COLOUR, which is the whole point of the
+   control: a filled navy bar among outline bars reads as the one thing a
+   reader is invited to DO, without a word of instruction.
+
+   `.speak-fine-print` below is the other half of BC-19.
+   --------------------------------------------------------------------------- */
 .speak-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 14px;
   border: 1px solid var(--speak-navy);
   background: var(--speak-navy);
   color: var(--speak-on-navy);
   border-radius: 999px;
-  padding: 10px 16px;
-  min-height: 40px;
-  font-size: 0.8125rem;
-  font-weight: 600;
+  /* The section titles' type, so the row reads as one of them. */
+  font-size: 0.875rem;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  text-align: left;
   cursor: pointer;
   white-space: nowrap;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+/* BC-19: the fine print under the send row. Quiet, and it is the only place
+   the panel now states the no-name commitment — /transparency carries it in
+   full. */
+.speak-fine-print {
+  margin-top: 8px;
+  font-size: 0.625rem;
+  line-height: 1.5;
+  color: var(--text-dim);
 }
 
 .speak-pill:hover,

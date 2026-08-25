@@ -723,8 +723,34 @@ export function EntityModal({
                   if (!blurb) return null;
                   return (
                     <>
+                      {/*
+                        **BC-17 (2026-08-25) — THE HEADING BRANCHES ON WHETHER
+                        THE DIVISION IS A GOVERNMENT OR A CONSTITUENCY.**
+
+                        The author read "What the person who represents this
+                        district does" off Tucson Unified District on
+                        `09-04-04`. The sentence is not wrong in general, and
+                        the note on `representedByOfficeTitle` above explains
+                        why it was chosen: a CONGRESSIONAL district is not a
+                        government, it is a constituency, and the useful thing
+                        to know about it is what the person elected from it can
+                        actually do.
+
+                        A SCHOOL DISTRICT is a government. It has a board, it
+                        meets, it sets a budget — and the paragraph underneath
+                        this heading says exactly that. So the heading
+                        described a person while its own prose described a
+                        body.
+
+                        `runsSomething` is the discriminator this card already
+                        uses a few lines away to decide whether to render a
+                        "Who runs it" section at all. Asking it here means the
+                        two answers cannot disagree about the same division.
+                      */}
                       <PopupSectionLabel>
-                        What the person who represents this district does
+                        {runsSomething(subject.divisionKind)
+                          ? "What this body does"
+                          : "What the person who represents this district does"}
                       </PopupSectionLabel>
                       <p className="mt-1.5 text-[0.75rem] leading-relaxed text-paper-dim">
                         {blurb.text}
@@ -853,7 +879,22 @@ export function EntityModal({
         */}
         {!subject.bodyCard && (
           <div className="account-modal-body pt-0">
+            {/*
+              **BC-20 (2026-08-25) — A TAB SWITCH COLLAPSES IT TO ITS PILL.**
+
+              The panel sits BELOW the tab strip and stays mounted across every
+              tab, which is deliberate — the author's placement is that it is
+              reachable from anywhere on the card. What it must not do is stay
+              OPEN across a tab change: a reader who moves to Sources has
+              stopped writing, and half-typed text left under a heading they
+              are no longer looking at is the surface deciding it knows better.
+
+              Keying it on the tab is the whole mechanism. React unmounts and
+              remounts on a changed key, so `open` returns to false with no
+              handler, no effect, and nothing for a future tab to forget.
+            */}
             <SpeakYourMind
+              key={tab}
               subjectType={subject.subjectKind}
               subjectId={subject.subjectId}
               subject={subject.title}

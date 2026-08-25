@@ -2856,12 +2856,36 @@ function bodyHomepageFacts(
   coverage: CoverageSummary | null,
   ocdId: string,
 ): { label: string; value: React.ReactNode }[] {
+  /*
+   * **BC-24 (2026-08-25) — DEDUPE ON WHAT THE READER SEES, NOT ON THE STORED
+   * STRING.**
+   *
+   * The author's `09-18-31`: Rockaway township's Overview renders
+   * `OFFICIAL SITE  rockawaytownship.org →` **five times**.
+   *
+   * The dedupe was here and it was working exactly as written — it just
+   * measured the wrong thing. It keyed on the raw `homepageUrl`, and a
+   * township's five bodies each carry a URL that differs by a `www.`, a
+   * trailing slash, or a path. Five DISTINCT keys, one identical rendered
+   * value, five rows a reader cannot tell apart.
+   *
+   * That is the distinctness rule pointed the other way. `CLAUDE.md` says
+   * identical payloads across distinct keys are presumed broken; here the keys
+   * were distinct and the PAYLOAD was identical, and nothing was asking. The
+   * only key that can be right is the one the reader can actually
+   * discriminate on — which is the rendered host, because the host is all this
+   * row renders.
+   *
+   * **A path is deliberately NOT part of the key.** Two bodies pointing at
+   * `/council` and `/planning-board` on one host still produce two rows
+   * reading `rockawaytownship.org`, which is the defect wearing a
+   * justification. Where a body's own page matters, it is on that body's own
+   * card, which its row opens.
+   */
   const seen = new Set<string>();
   const rows: { label: string; value: React.ReactNode }[] = [];
   for (const body of coverage?.bodies ?? []) {
     if (body.ocdId !== ocdId || !body.homepageUrl) continue;
-    if (seen.has(body.homepageUrl)) continue;
-    seen.add(body.homepageUrl);
     let host: string;
     try {
       host = new URL(body.homepageUrl).hostname.replace(/^www\./, "");
@@ -2869,6 +2893,8 @@ function bodyHomepageFacts(
       // A malformed stored URL renders no row rather than a broken link.
       continue;
     }
+    if (seen.has(host)) continue;
+    seen.add(host);
     rows.push({
       label: "Official site",
       value: (

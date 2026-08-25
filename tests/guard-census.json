@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 232,
-    "named": 2262,
+    "named": 2263,
     "dynamic": 6
   },
   "files": {
@@ -2933,7 +2933,8 @@
         "BC-11 RULE 4: nothing in the triage path can contact anybody",
         "BC-11 RULE 4: the intake limiter's attestation applies to this surface",
         "BC-11: nothing a reader writes here is rendered back to any reader",
-        "BC-11: the pill, the placeholder and the framing are the author's words"
+        "BC-11: the pill, the placeholder and the framing are the author's words",
+        "BC-19: the fine print says MAY and says why there is no name"
       ],
       "dynamic": 0
     },

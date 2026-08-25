@@ -3618,3 +3618,55 @@ Operationally:
 - **An assertion over stored state is not a verification of a rendered
   outcome.** A history-state round-trip is not a restored viewport, and only a
   capture read as an image is (the read-as-an-image rule).
+
+### RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
+
+(Adopted 2026-08-25, the author's ruling on `BC-19`. **It amends RULE 2 of
+RULING 141 and nothing else** — the other three rules of that ruling, and every
+other clause of rule 2, are untouched. RULING 99 is the procedure this follows.)
+
+**The disclosure PARAGRAPH comes out of the panel. The no-name commitment
+stays, enforced architecturally, stated in fine print at the box and in full on
+the transparency page.**
+
+*What RULING 141 rule 2 said, and it is quoted rather than paraphrased because
+this amends it:* "HONEST DISCLOSURE AT THE BOX. One line, plain language,
+before the reader types: what is written may be shared — without a name,
+because we do not hold one — with campaigns, organizations and researchers."
+
+*What changes:* the full sentence no longer renders inside the panel.
+
+*What does not change, and this is the load-bearing half:*
+
+- **The no-name commitment is ARCHITECTURE, not a promise.** `speak_your_mind`
+  has no column that could hold a name — no account reference, no email, no
+  address — which is the fact the paragraph was asserting. A schema with
+  nowhere to put a name cannot be talked out of it, and RULING 132's identity
+  boundary is asserted over value spaces rather than column names, so it cannot
+  be smuggled in under another heading either.
+- **"MAY", never "will."** The fine print carries it, for the same reason the
+  threat notice does: a stated commitment that is not honoured on every
+  instance is worse than a reserved right.
+- **The THREAT NOTICE does not move.** `CLAUDE.md` requires it adjacent to any
+  free-text field about named real people, and `BC-19` says nothing about it.
+- **The buyer classes are still named out loud**, in full, on
+  `/transparency` — campaigns, organizations and researchers, rather than "our
+  partners".
+
+*And it closes a gap that had nothing to do with the author's note.* The
+transparency page **had no Speak Your Mind section at all.** RULING 141 shipped
+a fourth reader-collection store on 2026-08-24, and the coupling rule — the
+transparency page changes in the same commit that ships the feature — was not
+met. Moving the disclosure is what made anyone look. The page now carries what
+is stored, that it is stored without a name and why, who it may be shared with,
+that the text is redacted and flagged for self-disclosed identifiers before
+storage, and that nothing written there is displayed back to anybody.
+
+*Why this is not a weakening.* The disclosure rule exists so a reader is not
+asked for something before being told what happens to it. A reader still is
+told, at the box, before typing. What is gone is a three-line paragraph
+standing between a person and a text field they had already decided to use —
+and the reader-friction rule counts that as a defect with the same standing as
+a wrong number, with exactly three exceptions, of which "consent to collection"
+is one. The fine print IS that consent line; the paragraph was the essay around
+it.

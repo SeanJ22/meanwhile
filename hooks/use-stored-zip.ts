@@ -3,7 +3,8 @@
 import { useCallback, useSyncExternalStore } from "react";
 
 import { recordRecentZip } from "@/hooks/use-recent-zips";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { lookupIn, type CentroidTable } from "@/lib/geo/zcta-core";
+import { loadZctaTable } from "@/lib/geo/zcta-table";
 import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**
@@ -73,14 +74,65 @@ function readRaw(): string | null {
   }
 }
 
+/**
+ * **P-002 · THE CENTROID TABLE ARRIVES, IT IS NOT ALREADY HERE.**
+ * (Performance audit of `336a3eb`, remediated 2026-08-24.)
+ *
+ * This hook was the last static importer of `lib/geo/zcta.ts` in the client
+ * graph, and one static importer is all it takes: 960,770 bytes of centroids —
+ * 32.5% of the landing page's initial JavaScript, more than MapLibre — landed
+ * in the initial bundle to answer one question on one code path.
+ *
+ * Converting the three components that resolve a typed zip was not enough, and
+ * the measurement said so plainly: the rebuild moved 2,955,835 → 2,956,534 raw
+ * bytes. UP. The table had a second async home and its old one, and the change
+ * was worth nothing until this line moved too. **A change kept because it
+ * sounded right, without the rebuilt number falling, is the thing the audit's
+ * measurement law exists to forbid.**
+ *
+ * ## Why PENDING is the honest answer while it loads, and not a regression
+ *
+ * `useSyncExternalStore` needs a synchronous snapshot, and the stored payload
+ * holds ONLY the zip — deliberately, so a Census vintage update that moves a
+ * centroid cannot leave a stale coordinate behind (the comment below is that
+ * decision, and it is untouched).
+ *
+ * So there is a moment where the zip is known and the coordinate is not, and
+ * the type already has a state for it: `restored: false`, which is exactly
+ * what the SERVER snapshot returns on every render today. The entry notice
+ * showing for that moment is the same state a reader already sees between the
+ * server render and hydration, and the surfaces downstream handle it because
+ * they must handle SSR.
+ *
+ * The alternative was writing the coordinates into `sessionStorage` and
+ * trusting them, which would have removed the pending state by removing the
+ * re-resolution — trading a correctness decision somebody made on purpose for
+ * a few hundred milliseconds of restore. Not that.
+ */
+let centroids: CentroidTable | null = null;
+let tableRequested = false;
+
+function ensureTable(): void {
+  if (tableRequested) return;
+  tableRequested = true;
+  void loadZctaTable().then((table) => {
+    centroids = table.centroids;
+    // Invalidate the identity cache and republish: every subscriber's snapshot
+    // moves from PENDING to the resolved location in one pass.
+    cachedRaw = undefined;
+    cachedSnapshot = PENDING;
+    for (const listener of listeners) listener();
+  });
+}
+
 function parse(raw: string | null): StoredLocation | null {
-  if (!raw) return null;
+  if (!raw || !centroids) return null;
 
   try {
     const parsed = JSON.parse(raw) as Partial<StoredPayload>;
     // Re-resolve rather than trusting stored coordinates: a Census vintage
     // update moves centroids, and the zip is the only durable part.
-    return parsed.zip ? lookupZcta(parsed.zip) : null;
+    return parsed.zip ? lookupIn(centroids, parsed.zip) : null;
   } catch {
     return null;
   }
@@ -95,6 +147,13 @@ const subscribe = (onStoreChange: () => void) =>
   subscribeToStorage(listeners, onStoreChange);
 
 function getSnapshot(): LocationSnapshot {
+  ensureTable();
+
+  // P-002: nothing can be RESTORED before the table that resolves it is here.
+  // Answering `restored: true, location: null` would tell every surface the
+  // reader has no stored zip, which is a claim rather than a wait.
+  if (!centroids) return PENDING;
+
   const raw = readRaw();
 
   if (raw !== cachedRaw || cachedSnapshot === PENDING) {

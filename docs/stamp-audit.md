@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-24 (America/Phoenix). 104 stamp(s) audited.
+Run on 2026-08-24 (America/Phoenix). 113 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -113,6 +113,15 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
 | RULING 115 — A DRILL IS NOT A FAILURE | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
 | RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
+| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | 2026-08-24 | **NOT FOUND** | — | — |
+| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | 2026-08-24 | **NOT FOUND** | — | — |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
@@ -127,17 +136,17 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
 | THE BUSINESS CONSTRAINTS | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
 | RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | 2026-08-24 | 2026-08-24 | 0 | `e8fe6b0` Sean's rulings of 2026-08-24: the faces ship, the store moves out, and the sweep runs |
-| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | 2026-08-24 | **NOT FOUND** | — | — |
+| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
+| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
+| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
+| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
+| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
 
 ## What the deltas say
 
 - **3 stamp(s) disagree with git history.**
 - **0 stamp(s) are still later than today** (2026-08-24) — a date that had not happened when it was written.
-- **5 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **9 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -251,6 +260,15 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | none | 1 |
 | RULING 115 — A DRILL IS NOT A FAILURE | none | 1 |
 | RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | none | 1 |
+| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | none | 0 |
+| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | none | 0 |
+| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | none | 0 |
+| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | none | 0 |
+| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | none | 0 |
+| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | none | 0 |
+| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | none | 0 |
+| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | none | 0 |
+| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | none | 0 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | none | 1 |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | none | 1 |
@@ -265,11 +283,11 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 122 — A PARTY-HOSTED CANDIDATE PAGE IS THE CANDIDA… | none | 1 |
 | THE BUSINESS CONSTRAINTS | none | 1 |
 | RULING 120 — EQUAL SOLICITATION IS THE OBLIGATION; BUYER … | none | 1 |
-| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | none | 0 |
-| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | none | 0 |
-| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | none | 0 |
-| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | none | 0 |
-| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | none | 0 |
+| FOUR RULINGS OF 2026-08-24 — THE MONEY, THE DEPLOYS, AND … | none | 1 |
+| RULING 124 — A COMMIT THAT CANNOT CHANGE WHAT A READER SE… | none | 1 |
+| RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | none | 1 |
+| RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | none | 1 |
+| RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and
 the recovery is unambiguous. Anything higher means the string was touched more

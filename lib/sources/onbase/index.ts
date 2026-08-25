@@ -123,10 +123,15 @@ export function makeOnBaseSource(
       notConfigured: 0,
     };
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one landing page and carries the whole upcoming list.
+    let considered = 0;
+
     for (const { wiring, html, collectedAt } of raw) {
       const baseUrl = wiring.config.baseUrl;
 
       for (const row of parseOnBaseRows(html, baseUrl)) {
+        considered += 1;
         const clock = wallClock(row.dateText);
         if (!clock) {
           drops.unplaceableInTime++;
@@ -180,7 +185,9 @@ export function makeOnBaseSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
+      logicalInput: considered,
+    });
   };
 
   return {

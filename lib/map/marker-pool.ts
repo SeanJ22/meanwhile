@@ -33,12 +33,68 @@ export interface MarkerPoolEntry {
   marker: Marker;
   element: HTMLButtonElement;
   venue: Venue;
+  /**
+   * P-004 · what this pin's appearance was last rendered FROM.
+   *
+   * `rebuildMarkerPool` used to call `updateMarkerIcon` and `setLngLat` on
+   * every surviving entry on every run, whether or not anything about the
+   * venue had changed — several DOM writes and a MapLibre reposition per pin,
+   * hundreds of times, to arrive back where the pin already was. Comparing a
+   * signature first is the same diff the visibility pass has always done, one
+   * layer over.
+   */
+  renderedSignature: string;
+  renderedAt: { lng: number; lat: number };
+}
+
+/**
+ * **P-001 / P-004 · WHAT THE POOL ACTUALLY DID, COUNTED.**
+ * (Performance audit of `336a3eb`, remediated 2026-08-24.)
+ *
+ * The module's own doc says a filter narrowing 500 pins to 480 does 20 DOM
+ * writes. Nothing measured that, and the wiring above it made it false: the
+ * canvas passed FILTERED venues into the pool, so twenty filtered-out venues
+ * read as vanished data and their markers were destroyed — then recreated when
+ * the filter was reversed.
+ *
+ * A documented optimisation the wiring bypasses is the chromium-pin shape, and
+ * the answer is the same one: **observe the step's product at the step**
+ * (RULING 113). Visual equivalence cannot tell a reused marker from a
+ * recreated one; a counter can, and the tests assert the counts rather than
+ * the look.
+ *
+ * Cumulative for the life of the pool. `resetPoolOps` zeroes them, which is
+ * what a test does between the two halves of a comparison.
+ */
+export interface PoolOps {
+  /** Markers constructed and added to the map. */
+  created: number;
+  /** Markers removed from the map and dropped from the pool. */
+  removed: number;
+  /** `updateMarkerIcon` calls — several DOM writes each. */
+  iconWrites: number;
+  /** `setLngLat` calls. */
+  positionWrites: number;
+  /** Elements whose `data-hidden` changed. */
+  visibilityWrites: number;
+  /** Elements whose `data-selected` changed. */
+  selectionWrites: number;
 }
 
 export interface MarkerPool {
   entries: Map<string, MarkerPoolEntry>;
   /** Keys visible after the last apply. The diff basis. */
   previouslyVisibleKeys: Set<string>;
+  /**
+   * P-004 · the key `applySelection` last wrote `true` for.
+   *
+   * Selection used to write `dataset.selected` on EVERY pool entry — 500
+   * writes to select one pin, and again to deselect it. Holding the previous
+   * key turns that into at most two.
+   */
+  selectedKey: string | null;
+  /** P-001 / P-004 · see {@link PoolOps}. */
+  ops: PoolOps;
   /**
    * The keys currently fanned out (M19), or empty. At most one group is fanned
    * at a time: a second fan while the first is open would put the new
@@ -48,11 +104,46 @@ export interface MarkerPool {
   spiderfiedKeys: Set<string>;
 }
 
+export function zeroPoolOps(): PoolOps {
+  return {
+    created: 0,
+    removed: 0,
+    iconWrites: 0,
+    positionWrites: 0,
+    visibilityWrites: 0,
+    selectionWrites: 0,
+  };
+}
+
+/** Zero the counters. A test's "before" line; nothing in the app calls it. */
+export function resetPoolOps(pool: MarkerPool): void {
+  pool.ops = zeroPoolOps();
+}
+
+/**
+ * Everything about a pin's appearance that `updateMarkerIcon` reads — P-004.
+ *
+ * Derived from the venue rather than measured off the DOM, so it can be
+ * compared BEFORE any write happens. It has to cover every input the icon pass
+ * uses, or a real change would be skipped: the meeting count, whether every
+ * meeting has concluded, and which levels of government meet here.
+ */
+export function renderedSignature(venue: Venue): string {
+  const levels = LEVEL_ORDER.filter((level) =>
+    venue.meetings.some((m) => levelForMeeting(m) === level),
+  );
+  const concluded =
+    venue.meetings.length > 0 && venue.meetings.every((m) => m.status === "CONCLUDED");
+  return [venue.name, venue.meetings.length, concluded ? "c" : "o", levels.join(",")].join("|");
+}
+
 export function createMarkerPool(): MarkerPool {
   return {
     entries: new Map(),
     previouslyVisibleKeys: new Set(),
     spiderfiedKeys: new Set(),
+    selectedKey: null,
+    ops: zeroPoolOps(),
   };
 }
 
@@ -268,11 +359,38 @@ export function reconcileKeys(
  * `applyVisibility`'s job, and conflating the two is what makes the naive
  * implementation slow.
  */
+/**
+ * How a pin is BUILT — injectable, and injectable for one stated reason.
+ *
+ * P-001 asks for the pool's behaviour to be proven with operation counters
+ * rather than with visual equivalence, and every other decision this module
+ * makes is already testable: `reconcileKeys` is pure, the signature comparison
+ * is pure, and visibility and selection touch nothing but `element.dataset`.
+ * The one thing that is not is CONSTRUCTION, which needs `document` and a real
+ * MapLibre `Marker` — and the create/remove counts are precisely the numbers
+ * the finding is about.
+ *
+ * So the two calls are named here and default to the real ones. Nothing in the
+ * app passes this; a test does, and what it passes is a counter's worth of
+ * object rather than a DOM.
+ */
+export interface MarkerFactory {
+  createElement: (venue: Venue) => HTMLButtonElement;
+  createMarker: (element: HTMLButtonElement, venue: Venue, map: MapLibreMap) => Marker;
+}
+
+const REAL_MARKERS: MarkerFactory = {
+  createElement: createMarkerElement,
+  createMarker: (element, venue, map) =>
+    new Marker({ element, anchor: "center" }).setLngLat([venue.lng, venue.lat]).addTo(map),
+};
+
 export function rebuildMarkerPool(
   pool: MarkerPool,
   map: MapLibreMap,
   venues: Venue[],
   onSelect: (venue: Venue) => void,
+  factory: MarkerFactory = REAL_MARKERS,
 ): void {
   const { remove } = reconcileKeys(pool.entries.keys(), venues.map((v) => v.key));
 
@@ -280,6 +398,7 @@ export function rebuildMarkerPool(
     const entry = pool.entries.get(key);
     if (!entry) continue;
     entry.marker.remove();
+    pool.ops.removed += 1;
     pool.entries.delete(key);
     pool.previouslyVisibleKeys.delete(key);
     // A removed pin cannot stay in the fanned set: `applySpiderfy` would
@@ -292,21 +411,34 @@ export function rebuildMarkerPool(
     const existing = pool.entries.get(venue.key);
 
     if (existing) {
-      // Same pin, possibly different contents. Mutate, never replace.
+      // Same pin, possibly different contents. Mutate, never replace — and
+      // P-004: only where something actually changed. This used to write the
+      // icon and the position on every surviving entry on every run, to
+      // arrive back where the pin already was.
       existing.venue = venue;
-      updateMarkerIcon(existing.element, venue);
-      existing.marker.setLngLat([venue.lng, venue.lat]);
+      const signature = renderedSignature(venue);
+      if (signature !== existing.renderedSignature) {
+        updateMarkerIcon(existing.element, venue);
+        existing.renderedSignature = signature;
+        pool.ops.iconWrites += 1;
+      }
+      if (existing.renderedAt.lng !== venue.lng || existing.renderedAt.lat !== venue.lat) {
+        existing.marker.setLngLat([venue.lng, venue.lat]);
+        existing.renderedAt = { lng: venue.lng, lat: venue.lat };
+        pool.ops.positionWrites += 1;
+      }
       continue;
     }
 
-    const element = createMarkerElement(venue);
+    const element = factory.createElement(venue);
     const entry: MarkerPoolEntry = {
       element,
       venue,
-      marker: new Marker({ element, anchor: "center" })
-        .setLngLat([venue.lng, venue.lat])
-        .addTo(map),
+      renderedSignature: renderedSignature(venue),
+      renderedAt: { lng: venue.lng, lat: venue.lat },
+      marker: factory.createMarker(element, venue, map),
     };
+    pool.ops.created += 1;
 
     // Reads `entry.venue` at click time rather than closing over `venue`, so a
     // pin whose contents were updated in place does not hand back a stale one.
@@ -337,6 +469,7 @@ export function applyVisibility(
     const entry = pool.entries.get(key);
     if (entry) {
       entry.element.dataset.hidden = "true";
+      pool.ops.visibilityWrites += 1;
       touched++;
     }
   }
@@ -346,6 +479,7 @@ export function applyVisibility(
     const entry = pool.entries.get(key);
     if (entry) {
       entry.element.dataset.hidden = "false";
+      pool.ops.visibilityWrites += 1;
       touched++;
     }
   }
@@ -354,14 +488,43 @@ export function applyVisibility(
   return touched;
 }
 
-/** Selection is a data attribute, so it survives re-renders and filter passes. */
+/**
+ * Selection is a data attribute, so it survives re-renders and filter passes.
+ *
+ * **P-004 · DIFFED, NOT SWEPT.** This used to write `dataset.selected` on every
+ * entry in the pool — 500 writes to select one pin — and the canvas re-ran it
+ * whenever `venues` changed, so a filter keystroke swept the whole pool for a
+ * selection that had not moved.
+ *
+ * Two writes at most now: the key that was true goes false, the new one goes
+ * true. It returns the number written, for the same reason `applyVisibility`
+ * does — a diff that stops diffing is invisible unless something counts.
+ */
 export function applySelection(
   pool: MarkerPool,
   selectedKey: string | null,
-): void {
-  for (const [key, entry] of pool.entries) {
-    entry.element.dataset.selected = String(key === selectedKey);
+): number {
+  if (pool.selectedKey === selectedKey) return 0;
+
+  let written = 0;
+  if (pool.selectedKey !== null) {
+    const previous = pool.entries.get(pool.selectedKey);
+    if (previous) {
+      previous.element.dataset.selected = "false";
+      pool.ops.selectionWrites += 1;
+      written += 1;
+    }
   }
+  if (selectedKey !== null) {
+    const next = pool.entries.get(selectedKey);
+    if (next) {
+      next.element.dataset.selected = "true";
+      pool.ops.selectionWrites += 1;
+      written += 1;
+    }
+  }
+  pool.selectedKey = selectedKey;
+  return written;
 }
 
 export function destroyMarkerPool(pool: MarkerPool): void {
@@ -369,4 +532,5 @@ export function destroyMarkerPool(pool: MarkerPool): void {
   pool.entries.clear();
   pool.previouslyVisibleKeys.clear();
   pool.spiderfiedKeys.clear();
+  pool.selectedKey = null;
 }

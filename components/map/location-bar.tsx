@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
-import { resolveZip } from "@/lib/geo/zcta";
+import { resolveZipAsync, warmZctaTable } from "@/lib/geo/zcta-table";
 
 import { ZipComb } from "./zip-comb";
 
@@ -41,8 +41,13 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [editing]);
 
-  function submit() {
-    const result = resolveZip(draft);
+  // P-002 · the table arrives while the reader is typing, not before paint.
+  useEffect(() => {
+    if (editing) warmZctaTable();
+  }, [editing]);
+
+  async function submit() {
+    const result = await resolveZipAsync(draft);
     if (!result.ok) {
       setError(MESSAGES[result.reason]);
       return;
@@ -108,7 +113,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
           setDraft(next);
           if (error) setError(null);
         }}
-        onSubmit={submit}
+        onSubmit={() => void submit()}
         invalid={Boolean(error)}
         describedBy={error ? "location-bar-error" : undefined}
         autoFocus
@@ -121,7 +126,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
       )}
 
       <div className="mt-3 flex gap-2">
-        <Button onClick={submit} size="sm" disabled={draft.length !== 5} className="flex-1">
+        <Button onClick={() => void submit()} size="sm" disabled={draft.length !== 5} className="flex-1">
           Show meetings
         </Button>
         <Button variant="outline" size="sm" onClick={() => setEditing(false)}>

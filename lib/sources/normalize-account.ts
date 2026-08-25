@@ -29,15 +29,20 @@ import type { Meeting } from "./types.ts";
  * - The composite already routes a throw from `normalizeWithDrops` to `JOB`,
  *   which turns the run red rather than carrying the emptiness onto a page.
  *
- * ## What it deliberately does NOT require
+ * ## What THIS check does not require — and what the one below it does
  *
- * Full accounting — `meetings + drops === input` — is not the rule, because it
- * is false of honest adapters: one `.ics` document is one raw row and twenty
- * meetings, one schedule page is one raw row and nine sittings. The invariant
- * is narrower and exactly matches the defect: **documents in hand, nothing out,
+ * The zero-row check is narrow on purpose: **documents in hand, nothing out,
  * and nothing dropped.** A source that fetched and dropped everything has
  * already said why, and is left alone. A source that fetched nothing has an
  * empty upstream, which the fetch layer is the right place to judge.
+ *
+ * This paragraph used to continue: *full accounting is not the rule, because it
+ * is false of honest adapters — one `.ics` document is one raw row and twenty
+ * meetings.* **That observation was correct and the conclusion drawn from it
+ * was wrong**, and A-002 is what the gap cost. Documents and events being
+ * different units is a reason to count in the unit the disposition happens in,
+ * not a reason to stop counting. The conservation contract below does exactly
+ * that, and it never compares a document count with an event count.
  *
  * ## The honest limit
  *
@@ -55,7 +60,209 @@ import type { Meeting } from "./types.ts";
 export const ACCOUNTED: unique symbol = Symbol.for("wtp.normalize.accounted");
 
 /** A normalize result that went through {@link accountedNormalize}. */
-export type Accounted<R> = R & { readonly [ACCOUNTED]: true };
+export type Accounted<R> = R & {
+  readonly [ACCOUNTED]: true;
+  /** What the conservation check was given and what it concluded. */
+  readonly accounting: ConservationRecord;
+};
+
+/* ======================================================================== *
+ *  A-002 / S-001 · CONSERVATION, NOT "SOMETHING WAS DROPPED"
+ * ======================================================================== */
+
+/**
+ * **ONE RECORDED DROP MAY NOT LAUNDER NINETY-NINE DISAPPEARANCES.**
+ *
+ * A-002 and S-001, from the external correctness audit of `336a3eb`,
+ * remediated 2026-08-24. Reproduced before it was fixed: the auditor's
+ * adversarial case — 100 logical inputs, 0 output, `drops: {malformed: 1}` —
+ * was branded and returned clean.
+ *
+ * The cause was a BOOLEAN. `accountedNormalize` asked `droppedAny`, and
+ * `droppedAny` cannot tell one drop from ninety-nine. It was the right question
+ * for RULING 43, which is about a pass that produced NOTHING; it is silent
+ * about a pass that produced SOME, which is precisely RULING 100's partial —
+ * *a total that reconciles is not a total that is correct*.
+ *
+ * ## The invariant, and why it is at the LOGICAL-RECORD layer
+ *
+ * The old doc comment on this module argued against full accounting, and its
+ * reasoning was sound as far as it went: *one `.ics` document is one raw row
+ * and twenty meetings*, so `meetings.length + drops === input.length` is false
+ * of every honest adapter. **The conclusion drawn from it was the wrong one.**
+ * The answer to "documents and events are different units" is to count in the
+ * unit the disposition happens in, not to abandon counting.
+ *
+ * So the pass declares how many LOGICAL RECORDS it considered — candidate
+ * events, agenda rows, calendar entries, whatever the thing is that either
+ * becomes a meeting or does not — and every one of them has exactly one
+ * disposition:
+ *
+ *     produced + dropped + outOfWindow + duplicates === logicalInput
+ *
+ * Exactly. Not at least, not approximately. A record that is none of those four
+ * things vanished, and a vanished record is the defect this exists to name.
+ *
+ * **Document count is never compared with event count**, and that is why
+ * `unretrieved` is NOT a term in the sum. A refused feed is a DOCUMENT that
+ * never arrived; it contributes no logical records, so it is already absent
+ * from `logicalInput`. Adding it would double-count, and it did — the first
+ * version of this contract failed `ical`'s refusal fixtures with *1 more
+ * disposition than records*, which is the contract catching its own author
+ * mixing the two layers.
+ *
+ * `unretrieved` is still carried, reported, and used by the RULING 43 zero-row
+ * check below, which is the one question here that IS about documents in hand.
+ *
+ * **Deviation from the brief, stated rather than smoothed.** The remediation
+ * brief wrote the invariant as `produced + dropped + outOfWindow + unretrieved
+ * === input` and, two sentences later, required that where an adapter counts
+ * documents but yields events the invariant move to the logical-record layer
+ * and document count never be compared with event count. Those two cannot both
+ * hold. The second governs, because it is the one that is true of `ical`.
+ *
+ * ## The second state, which is the load-bearing half
+ *
+ * A pass that CANNOT say how many logical records it considered records
+ * `COULD_NOT_ASSERT` — a named, reported state, never a silent pass. That is
+ * RULING 100's own second clause: *where a source states no count, extraction
+ * records that it could not assert one.* "We produced four and nothing told us
+ * how many there should be" is a far weaker claim than "we produced four and
+ * there were four", and a report that runs them together says it checked
+ * something it did not.
+ */
+export interface ConservationTerms {
+  /**
+   * How many logical records the pass CONSIDERED, or `null` when the pass
+   * genuinely cannot say. `null` is honest; a guessed number is not.
+   */
+  logicalInput: number | null;
+  /** Records that became meetings. */
+  produced: number;
+  /** Records the pass rejected, with a counted reason. */
+  dropped: number;
+  /** Records placed in time and then set aside as outside the served window. */
+  outOfWindow: number;
+  /** Records that were the same logical record already seen. */
+  duplicates: number;
+  /** Records that arrived with no retrieved document behind them. */
+  unretrieved: number;
+}
+
+export type ConservationOutcome = "CONSERVED" | "COULD_NOT_ASSERT";
+
+export interface ConservationRecord extends ConservationTerms {
+  outcome: ConservationOutcome;
+  /** Every disposition summed — the left-hand side of the invariant. */
+  accountedFor: number;
+}
+
+/**
+ * Thrown when the dispositions do not sum to the records considered.
+ *
+ * It names EVERY term, because "counts do not match" sends a reader back to the
+ * parser with nothing to go on, and the gap's sign is the first thing that
+ * tells them which way to look: short means records vanished, over means
+ * something was counted twice.
+ */
+export class ConservationError extends Error {
+  readonly source: string;
+  readonly terms: ConservationTerms;
+
+  constructor(source: string, terms: ConservationTerms, detail: string) {
+    const { logicalInput, produced, dropped, outOfWindow, duplicates, unretrieved } = terms;
+    super(
+      `${source}: extraction does not conserve — ${detail}. ` +
+        `considered ${logicalInput}, accounted for ${produced + dropped + outOfWindow + duplicates} ` +
+        `(produced ${produced}, dropped ${dropped}, out of window ${outOfWindow}, ` +
+        `duplicates ${duplicates}; and ${unretrieved} document(s) never retrieved, which are NOT part of this sum). ` +
+        "Every logical record has exactly one disposition and the sum is exact; " +
+        "a record that is none of these vanished silently (A-002).",
+    );
+    this.name = "ConservationError";
+    this.source = source;
+    this.terms = terms;
+  }
+}
+
+const isCount = (n: number) => Number.isInteger(n) && n >= 0;
+
+/**
+ * Check the invariant, or record honestly that it could not be checked.
+ *
+ * Exported and tested on its own so the contract has one implementation rather
+ * than one per adapter — RULING 103's predicate, applied before there is
+ * anything to sweep.
+ */
+export function conserve(source: string, terms: ConservationTerms): ConservationRecord {
+  const { logicalInput, produced, dropped, outOfWindow, duplicates, unretrieved } = terms;
+
+  // Bounds first. A negative or fractional counter means the caller's own
+  // arithmetic is broken, and checking a sum built out of nonsense would report
+  // a conservation failure for the wrong reason.
+  for (const [name, n] of [
+    ["produced", produced],
+    ["dropped", dropped],
+    ["outOfWindow", outOfWindow],
+    ["duplicates", duplicates],
+      ["unretrieved", unretrieved],
+  ] as const) {
+    if (!isCount(n)) {
+      throw new ConservationError(source, terms, `${name} is ${n}, which is not a count`);
+    }
+  }
+  const accountedFor = produced + dropped + outOfWindow + duplicates;
+
+  if (logicalInput === null || logicalInput === undefined) {
+    return { ...terms, logicalInput: null, outcome: "COULD_NOT_ASSERT", accountedFor };
+  }
+  if (!isCount(logicalInput)) {
+    throw new ConservationError(source, terms, `logicalInput is ${logicalInput}, which is not a count`);
+  }
+  if (accountedFor !== logicalInput) {
+    const gap = logicalInput - accountedFor;
+    throw new ConservationError(
+      source,
+      terms,
+      gap > 0
+        ? `${gap} logical record(s) have NO disposition and vanished`
+        : `${-gap} more disposition(s) than records — something is counted twice`,
+    );
+  }
+  return { ...terms, outcome: "CONSERVED", accountedFor };
+}
+
+/**
+ * Sum a drop-counter object.
+ *
+ * One implementation, called by both this module and the composite's own
+ * defence-in-depth copy of the zero-row check — the two `droppedAny` sites the
+ * S-001 sweep found (2 of 2).
+ */
+export function totalDropped(counters: object): number {
+  let total = 0;
+  for (const n of Object.values(counters as Record<string, unknown>)) {
+    if (typeof n === "number") total += n;
+  }
+  return total;
+}
+
+/**
+ * RULING 43's question, unchanged and asked at the DOCUMENT layer.
+ *
+ * Documents in hand, nothing out, nothing dropped. Shared so the composite's
+ * copy and this module's copy cannot drift apart.
+ */
+export function isZeroRowExtraction(args: {
+  documentsInHand: number;
+  produced: number;
+  dropped: number;
+  outOfWindow: number;
+}): boolean {
+  return (
+    args.documentsInHand > 0 && args.produced === 0 && args.dropped === 0 && args.outOfWindow === 0
+  );
+}
 
 /**
  * The shape every adapter's normalize pass produces, before branding.
@@ -139,14 +346,71 @@ export function accountedNormalize<R extends NormalizeAccountInput>(
      * pass that sets aside nothing cannot claim this exemption.
      */
     outOfWindow?: number;
+    /**
+     * How many LOGICAL RECORDS this pass considered — A-002.
+     *
+     * Candidate events, agenda rows, calendar entries: the thing that either
+     * becomes a meeting or does not. NOT documents. Omit it only when the pass
+     * genuinely cannot count them, in which case the result records
+     * `COULD_NOT_ASSERT` and says so rather than passing quietly.
+     */
+    logicalInput?: number | null;
+    /**
+     * Records skipped because the same logical record had already been seen.
+     *
+     * A duplicate is neither produced nor dropped, so before A-002 it was a
+     * `continue` that left no trace at all — which is also how A-005's
+     * same-night collisions disappeared uncounted.
+     */
+    duplicates?: number;
+    /**
+     * Counters that TALLIED a record which was nevertheless PRODUCED.
+     *
+     * `NormalizeDropCounts.placeless` is the live case and it is mis-modelled:
+     * in `boardbook`, `civicplus` and `diligent` it is incremented for an
+     * online-only meeting that is then pushed as a meeting (D18 keeps those on
+     * purpose), while in `iqm2` the same counter is a real drop with a
+     * `continue` behind it. So the same field name means two different things
+     * across the adapters that share its type.
+     *
+     * Conservation cannot be computed without knowing which, so the adapter
+     * says. This is a NAMED, DECLARED subtraction rather than a special case
+     * hidden in the sum — tracker row `AUD-PLACELESS` proposes moving the tally
+     * out of `NormalizeDropCounts` entirely, which is the real fix and is a
+     * change to twelve adapters' reporting shape rather than to their
+     * arithmetic.
+     */
+    countedButProduced?: number;
   } = {},
 ): Accounted<R> {
-  const counters = result.drops as Readonly<Record<string, number>>;
-  const droppedAny = Object.values(counters).some((n) => n > 0);
-  const accountedFor = droppedAny || (options.outOfWindow ?? 0) > 0;
-  const inHand = input.length - (options.unretrieved ?? 0);
-  if (inHand > 0 && result.meetings.length === 0 && !accountedFor) {
-    throw new ZeroRowExtractionError(source, inHand);
+  const dropped = totalDropped(result.drops) - (options.countedButProduced ?? 0);
+  const outOfWindow = options.outOfWindow ?? 0;
+  const unretrieved = options.unretrieved ?? 0;
+  const duplicates = options.duplicates ?? 0;
+
+  /*
+   * RULING 43's zero-row question, at the DOCUMENT layer, unchanged. It asks
+   * whether we held bytes and produced nothing from them; that is a different
+   * question from conservation and neither one subsumes the other.
+   */
+  const documentsInHand = input.length - unretrieved;
+  if (isZeroRowExtraction({ documentsInHand, produced: result.meetings.length, dropped, outOfWindow })) {
+    throw new ZeroRowExtractionError(source, documentsInHand);
   }
-  return Object.assign(result, { [ACCOUNTED]: true as const });
+
+  /*
+   * A-002's conservation question, at the LOGICAL-RECORD layer. It throws a
+   * `ConservationError`, which the composite's existing catch routes to `JOB`
+   * with no new branch — our arithmetic, on bytes we already hold, is our bug.
+   */
+  const accounting = conserve(source, {
+    logicalInput: options.logicalInput ?? null,
+    produced: result.meetings.length,
+    dropped,
+    outOfWindow,
+    duplicates,
+    unretrieved,
+  });
+
+  return Object.assign(result, { [ACCOUNTED]: true as const, accounting });
 }

@@ -158,7 +158,21 @@ const COLLECTION_STORES = ["searchLog", "reactions", "feedback"] as const;
  * quietly permit the NEXT contact column anyone adds anywhere. A second entry
  * here is a decision someone has to type out.
  */
-const DELIBERATE_IDENTIFIER_COLUMNS = new Set(["feedback.reply_to"]);
+const DELIBERATE_IDENTIFIER_COLUMNS = new Set<string>([
+  // **A-001, 2026-08-24: this set is now EMPTY, and that is the fix.**
+  //
+  // It used to hold `feedback.reply_to`. The exception was written carefully — an
+  // exact (store, column) pair rather than a softened fragment list, so a
+  // second entry would have to be typed out. What no amount of care about the
+  // list could do was notice that the value it exempted was an email address,
+  // which `questionnaire_invitations.email` also holds. A named exception to a
+  // NAME-based sweep is still a name-based sweep.
+  //
+  // The address moved to `feedback_contact`, which is not a collection store,
+  // and the claim is proven over VALUE SPACES in
+  // `tests/identity-boundary.test.ts`. If anything is ever added back here, that
+  // test is the one that has to be satisfied first.
+]);
 
 test("every collection store is identifier-free and joins nothing", () => {
   for (const storeName of COLLECTION_STORES) {
@@ -291,43 +305,72 @@ test("the feedback store holds no continuity key of any kind", () => {
   assert.deepEqual(
     names.sort(),
     [
+      "contact_ref",
       "id",
       "message",
       "received_at",
-      "reply_to",
       "run_class",
       "run_id",
       "surface",
       "suspect_reason",
     ],
-    "the feedback store holds the message, when, where from, the optional reply address, and nothing else",
+    "the feedback store holds the message, when, where from, an opaque contact handle, and nothing else",
   );
 });
 
-test("the optional reply address exists on the feedback store and nowhere else", () => {
-  // The same shape as the reaction-continuity-key guard: a column that may
-  // identify a person is pinned to exactly one table, so no later store can
-  // grow a copy and become joinable to this one (R41, n-stores rule).
+/**
+ * **A-001 · REWRITTEN, 2026-08-24.** This test used to be called *the optional
+ * reply address exists on the feedback store and nowhere else*, and it passed
+ * for a year while the schema falsified the constitutional claim.
+ *
+ * Its reasoning was the R41 note's: a column that may identify a person is
+ * pinned to ONE table, so no later store can grow a copy and become joinable.
+ * Being on one table was never the test. `questionnaire_invitations.email`
+ * held the same KIND of value under a different name, and this guard — like
+ * the fragment list above it — was looking for a spelling.
+ *
+ * The address is no longer in a reader collection store at all.
+ * `tests/identity-boundary.test.ts` is where the claim is now proven, over
+ * value spaces rather than names; this holds the mechanism in place.
+ */
+test("A-001 · the reader store holds an opaque handle, and the address is elsewhere", () => {
   for (const [name, table] of tables) {
     const config = getTableConfig(table as Parameters<typeof getTableConfig>[0]);
     for (const column of config.columns) {
-      if (column.name === "reply_to") {
-        assert.equal(
-          name,
-          "feedback",
-          `${name}.reply_to: the reply address may exist nowhere but feedback`,
+      assert.notEqual(
+        column.name,
+        "reply_to",
+        `${name}.reply_to still exists — the raw address is back in a table`,
+      );
+      if (column.name === "contact_ref") {
+        assert.ok(
+          name === "feedback" || name === "feedbackContact",
+          `${name}.contact_ref: the handle may exist only on the two tables it joins`,
         );
       }
     }
   }
 
-  // The mechanism check: it exists where it should, and it is OPTIONAL.
-  const column = getTableConfig(schema.feedback).columns.find((c) => c.name === "reply_to");
-  assert.ok(column, "feedback.reply_to missing");
+  const handle = getTableConfig(schema.feedback).columns.find((c) => c.name === "contact_ref");
+  assert.ok(handle, "feedback.contact_ref missing");
   assert.equal(
-    column.notNull,
+    handle.notNull,
     false,
-    "reply_to must be nullable — blank is the default and blank must submit",
+    "contact_ref must be nullable — blank is the default and blank must submit",
+  );
+
+  // The delivery store holds the address, when it arrived, and the handle.
+  // Nothing about what was said, where from, or by what kind of run.
+  const contact = getTableConfig(schema.feedbackContact);
+  assert.deepEqual(
+    contact.columns.map((c) => c.name).sort(),
+    ["address", "contact_ref", "received_at"],
+    "the contact-delivery store grew a column — every one of them is a way to profile somebody",
+  );
+  assert.equal(
+    contact.foreignKeys.length,
+    0,
+    "the delivery store must reference nothing — the handle is a value, not a constraint",
   );
 });
 

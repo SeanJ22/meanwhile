@@ -48,13 +48,36 @@ const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
       raw,
       now ?? new Date(),
     );
-    // Re-branded because the drop shape changes here — legistar counts three
-    // reasons, the composite's contract carries four. Same input array, so the
-    // factory judges the same fact twice and cannot disagree with itself.
-    return accountedNormalize("legistar", raw, {
-      meetings,
-      drops: { ...drops, notConfigured: 0 },
-    });
+    /*
+     * Re-branded because the drop shape changes here — legistar counted three
+     * reasons and the composite's contract carries four. Same input array, so
+     * the factory judges the same fact twice and cannot disagree with itself.
+     *
+     * A-002 found two things wrong with what used to be here, and the second
+     * is the worse one.
+     *
+     * 1. It passed no `logicalInput`, so this second branding SILENTLY
+     *    downgraded a conserved result to `COULD_NOT_ASSERT`. The sweep in
+     *    `tests/zero-row-contract.test.ts` is what named it — a call site
+     *    nobody thought of as an adapter.
+     * 2. It wrote `notConfigured: 0` as a LITERAL. That was correct while
+     *    legistar had no such counter; the moment A-002 gave it one — for an
+     *    event whose tenant is not wired — this line would have thrown the
+     *    real count away and reported zero. A default standing in for a value
+     *    that has since become real is the render-default failure, in a
+     *    report.
+     *
+     * `raw.length` is legistar's own logical-input count: one raw row is one
+     * event there, which is why its gap was a skip rather than an expansion.
+     */
+    return accountedNormalize(
+      "legistar",
+      raw,
+      // `drops` now carries `notConfigured` itself, so the shapes agree and no
+      // literal stands in front of a real count.
+      { meetings, drops },
+      { logicalInput: raw.length },
+    );
   },
 };
 

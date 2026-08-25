@@ -160,6 +160,18 @@ export interface NormalizeDrops {
   unknownVenue: number;
   /** No usable date or time. */
   unplaceableInTime: number;
+  /**
+   * An event whose Legistar tenant is not in the client registry — A-002.
+   *
+   * This used to be a bare `continue`, so the record was neither produced nor
+   * dropped and left no trace anywhere. It is exactly what `notConfigured`
+   * means in `NormalizeDropCounts`, and this adapter was the only one of the
+   * thirteen call sites missing the counter — which is why the composite's
+   * wrapper had to invent a literal `notConfigured: 0` to satisfy the shared
+   * shape, and why that literal would have silently discarded the real value
+   * the moment one existed.
+   */
+  notConfigured: number;
 }
 
 export function normalizeWithDrops(
@@ -175,15 +187,28 @@ export function normalizeWithDrops(
     placeless: 0,
     unknownVenue: 0,
     unplaceableInTime: 0,
+    // A-002: an event whose tenant is not wired used to be a bare `continue`,
+    // so it was neither produced nor dropped and left no trace. It is exactly
+    // what `notConfigured` means everywhere else, and this adapter was the
+    // only one of the twelve missing the counter.
+    notConfigured: 0,
   };
   // How many of the meetings that survived had their agenda actually read.
   // Its denominator is `meetings.length`, and the ingest prints both — a run
   // where nothing was read must not look like a run where nothing was found.
   let agendasRead = 0;
 
+  // A-002 · one raw row is one event, so the document layer and the logical
+  // layer coincide here — which is why this adapter's gap was a skip rather
+  // than an expansion.
+  let keptButPlaceless = 0;
+
   for (const { event, slug, collectedAt, items } of raw) {
     const client = findClient(slug);
-    if (!client) continue;
+    if (!client) {
+      drops.notConfigured++;
+      continue;
+    }
 
     const date = calendarDate(event.EventDate ?? "");
     const time = event.EventTime ? wallClock(event.EventTime) : null;
@@ -208,7 +233,12 @@ export function normalizeWithDrops(
      * way in.
      */
     const online = isPlaceless(location) ? { label: location, joinUrl: null } : null;
-    if (online) drops.placeless++;
+    if (online) {
+      drops.placeless++;
+      // A-002: this TALLIES a meeting that is then PRODUCED below (D18), so it
+      // is not a drop and must not be summed as one.
+      keptButPlaceless += 1;
+    }
 
     const venue = online ? null : findVenue(client, location);
     // No coordinates and no venue entry. Dropping is the contract: a meeting
@@ -286,7 +316,10 @@ export function normalizeWithDrops(
     });
   }
 
-  return accountedNormalize("legistar", raw, { meetings, drops, agendasRead });
+  return accountedNormalize("legistar", raw, { meetings, drops, agendasRead }, {
+    logicalInput: raw.length,
+    countedButProduced: keptButPlaceless,
+  });
 }
 
 /**

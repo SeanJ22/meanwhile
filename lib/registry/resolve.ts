@@ -60,6 +60,79 @@ export function sweepsRun(): number {
   return sweeps;
 }
 
+/**
+ * **P-003 · HOW MANY FEATURES A SWEEP ACTUALLY TESTED EXACTLY.**
+ * (Performance audit of `336a3eb`, remediated 2026-08-24.)
+ *
+ * `sweepsRun` proves the resolver runs ONCE per request, which AUD-04 needed
+ * and which is still true. It says nothing about what one sweep costs, and one
+ * sweep was walking every ring of every committed polygon: 118,533 coordinate
+ * pairs, most of them congressional districts in states this product does not
+ * cover.
+ *
+ * A bounding box is one comparison of four numbers and it cannot produce a
+ * false negative — a point outside a feature's box is outside the feature.
+ * `polygonContains` stays the final authority on everything the box lets
+ * through, so the ANSWER cannot change; only the number of exact tests does.
+ *
+ * Counting them is what makes that claim checkable. A prefilter that silently
+ * stopped filtering would be invisible in every equivalence test, which is the
+ * chromium-pin shape and the reason AUD-04's counter exists at all.
+ */
+let candidatesTested = 0;
+
+/** Features given an exact point-in-polygon test. Monotonic; read deltas. */
+export function candidateFeaturesTested(): number {
+  return candidatesTested;
+}
+
+/** A feature's bounding box: [west, south, east, north]. */
+export type BoundingBox = [number, number, number, number];
+
+export function boundingBoxOf(feature: GeoFeature): BoundingBox {
+  let west = Infinity;
+  let south = Infinity;
+  let east = -Infinity;
+  let north = -Infinity;
+  const polys =
+    feature.geometry.type === "Polygon"
+      ? [feature.geometry.coordinates]
+      : feature.geometry.coordinates;
+  for (const poly of polys) {
+    for (const ring of poly as Ring[]) {
+      for (const [x, y] of ring) {
+        if (x < west) west = x;
+        if (x > east) east = x;
+        if (y < south) south = y;
+        if (y > north) north = y;
+      }
+    }
+  }
+  return [west, south, east, north];
+}
+
+const inBox = (point: [number, number], box: BoundingBox): boolean =>
+  point[0] >= box[0] && point[0] <= box[2] && point[1] >= box[1] && point[1] <= box[3];
+
+/**
+ * The boxes, computed once per feature array.
+ *
+ * Keyed on the array identity rather than recomputed per call: the server
+ * caches one `features` array for the life of the process, so this is built on
+ * the first sweep and read on every one after. A `WeakMap` so a test that
+ * builds its own array does not leak.
+ */
+const boxes = new WeakMap<GeoFeature[], BoundingBox[]>();
+
+function boxesFor(features: GeoFeature[]): BoundingBox[] {
+  let cached = boxes.get(features);
+  if (!cached) {
+    cached = features.map(boundingBoxOf);
+    boxes.set(features, cached);
+  }
+  return cached;
+}
+
 /** Every division whose boundary contains the point. */
 export function divisionsAt(
   point: [number, number],
@@ -69,10 +142,18 @@ export function divisionsAt(
   sweeps += 1;
   const hits: Division[] = [];
   const seen = new Set<string>();
+  const featureBoxes = boxesFor(features);
 
-  for (const feature of features) {
+  for (const [index, feature] of features.entries()) {
     const ocdId = feature.properties.ocdId;
     if (seen.has(ocdId)) continue;
+    /*
+     * P-003 · the cheap test first. A point outside the box is outside the
+     * polygon — that direction has no false negatives, which is what lets the
+     * exact test remain the only thing that ever says YES.
+     */
+    if (!inBox(point, featureBoxes[index])) continue;
+    candidatesTested += 1;
     if (!contains(point, feature)) continue;
 
     const division = divisions.get(ocdId);

@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **130 sessions.**
+Newest first. **131 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -95,6 +95,37 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 
 **Needs Sean.** Nothing.
+
+## audit-remediation-0824 · 2026-08-24
+
+**What it finished.** 15 row(s).
+
+- **NH123** — The release gate every session trusts under RULING 75 discarded its stillborn list unless EVERY check was stillborn, so one passing check beside one check that completed having executed nothing read as green. Its own test said in a comment that this is not green while asserting only that it is not red. Reproduced, fixed, and the last 20 GREEN readings on main audited.
+- **NH124** — accountedNormalize asked a boolean, droppedAny, which cannot tell one drop from ninety-nine. 100 logical inputs, 0 output and one recorded drop was branded clean. Replaced with an exact conservation invariant at the logical-record layer, with COULD_NOT_ASSERT as a named second state for the one adapter that genuinely cannot count.
+- **NH125** — The same predicate was written out again in the composite own zero-row check. A sweep for the shape found 2 sites and both now call one shared implementation, per RULING 103.
+- **NH126** — The 403 escalation returned a browser-header 200 without the notADocument check and returned the curl rung raw with neither check, so the same bytes were refused on rung 2 and accepted on rung 3. And the branch required no injected fetch, which made it unreachable by any test. One finalizer now, and a declared ladder seam.
+- **NH127** — The past-feed failure was caught by an empty catch whose comment said the absence would be visible as a jurisdiction with no concluded meetings. The adapter reported success, carry-forward preserves rows only for a failed source or division, and every concluded meeting the previous snapshot held was deleted. Scoped partial results now exist and carry-forward preserves the failed scope only.
+- **NH128** — Two sittings at the same instant in one wiring row collapsed to one id and the second vanished with every drop counter at zero. Identity is now every field the feed published, and duplicates are counted apart by who judged them — the feed repeated UID, or our own fallback.
+- **NH129** — Apptegy stopped at twelve pages with the API still advertising a next page: 240 events read, an unknown number left, no error and no partial marker. The sweep the finding required found the identical shape in legistar pageById. A cap is a failure boundary now, in both.
+- **NH130** — catch return zero in the ical zone resolver. Measured against the shipped code: a 7pm Eastern sitting rendered four hours early, and a 1am sitting rendered on the previous day. The offset returns null now and the event is counted as unplaceable in time.
+- **NH131** — feedback.reply_to and questionnaire_invitations.email share a value space and are equality-joinable, which falsifies the constitutional claim that the stores share no joinable column. The guard that was supposed to catch it checked column NAMES. The address moved to an isolated contact-delivery store behind a random handle, and the boundary is now proven over value spaces.
+- **NH132** — The systemic half of A-004 and A-006: a source that partly failed reported plain success, because the result shape had only two states. Closed by the scoped partial result and by the pagination failure boundary.
+- **NH133** — map-entry passes FILTERED venues into MapCanvas, whose venues effect rebuilds the marker pool — so a filter change is read as vanished data and markers are destroyed and recreated. The pool own comments document the opposite behaviour. Needs allVenues and visibleVenueKeys as separate effects, proven with operation counters.
+- **NH134** — Measured 2954773 raw and 852590 gzip across 14 chunks against the committed baseline 2716714 and 818445 across 12. Needs the attribution build to attribute the growth by module provenance, then async boundaries only where the rebuilt number actually falls. MapLibre stays on the critical path.
+- **NH135** — registry server.ts discovers geometry by readdir, including the 1.63 MB national congressional file whose per-state derivatives already exist, and the point resolver walks the full collection with exact polygon tests. Needs a generated resolver manifest and a build-time bounding-box index, gated on every supported zip resolving to an identical set of division identifiers.
+- **NH136** — applySelection writes every pool entry on every selection and re-runs on venues changes. Store the selected key in the pool and diff to two writes. Ships with P-001 and is asserted by the same counters.
+- **NH143** — pnpm purge:synthetic removes only run_class SYNTHETIC from the search log, the reactions store and feedback, exports every row to a dated backup outside the repo first, and refuses to touch ORGANIC, UNKNOWN or AUTHOR. Applied to production 2026-08-24. The row exists so the tool has a home and so the next purge is a run rather than a decision.
+
+**What it started.** 21 row(s) opened, 6 still open.
+
+- **NH137** — pnpm perf measures FCP, LCP and frame timing on real Chrome and honestly refuses software-rendered numbers, and docs/perf-baseline.md is not committed. A thermometer with no recorded normal temperature measures nothing. Needs a run on hardware-accelerated Chrome, or an honest row saying this machine has none. *(open)*
+- **NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed. *(open)*
+- **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run. *(open)*
+- **NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts. *(open)*
+- **NH141** — Found by the A-007 sweep for catch-return-valid shapes. lib map districts.ts returns an empty array when queryRenderedFeatures throws, so an exception is indistinguishable from a viewport with no districts in it. Nine other sites of the same shape were assessed and fail closed; this one does not, and how it should behave is a visual decision. *(open)*
+- **NH142** — NS11 recorded the mirror scrubbed and verified by re-read on 2026-08-24. A sweep at the start of this session found six occurrences of five live credentials back in it. Nothing un-scrubbed it: handoff re-runs the transcript exporter, which rewrites the mirror out of the local jsonl files, and those are deliberately never scrubbed. The mirror is scrubbed again and handoff now scrubs it immediately after every export and re-reads to confirm. ROTATION IS STILL THE FIX and only you can do it: 0 of the 9 credentials in NS11 are rotated as of this session, proven by the sweep still finding every current value in a leaked location. *(open)*
+
+**Needs Sean.** NH142
 
 ## visual-tail-and-rehunt-0823 · 2026-08-23
 

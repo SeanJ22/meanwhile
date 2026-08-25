@@ -86,8 +86,49 @@ jobs:
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable
 
+      # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
+      #
+      # `package-manager-cache: false` above is correct and stays: pnpm is not
+      # on PATH until corepack enables it, so setup-node cannot find the store
+      # to cache. That left every run downloading the whole dependency tree.
+      #
+      # Resolving the path here and caching it by lockfile hash is the same
+      # thing setup-node would have done, at the only point in the job where
+      # the question can be answered.
+      - name: Where is the pnpm store
+        id: pnpm-store
+        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          # A lockfile change invalidates the key and this restores the nearest
+          # previous store, so a one-package bump re-downloads one package
+          # rather than all of them.
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
       - name: Install
         run: corepack pnpm install --frozen-lockfile
+
+      # P-006 · Next's own build cache. The build log read "No build cache
+      # found" on every run, so every compile was cold: 13.2 s of compile and
+      # 16.8 s of TypeScript, measured, on every one of the two matrix legs.
+      #
+      # `.next/cache` ONLY, never `.next` — the emitted output is what the
+      # budget check reads, and restoring a previous build's output would make
+      # that check report on bytes this run did not produce, which is precisely
+      # the shape RULING 113 exists to catch. The cache is keyed per MODE
+      # because the two legs compile differently and sharing one key would have
+      # them evict each other every run.
+      - uses: actions/cache@v4
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ github.sha }}
+          restore-keys: |
+            next-${{ runner.os }}-${{ matrix.mode }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            next-${{ runner.os }}-${{ matrix.mode }}-
 
       # The literal command from netlify.toml's [build] section, minus the
       # `corepack enable` already done above. If these two ever drift apart
@@ -166,8 +207,55 @@ jobs:
       - name: Enable corepack (pnpm pinned by packageManager)
         run: corepack enable
 
+      # P-006 · THE STORE, CACHED — and cached AFTER corepack, deliberately.
+      #
+      # `package-manager-cache: false` above is correct and stays: pnpm is not
+      # on PATH until corepack enables it, so setup-node cannot find the store
+      # to cache. That left every run downloading the whole dependency tree.
+      #
+      # Resolving the path here and caching it by lockfile hash is the same
+      # thing setup-node would have done, at the only point in the job where
+      # the question can be answered.
+      - name: Where is the pnpm store
+        id: pnpm-store
+        run: echo "path=$(corepack pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.pnpm-store.outputs.path }}
+          key: pnpm-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+          # A lockfile change invalidates the key and this restores the nearest
+          # previous store, so a one-package bump re-downloads one package
+          # rather than all of them.
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
       - name: Install
         run: corepack pnpm install --frozen-lockfile
+
+      # P-006 · the browser, cached. This install carries a 15-minute timeout
+      # because it is the longest step in the job.
+      #
+      # A cached BROWSER is the kind of cache that usually deserves suspicion —
+      # a stale or half-restored one would be exactly the "step reported
+      # success with its product unchecked" failure RULING 113 was adopted
+      # over. It is safe here for one specific reason: the step immediately
+      # below asks whether the binary is actually there, compares our
+      # resolution against Playwright's own `executablePath()`, and has no
+      # skip flag. The cache cannot lie past it.
+      #
+      # Keyed on the pinned Playwright version rather than on the lockfile
+      # hash, because that is the thing that decides which browser build is
+      # wanted. `--with-deps` still runs: the system libraries are not in the
+      # cache and are cheap.
+      - name: Playwright version (the cache key)
+        id: pw
+        run: echo "version=$(node -p "require('./node_modules/playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
 
       - name: Install the browser the suite needs
         timeout-minutes: 15

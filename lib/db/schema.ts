@@ -683,25 +683,36 @@ export const feedback = pgTable(
      */
     surface: text("surface", { enum: ["SIDEBAR", "TRANSPARENCY", "COVERAGE"] }).notNull(),
     /**
-     * THE ONE THING A READER MAY DELIBERATELY TELL US ABOUT THEMSELVES (R41,
-     * 2026-08-17, the author's ruling A).
+     * THE HANDLE, NOT THE ADDRESS — A-001 (external correctness audit of
+     * `336a3eb`, remediated 2026-08-24).
      *
-     * Optional and nullable — blank is the default and blank submits. It is
-     * filled ONLY from its own labelled field, never from the message body,
-     * which stays scrubbed by T09 exactly as before. It is stored UNSCRUBBED
-     * because scrubbing it would delete the deliberate act of typing it into
-     * a field that asked for it, which is the contradiction inside R40's own
-     * spec that this row existed to settle.
+     * R41 (2026-08-17, the author's ruling A) established that a reader may
+     * deliberately hand over a reply address, and that decision stands
+     * unchanged: the field is optional, blank is the default, blank submits,
+     * it is filled only from its own labelled field, and it is stored
+     * unscrubbed because scrubbing a deliberate act deletes it.
      *
-     * It is not a key and it is not ours: we minted nothing, and a reader
-     * chose to hand it over for one purpose. So the n-stores rule is
-     * unaffected, and it is held to that structurally rather than on the
-     * argument — `reply_to` exists on this table alone (asserted in
-     * `tests/db-schema.test.ts` the same way the reaction continuity key is),
-     * it appears in no export and no aggregate, and it is deleted on the same
-     * schedule as the message it came with.
+     * What R41 got wrong was WHERE the value lives. Its own note argued the
+     * n-stores rule was "unaffected... held to that structurally" because
+     * `reply_to` existed on this table alone. **Being on one table is not the
+     * test.** The test is whether a value space is shared, and an email
+     * address is shared with the whole world: a mailing list, a voter file, a
+     * breach dump, and — inside this very schema —
+     * `questionnaire_invitations.email`. Two tables, one value space,
+     * equality-joinable, and the guard that was supposed to catch it was
+     * looking for columns NAMED `email` (RULING 110, in a test).
+     *
+     * So the reader collection store now carries a RANDOM handle and nothing
+     * else. The address lives in `feedback_contact`, keyed by that handle.
+     *
+     * **The handle is minted, never derived**, and that is the load-bearing
+     * half: hashing the address on both sides would be the same join key
+     * relocated — two parties holding `sha256(address)` can still match rows,
+     * and one of them would be this table again.
+     *
+     * Null when the reader left the field blank, which is most of the time.
      */
-    replyTo: text("reply_to"),
+    contactRef: text("contact_ref"),
     /** Same declaration and the same meanings as the search log's (C05). */
     runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
       .notNull()
@@ -718,6 +729,54 @@ export const feedback = pgTable(
     }),
   },
   (table) => [index("feedback_received_at_idx").on(table.receivedAt)],
+);
+
+/**
+ * **THE CONTACT-DELIVERY STORE** — A-001, 2026-08-24.
+ *
+ * The one place a reader-supplied address lives, and a store class of its own:
+ * not a reader collection store, not civic content, not machinery.
+ *
+ * It exists because a reader who types an address into a field labelled *we
+ * will reply here* has asked to be replied to, and the alternative to holding
+ * the address is not holding it — which would silently drop the thing they
+ * asked for. R41 settled that question and this does not reopen it.
+ *
+ * What it changes is which table the value sits in. A raw email address in
+ * `feedback` made the constitutional claim false: *no store carries a column
+ * that could join to another*. It could join to
+ * `questionnaire_invitations.email`, and to anything outside this database
+ * holding the same address.
+ *
+ * ## What is here and what is deliberately not
+ *
+ * - The **address**, as the reader typed it.
+ * - The **handle** it was filed under — random, minted per submission, never
+ *   derived from the address. A deterministic hash on both sides would be the
+ *   same join key wearing a different name.
+ * - **When it arrived**, so it can be deleted on the same schedule as the
+ *   message it came with.
+ *
+ * There is **no message**, no zip, no division, no surface, no run class and
+ * no foreign key. Reading this table tells you that somebody asked to be
+ * replied to and gives you no way to know what they said, where they were, or
+ * what they searched for — that requires the handle, and the handle is in the
+ * other table.
+ *
+ * It enters no export and no aggregate, and `tests/identity-boundary.test.ts`
+ * asserts by VALUE SPACE — not by column name — that no reader collection
+ * store holds an address again.
+ */
+export const feedbackContact = pgTable(
+  "feedback_contact",
+  {
+    /** The random handle the feedback row carries. Not a foreign key. */
+    contactRef: text("contact_ref").primaryKey(),
+    /** As the reader typed it. Unscrubbed, for the reason R41 gives. */
+    address: text("address").notNull(),
+    receivedAt: timestamp("received_at", { withTimezone: true, mode: "string" }).notNull(),
+  },
+  (table) => [index("feedback_contact_received_at_idx").on(table.receivedAt)],
 );
 
 /**

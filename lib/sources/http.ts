@@ -121,6 +121,38 @@ export interface HttpOptions {
     /** A marker every genuine document of this format carries. */
     marker: string;
   };
+  /**
+   * **THE ESCALATION LADDER, MADE REACHABLE BY A TEST** — A-003 (external
+   * correctness audit of `336a3eb`, remediated 2026-08-24).
+   *
+   * The 403 escalation below is guarded by `!options.fetchImpl`, for a reason
+   * that is entirely correct: a test's fake fetch is the thing under test and
+   * must not be routed around. What that guard also did was make the whole
+   * production retry path **unreachable by injection**, so the branch where
+   * A-003 lived — a rung returning a body with no document check on it — could
+   * not be exercised by any test in this repo.
+   *
+   * That is the chromium-pin shape (RULING 113): a step whose product nothing
+   * observes. The pin was wrong on every platform for months because the only
+   * thing that could have caught it was a check nobody had written; this was
+   * wrong on one rung because the only thing that could have caught it was a
+   * test nobody could write.
+   *
+   * So the seam is DECLARED rather than inferred. A caller that injects both a
+   * `fetchImpl` and a `ladder` is deliberately driving the escalation with its
+   * own doubles; a caller that injects only a `fetchImpl` still gets the old
+   * behaviour, unchanged, and production — which injects neither — walks the
+   * real rungs.
+   */
+  ladder?: {
+    /** Rung 3: the same client with the full browser header set. */
+    browserFetch?: typeof fetch;
+    /** Rung 4: a different client, whose TLS fingerprint passes. */
+    curl?: (
+      url: string,
+      headers: Record<string, string>,
+    ) => Promise<{ status: number; contentType: string; text: string }>;
+  };
 }
 
 /**
@@ -308,6 +340,58 @@ export function challengeIn(text: string): string | null {
 }
 
 /**
+ * **THE ONE FINALIZER EVERY TRANSPORT RUNG PASSES THROUGH** — A-003.
+ *
+ * Before this existed there were four places a successful body could be
+ * returned from `politeGetText`, and only two of them asked whether the body
+ * was a document. The two that did not were both inside the 403 escalation:
+ *
+ * - a rung-3 browser-header 200 was checked with `challengeIn` and NOT with
+ *   `notADocument`, so a blank body or an `.ics` URL answering with an HTML
+ *   error page was returned as a document;
+ * - the rung-4 `curl` fallback was returned raw, with neither check.
+ *
+ * **So document validity depended on WHICH RUNG happened to succeed** — the
+ * same URL, the same bytes, judged or not judged according to how far up the
+ * ladder the request had gone. That is not a missing check in one branch; it
+ * is a contract that only some code paths were party to.
+ *
+ * The fix is structural rather than three more call sites: there is exactly
+ * one place a body becomes a return value, and it is this function. A rung
+ * that wants to succeed has to come through here.
+ *
+ * @param rung Which rung obtained this body, so a refusal names it honestly.
+ */
+export function readValidatedResponse(
+  url: string,
+  rung: number,
+  response: { status: number; contentType: string; text: string },
+  expect?: HttpOptions["expect"],
+): { status: number; contentType: string; text: string } {
+  const wall = challengeIn(response.text);
+  if (wall !== null) {
+    throw new SourceHttpError(
+      `${wall} at ${url} — HTTP ${response.status} carrying a challenge page rather ` +
+        "than the document. This is a WALL, not an empty page.",
+      response.status,
+      url,
+      rung,
+    );
+  }
+  const notDoc = notADocument(response.text, expect);
+  if (notDoc !== null) {
+    throw new SourceHttpError(
+      `HTTP ${response.status} from ${url} with ${notDoc} — a status is not a document. ` +
+        `This is a WALL on rung ${rung}, not an empty source.`,
+      response.status,
+      url,
+      rung,
+    );
+  }
+  return response;
+}
+
+/**
  * One polite GET returning the body as text. Retries 429 and 5xx a small
  * number of times, honouring `Retry-After`; everything else fails immediately.
  */
@@ -317,6 +401,17 @@ export async function politeGetText(
 ): Promise<{ status: number; contentType: string; text: string }> {
   const impl = options.fetchImpl ?? fetch;
   const browser = options.profile === "browser";
+  /*
+   * A-003 · WHETHER THE LADDER IS WALKED, DECIDED ONCE.
+   *
+   * `!options.fetchImpl` was tested at two separate escalation sites, which is
+   * how one of them acquired a return path the other did not have. It is one
+   * named condition now, and it is `true` in production (nothing is injected)
+   * and `true` for a test that deliberately supplies the rungs it wants driven.
+   */
+  const escalates = !options.fetchImpl || options.ladder !== undefined;
+  const browserFetch = options.ladder?.browserFetch ?? impl;
+  const curl = options.ladder?.curl ?? curlGetText;
   const headers: Record<string, string> = browser
     ? { ...browserProfileHeaders(), ...(options.accept ? { Accept: options.accept } : {}) }
     : { "User-Agent": sourceUserAgent(), Accept: options.accept ?? "*/*" };
@@ -331,62 +426,25 @@ export async function politeGetText(
 
     if (response.ok) {
       const text = await response.text();
+      const here = {
+        status: response.status,
+        contentType: response.headers.get("content-type") ?? "",
+        text,
+      };
       const wall = challengeIn(text);
       if (!wall) {
-        /*
-         * A 200 is a status, not a document. See `expect` on HttpOptions: an
-         * empty or wrong-format body is a WALL on this rung, and saying so
-         * here is what stops it being written into the data as an absence one
-         * layer down.
-         */
-        const notDoc = notADocument(text, options.expect);
-        if (notDoc !== null) {
-          throw new SourceHttpError(
-            `HTTP 200 from ${url} with ${notDoc} — a status is not a document. ` +
-              "This is a WALL on this rung, not an empty source.",
-            response.status,
-            url,
-            browser ? 3 : 2,
-          );
-        }
-        return {
-          status: response.status,
-          contentType: response.headers.get("content-type") ?? "",
-          text,
-        };
+        // A-003: one finalizer, and this rung goes through it like every other.
+        return readValidatedResponse(url, browser ? 3 : 2, here, options.expect);
       }
       // A 200 that is not the page. Step to the other client — same rung as
       // the 403 path — and if that is challenged too, say so out loud rather
       // than handing an empty document upward as a successful read.
-      if (browser && !options.fetchImpl) {
-        const viaCurl = await curlGetText(url, headers);
-        const stillWalled = challengeIn(viaCurl.text);
-        if (!stillWalled) {
-          // Rung 4 answers on its own terms and gets the same question asked
-          // of it. A document check that only guarded one of two return paths
-          // would be a guard with a door beside it.
-          const curlNotDoc = notADocument(viaCurl.text, options.expect);
-          if (curlNotDoc !== null) {
-            throw new SourceHttpError(
-              `HTTP 200 from ${url} with ${curlNotDoc} on the curl client — ` +
-                "a status is not a document. This is a WALL on rung 4.",
-              viaCurl.status,
-              url,
-              4,
-            );
-          }
-          return viaCurl;
-        }
-        throw new SourceHttpError(
-          `${stillWalled} at ${url} — HTTP 200 carrying a challenge page rather ` +
-            "than the document, on both clients. This is a WALL, not an empty page.",
-          response.status,
-          url,
-          // Rung 4 walked and refused: the other TLS stack was tried and
-          // challenged too. Rungs 5+ — a different egress, the live browser,
-          // the page's own JSON — are unwalked by this client, not exhausted.
-          4,
-        );
+      if (browser && escalates) {
+        // Rung 4 answers on its own terms and gets the same question asked of
+        // it, by the same function. A document check that only guarded one of
+        // two return paths would be a guard with a door beside it — which is
+        // exactly what A-003 found on the 403 path below.
+        return readValidatedResponse(url, 4, await curl(url, headers), options.expect);
       }
       throw new SourceHttpError(
         `${wall} at ${url} — HTTP 200 carrying a challenge page rather than the ` +
@@ -418,9 +476,9 @@ export async function politeGetText(
      * Only when the caller has not injected a `fetchImpl`, because a test's
      * fake fetch is the thing under test and must not be routed around.
      */
-    if (!options.fetchImpl && response.status === 403) {
+    if (escalates && response.status === 403) {
       if (!browser) {
-        const withBrowserHeaders = await impl(url, {
+        const withBrowserHeaders = await browserFetch(url, {
           headers: {
             ...browserProfileHeaders(),
             ...(options.accept ? { Accept: options.accept } : {}),
@@ -429,16 +487,46 @@ export async function politeGetText(
         });
         if (withBrowserHeaders.ok) {
           const text = await withBrowserHeaders.text();
-          if (!challengeIn(text)) {
-            return {
-              status: withBrowserHeaders.status,
-              contentType: withBrowserHeaders.headers.get("content-type") ?? "",
-              text,
-            };
+          /*
+           * A-003 · THIS RETURN WAS THE DEFECT.
+           *
+           * It read `if (!challengeIn(text)) return {…}` — a KNOWN
+           * interstitial was caught and everything else was handed upward as
+           * a document. A blank body, a truncated transfer, or an `.ics` URL
+           * answering with an HTML error page all passed, and passed ONLY
+           * here: the same bytes arriving on rung 2 were refused by
+           * `notADocument` two screens above.
+           *
+           * The failure that makes it concrete: a host that 403s the index
+           * client and answers the browser headers with an empty 200 would
+           * hand `parseIcs` an empty string. `accountedNormalize` would then
+           * refuse the zero-row result and turn the whole refresh red for a
+           * parser that did nothing wrong — or, with one drop recorded
+           * anywhere, would have passed silently, which is A-002.
+           */
+          if (challengeIn(text) === null) {
+            return readValidatedResponse(
+              url,
+              3,
+              {
+                status: withBrowserHeaders.status,
+                contentType: withBrowserHeaders.headers.get("content-type") ?? "",
+                text,
+              },
+              options.expect,
+            );
           }
         }
       }
-      return curlGetText(url, browser ? headers : browserProfileHeaders());
+      // Rung 4, and it used to be returned RAW — neither `challengeIn` nor
+      // `notADocument` ever saw it. A different client's 200 is a status like
+      // any other status (A-003).
+      return readValidatedResponse(
+        url,
+        4,
+        await curl(url, browser ? headers : browserProfileHeaders()),
+        options.expect,
+      );
     }
 
     const retryable = response.status === 429 || response.status >= 500;

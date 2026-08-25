@@ -717,6 +717,17 @@ export function makeSchedulePageSource(
     const windowStart = now.getTime() - WINDOW_BACK_DAYS * 86_400_000;
     const windowEnd = now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000;
 
+    /*
+     * A-002 · the logical record here is a SITTING, and one raw row is one
+     * body's page carrying many. A refused row is counted as one record too,
+     * because this adapter deliberately drops it into `notConfigured` rather
+     * than shortening its own input — see the comment immediately below, which
+     * is that decision written down before there was a contract to check it.
+     */
+    let considered = 0;
+    let duplicates = 0;
+    let outOfWindow = 0;
+
     for (const { wiring, schedule, documents, collectedAt, error } of raw) {
       // A refused row publishes nothing THIS run. It is counted, not skipped:
       // `notConfigured` is the drop bucket for "we had a row and produced no
@@ -725,6 +736,7 @@ export function makeSchedulePageSource(
       // upward by `unreachableOcdIds` below, which is what puts the honest
       // line on the reader's card instead of an empty calendar.
       if (error) {
+        considered += 1;
         drops.notConfigured += 1;
         // A division-less body has no division to attribute the gap TO; the
         // drop count above is the whole of what can honestly be said about it.
@@ -737,6 +749,10 @@ export function makeSchedulePageSource(
         : schedule;
 
       const lists: ScheduledSitting[][] = [];
+      // Rows the SHAPE PARSERS rejected before a sitting ever existed. They go
+      // into `drops` below one shape at a time; this keeps the same total so
+      // they can be added back into what the pass considered.
+      let parseDropped = 0;
       for (const shape of shapes) {
         if (shape === "weekday-list") {
           lists.push(parseSchedule(section));
@@ -745,11 +761,13 @@ export function makeSchedulePageSource(
           lists.push(sittings);
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.notSittings + counts.undated;
         } else if (shape === "dated-list") {
           const { sittings, counts } = parseDatedList(section);
           lists.push(sittings);
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.notSittings + counts.undated;
         } else if (shape === "agenda-list") {
           const { sittings, counts } = parseAgendaList(
             schedule,
@@ -758,6 +776,7 @@ export function makeSchedulePageSource(
           lists.push(sittings);
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.notSittings + counts.undated;
         } else if (shape === "event-tip") {
           const { sittings, counts } = parseEventTips(
             schedule,
@@ -766,8 +785,20 @@ export function makeSchedulePageSource(
           lists.push(sittings);
           drops.notConfigured += counts.notSittings;
           drops.unplaceableInTime += counts.undated;
+          parseDropped += counts.notSittings + counts.undated;
         }
       }
+
+      /*
+       * A-002 · `mergeSittings` unions the shapes a row declares, keyed on the
+       * date, so a sitting a page states twice — once in its month table and
+       * once in its dated list — collapses to one. That collapse is a real
+       * disposition and used to leave no trace.
+       */
+      const rawSittings = lists.reduce((n, l) => n + l.length, 0);
+      const mergedSittings = mergeSittings(lists);
+      considered += rawSittings + parseDropped;
+      duplicates += rawSittings - mergedSittings.length;
 
       // The blanket sentence ("All meetings begin at 6:30 P.M.") applies to
       // every row that did not state its own time, and to none that did.
@@ -781,7 +812,7 @@ export function makeSchedulePageSource(
         .map((s) => s.trim())
         .filter(Boolean);
 
-      for (const sitting of mergeSittings(lists)) {
+      for (const sitting of mergedSittings) {
         const [y, mo, d] = sitting.date.split("-").map(Number);
         const time = sitting.time ?? stated;
         // With no stated time, local midnight is an ORDERING position and
@@ -795,7 +826,11 @@ export function makeSchedulePageSource(
           wiring.timeZone,
         );
         const t = Date.parse(startsAt);
-        if (t < windowStart || t > windowEnd) continue;
+        if (t < windowStart || t > windowEnd) {
+          // A-002: a deliberate clip is still a disposition and is counted.
+          outOfWindow += 1;
+          continue;
+        }
 
         // A row naming a different room than the page's own sentence is
         // resolved on ITS OWN string, so an uncurated venue drops and counts
@@ -842,11 +877,12 @@ export function makeSchedulePageSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, {
-      meetings,
-      drops,
-      unreachableOcdIds: [...unreachable],
-    });
+    return accountedNormalize(
+      SOURCE_NAME,
+      raw,
+      { meetings, drops, unreachableOcdIds: [...unreachable] },
+      { logicalInput: considered, duplicates, outOfWindow },
+    );
   };
 
   return {

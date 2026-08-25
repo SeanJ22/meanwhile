@@ -1934,6 +1934,201 @@ twice and the guard has become a record of what coverage happens to be — which
 nobody reads — rather than a claim about what must always be true, which
 somebody would.
 
+## THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION
+
+(Adopted 2026-08-24, the audit-remediation session, item 9. **RULINGS 128
+through 135.** `docs/rulings.md` carries all eight in plain language, because a
+ruling the author cannot read is a ruling that does not bind him.)
+
+Two external audits of `ae5b178` (code head `336a3eb`) — one for correctness,
+one for performance — returned eight findings, two systemic patterns and six
+performance items. **Every finding was REASONED rather than reproduced**,
+because the auditor could not run code, so the session's law was that no fix
+ships without its finding first reproduced against the code as shipped. Eight of
+eight reproduced; none was disputed.
+
+### RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT
+
+(Adopted 2026-08-24. Answers **A-002** and **S-001**. Extends the
+zero-row-extraction rule and RULING 100; narrows neither.)
+
+**`produced + dropped + outOfWindow + duplicates === logicalInput`. Exactly.
+Every logical record has one disposition, and a record that has none vanished.**
+
+The shipped contract asked a BOOLEAN — *was anything dropped?* — and a boolean
+cannot tell one drop from ninety-nine. Reproduced before it was touched: 100
+logical inputs, 0 output, `{malformed: 1}`, branded as a fully-accounted result.
+**One recorded drop laundered ninety-nine disappearances.**
+
+That was the right question for RULING 43, which is about a pass that produced
+NOTHING. It is silent about a pass that produced SOME — which is RULING 100's
+partial exactly: *a total that reconciles is not a total that is correct.*
+
+- **The unit is the LOGICAL RECORD, never the document.** One `.ics` file is one
+  raw row and 1,157 events. The old module doc used that fact to argue against
+  counting; the answer to *documents and events are different units* is to count
+  in the unit the disposition happens in, not to stop counting.
+- **A pass that cannot count records `COULD_NOT_ASSERT`** — named, reported,
+  never a silent pass. `clerksboards` is the honest case: where a clerk writes
+  *meets as required*, one counted drop stands in for an unknowable number of
+  sittings and no true number exists.
+- **A duplicate is a disposition**, and it used to be a bare `continue` leaving
+  no trace — which is also where A-005's collisions vanished.
+
+The machinery is `conserve` in `lib/sources/normalize-account.ts`, guarded in
+`tests/conservation.test.ts` and swept in `tests/zero-row-contract.test.ts`.
+Measured on adoption: 13 of 13 call sites declare a count, 12 adapters' fixtures
+re-run under the shared contract, 0 newly failing.
+
+### RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN IMPLICIT END OF DATA
+
+(Adopted 2026-08-24. Answers **A-006**. Supersedes nothing.)
+
+**Reaching a cap while the source still advertises more is a FAILURE, and it
+throws — naming the pages fetched, the rows read, and the URL not followed.**
+
+Apptegy stopped at twelve pages with the API still offering a next page: 240
+events read, an unknown number left on the server, no error and no partial
+marker. The adapter's own comment already called the cap *a runaway stop, not a
+coverage cap*, and the code did not enforce the difference. **A cap documented
+as unreachable and silently reachable is worse than one nobody claimed anything
+about.**
+
+The sweep this required found the identical shape in `legistar`'s `pageById`,
+behind an identical comment. The cap itself stays — a runaway stop is a real
+need — and what changed is what hitting it MEANS.
+
+### RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DOCUMENT FINALIZER
+
+(Adopted 2026-08-24. Answers **A-003**. Supersedes nothing.)
+
+**A body becomes a return value in exactly one place, and every rung goes
+through it.**
+
+The 403 escalation had two return paths that never met `notADocument`: rung 3
+was checked only for a known challenge page, and rung 4 was returned raw with
+neither check. **Document validity depended on WHICH RUNG succeeded** — the same
+bytes refused on rung 2 and accepted on rung 3. Reproduced against the shipped
+code: an HTML 404 page returned as an `.ics` feed.
+
+**And no test could reach either branch**, because the escalation is gated on
+`!options.fetchImpl` — correct, so a fake fetch is not routed around, and the
+effect was a production path nothing could observe. That is the chromium-pin
+shape. `HttpOptions.ladder` is the DECLARED seam; production injects nothing and
+walks the real rungs.
+
+### RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT
+
+(Adopted 2026-08-24. Answers **A-004** and **S-002**. Extends the refresh
+corollary; narrows nothing.)
+
+**A result says which SCOPE failed, for which divisions, and why. Completeness
+is never inferred from `ok: true`, and carry-forward preserves the failed scope
+and no other.**
+
+`ical` fetches two feeds per body, and the past feed's failure was caught by an
+EMPTY `catch` whose comment read: *the archive's absence is visible as a
+jurisdiction with no concluded meetings.* **That sentence is the render-default
+failure written down as a design note.** The adapter reported success,
+carry-forward preserves rows only for a source or division that FAILED, and
+every concluded meeting the previous snapshot held was deleted by an outage.
+
+Marking the whole division unreachable would be wrong the other way — the
+upcoming feed answered, and carrying its rows forward would resurrect a sitting
+the town had just cancelled. So an `ARCHIVE` failure carries back only sittings
+that had already concluded, asserted in both directions.
+
+### RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE SPACES, NOT COLUMN NAMES
+
+(Adopted 2026-08-24. Answers **A-001**. It is **The collection stores never
+join** made enforceable; it narrows nothing.)
+
+**No reader collection store may hold a value that identifies a person
+independently of us.**
+
+The claim in this file is absolute. The test that was supposed to assert it
+checked column NAMES against a fragment list — and `feedback.reply_to` held a
+raw email address, does not contain the letters `email`, and was waved through
+as a carefully-written named exception. `questionnaire_invitations.email` holds
+a raw email address too. **One value space, two tables, equality-joinable, and a
+guard that could not see it** — RULING 110's wrong-form search, inside a test.
+
+- **Classification is by DOMAIN**, in `lib/db/identity-domains.ts`: every column
+  of every table, and a column missing from it fails the build.
+- **World value versus minted handle is the distinction that matters.** An email
+  address is joinable using data nobody here controls. A handle we minted is
+  joinable only where we put it, and we can say where.
+- **A shared deterministic hash is the same join key relocated.** Two tables
+  holding `sha256(address)` still match. The contact handle is `randomUUID()`,
+  never derived from the address.
+
+*The scope correction, recorded rather than smoothed.*
+`questionnaire_invitations.email` is a candidate's address from the county
+clerk's certified public filing, held to send one questionnaire, and nothing
+about it is wrong. **The finding's force is the CLASS**: an absolute claim is
+falsified by one counterexample however defensible the other side of the join
+is.
+
+### RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREMENT
+
+(Adopted 2026-08-24. Answers **P-001** through **P-004**. Extends the
+two-numbers rule and RULING 113; supersedes nothing.)
+
+**Counts, bytes or timings, before and after, asserted by counters or committed
+baselines. Never visual equivalence.**
+
+`lib/map/marker-pool.ts` claimed since it was written that a filter narrowing
+500 pins to 480 does 20 DOM writes. Nothing measured it, and the wiring made it
+false: the canvas was handed the FILTERED venues, so twenty filtered-out venues
+arrived as twenty venues the data no longer had and their markers were
+destroyed. **Visual equivalence cannot tell a reused marker from a recreated
+one** — the map looks identical either way, which is why it lasted.
+
+- **A change is KEPT ONLY IF THE REBUILT NUMBER FELL.** P-002's first attempt
+  moved the landing bundle from 2,955,835 to 2,956,534 raw bytes — UP — because
+  one static importer remained. A change kept because it sounded right is what
+  this forbids.
+- **A speed change that alters an answer is a wrong answer that arrived
+  faster.** P-003 cut exact polygon tests from 2,291 to 14 per lookup and
+  shipped only because **279 of 279** supported zips resolve to an identical set
+  of divisions.
+
+### RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE IS UNFINISHED
+
+(Adopted 2026-08-24. Answers **P-005**. Supersedes nothing.)
+
+**It measures nothing until normal is recorded — and a dishonest baseline is
+worse than none.**
+
+`pnpm perf` has existed since 2026-08-17 and `docs/perf-baseline.md` has never
+been committed: a thermometer with no recorded normal temperature. Run on this
+machine against a local production build it reported *hardware acceleration OFF
+or UNKNOWN* and `NaN` for every frame metric. **That output was not committed**,
+which is the rule working: the row stays open with the measurement attached
+rather than closing on a number that describes a rasterizer.
+
+### RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMITTING THE AUTHOR'S ARTIFACTS
+
+(Adopted 2026-08-24, the author's instruction. Refines **RULING 104**; narrows
+nothing.)
+
+**A file the author places in the repo is registered into git UNREAD, and the
+fence on its content stands in full force.**
+
+RULING 104 says such an artifact is an input the session must reach. A standing
+fence says a session may not act on a visual batch's contents until the visual
+session owns them. Read together they appeared to conflict, and the conflict
+blocked `handoff --ship` for every session while the files sat untracked.
+
+They do not conflict. **Committing is REGISTRATION, not action.** `git add` on a
+capture the session never opens is precisely what makes it reachable to the
+session that owns it, and it reads nothing.
+
+*Recorded because it is a fact about the repo rather than about the rule:* on
+2026-08-24 `docs/feedback/8.24/` existed and was EMPTY. There were no captures
+to commit, git cannot track an empty directory, and the session's first act was
+therefore a no-op — reported rather than smoothed.
+
 ## Entry experience
 
 The app opens on a map. The user enters a zip code, the map zooms, upcoming local meetings and hearings render as pins.

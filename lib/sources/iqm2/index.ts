@@ -177,8 +177,13 @@ export function makeIqm2Source(
       notConfigured: 0,
     };
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one calendar page and carries many rows.
+    let considered = 0;
+
     for (const { wiring, html, collectedAt } of raw) {
       for (const row of parseCalendarRows(html)) {
+        considered += 1;
         // Only rows for the wired board; the same tenant can host others.
         if (
           wiring.config.boardMatch &&
@@ -243,7 +248,12 @@ export function makeIqm2Source(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops }, {
+      logicalInput: considered,
+      // Every `placeless` here has a `continue` behind it, so this adapter's
+      // counter really is a drop — unlike boardbook, civicplus and diligent,
+      // where the same field name tallies a meeting that is kept (A-002).
+    });
   };
 
   return {

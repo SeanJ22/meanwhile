@@ -5,10 +5,11 @@ import {
   type FeedbackSurface,
 } from "../feedback/shape.ts";
 import { scrubFreeText } from "../log/scrub.ts";
+import { randomUUID } from "node:crypto";
 
 import { getDb } from "./index.ts";
 import { ORGANIC, type RunMarker } from "./run-marker.ts";
-import { feedback } from "./schema.ts";
+import { feedback, feedbackContact } from "./schema.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 
 /**
@@ -108,6 +109,21 @@ export async function writeFeedback(
   }
   const replyTo = replyToRaw || null;
 
+  /*
+   * **A-001 · THE HANDLE IS MINTED, NEVER DERIVED.**
+   *
+   * `randomUUID()`, not `sha256(address)`. A deterministic digest on both
+   * sides would be the same join key relocated: two tables holding
+   * `sha256(address)` can still be equality-joined, and one of them would be
+   * the reader collection store again. A random handle can be joined only
+   * where we put it, and we put it in exactly two places.
+   *
+   * Null when the reader left the field blank, which is most submissions —
+   * and a null handle means no row in the delivery store at all, so an
+   * ordinary submission leaves no address anywhere.
+   */
+  const contactRef = replyTo ? randomUUID() : null;
+
   const marker = submission.marker ?? ORGANIC;
 
   if (!process.env.DATABASE_URL) return { kind: "NO_STORE" };
@@ -118,13 +134,32 @@ export async function writeFeedback(
   assertWriteAllowed("a feedback submission");
 
   try {
+    const receivedAt = new Date().toISOString();
+    /*
+     * A-001 · THE ADDRESS GOES FIRST, AND THAT ORDER IS THE RULE.
+     *
+     * If the delivery row failed after the feedback row landed, the reader
+     * would have asked to be replied to and the handle would point at
+     * nothing — an answer promised and quietly not deliverable. The other
+     * way round, a failure leaves an orphaned address with no message
+     * attached, which is harmless and is cleaned up on the same schedule.
+     *
+     * Both writes are in one `try`, so a failure of either is reported as a
+     * failed submission rather than as a partial success (RULING 100, in a
+     * write path).
+     */
+    if (contactRef && replyTo) {
+      await getDb()
+        .insert(feedbackContact)
+        .values({ contactRef, address: replyTo, receivedAt });
+    }
     await getDb()
       .insert(feedback)
       .values({
-        receivedAt: new Date().toISOString(),
+        receivedAt,
         message,
         surface: submission.surface,
-        replyTo,
+        contactRef,
         runClass: marker.runClass,
         runId: marker.runClass === "ORGANIC" ? null : marker.runId,
         suspectReason: submission.suspectReason ?? null,

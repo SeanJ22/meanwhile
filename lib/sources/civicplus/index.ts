@@ -226,6 +226,12 @@ export function makeCivicPlusSource(
       notConfigured: 0,
     };
 
+    // A-002 · counted in the unit the disposition happens in. One raw row is
+    // one town's feed plus its archive page, and both expand into many events.
+    let considered = 0;
+    let duplicates = 0;
+    let keptButPlaceless = 0;
+
     for (const { wiring, ical, agendaCenter, collectedAt } of raw) {
       const summaryMatch = wiring.config.summaryMatch ?? "";
       // The body's own published name, where the feed's SUMMARY is a sitting
@@ -240,6 +246,7 @@ export function makeCivicPlusSource(
       const rowDates = new Set<string>();
 
       for (const event of parseIcalEvents(ical)) {
+        considered += 1;
         if (summaryMatch && !event.summary.includes(summaryMatch)) {
           drops.notConfigured++;
           continue;
@@ -271,7 +278,12 @@ export function makeCivicPlusSource(
         const online = isPlacelessLocation(eventLocation)
           ? { label: eventLocation, joinUrl: null }
           : null;
-        if (online) drops.placeless++;
+        if (online) {
+          drops.placeless++;
+          // A-002: this TALLIES a meeting that is then PRODUCED below (D18),
+          // so it is not a drop and must not be summed as one.
+          keptButPlaceless += 1;
+        }
         const venue = online
           ? null
           : resolveVenue(SOURCE_NAME, wiring.ocdId, eventLocation);
@@ -332,9 +344,15 @@ export function makeCivicPlusSource(
       const archiveUrl = `${wiring.config.agendaCenterUrl}`;
 
       for (const sitting of parseAgendaCenter(agendaCenter, categoryId)) {
+        considered += 1;
         // The feed's own row for a date, with its real time, always wins —
         // for THIS body. `rowDates` is per wiring row, not per division.
-        if (rowDates.has(sitting.date)) continue;
+        if (rowDates.has(sitting.date)) {
+          // A-002: the feed already produced this sitting; the archive row is
+          // the same logical record arriving a second way.
+          duplicates += 1;
+          continue;
+        }
         if (!venue) {
           drops.unknownVenue++;
           continue;
@@ -374,7 +392,12 @@ export function makeCivicPlusSource(
       }
     }
 
-    return accountedNormalize(SOURCE_NAME, raw, { meetings, drops });
+    return accountedNormalize(
+      SOURCE_NAME,
+      raw,
+      { meetings, drops },
+      { logicalInput: considered, duplicates, countedButProduced: keptButPlaceless },
+    );
   };
 
   return {

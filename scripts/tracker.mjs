@@ -1461,6 +1461,121 @@ function modeResolve(working, resolved, sections) {
   return { working, resolved };
 }
 
+/**
+ * **UNDO A SESSION'S OWN RESOLUTION, BEFORE IT MOVES.** (Added 2026-08-24,
+ * audit-remediation.)
+ *
+ * `resolve` had no inverse, and the store has exactly one writer — this file —
+ * so a session that marked the wrong row had a choice between leaving a false
+ * resolution standing and hand-editing a CSV that `CLAUDE.md` says nothing else
+ * may write. Both are worse than a mode.
+ *
+ * It happened here: P-005's row was marked Resolved by a batch script whose
+ * "note this one instead" branch silently failed to apply, and the brief for
+ * that row says in as many words to leave it OPEN. A row closed on work whose
+ * measurement is owed is exactly what the performance-measurement ruling
+ * forbids, so it had to come back.
+ *
+ * THE GUARDS ARE THE SAME ONES `resolve` HAS, and for the same reasons:
+ *
+ * - **RULING 37** — a session may not touch a Needs Sean row's resolution in
+ *   either direction. Re-opening one he closed would be as much a session
+ *   overruling him as closing one he had not.
+ * - **RULING 41** — nor a row he wrote.
+ * - **Only a row this session itself closed.** Re-opening another session's
+ *   resolution is not an undo, it is a disagreement, and it goes to him.
+ * - **Only while the row is still in the WORKING store.** Once `move` has run,
+ *   the resolved store is the permanent record and nothing is deleted from it.
+ *
+ * The Session record KEEPS the resolution text and gains the reopening beside
+ * it. An undo that erased what was claimed would leave a row whose history
+ * says it was never closed, which is a different lie from the one being
+ * corrected.
+ */
+function modeReopen(working, resolved, sections) {
+  const id = process.argv[3];
+  const reasonAt = process.argv.indexOf("--reason");
+  const reasonPath = reasonAt === -1 ? null : process.argv[reasonAt + 1];
+
+  if (!id || !reasonPath || !existsSync(reasonPath)) {
+    console.error(
+      "usage: node scripts/tracker.mjs reopen <ID> --session=<label> --reason <file>\n" +
+        "\n" +
+        "  The reason file is REQUIRED. A resolution withdrawn with no reason is\n" +
+        "  indistinguishable from one that was never written.",
+    );
+    process.exit(2);
+  }
+  if (!SESSION_LABEL) {
+    console.error("reopen refuses without --session=<label>.");
+    process.exit(2);
+  }
+
+  const reason = readFileSync(reasonPath, "utf8").trim().replace(/\s+/g, " ");
+  if (reason.length < 20) {
+    console.error(`the reason file holds ${reason.length} character(s).`);
+    process.exit(2);
+  }
+
+  const hits = working.filter((r) => (r.ID ?? "").trim() === id);
+  if (hits.length === 0) {
+    const moved = resolved.some((r) => (r.ID ?? "").trim() === id);
+    console.error(
+      moved
+        ? `${id} has already MOVED to the resolved store, which is permanent. Open a new row.`
+        : `${id} is not in the working store.`,
+    );
+    process.exit(1);
+  }
+
+  const row = hits[0];
+  const section = (row.Section ?? "").trim();
+  const onlySean = new Set(sections.filter((s) => s.onlySeanResolves).map((s) => s.slug));
+  if (onlySean.has(section)) {
+    console.error(
+      `RULING 37 — ${id} is in "${section}". Only Sean decides a row there is closed, and\n` +
+        "only he decides it is not.",
+    );
+    process.exit(1);
+  }
+  if (isSeanAuthored(row)) {
+    console.error(`RULING 41 — ${id} was opened by ${SEAN_AUTHOR}; its state is his judgement.`);
+    process.exit(1);
+  }
+
+  const already = (row.Resolution ?? "").trim();
+  if (!already) {
+    console.error(`${id} carries no resolution — there is nothing to withdraw.`);
+    process.exit(1);
+  }
+  const closer = (row["Closed by"] ?? "").trim();
+  if (closer !== SESSION_LABEL) {
+    console.error(
+      `${id} was closed by "${closer}", not by this session. Withdrawing another\n` +
+        "session's resolution is a disagreement, not an undo — open a row for it.",
+    );
+    process.exit(1);
+  }
+
+  const before = (row["Session record"] ?? "").trim();
+  row["Session record"] =
+    `${before} ${STAMP} (${SESSION_LABEL}). RESOLUTION WITHDRAWN by the session that wrote it, ` +
+    `and the text above is kept so the history says what was claimed. ${reason}`.trim();
+  row.Resolution = "";
+  row["Resolved on"] = "";
+  row["Closed by"] = "";
+
+  console.log(`\ntracker reopen — ${STAMP}\n`);
+  console.log(`  row                    ${id} · ${section} · ${row.Title}`);
+  console.log(`  was                    ${already}, closed by ${closer}`);
+  console.log(`  now                    OPEN`);
+  console.log(`  reason                 ${reason.length} chars appended to the Session record`);
+
+  writeFileSync(join(ROOT, WORKING_CSV), writeStore(working), "utf8");
+  console.log(`\n  written  ${WORKING_CSV}`);
+  return { working, resolved };
+}
+
 /* ------------------------------------------------------------------ main --- */
 
 const sections = readSections();
@@ -1485,7 +1600,12 @@ if (MODE === "open") {
 } else if (MODE === "add") {
   ({ working, resolved } = modeAdd(working, resolved, sections));
   modeViews(working, resolved, sections);
+} else if (MODE === "reopen") {
+  ({ working, resolved } = modeReopen(working, resolved, sections));
+  modeViews(working, resolved, sections);
 } else {
-  console.error(`unknown mode "${MODE}" — expected open, views, move, resolve, add, amend or note`);
+  console.error(
+    `unknown mode "${MODE}" — expected open, views, move, resolve, reopen, add, amend or note`,
+  );
   process.exit(2);
 }

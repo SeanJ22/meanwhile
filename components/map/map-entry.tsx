@@ -558,6 +558,34 @@ function MapEntryInner() {
 
   const venues = useMemo<Venue[]>(() => groupByVenue(meetings), [meetings]);
 
+  /*
+   * **P-001 · TWO LISTS, AND THE MAP NEEDS BOTH.**
+   * (Performance audit of `336a3eb`, remediated 2026-08-24.)
+   *
+   * `venues` above is grouped from the FILTERED meetings, and everything that
+   * renders a list of what is currently shown reads it — the count badge, the
+   * list overlay, the panel.
+   *
+   * The MAP needs the other one. Its marker pool exists so that filtering
+   * changes which pins are visible and never which markers exist, and passing
+   * it the filtered list defeated exactly that: twenty filtered-out venues
+   * arrived as twenty venues the data no longer had, their markers were
+   * destroyed, and reversing the filter built twenty new ones.
+   *
+   * So `allVenues` is grouped from the UNFILTERED held result, and the keys
+   * the filters leave are passed beside it. Neither is derived from the other
+   * at the component boundary, which is what stops the next well-meaning edit
+   * collapsing them back into one.
+   */
+  const allVenues = useMemo<Venue[]>(
+    () => (pinned ? groupByVenue(pinned.meetings) : []),
+    [pinned],
+  );
+  const visibleVenueKeys = useMemo(
+    () => new Set(venues.map((v) => v.key)),
+    [venues],
+  );
+
   const selectedVenue = useMemo(
     () => venues.find((v) => v.key === ui.selectedVenueKey) ?? null,
     [venues, ui.selectedVenueKey],
@@ -1700,7 +1728,8 @@ function MapEntryInner() {
             from a click on the canvas and the two must share one space. */}
         <div className="absolute inset-0">
           <MapCanvas
-            venues={venues}
+            venues={allVenues}
+            visibleVenueKeys={visibleVenueKeys}
             camera={camera}
             focus={focus}
             selectedVenueKey={ui.selectedVenueKey}

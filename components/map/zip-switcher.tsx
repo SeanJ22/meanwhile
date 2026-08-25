@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useRecentZips } from "@/hooks/use-recent-zips";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { lookupZctaAsync, warmZctaTable } from "@/lib/geo/zcta-table";
 
 /**
  * Changing zip without opening the drawer (item 3, 2026-08-15).
@@ -49,8 +49,14 @@ export function ZipSwitcher({
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const take = (zip: string) => {
-    const found = lookupZcta(zip);
+  // P-002 · the switcher is opened deliberately, so warming it on open puts
+  // the fetch entirely inside the time the reader spends choosing.
+  useEffect(() => {
+    warmZctaTable();
+  }, []);
+
+  const take = async (zip: string) => {
+    const found = await lookupZctaAsync(zip);
     if (!found) {
       // The honest failure, in the reader's terms: we do not hold a centroid
       // for this zip, which is a fact about our data and not about the zip.
@@ -67,7 +73,7 @@ export function ZipSwitcher({
       setError("A zip code is five digits.");
       return;
     }
-    take(zip);
+    void take(zip);
   };
 
   // The current zip is where the reader already is; offering it as a
@@ -92,7 +98,7 @@ export function ZipSwitcher({
             setError(null);
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter") submit();
+            if (e.key === "Enter") void submit();
           }}
         />
         <button type="button" onClick={submit} disabled={text.length !== 5}>
@@ -107,7 +113,7 @@ export function ZipSwitcher({
           <p className="zip-switcher-label">Recent on this device</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
-              <button key={zip} type="button" onClick={() => take(zip)}>
+              <button key={zip} type="button" onClick={() => void take(zip)}>
                 {zip}
               </button>
             ))}

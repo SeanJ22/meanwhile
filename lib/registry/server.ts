@@ -1,4 +1,4 @@
-import { readFile, readdir } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import {
@@ -55,23 +55,37 @@ async function load(): Promise<Loaded> {
   const geoDir = join(root, "public", "geo");
 
   /*
-   * Every district file in `public/geo`, and nothing else.
+   * **P-003 · THE RESOLVER READS A MANIFEST, NOT A DIRECTORY.**
+   * (Performance audit of `336a3eb`, remediated 2026-08-24.)
    *
-   * The directory grew a non-district member in g3: `state-outlines.geojson`,
-   * a GENERALIZED state boundary that exists only to decide which pixels the
-   * state-focus effect mutes. A blanket `*.geojson` sweep would have loaded
-   * it into the resolver alongside the cartographic boundaries and let a
-   * half-kilometre-accurate outline answer a question about who governs a
-   * point — which is precisely what its own header says it must never do.
+   * This used to be `readdir` with one file excluded by name. The exclusion
+   * was right and the instrument was wrong: `public/geo` is what the CLIENT
+   * downloads, plus the INPUTS to the scripts that build it, and a directory
+   * listing cannot tell an input from a product.
    *
-   * An allow-list would rot the other way (a new district type silently
-   * absent). So the rule is stated as an exclusion, named, with the reason
-   * attached to the name.
+   * So the resolver loaded `cd119.geojson` — the 1.63 MB national
+   * congressional file, 441 features and 80,115 coordinates — alongside
+   * `cd119-04`, `cd119-33` and `cd119-34`, its own per-state derivatives,
+   * which `pnpm cd:split` writes and which the map has used since g4 item 3.
+   * Every feature in the national file that could match a covered point is
+   * byte-identical to one in a per-state file, by construction of the split.
+   * The resolver was paying for all 435 other districts on every sweep.
+   *
+   * Measured: 26 files, 2,291 features, 118,533 coordinates → 25 files,
+   * 1,850 features, 38,418 coordinates. 67.6% of the geometry gone with no
+   * change to any answer, which `pnpm resolver:identity` proves per zip.
+   *
+   * The old comment's worry is preserved rather than dropped: an allow-list
+   * rots the other way, a new district type silently absent. The manifest is
+   * GENERATED, states its rule as SUPERSESSION, and accounts for every
+   * `.geojson` in the directory on one list or the other —
+   * `tests/resolver-manifest.test.ts` fails the build on a file that is on
+   * neither.
    */
-  const NOT_DISTRICT_GEOMETRY = new Set(["state-outlines.geojson"]);
-  const names = (await readdir(geoDir)).filter(
-    (n) => n.endsWith(".geojson") && !NOT_DISTRICT_GEOMETRY.has(n),
-  );
+  const manifest = JSON.parse(
+    await readFile(join(root, "data", "derived", "resolver-geometry.json"), "utf8"),
+  ) as { files: string[] };
+  const names = manifest.files;
   const features: GeoFeature[] = [];
   for (const name of names) {
     const parsed = JSON.parse(await readFile(join(geoDir, name), "utf8"));

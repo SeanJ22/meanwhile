@@ -59,11 +59,6 @@
       "reason": "Same rule as the client key paths: the two intake routes write to stores that may never join, and their limiter accessors are deliberately independent. The limiter table's own digest is already keyed differently from the reaction continuity hash for the same reason."
     },
     {
-      "id": "shape:hooks/use-stored-theme.ts#getSnapshot,hooks/use-stored-zip.ts#getSnapshot",
-      "disposition": "OWED",
-      "reason": "Travels with the subscribe group above and is fixed by the same shared helper."
-    },
-    {
       "id": "shape:lib/ballot/candidate-cards.ts#load,lib/ballot/candidate-sites.ts#load",
       "disposition": "ALLOWED",
       "reason": "The idiomatic lazy-JSON-loader shape — read a committed file once, cache it, return the typed value. Structurally identical by construction and typed differently; a shared generic would add an indirection without removing a place a defect can hide."

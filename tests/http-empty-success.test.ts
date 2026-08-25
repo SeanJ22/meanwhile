@@ -215,3 +215,147 @@ test("every direct network read in a source adapter checks it got a document", (
     `direct network reads with no document check: ${offenders.join(", ")}`,
   );
 });
+
+/* ======================================================================== *
+ *  A-003 · ONE FINALIZER, AND EVERY RUNG GOES THROUGH IT
+ * ======================================================================== */
+
+/**
+ * **DOCUMENT VALIDITY USED TO DEPEND ON WHICH RUNG SUCCEEDED.**
+ *
+ * External correctness audit of `336a3eb`, remediated 2026-08-24. The 403
+ * escalation had two return paths that never met `notADocument`: a rung-3
+ * browser-header 200 was checked only with `challengeIn`, and the rung-4 curl
+ * fallback was returned raw with neither check. The same bytes were refused on
+ * rung 2 and accepted on rung 3.
+ *
+ * **And no test in this repo could reach either**, because the escalation is
+ * gated on `!options.fetchImpl` — correctly, so a fake fetch is not routed
+ * around, but the effect was a production path that nothing could observe.
+ * `options.ladder` is the declared seam: supplying it says *drive the
+ * escalation with these doubles*, and omitting it leaves every existing caller
+ * exactly where it was.
+ */
+
+const html404 = "<html><body><h1>404 Not Found</h1></body></html>";
+
+/** A 403 on the first call — the trigger for the whole escalation. */
+const refuse403 = (): Promise<Response> =>
+  Promise.resolve(new Response("forbidden", { status: 403 }));
+
+test("A-003 · a rung-3 browser-header 200 carrying the wrong format is a WALL, not a document", async () => {
+  await assert.rejects(
+    politeGetText("https://town.example/export.ics", {
+      fetchImpl: refuse403 as unknown as typeof fetch,
+      expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
+      ladder: {
+        // Rung 3 answers 200 with an HTML error page. Before A-003 this was
+        // returned as the document.
+        browserFetch: (async () =>
+          new Response(html404, {
+            status: 200,
+            headers: { "content-type": "text/html" },
+          })) as unknown as typeof fetch,
+        curl: async () => ({ status: 200, contentType: "text/html", text: html404 }),
+      },
+    }),
+    (error: unknown) => {
+      assert.ok(error instanceof SourceHttpError);
+      assert.match(error.message, /carrying no BEGIN:VCALENDAR/);
+      assert.match(error.message, /a status is not a document/);
+      return true;
+    },
+  );
+});
+
+test("A-003 · a rung-3 200 with an EMPTY body is a WALL — the case challengeIn cannot see", async () => {
+  await assert.rejects(
+    politeGetText("https://town.example/export.ics", {
+      fetchImpl: refuse403 as unknown as typeof fetch,
+      ladder: {
+        browserFetch: (async () => new Response("   \n  ", { status: 200 })) as unknown as typeof fetch,
+        curl: async () => ({ status: 200, contentType: "", text: "" }),
+      },
+    }),
+    /an empty body/,
+  );
+});
+
+test("A-003 · the rung-4 curl fallback is validated too — it used to be returned raw", async () => {
+  await assert.rejects(
+    politeGetText("https://town.example/export.ics", {
+      fetchImpl: refuse403 as unknown as typeof fetch,
+      expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
+      ladder: {
+        // Rung 3 refuses outright, so the ladder falls through to rung 4 —
+        // which answers 200 with a page that is not the feed.
+        browserFetch: (async () => new Response("forbidden", { status: 403 })) as unknown as typeof fetch,
+        curl: async () => ({ status: 200, contentType: "text/html", text: html404 }),
+      },
+    }),
+    (error: unknown) => {
+      assert.ok(error instanceof SourceHttpError);
+      assert.equal(error.rung, 4, "the refusal has to name the rung that produced it");
+      assert.match(error.message, /WALL on rung 4/);
+      return true;
+    },
+  );
+});
+
+test("A-003 · a rung-3 200 that IS the document still succeeds, and reports rung 3's bytes", async () => {
+  const feed = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Selectboard\nEND:VEVENT\nEND:VCALENDAR";
+  const got = await politeGetText("https://town.example/export.ics", {
+    fetchImpl: refuse403 as unknown as typeof fetch,
+    expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
+    ladder: {
+      browserFetch: (async () =>
+        new Response(feed, { status: 200, headers: { "content-type": "text/calendar" } })) as unknown as typeof fetch,
+      curl: async () => {
+        throw new Error("rung 4 must not be reached when rung 3 answered with the document");
+      },
+    },
+  });
+  assert.equal(got.text, feed);
+  assert.equal(got.contentType, "text/calendar");
+});
+
+test("A-003 · injecting a fetchImpl alone still does NOT walk the ladder", async () => {
+  // The original guard's purpose, preserved: a test's fake fetch is the thing
+  // under test. Without `ladder`, a 403 is a 403 and nothing escalates.
+  await assert.rejects(
+    politeGetText("https://town.example/export.ics", {
+      fetchImpl: refuse403 as unknown as typeof fetch,
+    }),
+    (error: unknown) => {
+      assert.ok(error instanceof SourceHttpError);
+      assert.equal(error.status, 403);
+      assert.equal(error.rung, 2, "no rung above 2 was walked, and the error says so");
+      return true;
+    },
+  );
+});
+
+/**
+ * The structural half. Counting the return sites is what stops a future rung
+ * being added with its own `return {status, contentType, text}` beside the
+ * finalizer rather than through it — which is exactly how A-003 arrived.
+ */
+test("A-003 · politeGetText has exactly ONE place a body becomes a return value", () => {
+  const source = readFileSync(join(HERE, "..", "lib", "sources", "http.ts"), "utf8");
+  const body = source.slice(
+    source.indexOf("export async function politeGetText"),
+    source.indexOf("/** One polite GET returning parsed JSON. */"),
+  );
+  assert.ok(body.length > 500, "the slice missed politeGetText — this guard is stale");
+
+  const finalized = body.match(/return readValidatedResponse\(/g) ?? [];
+  assert.ok(finalized.length >= 3, `only ${finalized.length} rung(s) route through the finalizer`);
+
+  // A bare object return of the transport triple is the shape that was wrong.
+  const bare = body.match(/return\s*\{\s*\n?\s*status:/g) ?? [];
+  assert.deepEqual(
+    bare,
+    [],
+    "a rung returns a body without passing the finalizer — that is A-003 returning",
+  );
+});

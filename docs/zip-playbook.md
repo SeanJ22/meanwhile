@@ -3495,6 +3495,22 @@ script expected.
 | `pnpm guard:census [--write] [--allow-removals]` · `pnpm guard:history` | RULING 62 — see §4. |
 | `pnpm manifest:doc [--check]` | Regenerates the route tables in `docs/branch-manifest.md` — see §4. |
 
+### The tools the audit remediation built (2026-08-24)
+
+Not hunt tools. Every one of them is an instrument for proving something about
+this repo's own code, and they are here because the next session that needs to
+prove the same kind of thing should not rebuild them.
+
+| Command | What it does |
+|---|---|
+| `pnpm tsx scripts/repro-against-shipped.mts [--rev R] [--live]` | **Reproduce a finding against the code AS SHIPPED, not against the fix.** Materialises a module from `git show <rev>:<path>` into a scratch file, re-points its relative imports at the live tree, and drives the finding against that. Nothing stale is committed and the revision is named. Its second technique is the one worth remembering: where the code under test sits in a branch deliberately unreachable by injection — `politeGetText`'s 403 ladder is gated on `!options.fetchImpl` — replacing `globalThis.fetch` gets underneath the gate so the REAL ladder runs with doubles below it. |
+| `pnpm tsx scripts/a008-false-green-audit.mts [--count N]` | Replays two versions of a decision function over recent history and reports where they disagree. Written for the release gate; the shape generalises to any verdict function whose past answers are worth re-asking. The OLD logic is reimplemented in the script rather than imported, because importing the fixed module cannot answer a question about the broken one. |
+| `pnpm tsx scripts/p002-module-table.mts [--top N] [--json F]` | The landing page's initial JavaScript **by module**, decoded from the build's own source maps and reconciled to the byte. `pnpm build`'s budget answers map-versus-application, which is the right question for a budget and the wrong one for a fix: you cannot put a bucket behind an async boundary. Requires `WTP_ATTRIBUTION_BUILD=1`. |
+| `pnpm resolver:manifest` · `pnpm resolver:identity` | The geometry the server resolver may read, generated with SUPERSESSION as its rule, and the gate that proves a geometry change altered no answer — every supported zip through the old and new resolvers, compared as SETS. |
+| `pnpm purge:synthetic [--target=production] [--apply]` | Removes only `run_class = 'SYNTHETIC'` from the collection stores, exports every row to a dated backup outside the repo first, and refuses if ORGANIC, UNKNOWN or AUTHOR moved by a single row. Dry run by default. |
+| `pnpm tsx scripts/verify-p001-p002.mts` | Browser verification against a LOCAL production build (RULING 125). Its one transferable idea: it STAMPS each DOM element before the interaction and counts the stamps after, because a count would be satisfied by the same number of brand-new elements — which is precisely the defect it was written to catch. |
+| `node scripts/tracker.mjs reopen <ID> --session=… --reason F` | Withdraws a resolution THIS SESSION wrote, while the row is still in the working store. `resolve` had no inverse, and the store has one writer, so a session that marked the wrong row had to choose between a false resolution and hand-editing a CSV. It keeps the resolution text and adds the withdrawal beside it. |
+
 ## Inheritance — what the next zip loads before it hunts (RULING 63)
 
 **Read this before starting any zip. It is the first thing in the run, not a

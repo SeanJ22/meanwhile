@@ -122,19 +122,38 @@ test("a visible key with no pool entry is skipped rather than counted", () => {
   assert.equal(applyVisibility(pool, new Set(["v0", "v1", "ghost"])), 2);
 });
 
+/**
+ * **AMENDED 2026-08-24 for P-004**, and the amendment is narrow.
+ *
+ * This used to assert the literal strings ["false", "true", "false"], which
+ * pinned the IMPLEMENTATION — a sweep writing every pool entry on every
+ * selection, 500 writes to select one pin. Selection is diffed now: an
+ * unselected pin is never written, so its data-selected is ABSENT rather than
+ * "false".
+ *
+ * Nothing a reader can see changed. Every CSS rule for a pin keys on
+ * [data-selected="true"] (app/globals.css lines 4064, 4069, 4076) and none on
+ * "false", so absent and "false" render identically — checked, not assumed.
+ *
+ * So the invariant is what is asserted: EXACTLY ONE pin reads true, and after
+ * clearing, NONE does. That is the claim the test name always made, and it
+ * holds at any implementation (RULING 116 - pin the invariant, never the
+ * current value).
+ */
 test("selection is exclusive, and clearing it clears every pin", () => {
   const pool = stubPool(3);
-  applySelection(pool, "v1");
   const at = (k: string) => (pool.entries.get(k)!.element as unknown as StubElement).dataset;
-  assert.deepEqual(
-    ["v0", "v1", "v2"].map((k) => at(k).selected),
-    ["false", "true", "false"],
-  );
+  const trueKeys = () => ["v0", "v1", "v2"].filter((k) => at(k).selected === "true");
+
+  applySelection(pool, "v1");
+  assert.deepEqual(trueKeys(), ["v1"], "exactly one pin may read selected");
+
+  applySelection(pool, "v2");
+  assert.deepEqual(trueKeys(), ["v2"], "moving the selection leaves exactly one");
+  assert.equal(at("v1").selected, "false", "and the one it left is explicitly cleared");
+
   applySelection(pool, null);
-  assert.deepEqual(
-    ["v0", "v1", "v2"].map((k) => at(k).selected),
-    ["false", "false", "false"],
-  );
+  assert.deepEqual(trueKeys(), [], "clearing leaves none");
 });
 
 /* ------------------------------------------------- 3: the marker's face --- */

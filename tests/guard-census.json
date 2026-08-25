@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 223,
-    "named": 2145,
+    "files": 225,
+    "named": 2153,
     "dynamic": 6
   },
   "files": {
@@ -133,6 +133,13 @@
         "the classifier still cannot invent a route, and still cannot overrule a strong one",
         "the four classes the ruling names all route at one match, plus the two the index also carries",
         "the strong-match threshold is two distinct hits, and it is the same number the code uses"
+      ],
+      "dynamic": 0
+    },
+    "tests/ask-representation-parity.test.ts": {
+      "names": [
+        "ASK-5: every body a routed step names carries the roster the battlecard renders",
+        "ASK-5: no step claims the roster is unsourced while a roster exists for its body"
       ],
       "dynamic": 0
     },
@@ -1838,11 +1845,14 @@
     "tests/meeting-list-attribution.test.ts": {
       "names": [
         "F01 3.1: every meetings list renders the three groups, not a raw array",
-        "F01 3.2: a meeting from outside the list gets NO marker, never a wrong one",
-        "F01 3.2: one note per DISTINCT attribution, not one per row",
-        "F01 3.2: the marker set never runs out and never collides",
         "F01 3.2: the venue row no longer prints the jurisdiction on every meeting",
-        "F01 3.2: two bodies at one venue get two markers, in render order"
+        "SRC-1: identical rows credit ONE source, and it is named verbatim",
+        "SRC-1: no meeting surface prints a footnote marker on a row",
+        "SRC-1: nothing to credit renders NOTHING, never a placeholder",
+        "SRC-1: one sitting reads 'This was', never 'These were'",
+        "SRC-2: more than one source is the author's sentence plus the list",
+        "SRC-2: the author's own example wording — 'these three sources'",
+        "small counts read as words in the sentence, large ones as digits"
       ],
       "dynamic": 0
     },
@@ -2764,6 +2774,14 @@
         "every source-wiring row names a real registry body",
         "every wiring row's ocdId is its bodyId without the slot",
         "onbase: rows parse and mapped venues normalize; unmapped drop counted"
+      ],
+      "dynamic": 0
+    },
+    "tests/source-consolidation.test.ts": {
+      "names": [
+        "SRC: consolidating the DISPLAY leaves every provenance field exactly as it was",
+        "SRC: no source-carrying field was deleted from the meeting type",
+        "SRC: the single-source form still names its source in full, verbatim"
       ],
       "dynamic": 0
     },

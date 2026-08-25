@@ -8,7 +8,7 @@ It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1002 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1011 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 140 recorded
+## Rulings — 148 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -410,6 +410,14 @@ from. Each entry there names what it supersedes.
 - RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench
 - RULING 126 — campaign-finance data renders for readers and never enters anything sold
 - RULING 127 — no tool prints a credential value, and the guard is the values themselves
+- RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact
+- RULING 129 — a safety cap is a failure boundary, never an implicit end of data
+- RULING 130 — every transport success passes one shared document finalizer
+- RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`
+- RULING 132 — the identity boundary is proven over VALUE SPACES, not column names
+- RULING 133 — a performance change ships with its measurement
+- RULING 134 — an instrument without a committed baseline is unfinished
+- RULING 135 — a fence bars acting on content, never committing Sean's artifacts
 
 ## P0 tracker rows — 93 of 456 rows
 

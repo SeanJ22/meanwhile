@@ -8,12 +8,13 @@ import {
   formatMeetingTime,
   formatRelativeDay,
   locationLine,
-  meetingHeadline,
+  meetingEntryTitle,
   meetingSubline,
+  venueBodyTitle,
 } from "@/lib/map/format";
 import {
-  attributionNotesFor,
-  type AttributionNote,
+  sourceCreditFor,
+  type SourceCredit,
 } from "@/lib/meetings/list-attribution";
 import { relativeAge } from "@/lib/meetings/freshness";
 import { groupMeetingsForReading } from "@/lib/meetings/ordering";
@@ -51,7 +52,10 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   // Markers follow RENDER order, so the groups are flattened in group order
   // before the notes are built — not `venue.meetings`, which is the order the
   // reader no longer sees.
-  const { notes, markerFor } = attributionNotesFor(
+  // SRC-1/2/3: one credit line at the foot, built from the SAME flattened
+  // render order the rows use — a credit built from an order the reader never
+  // sees would name sources in an order that matches nothing on screen.
+  const credit = sourceCreditFor(
     groups.flatMap((group) => group.meetings),
   );
 
@@ -63,6 +67,10 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
   // (D18). The null check is the type being honest, not a case that occurs.
   const first = venue.meetings[0];
   const directions = first?.location ? venueLink(first.location) : null;
+  // MTG-6/MTG-7/MTG-8: one descent, read once, and the rows below read its
+  // `basis` so the card and its entries cannot disagree about whether the body
+  // has already been named.
+  const cardTitle = venueBodyTitle(venue.meetings, venue.name);
 
   return (
     <aside
@@ -75,25 +83,28 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
               meeting; the venue is where, and where comes after what. A
               multi-meeting venue leads with the count — the list below is
               the what. */}
-          {/* 3a (2026-08-16): WHAT it is, big and bold, on EVERY shape of
-              venue — a building hosting three sittings of one body headlines
-              that body, never the building. The building and address render
-              once, deduped, because some sources publish the address AS the
-              venue name. */}
+          {/* MTG-6 (2026-08-24): the count line, unchanged — it is the one
+              part of this header the author's captures leave alone. */}
           <p className="notice-eyebrow">
             {venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
+          {/* MTG-6 / MTG-8: the BODY is the title, and the building is where.
+              `venueBodyTitle` is the shared descent — see its note in
+              `lib/map/format.ts` for why a distinct-`bodyName` count was the
+              wrong question and what it was actually measuring. */}
           <h2 className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight text-paper">
-            {new Set(venue.meetings.map((m) => m.bodyName)).size === 1
-              ? meetingHeadline(venue.meetings[0])
-              : locationLine(venue.name, null)}
+            {cardTitle.title}
           </h2>
+          {/* MTG-6: venue name and address, in gray, beneath — the Parks and
+              Recreation pattern the author named as the reference. Where the
+              building IS the title there is nothing left to repeat under it,
+              so the address stands alone rather than printing twice. */}
           <p className="mt-1 text-[0.8125rem] leading-snug text-muted">
-            {new Set(venue.meetings.map((m) => m.bodyName)).size === 1
-              ? locationLine(venue.name, venue.address)
-              : (venue.address ?? "")}
+            {cardTitle.basis === "venue"
+              ? (venue.address ?? "")
+              : locationLine(venue.name, venue.address)}
           </p>
           {/*
             The address used to end there — correct, and inert. Somebody reading
@@ -130,8 +141,8 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
           in whatever order the venue grouper produced — which, with a serving
           window reaching ninety days back, put "Concluded 70 days ago" in the
           first row of an eight-meeting card. It now renders the three groups,
-          and every row's provenance collapses to a marker with the notes
-          printed once at the foot. */}
+          and the whole card's provenance collapses to ONE credit line at the
+          foot (SRC-1). */}
       <div className="overflow-y-auto">
         {groups.map((group) => (
           <section key={group.id}>
@@ -143,15 +154,18 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
                 <MeetingEntry
                   key={meeting.id}
                   meeting={meeting}
-                  marker={markerFor(meeting)}
                   onOpen={onOpenMeeting}
+                  /* MTG-7: the card above already names the body, so the row
+                     carries the sitting. False everywhere the card titled
+                     itself with the building instead. */
+                  bodyShown={cardTitle.basis !== "venue"}
                 />
               ))}
             </div>
           </section>
         ))}
 
-        <MeetingAttributionNotes notes={notes} />
+        <MeetingSourceCredit credit={credit} />
       </div>
     </aside>
   );
@@ -164,42 +178,55 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
  * organisation render verbatim, exactly as they did on every row before; what
  * changed is how many times.
  */
-export function MeetingAttributionNotes({
-  notes,
+export function MeetingSourceCredit({
+  credit,
   className = "border-t border-rule-soft px-5 py-3",
 }: {
-  notes: AttributionNote[];
+  credit: SourceCredit;
   className?: string;
 }) {
-  if (notes.length === 0) return null;
+  // SRC-1: nothing to credit renders NOTHING — no heading, no placeholder.
+  if (credit.kind === "none") return null;
   return (
     <div className={className}>
-      {notes.map((note) => (
-        <p
-          key={note.marker}
-          className="font-mono text-[0.6875rem] leading-relaxed text-muted"
-        >
-          <span aria-hidden="true" className="mr-1 text-paper-dim">
-            {note.marker}
-          </span>
-          <span className="text-paper-dim">{note.jurisdiction}</span>
-          {" — "}
-          {note.sourceOrg}
-        </p>
-      ))}
+      <p className="text-[0.6875rem] leading-relaxed text-muted">
+        {credit.lead}
+      </p>
+      {/* The multi-source list, still at the bottom, each source verbatim.
+          Empty for the single form, which already names its source in the
+          sentence above — printing it twice is the repetition SRC-1 removes. */}
+      {credit.sources.length > 0 && (
+        <ul className="mt-1">
+          {credit.sources.map((note) => (
+            <li
+              key={`${note.jurisdiction} ${note.sourceOrg}`}
+              className="text-[0.6875rem] leading-relaxed text-muted"
+            >
+              <span className="text-paper-dim">{note.jurisdiction}</span>
+              {" — "}
+              {note.sourceOrg}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
 
 function MeetingEntry({
   meeting,
-  marker,
   onOpen,
+  bodyShown = false,
 }: {
   meeting: Meeting;
-  /** F01 3.2: this row’s footnote symbol. Empty renders as nothing. */
-  marker: string;
   onOpen?: (meeting: Meeting) => void;
+  /**
+   * **MTG-7 (2026-08-24).** The card above this row already names the body, so
+   * the row names the SITTING. Default false, because a row that assumed its
+   * context had introduced it would drop the body's name on every surface that
+   * has no such context.
+   */
+  bodyShown?: boolean;
 }) {
   const concluded = meeting.status === "CONCLUDED";
   const { governing, zipPartial, basis, location } = useShellData();
@@ -223,12 +250,12 @@ function MeetingEntry({
               onClick={() => onOpen(meeting)}
               className="text-left font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper hover:text-signal"
             >
-              {meetingHeadline(meeting)}
+              {meetingEntryTitle(meeting, { bodyShown })}
             </button>
           </h3>
         ) : (
           <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-paper">
-            {meetingHeadline(meeting)}
+            {meetingEntryTitle(meeting, { bodyShown })}
           </h3>
         )}
       </div>
@@ -317,19 +344,14 @@ function MeetingEntry({
         {/* No identifier here: internal keys never render to readers (4a).
             Jurisdiction and source org are the reader-facing provenance.
 
-            F01 3.2 (2026-08-19): those two strings moved OUT of the row and
-            into one note per distinct body at the foot of the list, because on
-            an eight-sitting venue card they were the same two lines eight
-            times over. What stays on the row is the marker pointing at the
-            note, plus the two provenance facts that are genuinely PER ROW —
-            second-hand sourcing and the carry-forward stamp — which vary from
-            meeting to meeting and would be a lie if collapsed. */}
+            SRC-1 (2026-08-24): those two strings live in ONE credit line at
+            the foot of the card, and the footnote marker that used to point
+            at them is gone from the row — the author put a red arrow on a bare
+            asterisk floating between two meetings. What stays on the row is
+            the provenance that is genuinely PER ROW — second-hand sourcing and
+            the carry-forward stamp — which varies from meeting to meeting and
+            would be a lie if collapsed. */}
         <p className="font-mono text-[0.6875rem] leading-relaxed text-muted">
-          {marker && (
-            <span aria-hidden="true" className="text-paper-dim">
-              {marker}
-            </span>
-          )}
           {/*
             6f2 (2026-08-15, the author's ruling): "Not independently
             verified" is RETIRED where the source is the body's own site or

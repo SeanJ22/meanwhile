@@ -1,6 +1,9 @@
 import type { CoverageSummary, CoveredBody } from "../registry/coverage.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { officeTypeForTitle } from "../officials/office-blurbs.ts";
+/* ASK-5 (2026-08-24): the SAME store the battlecard and the representation
+   view read. See `peopleFor` below for what reading a different one cost. */
+import { rosterHoldersForBody } from "../registry/body-rosters.ts";
 
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
 
@@ -41,8 +44,24 @@ function whyFor(step: RouteStep, coverage: CoverageSummary): string {
 
 export interface ResolvedStep {
   why: string;
-  /** The bodies we can actually point at for this step. May be empty. */
-  bodies: { label: string; homepageUrl: string | null }[];
+  /**
+   * The bodies we can actually point at for this step. May be empty.
+   *
+   * **ASK-4 (2026-08-24) — `body` is the WHOLE covered row, and that is what
+   * makes the name a door rather than an exit.** The step used to carry a
+   * label and a `homepageUrl`, so the only thing an Ask answer could do with a
+   * body's name was link OUT of the product to the body's own website. The
+   * who-governs card settled this grammar on 2026-08-16: a body's row opens
+   * the body's battlecard, and every external door lives INSIDE that card.
+   * Ask was the one surface still doing it the old way, on all three of its
+   * placements. Carrying the row means the same opener the who-governs card
+   * uses can be handed to Ask unchanged, rather than a second lookup that
+   * could resolve to a different body.
+   *
+   * `homepageUrl` stays on the shape because it is part of the record. What
+   * changed is that no Ask surface renders it as the click target.
+   */
+  bodies: { label: string; homepageUrl: string | null; body: CoveredBody }[];
   /** The people we can actually name, each with their source intact. */
   people: SeatHolder[];
   /** The honest statement when bodies or people are missing. */
@@ -104,17 +123,68 @@ function bodiesFor(
   });
 }
 
+/**
+ * **ASK-5 (2026-08-24) — ASK AND REPRESENTATION WERE READING DIFFERENT
+ * STORES, AND ONLY ONE OF THEM HELD THE ANSWER.**
+ *
+ * The author's captures put the two side by side. `12-04-06` is Ask on
+ * "when does school start", saying *We haven't sourced who sits on this body
+ * yet* about Tucson Unified. `12-05-31` is the same district's battlecard,
+ * Representation tab, rendering Dr. Ravi Shah, Natalie Luna Rose, Jennifer
+ * Eckstrom, Val Romero, Sadie Shaw and Dr. Gabriel Trujillo — six people, five
+ * with photographs.
+ *
+ * **WHICH STORE EACH SIDE WAS READING.** This function read `coverage.seats`
+ * and `coverage.senators` — the LEGISLATIVE representation resolved from the
+ * reader's districts, which is Congress and the state legislature. The
+ * battlecard and the representation view read the BODY ROSTER store,
+ * `BODY_ROSTERS`, through `rosterHoldersForBody(bodyId)`. A school board sits
+ * in the second and has never been in the first, because a school board is not
+ * a legislative district — so Ask asked the one store that structurally could
+ * not answer, got nothing, and printed a sourced-sounding absence about a body
+ * whose members were on screen one click away.
+ *
+ * That is the collection-versus-rendering pair inside one product: two numbers
+ * for one question, each true about its own source, and the surface stating
+ * one of them as though it were the answer. It is also the render-default rule
+ * — the null was converted into a claim, and the claim was false.
+ *
+ * **THE FIX IS AT THE SHARED PATH**, which means the same key: the roster is
+ * looked up by `body.bodyId`, exactly the id the battlecard uses, so the two
+ * surfaces cannot drift again without both moving. `rosterHoldersForBody`
+ * returns an empty array for a body with no roster, so the honest gap still
+ * renders where there genuinely is one.
+ */
 function peopleFor(
   step: RouteStep,
   coverage: CoverageSummary,
+  bodies: CoveredBody[],
 ): SeatHolder[] {
-  if (!step.officeType) return [];
-  if (step.officeType === "us-senator") return coverage.senators;
   const holders: SeatHolder[] = [];
+  const seen = new Set<string>();
+  const push = (holder: SeatHolder) => {
+    if (seen.has(holder.id)) return;
+    seen.add(holder.id);
+    holders.push(holder);
+  };
+
+  // ASK-5: the body's own members lead, because they are the people the step
+  // is about. A school board's clerk is a better answer to "who decides when
+  // school starts" than the state representative who votes on the funding
+  // formula — and the second one is already the NEXT step of the route.
+  for (const body of bodies) {
+    for (const holder of rosterHoldersForBody(body.bodyId)) push(holder);
+  }
+
+  if (!step.officeType) return holders;
+  if (step.officeType === "us-senator") {
+    for (const senator of coverage.senators) push(senator);
+    return holders;
+  }
   for (const seat of coverage.seats) {
     for (const holder of seat.representatives) {
       if (officeTypeForTitle(holder.officeTitle) === step.officeType) {
-        holders.push(holder);
+        push(holder);
       }
     }
   }
@@ -140,7 +210,7 @@ export function resolveRouting(
 
   const steps: ResolvedStep[] = topic.steps.map((step) => {
     const bodies = bodiesFor(step, coverage);
-    const people = peopleFor(step, coverage);
+    const people = peopleFor(step, coverage, bodies);
 
     let gap: string | null = null;
     if (bodies.length === 0 && people.length === 0) {
@@ -158,6 +228,8 @@ export function resolveRouting(
         // body name (Body.name stays null on derived rows).
         label: b.name ?? b.divisionLabel,
         homepageUrl: b.homepageUrl,
+        // ASK-4: the row itself, so the name can open its battlecard.
+        body: b,
       })),
       people,
       gap,

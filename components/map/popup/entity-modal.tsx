@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
-import { attributionNotesFor } from "@/lib/meetings/list-attribution";
+import { sourceCreditFor } from "@/lib/meetings/list-attribution";
 import {
   groupMeetingsForReading,
   hasConcluded,
@@ -30,7 +30,7 @@ import {
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
 
-import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
+import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
 
 import { CalendarLinks } from "./calendar-links";
@@ -970,7 +970,8 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
   }
 
   const groups = groupMeetingsForReading(meetings, now);
-  const { notes, markerFor } = attributionNotesFor(
+  // SRC-1/2/3: one credit line at the foot of this tab, no inline markers.
+  const credit = sourceCreditFor(
     groups.flatMap((group) => group.meetings),
   );
 
@@ -992,11 +993,6 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                 </span>
               </div>
               <p className="mt-0.5 text-[0.6875rem] text-muted">
-                {markerFor(meeting) && (
-                  <span aria-hidden="true" className="mr-1 text-paper-dim">
-                    {markerFor(meeting)}
-                  </span>
-                )}
                 {formatMeetingTime(meeting)}
               </p>
               {/* 3i (2026-08-19): calendar links on every upcoming-meeting
@@ -1032,13 +1028,11 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
         </section>
       ))}
 
-      {/* F01 3.2: the body name used to sit on every row beside the time. It
-          is the same string on every row of a single body's card, so it moved
-          here — once per distinct body, with the marker above pointing at it.
-          The jurisdiction rides along, which is MORE provenance per note than
-          the row carried, not less. */}
-      <MeetingAttributionNotes
-        notes={notes}
+      {/* SRC-1 (2026-08-24): ONE credit line at the foot of the tab. The body
+          name and jurisdiction still render in full here — what is gone is the
+          footnote marker that used to sit on every row pointing at them. */}
+      <MeetingSourceCredit
+        credit={credit}
         className="mt-3 border-t border-[var(--rule)] pt-2.5"
       />
     </>

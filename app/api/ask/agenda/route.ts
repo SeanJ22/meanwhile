@@ -225,6 +225,10 @@ export async function POST(request: Request) {
       return {
         ...hit,
         bodyName: meeting?.bodyName ?? null,
+        /* ASK-4 (2026-08-24): the exact division key, so an agenda hit's body
+           name opens that body's battlecard rather than sitting inert. Never
+           a name match — two governments can share a name. */
+        ocdId: meeting?.ocdId ?? null,
         title: meeting?.title ?? null,
         startsAt: meeting?.startsAt ?? null,
         agendaUrl: meeting?.agendaUrl ?? null,

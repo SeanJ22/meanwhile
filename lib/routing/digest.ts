@@ -108,6 +108,14 @@ export function matchDigest(text: string): DigestMatch | null {
 export interface DigestMeetingRow {
   id: string;
   bodyName: string;
+  /**
+   * ASK-4 (2026-08-24): the division this sitting belongs to, so the body
+   * name in a digest row can open that body's battlecard instead of sitting
+   * inert. An EXACT key — never the name string, which two governments can
+   * share (the distinct-keys rule). Null where the meeting has no division,
+   * and a null renders as plain text rather than a wrong door.
+   */
+  ocdId: string | null;
   title: string;
   startsAt: string;
   startPrecision: "MINUTE" | "DAY";
@@ -148,6 +156,7 @@ function toRow(meeting: Meeting): DigestMeetingRow {
   return {
     id: meeting.id,
     bodyName: meeting.bodyName,
+    ocdId: meeting.ocdId,
     title: meeting.title,
     startsAt: meeting.startsAt,
     startPrecision: meeting.startPrecision ?? "MINUTE",

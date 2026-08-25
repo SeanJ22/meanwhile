@@ -147,6 +147,90 @@ export function locationLine(
   return `${n} · ${a}`;
 }
 
+/**
+ * **MTG-6 / MTG-8 (2026-08-24, the author's captures 11-59-24 and 12-01-44) —
+ * A MEETING CARD IS TITLED BY THE BODY, NEVER BY THE BUILDING.**
+ *
+ * His finding, in the captures: the Duffy Community Center card headlined
+ * *Duffy Community Center, Multipurpose Room* over ten sittings of the Tucson
+ * Unified School District — so the card read as though the MEETING WERE ABOUT
+ * THE BUILDING. The Parks and Recreation card is his named reference pattern:
+ * body as the title, venue and address in gray beneath. Its one flaw, struck
+ * through in red in `12-01-44`, is the jurisdiction prefix — *Tucson, AZ —*
+ * comes off, and the title is the body name alone.
+ *
+ * Why the venue ever won, which is the part worth keeping: the card asked
+ * whether every sitting shared one `bodyName`, and at TUSD they do not. The
+ * source publishes a DIFFERENT `bodyName` per sitting — "GOVERNING BOARD
+ * AGENDA SPECIAL MEETING", "AGENDA FOR AUDIT COMMITTEE MEETING" — while the
+ * `jurisdiction` is the district on every one of them. The distinct-body count
+ * was answering a question about the source's naming habits and being read as
+ * a question about who is meeting.
+ *
+ * So it descends: the shared body name if there is one, else the shared
+ * jurisdiction with its state suffix off, else — and only else — the building.
+ * The last rung is a real case (a civic centre hosting two governments) and it
+ * is the one shape where the building genuinely IS the only true common
+ * subject. It is reported as its own outcome rather than folded in, because
+ * "we titled this by the venue" and "this venue hosts one body" are different
+ * facts and a card that ran them together is what this fixes.
+ */
+export function venueBodyTitle(
+  meetings: Pick<Meeting, "bodyName" | "jurisdiction">[],
+  venueName: string,
+): { title: string; basis: "body" | "jurisdiction" | "venue" } {
+  const bodies = new Set(
+    meetings.map((m) => (m.bodyName ?? "").trim()).filter(Boolean),
+  );
+  if (bodies.size === 1) {
+    return { title: [...bodies][0]!, basis: "body" };
+  }
+
+  const jurisdictions = new Set(
+    meetings.map((m) => (m.jurisdiction ?? "").trim()).filter(Boolean),
+  );
+  if (jurisdictions.size === 1) {
+    return { title: bodyFromJurisdiction([...jurisdictions][0]!), basis: "jurisdiction" };
+  }
+
+  return { title: venueName, basis: "venue" };
+}
+
+/**
+ * "Tucson Unified School District, AZ" → "Tucson Unified School District".
+ *
+ * A TRAILING two-letter state code only. Anchored to the end and to a comma so
+ * it can never bite into a name — "Washington, DC" is the shape this strips,
+ * and "District of Columbia" is not, because the pattern requires the comma
+ * and the two letters and the end of the string all at once.
+ */
+export function bodyFromJurisdiction(jurisdiction: string): string {
+  return jurisdiction.replace(/,\s*[A-Z]{2}\s*$/, "").trim() || jurisdiction;
+}
+
+/**
+ * **MTG-7 (2026-08-24, confirmed by the author) — the row carries the SITTING,
+ * because the card above it already carries the body.**
+ *
+ * "Meetings in the next 30 days" stays as the header; the entry beneath is the
+ * actual meeting name — *Governing Board Agenda Special Meeting*, not *Tucson
+ * Unified School District, AZ — GOVERNING BOARD AGENDA SPECIAL MEETING*. This
+ * is `meetingRowTitle`'s rule (a row inside a context that already names the
+ * jurisdiction does not name it again) applied one level up: the card title is
+ * now that context.
+ *
+ * `titleShown` false hands the full headline back, so every surface that does
+ * NOT carry a body title above its rows is untouched.
+ */
+export function meetingEntryTitle(
+  meeting: Meeting,
+  { bodyShown }: { bodyShown: boolean },
+): string {
+  if (!bodyShown) return meetingHeadline(meeting);
+  const what = (meeting.bodyName ?? "").trim() || (meeting.title ?? "").trim();
+  return what || meetingHeadline(meeting);
+}
+
 /** Every plain date renders mm/dd/yyyy (3h). ISO dates in, 08/16/2026 out. */
 export function formatDateMDY(iso: string): string {
   // Replace each ISO date token so ranges ("2026-10-24 – 2026-11-01") and

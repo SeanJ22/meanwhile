@@ -12,7 +12,8 @@ import { buildDigest, type Digest } from "@/lib/routing/digest";
 import { ROUTABLE_CATEGORIES } from "@/lib/routing/destinations";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
-import type { CoverageSummary } from "@/lib/registry/coverage";
+import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import {
   KIND_LABEL,
@@ -103,6 +104,8 @@ interface AgendaAnswer {
     documentUrl: string;
     sourceOrg: string;
     bodyName: string | null;
+    /** ASK-4: the exact division key behind this hit, or null. */
+    ocdId: string | null;
     title: string | null;
     startsAt: string | null;
     agendaUrl: string | null;
@@ -118,6 +121,8 @@ export function AskBox({
   zip,
   ocdIds,
   onSearchPick,
+  onOpenBody,
+  onOpenPerson,
 }: {
   coverage: CoverageSummary;
   /** Orientation only, for the log — never district truth. */
@@ -131,6 +136,17 @@ export function AskBox({
    * behind it needs.
    */
   onSearchPick?: (item: SearchItem) => void;
+  /**
+   * **ASK-4 / ASK-8 (2026-08-24).** Opens a body's battlecard. This is the
+   * SAME opener the who-governs card is handed, so the two surfaces cannot
+   * resolve one name to two different bodies.
+   */
+  onOpenBody?: (body: CoveredBody) => void;
+  /**
+   * **ASK-3 / ASK-8 (2026-08-24).** Opens a person's battlecard. Again the
+   * who-governs card's own opener, threaded through rather than reimplemented.
+   */
+  onOpenPerson?: (holder: SeatHolder) => void;
 }) {
   const { venues, meetings, allMeetings } = useShellData();
   const ui = useUi();
@@ -163,7 +179,29 @@ export function AskBox({
   // ~250ms and disappeared too quickly. It now holds ~3 seconds with the
   // trailing dots animating in sequence for the duration. Presentation
   // only, still: routing and logging happen before the timer starts.
-  const BEAT_MS = 3000;
+  /**
+   * **ASK-6 (2026-08-24, the author's instruction) — the beat is DRAWN, not
+   * fixed.**
+   *
+   * It held exactly 3000ms on every ask since 2026-08-14, and a beat that is
+   * the same length every single time reads as a progress bar somebody set to
+   * a constant. The draw is between 2.4 and 3.1 seconds in 0.1-second steps —
+   * eight values — taken FRESH PER SUBMISSION, so two asks in a row do not
+   * match.
+   *
+   * **Presentation only, exactly as before.** The routing runs
+   * deterministically on-device before this timer starts and nothing is logged
+   * inside it, so the draw cannot change an answer or a record — it changes how
+   * long the acknowledgment holds and nothing else. The floor and the ceiling
+   * are named constants because the test reads them rather than a literal.
+   */
+  const BEAT_MIN_MS = 2400;
+  const BEAT_MAX_MS = 3100;
+  const BEAT_STEP_MS = 100;
+  const drawBeatMs = () =>
+    BEAT_MIN_MS +
+    Math.floor(Math.random() * ((BEAT_MAX_MS - BEAT_MIN_MS) / BEAT_STEP_MS + 1)) *
+      BEAT_STEP_MS;
   const [dots, setDots] = useState(1);
   useEffect(() => {
     if (!working) return;
@@ -448,9 +486,11 @@ export function AskBox({
         ? buildDigest(coverage, allMeetings, Date.now())
         : null;
 
-      // The beat holds its full length whatever the rung cost, so the box
-      // never flickers on a fast answer or feels stalled on a slow one.
-      const remaining = Math.max(0, BEAT_MS - (Date.now() - started));
+      // The beat holds its full drawn length whatever the rung cost, so the
+      // box never flickers on a fast answer or feels stalled on a slow one.
+      // ASK-6: drawn once per submission, here, so the ask that started it is
+      // the ask that gets that length.
+      const remaining = Math.max(0, drawBeatMs() - (Date.now() - started));
       beatTimer.current = setTimeout(() => {
         setAsked(result);
         setDigest(built);
@@ -646,7 +686,14 @@ export function AskBox({
         </p>
       )}
 
-      {asked && digest && <DigestAnswer digest={digest} />}
+      {asked && digest && (
+        <DigestAnswer
+          digest={digest}
+          coverage={coverage}
+          onOpenBody={onOpenBody}
+          onOpenPerson={onOpenPerson}
+        />
+      )}
 
       {asked && asked.destination && (
         /*
@@ -810,7 +857,13 @@ export function AskBox({
                 >
                   {hit.bodyName && (
                     <p className="text-[0.75rem] font-medium text-paper">
-                      {hit.bodyName}
+                      {/* ASK-4: the body name is a door here too. */}
+                      <BodyName
+                        label={hit.bodyName}
+                        ocdId={hit.ocdId}
+                        coverage={coverage}
+                        onOpenBody={onOpenBody}
+                      />
                     </p>
                   )}
                   {/* The clerk's own line. Never rewritten, never trimmed
@@ -893,14 +946,22 @@ export function AskBox({
                       {contact.note}
                     </p>
                   )}
-                  <a
-                    href={contact.sourceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-1 inline-block source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-                  >
-                    source — {contact.sourceOrg}
-                  </a>
+                  {/*
+                    **SRC-3 (2026-08-24) — ONE SOURCE LINE, AT THE BOTTOM.**
+
+                    This was a per-item `source — {org}` link on every contact
+                    card. It is the same sentence the meeting cards now carry,
+                    in the same place, in the level register: the publisher is
+                    named in full and verbatim, and it is not a competing click
+                    target beside the phone number the reader came for.
+
+                    The URL is NOT deleted — it is on the record, and the
+                    battlecard this contact belongs to lists it under Sources.
+                    What changed is what renders.
+                  */}
+                  <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
+                    This was sourced from {contact.sourceOrg}.
+                  </p>
                 </div>
               ))}
             </div>
@@ -910,19 +971,40 @@ export function AskBox({
               <li key={i} className="text-[0.75rem] leading-relaxed">
                 <p className="text-voice">{step.why}</p>
                 {step.bodies.length > 0 && (
+                  /*
+                    **ASK-4 (2026-08-24) — A BODY'S NAME OPENS ITS BATTLECARD,
+                    NEVER THE EXTERNAL SITE.**
+
+                    This rendered `body.homepageUrl` in a `target="_blank"`
+                    anchor, so the only thing a reader could do with "Tucson
+                    Unified District" in an answer was LEAVE. The who-governs
+                    card settled the grammar on 2026-08-16 — a body's row opens
+                    the body's large card, and every external door lives inside
+                    it — and Ask was the surface still doing it the old way.
+
+                    **ASK-8**: this is the shared renderer, so the sidebar, the
+                    collapsed top-right pill and any future placement all
+                    inherit the fix at once. There is exactly one `AskBox` and
+                    exactly one `PillCluster` constructing it.
+
+                    The opener is OPTIONAL, and the fallback is plain text
+                    rather than the old external link: a placement with no map
+                    behind it has nowhere to open a card, and sending that
+                    reader out of the product instead would be re-introducing
+                    the defect on the one surface nobody looks at.
+                  */
                   <p className="mt-0.5 text-[0.8125rem]">
                     {step.bodies.map((body, j) => (
                       <span key={body.label}>
                         {j > 0 && <span className="text-muted"> · </span>}
-                        {body.homepageUrl ? (
-                          <a
-                            href={body.homepageUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-link underline decoration-dotted underline-offset-2"
+                        {onOpenBody ? (
+                          <button
+                            type="button"
+                            onClick={() => onOpenBody(body.body)}
+                            className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
                           >
                             {body.label}
-                          </a>
+                          </button>
                         ) : (
                           <span className="text-paper">{body.label}</span>
                         )}
@@ -952,23 +1034,38 @@ export function AskBox({
                   <ul className="mt-0.5 space-y-1 text-[0.8125rem]">
                     {step.people.map((person) => (
                       <li key={person.id}>
-                        <span className="font-medium text-paper">
-                          {person.name}
-                        </span>
-                        <span className="text-muted"> · {person.officeTitle}</span>
-                        {person.sourceUrl && (
-                          <>
-                            {" "}
-                            <a
-                              href={person.sourceUrl}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-                            >
-                              source
-                            </a>
-                          </>
+                        {/*
+                          **ASK-3 (2026-08-24) — THE NAME IS THE PRIMARY CLICK
+                          TARGET, and it opens this person's battlecard.**
+
+                          A reader who has just been told WHO owns their
+                          problem wants to know about that person, and the name
+                          is where they will aim. It rendered as inert text.
+
+                          **SRC-4** is what cleared the room for it: the inline
+                          `source` tag that used to sit beside every name is
+                          gone from this answer entirely. It was a second,
+                          smaller, competing target one word away from the name
+                          — and the record it pointed at is in the battlecard's
+                          Sources tab, which is where the sourcing rule says it
+                          belongs. Nothing is de-sourced: `person.sourceUrl` and
+                          the whole provenance still travel on the row and
+                          render inside the card the name now opens.
+                        */}
+                        {onOpenPerson ? (
+                          <button
+                            type="button"
+                            onClick={() => onOpenPerson(person)}
+                            className="text-left font-medium text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+                          >
+                            {person.name}
+                          </button>
+                        ) : (
+                          <span className="font-medium text-paper">
+                            {person.name}
+                          </span>
                         )}
+                        <span className="text-muted"> · {person.officeTitle}</span>
                         {(person.phone || person.email || person.contactFormUrl) && (
                           <span className="ml-1 text-[0.75rem]">
                             {person.phone && (
@@ -1055,7 +1152,64 @@ export function AskBox({
  * gaps; nothing here is written, and every row is a record the product already
  * holds. See `lib/routing/digest.ts` for why the blocks never share a count.
  */
-function DigestAnswer({ digest }: { digest: Digest }) {
+/**
+ * **ASK-4 (2026-08-24) — one resolver, so every Ask template opens the same
+ * body for the same name.**
+ *
+ * Templates that carry a `CoveredBody` outright (the routed steps) hand it
+ * straight to the opener. Templates that carry a MEETING — the digest rows,
+ * the agenda hits — carry the division's ocd-id instead, and this resolves it
+ * against the same coverage the answer was built from.
+ *
+ * **Matched on the exact ocd-id and on the `#governing` / `#board` slot,
+ * never on the name string.** Two governments share a name constantly
+ * (Rockaway township and Rockaway borough sit in one county), and a
+ * name-matched door is a door onto the wrong government. No match renders
+ * plain text — an inert name is honest, a wrong battlecard is not.
+ */
+function BodyName({
+  label,
+  ocdId,
+  coverage,
+  onOpenBody,
+}: {
+  label: string;
+  ocdId: string | null;
+  coverage: CoverageSummary;
+  onOpenBody?: (body: CoveredBody) => void;
+}) {
+  const body = ocdId
+    ? coverage.bodies.find(
+        (b) =>
+          b.ocdId === ocdId &&
+          (b.bodyId === `${ocdId}#governing` || b.bodyId === `${ocdId}#board`),
+      )
+    : undefined;
+  if (!body || !onOpenBody) return <>{label}</>;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpenBody(body)}
+      className="text-left text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+    >
+      {label}
+    </button>
+  );
+}
+
+function DigestAnswer({
+  digest,
+  coverage,
+  onOpenBody,
+  onOpenPerson,
+}: {
+  digest: Digest;
+  coverage: CoverageSummary;
+  /** ASK-4: body names in digest rows open their battlecards. */
+  onOpenBody?: (body: CoveredBody) => void;
+  /** ASK-3: every person named in the digest opens their battlecard. */
+  onOpenPerson?: (holder: SeatHolder) => void;
+}) {
   return (
     <div data-ask-digest className="mt-3">
       <p className="t-eyebrow text-signal">Where you live</p>
@@ -1075,7 +1229,14 @@ function DigestAnswer({ digest }: { digest: Digest }) {
       >
         {digest.upcoming.rows.map((row) => (
           <li key={row.id} className="text-[0.75rem] leading-relaxed">
-            <span className="font-medium text-paper">{row.bodyName}</span>
+            <span className="font-medium text-paper">
+              <BodyName
+                label={row.bodyName}
+                ocdId={row.ocdId}
+                coverage={coverage}
+                onOpenBody={onOpenBody}
+              />
+            </span>
             <span className="text-muted"> · </span>
             <span className="text-voice">
               {row.startPrecision === "DAY"
@@ -1107,7 +1268,14 @@ function DigestAnswer({ digest }: { digest: Digest }) {
       >
         {digest.recent.rows.map((row) => (
           <li key={row.id} className="text-[0.75rem] leading-relaxed">
-            <span className="font-medium text-paper">{row.bodyName}</span>
+            <span className="font-medium text-paper">
+              <BodyName
+                label={row.bodyName}
+                ocdId={row.ocdId}
+                coverage={coverage}
+                onOpenBody={onOpenBody}
+              />
+            </span>
             <span className="text-muted"> · </span>
             <span className="text-voice">
               {formatMeetingDate(row)}
@@ -1137,21 +1305,21 @@ function DigestAnswer({ digest }: { digest: Digest }) {
       >
         {digest.representation.rows.map(({ seatLabel, holder }) => (
           <li key={`${seatLabel}|${holder.id}`} className="text-[0.75rem] leading-relaxed">
-            <span className="font-medium text-paper">{holder.name}</span>
-            <span className="text-muted"> · {holder.officeTitle}</span>
-            {holder.sourceUrl && (
-              <>
-                {" "}
-                <a
-                  href={holder.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
-                >
-                  source
-                </a>
-              </>
+            {/* ASK-3: the name is the door. SRC-4: the inline source tag is
+                gone — the record travels on the row and renders inside the
+                battlecard this name opens. */}
+            {onOpenPerson ? (
+              <button
+                type="button"
+                onClick={() => onOpenPerson(holder)}
+                className="text-left font-medium text-link underline decoration-dotted underline-offset-2 hover:text-paper"
+              >
+                {holder.name}
+              </button>
+            ) : (
+              <span className="font-medium text-paper">{holder.name}</span>
             )}
+            <span className="text-muted"> · {holder.officeTitle}</span>
           </li>
         ))}
       </DigestSection>

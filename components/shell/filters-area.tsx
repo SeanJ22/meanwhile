@@ -89,7 +89,19 @@ export function FiltersArea({
   };
 
   return (
-    <div className="filters-area">
+    /*
+     * **LAY-6 (2026-08-24) — collapsed is the DEFAULT, and collapsed reserves
+     * NOTHING.**
+     *
+     * `filtersPanelOpen` already defaulted to false, so the panel was closed
+     * on arrival and the author's capture `11-57-33` still shows a band of
+     * empty space under the word FILTERS: the header carried a 12px bottom
+     * margin and the area a 20px bottom padding whether or not anything
+     * followed them. Closed, that is 32px of nothing — dead space is exactly
+     * what the friction rule counts as a defect, and `data-open` is what lets
+     * the CSS charge for the gap only when there is something in it.
+     */
+    <div className="filters-area" data-open={ui.filtersPanelOpen || undefined}>
       <div className="filters-header">
         <button
           type="button"
@@ -97,6 +109,13 @@ export function FiltersArea({
           aria-expanded={ui.filtersPanelOpen}
           onClick={() => dispatch({ type: "filter/togglePanel" })}
         >
+          {/* The author asked for a right-pointing arrow: closed it points
+              right, open it turns down. One control, and its direction is the
+              state — a disclosure with no marker is a button a reader has to
+              press to discover. */}
+          <span className="filters-caret" aria-hidden="true">
+            ›
+          </span>
           Filters
           {count > 0 && <span className="filters-count">{count}</span>}
         </button>

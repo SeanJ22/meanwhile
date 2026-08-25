@@ -11,7 +11,8 @@ import {
   ballotCoveredForState,
   stateFromOcdIds,
 } from "@/lib/ballot/covered-states";
-import type { CoverageSummary } from "@/lib/registry/coverage";
+import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import type { SeatHolder } from "@/lib/officials/lookup";
 import { ASK_PILL_LABELS } from "@/lib/routing/ask-pill-labels";
 import type { AskPillPlacement } from "@/lib/map/cluster-placement";
 import type { SearchItem } from "@/lib/search";
@@ -66,6 +67,8 @@ export function PillCluster({
   onToggleAsk,
   ocdIds,
   onSearchPick,
+  onOpenBody,
+  onOpenPerson,
 }: {
   placement: AskPillPlacement;
   /** The zip the viewport currently resolves to. Null hides the pills. */
@@ -78,6 +81,11 @@ export function PillCluster({
   ocdIds: string[];
   /** M119's search half. Present wherever a map is behind the cluster. */
   onSearchPick?: (item: SearchItem) => void;
+  /** ASK-4/ASK-8: the who-governs card's own body opener, threaded to Ask so
+      every placement of the panel opens battlecards rather than leaving. */
+  onOpenBody?: (body: CoveredBody) => void;
+  /** ASK-3/ASK-8: the who-governs card's own person opener. */
+  onOpenPerson?: (holder: SeatHolder) => void;
 }) {
   const [switching, setSwitching] = useState(false);
 
@@ -219,6 +227,8 @@ export function PillCluster({
               zip={zip}
               ocdIds={ocdIds}
               onSearchPick={onSearchPick}
+              onOpenBody={onOpenBody}
+              onOpenPerson={onOpenPerson}
             />
           ) : (
             <p className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 text-[0.75rem] leading-relaxed text-voice shadow-[var(--shadow-panel)]">

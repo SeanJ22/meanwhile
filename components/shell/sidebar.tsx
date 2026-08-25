@@ -45,9 +45,6 @@ export function Sidebar({
   onNearMePoint,
   pillCluster,
   clusterElsewhere = false,
-  whoGoverns = null,
-  statsCollapsed = false,
-  onExpandStats,
 }: {
   onReset: () => void;
   /** Reopens the welcome overlay. */
@@ -75,25 +72,6 @@ export function Sidebar({
    * two doors onto one surface.
    */
   clusterElsewhere?: boolean;
-  /**
-   * **LAY-1 (item 4, 2026-08-23) — the who-governs card, in the column.**
-   *
-   * It used to float over the map in `.map-bottom-stack`, beside a rail that
-   * held the counts. The author's instruction is that everything lives in the
-   * left column, NESTED rather than stacked open: the counts card sets the
-   * column width, this sits directly beneath it, and expanding one collapses
-   * the other to pills.
-   *
-   * Null at every width where the rail is a drawer rather than a column —
-   * there the card keeps its place over the map, because a drawer that has to
-   * be opened to read who governs you is the buried entry point the friction
-   * rule forbids.
-   */
-  whoGoverns?: ReactNode;
-  /** True while the who-governs card holds the column. See `whoGoverns`. */
-  statsCollapsed?: boolean;
-  /** Expand the counts card, which collapses the who-governs card to its pill. */
-  onExpandStats?: () => void;
 }) {
   const { location } = useShellData();
 
@@ -238,9 +216,14 @@ export function Sidebar({
       </div>
 
       <div className="sidebar-scroll">
-        <StatsBar collapsed={statsCollapsed} onExpand={onExpandStats} />
-        {/* LAY-1: directly beneath the counts card, nothing between them. */}
-        {whoGoverns}
+        {/*
+          LAY-4 (2026-08-24): the who-governs card is NOT here. LAY-1 nested
+          it in this column; the author's arrows put it back in the viewport
+          BENEATH the rail, and the supersession table says LAY-1 must not
+          exist as built. The rail renders the counts and nothing else claims
+          its column.
+        */}
+        <StatsBar />
         {/* M119: the rail's second input is gone. Searching a meeting, body,
             district or person by name happens in the one input above. */}
         {/*
@@ -271,7 +254,11 @@ export function Sidebar({
             full-height column, which is precisely the dead space the rule
             says must not exist — the card now ends where its content ends, so
             the footer simply follows the last section. */}
-        <div className="mt-6 border-t border-[var(--panel-border)] px-1 pt-3 pb-2 text-[0.6875rem] leading-relaxed text-muted">
+        {/* LAY-5 (2026-08-24): the footer was two bare underlined links on
+            nothing, which is where the author's "degrades into unstyled raw
+            text" ends. It takes the same section chrome every block above it
+            now carries — one treatment down the whole column. */}
+        <div className="rail-section mb-3 text-[0.6875rem] leading-relaxed text-muted">
           <p>
             <a
               href="/transparency"

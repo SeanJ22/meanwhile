@@ -62,7 +62,7 @@ import {
   formatMeetingDate,
   formatMeetingTime,
   locationLine,
-  meetingHeadline,
+  meetingEntryTitle,
 } from "@/lib/map/format";
 
 import { SCHOOL_DISTRICT_TYPES } from "@/lib/map/districts";
@@ -222,19 +222,16 @@ function MapEntryInner() {
   // The who-governs card shrinks out of the way once the reader engages with
   // something specific (2h) — a pin, a list row, a filter — and comes back on
   // a tap or a new area.
-  const [noticeCollapsed, setNoticeCollapsed] = useState(false);
   /**
-   * **LAY-1 (item 4, 2026-08-23) — which card holds the left column.**
+   * **LAY-4 (2026-08-24) — ONE collapse mechanism, at every width.**
    *
-   * One expanded at a time. The other collapses to pills and every pill stays
-   * a door, so nothing becomes unreachable by being collapsed. The default is
-   * the who-governs card, because it is the answer the reader came for and
-   * defaulting to the counts would bury it one press deep on arrival.
-   *
-   * Only consulted where the rail is a COLUMN. In the drawer form the card
-   * keeps its place over the map and this is inert.
+   * The card floats; minimizing shrinks it to a pill in the same region it
+   * floated in. `columnCard` — LAY-1's "which card holds the left column" —
+   * is DELETED rather than left inert, because a second collapse mechanism
+   * for one card is how `wghOpen` came to need a conditional to work out
+   * which of two booleans it was asking about.
    */
-  const [columnCard, setColumnCard] = useState<"stats" | "wgh">("wgh");
+  const [noticeCollapsed, setNoticeCollapsed] = useState(false);
 
   /*
    * Popup state, in the two-tier architecture (3). Declared before the
@@ -1448,34 +1445,32 @@ function MapEntryInner() {
    */
   const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
   /*
-   * **LAY-1 (item 4, 2026-08-23) — the who-governs card lives in the LEFT
-   * COLUMN wherever the rail IS a column.**
+   * **LAY-4 (2026-08-24, the author's annotated capture `11-55-29`) — THE
+   * FLOATING CARDS ARE BACK, AND THEY BELONG UNDER THE RAIL.**
    *
-   * The author's instruction: everything in the left column, NESTED rather
-   * than stacked open. The counts card sets the column width, this sits
-   * directly beneath it, and expanding one collapses the other to pills — one
-   * expanded at a time.
+   * LAY-1 (2026-08-23) nested the who-governs card INSIDE the rail's
+   * scrolling column. The author's arrows say otherwise, and the supersession
+   * table in the 8/24 brief is explicit: LAY-1 must not exist as built. Who
+   * Governs Here, the meetings/venues count and the venue panel are SEPARATE
+   * FLOATING CARDS in the viewport region BENEATH the rail — none of the
+   * three inside the rail's content area.
    *
-   * `railIsAColumn` is the existing boolean for "the rail is a 364px side
-   * panel rather than a full-width drawer", and it is exactly the condition
-   * this turns on: below it the rail is a drawer, and a who-governs card that
-   * had to be opened out of a drawer would be the buried entry point the
-   * friction rule forbids. There it keeps its place over the map, unchanged.
+   * `railIsAColumn` still decides WHERE that region is, and it is still the
+   * existing boolean rather than a second breakpoint that could drift from
+   * it: where the rail is a 364px column the floaters sit under it in
+   * `.rail-floaters`; where it is a full-width drawer they keep their place
+   * over the map in `.map-bottom-stack`, unchanged.
+   *
+   * `.rail-column` is what makes LAY-3 true BY CONSTRUCTION rather than by
+   * measurement — the rail and the floaters are flex children of one fixed
+   * column, so neither can be laid out on top of the other at any viewport.
+   * A bound that has to be measured is a bound that holds until the content
+   * changes.
    */
-  const wghInColumn = railIsAColumn && Boolean(shown);
   /*
-   * Is the who-governs card OPEN, on whichever surface it is on?
-   *
-   * Two different collapse mechanisms answer to one question, and the cluster
-   * placement depends on the answer rather than on which mechanism produced
-   * it: over the map it is `noticeCollapsed`, and in the column it is which
-   * card holds the column. Reading only the first would have put the cluster
-   * on the map while a fully open card sat in the rail carrying its own slot,
-   * which is the two-doors-onto-one-surface defect 4e closed.
+   * Is the who-governs card OPEN? One mechanism now, at every width.
    */
-  const wghOpen = wghInColumn
-    ? columnCard === "wgh"
-    : Boolean(shown) && !noticeCollapsed;
+  const wghOpen = Boolean(shown) && !noticeCollapsed;
   const clusterAt = clusterPlacement({ wgh: wghOpen, sidebar: sidebarVisible });
   const clusterZip = shown
     ? /^\d{5}$/.test(shown.zip)
@@ -1504,6 +1499,29 @@ function MapEntryInner() {
           : []
       }
       onSearchPick={onSearchPick}
+      /*
+        **ASK-3 / ASK-4 / ASK-8 (2026-08-24) — the SAME two openers the
+        who-governs card is handed, a few lines below.**
+
+        Not a second implementation: the who-governs card settled this click
+        grammar on 2026-08-16 — a person's name opens their card, a body's row
+        opens the body's — and handing Ask the identical handlers is what makes
+        "the name is a door" mean the same thing on both surfaces. A second
+        lookup keyed on a label could resolve one name to a different body,
+        which is the class of defect the distinct-keys rule names.
+
+        There is exactly one `PillCluster` in this app, constructed here, so
+        every placement of the Ask panel — the rail, the who-governs card, and
+        the collapsed top-right pill the author captured in `12-12-28` —
+        inherits both openers from this one line.
+      */
+      onOpenBody={(body) =>
+        openLarge({
+          kind: "entity",
+          subject: bodySubject(body, shown?.meetings ?? []),
+        })
+      }
+      onOpenPerson={(holder) => openOfficial(holder, null, "local", null)}
     />
   );
   /*
@@ -1528,56 +1546,112 @@ function MapEntryInner() {
   const clusterRendered = Boolean(clusterZip && /^\d{5}$/.test(clusterZip));
 
   /*
-   * **LAY-1: the same card, rendered into the rail's own column.**
+   * **LAY-4: the floating cards, built ONCE and placed in one of two
+   * regions.**
    *
-   * One constructor, two placements — the props are identical, because a
-   * second construction is a second component that drifts. The only
-   * difference is `onMinimize`: over the map it shrinks to the floating
-   * "Who governs here" button, and in the column it hands the column back to
-   * the counts card, which is what "collapse to a pill" means here.
+   * One constructor, two placements — a second construction is a second
+   * component that drifts, and LAY-1 proved it: the card had two prop lists
+   * and two collapse handlers, and `wghOpen` needed a conditional to work out
+   * which of them was in force.
+   *
+   * The order is the author's, read off `11-55-29` and `11-54-33`: the
+   * meetings/venues count leads, the who-governs card follows, the freshness
+   * footnote closes. Each is its OWN card — separate boxes with the map
+   * visible between them, never one panel with three sections in it.
    */
-  const columnNotice =
-    wghInColumn && shown ? (
-      <div className="sidebar-wgh">
-        <CoverageNotice
-        tier={shown.tier}
-        zip={shown.zip}
-        radiusKm={shown.radiusKm}
-        requestedRadiusKm={shown.requestedRadiusKm}
-        count={shown.meetings.length}
-        coverage={shown.coverage}
-        refreshing={refreshing}
-        failedSourceOcdIds={
-          shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
-        }
-        /* F01 7.2: what the MAP is actually showing, so the card
-           cannot say “may be missing” about a body whose pins the
-           reader can see. Read off the same meeting array the pins
-           are drawn from — a second derivation is how two surfaces
-           come to disagree, which is the defect this closes. */
-        ocdIdsWithMeetings={[
-          ...new Set(
-            (shown.meetings ?? []).flatMap((m) =>
-              m.ocdId ? [m.ocdId] : [],
-            ),
-          ),
-        ]}
-        onOpenOfficial={openOfficial}
-        onOpenBody={(body) =>
-          openLarge({
-            kind: "entity",
-            subject: bodySubject(body, shown.meetings ?? []),
-          })
-        }
-        onMinimize={() => setColumnCard("stats")}
-        onNarrowApplied={onNarrowApplied}
-        onStreetPoint={onStreetPoint}
-        /* 4e: the WGH slot, which wins over the other two. */
-        pillCluster={clusterAt === "wgh" ? cluster : null}
-        clusterElsewhere={clusterRendered}
-      />
+  const floaters = (
+    <>
+      <div className="pointer-events-auto">
+        <CountBadge />
       </div>
-    ) : null;
+
+      {tilesFailed && <TileNotice />}
+      {failure && (
+        <SearchFailedNotice
+          failure={failure}
+          onRetry={() => setRetryNonce((n) => n + 1)}
+        />
+      )}
+
+      {shown &&
+        (noticeCollapsed ? (
+          /*
+           * Shrunk out of the way (2h), not gone: one tap brings the full
+           * card back. **LAY-4: the pill lands in the SAME region the card
+           * floated in** — never inside the rail, which is what
+           * `.sidebar-wgh-pill` did and is why that class is deleted.
+           */
+          <button
+            type="button"
+            className="notice-fab pointer-events-auto"
+            aria-label="Show who governs here"
+            /* 4c: opening WGH closes the rail and any battlecard. */
+            onClick={() => openSurface("wgh")}
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12.01" y2="8" />
+            </svg>
+            Who governs here
+          </button>
+        ) : (
+          // NOT wrapped in a div: `.map-bottom-stack > .coverage-notice` and
+          // `.rail-floaters > .coverage-notice` are the bounds that keep this
+          // card inside its region (M54/M55), and a `>` combinator reads the
+          // DOM tree, not the box tree — a wrapper would silently unbind it
+          // and the card would grow off the top again. The refreshing state
+          // rides as a prop instead.
+          <CoverageNotice
+            tier={shown.tier}
+            zip={shown.zip}
+            radiusKm={shown.radiusKm}
+            requestedRadiusKm={shown.requestedRadiusKm}
+            count={shown.meetings.length}
+            coverage={shown.coverage}
+            refreshing={refreshing}
+            failedSourceOcdIds={
+              shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
+            }
+            /* F01 7.2: what the MAP is actually showing, so the card
+               cannot say “may be missing” about a body whose pins the
+               reader can see. Read off the same meeting array the pins
+               are drawn from — a second derivation is how two surfaces
+               come to disagree, which is the defect this closes. */
+            ocdIdsWithMeetings={[
+              ...new Set(
+                (shown.meetings ?? []).flatMap((m) => (m.ocdId ? [m.ocdId] : [])),
+              ),
+            ]}
+            onOpenOfficial={openOfficial}
+            onOpenBody={(body) =>
+              openLarge({
+                kind: "entity",
+                subject: bodySubject(body, shown.meetings ?? []),
+              })
+            }
+            onMinimize={() => setNoticeCollapsed(true)}
+            onNarrowApplied={onNarrowApplied}
+            onStreetPoint={onStreetPoint}
+            /* 4e: the WGH slot, which wins over the other two. */
+            pillCluster={clusterAt === "wgh" ? cluster : null}
+            clusterElsewhere={clusterRendered}
+          />
+        ))}
+
+      {/* Provenance, not headline (3): "Last checked" demotes to a
+          footnote below the who-governs card. */}
+      {shown?.snapshot && <DataFreshness snapshot={shown.snapshot} />}
+    </>
+  );
 
   return (
     <DataProvider value={data}>
@@ -1597,44 +1671,45 @@ function MapEntryInner() {
         className="relative h-dvh w-full overflow-hidden"
         data-sidebar={sidebarState}
       >
-        <Sidebar
-          onReset={onReset}
-          onChangeLocation={() => setWelcomeRequested(true)}
-          showDistricts={showDistricts}
-          districtsFailed={districtsFailed}
-          onToggleDistricts={setShowDistricts}
-          mobileOpen={sidebarState === "open"}
-          onMobileClose={() => setSidebarState("closed")}
-          onNearMePoint={onNearMePoint}
-          /* 4e: the sidebar slot. `clusterElsewhere` tells the rail whether a
-             cluster painted anywhere, so its fallback ballot link can never
-             become a second door onto the same surface. */
-          pillCluster={clusterAt === "sidebar" ? cluster : null}
-          clusterElsewhere={clusterRendered}
-          /* LAY-1: the who-governs card, nested directly under the counts.
-             Expanded it holds the column; collapsed it is a pill, and the
-             pill is the door back — a collapsed card that stopped being
-             reachable would be a hidden entry point. */
-          whoGoverns={
-            wghInColumn
-              ? columnCard === "wgh"
-                ? columnNotice
-                : (
-                    <div className="sidebar-wgh-pill">
-                      <button
-                        type="button"
-                        className="stat-pill"
-                        onClick={() => setColumnCard("wgh")}
-                      >
-                        Who governs here
-                      </button>
-                    </div>
-                  )
-              : null
-          }
-          statsCollapsed={wghInColumn && columnCard === "wgh"}
-          onExpandStats={() => setColumnCard("stats")}
-        />
+        {/*
+          **LAY-4 / LAY-3 — the rail and its floaters are ONE fixed column.**
+
+          The author's annotated capture `11-55-29` draws two arrows: one from
+          the rail's bottom edge straight DOWN into the region below it, one
+          from the meetings/venues chip LEFT into that same region. That region
+          is `.rail-floaters`, and this wrapper is what makes it exist.
+
+          Flex children of one column cannot be laid out on top of each other.
+          That is LAY-3 answered BY CONSTRUCTION — no measured bound, nothing
+          to drift when the who-governs card grows from 12 bodies to 174. Both
+          children shrink and scroll inside themselves rather than overflowing,
+          and the rail shrinks FIRST (`flex-shrink: 2` against 1) because the
+          floaters carry the answer the reader came for.
+        */}
+        <div className="rail-column">
+          <Sidebar
+            onReset={onReset}
+            onChangeLocation={() => setWelcomeRequested(true)}
+            showDistricts={showDistricts}
+            districtsFailed={districtsFailed}
+            onToggleDistricts={setShowDistricts}
+            mobileOpen={sidebarState === "open"}
+            onMobileClose={() => setSidebarState("closed")}
+            onNearMePoint={onNearMePoint}
+            /* 4e: the sidebar slot. `clusterElsewhere` tells the rail whether a
+               cluster painted anywhere, so its fallback ballot link can never
+               become a second door onto the same surface. */
+            pillCluster={clusterAt === "sidebar" ? cluster : null}
+            clusterElsewhere={clusterRendered}
+          />
+
+          {/* Where the rail is a COLUMN, the floaters live under it. Where it
+              is a full-width drawer they keep their place over the map, in
+              `.map-bottom-stack` below — one boolean, no second breakpoint. */}
+          {railIsAColumn && (
+            <div className="rail-floaters">{floaters}</div>
+          )}
+        </div>
 
         {/* F01 9.4 (2026-08-19, the author): *"I don't like that I have to open
             the sidebar to reset. A very, very, very small reset button or
@@ -1860,95 +1935,10 @@ function MapEntryInner() {
               readable content, and the card shrinks to the space left and
               scrolls inside itself rather than off the screen. */}
           <div className="map-bottom-stack absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-3 p-3 pb-9 sm:p-5 sm:pb-10">
-            <div className="pointer-events-auto">
-              <CountBadge />
-            </div>
-
-            {tilesFailed && <TileNotice />}
-            {failure && (
-              <SearchFailedNotice
-                failure={failure}
-                onRetry={() => setRetryNonce((n) => n + 1)}
-              />
-            )}
-
-            {shown &&
-              !wghInColumn &&
-              (noticeCollapsed ? (
-                // Shrunk out of the way (2h), not gone: one tap brings the
-                // full card back. Rendered off `shown` rather than `current`
-                // so it survives the settle gap — see the note above.
-                <button
-                  type="button"
-                  className="notice-fab pointer-events-auto"
-                  aria-label="Show who governs here"
-                  /* 4c: opening WGH closes the rail and any battlecard. */
-                  onClick={() => openSurface("wgh")}
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    aria-hidden="true"
-                  >
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="12" y1="16" x2="12" y2="12" />
-                    <line x1="12" y1="8" x2="12.01" y2="8" />
-                  </svg>
-                  Who governs here
-                </button>
-              ) : (
-                // NOT wrapped in a div: `.map-bottom-stack > .coverage-notice`
-                // is the bound that keeps this card inside the viewport
-                // (M54/M55), and a `>` combinator reads the DOM tree, not the
-                // box tree — `display: contents` would silently unbind it and
-                // the card would grow off the top of a phone again. The
-                // refreshing state rides as a prop instead.
-                <CoverageNotice
-                  tier={shown.tier}
-                  zip={shown.zip}
-                  radiusKm={shown.radiusKm}
-                  requestedRadiusKm={shown.requestedRadiusKm}
-                  count={shown.meetings.length}
-                  coverage={shown.coverage}
-                  refreshing={refreshing}
-                  failedSourceOcdIds={
-                    shown.snapshot?.failed.flatMap((f) => f.ocdIds) ?? []
-                  }
-                  /* F01 7.2: what the MAP is actually showing, so the card
-                     cannot say “may be missing” about a body whose pins the
-                     reader can see. Read off the same meeting array the pins
-                     are drawn from — a second derivation is how two surfaces
-                     come to disagree, which is the defect this closes. */
-                  ocdIdsWithMeetings={[
-                    ...new Set(
-                      (shown.meetings ?? []).flatMap((m) =>
-                        m.ocdId ? [m.ocdId] : [],
-                      ),
-                    ),
-                  ]}
-                  onOpenOfficial={openOfficial}
-                  onOpenBody={(body) =>
-                    openLarge({
-                      kind: "entity",
-                      subject: bodySubject(body, shown.meetings ?? []),
-                    })
-                  }
-                  onMinimize={() => setNoticeCollapsed(true)}
-                  onNarrowApplied={onNarrowApplied}
-                  onStreetPoint={onStreetPoint}
-                  /* 4e: the WGH slot, which wins over the other two. */
-                  pillCluster={clusterAt === "wgh" ? cluster : null}
-                  clusterElsewhere={clusterRendered}
-                />
-              ))}
-
-            {/* Provenance, not headline (3): "Last checked" demotes to a
-                footnote below the who-governs card. */}
-            {shown?.snapshot && <DataFreshness snapshot={shown.snapshot} />}
+            {/* LAY-4: where the rail is a COLUMN these render under it, in
+                `.rail-floaters`. This is the drawer placement — the same node,
+                so the two can never drift into two different cards. */}
+            {!railIsAColumn && floaters}
 
             {selectedVenue && (
               // The phone form of the meeting panel: a bottom sheet pinned to
@@ -2266,7 +2256,10 @@ function meetingSubject(
     // District — Governing Board Meeting"); when, then where ONCE — some
     // sources publish the address as the venue name, and rendering the same
     // string as Location and again as Address was the author's Vail defect.
-    title: meetingHeadline(meeting),
+    /* MTG-8 (2026-08-24): the body alone. The jurisdiction is the SUBTITLE on
+       the very next line, so the em-dash prefix was printing it twice — which
+       is the "Tucson, AZ — " the author struck through in `12-01-44`. */
+    title: meetingEntryTitle(meeting, { bodyShown: true }),
     subtitle: meeting.jurisdiction,
     tier: tierForMeeting(meeting) ?? "local",
     badges:

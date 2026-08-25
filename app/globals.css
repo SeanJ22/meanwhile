@@ -979,12 +979,14 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
  * The HONEST MODES from M87 are truth rules, not styling, and none of them
  * moved: the "in view" labelling, the governing-set mode, "Off" when the
  * overlay is off, and the couldn't-check dash. */
+/* LAY-5: the divider under the tiles goes with the raw text it was separating
+   the tiles FROM. Every block below is a surface card now, and a rule between
+   two cards is a third treatment nobody asked for. */
 .stats-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--panel-border);
+  padding: 14px 22px 4px;
 }
 
 .stat-card {
@@ -1177,6 +1179,18 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-bottom: 1px solid var(--panel-border);
 }
 
+/* LAY-5: in the rail this is a SECTION, so it takes the tile chrome and drops
+   the divider rule — a card with a line under it is two treatments arguing.
+   Scoped to the rail's own child so the copy inside Filters is untouched. */
+.sidebar-scroll > .prox-control {
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
 .prox-toggle {
   display: flex;
   align-items: center;
@@ -1315,15 +1329,72 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 /* ---- Filters ---- */
+/* ---------------------------------------------------------------------------
+   LAY-5 (2026-08-24, the author's capture 11-57-33) — THE TOP'S TREATMENT,
+   CARRIED ALL THE WAY DOWN.
+
+   His words: the rail's top — the Ballot pill, the zip, the Ask line and the
+   four tiles — is the reference, and below the tiles it degrades into
+   unstyled raw text. The capture is exactly that: four rounded surface tiles,
+   and then a bare toggle, a bare paragraph, a bare uppercase label and two
+   bare underlined links, none of them on anything.
+
+   So every section below the tiles takes the tile's own chrome — the same
+   surface, the same committed radius token, the same inset — rather than a
+   new scale invented here. Content sits at 22px + 12px from the rail's edge
+   in EVERY section, tiles included, so the column has one left edge instead
+   of four.
+   --------------------------------------------------------------------------- */
+
+.rail-section {
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+/* LAY-6 (2026-08-24): closed, this reserves NOTHING. The bottom padding and
+   the header's bottom margin are the gap BEFORE the panel, so they are paid
+   for only when a panel is there to precede. Closed it is one row high. */
 .filters-area {
-  padding: 14px 22px 20px;
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.filters-area[data-open] {
+  padding-bottom: 16px;
 }
 
 .filters-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.filters-area[data-open] .filters-header {
   margin-bottom: 12px;
+}
+
+/* Closed it points right, open it turns down — the marker IS the state. */
+.filters-caret {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.filters-area[data-open] .filters-caret {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters-caret {
+    transition: none;
+  }
 }
 
 .filters-title {
@@ -4478,6 +4549,13 @@ button.jurisdiction-badge-action:focus-visible {
    ========================================================================== */
 
 @media (max-width: 639px) {
+  /* LAY-4: the column carries the drawer's width now, because the rail is its
+     child and fills it. One number, in one place — the rail and the column
+     disagreeing about how wide the drawer is would be a gap down its edge. */
+  .rail-column {
+    width: min(var(--rail-width), 86vw);
+  }
+
   .sidebar {
     width: min(340px, 86vw);
     transform: translateX(-100%);
@@ -5589,74 +5667,118 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 /* ---------------------------------------------------------------------------
-   LAY-1 (item 4, 2026-08-23) — THE LEFT COLUMN IS NESTED, NOT STACKED OPEN.
+   LAY-4 / LAY-3 (2026-08-24, the author's annotated capture 11-55-29) —
+   THE FLOATING CARDS BELONG UNDER THE RAIL, AND THE COLUMN IS WHAT PROVES
+   THEY CANNOT COLLIDE.
 
-   The author's instruction, in his words: everything lives in the left column,
-   nested rather than stacked open; the counts card sets the column width, the
-   who-governs card sits directly beneath it, and clicking one makes it take
-   over the column while the other collapses to pills. One expanded at a time.
+   **LAY-1 IS SUPERSEDED AND ITS CSS IS DELETED RATHER THAN LEFT DARK.**
+   .sidebar-wgh, .sidebar-wgh-pill and the .stats-collapsed family were
+   the nesting build of 2026-08-23: the who-governs card inside the rail's
+   scrolling column, one card expanded at a time, the other a pill IN the rail.
+   The author's arrows say the cards float BENEATH the rail, and the 8/24
+   brief's supersession table says LAY-1 must not exist as built. A superseded
+   rule kept as dead CSS is how it comes back as drift.
 
-   What was there before: the counts card in the rail and the who-governs card
-   floating over the map in `.map-bottom-stack`, so a desktop reader had two
-   competing panels and the map between them. The 8/22 capture `22-15-32` is
-   that layout — the card overlapping the pins it is describing.
+   THE CONSTRUCTION, and why it is a flex column rather than a measured bound.
+   LAY-3 asks that nothing overlap the rail or anything else at any tested
+   viewport. Every previous answer here was a NUMBER — a max-height, a top
+   band, a reserved gutter — and every one of them held until the content
+   changed underneath it. The who-governs card went from 12 bodies to 174 in
+   one hunt. Flex children of one fixed column cannot be laid out on top of
+   each other at ANY viewport, at any content length, with no number to keep
+   current. That is the whole reason for this wrapper.
 
-   The floating placement is UNCHANGED below the rail's column breakpoint.
-   There the rail is a full-width drawer, and a who-governs card that had to be
-   opened out of a drawer would be the buried entry point the friction rule
-   calls a defect. `wghInColumn` in `components/map/map-entry.tsx` is the one
-   switch, and it reads the existing `railIsAColumn` rather than a second
-   breakpoint that could drift from it.
+   The rail shrinks first (flex-shrink 2 against 1) because the floaters
+   carry the answer the reader came for; both shrink to their own scroll
+   rather than overflowing, so neither can grow off the top of the screen —
+   the M54/M55 failure, which is what the child-combinator rules below bind
+   against here exactly as they do in .map-bottom-stack.
    --------------------------------------------------------------------------- */
 
-.sidebar-wgh {
-  padding: 0 14px 14px;
+.rail-column {
+  position: fixed;
+  top: calc(var(--rail-inset) + env(safe-area-inset-top, 0px));
+  left: var(--rail-inset);
+  width: var(--rail-width);
+  height: calc(
+    100dvh - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  z-index: 1000;
+  /* The map between and beside the cards stays draggable. Each child turns
+     pointer events back on for itself. */
+  pointer-events: none;
 }
 
-/* The card loses its floating chrome in the column: it is no longer a thing
-   ON something, it IS the column's content. The `.panel` shadow and the
-   viewport-height bound both belong to the map placement. */
-.sidebar-wgh > .coverage-notice {
-  box-shadow: none;
-  max-height: none;
+.rail-column > * {
+  pointer-events: auto;
+}
+
+/* The rail inside the column. It keeps every visual property it had; what it
+   loses is its own position: fixed, because a fixed child is out of flow
+   and out of flow is exactly where overlap comes from. */
+.rail-column > .sidebar {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  max-height: 100%;
+  flex: 0 2 auto;
+  min-height: 0;
+}
+
+/* The region the author's two arrows point into: under the rail, the rail's
+   own width, the bottom of the viewport. margin-top: auto is what puts it
+   at the BOTTOM of the column rather than immediately under the rail — which
+   is where both arrows land, and where the count chip already sat before this
+   change moved it left out of the map. */
+.rail-floaters {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  flex: 0 1 auto;
+  min-height: 0;
+  /* Separate cards with the map visible between them — never one panel with
+     three sections in it. */
+  pointer-events: none;
+}
+
+.rail-floaters > * {
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+/* The same bound .map-bottom-stack carries, for the same reason: the card
+   shrinks to the space it has and scrolls inside itself rather than growing
+   off the top. A child combinator reads the DOM tree, not the box tree, so
+   the card must stay an unwrapped child of this region. */
+.rail-floaters > .panel {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.rail-floaters > .coverage-notice {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   width: 100%;
 }
 
-.sidebar-wgh-pill {
-  padding: 0 22px 14px;
+.rail-floaters > .coverage-notice > .coverage-notice-head {
+  flex: 0 0 auto;
 }
 
-/* The collapsed counts card. Same four doors, one row, and every pill still
-   carries what its number counts — a bare number in a pill is the "179
-   DISTRICTS" defect in a smaller box. */
-.stats-collapsed {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 22px;
-  border-bottom: 1px solid var(--panel-border);
-}
-
-.stats-collapsed-expand {
-  align-self: flex-start;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-
-.stats-collapsed-expand:hover {
-  color: var(--text);
-}
-
-.stats-collapsed-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.rail-floaters > .coverage-notice > .coverage-notice-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .stat-pill {

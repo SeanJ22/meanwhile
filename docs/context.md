@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 00:28:55 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-24 -->
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 00:32:47 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-24 -->
 Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -583,15 +583,15 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-25 00:28:55 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-24 -->
+generated: 2026-08-25 00:32:47 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-24 -->
 branch: claude/visual-0824-build
-head sha: 4fbb7443c0ac67e125a880490f5a0f40d0390c18
-head subject: Rulings 136-141, and six tracker rows that took four attempts to land
-origin/main sha: 51c41fbc823df4bf63e4ba33e7b905abec2e5b2e
-origin/main subject: Merge pull request #172 from SeanJ22/claude/audit-remediation-0824-pinvis
-local main sha: 51c41fbc823df4bf63e4ba33e7b905abec2e5b2e
+head sha: d7a5b660b38dbb6e7b0da666d1b648b462beb6a2
+head subject: Five API keys were leaking, and the mirror scrub was undoing itself
+origin/main sha: ab4da2008276520d094bdfd3e3d504a910ce4599
+origin/main subject: Merge pull request #173 from SeanJ22/claude/visual-0824-build
+local main sha: ab4da2008276520d094bdfd3e3d504a910ce4599
 local main matches origin/main: yes
-working tree: dirty — 7 changed file(s)
+working tree: clean
 open prs: none
 last recorded tests: 1442 (fail)
 last recorded lint: not recorded

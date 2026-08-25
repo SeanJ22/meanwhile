@@ -244,39 +244,36 @@ jobs:
       # resolution against Playwright's own `executablePath()`, and has no
       # skip flag. The cache cannot lie past it.
       #
-      # Keyed on the pinned Playwright version rather than on the lockfile
-      # hash, because that is the thing that decides which browser build is
-      # wanted. `--with-deps` still runs: the system libraries are not in the
-      # cache and are cheap.
-      # THE KEY IS READ FROM THE LOCKFILE, AND THE STEP REFUSES AN EMPTY ONE.
+      # `--with-deps` still runs regardless: the system libraries are not in
+      # the cache and are cheap.
       #
-      # The first version of this read `node_modules/playwright-core`, which
-      # pnpm does not hoist — the direct dependency is `playwright`. The read
-      # produced NOTHING, the key resolved to the bare prefix
-      # `playwright-Linux-`, and run 32794320409 shows it: "Cache not found for
-      # input keys: playwright-Linux-". Worse than a miss, it would then SAVE
-      # under a version-less key and restore a stale browser after every
-      # upgrade.
+      # THE KEY IS THE LOCKFILE HASH, AND THERE IS NO STEP TO GET WRONG.
       #
-      # So the step exits non-zero on an empty version rather than composing a
-      # key out of nothing. A cache key that cannot distinguish versions is not
-      # a cache key, and a step whose product is a string must be asked whether
-      # it produced one (RULING 113).
-      - name: Playwright version (the cache key)
-        id: pw
-        run: |
-          version="$(node -p "require(./node_modules/playwright/package.json).version")"
-          if [ -z "$version" ]; then
-            echo "could not read the Playwright version — refusing to build a version-less cache key" >&2
-            exit 1
-          fi
-          echo "playwright $version"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
+      # Two versions of this were wrong before it was this simple, and both
+      # failures are the argument for the simplicity.
+      #
+      # The first read `node_modules/playwright-core`, which pnpm does not
+      # hoist — the direct dependency is `playwright`. The version came back
+      # EMPTY and the key resolved to the bare prefix, which run 32794320409
+      # states outright: "Cache not found for input keys: playwright-Linux-".
+      # Worse than a miss — the post-step would then save under a version-less
+      # key and restore a stale browser after every upgrade.
+      #
+      # The second read the right package and nested a double-quoted `node -p`
+      # argument inside a double-quoted command substitution. It reached node
+      # with its inner quotes gone: `SyntaxError: Unexpected token '.'`, run
+      # 32794831139, and it took `main` red.
+      #
+      # So: no step at all. `hashFiles('pnpm-lock.yaml')` moves whenever
+      # Playwright's version moves, because a version bump IS a lockfile
+      # change. It also moves when any other dependency does, which throws the
+      # browser cache away more often than strictly necessary — and that is the
+      # direction to be wrong in. A key that invalidates too eagerly costs one
+      # download; a key that invalidates too rarely serves a stale browser.
       - uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install the browser the suite needs
         timeout-minutes: 15

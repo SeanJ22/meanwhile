@@ -76,6 +76,7 @@ import {
   KELLY_FIELDS,
   addDays,
   absenceStands,
+  kellyFieldHeld,
   type ArguedAbsence,
   type KellyField,
   type StuckStep,
@@ -131,24 +132,38 @@ const links = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "candidate-li
   links: Record<string, { official?: { url: string } | null; campaign?: { url: string } | null }>;
 };
 
-/** Is this field already held? An absence in front of data is a false claim. */
+/*
+ * The filed contact, where the zip has one. New Jersey's clerk publishes an
+ * email for every candidacy; New Hampshire's filing does not, and assuming the
+ * first was true of the second is exactly what this fixes.
+ */
+const contactsPath = chosen.contacts ? join(ROOT, "data", "ballot", chosen.contacts) : null;
+const filedEmail = new Map<string, string | null>(
+  contactsPath && existsSync(contactsPath)
+    ? (
+        JSON.parse(readFileSync(contactsPath, "utf8")) as {
+          contacts: { candidacyId: string; email?: string | null }[];
+        }
+      ).contacts.map((c) => [c.candidacyId, c.email ?? null])
+    : [],
+);
+
+/**
+ * Is this field already held? An absence in front of data is a false claim.
+ *
+ * The DECISION is `kellyFieldHeld` in `lib/hunt/kelly-depth.ts`, shared with the
+ * scoreboard. It was written twice on 2026-08-25 and the two disagreed within
+ * the hour — this copy counted a PHONE as satisfying `contact` and the
+ * scoreboard did not, so eight New Hampshire candidates were skipped here as
+ * complete and reported there as still owing the field. RULING 103.
+ */
 function isHeld(id: string, field: KellyField): boolean {
-  const card = cards.cards[id];
-  const link = links.links[id];
-  switch (field) {
-    case "photo": {
-      const url = card?.photoUrl ?? null;
-      return Boolean(url) && existsSync(join(ROOT, "public", url!.replace(/^\//, "")));
-    }
-    case "phone":
-      return Boolean(card?.phone);
-    case "contact":
-      return true; // handled by the caller — never argued on this ballot
-    case "verifiedPage":
-      return Boolean(link?.official);
-    case "campaignSite":
-      return Boolean(link?.campaign);
-  }
+  return kellyFieldHeld(field, {
+    card: cards.cards[id],
+    links: links.links[id],
+    filedEmail: filedEmail.get(id) ?? null,
+    photoOnDisk: (url) => existsSync(join(ROOT, "public", url.replace(/^\//, ""))),
+  }).yes;
 }
 
 /* ── The corpora moves 2 through 5 read, each a walk that happened ───────── */
@@ -158,17 +173,57 @@ function readIf<T>(rel: string): T | null {
   return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as T) : null;
 }
 
-const press = readIf<{ walkedAt: string; routes: { harvest?: { sourcePages: number } }[]; rows: unknown[] }>(
-  "nj-campaign-sites-press-outlet-wp-search+party-municipal-committee+party-county-gop+party-committee-domain-shape.json",
-);
+/*
+ * ── THE CORPORA ARE PER-ZIP, BECAUSE THEY ARE PER-PLACE ───────────────────
+ *
+ * Moves 4 and 5 answer *who else compiled this* and *where else could it live*,
+ * and both are answered from walks that actually happened. Those walks are of
+ * PLACES: a New Jersey press sweep says nothing about a New Hampshire county,
+ * and reading it for one would be a move that reports a result it did not have.
+ *
+ * So each zip names its own, and a zip with none says so. A move with nothing
+ * behind it is recorded `reached: false` with a result that admits it, rather
+ * than borrowing another state's evidence — which is RULING 60's caveat: a
+ * branch proven in one place is proven for that SHAPE, not for everywhere.
+ */
+const CORPORA: Record<string, { compiled: string[]; lateral: string | null }> = {
+  "07866": {
+    compiled: [
+      "nj-campaign-sites-press-outlet-wp-search+party-municipal-committee+party-county-gop+party-committee-domain-shape.json",
+      "nj-morris-party-directory-0825.json",
+      "nj-morris-party-pages-0825.json",
+      "nj-morris-press-surface-0825.json",
+    ],
+    lateral: "roster-pages-muni-sites-nj-morris.json",
+  },
+  "03255": {
+    compiled: ["directory-inversion-03255-0825.json"],
+    lateral: null,
+  },
+};
+const corpora = CORPORA[ZIP] ?? { compiled: [], lateral: null };
+
+/** Each compiled corpus that is actually held, with what it walked. */
+const compiled = corpora.compiled
+  .map((f) => ({ file: f, data: readIf<{ walkedAt?: string; totals?: Record<string, number> }>(f) }))
+  .filter((c): c is { file: string; data: NonNullable<typeof c.data> } => Boolean(c.data));
+
+/*
+ * `partyPages` and the roster walk are read SEPARATELY from the compiled list
+ * above, because those two answer a per-CANDIDATE question — is this person
+ * named on a committee page, does this person appear on their town's own site —
+ * where the compiled list answers a per-CORPUS one. Both are New Jersey
+ * artifacts and both correctly return null at any other zip.
+ *
+ * The press and directory reads that used to sit here went with the per-zip
+ * `compiled` list, which reads them by name and states what each one walked.
+ * Keeping the old constants beside it would have been two readers of one fact.
+ */
 const partyPages = readIf<{
   walkedAt: string;
   totals: { pagesFetched: number };
   rows: { url: string; names: { candidacyId: string; strong: boolean }[] }[];
 }>("nj-morris-party-pages-0825.json");
-const directory = readIf<{ walkedAt: string; totals: { attempted: number; documents: number } }>(
-  "nj-morris-party-directory-0825.json",
-);
 const rosterWalk = readIf<{
   walkedAt: string;
   totals: { sitesWalked: number; pagesFetched: number; membersFound: number };
@@ -350,7 +405,27 @@ async function browserQuery(name: string, place: string, nth: number): Promise<Q
 
 /* ── Build the protocols ─────────────────────────────────────────────────── */
 
-const ARGUABLE: KellyField[] = KELLY_FIELDS.filter((f) => f !== "contact");
+/*
+ * EVERY KELLY FIELD IS ARGUABLE, INCLUDING `contact`.
+ *
+ * The first version of this excluded `contact` outright, on the true statement
+ * that it is held for all 276 candidacies at 07866 — the county clerk publishes
+ * an email for every one. Run against 03255 that assumption made 25 New
+ * Hampshire candidates permanently un-done: their contact is genuinely owed,
+ * nothing here would argue it, and the scoreboard read 22 of 47 with the
+ * remaining 25 all owing the one field this refused to touch.
+ *
+ * A property of ONE county's document, hardcoded as a property of the world.
+ * `isHeld` answers the question for real now, and a field that is held is still
+ * never argued — an absence in front of data is a false claim whichever field
+ * it is.
+ *
+ * RULING 61's bar for `VERIFIED_ABSENT` on a contact is close to unearnable and
+ * is untouched by this. An ARGUED absence under RULING 143 is a different and
+ * lower bar — a five-move protocol with a seven-day clock — and it is the one
+ * that lets a candidate be DONE rather than permanently owed.
+ */
+const ARGUABLE: KellyField[] = [...KELLY_FIELDS];
 
 const out: ArguedAbsence[] = [];
 const skippedHeld: string[] = [];
@@ -362,7 +437,7 @@ let queriesWalled = 0;
 const cap = LIMIT > 0 ? Math.min(LIMIT, ballot.candidacies.length) : ballot.candidacies.length;
 console.log(`\nARGUED ABSENCES — ${ZIP}, ${TODAY}\n`);
 console.log(`  candidacies              ${ballot.candidacies.length}`);
-console.log(`  fields arguable          ${ARGUABLE.join(", ")} (contact is held for every candidacy here)`);
+console.log(`  fields arguable          ${ARGUABLE.join(", ")}`);
 console.log(`  pace                     one query every ${DELAY_MS} ms — slow enough that a refusal is the host's, not ours`);
 console.log(`  candidates to walk       ${cap}${cap < ballot.candidacies.length ? ` — CLIPPED at --limit=${LIMIT}` : ""}\n`);
 
@@ -414,16 +489,25 @@ for (let i = 0; i < cap; i++) {
       {
         move: "who-compiled-it",
         query:
-          "the corpora already compiled: the local and statewide press sweep (2026-08-24), the county party's municipal directory and the municipal committee crawl (2026-08-25)",
-        result: [
-          press ? `press: ${press.routes?.[0]?.harvest?.sourcePages ?? "?"} source pages walked ${press.walkedAt}` : "press: not held",
-          directory ? `county-party directory: ${directory.totals.documents} of ${directory.totals.attempted} pages ${directory.walkedAt}` : "directory: not held",
-          partyPages ? `committee pages: ${partyPages.totals.pagesFetched} fetched ${partyPages.walkedAt}` : "committee pages: not held",
-          namedOnAPartyPage.has(c.id)
-            ? "this candidate IS named on a committee page, and it carries no " + field
-            : "this candidate is named on none of them",
-        ].join("; "),
-        reached: Boolean(press || directory || partyPages),
+          compiled.length > 0
+            ? `the corpora already compiled for this zip: ${compiled.map((c) => c.file).join(", ")}`
+            : "no corpus has been compiled for this zip — nobody has swept its press or its party organisations",
+        result:
+          compiled.length > 0
+            ? [
+                ...compiled.map(
+                  (c) =>
+                    `${c.file} walked ${c.data.walkedAt ?? "(undated)"}: ${Object.entries(c.data.totals ?? {})
+                      .slice(0, 4)
+                      .map(([k, v]) => `${k} ${v}`)
+                      .join(", ")}`,
+                ),
+                namedOnAPartyPage.has(c.id)
+                  ? `this candidate IS named in them, and none carries a ${field}`
+                  : "this candidate is named in none of them",
+              ].join("; ")
+            : `NOTHING WAS WALKED. No press or party corpus exists for ${ZIP}, so this move reached no source and establishes nothing about the ${field}. Recorded as a wall of our own making rather than as a search that came back empty.`,
+        reached: compiled.length > 0,
       },
       {
         move: "lateral",

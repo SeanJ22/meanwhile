@@ -3,30 +3,19 @@
   "zip": "07866",
   "walkedAt": "2026-08-25",
   "pacing": {
-    "delayMs": 9000,
+    "delayMs": 7000,
     "why": "A refusal caused by our own request rate, recorded as a wall, would be a fact about the script wearing the clothes of a fact about the web. The pace is stated so a reader can judge whether a wall was earned."
   },
   "totals": {
     "candidacies": 276,
     "walked": 276,
-    "absencesEarned": 1040,
+    "absencesEarned": 1038,
     "voided": 0,
     "queriesRun": 276,
     "queriesAnswered": 276,
     "queriesWalled": 0
   },
-  "engineRefusals": [
-    {
-      "id": "mojeek",
-      "times": 9,
-      "lastStatus": 0
-    },
-    {
-      "id": "brave",
-      "times": 8,
-      "lastStatus": 429
-    }
-  ],
+  "engineRefusals": [],
   "voided": [],
   "rows": [
     {
@@ -12901,45 +12890,6 @@
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
-      "field": "phone",
-      "protocol": [
-        {
-          "move": "browser-query",
-          "query": "\"Nancy VERGA\" morris plains New Jersey 2026",
-          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7350 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a phone for them that this walk could read.",
-          "reached": true
-        },
-        {
-          "move": "tier-above",
-          "query": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates — the county clerk's certified filed-candidate documents",
-          "result": "Held in this repo as data/ballot/nj-morris-2026.json. The filing carries an email and a street address for every one of the 276 candidacies and carries NO phone for any of them — a fact about the document, not about this person.",
-          "reached": true
-        },
-        {
-          "move": "same-shape",
-          "query": "every other candidacy in Mayor — do entities of this shape hold a phone?",
-          "result": "0 of 2 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
-          "reached": true
-        },
-        {
-          "move": "who-compiled-it",
-          "query": "the corpora already compiled: the local and statewide press sweep (2026-08-24), the county party's municipal directory and the municipal committee crawl (2026-08-25)",
-          "result": "press: 4056 source pages walked 2026-08-24; county-party directory: 39 of 40 pages 2026-08-25; committee pages: 88 fetched 2026-08-25; this candidate IS named on a committee page, and it carries no phone",
-          "reached": true
-        },
-        {
-          "move": "lateral",
-          "query": "where else can I find a phone for a Mayor candidate in morris plains — the municipality's own .gov site",
-          "result": "39 municipal sites and 180 pages walked 2026-08-24, reading 82 members. This person appears on morris_plains's own site WITH a phone (973-714-8246) — the field is NOT absent and this protocol must not be written.",
-          "reached": true
-        }
-      ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Nancy VERGA (Mayor). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site names them and carries none. The general web index answered and carried none."
-    },
-    {
-      "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
       "field": "campaignSite",
       "protocol": [
         {
@@ -13035,7 +12985,7 @@
         {
           "move": "same-shape",
           "query": "every other candidacy in Mayor — do entities of this shape hold a phone?",
-          "result": "0 of 2 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
+          "result": "1 of 2 candidacies in this contest hold a phone. Some do, so the field is publishable here and this candidate's is still owed on a route not yet found.",
           "reached": true
         },
         {
@@ -13053,7 +13003,7 @@
       ],
       "at": "2026-08-25",
       "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jason C. KARR (Mayor). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "argument": "Five moves walked on 2026-08-25 for Jason C. KARR (Mayor). The certified filing does not publish a phone; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:karr-jason-c",
@@ -14734,45 +14684,6 @@
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
-      "field": "phone",
-      "protocol": [
-        {
-          "move": "browser-query",
-          "query": "\"Melissa FOSTLE\" mount arlington New Jersey 2026",
-          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7390 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a phone for them that this walk could read.",
-          "reached": true
-        },
-        {
-          "move": "tier-above",
-          "query": "https://www.morriscountyclerk.org/Elections/Current-Election-Candidates — the county clerk's certified filed-candidate documents",
-          "result": "Held in this repo as data/ballot/nj-morris-2026.json. The filing carries an email and a street address for every one of the 276 candidacies and carries NO phone for any of them — a fact about the document, not about this person.",
-          "reached": true
-        },
-        {
-          "move": "same-shape",
-          "query": "every other candidacy in Member of the Borough Council — do entities of this shape hold a phone?",
-          "result": "0 of 4 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
-          "reached": true
-        },
-        {
-          "move": "who-compiled-it",
-          "query": "the corpora already compiled: the local and statewide press sweep (2026-08-24), the county party's municipal directory and the municipal committee crawl (2026-08-25)",
-          "result": "press: 4056 source pages walked 2026-08-24; county-party directory: 39 of 40 pages 2026-08-25; committee pages: 88 fetched 2026-08-25; this candidate is named on none of them",
-          "reached": true
-        },
-        {
-          "move": "lateral",
-          "query": "where else can I find a phone for a Member of the Borough Council candidate in mount arlington — the municipality's own .gov site",
-          "result": "39 municipal sites and 180 pages walked 2026-08-24, reading 82 members. This person appears on mount_arlington's own site WITH a phone (973-398-6832 ext. 4) — the field is NOT absent and this protocol must not be written.",
-          "reached": true
-        }
-      ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Melissa FOSTLE (Member of the Borough Council). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site names them and carries none. The general web index answered and carried none."
-    },
-    {
-      "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
       "field": "campaignSite",
       "protocol": [
         {
@@ -14868,7 +14779,7 @@
         {
           "move": "same-shape",
           "query": "every other candidacy in Member of the Borough Council — do entities of this shape hold a phone?",
-          "result": "0 of 4 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
+          "result": "1 of 4 candidacies in this contest hold a phone. Some do, so the field is publishable here and this candidate's is still owed on a route not yet found.",
           "reached": true
         },
         {
@@ -14886,7 +14797,7 @@
       ],
       "at": "2026-08-25",
       "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for John \"Jack\" DELANEY (Member of the Borough Council). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "argument": "Five moves walked on 2026-08-25 for John \"Jack\" DELANEY (Member of the Borough Council). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:delaney-john-jack",
@@ -15024,7 +14935,7 @@
         {
           "move": "same-shape",
           "query": "every other candidacy in Member of the Borough Council — do entities of this shape hold a phone?",
-          "result": "0 of 4 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
+          "result": "1 of 4 candidacies in this contest hold a phone. Some do, so the field is publishable here and this candidate's is still owed on a route not yet found.",
           "reached": true
         },
         {
@@ -15042,7 +14953,7 @@
       ],
       "at": "2026-08-25",
       "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jessica PRICE (Member of the Borough Council). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "argument": "Five moves walked on 2026-08-25 for Jessica PRICE (Member of the Borough Council). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
@@ -15180,7 +15091,7 @@
         {
           "move": "same-shape",
           "query": "every other candidacy in Member of the Borough Council — do entities of this shape hold a phone?",
-          "result": "0 of 4 candidacies in this contest hold a phone. None does, so the shape itself suggests this field is not published for this race.",
+          "result": "1 of 4 candidacies in this contest hold a phone. Some do, so the field is publishable here and this candidate's is still owed on a route not yet found.",
           "reached": true
         },
         {
@@ -15198,7 +15109,7 @@
       ],
       "at": "2026-08-25",
       "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jay DECKER (Member of the Borough Council). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "argument": "Five moves walked on 2026-08-25 for Jay DECKER (Member of the Borough Council). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
@@ -39504,7 +39415,7 @@
         {
           "move": "browser-query",
           "query": "\"Padraig Sean HARE\" washington township New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 221354 B against a 0 B control. The result page NAMES them and pointed at 25 host(s) (washingtonboro-nj.gov, twpofwashington.us, politics1.com, northjersey.com, usphonebook.com, wtps.org, wtbcnj.org, vpmemorial.com); none carries a photo for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7446 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a photo for them that this walk could read.",
           "reached": true
         },
         {
@@ -39543,7 +39454,7 @@
         {
           "move": "browser-query",
           "query": "\"Padraig Sean HARE\" washington township New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 221354 B against a 0 B control. The result page NAMES them and pointed at 25 host(s) (washingtonboro-nj.gov, twpofwashington.us, politics1.com, northjersey.com, usphonebook.com, wtps.org, wtbcnj.org, vpmemorial.com); none carries a phone for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7446 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a phone for them that this walk could read.",
           "reached": true
         },
         {
@@ -39582,7 +39493,7 @@
         {
           "move": "browser-query",
           "query": "\"Padraig Sean HARE\" washington township New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 221354 B against a 0 B control. The result page NAMES them and pointed at 25 host(s) (washingtonboro-nj.gov, twpofwashington.us, politics1.com, northjersey.com, usphonebook.com, wtps.org, wtbcnj.org, vpmemorial.com); none carries a verifiedPage for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7446 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a verifiedPage for them that this walk could read.",
           "reached": true
         },
         {
@@ -39621,7 +39532,7 @@
         {
           "move": "browser-query",
           "query": "\"Padraig Sean HARE\" washington township New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 221354 B against a 0 B control. The result page NAMES them and pointed at 25 host(s) (washingtonboro-nj.gov, twpofwashington.us, politics1.com, northjersey.com, usphonebook.com, wtps.org, wtbcnj.org, vpmemorial.com); none carries a campaignSite for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7446 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a campaignSite for them that this walk could read.",
           "reached": true
         },
         {
@@ -39972,7 +39883,7 @@
         {
           "move": "browser-query",
           "query": "\"Cristina RICE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 227963 B against a 0 B control. The result page NAMES them and pointed at 15 host(s) (ballotpedia.org, morriscountynj.gov, njcourts.gov, radaris.com, 247sports.com, mcclerksng.co.morris.nj.us, issuu.com, morriscountyclerk.org); none carries a photo for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7366 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a photo for them that this walk could read.",
           "reached": true
         },
         {
@@ -40011,7 +39922,7 @@
         {
           "move": "browser-query",
           "query": "\"Cristina RICE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 227963 B against a 0 B control. The result page NAMES them and pointed at 15 host(s) (ballotpedia.org, morriscountynj.gov, njcourts.gov, radaris.com, 247sports.com, mcclerksng.co.morris.nj.us, issuu.com, morriscountyclerk.org); none carries a phone for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7366 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a phone for them that this walk could read.",
           "reached": true
         },
         {
@@ -40050,7 +39961,7 @@
         {
           "move": "browser-query",
           "query": "\"Cristina RICE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 227963 B against a 0 B control. The result page NAMES them and pointed at 15 host(s) (ballotpedia.org, morriscountynj.gov, njcourts.gov, radaris.com, 247sports.com, mcclerksng.co.morris.nj.us, issuu.com, morriscountyclerk.org); none carries a verifiedPage for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7366 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a verifiedPage for them that this walk could read.",
           "reached": true
         },
         {
@@ -40089,7 +40000,7 @@
         {
           "move": "browser-query",
           "query": "\"Cristina RICE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 227963 B against a 0 B control. The result page NAMES them and pointed at 15 host(s) (ballotpedia.org, morriscountynj.gov, njcourts.gov, radaris.com, 247sports.com, mcclerksng.co.morris.nj.us, issuu.com, morriscountyclerk.org); none carries a campaignSite for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7366 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a campaignSite for them that this walk could read.",
           "reached": true
         },
         {
@@ -40440,7 +40351,7 @@
         {
           "move": "browser-query",
           "query": "\"Colleen F. PASCALE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 186214 B against a 0 B control. The result page NAMES them and pointed at 17 host(s) (linkedin.com, mcvts.org, njcourts.gov, morriscountyclerk.org, ballotpedia.org, morriscountybar.com, njleg.state.nj.us, passaiccountynj.org); none carries a photo for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7406 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a photo for them that this walk could read.",
           "reached": true
         },
         {
@@ -40479,7 +40390,7 @@
         {
           "move": "browser-query",
           "query": "\"Colleen F. PASCALE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 186214 B against a 0 B control. The result page NAMES them and pointed at 17 host(s) (linkedin.com, mcvts.org, njcourts.gov, morriscountyclerk.org, ballotpedia.org, morriscountybar.com, njleg.state.nj.us, passaiccountynj.org); none carries a phone for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7406 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a phone for them that this walk could read.",
           "reached": true
         },
         {
@@ -40518,7 +40429,7 @@
         {
           "move": "browser-query",
           "query": "\"Colleen F. PASCALE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 186214 B against a 0 B control. The result page NAMES them and pointed at 17 host(s) (linkedin.com, mcvts.org, njcourts.gov, morriscountyclerk.org, ballotpedia.org, morriscountybar.com, njleg.state.nj.us, passaiccountynj.org); none carries a verifiedPage for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7406 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a verifiedPage for them that this walk could read.",
           "reached": true
         },
         {
@@ -40557,7 +40468,7 @@
         {
           "move": "browser-query",
           "query": "\"Colleen F. PASCALE\" Morris County New Jersey 2026",
-          "result": "brave (Brave's own index) answered HTTP 200 with 186214 B against a 0 B control. The result page NAMES them and pointed at 17 host(s) (linkedin.com, mcvts.org, njcourts.gov, morriscountyclerk.org, ballotpedia.org, morriscountybar.com, njleg.state.nj.us, passaiccountynj.org); none carries a campaignSite for them that this walk could read.",
+          "result": "4get (a 4get instance, which federates several independent crawlers) answered HTTP 200 with 7406 B against a 7268 B control. The result page NAMES them and pointed at 1 host(s) (git.lolcat.ca); none carries a campaignSite for them that this walk could read.",
           "reached": true
         },
         {

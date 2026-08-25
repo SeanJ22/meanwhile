@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 231,
-    "named": 2240,
+    "files": 232,
+    "named": 2246,
     "dynamic": 6
   },
   "files": {
@@ -1940,6 +1940,17 @@
         "the id map records the folder and the verification date",
         "the manifest heads with what it is, and never hides a refusal",
         "the size caps are the stated ones and today's allowlist fits"
+      ],
+      "dynamic": 0
+    },
+    "tests/mirror-workbook-guard.test.ts": {
+      "names": [
+        "PERMITS a workbook whose every row this repo already holds",
+        "REFUSES a workbook holding a row id this repo has never held",
+        "the live mirror, if it is present, holds no row this repo has never held",
+        "the mirror guard reads a workbook's rows, not its zip",
+        "the two live stores hold enough ids for the comparison to mean anything",
+        "two rebuilds of the SAME rows differ in bytes — which is why bytes are the wrong test"
       ],
       "dynamic": 0
     },

@@ -93,9 +93,23 @@ import { today } from "./doc-dates.mjs";
 import { generatedAtEastern } from "./generated-at.mjs";
 import { mirrorCode } from "./mirror-code.mjs";
 import { COPIED_DOCS, MIRRORED_DOCS, checkMirrorContents } from "./mirror-set.mjs";
+/* The workbook reader and the tracker stores — the mirror check compares a
+   .xlsx by its ROWS rather than by its bytes; see workbookHoldsUnknownRows. */
+import { RESOLVED_CSV, WORKING_CSV, readStore } from "./tracker-core.mjs";
+import { readWorkbook } from "./xlsx.mjs";
+import { tryRun as sharedTryRun } from "./try-run.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
+
+/**
+ * `tryRun`, bound to this repo's root.
+ *
+ * The IMPLEMENTATION is `scripts/try-run.mjs` — it was written twice and
+ * `tests/duplicate-implementations.json` carried the pair (RULING 103). This is
+ * a binding rather than a copy: it supplies `cwd` and nothing else.
+ */
+const tryRun = (cmd, args, opts = {}) => sharedTryRun(cmd, args, { cwd: ROOT, ...opts });
 
 /** Overridable so a second machine with a different drive letter still works. */
 const MIRROR =
@@ -140,18 +154,63 @@ function git(...args) {
   return execFileSync("git", args, { cwd: ROOT, encoding: "utf8" }).trim();
 }
 
-/** Run a command, returning null instead of throwing when it is unavailable. */
-function tryRun(cmd, args, opts = {}) {
+/*
+ * `tryRun` moved to `scripts/try-run.mjs` on 2026-08-25 — it was written
+ * twice and `tests/duplicate-implementations.json` carried the pair. The
+ * shared one sets `maxBuffer` to 256 MB, because Node's 1 MB default made a
+ * `git show` of `docs/state.md` THROW, which this function turns into
+ * `null`, which a caller reads as "that version does not match".
+ */
+
+/**
+ * Does this mirrored workbook hold a row id neither tracker store has?
+ *
+ * That is what a hand edit looks like — RULING 41: the author adds rows by hand,
+ * and a session may never reword or delete one. Anything else about a rebuilt
+ * `.xlsx` (entry order, zip stamps, a regenerated view) is not a reason to
+ * refuse an overwrite.
+ *
+ * `unknown: null` means the file could not be read AS a workbook, which is a
+ * different answer from "it holds nothing unknown" and is never treated as one.
+ */
+function workbookHoldsUnknownRows(mirrorPath, repoPath) {
+  let known;
   try {
-    return execFileSync(cmd, args, {
-      cwd: ROOT,
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      ...opts,
-    }).trim();
-  } catch {
-    return null;
+    /*
+     * The two LIVE stores only. `docs/tracker.csv` is the frozen pre-rebuild
+     * snapshot and carries a different column shape, so `readStore` refuses it
+     * outright — and including it would be the wrong direction anyway: every id
+     * added to `known` makes this guard WEAKER, and the safe error is to refuse
+     * an overwrite we did not need to refuse rather than to permit one we should
+     * not have.
+     */
+    const stores = [WORKING_CSV, RESOLVED_CSV].filter((p) => existsSync(join(ROOT, p)));
+    known = new Set(stores.flatMap((p) => readStore(p).map((r) => r.ID)).filter(Boolean));
+  } catch (e) {
+    return { unknown: null, why: `the tracker stores would not read: ${e?.message ?? e}` };
   }
+  if (known.size === 0) {
+    return { unknown: null, why: "the tracker stores read as empty, so nothing could be compared" };
+  }
+  let sheets;
+  try {
+    sheets = readWorkbook(readFileSync(mirrorPath));
+  } catch (e) {
+    return { unknown: null, why: `${e?.message ?? e}` };
+  }
+  const unknown = [];
+  for (const sheet of Object.values(sheets)) {
+    const rows = sheet?.rows;
+    if (!Array.isArray(rows) || rows.length < 2) continue;
+    const idCol = rows[0].indexOf("ID");
+    if (idCol < 0) continue;
+    for (const row of rows.slice(1)) {
+      const id = row[idCol];
+      if (id && !known.has(id) && !unknown.includes(id)) unknown.push(id);
+    }
+  }
+  void repoPath;
+  return { unknown, why: "" };
 }
 
 /**
@@ -772,26 +831,68 @@ if (!existsSync(MIRROR)) {
       const normalize = (s) => s.replace(/\r\n/g, "\n").trimEnd();
       const target = isBinary ? mirrorBytes : normalize(mirrorBytes);
 
-      const revs = (
-        tryRun("git", ["rev-list", "--max-count=60", "HEAD", "--", repoPath]) ?? ""
-      )
-        .split("\n")
-        .filter(Boolean);
-
-      const known = revs.some((rev) => {
-        if (isBinary) {
-          const past = gitShowBuffer(rev, repoPath);
-          return past !== null && Buffer.compare(past, target) === 0;
+      /*
+       * ── A WORKBOOK IS COMPARED BY ITS ROWS, NEVER BY ITS BYTES ────────────
+       *
+       * A `.xlsx` is a ZIP, and this repo rebuilds one on every `pnpm
+       * tracker:views`. Two rebuilds of identical data differ in bytes — entry
+       * order and stamps — so a byte comparison against committed history can
+       * only pass if the mirror happens to hold the exact bytes of a commit,
+       * which it generally does not: the mirror is written when a session runs,
+       * and the commit is made afterwards.
+       *
+       * The consequence, measured 2026-08-25: the guard reported **tracker.xlsx
+       * matches no version in this file's history — not overwritten, diff it by
+       * hand** and FAILED the handoff, which under RULING 75 is a gate. Diffing
+       * it by hand as instructed found the mirror's Working sheet held **246
+       * rows, ZERO of them absent from the repo's two stores** — no hand edit at
+       * all, just a copy sixteen rows behind.
+       *
+       * So the question is asked properly: does the mirror workbook contain a
+       * ROW this repo has never held? That is what a hand edit looks like
+       * (RULING 41 — the author adds rows by hand and a session may never
+       * reword or delete one), and it is the only thing worth refusing over.
+       * Stamps in a zip are not.
+       *
+       * A workbook that fails to PARSE is refused, not waved through: an
+       * unreadable file is not a file we know is safe to overwrite.
+       */
+      if (isBinary && /\.xlsx$/i.test(repoPath)) {
+        const verdict = workbookHoldsUnknownRows(to, repoPath);
+        if (verdict.unknown === null) {
+          problems.push(`${mirrorName} could not be read as a workbook (${verdict.why}) — not overwritten`);
+          continue;
         }
-        const past = tryRun("git", ["show", `${rev}:${repoPath}`]);
-        return past !== null && normalize(past) === target;
-      });
+        if (verdict.unknown.length > 0) {
+          problems.push(
+            `${mirrorName} holds ${verdict.unknown.length} row id(s) this repo has never held ` +
+              `(${verdict.unknown.slice(0, 6).join(", ")}) — a hand edit, not overwritten`,
+          );
+          continue;
+        }
+        /* Every row is one this repo knows. Safe to overwrite. */
+      } else {
+        const revs = (
+          tryRun("git", ["rev-list", "--max-count=60", "HEAD", "--", repoPath]) ?? ""
+        )
+          .split("\n")
+          .filter(Boolean);
 
-      if (!known) {
-        problems.push(
-          `${mirrorName} matches no version in this file's history — not overwritten, diff it by hand`,
-        );
-        continue;
+        const known = revs.some((rev) => {
+          if (isBinary) {
+            const past = gitShowBuffer(rev, repoPath);
+            return past !== null && Buffer.compare(past, target) === 0;
+          }
+          const past = tryRun("git", ["show", `${rev}:${repoPath}`]);
+          return past !== null && normalize(past) === target;
+        });
+
+        if (!known) {
+          problems.push(
+            `${mirrorName} matches no version in this file's history — not overwritten, diff it by hand`,
+          );
+          continue;
+        }
       }
     }
 

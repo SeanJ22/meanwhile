@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:46:57 EDT.
+Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -586,5 +586,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-25 13:46:57 EDT
+branch: claude/final-pass-0825
+head sha: 48aefaa28c7a92e72d5cf7b62005bf6a15fa5a6f
+head subject: Merge origin/main — the job watcher's row and this session's rows both survive
+origin/main sha: c4167eb791831be26c34aee207795f90bc71c8fe
+origin/main subject: Merge pull request #175 from SeanJ22/claude/final-pass-0825
+local main sha: c4167eb791831be26c34aee207795f90bc71c8fe
+local main matches origin/main: yes
+working tree: dirty — 5 changed file(s)
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14434
+```

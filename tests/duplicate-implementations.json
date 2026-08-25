@@ -39,11 +39,6 @@
       "reason": "XML entity unescaping, twice, under two names."
     },
     {
-      "id": "exact:scripts/handoff.mjs#tryRun,scripts/session-start.mjs#tryRun",
-      "disposition": "OWED",
-      "reason": "The gate runner, duplicated between the two scripts that bookend a session. A fix to how a failing gate is reported lands in one of them."
-    },
-    {
       "id": "exact:tests/coverage.test.ts#loadFeatures,tests/registry-oracle.test.ts#loadFeatures,tests/resolve-once.test.ts#loadFeatures",
       "disposition": "OWED",
       "reason": "Three tests each load the committed features their own way. A shared fixture loader is the fix."
@@ -95,5 +90,13 @@
     "howItWasFixed": "One shared lib/db/intake-windows.ts, keyed per intake SPACE so consolidating the code cannot consolidate the budgets: reactions and feedback keep their own per-minute and per-IP numbers, and speak takes the reactions budget deliberately.",
     "whereItLives": "lib/db, not lib/signal. Written into lib/signal first, it immediately tripped the guard in tests/feedback.test.ts that keeps the licensed path from naming the feedback store. The guard was right and the file was in the wrong place: a rate-limit window is intake machinery, not signal. It moved rather than the guard being widened.",
     "groupsRemoved": 1
-  }
+  },
+  "consolidatedOn2026-08-25": [
+    {
+      "id": "exact:scripts/handoff.mjs#tryRun,scripts/session-start.mjs#tryRun",
+      "what": "the gate runner, duplicated between the two scripts that bookend a session",
+      "how": "Moved to scripts/try-run.mjs. Each caller keeps a one-line BINDING that supplies cwd and nothing else, which is not an implementation.",
+      "why": "It was consolidated because the duplicate had already cost something: Node defaults execFileSync maxBuffer to 1 MB, output past it THROWS, and both copies turned that into null. docs/state.md crossed a megabyte, so every git show of it in the handoff mirror guard threw, every revision was skipped, and the guard reported that a byte-identical mirror copy matched no version in its history — failing the handoff, which under RULING 75 is a gate. Fixing one copy would have left the other carrying the same silent wrong answer."
+    }
+  ]
 }

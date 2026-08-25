@@ -734,8 +734,37 @@ for (const id of wanted) {
   const route = ROUTES.find((r) => r.id === id)!;
   console.log(`ROUTE ${route.id}  (Tier ${route.tier}) — ${route.publisher}`);
 
-  const targets = await route.pages(ctx);
-  console.log(`  source pages to harvest: ${targets.length}`);
+  const all = await route.pages(ctx);
+  /*
+   * **A STATED CLIP, NEVER A SILENT ONE — RULING 129 and the two-numbers rule.**
+   *
+   * The press route's 258 surname searches named **4,056 distinct articles**,
+   * which at a polite request rate is several hours. `--max-pages=N` bounds a
+   * run, and when it bites BOTH numbers are printed and the artifact carries
+   * them. A cap reached while the source still offers more is a boundary this
+   * run stopped at, not the end of the data, and the difference has to be
+   * readable in the output rather than inferable from it.
+   *
+   * Pages already in the disk cache are FREE and are never counted against the
+   * cap: the cap exists to bound requests to somebody else's server, and a
+   * cached page makes none.
+   */
+  const cap = Number((process.argv.find((a) => a.startsWith("--max-pages=")) ?? "").slice("--max-pages=".length));
+  let targets = all;
+  let clipped = 0;
+  if (Number.isFinite(cap) && cap > 0) {
+    const free = all.filter((t) => existsSync(cachePath(t.url)));
+    const costly = all.filter((t) => !existsSync(cachePath(t.url)));
+    targets = [...free, ...costly.slice(0, cap)];
+    clipped = costly.length - Math.min(cap, costly.length);
+  }
+  console.log(
+    `  source pages to harvest: ${targets.length} of ${all.length}` +
+      (clipped > 0
+        ? `  — CLIPPED: ${clipped} page(s) not fetched this run because --max-pages=${cap} bounded it. ` +
+          "The source still offers them."
+        : ""),
+  );
 
   let harvested = 0;
   let refused = 0;
@@ -813,7 +842,9 @@ for (const id of wanted) {
     symmetricWith: route.symmetricWith ?? null,
     walkedAt: stamp,
     harvest: {
-      sourcePages: targets.length,
+      sourcePagesOffered: all.length,
+      sourcePagesAttempted: targets.length,
+      clippedByMaxPages: clipped,
       read: harvested,
       refused,
       outcome: harvest.outcome,

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 227,
-    "named": 2201,
+    "files": 229,
+    "named": 2216,
     "dynamic": 6
   },
   "files": {
@@ -1057,6 +1057,20 @@
         "previews and branch deploys cancel without needing a diff",
         "the paperwork paths ARE on the allowlist",
         "the shipping directories are NOT on the allowlist"
+      ],
+      "dynamic": 0
+    },
+    "tests/deploy-verdict.test.ts": {
+      "names": [
+        "CANNOT-TELL exits non-zero — an unanswerable question is never a pass",
+        "FAILED — the planted case, because no real one existed to point at",
+        "NJ25 — the close-out verifies the deploy for the shipped SHA succeeded",
+        "PENDING while it builds, and PENDING when it has not appeared — never SUCCESS",
+        "SUCCESS when a deploy carrying this commit is ready",
+        "a FILTER CANCEL is not a failure — RULING 115, and it is the live case",
+        "a RETRY that succeeded reads SUCCESS — the question is what production serves",
+        "a SHORT sha matches the full ref, because that is what a caller has",
+        "another commit's deploy is not this commit's, and a PREVIEW is not production"
       ],
       "dynamic": 0
     },
@@ -2731,6 +2745,17 @@
       "names": [
         "no client component takes a render prop or an injected function",
         "the about-area page passes ShuffledFacts nothing but data"
+      ],
+      "dynamic": 0
+    },
+    "tests/serving-surfaces.test.ts": {
+      "names": [
+        "NS15 — every serving surface is checked against its store",
+        "a whole database says nothing is broken",
+        "catches the ACTUAL failure: speak_your_mind gone, and names what a reader gets",
+        "every surface names the code that serves it, so a failure points somewhere",
+        "every table a surface declares is a table the schema actually creates",
+        "worst first — a surface that ACCEPTS AND DROPS is reported above one that renders empty"
       ],
       "dynamic": 0
     },

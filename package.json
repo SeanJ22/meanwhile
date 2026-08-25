@@ -231,7 +231,9 @@
     "absences": "tsx scripts/argue-absences-0825.mts",
     "door2": "tsx scripts/incumbent-door2-0825.mts",
     "wire:phones": "tsx scripts/wire-door2-phones-0825.mts",
-    "directory:invert": "tsx scripts/directory-inversion-0825.mts"
+    "directory:invert": "tsx scripts/directory-inversion-0825.mts",
+    "db:surfaces": "tsx scripts/assert-serving-tables.mts",
+    "deploy:sha": "node scripts/deploy-live.mjs --sha"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

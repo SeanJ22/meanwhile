@@ -1553,5 +1553,92 @@
     "ids": [
       "NH144"
     ]
+  },
+  {
+    "session": "visual-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH145",
+      "NH146",
+      "NH147",
+      "NH148",
+      "NH149",
+      "NH150"
+    ],
+    "retracted": {
+      "reason": "Opened correctly, but under the session label 'visual-0824', which lacks the -nonhunt marker a non-hunt session has to claim explicitly (RULING 88, tests/expansion-log.test.ts). The label lives in the Opened by column and no tracker command changes it, so the same six rows were re-added under 'visual-0824-nonhunt'. Same content, same session, same day.",
+      "retractedOn": "2026-08-24",
+      "retractedBy": "visual-0824-nonhunt",
+      "survivingIds": [
+        "NH163",
+        "NH164",
+        "NH165",
+        "NH166",
+        "NH167",
+        "NH168"
+      ]
+    }
+  },
+  {
+    "session": "visual-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH151",
+      "NH152",
+      "NH153",
+      "NH154",
+      "NH155",
+      "NH156"
+    ],
+    "retracted": {
+      "reason": "tracker:add was run twice on one input file. Its confirmation prints ABOVE the views summary and a tail of the output hid it, so the first run was read as having failed and the command was repeated — the identical accident this ledger already records against 2026-08-21. Six byte-identical twins, removed the same minute, seen by nobody.",
+      "retractedOn": "2026-08-24",
+      "retractedBy": "visual-0824-nonhunt",
+      "survivingIds": [
+        "NH163",
+        "NH164",
+        "NH165",
+        "NH166",
+        "NH167",
+        "NH168"
+      ]
+    }
+  },
+  {
+    "session": "visual-0824",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH157",
+      "NH158",
+      "NH159",
+      "NH160",
+      "NH161",
+      "NH162"
+    ],
+    "retracted": {
+      "reason": "Re-added under the correct label and it did not take: the input JSON carried an explicit Opened by field, which the add command prefers over the --session flag, so the rows landed under visual-0824 again. The field was removed from the input so the flag is the single source, and the rows were re-added. Same content, same session, same day.",
+      "retractedOn": "2026-08-24",
+      "retractedBy": "visual-0824-nonhunt",
+      "survivingIds": [
+        "NH163",
+        "NH164",
+        "NH165",
+        "NH166",
+        "NH167",
+        "NH168"
+      ]
+    }
+  },
+  {
+    "session": "visual-0824-nonhunt",
+    "opened": "2026-08-24",
+    "ids": [
+      "NH163",
+      "NH164",
+      "NH165",
+      "NH166",
+      "NH167",
+      "NH168"
+    ]
   }
 ]

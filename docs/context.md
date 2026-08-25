@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 148 recorded
+## Rulings — 154 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -418,6 +418,12 @@ from. Each entry there names what it supersedes.
 - RULING 133 — a performance change ships with its measurement
 - RULING 134 — an instrument without a committed baseline is unfinished
 - RULING 135 — a fence bars acting on content, never committing Sean's artifacts
+- RULING 136 — feedback names examples; a fix closes the class
+- RULING 137 — for layout, an annotated image is the spec, and it outranks prose
+- RULING 138 — display consolidates sources; the record is never deleted
+- RULING 139 — the product never announces its own failure
+- RULING 140 — dates spell out, product-wide
+- RULING 141 — the Speak Your Mind store's four rules
 
 ## P0 tracker rows — 93 of 456 rows
 

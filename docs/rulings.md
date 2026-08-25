@@ -3029,3 +3029,203 @@ capture the session never opens makes it reachable to the session that owns it
 about the rule:* on 2026-08-24 `docs/feedback/8.24/` existed and was **EMPTY**.
 There were no captures to commit, git cannot track an empty directory, and the
 first act of the session was therefore a no-op. Reported rather than smoothed.
+
+---
+
+## THE SIX RULINGS OF 2026-08-24 — SEAN'S VISUAL WALKTHROUGH
+
+*Adopted 2026-08-24, from Sean's 8/24 walkthrough of the app and the sixteen
+captures he recorded between 11:54 and 12:27. `CLAUDE.md` carries them as law.*
+
+---
+
+### RULING 136 — feedback names examples; a fix closes the class
+
+*Adopted 2026-08-24, Sean's frame for the whole walkthrough, stated by him
+three times across two walkthroughs before it was written down.*
+
+**His words: "All of what I've provided are examples of recurring issues. These
+are not the specific issues; these are examples of underlying issues."**
+
+Every id in a feedback list names an INSTANCE. The defect is the CLASS. An item
+is done when the class is closed everywhere it exists — every state, every zip,
+every surface — and the named instance is only the verification case.
+
+- **An item closed at the instance and open at the class is NOT DONE**, and may
+  not be reported as done.
+- **Every ending carries its denominator**: the class named, the surfaces and
+  states it exists on, N of M closed, and the observed instance confirmed among
+  them.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+named-instance rule already said a reported defect is the START of a sweep. What
+it did not say is what a feedback ITEM is, and a feedback item looks like a
+request to fix one thing. "The role text is cut off on Dr. Ravi Shah" reads as a
+request about one card; it was 17 uncompensated letter-spaced runs across 11
+files. Fixing the card would have been a truthful report of an untrue fix.
+
+*What this cost before it was written down.* `LBL-2` closed on 2026-08-23 at
+"6 found, 6 fixed", correctly, and Sean found the same defect on another card
+the next day. The six were right. The CLASS was 23.
+
+---
+
+### RULING 137 — for layout, an annotated image is the spec, and it outranks prose
+
+*Adopted 2026-08-24. It is the render-default rule's cousin: that one says a
+capture is evidence only once read as an image, and this says a capture can be
+a SPECIFICATION.*
+
+**Where Sean annotates a capture — an arrow, a red box, a strikethrough — that
+image IS the spec. It is built to directly, and it wins against any prose
+describing it, including the brief's own.**
+
+- **The two spec images are identified BY CONTENT before anything is built.** A
+  file-to-issue mapping inferred from capture times is a guess, and on 2026-08-24
+  it was wrong about both of them.
+- **Where the image and the prose disagree, the image wins and the disagreement
+  is REPORTED**, so Sean can overrule the reading rather than discover it.
+
+*The rationale, and it is a measured failure rather than a preference.* The 8/22
+prose said "left column, nested". The build was faithful to those words and the
+result was wrong: the cards ended up INSIDE the sidebar instead of floating
+beneath it, and the whole of `LAY-1` had to be deleted the following day. **Prose
+lost information the image carries.** An arrow has a start and an end; "nested"
+does not.
+
+*Both halves were exercised on the day this was adopted.* The brief said to cut
+a phrase from the jurisdiction note that turned out to be inside the paragraph
+Sean had marked GOOD — his red box covered only the two paragraphs after it. The
+image was followed and the difference was reported.
+
+---
+
+### RULING 138 — display consolidates sources; the record is never deleted
+
+*Adopted 2026-08-24, from `SRC-1` through `SRC-4`. It narrows nothing in the
+no-claim-without-a-source rule; it constrains how a fix to it may be built.*
+
+**Every inline asterisk and per-item source annotation collapses to ONE line at
+the bottom of the card. That is a change to what RENDERS, never to what is
+HELD.**
+
+- Single source: *These were sourced from [publisher].*
+- More than one: *We sourced this information from these three sources,* then
+  the list, still at the bottom.
+- **Footnotes, source URLs and fetch dates are never deleted from the data**,
+  and a test asserts the populated provenance fields are IDENTICAL before and
+  after the consolidation runs.
+
+*Why the test is not optional.* "Remove the source annotations" and "remove the
+sources" are one careless edit apart, and only one of them is allowed. A session
+that deleted the fields would satisfy every visual check — the cards would look
+exactly as asked — and the product would have quietly stopped being able to say
+where anything came from. Nothing else in the repo would have gone red.
+
+*What this supersedes, and the cost is stated rather than hidden.* F01 3.2
+collapsed repeated provenance to one note per distinct source with a footnote
+MARKER on each row. That was a real improvement and the markers are now the
+friction. On a card carrying two bodies at one building a reader can no longer
+tell which row came from which — Tucson splits city and school meetings at one
+address, so this is not hypothetical. It is Sean's call; what it buys is that
+the other ninety-odd cards, which carry one source, stop printing punctuation
+nobody reads.
+
+---
+
+### RULING 139 — the product never announces its own failure
+
+*Adopted 2026-08-24, from `BAL-7`, made product-wide. It is the render-default
+rule's other edge, and the two are easy to confuse.*
+
+**"That is a gap on our side" and every variant comes out, everywhere. State
+what is known, offer the narrowing, move on.**
+
+**THE ATTRIBUTION IS NOT WHAT THIS TOUCHES, and the distinction is the whole
+rule.** The render-default rule requires a reader be able to tell OUR gap from
+THEIR absence, and it says in as many words that what it protects is the
+ATTRIBUTION rather than any particular sentence. *We haven't recorded this
+chamber's vote on this yet* is REQUIRED. *That is a gap on our side, not a
+finding about those districts* is attribution PLUS a verdict on ourselves, and
+only the second half is struck.
+
+- **The sweep is by SHAPE, never by string** (RULING 110), and it lives on the
+  existing refusal-shapes instrument rather than in a second one.
+- **The honest attributions are planted in the test alongside the defects**, so
+  the family can never become pressure to delete the render-default rule.
+- **The report states N found and N cut.**
+
+*Measured on adoption: four instances shipped, four cut* — two Sean red-boxed
+himself, plus one in the map entry and one in the voting-sites panel that the
+widened sweep found. One of the three new patterns could not match anything at
+all until a planted instance caught it.
+
+---
+
+### RULING 140 — dates spell out, product-wide
+
+*Adopted 2026-08-24, from `BC-12` and `BAL-4`. Supersedes the mm/dd/yyyy
+convention of `3h` (2026-08-16).*
+
+**Sean's words: "in seat until January 3rd, 2029," never "01-03-2029." Full
+month name, ordinal day, four-digit year, everywhere a reader sees a date.**
+
+**ONE formatter.** RULING 103 applies with force here, because this defect had
+three implementations under three names and none of them called each other:
+
+1. `formatDateMDY`, which rendered the ballot page and the whole funding surface;
+2. `inSeatUntil`, which built `${m}/${d}/${y}` by hand off its own regex — and
+   is the LITERAL instance Sean quoted, so fixing only the first would have left
+   his example on screen;
+3. the picks card, which spelled the month already and stopped there —
+   "August 24, 2026" against "August 24th, 2026", close enough to look right and
+   different enough to be a separate convention.
+
+*A calendar date is read from the string and never round-tripped through a
+`Date`.* `new Date("2026-11-03")` <!-- expected-future: the 2026 general election, quoted as a code example --> is midnight UTC, and formatting that in
+America/Phoenix returns November 2nd — an election date off by one day, which in
+this product is a false claim about a government.
+
+---
+
+### RULING 141 — the Speak Your Mind store's four rules
+
+*Adopted 2026-08-24, Sean's ruling on `BC-11`. All four are constitutional and
+none is optional.*
+
+**Speak Your Mind is the collection point for verbatim constituent sentiment —
+product infrastructure, not a comment box.** The framing is what you would say
+if this person were standing in front of you.
+
+1. **DISTRICT-STAMPED, JOINED TO NOTHING.** The subject's public id, the
+   reader's zip-resolved district, a timestamp, the text, and a hashed
+   browser-minted continuity key. No email, no account reference, no address,
+   no new join path to any other store. **The continuity key is digested under
+   its own prefix**: three stores hash the same kind of key, and without
+   distinct prefixes they would be equality-joinable on a value nobody had to
+   look up.
+2. **HONEST DISCLOSURE AT THE BOX.** One line, plain language, before the reader
+   types: what is written may be shared — without a name, because we do not hold
+   one — with campaigns, organizations and researchers. **"May", never "will."**
+   The reason there is no name is inside the sentence, because *anonymously* is
+   a promise a reader takes on trust and *we do not hold one* is a fact they can
+   check. The honest version is the credible version.
+3. **PII SELF-DISCLOSURE IS REDACTED AND FLAGGED, AND A FLAGGED ROW NEVER
+   EXPORTS VERBATIM.** People type their own names, emails, phones and addresses
+   into boxes like this. The pass and the flag exist BEFORE any export path
+   does — the store is born safe, not retrofitted. **It detects the act of
+   introducing yourself rather than trying to recognise names**, because any
+   list of names is incomplete and a list built from our own officials would
+   flag the very sentiment this box collects.
+4. **ABUSE TRIAGE, NOT FORWARDING.** Nothing typed here is ever auto-forwarded
+   to anyone. Severe content goes to a HELD queue for Sean's review, in the
+   tiers `docs/abuse-policy.md` already defines. **Harsh political speech is
+   never held** — over-filtering degrades the product to guard against a rare
+   case, and a box that promises you can say what you would say to their face
+   and then swallows it would be worse than not asking. The intake limiter's
+   attestation applies to submissions.
+
+**Not rendered publicly.** Collected, never displayed — the same reasoning that
+keeps reaction aggregates off every card, because showing them anchors later
+respondents and corrupts what is being sold. **The default is REVERSIBLE and is
+Sean's call.**

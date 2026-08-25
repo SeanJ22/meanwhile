@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **134 sessions.**
+Newest first. **135 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,16 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## one-session-0825 · 2026-08-25
+
+**What it finished.** 3 row(s).
+
+- **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these.
+- **NH142** — NS11 recorded the mirror scrubbed and verified by re-read on 2026-08-24. A sweep at the start of this session found six occurrences of five live credentials back in it. Nothing un-scrubbed it: handoff re-runs the transcript exporter, which rewrites the mirror out of the local jsonl files, and those are deliberately never scrubbed. The mirror is scrubbed again and handoff now scrubs it immediately after every export and re-reads to confirm. ROTATION IS STILL THE FIX and only you can do it: 0 of the 9 credentials in NS11 are rotated as of this session, proven by the sweep still finding every current value in a leaked location.
+- **NH169** — pnpm secrets:sweep found six credential VALUES in three transcripts on the Drive mirror. CONGRESS_API_KEY (twice - 8/17 and 8/18), FEC_API_KEY, PLURAL_API_KEY and LEGISCAN_API_KEY (all 8/17), and CENSUS_API_KEY (8/24, from another session that ran today). All three files have been scrubbed and re-read clean. RULING 127 is explicit that this is not enough: a value written to a synced folder must be assumed READ, so scrubbing is cleanup and ROTATION is the fix. That is yours - the accounts are yours and no session can do it. Rotate all five, then prove it the way RULING 95 asks: CALL the dead key and confirm it is refused, and CALL the new one and confirm it answers with the data requested. Both halves matter, because the Census host answers a dead key with HTTP 200 and an HTML page titled Invalid Key, so a status check alone reads a corpse as healthy. Nobody pasted these: the leak mechanism RULING 127 names is a tool printing a resolved URL back, and several of these APIs carry the key as a query parameter. This session neither caused nor touched the leaks; it found them at the ship gate and is routing them to you.
+
+**Needs Sean.** Nothing.
 
 ## final-pass-0825 · 2026-08-25
 
@@ -48,7 +58,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## visual-0824-nonhunt · 2026-08-24
 
-**What it started.** 7 row(s) opened, 7 still open.
+**What it started.** 7 row(s) opened, 6 still open.
 
 - **NH163** — Sean's 8/24 walkthrough of the app, recorded as sixteen captures between 11:54 and 12:27. Every id was built and verified against a local production build in the visual-0824 session, with the captures read as images. Opened as ONE row because they were worked as one item list and share one verification pass; the per-id endings are on the Session record and in the session's close-out. Kept open only until Sean has looked at the result — the work itself is done and the gates are green. *(open)*
 - **NH164** — Your BC-11 ruling asked for the disclosure to be drafted this session, marked for your review as COPY, and shipped as drafted meanwhile. It ships as: 'What you write may be shared - without a name, because we don't hold one - with campaigns, organizations, and researchers working to understand what people want.' Three things in it are load-bearing and worth checking: it says MAY rather than will, because a commitment not honoured on every instance is worse than a reserved right; it gives the REASON there is no name inside the sentence, because anonymously is a promise and we-don't-hold-one is a checkable fact; and it names the buyer classes out loud at the moment of typing. The framing above the box reads 'What would you say if [the body] were standing in front of you?' and the placeholder is 'What would you want to say?'. Change any of it and the words live in lib/speak/copy.ts. *(open)*
@@ -56,9 +66,8 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH166** — OFF-3 asked for the superintendent's photo from the TUSD site, queued for your review under the photo rules, with the rest of the board swept alongside. NOT DONE this session and reported as not done rather than smoothed. Two things you may want to rule on. First, the four-door rule: a district's own site publishing a portrait of its own superintendent is door 2, an official government-published portrait, and TUSD is not a .gov host - so whether door 2 reaches a school district's own domain is your call and not a session's. Second, the app spells him Gabriel Trujillo; the 8/24 brief dictated Gabrielle. The naming rule says the app's spelling is authoritative, so nothing was changed - but if the app is wrong, that is a data fix and it wants your word first. The board's other five members already carry portraits; he is the one initials circle on that card. *(open)*
 - **NH167** — LAY-4 puts Who Governs Here and the meetings count in a floating region beneath the rail, and both live in one fixed flex column so they cannot overlap at any viewport. At 1440x900 the rail wants 662px and the who-governs card wants 350px or more against 876px of column, so they do not both fit and something is always scrolling. The rail is capped at 58% of the column: at 70% the card had 100px, less than its own header. Both scroll internally so nothing is unreachable either way, and WGH-6 is the real answer - clicking Who Governs Here minimizes the rail and the card takes the whole column. The number decides what a reader sees BEFORE they choose, and it is the kind of call worth looking at on a real screen. *(open)*
 - **NH168** — MTG-6 titles a venue card with the body and MTG-7 puts the sitting's own name on the entry beneath. Where a source publishes a DIFFERENT bodyName per sitting - Tucson Unified does, with names like GOVERNING BOARD AGENDA SPECIAL MEETING - the entry carries something distinct and it reads well. Where a source publishes ONE name for every sitting, as Tucson Parks and Recreation does, the entry repeats the card title. Sean's own reference capture 12-01-44 shows the same repetition and he marked only the jurisdiction prefix, so nothing was changed here. Worth a look on a real card: the honest options are to drop the entry title where it equals the card title, or to leave it as the anchor for the date and the agenda link. *(open)*
-- **NH169** — pnpm secrets:sweep found six credential VALUES in three transcripts on the Drive mirror. CONGRESS_API_KEY (twice - 8/17 and 8/18), FEC_API_KEY, PLURAL_API_KEY and LEGISCAN_API_KEY (all 8/17), and CENSUS_API_KEY (8/24, from another session that ran today). All three files have been scrubbed and re-read clean. RULING 127 is explicit that this is not enough: a value written to a synced folder must be assumed READ, so scrubbing is cleanup and ROTATION is the fix. That is yours - the accounts are yours and no session can do it. Rotate all five, then prove it the way RULING 95 asks: CALL the dead key and confirm it is refused, and CALL the new one and confirm it answers with the data requested. Both halves matter, because the Census host answers a dead key with HTTP 200 and an HTML page titled Invalid Key, so a status check alone reads a corpse as healthy. Nobody pasted these: the leak mechanism RULING 127 names is a tool printing a resolved URL back, and several of these APIs carry the key as a query parameter. This session neither caused nor touched the leaks; it found them at the ship gate and is routing them to you. *(open)*
 
-**Needs Sean.** NH164, NH165, NH166, NH169
+**Needs Sean.** NH164, NH165, NH166
 
 ## state-money-0824 · 2026-08-24
 
@@ -66,16 +75,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 - **NH121** — pnpm walk:all against production on 2026-08-24 raised a NAMED REGRESSION at 03255 on the phone viewport: the sidebar says 201, the panel header says 201, and the seven group headings add up to 200. One meeting is in the panel's own count and in none of its groups. The reader is not shown a wrong number - both figures are internally consistent with what they are counting - but one row is invisible in the grouped list, and the check that exists to catch exactly this is red.
 
-**What it started.** 6 row(s) opened, 6 still open.
+**What it started.** 6 row(s) opened, 5 still open.
 
-- **NS11** — The brief named one leaked key (Census). A sweep BY VALUE across the repo, the Drive mirror and the local session transcripts found NINE distinct credentials in plaintext: CONGRESS_API_KEY, PLURAL_API_KEY, FEC_API_KEY, LEGISCAN_API_KEY, CENSUS_API_KEY, ANTHROPIC_API_KEY, DATABASE_URL, WTP_PRODUCTION_DATABASE_URL_READONLY and WTP_PRODUCTION_DATABASE_URL_WRITE. The last three are database connection strings carrying passwords, and one of them is the PRODUCTION WRITE credential. The Drive mirror — the surface that leaves this machine — held six of them and has been SCRUBBED (0 remaining, verified by re-read). The local ~/.claude transcripts still hold all nine and were deliberately NOT edited: they are the runtime's own files and corrupting session state to remove a secret that has already escaped would be a real cost for no security. A value written to a synced folder must be assumed read. Scrubbing is cleanup; ROTATION IS THE FIX, and only Sean can rotate these. *(open)*
 - **NS12** — RULING 125 moves every walk onto the local production build and leaves exactly one question that needs Netlify: which SHA is live. pnpm deploy:live reads it from Netlify's deploy API in one call with zero requests to the site. There is no NETLIFY_AUTH_TOKEN in .env.local and the Netlify CLI config on this machine holds no user, so the tool correctly reports CANNOT-TELL and exits 3 rather than passing. A Personal Access Token from Netlify (User settings, Applications, Personal access tokens) added to .env.local as NETLIFY_AUTH_TOKEN closes it. *(open)*
 - **NS13** — RULING 124 item 5 makes pnpm closeout REFUSE a separate push to main, per Sean's instruction that records ship inside the PR or not at all. CLAUDE.md's merge-cadence rule permits separate close-out commits for a stated reason: a document cannot name the commit that contains it. Most of that reason is now gone — RULING 125 moves walks onto a local build, so the walk numbers ARE knowable before the ship. What remains genuinely unknowable in advance is the deploy SHA. This session's position: that is an operational fact read from Netlify's deploy record afterwards and it does not need to live in a commit at all. If Sean disagrees, the merge-cadence rule needs amending rather than the tool. *(open)*
 - **NH122** — cfs.sos.nh.gov ANSWERS: Node fetch gets HTTP 200 and 65,928 bytes. But the page is an Angular single-page app whose HTML is a shell, and the campaign-finance data endpoints were not found. Rung 6 (a live browser, which would reveal the calls) is REFUSED with 403 by the edge — curl is also refused, and only Node's fetch passes, which inverts the usual assumption that the browser is the strongest rung. Reading the served JS bundles (a new route, recorded in the expansion log) surfaced only lobbyist paths; the campaign-finance routes are in lazy chunks this pass did not locate. *(open)*
 - **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions. *(open)*
 - **NJ14** — Of the 07866 ballot's 272 candidacies, 235 resolved to an ELEC location and 37 did not. Fifteen of the 37 are correctly out of scope: US Senate and two congressional districts file with the FEC, and the state-level contest files elsewhere. The rest are REGIONAL SCHOOL DISTRICTS — West Morris Regional, Morris Hills Regional, Hanover Park Regional — plus Long Hill Township and Parsippany-Troy Hills, whose names did not resolve against the ELEC dropdown under any of the six municipal suffixes tried. *(open)*
 
-**Needs Sean.** NS11, NS12, NS13
+**Needs Sean.** NS12, NS13
 
 ## rulings-sweep-0824 · 2026-08-24
 
@@ -173,14 +181,13 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH143** — pnpm purge:synthetic removes only run_class SYNTHETIC from the search log, the reactions store and feedback, exports every row to a dated backup outside the repo first, and refuses to touch ORGANIC, UNKNOWN or AUTHOR. Applied to production 2026-08-24. The row exists so the tool has a home and so the next purge is a run rather than a decision.
 - **NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed.
 
-**What it started.** 22 row(s) opened, 4 still open.
+**What it started.** 22 row(s) opened, 3 still open.
 
 - **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run. *(open)*
 - **NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts. *(open)*
 - **NH141** — Found by the A-007 sweep for catch-return-valid shapes. lib map districts.ts returns an empty array when queryRenderedFeatures throws, so an exception is indistinguishable from a viewport with no districts in it. Nine other sites of the same shape were assessed and fail closed; this one does not, and how it should behave is a visual decision. *(open)*
-- **NH142** — NS11 recorded the mirror scrubbed and verified by re-read on 2026-08-24. A sweep at the start of this session found six occurrences of five live credentials back in it. Nothing un-scrubbed it: handoff re-runs the transcript exporter, which rewrites the mirror out of the local jsonl files, and those are deliberately never scrubbed. The mirror is scrubbed again and handoff now scrubs it immediately after every export and re-reads to confirm. ROTATION IS STILL THE FIX and only you can do it: 0 of the 9 credentials in NS11 are rotated as of this session, proven by the sweep still finding every current value in a leaked location. *(open)*
 
-**Needs Sean.** NH142
+**Needs Sean.** Nothing.
 
 ## visual-tail-and-rehunt-0823 · 2026-08-23
 
@@ -333,7 +340,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 - **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml] *(open)*
 
-**Needs Sean.** JOB03
+**Needs Sean.** Nothing.
 
 ## NJHUNT2 · 2026-08-22
 
@@ -479,7 +486,7 @@ Two things for whoever takes it: why that class of row resolves to no card, and 
 - **NH41** — The Lake Todd Village District's own site, which the Census of Governments records as laketoddvillagedistrict.us, answers HTTP 404 at rungs 2, 3, 4, 5 and 6, and so does the Town of Bradford's news item for its meeting. The Internet Archive - rung 11, and the rung that produced this district's own words for an earlier session - answered 'Temporarily Offline' on 2026-08-21. *(open)*
 - **NH42** — pnpm twig:pair reports 48 government units inside 03255's first-rung circle, 28 with a body in this registry and 20 without. Seven of the twenty are not missing a body so much as missing a DIVISION: Sullivan County itself, and the towns of Lempster, Croydon, Newport, Windsor, Acworth and Grantham are not in the shipped division list at all, so no body could be attached to them. *(open)*
 
-**Needs Sean.** NH32
+**Needs Sean.** Nothing.
 
 ## Prompt E · 2026-08-20
 

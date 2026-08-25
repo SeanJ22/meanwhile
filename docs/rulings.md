@@ -3405,3 +3405,145 @@ equal-effort rule exists to catch, committed by the field definition itself.
   the page has a picture on it and the field beside it is empty.
 - **It supplies no prose** beyond the labelled self-description the blurb rule
   already governs.
+
+---
+
+## The six rulings of 2026-08-25 — the one-session brief
+
+*Five were written BEFORE the work they govern, which is the point of them: a
+rule adopted after a session is a rule that describes what the session already
+did. The sixth records Sean's tracker decisions of the same day as a batch, the
+way RULING 123 recorded his decisions of 2026-08-24.*
+
+### RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question
+
+(Adopted 2026-08-25, Sean's standing instruction, made law for every future
+session rather than repeated in every brief.)
+
+**Nobody is watching. A question asked is hours lost.**
+
+- A decision that is genuinely Sean's becomes a **Needs Sean row** and the
+  session keeps going. It never waits and it never ends its turn to ask.
+- **No command may be capable of prompting.** Non-interactive flags everywhere,
+  `GIT_TERMINAL_PROMPT=0`, `GH_PROMPT=disabled`, stdin closed, every
+  long-running command inside a timeout. Five silent minutes is a kill, a row,
+  and carry on.
+- **Ambiguity resolves against the repo.** The repo is the thing that can be
+  checked; a brief is a description of it written earlier.
+- **"Ran out of room" is not a blocker.** Neither is a wall, a refusal, or a
+  missing input — each is a finding with a row.
+
+*Why this is law and not a header.* It has been the top of every brief for days
+and it is a fact about how this project runs, not about one night's work. A rule
+that has to be restated every time is a rule that will eventually be left out of
+a brief, and the session that reads that brief will stop and wait.
+
+### RULING 147 — no reconciliation may compare a parser to itself
+
+(Adopted 2026-08-25. It is RULING 114's reasoning — *re-deriving a stamp from
+the field it was stamped from proves only that the code is deterministic* —
+made general and pointed at every check in the repo.)
+
+**Every reconciliation names its EXTERNAL ANCHOR: an authority we did not
+write. A check with no external side is decoration, and is deleted or rebuilt.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+MAYOR defect shipped **nine invisible contests and seven fabricated
+candidates** while `pnpm nj:filing:check` reported AGREES on 272 against 272.
+Both of those numbers came from our own parser reading the same document. The
+check was not lying and it was not broken; it was asking whether a thing equals
+itself, which it always does.
+
+- **The anchor is named on the check**, in words, so a reader can see what the
+  other side is without reading the code.
+- **A count published BY the authority is an anchor. A count we derived from
+  the authority's document is not.**
+- **Where no external anchor exists, the check says so** and reports
+  `COULD_NOT_ANCHOR` rather than `AGREES`. Two names for two different states,
+  because a check that cannot reach an authority must never print like one that
+  did (RULING 24).
+
+### RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session
+
+(Adopted 2026-08-25. It is the enforcement half of the permission rule the way
+RULING 107 was the enforcement half of RULING 96.)
+
+**The shared fetcher REFUSES any host whose recorded verdict is `no` or
+`unknown`. Permission is asked before the first byte, by the code, not by a
+person remembering to look.**
+
+*The rationale.* On 2026-08-25 two search engines went into a pool on the
+strength of the right two questions asked in the wrong order — *does it answer*
+and *does it pass a control query*. Both do. Both also carry `Disallow: /search`,
+which is the exact path a query goes to, and `docs/sources.md` had recorded that,
+dated, in a column headed *may we walk it*, with the answer **no**. The register
+was correct, the tracker row was correct, and the session opened the register and
+read the sections it expected to need rather than the one about the thing it was
+about to do. The run was stopped at 125 of 276 and its output discarded.
+
+- **`unknown` refuses.** A host nobody has ruled on is not a host we may walk;
+  that direction costs a lookup, and the other direction costs an apology.
+- **A DISALLOW is not a WALL.** A wall is a host refusing us and RULING 53 sends
+  a session back to re-walk it on a clock. A disallow is a host telling us not
+  to ask, and re-walking it on a clock is asking again after being told no.
+- **Proved with a planted forbidden host**, so the refusal is demonstrated
+  rather than asserted.
+
+### RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader
+
+(Adopted 2026-08-25, with the instrument it governs.)
+
+**`docs/coverage-matrix.csv` is written by `pnpm matrix`, regenerated every
+session, never hand-edited (RULING 92), and never rendered to a reader in any
+form.**
+
+*Why the last clause is constitutional rather than a preference.* The matrix is
+a grid of every candidate against every fact, with a state and a provenance in
+every cell. Put in front of a reader it is a **completeness score per
+candidate**, sorted — which is the composite match score this product does not
+compute, the per-card completeness marker RULING 42 deleted, and the equal-effort
+failure all at once. It is exactly as useful internally as it is forbidden
+externally.
+
+**It reads the stores and adds nothing to them.** The collection minimum is
+untouched: a measuring instrument that had to collect something in order to
+measure would have changed the thing it measures.
+
+### RULING 150 — a Needs Sean row states its ask as an answerable question, with options
+
+(Adopted 2026-08-25.)
+
+**A row in that section ends with a QUESTION Sean can answer, and the options he
+is choosing between. A row that cannot state one is misfiled and is rerouted to
+the section that owns the work.**
+
+*The rationale.* Needs Sean is the only channel that reaches a person, and it
+stood at 48 open. A row that describes a situation without asking anything
+cannot be closed by him — there is nothing to say — so it sits there forever,
+and every row like it makes the queue less likely to be read at all. That is the
+accumulation RULING 79 was adopted over, arriving through a different door.
+
+- **Not every long row is misfiled.** A row asking a genuine judgement call is
+  correct however long it is; what is misfiled is a row asking nobody anything.
+- **A rerouted row is never reworded** (RULING 41) and is never closed by the
+  reroute. It moves to the section that owns the work and stays open there.
+
+### RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch
+
+(Adopted 2026-08-25, Sean's instruction. Recorded the way RULING 123 recorded
+his decisions of 2026-08-24, so that a close has an authority which exists.)
+
+- **`NS11`, `NH142` and `NH169` are CLOSED on the rotation proof.** All nine
+  leaked credentials were rotated; `pnpm rotation:prove` called every old value
+  it could recover from the transcripts and returned **18 old values proven
+  dead, 0 still live**; `pnpm credentials` returned **15 of 15 proven**; and
+  `pnpm secrets:sweep` returned **0 secret occurrences across 2,813 files read**
+  across the repository and the Drive mirror.
+- **`B05` (find counsel) drops to P3 and is Sean-owned.** Its dependents are
+  noted as parked rather than closed.
+- **`T05` and `NH108` are annotated and LEFT OPEN.** The date he gave them is
+  2026-08-28. <!-- expected-future: 2026-08-28, the date Sean set for T05 and NH108 -->
+- **`JOB03` is REROUTED out of Needs Sean to the section that owns the work.**
+  It asked nobody anything — it recorded that a job broke and that nobody found
+  out why, which is work rather than a judgement call. It is RULING 150's first
+  application, and it was diagnosed the same day it moved.

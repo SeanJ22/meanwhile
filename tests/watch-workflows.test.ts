@@ -326,7 +326,7 @@ test("the drill filter does not change the RATE, which is a fact about the workf
  */
 
 const RECORDED_FAILING_LOG = readFileSync(
-  join(ROOT, "tests", "fixtures", "job-watch", "refresh-daily-32833989579-tail.log"),
+  join(ROOT, "tests", "fixtures", "job-watch", "refresh-daily-32833989579-tail.txt"),
   "utf8",
 );
 

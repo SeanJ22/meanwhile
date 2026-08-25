@@ -27,7 +27,10 @@ import {
 /** A fetch that answers with exactly what a named host answered on 2026-08-25. */
 function canned(status: number, contentType: string, body: Uint8Array): typeof fetch {
   return (async () =>
-    new Response(body, { status, headers: { "content-type": contentType } })) as unknown as typeof fetch;
+    new Response(new Blob([body as BlobPart]), {
+      status,
+      headers: { "content-type": contentType },
+    })) as unknown as typeof fetch;
 }
 const JPEG = new Uint8Array([0xff, 0xd8, 0xff, 0xe0, 0, 16, 74, 70, 73, 70, 0, 1]);
 const HTML = new TextEncoder().encode("<!doctype html><html><head><title>Page Not Found</title>");

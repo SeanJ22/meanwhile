@@ -1338,6 +1338,7 @@ export default async function BallotPage({
                             partyLine={nominee.partyLabel}
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
+                            contestOcdId={contest.ocdId}
                             federal={isFederalContest(contest)}
                             context={
                               centroid && zip
@@ -1485,6 +1486,7 @@ export default async function BallotPage({
                               partyLine={cand.partyLabel}
                               targetKey={cand.id}
                               contestTitle={contest.title}
+                              contestOcdId={contest.ocdId}
                               federal={isFederalContest(contest)}
                               context={
                                 centroid && zip

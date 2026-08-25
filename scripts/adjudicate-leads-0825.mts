@@ -206,9 +206,9 @@ const fetcher = async (url: string): Promise<ProbeResponse> => {
   try {
     const r = await politeGetText(url, { profile: "browser" });
     bodies.set(url, r.text);
-    return { status: r.status, length: r.text.length, body: r.text };
+    return { status: r.status, length: r.text.length };
   } catch {
-    return { status: 0, length: 0, body: "" };
+    return { status: 0, length: 0 };
   }
 };
 const probe = new ControlledProbe(fetcher);

@@ -39,7 +39,8 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from
 import { join } from "node:path";
 
 import { officialPhotoForPerson } from "../lib/photos/person.ts";
-import { reviewFor, stagedAwaitingReview } from "../lib/photos/review.ts";
+import { reviewFor } from "../lib/photos/review.ts";
+import { stagedAwaitingReview } from "../lib/photos/staged.ts";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 

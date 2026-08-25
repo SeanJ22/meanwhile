@@ -50,7 +50,10 @@ describe("the search pool asks permission before it asks anything else", () => {
      */
     for (const id of ["mojeek", "brave"]) {
       const row = SEARCH_POOL_EXCLUDED.find((e) => e.id === id);
-      assert.ok(row, `${id} must stay in the record rather than being deleted`);
+      if (!row) {
+        assert.fail(`${id} must stay in the record rather than being deleted`);
+        return;
+      }
       assert.equal(row.kind, "DISALLOWED", `${id} is recorded as ${row.kind}, which invites a re-walk`);
       assert.match(row.why, /Disallow/, `${id}'s reason must quote the robots.txt line`);
       assert.match(row.measuredOn, /^\d{4}-\d{2}-\d{2}$/, `${id} carries no measurement date`);
@@ -101,6 +104,10 @@ describe("the search pool asks permission before it asks anything else", () => {
     const sources = readFileSync(join(ROOT, "docs", "sources.md"), "utf8");
     for (const id of ["mojeek", "brave"]) {
       const row = SEARCH_POOL_EXCLUDED.find((e) => e.id === id);
+      if (!row) {
+        assert.fail(`${id} is not in the exclusion record`);
+        return;
+      }
       assert.ok(
         sources.includes(row.id) || sources.includes(`${row.id}.com`),
         `docs/sources.md does not mention ${id}, so the register and the module disagree`,

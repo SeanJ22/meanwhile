@@ -6,10 +6,9 @@ import { coverageAt } from "@/lib/registry/server";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   classifySubmission,
-  intakeLimits,
   isSameOriginSubmission,
 } from "@/lib/signal/intake-limits";
-import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { intakeWindows } from "@/lib/db/intake-windows";
 import {
   CONTEXT_RESTRICTED_VALUES,
   FREE_TEXT_CLOSED_HEADER,
@@ -68,18 +67,6 @@ export const runtime = "nodejs";
  * instance — the authoritative cross-instance numbers live in the DB
  * counters, so a stale window limit here only affects the cheap pre-check.
  */
-let limiters: { perKey: SlidingWindowLimiter; perIp: SlidingWindowLimiter } | null =
-  null;
-function getLimiters() {
-  if (!limiters) {
-    const limits = intakeLimits();
-    limiters = {
-      perKey: new SlidingWindowLimiter(limits.reactionsPerMinuteHard, 60_000),
-      perIp: new SlidingWindowLimiter(limits.reactionsPerIpPerMinute, 60_000),
-    };
-  }
-  return limiters;
-}
 
 const MAX_BODY_BYTES = 4096;
 
@@ -220,7 +207,7 @@ export async function POST(request: Request) {
     // limiting only).
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const { perKey, perIp } = getLimiters();
+    const { perKey, perIp } = intakeWindows("reactions");
     if (
       !perKey.allow(`k:${submission.reactionKey}`) ||
       !perIp.allow(`ip:${ip}`)

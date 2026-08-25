@@ -5869,14 +5869,57 @@ main[data-sidebar="closed"] .rail-column {
 /* The rail inside the column. It keeps every visual property it had; what it
    loses is its own position: fixed, because a fixed child is out of flow
    and out of flow is exactly where overlap comes from. */
+/*
+ * **WHICH CHILD YIELDS, and the first version of this got it backwards.**
+ *
+ * It gave the rail `flex-shrink: 2` against the floaters' 1, reasoning that the
+ * floaters carry the answer the reader came for. Read as an image at 1440×900
+ * the result was the rail SQUEEZED TO 230px with its stat tiles sliced through
+ * the middle — half a "60" and no "147 Meetings" — while the who-governs card
+ * below it had room to spare.
+ *
+ * The reasoning was fine and the arithmetic was the problem: the who-governs
+ * card is 500px+ at a covered zip and it ALREADY SCROLLS INSIDE ITSELF, so
+ * giving it priority costs the rail real content to buy the card space it does
+ * not need. The rail's top is the treatment the author named as the reference
+ * — the Ballot pill, the zip, the Ask line, the four tiles — and clipping it
+ * mid-tile is the one outcome LAY-5 exists to prevent.
+ *
+ * So the rail keeps its content height up to a CEILING and the floaters take
+ * the rest. The ceiling is a PROPORTION rather than a pixel count on purpose:
+ * a pixel budget is a number that drifts the moment a section is added to the
+ * rail, and a proportion holds at any viewport and any content length.
+ */
 .rail-column > .sidebar {
   position: relative;
   top: auto;
   left: auto;
   width: 100%;
-  max-height: 100%;
-  flex: 0 2 auto;
+  /* NEVER SHRINKS. A shrink factor of 1 let the floaters' own content push the
+     rail down to 340px against 662px of content, slicing its stat tiles
+     through the middle — measured at 1440x900, not guessed. The rail takes its
+     content height up to a ceiling; the floaters take exactly what is left. */
+  flex: 0 0 auto;
   min-height: 0;
+  /*
+   * **58%, and the number is a JUDGEMENT that is stated rather than hidden.**
+   *
+   * At 1440x900 the rail wants 662px and the who-governs card wants 350px or
+   * more, against 876px of column. They do not both fit, so something is
+   * always scrolling and the only question is which.
+   *
+   * 70% gave the rail everything and left the card 100px — less than its own
+   * header — which is a card that is present and unusable. 58% leaves the rail
+   * showing its top treatment through the Filters row with the footer
+   * scrolling, and leaves the card enough to read. Both scroll internally, so
+   * nothing is unreachable either way.
+   *
+   * **And the cramped-both state is the DEFAULT rather than the answer.**
+   * WGH-6 is the answer: clicking Who Governs Here minimizes the rail and the
+   * card takes the whole column. This proportion decides what a reader sees
+   * before they choose, not what they can get to.
+   */
+  max-height: 58%;
 }
 
 /* The region the author's two arrows point into: under the rail, the rail's
@@ -5885,13 +5928,26 @@ main[data-sidebar="closed"] .rail-column {
    is where both arrows land, and where the count chip already sat before this
    change moved it left out of the map. */
 .rail-floaters {
-  margin-top: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  justify-content: flex-end;
   gap: 10px;
-  flex: 0 1 auto;
+  /* Takes whatever the rail leaves, and scrolls its own card rather than
+     pushing the rail out of the way. `justify-content: flex-end` is what puts
+     the group at the BOTTOM of the space — where both of the author's arrows
+     land — now that `margin-top: auto` has nothing left to push against. */
+  /* Basis ZERO, not auto: the floaters take exactly the remainder rather than
+     asking for their content height and taking it out of the rail. The card
+     inside already scrolls, so the remainder is always enough for it to be
+     usable. */
+  flex: 1 1 0;
   min-height: 0;
+  /* The same gutter `.map-bottom-stack` reserves, for the same reason: the map
+     attribution sits in this corner and the freshness footnote landed on top
+     of it. Computed from the legend's own numbers so a taller legend pushes
+     the text up instead of hiding it. */
+  padding-bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 8px);
   /* Separate cards with the map visible between them — never one panel with
      three sections in it. */
   pointer-events: none;

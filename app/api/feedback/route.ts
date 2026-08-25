@@ -9,10 +9,9 @@ import { noteSubmission } from "@/lib/db/intake-limiter";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import {
   classifyFeedbackSubmission,
-  intakeLimits,
   isSameOriginSubmission,
 } from "@/lib/signal/intake-limits";
-import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { intakeWindows } from "@/lib/db/intake-windows";
 
 /**
  * POST /api/feedback — R40, 2026-08-17, the author's ruling (1A: in-app).
@@ -55,18 +54,6 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 export const runtime = "nodejs";
 
-let limiters: { perKey: SlidingWindowLimiter; perIp: SlidingWindowLimiter } | null =
-  null;
-function getLimiters() {
-  if (!limiters) {
-    const limits = intakeLimits();
-    limiters = {
-      perKey: new SlidingWindowLimiter(limits.feedbackPerMinuteHard, 60_000),
-      perIp: new SlidingWindowLimiter(limits.feedbackPerIpPerMinute, 60_000),
-    };
-  }
-  return limiters;
-}
 
 /** 2000 chars of text, plus the small envelope around it. */
 const MAX_BODY_BYTES = 8192;
@@ -161,7 +148,7 @@ export async function POST(request: Request) {
   // The IP is read for limiting and discarded — never stored, never logged,
   // never in an error message (CLAUDE.md).
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const { perKey, perIp } = getLimiters();
+  const { perKey, perIp } = intakeWindows("feedback");
   if (!perKey.allow(`k:${submission.feedbackKey}`) || !perIp.allow(`ip:${ip}`)) {
     return Response.json(
       { stored: false, error: "That is a lot of messages at once. Try again in a minute." },

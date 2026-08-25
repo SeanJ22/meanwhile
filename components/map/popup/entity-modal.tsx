@@ -2,7 +2,7 @@
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { X } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { sourceCreditFor } from "@/lib/meetings/list-attribution";
@@ -574,9 +574,33 @@ function BodySections({
           failure available to it. One group, one open pill. */}
       <CardSectionGroup>
         {sections.map((section) => (
-          <CardSection key={section.id} title={section.title} meta={section.meta}>
-            {section.content ?? <Empty>{section.absence}</Empty>}
-          </CardSection>
+          <Fragment key={section.id}>
+            {/*
+              **BC-11 (2026-08-24) — ABOVE SOURCES, which on THIS card shape is
+              a position rather than a neighbour.**
+
+              The author's placement is "above Sources, below Voting record".
+              The tabbed card has no Sources SECTION — it has a Sources tab — so
+              the pill sits below the whole panel there. This card does have
+              one, and it is the last section, so "below the card" and "above
+              Sources" are different places. The capture is what showed the
+              difference: the pill rendered underneath the citations.
+
+              Keyed off the section id rather than an index, so inserting or
+              reordering a section cannot silently move the pill somewhere the
+              author did not put it.
+            */}
+            {section.id === "sources" && (
+              <SpeakYourMind
+                subjectType={subject.subjectKind}
+                subjectId={subject.subjectId}
+                subject={subject.title}
+              />
+            )}
+            <CardSection title={section.title} meta={section.meta}>
+              {section.content ?? <Empty>{section.absence}</Empty>}
+            </CardSection>
+          </Fragment>
         ))}
       </CardSectionGroup>
     </div>
@@ -787,31 +811,53 @@ export function EntityModal({
           {tab === "sources" && <Sources sources={subject.sources} />}
         </div>
 
+        </>
+        )}
+
         {/*
-          **BC-11 (2026-08-24) — SPEAK YOUR MIND, on the BODY battlecard and
-          the large MEETING battlecard, which are both this component.**
+          **BC-11 (2026-08-24) — SPEAK YOUR MIND, ON EVERY SHAPE THIS CARD
+          TAKES, and it took reading a capture to find that it was not.**
 
-          It sits OUTSIDE the tab panel, deliberately. The author's placement is
-          "above Sources, below Voting record", and on a tabbed card Sources is
-          a TAB rather than a section — so a pill inside the panel would appear
-          and vanish as the reader moved between tabs, and a reader who wanted
-          to say something would have to work out which tab it was hiding
-          behind. Below the panel it is on every tab, which is what "on every
-          battlecard" means when the card has tabs.
+          The author asked for the pill on every battlecard and every large
+          meeting battlecard. This component renders THREE different cards from
+          one function — a seven-section BODY card, a PLACE card, and the tabbed
+          division/meeting card — and the first version put the pill inside the
+          tabbed branch only.
 
-          `subject` is the body's own name, so the framing asks what you would
+          The DOM assertion was content: it found the modal, and the modal was
+          open. **The capture is what showed a Pima County body card with six
+          section pills and no Speak Your Mind on it** — the exact shape of
+          failure the 8/24 brief names: closed at the instance, open at the
+          class. It sits outside the branch now, so a fourth card shape cannot
+          ship without it either.
+
+          Below the card body rather than inside it: on the tabbed form Sources
+          is a TAB, so a pill inside the panel would appear and vanish as the
+          reader moved between tabs. Below the panel it is on every tab, which
+          is what "above Sources" means when Sources is not a section.
+
+          The subject's own title feeds the framing, so it asks what you would
           say if THE TOWNSHIP COUNCIL were standing in front of you rather than
           "this person" — a board is not a person and the copy may not pretend
           otherwise.
         */}
-        <div className="account-modal-body pt-0">
-          <SpeakYourMind
-            subjectType={subject.subjectKind}
-            subjectId={subject.subjectId}
-            subject={subject.title}
-          />
-        </div>
-        </>
+        {/*
+          **NOT on the body card, which renders its own ABOVE Sources.**
+
+          Without this condition the body card carried TWO pills — measured, not
+          reasoned about: the shooter counted `[data-speak-pill]` and found 2.
+          The body card is the one shape with a Sources SECTION, so it places
+          the pill itself to satisfy "above Sources"; the tabbed card and the
+          place card have no such section and take it here.
+        */}
+        {!subject.bodyCard && (
+          <div className="account-modal-body pt-0">
+            <SpeakYourMind
+              subjectType={subject.subjectKind}
+              subjectId={subject.subjectId}
+              subject={subject.title}
+            />
+          </div>
         )}
       </div>
     </div>

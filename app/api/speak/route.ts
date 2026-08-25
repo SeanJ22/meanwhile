@@ -7,10 +7,9 @@ import { coverageAt } from "@/lib/registry/server";
 import { ripcordPulled } from "@/lib/ripcords";
 import {
   classifySubmission,
-  intakeLimits,
   isSameOriginSubmission,
 } from "@/lib/signal/intake-limits";
-import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { intakeWindows } from "@/lib/db/intake-windows";
 import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions";
 
 /**
@@ -44,18 +43,6 @@ import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions"
 
 export const runtime = "nodejs";
 
-let limiters: { perKey: SlidingWindowLimiter; perIp: SlidingWindowLimiter } | null =
-  null;
-function getLimiters() {
-  if (!limiters) {
-    const limits = intakeLimits();
-    limiters = {
-      perKey: new SlidingWindowLimiter(limits.reactionsPerMinuteHard, 60_000),
-      perIp: new SlidingWindowLimiter(limits.reactionsPerIpPerMinute, 60_000),
-    };
-  }
-  return limiters;
-}
 
 const MAX_BODY_BYTES = 8192;
 const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING"]);
@@ -120,7 +107,7 @@ export async function POST(request: Request) {
     // The IP is used here and discarded — never stored, never logged.
     const ip =
       request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-    const { perKey, perIp } = getLimiters();
+    const { perKey, perIp } = intakeWindows("speak");
     if (!perKey.allow(`k:${submission.speakKey}`) || !perIp.allow(`ip:${ip}`)) {
       return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
     }

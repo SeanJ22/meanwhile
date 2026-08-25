@@ -69,7 +69,28 @@ export const REFRESH_SOURCES: readonly RefreshSource[] = [
   },
   {
     id: "nj-filing",
-    commands: ["nj:filing:check", "nj:ballot --write"],
+    /*
+     * THE REBUILD RUNS FIRST, AND THE CHECK MEASURES WHAT IT PRODUCED.
+     *
+     * The order was `["nj:filing:check", "nj:ballot --write"]` until
+     * 2026-08-25, and in that order this source could never become fresh.
+     * `nj:filing:check` exits non-zero on STALE — the pull being older than its
+     * one-day window — which stopped the source before `nj:ballot --write`, the
+     * command that performs the pull the check is complaining about. So the
+     * gate blocked the only thing that could satisfy it, `curatedAt` froze at
+     * 2026-08-23, and every daily run failed on it from then on: run
+     * 32833989579, `nj-filing failed at 'pnpm nj:filing:check' (exit 1)`, with
+     * the clerk's 272 candidacies and our 272 agreeing on the same line.
+     *
+     * Reversed, each half does the job it was written for. `nj:ballot --write`
+     * fetches the clerk's candidates page, reads its current hrefs, extracts
+     * the filed-candidate PDFs and stamps `curatedAt` on the day it read them.
+     * `nj:filing:check` then asks the RULING 113 question of the step that just
+     * ran — did it actually do the thing — and a divergence between the clerk's
+     * published count and ours is a real alarm about a rebuild that just
+     * happened rather than a complaint about one that never got to run.
+     */
+    commands: ["nj:ballot --write", "nj:filing:check"],
     governs: ["data/ballot/"],
     cadence: "weekly",
     // The election is 2026-11-03. expected-future-date: the general election.

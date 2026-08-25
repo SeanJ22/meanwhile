@@ -221,7 +221,7 @@ export function CandidateCard({
                 rel="noreferrer"
                 className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
-                official site
+                {links.official.label ?? "official site"}
               </a>
             )}
             {links?.campaign && (
@@ -231,7 +231,7 @@ export function CandidateCard({
                 rel="noreferrer"
                 className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
-                campaign site
+                {links.campaign.label ?? "campaign site"}
               </a>
             )}
             {!links?.official && !links?.campaign && filedSiteUrl && (

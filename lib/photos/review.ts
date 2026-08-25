@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { personKey } from "./person.ts";
 import { join } from "node:path";
 
 /**

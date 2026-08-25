@@ -395,6 +395,49 @@ function checkMainGreen() {
 }
 
 checkMainGreen();
+/**
+ * `NS15` — does every serving surface still have its store?
+ *
+ * Speak Your Mind shipped live on production with its table missing: the surface
+ * rendered, the route answered, every insert failed, the route caught the error,
+ * and the page carried on as though the words had been kept. A reader typed
+ * something they meant and this product dropped it silently.
+ *
+ * `pnpm db:check` would have caught it and nobody fired it. This fires it, here,
+ * where a session reads its gates — and it asks the better question, because
+ * `db:check` compares migration TAGS and cannot say *the Speak Your Mind box has
+ * nowhere to write*.
+ *
+ * A `CANNOT TELL` (exit 2 — no credential, or the catalog would not answer) is a
+ * WARNING and never a pass. A session without the production credential is not a
+ * session that has verified anything.
+ */
+function checkServingSurfaces() {
+  const probed = spawnSync(
+    process.execPath,
+    [join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"), join(ROOT, "scripts", "assert-serving-tables.mts"), "--target=production"],
+    { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
+  );
+  const out = `${probed.stdout ?? ""}${probed.stderr ?? ""}`;
+  const broken = [...out.matchAll(/^ {2}BROKEN {2}(\S+)/gm)].map((m) => m[1]);
+  if (probed.status === 0) {
+    ok("serving surfaces", "every reader surface on production has its store");
+  } else if (probed.status === 1) {
+    fail(
+      "serving surfaces",
+      `${broken.join(", ") || "a surface"} has NO STORE on production — a reader's input is being ` +
+        "accepted and dropped. Apply the committed migrations before shipping.",
+    );
+  } else {
+    warn(
+      "serving surfaces",
+      "COULD NOT TELL — no credential, or the catalog would not answer. This is not a pass.",
+    );
+  }
+}
+
+checkServingSurfaces();
+
 
 const prs = tryRun("gh", [
   "pr",

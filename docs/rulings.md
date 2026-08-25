@@ -3312,3 +3312,96 @@ fact about the session rather than about the ballot. Kelly-or-argued is the only
 version that is both reachable and checkable, and it is checkable per candidate
 rather than in aggregate — which is what stops a well-covered contest carrying a
 thin one across the line.
+
+---
+
+### RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls
+
+*Adopted 2026-08-25, Sean's ruling, the final pass. It is the operational half
+**RULING 94** was missing, and it narrows neither RULING 94 nor RULING 61.*
+
+**A five-move stuck protocol whose moves were REFUSED still earns an absence.
+Each wall is recorded as a walked move carrying its rung history and the date it
+was tested, alongside the moves that answered. The absence expires on its normal
+RULING 53 window, or EARLY — the day any wall inside it falls — whichever comes
+first.**
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is a measurement rather than an argument.*
+
+The NJ depth session of 2026-08-24 earned **zero** argued absences. Not because
+it did not walk the protocol — it walked it — but because the general search
+indexes are closed to this project, and a move that returns HTTP 403 is not a
+move that returned nothing. Read strictly, that meant **no absence could ever be
+earned while any wall stood**, and a field with no route left would sit owed
+forever, re-hunted nightly against the same refusal, reported as still-owed in
+perpetuity.
+
+**That is dishonest in the other direction, and it is the direction nobody
+watches.** This project's whole discipline points at one failure — asserting an
+absence that was never earned — and the mirror of it is asserting that a field
+is still reachable when every route to it has been tested and refused. A
+permanent "still owed" is a claim too: it says *we believe this exists and we
+will find it*, and after the tenth identical refusal that sentence is no longer
+supported by anything.
+
+- **The protocol still runs in FULL.** All five moves, every literal query or URL
+  recorded. A wall is a recorded move, never a skipped one, and a protocol with
+  four moves walked and one omitted is still void.
+- **Each wall names what it is a wall AROUND** — RULING 90 item 4, unchanged. *A
+  search engine refused after six queries* is one road closed; it is not a fact
+  about a candidate.
+- **The absence carries BOTH clocks and expires on the earlier.** The RULING 53
+  window is the ceiling. The floor is any wall in the record falling, which is
+  checked by the same re-walk that already runs on cadence — so an absence built
+  on a closed door becomes owed again the moment the door opens, automatically,
+  without anyone having to remember which absences were built on which walls.
+- **An absence built ENTIRELY of walls is recorded as such and says so.** It is
+  the weakest kind and it must be legible as the weakest kind. `VERIFIED_ABSENT`
+  is still RULING 61's bar and is not reached this way; what this earns is a
+  dated, argued, expiring absence — which is what RULING 143 asks for and is a
+  different thing.
+
+*What this does NOT license.* It is not permission to declare a wall and stop.
+The tree of RULING 52 is unchanged: a branch refusing is one measurement on one
+date, and the response to a refusal is another branch. This governs only what
+happens when every named branch has been tried and the record is honest about
+which of them answered and which slammed.
+
+---
+
+### RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled
+
+*Adopted 2026-08-25, Sean's ruling, the final pass. A direct extension of
+**RULING 122** — a party-hosted candidate page is the candidate's page with the
+host named — to the platform a campaign actually lives on. It supersedes
+nothing, and the campaign-that-lives-on-Facebook rule in `CLAUDE.md` is its
+parent rather than its rival.*
+
+**An official campaign presence on a platform — a Facebook page or its
+equivalent — FILLS the campaign-site field when it is reached by a compliant
+route, and it renders with its host labelled plainly.**
+
+*The rationale stays attached.* Small-race candidates overwhelmingly live on
+platforms rather than on domains. A domain costs money and a page costs nothing,
+so a rule that recognises only domains does not measure campaign presence — it
+measures campaign budget, and it records the least-resourced candidate in every
+contest as having no presence at all. That is the information asymmetry the
+equal-effort rule exists to catch, committed by the field definition itself.
+
+- **The verification bar does not move.** The presence must be the candidate's
+  OWN, established by name–office–cycle agreement and control-checked. A page
+  found by guessing a handle is a `LEAD`, never a `HIT`, and a guessed
+  identifier has never been anything else here.
+- **Compliant routes only.** The Meta Ad Library API, archived captures,
+  cross-posted mirrors, local-news embeds, and the campaign's own filed
+  materials. The two standing prohibitions are untouched.
+- **The host is named, never dressed as a website.** *The campaign's Facebook
+  page*, in those words. A reader is told exactly what they are being sent to
+  and left to judge it, which is what this product does with every other source.
+- **It NEVER supplies a photo.** Social-media images are prohibited at every
+  door of the photo rule, and a door the campaign-site rule opens is not a door
+  into the photo rule. This is the one clause most likely to be lost, because
+  the page has a picture on it and the field beside it is empty.
+- **It supplies no prose** beyond the labelled self-description the blurb rule
+  already governs.

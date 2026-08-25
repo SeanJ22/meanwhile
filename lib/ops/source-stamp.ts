@@ -98,7 +98,16 @@ export function declaredSourceStamp(stamp: DeclaredStamp): string {
 
 export type GitVerdict =
   /** Git has full history and agrees with the declaration. */
-  | { kind: "AGREES"; newest: string }
+  | {
+      kind: "AGREES";
+      newest: string;
+      /**
+       * The declaration is the day BEFORE the newest commit — a session that
+       * read the source and committed after midnight. Stated rather than
+       * smoothed, so a reader can tell an exact match from a tolerated one.
+       */
+      oneDayBehind?: true;
+    }
   /** Git has full history and disagrees. The declaration still wins; this reports. */
   | { kind: "DISAGREES"; newest: string; declared: string }
   /**
@@ -158,7 +167,45 @@ export function verifyAgainstGit(stamp: DeclaredStamp, cwd = process.cwd()): Git
   // The NEWEST, because an artifact is only as current as its most recently
   // updated input.
   const newest = dates.sort()[dates.length - 1];
-  return newest === stamp.readOn
-    ? { kind: "AGREES", newest }
-    : { kind: "DISAGREES", newest, declared: stamp.readOn };
+  return judgeStamp(stamp.readOn, newest);
+}
+
+/**
+ * The verdict, as a pure function of the two dates — the ONLY place the
+ * comparison is made, so no caller can arrive at a different answer.
+ *
+ * ## A COMMIT DATE IS NOT A READ DATE, AND A SESSION THAT CROSSES MIDNIGHT PROVES IT
+ *
+ * A read always precedes the commit that carries it, so the two agree only when
+ * both land on the same calendar day. The unattended sessions this repo runs
+ * routinely do not. On 2026-08-25 the NJ depth session walked 39 municipal
+ * sites, wrote `walkedAt: "2026-08-24"` into the artifact from evidence of the
+ * read, and committed at 00:38 America/Phoenix — so git said 2026-08-25 while
+ * the declaration said 2026-08-24. Nothing had drifted. The guard was measuring
+ * the distance to midnight, and it took the whole local suite red.
+ *
+ * So a declaration ONE DAY BEHIND the newest commit is the ordinary case and is
+ * reported as agreement, with `oneDayBehind` set so a reader can tell a
+ * tolerated match from an exact one. Two days behind is drift and still fails,
+ * because the tolerance is for a clock boundary rather than for a stale
+ * declaration.
+ *
+ * **The other direction is never tolerated, at any distance.** A declaration
+ * NEWER than any commit claims a read whose evidence is not in the tree, and
+ * that is the fabrication direction RULING 107 exists to refuse: a confident
+ * wrong date does not merely fail to help, it suppresses the re-walk that would
+ * have caught the staleness.
+ */
+export function judgeStamp(declared: string, newest: string): GitVerdict {
+  if (newest === declared) return { kind: "AGREES", newest };
+  if (dayBefore(newest) === declared) {
+    return { kind: "AGREES", newest, oneDayBehind: true };
+  }
+  return { kind: "DISAGREES", newest, declared };
+}
+
+/** The calendar day before `YYYY-MM-DD`, as `YYYY-MM-DD`. */
+function dayBefore(iso: string): string {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(Date.UTC(y, m - 1, d - 1)).toISOString().slice(0, 10);
 }

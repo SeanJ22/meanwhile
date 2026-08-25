@@ -25,6 +25,7 @@ import {
   declaredSourceStamp,
   isShallowClone,
   verifyAgainstGit,
+  judgeStamp,
 } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
@@ -115,5 +116,48 @@ describe("git verification reports rather than guesses", () => {
       "a declared source stamp disagrees with its sources' own history. Either the sources moved " +
         "and the declaration was not updated in the same commit, or the declaration is a typo.",
     );
+  });
+});
+
+describe("the midnight tolerance, in both directions", () => {
+  /*
+   * Written from the failure rather than from the fix. On 2026-08-25 the whole
+   * local suite went red on
+   * `build-nj-rosters.mts: declares 2026-08-24, git says 2026-08-25` — an
+   * artifact whose own body carries `walkedAt: "2026-08-24"`, committed at
+   * 00:38 America/Phoenix by a session that had been running since the evening
+   * before. Nothing had drifted; the guard was measuring the distance to
+   * midnight, and CI could not see it because CI is a shallow clone.
+   */
+  it("a declaration ONE DAY BEHIND the newest commit agrees, and says it was tolerated", () => {
+    const v = judgeStamp("2026-08-24", "2026-08-25");
+    assert.equal(v.kind, "AGREES");
+    assert.equal((v as { oneDayBehind?: true }).oneDayBehind, true);
+  });
+
+  it("an exact match agrees WITHOUT the tolerance flag, so the two are distinguishable", () => {
+    const v = judgeStamp("2026-08-25", "2026-08-25");
+    assert.equal(v.kind, "AGREES");
+    assert.equal((v as { oneDayBehind?: true }).oneDayBehind, undefined);
+  });
+
+  it("TWO days behind is drift and still fails — the tolerance is a clock boundary, not a grace period", () => {
+    assert.equal(judgeStamp("2026-08-23", "2026-08-25").kind, "DISAGREES");
+  });
+
+  it("a declaration NEWER than any commit fails, because that is the fabrication direction", () => {
+    /*
+     * RULING 107. A read stamp claiming a day for which no commit exists is a
+     * claim about a read whose evidence is not in the tree, and a confident
+     * wrong date suppresses the re-walk that would have caught the staleness.
+     * One day is not tolerated here even though one day IS tolerated the other
+     * way, and the asymmetry is the rule rather than an oversight.
+     */
+    assert.equal(judgeStamp("2026-08-26", "2026-08-25").kind, "DISAGREES");
+  });
+
+  it("crosses a month boundary correctly — 08-31 is the day before 09-01", () => {
+    assert.equal(judgeStamp("2026-08-31", "2026-09-01").kind, "AGREES");
+    assert.equal(judgeStamp("2026-12-31", "2027-01-01").kind, "AGREES");
   });
 });

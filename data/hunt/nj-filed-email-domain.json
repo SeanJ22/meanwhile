@@ -2,9 +2,9 @@
  "note": "The filed-email-domain route, walked. A route that did not exist before 2026-08-23. The Morris County Clerk publishes every candidate's filed email; the right-hand side of the @ is frequently the campaign's own domain, and a campaign-shaped left-hand side names a domain on another TLD. Written by scripts/hunt-filed-email-domain.mts.",
  "route": "filed-email-domain",
  "tier": "A",
- "walkedAt": "2026-08-23",
+ "walkedAt": "2026-08-25",
  "summary": {
-  "candidaciesWalked": "272 of 272",
+  "candidaciesWalked": "276 of 276",
   "candidaciesWithANonFreemailDomain": 33,
   "candidaciesWithACampaignShapedLocalPart": 12,
   "urlsProbed": 69,
@@ -46,7 +46,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -81,11 +81,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 263077,
+   "bytes": 264380,
    "proseChars": 14703,
    "control": -1,
    "detail": "the page names the candidate (justin murphy, murphy) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, for <place> <office>, running for, this campaign)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -118,7 +118,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -155,7 +155,7 @@
    "proseChars": 1179,
    "control": -1,
    "detail": "the page names the candidate (cory booker, booker) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, this campaign)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -191,7 +191,7 @@
    "proseChars": 2852,
    "control": -1,
    "detail": "the page names the candidate (veronica fernandez, fernandez) and identifies itself as a campaign (paid-for-by disclaimer, for <office>)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -224,7 +224,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -257,7 +257,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -290,7 +290,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -339,11 +339,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 97541,
-   "proseChars": 2296,
+   "bytes": 97527,
+   "proseChars": 2284,
    "control": -1,
    "detail": "the page names the candidate (tom kean, kean) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, for <place> <office>, this campaign)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -387,11 +387,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 218729,
+   "bytes": 219470,
    "proseChars": 11903,
    "control": -1,
    "detail": "the page names the candidate (rebecca bennett, becca bennett, bennett) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, running for, this campaign)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -427,7 +427,7 @@
    "proseChars": 3120,
    "control": -1,
    "detail": "the page names the candidate (joe hathaway, hathaway) and identifies itself as a campaign (paid-for-by disclaimer, for <office>)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -460,11 +460,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 403977,
+   "bytes": 339770,
    "proseChars": 2080,
    "control": -1,
    "detail": "the page names the candidate (analilia mejia, mejia) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, this campaign)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -513,7 +513,7 @@
    "proseChars": 7030,
    "control": -1,
    "detail": "the page names the candidate (chris russo, russo) and identifies itself as a campaign (paid-for-by disclaimer, for <place> <office>) — BUT the page identifies ITSELF as a party organisation (names itself a county committee, names itself the party organisation), so it is the committee's own site and not this person's campaign site. It is a real find for party-committee-roster.",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -551,7 +551,7 @@
    "proseChars": 1834,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark f. wrobel, mark wrobel, wrobel) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -580,11 +580,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 82300,
+   "bytes": 82299,
    "proseChars": 3999,
    "control": -1,
    "detail": "the page names the candidate but carries no word showing it is about standing for office — whose page it is remains unestablished",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -617,7 +617,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -661,11 +661,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 363929,
-   "proseChars": 8276,
+   "bytes": 363940,
+   "proseChars": 8240,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 5 name forms searched (joseph di paolo, joseph paolo, joe paolo, joey paolo, paolo) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -698,7 +698,7 @@
    "proseChars": 727,
    "control": -1,
    "detail": "only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes.",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -736,7 +736,7 @@
    "proseChars": 1188,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (frank a. de maio, jr., frank maio, maio) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -774,7 +774,7 @@
    "proseChars": 1188,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (michael martorelli, mike martorelli, martorelli) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -812,7 +812,7 @@
    "proseChars": 0,
    "control": 42346,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -855,7 +855,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -888,7 +888,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -921,7 +921,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -954,7 +954,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -987,7 +987,7 @@
    "proseChars": 7212,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 2 name forms searched (bruce dubowsky, dubowsky) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1020,13 +1020,13 @@
    "proseChars": 1086,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 2 name forms searched (frank liberato, liberato) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
-   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:mayor-mendham-borough",
-   "subject": "Mendham Borough MAYOR",
-   "contestTitle": "Member of the Borough Council",
+   "candidacyId": "ballot-nj-morris:mendham-borough-mayor-place-mendham:kelly-james-r",
+   "subject": "James R. KELLY",
+   "contestTitle": "Mayor",
    "subRoute": "domain",
    "email": "james@kellyplumbingheating.com",
    "url": "https://kellyplumbingheating.com",
@@ -1036,29 +1036,39 @@
    "kind": "NOT_A_CANDIDACY",
    "formsSearched": [
     {
-     "form": "mendham borough mayor",
+     "form": "james r. kelly",
      "kind": "filed",
      "matched": false
     },
     {
-     "form": "mendham mayor",
+     "form": "james kelly",
      "kind": "given-surname",
      "matched": false
     },
     {
-     "form": "mayor",
-     "kind": "surname",
+     "form": "jim kelly",
+     "kind": "diminutive-surname",
      "matched": false
+    },
+    {
+     "form": "jimmy kelly",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kelly",
+     "kind": "surname",
+     "matched": true
     }
    ],
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 195067,
+   "bytes": 195577,
    "proseChars": 4634,
    "control": -1,
-   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mendham borough mayor, mendham mayor, mayor) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "detail": "only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes.",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1089,11 +1099,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 533376,
+   "bytes": 534245,
    "proseChars": 225,
    "control": -1,
    "detail": "the page names the candidate (gary kapner, kapner) and identifies itself as a campaign (for <place> <office>)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1131,7 +1141,7 @@
    "proseChars": 8094,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (arthur j. art bruhn, jr., arthur bruhn, bruhn) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1169,7 +1179,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1207,7 +1217,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1245,7 +1255,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1279,11 +1289,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 125338,
-   "proseChars": 9190,
+   "bytes": 123917,
+   "proseChars": 7807,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (john sylvester, jr., john sylvester, sylvester) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1327,11 +1337,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 125338,
-   "proseChars": 9190,
+   "bytes": 123917,
+   "proseChars": 7807,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 5 name forms searched (joseph a. nametko, joseph nametko, joe nametko, joey nametko, nametko) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1369,7 +1379,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1407,7 +1417,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1445,7 +1455,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1478,7 +1488,7 @@
    "proseChars": 4424,
    "control": -1,
    "detail": "the page names the candidate but carries no word showing it is about standing for office — whose page it is remains unestablished",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1511,7 +1521,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1544,7 +1554,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1577,7 +1587,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1610,7 +1620,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1644,11 +1654,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 119405,
-   "proseChars": 11501,
+   "bytes": 119403,
+   "proseChars": 11499,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 3 name forms searched (carolyn cici byszewski, carolyn byszewski, byszewski) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1686,7 +1696,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1729,7 +1739,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1772,7 +1782,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1815,7 +1825,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1848,7 +1858,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1879,11 +1889,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 150622,
+   "bytes": 117584,
    "proseChars": 683,
    "control": -1,
    "detail": "the page names the candidate (david hodas, hodas) and identifies itself as a campaign (for <office>)",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1916,7 +1926,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1949,7 +1959,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -1982,7 +1992,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2015,7 +2025,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2048,7 +2058,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2081,7 +2091,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2114,7 +2124,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2147,7 +2157,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2180,7 +2190,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2213,7 +2223,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2246,7 +2256,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2279,7 +2289,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2312,7 +2322,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2341,11 +2351,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 183413,
+   "bytes": 183397,
    "proseChars": 8399,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 2 name forms searched (marybeth thomas, thomas) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2391,11 +2401,11 @@
    ],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 96753,
+   "bytes": 96752,
    "proseChars": 10472,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 5 name forms searched (william serafin, will serafin, bill serafin, billy serafin, serafin) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2424,11 +2434,11 @@
    "officeEvidence": [],
    "otherCandidatesNamed": [],
    "partyOrganSelfId": [],
-   "bytes": 129363,
-   "proseChars": 8477,
+   "bytes": 129367,
+   "proseChars": 8478,
    "control": -1,
    "detail": "the page cleared the control but carries NONE of the 2 name forms searched (brian roach, roach) — it is a live host, not this person's site",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2461,7 +2471,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2494,7 +2504,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   },
   {
@@ -2527,7 +2537,7 @@
    "proseChars": 0,
    "control": -1,
    "detail": "did not clear the control",
-   "attemptedAt": "2026-08-23",
+   "attemptedAt": "2026-08-25",
    "walkedAtRung": 3
   }
  ]

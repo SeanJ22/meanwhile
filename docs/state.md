@@ -18506,3 +18506,156 @@ lookup. That is right for a link read off a real page and wrong for a guess,
 where `NXDOMAIN` is the expected answer rather than a wall to climb. It was
 stopped rather than left running, and the fix is to escalate a GUESSED
 identifier differently from a READ one.
+
+## The final pass, 2026-08-25 — nine mayoral races were missing, and the Kelly numbers reached 276 of 276 and 47 of 47
+
+### THE KELLY NUMBERS FIRST, AND THE SPLIT MATTERS MORE THAN THE TOTAL
+
+RULING 143's finish line, reached for both zips. Every candidate either meets the
+Kelly standard in full or carries a five-move argued absence with its literal
+queries recorded and a seven-day expiry. **1,038 absence records at 07866 and
+124 at 03255, every one put through `absenceStands` before it was kept, 0
+voided.**
+
+| | photo | phone | contact | verified page | campaign site |
+|---|---:|---:|---:|---:|---:|
+| **07866** held | 12 | 4 | 276 | 36 | 14 |
+| **07866** argued absent | 264 | 272 | 0 | 240 | 262 |
+| **03255** held | 25 | 24 | 22 | 11 | 29 |
+| **03255** argued absent | 22 | 23 | 25 | 36 | 18 |
+
+**Most of "done" at 07866 is argued absence rather than held data**, and RULING
+143 anticipated exactly that: many small-race candidates genuinely have no
+campaign site, and the honest end state for them is an argued absence rather than
+a permanent blank. A report leading with *276 of 276* and not with *12 photos*
+would be describing a measurement as an achievement.
+
+**Done is not a permanent state.** Every absence carries a seven-day clock and
+RULING 144 gives it a second — it expires early the day any wall inside it falls.
+276 browser queries at 07866 and 43 at 03255, every one ANSWERED and none walled,
+so these absences rest on routes that answered and found nothing rather than on
+routes that refused.
+
+### NINE MAYORAL CONTESTS WERE MISSING, AND SIX OF THE PEOPLE ON THE BALLOT DID NOT EXIST
+
+`MAYOR` was never in the filed-candidate parser's list of office headings. Every
+other heading in the Morris County Clerk's document opens with `MEMBER OF THE`,
+so the list read like the document's grammar and was in fact a list of the
+headings somebody had already seen.
+
+A `MAYOR` heading therefore was not a heading. It stayed inside the PREVIOUS
+contest's body, where the name pattern read it as a person — the Title-Case run
+before it became a given name and the capitals became a surname:
+
+- **Six phantom candidates on the rendered ballot.** `Butler Borough MAYOR`
+  standing in Boonton Township, `Chester Borough MAYOR` in Chatham Township,
+  `Kinnelon Borough MAYOR` in Jefferson Township, `Mendham Borough MAYOR` in
+  Madison, `Morris Plains Borough MAYOR` in Montville, `Wharton Borough MAYOR` in
+  Washington Township. Each lands in the contest of the municipality
+  alphabetically BEFORE it — the signature of a heading swallowed by the
+  preceding body — and each carries a null party. A seventh was worse and no
+  pattern would have found it: `Morris Plains Borough MAYOR 4 1 Jason C. KARR`
+  was one whole row read as one person's name, term and seat digits included.
+- **Nine mayoral contests rendering nowhere**, two of them CONTESTED: Morris
+  Plains (Verga against Karr) and Wharton (Binkoski against Ghebreal).
+- **Eleven real named candidates absent from the product entirely.**
+
+272 → 276 candidacies, 90 → 99 contests.
+
+**And every instrument said this was healthy.** `nj:filing:check` ran our parser
+over the clerk's PDFs and compared the result to a ballot our parser had built
+from the same PDFs — both sides were the same measurement, so the pair could only
+catch a stale rebuild. It printed *AGREES, the pair reconciles* on 272 against
+272. It counts filed EMAIL ADDRESSES now, one per candidacy row, depending on
+none of our reading; it reads 276 today and would have read 276 the whole time.
+
+The CLASS was closed rather than the instance. The document's own row grammar is
+`<Jurisdiction> <ALL-CAPS OFFICE> <term> <seats> <Name>`, and reading every
+all-caps run in that position found fourteen distinct shapes in the general
+document and three in the school document. `MAYOR` is the only one the list was
+missing — a measured answer rather than a hopeful one.
+
+### THE DAILY REFRESH HAD BEEN RED SINCE RULING 124 BUILT IT
+
+Three defects, all reproduced before they were touched.
+
+1. **legistar counted every online meeting twice.** `drops.placeless` tallies a
+   meeting that is then PRODUCED anyway (D18), so the adapter cancels it with
+   `countedButProduced` — and the composite wrapper re-branded the same arrays
+   through a SECOND `accountedNormalize` call without that option. The comment
+   above it claimed the wrapper "cannot disagree with itself"; it had disagreed
+   for as long as it existed.
+2. **nj-filing's staleness gate blocked the only command that could satisfy it.**
+   `nj:filing:check` ran BEFORE `nj:ballot --write` and exits non-zero on STALE,
+   so it stopped the rebuild that performs the pull it was complaining about.
+3. **The orchestrator threw away 451 healthy meeting rows.** Its own header
+   states a three-valued exit vocabulary and calls exit 2 *commit the survivors,
+   THEN go red* — and `runCommand` asked `status === 0`.
+
+### I WALKED TWO SEARCH ENGINES THAT TELL US NOT TO
+
+`lib/hunt/search-pool.ts` shipped mid-session with Mojeek and Brave in it, on the
+strength of the right two questions asked in the wrong order: does the host
+answer, and does its answer pass a control. Both do. **Both carry
+`Disallow: /search`, and `/search` is the path a query goes to.**
+
+`docs/sources.md` said so, dated 2026-08-24, in a column headed *may we walk it*
+with the answer **no**. Tracker row `NJ16` said so too. Everything needed to
+avoid it was written down, in the register the constitution names as the source
+of record. The failure is a reading failure: this session opened
+`docs/sources.md`, measured its size, and went to the sections it expected to
+need rather than the one about the thing it was about to do.
+
+The run was stopped at 125 of 276 and its output discarded. `SEARCH_POOL` holds
+`4get.ca` alone, whose `robots.txt` is an empty `Disallow:`.
+`tests/search-pool.test.ts` fails the build if a `DISALLOWED` engine appears in
+the pool and requires every engine in it to QUOTE the line permitting its path.
+
+**A disallow is not a wall**, and the two were one word apart: the export was
+first called `SEARCH_POOL_REFUSED`, which would have put both hosts on RULING
+53's fourteen-day re-walk clock. It is `SEARCH_POOL_EXCLUDED` now.
+
+### WHAT THE WALK SAID, AND IT IS NOT CLEAN
+
+Four consecutive runs against ONE local production build, nothing changing
+between them: **372 passed, 6 declared COULD NOT RUN, and exactly one failure —
+a different one each time.**
+
+| run | failure | verdict |
+|---|---|---|
+| 1 | `[promptD]` the schema check | **REAL.** The local Neon branch was at 19 of 21; production was IN SYNC at 21 of 21 the same minute. Applied locally. |
+| 2 | `[g12]` exact name at 07866 | the IDENTICAL `offered=` string that PASSED in run 1 |
+| 3 | `[g5]` north Tucson crisp | delta 8.61 against a 2.5 threshold |
+| 4 | `[g12]` exact name at 03255 | |
+
+`NH176` is the P1. The premise of this suite is that a failure is a NAMED
+REGRESSION, and a suite that fails one arbitrary check per run teaches a session
+to skim past the failure — which means the one deterministic failure in run 1
+could as easily have been shrugged off.
+
+### RULING 2 EARNED ITS KEEP TWICE
+
+Reading the portrait review sheet AS AN IMAGE showed two broken tiles.
+`chesterborough.org//images/2022/08/08/russell-goodwin.jpeg` — the double slash
+came from the site's own template — answers **HTTP 200 with `text/html` and
+12,119 bytes**. Two soft-404 pages had been queued for the author as named
+people's faces, and the queue's row count, the artifact's byte count and the
+PNG's byte count were all healthy.
+
+Writing the guard for that found a second defect in the same reader: `imagesIn`
+read `src` and fell back to `data-src` only when `src` was absent, so a
+lazily-loaded portrait lost to its own placeholder.
+
+### ROUTES THAT DID NOT EXIST AT SESSION START
+
+Seven, in `docs/expansion-log.md`. The county party's own municipal-committee
+directory (16 committee websites, named rather than guessed); Republican
+committees by domain shape (20 live documents from 195 probes); the INVERSION,
+asking a page whose page it is rather than asking each candidate about each page
+(three sites the cross product could not have found); the **paid-for-by
+disclaimer** as the campaign-site discriminator, which is a rule from statute
+rather than another exclusion list; the general web index re-walked against a
+wall recorded as permanent; the hyperlocal press surface with terms read first;
+and a tier-above directory inversion for New Hampshire that returned **zero**,
+for a reason that is itself the finding — a directory publishes the people who
+HOLD offices, and this ballot is mostly the people running against them.

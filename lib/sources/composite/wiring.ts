@@ -21,7 +21,6 @@ import { makeOnBaseSource } from "../onbase/index.ts";
 import type { ReportingMeetingSource } from "../types.ts";
 
 import { CompositeSource } from "./index.ts";
-import { accountedNormalize } from "../normalize-account.ts";
 
 /**
  * Which adapter serves which `AgendaSourceType` — the capability registry
@@ -43,41 +42,51 @@ type ChildFactory = (rows: BodySourceWiring[]) => ReportingMeetingSource<unknown
 /** Legistar keeps its own client registry; wrap it with the reporting shape. */
 const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
   ...legistarSource,
+  /**
+   * `@accounting-delegated-to lib/sources/legistar/index.ts`
+   *
+   * Declared rather than inferred — `tests/zero-row-contract.test.ts` reads this
+   * marker, and checks that the module it names is itself a branding
+   * implementor. See the note inside for what the second branding cost.
+   */
   normalizeWithDrops(raw, now) {
-    const { meetings, drops } = legistarNormalizeWithDrops(
-      raw,
-      now ?? new Date(),
-    );
     /*
-     * Re-branded because the drop shape changes here — legistar counted three
-     * reasons and the composite's contract carries four. Same input array, so
-     * the factory judges the same fact twice and cannot disagree with itself.
+     * RETURNED AS THE ADAPTER BRANDED IT. There is no second branding here,
+     * and REMOVING it is the fix rather than a tidy-up.
      *
-     * A-002 found two things wrong with what used to be here, and the second
-     * is the worse one.
+     * ## What the second branding cost, reproduced before it was removed
      *
-     * 1. It passed no `logicalInput`, so this second branding SILENTLY
-     *    downgraded a conserved result to `COULD_NOT_ASSERT`. The sweep in
-     *    `tests/zero-row-contract.test.ts` is what named it — a call site
-     *    nobody thought of as an adapter.
-     * 2. It wrote `notConfigured: 0` as a LITERAL. That was correct while
-     *    legistar had no such counter; the moment A-002 gave it one — for an
-     *    event whose tenant is not wired — this line would have thrown the
-     *    real count away and reported zero. A default standing in for a value
-     *    that has since become real is the render-default failure, in a
-     *    report.
+     * `accountedNormalize` cancels a tally that is counted in `drops` and then
+     * PRODUCED anyway, through its `countedButProduced` option. Legistar has
+     * exactly one such tally: `placeless`. A meeting with no physical place is
+     * counted under `drops.placeless` — a name D18 kept on purpose so the
+     * series stays comparable across every snapshot ever written — and is then
+     * KEPT and produced, so the adapter passes `countedButProduced:
+     * keptButPlaceless` to cancel it.
      *
-     * `raw.length` is legistar's own logical-input count: one raw row is one
-     * event there, which is why its gap was a skip rather than an expansion.
+     * This wrapper re-branded the same arrays and **did not pass that option**,
+     * so every placeless-but-kept meeting was counted once as produced and once
+     * as dropped. Against the recorded Pima events fixture — 18 events, 4 of
+     * them online — the adapter reports `CONSERVED, 18 of 18` and this wrapper
+     * threw `4 more disposition(s) than records`. Against the live feed on
+     * 2026-08-25 it was 3, and it took the whole daily refresh red: run
+     * 32833989579, `legistar: JOB FAILURE`, `considered 16, accounted for 19`.
+     *
+     * The comment that used to sit here said the wrapper "judges the same fact
+     * twice and cannot disagree with itself". It disagreed with itself for as
+     * long as it existed, because the second judgement was missing an argument
+     * the first one had — RULING 103's duplicated implementation, living in an
+     * accounting rather than in a function.
+     *
+     * ## Why re-branding is not needed at all any more
+     *
+     * The stated reason for it was that the drop SHAPES differed: legistar
+     * counted three reasons and this contract carries four. A-002 gave the
+     * adapter its own `notConfigured` counter, so the shapes agree and there is
+     * nothing left to translate. Two accountings of one pass is the thing that
+     * can disagree; one cannot.
      */
-    return accountedNormalize(
-      "legistar",
-      raw,
-      // `drops` now carries `notConfigured` itself, so the shapes agree and no
-      // literal stands in front of a real count.
-      { meetings, drops },
-      { logicalInput: raw.length },
-    );
+    return legistarNormalizeWithDrops(raw, now ?? new Date());
   },
 };
 

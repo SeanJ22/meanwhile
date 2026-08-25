@@ -603,7 +603,7 @@ test("questionnaire: the symmetry check catches an asymmetric contest", () => {
 /* The generated artifact and the generated document                           */
 /* ========================================================================== */
 
-test("questionnaire: 272 of 272 NJ candidacies have an invitation, and none claims a send", () => {
+test("questionnaire: every NJ candidacy has an invitation, and none claims a send", () => {
   const artifact = JSON.parse(
     readFileSync(join(ROOT, "data", "questionnaire", "invitations-nj-morris-2026.json"), "utf8"),
   ) as {
@@ -698,7 +698,7 @@ test("questionnaire: a title that matches nothing falls to `other`, never to a g
   assert.equal(questionsFor("other").length, 5, "`other` must be a complete instrument");
 });
 
-test("questionnaire: every one of the 90 NJ contests classifies, and none falls back", () => {
+test("questionnaire: every NJ contest classifies, and none falls back", () => {
   const ballot = JSON.parse(
     readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
   ) as { contests: Array<{ ocdId: string; title: string }> };
@@ -711,7 +711,19 @@ test("questionnaire: every one of the 90 NJ contests classifies, and none falls 
     0,
     `contests with no office class: ${fallbacks.map((c) => c.title).join(", ")}`,
   );
-  assert.equal(ballot.contests.length, 90, "the stated contest count moved");
+  /*
+   * A FLOOR, not an equality — RULING 116. This asserted `=== 90` and went red
+   * on 2026-08-25 when the parser learned that MAYOR is an office heading and
+   * nine mayoral contests were recovered. A guard that freezes a size fails on
+   * the day somebody makes the number move for a good reason, and the cheapest
+   * way to make it green is to edit the constant. What matters here is that
+   * every contest classifies, and that the set never silently shrinks under a
+   * classifier that would then have fewer things to fail on.
+   */
+  assert.ok(
+    ballot.contests.length >= 99,
+    `the contest count fell to ${ballot.contests.length} from a floor of 99`,
+  );
 });
 
 /* ========================================================================== */

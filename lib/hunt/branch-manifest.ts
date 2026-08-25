@@ -251,9 +251,96 @@ export interface ManifestRoute {
  * every absence earned under v3 re-opens automatically, because four routes that
  * did not exist when it was earned now do.
  */
-export const MANIFEST_VERSION = "v6";
+export const MANIFEST_VERSION = "v7";
 
 export const MANIFEST_ROUTES: readonly ManifestRoute[] = [
+  /* ── Added 2026-08-25, the final pass ─────────────────────────────────── */
+  {
+    id: "party-county-directory",
+    tier: "A",
+    what: "The COUNTY party's own directory of its municipal committees",
+    how: "`morrisdems.org/candidates/municipal-candidates/<municipality>` — one page per municipality, carrying that committee's chair, email, website and Facebook page. Found with the literal query `Morris County NJ municipal Democratic committee 2026 candidates site`.",
+    yields: "The authoritative committee URL, email and social page per municipality — the seed for every per-committee route below it",
+    rung: "2 (plain fetch); the page carries a control string naming the municipality",
+    through: "the county party organisation",
+    fields: ["verifiedPage", "campaignSite", "contact"],
+    expectedToTravel:
+      "The SHAPE travels — a county party that runs municipal committees generally lists them. The URL does not, and the same walk on 2026-08-25 measured Morris County's Republican committee publishing NO per-municipality directory at all, which is why `party-municipal-committee-gop-shape` exists beside this.",
+    subBranches: [
+      {
+        where: "Morris County Republican Committee, 2026-08-25",
+        on: "It publishes no per-municipality directory this walk could find. Walked at its own depth on the same day — `morrisgop.org/officials` answers 200 — and its county page carries a 2024 executive board rather than 2026 municipal committees.",
+        instead:
+          "`party-municipal-committee-gop-shape`: probe the domain shapes a municipal Republican committee actually registers. 195 probes over 39 municipalities returned 20 live documents.",
+      },
+    ],
+  },
+  {
+    id: "party-municipal-committee-gop-shape",
+    tier: "B",
+    what: "A municipal party committee reached by the DOMAIN SHAPE its siblings use",
+    how: "`<town>republicans.org`, `<town>republicans.com`, `<town>gop.org`, `<town>gop.com`, `<town>njgop.org` — every one control-probed, and the PAGE decides rather than the guess. Seeded by `randolphrepublicans.org`, found with the literal query `Randolph NJ Republican Committee 2026 council candidates`.",
+    yields: "The committee's own site, and from its internal pages the candidates it runs",
+    rung: "2 (plain fetch), with a control probe per host because a parked domain answers 200",
+    through: "the municipal party organisation",
+    fields: ["verifiedPage", "campaignSite"],
+    expectedToTravel:
+      "The METHOD travels — RULING 94's third move is shape-testing and it applies anywhere. The specific shapes are American two-party naming conventions and will not survive a jurisdiction with different party structures.",
+    subBranches: [],
+  },
+  {
+    id: "host-inversion",
+    tier: "A",
+    what: "Ask a PAGE whose page it is, rather than asking each candidate about each page",
+    how: "Fetch each distinct host in a link corpus ONCE, control-probe it, and test its text against EVERY candidate on the ballot at once. The promotion bar is `verdictFor` plus `classifyCampaignPage`, unchanged.",
+    yields: "Campaign sites belonging to candidates who were never paired with the page their site was linked from — three of five promotions on 2026-08-25 were of that kind",
+    rung: "2, with a control probe per host",
+    through: "whatever hosts the corpus already contains — it adds no new dependency",
+    fields: ["campaignSite", "verifiedPage"],
+    expectedToTravel:
+      "Yes, unconditionally. It is a way of reading a corpus rather than a place to look, and it costs one fetch per host where a cross product costs one per candidate-host pair.",
+    subBranches: [],
+  },
+  {
+    id: "general-web-index",
+    tier: "C",
+    what: "A general web index that answers this project, control-checked",
+    how: "`lib/hunt/search-pool.ts` — Mojeek (its own crawler), 4get and Brave, rotated with a doubling cooldown on refusal. The control is CONTENT rather than size: does the answer name the subject, and does the answer for an identifier that cannot exist not.",
+    yields: "What a person with a browser would see — RULING 94's first move and RULING 85's two-click test, made mechanical",
+    rung: "2, rotating across three INDEPENDENT indexes rather than three fronts of one",
+    through: "three separate crawlers",
+    fields: ["photo", "blurb", "contact", "campaignSite", "verifiedPage"],
+    expectedToTravel:
+      "Yes, everywhere. And the wall it replaces was real: DuckDuckGo, Bing and Yahoo all refuse, and all three front the same two or three indexes — which is why independence is counted over what a branch goes THROUGH.",
+    subBranches: [
+      {
+        where: "Startpage and searx.be, 2026-08-25",
+        on: "Both answer HTTP 200 with BYTE-IDENTICAL bodies for a real query and for an identifier that cannot exist. A JavaScript shell, and a 'no result' from either would be indistinguishable from a wall.",
+        instead:
+          "Refused by the control query and recorded in `SEARCH_POOL_REFUSED` with the date, rather than deleted — the next session that thinks of Startpage can see it was tried and why the answer was no.",
+      },
+    ],
+  },
+  {
+    id: "tier-above-directory-inversion",
+    tier: "A",
+    what: "The directory the tier ABOVE publishes about the tier below, read by inversion",
+    how: "Crawl the publisher's own roster pages and ask of each which candidates it names. A page naming exactly ONE candidate on an official host is that candidate's page; a page naming several is the roster they are listed on, and a roster is nobody's own page.",
+    yields: "A verified page for a candidate who currently HOLDS the office — and, measured, nothing at all for a challenger",
+    rung: "2; `governor.nh.gov` and `nh.gov` refused rungs 3 AND 4 on 2026-08-25",
+    through: "the government one tier above the office",
+    fields: ["verifiedPage"],
+    expectedToTravel:
+      "The technique travels; the seeds are per-state (RULING 60). New Hampshire's ballot at 03255 is federal, statewide and county with no municipal layer, and its legislators live on a General Court roster with no New Jersey equivalent.",
+    subBranches: [
+      {
+        where: "Merrimack County, New Hampshire, 2026-08-25",
+        on: "92 pages crawled across five official seeds returned 0 NEW verified pages. A tier-above directory publishes the people who HOLD offices, and this ballot is mostly the people running against them.",
+        instead:
+          "For a challenger the routes are `general-web-index`, `press-outlet-wp-search` and the candidate's own filed materials. This route is not a way to reach a challenger and recording it as one would be an absence built on the wrong question.",
+      },
+    ],
+  },
   /* ── The filed record ─────────────────────────────────────────────────── */
   {
     id: "filing-state",

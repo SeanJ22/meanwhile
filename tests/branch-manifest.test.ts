@@ -55,6 +55,12 @@ const DOC = readFileSync(DOC_PATH, "utf8");
  * refused — a route that stops working grows `retiredOn` and keeps its place.
  */
 const V1_ROUTES = [
+  /* Added 2026-08-25, the final pass — v6 to v7. */
+  "party-county-directory",
+  "party-municipal-committee-gop-shape",
+  "host-inversion",
+  "general-web-index",
+  "tier-above-directory-inversion",
   "alumni-obituary-archive",
   "announcement-archive",
   "bar-directory",

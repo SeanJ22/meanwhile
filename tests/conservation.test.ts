@@ -16,6 +16,8 @@
  * and the test that matters is that it is never silently equal to conserved.
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import {
@@ -202,5 +204,63 @@ test("RULING 43 survives A-002 — documents in hand and nothing out still throw
   assert.throws(
     () => accountedNormalize("ical", rows(3), { meetings: [], drops: {} }, { logicalInput: 0 }),
     ZeroRowExtractionError,
+  );
+});
+
+/* ======================================================================== *
+ *  THE LEGISTAR DOUBLE-COUNT — daily refresh run 32833989579, 2026-08-25
+ * ======================================================================== */
+
+test("legistar's composite wrapper conserves, and agrees with the adapter EXACTLY", async () => {
+  /*
+   * The defect this pins, stated as the failure rather than as the fix.
+   *
+   * `drops.placeless` counts a meeting that is then PRODUCED anyway (D18), so
+   * the adapter cancels it with `countedButProduced`. The composite wrapper
+   * re-branded the same two arrays through a SECOND `accountedNormalize` call
+   * and did not pass that option, so every online meeting was counted once as
+   * produced and once as dropped. That took the whole daily refresh red on
+   * 2026-08-25 — `legistar: JOB FAILURE ... considered 16, accounted for 19`.
+   *
+   * The recorded Pima fixture carries four online meetings, so the unfixed
+   * wrapper throws `4 more disposition(s) than records` here. The assertion is
+   * deliberately NOT "it does not throw": the wrapper's accounting must be
+   * IDENTICAL to the adapter's, because two accountings of one pass is the
+   * thing that can disagree — RULING 103, in an accounting rather than in a
+   * function.
+   */
+  const { normalizeWithDrops } = await import("../lib/sources/legistar/index.ts");
+  const { CAPABILITIES } = await import("../lib/sources/composite/wiring.ts");
+
+  const events = JSON.parse(
+    readFileSync(join(import.meta.dirname, "fixtures", "legistar-pima-events.json"), "utf8"),
+  ) as Record<string, unknown>[];
+  const raw = events.map((event) => ({
+    event,
+    slug: "pima",
+    collectedAt: "2026-08-25",
+    items: [],
+  })) as unknown as Parameters<typeof normalizeWithDrops>[0];
+  const now = new Date("2026-08-25T12:00:00Z");
+
+  const direct = normalizeWithDrops(raw, now);
+  assert.equal(direct.accounting.outcome, "CONSERVED", "the adapter itself must conserve");
+  assert.ok(
+    direct.drops.placeless > 0,
+    "the fixture must still carry a placeless meeting, or this guard proves nothing (RULING 110)",
+  );
+
+  const cap = CAPABILITIES.find((c) => c.name === "legistar");
+  assert.ok(cap, "the legistar capability must be registered");
+  const child = cap.make([]);
+  assert.ok(child.normalizeWithDrops, "the legistar child must report its drops");
+  const wrapped = child.normalizeWithDrops(raw as never, now) as unknown as {
+    accounting: Record<string, unknown>;
+  };
+
+  assert.deepEqual(
+    { ...wrapped.accounting },
+    { ...(direct.accounting as unknown as Record<string, unknown>) },
+    "the composite wrapper must report the adapter's own accounting, never a second one",
   );
 });

@@ -178,3 +178,78 @@ export function absenceStands(
   }
   return { stands: true, why: `walked ${absence.at}, current until ${absence.expiresOn}` };
 }
+
+/* ========================================================================== *
+ *  IS A FIELD HELD — ONE implementation, and it had two for an hour
+ * ========================================================================== */
+
+/** What a caller must supply to answer the question. */
+export interface KellyHeldInput {
+  card: { photoUrl?: string | null; phone?: string | null; email?: string | null } | undefined;
+  links: { official?: { url: string } | null; campaign?: { url: string } | null } | undefined;
+  /** The contact the filing itself published, where the zip's clerk publishes one. */
+  filedEmail: string | null;
+  /** Does the committed portrait exist on disk? A path to nothing is not a photo. */
+  photoOnDisk: (url: string) => boolean;
+}
+
+/**
+ * **Is this Kelly field held, and what is the evidence?**
+ *
+ * ## WHY THIS IS HERE RATHER THAN IN THE SCOREBOARD
+ *
+ * It was written twice on 2026-08-25 — once in `scripts/kelly-scoreboard.mts`
+ * and once in `scripts/argue-absences-0825.mts` — and the two disagreed within
+ * the hour. The absence generator counted a PHONE as satisfying `contact`; the
+ * scoreboard did not. The consequence was silent and exactly wrong: eight New
+ * Hampshire candidates were skipped by the generator as already complete and
+ * reported by the scoreboard as still owing the field, so a protocol nobody ran
+ * looked like a field nobody needed.
+ *
+ * RULING 103, in code written the same night as the ruling was cited. Two
+ * implementations of one judgement is the thing that can disagree, and the fix
+ * is one implementation rather than two careful ones.
+ *
+ * ## AND `contact` DOES NOT MEAN `phone`
+ *
+ * `phone` is its own Kelly field. Counting a phone as a contact would let one
+ * finding satisfy two of the five, which is a scoreboard measuring four things
+ * and calling it five. A contact is an address a reader can write to: the
+ * candidate's own email on the card, or the email the filing authority
+ * published.
+ */
+export function kellyFieldHeld(
+  field: KellyField,
+  input: KellyHeldInput,
+): { yes: boolean; evidence: string } {
+  const { card, links, filedEmail, photoOnDisk } = input;
+  switch (field) {
+    case "photo": {
+      const url = card?.photoUrl ?? null;
+      if (!url) return { yes: false, evidence: "no photoUrl on the card" };
+      /*
+       * The asset must EXIST. A photoUrl pointing at nothing renders as a broken
+       * image, which is worse than an honest initials block — and it would count
+       * as a held field while the reader sees a gap.
+       */
+      if (!photoOnDisk(url)) return { yes: false, evidence: `photoUrl ${url} but no file at public${url}` };
+      return { yes: true, evidence: url };
+    }
+    case "phone":
+      return card?.phone
+        ? { yes: true, evidence: card.phone }
+        : { yes: false, evidence: "no phone on the card" };
+    case "contact": {
+      const e = card?.email ?? filedEmail ?? null;
+      return e ? { yes: true, evidence: e } : { yes: false, evidence: "no email held" };
+    }
+    case "verifiedPage":
+      return links?.official
+        ? { yes: true, evidence: links.official.url }
+        : { yes: false, evidence: "no verified official page" };
+    case "campaignSite":
+      return links?.campaign
+        ? { yes: true, evidence: links.campaign.url }
+        : { yes: false, evidence: "no campaign site" };
+  }
+}

@@ -222,7 +222,19 @@
     "rotation:prove": "tsx scripts/rotation-proof.mts",
     "hunt:sites": "tsx scripts/hunt-campaign-sites.mts",
     "kelly": "tsx scripts/kelly-scoreboard.mts",
-    "search:rung": "tsx scripts/search-rung.mts"
+    "search:rung": "tsx scripts/search-rung.mts",
+    "leads:adjudicate": "tsx scripts/adjudicate-leads-0825.mts",
+    "party:directory": "tsx scripts/party-directory-0825.mts",
+    "party:pages": "tsx scripts/hunt-party-pages-0825.mts",
+    "gop:shape": "tsx scripts/gop-municipal-shape-0825.mts",
+    "wire:0825": "tsx scripts/wire-0825.mts",
+    "absences": "tsx scripts/argue-absences-0825.mts",
+    "door2": "tsx scripts/incumbent-door2-0825.mts",
+    "wire:phones": "tsx scripts/wire-door2-phones-0825.mts",
+    "directory:invert": "tsx scripts/directory-inversion-0825.mts",
+    "db:surfaces": "tsx scripts/assert-serving-tables.mts",
+    "deploy:sha": "node scripts/deploy-live.mjs --sha",
+    "press:surface": "tsx scripts/press-surface-0825.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

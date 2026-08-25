@@ -42,6 +42,7 @@ import { today } from "./doc-dates.mjs";
 import {
   KELLY_FIELDS,
   absenceStands,
+  kellyFieldHeld,
   type ArguedAbsence,
   type KellyReading,
   type FieldState,
@@ -124,37 +125,18 @@ const absences: ArguedAbsence[] = existsSync(ABSENCE_FILE)
 const absenceFor = new Map<string, ArguedAbsence>();
 for (const a of absences) absenceFor.set(`${a.candidacyId}|${a.field}`, a);
 
+/**
+ * The decision lives in `lib/hunt/kelly-depth.ts` and is shared with the absence
+ * generator. Two implementations of one judgement is the thing that can
+ * disagree, and these two did — see `kellyFieldHeld`'s own note.
+ */
 function held(id: string, field: KellyField): { yes: boolean; evidence: string } {
-  const card = cards.cards[id];
-  const link = links.links[id];
-  switch (field) {
-    case "photo": {
-      const url = card?.photoUrl ?? null;
-      if (!url) return { yes: false, evidence: "no photoUrl on the card" };
-      /*
-       * The asset must EXIST. A photoUrl pointing at nothing renders as a broken
-       * image, which is worse than an honest initials block — and it would count
-       * here as a held field while the reader sees a gap.
-       */
-      const onDisk = join(ROOT, "public", url.replace(/^\//, ""));
-      if (!existsSync(onDisk)) return { yes: false, evidence: `photoUrl ${url} but no file at public${url}` };
-      return { yes: true, evidence: url };
-    }
-    case "phone":
-      return card?.phone ? { yes: true, evidence: card.phone } : { yes: false, evidence: "no phone on the card" };
-    case "contact": {
-      const e = card?.email ?? filedEmail.get(id) ?? null;
-      return e ? { yes: true, evidence: e } : { yes: false, evidence: "no email held" };
-    }
-    case "verifiedPage":
-      return link?.official
-        ? { yes: true, evidence: link.official.url }
-        : { yes: false, evidence: "no verified official page" };
-    case "campaignSite":
-      return link?.campaign
-        ? { yes: true, evidence: link.campaign.url }
-        : { yes: false, evidence: "no campaign site" };
-  }
+  return kellyFieldHeld(field, {
+    card: cards.cards[id],
+    links: links.links[id],
+    filedEmail: filedEmail.get(id) ?? null,
+    photoOnDisk: (url) => existsSync(join(ROOT, "public", url.replace(/^\//, ""))),
+  });
 }
 
 const rows: KellyReading[] = [];

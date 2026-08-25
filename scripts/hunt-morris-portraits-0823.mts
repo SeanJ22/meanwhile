@@ -58,6 +58,7 @@
 
 import { writeFileSync } from "node:fs";
 
+import { imagesIn, nameTokens, pickPortrait } from "../lib/hunt/portrait-pick.ts";
 import { sourceUserAgent } from "../lib/sources/http.ts";
 
 interface Commissioner {
@@ -109,7 +110,7 @@ async function memberPages(): Promise<Map<string, string>> {
   }
   const byName = new Map<string, string>();
   for (const { name } of NAMES) {
-    const want = tokens(name);
+    const want = nameTokens(name);
     const surname = want[want.length - 1];
     const hit = [...links].find((l) => {
       const slug = decodeURIComponent(l.split("/").pop() ?? "").toLowerCase();
@@ -140,59 +141,12 @@ interface Found {
   reason: string;
 }
 
-/** Every `<img>` on the page, with its src and alt. */
-function images(html: string, base: string): { src: string; alt: string }[] {
-  const out: { src: string; alt: string }[] = [];
-  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
-    const tag = m[0];
-    const src =
-      /\bsrc\s*=\s*"([^"]+)"/i.exec(tag)?.[1] ??
-      /\bsrc\s*=\s*'([^']+)'/i.exec(tag)?.[1] ??
-      /\bdata-src\s*=\s*"([^"]+)"/i.exec(tag)?.[1] ??
-      null;
-    if (src === null) continue;
-    const alt =
-      /\balt\s*=\s*"([^"]*)"/i.exec(tag)?.[1] ?? /\balt\s*=\s*'([^']*)'/i.exec(tag)?.[1] ?? "";
-    try {
-      out.push({ src: new URL(src, base).toString(), alt });
-    } catch {
-      /* a malformed src is not an image */
-    }
-  }
-  return out;
-}
-
-/** Surnames and given names, so a filename or alt can be matched against them. */
-function tokens(name: string): string[] {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z ]/g, " ")
-    .split(/\s+/)
-    .filter((t) => t.length > 2);
-}
-
-/**
- * Pick the portrait.
- *
- * **Name-matched first, and nothing else is trusted.** A page furniture image —
- * a county seal, a Granicus badge, a banner — is exactly what a "largest image"
- * heuristic would pick, and a wrong face is the one failure the photo rule says
- * fails at every door. So a candidate must carry the person's name in its alt
- * text or its filename, and where none does this reports NO CANDIDATE rather
- * than offering the best of a bad set.
+/*
+ * `images`, `tokens` and `pick` moved to `lib/hunt/portrait-pick.ts` on
+ * 2026-08-25, unchanged, when a second hunt needed them. RULING 103: the
+ * cheapest way to have no duplicate implementation is to move the original
+ * rather than write a second one, and this script now calls what it wrote.
  */
-function pick(name: string, all: { src: string; alt: string }[]): { src: string; alt: string; why: string } | null {
-  const want = tokens(name);
-  const surname = want[want.length - 1];
-  for (const img of all) {
-    const haystack = `${img.alt} ${decodeURIComponent(img.src)}`.toLowerCase();
-    const hits = want.filter((t) => haystack.includes(t));
-    if (hits.length >= 2 || (surname && haystack.includes(surname) && /\.(jpe?g|png|webp)/i.test(img.src))) {
-      return { src: img.src, alt: img.alt, why: `name matched on ${hits.join(", ") || surname}` };
-    }
-  }
-  return null;
-}
 
 async function get(url: string): Promise<{ status: number; body: string }> {
   const res = await fetch(url, {
@@ -233,7 +187,7 @@ for (const c of COMMISSIONERS) {
      * person is the shape `notADocument` exists for, and here the control is
      * the person's own name appearing on the page they were asked for.
      */
-    if (!page.body.toLowerCase().includes(tokens(c.name)[tokens(c.name).length - 1])) {
+    if (!page.body.toLowerCase().includes(nameTokens(c.name)[nameTokens(c.name).length - 1])) {
       results.push({
         ...c,
         status,
@@ -246,8 +200,8 @@ for (const c of COMMISSIONERS) {
       continue;
     }
 
-    const all = images(page.body, c.page);
-    const chosen = pick(c.name, all);
+    const all = imagesIn(page.body, c.page);
+    const chosen = pickPortrait(c.name, all);
     if (chosen === null) {
       results.push({
         ...c,

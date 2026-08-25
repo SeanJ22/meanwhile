@@ -12,6 +12,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 
 import {
+  classifyCampaignPage,
   FREEMAIL_DOMAINS,
   flattenForEvidence,
   givenSurnamePair,
@@ -172,5 +173,54 @@ describe("the freemail list", () => {
     for (const d of ["corybooker.com", "tomkean.com", "garykapner.com", "analiliafornj.com"]) {
       assert.ok(!FREEMAIL_DOMAINS.has(d));
     }
+  });
+});
+
+describe("what KIND of page it is — the paid-for-by rule, not a host list", () => {
+  /*
+   * Written from the ten promotions the 2026-08-25 inversion returned. Six were
+   * real; two were `huffpost.com` promoted as William Maher's campaign site (the
+   * page names Bill Maher, the comedian) and `wpgtalkradio.com` promoted as
+   * Thomas H. Kean, Jr.'s. Adding two hosts to an exclusion list would have been
+   * RULING 90's failure — every fix so far has been a list, and lists are
+   * finite. The rule comes from statute instead: a candidate committee must
+   * carry a "paid for by" disclaimer on the communications it pays for, and a
+   * news organisation writing about a candidate does not.
+   *
+   * The evidence arrays below are the ACTUAL ones recorded for those hosts on
+   * 2026-08-25, so this test is the instrument shown catching the real instance
+   * rather than a constructed one (RULING 110).
+   */
+  it("promotes a campaign site — the disclaimer, and no party self-identification", () => {
+    // analiliafornj.com, as recorded.
+    const v = classifyCampaignPage({
+      officeEvidence: ["paid-for-by disclaimer", "for <office>", "this campaign"],
+      partyOrganSelfId: [],
+    });
+    assert.equal(v.kind, "CAMPAIGN_SITE");
+  });
+
+  it("REFUSES a news organisation, which is what the list would have had to name", () => {
+    // huffpost.com, as recorded — "running for" and nothing else.
+    assert.equal(classifyCampaignPage({ officeEvidence: ["running for"], partyOrganSelfId: [] }).kind, "LEAD");
+    // wpgtalkradio.com, as recorded.
+    assert.equal(classifyCampaignPage({ officeEvidence: ["this campaign"], partyOrganSelfId: [] }).kind, "LEAD");
+  });
+
+  it("a party organ is a THIRD thing — RULING 122's page, never a campaign site", () => {
+    // morrisdems.org, as recorded: it carries the disclaimer AND says what it is.
+    const v = classifyCampaignPage({
+      officeEvidence: ["paid-for-by disclaimer", "for <place> <office>"],
+      partyOrganSelfId: ["names itself a county committee", "names itself the party organisation"],
+    });
+    assert.equal(v.kind, "PARTY_HOSTED_PAGE");
+    assert.match(v.why, /host/i, "the reason must say the host is named — that is the whole of RULING 122");
+  });
+
+  it("names what it saw when it refuses, so the refusal points at the page", () => {
+    const v = classifyCampaignPage({ officeEvidence: ["running for"], partyOrganSelfId: [] });
+    assert.match(v.why, /running for/, "the refusal must quote the evidence it did find");
+    const bare = classifyCampaignPage({ officeEvidence: [], partyOrganSelfId: [] });
+    assert.match(bare.why, /nothing/, "and say so when it found none");
   });
 });

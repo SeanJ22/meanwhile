@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 03:49:41 EDT.
-Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
+Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1028 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1036 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 156 recorded
+## Rulings — 158 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -426,6 +426,8 @@ from. Each entry there names what it supersedes.
 - RULING 141 — the Speak Your Mind store's four rules
 - RULING 142 — the line in the sand, and nothing collected before it is ever sold
 - RULING 143 — what DONE means for 07866, and it is per candidate
+- RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls
+- RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -584,19 +586,5 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-```
-generated: 2026-08-25 03:49:41 EDT
-branch: main
-head sha: d43adf7de89d0114df9976efe493af82d74fbca2
-head subject: Close-out: the deploy is READY at 5ddf038, and two rows about how nearly nobody would have known
-origin/main sha: d43adf7de89d0114df9976efe493af82d74fbca2
-origin/main subject: Close-out: the deploy is READY at 5ddf038, and two rows about how nearly nobody would have known
-local main sha: d43adf7de89d0114df9976efe493af82d74fbca2
-local main matches origin/main: yes
-working tree: clean
-open prs: none
-last recorded tests: 1442 (fail)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:14434
-```
+_No git facts available this run._
+

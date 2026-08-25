@@ -90,7 +90,7 @@ test("2.3: a curatedAt that cannot be parsed reads as stale, never as fresh", ()
   assert.equal(compareFiling({ ...base, published: 272, curatedAt: "not-a-date" }).state, "STALE");
 });
 
-test("2: the committed ballot still holds 90 contests and 272 candidacies", () => {
+test("2: the committed ballot's ids are distinct and its coverage never silently shrinks", () => {
   /*
    * The regression guard for the carry-key defect. The contest id is minted
    * from jurisdiction + office + DIVISION, and the carry map was keyed on
@@ -101,15 +101,44 @@ test("2: the committed ballot still holds 90 contests and 272 candidacies", () =
    * orphaned four candidacy ids, and every Chester and Mendham reader would
    * have been shown Washington Township's candidates for a seat they do not
    * vote on.
+   *
+   * ## IT USED TO ASSERT `=== 90` AND `=== 272`, AND THAT WAS RULING 116's DEFECT
+   *
+   * A guard that freezes a size goes red on the day somebody makes the number
+   * move for a good reason, and the cheapest way to make it green again is to
+   * edit the constant. On 2026-08-25 the parser learned that `MAYOR` is an
+   * office heading — recovering nine mayoral contests, eleven real candidates
+   * and deleting seven phantom people — and this test failed because the work
+   * had been done. Nothing was wrong.
+   *
+   * What is worth holding still is the SHAPE of the accounting, never its
+   * current value: every contest id is distinct, every candidacy points at a
+   * contest that exists, and coverage may grow but may not quietly fall. A
+   * floor catches the collapse this was written for — 87 contests instead of 90
+   * — while a recovered mayoral race passes, which is the correct answer to
+   * both.
    */
   const ballot = JSON.parse(
     readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
-  ) as { contests: { id: string }[]; candidacies: { id: string }[] };
-  assert.equal(ballot.contests.length, 90);
-  assert.equal(ballot.candidacies.length, 272);
+  ) as { contests: { id: string }[]; candidacies: { id: string; contestId: string }[] };
 
+  // THE DIRECTION. The floors are the last measured values, and they move only
+  // upward and only in the same commit as the work that moved them.
+  assert.ok(
+    ballot.contests.length >= 99,
+    `contests fell to ${ballot.contests.length} from a floor of 99 — coverage may improve and may not silently reverse`,
+  );
+  assert.ok(
+    ballot.candidacies.length >= 276,
+    `candidacies fell to ${ballot.candidacies.length} from a floor of 276`,
+  );
+
+  // THE INVARIANT. Distinct ids, and no candidacy pointing at a contest that
+  // is not there — which is exactly what the carry-key defect produced.
   const ids = new Set(ballot.contests.map((c) => c.id));
   assert.equal(ids.size, ballot.contests.length, "no two contests may share an id");
+  const orphans = ballot.candidacies.filter((c) => !ids.has(c.contestId)).map((c) => c.id);
+  assert.deepEqual(orphans, [], "a candidacy points at a contest that does not exist");
 
   // The three regional-board contests specifically, by name.
   const westMorris = ballot.contests.filter((c) =>

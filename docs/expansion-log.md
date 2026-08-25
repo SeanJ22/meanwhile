@@ -848,3 +848,129 @@ lookup is not a campaign contact, and publishing one next to a private
 individual's name because they filed to run for the school board is the opposite
 of what this product is for. Recorded here so the next session recognises it as
 a decision rather than a gap.
+
+## final-pass-0825 · 2026-08-25
+
+Seven routes that did not exist at session start. One returned nothing, and it
+returned nothing for a reason that is itself the finding.
+
+### the session's OWN web search, walked before any free quota was measured
+- **Conceived:** RULING 90 item 5 says every AUTHENTICATED resource is walked
+  before any UNAUTHENTICATED one is exhausted, and that a credential sitting
+  unused beside a rate limit is a DEFECT. NJ Hunt 4 spent its whole search
+  budget measuring how fast DuckDuckGo, Bing and Yahoo would refuse it and
+  concluded the constraint was money. The question nobody had asked is what
+  search capability the SESSION ITSELF has — the same rule pointed at the
+  session's own tools rather than at `.env.local`.
+- **Query:** `"Nancy Verga" Morris Plains mayor 2026 campaign`
+- **Returned:** nine results, including `mpdems.org/goddard-verga` — a candidate
+  page on the Morris Plains Democratic Committee's site — and confirmation that
+  the incumbent mayor is running as an Independent, which matches the ballot
+  recovered the same night. A second query returned `randolphrepublicans.org`,
+  which seeded the whole Republican branch below.
+- **Generalises:** yes, to every entity in every zip. It is a general index, and
+  the only narrow thing about it is that a script cannot call it — so it seeds
+  routes rather than running them.
+
+### the county party's own directory of its municipal committees
+- **Conceived:** RULING 93 — ask what the tier ABOVE publishes about the tier
+  below. The 2026-08-24 hunt reached municipal committees by GUESSING domains,
+  and its own artifact says so: *a guessed Democratic municipal committee domain
+  for denville_township*. A guessed identifier is a LEAD and never a HIT, so
+  every one of those was structurally unpromotable however right the guess was.
+- **Query:** `Morris County NJ municipal Democratic committee 2026 candidates site`,
+  which produced the URL shape
+  `https://morrisdems.org/candidates/municipal-candidates/<municipality>`
+- **Returned:** 40 attempts, 39 documents about the municipality asked for, 1
+  wall. **16 committee websites, 18 Facebook pages and 24 emails**, every one
+  named by the county party rather than guessed.
+- **Generalises:** yes, to any county with an organised party committee — and
+  the same walk measured that Morris County's Republican committee publishes no
+  equivalent, which is the next route.
+
+### Republican municipal committees by DOMAIN SHAPE
+- **Conceived:** the route above produced 17 Democratic verified pages and 0
+  Republican, because one county organisation publishes a directory and the
+  other does not. That number is a fact about the organisations rather than
+  about the candidates, and shipping it would put the information asymmetry the
+  equal-effort rule exists to catch straight onto the ballot page. RULING 94's
+  third move: test the SHAPE, not the instance.
+- **Query:** seeded by `Randolph NJ Republican Committee 2026 council candidates`,
+  which returned `randolphrepublicans.org`; then `https://<town>republicans.org/`,
+  `.com`, `<town>gop.org`, `<town>gop.com` and `<town>njgop.org` across all 39
+  municipalities — 195 probes.
+- **Returned:** 26 answered 200, of which **20 were live documents** and 6 were
+  parked or catch-all. Feeding those into the same crawler took Republican
+  verified pages from 0 to 4.
+- **Generalises:** yes — and the parked-domain count is exactly why the control
+  query is not optional, because a squatter and a committee both answer 200.
+
+### the INVERSION — asking a page whose page it is
+- **Conceived:** the held-LEAD pile was produced by a CROSS PRODUCT that asked,
+  of each candidate, *is this that candidate's site*. It never asked, of a site,
+  *whose site is this*. A campaign site linked from a press page about candidate
+  A and belonging to candidate B is invisible to every one of its 2,344 rows.
+- **Query:** each of the 293 distinct hosts in the corpus fetched once at its
+  root, control-probed, and tested against all 276 candidates at once.
+- **Returned:** 5 campaign sites and 3 party-hosted pages, of which **three
+  could not have been found any other way** — `rebeccabennettforcongress.com`,
+  `townshiptrio.com` and `votemtarlington.com`. 262 stayed LEAD, 14 refused, 9
+  empty; 293 of 293 accounted for.
+- **Generalises:** yes, to any corpus of mined links plus any ballot. It is
+  strictly more information than a cross product, for strictly fewer fetches.
+
+### the PAID-FOR-BY disclaimer as the campaign-site discriminator
+- **Conceived:** the inversion's first run promoted `huffpost.com` as William
+  Maher's campaign site — the page names Bill Maher, the comedian — and
+  `wpgtalkradio.com` as Thomas H. Kean, Jr.'s. The reflex is an exclusion list,
+  and RULING 90 says every fix so far has been a list and lists are finite.
+- **Query:** not a query, a reading of what the ten promotions actually carried.
+  New Jersey requires a candidate committee to carry a *paid for by* disclaimer
+  on communications it pays for (N.J.S.A. 19:44A-22.3); a news organisation
+  writing about a candidate does not, because it is not a campaign
+  communication.
+- **Returned:** all six genuine campaign sites carried it; the two news hosts
+  carried only `running for` and `this campaign` — the vocabulary of writing
+  about a race rather than standing in one. Both were demoted by the rule
+  without either being named.
+- **Generalises:** yes. Every US jurisdiction requires some form of campaign
+  disclaimer, and the shape is the same everywhere.
+
+### the general web index, RE-WALKED against a wall recorded as permanent
+- **Conceived:** RULING 52 — no branch result is permanent, and a walled source
+  carries the date it was last tested. The paid-search-API recommendation rested
+  on three engines, and all three front the same two or three indexes.
+  Independence is counted over what a branch goes THROUGH, not over names.
+- **Query:** the same real query and the same impossible control against seven
+  engines: `html.duckduckgo.com`, `lite.duckduckgo.com`, `startpage.com`,
+  `searx.be`, `ecosia.org`, `mojeek.com`, `4get.ca` and `search.brave.com`.
+- **Returned:** **three independent indexes answer.** Mojeek runs its own
+  crawler and named the subject 44 times; 4get and Brave answer too. DuckDuckGo
+  serves a constant ~14 KB challenge at HTTP 202. Startpage and searx.be return
+  BYTE-IDENTICAL bodies for a real query and for one that cannot exist — a
+  JavaScript shell, which RULING 68 refuses. Rotated across the three at one
+  query per nine seconds, the first hundred candidates every one got a real
+  answer.
+- **Generalises:** yes, everywhere, and it removes the case for the paid search
+  API that RULING 83 was adopted over.
+
+### a TIER-ABOVE DIRECTORY, inverted — and it returned NOTHING
+- **Conceived:** the same inversion pointed at New Hampshire, where the ballot at
+  03255 is federal, statewide and COUNTY with no municipal layer at all. RULING
+  93's descent: the General Court publishes its own legislators, and the county
+  publishes its own officers.
+- **Query:** `https://gc.nh.gov/house/members/default.aspx`,
+  `https://gc.nh.gov/Senate/members/senate_roster.aspx`,
+  `https://www.merrimackcounty.net/`, `https://www.governor.nh.gov/` and
+  `https://www.nh.gov/governor/executive-council/` — 92 pages crawled.
+- **Returned:** **0 new verified pages.** The one page naming exactly one
+  candidate named Daniel E. Innis, who already had one. Merrimack County's 30
+  pages matched only SURNAMES — *innis*, *hill* and *french* are ordinary words
+  — and a surname alone never promotes. Two hosts refuse this project at rung 3
+  AND rung 4: `governor.nh.gov` and `nh.gov` answer 403 to a browser header set
+  and to curl alike, recorded with the date.
+- **Generalises:** the technique yes, the seeds no (RULING 60). **And the zero is
+  the finding.** A tier-above directory publishes the people who HOLD offices,
+  and this ballot is mostly the people running against them — the equal-effort
+  asymmetry arriving from the source rather than from our effort, and the reason
+  challengers need routes that are not directories.

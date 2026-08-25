@@ -14,6 +14,16 @@
       "file": "components/map/zip-switcher.tsx",
       "text": "zip code",
       "reason": "An input PLACEHOLDER, not rendered prose about a subject. It tells the reader what to type; it asserts nothing about anything we hold."
+    },
+    {
+      "file": "components/ballot/candidate-card.tsx",
+      "text": "official site",
+      "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."
+    },
+    {
+      "file": "components/ballot/candidate-card.tsx",
+      "text": "campaign site",
+      "reason": "Not an absence. The default fires when a link carries no LABEL, and a link with no label is one on the candidate's own domain — where \"official site\" and \"campaign site\" describe exactly the thing that IS present. The label exists for the two cases where those words would be false: RULING 122's page a party publishes about a candidate, and RULING 145's campaign presence on a platform, both of which name their host instead. So the ?? is choosing between two true descriptions of a link that is there, never standing in front of one that is missing — and when there is no link, neither branch renders at all."
     }
   ]
 }

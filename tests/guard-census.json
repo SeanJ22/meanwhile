@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 227,
-    "named": 2183,
+    "files": 231,
+    "named": 2240,
     "dynamic": 6
   },
   "files": {
@@ -521,6 +521,8 @@
     },
     "tests/candidate-evidence.test.ts": {
       "names": [
+        "REFUSES a news organisation, which is what the list would have had to name",
+        "a party organ is a THIRD thing — RULING 122's page, never a campaign site",
         "catches the real instance: `for <place> <office>` on garykapner.com",
         "catches the real instance: morrisdems.org's own title and first line",
         "does not fire on a candidate's own site that merely names their party",
@@ -533,9 +535,11 @@
         "holds the providers the filing corpus actually contains",
         "is symmetric across parties, which is a rule and not a courtesy",
         "name forms — RULING 110",
+        "names what it saw when it refuses, so the refusal points at the page",
         "never promotes something that did not clear the control",
         "office evidence",
         "party-organ self-identification",
+        "promotes a campaign site — the disclaimer, and no party self-identification",
         "promotes only when the page NAMES the person AND says it is a campaign",
         "records every form searched, matched or not",
         "refuses to promote a page that names the person with no office evidence",
@@ -544,7 +548,8 @@
         "strips a quoted nickname and a comma suffix",
         "strips the parenthetical nickname that made the slate test find nothing",
         "the freemail list",
-        "the promotion verdict — RULING 68's two bars"
+        "the promotion verdict — RULING 68's two bars",
+        "what KIND of page it is — the paid-for-by rule, not a host list"
       ],
       "dynamic": 0
     },
@@ -787,7 +792,8 @@
         "A-002 · unretrieved DOCUMENTS are reported but never summed with logical records",
         "RULING 43 survives A-002 — documents in hand and nothing out still throws",
         "S-001 · the zero-row predicate has ONE implementation and both callers use it",
-        "S-001 · totalDropped sums the counters rather than asking whether any is set"
+        "S-001 · totalDropped sums the counters rather than asking whether any is set",
+        "legistar's composite wrapper conserves, and agrees with the adapter EXACTLY"
       ],
       "dynamic": 0
     },
@@ -1051,6 +1057,20 @@
         "previews and branch deploys cancel without needing a diff",
         "the paperwork paths ARE on the allowlist",
         "the shipping directories are NOT on the allowlist"
+      ],
+      "dynamic": 0
+    },
+    "tests/deploy-verdict.test.ts": {
+      "names": [
+        "CANNOT-TELL exits non-zero — an unanswerable question is never a pass",
+        "FAILED — the planted case, because no real one existed to point at",
+        "NJ25 — the close-out verifies the deploy for the shipped SHA succeeded",
+        "PENDING while it builds, and PENDING when it has not appeared — never SUCCESS",
+        "SUCCESS when a deploy carrying this commit is ready",
+        "a FILTER CANCEL is not a failure — RULING 115, and it is the live case",
+        "a RETRY that succeeded reads SUCCESS — the question is what production serves",
+        "a SHORT sha matches the full ref, because that is what a caller has",
+        "another commit's deploy is not this commit's, and a PREVIEW is not production"
       ],
       "dynamic": 0
     },
@@ -2002,7 +2022,7 @@
         "2.4: a zero parse is a FAILED extraction, never an empty filing",
         "2.4: an unreadable clerk is CANNOT TELL, never agreement",
         "2.4: the pair reconciling inside its window is the only passing state",
-        "2: the committed ballot still holds 90 contests and 272 candidacies"
+        "2: the committed ballot's ids are distinct and its coverage never silently shrinks"
       ],
       "dynamic": 0
     },
@@ -2012,12 +2032,16 @@
         "a candidate's party is never taken from the preceding unfilled-seat row",
         "a document with no office headings is ZERO_ROWS with a reason, not success",
         "a seat a party filed nobody for is RECORDED, not discarded",
+        "all nine mayoral contests parse, with the candidates the clerk names",
         "an empty text layer is a FAILED parse naming itself, never an empty filing",
         "every jurisdiction is a plausible place name, or empty only on a federal office",
+        "every office-heading SHAPE the DOCUMENT exposes is recognised as a heading",
         "every unfilled seat in the document is accounted for",
         "no candidate is filed under document furniture instead of a place",
+        "no candidate's NAME is an office heading, a term count, or a seat count",
         "the document yields a real number of candidates, not merely no error",
-        "the four Rockaway Borough council candidates parse with their filed contact"
+        "the four Rockaway Borough council candidates parse with their filed contact",
+        "the parser's count matches an INDEPENDENT count of the same document"
       ],
       "dynamic": 0
     },
@@ -2054,10 +2078,12 @@
     },
     "tests/office-blurbs.test.ts": {
       "names": [
+        "a New Jersey mayor is never described as a city's elected leader",
         "blurbs describe offices in the register — no advocacy vocabulary",
         "county offices never borrow their state-level cousin's blurb",
         "every candidacy contest on every covered ballot has an office explainer",
-        "the Selectboard maps to its own explainer, never a borrowed one (2e)"
+        "the Selectboard maps to its own explainer, never a borrowed one (2e)",
+        "the bare word MAYOR is a contest title, and does not catch the council titles"
       ],
       "dynamic": 0
     },
@@ -2284,6 +2310,26 @@
       ],
       "dynamic": 0
     },
+    "tests/portrait-pick.test.ts": {
+      "names": [
+        "REFUSES bytes and label that disagree, in either direction",
+        "REFUSES the real soft-404 — 200, text/html, and the bytes are markup",
+        "a non-200 is refused with its status, never treated as an absence",
+        "a phone read off a municipal page is narrow on purpose",
+        "a portrait URL has to serve a picture",
+        "a short token never matches — initials and particles are not names",
+        "accepts a real image, and says what it read",
+        "decodes the entities a page's own markup puts inside a src",
+        "does not read a street address or a zip+4 as a phone",
+        "picks the name-matched image and passes over the furniture",
+        "reads data-src, because a lazily-loaded portrait hides behind a placeholder",
+        "reads the shapes these sites actually write",
+        "refuses a template number, which would send a reader to nobody",
+        "returns NOTHING rather than the best of a bad set",
+        "the picker matches on the name and nothing else"
+      ],
+      "dynamic": 0
+    },
     "tests/positions-search.test.ts": {
       "names": [
         "13: a failed search and an empty search are different sentences",
@@ -2358,7 +2404,6 @@
     },
     "tests/questionnaire.test.ts": {
       "names": [
-        "questionnaire: 272 of 272 NJ candidacies have an invitation, and none claims a send",
         "questionnaire: a WITHDRAWAL is indistinguishable from never having answered",
         "questionnaire: a contest with one unreachable candidate invites NOBODY",
         "questionnaire: a generated invitation claims NO send that has not happened",
@@ -2370,9 +2415,10 @@
         "questionnaire: an over-limit answer is REFUSED with its own count, never cut",
         "questionnaire: answering again clears a withdrawal",
         "questionnaire: each refusal reason gets its own sentence",
+        "questionnaire: every NJ candidacy has an invitation, and none claims a send",
+        "questionnaire: every NJ contest classifies, and none falls back",
         "questionnaire: every candidate for an office class is asked the IDENTICAL five questions",
         "questionnaire: every office class has exactly two class questions",
-        "questionnaire: every one of the 90 NJ contests classifies, and none falls back",
         "questionnaire: every question id is unique across the whole instrument",
         "questionnaire: every question passes the 15-year-old test",
         "questionnaire: five to seven questions maximum, and it asks five",
@@ -2688,6 +2734,20 @@
       ],
       "dynamic": 0
     },
+    "tests/search-pool.test.ts": {
+      "names": [
+        "a 202 is a refusal — DuckDuckGo's challenge is not a search that found nothing",
+        "docs/sources.md records the same verdict as the module, for the same hosts",
+        "every engine in the pool quotes the robots.txt line that permits its path",
+        "every exclusion says WHY and carries a date, and none is a placeholder",
+        "mojeek and brave are named as DISALLOWED, not as walls — they answered fine",
+        "no engine in the pool is one this project recorded as DISALLOWED",
+        "the content control catches a shell that answers identically to an impossible query",
+        "the control query is an identifier nothing could match",
+        "the search pool asks permission before it asks anything else"
+      ],
+      "dynamic": 0
+    },
     "tests/search-rows.test.ts": {
       "names": [
         "PU02 class sweep: no surface joins a snapshot body name to a registry name by ===",
@@ -2719,6 +2779,17 @@
       "names": [
         "no client component takes a render prop or an injected function",
         "the about-area page passes ShuffledFacts nothing but data"
+      ],
+      "dynamic": 0
+    },
+    "tests/serving-surfaces.test.ts": {
+      "names": [
+        "NS15 — every serving surface is checked against its store",
+        "a whole database says nothing is broken",
+        "catches the ACTUAL failure: speak_your_mind gone, and names what a reader gets",
+        "every surface names the code that serves it, so a failure points somewhere",
+        "every table a surface declares is a table the schema actually creates",
+        "worst first — a surface that ACCEPTS AND DROPS is reported above one that renders empty"
       ],
       "dynamic": 0
     },
@@ -2816,11 +2887,17 @@
       "names": [
         "REFUSES a malformed date rather than coercing it",
         "REFUSES a stamp that describes no sources",
+        "TWO days behind is drift and still fails — the tolerance is a clock boundary, not a grace period",
+        "a declaration NEWER than any commit fails, because that is the fabrication direction",
+        "a declaration ONE DAY BEHIND the newest commit agrees, and says it was tolerated",
         "a declared stamp cannot be wrong by accident",
         "accepts a well-formed declaration",
+        "an exact match agrees WITHOUT the tolerance flag, so the two are distinguishable",
+        "crosses a month boundary correctly — 08-31 is the day before 09-01",
         "every declared stamp in the tree AGREES with git, where git can answer",
         "git verification reports rather than guesses",
-        "says UNVERIFIABLE on a shallow clone instead of returning the tip's date"
+        "says UNVERIFIABLE on a shallow clone instead of returning the tip's date",
+        "the midnight tolerance, in both directions"
       ],
       "dynamic": 0
     },

@@ -1,6 +1,6 @@
 {
   "formatVersion": 1,
-  "curatedAt": "2026-08-22",
+  "curatedAt": "2026-08-25",
   "note": "Kelly-standard candidate cards (2b): photo, a short bio in the candidate's own site's words, and published contact — each read from the cited page on the date recorded, every photo URL HEAD-verified as an image. Photo rule (tightened 2026-08-14, 2b): a clean solo portrait or honest initials — NEVER a screengrab, banner, logo crop, or a photo where the candidate is not the unambiguous sole subject. A challenger has no official portrait, so the campaign site's own photo is the legitimate source when it passes that bar — recorded and labeled as such; when it does not, initials render and the miss is a recorded hunt. Every shipped photo is listed with its source URL in docs/photo-report.md for human verification. Bios are the site's words, attributed, never our characterization. A candidate without an entry still renders a card (name, party, links, reaction control); every bio/photo absence is a recorded hunt below, never a blank presented as a fact.",
   "cards": {
     "ballot-nh-merrimack:governor:ayotte-kelly": {
@@ -1330,7 +1330,8 @@
       "bioSourceUrl": null,
       "bioSourceLabel": null,
       "email": null,
-      "phone": null
+      "phone": "973-398-6832 ext. 4",
+      "phoneSource": "published by mount arlington beside this member on its own site, read 2026-08-25 — https://mountarlingtonnj.org/boroughcouncil/"
     },
     "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa": {
       "photoUrl": "/candidates/nj-morris-mountain-lakes-borough-council-muilenburg-melissa.jpg",
@@ -1394,6 +1395,16 @@
       "bioSourceLabel": null,
       "email": null,
       "phone": null
+    },
+    "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy": {
+      "photoUrl": null,
+      "photoSource": null,
+      "bio": null,
+      "bioSourceUrl": null,
+      "bioSourceLabel": null,
+      "phone": "973-714-8246",
+      "email": null,
+      "phoneSource": "published by Morris Plains Borough Council beside this member on its own site, read 2026-08-25 — https://morrisplainsboro.org/governing-body/"
     }
   },
   "hunts": [

@@ -5461,7 +5461,32 @@ console.log(`\n${new Array(60).fill("─").join("")}`);
  */
 {
   section("D73's class — the schema gate and the write alarm");
+  /*
+   * ── THE NAME IS STABLE; THE SUBJECT IS IN THE DETAIL ──────────────────────
+   *
+   * This check was written when the suite ran against production, and RULING 125
+   * moved every walk to a LOCAL production build — which reads `DATABASE_URL`,
+   * the development Neon branch. So it kept production-shaped wording while
+   * asking a development database, and on 2026-08-25 it reported a NAMED
+   * REGRESSION about migrations while production was IN SYNC at 21 of 21 the
+   * same minute. RULING 115's shape for the third time in this repo: an alarm
+   * that cannot tell an exercise from an event.
+   *
+   * **The first fix made the NAME depend on the target, and that was worse.**
+   * A check whose identity changes with where it ran cannot be diffed: the
+   * baseline looked for the old name, got nothing, and `R58` correctly reported
+   * a check that had reported NO ENDING AT ALL. A check identity is how the
+   * suite can see a single check die, and it must be the same string wherever
+   * the run points.
+   *
+   * So the name never moves and the DETAIL says whose database was asked. A
+   * local run naming its own branch is honest; a local run wearing production's
+   * name is not.
+   */
   const SCHEMA_CHECK = "the deploy's database has the migrations the deploy was built from";
+  const whichDatabase = BASE.startsWith("http://localhost")
+    ? "the LOCAL build's database (DATABASE_URL, the development branch) — production's own schema is `pnpm db:check --target=production`"
+    : "the deploy's database";
   const raw = await get("/api/schema");
   if (raw.status === 200 || raw.status === 503) {
     /*
@@ -5476,7 +5501,7 @@ console.log(`\n${new Array(60).fill("─").join("")}`);
     } catch {
       // A body that will not parse is reported as the bytes that arrived.
     }
-    check("promptD", SCHEMA_CHECK, raw.status === 200, summary);
+    check("promptD", SCHEMA_CHECK, raw.status === 200, `${whichDatabase} — ${summary}`);
   } else if (raw.status === 501) {
     cannotRun("promptD", SCHEMA_CHECK, "the deploy reports no DATABASE_URL — nothing was compared");
   } else {

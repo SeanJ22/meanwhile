@@ -48,7 +48,20 @@ test("every card key resolves against the ballot data or lineup keys", () => {
 test("every photo carries a labeled source and https URL; every bio its citation", () => {
   const { cards } = allCandidateCards();
   for (const [key, card] of Object.entries(cards)) {
-    if (card.photoUrl !== null) {
+    /*
+     * `!= null`, LOOSE, AND DELIBERATELY.
+     *
+     * This read `!== null` until 2026-08-25, which is TRUE for `undefined` —
+     * so the first card row written that carried a phone and no photo key at
+     * all walked into this branch and asserted about a portrait nobody had
+     * claimed. The message it produced named the defect precisely and pointed
+     * at the wrong thing: *shipped photo undefined is not listed*.
+     *
+     * The same distinction bit `candidate-links-2026.json` in the same hour.
+     * `null` means we looked and there is none; MISSING means nobody has said.
+     * A guard that cannot tell them apart reports on data that does not exist.
+     */
+    if (card.photoUrl != null) {
       // https for external photos; a site-local path serves a COMMITTED
       // portrait — `/officials/…` licensed in official-photos.json,
       // `/candidates/…` judged and sourced on the card itself (photo
@@ -66,7 +79,7 @@ test("every photo carries a labeled source and https URL; every bio its citation
       }
       assert.ok(card.photoSource, `${key}: photo without a labeled source`);
     }
-    if (card.bio !== null) {
+    if (card.bio != null) {
       assert.ok(card.bioSourceUrl, `${key}: bio without a source URL`);
       assert.ok(
         card.bioSourceLabel?.includes("read 2026"),
@@ -82,7 +95,7 @@ test("2b: every shipped photo appears in docs/photo-report.md with its judgment"
   const report = readFileSync(join(process.cwd(), "docs", "photo-report.md"), "utf8");
   const { cards } = allCandidateCards();
   for (const [key, card] of Object.entries(cards)) {
-    if (card.photoUrl !== null) {
+    if (card.photoUrl != null) {
       assert.ok(
         report.includes(card.photoUrl),
         `${key}: shipped photo ${card.photoUrl} is not listed in docs/photo-report.md`,

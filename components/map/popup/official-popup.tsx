@@ -1,6 +1,7 @@
 "use client";
 
 import { personInitials } from "@/lib/officials/person-name";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { useEffect, useState } from "react";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
@@ -556,7 +557,7 @@ export function OfficialIdentity({
 
       <div className="min-w-0">
         <p className="text-[0.8125rem] leading-snug">
-          {holder.officeTitle}
+          {readerOfficeTitle(holder.officeTitle)}
           {/* A seat label identical to the title ("Mayor · Mayor") is
               noise, not information — caught on the item-1 gate
               screenshot. */}
@@ -699,7 +700,7 @@ export function OfficialPopup({
 }: OfficialPopupProps) {
   return (
     <PopupCard
-      type={holder.officeTitle}
+      type={readerOfficeTitle(holder.officeTitle)}
       tier={tier}
       title={holder.name}
       onExpand={onExpand}

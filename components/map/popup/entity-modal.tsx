@@ -1,6 +1,7 @@
 "use client";
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { X } from "lucide-react";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 
@@ -992,7 +993,7 @@ function Representation({
                 shrink-0 — so a right-edge clip takes the space and then the
                 glyph. trailing-space-trimmed removes the space from the box. */}
             <span className="trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
-              {holder.officeTitle}
+              {readerOfficeTitle(holder.officeTitle)}
             </span>
           </div>
 

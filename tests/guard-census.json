@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 232,
-    "named": 2260,
+    "named": 2262,
     "dynamic": 6
   },
   "files": {
@@ -2679,6 +2679,8 @@
     "tests/routing.test.ts": {
       "names": [
         "85723: no routed step ever names a body that isn't the division's own government",
+        "ASK-10: several districts name NO person from any of their rosters",
+        "ASK-9: one district names the superintendent and no board member",
         "a state-law topic grounds on the actual state legislators",
         "a thin area routes honestly: gaps stated, nothing guessed",
         "an unmapped topic returns the honest refusal, never a guess",

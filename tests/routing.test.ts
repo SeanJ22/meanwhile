@@ -142,10 +142,26 @@ test("golden case: the stopped library, at Tucson", async () => {
         step.gap === null || !step.gap.includes("who sits on this body"),
         `a step naming a rostered body still claims nobody is sourced: ${JSON.stringify(step.bodies.map((b) => b.label))}`,
       );
-      assert.ok(
-        step.people.length > 0,
-        `a step naming a rostered body named nobody: ${JSON.stringify(step.bodies.map((b) => b.label))}`,
-      );
+      /*
+       * **THE "SOMEBODY IS NAMED" HALF IS REMOVED HERE (2026-08-25, ASK-9 /
+       * ASK-10), DELIBERATELY AND WITH ITS REASON.**
+       *
+       * It asserted that a step naming a rostered body must name at least one
+       * PERSON. Ask no longer prints body rosters — the author's instruction
+       * is that Ask names bodies and the people live on the card — so an
+       * empty `people` beside a rostered body is now the CORRECT answer for a
+       * council, and for several school districts it is the required one.
+       *
+       * What the removal must not cost is the thing this guard exists for, so
+       * that half is not merely kept, it is kept BOTH WAYS above and below:
+       * a rostered body may never claim nobody is sourced, and an unrostered
+       * one must say which half is missing. The false-absence ASK-5 was
+       * opened over is still impossible; what is no longer asserted is a
+       * RENDER decision that has since been made the other way.
+       *
+       * RULING 62: this leaves the guard census in the same commit, so the
+       * removal is a diff rather than a silence.
+       */
     } else if (step.bodies.length > 0 && step.people.length === 0) {
       assert.ok(
         step.gap?.includes("who sits on this body"),
@@ -213,4 +229,77 @@ test("a thin area routes honestly: gaps stated, nothing guessed", async () => {
     assert.ok(step.gap, "an ungroundable step must say so");
   }
   assert.equal(answer.grounding.stepsWithSomeone, 0);
+});
+
+/* --------------------------------------------------------------------------
+ * ASK-9 / ASK-10 (2026-08-25) — ASK NAMES BODIES, NOT THEIR MEMBERS.
+ *
+ * The author boxed six names on `08-58-52` at Tucson, and on `09-22-18` at
+ * 07866 the answer named four school districts correctly and then printed ONE
+ * of their rosters underneath — seven `@rocktwp.net` addresses standing in for
+ * all four.
+ *
+ * The one exception he asked for by name is the person who RUNS the body, and
+ * only where there is exactly one body to run.
+ * ------------------------------------------------------------------------ */
+
+const ROCKAWAY: [number, number] = [40.9187, -74.5143];
+
+test("ASK-9: one district names the superintendent and no board member", async () => {
+  const coverage = await coverageAt(...TUCSON, 1);
+  const answer = resolveRouting("schools-operations", coverage);
+  const named = answer.steps.flatMap((s) => s.people.map((p) => p.name));
+
+  // The body is still named — that half never changed.
+  const bodies = answer.steps.flatMap((s) => s.bodies.map((b) => b.label));
+  assert.ok(bodies.length > 0, "the answer must still name the district");
+
+  // Whoever runs it is named, described as running it rather than governing
+  // (RULING 118 — an appointed official never carries the govern verb).
+  const roster = answer.steps
+    .flatMap((s) => s.bodies)
+    .flatMap((b) => rosterHoldersForBody(b.body.bodyId));
+  const superintendent = roster.find((h) => /superintendent/i.test(h.officeTitle ?? ""));
+  assert.ok(superintendent, "the fixture has no superintendent — this guard would pass vacuously");
+  assert.ok(
+    named.includes(superintendent.name),
+    `the superintendent ${superintendent.name} must still be named`,
+  );
+
+  // And nobody else from the roster is.
+  const others = roster
+    .filter((h) => !/superintendent/i.test(h.officeTitle ?? ""))
+    .map((h) => h.name)
+    .filter((name) => named.includes(name));
+  assert.deepEqual(
+    others,
+    [],
+    `Ask still names roster members who are not the superintendent: ${others.join(", ")}`,
+  );
+});
+
+test("ASK-10: several districts name NO person from any of their rosters", async () => {
+  const coverage = await coverageAt(...ROCKAWAY, 1);
+  const answer = resolveRouting("schools-operations", coverage);
+
+  const step = answer.steps.find((s) => s.bodies.length > 1);
+  assert.ok(
+    step,
+    "no step at 07866 resolves to more than one district — this guard would pass vacuously",
+  );
+
+  const named = new Set(step.people.map((p) => p.name));
+  const roster = step.bodies.flatMap((b) => rosterHoldersForBody(b.body.bodyId));
+  assert.ok(roster.length > 0, "the districts hold no roster — nothing to over-include");
+
+  const leaked = roster.map((h) => h.name).filter((name) => named.has(name));
+  assert.deepEqual(
+    leaked,
+    [],
+    "with more than one body in the step, naming ANY of their people attributes " +
+      `one body's person to all of them: ${leaked.join(", ")}`,
+  );
+
+  // The bodies themselves are still all named — the fix trims people, not coverage.
+  assert.ok(step.bodies.length >= 2, "the districts must still all be named");
 });

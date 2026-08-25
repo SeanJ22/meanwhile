@@ -58,12 +58,47 @@ test("ASK-5: every body a routed step names carries the roster the battlecard re
     answer.steps.flatMap((s) => s.people.map((p) => p.id)),
   );
 
-  for (const member of roster) {
-    assert.ok(
-      named.has(member.id),
-      `Ask does not name ${member.name} (${member.officeTitle}), who the battlecard renders for ${school.bodyId}`,
-    );
-  }
+  /*
+   * **AMENDED 2026-08-25 BY ASK-9 / ASK-10, and the amendment is narrow.**
+   *
+   * This asserted that Ask names EVERY member of the roster the battlecard
+   * renders. That was the right claim while Ask printed rosters, and the
+   * author has since ruled it does not: *"Ask names bodies, not people"*, with
+   * the person who RUNS the body as the one exception he asked for by name.
+   * Six names under one sentence at Tucson is what he boxed in red.
+   *
+   * So the parity claim moves from PEOPLE to the BODY, which is where the
+   * defect ASK-5 was opened over actually lived: Ask was reading
+   * `coverage.seats` — the legislative store — and a school board has never
+   * been in it, so Ask printed a sourced-sounding absence about a body whose
+   * members were one click away. **That failure is still impossible**, and
+   * these three assertions are what make it so: the body is named, its roster
+   * is reachable by the same id the battlecard uses, and whoever runs it is
+   * named. Nothing about the amendment weakens the store-parity claim; what it
+   * drops is a claim about how many of the store's rows are PRINTED.
+   */
+  const bodyIds = new Set(answer.steps.flatMap((s) => s.bodies.map((b) => b.body.bodyId)));
+  assert.ok(
+    bodyIds.has(school.bodyId),
+    `Ask does not name ${school.bodyId}, whose roster the battlecard renders`,
+  );
+
+  const executive = roster.find((m) => /superintendent/i.test(m.officeTitle ?? ""));
+  assert.ok(
+    executive,
+    "the fixture requires a superintendent — the one roster member Ask still names",
+  );
+  assert.ok(
+    named.has(executive.id),
+    `Ask does not name ${executive.name}, who runs ${school.bodyId} day to day`,
+  );
+
+  const alsoNamed = roster.filter((m) => m.id !== executive.id && named.has(m.id));
+  assert.deepEqual(
+    alsoNamed.map((m) => m.name),
+    [],
+    `Ask names roster members who do not run the body: ${alsoNamed.map((m) => m.name).join(", ")}`,
+  );
 });
 
 test("ASK-5: no step claims the roster is unsourced while a roster exists for its body", async () => {

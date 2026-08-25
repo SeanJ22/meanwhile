@@ -1,6 +1,7 @@
 "use client";
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
   rosterInReadingOrder,
@@ -197,7 +198,7 @@ export function DistrictPopup({
                 theirs, and the two are never merged. */}
             <span className="person-row-office">
               {office.role}
-              {office.holder.officeTitle ? ` · ${office.holder.officeTitle}` : ""}
+              {office.holder.officeTitle ? ` · ${readerOfficeTitle(office.holder.officeTitle)}` : ""}
             </span>
           </div>
         ))
@@ -212,7 +213,7 @@ export function DistrictPopup({
         /*
          * Item 2 (2026-08-16) — THE VERTICAL-TEXT DEFECT, diagnosed.
          *
-         * These rows were `<PopupRow label={holder.officeTitle}>`, and
+         * These rows were `<PopupRow label={readerOfficeTitle(holder.officeTitle)}>`, and
          * `.pk` is `white-space: nowrap`. Inside a 300px card that leaves
          * 264px for a label and a value; "County Supervisor, District 2
          * (Vice Chair)" refuses to wrap and eats all of it, the value column
@@ -253,7 +254,7 @@ export function DistrictPopup({
               )}
             </span>
             <span className="person-row-office">
-              {holder.officeTitle}
+              {readerOfficeTitle(holder.officeTitle)}
               {holder.sourceUrl && (
                 <>
                   {" · "}

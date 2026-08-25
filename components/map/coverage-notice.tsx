@@ -1,6 +1,7 @@
 "use client";
 
 import { AddressPrompt } from "@/components/address/address-prompt";
+import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import {
   CouldGovernMark,
   CouldGovernNotice,
@@ -711,7 +712,7 @@ function CoverageBody({
                   key={holder.id}
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
-                  <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
+                  <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                   <span className="block">
                     <Holder
                       holder={holder}
@@ -919,7 +920,7 @@ function CoverageBody({
                     key={holder.id}
                     className="text-[0.75rem] leading-snug"
                   >
-                    <span className={TYPE_LABEL_CLASS}>{holder.officeTitle}</span>
+                    <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
                     <span className="block">
                       <Holder
                         holder={holder}

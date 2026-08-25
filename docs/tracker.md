@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **254 open**, 409 resolved.
+- **256 open**, 409 resolved.
 - **46 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -681,7 +681,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**13 open · 69 resolved.**
+**15 open · 69 resolved.**
 
 ### P1
 
@@ -700,6 +700,10 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH85** — RULING 75's third part asks GitHub rather than the working tree, and the four verdicts it keeps apart are green, red, pending and could-not-tell. Measured on 2026-08-23: both of this session's commits to main are GREEN on GitHub - d0f2831 carries build default, build standalone and the gates, and e83db50 carries those plus the tripwire. But main's TIP was 7112307, an intake-tripwire[bot] commit pushed minutes later, and no check has ever been registered against it. So main:green exits 2 with CANNOT TELL on a healthy tree, and it did the same on 750e094 at the start of this session. Seven workflows push main daily, so the tip is a bot commit far more often than it is a human one, and a gate that reads could-not-tell as its normal answer is a gate a session learns to walk past. What is owed is a decision about the shape rather than a patch: either the scheduled workflows' pushes to main run build check too, or main:green reports on the newest commit that HAS a check and says how many bot commits sit above it. The second keeps the Actions budget RULING 78 protects; the first is stricter. Nothing is broken today and the distinction between the four verdicts must not be softened to make this go away.
 
 **NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
+
+**NJ24** — RULING 125 made the Netlify deploy record the one remaining production fact a close-out needs, and the tool that reads it cannot. scripts/deploy-live.mjs defaults NETLIFY_SITE_ID to the bare name sparkwtp and calls /api/v1/sites/sparkwtp/deploys, which is HTTP 404. Measured 2026-08-25 with the token that is already in .env.local: the token works (the sites list returns 200 and shows sparkwtp), and the same deploys call returns 200 under either the site id 6b39b212-f8f8-4ddf-9357-a16faa9ecd08 or the full host sparkwtp.netlify.app. Only the bare name fails. The tool reported cannot-tell and exited non-zero, which is RULING 125's four-verdict rule working exactly as designed — it did not lie — but the verdict has been unavailable every time it has been asked. Fix: resolve a bare name through the sites list before calling deploys, and name the resolution in the output so a wrong site is legible rather than a 404. Not shipped tonight because it is a second code merge for a tooling defect rather than a regression the walk caught; the deploy fact was read directly from the API instead and is in the session report.
+
+**NJ25** — Read from the Netlify deploys API 2026-08-25 while getting this session's deploy id. Commit 26b357d, 'context.md, rewritten after shipping', deploy 6a8d1b7b08d04c00083024d8, context production, state ERROR. So production was serving ab4da20 rather than the tip of main from 04:35 until this session's merge deployed successfully at 07:38. Two of the six most recent production deploys are in state ERROR (41113c1b and 55d30471 as well), so this is a pattern rather than one bad build. Nothing in the close-out path notices: pnpm main:green asks GitHub whether the CHECKS passed, which they did, and a Netlify deploy failing afterwards is a different question that only the deploys API can answer — which is the same tool NJ24 says cannot currently answer it. The two rows belong together.
 
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 

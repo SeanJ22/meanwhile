@@ -18162,10 +18162,21 @@ working rather than the work failing: a number describing a software rasterizer
 in the place a reader's hardware belongs would be inherited by every budget set
 from it afterwards.
 
-**P-006 stays OPEN.** The pnpm store, `.next/cache` and the Playwright browser
-are all cached now, and the measured delta cannot exist until the workflow runs
-on this change. A row closed on a change whose after-number does not yet exist
-is RULING 133 broken in the tracker.
+**P-006 is measured, and measuring it found a defect in itself.** Across three
+real build-check runs: the build legs went 73s to 51s and 65s to 53s with cache
+hits confirmed in the log, while gates stayed at ~195s — because that job is 96s
+of test, 24s of lint and 20s of types against a 3s install, and saying so is more
+useful than a percentage. A merge is not faster; Actions minutes fall by about
+34s a run, which is what RULING 78 is about.
+
+The defect: the Playwright cache key read `node_modules/playwright-core`, which
+pnpm does not hoist, so the version came back empty and the key resolved to the
+bare prefix `playwright-Linux-`. Worse than a miss — the post-step would save
+under a version-less key and restore a stale browser after every upgrade. The
+step reads `playwright` now and EXITS NON-ZERO on an empty version rather than
+composing a key out of nothing. **A step whose product is a string must be asked
+whether it produced one**, which is the same sentence as RULING 113 and was
+found by applying it.
 
 **0 of 9 leaked credentials are rotated**, proven rather than assumed: the
 by-value sweep still finds every current value in a leaked location. Only Sean

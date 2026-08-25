@@ -98,7 +98,7 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## audit-remediation-0824 · 2026-08-24
 
-**What it finished.** 15 row(s).
+**What it finished.** 16 row(s).
 
 - **NH123** — The release gate every session trusts under RULING 75 discarded its stillborn list unless EVERY check was stillborn, so one passing check beside one check that completed having executed nothing read as green. Its own test said in a comment that this is not green while asserting only that it is not red. Reproduced, fixed, and the last 20 GREEN readings on main audited.
 - **NH124** — accountedNormalize asked a boolean, droppedAny, which cannot tell one drop from ninety-nine. 100 logical inputs, 0 output and one recorded drop was branded clean. Replaced with an exact conservation invariant at the logical-record layer, with COULD_NOT_ASSERT as a named second state for the one adapter that genuinely cannot count.
@@ -115,11 +115,11 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH135** — registry server.ts discovers geometry by readdir, including the 1.63 MB national congressional file whose per-state derivatives already exist, and the point resolver walks the full collection with exact polygon tests. Needs a generated resolver manifest and a build-time bounding-box index, gated on every supported zip resolving to an identical set of division identifiers.
 - **NH136** — applySelection writes every pool entry on every selection and re-runs on venues changes. Store the selected key in the pool and diff to two writes. Ships with P-001 and is asserted by the same counters.
 - **NH143** — pnpm purge:synthetic removes only run_class SYNTHETIC from the search log, the reactions store and feedback, exports every row to a dated backup outside the repo first, and refuses to touch ORGANIC, UNKNOWN or AUTHOR. Applied to production 2026-08-24. The row exists so the tool has a home and so the next purge is a run rather than a decision.
+- **NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed.
 
-**What it started.** 21 row(s) opened, 6 still open.
+**What it started.** 21 row(s) opened, 5 still open.
 
 - **NH137** — pnpm perf measures FCP, LCP and frame timing on real Chrome and honestly refuses software-rendered numbers, and docs/perf-baseline.md is not committed. A thermometer with no recorded normal temperature measures nothing. Needs a run on hardware-accelerated Chrome, or an honest row saying this machine has none. *(open)*
-- **NH138** — The build log says no build cache found; measured 13.2 s compile plus 16.8 s TypeScript with package-manager caching disabled. Cache the pnpm store and .next cache, keeping both builds because they check different trace behaviour. Loop speed, not reader speed. *(open)*
 - **NH139** — The external audit of ae5b178 read 50 files of an unestablished denominator and did not perform Phase 2, the Drive consistency check. Neither number is known. A second pass owes both: the denominator of files that exist and should have been read, and the Drive comparison that was never run. *(open)*
 - **NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts. *(open)*
 - **NH141** — Found by the A-007 sweep for catch-return-valid shapes. lib map districts.ts returns an empty array when queryRenderedFeatures throws, so an exception is indistinguishable from a viewport with no districts in it. Nine other sites of the same shape were assessed and fail closed; this one does not, and how it should behave is a visual decision. *(open)*

@@ -99,9 +99,20 @@ import { RESOLVED_CSV, WORKING_CSV, readStore } from "./tracker-core.mjs";
 import { readWorkbook } from "./xlsx.mjs";
 import { tryRun as sharedTryRun } from "./try-run.mjs";
 import { verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
+import { loadEnvLocal } from "./load-env-local.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
+
+/*
+ * `.env.local` into `process.env`, before any gate reads it.
+ *
+ * `pnpm handoff --ship` reported "no NETLIFY_AUTH_TOKEN — the deploy record
+ * cannot be read" on 2026-08-25 while the token sat in `.env.local` and
+ * `pnpm deploy:live` read it fine. A could-not-run caused by not looking is
+ * still a check that did not run.
+ */
+loadEnvLocal(ROOT);
 
 /**
  * `tryRun`, bound to this repo's root.

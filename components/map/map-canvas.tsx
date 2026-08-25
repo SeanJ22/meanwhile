@@ -26,6 +26,7 @@ import {
   resolveBasemap,
 } from "@/lib/map/style";
 import { initialZoomForZip } from "@/lib/map/initial-zoom";
+import { recallCamera, rememberCamera } from "@/lib/map/camera-memory";
 import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
@@ -453,10 +454,30 @@ export function MapCanvas({
     const basemap = resolveBasemap(theme);
     if (!basemap) onTileError();
 
+    /*
+     * **BAL-9 (2026-08-24): open where the reader last was, not at the
+     * continent.**
+     *
+     * `bounds: CONUS_BOUNDS` is what the author photographed on `12-19-41`
+     * after pressing back — the whole country, while the rail still read
+     * "Meetings near 85701". Every mount started there, and returning from
+     * another route is a fresh mount.
+     *
+     * CONUS remains the answer for a reader with no remembered camera, which
+     * is every first visit. See `lib/map/camera-memory.ts` for why this is a
+     * separate store from the zip and why it is not history state.
+     */
+    const remembered = recallCamera();
+
     const map = new MapLibreMap({
       container: containerRef.current,
       style: basemap?.styleUrl ?? FALLBACK_STYLE,
-      bounds: CONUS_BOUNDS,
+      ...(remembered
+        ? {
+            center: [remembered.lng, remembered.lat] as [number, number],
+            zoom: remembered.zoom,
+          }
+        : { bounds: CONUS_BOUNDS }),
       fitBoundsOptions: { padding: 24, duration: 0 },
       // Added explicitly below so it lands bottom right, clear of the coverage
       // notices in the bottom-left corner.
@@ -609,6 +630,17 @@ export function MapCanvas({
         // settle-only failure a client can manufacture on its own (2a).
         const center = map.getCenter().wrap();
         const bounds = map.getBounds();
+        /*
+         * BAL-9: the reader moved the camera and it came to rest. THIS is the
+         * moment worth remembering — a settle is a deliberate arrival, where
+         * every frame of a fly-to is not, and writing on every frame would
+         * store wherever an animation happened to be interrupted.
+         */
+        rememberCamera({
+          lat: center.lat,
+          lng: center.lng,
+          zoom: map.getZoom(),
+        });
         onViewportSettleRef.current?.({
           lat: center.lat,
           lng: center.lng,

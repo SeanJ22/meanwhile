@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { forgetCamera } from "@/lib/map/camera-memory";
 
 import dynamic from "next/dynamic";
 
@@ -1154,6 +1155,13 @@ function MapEntryInner() {
   const onReset = useCallback(() => {
     dispatch({ type: "reset" });
     setFocus(null);
+    /*
+     * BAL-9: reset FORGETS the remembered camera. The whole point of reset is
+     * "put me back where I started" — restoring the viewport the reader just
+     * asked to leave would make the control do nothing visible, which is the
+     * click-that-does-nothing defect this repo names most often.
+     */
+    forgetCamera();
     if (location) {
       search(location.zip, location.lat, location.lng);
       return;
@@ -2553,7 +2561,11 @@ function placeSubject(
         })
         .sort((a, b) => a.name.localeCompare(b.name)),
       absence:
-        "We haven't recorded any governing body in this place yet. That's a gap in our coverage, not a statement about the place.",
+        /* BAL-7 (2026-08-24): the attribution stays, the self-assessment goes.
+           A reader needs to know this absence is OURS and that it is not a
+           finding about the place — neither of which requires the app to grade
+           its own coverage in the middle of the sentence. */
+        "We haven't recorded any governing body in this place yet — which is not a statement that it has none.",
     },
     // A place has no roster of its own — the people are on the bodies' cards,
     // one level down, and saying so is better than an empty tab.

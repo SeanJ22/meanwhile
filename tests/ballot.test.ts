@@ -488,10 +488,31 @@ test("F21: the ballot page renders the polling-place pointer exactly once, in th
     "the separate registration checker box is back — AZ-4 and AZ-5 deduplicated it to one pill",
   );
 
-  // The warning travelled with the pointer rather than being deleted with the
-  // duplicate: what the state's tool demands on arrival is friction a reader
-  // is owed a word about before the tap.
-  assert.ok(page.includes("{polls.note}"), "the reader is never told what the tool asks for");
+  /*
+   * **AMENDED 2026-08-24 (BAL-2, BAL-3) — THE WARNING'S SUBJECT NO LONGER
+   * EXISTS ON THIS PAGE.**
+   *
+   * This asserted `page.includes("{polls.note}")` — "the reader is never told
+   * what the tool asks for" — where the tool is the state's polling-place
+   * lookup and the note is *"You'll need your date of birth and either a
+   * driver's licence number or the last four of your Social Security
+   * number."*
+   *
+   * BAL-2 deleted the LINK to that tool: the author's ruling is that the pill
+   * beside it already opens the same authority's answer, in-app, from data we
+   * retrieved and sourced. With no tap that leaves, there is nothing to warn
+   * about, and BAL-3 removed the warning for that reason rather than to make
+   * the card shorter.
+   *
+   * What is asserted instead is the thing that still matters: the pointer is
+   * the IN-APP pill, and the state's tool is not offered as a second route
+   * beside it. `polls.note` is untouched in `lib/ballot/polling-place-links.ts`
+   * — the fact is still recorded, it simply no longer renders.
+   */
+  assert.ok(
+    !/own tool/.test(page),
+    "the state's polling-place tool is being offered as a second route again (BAL-2)",
+  );
 });
 
 /**
@@ -531,8 +552,26 @@ test("AZ-4/AZ-5: the ballot resolves the registration link exactly once, and it 
       /data-leaves-app[\s\S]{0,120}voting-open-button/.test(page),
     "the registration pill must be labelled as leaving the app",
   );
+  /*
+   * **AMENDED 2026-08-24 (BAL-4) — THE WARNING IS ON THE CONTROL, NOT BESIDE
+   * IT, AND THAT IS THE POINT OF THE AMENDMENT.**
+   *
+   * This asserted the sentence rendered as a paragraph under the pill. BAL-4's
+   * spec for the next-election box admits the two dates and the two pills and
+   * nothing else, so the paragraph came out — but the OBLIGATION it carried
+   * did not, because this pill genuinely leaves the product and the friction
+   * rule's own example is a link that springs a demand on an unwarned reader.
+   *
+   * So the assertion moves with the sentence: it must still be present, and it
+   * must be reachable by a reader who cannot see the arrow. A `title` alone
+   * would not be — it is invisible to a screen reader and to a touch device.
+   */
   assert.ok(
-    /only place this can be\s+checked/.test(page),
-    "the pill must say why it leaves — the Secretary of State is the system of record",
+    /only place this can be checked/.test(page),
+    "the pill no longer says why it leaves — the Secretary of State is the system of record",
+  );
+  assert.ok(
+    /aria-label=\{`\$\{reg\.label\}[\s\S]{0,200}leaves this app`\}/.test(page),
+    "the leaving warning is not in the pill's accessible name, so a reader who cannot see the arrow is never told",
   );
 });

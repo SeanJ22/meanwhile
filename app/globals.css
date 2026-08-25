@@ -3807,6 +3807,58 @@ button.jurisdiction-badge-action:focus-visible {
   border-color: var(--accent-voting);
 }
 
+/* ---------------------------------------------------------------------------
+   BAL-8 (2026-08-24) — "What's in it, part by part" COLLAPSES, and the control
+   is the voting pill's family because the author named that pattern by sight:
+   light-purple, bolded, a right-pointing arrow.
+
+   It is not `.voting-open-button` itself. That pill is a 44px call to action
+   sitting alone in a card; this is a disclosure control repeated once per
+   proposition down a page, and reusing the tap target verbatim would put three
+   full-size buttons in a column and re-create the wall it exists to remove. It
+   borrows the palette and the shape and takes its own size.
+   --------------------------------------------------------------------------- */
+.provisions-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
+  color: var(--text);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.provisions-summary::-webkit-details-marker {
+  display: none;
+}
+
+.provisions-summary:hover,
+.provisions-summary:focus-visible {
+  border-color: var(--accent-voting);
+}
+
+.provisions-caret {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+[data-provisions][open] .provisions-caret {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .provisions-caret {
+    transition: none;
+  }
+}
+
 .voting-panel {
   width: min(23rem, calc(100vw - 2rem));
   max-height: min(32rem, calc(100vh - 8rem));

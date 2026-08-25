@@ -89,23 +89,23 @@ export function WhereToVote({
         </button>
       )}
 
-      {fallback && (
-        <p className="mt-2 text-[0.75rem] leading-relaxed text-muted">
-          {/* Labelled as leaving, at the point of the link. */}
-          Or search{" "}
-          <a
-            href={fallback.url}
-            target="_blank"
-            rel="noreferrer"
-            data-leaves-app
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            {fallback.sourceOrg}&apos;s own tool
-          </a>{" "}
-          — that one opens in a new tab and leaves {""}
-          this app.
-        </p>
-      )}
+      {/*
+        **BAL-2 (2026-08-24, the author's ruling) — the sentence is DELETED,
+        because the pill above it already IS that.**
+
+        His words: *delete "or search Arizona Secretary of State's own tool" —
+        the pill below it is that.* The line offered the state's lookup as a
+        second route; the pill opens the same authority's answer in-app, from
+        the same retrieved and sourced data, and a second control pointing at
+        the same destination is the duplicate-entry friction `CLAUDE.md` counts
+        as a defect.
+
+        **`fallback` is NOT removed from the contract.** The prop is still what
+        the caller resolves and still what the panel behind the pill falls back
+        to for a jurisdiction we do not hold — item 15's honest handoff is
+        intact, and it is a behaviour rather than a paragraph. What the author
+        struck is the paragraph.
+      */}
     </div>
   );
 }

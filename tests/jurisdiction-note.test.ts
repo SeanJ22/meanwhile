@@ -105,17 +105,64 @@ test("JUR-4: UNKNOWN is counted and never named as partial", () => {
   );
 });
 
-test("JUR-4: the unplaceable sentence says whose gap it is", () => {
+/**
+ * **AMENDED 2026-08-24 (BAL-7) — THE SENTENCE IS CUT, AND ITS OBLIGATION IS
+ * ASSERTED INSTEAD OF ITS WORDING.**
+ *
+ * This asserted the literal strings *"That is a gap on our side, not a finding
+ * about the district."* and its plural. The author red-boxed both on
+ * `12-16-38` and ruled the class product-wide: **stop announcing that the site
+ * is failing.**
+ *
+ * The render-default rule survives that cut unchanged, and this is what it
+ * actually requires — it says in as many words that **the rule is the
+ * ATTRIBUTION, never a particular sentence**, and that what may be rewritten
+ * at any time is how it is said. So the guard now asserts the two things that
+ * must remain true:
+ *
+ *  1. **No claim is made about any district.** The block may not say a
+ *     district covers part of this zip on the strength of a polygon we do not
+ *     hold — that is the assertion the deleted sentence was hedging, and
+ *     deleting the hedge would be a defect if the assertion had stayed.
+ *  2. **The limit is still attributed to US and to the zip.** The surviving
+ *     paragraph carries it: *what we cannot tell from a zip code alone is
+ *     which of them is yours.*
+ */
+test("BAL-7: the block attributes the limit to us without announcing a failure", () => {
   const note = readFileSync(
     join(ROOT, "components", "ballot", "jurisdiction-note.tsx"),
     "utf8",
   );
+  /*
+   * Comments stripped first. The component's own note QUOTES the sentence the
+   * author cut, so a sweep over the raw file would flag the record of the fix
+   * as the defect — an instrument that cannot tell shipped copy from a comment
+   * about shipped copy is reading the wrong thing (RULING 110).
+   */
+  const code = note.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+
+  // The self-deprecating form is gone from what a reader sees.
+  assert.doesNotMatch(
+    code,
+    /gap on our side/,
+    "the failure-announcing sentence is back (BAL-7)",
+  );
+
+  // The attribution it used to carry is still on the page, in the paragraph
+  // the author left unmarked.
   assert.match(
     note,
-    /That is a gap on our side, not a finding about the district\./,
-    "the unplaceable sentence lost its whose-gap attribution",
+    /what we cannot tell from a zip code alone is\s*\n?\s*which of them is yours/,
+    "the block no longer attributes the limit to the zip and to us",
   );
-  assert.match(note, /not a finding about those districts\./, "the plural form lost its attribution");
+
+  // And nothing was upgraded into a claim about a district in the process:
+  // `unplaceable` divisions are still COUNTED rather than named.
+  assert.doesNotMatch(
+    note,
+    /unplaceable[\s\S]{0,200}jurisdictions\.join/,
+    "unplaceable divisions are being named alongside measured ones",
+  );
 });
 
 test("JUR-4: the full pill no longer renders per contest on the ballot page", () => {

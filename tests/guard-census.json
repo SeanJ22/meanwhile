@@ -1642,10 +1642,10 @@
     },
     "tests/jurisdiction-note.test.ts": {
       "names": [
+        "BAL-7: the block attributes the limit to us without announcing a failure",
         "JUR-4: UNKNOWN is counted and never named as partial",
         "JUR-4: the full pill no longer renders per contest on the ballot page",
-        "JUR-4: the page-level block names bodies, never offices",
-        "JUR-4: the unplaceable sentence says whose gap it is"
+        "JUR-4: the page-level block names bodies, never offices"
       ],
       "dynamic": 0
     },
@@ -3017,7 +3017,6 @@
     "tests/voting-dates-and-place.test.ts": {
       "names": [
         "15: the ballot's polling-place affordance opens the map's own panel",
-        "15: the state's own tool is still offered, and labelled as leaving",
         "16: 'is it still ahead' is decided on the Phoenix wall clock",
         "16: Arizona and New Jersey produce the same stamps for the same dates",
         "16: a window is a window, and a phrase is not a date",
@@ -3026,7 +3025,8 @@
         "16: the NJ early-voting window produces a correct multi-day event",
         "17: no code path can send the placeholder anywhere",
         "17: no reader-facing placeholder carries a region-specific address",
-        "17: the placeholder address is exactly the approved string"
+        "17: the placeholder address is exactly the approved string",
+        "BAL-2: the state's tool is reached through the pill, not offered beside it"
       ],
       "dynamic": 0
     },

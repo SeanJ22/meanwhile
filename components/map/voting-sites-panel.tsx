@@ -184,8 +184,10 @@ export function VotingSitesPanel({
         state.answer.match &&
         state.answer.outsideCoverage && (
           <p className="voting-panel-status">
-            That address is outside the places this app covers yet. That is a
-            gap in our coverage, not a statement about your county.
+            {/* BAL-7 (2026-08-24): what is known, then the non-claim, and
+                nothing about how we feel about the shortfall. */}
+            That address is outside the places this app covers yet — which is
+            not a statement about your county.
           </p>
         )}
 

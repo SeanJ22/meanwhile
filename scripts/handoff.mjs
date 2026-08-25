@@ -98,6 +98,7 @@ import { COPIED_DOCS, MIRRORED_DOCS, checkMirrorContents } from "./mirror-set.mj
 import { RESOLVED_CSV, WORKING_CSV, readStore } from "./tracker-core.mjs";
 import { readWorkbook } from "./xlsx.mjs";
 import { tryRun as sharedTryRun } from "./try-run.mjs";
+import { verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, "..");
@@ -1409,53 +1410,84 @@ function fastForwardMain() {
  * commit. Those are different claims, and the gap between them is an hour of
  * production quietly serving the previous build, which is how R22 was born.
  *
- * `/api/build` closes it by reporting the commit the running deploy was built
- * from. Polling behaviour, which is what the g6 session did, only works when a
- * change alters observable behaviour; a doc-only or internal change has
- * nothing to poll, and this session's own work is mostly that shape.
+ * ## IT ASKED THE SITE, AND IT ASKED THE WRONG QUESTION
  *
- * A TIMEOUT IS REPORTED AS A COULD-NOT-RUN, NEVER AS A FAILURE. Netlify's
- * build queue is not this script's to wait on, and an unreachable service is
- * not a missing feature — the same distinction `walk:all` draws. What it must
- * never do is report success without having seen the SHA.
+ * This polled `/api/build` on the live site until it saw the SHA, and it had two
+ * defects that are one defect wearing two hats.
+ *
+ * **It could not tell a filter CANCEL from a failed deploy.** RULING 124's
+ * deploy filter cancels the build for a commit that cannot change what a reader
+ * sees, and production correctly goes on serving the previous one — so a
+ * docs-only close-out commit made this warn *production still serving <old>,
+ * expected <new> after 5 min — deploy NOT verified*. Measured 2026-08-25 on
+ * `3449ef8`: Netlify's record reads *Canceled build due to no content change*,
+ * and the deploy filter had done exactly its job. An alarm that fires on every
+ * quiet close-out is one nobody reads (RULING 115).
+ *
+ * **And RULING 125 says not to ask the site at all.** `scripts/deploy-live.mjs`
+ * carries the sentence in as many words: *Do NOT substitute a request to the
+ * site: `/api/build` answers the same question and writes
+ * reader-indistinguishable traffic to a sold store.* This file was doing the
+ * thing that file warns against, five minutes at a time, on every ship.
+ *
+ * `NJ25` was closed earlier in the same session by giving
+ * `lib/ops/deploy-verdict.ts` four verdicts kept apart — and fixing that tool
+ * while leaving this one is the named-instance failure `CLAUDE.md` warns about.
+ * They share the decision now.
+ *
+ * A TIMEOUT IS REPORTED AS A COULD-NOT-RUN, NEVER AS A FAILURE. Netlify's build
+ * queue is not this script's to wait on, and an unreachable service is not a
+ * missing feature — the same distinction `walk:all` draws. What it must never do
+ * is report success without having seen the answer.
  */
 async function verifyDeployLanded(expectedSha) {
-  const url = `${(process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/+$/, "")}/api/build`;
-  const deadline = Date.now() + 5 * 60 * 1000;
   const short = expectedSha.slice(0, 7);
-  let last = null;
+  const token = process.env.NETLIFY_AUTH_TOKEN || process.env.NETLIFY_TOKEN || "";
+  const site = process.env.NETLIFY_SITE_ID || "sparkwtp.netlify.app";
+  if (!token) {
+    warn(
+      "ship · deploy",
+      "no NETLIFY_AUTH_TOKEN — the deploy record cannot be read, and this is a could-not-run rather than a pass",
+    );
+    return;
+  }
 
+  const deadline = Date.now() + 5 * 60 * 1000;
+  let verdict = { kind: "CANNOT-TELL", why: "nothing asked" };
   while (Date.now() < deadline) {
+    let deploys = null;
     try {
-      const response = await fetch(url, {
-        cache: "no-store",
-        headers: {
-          "cache-control": "no-cache",
-          // Declare ourselves (C05). This is a GET on a route that writes
-          // nothing, but the rule is that automated traffic says so.
-          "x-wtp-synthetic-run": `handoff-deploy-verify@${new Date().toISOString()}`,
-        },
+      const res = await fetch(`https://api.netlify.com/api/v1/sites/${site}/deploys?per_page=40`, {
+        headers: { Authorization: `Bearer ${token}` },
       });
-      if (response.ok) {
-        const body = await response.json();
-        last = body.commit ?? "unknown";
-        if (last === expectedSha) {
-          ok("ship · deploy", `production is serving ${short} (/api/build)`);
-          return;
-        }
-      }
-    } catch {
-      // Network flake or a deploy mid-swap; keep polling until the deadline.
+      if (res.ok) deploys = await res.json();
+      else verdict = { kind: "CANNOT-TELL", why: `HTTP ${res.status} from the deploys API` };
+    } catch (err) {
+      verdict = { kind: "CANNOT-TELL", why: `request failed: ${err?.message ?? err}` };
+    }
+    if (Array.isArray(deploys)) {
+      verdict = verdictForDeploys(deploys, expectedSha);
+      if (verdict.kind !== "PENDING") break;
     }
     await new Promise((r) => setTimeout(r, 15_000));
   }
 
-  warn(
-    "ship · deploy",
-    last === null
-      ? `could not reach ${url} within 5 min — deploy NOT verified (could-not-run, not a failure)`
-      : `production still serving ${String(last).slice(0, 7)}, expected ${short} after 5 min — deploy NOT verified`,
-  );
+  if (verdict.kind === "SUCCESS") {
+    ok("ship · deploy", `production is serving ${short} — ${verdict.why}`);
+    return;
+  }
+  if (verdict.kind === "CANCELLED-BY-FILTER") {
+    ok(
+      "ship · deploy",
+      `${short} was correctly NOT built — ${verdict.why} Production goes on serving the last commit a reader could see.`,
+    );
+    return;
+  }
+  if (verdict.kind === "FAILED") {
+    fail("ship · deploy", `${short} FAILED to deploy — ${verdict.why}`);
+    return;
+  }
+  warn("ship · deploy", `${short} — ${verdict.kind}: ${verdict.why}. NOT verified.`);
 }
 
 if (SHIP) {

@@ -1,0 +1,35 @@
+{
+  "what": "OFF-3 — the TUSD Governing Board and its superintendent, swept for portraits the district publishes of its own people.",
+  "door": "door 2 — an official government-published portrait, published by the body about its own member",
+  "note": "NH166 is OPEN and it is Sean's call: tusd1.org is a public school district and is NOT a .gov host, so whether door 2 reaches a district's own domain is his ruling. This is STAGED, never shipped — staging is the ask, not the answer.",
+  "walkedAt": "2026-08-25",
+  "robots": "https://www.tusd1.org/robots.txt read 2026-08-25 — only /TUSD-school-exit-survey is disallowed; this path is permitted.",
+  "boardSweep": {
+    "members": 6,
+    "alreadyHeld": 5,
+    "missing": 1,
+    "detail": "Dr. Ravi Shah, Natalie Luna Rose, Jennifer Eckstrom, Val Romero and Sadie Shaw already carry portraits on the card. Dr. Gabriel Trujillo was the one initials circle, which is what OFF-3 named."
+  },
+  "rows": [
+    {
+      "subject": "Dr. Gabriel Trujillo",
+      "office": "Superintendent, Tucson Unified District",
+      "page": "https://www.tusd1.org/Superintendent",
+      "attemptedAt": "2026-08-25",
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.tusd1.org/_theme/images/staff-photos/Dr-Trujillo-Updated-Headshot.jpg",
+        "alt": "Dr. Gabriel Trujillo",
+        "why": "A studio headshot in the district's own /staff-photos/ directory, linked from the district's Superintendent page and named for him. READ AS AN IMAGE 2026-08-25: one subject, plain background, no banner, no logo, no second person. The five other images of him on that page are EVENT CANDIDS — a school visit, a graduation, a luncheon, a booth, a concert — and every one of those is prohibited at every door of the photo rule, which is why none was taken."
+      },
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 800,
+        "height": 1200,
+        "bytes": 84463,
+        "decodedAt": "2026-08-25"
+      }
+    }
+  ]
+}

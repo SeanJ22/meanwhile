@@ -27,6 +27,7 @@
  * is a way IN to the review, never a way around it.
  */
 import { readFileSync } from "node:fs";
+import type { PortraitDecodeRecord } from "./decode.ts";
 import { join } from "node:path";
 
 import { personKey } from "./person.ts";
@@ -84,10 +85,39 @@ const STAGING_FILES: readonly { path: string; door: string }[] = [
     path: "data/photos/door2-incumbents-2026-08-25.json",
     door: "door 2 — the portrait a government body publishes of its own member",
   },
+  {
+    // OFF-3 (2026-08-25). NH166 is open and is Sean's: tusd1.org is a public
+    // school district and is not a .gov host, so whether door 2 reaches a
+    // district's own domain is his ruling. Staging is the ask, not the answer.
+    path: "data/photos/door2-tusd-board-2026-08-25.json",
+    door: "door 2 — the portrait a government body publishes of its own member",
+  },
 ];
+
+/**
+ * A staged row that was REFUSED, and why.
+ *
+ * Refusals are RETURNED rather than logged and dropped. A queue that silently
+ * shrinks is the shape this repo names most often, and the two soft-404s that
+ * caused this guard would have vanished into it without a word.
+ */
+export interface RefusedPortrait {
+  name: string;
+  url: string;
+  reason: string;
+  source: string;
+}
+
+const refusals: RefusedPortrait[] = [];
+
+/** Every staged row refused by the last `stagedPortraits()` call. */
+export function refusedPortraits(): RefusedPortrait[] {
+  return [...refusals];
+}
 
 export function stagedPortraits(): StagedPortrait[] {
   const out: StagedPortrait[] = [];
+  refusals.length = 0;
   for (const file of STAGING_FILES) {
     let parsed: {
       walkedAt?: string;
@@ -96,6 +126,7 @@ export function stagedPortraits(): StagedPortrait[] {
         page?: string | null;
         portrait?: { src: string; alt: string; why: string } | null;
         photoAlreadyHeld?: boolean;
+        decode?: PortraitDecodeRecord;
         attemptedAt?: string;
       }[];
     };
@@ -112,6 +143,35 @@ export function stagedPortraits(): StagedPortrait[] {
        * twice would put one face in front of the author under two numbers.
        */
       if (row.photoAlreadyHeld) continue;
+      /*
+       * **NOTHING QUEUES WITHOUT A PASSING DECODE.** (2026-08-25.)
+       *
+       * The door-2 hunt queued two soft-404 HTML pages as portraits — served
+       * 200, several kilobytes each, `.jpg` in the URL — and only the
+       * author's eyes on the review sheet caught them.
+       *
+       * The check lives HERE, at the door into the review, rather than in the
+       * hunt that happened to produce them. A guard inside one hunt is a guard
+       * the next hunt does not have, and there will be a next hunt. Every
+       * staging artifact passes through this function, so this is the one
+       * place that cannot be bypassed.
+       *
+       * A MISSING record refuses exactly as a FAILING one does. "Nobody
+       * decoded this" and "this is not an image" are different facts and both
+       * are disqualifying, and defaulting the other way is how an unchecked
+       * row becomes a checked one by omission.
+       */
+      if (!row.decode?.ok) {
+        refusals.push({
+          name: row.subject,
+          url: row.portrait.src,
+          reason: row.decode
+            ? `${row.decode.reason ?? "REFUSED"} — ${row.decode.detail ?? "no detail recorded"}`
+            : "NOT DECODED — no decode record on the staged row, so nothing has confirmed these bytes are an image",
+          source: file.path,
+        });
+        continue;
+      }
       out.push({
         personKey: personKey(row.subject),
         name: row.subject,

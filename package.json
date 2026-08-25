@@ -234,7 +234,8 @@
     "directory:invert": "tsx scripts/directory-inversion-0825.mts",
     "db:surfaces": "tsx scripts/assert-serving-tables.mts",
     "deploy:sha": "node scripts/deploy-live.mjs --sha",
-    "press:surface": "tsx scripts/press-surface-0825.mts"
+    "press:surface": "tsx scripts/press-surface-0825.mts",
+    "photos:verify": "tsx scripts/verify-staged-portraits.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

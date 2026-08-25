@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 232,
-    "named": 2263,
+    "files": 233,
+    "named": 2271,
     "dynamic": 6
   },
   "files": {
@@ -2318,6 +2318,19 @@
         "the quota is stated where the build can print it",
         "the registry label yields the designation Plural publishes",
         "the roster reads the unmetered bulk host, never the quota'd API"
+      ],
+      "dynamic": 0
+    },
+    "tests/portrait-decode.test.ts": {
+      "names": [
+        "MAGIC BYTES ALONE ARE NOT ENOUGH: a PNG header with no image data is refused",
+        "a real PNG decodes, and reports its own dimensions",
+        "a truncated JPEG is TRUNCATED, which is not the same answer as NOT_AN_IMAGE",
+        "an icon-sized image is refused as TOO_SMALL, with both numbers stated",
+        "the record carries the decode DATE, because a decode is a measurement",
+        "the review queue REFUSES a row with no decode record, and says so out loud",
+        "the soft 404 that got through: an HTML error page is refused as NOT_AN_IMAGE",
+        "zero bytes is EMPTY — a failed fetch never reads as a bad image"
       ],
       "dynamic": 0
     },

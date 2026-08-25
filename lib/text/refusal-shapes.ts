@@ -60,6 +60,66 @@ export const REFUSAL_SHAPES: readonly RefusalShape[] = [
     pattern:
       /\bthere(?:'s| is| are)\s+nothing\s+(?:we\s+can\s+(?:tell|say|show)|to\s+(?:tell|say|show))\b/i,
   },
+
+  /* ======================================================================
+   * BAL-7 (2026-08-24, the author's ruling, made product-wide) —
+   * THE PRODUCT NEVER ANNOUNCES ITS OWN FAILURE.
+   *
+   * His words: *stop announcing that the site is failing. "That is a gap on
+   * our side" and every variant comes out everywhere. State what's known,
+   * offer the narrowing, move on.*
+   *
+   * ## This is a DIFFERENT family from the three above, and the line matters
+   *
+   * The shapes above catch the app declining to DESCRIBE something. These
+   * catch the app EDITORIALISING ABOUT ITSELF — apologising, confessing,
+   * blaming its own coverage — while telling the reader something true. The
+   * information is not withheld; a sentence about our shortcomings is stapled
+   * to it, and the reader is asked to spend attention on our feelings about a
+   * gap instead of on the answer.
+   *
+   * ## THE ATTRIBUTION IS NOT WHAT THIS TOUCHES, and that distinction is the
+   * whole reason these are patterns rather than a word list
+   *
+   * The render-default rule requires that a reader can tell OUR gap from THEIR
+   * absence, and it says in as many words that **the rule is the ATTRIBUTION,
+   * never a particular sentence**. *"We haven't recorded this chamber's vote on
+   * this yet"* is attribution: it names who is missing what. *"That is a gap on
+   * our side, not a finding about those districts"* is attribution PLUS a
+   * verdict on ourselves, and only the second half is struck.
+   *
+   * Every pattern below therefore fires on the SELF-ASSESSMENT — a possessive
+   * about our own shortcoming, an apology, an admission of failure — and none
+   * of them can fire on "we haven't X yet". `KNOWN_GOOD` proves it, and this
+   * is the same discipline RULING 110 demanded: the instrument is shown
+   * catching the real instance, and shown NOT catching the honest lines.
+   * ====================================================================== */
+  {
+    id: "blames-our-coverage",
+    what: "calls a gap ours in the possessive — \"a gap on our side\", \"our fault\", \"our end\"",
+    pattern:
+      /\b(?:gap|failing|shortcoming|shortfall|oversight|mistake|fault)\s+(?:on|in|at)\s+(?:our|the)\s+(?:side|end|part|data|research|coverage)\b|\bour\s+(?:fault|failing|shortcoming|oversight)\b/i,
+  },
+  {
+    id: "apologises-for-coverage",
+    what: "apologises to the reader for what the product does not hold",
+    /*
+     * The word boundary is per-alternative, not trailing on the group. A `\b`
+     * after "unfortunately," sits between a comma and a space — two non-word
+     * characters, which is not a boundary — so the alternative could never
+     * fire. Caught by the plant in `tests/refusal-copy.test.ts` rather than by
+     * reading it, which is exactly what the plant is for: a pattern that
+     * cannot match reports zero findings and reads as a clean sweep.
+     */
+    pattern:
+      /\bwe(?:'re| are)\s+sorry\b|\bwe\s+apologi[sz]e\b|\bsorry\s+(?:about|for)\s+(?:that|this)\b|\bunfortunately\s*,/i,
+  },
+  {
+    id: "admits-a-shortfall",
+    what: "confesses a failure rather than naming what is missing — \"we should have\", \"we fell short\"",
+    pattern:
+      /\bwe\s+(?:should\s+have|ought\s+to\s+have|fell\s+short|have\s+fallen\s+short|failed\s+to)\b/i,
+  },
 ];
 
 /** Present in this file and nowhere else. See `refusalHitsIn`. */
@@ -132,4 +192,16 @@ export const KNOWN_GOOD: readonly string[] = [
   "No official boundary is published for this body, so we can't say whether it governs your area.",
   "We haven't read this body's own charter yet, so the description above is what this kind of body does here.",
   "People who have not held this office don't have a voting record to show.",
+  /*
+   * BAL-7's neighbours. Every one of these ATTRIBUTES an absence to us, which
+   * the render-default rule requires, and none of them editorialises about it.
+   * If a pattern above ever starts matching one of these, the pattern is wrong
+   * — this list is the brake on a sweep that would otherwise become pressure
+   * to delete the attribution rule.
+   */
+  "We hold every one of these races in full; what we cannot tell from a zip code alone is which of them is yours.",
+  "That is our coverage, not a statement that nothing is scheduled.",
+  "We haven't sourced who sits on this body yet.",
+  "This is not a statement that nothing is on your ballot.",
+  "We haven't built the ballot for this area yet.",
 ];

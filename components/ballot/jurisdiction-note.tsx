@@ -1,4 +1,4 @@
-import { COULD_GOVERN_ACTION } from "@/lib/ballot/could-govern";
+import { AddressPrompt } from "@/components/address/address-prompt";
 
 /**
  * **JUR-4 ON THE BALLOT PAGE — ONE DELIBERATE ANNOTATION INSTEAD OF TWELVE.**
@@ -82,7 +82,19 @@ export function JurisdictionMark() {
 export function JurisdictionNote({
   jurisdictions,
   unplaceable = 0,
+  zip,
+  onResolved,
+  onPoint,
 }: {
+  /**
+   * **BAL-7 (2026-08-24).** The block ends with the street-first address
+   * prompt itself (WGH-5's one component, every surface) rather than with a
+   * sentence telling the reader such a control exists somewhere. The zip
+   * scopes it: an address resolved in 07866 says nothing about 03255.
+   */
+  zip: string;
+  onResolved?: React.ComponentProps<typeof AddressPrompt>["onResolved"];
+  onPoint?: React.ComponentProps<typeof AddressPrompt>["onPoint"];
   /** Bodies MEASURED as covering only part of this zip. Named outright. */
   jurisdictions: readonly string[];
   /**
@@ -133,22 +145,46 @@ export function JurisdictionNote({
           <span className="font-semibold text-paper">{jurisdictions.join(", ")}</span>.
         </p>
       )}
-      {unplaceable > 0 && (
-        /*
-         * OUR gap, said as ours. These are marked because we cannot place them
-         * against this zip's boundary, which is a fact about our data — not a
-         * finding that they cover part of it.
-         */
-        <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
-          {unplaceable === 1
-            ? "One more contest below is marked because we have not yet mapped its district against this zip. That is a gap on our side, not a finding about the district."
-            : `${unplaceable} more contests below are marked because we have not yet mapped their districts against this zip. That is a gap on our side, not a finding about those districts.`}
-        </p>
-      )}
-      <p className="mt-2 text-[0.8125rem] leading-relaxed text-voice">
-        If yours is on that list you already have your answer. If you would
-        rather we narrowed it, {COULD_GOVERN_ACTION}.
-      </p>
+      {/*
+        **BAL-7 (2026-08-24) — BUILT TO THE RED MARKS ON `12-16-38`.**
+
+        The author boxed exactly two paragraphs and left the rest alone:
+
+          "N more contests below are marked because we have not yet mapped
+           their districts against this zip. That is a gap on our side, not a
+           finding about those districts."
+
+          "If yours is on that list you already have your answer. If you would
+           rather we narrowed it, add your address to confirm."
+
+        Both are gone. What stays is the heading and the mail-route paragraph,
+        which he marked good, and the address ask now ends the block as the
+        control itself rather than as a sentence describing one.
+
+        **RECORDED, because the image and the brief's prose disagree and the
+        image wins.** The brief said to cut "decided by one of them rather than
+        by all of you" as well. That phrase is inside the mail-route paragraph,
+        which carries NO red mark. Prose lost information the image carries —
+        which is the reason this session's rule puts the image above the prose
+        in the first place — so the sentence stands.
+
+        **AND WHAT IS NOT LOST.** The render-default rule requires a reader be
+        able to tell OUR gap from THEIR absence; what it protects is the
+        ATTRIBUTION, and the wording is rewritable at any time. The paragraph
+        above still attributes the limit to us and to the zip — *what we cannot
+        tell from a zip code alone is which of them is yours* — every marked
+        contest still renders in full, and nothing is asserted about any
+        district. What went is the sentence announcing that the shortfall is
+        our fault, which is the product apologising rather than informing.
+      */}
+      <div className="mt-3">
+        <AddressPrompt
+          zip={zip}
+          trigger="Want to narrow it? Put in your address"
+          onResolved={onResolved}
+          onPoint={onPoint}
+        />
+      </div>
     </section>
   );
 }

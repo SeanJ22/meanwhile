@@ -851,14 +851,22 @@ export default async function BallotPage({
               */}
               {(polls || reg) && (
                 <div className="mt-3 flex flex-col gap-3">
-                  {polls && (
-                    <div>
-                      <WhereToVote fallback={polls} />
-                      <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
-                        {polls.note}
-                      </p>
-                    </div>
-                  )}
+                  {/*
+                    **BAL-3 (2026-08-24, the author's ruling) — the prompt is
+                    DELETED.** It read "You will need your date of birth and
+                    either a driver's licence number or the last four of your
+                    Social Security number" and it was a warning about a tool
+                    the reader is no longer being sent to: BAL-2 removed that
+                    link, and the pill opens our own sourced answer, which asks
+                    for nothing. A caution about a demand nothing makes is
+                    friction with no reader on the other end of it.
+
+                    The note itself is untouched in
+                    lib/ballot/polling-place-links.ts — it is a fact about the
+                    state tool, correctly recorded, and it stops RENDERING here
+                    rather than being deleted.
+                  */}
+                  {polls && <WhereToVote fallback={polls} />}
               {/*
                 **ONE PILL, AT THE MOMENT OF NEED** (AZ-4 and AZ-5, the
                 author's ruling, 2026-08-23).
@@ -877,6 +885,33 @@ export default async function BallotPage({
               */}
                   {reg && (
                     <div>
+                      {/*
+                        **BAL-4 (2026-08-24) — THE WARNING MOVES ONTO THE
+                        CONTROL, and this is the one place the author's cut
+                        needed thinking about rather than executing.**
+
+                        His spec is exact: this box holds the election date,
+                        the registration deadline, early voting and the two
+                        pills, and every other line comes out. The line that
+                        came out under this pill was *"The Arizona Secretary of
+                        State is the only place this can be checked — that
+                        opens in a new tab and leaves this app."*
+
+                        That sentence was doing a job the rest of the deleted
+                        copy was not. This pill genuinely LEAVES THE PRODUCT,
+                        and the friction rule's own example is a link that
+                        springs a demand on a reader who was not told. Deleting
+                        the sentence and nothing else would have satisfied
+                        BAL-4 by making the app quieter about the one thing on
+                        the page it should not be quiet about.
+                        {" "}
+                        So it is not deleted, it is RELOCATED ONTO THE CONTROL:
+                        the arrow is the universal leaving mark, the accessible
+                        name carries the whole sentence for a reader who cannot
+                        see it, and the title shows it on hover. No line is
+                        added to the box — a property of a control is not a
+                        line — and nothing about the handoff is now implicit.
+                      */}
                       <a
                         href={reg.url}
                         target="_blank"
@@ -884,28 +919,45 @@ export default async function BallotPage({
                         data-leaves-app
                         data-registration-pill
                         className="voting-open-button"
+                        title={`The ${reg.sourceOrg} is the only place this can be checked — that opens in a new tab and leaves this app.`}
+                        aria-label={`${reg.label} — the ${reg.sourceOrg} is the only place this can be checked, and that opens in a new tab and leaves this app`}
                       >
                         {reg.label}
+                        <span aria-hidden="true" className="ml-1.5">
+                          ↗
+                        </span>
                       </a>
-                      <p className="mt-0.5 text-[0.75rem] leading-relaxed text-voice">
-                        The {reg.sourceOrg} is the only place this can be
-                        checked — that opens in a new tab and leaves this app.
-                      </p>
                     </div>
                   )}
                 </div>
               )}
-              {/* The tester's exact confusion, answered in one line. The
-                  propositions sentence renders only where propositions
-                  actually share the ballot. */}
-              <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice">
-                Everyone below is on this ballot.
-                {measureContests.length > 0 &&
-                  " Propositions are voted on at the same time."}
-              </p>
+              {/*
+                **BAL-4 (2026-08-24) — this sentence LEAVES THE BOX.**
+
+                The author's spec for the next-election box is exact: the
+                election date, the registration deadline, early voting, and the
+                two pills. Every other line comes out.
+
+                It is not deleted from the page — it answered a real confusion
+                the tester reported on 2026-08-14 and it still does. It moves
+                below the box, where it introduces the contests it is about
+                rather than sitting inside a card about dates.
+              */}
             </section>
           );
         })()}
+
+      {/* BAL-4: the tester's exact confusion (2026-08-14), answered in one
+          line — now BELOW the next-election box rather than inside it. The
+          propositions sentence renders only where propositions actually share
+          the ballot. */}
+      {set && matched && (
+        <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice">
+          Everyone below is on this ballot.
+          {measureContests.length > 0 &&
+            " Propositions are voted on at the same time."}
+        </p>
+      )}
 
       {/* 7: the mover's page — the questions people ask before moving,
           answered from official sources. */}
@@ -1083,6 +1135,9 @@ export default async function BallotPage({
                 .filter((name): name is string => name !== null),
             ),
           ]}
+          /* BAL-7 (2026-08-24): the block ends with the address prompt itself.
+             The zip scopes the prompt to this page's area. */
+          zip={zip ?? ""}
         />
       )}
 
@@ -1570,16 +1625,43 @@ export default async function BallotPage({
 
                   Between the plain-language summary and the official text on
                   purpose: summary, then what is actually in it, then the
-                  state's own words. It is NOT collapsed — this is the
+                  state's own words.
+
+                  **BAL-8 (2026-08-24) — IT IS COLLAPSED NOW, AND THIS
+                  DELIBERATELY REVERSES THE PARAGRAPH THAT USED TO SIT HERE.**
+
+                  What that paragraph said: *"It is NOT collapsed — this is the
                   explanation the reader came for, and hiding it behind a click
-                  would be the reader friction rule's own defect.
+                  would be the reader friction rule's own defect."* The
+                  reasoning was sound and the author has ruled the other way,
+                  with a better reason: **collapsing is what gets it read.**
+
+                  A reader scrolling a ballot page meets three provisions, each
+                  with a reaction control under it, before reaching the next
+                  contest — so the fully-expanded form is a wall that gets
+                  scrolled PAST, and content nobody reaches is not less hidden
+                  for being technically on screen. The content itself is
+                  untouched and verbatim; he called it excellent. What changed
+                  is that a reader chooses to open it.
+
+                  The friction rule is not weakened by this. Its defect is a
+                  click that buys the reader nothing — a duplicate control, a
+                  needless confirmation, an entry point nobody can find. This
+                  one buys a page a reader can navigate, and the control names
+                  exactly what is behind it.
                 */}
                 {provisionsForContest(contest.id).length > 0 && (
-                  <div className="mt-3.5">
-                    <p className="t-eyebrow text-muted">
+                  <details className="mt-3.5" data-provisions>
+                    {/* Styled as the voting pills are — the author named them
+                        as the pattern: light-purple, bolded, a right-pointing
+                        arrow that turns down when open. */}
+                    <summary className="provisions-summary">
+                      <span aria-hidden="true" className="provisions-caret">
+                        ›
+                      </span>
                       What&apos;s in it, part by part
-                    </p>
-                    <ul className="mt-1.5 space-y-2.5">
+                    </summary>
+                    <ul className="mt-2.5 space-y-2.5">
                       {provisionsForContest(contest.id).map((provision) => (
                         <li
                           key={provision.id}
@@ -1630,7 +1712,7 @@ export default async function BallotPage({
                       Each part is written from the official analysis below, and
                       says what it would do — never whether it is a good idea.
                     </p>
-                  </div>
+                  </details>
                 )}
 
                 {analysis?.text ? (

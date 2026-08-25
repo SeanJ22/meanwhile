@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { formatDateLong } from "@/lib/text/format-date";
 import { createPortal } from "react-dom";
 
 import { useStoredTheme } from "@/hooks/use-stored-theme";
@@ -232,15 +233,20 @@ export function PicksCardControls({
   const picksKey = JSON.stringify(picks);
   const cardUrl = useMemo(() => {
     if (!showCard || picks.length === 0) return null;
-    return drawCard(
-      picks,
-      new Date().toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }),
-      PALETTES[theme],
-    );
+    /*
+     * **BC-12 (2026-08-24): the THIRD date-format implementation, consolidated.**
+     *
+     * It spelled the month out already and stopped there — "August 24, 2026"
+     * against the author's "August 24th, 2026" — so it was close enough to look
+     * right and different enough to be a separate convention. That is the
+     * duplicate-implementation shape RULING 103 names: a sweep for the numeric
+     * form would never have found it.
+     *
+     * `en-CA` gives the local calendar date as `YYYY-MM-DD`, which is what the
+     * one formatter takes.
+     */
+    const today = new Date().toLocaleDateString("en-CA");
+    return drawCard(picks, formatDateLong(today) ?? today, PALETTES[theme]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showCard, picksKey, theme]);
 

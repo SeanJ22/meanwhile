@@ -2,17 +2,19 @@
 
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { X } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 
 import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
-import { attributionNotesFor } from "@/lib/meetings/list-attribution";
+import { sourceCreditFor } from "@/lib/meetings/list-attribution";
 import {
   groupMeetingsForReading,
   hasConcluded,
   orderByUpcomingFirst,
 } from "@/lib/meetings/ordering";
 import { NO_BODY_BLURB_LINE } from "@/lib/officials/body-blurbs";
-import { TOP_OFFICES_GAP, runsSomething, topOfficesFor } from "@/lib/officials/top-offices";
+import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
+  rosterInReadingOrder,
+} from "@/lib/officials/top-offices";
 import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
@@ -29,8 +31,9 @@ import {
 } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
+import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
-import { HowToBeHeard, MeetingAttributionNotes } from "../meeting-panel";
+import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
 
 import { CalendarLinks } from "./calendar-links";
@@ -55,7 +58,6 @@ export type ModalTab =
   | "representation"
   | "meetings"
   | "activity"
-  | "notes"
   | "sources";
 
 const TABS: { id: ModalTab; label: string }[] = [
@@ -63,7 +65,6 @@ const TABS: { id: ModalTab; label: string }[] = [
   { id: "representation", label: "Representation" },
   { id: "meetings", label: "Meetings" },
   { id: "activity", label: "Activity" },
-  { id: "notes", label: "Notes" },
   { id: "sources", label: "Sources" },
 ];
 
@@ -217,6 +218,21 @@ export interface ModalSubject {
   title: string;
   subtitle: string;
   tier: Tier;
+  /**
+   * **BC-11 (2026-08-24) — WHAT THIS CARD IS ABOUT, as a public identifier.**
+   *
+   * Speak Your Mind stores who was spoken TO, and it stores it as an id rather
+   * than as a title. A title is display text: two bodies can share one
+   * ("Township Council" is nine different governments in Morris County alone),
+   * it changes when copy changes, and a store keyed on it would silently merge
+   * unrelated subjects. This is the ocd-id, body id or meeting id the rest of
+   * the product already keys on.
+   *
+   * `subjectKind` says which of the three it is, so the row can be read back
+   * without guessing from the id's shape.
+   */
+  subjectId: string;
+  subjectKind: "OFFICIAL" | "BODY" | "MEETING";
   /**
    * What KIND of thing this subject is, in either the registry vocabulary
    * (place, county, school_district, cd, sldu, sldl) or the map one
@@ -558,9 +574,33 @@ function BodySections({
           failure available to it. One group, one open pill. */}
       <CardSectionGroup>
         {sections.map((section) => (
-          <CardSection key={section.id} title={section.title} meta={section.meta}>
-            {section.content ?? <Empty>{section.absence}</Empty>}
-          </CardSection>
+          <Fragment key={section.id}>
+            {/*
+              **BC-11 (2026-08-24) — ABOVE SOURCES, which on THIS card shape is
+              a position rather than a neighbour.**
+
+              The author's placement is "above Sources, below Voting record".
+              The tabbed card has no Sources SECTION — it has a Sources tab — so
+              the pill sits below the whole panel there. This card does have
+              one, and it is the last section, so "below the card" and "above
+              Sources" are different places. The capture is what showed the
+              difference: the pill rendered underneath the citations.
+
+              Keyed off the section id rather than an index, so inserting or
+              reordering a section cannot silently move the pill somewhere the
+              author did not put it.
+            */}
+            {section.id === "sources" && (
+              <SpeakYourMind
+                subjectType={subject.subjectKind}
+                subjectId={subject.subjectId}
+                subject={subject.title}
+              />
+            )}
+            <CardSection title={section.title} meta={section.meta}>
+              {section.content ?? <Empty>{section.absence}</Empty>}
+            </CardSection>
+          </Fragment>
         ))}
       </CardSectionGroup>
     </div>
@@ -768,16 +808,56 @@ export function EntityModal({
             </Empty>
           )}
 
-          {tab === "notes" && (
-            <Empty>
-              Notes arrive in Phase 7. They stay on this device — never synced,
-              never shown to another reader, never exported.
-            </Empty>
-          )}
-
           {tab === "sources" && <Sources sources={subject.sources} />}
         </div>
+
         </>
+        )}
+
+        {/*
+          **BC-11 (2026-08-24) — SPEAK YOUR MIND, ON EVERY SHAPE THIS CARD
+          TAKES, and it took reading a capture to find that it was not.**
+
+          The author asked for the pill on every battlecard and every large
+          meeting battlecard. This component renders THREE different cards from
+          one function — a seven-section BODY card, a PLACE card, and the tabbed
+          division/meeting card — and the first version put the pill inside the
+          tabbed branch only.
+
+          The DOM assertion was content: it found the modal, and the modal was
+          open. **The capture is what showed a Pima County body card with six
+          section pills and no Speak Your Mind on it** — the exact shape of
+          failure the 8/24 brief names: closed at the instance, open at the
+          class. It sits outside the branch now, so a fourth card shape cannot
+          ship without it either.
+
+          Below the card body rather than inside it: on the tabbed form Sources
+          is a TAB, so a pill inside the panel would appear and vanish as the
+          reader moved between tabs. Below the panel it is on every tab, which
+          is what "above Sources" means when Sources is not a section.
+
+          The subject's own title feeds the framing, so it asks what you would
+          say if THE TOWNSHIP COUNCIL were standing in front of you rather than
+          "this person" — a board is not a person and the copy may not pretend
+          otherwise.
+        */}
+        {/*
+          **NOT on the body card, which renders its own ABOVE Sources.**
+
+          Without this condition the body card carried TWO pills — measured, not
+          reasoned about: the shooter counted `[data-speak-pill]` and found 2.
+          The body card is the one shape with a Sources SECTION, so it places
+          the pill itself to satisfy "above Sources"; the tabbed card and the
+          place card have no such section and take it here.
+        */}
+        {!subject.bodyCard && (
+          <div className="account-modal-body pt-0">
+            <SpeakYourMind
+              subjectType={subject.subjectKind}
+              subjectId={subject.subjectId}
+              subject={subject.title}
+            />
+          </div>
         )}
       </div>
     </div>
@@ -806,7 +886,10 @@ function Representation({
 }) {
   if (holders.length === 0) return <Empty>{note}</Empty>;
 
-  const topOffices = showTopOffices ? topOfficesFor(holders) : [];
+  // OFF-4 (2026-08-24): the appointed executive leads the list. See
+  // rosterInReadingOrder for why it reuses the precedence table above.
+  const ordered = rosterInReadingOrder(holders);
+  const topOffices = showTopOffices ? topOfficesFor(ordered) : [];
   // One person in the list IS the top office; a heading over a duplicate of
   // the only row is furniture, not information.
   const leadsWorthShowing = topOffices.length > 0 && holders.length > 1;
@@ -854,7 +937,7 @@ function Representation({
           {TOP_OFFICES_GAP}
         </p>
       )}
-      {holders.map((holder) => (
+      {ordered.map((holder) => (
         <div key={holder.id} className="account-modal-person flex items-start gap-3">
           {/*
             F01 2.3 (2026-08-19, the author): *"On AZ-6, when I look at
@@ -970,7 +1053,8 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
   }
 
   const groups = groupMeetingsForReading(meetings, now);
-  const { notes, markerFor } = attributionNotesFor(
+  // SRC-1/2/3: one credit line at the foot of this tab, no inline markers.
+  const credit = sourceCreditFor(
     groups.flatMap((group) => group.meetings),
   );
 
@@ -992,11 +1076,6 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                 </span>
               </div>
               <p className="mt-0.5 text-[0.6875rem] text-muted">
-                {markerFor(meeting) && (
-                  <span aria-hidden="true" className="mr-1 text-paper-dim">
-                    {markerFor(meeting)}
-                  </span>
-                )}
                 {formatMeetingTime(meeting)}
               </p>
               {/* 3i (2026-08-19): calendar links on every upcoming-meeting
@@ -1021,7 +1100,7 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
                       target="_blank"
                       rel="noreferrer"
                       title={directions.hint}
-                      className="mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono text-[0.6875rem] uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
                     </a>
@@ -1032,13 +1111,11 @@ function Meetings({ meetings }: { meetings: Meeting[] }) {
         </section>
       ))}
 
-      {/* F01 3.2: the body name used to sit on every row beside the time. It
-          is the same string on every row of a single body's card, so it moved
-          here — once per distinct body, with the marker above pointing at it.
-          The jurisdiction rides along, which is MORE provenance per note than
-          the row carried, not less. */}
-      <MeetingAttributionNotes
-        notes={notes}
+      {/* SRC-1 (2026-08-24): ONE credit line at the foot of the tab. The body
+          name and jurisdiction still render in full here — what is gone is the
+          footnote marker that used to sit on every row pointing at them. */}
+      <MeetingSourceCredit
+        credit={credit}
         className="mt-3 border-t border-[var(--rule)] pt-2.5"
       />
     </>

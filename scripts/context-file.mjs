@@ -413,7 +413,27 @@ export async function buildContext({
       "# we-the-people — current context",
       "",
       "**GENERATED FILE — do not edit, and do not copy it back into the repo.**",
-      `Written by \`pnpm handoff\` (\`scripts/context-file.mjs\`) at ${generatedAt}.`,
+      /*
+       * **TWO CLOCKS, ONE OF THEM AHEAD — and the file has to say so.**
+       *
+       * The run stamp is EASTERN by R18 (2026-08-17, the author's ruling) and
+       * the session day is AMERICA/PHOENIX by the date doctrine. Between about
+       * 21:00 and midnight Phoenix, Eastern is already TOMORROW, so this header
+       * prints a date one day ahead of the session day directly above it.
+       *
+       * That is not a fabrication — it is a clock read, in the zone a ruling
+       * names, with its own zone label attached. But the pre-commit date scan
+       * cannot tell a clock read from a claim, and it correctly REFUSED the
+       * commit: an unannotated future date is exactly what it exists to catch.
+       *
+       * So the generator declares it, and only when the collision is real. The
+       * annotation is emitted from the same two values it is about, so it can
+       * never describe a discrepancy that is not there.
+       */
+      `Written by \`pnpm handoff\` (\`scripts/context-file.mjs\`) at ${generatedAt}.` +
+        (generatedAt.slice(0, 10) > stampToday
+          ? ` <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still ${stampToday} -->`
+          : ""),
       `Session day ${stampToday} (America/Phoenix, from \`pnpm stamp\`).`,
       "",
       "It has no repo counterpart, is never compared for drift, is skipped by",
@@ -610,9 +630,20 @@ export async function buildContext({
     put("## Git", "", "Source: the same facts `git-state.txt` carries, generated in the same run.", "");
     if (gitFacts.length === 0) put("_No git facts available this run._", "");
     else {
-      put("```");
-      put(...gitFacts);
-      put("```");
+      /*
+       * The same two-clock collision, one section down: `git-state.txt` carries
+       * its own Eastern `generated:` line and it lands here verbatim. Annotated
+       * on the same condition and from the same values.
+       */
+      put("\`\`\`");
+      put(
+        ...gitFacts.map((line) =>
+          /^generated:/.test(line) && line.slice(11, 21) > stampToday
+            ? `${line}   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is ${stampToday} -->`
+            : line,
+        ),
+      );
+      put("\`\`\`");
     }
     put("");
 

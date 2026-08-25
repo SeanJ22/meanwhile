@@ -678,6 +678,11 @@
      drift apart. The map canvas and MapLibre's controls both read it. */
   --rail-width: 340px;
   --rail-inset: 12px;
+  /* WGH-6 (2026-08-24): the who-governs card takes the rail's space when the
+     rail minimizes, and needs the longest body name plus its type label on one
+     line. Measured against "Morris Hills Regional School District" +
+     "SCHOOL DISTRICT" at 07866, which is the pair the author named. */
+  --wgh-wide: 460px;
   --rail-gutter: 364px; /* rail-width + 2 × rail-inset */
 }
 
@@ -979,12 +984,14 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
  * The HONEST MODES from M87 are truth rules, not styling, and none of them
  * moved: the "in view" labelling, the governing-set mode, "Off" when the
  * overlay is off, and the couldn't-check dash. */
+/* LAY-5: the divider under the tiles goes with the raw text it was separating
+   the tiles FROM. Every block below is a surface card now, and a rule between
+   two cards is a third treatment nobody asked for. */
 .stats-bar {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--panel-border);
+  padding: 14px 22px 4px;
 }
 
 .stat-card {
@@ -1177,6 +1184,18 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   border-bottom: 1px solid var(--panel-border);
 }
 
+/* LAY-5: in the rail this is a SECTION, so it takes the tile chrome and drops
+   the divider rule — a card with a line under it is two treatments arguing.
+   Scoped to the rail's own child so the copy inside Filters is untouched. */
+.sidebar-scroll > .prox-control {
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
 .prox-toggle {
   display: flex;
   align-items: center;
@@ -1315,15 +1334,72 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
 }
 
 /* ---- Filters ---- */
+/* ---------------------------------------------------------------------------
+   LAY-5 (2026-08-24, the author's capture 11-57-33) — THE TOP'S TREATMENT,
+   CARRIED ALL THE WAY DOWN.
+
+   His words: the rail's top — the Ballot pill, the zip, the Ask line and the
+   four tiles — is the reference, and below the tiles it degrades into
+   unstyled raw text. The capture is exactly that: four rounded surface tiles,
+   and then a bare toggle, a bare paragraph, a bare uppercase label and two
+   bare underlined links, none of them on anything.
+
+   So every section below the tiles takes the tile's own chrome — the same
+   surface, the same committed radius token, the same inset — rather than a
+   new scale invented here. Content sits at 22px + 12px from the rail's edge
+   in EVERY section, tiles included, so the column has one left edge instead
+   of four.
+   --------------------------------------------------------------------------- */
+
+.rail-section {
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+/* LAY-6 (2026-08-24): closed, this reserves NOTHING. The bottom padding and
+   the header's bottom margin are the gap BEFORE the panel, so they are paid
+   for only when a panel is there to precede. Closed it is one row high. */
 .filters-area {
-  padding: 14px 22px 20px;
+  margin: 10px 22px;
+  padding: 11px 12px;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+}
+
+.filters-area[data-open] {
+  padding-bottom: 16px;
 }
 
 .filters-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.filters-area[data-open] .filters-header {
   margin-bottom: 12px;
+}
+
+/* Closed it points right, open it turns down — the marker IS the state. */
+.filters-caret {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+.filters-area[data-open] .filters-caret {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters-caret {
+    transition: none;
+  }
 }
 
 .filters-title {
@@ -3736,6 +3812,58 @@ button.jurisdiction-badge-action:focus-visible {
   border-color: var(--accent-voting);
 }
 
+/* ---------------------------------------------------------------------------
+   BAL-8 (2026-08-24) — "What's in it, part by part" COLLAPSES, and the control
+   is the voting pill's family because the author named that pattern by sight:
+   light-purple, bolded, a right-pointing arrow.
+
+   It is not `.voting-open-button` itself. That pill is a 44px call to action
+   sitting alone in a card; this is a disclosure control repeated once per
+   proposition down a page, and reusing the tap target verbatim would put three
+   full-size buttons in a column and re-create the wall it exists to remove. It
+   borrows the palette and the shape and takes its own size.
+   --------------------------------------------------------------------------- */
+.provisions-summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid color-mix(in srgb, var(--accent-voting) 45%, transparent);
+  background: color-mix(in srgb, var(--surface) 92%, var(--accent-voting));
+  color: var(--text);
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.provisions-summary::-webkit-details-marker {
+  display: none;
+}
+
+.provisions-summary:hover,
+.provisions-summary:focus-visible {
+  border-color: var(--accent-voting);
+}
+
+.provisions-caret {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 1;
+  transition: transform 0.15s ease;
+}
+
+[data-provisions][open] .provisions-caret {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .provisions-caret {
+    transition: none;
+  }
+}
+
 .voting-panel {
   width: min(23rem, calc(100vw - 2rem));
   max-height: min(32rem, calc(100vh - 8rem));
@@ -4389,9 +4517,28 @@ button.jurisdiction-badge-action:focus-visible {
   font-size: 11px;
 }
 
+/* ---------------------------------------------------------------------------
+   BC-7 (2026-08-24) — THE SPURIOUS BLANK LINE, AND WHAT IT ACTUALLY WAS.
+
+   The author red-boxed an empty band between "Upcoming 5" and "Who runs it" on
+   the Tucson Unified small card (`12-06-33`). Nothing was rendering there. It
+   is TWO RULES: the last `.popup-row` draws a `border-bottom`, and the section
+   label immediately below draws a `border-top` 20px later, so the card shows a
+   pair of hairlines with a band of nothing between them — which reads as a
+   dropped row rather than as a divider.
+
+   A row followed by a section label hands the divider to the label, which is
+   the one that means something: the label IS the break. The `:last-child` rule
+   above cannot reach this, because the row is not the last child — the section
+   label is.
+   --------------------------------------------------------------------------- */
+.popup-row:has(+ .popup-section-label) {
+  border-bottom: none;
+}
+
 .popup-section-label {
-  margin-top: 12px;
-  padding-top: 8px;
+  margin-top: 8px;
+  padding-top: 6px;
   border-top: 1px solid var(--panel-border);
   /* Structural label (design pass): organizes, so it carries weight. */
   font-family: var(--font-mono);
@@ -4478,6 +4625,13 @@ button.jurisdiction-badge-action:focus-visible {
    ========================================================================== */
 
 @media (max-width: 639px) {
+  /* LAY-4: the column carries the drawer's width now, because the rail is its
+     child and fills it. One number, in one place — the rail and the column
+     disagreeing about how wide the drawer is would be a gap down its edge. */
+  .rail-column {
+    width: min(var(--rail-width), 86vw);
+  }
+
   .sidebar {
     width: min(340px, 86vw);
     transform: translateX(-100%);
@@ -5589,74 +5743,246 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 /* ---------------------------------------------------------------------------
-   LAY-1 (item 4, 2026-08-23) — THE LEFT COLUMN IS NESTED, NOT STACKED OPEN.
+   OFF-2 (2026-08-24) — THE SAME DEFECT, OUTSIDE THE SWEPT CLASS.
 
-   The author's instruction, in his words: everything lives in the left column,
-   nested rather than stacked open; the counts card sets the column width, the
-   who-governs card sits directly beneath it, and clicking one makes it take
-   over the column while the other collapses to pills. One expanded at a time.
+   THE RECONCILIATION, because the brief asks for it rather than for a fix.
+   `LBL-2` was closed 2026-08-23 at "6 found, 6 fixed" and it did NOT regress:
+   all six still carry their compensation. What was wrong was the PREDICATE.
+   It tested for `shrink-0` ON THE ELEMENT — one way of pinning a run against a
+   container's right edge — and the author's 8/24 capture `12-06-33` shows the
+   role column clipped on the TUSD small card, where the run is pinned by its
+   PARENT instead: `.person-row` is `justify-content: flex-end`, in this
+   stylesheet, where a line-based grep over `.tsx` cannot see it.
 
-   What was there before: the counts card in the rail and the who-governs card
-   floating over the map in `.map-bottom-stack`, so a desktop reader had two
-   competing panels and the map between them. The 8/22 capture `22-15-32` is
-   that layout — the card overlapping the pins it is describing.
+   Measured: 23 letter-spaced runs in `app/` and `components/`; 6 inside the
+   old predicate, 17 outside it and uncompensated — including all four
+   `.source-tag` sites, one of which is the row he photographed.
 
-   The floating placement is UNCHANGED below the rail's column breakpoint.
-   There the rail is a full-width drawer, and a who-governs card that had to be
-   opened out of a drawer would be the buried entry point the friction rule
-   calls a defect. `wghInColumn` in `components/map/map-entry.tsx` is the one
-   switch, and it reads the existing `railIsAColumn` rather than a second
-   breakpoint that could drift from it.
+   SO THE PREDICATE IS RETIRED RATHER THAN WIDENED. Every way of pinning an
+   element at an edge would have to be enumerated, and the next one nobody
+   thought of would be the next `OFF-2`. The physics does not need the
+   enumeration: `letter-spacing` adds its space after the FINAL glyph, always,
+   so that space is spurious on every uppercase letter-spaced run whether or
+   not anything clips it today. Compensating unconditionally has no blind spot
+   to have.
+
+   One utility per tracking value in use, so the trim MATCHES its run — a
+   -0.15em compensation on a 0.1em run would pull the label 0.05em into
+   whatever precedes it, which is a smaller version of the same carelessness.
    --------------------------------------------------------------------------- */
 
-.sidebar-wgh {
-  padding: 0 14px 14px;
+.trailing-space-trimmed-10 {
+  margin-inline-end: -0.1em;
 }
 
-/* The card loses its floating chrome in the column: it is no longer a thing
-   ON something, it IS the column's content. The `.panel` shadow and the
-   viewport-height bound both belong to the map placement. */
-.sidebar-wgh > .coverage-notice {
-  box-shadow: none;
-  max-height: none;
+.trailing-space-trimmed-14 {
+  margin-inline-end: -0.14em;
+}
+
+.trailing-space-trimmed-15 {
+  margin-inline-end: -0.15em;
+}
+
+.trailing-space-trimmed-16 {
+  margin-inline-end: -0.16em;
+}
+
+.trailing-space-trimmed-18 {
+  margin-inline-end: -0.18em;
+}
+
+/* ---------------------------------------------------------------------------
+   LAY-4 / LAY-3 (2026-08-24, the author's annotated capture 11-55-29) —
+   THE FLOATING CARDS BELONG UNDER THE RAIL, AND THE COLUMN IS WHAT PROVES
+   THEY CANNOT COLLIDE.
+
+   **LAY-1 IS SUPERSEDED AND ITS CSS IS DELETED RATHER THAN LEFT DARK.**
+   .sidebar-wgh, .sidebar-wgh-pill and the .stats-collapsed family were
+   the nesting build of 2026-08-23: the who-governs card inside the rail's
+   scrolling column, one card expanded at a time, the other a pill IN the rail.
+   The author's arrows say the cards float BENEATH the rail, and the 8/24
+   brief's supersession table says LAY-1 must not exist as built. A superseded
+   rule kept as dead CSS is how it comes back as drift.
+
+   THE CONSTRUCTION, and why it is a flex column rather than a measured bound.
+   LAY-3 asks that nothing overlap the rail or anything else at any tested
+   viewport. Every previous answer here was a NUMBER — a max-height, a top
+   band, a reserved gutter — and every one of them held until the content
+   changed underneath it. The who-governs card went from 12 bodies to 174 in
+   one hunt. Flex children of one fixed column cannot be laid out on top of
+   each other at ANY viewport, at any content length, with no number to keep
+   current. That is the whole reason for this wrapper.
+
+   The rail shrinks first (flex-shrink 2 against 1) because the floaters
+   carry the answer the reader came for; both shrink to their own scroll
+   rather than overflowing, so neither can grow off the top of the screen —
+   the M54/M55 failure, which is what the child-combinator rules below bind
+   against here exactly as they do in .map-bottom-stack.
+   --------------------------------------------------------------------------- */
+
+.rail-column {
+  position: fixed;
+  top: calc(var(--rail-inset) + env(safe-area-inset-top, 0px));
+  left: var(--rail-inset);
+  width: var(--rail-width);
+  height: calc(
+    100dvh - (var(--rail-inset) * 2) - env(safe-area-inset-top, 0px) -
+      env(safe-area-inset-bottom, 0px)
+  );
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  z-index: 1000;
+  /* The map between and beside the cards stays draggable. Each child turns
+     pointer events back on for itself. */
+  pointer-events: none;
+}
+
+.rail-column > * {
+  pointer-events: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   WGH-6 (2026-08-24) — WITH THE RAIL MINIMIZED, THE CARD TAKES THE SPACE.
+
+   The author, on the 07866 panel (`12-21-07`): clicking Who Governs Here
+   minimizes the sidebar and the card takes over that space, WIDE ENOUGH THAT
+   EVERY ENTRY FITS ON ONE LINE — he named "Morris Hills Regional School
+   District", which wraps to two lines in that capture with its
+   SCHOOL DISTRICT type label beside it.
+
+   That is NH-1's one-line requirement, and this is the mechanism that makes it
+   possible: the requirement was unmeetable at the rail's 340px because the
+   longest body name and its type label do not fit, and no amount of type
+   tuning changes that without shrinking the name.
+
+   The width is a token so the row's own measurement and this rule read ONE
+   number — the pair that has to agree cannot be written twice (`4c`'s lesson).
+   Capped against the viewport so a narrow laptop gets a card it can see rather
+   than one that runs off the edge.
+   --------------------------------------------------------------------------- */
+main[data-sidebar="closed"] .rail-column {
+  width: min(var(--wgh-wide), calc(100vw - (var(--rail-inset) * 2)));
+}
+
+/* The rail inside the column. It keeps every visual property it had; what it
+   loses is its own position: fixed, because a fixed child is out of flow
+   and out of flow is exactly where overlap comes from. */
+/*
+ * **WHICH CHILD YIELDS, and the first version of this got it backwards.**
+ *
+ * It gave the rail `flex-shrink: 2` against the floaters' 1, reasoning that the
+ * floaters carry the answer the reader came for. Read as an image at 1440×900
+ * the result was the rail SQUEEZED TO 230px with its stat tiles sliced through
+ * the middle — half a "60" and no "147 Meetings" — while the who-governs card
+ * below it had room to spare.
+ *
+ * The reasoning was fine and the arithmetic was the problem: the who-governs
+ * card is 500px+ at a covered zip and it ALREADY SCROLLS INSIDE ITSELF, so
+ * giving it priority costs the rail real content to buy the card space it does
+ * not need. The rail's top is the treatment the author named as the reference
+ * — the Ballot pill, the zip, the Ask line, the four tiles — and clipping it
+ * mid-tile is the one outcome LAY-5 exists to prevent.
+ *
+ * So the rail keeps its content height up to a CEILING and the floaters take
+ * the rest. The ceiling is a PROPORTION rather than a pixel count on purpose:
+ * a pixel budget is a number that drifts the moment a section is added to the
+ * rail, and a proportion holds at any viewport and any content length.
+ */
+.rail-column > .sidebar {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 100%;
+  /* NEVER SHRINKS. A shrink factor of 1 let the floaters' own content push the
+     rail down to 340px against 662px of content, slicing its stat tiles
+     through the middle — measured at 1440x900, not guessed. The rail takes its
+     content height up to a ceiling; the floaters take exactly what is left. */
+  flex: 0 0 auto;
+  min-height: 0;
+  /*
+   * **58%, and the number is a JUDGEMENT that is stated rather than hidden.**
+   *
+   * At 1440x900 the rail wants 662px and the who-governs card wants 350px or
+   * more, against 876px of column. They do not both fit, so something is
+   * always scrolling and the only question is which.
+   *
+   * 70% gave the rail everything and left the card 100px — less than its own
+   * header — which is a card that is present and unusable. 58% leaves the rail
+   * showing its top treatment through the Filters row with the footer
+   * scrolling, and leaves the card enough to read. Both scroll internally, so
+   * nothing is unreachable either way.
+   *
+   * **And the cramped-both state is the DEFAULT rather than the answer.**
+   * WGH-6 is the answer: clicking Who Governs Here minimizes the rail and the
+   * card takes the whole column. This proportion decides what a reader sees
+   * before they choose, not what they can get to.
+   */
+  max-height: 58%;
+}
+
+/* The region the author's two arrows point into: under the rail, the rail's
+   own width, the bottom of the viewport. margin-top: auto is what puts it
+   at the BOTTOM of the column rather than immediately under the rail — which
+   is where both arrows land, and where the count chip already sat before this
+   change moved it left out of the map. */
+.rail-floaters {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 10px;
+  /* Takes whatever the rail leaves, and scrolls its own card rather than
+     pushing the rail out of the way. `justify-content: flex-end` is what puts
+     the group at the BOTTOM of the space — where both of the author's arrows
+     land — now that `margin-top: auto` has nothing left to push against. */
+  /* Basis ZERO, not auto: the floaters take exactly the remainder rather than
+     asking for their content height and taking it out of the rail. The card
+     inside already scrolls, so the remainder is always enough for it to be
+     usable. */
+  flex: 1 1 0;
+  min-height: 0;
+  /* The same gutter `.map-bottom-stack` reserves, for the same reason: the map
+     attribution sits in this corner and the freshness footnote landed on top
+     of it. Computed from the legend's own numbers so a taller legend pushes
+     the text up instead of hiding it. */
+  padding-bottom: calc(var(--map-legend-bottom) + var(--map-legend-height) + 8px);
+  /* Separate cards with the map visible between them — never one panel with
+     three sections in it. */
+  pointer-events: none;
+}
+
+.rail-floaters > * {
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+/* The same bound .map-bottom-stack carries, for the same reason: the card
+   shrinks to the space it has and scrolls inside itself rather than growing
+   off the top. A child combinator reads the DOM tree, not the box tree, so
+   the card must stay an unwrapped child of this region. */
+.rail-floaters > .panel {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.rail-floaters > .coverage-notice {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   width: 100%;
 }
 
-.sidebar-wgh-pill {
-  padding: 0 22px 14px;
+.rail-floaters > .coverage-notice > .coverage-notice-head {
+  flex: 0 0 auto;
 }
 
-/* The collapsed counts card. Same four doors, one row, and every pill still
-   carries what its number counts — a bare number in a pill is the "179
-   DISTRICTS" defect in a smaller box. */
-.stats-collapsed {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 12px 22px;
-  border-bottom: 1px solid var(--panel-border);
-}
-
-.stats-collapsed-expand {
-  align-self: flex-start;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-  background: none;
-  border: 0;
-  padding: 0;
-  cursor: pointer;
-}
-
-.stats-collapsed-expand:hover {
-  color: var(--text);
-}
-
-.stats-collapsed-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.rail-floaters > .coverage-notice > .coverage-notice-body {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .stat-pill {
@@ -5730,4 +6056,138 @@ main[data-sidebar="closed"] .map-top-row {
 
 .filter-group-toggle .filters-count {
   margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   BC-11 (2026-08-24) — SPEAK YOUR MIND.
+
+   The author asked for the pill by sight: DEEP NAVY FILL, WHITE TEXT,
+   deliberately distinct from the gray pills so it reads as the thing to click.
+
+   Why a filled control among outline controls: every other pill on a
+   battlecard is a label or a disclosure, and this is the one thing a reader is
+   INVITED to do. The design system reserves saturated fill for a primary
+   action for exactly this reason, and it is the grammar the ballot pill and
+   the Ask button already use — a reader has learned it before arriving here.
+
+   The navy is its own token rather than a reuse. `--action` is the app's
+   interactive azure and `--accent-national` is a TIER colour, and a reader who
+   has learned that periwinkle means federal must not meet it as a button. Navy
+   is dark enough to carry white text at any size in either theme, and it is
+   nobody's tier and nobody's party.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --speak-navy: #16233f;
+  --speak-navy-hover: #1e3055;
+  --speak-on-navy: #f4f6fa;
+}
+
+/* The light theme takes the same navy: it is already dark enough to carry
+   white text on a pale surface, and a second value would be two colours
+   claiming to be one control. */
+
+.speak-block {
+  margin-top: 12px;
+}
+
+.speak-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--speak-navy);
+  background: var(--speak-navy);
+  color: var(--speak-on-navy);
+  border-radius: 999px;
+  padding: 10px 16px;
+  min-height: 40px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.speak-pill:hover,
+.speak-pill:focus-visible {
+  background: var(--speak-navy-hover);
+  border-color: var(--speak-navy-hover);
+}
+
+/* The framing question. Playful register — it is an ASK, and the whole
+   instrument is the invitation to say the thing you would actually say. */
+.speak-framing {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.speak-input {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.speak-input:focus-visible {
+  border-color: var(--speak-navy-hover);
+  outline: none;
+}
+
+/* Level register, both of them: these are claim surfaces — what happens to
+   what somebody writes, and what will be removed. Never cute. */
+.speak-disclosure {
+  margin-top: 6px;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.speak-actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.speak-send {
+  border: 1px solid var(--speak-navy);
+  background: var(--speak-navy);
+  color: var(--speak-on-navy);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.speak-send:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.speak-count {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The outcome. Only RECORDED is a thank-you; every other state says plainly
+   that nothing was kept, because a submission never silently succeeds. */
+.speak-outcome {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.speak-outcome[data-speak-outcome="RECORDED"] {
+  color: var(--text);
 }

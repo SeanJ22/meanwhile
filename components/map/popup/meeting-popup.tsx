@@ -7,7 +7,7 @@ import {
   formatMeetingTime,
   formatRelativeDay,
   locationLine,
-  meetingHeadline,
+  meetingEntryTitle,
   meetingSubline,
 } from "@/lib/map/format";
 import { tierForMeeting } from "@/lib/state/derive";
@@ -103,6 +103,9 @@ export function MeetingPopup({
   // 6a (2026-08-17): a concluded meeting is a record, not an errand —
   // Directions drops (nobody drives to a meeting that already happened),
   // and the card gains what happened + the office phone instead.
+  /* MTG-8 (2026-08-24): the body alone — this card carries a Jurisdiction
+     row of its own, so the em-dash prefix was the same fact twice. */
+  const cardTitle = meetingEntryTitle(meeting, { bodyShown: true });
   const concluded = meeting.status === "CONCLUDED";
   const links = linksForMeeting(meeting, body).filter(
     (link) => !(concluded && link.rung === "VENUE_MAP"),
@@ -114,7 +117,7 @@ export function MeetingPopup({
     <PopupCard
       type={meeting.jurisdiction}
       tier={tier}
-      title={meetingHeadline(meeting)}
+      title={cardTitle}
       badges={badge ? [badge] : []}
       onExpand={onExpand}
       expandLabel={`More about ${meeting.title} — agenda and how to be heard`}
@@ -128,7 +131,7 @@ export function MeetingPopup({
           Meeting", so the row printed "Township Council" under a headline
           reading "Rockaway Township, NJ — Township Council". The question is
           whether the HEADLINE already carries it. */}
-      {!meetingHeadline(meeting).toLowerCase().includes(meeting.bodyName.toLowerCase()) && (
+      {!cardTitle.toLowerCase().includes(meeting.bodyName.toLowerCase()) && (
         <PopupRow label="Body">{meeting.bodyName}</PopupRow>
       )}
       {/* And the sitting's own distinct name, where it has one. */}
@@ -291,11 +294,6 @@ export function MeetingPopup({
         </p>
       )}
 
-      <PopupSectionLabel>Notes</PopupSectionLabel>
-      <p className="mt-1.5 text-[0.6875rem] leading-relaxed text-muted">
-        Notes arrive in Phase 7. They stay on this device — never synced, never
-        shown to another reader.
-      </p>
     </PopupCard>
   );
 }

@@ -1,0 +1,187 @@
+import { writeSpeakYourMind, SPEAK_MAX_CHARS } from "@/lib/db/speak";
+import { raiseWriteAlarm } from "@/lib/db/write-alarm";
+import { noteSubmission } from "@/lib/db/intake-limiter";
+import { markerFromRequest } from "@/lib/db/run-marker";
+import { DIVISION_VINTAGE } from "@/lib/db/search-log";
+import { coverageAt } from "@/lib/registry/server";
+import { ripcordPulled } from "@/lib/ripcords";
+import {
+  classifySubmission,
+  isSameOriginSubmission,
+} from "@/lib/signal/intake-limits";
+import { intakeWindows } from "@/lib/db/intake-windows";
+import { isPlausibleTargetId, isValidReactionKey } from "@/lib/signal/reactions";
+
+/**
+ * POST /api/speak — the Speak Your Mind write path (BC-11, 2026-08-24).
+ *
+ * ## It reuses the reactions route's protections rather than inventing any
+ *
+ * The author's rule 4 says *the intake limiter's attestation applies to
+ * submissions*, and this is what that means concretely: same-origin, the same
+ * in-memory sliding windows, the same authoritative cross-instance counters,
+ * the same quarantine-never-trust-through disposition. A second intake surface
+ * with its own weaker protections would be the front door left open beside a
+ * locked one.
+ *
+ * **The limiter's digest still cannot join this store.** It hashes
+ * `"intake-limiter:" + key` and this store hashes `"speak-your-mind:" + key` —
+ * n-stores-never-join under load, which is the whole reason `T08` gave the
+ * limiter a prefix, now with a third party to keep apart.
+ *
+ * ## Validation fails closed and is never behind a flag
+ *
+ * A malformed key, an oversized payload, an unknown subject type — all 400,
+ * nothing stored, nothing coerced. `CLAUDE.md`: validity checks are never
+ * behind any flag.
+ *
+ * ## A missing database is a 202, not a 204
+ *
+ * Accepted-not-stored, so a demo without `DATABASE_URL` behaves honestly and
+ * the surface can decline to thank a reader for something nothing kept.
+ */
+
+export const runtime = "nodejs";
+
+
+const MAX_BODY_BYTES = 8192;
+const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING"]);
+
+export async function POST(request: Request) {
+  // The master intake ripcord closes this surface with everything else it
+  // closes. A new collection point outside the kill switch would be a
+  // ripcord that stopped covering the product it was built for.
+  if (ripcordPulled("ripcord.reactionIntake")) {
+    return Response.json({ error: "intake is closed" }, { status: 503 });
+  }
+
+  const raw = await request.text();
+  if (raw.length > MAX_BODY_BYTES) {
+    return Response.json({ error: "payload too large" }, { status: 413 });
+  }
+
+  let body: unknown;
+  try {
+    body = JSON.parse(raw);
+  } catch {
+    return Response.json({ error: "body must be JSON" }, { status: 400 });
+  }
+
+  const submission = body as {
+    subjectType?: unknown;
+    subjectId?: unknown;
+    text?: unknown;
+    speakKey?: unknown;
+    lat?: unknown;
+    lng?: unknown;
+  };
+
+  if (typeof submission.subjectType !== "string" || !SUBJECT_TYPES.has(submission.subjectType)) {
+    return Response.json({ error: "unknown subjectType" }, { status: 400 });
+  }
+  if (!isPlausibleTargetId(submission.subjectId)) {
+    return Response.json({ error: "malformed subjectId" }, { status: 400 });
+  }
+  // The continuity key's shape is the reactions store's, deliberately — one
+  // definition of "a browser-minted key" rather than two that drift.
+  if (!isValidReactionKey(submission.speakKey)) {
+    return Response.json({ error: "malformed speakKey" }, { status: 400 });
+  }
+  const text = typeof submission.text === "string" ? submission.text.trim() : "";
+  if (!text) {
+    return Response.json({ error: "nothing to record" }, { status: 400 });
+  }
+  if (text.length > SPEAK_MAX_CHARS) {
+    return Response.json({ error: "text too long" }, { status: 400 });
+  }
+
+  // ── The T08 protections, cheapest first — the ripcord.rateLimits family ──
+  let suspectReason: "VELOCITY" | "LIMITER_UNAVAILABLE" | null = null;
+  if (!ripcordPulled("ripcord.rateLimits")) {
+    if (!isSameOriginSubmission(request)) {
+      return Response.json(
+        { error: "cross-origin submissions are not accepted" },
+        { status: 403 },
+      );
+    }
+    // The IP is used here and discarded — never stored, never logged.
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const { perKey, perIp } = intakeWindows("speak");
+    if (!perKey.allow(`k:${submission.speakKey}`) || !perIp.allow(`ip:${ip}`)) {
+      return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
+    }
+    const counters = await noteSubmission(submission.speakKey);
+    if (counters === null) {
+      suspectReason = "LIMITER_UNAVAILABLE";
+    } else {
+      const disposition = classifySubmission(counters);
+      if (disposition.kind === "REFUSE_DAILY") {
+        return new Response(null, { status: 429, headers: { "Retry-After": "86400" } });
+      }
+      if (disposition.kind === "REFUSE_RATE") {
+        return new Response(null, { status: 429, headers: { "Retry-After": "60" } });
+      }
+      if (disposition.kind === "QUARANTINE") {
+        suspectReason = disposition.reason;
+      }
+    }
+  }
+
+  /*
+   * RULE 1 — DISTRICT-STAMPED. Resolved SERVER-SIDE from the map view, the
+   * same approximate-location basis the search log and the reactions store
+   * use. A submission with no resolvable view stores with NO divisions rather
+   * than guessed ones, and `Number(null)` is 0 — so the guard requires an
+   * actual number on the wire rather than resolving the equator (item 1b).
+   */
+  const lat = typeof submission.lat === "number" ? submission.lat : Number.NaN;
+  const lng = typeof submission.lng === "number" ? submission.lng : Number.NaN;
+  let ocdIds: string[] = [];
+  if (
+    Number.isFinite(lat) &&
+    lat >= -90 &&
+    lat <= 90 &&
+    Number.isFinite(lng) &&
+    lng >= -180 &&
+    lng <= 180
+  ) {
+    try {
+      const coverage = await coverageAt(lat, lng, 0);
+      ocdIds = [
+        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
+        ...coverage.seats.map((s) => s.ocdId),
+      ];
+    } catch {
+      // A failed resolution is an empty list, never a fabricated one.
+    }
+  }
+
+  try {
+    const stored = await writeSpeakYourMind({
+      subjectType: submission.subjectType as "OFFICIAL" | "BODY" | "MEETING",
+      subjectId: submission.subjectId,
+      ocdIds,
+      divisionVintage: DIVISION_VINTAGE,
+      text,
+      continuityKey: submission.speakKey,
+      suspectReason,
+      marker: markerFromRequest(request),
+    });
+    /*
+     * **A HELD ROW IS STILL A 204, and the reader is not told it was held.**
+     *
+     * Deliberate, and it is the one decision here worth arguing. Telling a
+     * reader their words tripped a review would teach anybody probing the
+     * classifier exactly where its line sits, and it would accuse somebody who
+     * wrote "I'd kill for a bike lane" of something they did not do. The row
+     * is kept, excluded from everything, and a person looks at it — which is
+     * what `docs/abuse-policy.md` promises and what rule 4 asks for.
+     */
+    return new Response(null, { status: stored.kind === "STORED" ? 204 : 202 });
+  } catch (error) {
+    console.error("speak-your-mind write failed", error);
+    await raiseWriteAlarm("speak_your_mind", error);
+    return Response.json({ error: "could not record that" }, { status: 500 });
+  }
+}

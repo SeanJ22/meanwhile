@@ -259,7 +259,7 @@ function Holder({
             target="_blank"
             rel="noreferrer"
             title="Where this record was read from"
-            className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
+            className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted underline decoration-dotted underline-offset-2 hover:text-link"
           >
             source
           </a>
@@ -1065,19 +1065,29 @@ function CoverageBody({
         the pill above opens and the ballot page uses: street only, and a house
         number only when the reader's own street crosses a line.
       */}
-      {/^\d{5}$/.test(zip) && (
-        <AddressPrompt
-          key={zip}
-          zip={zip}
-          trigger="Narrow to this area"
-          onPoint={onStreetPoint ? (pt) => onStreetPoint({ ...pt, street: "", samples: 1, spreadKm: 0 }) : undefined}
-          onResolved={(scope) => {
-            onAddressResolved?.(scope);
-            onNarrowApplied?.();
-          }}
-          onCleared={onAddressCleared}
-        />
-      )}
+      {/*
+        **WGH-7 (2026-08-24, the author's ruling) — DELETED, AND THIS IS WHAT
+        CLOSES WGH-3 AND WGH-4 RATHER THAN MERGING THEM.**
+
+        His words: *delete the "Narrow this area" link under the federal
+        representatives — the pill is the single entry point.*
+
+        The pill he means is `CouldGovernNotice`, above the Local list, which
+        has opened this exact `AddressPrompt` since 2026-08-22. So the card was
+        carrying TWO doors onto one surface — the duplicate-entry friction
+        `CLAUDE.md` names — separated by the whole Local/State/Federal list, so
+        a reader who took the second one had scrolled past the first.
+
+        WGH-3 and WGH-4 removed a SECOND IMPLEMENTATION of the address feature
+        and left one component in two places. This removes the second PLACE. It
+        is a deletion rather than a merge because there is nothing here the pill
+        does not already do: same component, same zip, same handlers.
+
+        **What is NOT lost.** `onNarrowApplied` fired from here to tell the map
+        to shade its boundaries, and the pill's own `onAddressResolved` path
+        reaches the same handler in `map-entry` — the shading follows the
+        RESOLUTION, not the control that asked for it.
+      */}
 
       {/* 7 (2026-08-17): the mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (

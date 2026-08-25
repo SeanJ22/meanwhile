@@ -54,11 +54,6 @@
       "reason": "Two guards walk the tree with their own copy of the walker. RULING 27 and RULING 59 both depend on that walk reaching every file; two walkers is two populations."
     },
     {
-      "id": "shape:app/api/feedback/route.ts#getLimiters,app/api/reactions/route.ts#getLimiters",
-      "disposition": "ALLOWED",
-      "reason": "Same rule as the client key paths: the two intake routes write to stores that may never join, and their limiter accessors are deliberately independent. The limiter table's own digest is already keyed differently from the reaction continuity hash for the same reason."
-    },
-    {
       "id": "shape:lib/ballot/candidate-cards.ts#load,lib/ballot/candidate-sites.ts#load",
       "disposition": "ALLOWED",
       "reason": "The idiomatic lazy-JSON-loader shape — read a committed file once, cache it, return the typed value. Structurally identical by construction and typed differently; a shared generic would add an indirection without removing a place a defect can hide."
@@ -94,5 +89,11 @@
     "from": 24,
     "to": 17,
     "note": "NH79, the questionnaire-and-corpora session. Seven groups consolidated: the six byte-identical useSyncExternalStore subscribers into lib/state/subscribe-to-storage.ts; the two browser-key minters and their get-or-create into lib/state/browser-key.ts (with the in-memory fallback kept PER STORAGE KEY, because one shared cell would have made the feedback key and the reaction key identical in the private-window path and two identifier-free stores holding one identical value are two stores that join); and four copies of even-odd point-in-polygon arithmetic into lib/geo/polygon.ts, which keeps exterior-minus-holes as its own named function rather than folding it into the flattening one, because lib/registry/resolve.ts decides which government covers a reader point and its semantics were not changed. Zero new groups were introduced."
+  },
+  "consolidatedOn2026-08-24": {
+    "what": "The three API routes each held their own module-level sliding-window cache and a lazy getLimiters() to fill it. Adding the Speak Your Mind route for BC-11 made a third copy, and this sweep reported it as an EXACT match against the reactions one — the instrument catching a duplicate on the day it was written.",
+    "howItWasFixed": "One shared lib/db/intake-windows.ts, keyed per intake SPACE so consolidating the code cannot consolidate the budgets: reactions and feedback keep their own per-minute and per-IP numbers, and speak takes the reactions budget deliberately.",
+    "whereItLives": "lib/db, not lib/signal. Written into lib/signal first, it immediately tripped the guard in tests/feedback.test.ts that keeps the licensed path from naming the feedback store. The guard was right and the file was in the wrong place: a rate-limit window is intake machinery, not signal. It moved rather than the guard being widened.",
+    "groupsRemoved": 1
   }
 }

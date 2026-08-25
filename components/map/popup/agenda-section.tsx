@@ -190,7 +190,7 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
     <div className="mt-1.5">
       {items.length > 0 && (
         <div className="mb-2">
-          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
             On the docket — the agenda&apos;s own items, in its words
           </p>
           <ol className="mt-1.5 space-y-1">
@@ -213,7 +213,7 @@ export function AgendaSection({ meetingId, agendaUrl }: AgendaSectionProps) {
         // Curated from this exact document version (4d): labeled, above,
         // never replacing the official text below.
         <div className="mb-2 rounded bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
-          <p className="font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
+          <p className="trailing-space-trimmed-15 font-mono text-[0.5625rem] uppercase tracking-[0.15em] text-muted">
             Plain-language summary — read the official text below
           </p>
           {/* 3b: the product's voice renders BOLD. */}

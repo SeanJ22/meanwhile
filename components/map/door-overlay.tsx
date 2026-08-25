@@ -392,7 +392,7 @@ function DoorSection({
   return (
     <section className="mt-3">
       <div className="flex items-baseline gap-2">
-        <h3 className="font-mono text-[0.625rem] uppercase tracking-[0.16em] text-paper-dim">
+        <h3 className="trailing-space-trimmed-16 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-paper-dim">
           {heading}
         </h3>
         {count !== null && (

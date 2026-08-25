@@ -57,6 +57,63 @@ test("the shapes catch the two refusals this product actually shipped", () => {
   }
 });
 
+/**
+ * **BAL-7 (2026-08-24) — the failure-announcing family, shown catching the
+ * four instances this product actually shipped.**
+ *
+ * RULING 110's discipline: a sweep that cannot find the defect it was written
+ * for is a sweep reporting green about nothing. So the strings below are
+ * VERBATIM from the tree as it stood on 2026-08-24, before they were cut —
+ * two in `components/ballot/jurisdiction-note.tsx` (the author's own red box
+ * on `12-16-38`), one in `components/map/map-entry.tsx`, one in
+ * `components/map/voting-sites-panel.tsx`.
+ */
+test("BAL-7: the shapes catch the failure-announcing copy this product shipped", () => {
+  const shipped = [
+    'const a = "One more contest below is marked because we have not yet mapped its district against this zip. That is a gap on our side, not a finding about the district.";',
+    'const b = `${n} more contests below are marked because we have not yet mapped their districts against this zip. That is a gap on our side, not a finding about those districts.`;',
+    'const c = "We haven\'t recorded any governing body in this place yet. That\'s a gap in our coverage, not a statement about the place.";',
+    'const d = "That address is outside the places this app covers yet. That is a gap in our coverage, not a statement about your county.";',
+  ];
+  for (const line of shipped) {
+    const hits = refusalHitsIn(line);
+    assert.ok(
+      hits.length > 0,
+      `the failure-copy shapes missed a line this product shipped: ${line}`,
+    );
+    assert.ok(
+      hits.some((hit) => hit.shape === "blames-our-coverage"),
+      `matched, but not as failure copy: ${JSON.stringify(hits)}`,
+    );
+  }
+});
+
+test("BAL-7: an apology and a confession are caught, and 'we haven't yet' is not", () => {
+  // The two other shapes in the family, each shown firing...
+  assert.ok(
+    refusalHitsIn('const a = "Unfortunately, we don\'t have that yet.";').length > 0,
+    "an apology to the reader is not caught",
+  );
+  assert.ok(
+    refusalHitsIn('const b = "We should have collected this by now.";').length > 0,
+    "a confession of shortfall is not caught",
+  );
+  // ...and the attribution the render-default rule REQUIRES shown surviving.
+  // This is the load-bearing half: a family that flagged these would become
+  // pressure to delete the attribution rule rather than the editorialising.
+  for (const honest of [
+    'const c = "We haven\'t recorded this chamber\'s vote on this yet.";',
+    'const d = "We haven\'t sourced who sits on this body yet.";',
+    'const e = "That is our coverage, not a statement that nothing is scheduled.";',
+  ]) {
+    assert.deepEqual(
+      refusalHitsIn(honest),
+      [],
+      `an honest attribution was flagged as failure copy: ${honest}`,
+    );
+  }
+});
+
 test("no honest named gap is ever flagged as a refusal", () => {
   /*
    * The render-default rule REQUIRES a null to render as its named gap. If a

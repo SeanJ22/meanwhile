@@ -193,6 +193,10 @@ test("item 8.4: every write path into a sold store states a tier", () => {
   const writers = [
     { file: "lib/db/reactions.ts", call: "coverageTierForOcdIds" },
     { file: "lib/db/search-log.ts", call: "coverageTierForZip" },
+    // BC-11 (2026-08-24): the fourth reader-collection store, and the third
+    // that is SOLD. A sold store outside this list would be a row a buyer
+    // cannot weight, which is what the tier exists to prevent.
+    { file: "lib/db/speak.ts", call: "coverageTierForOcdIds" },
   ];
   for (const { file, call } of writers) {
     const src = readFileSync(join(ROOT, file), "utf8");
@@ -246,6 +250,23 @@ test("item 8.4: every write path into a sold store states a tier", () => {
       "lib/db/questionnaire.ts",
       "lib/db/reactions.ts",
       "lib/db/search-log.ts",
+      /*
+       * **BC-11 (2026-08-24): speak_your_mind IS a sold aggregate record and
+       * carries the tier.**
+       *
+       * The author's own words for what it is: the collection point for
+       * verbatim constituent sentiment, product infrastructure rather than a
+       * comment box, and its disclosure tells a reader in as many words that
+       * what they write may be shared with campaigns, organizations and
+       * researchers. That is a sold record, so a buyer weighting a row is
+       * entitled to know how well researched the place behind it is —
+       * sentiment from a fully enumerated county is a different measurement
+       * from sentiment from a place where almost nothing is known.
+       *
+       * It holds a district, so unlike the questionnaire there IS a place
+       * whose coverage depth can be stated honestly.
+       */
+      "lib/db/speak.ts",
       /*
        * **RULED ON, Prompt D item 6.2 (2026-08-20): `write_alarm` is NOT a
        * sold aggregate record and carries no coverage tier.**

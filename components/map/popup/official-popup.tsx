@@ -611,7 +611,7 @@ export function OfficialIdentity({
             target="_blank"
             rel="noreferrer"
             title="Where this record was read from"
-            className="source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
+            className="trailing-space-trimmed-10 source-tag font-mono text-[0.5625rem] uppercase tracking-[0.1em] text-muted hover:text-signal"
           >
             source
           </a>

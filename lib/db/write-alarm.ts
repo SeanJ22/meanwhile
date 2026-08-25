@@ -40,7 +40,14 @@ import { assertWriteAllowed } from "./write-guard.ts";
  * failed, and the reader is owed their page either way.
  */
 
-export type SoldStore = "search_log" | "reactions";
+/**
+ * BC-11 (2026-08-24): speak_your_mind joins, because it is a COLLECTION
+ * STORE and this alarm exists for the failure a collection store does not
+ * announce — a write path that starts refusing every row while every page
+ * still renders. A new sold store outside the alarm would be the one store
+ * nobody finds out about.
+ */
+export type SoldStore = "search_log" | "reactions" | "speak_your_mind";
 
 /** The database's own words are useful; a parameter echo is not. Capped. */
 const MESSAGE_CAP = 400;

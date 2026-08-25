@@ -134,6 +134,20 @@
       "when": 1787614490471,
       "tag": "0018_plain_silver_samurai",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1787628689228,
+      "tag": "0019_next_scarlet_witch",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1787629201748,
+      "tag": "0020_dazzling_deathbird",
+      "breakpoints": true
     }
   ]
 }

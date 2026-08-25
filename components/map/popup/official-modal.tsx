@@ -19,6 +19,7 @@ import {
   CardSectionGroup,
 } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
+import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { identityChipsFor } from "@/lib/officials/identity-chips";
 import { ContactPills } from "@/components/officials/contact-pills";
@@ -246,6 +247,28 @@ export function OfficialModal({
             holder={holder}
             reactionContext={reactionContext}
             columns
+          />
+
+          {/*
+            **BC-11 (2026-08-24) — SPEAK YOUR MIND, where the author put it:
+            above Sources, below Voting record.**
+
+            The placement is the argument. A reader arrives at this card, reads
+            what the person has actually DONE — their money, then their votes —
+            and the invitation to say something lands at the moment they have
+            just formed the opinion. Above the citations, because Sources is
+            where a reader goes to check us rather than to speak.
+
+            `subject` is the person's own name, so the framing asks what you
+            would say if THEY were standing in front of you rather than "this
+            person" — his words are the instrument and a placeholder in the
+            middle of them would blunt it.
+          */}
+          <SpeakYourMind
+            subjectType="OFFICIAL"
+            subjectId={holder.id}
+            subject={holder.name}
+            context={reactionContext ?? undefined}
           />
 
           {/*

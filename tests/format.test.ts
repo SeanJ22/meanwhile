@@ -64,10 +64,20 @@ test("the address renders once when the source publishes it as the venue name", 
   assert.equal(locationLine("Hearing Room A", "33 N Stone Ave"), "Hearing Room A · 33 N Stone Ave");
 });
 
-test("dates render mm/dd/yyyy, including inside ranges", () => {
-  assert.equal(formatDateMDY("2026-11-03"), "11/03/2026");
+/*
+ * **BC-12 (2026-08-24) — the convention moved, and the guard moves with it.**
+ *
+ * The author: dates spell out everywhere, "in seat until January 3rd, 2029,"
+ * never "01-03-2029." This asserted the mm/dd/yyyy form that 3h established on
+ * 2026-08-16. Kept in place rather than deleted, because the RANGE half is the
+ * part worth guarding either way: several callers hand in annotated strings,
+ * and a formatter that only accepted a bare date would return them unconverted
+ * without erroring.
+ */
+test("BC-12: dates spell out, including inside ranges", () => {
+  assert.equal(formatDateMDY("2026-11-03"), "November 3rd, 2026");
   assert.equal(
     formatDateMDY("2026-10-24 – 2026-11-01"),
-    "10/24/2026 – 11/01/2026",
+    "October 24th, 2026 – November 1st, 2026",
   );
 });

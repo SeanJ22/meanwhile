@@ -91,6 +91,32 @@ export interface ColumnDomain {
   space: ValueSpace;
   /** Why, in one line. Read by a person, not by the test. */
   why?: string;
+  /**
+   * **BC-11 (2026-08-24) — WHICH DIGEST SPACE, for a `DIGEST` column.**
+   *
+   * The literal prefix the input is digested under, so `""` means the bare
+   * key. Required on every `DIGEST` column and meaningless on any other.
+   *
+   * ## Why this had to exist before a fourth store could be added correctly
+   *
+   * The boundary test treated `DIGEST` as a joinable space outright: two
+   * reader stores holding one were a failure, full stop. That was right about
+   * the DEFAULT and wrong about the mechanism, and the difference only shows
+   * up when a fourth store arrives.
+   *
+   * Two sha256 columns are equality-joinable if and only if they digest the
+   * same INPUT. `sha256(key)` and `sha256("intake-limiter:" + key)` over one
+   * browser key produce values that can never match — that is precisely why
+   * the limiter was given a prefix in the first place (T08), and the registry
+   * said so in prose that no test could read.
+   *
+   * So the classification descends one level. A `DIGEST` column now declares
+   * its input space, and the guard asserts the spaces are DISTINCT rather than
+   * asserting there is at most one digest. That is strictly stronger: the old
+   * form would have passed a second store that reused the bare-key space, as
+   * long as it was the only other one.
+   */
+  digestSpace?: string;
 }
 
 export interface TableDomain {
@@ -160,6 +186,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       },
       reaction_key_hash: {
         space: "DIGEST",
+        digestSpace: "",
         why:
           "sha256 of a RANDOM browser-minted key. Deliberately a different digest space " +
           "from the intake limiter's, and it exists on this table alone.",
@@ -214,6 +241,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       ),
       digest: {
         space: "DIGEST",
+        digestSpace: "intake-limiter:",
         why:
           'sha256("intake-limiter:" + key) — deliberately a different digest space from the ' +
           "reactions store's sha256(key), so the two cannot be equality-joined.",
@@ -279,6 +307,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       candidacy_id: { space: "CIVIC_IDENTIFIER" },
       token_digest: {
         space: "DIGEST",
+        digestSpace: "questionnaire-token:",
         why: "sha256 of a single-use token. The token itself is never stored.",
       },
     },
@@ -339,6 +368,74 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       text: {
         space: "PROSE",
         why: "The body's own published agenda text, extracted verbatim.",
+      },
+    },
+  },
+
+  /**
+   * **BC-11 — SPEAK YOUR MIND, the fourth reader-collection store.**
+   * (The author's ruling, 2026-08-24.)
+   *
+   * Registered here in the same commit that creates the table, which is the
+   * point of this registry: a column missing from it fails the build, so a new
+   * store is a classification somebody made rather than a table that appeared.
+   *
+   * **This store was born UNDER the boundary test**, not retrofitted to it —
+   * the brief asks the question explicitly, and the answer is that
+   * `tests/identity-boundary.test.ts` (A-001, RULING 132) existed before this
+   * table did and proves it over VALUE SPACES rather than column names.
+   *
+   * Nothing here is a world identity value. There is no email, no phone, no
+   * address and no account reference, because the surface never asks for one.
+   */
+  speak_your_mind: {
+    storeClass: "READER_COLLECTION",
+    columns: {
+      ...nonIdentifying(
+        "id",
+        "occurred_at",
+        "subject_type",
+        "division_vintage",
+        "review_state",
+        "review_reason",
+        "suspect_reason",
+        "run_class",
+        "coverage_tier",
+        "coverage_tier_distribution",
+        // An enum list of WHICH KINDS of self-identifying content were found
+        // and removed — never the content. Storing what was redacted beside
+        // the redaction would defeat the redaction.
+        "self_disclosure",
+      ),
+      subject_id: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "The public body, official or meeting that was spoken TO. It identifies who was " +
+          "spoken about, never who spoke.",
+      },
+      ocd_ids: {
+        space: "CIVIC_IDENTIFIER",
+        why: "The reader's zip-resolved divisions. Districts, not a person and not an address.",
+      },
+      text: {
+        space: "PROSE",
+        why:
+          "Scrubbed at the single write path (T09) AND passed through the BC-11 self-" +
+          "disclosure redaction, which also FLAGS what it removed so a flagged row can " +
+          "never export verbatim.",
+      },
+      speak_key_hash: {
+        space: "DIGEST",
+        digestSpace: "speak-your-mind:",
+        why:
+          "sha256('speak-your-mind:' + a RANDOM browser-minted key). The prefix is the " +
+          "boundary: reactions hash the same kind of key as sha256(key) and the intake " +
+          "limiter as sha256('intake-limiter:' + key), so without it three stores would " +
+          "share one digest space and be equality-joinable on it.",
+      },
+      run_id: {
+        space: "OPAQUE_HANDLE",
+        why: "Names a synthetic RUN, hashed in its own space. Null on every organic row.",
       },
     },
   },

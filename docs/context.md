@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test.
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 00:28:55 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-24 -->
+Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1002 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1011 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 140 recorded
+## Rulings — 154 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -410,6 +410,20 @@ from. Each entry there names what it supersedes.
 - RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench
 - RULING 126 — campaign-finance data renders for readers and never enters anything sold
 - RULING 127 — no tool prints a credential value, and the guard is the values themselves
+- RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact
+- RULING 129 — a safety cap is a failure boundary, never an implicit end of data
+- RULING 130 — every transport success passes one shared document finalizer
+- RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`
+- RULING 132 — the identity boundary is proven over VALUE SPACES, not column names
+- RULING 133 — a performance change ships with its measurement
+- RULING 134 — an instrument without a committed baseline is unfinished
+- RULING 135 — a fence bars acting on content, never committing Sean's artifacts
+- RULING 136 — feedback names examples; a fix closes the class
+- RULING 137 — for layout, an annotated image is the spec, and it outranks prose
+- RULING 138 — display consolidates sources; the record is never deleted
+- RULING 139 — the product never announces its own failure
+- RULING 140 — dates spell out, product-wide
+- RULING 141 — the Speak Your Mind store's four rules
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -568,5 +582,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-25 00:28:55 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-24 -->
+branch: claude/visual-0824-build
+head sha: 4fbb7443c0ac67e125a880490f5a0f40d0390c18
+head subject: Rulings 136-141, and six tracker rows that took four attempts to land
+origin/main sha: 51c41fbc823df4bf63e4ba33e7b905abec2e5b2e
+origin/main subject: Merge pull request #172 from SeanJ22/claude/audit-remediation-0824-pinvis
+local main sha: 51c41fbc823df4bf63e4ba33e7b905abec2e5b2e
+local main matches origin/main: yes
+working tree: dirty — 7 changed file(s)
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14434
+```

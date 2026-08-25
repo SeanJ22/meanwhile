@@ -66,31 +66,122 @@ test("LBL-2: the shared letter-spaced label classes trim their trailing space", 
   }
 });
 
-test("LBL-2: a letter-spaced run pinned with shrink-0 trims its trailing space", () => {
-  /*
-   * `shrink-0` is the shape that turns the trailing space into a clipped
-   * letter: the element refuses to give width back, so it sits hard against
-   * its row's right edge and anything clipping there takes the space and then
-   * the glyph. A tracked run that can shrink is not in this class.
-   */
+/**
+ * **OFF-2 (2026-08-24) — THE `shrink-0` PREDICATE IS RETIRED, AND THIS IS THE
+ * RECONCILIATION THE BRIEF ASKED FOR.**
+ *
+ * `LBL-2` closed at "6 found, 6 fixed" on 2026-08-23. **It did not regress** —
+ * all six still carry their compensation, asserted below. The author then found
+ * the same defect on the Tucson Unified small card (`12-06-33`), so the
+ * question is why the sweep missed a seventh.
+ *
+ * **Which selector this instance uses.** `.source-tag` inside
+ * `.person-row-office`, in `components/map/popup/district-popup.tsx`. The run
+ * carries `tracking-[0.1em]` and NO `shrink-0`.
+ *
+ * **Why the sweep missed it.** The predicate tested for `shrink-0` on the
+ * ELEMENT — one way of pinning a run against a container's right edge. This
+ * run is pinned by its PARENT: `.person-row` is `justify-content: flex-end`,
+ * declared in `globals.css`, which a line-based grep over `.tsx` files cannot
+ * see. Measured at the time of the fix: 23 letter-spaced runs, 6 inside the old
+ * predicate, **17 outside it and uncompensated**, including all four
+ * `.source-tag` sites.
+ *
+ * **What changed so it runs next time.** The predicate is not widened — every
+ * way of pinning an element at an edge would have to be enumerated, and the
+ * next one nobody thought of would be the next OFF-2. It is REPLACED by the
+ * physics: `letter-spacing` adds its space after the final glyph on every run,
+ * always, so the space is spurious whether or not anything clips it today.
+ * **Every letter-spaced run carries a matching trim, with no exceptions to get
+ * wrong.**
+ */
+test("OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinned ones", () => {
   const offenders: string[] = [];
+  for (const file of sourceFiles()) {
+    const src = readFileSync(join(ROOT, file), "utf8");
+    src.split("\n").forEach((line, i) => {
+      if (!TRACKING.test(line)) return;
+      if (/trailing-space-trimmed/.test(line)) return;
+      offenders.push(`${file}:${i + 1}: ${line.trim().slice(0, 110)}`);
+    });
+  }
+  assert.deepEqual(
+    offenders,
+    [],
+    "these letter-spaced uppercase runs carry no trailing-space compensation. " +
+      "letter-spacing adds its space AFTER the last glyph, so any right edge — " +
+      "an element's own `shrink-0`, or a parent's `justify-content: flex-end`, " +
+      "which is what OFF-2 turned out to be — takes the space and then the " +
+      "letter. Add the `trailing-space-trimmed-NN` matching this run's tracking.",
+  );
+});
+
+test("OFF-2: the trim MATCHES its run's tracking, never a near-enough value", () => {
+  // A -0.15em compensation on a 0.1em run pulls the label 0.05em into whatever
+  // precedes it. Smaller than the defect it fixes, and the same carelessness.
+  const css = readFileSync(join(ROOT, "app", "globals.css"), "utf8");
+  const mismatched: string[] = [];
+  for (const file of sourceFiles()) {
+    const src = readFileSync(join(ROOT, file), "utf8");
+    src.split("\n").forEach((line, i) => {
+      const tracking = /tracking-\[0\.(1[0-9]*)em\]/.exec(line);
+      if (!tracking) return;
+      const digits = tracking[1];
+      const want =
+        digits.length === 1 ? Number(digits) * 10 : Number(digits.slice(0, 2));
+      // The legacy alias is the 0.15em trim under its original name.
+      const ok =
+        line.includes(`trailing-space-trimmed-${want}`) ||
+        (want === 15 && /trailing-space-trimmed(?!-)/.test(line));
+      if (!ok) {
+        mismatched.push(
+          `${file}:${i + 1}: tracking 0.${digits}em wants trailing-space-trimmed-${want}`,
+        );
+      }
+    });
+  }
+  assert.deepEqual(mismatched, [], "a trim does not match the run it compensates");
+
+  // And every utility the components ask for actually exists in the stylesheet,
+  // carrying the em value its NAME promises — a utility named for 0.14em and
+  // declaring 0.15em would satisfy the per-site check above while trimming the
+  // wrong amount everywhere it is used.
+  for (const value of [10, 14, 15, 16, 18]) {
+    const em = String(value / 100); // 10 -> "0.1", 14 -> "0.14"
+    assert.match(
+      css,
+      new RegExp(
+        `\\.trailing-space-trimmed-${value}\\s*\\{[^}]*margin-inline-end:\\s*-${em.replace(".", "\\.")}em`,
+      ),
+      `the trailing-space-trimmed-${value} utility is missing or declares the wrong em value`,
+    );
+  }
+});
+
+test("OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed", () => {
+  // The reconciliation's other half. A seventh instance appearing is one
+  // finding; the original six quietly coming undone would be a different one,
+  // and a report that could not tell them apart would be guessing.
+  const stillPinned: string[] = [];
   for (const file of sourceFiles()) {
     const src = readFileSync(join(ROOT, file), "utf8");
     for (const line of src.split("\n")) {
       if (!TRACKING.test(line)) continue;
       if (!/\bshrink-0\b/.test(line)) continue;
-      if (/trailing-space-trimmed/.test(line)) continue;
-      offenders.push(`${file}: ${line.trim().slice(0, 110)}`);
+      stillPinned.push(line);
     }
   }
-  assert.deepEqual(
-    offenders,
-    [],
-    "these letter-spaced uppercase runs are pinned at a container edge with no " +
-      "trailing-space compensation. letter-spacing adds its space AFTER the last " +
-      "glyph, so a right-edge clip takes the space and then the letter — which is " +
-      "what LBL-2 reported. Add `trailing-space-trimmed`.",
+  assert.ok(
+    stillPinned.length >= 6,
+    `only ${stillPinned.length} shrink-0 letter-spaced runs remain — the LBL-2 population collapsed`,
   );
+  for (const line of stillPinned) {
+    assert.match(
+      line,
+      /trailing-space-trimmed/,
+      `an LBL-2 site lost its compensation: ${line.trim().slice(0, 110)}`,
+    );
+  }
 });
 
 test("LBL-2: the sweep reaches the tree it claims to", () => {

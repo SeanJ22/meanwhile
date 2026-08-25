@@ -207,13 +207,61 @@ test("15: the ballot's polling-place affordance opens the map's own panel", () =
   );
 });
 
-test("15: the state's own tool is still offered, and labelled as leaving", () => {
+/**
+ * **AMENDED 2026-08-24 (BAL-2) — THE HANDOFF IS A BEHAVIOUR NOW, NOT A LINK.**
+ *
+ * Item 15 (2026-08-19) required the state's own tool to be OFFERED beside the
+ * in-app answer and LABELLED as leaving. The author's 8/24 ruling deletes the
+ * offer: *delete "or search Arizona Secretary of State's own tool" — the pill
+ * below it is that.*
+ *
+ * Item 15's substance is untouched, and the distinction is what this guard now
+ * holds. Its defect was that one product answered one question two ways on two
+ * surfaces, and that a reader was sent AWAY from six sourced voting locations
+ * we already held. Neither returns: the pill still opens the shared
+ * `VotingSitesPanel`, `fallback` is still resolved and still handed to it, and
+ * a jurisdiction we do not hold still reaches the authority through it. What
+ * is gone is a second, redundant, outbound link sitting under the control that
+ * already answers.
+ *
+ * A link that leaves must still say so — that rule is untouched and now has no
+ * subject on this component, so it is asserted where the leaving link actually
+ * lives: the registration pill on the ballot page, in `tests/ballot.test.ts`.
+ */
+test("BAL-2: the state's tool is reached through the pill, not offered beside it", () => {
   const where = read("components", "ballot", "where-to-vote.tsx");
-  assert.match(where, /data-leaves-app/, "the handoff needs its marker");
+  /*
+   * Comments stripped before the check, and this is not a convenience: this
+   * file's own note QUOTES the author's instruction — *delete "or search
+   * ... own tool"* — so a guard reading the raw text would flag the record of
+   * the fix as the defect. A sweep that cannot tell shipped copy from a
+   * comment about shipped copy is reading the wrong thing (RULING 110).
+   */
+  const code = where.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/[^\n]*/g, "");
+
+  // No second outbound route beside the control that already answers.
+  assert.doesNotMatch(
+    code,
+    /own tool/,
+    "the redundant outbound link to the state's tool is back (BAL-2)",
+  );
+  assert.doesNotMatch(
+    code,
+    /<a\s/,
+    "this component renders an outbound anchor again",
+  );
+
+  // But the handoff itself is intact: the fallback is still part of the
+  // contract and still reaches the shared panel.
   assert.match(
     where,
-    /opens in a new tab and leaves/,
-    "a link that leaves must say so at the point of the link",
+    /fallback: \{ label: string; url: string; sourceOrg: string \} \| null;/,
+    "the fallback left the contract — a jurisdiction we do not hold now reaches nothing",
+  );
+  assert.match(
+    where,
+    /<VotingSitesPanel/,
+    "the pill no longer opens the shared voting-sites panel",
   );
 });
 

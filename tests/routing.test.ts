@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { coverageAt } from "../lib/registry/server.ts";
+import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
 import { TOPIC_ROUTES } from "../lib/routing/topics.ts";
 
@@ -118,9 +119,40 @@ test("golden case: the stopped library, at Tucson", async () => {
     countyStep.bodies.some((b) => b.label === "Pima"),
     `county step must name Pima, got ${JSON.stringify(countyStep.bodies)}`,
   );
-  // Local rosters don't exist yet, so the honest half-gap must be stated —
-  // the body is real, who sits on it is unsourced.
-  assert.ok(cityStep.gap?.includes("who sits on this body"));
+  /*
+   * **AMENDED 2026-08-24 (ASK-5), and the amendment is the point of the fix.**
+   *
+   * This asserted `cityStep.gap?.includes("who sits on this body")` on the
+   * comment *"Local rosters don't exist yet."* That was true the day it was
+   * written and stopped being true when the curated local rosters landed — so
+   * the guard had become a pin on the SIZE OF A GAP, which RULING 116 forbids
+   * precisely because it goes red on the day somebody closes it, and the
+   * cheapest way to green is to put the gap back.
+   *
+   * What is worth holding still is the INVARIANT: the half-gap fires when, and
+   * only when, no roster is sourced for the body the step names. Asserted in
+   * both directions below so neither half can be lost.
+   */
+  for (const step of answer.steps) {
+    const rostered = step.bodies.some(
+      (b) => rosterHoldersForBody(b.body.bodyId).length > 0,
+    );
+    if (rostered) {
+      assert.ok(
+        step.gap === null || !step.gap.includes("who sits on this body"),
+        `a step naming a rostered body still claims nobody is sourced: ${JSON.stringify(step.bodies.map((b) => b.label))}`,
+      );
+      assert.ok(
+        step.people.length > 0,
+        `a step naming a rostered body named nobody: ${JSON.stringify(step.bodies.map((b) => b.label))}`,
+      );
+    } else if (step.bodies.length > 0 && step.people.length === 0) {
+      assert.ok(
+        step.gap?.includes("who sits on this body"),
+        "a step with a real body and no sourced roster must say which half is missing",
+      );
+    }
+  }
   assert.equal(answer.grounding.stepsWithSomeone, 2);
   assert.equal(answer.grounding.totalSteps, 2);
 });

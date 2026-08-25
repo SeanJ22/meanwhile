@@ -233,7 +233,8 @@
     "wire:phones": "tsx scripts/wire-door2-phones-0825.mts",
     "directory:invert": "tsx scripts/directory-inversion-0825.mts",
     "db:surfaces": "tsx scripts/assert-serving-tables.mts",
-    "deploy:sha": "node scripts/deploy-live.mjs --sha"
+    "deploy:sha": "node scripts/deploy-live.mjs --sha",
+    "press:surface": "tsx scripts/press-surface-0825.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

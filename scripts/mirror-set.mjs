@@ -63,6 +63,21 @@ export const MIRRORED_DOCS = [
   { mirrorName: "transparency-draft.md", repoPath: "docs/transparency-draft.md" },
   { mirrorName: "portraits-pending.png", repoPath: "docs/photo-review/portraits-pending.png" },
 
+  /*
+   * **JOINED 2026-08-25 with `pnpm matrix` (RULING 149).** The coverage matrix
+   * is one row per candidate and one column per fact, and it is a SPREADSHEET
+   * question — which is a thing to open in a spreadsheet, not in a terminal.
+   *
+   * It is INTERNAL and never rendered to a reader, and the mirror is not a
+   * reader surface: it is the author's own folder. That distinction is the
+   * whole of why this is allowed here and forbidden in `app/`.
+   *
+   * A STABLE name for the same reason `portraits-pending.png` has one: a dated
+   * filename would grow a file per session and make him work out which one is
+   * live. The measurement date is a column inside it.
+   */
+  { mirrorName: "coverage-matrix.csv", repoPath: "docs/coverage-matrix.csv" },
+
   { mirrorName: "CLAUDE.md", repoPath: "CLAUDE.md" },
   { mirrorName: "abuse-policy.md", repoPath: "docs/abuse-policy.md" },
   { mirrorName: "vendor-review.md", repoPath: "docs/vendor-review.md" },

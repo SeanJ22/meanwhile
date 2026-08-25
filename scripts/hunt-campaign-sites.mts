@@ -868,8 +868,25 @@ console.log(`\nPROVE · ${distinct.length} distinct URL(s) from ${allLeads.lengt
 
 const bodies = new Map<string, string>();
 
+/*
+ * **ONE FETCH PER URL, NOT ONE PER LEAD.**
+ *
+ * `ControlledProbe` caches the CONTROL by hostname and nothing else, which is
+ * right for its job and wrong for this loop: the press route produced **1,502
+ * leads over 229 distinct URLs**, because one article naming six candidates
+ * yields six leads at the same address. Fetching per lead would have asked
+ * those 229 hosts 1,502 times for the same pages.
+ *
+ * That is not a speed problem, it is the public-records rule — never request at
+ * a rate that degrades service — and it was found by watching the run rather
+ * than by reading the code.
+ */
+const probed = new Map<string, { status: number; length: number }>();
 const probe = new ControlledProbe(async (url) => {
+  const seen = probed.get(url);
+  if (seen) return seen;
   await sleep(SPACING_MS);
+  let result: { status: number; length: number };
   try {
     const res = await fetch(url, {
       headers: { ...browserProfileHeaders(), "User-Agent": sourceUserAgent() },
@@ -878,10 +895,12 @@ const probe = new ControlledProbe(async (url) => {
     });
     const text = await res.text();
     bodies.set(url, text);
-    return { status: res.status, length: text.length };
+    result = { status: res.status, length: text.length };
   } catch {
-    return { status: 0, length: 0 };
+    result = { status: 0, length: 0 };
   }
+  probed.set(url, result);
+  return result;
 });
 
 const proven: Proven[] = [];

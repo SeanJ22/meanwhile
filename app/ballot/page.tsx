@@ -352,6 +352,7 @@ async function BallotBattlecard({
   partyLine,
   targetKey,
   contestTitle,
+  contestOcdId,
   federal,
   context,
 }: {
@@ -360,6 +361,8 @@ async function BallotBattlecard({
   /** The candidate key — `${contest.id}|${nominee.name}` or a candidacy id. */
   targetKey: string;
   contestTitle: string;
+  /** The contest's division, so a state-scoped office explainer can resolve. */
+  contestOcdId: string;
   /** Whether the contest is federal, which decides whether FEC money applies. */
   federal: boolean;
   context: { zip: string; lat: number; lng: number } | null;
@@ -372,7 +375,7 @@ async function BallotBattlecard({
    * render committees for the same person in another.
    */
   const holder = await incumbentHolderFor(targetKey);
-  const officeBlurb = blurbForContestTitle(contestTitle);
+  const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   const positions = positionsFor(targetKey);
   /*
    * RULING 126 (2026-08-24). Until this line existed, `money` was `null` for
@@ -530,6 +533,7 @@ export default async function BallotPage({
       ? [...candidacyContests, ...measureContests].map((contest) => ({
           contestId: contest.id,
           contestTitle: contest.title,
+          contestOcdId: contest.ocdId,
           voteFor: contest.type === "MEASURE" ? 1 : contest.voteFor,
           options: pickOptionsFor(set, contest),
         }))
@@ -1222,7 +1226,7 @@ export default async function BallotPage({
                   register, at the top of the contest. Describes the office,
                   never the people running for it. Voice register. */}
               {(() => {
-                const blurb = blurbForContestTitle(contest.title);
+                const blurb = blurbForContestTitle(contest.title, contest.ocdId);
                 return blurb ? (
                   <p className="mt-2 text-[0.75rem] leading-relaxed text-voice">
                     {blurb.text}

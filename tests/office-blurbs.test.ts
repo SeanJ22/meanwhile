@@ -6,6 +6,7 @@ import { test } from "node:test";
 import {
   OFFICE_BLURBS,
   blurbForContestTitle,
+  blurbForTitle,
   officeTypeForContestTitle,
   officeTypeForTitle,
 } from "../lib/officials/office-blurbs.ts";
@@ -71,4 +72,42 @@ test("blurbs describe offices in the register — no advocacy vocabulary", () =>
   for (const [key, blurb] of Object.entries(OFFICE_BLURBS)) {
     assert.ok(!banned.test(blurb.text), `advocacy vocabulary in ${key}`);
   }
+});
+
+test("a New Jersey mayor is never described as a city's elected leader", () => {
+  /*
+   * RULING 114: closing a layer converts every wrong entry in it from silence
+   * into a false claim. The generic `mayor` blurb was written for Tucson's
+   * neighbours — "Your mayor is the city's elected leader… in some cities the
+   * mayor runs city hall directly" — and it was ALREADY rendering for New
+   * Jersey, because the committed rosters carry `officeTitle: "Mayor"`.
+   * Recovering nine mayoral CONTESTS on 2026-08-25 would have put the same
+   * sentence on nine more surfaces.
+   *
+   * The nine municipalities electing a mayor in this filing are eight boroughs
+   * and one Faulkner Act township. None is a city and none is council-manager.
+   */
+  const njPlace = "ocd-division/country:us/state:nj/place:butler";
+  const nj = blurbForContestTitle("Mayor", njPlace);
+  assert.ok(nj, "a New Jersey mayoral contest must resolve an explainer");
+  assert.doesNotMatch(nj.text, /\bcity\b/i, "New Jersey's mayors do not run cities here");
+  assert.match(nj.text, /form(s)? of government|charter/i, "it must name the variation rather than resolve it");
+
+  // The roster path resolves the same way — one resolver, two entry points.
+  const fromRoster = blurbForTitle("Mayor", njPlace);
+  assert.deepEqual(fromRoster, nj, "the roster and contest paths must agree");
+
+  // The place-specific entry still outranks the state one.
+  const tucson = blurbForTitle("Mayor", "ocd-division/country:us/state:az/place:tucson");
+  assert.match(tucson?.text ?? "", /city manager/, "Tucson keeps its own charter's text");
+
+  // And with no division at all the generic text is still what comes back,
+  // rather than a state entry leaking to everybody.
+  assert.deepEqual(blurbForTitle("Mayor"), OFFICE_BLURBS.mayor);
+});
+
+test("the bare word MAYOR is a contest title, and does not catch the council titles", () => {
+  assert.equal(officeTypeForContestTitle("Mayor"), "mayor");
+  assert.equal(officeTypeForContestTitle("Member of the Borough Council"), "nj-municipal-governing-body");
+  assert.equal(officeTypeForContestTitle("Mayor and Council"), null);
 });

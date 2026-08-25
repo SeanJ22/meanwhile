@@ -42,6 +42,13 @@ type ChildFactory = (rows: BodySourceWiring[]) => ReportingMeetingSource<unknown
 /** Legistar keeps its own client registry; wrap it with the reporting shape. */
 const legistarReporting: ReportingMeetingSource<LegistarEventWithClient> = {
   ...legistarSource,
+  /**
+   * `@accounting-delegated-to lib/sources/legistar/index.ts`
+   *
+   * Declared rather than inferred — `tests/zero-row-contract.test.ts` reads this
+   * marker, and checks that the module it names is itself a branding
+   * implementor. See the note inside for what the second branding cost.
+   */
   normalizeWithDrops(raw, now) {
     /*
      * RETURNED AS THE ADAPTER BRANDED IT. There is no second branding here,

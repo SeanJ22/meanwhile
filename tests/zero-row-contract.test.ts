@@ -124,12 +124,23 @@ test("the three honest empties still pass", () => {
   );
 });
 
+/**
+ * How a file DECLARES that its accounting is another module's.
+ *
+ * A marker rather than an inference: the sweep must not decide by string
+ * coincidence which delegations are honest, and the declaration is checked
+ * against a real branding implementor below.
+ */
+const DELEGATION_MARKER = /@accounting-delegated-to\s+`?([\w./-]+)`?/;
+
 test("every adapter routes its normalize result through the factory", () => {
   const files = walk(SOURCES);
   assert.ok(files.length >= 12, `swept ${files.length} source files`);
 
   const implementors: string[] = [];
   const routed: string[] = [];
+  /** `[file, the module it delegates its accounting to]`. */
+  const delegated: [string, string][] = [];
   for (const file of files) {
     const rel = relative(ROOT, file).split(sep).join("/");
     const text = readFileSync(file, "utf8");
@@ -140,14 +151,50 @@ test("every adapter routes its normalize result through the factory", () => {
     if (!/normalizeWithDrops[(:,]/.test(text)) continue;
     if (!/normalizeWithDrops\s*[(:]|normalizeWithDrops,/.test(text)) continue;
     implementors.push(rel);
+    /*
+     * Routed means THE RESULT CARRIES THE BRAND, and there are two honest ways
+     * to arrange that: brand it here, or return a result another implementor
+     * already branded.
+     *
+     * The second is not a loophole and it is not a string coincidence — it is
+     * DECLARED, with `@accounting-delegated-to <module>`, and the module it
+     * names is checked below to be an implementor that brands. A declaration
+     * costs a diff, which is the same mechanism `tests/guard-census.json` uses
+     * to let a guard leave and `@freshness-reads-here` uses to let a clock
+     * stamp a freshness field (RULING 107). A carve-out nobody has to write
+     * down is a carve-out that grows.
+     *
+     * The live case is `composite/wiring.ts`. It used to brand legistar's
+     * result a SECOND time and that second branding lost the
+     * `countedButProduced` option the adapter had passed, so every online
+     * meeting was counted once as produced and once as dropped — which took the
+     * daily refresh red on 2026-08-25. Deleting the second branding is the fix;
+     * requiring one here would be requiring the defect.
+     */
     if (text.includes("accountedNormalize(")) routed.push(rel);
+    else {
+      const declared = DELEGATION_MARKER.exec(text);
+      if (declared) delegated.push([rel, declared[1]]);
+    }
   }
 
+  const declaredDelegators = delegated.map(([f]) => f);
   assert.deepEqual(
-    implementors.filter((f) => !routed.includes(f)),
+    implementors.filter((f) => !routed.includes(f) && !declaredDelegators.includes(f)),
     [],
-    "an adapter producing a normalize result without the factory",
+    "an adapter producing a normalize result without the factory and without declaring a delegate",
   );
+
+  // A declared delegate must itself be an implementor that brands, or the
+  // declaration is a way of pointing at nothing.
+  for (const [file, target] of delegated) {
+    const base = target.split("/").pop()?.replace(/\.ts$/, "") ?? target;
+    const resolved = routed.find((r) => r.includes(base));
+    assert.ok(
+      resolved,
+      `${file} declares @accounting-delegated-to ${target}, and no branding implementor answers to that name`,
+    );
+  }
   // Stated N equals the rows actually swept.
   assert.ok(
     implementors.length >= 12,

@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **256 open**, 409 resolved.
-- **46 waiting on Sean** — the first section below.
+- **259 open**, 412 resolved.
+- **47 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
@@ -25,7 +25,7 @@ and when. Nothing is ever deleted.
   - Data infrastructure — **1**
   - Product / UI — **1**
   - Constitution & rules — **1**
-  - Repo & ops — **1**
+  - Repo & ops — **2**
 
 **1 section(s) over the cap.** A section over five P1 rows is STOPPED, and that is reported as a fact. Nothing is relabelled to fit — a demotion changes the label and not the situation.
 
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**46 open · 42 resolved.**
+**47 open · 42 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -68,6 +68,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH105** — Opened 2026-08-23. The instrument is built and the invitation list is generated - 272 of 272 Morris County candidacies, every row carrying invitedOn: null because nothing has been sent. The message is docs/candidate-questionnaire-invitation.md, quoted in full, plus a reminder message. FOUR THINGS ARE YOURS AND NONE OF THEM IS A SESSION'S CALL: (1) the message itself - it goes out under this product's name to 272 named people asking for votes; (2) a monitored reply address a person actually reads, which the message promises three times and which does not exist yet; (3) the schedule - one send date, two reminder dates and a deadline, which are constants at the top of scripts/questionnaire-invitations.mts and are quoted in full in that file and in data/questionnaire/invitations-nj-morris-2026.json; one edit moves all 272 symmetrically; (4) whether sparkwtp.netlify.app comes off its password wall first, because a candidate following the link today hits a password prompt. RULING 112 governs everything about the instrument itself; this row is only the decision to contact real people.
 
 **NH165** — Rule 4 of your BC-11 ruling is built: nothing typed into Speak Your Mind is ever auto-forwarded, and content the triage reads as a threat or as menacing is stored with review_state HELD and excluded from everything. What does not exist is the surface where you READ that queue and act on it - which is exactly what T05 says about the abuse policy generally. This row links the two: the HOLD half now has a concrete first surface, and the REVIEW half is still yours to unblock. T05 stays open and only you close it. The tiers are docs/abuse-policy.md's own T1/T2/T3, not new ones, and the rules that decide are lib/speak/triage.ts with the harsh-political-speech cases planted in the test so over-filtering fails the build.
+
+**NH174** — pnpm door2 walked all 19 candidacies on the 07866 ballot who are people this repo already records sitting on a governing body — the class your 8/24 ruling pre-approves — at the MEMBER'S OWN page rather than the body's index, which was NJ13's defect. 19 of 19 pages answered, 0 walls. Six portraits found, four of them new: Jennifer Rowland (Chatham Township), Russell Goodwin and Michael Dominianni (Chester Borough), Sean Mabey (Kinnelon), Kyle Russell and Melissa Florance-Lynch (Pequannock). Each is name-matched on the person's own municipal .gov page, read as an img element and never an og:image. ZERO shipped, which is the rule for a candidate portrait and is not something a hunt gets to decide. The queue is data/photos/door2-incumbents-2026-08-25.json. Two phones from the same walk DID ship — Nancy Verga and Melissa Fostle — because a number a town publishes beside a named member is a fact checkable by dialling it, where a portrait's failure mode is a wrong face beside a real name.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
@@ -259,13 +261,17 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**37 open · 5 resolved.**
+**40 open · 5 resolved.**
 
 ### P2
 
 **NH113** — The scheduled NJ filing refresh rebuilds data/ballot/nj-morris-2026.json and the file comes back reordered even when nothing about the ballot has changed. Run 32711668624 on 2026-08-24 showed 1,013 insertions against 1,013 deletions across two files while the clerk's own totals were identical - 272 candidacies, 90 contests, both PDFs still dated 08-21-26. So the workflow reports 'data/ballot/ CHANGED' and runs the full gate on every single run. That is not just noise: a real republish by the clerk will look exactly like the churn, and the one signal that would tell somebody the ballot actually moved is the one being spent every day on nothing.
 
 **NH115** — pnpm roster:stale, built 2026-08-24 for NH73, compares the Morris County Clerk's 263 certified winners against the 271 people this project holds on Morris body rosters. Of 234 municipal winners: 99 are confirmed in our rosters, 90 belong to municipalities we hold no roster for at all (a coverage gap), and 45 belong to places where we DO hold a roster that does not name them. Those 45 are the NH73 shape - a roster that may be showing a reader somebody who is not in the seat. Boonton Town has 13 of them and Chester Township 7.
+
+**NH172** — Measured 2026-08-25 during the tier-above directory inversion. www.governor.nh.gov, www.nh.gov and www.nh.gov/governor/executive-council/ all answer HTTP 403 to a browser header set AND to curl — two different clients, two different TLS fingerprints, same refusal. That is an EGRESS or host-policy wall rather than a header problem (ladder rung 5's finding), and it is recorded with its date rather than as a standing property (RULING 52). What sits behind it: the Governor's own page and the Executive Council's roster, which are the official sources for two contests on the 03255 ballot — Governor (4 candidates) and Executive Councilor District 2 (3 candidates). The next rungs not yet walked are 5 (a different egress), 11 (the Internet Archive) and 12 (the vendor platform, if the state runs one). NOT an absence: this names what the wall is around, per RULING 90 item 4.
+
+**NH175** — 2026-general-candidate-order-081026.pdf, the third document on the Morris County Clerk's candidates page. Read 2026-08-25: 7 pages, every one rendering with NO text layer, so the extractor correctly reports ZERO_ROWS with the reason 'this is a scanned PDF. The next rung is OCR (lib/extract/ocr.ts), NOT a finding that the document is empty'. Both the filing parser and nj:filing:check exclude it by name and say why, which is right — including it would produce a guaranteed zero-row parse. What it carries is the BALLOT POSITION of every candidate, drawn by lot, which decides the order a reader meets them on a real ballot and which this product does not hold. lib/extract/ocr.ts exists. Nobody has pointed it at this document.
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
 
@@ -318,6 +324,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH107** — Promoting the rung-1 campaign-site leads turned up attorney bio pages for two Morris County candidates — chippersonlaw.com for Rita C. Chipperson and dawkinswarrington.com for Clifford D. Dawkins. Both were briefly and wrongly promoted as campaign sites by a first version of the evidence test, and both are correctly recorded as MISS for that field now: a law firm page is not evidence of a candidacy. But it IS a real find for a different field. The branch manifest already names the route — bar-directory, which it describes as reaching an office address and a direct line — and the manifest's own index says to try it first when a candidate is a lawyer. Nothing read these two pages for a phone or an address.
 
 **NH114** — data/hunt/nj-morris-certified-winners.json holds 263 rows and some of them carry an office that is plainly not an office. Carolyn Dempsey's reads 'DEMPSEY', Robert Simpson's reads 'SIMPSON' - the surname landing in the office field - and several read null outright, among them Robert H. Conley, Howard Kritz, Maria Cote, Louis R. Maffei and James A. Lynch. The row count is right and the names are right, so every count over this file reconciles and reports success.
+
+**NH173** — Read 2026-08-25. https://www.tapinto.net/robots.txt answers HTTP 403, so the policy that would say whether we may walk it cannot be read at all — and a 403 on a policy is not an implied yes. TAPinto is a hyperlocal NETWORK with per-town sites across New Jersey and is the largest press surface this county has that this project does not read; docs/sources.md already recorded it walled at rung 3 on 2026-08-24. lib/hunt/press-surface.ts records it as UNREADABLE, which is a third state beside PERMITTED and DISALLOWED and is deliberately not either. Routes not yet walked: the Internet Archive's capture of the robots.txt (rung 11), which would establish what the policy SAYS even if the live file refuses; and asking the publisher directly, which is rung 13 and is a real option for a local outlet.
 
 **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
 
@@ -405,7 +413,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**76 open · 102 resolved.**
+**75 open · 103 resolved.**
 
 ### P1
 
@@ -450,8 +458,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH79** — pnpm dupes reads 2114 function bodies across 806 files and finds 26 groups where the same logic lives in more than one file. Two were consolidated on 2026-08-23: four copies of the outbound User-Agent, which CLAUDE.md makes law, and two of the person-name normaliser, one of which sat inside the tool that CHECKS whether the same person is shown twice - so the audit was using a different definition of a person from the resolver it audits. The other 24 are recorded in tests/duplicate-implementations.json with a disposition and a reason each. Six are ALLOWED for reasons that hold: the two intake key paths must stay unable to converge because the stores may never join, React context accessors are three identical lines by construction, and the .mjs date helper cannot import TypeScript because the pre-commit hook runs without tsx. Eighteen are OWED. The guard fails on a NEW group, so the class cannot grow while the backlog is worked, and the baseline only shrinks. The heaviest three: six byte-identical useSyncExternalStore subscribe callbacks across the hooks, four separate CSV parsers with the tracker stores downstream of two of them, and - the worst of the set - tests/district-hits.test.ts carrying its own copies of inRing, inPolygon and contains, so the test that checks point-in-district geometry proves its own copy works and says nothing at all about the shipped one.
 
 **NJ03** — lib/sources/http.ts gives the Cloudflare interstitial signature a 20 KB maxBytes floor, with a comment explaining exactly why: Cloudflare injects its challenge-platform script into ORDINARY pages, so reading the marker at any size would mark a working source refused. The Imperva/Incapsula signature has no such floor, and Imperva injects _Incapsula_Resource script tags into ordinary served pages in the same way. Swept on 2026-08-22 with git grep -a --untracked: no committed fixture currently carries the marker in a real page, so this is a LATENT risk and not a live defect, which is why it is a row rather than an edit. Diagnose before fixing applies with force here — changing a challenge detector without evidence would risk the opposite failure, a real wall read as a page. What would settle it is a recorded fixture of a large Imperva-fronted page that is genuinely served, which www.nj.gov can supply.
-
-**NJ16** — Measured 2026-08-24 with pnpm search:rung. Mojeek, Brave, Ecosia, Startpage and Bing all Disallow: /search in their own robots.txt, so they are not walked at any rung. html.duckduckgo.com and lite.duckduckgo.com publish Allow: / and answer HTTP 202 with a challenge page at rungs 2 and 3; rung 6, a live browser with JavaScript executed, renders the sentence 'Unfortunately, bots use DuckDuckGo too.' This is a WALL and no field moves toward absence on it. It matters because two of the five moves of the stuck protocol are literally 'type this into a search box', so an argued absence cannot be earned through that move today. The compliant routes that replaced it are in docs/sources.md.
 
 **PB02** — Nobody publishes boundaries for special districts — fire, water, irrigation, library — so the product cannot tell a reader whether they live in one. They are 43.55% of every government in the country, and this is the largest single hole in the coverage promise.
 
@@ -681,11 +687,13 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**15 open · 69 resolved.**
+**15 open · 71 resolved.**
 
 ### P1
 
 **NH106** — Established 2026-08-23 by asking GitHub directly, because gh is absent from this container and corepack pnpm main:green therefore answers CANNOT TELL - which is the correct fourth verdict and says nothing about main. main's tip 3d453fd (the merge of PR #162, a HUMAN commit rather than the NH85 bot-tip shape) FAILED build check, run 32664443326, at 2026-08-23T20:30:04Z. IT IS NOT THE RULING 81 SHAPE: 19 steps ran and the Test step ran for 81 seconds before failing, so the runner started and the tree was really tested. Lint passed, tsc passed, and BOTH build jobs passed - only the gates job is red. THE CAUSE IS ONE THING, FOUR TIMES: tests 1853, pass 1848, fail 4, skip 1, and every one of the four is 'NO CHROMIUM INSTALLED. Wanted build 1234; searched /home/runner/.cache/ms-playwright.' - three in tests/beacon-guard.test.ts and one in tests/chromium-pin.test.ts. The workflow's 'Install the browser the suite needs' step (corepack pnpm exec playwright install --with-deps chromium) reported SUCCESS in 27 seconds and left nothing the suite can find. So the step's success is not evidence a browser exists, which is the same shape as a 200 that is not a document. WHY NO FIX WAS PUSHED. It reproduces identically on the base branch, so it is not any diff's failure and a session cannot verify a CI-only change from a container with no way to run CI. The one 'fix' available locally would be to let the guard pass with no browser, and scripts/browser.mts says in as many words that nothing here may report a pass - softening it would delete the guard rather than repair the runner. WHAT IS OWED: read the install step's own log for run 32664443326 (it is not in the tail this session could fetch), and decide between pinning the Playwright version the image can actually serve, caching ~/.cache/ms-playwright, or asserting the executable exists as its own workflow step so a silent no-op install fails where it happens rather than eighty seconds later inside the suite. RELATED BUT DIFFERENT: NH96 is the same class in the SESSION CONTAINER, where a substituted Chromium 1194 makes the same test report CANNOT RUN by name rather than fail. Locally the suite is 1947 / 1946 pass / 0 fail / 1 skipped. On the runner it is 4 failures. Same pin, two environments, two different answers.
+
+**NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
 
 ### P2
 
@@ -701,13 +709,11 @@ CI, tests, workflows, storage, the machinery the project runs on.
 
 **NH96** — NH91 is closed: playwright is pinned to an exact version, EXPECTED_CHROMIUM_REVISION is committed in lib/ops/chromium-pin.ts and checked against playwright's own browsers.json, and scripts/browser.mts launches whatever complete Chromium the image has by explicit path while NAMING the substitution. Two of the three tests that could not run now run and pass on build 1194. THE THIRD CANNOT, and it is a real finding rather than a harness problem: the plant that proves the guard can fail asserts that an unload-time sendBeacon escapes extraHTTPHeaders, and on Chromium 1194 the headers DO reach it, so the beacon arrives declared. That is a measurement of build 1194 and says nothing about the pinned 1234, so the test reports CANNOT RUN with the substituted build named rather than asserting either way. WHAT WOULD CLOSE IT: the container image carrying the pinned build, at which point the plant runs against the browser it was written for. Nothing in the repo can fix it — this is a fact about the image.
 
-**NJ24** — RULING 125 made the Netlify deploy record the one remaining production fact a close-out needs, and the tool that reads it cannot. scripts/deploy-live.mjs defaults NETLIFY_SITE_ID to the bare name sparkwtp and calls /api/v1/sites/sparkwtp/deploys, which is HTTP 404. Measured 2026-08-25 with the token that is already in .env.local: the token works (the sites list returns 200 and shows sparkwtp), and the same deploys call returns 200 under either the site id 6b39b212-f8f8-4ddf-9357-a16faa9ecd08 or the full host sparkwtp.netlify.app. Only the bare name fails. The tool reported cannot-tell and exited non-zero, which is RULING 125's four-verdict rule working exactly as designed — it did not lie — but the verdict has been unavailable every time it has been asked. Fix: resolve a bare name through the sites list before calling deploys, and name the resolution in the output so a wrong site is legible rather than a 404. Not shipped tonight because it is a second code merge for a tooling defect rather than a regression the walk caught; the deploy fact was read directly from the API instead and is in the session report.
-
-**NJ25** — Read from the Netlify deploys API 2026-08-25 while getting this session's deploy id. Commit 26b357d, 'context.md, rewritten after shipping', deploy 6a8d1b7b08d04c00083024d8, context production, state ERROR. So production was serving ab4da20 rather than the tip of main from 04:35 until this session's merge deployed successfully at 07:38. Two of the six most recent production deploys are in state ERROR (41113c1b and 55d30471 as well), so this is a pattern rather than one bad build. Nothing in the close-out path notices: pnpm main:green asks GitHub whether the CHECKS passed, which they did, and a Netlify deploy failing afterwards is a different question that only the deploys API can answer — which is the same tool NJ24 says cannot currently answer it. The two rows belong together.
-
 **PB07** — Four of the five scheduled jobs run the full test suite before they push. The fifth does not, so a broken document can reach the repository unchallenged.
 
 ### P3
+
+**NH171** — Run 32840268606, 2026-08-25 11:03 UTC. push-main.mjs retried five times and every attempt came back 'remote: fatal error in commit_refs' with '! [remote rejected] HEAD -> main (failure)'. That is a GitHub-side error rather than a rejected fast-forward — a rebase-and-retry cannot fix it and correctly did not. Nothing in this repo is broken by it and nothing was lost: the tripwire commits only under docs/, which the deploy filter classifies as non-shipping. Recorded so a SECOND occurrence is recognised as a pattern rather than diagnosed from scratch, and because RULING 24 says a check that could not run is reported separately from one that failed. If it recurs, the question is whether push-main should distinguish a remote-side fatal from a rejected push and stop retrying.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

@@ -75,23 +75,55 @@ interface Outcome {
   source: RefreshSource;
   ran: boolean;
   ok: boolean;
+  /**
+   * The child said it wrote usable output and then failed — exit 2.
+   *
+   * ## The orchestrator was speaking a language it could not hear
+   *
+   * The header above states the three-valued vocabulary this file uses toward
+   * its own caller, and says in as many words that it is "the distinction the
+   * meetings ingest already draws". It did not LISTEN for that distinction:
+   * `runCommand` asked `status === 0`, so a child exiting 2 to mean *partial
+   * progress is on disk, commit it, then go red* was recorded identically to a
+   * child exiting 1 to mean *nothing usable exists*.
+   *
+   * The cost, measured on run 32833989579 (2026-08-25). `pnpm ingest composite`
+   * printed, in its own words, "PARTIAL PROGRESS IS ON DISK AND MUST BE
+   * COMMITTED: 451 row(s) from 10 of 11 source(s) were written before this
+   * failure. Exiting 2 (not 1) so the caller commits them". Both due sources
+   * were then marked plain failures, `succeeded.length` was 0, the
+   * every-due-source-failed branch fired, and the workflow printed "nothing
+   * usable was written — there is nothing to commit". Four hundred and
+   * fifty-one meeting rows from ten healthy sources were written to disk and
+   * thrown away, and nothing anywhere said so.
+   *
+   * A source that is PARTIAL is still FAILED — `ok` stays false, it is named in
+   * the report, and the run still exits 2 and goes red. What changes is that it
+   * no longer counts toward "every due source failed", which is the only
+   * question whose answer decides whether the healthy rows reach `main`.
+   */
+  partial?: boolean;
   skippedWhy?: string;
   failedCommand?: string;
   exitCode?: number;
 }
 
-function runCommand(command: string): { ok: boolean; code: number } {
+/** Exit 2 is a CONTRACT, not just a non-zero: output exists, and the run failed. */
+const PARTIAL_PROGRESS_CODE = 2;
+
+function runCommand(command: string): { ok: boolean; code: number; partial: boolean } {
   console.log(`\n  $ corepack pnpm ${command}`);
   if (dryRun) {
     console.log("    (dry run — not executed)");
-    return { ok: true, code: 0 };
+    return { ok: true, code: 0, partial: false };
   }
   const r = spawnSync("corepack", ["pnpm", ...command.split(" ")], {
     cwd: ROOT,
     stdio: "inherit",
     shell: process.platform === "win32",
   });
-  return { ok: r.status === 0, code: r.status ?? -1 };
+  const code = r.status ?? -1;
+  return { ok: code === 0, code, partial: code === PARTIAL_PROGRESS_CODE };
 }
 
 const due = forceAll ? [...REFRESH_SOURCES] : dueSources(runDate);
@@ -130,25 +162,40 @@ for (const source of REFRESH_SOURCES) {
 
   console.log(`  RUN   ${source.id.padEnd(12)} ${cadence}`);
   let ok = true;
+  let partial = false;
   let failedCommand: string | undefined;
   let exitCode: number | undefined;
   for (const command of source.commands) {
     const r = runCommand(command);
     if (!r.ok) {
       ok = false;
+      partial = r.partial;
       failedCommand = command;
       exitCode = r.code;
       // NH31: the source stops, the ORCHESTRATOR does not.
-      console.log(`\n  ::warning title=refresh source failed::${source.id} failed at 'pnpm ${command}' (exit ${r.code}). The other due sources continue; this run will be FAILED at the end, after any healthy data is safely committed.`);
+      const wrote = r.partial
+        ? " It exited 2, which is this project's contract for USABLE OUTPUT IS ON DISK — its rows continue to the gate and the commit."
+        : "";
+      console.log(`\n  ::warning title=refresh source failed::${source.id} failed at 'pnpm ${command}' (exit ${r.code}).${wrote} The other due sources continue; this run will be FAILED at the end, after any healthy data is safely committed.`);
       break;
     }
   }
-  outcomes.push({ source, ran: true, ok, failedCommand, exitCode });
+  outcomes.push({ source, ran: true, ok, partial, failedCommand, exitCode });
 }
 
 const ranSources = outcomes.filter((o) => o.ran);
 const failed = ranSources.filter((o) => !o.ok);
 const succeeded = ranSources.filter((o) => o.ok);
+/*
+ * WHOSE OUTPUT REACHED DISK — a different question from whose run was clean,
+ * and the one that decides whether anything is committed.
+ *
+ * A source that exited 2 wrote rows and then failed. Counting it as a plain
+ * failure is what discarded 451 meeting rows on 2026-08-25; counting it as a
+ * success would hide a red run. It is neither: it PRODUCED, and it FAILED.
+ */
+const produced = ranSources.filter((o) => o.ok || o.partial);
+const partials = ranSources.filter((o) => !o.ok && o.partial);
 
 const lines: string[] = [];
 lines.push("# The daily refresh run");
@@ -171,6 +218,8 @@ for (const o of outcomes) {
     ? `not due — ${o.skippedWhy}`
     : o.ok
       ? "clean"
+      : o.partial
+        ? `**FAILED, output kept** at \`pnpm ${o.failedCommand}\` (exit ${o.exitCode} — usable rows were on disk and are committed)`
       : `**FAILED** at \`pnpm ${o.failedCommand}\` (exit ${o.exitCode})`;
   lines.push(
     `| \`${o.source.id}\` | ${cad} | ${o.ran ? "yes" : "no"} | ${result} | ${o.source.governs.map((g) => `\`${g}\``).join(", ")} |`,
@@ -194,20 +243,32 @@ if (!dryRun) {
 }
 
 console.log(
-  `\nrefresh-daily · ${succeeded.length} clean, ${failed.length} failed, ${outcomes.length - ranSources.length} not due, of ${REFRESH_SOURCES.length} source(s)`,
+  `\nrefresh-daily · ${succeeded.length} clean, ${partials.length} failed with output on disk, ${failed.length - partials.length} failed with nothing usable, ${outcomes.length - ranSources.length} not due, of ${REFRESH_SOURCES.length} source(s)`,
 );
 
 if (ranSources.length === 0) {
   console.log("refresh-daily · nothing was due today — exit 0, and the workflow will find no diff to commit");
   process.exit(0);
 }
-if (succeeded.length === 0) {
-  console.log("refresh-daily · EVERY due source failed — nothing trustworthy was written. Commit nothing.");
+/*
+ * THE QUESTION IS WHETHER ANYTHING USABLE EXISTS, NOT WHETHER ANY RUN WAS
+ * CLEAN. Asking the second question is what threw 451 rows away — see the
+ * `partial` field's note above.
+ */
+if (produced.length === 0) {
+  console.log(
+    "refresh-daily · EVERY due source failed AND none of them wrote usable output — nothing trustworthy exists. Commit nothing.",
+  );
   process.exit(1);
 }
 if (failed.length > 0) {
+  if (partials.length > 0) {
+    console.log(
+      `refresh-daily · ${partials.map((f) => f.source.id).join(", ")} wrote usable output before failing (exit 2). Those rows are committed; the run still goes red.`,
+    );
+  }
   console.log(
-    `refresh-daily · PARTIAL: ${failed.map((f) => f.source.id).join(", ")} failed. The healthy sources' data continues to the gate and the commit; this run goes red afterwards (NH31).`,
+    `refresh-daily · PARTIAL: ${failed.map((f) => f.source.id).join(", ")} failed. Everything usable continues to the gate and the commit; this run goes red afterwards (NH31).`,
   );
   process.exit(2);
 }

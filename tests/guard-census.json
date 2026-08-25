@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 227,
-    "named": 2183,
+    "named": 2190,
     "dynamic": 6
   },
   "files": {
@@ -787,7 +787,8 @@
         "A-002 · unretrieved DOCUMENTS are reported but never summed with logical records",
         "RULING 43 survives A-002 — documents in hand and nothing out still throws",
         "S-001 · the zero-row predicate has ONE implementation and both callers use it",
-        "S-001 · totalDropped sums the counters rather than asking whether any is set"
+        "S-001 · totalDropped sums the counters rather than asking whether any is set",
+        "legistar's composite wrapper conserves, and agrees with the adapter EXACTLY"
       ],
       "dynamic": 0
     },
@@ -2816,11 +2817,17 @@
       "names": [
         "REFUSES a malformed date rather than coercing it",
         "REFUSES a stamp that describes no sources",
+        "TWO days behind is drift and still fails — the tolerance is a clock boundary, not a grace period",
+        "a declaration NEWER than any commit fails, because that is the fabrication direction",
+        "a declaration ONE DAY BEHIND the newest commit agrees, and says it was tolerated",
         "a declared stamp cannot be wrong by accident",
         "accepts a well-formed declaration",
+        "an exact match agrees WITHOUT the tolerance flag, so the two are distinguishable",
+        "crosses a month boundary correctly — 08-31 is the day before 09-01",
         "every declared stamp in the tree AGREES with git, where git can answer",
         "git verification reports rather than guesses",
-        "says UNVERIFIABLE on a shallow clone instead of returning the tip's date"
+        "says UNVERIFIABLE on a shallow clone instead of returning the tip's date",
+        "the midnight tolerance, in both directions"
       ],
       "dynamic": 0
     },

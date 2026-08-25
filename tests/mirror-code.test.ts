@@ -52,7 +52,14 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // anything sends, the transparency draft for the same reason, and the
   // portrait review sheet, which is how he now approves photographs — he
   // glances at it in Drive and replies with numbers.
-  assert.equal(MIRRORED_DOCS.length, 23, "the canonical set changed size — was that a decision?");
+  // TWENTY-FOUR since 2026-08-25, and it was a decision: `coverage-matrix.csv`,
+  // written by `pnpm matrix` under RULING 149. It is one row per candidate and
+  // one column per fact, which is a SPREADSHEET question — a thing to open in a
+  // spreadsheet rather than in a terminal. It is INTERNAL and never rendered to
+  // a reader; the mirror is the author's own folder rather than a reader
+  // surface, and that distinction is the whole of why it belongs here and is
+  // forbidden in `app/`.
+  assert.equal(MIRRORED_DOCS.length, 24, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -91,7 +98,11 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Twenty-one copied since 2026-08-24: the four Sean added all have repo
   // counterparts, so all four are drift-checkable, which is the point of
   // putting them in the canonical set rather than declaring them extras.
-  assert.equal(COPIED_DOCS.length, 21);
+  // Twenty-two copied since 2026-08-25: coverage-matrix.csv has a repo
+  // counterpart, so it is drift-checkable like the rest — which is the point of
+  // putting a generated artifact in the canonical set rather than declaring it
+  // an extra.
+  assert.equal(COPIED_DOCS.length, 22);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 

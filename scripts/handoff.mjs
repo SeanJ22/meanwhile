@@ -1304,6 +1304,47 @@ function buildGate() {
  * step is skipped when it is already done, so running it twice is harmless.
  */
 function ship() {
+  /*
+   * **THE GENERATED FILES THIS RUN ITSELF WROTE, COMMITTED BEFORE THE PUSH.**
+   * (2026-08-25, Item 16.)
+   *
+   * `handoff` regenerates `docs/context.md` — and now the coverage matrix —
+   * on its way to the ship. Those writes land AFTER the session's last commit
+   * and BEFORE this push, so they were in neither: not in the pull request,
+   * and not committed anywhere. The tree was left dirty, and Sean has
+   * hand-cleared that jam three times.
+   *
+   * The refusal below is the reason it could never fix itself: `dirty` is
+   * measured at startup, before those files are written, so the run does not
+   * refuse — it simply pushes without them.
+   *
+   * These are GENERATED artifacts with named paths, so committing them needs
+   * no judgement about what the change means, which is why the general
+   * "commit first, a commit needs a message" rule below still stands for
+   * everything else and is untouched.
+   */
+  const generated = ["docs/context.md", "docs/coverage-matrix.csv"].filter(
+    (path) => git("status", "--porcelain", "--", path) !== "",
+  );
+  if (generated.length > 0) {
+    try {
+      git("add", ...generated);
+      git(
+        "commit",
+        "-m",
+        `Close-out: the generated files handoff wrote on its way here (${generated
+          .map((p2) => p2.replace(/^docs\//, ""))
+          .join(", ")})`,
+      );
+      ok("ship · generated", `committed ${generated.join(", ")} so they travel in the PR`);
+    } catch (error) {
+      warn(
+        "ship · generated",
+        `could not commit ${generated.join(", ")} — ${String(error.message).split("\n")[0]}`,
+      );
+    }
+  }
+
   if (dirty.length > 0) {
     fail("ship", "refused — commit first, a commit needs a message that says why");
     return;

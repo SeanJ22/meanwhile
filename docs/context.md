@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 19:55:18 EDT.
+Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1036 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1039 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -595,5 +595,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-25 19:55:18 EDT
+branch: claude/one-session-0825
+head sha: 62ffea7e99265c0bf4dc3d6b692970be23704ec5
+head subject: Close-out tooling: handoff commits what it writes, and the matrix joins the mirror set
+origin/main sha: 9a2a8d7bae55a1fa65ff6399e75fabcde5c44210
+origin/main subject: Merge pull request #180 from SeanJ22/claude/one-session-0825
+local main sha: 9a2a8d7bae55a1fa65ff6399e75fabcde5c44210
+local main matches origin/main: yes
+working tree: clean
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14496
+```

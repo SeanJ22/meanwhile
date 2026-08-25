@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 235,
-    "named": 2285,
+    "named": 2288,
     "dynamic": 6
   },
   "files": {
@@ -1653,6 +1653,9 @@
       "names": [
         "JUR-1: no surface builds a Governs row without going through the one claim",
         "JUR-1: the two claims are mutually exclusive, by construction",
+        "JUR-2 third era: RULING 71 survives — a HIT on a zip basis still GOVERNS",
+        "JUR-2 third era: a caller that resolved NO partial set is unchanged",
+        "JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY",
         "JUR-2: NEARBY is the same over-claim pointed the other way, and collapses too",
         "JUR-2: UNMEASURED partiality is not treated as 'nothing is partial'",
         "JUR-2: a division covering the WHOLE zip still answers normally",

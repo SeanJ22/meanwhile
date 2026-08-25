@@ -621,7 +621,34 @@ export function MapCanvas({
       window.clearTimeout(settleTimer);
     };
     const onMoveEnd = () => {
-      if (!userMoved) return;
+      /*
+       * **BAL-9, SECOND PASS (2026-08-25) — THE GATE WAS WHY THE FIX DID NOT
+       * WORK.**
+       *
+       * `camera-memory.ts` was built correctly and restores correctly, and the
+       * author still got the continent back the next morning. The reason is
+       * six lines above this one, in this file's own words: *a user gesture is
+       * the only thing that carries an `originalEvent` on movestart — flyTo,
+       * jumpTo and fitBounds never do.*
+       *
+       * Entering a zip flies the camera PROGRAMMATICALLY. So on the entry path
+       * — type a zip, look at the ballot, press back — `userMoved` was never
+       * true, nothing was ever remembered, `recallCamera()` returned null, and
+       * the map fell back to `CONUS_BOUNDS`. The fix worked only for a reader
+       * who happened to pan or pinch first.
+       *
+       * **A FLY-TO'S END IS A DELIBERATE ARRIVAL TOO.** The original reasoning
+       * — a settle is an arrival, a frame of an animation is not — is right,
+       * and it argues for ignoring the FRAMES rather than the destination. The
+       * debounce already handles the frames. Where the app put the reader is
+       * exactly where the reader was.
+       *
+       * So the camera is remembered on ANY settled arrival. The gesture gate
+       * stays on `onViewportSettle` below, which is a different question: that
+       * one re-queries the server, and firing it on our own camera moves would
+       * be a query loop.
+       */
+      const wasUserMove = userMoved;
       userMoved = false;
       window.clearTimeout(settleTimer);
       settleTimer = window.setTimeout(() => {
@@ -641,6 +668,13 @@ export function MapCanvas({
           lng: center.lng,
           zoom: map.getZoom(),
         });
+        /*
+         * The gesture gate lives HERE and only here. A re-query on our own
+         * camera move is a loop: the answer moves the camera, the camera asks
+         * again. BAL-9 needed the camera REMEMBERED on every arrival; it never
+         * needed the server asked again.
+         */
+        if (!wasUserMove) return;
         onViewportSettleRef.current?.({
           lat: center.lat,
           lng: center.lng,

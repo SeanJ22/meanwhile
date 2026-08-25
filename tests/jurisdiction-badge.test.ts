@@ -324,3 +324,45 @@ test("JUR-2: the census counts the fourth state", () => {
   );
   assert.deepEqual(census, { GOVERNS: 1, NEARBY: 0, NO_BOUNDARY: 1, COULD_GOVERN: 1 });
 });
+
+test("JUR-2 third era: a centroid MISS on a zip basis does not assert NEARBY", () => {
+  /*
+   * The half that survived two passes. `COULD_GOVERN` replaced the GOVERNS
+   * assertion for a partial division, and the NEARBY beside it went on
+   * asserting "this body governs a different area" from a ZCTA centroid —
+   * which this module's own documentation already called "the same unearned
+   * certainty pointed the other way".
+   *
+   * A centroid is one sample of a zip. A body governing the half of the zip
+   * the reader actually lives in looks exactly like a body governing
+   * somewhere else.
+   */
+  const somewhereElse = { ocdId: "ocd-division/country:us/state:nj/place:dover" };
+  const atPoint = new Set(["ocd-division/country:us/state:nj/place:rockaway"]);
+  const partial = new Set(["ocd-division/country:us/state:nj/place:rockaway"]);
+
+  // On an ADDRESS basis a miss is a real geometric answer and stays NEARBY.
+  assert.equal(badgeFor(somewhereElse, atPoint, "ADDRESS", partial), "NEARBY");
+
+  // On a ZIP basis it cannot be asserted.
+  assert.equal(badgeFor(somewhereElse, atPoint, "ZIP", partial), "COULD_GOVERN");
+});
+
+test("JUR-2 third era: RULING 71 survives — a HIT on a zip basis still GOVERNS", () => {
+  /*
+   * A county, a regional district or a state covering the WHOLE zip does not
+   * become uncertain because the zip crosses a municipal line, and a pill on
+   * things it obviously does not apply to is a pill readers learn to skip.
+   */
+  const county = { ocdId: "ocd-division/country:us/state:nj/county:morris" };
+  const atPoint = new Set([county.ocdId]);
+  assert.equal(badgeFor(county, atPoint, "ZIP", new Set()), "GOVERNS");
+});
+
+test("JUR-2 third era: a caller that resolved NO partial set is unchanged", () => {
+  // The new branch is guarded on `partialAtZip !== null`. A caller that passed
+  // nothing has told us nothing about zip overlap, and inventing an answer for
+  // it would be the opposite defect.
+  const elsewhere = { ocdId: "ocd-division/country:us/state:nj/place:dover" };
+  assert.equal(badgeFor(elsewhere, new Set(["other"]), "ZIP", null), "NEARBY");
+});

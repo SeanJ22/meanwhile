@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 154 recorded
+## Rulings — 156 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -424,6 +424,8 @@ from. Each entry there names what it supersedes.
 - RULING 139 — the product never announces its own failure
 - RULING 140 — dates spell out, product-wide
 - RULING 141 — the Speak Your Mind store's four rules
+- RULING 142 — the line in the sand, and nothing collected before it is ever sold
+- RULING 143 — what DONE means for 07866, and it is per candidate
 
 ## P0 tracker rows — 93 of 456 rows
 

@@ -36,7 +36,7 @@
     "regeneratedOn": "2026-08-24"
   },
   "data/hunt/roster-pages-muni-sites-nj-morris.json": {
-    "digest": "d5064adcd19d394bc5d8fd50ab900ae4eefb315c522e476d2039821b50d3e2d6",
+    "digest": "63898d032fb194e30ee820fd019f53f3fbaa9e3ab2690333303ab521fbd34cfd",
     "files": 3,
     "entry": "scripts/roster-hunt.mts",
     "regeneratedOn": "2026-08-24"
@@ -72,8 +72,8 @@
     "regeneratedOn": "2026-08-24"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "d86c0a9feda9031966c407ce8529d7b5650092eedc667e3eae59fd1453e150f3",
-    "files": 2,
+    "digest": "0653ce72cc7542b0d02c9648474d23366478045d8fa384ee882db7aadc881b8f",
+    "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-24"
   },
@@ -84,8 +84,8 @@
     "regeneratedOn": "2026-08-24"
   },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "d86c0a9feda9031966c407ce8529d7b5650092eedc667e3eae59fd1453e150f3",
-    "files": 2,
+    "digest": "0653ce72cc7542b0d02c9648474d23366478045d8fa384ee882db7aadc881b8f",
+    "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-24"
   }

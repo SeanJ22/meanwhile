@@ -61,6 +61,7 @@ import {
 import { ControlledProbe, type ProbeOutcome } from "../lib/hunt/control-query.ts";
 import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
 import { conserve } from "../lib/sources/normalize-account.ts";
+import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 const OUT_DIR = join(ROOT, "data", "hunt");
@@ -152,16 +153,16 @@ interface Ctx {
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-function today(): string {
-  /*
-   * A RUN stamp is forbidden in a freshness field (RULING 107). This one is an
-   * `attemptedAt` written by the code path that PERFORMS the read, in the same
-   * function, which is the declared reading-path carve-out.
-   *
-   * @freshness-reads-here
-   */
-  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/Phoenix" }).format(new Date());
-}
+/*
+ * The stamp comes from `scripts/doc-dates.mjs`, never a local formatter — a
+ * second copy of the Phoenix rule is a duplicate implementation (RULING 103).
+ *
+ * It is written into `attemptedAt` by the code path that PERFORMS the read, in
+ * the same run, which is the declared reading-path carve-out of RULING 107 and
+ * not a restamp.
+ *
+ * @freshness-reads-here
+ */
 
 function subjectOf(c: Candidacy): string {
   return `${c.givenName} ${c.familyName}`.replace(/\s+/g, " ").trim();

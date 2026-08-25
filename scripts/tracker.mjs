@@ -1056,7 +1056,7 @@ function modeAdd(working, resolved, sections) {
   const fingerprint = (r) =>
     [r.Section ?? "", r.Title ?? "", r["What this is"] ?? ""]
       .map((s) => String(s).trim().replace(/\s+/g, " ").toLowerCase())
-      .join(" ");
+      .join("\u0000");
   const alreadyOpen = new Map(working.map((r) => [fingerprint(r), r.ID]));
   const duplicates = added.filter((r) => alreadyOpen.has(fingerprint(r)));
   for (const d of duplicates) {

@@ -92,7 +92,7 @@ export type FieldState =
   /** Nobody has looked, or the looking does not meet the bar. */
   | { state: "OWED"; why: string };
 
-export interface CandidateDepth {
+export interface KellyReading {
   candacyId: string;
   subject: string;
   contestId: string;

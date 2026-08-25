@@ -40,6 +40,7 @@ import { join } from "node:path";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
 import { launchGuarded, type GuardedBrowser } from "./browser.mts";
+import { today } from "./doc-dates.mjs";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");
 const ZIP = process.env.PERF_ZIP ?? "85701";
@@ -305,7 +306,7 @@ console.log(`  written to ${OUT}`);
  * @freshness-reads-here — the clock stamps in the path that PERFORMED the
  * measurement, which is the declared carve-out in RULING 107, not a restamp.
  */
-const stamp = `${new Intl.DateTimeFormat("en-CA", { timeZone: "America/Phoenix" }).format(new Date())} (America/Phoenix)`;
+const stamp = `${today()} (America/Phoenix)`;
 writeFileSync(
   OUT,
   `# Performance baseline

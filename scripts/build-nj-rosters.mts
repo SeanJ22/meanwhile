@@ -63,6 +63,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { topOfficesFor } from "../lib/officials/top-offices.ts";
 import { declaredSourceStamp } from "../lib/ops/source-stamp.ts";
 
 const ROOT = process.cwd();
@@ -85,8 +86,13 @@ const AS_OF = declaredSourceStamp({
    * which CI does not have. The newest of these four inputs last changed on
    * 2026-08-22, and this line changes in the same commit as the next one that
    * does.
+   *
+   * Moved to 2026-08-24 by the NJ depth session: `roster-pages-muni-sites-nj-morris.json`
+   * was rewritten that day when `pnpm roster:hunt` grew its sitemap branch, and
+   * the artifact was regenerated in the same commit — 19 bodies to 21, 126
+   * members to 145.
    */
-  readOn: "2026-08-22",
+  readOn: "2026-08-24",
   sources: SOURCE_FILES,
 });
 const DRY = process.argv.includes("--dry");
@@ -671,6 +677,47 @@ for (const m of wiki.municipalities) {
         "the county clerk's certified winners do not reach this municipality, so the SEATS' " +
         "partisanship is unsettled (M62). Not shipped UNDETERMINED — that is a gap in the hunt, " +
         "not a fact about the office. OWED.",
+    });
+    continue;
+  }
+
+  /*
+   * **A ROSTER THAT RESOLVES NO PRESIDING OFFICER IS A GARBLED READ, NOT A BODY.**
+   * (Added 2026-08-24, the NJ depth session, after the sitemap branch produced
+   * exactly one.)
+   *
+   * `tests/top-offices.test.ts` already asserts that every curated roster
+   * resolves a presiding officer, and it caught Hanover Township the moment the
+   * new discovery branch reached its page. That is the guard working; what was
+   * missing is the gate, because a defect the SUITE catches is a defect that
+   * shipped into the artifact and had to be taken back out.
+   *
+   * The Hanover page is a portfolio table — *Director of Public Works*,
+   * *Building Department and Property Maintenance Director* — and the extractor
+   * read the portfolios as office titles. One "member" came back as
+   * `Krista DiGiorgio / Bid Committee Members` with a list of six other names in
+   * its term note, which is the parse failing rather than the town being odd.
+   *
+   * **This is not suppression.** It is the same completeness gate the seat-count
+   * and partisanship checks above apply: the body is OWED with a stated reason
+   * and named in `--dry`, exactly like the eighteen others. A New Jersey
+   * governing body has someone presiding — the mayor, the chair, the deputy —
+   * so a roster with none is a fact about our READ.
+   */
+  /* `topOfficesFor` reads only `officeTitle` and `id`; the cast keeps this to the
+   * two fields the check actually uses rather than building a whole SeatHolder
+   * that would then have to be kept in step with a type it does not need. */
+  const presiding = topOfficesFor(
+    members.map((m, i) => ({ id: `gate:${slug}#${i}`, officeTitle: m.officeTitle ?? null })) as unknown as
+      Parameters<typeof topOfficesFor>[0],
+  );
+  if (presiding.length === 0) {
+    refused.push({
+      slug,
+      why:
+        `${members.length} member(s) read and NOT ONE resolves a presiding office. Every NJ ` +
+        "governing body has someone presiding, so this is a garbled read rather than a town " +
+        "that publishes no chair — most often a department-portfolio table parsed as a roster. OWED.",
     });
     continue;
   }

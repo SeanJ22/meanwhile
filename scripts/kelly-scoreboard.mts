@@ -37,20 +37,28 @@
 
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { today } from "./doc-dates.mjs";
 
 import {
   KELLY_FIELDS,
   absenceStands,
   type ArguedAbsence,
-  type CandidateDepth,
+  type KellyReading,
   type FieldState,
   type KellyField,
 } from "../lib/hunt/kelly-depth.ts";
 
 const ROOT = process.cwd();
 
-/** @freshness-reads-here — a run stamp used as TODAY for an expiry comparison, never written into a freshness field. */
-const TODAY = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Phoenix" }).format(new Date());
+/**
+ * @freshness-reads-here — the day an expiry is compared AGAINST, never a value
+ * written into a freshness field.
+ *
+ * From `scripts/doc-dates.mjs` rather than a local `Intl.DateTimeFormat`:
+ * a second copy of the Phoenix formatter is a duplicate implementation
+ * (RULING 103), and the two would drift the first time one was corrected.
+ */
+const TODAY = today();
 
 interface Candidacy {
   id: string;
@@ -149,7 +157,7 @@ function held(id: string, field: KellyField): { yes: boolean; evidence: string }
   }
 }
 
-const rows: CandidateDepth[] = [];
+const rows: KellyReading[] = [];
 for (const c of ballot.candidacies) {
   const fields = {} as Record<KellyField, FieldState>;
   const owed: KellyField[] = [];

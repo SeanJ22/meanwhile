@@ -236,7 +236,8 @@
     "deploy:sha": "node scripts/deploy-live.mjs --sha",
     "press:surface": "tsx scripts/press-surface-0825.mts",
     "photos:verify": "tsx scripts/verify-staged-portraits.mts",
-    "matrix": "tsx scripts/coverage-matrix.mts"
+    "matrix": "tsx scripts/coverage-matrix.mts",
+    "flake:sweep": "tsx scripts/flake-sweep.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

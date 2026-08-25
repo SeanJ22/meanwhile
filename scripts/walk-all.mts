@@ -58,6 +58,10 @@
  * ever tapped and no ask is ever submitted.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  outcomeFor,
+  type QuarantineFile,
+} from "../lib/ops/flake-quarantine.ts";
 import { join } from "node:path";
 
 import { neon } from "@neondatabase/serverless";
@@ -217,14 +221,46 @@ const CHECKS_FILE = join(process.cwd(), "docs", "walk-checks.txt");
  * is undone", which is the sentence the standing report needs and the one a
  * bare check name cannot produce.
  */
+/**
+ * **THE QUARANTINE LIST (`NH176`, 2026-08-25).**
+ *
+ * A check that has been shown to FAIL AND THEN PASS on an unchanged build is
+ * flaky, and a suite that fails one arbitrary check per run teaches a session
+ * to skim past the real one. Quarantined checks still RUN and still print —
+ * they are tracked and hunted, never deleted and never counted passing.
+ *
+ * Detection is rerun-based and lives in `pnpm flake:sweep`; this file is only
+ * the committed verdict, so a run cannot quarantine anything on its own.
+ */
+const QUARANTINE: QuarantineFile | null = (() => {
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), "docs", "walk-flakes.json"), "utf8"),
+    ) as QuarantineFile;
+  } catch {
+    return null;
+  }
+})();
+const quarantined: string[] = [];
+
 function check(session: string, name: string, ok: boolean, evidence = ""): boolean {
   census.set(session, (census.get(session) ?? 0) + 1);
-  identities.push(`[${session}] ${name}`);
-  if (ok) passed += 1;
-  else failures.push({ session, name, evidence });
-  console.log(
-    `  ${ok ? "ok  " : "FAIL"} [${session}] ${name}${evidence ? ` — ${evidence}` : ""}`,
-  );
+  const identity = `[${session}] ${name}`;
+  identities.push(identity);
+
+  /*
+   * FOUR outcomes, four different facts, and none may wear another's clothes
+   * (RULING 24). `outcomeFor` is what makes "never counted passing" true
+   * rather than promised: the only way to get PASS out of it is to have
+   * passed.
+   */
+  const outcome = outcomeFor(QUARANTINE, identity, ok);
+  if (outcome === "PASS") passed += 1;
+  else if (outcome === "FAIL") failures.push({ session, name, evidence });
+  else quarantined.push(`${identity}${evidence ? ` — ${evidence}` : ""}`);
+
+  const mark = outcome === "PASS" ? "ok  " : outcome === "FAIL" ? "FAIL" : "QUAR";
+  console.log(`  ${mark} ${identity}${evidence ? ` — ${evidence}` : ""}`);
   return ok;
 }
 
@@ -5749,6 +5785,31 @@ if (!AGAINST_PRODUCTION) {
   console.log(
     `\n  docs/walk-checks.txt written — ${everyIdentity.length} identities ` +
       `(${ranNow.length} ran, ${carriedDeclined} carried because they COULD NOT RUN).`,
+  );
+}
+
+/*
+ * **THE QUARANTINE IS PRINTED ON EVERY RUN, whether or not it caught
+ * anything.** (`NH176`, 2026-08-25.)
+ *
+ * A deliberate exclusion that reads as a clean result is the silent-trim shape
+ * this repo names more often than any other. The number set aside is stated,
+ * by name, beside the number that passed — so "372 passed" can never quietly
+ * mean "372 passed and 3 were not counted".
+ */
+if (quarantined.length > 0) {
+  console.log(
+    `
+  ${quarantined.length} check(s) QUARANTINED as flaky — tracked and hunted, NOT counted as passing:`,
+  );
+  for (const q of quarantined) console.log(`    ${q}`);
+  console.log(
+    "  Each carries a tracker row. Detection is pnpm flake:sweep; docs/walk-flakes.json is the verdict.",
+  );
+} else if (QUARANTINE && QUARANTINE.entries.length > 0) {
+  console.log(
+    `
+  quarantine list holds ${QUARANTINE.entries.length} check(s); none of them failed this run.`,
   );
 }
 

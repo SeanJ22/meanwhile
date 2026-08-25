@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:46:57 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:48:51 EDT.
 Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -587,15 +587,15 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-25 13:46:57 EDT
+generated: 2026-08-25 13:48:51 EDT
 branch: claude/final-pass-0825
-head sha: 48aefaa28c7a92e72d5cf7b62005bf6a15fa5a6f
-head subject: Merge origin/main — the job watcher's row and this session's rows both survive
+head sha: 0527e634971dbc1f729d695050cd7fe220adaa73
+head subject: The handoff's own mirror gate was failing on a 1 MB buffer, and it had been for as long as state.md has been big
 origin/main sha: c4167eb791831be26c34aee207795f90bc71c8fe
 origin/main subject: Merge pull request #175 from SeanJ22/claude/final-pass-0825
 local main sha: c4167eb791831be26c34aee207795f90bc71c8fe
 local main matches origin/main: yes
-working tree: dirty — 5 changed file(s)
+working tree: clean
 open prs: none
 last recorded tests: 1442 (fail)
 last recorded lint: not recorded

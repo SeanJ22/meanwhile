@@ -34,7 +34,14 @@ const ROOT = join(import.meta.dirname, "..");
 
 /** The same question `workbookHoldsUnknownRows` asks, over a workbook's bytes. */
 function unknownIdsIn(bytes: Buffer, known: Set<string>): string[] {
-  const sheets = readWorkbook(bytes) as Record<string, { name: string; rows: string[][] }>;
+  /*
+   * `readWorkbook` returns an ARRAY of sheets, and the handoff guard iterates
+   * `Object.values(...)` over it — which works for both shapes and is why the
+   * two read alike. Typed through `unknown` because the compiler is right that
+   * an array and a record do not overlap, and pretending otherwise would be
+   * asserting a shape rather than reading one.
+   */
+  const sheets = readWorkbook(bytes) as unknown as Record<string, { name: string; rows: string[][] }>;
   const unknown: string[] = [];
   for (const sheet of Object.values(sheets)) {
     const rows = sheet?.rows;

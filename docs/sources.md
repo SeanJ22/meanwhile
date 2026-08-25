@@ -475,14 +475,56 @@ client.
 
 | Host | its `User-agent: *` says | may we walk it | rung result | last walked |
 |---|---|:--:|---|---|
-| `html.duckduckgo.com` | `Allow: /` | **yes** | rungs 2 and 3: **HTTP 202, ~14 KB, zero result anchors** — a challenge page, not an empty result set | 2026-08-24 |
-| `lite.duckduckgo.com` | `Allow: /` | **yes** | HTTP 202, same shape | 2026-08-24 |
+| `html.duckduckgo.com` | `Allow: /` | **yes** | rungs 2 and 3: **HTTP 202, ~14 KB, zero result anchors** — a challenge page, not an empty result set. Re-measured 2026-08-25: unchanged, HTTP 202 at ~14.2 KB constant across ten queries | 2026-08-25 |
+| `lite.duckduckgo.com` | `Allow: /` | **yes** | HTTP 202, same shape. Re-measured 2026-08-25: unchanged | 2026-08-25 |
 | `duckduckgo.com` | `Disallow: /*?` then `Allow: /?*` | **yes, at the root query form** | rung 6, a live browser with JavaScript executed: the rendered page reads **"Unfortunately, bots use DuckDuckGo too."** | 2026-08-24 |
-| `www.mojeek.com` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
-| `search.brave.com` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
+| `4get.ca` | `Disallow:` — **empty, so every path is permitted** | **YES** | rung 2: HTTP 200, 7,228 B naming the subject 8 times, against a 7,274 B control. **The only compliant general index in this table**, and it is in `SEARCH_POOL` | 2026-08-25 |
+| `www.mojeek.com` | `Disallow: /search` | **no** | **not walked at any rung.** Its `robots.txt` was re-read 2026-08-25 and is unchanged | 2026-08-25 |
+| `search.brave.com` | `Disallow: /search` (with `Allow: /search?conversation=` above it) | **no** | **not walked at any rung.** Re-read 2026-08-25, unchanged | 2026-08-25 |
 | `www.ecosia.org` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
 | `www.startpage.com` | `Disallow: /sp/` | **no** | not walked at any rung | 2026-08-24 |
+| `searx.be` | — | **not reached** | HTTP 200 with **byte-identical bodies (11,354 B)** for a real query and for an identifier that cannot exist, naming nobody. A JavaScript shell: a "no result" from it would be indistinguishable from a wall, so it fails RULING 68's control before compliance is even the question | 2026-08-25 |
 | `www.bing.com` | `Disallow: /search` and siblings | **no** | not walked at any rung | 2026-08-24 |
+
+### A CORRECTION THIS SESSION OWES, recorded rather than smoothed (2026-08-25)
+
+**The final pass built a search route straight through this table's own
+prohibition, and had to unbuild it.**
+
+`lib/hunt/search-pool.ts` was first written with **Mojeek and Brave in the
+pool**, on the strength of the right two questions asked in the wrong order:
+does the host answer, and does its answer pass a control query. Both do. Both
+also carry `Disallow: /search`, and `/search` is the path a query goes to.
+
+**The table above already said so**, in the column headed *may we walk it*, with
+the answer **no** and the rung result **not walked at any rung** — recorded by
+the 2026-08-24 session, which had asked the permission question first and got it
+right. The header three lines above it says the compliance column is decided
+*before any rung was attempted*. Everything needed to avoid this was written
+down, dated, and in the register the constitution names as the source of record.
+
+What went wrong is a reading failure and it is worth naming precisely: this
+session opened `docs/sources.md`, measured its size, and went to the sections it
+expected to need. It did not read the section about the thing it was about to
+do.
+
+*What was done about it.* The run was stopped mid-flight at 125 of 276
+candidates and its output discarded — no artifact built through a disallowed
+path is committed. `SEARCH_POOL` holds `4get.ca` alone, whose `robots.txt` is
+an empty `Disallow:`. `tests/search-pool.test.ts` now fails the build if an
+engine recorded as `DISALLOWED` appears in the pool, and requires every engine
+in it to QUOTE the `robots.txt` line permitting its path, with the date it was
+read.
+
+*And the distinction the guard is really about.* **A disallow is not a wall.** A
+wall is a host refusing us, it carries a date, and RULING 53 sends a session
+back to re-walk it. A disallow is a host telling us not to ask, and re-walking
+it on a clock would be asking the same question again after being told no. The
+two were one word apart in the module's first draft — `SEARCH_POOL_REFUSED` —
+and that word would have put both hosts on a fourteen-day re-walk cadence. They
+are `SEARCH_POOL_EXCLUDED` now, with a `kind` that keeps `DISALLOWED`,
+`WALLED` and `FAILS_CONTROL` apart, and the guard asserts Mojeek and Brave are
+recorded under the first.
 
 **This is a WALL and it is recorded as one.** No field moves toward
 `VERIFIED_ABSENT` on a route we were refused, and none moves toward it because

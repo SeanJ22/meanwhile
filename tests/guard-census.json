@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 229,
-    "named": 2216,
+    "files": 230,
+    "named": 2225,
     "dynamic": 6
   },
   "files": {
@@ -2711,6 +2711,20 @@
         "event types are a closed set",
         "logging and the transparency page exist together",
         "the transparency page is linked from the welcome overlay and the sidebar footer"
+      ],
+      "dynamic": 0
+    },
+    "tests/search-pool.test.ts": {
+      "names": [
+        "a 202 is a refusal — DuckDuckGo's challenge is not a search that found nothing",
+        "docs/sources.md records the same verdict as the module, for the same hosts",
+        "every engine in the pool quotes the robots.txt line that permits its path",
+        "every exclusion says WHY and carries a date, and none is a placeholder",
+        "mojeek and brave are named as DISALLOWED, not as walls — they answered fine",
+        "no engine in the pool is one this project recorded as DISALLOWED",
+        "the content control catches a shell that answers identically to an impossible query",
+        "the control query is an identifier nothing could match",
+        "the search pool asks permission before it asks anything else"
       ],
       "dynamic": 0
     },

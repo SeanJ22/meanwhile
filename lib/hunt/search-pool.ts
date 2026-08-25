@@ -1,49 +1,60 @@
 /**
- * **A GENERAL WEB INDEX THIS PROJECT CAN ACTUALLY WALK.**
+ * **A GENERAL WEB INDEX THIS PROJECT MAY WALK.**
  * (The final pass, 2026-08-25.)
  *
- * ## What was believed, and what was measured
+ * ## THE FIRST QUESTION IS PERMISSION, NOT REACHABILITY
  *
- * NJ Hunt 4 recorded DuckDuckGo walling after six queries and Bing and Yahoo
- * after roughly 170, and ended by recommending a paid search API. RULING 83 was
- * adopted over that recommendation. The wall itself was real and correctly
- * measured — and it was measured on **three engines**, all of which front the
- * same two or three indexes.
+ * This module was first written with Mojeek and Brave in the pool, because both
+ * answered and both passed a control query. **Both carry `Disallow: /search` in
+ * their `robots.txt`, and `/search` is exactly the path a query goes to.** They
+ * were removed the same session, and the reason is recorded rather than the
+ * removal being quietly made.
  *
- * Re-walked 2026-08-25, which is what RULING 52 requires of any recorded wall:
- * *no branch result is permanent.*
+ * `CLAUDE.md` names four limits on an otherwise unrestricted mandate, and one of
+ * them is that an access control is never circumvented. RULING 52 says the same
+ * thing in the tree's vocabulary: *a `robots.txt` disallow gets a COMPLIANT
+ * ROUTE to the same information.* And the 2026-08-24 session had already
+ * recorded both hosts in `docs/sources.md` as **not walked at any rung** for
+ * precisely this reason — the record was right and a later session walked them
+ * anyway.
  *
- * | Engine | Status | Bytes | Control differed | Verdict |
- * | --- | ---: | ---: | :---: | --- |
- * | `html.duckduckgo.com` | 202 | 14,201 | — | the challenge interstitial, constant across every query — the host talking about itself |
- * | `startpage.com` | 200 | 22,098 | **no** | byte-identical for a real query and for one that cannot exist. A JavaScript shell, and RULING 68 refuses it |
- * | `search.brave.com` | 200 | 181,173 | yes | answers, and names the person asked about |
- * | `www.mojeek.com` | 200 | 20,062 | yes | answers, names the person 19 times, and control returns 11,420 B |
- * | `ecosia.org` | 403 | 4,467 | — | refuses this client |
+ * **A HOST THAT DISALLOWS IS NOT A WALL, AND THE TWO MUST NEVER BE RECORDED
+ * ALIKE.** A wall is a host refusing us; a disallow is a host telling us not to
+ * ask. A wall expires and is re-walked on its cadence (RULING 53). A disallow is
+ * honoured until the host changes it, and re-testing it on a clock would be
+ * asking the same question after being told no.
  *
- * **Mojeek runs its own crawler and its own index** — it is not a front end for
- * one of the majors, which is why it answers where three fronts of the same
- * index do not. That is RULING 52's tree in one line: a branch declares what it
- * goes *through*, and independence is counted over distinct dependencies rather
- * than over names.
+ * ## What was measured, and on what date
  *
- * ## THE CONTROL IS MANDATORY AND IT IS WHAT DISQUALIFIED STARTPAGE
+ * | Host | `robots.txt` on `/search` | Answered | Control differed | In the pool |
+ * | --- | --- | :---: | :---: | :---: |
+ * | `4get.ca` | `Disallow:` — empty, everything allowed | 200 | yes | **yes** |
+ * | `www.mojeek.com` | **`Disallow: /search`** | 200 | yes | **no — disallowed** |
+ * | `search.brave.com` | **`Disallow: /search`** | 200 | yes | **no — disallowed** |
+ * | `html.duckduckgo.com` | `Allow: /` | 202 | — | no — a constant challenge page |
+ * | `www.startpage.com` | `Disallow: /sp/` | 200 | **no** | no — disallowed, and a JS shell besides |
+ * | `searx.be` | — | 200 | **no** | no — byte-identical for a real query and an impossible one |
+ * | `www.ecosia.org` | `Disallow: /search` | 403 | — | no — disallowed |
  *
- * A search engine answering 200 tells you nothing; three of the five above do.
- * The question is whether the body is ABOUT the thing asked for, and the only
- * way to know is to ask for something that cannot exist and require a different
- * answer (RULING 68). Startpage returned the same 22,098 bytes for
- * `"Nancy Verga" Morris Plains` and for `zzqxwvnonexistent99` — a shell that
- * would have produced a "no result" for every candidate on the ballot and read
- * as a walked route.
+ * ## THE CONTROL IS CONTENT, NOT SIZE
  *
- * ## A WALL IS A RECORDED MOVE, NOT A SKIPPED ONE
+ * The site probe compares byte counts, because a host's answer for a page that
+ * cannot exist is usually its 404 furniture. That reasoning does not carry to a
+ * search engine: a results page and a no-results page are one template with a
+ * different middle, and the difference can be under a percent. Measured
+ * 2026-08-25, `4get.ca` returned **7,228 B** for a real query and **7,274 B**
+ * for one that cannot exist — the control page was LARGER — while the real one
+ * named the subject eight times. A 2% size tolerance would have thrown away the
+ * only compliant index in the set.
  *
- * These engines rate-limit, and the pool rotates rather than hammering: a
- * refusal moves to the next engine and is recorded with its status and its date.
- * Under RULING 144 a walled move still counts toward a protocol, carrying its
- * rung history — and the absence it helps build expires the day that wall falls,
- * which is exactly what happened to the wall this module was written over.
+ * So the control asks what a control is for: does the answer contain the thing
+ * asked about, and does the answer for an identifier that cannot exist not.
+ *
+ * ## A RATE LIMIT IS A WALL, AND IT IS A RECORDED MOVE
+ *
+ * Under RULING 144 a walled move still counts toward a stuck protocol, carrying
+ * its rung history and its date — and the absence it helps build expires the day
+ * that wall falls.
  */
 
 /** One engine, and what it is a front for. */
@@ -53,6 +64,8 @@ export interface SearchEngine {
   index: string;
   /** The literal URL for a query. */
   url: (query: string) => string;
+  /** The `robots.txt` line that permits the path this uses, quoted. */
+  robots: string;
   /**
    * A status that means REFUSED rather than answered.
    *
@@ -64,47 +77,72 @@ export interface SearchEngine {
 
 export const SEARCH_POOL: readonly SearchEngine[] = [
   {
-    id: "mojeek",
-    index: "Mojeek's own crawler",
-    url: (q) => `https://www.mojeek.com/search?q=${encodeURIComponent(q)}`,
-    refuses: (s) => s !== 200,
-  },
-  {
     id: "4get",
     index: "a 4get instance, which federates several independent crawlers",
     url: (q) => `https://4get.ca/web?s=${encodeURIComponent(q)}`,
-    refuses: (s) => s !== 200,
-  },
-  {
-    id: "brave",
-    index: "Brave's own index",
-    url: (q) => `https://search.brave.com/search?q=${encodeURIComponent(q)}`,
+    robots: "`User-agent: *` / `Disallow:` — empty, so every path is permitted (read 2026-08-25)",
     refuses: (s) => s !== 200,
   },
 ];
 
+/** Why a host is not in the pool. The two reasons are not the same reason. */
+export type ExclusionKind =
+  /** Its `robots.txt` disallows the path a query uses. Honoured, never retested on a clock. */
+  | "DISALLOWED"
+  /** It refuses us, or answers with something that is not a result set. Expires under RULING 53. */
+  | "WALLED"
+  /** It answers, and its answer is indistinguishable from its answer to an impossible query. */
+  | "FAILS_CONTROL";
+
 /**
- * Engines measured and REFUSED, kept here rather than deleted.
+ * Engines measured and NOT in the pool, kept here rather than deleted.
  *
  * A route that stops working keeps its id with a dated note (RULING 61), and a
- * route that never worked is worth as much: the next session that thinks of
- * Startpage can see it was tried, on what date, and why the answer was no.
+ * route that was never permitted is worth as much: the next session that thinks
+ * of Mojeek can see it was considered, on what date, and that the answer was a
+ * `Disallow` rather than a wall — which is a decision, not an obstacle.
  */
-export const SEARCH_POOL_REFUSED: ReadonlyArray<{ id: string; measuredOn: string; why: string }> = [
+export const SEARCH_POOL_EXCLUDED: ReadonlyArray<{
+  id: string;
+  kind: ExclusionKind;
+  measuredOn: string;
+  why: string;
+}> = [
   {
-    id: "duckduckgo-html",
+    id: "mojeek",
+    kind: "DISALLOWED",
     measuredOn: "2026-08-25",
-    why: "HTTP 202 with a constant ~14 KB challenge interstitial on every query — the host talking about itself. A check written against 4xx reads this as a search that found nothing.",
+    why: "`https://www.mojeek.com/robots.txt` carries `User-agent: *` / `Disallow: /search`, and `/search` is the query path. It ANSWERS — 200, naming the subject 44 times, control 11,420 B — which is exactly why the record has to say DISALLOWED rather than walled: the host is not refusing us, it is telling us not to ask, and those get opposite treatment.",
   },
   {
-    id: "startpage",
+    id: "brave",
+    kind: "DISALLOWED",
     measuredOn: "2026-08-25",
-    why: "HTTP 200, and byte-identical (22,098 B) for a real query and for an identifier that cannot exist. It fails the control query, so a 'no result' from it would be indistinguishable from a wall.",
+    why: "`https://search.brave.com/robots.txt` allows `/search?conversation=` and then `Disallow: /search`. A plain web query is the disallowed form.",
   },
   {
     id: "ecosia",
+    kind: "DISALLOWED",
     measuredOn: "2026-08-25",
-    why: "HTTP 403 to this client.",
+    why: "`Disallow: /search`, and it answered 403 to this client besides. Either alone is sufficient.",
+  },
+  {
+    id: "startpage",
+    kind: "DISALLOWED",
+    measuredOn: "2026-08-25",
+    why: "`Disallow: /sp/`, which is the query path. It also returned BYTE-IDENTICAL bodies (22,098 B) for a real query and for an identifier that cannot exist — a JavaScript shell — so it would have failed the control too.",
+  },
+  {
+    id: "searx-be",
+    kind: "FAILS_CONTROL",
+    measuredOn: "2026-08-25",
+    why: "HTTP 200 with byte-identical bodies (11,354 B) for a real query and for one that cannot exist, naming nobody. A 'no result' from it would be indistinguishable from a wall.",
+  },
+  {
+    id: "duckduckgo-html",
+    kind: "WALLED",
+    measuredOn: "2026-08-25",
+    why: "`Allow: /`, so it is permitted — and it answers HTTP **202** with a constant ~14 KB challenge interstitial on every query, which is the host talking about itself. A check written against 4xx reads this as a search that found nothing.",
   },
 ];
 
@@ -112,21 +150,8 @@ export const SEARCH_POOL_REFUSED: ReadonlyArray<{ id: string; measuredOn: string
 export const SEARCH_CONTROL_QUERY = "zzqxwvnonexistent99 zzqxwvnonexistent98";
 
 /**
- * **THE CONTROL FOR A SEARCH ENGINE IS CONTENT, NOT SIZE.**
- *
- * The site probe compares byte counts, because a host's answer for a page that
- * cannot exist is usually its 404 furniture and a real page is bigger. That
- * reasoning does not carry to a search engine: a results page and a no-results
- * page are the same template with a different middle, and the difference can be
- * under a percent. Measured 2026-08-25, `4get.ca` returned **7,228 B** for a
- * real query and **7,274 B** for one that cannot exist — the control page was
- * LARGER — while the real one named the subject eight times.
- *
- * So the control asks the question a control is actually for: does the engine's
- * answer contain the thing asked about, and does its answer for an identifier
- * that cannot exist NOT contain it? An engine serving a JavaScript shell fails
- * both halves, which is what disqualified Startpage and searx.be — each returned
- * byte-identical bodies naming nobody.
+ * Does the engine's answer name the subject, where its answer to an impossible
+ * query does not?
  *
  * The subject term is the SURNAME rather than the full name, because engines
  * break a quoted phrase across markup and a full-name test would report a miss

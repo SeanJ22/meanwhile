@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 227,
-    "named": 2196,
+    "named": 2201,
     "dynamic": 6
   },
   "files": {
@@ -521,6 +521,8 @@
     },
     "tests/candidate-evidence.test.ts": {
       "names": [
+        "REFUSES a news organisation, which is what the list would have had to name",
+        "a party organ is a THIRD thing — RULING 122's page, never a campaign site",
         "catches the real instance: `for <place> <office>` on garykapner.com",
         "catches the real instance: morrisdems.org's own title and first line",
         "does not fire on a candidate's own site that merely names their party",
@@ -533,9 +535,11 @@
         "holds the providers the filing corpus actually contains",
         "is symmetric across parties, which is a rule and not a courtesy",
         "name forms — RULING 110",
+        "names what it saw when it refuses, so the refusal points at the page",
         "never promotes something that did not clear the control",
         "office evidence",
         "party-organ self-identification",
+        "promotes a campaign site — the disclaimer, and no party self-identification",
         "promotes only when the page NAMES the person AND says it is a campaign",
         "records every form searched, matched or not",
         "refuses to promote a page that names the person with no office evidence",
@@ -544,7 +548,8 @@
         "strips a quoted nickname and a comma suffix",
         "strips the parenthetical nickname that made the slate test find nothing",
         "the freemail list",
-        "the promotion verdict — RULING 68's two bars"
+        "the promotion verdict — RULING 68's two bars",
+        "what KIND of page it is — the paid-for-by rule, not a host list"
       ],
       "dynamic": 0
     },

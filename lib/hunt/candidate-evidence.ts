@@ -387,3 +387,97 @@ export const FREEMAIL_DOMAINS = new Set([
   "windstream.net",
   "embarqmail.com",
 ]);
+
+/* ========================================================================== *
+ *  WHAT KIND OF PAGE IS THIS — the final pass, 2026-08-25
+ * ========================================================================== */
+
+/** The three things a page carrying a candidate's name can be. */
+export type CampaignPageKind =
+  /** The candidate's own campaign site. Fills the campaign-site field. */
+  | "CAMPAIGN_SITE"
+  /** A party publishes it about them. RULING 122 — the HOST IS LABELLED. */
+  | "PARTY_HOSTED_PAGE"
+  /** Something else names them. Whose page it is remains unestablished. */
+  | "LEAD";
+
+/**
+ * Which of the three, decided by a RULE rather than by a list of hosts.
+ *
+ * ## Why this exists, and what the list was costing
+ *
+ * The lead adjudication of 2026-08-25 inverted the campaign-site question — every
+ * host in the corpus tested against every candidate on the ballot — and returned
+ * ten promotions. Six were real, and three of the other four were `huffpost.com`
+ * promoted as **William Maher's** campaign site (the page names Bill Maher, the
+ * comedian) and `wpgtalkradio.com` promoted as **Thomas H. Kean, Jr.'s** (a radio
+ * station that had covered him).
+ *
+ * The reflex is to add those two hosts to an exclusion list. **That is RULING
+ * 90's failure exactly: every fix so far has been a list, and lists are
+ * finite.** The next false positive would be a host nobody had thought of, and
+ * the one after that another.
+ *
+ * ## The rule, and it comes from statute rather than from taste
+ *
+ * New Jersey requires a candidate committee to carry a **"paid for by"**
+ * disclaimer on the communications it pays for (N.J.S.A. 19:44A-22.3). A news
+ * organisation writing ABOUT a candidate does not carry one, because it is not a
+ * campaign communication. So the disclaimer separates *a page the campaign
+ * published* from *a page somebody published about the campaign* — structurally,
+ * on every host, including the ones nobody has met yet.
+ *
+ * Measured against the ten: all six genuine campaign sites carried it; the two
+ * news hosts carried only `running for` and `this campaign`, the vocabulary of
+ * writing about a race rather than standing in one.
+ *
+ * ## And a party organ is a THIRD thing, not a campaign site
+ *
+ * `morrisdems.org` and `morrisgop.org` both carry the disclaimer and both name
+ * candidates — and neither is anybody's campaign site. They are the case RULING
+ * 122 governs: the page a party publishes about its candidate, which fills the
+ * verified-page field **with the host named in plain words** and never renders
+ * under a bare "Campaign site" label. Presenting a county party's website as a
+ * candidate's own site would blur the exact line the
+ * organisations-render-as-filed rule draws.
+ *
+ * ## What this deliberately does NOT decide
+ *
+ * Identity. A strong name form is still required by the caller and a surname
+ * alone still promotes nothing — this answers *what kind of page*, never *whose
+ * page*, and both questions have to be answered before anything renders.
+ */
+export function classifyCampaignPage(input: {
+  /** From `officeEvidenceIn`. */
+  officeEvidence: readonly string[];
+  /** From `partyOrganSelfIdIn`. */
+  partyOrganSelfId: readonly string[];
+}): { kind: CampaignPageKind; why: string } {
+  const paidFor = input.officeEvidence.includes("paid-for-by disclaimer");
+  const organ = input.partyOrganSelfId.length > 0;
+  if (!paidFor) {
+    return {
+      kind: "LEAD",
+      why:
+        "the page carries no paid-for-by disclaimer, which a campaign committee's own " +
+        "communications are required to carry and a page written ABOUT a campaign is not. " +
+        `What it does carry (${input.officeEvidence.join(", ") || "nothing"}) is the vocabulary of ` +
+        "writing about a race rather than standing in one.",
+    };
+  }
+  if (organ) {
+    return {
+      kind: "PARTY_HOSTED_PAGE",
+      why:
+        `the page identifies itself as a party organisation (${input.partyOrganSelfId.join(", ")}) ` +
+        "and carries a paid-for-by disclaimer. RULING 122: it is the page the party publishes about " +
+        "them, it renders with the HOST NAMED, and it is never dressed as their own site.",
+    };
+  }
+  return {
+    kind: "CAMPAIGN_SITE",
+    why:
+      "the page carries a paid-for-by disclaimer and does not identify itself as a party " +
+      "organisation — a campaign committee's own communication, which is what a campaign site is.",
+  };
+}

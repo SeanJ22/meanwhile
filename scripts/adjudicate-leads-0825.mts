@@ -60,6 +60,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  classifyCampaignPage,
   flattenForEvidence,
   matchNameForms,
   officeEvidenceIn,
@@ -215,6 +216,8 @@ interface Verdict {
   formsMatched: string[];
   officeEvidence: string[];
   partyOrganSelfId: string[];
+  pageKind: string;
+  pageKindWhy: string;
   rowsCovered: number;
   attemptedAt: string;
 }
@@ -261,12 +264,30 @@ for (let i = 0; i < cap; i++) {
     }
   }
 
-  const outcome = !reachable ? r.outcome : (best?.verdict.outcome ?? "LEAD");
+  /*
+   * WHAT KIND OF PAGE IS THIS — asked separately from WHOSE it is, because the
+   * two questions have different evidence and conflating them is what promoted
+   * a news site as a comedian-adjacent candidate's campaign site.
+   */
+  const kind = reachable
+    ? classifyCampaignPage({ officeEvidence: office, partyOrganSelfId: organ })
+    : { kind: "LEAD" as const, why: "not reached" };
+
+  const identified = Boolean(best) && best!.verdict.outcome === "HIT";
+  const outcome = !reachable
+    ? r.outcome
+    : identified && kind.kind === "CAMPAIGN_SITE"
+      ? "HIT"
+      : identified && kind.kind === "PARTY_HOSTED_PAGE"
+        ? "PARTY_HOSTED_PAGE"
+        : "LEAD";
   const detail = !reachable
     ? r.detail
-    : best
-      ? best.verdict.detail
-      : `the page cleared the control and names NONE of the ${ballot.candidacies.length} candidates on this ballot — a live host, and not any of their sites`;
+    : identified
+      ? `${best!.verdict.detail} — and ${kind.why}`
+      : best
+        ? best.verdict.detail
+        : `the page cleared the control and names NONE of the ${ballot.candidacies.length} candidates on this ballot — a live host, and not any of their sites`;
 
   verdicts.push({
     host,
@@ -281,6 +302,8 @@ for (let i = 0; i < cap; i++) {
     formsMatched: best ? best.forms.filter((f) => f.matched).map((f) => f.form) : [],
     officeEvidence: office,
     partyOrganSelfId: organ,
+    pageKind: kind.kind,
+    pageKindWhy: kind.why,
     rowsCovered: entry.rows,
     attemptedAt: today(),
   });
@@ -292,6 +315,7 @@ for (let i = 0; i < cap; i++) {
 }
 
 const hits = verdicts.filter((v) => v.outcome === "HIT");
+const partyHosted = verdicts.filter((v) => v.outcome === "PARTY_HOSTED_PAGE");
 const stillLead = verdicts.filter((v) => v.outcome === "LEAD");
 const refused = verdicts.filter((v) => v.outcome === "REFUSED");
 const empty = verdicts.filter((v) => v.outcome === "EMPTY");
@@ -302,11 +326,18 @@ console.log(
       ? ` — CLIPPED at --limit=${LIMIT}; ${walkable.length - cap} host(s) NOT walked and still owed`
       : ""),
 );
-console.log(`  HIT           ${hits.length}`);
+console.log(`  HIT (campaign site)      ${hits.length}`);
+console.log(`  PARTY-HOSTED PAGE        ${partyHosted.length} — RULING 122, and the host is named`);
 console.log(`  still LEAD    ${stillLead.length}`);
 console.log(`  refused       ${refused.length} — a wall, never an absence`);
 console.log(`  empty         ${empty.length}`);
-console.log(`  accounted for ${hits.length + stillLead.length + refused.length + empty.length} of ${verdicts.length}`);
+console.log(
+  `  accounted for ${hits.length + partyHosted.length + stillLead.length + refused.length + empty.length} of ${verdicts.length}`,
+);
+if (partyHosted.length) {
+  console.log("\n  PROMOTED — the page their party publishes about them (RULING 122, host named):");
+  for (const h of partyHosted) console.log(`    ${h.subject} — ${h.url}  (${h.contestTitle})`);
+}
 if (hits.length) {
   console.log("\n  PROMOTED:");
   for (const h of hits) console.log(`    ${h.subject} — ${h.url}  (${h.contestTitle})`);
@@ -335,6 +366,7 @@ if (WRITE) {
           walked: verdicts.length,
           notWalked: walkable.length - verdicts.length,
           hit: hits.length,
+          partyHostedPage: partyHosted.length,
           stillLead: stillLead.length,
           refused: refused.length,
           empty: empty.length,

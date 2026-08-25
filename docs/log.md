@@ -312,10 +312,11 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## job-watch · 2026-08-22
 
-**What it started.** 2 row(s) opened, 0 still open.
+**What it started.** 3 row(s) opened, 1 still open.
 
+- **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml] *(open)*
 
-**Needs Sean.** Nothing.
+**Needs Sean.** JOB03
 
 ## NJHUNT2 · 2026-08-22
 

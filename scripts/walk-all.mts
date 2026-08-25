@@ -1252,6 +1252,28 @@ section("C. The map, who-governs, and the footnotes (0814c, 0815, e, g3)");
 
 for (const { zip } of FOUR) {
   const page = await openAt(browser, zip);
+  /*
+   * **THE WHO-GOVERNS CARD IS OPENED RATHER THAN ASSUMED (WGH-8, 2026-08-25).**
+   *
+   * Every check in this section reads `document.body.innerText` and asserts
+   * something the CARD says — the governor, the Local/State/Federal grouping,
+   * Kearsarge Regional, Newbury's no-mayor fact. All of them worked because
+   * arriving at a zip auto-expanded the card.
+   *
+   * The author's rule is now that exactly one of the rail and the card is up,
+   * and his `08-53-15` specifies that arrival gets the rail with Who Governs
+   * Here beneath it as a pill. So the card has to be REACHED, and the walk
+   * reaches it the way a reader does: by clicking the pill.
+   *
+   * Not a weakening of any check. Every assertion below is unchanged and still
+   * fails if the card stops saying what it says — what changed is that the
+   * walk now performs the click that used to happen by itself.
+   */
+  const wghPill = page.locator(".notice-fab").first();
+  if (await wghPill.isVisible().catch(() => false)) {
+    await wghPill.click();
+    await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+  }
   const text = await bodyText(page);
 
   check("0814c", `${zip}: the map answers with something about this place`, text.length > 200);
@@ -3693,7 +3715,28 @@ for (const { zip } of FOUR) {
     const label = wide ? "desktop" : "390px";
     const page = wide ? await openWideAt(browser, zip) : await openAt(browser, zip);
     try {
-      // STATE 1 — WGH open (the card shows itself once per resolved area).
+      /*
+       * STATE 1 — WGH open.
+       *
+       * **THE CARD NO LONGER SHOWS ITSELF (WGH-8, 2026-08-25).** This comment
+       * used to read "the card shows itself once per resolved area", and that
+       * was true: arriving at a zip auto-expanded it. The author's rule is now
+       * that exactly ONE of the rail and the card is up, and his annotated
+       * `08-53-15` specifies which one arrival gets — the rail, full height,
+       * with Who Governs Here sitting beneath it as its pill.
+       *
+       * So this state has to be REACHED rather than assumed. The walk clicks
+       * the pill, which is also the reader's own route to it (RULING 153).
+       *
+       * The checks below are unchanged and still assert exactly what they did:
+       * one cluster, at the top of WGH, one ballot door, a concrete example on
+       * the Ask pill. What changed is the two lines that get there.
+       */
+      const wghPill = page.locator(".notice-fab").first();
+      if (await wghPill.isVisible().catch(() => false)) {
+        await wghPill.click();
+        await until(page, async () => (await page.locator(".coverage-notice").count()) > 0, 8_000);
+      }
       const wgh = await clusterCensus(page);
       check(
         "g12",

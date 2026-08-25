@@ -324,6 +324,68 @@ correctness session (§14).
 
 ---
 
+## Coverage matrix, 2026-08-25 — the per-zip summary, and it is generated
+
+**Written by `pnpm matrix` (RULING 149) and regenerated on every `handoff`.**
+The full grid is `docs/coverage-matrix.csv` — one row per candidate, one column
+per fact, every cell a state with its source and its date. It is INTERNAL and
+is never rendered to a reader in any form: in front of a reader it is a
+completeness score per candidate, sorted, which is the composite match score
+this product does not compute.
+
+### 07866 — Morris County, New Jersey
+
+**276 candidates × 19 fact columns. Kelly verdict 276 of 276 DONE**, which is
+`pnpm kelly`'s own answer rather than an agreement with it — both call one loop
+in `lib/hunt/coverage-matrix.ts`.
+
+| Column | HELD | ABSENT | OWED | N/A |
+|---|---:|---:|---:|---:|
+| photo | 12 | 264 | 0 | 0 |
+| phone | 4 | 272 | 0 | 0 |
+| contact | 276 | 0 | 0 | 0 |
+| verifiedPage | 36 | 240 | 0 | 0 |
+| campaignSite | 14 | 262 | 0 | 0 |
+| ownWords | 6 | 0 | 270 | 0 |
+| social (x / instagram / facebook / other) | 0 | 0 | 276 each | 0 |
+| campaignMoney | 0 | 0 | 276 | 0 |
+| slogan | 0 | 0 | 0 | 276 |
+| votingRecord, committees | 0 | 0 | 0 | 276 |
+| questionnaire (5 stages) | 0 | 0 | 276 each | 0 |
+
+**`OWED` and `N/A` are different claims and are kept apart.** `OWED` says
+nobody has established the fact — our gap. `N/A` says it does not apply: a
+challenger has no voting record, and that is not a gap. Everything social, the
+campaign money and the questionnaire read `OWED` because no committed store
+holds them per candidate yet, which is our gap rather than a settled question.
+
+**1,038 argued absences carry an expiry, and the first falls on 2026-09-01.** <!-- expected-future: 2026-09-01, the earliest RULING 53 expiry on the 07866 argued absences -->
+That is the day this ballot stops being done unless the absences are re-walked,
+and it is the number RULING 143's clock actually turns on.
+
+**Three contests carry an asymmetry flag** — a spread of 3 or more HELD facts
+between the best- and worst-covered candidate in one contest. It is a flag on a
+CONTEST and never a score on a candidate:
+
+- Member of the United States Senate — Justin Murphy 5 against Joanne Kuniansky 1
+- Member of the House of Representatives, 11th Congressional — Joe Hathaway 5 against Alan B. Bond 1
+- Member of the Board of County Commissioners — Tayfun Selen 5 against Christopher (Chris) Russo 2
+
+The equal-effort rule is a HUNT discipline and has never had an instrument;
+this is one. It measures what to go and hunt, and it never reaches a reader.
+
+**Spot-checked 40 of 40 cells** across 20 candidates (every 13th row) against
+what the product actually renders from — a `HELD` photo has a `photoUrl` and
+the asset on disk; an `ABSENT` campaign site has no link. Zero disagreements.
+
+### 03255 — Merrimack County, New Hampshire
+
+`pnpm matrix --zip=03255` reads the same loop against the New Hampshire ballot.
+It is not summarised here because RULING 143's clock is 07866's, and a second
+table nobody is measuring against would be a number that goes stale without
+anyone noticing.
+
+
 ## Overnight depth hunt, 2026-08-24 — the county filed 202 empty cells, and the filed email was a campaign site nobody had read
 
 **Shipped `a6c72a7` (14 commits), then `277c3df` (the regression fix). Production

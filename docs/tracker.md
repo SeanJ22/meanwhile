@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **246 open**, 406 resolved.
+- **246 open**, 407 resolved.
 - **44 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -255,7 +255,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**31 open · 4 resolved.**
+**31 open · 5 resolved.**
 
 ### P2
 

@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-24 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **132 sessions.**
+Newest first. **133 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -106,6 +106,17 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH109** — AZ-1 added two topics to Know the basics — Am I allowed to hunt or fish, and what the law on abortion is. Both are cited to the state's own source with a fetch date and neither takes a position. Arizona now carries nine topics; New Jersey and New Hampshire carry seven. A reader who moves to New Jersey gets no answer to either question, and a reader who moves to Arizona does. That asymmetry is not a defect in the Arizona work — it is the work being ahead — but it is an information gap that tracks which state a session happened to be briefed on rather than anything about the reader, which is the shape the equal-effort rule exists to catch, pointed at states instead of candidates.
 
 **What it started.** 2 row(s) opened, 0 still open.
+
+
+**Needs Sean.** Nothing.
+
+## nj-depth-0824 · 2026-08-24
+
+**What it finished.** 1 row(s).
+
+- **NJ15** — A probe written by the NJ depth session to prove tracker add refuses a byte-identical second run.
+
+**What it started.** 1 row(s) opened, 0 still open.
 
 
 **Needs Sean.** Nothing.

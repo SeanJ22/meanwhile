@@ -1,5 +1,15 @@
 #!/usr/bin/env tsx
 /**
+ * @freshness-reads-here
+ *
+ * RULING 107 — every clock stamp in this file is minted by the code path that
+ * performs the read. `attemptedAt` and `walkedAt` are taken in the same run
+ * that fetched the page they describe, which is what the ruling asks for rather
+ * than what it forbids: a READ stamp from evidence of a read, never a RUN stamp
+ * written into a freshness field. Declared rather than inferred, because a
+ * carve-out nobody has to write down is a carve-out that grows.
+ */
+/**
  * **ADJUDICATE THE HELD LEADS — the final pass, 2026-08-25, item 3.**
  *
  * ```

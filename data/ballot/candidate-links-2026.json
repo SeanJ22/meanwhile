@@ -1,5 +1,5 @@
 {
-  "curatedAt": "2026-08-23",
+  "curatedAt": "2026-08-25",
   "note": "Hunted-and-verified links for every rendered ballot candidate (session 2026-08-13, item 2b). Every URL in `links` was fetched this session and the page read to confirm it names the person and the race or office; the `verification` sentence records what was seen. Official pages read from a legislature's server-rendered member roster carry that chain in the sentence. `hunts` records every candidate for whom no link ships: MISS means a search was run and nothing verifiable was found; NOT_ATTEMPTED means the hunt is queued and no claim of absence is made. CORRECTED 2026-08-21 under RULING 52: this note used to say 'gc.nh.gov member pages cannot be verified from this pipeline (TLS wall, docs/source-ladder.md) and are recorded in hunts rather than shipped unverified.' That was a measurement taken 2026-08-17 written as a standing property. Re-walked 2026-08-21: gc.nh.gov answers rung 2 at HTTP 200 and member pages verify from this pipeline. Rows still sitting in `hunts` on the strength of that wall are owed a re-walk, not treated as settled.",
   "links": {
     "ballot-az-pima:governor|Katie Hobbs": {
@@ -287,7 +287,12 @@
       }
     },
     "ballot-nj-morris:us-house-11:hathaway": {
-      "official": null,
+      "official": {
+        "url": "https://randolphrepublicans.org/",
+        "verification": "Read 2026-08-25: the Randolph Republican committee's page — it names Joe HATHAWAY, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Randolph Republican committee's page"
+      },
       "campaign": {
         "url": "https://www.joehathawayforcongress.com/",
         "verification": "Fetched 2026-08-22 at https://www.joehathawayforcongress.com/platform — the page carries \"Joe Hathaway\" and the race.",
@@ -839,6 +844,166 @@
         "attemptedAt": "2026-08-24"
       },
       "official": null
+    },
+    "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:lyon-stephanie": {
+      "official": null,
+      "campaign": {
+        "url": "https://townshiptrio.com/",
+        "verification": "Read 2026-08-25: the page names Stephanie LYON, is about standing for office, and carries a paid-for-by disclaimer — a campaign committee's own communication.",
+        "attemptedAt": "2026-08-25"
+      }
+    },
+    "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay": {
+      "official": null,
+      "campaign": {
+        "url": "https://votemtarlington.com/",
+        "verification": "Read 2026-08-25: the page names Jay DECKER, is about standing for office, and carries a paid-for-by disclaimer — a campaign committee's own communication.",
+        "attemptedAt": "2026-08-25"
+      }
+    },
+    "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john": {
+      "official": {
+        "url": "https://bt-dems.org/",
+        "verification": "Read 2026-08-25: the Boonton Township Democratic committee's page — it names John MORAN, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Boonton Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:eck-nicholas-c": {
+      "official": {
+        "url": "https://www.democraticclubofthechathams.org/borough-candidates",
+        "verification": "Read 2026-08-25: the Chatham Township Democratic committee's page — it names Nicholas C. ECK, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Chatham Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e": {
+      "official": {
+        "url": "https://madisonnjdems.com/",
+        "verification": "Read 2026-08-25: the Madison Democratic committee's page — it names Robert E. LANDRIGAN, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site. HTTPS answered 200 with 133431 B, so this is the HTTPS address.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Madison Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j": {
+      "official": {
+        "url": "https://madisonnjdems.com/",
+        "verification": "Read 2026-08-25: the Madison Democratic committee's page — it names John J. FORTE, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site. HTTPS answered 200 with 133431 B, so this is the HTTPS address.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Madison Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark": {
+      "official": {
+        "url": "https://mendhamborodems.org/",
+        "verification": "Read 2026-08-25: the Mendham Democratic committee's page — it names Mark VAN DEN HENDE, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Mendham Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k": {
+      "official": {
+        "url": "https://www.montvillenjdems.org/",
+        "verification": "Read 2026-08-25: the Montville Township Democratic committee's page — it names Emily K. RYZUK, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Montville Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari": {
+      "official": {
+        "url": "https://www.montvillenjdems.org/",
+        "verification": "Read 2026-08-25: the Montville Township Democratic committee's page — it names Shari SEFFER, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Montville Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy": {
+      "official": {
+        "url": "https://www.mpdems.org/meet-us",
+        "verification": "Read 2026-08-25: the Morris Plains Democratic committee's page — it names Nancy VERGA, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Morris Plains Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:connor-lee-lusardi": {
+      "official": {
+        "url": "https://www.mpdems.org/meet-us",
+        "verification": "Read 2026-08-25: the Morris Plains Democratic committee's page — it names Lee (Lusardi) CONNOR, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Morris Plains Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:denova-rosaria": {
+      "official": {
+        "url": "https://www.mpdems.org/meet-us",
+        "verification": "Read 2026-08-25: the Morris Plains Democratic committee's page — it names Rosaria DENOVA, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Morris Plains Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:county-commissioner:russo": {
+      "official": {
+        "url": "https://www.mpdems.org/candidates",
+        "verification": "Read 2026-08-25: the Morris Plains Democratic committee's page — it names Christopher (Chris) RUSSO, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Morris Plains Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:rothman-samantha-g": {
+      "official": {
+        "url": "https://www.morristwpdems.org/elected_officials",
+        "verification": "Read 2026-08-25: the Morris Township Democratic committee's page — it names Samantha G. ROTHMAN, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Morris Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:lynch-meghan": {
+      "official": {
+        "url": "https://randolphdems.org/about",
+        "verification": "Read 2026-08-25: the Randolph Township Democratic committee's page — it names Meghan LYNCH, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Randolph Township Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:wharton-borough-mayor-place-wharton:ghebreal-robin": {
+      "official": {
+        "url": "https://whartondems.com/meet-our-candidates/",
+        "verification": "Read 2026-08-25: the Wharton Democratic committee's page — it names Robin GHEBREAL, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Wharton Democratic committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:chipperson-rita-c": {
+      "official": {
+        "url": "https://hardingrepublicans.org/elections/",
+        "verification": "Read 2026-08-25: the Harding Township Republican committee's page — it names Rita C. CHIPPERSON, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Harding Township Republican committee's page"
+      },
+      "campaign": null
+    },
+    "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m": {
+      "official": {
+        "url": "https://hardingrepublicans.org/elections/",
+        "verification": "Read 2026-08-25: the Harding Township Republican committee's page — it names Christopher M. YATES, the office, and a way to reach them. RULING 122: rendered with the host named, never as their own site.",
+        "attemptedAt": "2026-08-25",
+        "label": "the Harding Township Republican committee's page"
+      },
+      "campaign": null
     }
   },
   "hunts": [

@@ -1,5 +1,15 @@
 #!/usr/bin/env tsx
 /**
+ * @freshness-reads-here
+ *
+ * RULING 107 — every clock stamp in this file is minted by the code path that
+ * performs the read. `attemptedAt` and `walkedAt` are taken in the same run
+ * that fetched the page they describe, which is what the ruling asks for rather
+ * than what it forbids: a READ stamp from evidence of a read, never a RUN stamp
+ * written into a freshness field. Declared rather than inferred, because a
+ * carve-out nobody has to write down is a carve-out that grows.
+ */
+/**
  * **THE MUNICIPAL COMMITTEE SITES, CRAWLED FOR CANDIDATE PAGES.**
  * (The final pass, 2026-08-25, items 3 and 5. The consumer of
  * `pnpm party:directory`.)
@@ -77,6 +87,40 @@ interface DirRow {
 }
 const directory = JSON.parse(readFileSync(DIRECTORY, "utf8")) as { rows: DirRow[] };
 
+/*
+ * ── BOTH PARTIES' SEEDS, THROUGH ONE CRAWLER ──────────────────────────────
+ *
+ * The Democratic committees come from the county party's own per-municipality
+ * directory. The Republican ones come from `pnpm gop:shape`, because the county
+ * Republican committee publishes no such directory — a difference in how the two
+ * organisations publish, and not a licence to walk only the one that answers.
+ *
+ * They meet HERE, in one crawler with one bar, rather than in two scripts that
+ * could drift apart. RULING 103: two implementations of one judgement is the
+ * thing that can disagree, and the judgement here is which pages a party
+ * publishes about the people it runs.
+ *
+ * A GOP shape row is seeded only where it returned a real DOCUMENT — a parked
+ * domain answering 200 is the host talking about itself, and crawling one would
+ * spend requests on a placeholder.
+ */
+const gopFile = join(ROOT, "data", "hunt", "nj-morris-gop-municipal-shape-0825.json");
+const gopSeeds: DirRow[] = existsSync(gopFile)
+  ? (
+      JSON.parse(readFileSync(gopFile, "utf8")) as {
+        rows: { municipality: string; url: string; beyondControl: boolean }[];
+      }
+    ).rows
+      .filter((r) => r.beyondControl)
+      .map((r) => ({
+        party: "republican",
+        org: "a Morris County municipal Republican committee",
+        municipality: r.municipality,
+        committeeWebsite: r.url,
+        url: r.url,
+      }))
+  : [];
+
 const ballot = JSON.parse(
   readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8"),
 ) as {
@@ -133,9 +177,11 @@ interface PageRow {
   note: string;
 }
 
-const seeds = directory.rows.filter((r) => r.committeeWebsite);
+const seeds = [...directory.rows.filter((r) => r.committeeWebsite), ...gopSeeds];
 console.log(`\nCOMMITTEE SITES, CRAWLED FOR CANDIDATE PAGES — ${today()}\n`);
-console.log(`  committee sites from the county party's directory  ${seeds.length}`);
+const demSeeds = seeds.filter((s) => s.party === "democratic").length;
+console.log(`  committee sites — Democratic  ${demSeeds} (the county party's own directory)`);
+console.log(`  committee sites — Republican  ${gopSeeds.length} (by domain shape; the county party publishes no directory)`);
 console.log(`  internal pages followed per site (cap)            ${PAGES}`);
 console.log(`  candidates tested per page                        ${ballot.candidacies.length}\n`);
 

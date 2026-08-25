@@ -27,6 +27,21 @@ export interface VerifiedLink {
   /** What the fetched page showed — the person and the race/office, named. */
   verification: string;
   attemptedAt: string;
+  /**
+   * WHAT THIS LINK IS, IN PLAIN WORDS — and where it is not "official site".
+   *
+   * RULING 122 and RULING 145 both turn on the same clause: a page a party
+   * publishes about a candidate, or a campaign's presence on a platform, fills
+   * the field **with the host labelled**. Rendering either under a bare
+   * "official site" or "campaign site" would present a party's website or a
+   * social platform as the candidate's own, which is the exact line the
+   * organisations-render-as-filed rule draws.
+   *
+   * Absent, the card's own default stands — a link this project fetched on the
+   * candidate's own domain needs no explaining, and adding a label to every one
+   * of those would be words a reader has to read for nothing.
+   */
+  label?: string;
 }
 
 export interface CandidateLinks {

@@ -222,7 +222,9 @@
     "rotation:prove": "tsx scripts/rotation-proof.mts",
     "hunt:sites": "tsx scripts/hunt-campaign-sites.mts",
     "kelly": "tsx scripts/kelly-scoreboard.mts",
-    "search:rung": "tsx scripts/search-rung.mts"
+    "search:rung": "tsx scripts/search-rung.mts",
+    "leads:adjudicate": "tsx scripts/adjudicate-leads-0825.mts",
+    "party:directory": "tsx scripts/party-directory-0825.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -3547,3 +3547,74 @@ his decisions of 2026-08-24, so that a close has an authority which exists.)
   It asked nobody anything — it recorded that a job broke and that nobody found
   out why, which is work rather than a judgement call. It is RULING 150's first
   application, and it was diagnosed the same day it moved.
+
+### RULING 152 — a reader-facing DONE names the production deploy that is serving it
+
+(Adopted 2026-08-25, earned by the reconciliation of Item 6. It is the
+merge-cadence rule's missing receipt.)
+
+**A session may not report a reader-facing item DONE without naming the
+production deploy that carries it and the state that deploy reached.** Not the
+merge, not the commit — the DEPLOY.
+
+- **The deploy id, its state, and the SHA it built.** Read from Netlify's deploy
+  API, which is one call and zero requests to the site (RULING 125).
+- **A deploy that never reached `ready` has not shipped anything**, however
+  green the merge was.
+- **Where the deploy record cannot be read, the item reports `COULD_NOT_TELL`**
+  and never DONE. RULING 24, applied to the last step.
+
+*The rationale stays attached, because a stripped rule reads as guidance.* The
+reconciliation of 2026-08-25 tested six DONEs against what production was
+actually serving during Sean's walk, and found **every claimed fix genuinely
+live** — so this rule is not written because a deploy ate one. It is written
+because ANSWERING the question took an afternoon and a Netlify token that was
+not there a day earlier, and because the same read turned up four production
+deploys in two days that reached `error` and were never published — `3449ef8`,
+`41113c1`, `55d3047` and `e0f6426`. Three were real code merges. Each was
+covered by a later merge so nothing was permanently lost, and **between the
+merge and that later deploy production served older code while nothing in this
+repo said so.** A receipt costs one API call and removes the question
+permanently.
+
+### RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
+
+(Adopted 2026-08-25, earned by the reconciliation of Item 6. It is RULING 147 —
+*no reconciliation may compare a parser to itself* — pointed at VERIFICATION
+rather than at reconciliation, and it is RULING 136's missing half: that ruling
+says a fix closes the class, and this says what it means to have checked.)
+
+**A verification states the READER'S ROUTE to the thing it verifies, and walks
+it. A test that exercises only the code path the fix introduced has proved that
+the code does what the code does.**
+
+*The rationale stays attached, because here the rationale is a measurement.* Six
+DONEs were disproved by Sean the next morning. Verdict (a) — never reached
+production — did not happen once; every fix was live. The five real recurrences
+share one mechanism, and it is not carelessness:
+
+- **`BAL-9`** built a camera store and restored from it correctly. The store is
+  written only after a user GESTURE — the code says so itself: *"flyTo, jumpTo
+  and fitBounds never [carry an originalEvent], so this stays silent through
+  every camera move the app makes itself."* Entering a zip flies the camera
+  programmatically, so a reader who types a zip and clicks through has nothing
+  remembered and gets the continent back. The fix works for a reader who
+  happened to pan first. **And `git grep BAL-9 -- tests/ scripts/` returns
+  nothing**: the words "done, verified" rested on no artifact this repo holds.
+- **`BC-14`** asserted the consolidation it had written, on the data type it had
+  written it for, and reported *4 surfaces, 0 footnote markers* — true, and
+  about the wrong four surfaces.
+- **`JUR-2`** asserted the new branch and not the branch beside it, while the
+  module's own documentation already said the branch beside it was wrong.
+
+Operationally:
+
+- **The route is stated in words** — *type a zip, open the ballot, press back* —
+  before the assertion is written, so a route that never touches the fix is
+  visible as one.
+- **A verification that cannot reach the reader's route says so** and the item
+  is a BOUNDARY STOP rather than a finish. That is a real ending and an honest
+  one.
+- **An assertion over stored state is not a verification of a rendered
+  outcome.** A history-state round-trip is not a restored viewport, and only a
+  capture read as an image is (the read-as-an-image rule).

@@ -156,8 +156,51 @@ const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/;
  * An all-caps run in a heading is never followed immediately by a lower-case
  * letter, so `(?![a-z])` ends it exactly where the capitals do.
  */
+/*
+ * **AND `MAYOR` IS A HEADING TOO — it was missing for the whole life of this
+ * parser, and it cost nine contests.** (2026-08-25, the final pass.)
+ *
+ * Every other heading in this document opens with `MEMBER OF THE`, so the
+ * opener list READ like the document's grammar and was in fact a list of the
+ * headings somebody had already seen. A county's mayoral races open with the
+ * bare word, and it was not on the list — so a `MAYOR` heading was not a
+ * heading at all. It stayed inside the PREVIOUS contest's body, where
+ * `NAME_RE` read it as a person: the Title-Case run before it became a given
+ * name and the capitals became a surname.
+ *
+ * What that shipped, measured against the clerk's document of 2026-08-21:
+ *
+ * - **Six phantom candidates on the rendered ballot** — `Butler Borough MAYOR`
+ *   standing in Boonton Township, `Chester Borough MAYOR` in Chatham Township,
+ *   `Kinnelon Borough MAYOR` in Jefferson Township, `Mendham Borough MAYOR` in
+ *   Madison, `Morris Plains Borough MAYOR` in Montville and `Wharton Borough
+ *   MAYOR` in Washington Township. Every one lands in the contest of the
+ *   municipality alphabetically BEFORE it, which is the signature of a heading
+ *   swallowed by the preceding body, and every one carries a null party, which
+ *   is the tell nothing was looking for.
+ * - **Nine whole mayoral contests rendering nowhere**, two of them contested:
+ *   Morris Plains (Verga against Karr) and Wharton (Binkoski against Ghebreal).
+ * - **Twelve real named candidates absent from the product entirely.**
+ *
+ * **And every instrument said this was healthy**, because `nj:filing:check`
+ * compared our count against a count produced by THIS PARSER reading the same
+ * document — 272 against 272, reconciling perfectly. RULING 100: a total that
+ * reconciles is not a total that is correct.
+ *
+ * The CLASS was closed rather than the instance (RULING 136). The document's
+ * own row grammar is `<Jurisdiction> <ALL-CAPS OFFICE> <term> <seats> <Name>`,
+ * and reading every all-caps run sitting in that position found fourteen
+ * distinct shapes in the general document and three in the school document.
+ * `MAYOR` is the only one this list was missing, and that is a measured answer
+ * rather than a hopeful one.
+ *
+ * The digits are what make a bare word safe here. `MAYOR` matches only where
+ * the term and seat counts follow it, which is the document's grammar for a
+ * heading and never the grammar for a surname — a surname is followed by a
+ * party.
+ */
 const OFFICE_RE =
-  /((?:MEMBER OF THE|DOVER BOARD OF EDUCATION CANDIDATES|NO LOCAL ELECTION)(?:\s*-\s*WARD\s\d+|\sWARD\s\d+|[A-Z.'\-/]+(?![a-z])|\s(?!\d))*)/;
+  /((?:MEMBER OF THE|DOVER BOARD OF EDUCATION CANDIDATES|NO LOCAL ELECTION)(?:\s*-\s*WARD\s\d+|\sWARD\s\d+|[A-Z.'\-/]+(?![a-z])|\s(?!\d))*|MAYOR(?=\s+\d{1,2}\s+\d{1,2}\s))/;
 
 /** `3 2` after an office heading is term-years then seats. */
 const TERM_SEATS_RE = /^\s*(\d{1,2})\s+(\d{1,2})\b/;

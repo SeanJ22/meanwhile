@@ -190,3 +190,128 @@ test("a document with no office headings is ZERO_ROWS with a reason, not success
   assert.notEqual(out.outcome, "EXTRACTED");
   assert.match(String(out.reason), /grammar/);
 });
+
+/* ========================================================================== *
+ *  THE MAYOR DEFECT — nine contests, eleven candidates, and seven phantoms
+ *  (2026-08-25, the final pass.)
+ * ========================================================================== */
+
+/**
+ * The document's own row grammar: `<Jurisdiction> <ALL-CAPS OFFICE> <term>
+ * <seats> <payload>`. Anchored on the Title-Case-to-CAPS transition, so a
+ * candidate's capitalised SURNAME — which is preceded by a Title-Case given
+ * name and followed by a party — cannot match.
+ *
+ * This is deliberately NOT a list of headings. Reading a list of headings we
+ * already knew is exactly what missed `MAYOR` for the whole life of the parser.
+ */
+const ROW_GRAMMAR =
+  /[a-z]\s+((?:[A-Z][A-Z.'\-/]*|-|WARD|\d)(?:\s+(?:[A-Z][A-Z.'\-/]*|-|WARD|\d))*?)\s+\d{1,2}\s+\d{1,2}\s+[A-Z]/g;
+
+test("every office-heading SHAPE the DOCUMENT exposes is recognised as a heading", () => {
+  /*
+   * The guard that would have caught this without anyone knowing to look.
+   *
+   * `MAYOR` was not in `OFFICE_RE`'s opener list, so a `MAYOR` heading was not
+   * a heading: it stayed inside the previous contest's body and `NAME_RE` read
+   * it as a person — the Title-Case run before it became a given name and the
+   * capitals became a surname. Six phantom candidates reached the rendered
+   * ballot, a seventh swallowed a whole row (`Morris Plains Borough MAYOR 4 1
+   * Jason C. KARR` as one person's name), nine mayoral contests rendered
+   * nowhere, and eleven real named candidates were absent from the product.
+   *
+   * So the shapes are read from the fixture rather than declared here, and each
+   * one must produce at least one parsed row that names it as its office. A new
+   * heading the clerk introduces next year fails this test on the day the
+   * fixture is re-recorded, which is the point.
+   */
+  const flat = text.replace(/\s+/g, " ");
+  const shapes = new Set<string>();
+  for (const m of flat.matchAll(ROW_GRAMMAR)) shapes.add(m[1].trim().replace(/\s+/g, " "));
+  assert.ok(shapes.size >= 10, `the row grammar found only ${shapes.size} heading shape(s)`);
+  assert.ok(shapes.has("MAYOR"), "the fixture must still carry MAYOR rows, or this guard proves nothing");
+
+  const { candidates, unfilled } = parse();
+  const offices = new Set<string>([
+    ...candidates.map((c) => c.office.replace(/\s+/g, " ").trim()),
+    ...unfilled.map((u) => u.office.replace(/\s+/g, " ").trim()),
+  ]);
+  const unrecognised = [...shapes].filter((s) => ![...offices].some((o) => o.startsWith(s)));
+  assert.deepEqual(
+    unrecognised,
+    [],
+    "an all-caps run sits in the document's heading position and no parsed row calls it an office. " +
+      "It is being read as part of a candidate's name, which is how MAYOR shipped six phantom people.",
+  );
+});
+
+test("no candidate's NAME is an office heading, a term count, or a seat count", () => {
+  const { candidates } = parse();
+  const wrong = candidates
+    .filter(
+      (c) =>
+        /^(MAYOR|MEMBER|COUNCIL|COMMITTEE|BOARD|EDUCATION|COMMISSIONERS|SENATE|REPRESENTATIVES)$/i.test(
+          c.familyName.trim(),
+        ) || /\d/.test(`${c.givenName} ${c.familyName}`),
+    )
+    .map((c) => `${c.givenName} ${c.familyName} (${c.jurisdiction} — ${c.office})`);
+  assert.deepEqual(
+    wrong,
+    [],
+    "a heading or a row's digits parsed as a person. Every one of these renders on a ballot as " +
+      "somebody standing for office who does not exist.",
+  );
+});
+
+test("the parser's count matches an INDEPENDENT count of the same document", () => {
+  /*
+   * RULING 111 and RULING 114, offline. `nj:filing:check` compared our parse
+   * against our parse and reported `AGREES` on 272 against 272 while four
+   * candidacies were missing and six were fictional. The count of filed email
+   * addresses depends on none of this project's reading — not the heading list,
+   * not the name pattern, not the jurisdiction tail — and it read the true
+   * number the whole time.
+   *
+   * OCCURRENCES, never distinct: a joint ticket files one shared mailbox
+   * (`rowlandandmchugh4chathamtwp@gmail.com`), and counting distinct values
+   * would lose one of the two candidates it belongs to.
+   */
+  const emails = text.match(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g)?.length ?? 0;
+  assert.ok(emails > 100, `the fixture carries only ${emails} email(s) — the instrument is broken, not the parser`);
+  const { candidates } = parse();
+  assert.equal(
+    candidates.length,
+    emails,
+    "the parser and an independent read of the same document disagree about how many candidacies " +
+      "it contains. One of them is wrong and the document decides which.",
+  );
+});
+
+test("all nine mayoral contests parse, with the candidates the clerk names", () => {
+  const { candidates } = parse();
+  const mayoral = candidates.filter((c) => /^MAYOR\b/.test(c.office.trim()));
+  const byPlace = new Map<string, string[]>();
+  for (const c of mayoral) {
+    const k = c.jurisdiction.trim();
+    byPlace.set(k, [...(byPlace.get(k) ?? []), `${c.givenName} ${c.familyName}`.trim()]);
+  }
+  assert.deepEqual(
+    [...byPlace.keys()].sort(),
+    [
+      "Butler Borough",
+      "Chester Borough",
+      "Jefferson Township",
+      "Kinnelon Borough",
+      "Lincoln Park Borough",
+      "Mendham Borough",
+      "Morris Plains Borough",
+      "Mount Arlington Borough",
+      "Wharton Borough",
+    ],
+    "the nine municipalities electing a mayor in this filing",
+  );
+  // The two CONTESTED ones, named — a mayoral race with two candidates is the
+  // case a reader most needs and the one this defect hid most completely.
+  assert.deepEqual(byPlace.get("Morris Plains Borough")?.sort(), ["Jason C. KARR", "Nancy VERGA"]);
+  assert.deepEqual(byPlace.get("Wharton Borough")?.sort(), ["Robin GHEBREAL", "Vincent BINKOSKI"]);
+});

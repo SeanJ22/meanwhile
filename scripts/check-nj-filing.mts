@@ -49,8 +49,6 @@ import { politeGetText } from "../lib/sources/http.ts";
 import {
   NJ_FILING_SOURCES,
   newestFilingPdfs,
-  parseNjFiling,
-  type FiledCandidate,
 } from "../lib/hunt/nj-filing.ts";
 import { compareFiling } from "../lib/hunt/nj-filing-clock.ts";
 import { today as stampToday } from "./doc-dates.mjs";
@@ -65,10 +63,49 @@ function arg(flag: string): string | undefined {
 
 const MAX_AGE_DAYS = Number(arg("--max-age-days") ?? 1);
 
+/** Every filed candidacy row carries one. Global — occurrences, never distinct. */
+const FILED_EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+.[A-Za-z]{2,}/g;
+
 /* -------------------------------------------------------------------------- */
 /* The CLI half: fetch, count, compare.                                       */
-/* -------------------------------------------------------------------------- */
-
+/**
+ * The clerk's own count, measured WITHOUT this project's parser.
+ *
+ * ## Why it cannot be `parseNjFiling`, which is what it was until 2026-08-25
+ *
+ * This check exists to notice that the document and our ballot disagree. It ran
+ * `parseNjFiling` over the clerk's PDFs and compared the result to
+ * `ballot.candidacies.length` — which `pnpm nj:ballot` had built by running
+ * `parseNjFiling` over the same PDFs. **Both sides of the comparison were the
+ * same measurement**, so the pair could only ever catch a stale REBUILD. It was
+ * structurally incapable of catching a wrong PARSE, and it reported `AGREES —
+ * the pair reconciles` on 272 against 272 while six of those 272 were office
+ * headings read as people and nine mayoral contests were missing outright.
+ *
+ * That is RULING 114 in as many words: re-deriving a figure from the thing it
+ * was derived from proves the code is deterministic and nothing else. And it is
+ * RULING 111 — the fact lives on the DOCUMENT's side, so the document is what
+ * must be asked.
+ *
+ * ## What is counted instead, and why an email address is the right unit
+ *
+ * Every filed candidacy row in these documents carries the candidate's email;
+ * the clerk publishes it as part of the filing. So the count of email addresses
+ * in the text layer is a count of candidacy rows that depends on **none** of
+ * this project's reading: not the office-heading list, not the name pattern,
+ * not the jurisdiction tail, not the contest minting. On the day this was
+ * written it read 276 while our parse read 272 — it would have caught the
+ * defect the moment it shipped.
+ *
+ * OCCURRENCES, not distinct addresses. Two candidates on a joint ticket file a
+ * shared campaign mailbox — `rowlandandmchugh4chathamtwp@gmail.com` is the live
+ * case — and counting distinct values would quietly lose one of them, which is
+ * the same class of silent undercount this whole function exists to catch.
+ *
+ * A row filed with no email would read low here and the check would go RED. That
+ * is the correct direction: a disagreement is reported and investigated, and
+ * never rounded into a pass.
+ */
 async function publishedCount(): Promise<number | null> {
   try {
     const page = await politeGetText(NJ_FILING_SOURCES.morrisClerkCandidates, {
@@ -79,7 +116,7 @@ async function publishedCount(): Promise<number | null> {
      * The ballot-position scan is excluded by name, exactly as `pnpm nj:ballot`
      * excludes it: it is an image-only document with no text layer, and a
      * rung-9 OCR of it is a different branch. Including it here would produce a
-     * guaranteed zero-row parse and turn every run into CANNOT TELL.
+     * guaranteed zero-row read and turn every run into CANNOT TELL.
      */
     const pdfs = newestFilingPdfs(page.text, "https://www.morriscountyclerk.org").filter(
       (url) => !/order/i.test(url),
@@ -93,13 +130,12 @@ async function publishedCount(): Promise<number | null> {
       const bytes = new Uint8Array(await res.arrayBuffer());
       const text = await extractTextLayer(bytes, url);
       if (text.outcome !== "EXTRACTED") return null;
-      const parsed = parseNjFiling(text.items.map((p) => p.text).join("\n"), url);
-      if (parsed.outcome !== "EXTRACTED") return null;
-      const candidates = parsed.items.filter((r): r is FiledCandidate => "familyName" in r);
-      // A zero from any one document is a FAILED parse of that document, and
+      const flat = text.items.map((p) => p.text).join("\n");
+      const found = flat.match(FILED_EMAIL_RE)?.length ?? 0;
+      // A zero from any one document is a FAILED read of that document, and
       // summing it into a total would launder the failure into a smaller number.
-      if (candidates.length === 0) return null;
-      total += candidates.length;
+      if (found === 0) return null;
+      total += found;
     }
     return total;
   } catch {

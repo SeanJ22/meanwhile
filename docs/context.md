@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 156 recorded
+## Rulings — 158 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -426,6 +426,8 @@ from. Each entry there names what it supersedes.
 - RULING 141 — the Speak Your Mind store's four rules
 - RULING 142 — the line in the sand, and nothing collected before it is ever sold
 - RULING 143 — what DONE means for 07866, and it is per candidate
+- RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls
+- RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled
 
 ## P0 tracker rows — 93 of 456 rows
 

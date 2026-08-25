@@ -226,6 +226,27 @@
     "transferCeiling": 940000,
     "transferCeilingNote": "EXACTLY the cap: floor(818445 * 1.15 / 10000) * 10000 = 940000. It was 950000 until AUD-03 lowered the baseline out from under it, which put the old ceiling ABOVE the cap — so the rule pulled it down. This is the figure closest to what a reader waits for, and it is the one worth keeping tight.",
     "split": "By MODULE PROVENANCE since R53 (g18). Measured windows/default with WTP_ATTRIBUTION_BUILD=1 on 2026-08-18: maplibre 873003 raw, application 1659592 raw, unattributed 184923 raw, total 2717518 (which includes 1076 bytes of sourceMappingURL comments the deployed build does not carry). PLATFORM-NAMED AND NOT A COMMITTED BASELINE: the raw/gzip baselines above are ubuntu standalone figures from build-check.yml, and no ubuntu attribution run has been taken yet, so these are not written in as if they were. Tracked apart so a change in application code is visible against the map library, never to lower the total.",
-    "splitMethod": "scripts/attribute-client-bytes.mjs — source maps, VLQ mappings decoded, bytes attributed to the module that produced them. Reconciles to the byte: maplibre + application + unattributed === total, asserted at measurement time. Gzip is deliberately not split."
+    "splitMethod": "scripts/attribute-client-bytes.mjs — source maps, VLQ mappings decoded, bytes attributed to the module that produced them. Reconciles to the byte: maplibre + application + unattributed === total, asserted at measurement time. Gzip is deliberately not split.",
+    "$p002": [
+      "P-002, 2026-08-24 — MEASURED, and the ceiling deliberately NOT moved.",
+      "",
+      "The baselines above are ubuntu-latest standalone figures from build-check.yml,",
+      "named with their run ids. This session measured on WINDOWS in standalone mode,",
+      "which is a different instrument, so the pair below is recorded beside them and",
+      "not written over them. The ceiling rule moves a ceiling only on a re-measured",
+      "baseline, and a Windows number cannot re-measure an ubuntu one.",
+      "",
+      "  before  raw 2955835 · gzip 852947 · 14 chunks",
+      "  after   raw 1995824 · gzip 524646 · 13 chunks",
+      "  delta   raw -960011 (-32.5%) · gzip -328301 (-38.5%)",
+      "",
+      "The whole of it is lib/geo/zcta-centroids.json — 960,770 raw bytes, 32.5% of",
+      "the landing page initial JavaScript, larger than MapLibre — attributed by",
+      "module provenance with scripts/p002-module-table.mts. It is loaded on demand",
+      "now (lib/geo/zcta-table.ts); no reader can use it before typing a zip.",
+      "",
+      "WHAT IS OWED: an ubuntu standalone figure from a build-check run on this",
+      "change, and only then a re-baseline. Tracker NH134."
+    ]
   }
 }

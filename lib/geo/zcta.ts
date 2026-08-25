@@ -2,27 +2,47 @@
 // well as under the bundler. Without it Node refuses the JSON outright, which
 // kept every zip-level test out of the suite.
 import centroidFile from "./zcta-centroids.json" with { type: "json" };
+import {
+  isWellFormedZip,
+  lookupIn,
+  nearestIn,
+  resolveIn,
+  type CentroidTable,
+  type ZctaCentroid,
+  type ZipResolution,
+} from "./zcta-core.ts";
 
 /**
- * Zip → map coordinate.
+ * Zip → map coordinate, SYNCHRONOUSLY, with the whole table in the module.
  *
  * Orientation only. A ZCTA is a statistical shape derived from mail delivery
  * routes; it crosses city, county, school district, and legislative lines. It
  * tells the map where to look and nothing else. Anything that needs actual
  * districts asks for a street address, and says why at the point of asking.
+ *
+ * ## THIS MODULE IS FOR THE SERVER AND FOR SCRIPTS — P-002, 2026-08-24.
+ *
+ * The static import above pulls 960,770 bytes into whatever graph reaches it.
+ * On a server or in a script that is free. In the browser it was 32.5% of the
+ * landing page's initial JavaScript — more than MapLibre — for a table no
+ * reader can use until they type a zip.
+ *
+ * So the three client components that used to import this now use
+ * `./zcta-table.ts`, which loads the same file with a dynamic `import()`.
+ * `tests/zcta-async.test.ts` fails the build if a client component imports
+ * this one again, because nothing else would notice: the page would work
+ * perfectly and simply be a megabyte heavier.
+ *
+ * The logic lives in `./zcta-core.ts` and is called by both, so there is one
+ * implementation of "which zip is nearest" rather than a copy per module
+ * (RULING 103).
  */
 
-export interface ZctaCentroid {
-  zip: string;
-  lat: number;
-  lng: number;
-}
+export type { ZctaCentroid, ZipResolution };
+export { isWellFormedZip };
 
 // JSON arrays widen to number[]; the file's contract is a pair per zip.
-const CENTROIDS = centroidFile.centroids as unknown as Record<
-  string,
-  [number, number]
->;
+const CENTROIDS = centroidFile.centroids as unknown as CentroidTable;
 
 /**
  * Whether the centroid table covers the whole country.
@@ -39,76 +59,14 @@ export const CENTROID_SOURCE = {
   vintage: centroidFile.vintage,
 };
 
-/** Five digits. Rejects ZIP+4 and anything non-numeric. */
-export function isWellFormedZip(input: string): boolean {
-  return /^\d{5}$/.test(input.trim());
-}
-
 export function lookupZcta(input: string): ZctaCentroid | null {
-  const zip = input.trim();
-  if (!isWellFormedZip(zip)) return null;
-
-  const point = CENTROIDS[zip];
-  if (!point) return null;
-
-  return { zip, lat: point[0], lng: point[1] };
+  return lookupIn(CENTROIDS, input);
 }
 
-/**
- * The ZCTA whose centroid is closest to a coordinate.
- *
- * Backs "Use my location" on the entry overlay. Note what this deliberately is
- * not: it does not decide which districts a coordinate falls in, and it is not
- * a reverse geocoder. It converts a browser position into the same kind of
- * orientation a typed zip gives — no more authoritative for having come from
- * GPS. Treating a precise coordinate as district truth is the exact mistake
- * CLAUDE.md rules out for zip, and a coordinate invites it more strongly.
- *
- * Linear scan over ~33k points. It runs once, on a click, and a spatial index
- * for a single query would cost more to build than the scan costs to run.
- */
 export function nearestZcta(lat: number, lng: number): ZctaCentroid | null {
-  let best: ZctaCentroid | null = null;
-  let bestDistance = Infinity;
-
-  for (const zip in CENTROIDS) {
-    const [zLat, zLng] = CENTROIDS[zip];
-
-    // Squared degrees, with longitude scaled by cos(latitude) so the comparison
-    // is not skewed at high latitudes. Only used for ranking, never reported,
-    // so it does not need to be a real distance.
-    const dLat = zLat - lat;
-    const dLng = (zLng - lng) * Math.cos((lat * Math.PI) / 180);
-    const distance = dLat * dLat + dLng * dLng;
-
-    if (distance < bestDistance) {
-      bestDistance = distance;
-      best = { zip, lat: zLat, lng: zLng };
-    }
-  }
-
-  return best;
+  return nearestIn(CENTROIDS, lat, lng);
 }
 
-export type ZipResolution =
-  | { ok: true; centroid: ZctaCentroid }
-  | { ok: false; reason: "malformed" | "unknown" | "uncovered" };
-
-/**
- * Resolve a zip for the entry screen, distinguishing the three ways it fails so
- * each can get its own message.
- *
- * `malformed` — not five digits.
- * `unknown`   — five digits, no such ZCTA. Only claimable with a complete table.
- * `uncovered` — five digits, absent from the stub. We don't know either way.
- */
 export function resolveZip(input: string): ZipResolution {
-  const zip = input.trim();
-
-  if (!isWellFormedZip(zip)) return { ok: false, reason: "malformed" };
-
-  const centroid = lookupZcta(zip);
-  if (centroid) return { ok: true, centroid };
-
-  return { ok: false, reason: COVERAGE_IS_COMPLETE ? "unknown" : "uncovered" };
+  return resolveIn(CENTROIDS, COVERAGE_IS_COMPLETE, input);
 }

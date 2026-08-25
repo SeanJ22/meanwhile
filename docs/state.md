@@ -4,9 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-24 — **The county filed 202 empty cells, and the filed
-email was a campaign site nobody had read.** The overnight depth hunt; its record
-is the section directly below. The previous entry follows it.
+Last updated: 2026-08-24 — **Every finding was reasoned, so every fix was
+reproduced first.** The audit remediation; its record is the LAST section of this
+file. The previous entries follow the summary below.
+
+Previous: 2026-08-24 — **The county filed 202 empty cells, and the filed
+email was a campaign site nobody had read.** The overnight depth hunt.
 
 Previous: 2026-08-23 — **The captures were in the repo this time, and reading
 them found the fix.** Hunt 6 hardening and the 8/22 visual pass. Its record is the
@@ -18050,3 +18053,131 @@ the merge, with zero requests to the site (RULING 125).** They are not in this
 document because they cannot be, and `NS12` records that no Netlify credential
 exists on this machine yet — so this session's verdict for them is
 **CANNOT-TELL**, which is not a pass.
+
+---
+
+## Audit remediation, 2026-08-24 — every finding was reasoned, so every fix was reproduced first
+
+Two external audits of `ae5b178` (code head `336a3eb`) — one for correctness,
+one for performance — returned eight findings, two systemic patterns and six
+performance items. **The auditor could not run code**, so nothing they reported
+had been observed happening. That made the session's law simple and it is the
+only reason this record is worth reading: **no fix shipped without its finding
+first reproduced against the code as shipped.**
+
+**Eight of eight correctness findings reproduced. None disputed. One correction
+to an auditor's example, recorded rather than smoothed.**
+
+The reproductions were not ceremony. Three of them changed what the fix had to
+be:
+
+- **A-005's example was one slug too wide.** The finding described two boards
+  meeting at 7pm collapsing into one meeting. Read against the code that cannot
+  happen — the id is namespaced by wiring row, so two boards produce two ids.
+  The defect is real and one level in, WITHIN a row, where a town publishes
+  "Zoning Board of Adjustment" and "Zoning Board of Adjustment Public Hearing"
+  at the same start and both match the row's title filter. **A fix built for the
+  example as written would have been a fix for nothing.**
+- **A-002's stated invariant could not hold.** The brief wrote `produced +
+  dropped + outOfWindow + unretrieved === input` and, two sentences later,
+  required that document counts never be compared with event counts. Those
+  cannot both be true: `unretrieved` counts DOCUMENTS. The first implementation
+  added them anyway and `ical`'s own refusal fixtures failed with *1 more
+  disposition than records* — the contract catching its author mixing two
+  layers.
+- **P-002's first attempt made the bundle BIGGER.** Converting the three
+  components that resolve a typed zip moved the landing page from 2,955,835 to
+  2,956,534 raw bytes, because one static importer remained in a hook. The
+  change was worth exactly nothing until that moved too, and the measurement is
+  the only thing that said so.
+
+### What is measurably different
+
+| | before | after |
+|---|---|---|
+| Landing page initial JS (this machine, standalone) | 2,955,835 raw · 852,947 gzip · 14 chunks | **1,995,824 raw · 524,646 gzip · 13 chunks** |
+| Exact polygon tests per division lookup | 2,291 | **14** |
+| Resolver geometry | 26 files · 2,291 features · 118,533 coordinates | **25 · 1,850 · 38,418** |
+| DOM writes on a 500→480 pin filter | 20 removes + 20 later creates | **20 visibility writes, 0 creates, 0 removes** |
+| DOM writes to select one pin | 500 | **1** |
+| Raw email addresses in a reader collection store | 1 | **0** |
+| Search-log rows that are ours | 11,755 of 14,877 | **0 of 3,122** |
+
+Every one of those is a measurement taken twice on the same instrument, which
+is now law: **RULING 133 — a performance change ships with its measurement.**
+
+### The three that were about our own instruments lying
+
+**A-008.** `pnpm main:green` — the gate every session's close-out trusts under
+RULING 75 — returned GREEN when a required check had completed having executed
+zero steps. Its own test carried the comment *"That is not green"* above an
+assertion that only checked it was not RED, which GREEN satisfies. The prose and
+the assertion had disagreed since the day it was written and the prose lost
+silently. Audited across the last 20 green readings on `main`: **0 were false**,
+which is the honest number and not a comforting one — the defect was real and
+had not yet fired.
+
+**A-002.** `accountedNormalize` asked a boolean. 100 logical inputs, 0 output and
+one recorded drop was branded as a fully-accounted result: **one drop laundering
+ninety-nine disappearances.** RULING 43 asks whether a pass produced NOTHING and
+is silent about a pass that produced SOME, which is RULING 100 one layer down.
+
+**A-003.** Document validity depended on which transport rung happened to
+succeed — the same bytes refused on rung 2 and accepted on rung 3. And the
+branch was gated on `!options.fetchImpl`, so **no test in this repo could reach
+it.** That is the chromium-pin shape: a production path nothing observes.
+
+### A-001, which is the one that touched the constitution
+
+`CLAUDE.md` says without qualification that no store carries a column that could
+join to another. `feedback.reply_to` held a raw email address.
+`questionnaire_invitations.email` holds a raw email address. One value space,
+two tables, equality-joinable.
+
+**The guard that was supposed to catch it checked column NAMES.** `reply_to`
+does not contain the letters `email`, so it was added to a carefully-written
+exception set and waved through — RULING 110's wrong-form search, living inside
+a test.
+
+The address moved to a contact-delivery store behind a handle minted with
+`randomUUID`, never derived, because a shared deterministic hash is the same
+join key relocated. Migration applied to production and **verified by reading
+the catalog back** rather than by trusting `db:apply`'s own per-statement OK. 3
+feedback rows exported to a dated backup outside the repo first; 1 carried an
+address; 1 address in the delivery store afterwards; 0 handles resolving to
+nothing.
+
+Two things the work found on the way, both stated: the reply address was **never
+readable** — `pnpm feedback:read` did not select it, so R41's field had been
+collected and never surfaced since it shipped — and the delivery store IS joined
+by that handle on that one author-only path, which is a deviation from the
+brief's "joined to nothing" and is written down where the query is.
+
+### What did not get done, and why
+
+**P-005 stays OPEN.** `pnpm perf` ran against a local production build and
+reported *hardware acceleration OFF or UNKNOWN* with `NaN` for every frame
+metric. `docs/perf-baseline.md` was **not committed**, which is the harness
+working rather than the work failing: a number describing a software rasterizer
+in the place a reader's hardware belongs would be inherited by every budget set
+from it afterwards.
+
+**P-006 stays OPEN.** The pnpm store, `.next/cache` and the Playwright browser
+are all cached now, and the measured delta cannot exist until the workflow runs
+on this change. A row closed on a change whose after-number does not yet exist
+is RULING 133 broken in the tracker.
+
+**0 of 9 leaked credentials are rotated**, proven rather than assumed: the
+by-value sweep still finds every current value in a leaked location. Only Sean
+can rotate them. What this session could do it did — the Drive mirror was found
+dirty AGAIN, with six occurrences of five live credentials, and the cause is now
+named: `handoff` re-runs the transcript exporter, which rewrites the mirror out
+of the local `.jsonl` files that are deliberately never scrubbed. **A hand-run
+scrub was only ever true until the next handoff.** It scrubs at the output
+channel now and re-reads to confirm.
+
+**`docs/feedback/8.24/` was empty.** The session's first act was to be committing
+sixteen captures unread; there were none, and git cannot track an empty
+directory. The refinement it was meant to unblock is law anyway — RULING 135, a
+fence bars acting on content and never registering the author's artifacts — so
+the next batch lands without the collision.

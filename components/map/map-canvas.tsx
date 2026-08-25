@@ -98,7 +98,28 @@ interface CameraProbe {
 }
 
 interface MapCanvasProps {
+  /**
+   * **EVERY venue the DATA contains** — P-001, 2026-08-24.
+   *
+   * Not the filtered list. `lib/map/marker-pool.ts` says in its own header
+   * that filtering "changes which are VISIBLE, never which exist", and the
+   * wiring here made that false: `map-entry` passed the filtered venues in,
+   * so a filter that narrowed 500 pins to 480 arrived as twenty venues the
+   * data no longer had, and `rebuildMarkerPool` destroyed their markers —
+   * then rebuilt them when the filter was reversed. The optimisation was
+   * documented and bypassed, which is the chromium-pin shape.
+   *
+   * This drives the POOL. {@link MapCanvasProps.visibleVenueKeys} drives what
+   * is shown, and the two are separate effects.
+   */
   venues: Venue[];
+  /**
+   * The keys the current filters leave visible — P-001.
+   *
+   * A subset of `venues` by construction. Passing `null` means "no filter is
+   * narrowing anything", and every venue in the pool is shown.
+   */
+  visibleVenueKeys?: ReadonlySet<string> | null;
   camera: CameraTarget | null;
   focus: MapFocus | null;
   /** The districts currently drawn — the stats card counts this list and
@@ -240,6 +261,7 @@ function createHereElement(zipLabel: string): HTMLDivElement {
 
 export function MapCanvas({
   venues,
+  visibleVenueKeys = null,
   camera,
   focus,
   selectedVenueKey,
@@ -894,6 +916,12 @@ export function MapCanvas({
    * applyVisibility below and touches only the pins whose visibility actually
    * changed. Separating the two is the whole point of the pool — see
    * lib/map/marker-pool.ts.
+   *
+   * **P-001, 2026-08-24: the separation is now real.** The sentence above was
+   * true of the pool and false of this component, because `venues` arrived
+   * already filtered. This effect depends on the DATA list and does no
+   * visibility work at all; the visibility effect below owns that and depends
+   * on the filtered keys, so a filter change cannot reach `rebuildMarkerPool`.
    */
   useEffect(() => {
     const map = mapRef.current;
@@ -944,8 +972,6 @@ export function MapCanvas({
 
       applySpiderfy(pool, fanOffsets(group));
     });
-    applyVisibility(poolRef.current, new Set(venues.map((v) => v.key)));
-
     /*
      * The pin-count probe (g3 item 6).
      *
@@ -957,9 +983,43 @@ export function MapCanvas({
      * behaves differently when it is or isn't there, so it cannot become a
      * feature by accident.
      */
+    /*
+     * **P-001: it counts the VISIBLE pins, not the pool.**
+     *
+     * Its own sentence above is "how many pins are you showing". While
+     * `venues` was the filtered list those were the same number; now that the
+     * pool holds every venue in the data they are not, and returning the pool
+     * size would quietly change what `pnpm walk:all`'s zoom-out check is
+     * asserting. It reads the elements, because visibility is a data
+     * attribute on them and that is the thing a reader can actually see.
+     */
     (window as unknown as { __wtpPinCount?: () => number }).__wtpPinCount = () =>
-      venues.length;
+      [...poolRef.current.entries.values()].filter(
+        (entry) => entry.element.dataset.hidden !== "true",
+      ).length;
   }, [venues]);
+
+  /*
+   * **P-001 · VISIBILITY IS ITS OWN EFFECT, WITH ITS OWN DEPENDENCY.**
+   *
+   * This is the half that makes the pool's design work. It depends on the
+   * filtered KEYS and never on the venue objects, so a filter keystroke runs
+   * this and nothing else: `applyVisibility` touches only the pins whose
+   * visibility actually changed — twenty writes on a 500-to-480 filter, which
+   * is the number the pool's header has claimed since it was written and
+   * which `tests/marker-pool-ops.test.ts` now asserts.
+   *
+   * A null `visibleVenueKeys` means nothing is narrowing, so everything in
+   * the pool is shown. That is the honest default rather than an empty set,
+   * which would hide every pin on a caller that has not opted in.
+   */
+  useEffect(() => {
+    if (!mapRef.current) return;
+    applyVisibility(
+      poolRef.current,
+      visibleVenueKeys ? new Set(visibleVenueKeys) : new Set(venues.map((v) => v.key)),
+    );
+  }, [venues, visibleVenueKeys]);
 
   /*
    * THE STATE FOCUS (g3 item 10, M91) — the author's design, against his
@@ -1201,11 +1261,21 @@ export function MapCanvas({
     };
   }, [districtTypes]);
 
-  // Selection is a class on the marker element, so it survives re-renders
-  // without rebuilding the marker.
+  /*
+   * Selection is a data attribute on the marker element, so it survives
+   * re-renders without rebuilding the marker.
+   *
+   * **P-004, 2026-08-24: `venues` is out of the dependency list.** Selection
+   * does not change when the data does — the pool holds the selected key and
+   * `applySelection` diffs against it, so re-running on every data change
+   * swept the whole pool to re-assert something that had not moved. It stays
+   * correct across a rebuild because a newly created marker's
+   * `dataset.selected` is unset, and the selected pin is not recreated by a
+   * rebuild that keeps it.
+   */
   useEffect(() => {
     applySelection(poolRef.current, selectedVenueKey);
-  }, [selectedVenueKey, venues]);
+  }, [selectedVenueKey]);
 
   /**
    * Keep the pins in frame.
@@ -1215,9 +1285,24 @@ export function MapCanvas({
    * hour's drive away — so frame all of them, along with the centroid, rather
    * than resting on a view with nothing in it.
    */
+  /*
+   * **P-001 · FRAMING FOLLOWS THE VISIBLE PINS, NOT THE POOL.**
+   *
+   * `venues` is now every venue the DATA holds, which is right for the marker
+   * pool and wrong for a camera: framing a pin the current filter hides would
+   * fly the reader to somewhere with nothing on it. `framed` is the filtered
+   * subset, and it is computed from the same key set the visibility effect
+   * uses so the two cannot disagree about what is on screen.
+   */
+  const framed = useMemo(
+    () =>
+      visibleVenueKeys ? venues.filter((v) => visibleVenueKeys.has(v.key)) : venues,
+    [venues, visibleVenueKeys],
+  );
+
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !camera || venues.length === 0) return;
+    if (!map || !camera || framed.length === 0) return;
 
     // A settle-driven result must never move the camera — the reader put the
     // viewport where they wanted it (2i).
@@ -1254,7 +1339,7 @@ export function MapCanvas({
       // runs at scheduling time cannot see it.
       if (userMovedRef.current) return;
       if (!frameAllVenues) {
-        const anyVisible = venues.some((venue) =>
+        const anyVisible = framed.some((venue) =>
           map.getBounds().contains([venue.lng, venue.lat]),
         );
         if (anyVisible) return;
@@ -1262,7 +1347,7 @@ export function MapCanvas({
 
       const bounds = new LngLatBounds();
       bounds.extend([camera.lng, camera.lat]);
-      for (const venue of venues) bounds.extend([venue.lng, venue.lat]);
+      for (const venue of framed) bounds.extend([venue.lng, venue.lat]);
 
       map.fitBounds(bounds, {
         padding: { top: 96, bottom: 128, left: 64, right: 64 },
@@ -1272,7 +1357,7 @@ export function MapCanvas({
     }, 2800);
 
     return () => window.clearTimeout(timer);
-  }, [venues, camera, frameAllVenues, allowAutoFrame]);
+  }, [framed, camera, frameAllVenues, allowAutoFrame]);
 
   // The inner div is the MapLibre container and gets its size from this
   // wrapper. maplibre-gl.css sets `position: relative` on `.maplibregl-map`

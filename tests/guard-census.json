@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 221,
-    "named": 2123,
+    "files": 223,
+    "named": 2143,
     "dynamic": 6
   },
   "files": {
@@ -1788,6 +1788,25 @@
       ],
       "dynamic": 0
     },
+    "tests/marker-pool-ops.test.ts": {
+      "names": [
+        "P-001 · REVERSING the filter is another 20 writes, not 20 constructions",
+        "P-001 · THE OLD WIRING, kept as a measurement rather than an argument",
+        "P-001 · a 500-to-480 filter creates and removes NOTHING",
+        "P-001 · a 500-to-480 filter touches ~20 elements, the number the pool documents",
+        "P-001 · a REAL data change still creates and removes, which is the whole point",
+        "P-001 · map-entry hands the map ALL venues and the visible keys separately",
+        "P-001 · the before line: building the pool creates 500 and shows 500",
+        "P-001 · the canvas rebuilds on DATA and applies visibility on KEYS, in separate effects",
+        "P-004 · a venue that MOVES is repositioned, and only that one",
+        "P-004 · an unchanged venue is not rewritten, and a changed one is",
+        "P-004 · re-asserting the SAME selection writes nothing at all",
+        "P-004 · selecting one pin writes TWO elements, not five hundred",
+        "P-004 · the selected attribute lands on the right two elements",
+        "P-004 · the signature covers every input the icon pass reads"
+      ],
+      "dynamic": 0
+    },
     "tests/measure-provisions.test.ts": {
       "names": [
         "Proposition 141's absences survive the fifth kind",
@@ -2529,6 +2548,17 @@
         "pre-resolving the divisions produces the identical coverage answer",
         "the counter can read two, so a one is a measurement and not a constant",
         "the route passes its divisions only when the lookup succeeded"
+      ],
+      "dynamic": 0
+    },
+    "tests/resolver-manifest.test.ts": {
+      "names": [
+        "P-003 · a point inside a feature is inside its bounding box",
+        "P-003 · every .geojson is either read or excluded WITH A REASON",
+        "P-003 · the box is a PREFILTER, never the answer",
+        "P-003 · the national congressional file is excluded, and its splits are all present",
+        "P-003 · the server reads the manifest and no longer lists a directory",
+        "P-003 · the state outline is still excluded, for the reason it always was"
       ],
       "dynamic": 0
     },

@@ -1,8 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { isWellFormedZip, nearestZcta, resolveZip } from "@/lib/geo/zcta";
+import {
+  isWellFormedZip,
+  nearestZctaAsync,
+  resolveZipAsync,
+  warmZctaTable,
+} from "@/lib/geo/zcta-table";
 
 import { useRecentZips } from "@/hooks/use-recent-zips";
 import { ZipComb } from "./zip-comb";
@@ -61,8 +66,17 @@ export function WelcomeOverlay({
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
 
-  function submit(value: string = zip) {
-    const result = resolveZip(value);
+  /*
+   * P-002 · the 960 KB centroid table is fetched when the reader arrives, not
+   * when the page paints. By the time five digits are typed it is almost
+   * always already here; if it is not, the await below waits for it.
+   */
+  useEffect(() => {
+    warmZctaTable();
+  }, []);
+
+  async function submit(value: string = zip) {
+    const result = await resolveZipAsync(value);
 
     if (!result.ok) {
       setError(MESSAGES[result.reason]);
@@ -84,9 +98,9 @@ export function WelcomeOverlay({
 
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         setLocating(false);
-        const near = nearestZcta(
+        const near = await nearestZctaAsync(
           position.coords.latitude,
           position.coords.longitude,
         );
@@ -196,7 +210,7 @@ export function WelcomeOverlay({
               setZip(next);
               if (error) setError(null);
             }}
-            onSubmit={() => submit()}
+            onSubmit={() => void submit()}
             invalid={Boolean(error)}
             describedBy={error ? "welcome-error" : "welcome-fineprint"}
             autoFocus={open}
@@ -210,7 +224,7 @@ export function WelcomeOverlay({
           type="button"
           className="welcome-submit"
           disabled={!isWellFormedZip(zip)}
-          onClick={() => submit()}
+          onClick={() => void submit()}
         >
           Show meetings
         </button>
@@ -249,7 +263,7 @@ export function WelcomeOverlay({
                   key={zip}
                   type="button"
                   className="welcome-team-btn"
-                  onClick={() => submit(zip)}
+                  onClick={() => void submit(zip)}
                 >
                   {zip}
                 </button>
@@ -269,7 +283,7 @@ export function WelcomeOverlay({
               key={quick.zip}
               type="button"
               className="welcome-team-btn"
-              onClick={() => submit(quick.zip)}
+              onClick={() => void submit(quick.zip)}
             >
               {quick.label}
             </button>

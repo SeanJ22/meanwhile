@@ -25,6 +25,8 @@
  * page, which is where a portrait actually is.
  */
 
+import { sourceUserAgent } from "../sources/http.ts";
+
 /** One image on a page, resolved against the page's own URL. */
 export interface PageImage {
   src: string;
@@ -34,26 +36,40 @@ export interface PageImage {
 /**
  * Every `<img>` on the page, with its `src` and `alt`.
  *
- * `data-src` is read as well as `src`, because a lazily-loaded portrait carries
- * a placeholder in `src` and the real file in `data-src` — and a reader with
- * JavaScript sees the second one.
+ * ## BOTH `data-src` AND `src`, AND `data-src` FIRST
+ *
+ * This read `src` and fell back to `data-src` only when `src` was absent. A
+ * lazily-loaded image has **both**: a placeholder in `src` and the real file in
+ * `data-src`. So the placeholder won, the real portrait was never offered to the
+ * picker, and the page read as carrying no image of the person — an absence
+ * manufactured by our own reader.
+ *
+ * A reader with JavaScript sees the `data-src` file, so that is the one this
+ * project is looking at. Both are emitted, `data-src` first, because a page may
+ * lazily load the furniture and eagerly load the portrait as easily as the
+ * reverse and the picker decides on the NAME rather than on the order.
+ *
+ * `srcset` is read too, at its first candidate: a responsive portrait often
+ * carries no plain `src` worth having.
  */
 export function imagesIn(html: string, base: string): PageImage[] {
   const out: PageImage[] = [];
   for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
     const tag = m[0];
-    const src =
-      /\bsrc\s*=\s*"([^"]+)"/i.exec(tag)?.[1] ??
-      /\bsrc\s*=\s*'([^']+)'/i.exec(tag)?.[1] ??
-      /\bdata-src\s*=\s*"([^"]+)"/i.exec(tag)?.[1] ??
+    const attr = (name: string): string | null =>
+      new RegExp(`\\b${name}\\s*=\\s*"([^"]+)"`, "i").exec(tag)?.[1] ??
+      new RegExp(`\\b${name}\\s*=\\s*'([^']+)'`, "i").exec(tag)?.[1] ??
       null;
-    if (src === null) continue;
-    const alt =
-      /\balt\s*=\s*"([^"]*)"/i.exec(tag)?.[1] ?? /\balt\s*=\s*'([^']*)'/i.exec(tag)?.[1] ?? "";
-    try {
-      out.push({ src: new URL(src, base).toString(), alt });
-    } catch {
-      /* a malformed src is not an image */
+    const alt = attr("alt") ?? "";
+    const firstOfSrcset = attr("srcset")?.split(",")[0]?.trim().split(/\s+/)[0] ?? null;
+    for (const src of [attr("data-src"), attr("data-lazy-src"), attr("src"), firstOfSrcset]) {
+      if (!src) continue;
+      try {
+        const resolved = new URL(src, base).toString();
+        if (!out.some((i) => i.src === resolved)) out.push({ src: resolved, alt });
+      } catch {
+        /* a malformed src is not an image */
+      }
     }
   }
   return out;
@@ -111,4 +127,103 @@ export function phoneIn(text: string): string | null {
   // 000 and 555 are not dialable area codes; a match on either is a template.
   if (area === "000" || area === "555") return null;
   return `${area}-${m[2]}-${m[3]}${m[4] ? ` ${m[4].trim()}` : ""}`;
+}
+
+/**
+ * **IS THIS URL ACTUALLY AN IMAGE?**
+ *
+ * The picker above finds a name-matched `<img src>` in a page's markup. That is
+ * a claim about the MARKUP and not about what the URL serves, and the two came
+ * apart the first time this ran at scale.
+ *
+ * Measured 2026-08-25 on the door-2 walk: `chesterborough.org//images/2022/08/08/
+ * russell-goodwin.jpeg` — note the double slash, which the page's own template
+ * emitted — answers **HTTP 200 with `text/html` and 12,119 bytes.** It is the
+ * site's soft-404 page wearing an image's URL. Two portraits were queued for the
+ * author's review that way, and the ONLY reason it was caught is that RULING 2
+ * made somebody open the review sheet as an image and see two broken tiles.
+ *
+ * A 200 that is not the thing is not a document, and a soft-404 offered as a
+ * named person's face is the wrong-face failure in a different costume.
+ *
+ * **The content type is checked AND the bytes are.** A server can label anything
+ * anything; the magic numbers are what the file is. Both must agree, because a
+ * JPEG served as `text/html` and an HTML page served as `image/jpeg` are both
+ * things that happen and neither is a portrait this product can use.
+ */
+export interface ImageVerdict {
+  ok: boolean;
+  status: number;
+  bytes: number;
+  contentType: string;
+  why: string;
+}
+
+/** The first bytes of the formats a portrait may be in. */
+function magicOf(b: Uint8Array): string | null {
+  if (b.length < 12) return null;
+  if (b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return "jpeg";
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return "png";
+  if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) return "gif";
+  const riff = String.fromCharCode(...b.slice(0, 4));
+  const webp = String.fromCharCode(...b.slice(8, 12));
+  if (riff === "RIFF" && webp === "WEBP") return "webp";
+  return null;
+}
+
+/** `&#038;` and friends, which a page's own markup puts inside a src. */
+export function decodeEntities(url: string): string {
+  return url
+    .replace(/&#0?38;|&amp;/g, "&")
+    .replace(/&#0?39;/g, "'")
+    .replace(/&quot;/g, '"');
+}
+
+export async function verifyIsImage(
+  url: string,
+  fetchImpl: typeof fetch = fetch,
+): Promise<ImageVerdict> {
+  let res: Response;
+  try {
+    res = await fetchImpl(decodeEntities(url), {
+      headers: { "user-agent": sourceUserAgent() },
+      redirect: "follow",
+    });
+  } catch (e) {
+    return { ok: false, status: 0, bytes: 0, contentType: "", why: `request failed: ${(e as Error).message}` };
+  }
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!res.ok) {
+    return { ok: false, status: res.status, bytes: 0, contentType, why: `HTTP ${res.status}` };
+  }
+  const bytes = new Uint8Array(await res.arrayBuffer());
+  const magic = magicOf(bytes);
+  if (!magic) {
+    return {
+      ok: false,
+      status: res.status,
+      bytes: bytes.length,
+      contentType,
+      why:
+        `HTTP 200 with ${bytes.length} B of ${contentType || "an unnamed type"} whose first bytes are ` +
+        "no image format this reads. A 200 that is not the thing is not a document — most often a " +
+        "soft 404 wearing an image's URL.",
+    };
+  }
+  if (!/^image\//i.test(contentType)) {
+    return {
+      ok: false,
+      status: res.status,
+      bytes: bytes.length,
+      contentType,
+      why: `the bytes are a ${magic} and the server calls it ${contentType} — the two disagree, and a portrait is not shipped on a disagreement`,
+    };
+  }
+  return {
+    ok: true,
+    status: res.status,
+    bytes: bytes.length,
+    contentType,
+    why: `${bytes.length} B of ${magic}, served as ${contentType}`,
+  };
 }

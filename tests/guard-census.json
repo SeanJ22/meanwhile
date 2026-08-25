@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 230,
-    "named": 2225,
+    "files": 231,
+    "named": 2240,
     "dynamic": 6
   },
   "files": {
@@ -2307,6 +2307,26 @@
         "the quota is stated where the build can print it",
         "the registry label yields the designation Plural publishes",
         "the roster reads the unmetered bulk host, never the quota'd API"
+      ],
+      "dynamic": 0
+    },
+    "tests/portrait-pick.test.ts": {
+      "names": [
+        "REFUSES bytes and label that disagree, in either direction",
+        "REFUSES the real soft-404 — 200, text/html, and the bytes are markup",
+        "a non-200 is refused with its status, never treated as an absence",
+        "a phone read off a municipal page is narrow on purpose",
+        "a portrait URL has to serve a picture",
+        "a short token never matches — initials and particles are not names",
+        "accepts a real image, and says what it read",
+        "decodes the entities a page's own markup puts inside a src",
+        "does not read a street address or a zip+4 as a phone",
+        "picks the name-matched image and passes over the furniture",
+        "reads data-src, because a lazily-loaded portrait hides behind a placeholder",
+        "reads the shapes these sites actually write",
+        "refuses a template number, which would send a reader to nobody",
+        "returns NOTHING rather than the best of a bad set",
+        "the picker matches on the name and nothing else"
       ],
       "dynamic": 0
     },

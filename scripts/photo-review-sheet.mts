@@ -39,7 +39,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from
 import { join } from "node:path";
 
 import { officialPhotoForPerson } from "../lib/photos/person.ts";
-import { reviewFor } from "../lib/photos/review.ts";
+import { reviewFor, stagedAwaitingReview } from "../lib/photos/review.ts";
 import { launchGuarded } from "./browser.mts";
 import { today } from "./doc-dates.mjs";
 
@@ -82,7 +82,34 @@ for (const [key, card] of Object.entries(cards.cards)) {
   pending.push({ index: pending.length + 1, name, url, where: "candidate card" });
 }
 
+/*
+ * STAGED PORTRAITS, WHICH HAD NO CHANNEL HERE UNTIL 2026-08-25 — NJ22.
+ *
+ * The loop above asks which portraits ON A CARD are unapproved. That is the
+ * right question for one already written onto a card, and it means a portrait a
+ * hunt FOUND and correctly refused to ship was invisible to the author: the only
+ * way onto this sheet was to do the thing the rule forbids.
+ *
+ * `pnpm door2` found six on sitting officials' own municipal .gov pages, four
+ * of them new, and shipped none. The sheet then showed three pending, none of
+ * them his.
+ *
+ * A staged row carries WHERE it was found and WHY it matched, so a wrong face is
+ * arguable rather than asserted — and it is still not approval and still not
+ * rendering. `photoMayRender` is untouched.
+ */
+for (const staged of stagedAwaitingReview()) {
+  if (pending.some((x) => x.url === staged.url)) continue;
+  pending.push({
+    index: pending.length + 1,
+    name: staged.name,
+    url: staged.url,
+    where: `STAGED · ${staged.door.split(" — ")[0]} · ${staged.foundOn}`,
+  });
+}
+
 console.log(`portrait review sheet — ${pending.length} pending`);
+console.log(`  of which STAGED (found, not shipped): ${pending.filter((x) => x.where.startsWith("STAGED")).length}`);
 
 const dataUri = (url: string): string => {
   const local = url.startsWith("/") ? join(ROOT, "public", url.slice(1)) : null;
@@ -112,6 +139,19 @@ const emptyBlock =
   `generator that did not run must never look the same.</p></div>`;
 
 const style = [
+  /*
+   * `box-sizing` FIRST, and it is not a nicety.
+   *
+   * The body carried 28px of padding with the default `content-box`, so on the
+   * 1180px viewport below the content box was 1180 wide PLUS 56px of padding and
+   * the last tile in a row ran off the right edge — its URL clipped mid-word.
+   * Read as an image on 2026-08-25, which is the only way anyone would ever have
+   * seen it: the file is a valid PNG at a healthy byte count either way.
+   *
+   * This sheet is the ONLY channel a portrait has to the author. A tile he
+   * cannot read is a portrait he cannot judge.
+   */
+  "*,*::before,*::after{box-sizing:border-box}",
   "body{margin:0;padding:28px;background:#12131a;color:#e8e8ee;",
   "font:15px/1.45 ui-sans-serif,system-ui,-apple-system,sans-serif}",
   "h1{font-size:19px;margin:0 0 4px}",
@@ -124,7 +164,15 @@ const style = [
   "display:flex;align-items:center;justify-content:center;padding:0 6px}",
   "img{width:100%;height:250px;object-fit:cover;object-position:center top;display:block;",
   "background:#24252f}",
-  "figcaption{padding:9px 11px;font-size:13px;display:flex;flex-direction:column;gap:2px}",
+  /*
+   * A URL DOES NOT WRAP UNLESS IT IS TOLD TO, and a staged row's caption is a
+   * URL. Without `overflow-wrap`, `https://www.peqtwp.org/243/Township-Council`
+   * runs past the tile's right edge and the author reads half an address —
+   * which, on the only channel a portrait has to him, is the same as not
+   * telling him where it came from.
+   */
+  "figcaption{padding:9px 11px;font-size:13px;display:flex;flex-direction:column;gap:2px;",
+  "overflow-wrap:anywhere;word-break:break-word}",
   "figcaption span{color:#9a9aa8;font-size:11.5px}",
   ".empty{padding:56px 8px}.empty h2{margin:0 0 8px;font-size:17px}",
   ".empty p{margin:0 0 6px;color:#9a9aa8}.small{font-size:12px}",

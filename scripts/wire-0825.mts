@@ -50,6 +50,7 @@
  * opens is not a door into the photo rule.
  */
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { sourceUserAgent } from "../lib/sources/http.ts";
 import { join } from "node:path";
 
 import { today } from "./doc-dates.mjs";
@@ -236,7 +237,7 @@ async function preferHttps(url: string): Promise<{ url: string; note: string }> 
   const https = url.replace(/^http:\/\//, "https://");
   try {
     const r = await fetch(https, {
-      headers: { "user-agent": "we-the-people/1.0 (civic data; seanj22@gmail.com)" },
+      headers: { "user-agent": sourceUserAgent() },
       redirect: "follow",
     });
     const body = await r.text();

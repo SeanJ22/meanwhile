@@ -59,7 +59,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { imagesIn, phoneIn, pickPortrait } from "../lib/hunt/portrait-pick.ts";
+import { decodeEntities, imagesIn, phoneIn, pickPortrait, verifyIsImage } from "../lib/hunt/portrait-pick.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 import { conserve } from "../lib/sources/normalize-account.ts";
 import { today } from "./doc-dates.mjs";
@@ -138,6 +138,8 @@ interface Row {
   photoAlreadyHeld: boolean;
   phoneAlreadyHeld: boolean;
   portrait: { src: string; alt: string; why: string } | null;
+  /** The page named an image for this person and the URL did not serve one. */
+  imageRefusal: { src: string; why: string } | null;
   phone: string | null;
   door: "door 2 — the portrait a government body publishes of its own member";
   attemptedAt: string;
@@ -189,6 +191,7 @@ for (const c of incumbents) {
       photoAlreadyHeld: photoHeld,
       phoneAlreadyHeld: phoneHeld,
       portrait: null,
+      imageRefusal: null,
       phone: rosterPhone,
       door: "door 2 — the portrait a government body publishes of its own member",
       attemptedAt: TODAY,
@@ -223,6 +226,7 @@ for (const c of incumbents) {
       photoAlreadyHeld: photoHeld,
       phoneAlreadyHeld: phoneHeld,
       portrait: null,
+      imageRefusal: null,
       phone: rosterPhone,
       door: "door 2 — the portrait a government body publishes of its own member",
       attemptedAt: TODAY,
@@ -232,7 +236,26 @@ for (const c of incumbents) {
     continue;
   }
 
-  const portrait = pickPortrait(subject, imagesIn(text, page));
+  const picked = pickPortrait(subject, imagesIn(text, page));
+  /*
+   * THE MARKUP SAID IMAGE; THE URL HAS TO AGREE.
+   *
+   * `pickPortrait` finds a name-matched `<img src>`, which is a claim about the
+   * PAGE and not about what the URL serves. Measured on this walk's first run:
+   * `chesterborough.org//images/...` — the double slash is the site's own
+   * template — answers HTTP 200 with `text/html` and 12 KB. Two soft-404 pages
+   * were queued as named people's faces, and the only reason it was caught is
+   * that RULING 2 made somebody open the review sheet AS AN IMAGE and see two
+   * broken tiles.
+   *
+   * A portrait that does not verify is a REFUSAL with its reason recorded, never
+   * a silent drop: the page really does name an image for this person and
+   * something is wrong at the other end, which is a finding a later session can
+   * act on.
+   */
+  const verdict = picked ? await verifyIsImage(picked.src) : null;
+  const portrait = picked && verdict?.ok ? { ...picked, src: decodeEntities(picked.src) } : null;
+  const imageRefusal = picked && verdict && !verdict.ok ? { src: picked.src, why: verdict.why } : null;
   /*
    * The phone is read from the passage AROUND the person's name, never from the
    * whole page: a municipal page carries the clerk's number, the police
@@ -254,19 +277,28 @@ for (const c of incumbents) {
     photoAlreadyHeld: photoHeld,
     phoneAlreadyHeld: phoneHeld,
     portrait,
+    imageRefusal,
     phone,
     door: "door 2 — the portrait a government body publishes of its own member",
     attemptedAt: TODAY,
     note: portrait
-      ? `name-matched portrait on their own page (${portrait.why})`
-      : "the page carries no image bearing this person's name — reported as no candidate image rather than as the best of a bad set",
+      ? `name-matched portrait on their own page (${portrait.why}); the URL serves ${verdict?.why}`
+      : imageRefusal
+        ? `the page names an image for this person and the URL does not serve one — ${imageRefusal.why}`
+        : "the page carries no image bearing this person's name — reported as no candidate image rather than as the best of a bad set",
   });
   console.log(
-    `  ${subject.padEnd(26)} ${portrait ? "PORTRAIT" : "no image "} ${phone ? phone.padEnd(22) : "no phone".padEnd(22)} ${page.slice(0, 60)}`,
+    `  ${subject.padEnd(26)} ${portrait ? "PORTRAIT" : imageRefusal ? "NOT-IMAGE" : "no image "} ${phone ? phone.padEnd(22) : "no phone".padEnd(22)} ${page.slice(0, 56)}`,
   );
 }
 
 const queued = rows.filter((r) => r.portrait && !r.photoAlreadyHeld);
+/**
+ * A page that NAMES an image for this person where the URL serves something
+ * else. Refused with the reason and never queued — a soft 404 offered as a
+ * named person's face is the wrong-face failure in a different costume.
+ */
+const notImages = rows.filter((r) => r.imageRefusal);
 const phonesNew = rows.filter((r) => r.phone && !r.phoneAlreadyHeld);
 const accounting = conserve("incumbent-door2", {
   logicalInput: incumbents.length,
@@ -282,6 +314,8 @@ console.log(`  no page of their own    ${noPage}`);
 console.log(`  refused                 ${refused} — walls on this date, never absences`);
 console.log(`  accounting              ${accounting.outcome}, ${accounting.accountedFor} of ${incumbents.length}`);
 console.log(`\n  PORTRAITS QUEUED FOR REVIEW  ${queued.length}   (shipped: 0, and that is the rule)`);
+console.log(`  named an image that is NOT one ${notImages.length} — refused with the reason, never queued`);
+for (const r of notImages) console.log(`    ${r.subject.padEnd(26)} ${r.imageRefusal?.why.slice(0, 96)}`);
 console.log(`  PHONES newly found           ${phonesNew.length}`);
 for (const r of phonesNew) console.log(`    ${r.subject.padEnd(26)} ${r.phone}`);
 
@@ -314,6 +348,7 @@ if (WRITE) {
           noPageOfTheirOwn: noPage,
           refused,
           portraitsQueued: queued.length,
+          namedAnImageThatIsNotOne: notImages.length,
           phonesFound: phonesNew.length,
         },
         accounting,

@@ -10,8 +10,9 @@
     "pagesWalked": 19,
     "noPageOfTheirOwn": 0,
     "refused": 0,
-    "portraitsQueued": 4,
-    "phonesFound": 2
+    "portraitsQueued": 2,
+    "namedAnImageThatIsNotOne": 0,
+    "phonesFound": 0
   },
   "accounting": {
     "logicalInput": 19,
@@ -35,6 +36,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -51,6 +53,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -67,6 +70,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -83,6 +87,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -95,18 +100,19 @@
       "bodyName": "Chatham Township Committee",
       "page": "https://chathamtownship.org/government/mayor-township-committee/",
       "status": 200,
-      "bytes": 315934,
+      "bytes": 315935,
       "photoAlreadyHeld": true,
       "phoneAlreadyHeld": false,
       "portrait": {
-        "src": "https://i0.wp.com/chathamtownship.org/wp-content/uploads/jen_rowland.jpg?resize=860%2C1000&#038;ssl=1",
+        "src": "https://i0.wp.com/chathamtownship.org/wp-content/uploads/jen_rowland.jpg?resize=860%2C1000&ssl=1",
         "alt": "",
         "why": "name matched on rowland"
       },
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on rowland)"
+      "note": "name-matched portrait on their own page (name matched on rowland); the URL serves 134975 B of jpeg, served as image/jpeg"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-mayor-place-chester:goodwin-russell",
@@ -115,18 +121,15 @@
       "bodyName": "Chester Borough Council",
       "page": "https://chesterborough.org/government/mayor",
       "status": 200,
-      "bytes": 170361,
+      "bytes": 12093,
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
-      "portrait": {
-        "src": "https://chesterborough.org//images/2022/08/08/russell-goodwin.jpeg",
-        "alt": "Image",
-        "why": "name matched on russell, goodwin"
-      },
+      "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on russell, goodwin)"
+      "note": "the page carries no image bearing this person's name — reported as no candidate image rather than as the best of a bad set"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:dominianni-michael",
@@ -135,18 +138,15 @@
       "bodyName": "Chester Borough Council",
       "page": "https://chesterborough.org/government/mayor",
       "status": 200,
-      "bytes": 170361,
+      "bytes": 12093,
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
-      "portrait": {
-        "src": "https://chesterborough.org//images/2026/02/17/michael-dominianni.jpg",
-        "alt": "Michael Dominianni Headshot",
-        "why": "name matched on michael, dominianni"
-      },
+      "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on michael, dominianni)"
+      "note": "the page carries no image bearing this person's name — reported as no candidate image rather than as the best of a bad set"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m",
@@ -155,10 +155,11 @@
       "bodyName": "Harding Township Committee",
       "page": "https://www.hardingnj.org/government/mayor",
       "status": 200,
-      "bytes": 146244,
+      "bytes": 12092,
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -175,6 +176,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -195,10 +197,11 @@
         "alt": "Sean Mabey",
         "why": "name matched on sean, mabey"
       },
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on sean, mabey)"
+      "note": "name-matched portrait on their own page (name matched on sean, mabey); the URL serves 31583 B of jpeg, served as image/jpeg"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
@@ -211,6 +214,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -225,8 +229,9 @@
       "status": 200,
       "bytes": 350309,
       "photoAlreadyHeld": false,
-      "phoneAlreadyHeld": false,
+      "phoneAlreadyHeld": true,
       "portrait": null,
+      "imageRefusal": null,
       "phone": "973-714-8246",
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -241,8 +246,9 @@
       "status": 200,
       "bytes": 74618,
       "photoAlreadyHeld": false,
-      "phoneAlreadyHeld": false,
+      "phoneAlreadyHeld": true,
       "portrait": null,
+      "imageRefusal": null,
       "phone": "973-398-6832 ext. 4",
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -263,10 +269,11 @@
         "alt": "Kyle Russell",
         "why": "name matched on kyle, russell"
       },
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on kyle, russell)"
+      "note": "name-matched portrait on their own page (name matched on kyle, russell); the URL serves 4186 B of jpeg, served as image/jpeg"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
@@ -283,10 +290,11 @@
         "alt": "Melissa Florance-Lynch",
         "why": "name matched on melissa, florance, lynch"
       },
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
-      "note": "name-matched portrait on their own page (name matched on melissa, florance, lynch)"
+      "note": "name-matched portrait on their own page (name matched on melissa, florance, lynch); the URL serves 7838 B of jpeg, served as image/jpeg"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
@@ -299,6 +307,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": true,
       "portrait": null,
+      "imageRefusal": null,
       "phone": "973-627-2000",
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -315,6 +324,7 @@
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -327,10 +337,11 @@
       "bodyName": "Wharton Borough Council",
       "page": "https://www.whartonnj.com/index.php/borough/governing-body",
       "status": 200,
-      "bytes": 210386,
+      "bytes": 211054,
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",
@@ -343,10 +354,11 @@
       "bodyName": "Wharton Borough Council",
       "page": "https://www.whartonnj.com/index.php/borough/governing-body",
       "status": 200,
-      "bytes": 210375,
+      "bytes": 211064,
       "photoAlreadyHeld": false,
       "phoneAlreadyHeld": false,
       "portrait": null,
+      "imageRefusal": null,
       "phone": null,
       "door": "door 2 — the portrait a government body publishes of its own member",
       "attemptedAt": "2026-08-25",

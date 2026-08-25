@@ -48,6 +48,7 @@
  */
 
 import { spawnSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -99,7 +100,20 @@ interface Lead {
   /** The page the lead was mined FROM — the provenance, never dropped. */
   foundOn: string;
   foundOnPublisher: string;
+  /**
+   * The page the evidence is ON. It is what gets fetched and read.
+   */
   url: string;
+  /**
+   * The SITE, which is what a reader is shown.
+   *
+   * The two are separated because collapsing them broke the route in both
+   * directions. Mining paths produced two rows for one slate site; mining hosts
+   * lost the page that carried the name and the office, so a site that had
+   * proven itself stopped proving itself. A campaign site is a PLACE and the
+   * evidence for it is a PAGE, and they are not the same string.
+   */
+  siteUrl: string;
   /** Whether the URL was read off a page or constructed by us. RULING 68. */
   guessed: boolean;
 }
@@ -204,7 +218,7 @@ const NEVER_A_CAMPAIGN_SITE_HOST = new RegExp(
   "i",
 );
 
-function externalLinks(html: string, pageUrl: string): string[] {
+function externalLinks(html: string, pageUrl: string): { page: string; site: string }[] {
   const host = (() => {
     try {
       return new URL(pageUrl).hostname.replace(/^www\./, "");
@@ -212,7 +226,9 @@ function externalLinks(html: string, pageUrl: string): string[] {
       return "";
     }
   })();
-  const out = new Set<string>();
+  /* Keyed on the SITE, so one slate site linked twice is one lead — and the
+   * page kept with it is the one that will be read for evidence. */
+  const out = new Map<string, string>();
   for (const m of html.matchAll(/href=["']([^"']+)["']/gi)) {
     const raw = m[1];
     if (!/^https?:\/\//i.test(raw)) continue;
@@ -227,15 +243,14 @@ function externalLinks(html: string, pageUrl: string): string[] {
     if (NOT_A_CAMPAIGN_SITE.test(h)) continue;
     if (NEVER_A_CAMPAIGN_SITE_HOST.test(h)) continue;
     if (/\.(pdf|jpg|jpeg|png|gif|svg|css|js|ico|xml|webp)$/i.test(u.pathname)) continue;
-    /*
-     * **The HOST is the lead, not the path.** A slate site links `/meet-jay`
-     * and `/meet-jess` from the same page, and mining paths produced two rows
-     * that read as two different campaign sites when they are two pages of one.
-     * The field a reader sees is "the campaign's site", and that is a place.
-     */
-    out.add(`${u.protocol}//${u.hostname}`);
+    const site = `${u.protocol}//${u.hostname}`;
+    const page = `${u.protocol}//${u.hostname}${u.pathname}`.replace(/\/$/, "") || site;
+    /* A DEEPER page wins: it is likelier to carry the name and the office than
+     * an apex that is a slideshow. The apex is still what the reader is shown. */
+    const held = out.get(site);
+    if (held === undefined || page.length > held.length) out.set(site, page);
   }
-  return [...out];
+  return [...out.entries()].map(([site, page]) => ({ site, page }));
 }
 
 /* --------------------------------------------------------------- routes */
@@ -277,7 +292,7 @@ const ROUTES: Route[] = [
       for (const p of pages) {
         const html = p.content?.rendered ?? "";
         for (const link of externalLinks(html, p.link)) {
-          const h = new URL(link).hostname.replace(/^www\./, "");
+          const h = new URL(link.site).hostname.replace(/^www\./, "");
           /* Government and clerk hosts are a different route's business. */
           if (/\.gov$|\.us$|morriscountyclerk|njelec/i.test(h)) continue;
           if (hosts.has(h)) continue;
@@ -323,6 +338,71 @@ const ROUTES: Route[] = [
     },
   },
   {
+    id: "press-outlet-wp-search",
+    tier: "A",
+    publisher: "the local and statewide press that covers these races",
+    about: "every candidate on this ballot, one surname at a time",
+    async pages(ctx) {
+      /*
+       * **THE PUBLISHER'S OWN SEARCH, WHICH IS NOT A SEARCH ENGINE.**
+       *
+       * Conceived on 2026-08-24 after measuring that every general web index
+       * this project is PERMITTED to walk is walled: `html.duckduckgo.com` and
+       * `lite.duckduckgo.com` publish `Allow: /` and answer HTTP 202 with a
+       * challenge page at rungs 2 and 3, and rung 6 renders
+       * *"Unfortunately, bots use DuckDuckGo too."* Mojeek, Brave, Ecosia,
+       * Startpage and Bing all `Disallow: /search`, so they are not walked at
+       * any rung — `CLAUDE.md` says a robots disallow gets a COMPLIANT ROUTE to
+       * the same information rather than a cleverer client.
+       *
+       * This is that compliant route. Both outlets run WordPress and publish
+       * `/wp-json/wp/v2/search`, which is the site's own documented interface —
+       * ladder rung 7, the page's own network calls, and rung 12, the vendor
+       * platform underneath. It is asked one SURNAME at a time, which is a
+       * broad question rather than a per-person one: a surname query returns
+       * every article about anyone of that name, and the articles are then
+       * mined for all 272 at once.
+       *
+       * The control is clean and was measured before this was written: a
+       * deliberately impossible term returns `[]` on both hosts, so a real
+       * answer is distinguishable from the host talking about itself.
+       */
+      const outlets = [
+        { host: "newjerseyglobe.com", who: "the New Jersey Globe" },
+        { host: "morristowngreen.com", who: "Morristown Green" },
+      ];
+      const surnames = new Map<string, string>();
+      for (const c of ctx.candidacies) {
+        const s = c.familyName
+          .replace(/,\s*(JR|SR|II|III|IV|V)\.?/gi, "")
+          .replace(/[^A-Za-z' -]/g, "")
+          .trim();
+        if (s.length >= 4) surnames.set(s.toLowerCase(), s);
+      }
+      console.log(`  ${surnames.size} distinct surname(s) to ask ${outlets.length} outlet(s)`);
+
+      const articles = new Map<string, string>();
+      for (const [, surname] of surnames) {
+        for (const o of outlets) {
+          const q = `https://${o.host}/wp-json/wp/v2/search?search=${encodeURIComponent(surname)}&per_page=20`;
+          const res = await ctx.get(q, `${o.who}, its own search API`);
+          if (!res.ok) continue;
+          let hits: { url?: string }[];
+          try {
+            hits = JSON.parse(res.text);
+          } catch {
+            continue;
+          }
+          for (const h of hits) {
+            if (h.url && !articles.has(h.url)) articles.set(h.url, o.who);
+          }
+        }
+      }
+      console.log(`  ${articles.size} distinct article(s) named by those searches`);
+      return [...articles.entries()].map(([url, who]) => ({ url, publisher: who }));
+    },
+  },
+  {
     id: "party-committee-domain-shape",
     tier: "A",
     publisher: "the municipal party committees of Morris County, both parties",
@@ -352,7 +432,7 @@ const ROUTES: Route[] = [
        * LEAD on the probe alone (RULING 68); it is the page's own words that
        * decide, exactly as everywhere else.
        */
-      const file = join(OUT_DIR, "nj-morris-municipal-sites.json");
+      const file = join(OUT_DIR, "muni-sites-nj-morris.json");
       const munis: string[] = existsSync(file)
         ? (JSON.parse(readFileSync(file, "utf8")) as { sites: { municipality: string }[] }).sites.map(
             (s) => s.municipality,
@@ -438,9 +518,40 @@ const stamp = today();
 
 const fetched = new Map<string, SourcePage>();
 
+/**
+ * A read-through disk cache, so re-running a route costs nothing at the origin.
+ *
+ * Not a nicety. This route asks two newspapers 516 questions; re-walking it to
+ * fix a bug in OUR code would be 516 more requests at somebody else's expense,
+ * and the public-records rule says never request at a rate that degrades
+ * service. A cached page is also what makes a diff-able re-run possible: the
+ * same bytes, a different verdict, and the difference is ours.
+ *
+ * `--fresh` bypasses it, because a cache nobody can turn off eventually serves
+ * a session a page the publisher has since changed.
+ */
+const CACHE_DIR = join(ROOT, ".hunt-tmp", "cache");
+const FRESH = process.argv.includes("--fresh");
+
+function cachePath(url: string): string {
+  return join(CACHE_DIR, `${createHash("sha256").update(url).digest("hex").slice(0, 32)}.json`);
+}
+
 async function get(url: string, publisher: string): Promise<SourcePage> {
   const cached = fetched.get(url);
   if (cached) return cached;
+  if (!FRESH) {
+    const file = cachePath(url);
+    if (existsSync(file)) {
+      try {
+        const disk = JSON.parse(readFileSync(file, "utf8")) as SourcePage;
+        fetched.set(url, { ...disk, publisher });
+        return fetched.get(url)!;
+      } catch {
+        /* a corrupt cache entry is not a document — fall through and fetch */
+      }
+    }
+  }
   await sleep(SPACING_MS);
   let page: SourcePage;
   try {
@@ -484,10 +595,104 @@ async function get(url: string, publisher: string): Promise<SourcePage> {
           ok: viaCurl.status >= 200 && viaCurl.status < 400 && viaCurl.text.length > 0,
           note: `${node}; RUNG 4 (curl) answered HTTP ${viaCurl.status}`,
         }
-      : { url, publisher, status: 0, bytes: 0, text: "", ok: false, note: `${node}; rung 4 (curl) also refused` };
+      : await afterCurl(url, publisher, node);
   }
   fetched.set(url, page);
+  /* Only a page that ANSWERED is cached. Caching a refusal would freeze a wall
+   * into a fact, which is the one thing this project never records. */
+  if (page.ok) {
+    mkdirSync(CACHE_DIR, { recursive: true });
+    writeFileSync(cachePath(url), JSON.stringify(page));
+  }
   return page;
+}
+
+/**
+ * **RUNG 11 — the Internet Archive, when the host itself is gone.**
+ *
+ * Two of the municipal committee sites the county party links do not resolve at
+ * all: `NXDOMAIN`, not a wall. A domain that has expired is the one case where
+ * no amount of client-swapping helps, and it is also the case where the archive
+ * is strongest — the committee's own page about its own candidates is still
+ * there, dated.
+ *
+ * A capture is NOT the live web and the difference is recorded on the row: the
+ * note names the archive and the capture timestamp, so nothing downstream can
+ * mistake a 2023 snapshot for what the committee publishes today.
+ */
+async function afterCurl(url: string, publisher: string, node: string): Promise<SourcePage> {
+  /* Rung 2 again, over plain http — a TLS handshake failure is about TLS. */
+  if (url.startsWith("https://")) {
+    const plain = curlRead(url.replace(/^https:/, "http:"));
+    if (plain && plain.status >= 200 && plain.status < 400 && plain.text.length > 0) {
+      return {
+        url,
+        publisher,
+        status: plain.status,
+        bytes: plain.text.length,
+        text: plain.text,
+        ok: true,
+        note: `${node}; rung 4 (curl) refused over https; PLAIN HTTP answered ${plain.status}`,
+      };
+    }
+  }
+
+  try {
+    const host = new URL(url).hostname;
+    const api = `https://archive.org/wayback/available?url=${encodeURIComponent(host)}`;
+    const res = await fetch(api, {
+      headers: { "User-Agent": sourceUserAgent() },
+      signal: AbortSignal.timeout(30_000),
+    });
+    const j = (await res.json()) as {
+      archived_snapshots?: { closest?: { url?: string; timestamp?: string; available?: boolean } };
+    };
+    const snap = j.archived_snapshots?.closest;
+    if (!snap?.available || !snap.url) {
+      return {
+        url,
+        publisher,
+        status: 0,
+        bytes: 0,
+        text: "",
+        ok: false,
+        note: `${node}; rung 4 (curl) refused; rung 11 (Internet Archive) holds no capture of ${host}`,
+      };
+    }
+    const cap = curlRead(snap.url);
+    if (!cap || cap.text.length === 0) {
+      return {
+        url,
+        publisher,
+        status: 0,
+        bytes: 0,
+        text: "",
+        ok: false,
+        note: `${node}; rung 11 named a capture at ${snap.timestamp} and it could not be read`,
+      };
+    }
+    return {
+      url,
+      publisher,
+      status: cap.status,
+      bytes: cap.text.length,
+      text: cap.text,
+      ok: true,
+      note:
+        `${node}; rung 4 (curl) refused; RUNG 11 — read from the Internet Archive, capture ` +
+        `${snap.timestamp}. This is an ARCHIVED page, not what the publisher serves today.`,
+    };
+  } catch (e) {
+    return {
+      url,
+      publisher,
+      status: 0,
+      bytes: 0,
+      text: "",
+      ok: false,
+      note: `${node}; rung 4 (curl) refused; rung 11 threw: ${(e as Error).message.slice(0, 70)}`,
+    };
+  }
 }
 
 /** Rung 4: the same request through a client with a different TLS fingerprint. */
@@ -578,14 +783,15 @@ for (const id of wanted) {
        * and the PROVE phase decides — which is what the control and the
        * self-identification bar are for.
        */
-      for (const url of links) {
+      for (const link of links) {
         routeLeads.push({
           candidacyId: c.id,
           subject: subjectOf(c),
           contestTitle: contests.get(c.contestId)?.title ?? "",
           foundOn: p.url,
           foundOnPublisher: p.publisher,
-          url,
+          url: link.page,
+          siteUrl: link.site,
           guessed: false,
         });
         mined += 1;
@@ -652,8 +858,29 @@ let leadsOut = 0;
 let empties = 0;
 let refusals = 0;
 
+/**
+ * The URL for one identifier on the lead's own host.
+ *
+ * **This function is the control, and getting it wrong made the control
+ * meaningless in the first three runs of this route.** `ControlledProbe` calls
+ * the SAME `make` twice — once with `CONTROL_IDENTIFIER`, once with the real
+ * one — and compares the two answers. The first version here ignored its
+ * argument and returned the lead URL both times, so the host was compared
+ * against itself: every page came back `EMPTY` as "indistinguishable from this
+ * host's own answer for a name that cannot exist", which it trivially was.
+ *
+ * Worse, `controlSize` caches by HOSTNAME, so the one page that did promote was
+ * promoted by comparing against whichever path on that host happened to be
+ * probed first. An order-dependent verdict about a named person is exactly what
+ * RULING 68 exists to stop, arriving through the instrument built to enforce it.
+ */
+function onLeadHost(leadUrl: string): (identifier: string) => string {
+  const origin = new URL(leadUrl).origin;
+  return (identifier) => (identifier === leadUrl ? leadUrl : `${origin}/${identifier}`);
+}
+
 for (const lead of allLeads) {
-  const r = await probe.probe(() => lead.url, lead.url, { guessed: lead.guessed });
+  const r = await probe.probe(onLeadHost(lead.url), lead.url, { guessed: lead.guessed });
   const body = bodies.get(lead.url) ?? "";
   const flat = flattenForEvidence(body);
   const forms = matchNameForms(filedName(ballot.candidacies.find((c) => c.id === lead.candidacyId)!), flat);
@@ -696,7 +923,7 @@ for (const p of proven) {
 }
 console.log(`  distinct candidacies with a proven site: ${bySubject.size}\n`);
 for (const [id, rows] of bySubject) {
-  console.log(`    ${rows[0].subject.padEnd(30)} ${rows.map((r) => r.url).join(", ")}`);
+  console.log(`    ${rows[0].subject.padEnd(30)} ${[...new Set(rows.map((r) => r.siteUrl))].join(", ")}`);
 }
 
 mkdirSync(OUT_DIR, { recursive: true });

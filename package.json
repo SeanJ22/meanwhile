@@ -221,7 +221,8 @@
     "roster:stale": "tsx scripts/stale-roster-sweep.mts",
     "rotation:prove": "tsx scripts/rotation-proof.mts",
     "hunt:sites": "tsx scripts/hunt-campaign-sites.mts",
-    "kelly": "tsx scripts/kelly-scoreboard.mts"
+    "kelly": "tsx scripts/kelly-scoreboard.mts",
+    "search:rung": "tsx scripts/search-rung.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

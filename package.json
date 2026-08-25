@@ -227,7 +227,8 @@
     "party:directory": "tsx scripts/party-directory-0825.mts",
     "party:pages": "tsx scripts/hunt-party-pages-0825.mts",
     "gop:shape": "tsx scripts/gop-municipal-shape-0825.mts",
-    "wire:0825": "tsx scripts/wire-0825.mts"
+    "wire:0825": "tsx scripts/wire-0825.mts",
+    "absences": "tsx scripts/argue-absences-0825.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -3229,3 +3229,86 @@ if this person were standing in front of you.
 keeps reaction aggregates off every card, because showing them anchors later
 respondents and corrupts what is being sold. **The default is REVERSIBLE and is
 Sean's call.**
+
+---
+
+### RULING 142 — the line in the sand, and nothing collected before it is ever sold
+
+*Adopted 2026-08-24, Sean's ruling. His words are the ruling and are recorded
+verbatim, because a paraphrase of a promise is a different promise.*
+
+> **"I will draw a line in the sand once people outside of testing are actually
+> using it. We have not crossed that line yet."**
+
+**Nothing collected before that line — organic-looking or not — is ever sold, or
+shown to anyone as signal.** Not the reactions, not the search log, not a
+sample, not an aggregate, not a chart in a buyer deck, not a screenshot in a
+pitch. **The sellable clock starts at zero on the day the password wall comes
+down.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.* Every
+row in those two stores today was made by Sean, by a tester he asked, or by this
+project's own instruments. Some of them look exactly like reader rows, because
+they were produced by walking the product the way a reader would. **That is the
+problem, and it is not solvable by filtering.** A filter that separates them
+depends on a session having correctly declared every synthetic run, forever, in
+every path — and the measured history says otherwise: 11,755 synthetic
+search-log rows accumulated against 260 organic before RULING 125 sent
+verification to the local build. *Organic after filtering* is a weaker claim than
+*organic by construction*, and only one of them survives being asked about.
+
+**The mechanism is `T10`, not a filter somebody remembers.** `lib/ops/demo-window.ts`
+holds the wall-down trigger and `pnpm demo:sweep` fires it; **`WALL_DOWN` is set
+by the change that takes the wall down and by nothing else** — never inferred
+from a deploy, a config read or a probe. A promise kept by memory is a promise
+broken, which is the sentence T10 was opened over.
+
+**What this ruling changes about that mechanism, and it is a real change.** T10
+was built to delete a *window* — from `WALL_UP` to `WALL_DOWN` — and refused to
+run at all while `WALL_UP` was unset, on the correct reasoning that deleting from
+the beginning of time would take real reader rows with it. **Under this ruling
+there are no real reader rows before the line**, by definition, so the lower
+bound is not unknown: it is the beginning. The refusal is therefore lifted for
+that one case and kept for every other, and `demoSweepVerdict` says which of the
+two it is on the verdict itself.
+
+**No date is written here.** The line has not been drawn, `WALL_DOWN` is `null`,
+and a plausible date in this module would decide an irreversible deletion on a
+fabricated number.
+
+---
+
+### RULING 143 — what DONE means for 07866, and it is per candidate
+
+*Adopted 2026-08-24, Sean's ruling, recorded so the finish line is a measurement
+rather than a feeling.*
+
+**Every candidate on the 07866 ballot either meets the Kelly standard in full —
+a photo, a phone, a working contact, a specific verified page, and a campaign
+site — or carries an ARGUED ABSENCE: a five-move stuck protocol under RULING 94
+with its literal queries recorded, and an expiry date under RULING 53. Nothing
+in between counts, and there is no partial credit.**
+
+- **A candidate with four of the five Kelly fields and no protocol on the fifth
+  is NOT done.** The field is still owed.
+- **An absence with no stuck-protocol block is VOID** and the field returns to
+  owed — RULING 94, unchanged and restated here because this is the place a
+  session will be tempted to round up.
+- **An absence expires.** Candidate fields carry a 7-day clock (RULING 53), so a
+  protocol walked tonight is owed again next week. **Done is not a permanent
+  state**, and a report that says otherwise is describing a measurement as a
+  conclusion.
+- **The distance remaining is reported as a NUMBER against 272, every session**,
+  and it is the number that decides when Arizona starts. The zip order is law:
+  NH `03255`, then NJ `07866`, then AZ `85641`, then AZ `85701`.
+
+*The rationale stays attached.* "Depth" has no finish line and a session can
+always report progress against it, honestly, forever. Many small-race candidates
+genuinely have no campaign site, and the honest end state for them is an argued
+absence rather than a blank — **which means the finish line cannot be "everybody
+has five fields", because that line is unreachable and would make the zip
+permanently unfinished.** It also cannot be "we hunted hard", because that is a
+fact about the session rather than about the ballot. Kelly-or-argued is the only
+version that is both reachable and checkable, and it is checkable per candidate
+rather than in aggregate — which is what stops a well-covered contest carrying a
+thin one across the line.

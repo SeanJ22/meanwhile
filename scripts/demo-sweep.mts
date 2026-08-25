@@ -47,7 +47,8 @@ if (verdict.state !== "READY") {
   process.exit(0);
 }
 
-console.log(`  demo window:     ${verdict.from} .. ${verdict.to}`);
+console.log(`  demo window:     ${verdict.from ?? "(the beginning)"} .. ${verdict.to}`);
+console.log(`  lower bound:     ${verdict.lowerBound}`);
 
 if (!EXECUTE || !PRODUCTION) {
   console.log(
@@ -75,7 +76,8 @@ const record = [
   ``,
   `## Demo deletion — ${today()}`,
   ``,
-  `The promise Sean made to the tester, executed. Window \`${verdict.from}\` to \`${verdict.to}\`.`,
+  `The promise Sean made to the tester, executed. Window \`${verdict.from ?? "the beginning"}\` ` +
+    `to \`${verdict.to}\` — ${verdict.lowerBound}`,
   ``,
   ...Object.entries(result.deleted).map(([s, c]) => `- \`${s}\` — **${c}** row(s) deleted`),
   ``,

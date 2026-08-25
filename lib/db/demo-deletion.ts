@@ -30,7 +30,8 @@ import { reactions, searchLog } from "./schema.ts";
 import { WriteHandleRefused, resolveProductionWriteHandle } from "./write-handle.ts";
 
 export interface DemoDeletionResult {
-  window: { from: string; to: string };
+  /** `from` is `null` when the lower bound is THE BEGINNING — RULING 142. */
+  window: { from: string | null; to: string };
   /** Rows removed, per store. Stated per store, never as one blended total. */
   deleted: Record<string, number>;
   /** What the window held before, so the two numbers can be reconciled. */
@@ -42,9 +43,16 @@ export interface DemoDeletionResult {
  *
  * The bounds are inclusive DATES. A row is in the demo if it happened on or
  * between the day the wall went up and the day it came down.
+ *
+ * **`from` may be `null`, and that is a bound rather than a missing one** —
+ * RULING 142. Nothing collected before the wall comes down is sellable, so
+ * when `WALL_UP` was never established the correct lower bound is the
+ * beginning, and the predicate simply drops its lower half. A caller that
+ * meant *I do not know the start* must not pass `null` here; `demoSweepVerdict`
+ * is what decides which of the two this is, and it says so in words.
  */
 export async function deleteDemoWindowRows(
-  from: string,
+  from: string | null,
   to: string,
 ): Promise<DemoDeletionResult> {
   const handle = resolveProductionWriteHandle(process.env);
@@ -66,7 +74,7 @@ export async function deleteDemoWindowRows(
    * reaction recorded at noon on the day the wall came down would survive a
    * deletion that promised to take it.
    */
-  const start = `${from}T00:00:00.000Z`;
+  const start = from === null ? null : `${from}T00:00:00.000Z`;
   const end = `${to}T23:59:59.999Z`;
 
   const counted: Record<string, number> = {};
@@ -76,7 +84,7 @@ export async function deleteDemoWindowRows(
     ["reactions", reactions, reactions.occurredAt],
     ["search_log", searchLog, searchLog.occurredAt],
   ] as const) {
-    const where = and(gte(column, start), lte(column, end));
+    const where = start === null ? lte(column, end) : and(gte(column, start), lte(column, end));
 
     const before = await db
       .select({ n: sql<number>`count(*)::int` })

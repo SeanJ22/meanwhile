@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 00:32:47 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-24 -->
-Session day 2026-08-24 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
+Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -582,19 +582,5 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-```
-generated: 2026-08-25 00:32:47 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-24 -->
-branch: claude/visual-0824-build
-head sha: d7a5b660b38dbb6e7b0da666d1b648b462beb6a2
-head subject: Five API keys were leaking, and the mirror scrub was undoing itself
-origin/main sha: ab4da2008276520d094bdfd3e3d504a910ce4599
-origin/main subject: Merge pull request #173 from SeanJ22/claude/visual-0824-build
-local main sha: ab4da2008276520d094bdfd3e3d504a910ce4599
-local main matches origin/main: yes
-working tree: clean
-open prs: none
-last recorded tests: 1442 (fail)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:14434
-```
+_No git facts available this run._
+

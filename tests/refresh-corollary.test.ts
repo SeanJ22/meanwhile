@@ -786,13 +786,43 @@ test("F22: every source whose rows outrun the serving window declares its own", 
       "\n",
   );
 
+  /*
+   * TWO CLOCKS, ONE EDGE — measured 2026-08-25, and it made the daily refresh
+   * red on a source that had declared itself perfectly correctly.
+   *
+   * An adapter computes its back edge at FETCH time. This guard computes one
+   * from the snapshot's `generatedAt`, which is stamped AFTER every source has
+   * been read — minutes later on a small corpus, and longer as the corpus
+   * grows. A row admitted at 89.99 days is 90.01 days old by the time the
+   * snapshot is written, and the guard then reports it as an archive nobody
+   * declared. It was declared; it was measured against a different instant.
+   *
+   * That is not hypothetical and it is not rare. In the committed snapshot
+   * FIVE of eleven sources sit inside a day and a half of the edge —
+   * apptegy 88.50d, clerksboards 88.61d, iqm2 88.54d, legistar 89.46d,
+   * diligent and ical 89.50d — because the publishers all keep about a
+   * quarter's history and the adapters all clip to the same 90. Which one
+   * trips is decided by what time of day the refresh ran.
+   *
+   * So the tolerance is the GAP BETWEEN THE TWO CLOCKS and nothing else. It
+   * is one day, it is asserted below to stay one day, and it is deliberately
+   * far too small to hide a real undeclared archive — `civicplus` at 230 days
+   * and `revize` at 196 are the shape this guard exists to catch, and a day of
+   * slack does not reach them.
+   */
+  const CLOCK_GAP_MS = 86_400_000;
+  assert.ok(
+    CLOCK_GAP_MS <= 86_400_000,
+    "the fetch-to-stamp tolerance may never grow past a day — past that it stops being a clock gap and starts being a hole",
+  );
+
   const undeclared: string[] = [];
   for (const [source, at] of beyond) {
     if (!declared.has(source)) continue; // a snapshot may name a source this build no longer has
     const window = declared.get(source);
     if (window === null) continue; // no back clip at all — the archive is whole
     const days = window ?? CONCLUDED_LOOKBACK_DAYS;
-    if (generatedAt - days * 86_400_000 <= at) continue;
+    if (generatedAt - days * 86_400_000 - CLOCK_GAP_MS <= at) continue;
     undeclared.push(
       `${source} (oldest row ${new Date(at).toISOString().slice(0, 10)}, ` +
         `declared window ${days}d)`,
@@ -1106,4 +1136,32 @@ test("A-004 · the ical adapter no longer swallows a past-feed failure", () => {
     [],
     `a catch block that discards its error and continues: ${swallowed.join(" | ")}`,
   );
+});
+
+test("F22: a day of clock-gap slack does not reach a real undeclared archive", () => {
+  /*
+   * The guard above allows one day between the adapter's fetch clock and the
+   * snapshot's stamp. This proves that slack cannot swallow the thing the
+   * guard is for. `civicplus` (230 days past the window) and `revize` (196)
+   * are the real shape; both declare `publishedLookbackDays: null` and pass
+   * for the RIGHT reason — they say they carry the whole archive.
+   *
+   * A source with the same rows and NO declaration must still be caught, and
+   * a day of tolerance must not change that by even a little.
+   */
+  const CLOCK_GAP_MS = 86_400_000;
+  const generatedAt = Date.parse("2026-08-25T19:36:00Z");
+  const backEdge = generatedAt - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+
+  const caught = (rowAt: string): boolean =>
+    !(backEdge - CLOCK_GAP_MS <= Date.parse(rowAt));
+
+  // The false positive the slack exists to end: inside the window at fetch,
+  // outside it by hours at the stamp.
+  assert.equal(caught("2026-05-27T19:30:00Z"), false, "a clock-gap row must not be reported");
+  // The real thing, at both of the sizes actually measured in the snapshot.
+  assert.equal(caught("2026-01-06T05:00:00Z"), true, "a 230-day archive must still be caught");
+  assert.equal(caught("2026-02-09T05:00:00Z"), true, "a 196-day archive must still be caught");
+  // And the slack is genuinely a day, not a week wearing a day's name.
+  assert.equal(caught("2026-05-23T00:00:00Z"), true, "four days past the edge is not a clock gap");
 });

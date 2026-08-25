@@ -59,7 +59,31 @@ interface Candidacy {
   givenName: string;
 }
 
-const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026.json"), "utf8")) as {
+/**
+ * WHICH BALLOT. Defaults to 07866, because RULING 143 is about 07866 and the
+ * number this prints is the one that decides when Arizona starts.
+ *
+ * It takes an argument because the alternative is a SECOND scoreboard for New
+ * Hampshire, and RULING 103 is explicit that a renamed copy of a function is a
+ * duplicate implementation — the two would drift the first time one of them was
+ * fixed.
+ */
+const BALLOTS: Record<string, { file: string; label: string; contacts?: string }> = {
+  "07866": {
+    file: "nj-morris-2026.json",
+    label: "07866 (Morris County, New Jersey)",
+    contacts: "nj-morris-2026-contacts.json",
+  },
+  "03255": { file: "nh-merrimack-2026.json", label: "03255 (Merrimack County, New Hampshire)" },
+};
+const ZIP = (process.argv.find((a) => a.startsWith("--zip=")) ?? "--zip=07866").slice("--zip=".length);
+const CHOSEN = BALLOTS[ZIP];
+if (!CHOSEN) {
+  console.error(`pnpm kelly --zip=<${Object.keys(BALLOTS).join("|")}>`);
+  process.exit(2);
+}
+
+const ballot = JSON.parse(readFileSync(join(ROOT, "data", "ballot", CHOSEN.file), "utf8")) as {
   contests: { id: string; title: string }[];
   candidacies: Candidacy[];
 };
@@ -74,12 +98,18 @@ const links = JSON.parse(
   readFileSync(join(ROOT, "data", "ballot", "candidate-links-2026.json"), "utf8"),
 ) as { links: Record<string, { official?: { url: string }; campaign?: { url: string } }> };
 
-const contacts = JSON.parse(
-  readFileSync(join(ROOT, "data", "ballot", "nj-morris-2026-contacts.json"), "utf8"),
-) as { contacts: { candidacyId: string; email?: string | null }[] };
-const filedEmail = new Map(contacts.contacts.map((c) => [c.candidacyId, c.email ?? null]));
+/* A contacts file is a per-zip artifact and not every zip has one; where it is
+   absent the card is the only source, which is a smaller claim honestly made. */
+const contactsPath = CHOSEN.contacts ? join(ROOT, "data", "ballot", CHOSEN.contacts) : null;
+const filedEmail = new Map<string, string | null>(
+  contactsPath && existsSync(contactsPath)
+    ? (JSON.parse(readFileSync(contactsPath, "utf8")) as {
+        contacts: { candidacyId: string; email?: string | null }[];
+      }).contacts.map((c) => [c.candidacyId, c.email ?? null])
+    : [],
+);
 
-const ABSENCE_FILE = join(ROOT, "data", "hunt", "nj-morris-argued-absences.json");
+const ABSENCE_FILE = join(ROOT, "data", "hunt", `argued-absences-${ZIP}.json`);
 const absences: ArguedAbsence[] = existsSync(ABSENCE_FILE)
   ? (JSON.parse(readFileSync(ABSENCE_FILE, "utf8")) as { rows: ArguedAbsence[] }).rows
   : [];
@@ -159,7 +189,14 @@ if (process.argv.includes("--json")) {
 }
 
 const done = rows.filter((r) => r.done).length;
-console.log(`KELLY DEPTH at 07866 — RULING 143, measured ${TODAY}\n`);
+console.log(`KELLY DEPTH at ${CHOSEN.label} — RULING 143, measured ${TODAY}\n`);
+console.log(
+  "  The five Kelly fields are photo, phone, contact, a specific verified page and a\n" +
+    "  campaign site. That is NOT the four-field denominator earlier NH reports used\n" +
+    "  (photo, own words, contact, site), and the two numbers are different measurements\n" +
+    "  of different things — stated rather than reconciled, because a single figure in\n" +
+    "  front of two measurements is the shape the two-numbers rule forbids.\n",
+);
 console.log(`  ${done} of ${rows.length} candidates are DONE (every field held or argued absent)`);
 console.log(`  ${rows.length - done} still owe at least one field\n`);
 

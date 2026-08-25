@@ -462,3 +462,105 @@ ELEC'S WEBSITE that is walled and not ELEC's RECORDS: the filings are on
 `njelecefilesearch.com`, one hop away, answering at rung 2. A host being walled
 and a body being unreachable are different facts, and collapsing them is what
 RULING 52 exists to prevent.
+
+---
+
+## GENERAL WEB SEARCH — walked, walled, and the compliant route that replaced it (2026-08-24, NJ depth)
+
+**Every entry below carries the date it was last walked, per RULING 96.** The
+compliance column is decided from each host's OWN `robots.txt`, read on the
+date given, before any rung was attempted — `CLAUDE.md` says a `robots.txt`
+disallow gets a COMPLIANT ROUTE to the same information, never a cleverer
+client.
+
+| Host | its `User-agent: *` says | may we walk it | rung result | last walked |
+|---|---|:--:|---|---|
+| `html.duckduckgo.com` | `Allow: /` | **yes** | rungs 2 and 3: **HTTP 202, ~14 KB, zero result anchors** — a challenge page, not an empty result set | 2026-08-24 |
+| `lite.duckduckgo.com` | `Allow: /` | **yes** | HTTP 202, same shape | 2026-08-24 |
+| `duckduckgo.com` | `Disallow: /*?` then `Allow: /?*` | **yes, at the root query form** | rung 6, a live browser with JavaScript executed: the rendered page reads **"Unfortunately, bots use DuckDuckGo too."** | 2026-08-24 |
+| `www.mojeek.com` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
+| `search.brave.com` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
+| `www.ecosia.org` | `Disallow: /search` | **no** | not walked at any rung | 2026-08-24 |
+| `www.startpage.com` | `Disallow: /sp/` | **no** | not walked at any rung | 2026-08-24 |
+| `www.bing.com` | `Disallow: /search` and siblings | **no** | not walked at any rung | 2026-08-24 |
+
+**This is a WALL and it is recorded as one.** No field moves toward
+`VERIFIED_ABSENT` on a route we were refused, and none moves toward it because
+a route was closed to us by a publisher's own policy. `pnpm search:rung`
+re-measures it, so the next session reads the verdict rather than rediscovering
+the wall across four rungs.
+
+### The compliant routes to the same information, measured the same day
+
+| Source | What it answers | Licence / terms | Control | Last walked |
+|---|---|---|---|---|
+| `newjerseyglobe.com/wp-json/wp/v2/search` | statewide NJ political coverage, by surname | no terms document encountered; the site's own documented WordPress interface (ladder rung 7) | an impossible term returns `[]` | 2026-08-24 |
+| `morristowngreen.com/wp-json/wp/v2/search` | Morris County local coverage, by surname | same | an impossible term returns `[]` | 2026-08-24 |
+| `morrisdems.org/wp-json/wp/v2/pages` | the county Democratic committee's own 85 pages in ONE request, including an index of its 22 municipal committees | same | the index carries the municipal pages by name | 2026-08-24 |
+| `index.commoncrawl.org/CC-MAIN-2026-34-index` | does a host exist in the August 2026 crawl, and which URLs does it hold | Common Crawl, open | an impossible host returns **HTTP 404 `No Captures found`** — a real control | 2026-08-24 |
+| `api.marginalia.nu/public/search/<query>` | an independent keyword index of the non-commercial web | **CC-BY-NC-SA 4.0 — DISCOVERY ONLY.** The non-commercial clause means it may point at a URL and may never be a source of record here; the URL is then fetched from the origin and proved there, exactly as RULING 87 governs Wikipedia | returns a `license` field and a `results` array | 2026-08-24 |
+
+**Coverage measured rather than assumed.** Common Crawl's August 2026 index
+holds **6** URLs for `newjerseyglobe.com`, **98** for `morristowngreen.com`,
+**22** for `tapinto.net`, **77** for `patch.com` and **7** for
+`dailyrecord.com`. It is a domain-existence oracle and a page enumerator for
+small sites; it is not a substitute for a keyword index, and the numbers are
+here so the next session does not have to re-measure to find that out.
+
+### `crt.sh` — Certificate Transparency as a domain index
+
+**Conceived and walked 2026-08-24.** Every HTTPS campaign site has a
+certificate, and every certificate is in a public CT log, so a substring query
+against `crt.sh` finds domains containing a candidate's surname. The control is
+clean — an impossible substring returns `[]` at HTTP 200 — but **three of four
+real queries returned HTTP 502 from its nginx**, which is a WALL on those
+queries rather than an absence of certificates. Recorded with the date; owed a
+re-walk on the RULING 53 clock.
+
+### `www.tapinto.net` — walled at rung 3, 2026-08-24
+
+HTTP 403 to an identified browser-profile client. Not walked further this
+session. Recorded as a measurement on a date, never as a standing property.
+
+### VOTE411 / the League of Women Voters — READ, AND STILL RESTRICTED
+
+**The brief's condition was: read its terms from its own site before extracting
+anything, and treat it as restricted until the terms say otherwise. The terms
+were looked for and there are none.**
+
+- `www.vote411.org/robots.txt` — read 2026-08-24. It disallows `/admin/`,
+  `/user/*`, `/search/`, `/comment/reply/` and `/media/oembed`, and permits the
+  rest. That is an access statement about crawling; it is not a licence.
+- `/terms-use`, `/terms-of-use`, `/privacy-policy` — **all HTTP 404**, read
+  2026-08-24. `lwv.org/terms-use` is HTTP 404 too.
+- The homepage and its footer link `/about`, Contact, Get Involved, Sponsors &
+  Partners and the social accounts. **No terms-of-use document is linked from
+  either.** The only assertion is the footer's `©2026 League of Women Voters
+  Education Fund`.
+
+**So it stays RESTRICTED, and nothing was extracted.** An absent terms document
+is not a permissive one, and a copyright notice with no licence beside it is the
+opposite of a grant. This is the same posture RULING 70 takes toward Ballotpedia
+and RULING 93 toward `usmayors.org`: a nonprofit's compilation is not a
+government publication, and the fact that it is *about* public records does not
+make it public-domain. **Re-walk on the 14-day clock** — a terms page may
+appear, and the answer changes the day it does.
+
+### `nj.gov/nj/gov/county/localgov.shtml` — the state's own municipal directory, re-walked
+
+**Re-walked 2026-08-24 at rung 2: HTTP 200, 114,118 bytes, 619 links, control
+strings present.** RULING 93's route still answers.
+
+It closed three real gaps in one fetch, and one of them is the argument for the
+whole rule: **Madison Borough's official website is `rosenet.org`**, which no
+name-shaped guess would ever reach. Confirmed by control — the page titles
+itself *Madison Borough, NJ | Official Website*. `peqtwp.org` likewise titles
+itself *Pequannock Township, NJ | Official Website*.
+
+**Washington Township (Morris) is `wtmorris.org` and it is walled at rung 3** —
+a Sucuri CloudProxy JavaScript challenge that sets a cookie and reloads, which
+a plain client reads as a 1,331-byte page titled *"You are being redirected…"*.
+The directory also lists four different Washington Townships across four
+counties, so the Morris one is identified by its position in the county section
+rather than by its name, which is exactly the Boonton / Boonton Township problem
+this project has already paid for once.

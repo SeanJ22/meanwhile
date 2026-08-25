@@ -196,6 +196,33 @@ for (const [m, ws] of [...byMunicipality].sort((a, b) => b[1].length - a[1].leng
   }
 }
 
+/*
+ * **THE DARK PLACES ARE NAMED, NOT COUNTED.** (2026-08-24, the NJ depth session.)
+ *
+ * The sweep printed the possibly-stale winners by municipality and gave the
+ * no-roster-held side a single number. RULING 105 asks for three numbers each
+ * with its denominator AND names the middle one as the half that keeps a report
+ * honest — but a count of 90 with no names is not a work list, and this sweep
+ * exists to produce a work list. RULING 57 says the same thing from the other
+ * end: *a count is not a name, and a village water district disappears into a
+ * statistic the moment it is only counted.*
+ */
+const darkPlaces = new Map<string, Winner[]>();
+for (const w of noRosterHeld) {
+  const m = w.municipality ?? "(none)";
+  darkPlaces.set(m, [...(darkPlaces.get(m) ?? []), w]);
+}
+console.log("");
+console.log("  NO ROSTER HELD, by municipality — this project carries nothing for this place.");
+console.log("  A COVERAGE gap, and the work list for closing it:");
+if (darkPlaces.size === 0) {
+  console.log("    none — every place with a certified winner has a roster here.");
+}
+for (const [m, ws] of [...darkPlaces].sort((a, b) => b[1].length - a[1].length)) {
+  console.log(`    ${String(ws.length).padStart(3)}  ${m}`);
+}
+console.log(`    ${darkPlaces.size} municipalit(y|ies) dark, holding ${noRosterHeld.length} certified winner(s)`);
+
 console.log("");
 console.log(
   "  Neither column is proof on its own. The certified file covers the cycles it\n" +

@@ -6424,3 +6424,81 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .speak-outcome[data-speak-outcome="RECORDED"] {
   color: var(--text);
 }
+
+/* ---------------------------------------------------------------------------
+   BAL-11 (2026-08-25) — THE BALLOT'S TWO TOP LINKS ARE PILLS.
+
+   His `09-08-18` draws four reader actions on one page as two kinds of object:
+   two pills inside the election box, and two underlined links a screen apart.
+   These are the two links, and they take the same shape as the pills they sit
+   above — the lavender action treatment the election box already uses.
+
+   The narrowing control passes this class down to its own trigger, so the two
+   are one rule rather than a pill and something that resembles a pill.
+   --------------------------------------------------------------------------- */
+.ballot-top-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.ballot-top-pill,
+.ballot-top-pill .address-prompt-trigger {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid color-mix(in srgb, var(--link) 45%, var(--panel-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--link) 8%, var(--panel-bg));
+  color: var(--text);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  /* A pill is a control, so the link underline comes off — the shape is what
+     says it is pressable now. */
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.ballot-top-pill:hover,
+.ballot-top-pill:focus-visible,
+.ballot-top-pill .address-prompt-trigger:hover {
+  border-color: var(--link);
+  background: color-mix(in srgb, var(--link) 14%, var(--panel-bg));
+  text-decoration: none;
+}
+
+/* The narrowing renders a <p class="ballot-top-pill"> wrapping its own button,
+   so the wrapper must not draw a second pill around the one inside it. */
+.ballot-top-pill:has(> .address-prompt-trigger) {
+  padding: 0;
+  border: 0;
+  background: none;
+}
+
+/* BAL-10 (2026-08-25): the ballot route's loading indicator. A quiet pulse
+   rather than a spinner — it says "working" without asking for attention the
+   answer is about to want. Reduced motion gets a steady dot, because the
+   information is that something is happening and an animation is only one way
+   of saying it. */
+.ballot-loading-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  background: var(--link);
+  animation: ballot-loading-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes ballot-loading-pulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ballot-loading-dot {
+    animation: none;
+    opacity: 0.8;
+  }
+}

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 234,
-    "named": 2277,
+    "files": 235,
+    "named": 2285,
     "dynamic": 6
   },
   "files": {
@@ -1326,6 +1326,19 @@
         "no fixture cites a host that is not on the allowlist",
         "normalize does not manufacture URLs the fixtures did not carry",
         "nothing has been verified against a live source"
+      ],
+      "dynamic": 0
+    },
+    "tests/flake-quarantine.test.ts": {
+      "names": [
+        "A QUARANTINED CHECK IS NEVER COUNTED AS PASSING",
+        "NH176's four real runs classify exactly as the row describes",
+        "a SINGLE failure is never FLAKY — that is the habit this exists to stop",
+        "a check ABSENT from a run did not pass — it did not run",
+        "a check that only ever COULD NOT RUN gets no verdict about the check",
+        "fails then passes on an unchanged tree is FLAKY, in either order",
+        "quarantine matches an identity EXACTLY, never loosely",
+        "walk:all prints the quarantined count on every run"
       ],
       "dynamic": 0
     },

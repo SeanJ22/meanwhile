@@ -702,7 +702,35 @@ export default async function BallotPage({
           this resolves a street to a point and narrows the contests to the
           districts that actually contain it. Nothing is deleted — the
           set-aside contests are one tap from coming back. */}
-      {zip && <BallotNarrowing zip={zip} />}
+      {/*
+        **BAL-11 (2026-08-25) — BOTH LINKS BECOME PILLS, AT THE TOP.**
+
+        His capture 09-08-18 has four things a reader can do on this page, drawn
+        as two different kinds of object: "Where can I vote?" and "Check whether
+        you're registered" are pills inside the election box, while "Narrow this
+        to where you live" and "Moving here? Know the basics" are underlined
+        links a screen apart — one above the election box and one below the
+        whole contest list.
+
+        Same kind of thing, two shapes, two places. They are pills now, and they
+        are together directly under the heading, which is his stated lean.
+
+        **REVERSIBLE, and noted as such because it is a lean rather than a
+        ruling.** Putting them back is moving this block: the movers link is a
+        plain Link and the narrowing is one self-contained component, so neither
+        depends on sitting here. The narrowing keeps its internal phases exactly
+        as they were.
+      */}
+      {zip && (
+        <div className="ballot-top-pills">
+          <BallotNarrowing zip={zip} className="ballot-top-pill" />
+          <Link href={`/about-area?zip=${zip}`} className="ballot-top-pill">
+            {/* 3c: the author's line, verbatim. Marijuana stays in the
+                section; it left the teaser. */}
+            Moving here? Know the basics →
+          </Link>
+        </div>
+      )}
 
       {/* Item 4 (2026-08-14 second session): the standing header — the
           tester's "that's when you want to catch somebody and make them
@@ -963,20 +991,9 @@ export default async function BallotPage({
         </p>
       )}
 
-      {/* 7: the mover's page — the questions people ask before moving,
-          answered from official sources. */}
-      {zip && (
-        <p className="mt-2 text-[0.8125rem]">
-          <Link
-            href={`/about-area?zip=${zip}`}
-            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-          >
-            {/* 3c: the author's line, verbatim. Marijuana stays in the
-                section; it left the teaser. */}
-            Moving here? Know the basics →
-          </Link>
-        </p>
-      )}
+      {/* 7: the mover's page. BAL-11 (2026-08-25) moved this link UP into the
+          pill row under the heading — see there for why, and for how to put it
+          back. Nothing was deleted; the route is unchanged. */}
 
       {!zip && (
         <p className="mt-6 text-[0.8125rem] text-muted">

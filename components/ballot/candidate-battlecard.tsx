@@ -156,7 +156,26 @@ export function CandidateBattlecard({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--panel-border)] bg-[var(--panel-raised)] px-3 py-2 text-center text-[0.8125rem] font-medium text-link transition-colors hover:border-[var(--link)] hover:bg-[var(--panel)]"
+        /*
+          **BAL-13 (2026-08-25) — THE NAVY TREATMENT.**
+
+          The author red-boxed this control on `09-10-09`: a plain outline
+          button in link blue, sitting directly above the filled
+          "Would you vote for them?" panel that gives it its width. His note is
+          the argument — *it is the thing the product most wants opened and
+          nothing says so.*
+
+          Deep navy, white, bolded. The same `--speak-navy` the Speak Your Mind
+          pill uses, and for the same reason it uses it: a FILLED control among
+          outline controls reads as the action without a word of instruction.
+          Two filled navy controls in this product now, and both are the one
+          thing a reader is being invited to do on their surface.
+
+          `w-full` is unchanged and is what matches the reaction panel below —
+          they are siblings in one column, so the width is shared by
+          construction rather than by a number typed twice.
+        */
+        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--speak-navy)] bg-[var(--speak-navy)] px-3 py-2 text-center text-[0.8125rem] font-semibold text-[var(--speak-on-navy)] transition-colors hover:border-[var(--speak-navy-hover)] hover:bg-[var(--speak-navy-hover)]"
       >
         View Battlecard
       </button>

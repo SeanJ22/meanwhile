@@ -915,6 +915,56 @@ const proveAccount = conserve("hunt:sites/prove", {
 console.log(`  HIT ${hits} · LEAD ${leadsOut} · EMPTY ${empties} · REFUSED ${refusals}`);
 console.log(`  conservation: ${proveAccount.outcome} — ${proveAccount.accountedFor} of ${allLeads.length}`);
 
+/*
+ * **SLATE PROPAGATION — the stuck protocol's third move, applied to a page we
+ * already hold.** (Added 2026-08-24.)
+ *
+ * *What did entities of this same shape do? Test the SHAPE, not the instance.*
+ * In New Jersey municipal races candidates run as a bracketed slate and the
+ * slate has ONE website — `votemtarlington.com` carries `/meet-jay` and
+ * `/meet-jess`, two people, one site.
+ *
+ * The mining pass can only reach the second person if the SOURCE page named
+ * them too, which is an accident of how the county party wrote its post. So
+ * every body that has already been fetched is re-read against ALL 272
+ * candidates rather than only the one it was fetched for.
+ *
+ * **This costs no request.** The bytes are in memory. And the bar does not
+ * move: `verdictFor` is the same function, the name must match in a form
+ * stronger than the bare surname, and the page must still say it is about
+ * standing for office. A slate site that does not name the second candidate
+ * produces nothing, which is the correct outcome.
+ */
+const alreadyClaimed = new Set(proven.map((p) => `${p.candidacyId}|${p.siteUrl}`));
+let propagated = 0;
+for (const p of proven) {
+  if (p.outcome !== "HIT") continue;
+  const body = bodies.get(p.url) ?? "";
+  if (!body) continue;
+  const flat = flattenForEvidence(body);
+  const office = officeEvidenceIn(flat);
+  for (const c of ballot.candidacies) {
+    if (c.id === p.candidacyId) continue;
+    if (alreadyClaimed.has(`${c.id}|${p.siteUrl}`)) continue;
+    const forms = matchNameForms(filedName(c), flat);
+    const v = verdictFor("HIT", forms, office);
+    if (v.outcome !== "HIT") continue;
+    alreadyClaimed.add(`${c.id}|${p.siteUrl}`);
+    propagated += 1;
+    proven.push({
+      ...p,
+      candidacyId: c.id,
+      subject: subjectOf(c),
+      contestTitle: contests.get(c.contestId)?.title ?? "",
+      formsSearched: forms,
+      officeEvidence: office,
+      outcome: "HIT",
+      detail: `${v.detail} — reached by SLATE PROPAGATION from ${p.subject}'s proven site, same bytes, no new request`,
+    });
+  }
+}
+console.log(`  slate propagation: ${propagated} further candidacy(ies) named on a site already proven`);
+
 const bySubject = new Map<string, Proven[]>();
 for (const p of proven) {
   if (p.outcome !== "HIT") continue;

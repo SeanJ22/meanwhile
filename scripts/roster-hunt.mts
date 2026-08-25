@@ -52,6 +52,33 @@ const UA =
   "we-the-people/1.0 (civic data for a public-records product; contact: hello@wethepeople.vote)";
 const SPACING_MS = 700;
 /** Candidate pages fetched per site. A ceiling that is STATED, never silent. */
+/*
+ * **MEASURED, AND THE RAISE WAS REVERTED — RULING 133.**
+ *
+ * The sitemap branch surfaced 215 scored candidates on one municipal site and
+ * 102 on another, and the run reported "6 candidate page(s) of 215". That is a
+ * clip stated honestly and it is still a clip, so the ceiling was raised to 10
+ * to see what it was hiding.
+ *
+ * **It was hiding nothing.** Three runs against the same 39 sites:
+ *
+ * | run | sites with a roster | members | pages fetched |
+ * |---|---|---|---|
+ * | anchors only, ceiling 6 | 14 | 57 | 128 |
+ * | + sitemap, ceiling 6 | 17 | 82 | 169 |
+ * | + sitemap, ceiling 10, scores >= 8 | 17 | 82 | 180 |
+ *
+ * The sitemap branch is worth three municipalities and 25 members. The ceiling
+ * raise is worth ZERO and costs eleven more requests at somebody else's
+ * expense, so it goes back. RULING 133 says a change is kept only if the
+ * rebuilt number fell, and a change kept because it sounded right is what that
+ * ruling forbids.
+ *
+ * What DOES stay is the score filter on sitemap candidates, which is why the
+ * ceiling stopped binding: a slug matching "government" fits dozens of pages,
+ * and letting those compete for the slots is how 215 candidates crowded out
+ * the one page named "Township Council".
+ */
 const CANDIDATE_CEILING = 6;
 
 function arg(flag: string): string | undefined {
@@ -378,7 +405,12 @@ async function walkSite(municipality: string, siteUrl: string): Promise<SiteResu
    * scoring table, not two — RULING 103's predicate applied before there is
    * anything to sweep.
    */
-  const fromSitemap = await sitemapCandidates(home.finalUrl, get);
+  /* Only the SPECIFIC patterns from the sitemap. A slug matching "government"
+   * (score 3) or "mayor" (score 5) fits dozens of pages on a large municipal
+   * site, and letting those compete for the ceiling is how 215 candidates crowd
+   * out the one page named "Township Council". The anchor branch keeps its full
+   * range, because anchor TEXT is written by a human describing a link. */
+  const fromSitemap = (await sitemapCandidates(home.finalUrl, get)).filter((c) => c.score >= 8);
   const seen = new Set(found.map((c) => c.url));
   for (const c of fromSitemap) if (!seen.has(c.url)) found.push(c);
   found.sort((a, b) => b.score - a.score);

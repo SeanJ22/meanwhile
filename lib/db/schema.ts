@@ -969,3 +969,122 @@ export const questionnaireTokens = pgTable(
   },
   (t) => [uniqueIndex("questionnaire_tokens_digest_idx").on(t.tokenDigest)],
 );
+
+/* ==========================================================================
+ * BC-11 — SPEAK YOUR MIND
+ *
+ * The author's ruling of 2026-08-24: this is the collection point for VERBATIM
+ * CONSTITUENT SENTIMENT — product infrastructure, not a comment box. The
+ * framing on the surface is what you would say if this person were standing in
+ * front of you.
+ *
+ * ## It is a NEW SIBLING STORE, and the n-stores rule is untouched
+ *
+ * `CLAUDE.md`: *the collection stores never join — n stores, same rule for
+ * every n.* This is the fourth. It carries no email, no account reference, no
+ * address, and no key that resolves to any other table:
+ *
+ *  - `speakKeyHash` is `sha256("speak-your-mind:" + key)` over a RANDOM
+ *    browser-minted key. The prefix is not decoration — the reactions store
+ *    hashes the same kind of key as `sha256(key)` and the intake limiter as
+ *    `sha256("intake-limiter:" + key)`, so three tables would otherwise share
+ *    a digest space and be equality-joinable on it. Different prefix,
+ *    different space, and `tests/identity-boundary.test.ts` proves it over the
+ *    VALUES rather than over the column names (A-001, RULING 132).
+ *  - `ocdIds` is the reader's zip-resolved DISTRICT — divisions, never an
+ *    address and never district truth, on the same approximate-location basis
+ *    the search log and the reactions store already use.
+ *  - `subjectId` is a public-record identifier for a public body, official or
+ *    meeting. It identifies who was SPOKEN ABOUT, never who spoke.
+ *
+ * ## NOT RENDERED PUBLICLY, and that is the default rather than a limitation
+ *
+ * `CLAUDE.md`'s no-user-to-user rule: reactions are write-only from the
+ * reader's perspective, and showing aggregates anchors later respondents and
+ * corrupts the data being sold. The same reasoning governs this. **The author
+ * recorded the default as REVERSIBLE** — it is his call to make later, and
+ * nothing here forecloses it.
+ * ========================================================================== */
+export const speakYourMind = pgTable(
+  "speak_your_mind",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
+    /** What kind of public thing this was said to. */
+    subjectType: text("subject_type", {
+      enum: ["OFFICIAL", "BODY", "MEETING"],
+    }).notNull(),
+    /** The subject's own public identifier — an ocd-id, a body id, a meeting id. */
+    subjectId: text("subject_id").notNull(),
+    /**
+     * The reader's zip-resolved divisions. District-stamped, which is the
+     * whole value of the row to anybody: sentiment without a district is
+     * sentiment about nowhere.
+     */
+    ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
+    divisionVintage: text("division_vintage").notNull(),
+    /**
+     * What the reader wrote, after the T09 scrub AND the self-disclosure pass.
+     * Capped at the write path.
+     */
+    text: text("text").notNull(),
+    /**
+     * **RULE 3 — the PII self-disclosure flags.** Which KINDS of self-
+     * identifying content the pass found and removed. Never the content
+     * itself: storing what was redacted alongside the redaction would defeat
+     * the redaction.
+     *
+     * A non-empty array means this row may NEVER export verbatim. The flag is
+     * carried on the row rather than recomputed at export time, because an
+     * export path that had to remember to re-run a classifier is an export
+     * path that will one day forget.
+     */
+    selfDisclosure: jsonb("self_disclosure").$type<string[]>().notNull(),
+    /**
+     * **RULE 4 — abuse triage, never forwarding.** `HELD` means this row is
+     * waiting for the author's review and is excluded from everything until he
+     * decides. Nothing typed here is ever auto-forwarded to anyone; the tier
+     * model is `docs/abuse-policy.md`.
+     */
+    reviewState: text("review_state", { enum: ["NONE", "HELD"] })
+      .notNull()
+      .default("NONE"),
+    /** WHY it is held, in the abuse policy's own tiers. Never who. */
+    reviewReason: text("review_reason", {
+      enum: ["T1_ABUSIVE", "T2_CONCERNING", "T3_THREAT"],
+    }),
+    /**
+     * **THE COVERAGE TIER, because this is a SOLD store.**
+     *
+     * Item 8.4's rule: every write path into a sold store states a tier, and
+     * it is derived SERVER-SIDE from the row's own divisions — a client does
+     * not get to say how well researched the place it is looking at is.
+     *
+     * Sentiment from a place whose governments are fully enumerated is not the
+     * same measurement as sentiment from a place where almost nothing is known,
+     * and a buyer weighting a row is entitled to tell them apart.
+     */
+    coverageTier: text("coverage_tier", {
+      enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
+    }).notNull(),
+    /** The same stamped values COUNTED rather than floored — see the
+     *  reactions table above, whose note carries the whole reasoning. */
+    coverageTierDistribution: text("coverage_tier_distribution").notNull(),
+    /** Browser continuity, for dedup and abuse defence. See the header. */
+    speakKeyHash: text("speak_key_hash").notNull(),
+    /** Quarantine, not deletion (T08). Same semantics as the reactions store. */
+    suspectReason: text("suspect_reason", {
+      enum: ["VELOCITY", "LIMITER_UNAVAILABLE"],
+    }),
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+      .notNull()
+      .default("UNKNOWN"),
+    /** `sha256("speak-run:" + runId)` — its own digest space, like every other. */
+    runId: text("run_id"),
+  },
+  (table) => [
+    index("speak_your_mind_subject_idx").on(table.subjectType, table.subjectId),
+    index("speak_your_mind_review_idx").on(table.reviewState),
+    index("speak_your_mind_occurred_idx").on(table.occurredAt),
+  ],
+);

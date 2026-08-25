@@ -169,6 +169,52 @@ test("A-001 · no two reader collection stores share a joinable value space", ()
     // is checked by name below rather than exempted by loosening the space.
     const columns = columnsHolding(space).filter((c) => readerStores.includes(c.split(".")[0]));
     const nonRunId = columns.filter((c) => !c.endsWith(".run_id"));
+
+    /*
+     * **BC-11 (2026-08-24): `DIGEST` is compared by INPUT SPACE, not by being
+     * a digest — and this is a strengthening rather than an exemption.**
+     *
+     * Two sha256 columns are equality-joinable if and only if they digest the
+     * same input. `sha256(key)` and `sha256("speak-your-mind:" + key)` over one
+     * browser key can never match, which is exactly why the intake limiter was
+     * given a prefix on the day it was built (T08) — a fact the registry stated
+     * in prose that no test could read.
+     *
+     * The old form asserted there was AT MOST ONE digest column across the
+     * reader stores. That would have passed a second store reusing the bare-key
+     * space as long as it was the only other one — the actual defect — and
+     * failed a second store that correctly used its own prefix. It was
+     * measuring the wrong thing in both directions.
+     *
+     * A `DIGEST` column with no declared space fails below, so the strict
+     * direction is preserved: an undeclared digest is treated as a collision
+     * rather than waved through.
+     */
+    if (space === "DIGEST") {
+      const spaces = nonRunId.map(
+        (column) => {
+          const [table, name] = column.split(".");
+          return IDENTITY_DOMAINS[table].columns[name].digestSpace;
+        },
+      );
+      const undeclared = nonRunId.filter((_, i) => spaces[i] === undefined);
+      if (undeclared.length > 0) {
+        shared.push(`${space}: undeclared digest space on ${undeclared.join(", ")}`);
+      }
+      const seen = new Map<string, string[]>();
+      nonRunId.forEach((column, i) => {
+        const key = spaces[i];
+        if (key === undefined) return;
+        seen.set(key, [...(seen.get(key) ?? []), column]);
+      });
+      for (const [key, cols] of seen) {
+        if (cols.length > 1) {
+          shared.push(`${space}[${key}]: ${cols.join(", ")}`);
+        }
+      }
+      continue;
+    }
+
     const tablesNonRunId = new Set(nonRunId.map((c) => c.split(".")[0]));
     if (tablesNonRunId.size > 1) shared.push(`${space}: ${nonRunId.join(", ")}`);
     void tables;
@@ -187,7 +233,15 @@ test("A-001 · run_id is the one handle shared across reader stores, and it name
   const runIds = columnsHolding("OPAQUE_HANDLE").filter((c) => c.endsWith(".run_id"));
   assert.deepEqual(
     runIds.sort(),
-    ["feedback.run_id", "reactions.run_id", "search_log.run_id"],
+    [
+      "feedback.run_id",
+      "reactions.run_id",
+      "search_log.run_id",
+      // BC-11 (2026-08-24): the fourth reader-collection store. Typed here
+      // deliberately, which is what this guard is for — a new store joining
+      // the exemption is somebody's decision, not a list that grew.
+      "speak_your_mind.run_id",
+    ],
     "the shared-handle exemption changed shape",
   );
 });
@@ -245,9 +299,43 @@ test("A-001 · every digest column is in a different digest space from every oth
   const digests = columnsHolding("DIGEST");
   assert.deepEqual(
     digests,
-    ["intake_limiter.digest", "questionnaire_tokens.token_digest", "reactions.reaction_key_hash"],
+    [
+      "intake_limiter.digest",
+      "questionnaire_tokens.token_digest",
+      "reactions.reaction_key_hash",
+      // BC-11 (2026-08-24).
+      "speak_your_mind.speak_key_hash",
+    ],
     "a digest column appeared or moved — say which space it is in",
   );
+
+  /*
+   * **BC-11: the spaces are DECLARED and DISTINCT, checked mechanically.**
+   *
+   * This used to read the `why` prose for the phrase "different digest space",
+   * which proved a sentence had been written rather than that the inputs
+   * differ. A fourth store could have copied the sentence and the bare-key
+   * prefix in one paste and passed.
+   */
+  const spaces = digests.map((column) => {
+    const [table, name] = column.split(".");
+    const declared = IDENTITY_DOMAINS[table].columns[name].digestSpace;
+    assert.notEqual(
+      declared,
+      undefined,
+      `${column} is a DIGEST with no declared input space — say what it digests`,
+    );
+    return `${declared}`;
+  });
+  assert.equal(
+    new Set(spaces).size,
+    spaces.length,
+    `two digest columns share an input space and are equality-joinable: ${JSON.stringify(
+      Object.fromEntries(digests.map((c, i) => [c, spaces[i]])),
+    )}`,
+  );
+
+  // And the prose still says why, for a person reading the registry.
   const reactionsWhy = IDENTITY_DOMAINS.reactions.columns.reaction_key_hash.why ?? "";
   const limiterWhy = IDENTITY_DOMAINS.intake_limiter.columns.digest.why ?? "";
   assert.match(reactionsWhy, /different digest space/);

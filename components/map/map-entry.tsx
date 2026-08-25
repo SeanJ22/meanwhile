@@ -1452,6 +1452,26 @@ function MapEntryInner() {
    * inset applies only where the rail is genuinely a 364px column.
    */
   const railIsAColumn = useSidebarVisible("default") && sidebarVisible;
+  /**
+   * **WGH-6 (2026-08-24) — the left REGION is a column even when the RAIL is
+   * not in it.**
+   *
+   * The author: *clicking Who Governs Here minimizes the sidebar to the left
+   * and takes over that space, wide enough that every entry — Morris Hills
+   * Regional School District included — fits on one line.*
+   *
+   * The minimizing half already worked: `openSurface("wgh")` closes the rail,
+   * which is 4c's mutual exclusion. What did not work is "takes over that
+   * space" — with the rail closed, `railIsAColumn` goes false and LAY-4 would
+   * send the floaters back over the map, so the card would abandon the space
+   * the rail had just vacated rather than claiming it.
+   *
+   * This is the question LAY-4 actually needs to ask, and it is a different
+   * one: is there a left COLUMN REGION at this width, whether or not the rail
+   * is currently occupying it. `railIsAColumn` stays exactly as it was for the
+   * camera inset, which genuinely is a question about what the rail covers.
+   */
+  const railRegionIsAColumn = useSidebarVisible("default");
   /*
    * **LAY-4 (2026-08-24, the author's annotated capture `11-55-29`) — THE
    * FLOATING CARDS ARE BACK, AND THEY BELONG UNDER THE RAIL.**
@@ -1714,7 +1734,7 @@ function MapEntryInner() {
           {/* Where the rail is a COLUMN, the floaters live under it. Where it
               is a full-width drawer they keep their place over the map, in
               `.map-bottom-stack` below — one boolean, no second breakpoint. */}
-          {railIsAColumn && (
+          {railRegionIsAColumn && (
             <div className="rail-floaters">{floaters}</div>
           )}
         </div>
@@ -1946,7 +1966,7 @@ function MapEntryInner() {
             {/* LAY-4: where the rail is a COLUMN these render under it, in
                 `.rail-floaters`. This is the drawer placement — the same node,
                 so the two can never drift into two different cards. */}
-            {!railIsAColumn && floaters}
+            {!railRegionIsAColumn && floaters}
 
             {selectedVenue && (
               // The phone form of the meeting panel: a bottom sheet pinned to
@@ -2275,6 +2295,9 @@ function meetingSubject(
     /* MTG-8 (2026-08-24): the body alone. The jurisdiction is the SUBTITLE on
        the very next line, so the em-dash prefix was printing it twice — which
        is the "Tucson, AZ — " the author struck through in `12-01-44`. */
+    // BC-11: what this card is ABOUT, keyed rather than titled.
+    subjectId: meeting.id,
+    subjectKind: "MEETING" as const,
     title: meetingEntryTitle(meeting, { bodyShown: true }),
     subtitle: meeting.jurisdiction,
     tier: tierForMeeting(meeting) ?? "local",
@@ -2370,6 +2393,10 @@ function bodySubject(
     : roster;
 
   return {
+    // BC-11: the body id, never the display title — nine Morris County
+    // governments answer to "Township Council".
+    subjectId: body.bodyId,
+    subjectKind: "BODY" as const,
     title: body.name ?? body.divisionLabel,
     subtitle: body.divisionLabel,
     tier: body.tier,
@@ -2521,6 +2548,9 @@ function placeSubject(
   const tier: Tier | null = rowTier ?? mine[0]?.tier ?? null;
 
   return {
+    // BC-11: a PLACE is not a body and not a person; the ocd-id is what it is.
+    subjectId: ocdId,
+    subjectKind: "BODY" as const,
     title: label,
     subtitle: divisionTypeLabel(divisionType),
     tier: tier ?? "local",
@@ -2653,6 +2683,10 @@ function districtSubject(
       ? resolved.holders
       : representationForDivision(coverage, district.ocdId);
   return {
+    // BC-11: the division's own ocd-id. A district card is about a government,
+    // so a reader speaking here is speaking to it.
+    subjectId: district.ocdId,
+    subjectKind: "BODY" as const,
     title: district.label,
     subtitle: `${district.typeLabel} · ${district.state}`,
     tier: district.tier,

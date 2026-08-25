@@ -678,6 +678,11 @@
      drift apart. The map canvas and MapLibre's controls both read it. */
   --rail-width: 340px;
   --rail-inset: 12px;
+  /* WGH-6 (2026-08-24): the who-governs card takes the rail's space when the
+     rail minimizes, and needs the longest body name plus its type label on one
+     line. Measured against "Morris Hills Regional School District" +
+     "SCHOOL DISTRICT" at 07866, which is the pair the author named. */
+  --wgh-wide: 460px;
   --rail-gutter: 364px; /* rail-width + 2 × rail-inset */
 }
 
@@ -5838,6 +5843,29 @@ main[data-sidebar="closed"] .map-top-row {
   pointer-events: auto;
 }
 
+/* ---------------------------------------------------------------------------
+   WGH-6 (2026-08-24) — WITH THE RAIL MINIMIZED, THE CARD TAKES THE SPACE.
+
+   The author, on the 07866 panel (`12-21-07`): clicking Who Governs Here
+   minimizes the sidebar and the card takes over that space, WIDE ENOUGH THAT
+   EVERY ENTRY FITS ON ONE LINE — he named "Morris Hills Regional School
+   District", which wraps to two lines in that capture with its
+   SCHOOL DISTRICT type label beside it.
+
+   That is NH-1's one-line requirement, and this is the mechanism that makes it
+   possible: the requirement was unmeetable at the rail's 340px because the
+   longest body name and its type label do not fit, and no amount of type
+   tuning changes that without shrinking the name.
+
+   The width is a token so the row's own measurement and this rule read ONE
+   number — the pair that has to agree cannot be written twice (`4c`'s lesson).
+   Capped against the viewport so a narrow laptop gets a card it can see rather
+   than one that runs off the edge.
+   --------------------------------------------------------------------------- */
+main[data-sidebar="closed"] .rail-column {
+  width: min(var(--wgh-wide), calc(100vw - (var(--rail-inset) * 2)));
+}
+
 /* The rail inside the column. It keeps every visual property it had; what it
    loses is its own position: fixed, because a fixed child is out of flow
    and out of flow is exactly where overlap comes from. */
@@ -5972,4 +6000,138 @@ main[data-sidebar="closed"] .map-top-row {
 
 .filter-group-toggle .filters-count {
   margin-left: auto;
+}
+
+/* ---------------------------------------------------------------------------
+   BC-11 (2026-08-24) — SPEAK YOUR MIND.
+
+   The author asked for the pill by sight: DEEP NAVY FILL, WHITE TEXT,
+   deliberately distinct from the gray pills so it reads as the thing to click.
+
+   Why a filled control among outline controls: every other pill on a
+   battlecard is a label or a disclosure, and this is the one thing a reader is
+   INVITED to do. The design system reserves saturated fill for a primary
+   action for exactly this reason, and it is the grammar the ballot pill and
+   the Ask button already use — a reader has learned it before arriving here.
+
+   The navy is its own token rather than a reuse. `--action` is the app's
+   interactive azure and `--accent-national` is a TIER colour, and a reader who
+   has learned that periwinkle means federal must not meet it as a button. Navy
+   is dark enough to carry white text at any size in either theme, and it is
+   nobody's tier and nobody's party.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --speak-navy: #16233f;
+  --speak-navy-hover: #1e3055;
+  --speak-on-navy: #f4f6fa;
+}
+
+/* The light theme takes the same navy: it is already dark enough to carry
+   white text on a pale surface, and a second value would be two colours
+   claiming to be one control. */
+
+.speak-block {
+  margin-top: 12px;
+}
+
+.speak-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--speak-navy);
+  background: var(--speak-navy);
+  color: var(--speak-on-navy);
+  border-radius: 999px;
+  padding: 10px 16px;
+  min-height: 40px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.speak-pill:hover,
+.speak-pill:focus-visible {
+  background: var(--speak-navy-hover);
+  border-color: var(--speak-navy-hover);
+}
+
+/* The framing question. Playful register — it is an ASK, and the whole
+   instrument is the invitation to say the thing you would actually say. */
+.speak-framing {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.speak-input {
+  margin-top: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.speak-input:focus-visible {
+  border-color: var(--speak-navy-hover);
+  outline: none;
+}
+
+/* Level register, both of them: these are claim surfaces — what happens to
+   what somebody writes, and what will be removed. Never cute. */
+.speak-disclosure {
+  margin-top: 6px;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.speak-actions {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.speak-send {
+  border: 1px solid var(--speak-navy);
+  background: var(--speak-navy);
+  color: var(--speak-on-navy);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.speak-send:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.speak-count {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The outcome. Only RECORDED is a thank-you; every other state says plainly
+   that nothing was kept, because a submission never silently succeeds. */
+.speak-outcome {
+  margin-top: 8px;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--text-dim);
+}
+
+.speak-outcome[data-speak-outcome="RECORDED"] {
+  color: var(--text);
 }

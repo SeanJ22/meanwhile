@@ -31,6 +31,7 @@ import {
 } from "@/components/officials/card-section";
 import { CardSourcesList } from "@/components/officials/card-sources-list";
 import { IdentityPortrait } from "@/components/officials/person-identity";
+import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
@@ -217,6 +218,21 @@ export interface ModalSubject {
   title: string;
   subtitle: string;
   tier: Tier;
+  /**
+   * **BC-11 (2026-08-24) — WHAT THIS CARD IS ABOUT, as a public identifier.**
+   *
+   * Speak Your Mind stores who was spoken TO, and it stores it as an id rather
+   * than as a title. A title is display text: two bodies can share one
+   * ("Township Council" is nine different governments in Morris County alone),
+   * it changes when copy changes, and a store keyed on it would silently merge
+   * unrelated subjects. This is the ocd-id, body id or meeting id the rest of
+   * the product already keys on.
+   *
+   * `subjectKind` says which of the three it is, so the row can be read back
+   * without guessing from the id's shape.
+   */
+  subjectId: string;
+  subjectKind: "OFFICIAL" | "BODY" | "MEETING";
   /**
    * What KIND of thing this subject is, in either the registry vocabulary
    * (place, county, school_district, cd, sldu, sldl) or the map one
@@ -769,6 +785,31 @@ export function EntityModal({
           )}
 
           {tab === "sources" && <Sources sources={subject.sources} />}
+        </div>
+
+        {/*
+          **BC-11 (2026-08-24) — SPEAK YOUR MIND, on the BODY battlecard and
+          the large MEETING battlecard, which are both this component.**
+
+          It sits OUTSIDE the tab panel, deliberately. The author's placement is
+          "above Sources, below Voting record", and on a tabbed card Sources is
+          a TAB rather than a section — so a pill inside the panel would appear
+          and vanish as the reader moved between tabs, and a reader who wanted
+          to say something would have to work out which tab it was hiding
+          behind. Below the panel it is on every tab, which is what "on every
+          battlecard" means when the card has tabs.
+
+          `subject` is the body's own name, so the framing asks what you would
+          say if THE TOWNSHIP COUNCIL were standing in front of you rather than
+          "this person" — a board is not a person and the copy may not pretend
+          otherwise.
+        */}
+        <div className="account-modal-body pt-0">
+          <SpeakYourMind
+            subjectType={subject.subjectKind}
+            subjectId={subject.subjectId}
+            subject={subject.title}
+          />
         </div>
         </>
         )}

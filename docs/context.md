@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 13:57:01 EDT.
-Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
+Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -586,19 +586,5 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-```
-generated: 2026-08-25 13:57:01 EDT
-branch: claude/final-pass-0825
-head sha: a4a148cbdd4621a151a2bb74b5f38c616369329b
-head subject: The build gate caught a type error the test runner cannot see
-origin/main sha: 1c72c300dff11b23bc38e9108c936dcfce2829b1
-origin/main subject: Merge pull request #176 from SeanJ22/claude/final-pass-0825
-local main sha: 1c72c300dff11b23bc38e9108c936dcfce2829b1
-local main matches origin/main: yes
-working tree: clean
-open prs: none
-last recorded tests: 1442 (fail)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:14434
-```
+_No git facts available this run._
+

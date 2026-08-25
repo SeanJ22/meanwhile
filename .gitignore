@@ -100,3 +100,4 @@ next-env.d.ts
 # Excel holds the file open and git cannot unlink it to check the branch out.
 ~$*
 /.nh6tmp/
+.hunt-tmp/

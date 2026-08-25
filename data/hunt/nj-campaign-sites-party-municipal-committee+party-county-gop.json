@@ -1,0 +1,3819 @@
+{
+ "note": "The campaign-site hunt by BROAD route (RULING 84's tier order, RULING 90's meta-search). Every row carries the page it was mined FROM, every name form searched whether it matched or not (RULING 110), and the office evidence that decided HIT against LEAD (RULING 68). A LEAD is never a find and never moves a field toward exhaustion. Written by scripts/hunt-campaign-sites.mts.",
+ "walkedAt": "2026-08-24",
+ "routes": [
+  {
+   "route": "party-municipal-committee",
+   "tier": "A",
+   "publisher": "the Morris County Democratic Committee",
+   "about": "the municipal Democratic committees, and the candidates they run",
+   "symmetricWith": "party-county-gop",
+   "walkedAt": "2026-08-24",
+   "harvest": {
+    "sourcePages": 28,
+    "read": 19,
+    "refused": 9,
+    "outcome": "CONSERVED",
+    "accountedFor": 28,
+    "refusedPages": [
+     {
+      "url": "https://johnhesterphoto.com/",
+      "note": "network refusal: fetch failed"
+     },
+     {
+      "url": "https://lgbtqacaucus.org/",
+      "note": "network refusal: fetch failed"
+     },
+     {
+      "url": "https://mcdwomenscaucus.org/",
+      "note": "HTTP 404 — a wall, never an absence"
+     },
+     {
+      "url": "https://lhdems.wixsite.com/",
+      "note": "HTTP 404 — a wall, never an absence"
+     },
+     {
+      "url": "https://onecommunityml.com/",
+      "note": "HTTP 404 — a wall, never an absence"
+     },
+     {
+      "url": "https://morristowndems.com/",
+      "note": "network refusal: fetch failed"
+     },
+     {
+      "url": "https://morristwpdems.org/",
+      "note": "network refusal: fetch failed"
+     },
+     {
+      "url": "https://chathamnjdemocrats.com/",
+      "note": "network refusal: fetch failed"
+     },
+     {
+      "url": "https://my.morrisdems.org/",
+      "note": "HTTP 403 — a wall, never an absence"
+     }
+    ]
+   },
+   "mine": {
+    "leads": 111,
+    "pagesNamingSomebody": 8,
+    "pagesNamingNobody": 11
+   }
+  },
+  {
+   "route": "party-county-gop",
+   "tier": "A",
+   "publisher": "the Morris County Republican Committee",
+   "about": "the Republican candidates and clubs of Morris County",
+   "symmetricWith": "party-municipal-committee",
+   "walkedAt": "2026-08-24",
+   "harvest": {
+    "sourcePages": 25,
+    "read": 25,
+    "refused": 0,
+    "outcome": "CONSERVED",
+    "accountedFor": 25,
+    "refusedPages": []
+   },
+   "mine": {
+    "leads": 0,
+    "pagesNamingSomebody": 8,
+    "pagesNamingNobody": 17
+   }
+  }
+ ],
+ "prove": {
+  "leads": 111,
+  "distinctUrls": 50,
+  "HIT": 5,
+  "LEAD": 28,
+  "EMPTY": 70,
+  "REFUSED": 8,
+  "outcome": "CONSERVED",
+  "accountedFor": 111,
+  "distinctCandidaciesWithAProvenSite": 4
+ },
+ "rows": [
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "https://fonts.googleapis.com/css2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "https://richardc449.sg-host.com/donation-form",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 0,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "https://dribbble.com/ThemeREX",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 283628,
+   "control": 283628,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "https://www.morrisyoungdems.com/home",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 567694,
+   "control": 567694,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "http://tec_events_elementor_document",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 0,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "http://t",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 0,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
+   "subject": "John MORAN",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://bt-dems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (bt-dems.org)",
+   "url": "https://www.winm-nj.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 149781,
+   "control": 149781,
+   "formsSearched": [
+    {
+     "form": "john moran",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "moran",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:connor-lee-lusardi",
+   "subject": "Lee (Lusardi) CONNOR",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mpdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mpdems.org)",
+   "url": "https://mailchi.mp/be78176a7bee/update-august-2026815",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 161418,
+   "control": 161418,
+   "formsSearched": [
+    {
+     "form": "lee (lusardi) connor",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "lee connor",
+     "kind": "given-surname",
+     "matched": true
+    },
+    {
+     "form": "connor",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:denova-rosaria",
+   "subject": "Rosaria DENOVA",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mpdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mpdems.org)",
+   "url": "https://mailchi.mp/be78176a7bee/update-august-2026815",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 161418,
+   "control": 161418,
+   "formsSearched": [
+    {
+     "form": "rosaria denova",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "denova",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
+   "subject": "Matthew S. KAYNE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://lp.constantcontactpages.com/sl/KLkoCGV",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 5853,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "matthew s. kayne",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "matthew kayne",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "matt kayne",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kayne",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
+   "subject": "Matthew S. KAYNE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.montville.net/page/board-meeting-information",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1433802,
+   "control": 1433802,
+   "formsSearched": [
+    {
+     "form": "matthew s. kayne",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "matthew kayne",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "matt kayne",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kayne",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
+   "subject": "Matthew S. KAYNE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.nj.gov/governor/news/2026/approved/20260811a.shtml",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 66793,
+   "control": 66793,
+   "formsSearched": [
+    {
+     "form": "matthew s. kayne",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "matthew kayne",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "matt kayne",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kayne",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
+   "subject": "Emily K. RYZUK",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://lp.constantcontactpages.com/sl/KLkoCGV",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 5853,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "emily k. ryzuk",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "emily ryzuk",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "ryzuk",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
+   "subject": "Emily K. RYZUK",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.montville.net/page/board-meeting-information",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1433802,
+   "control": 1433802,
+   "formsSearched": [
+    {
+     "form": "emily k. ryzuk",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "emily ryzuk",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "ryzuk",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
+   "subject": "Emily K. RYZUK",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.nj.gov/governor/news/2026/approved/20260811a.shtml",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 66792,
+   "control": 66793,
+   "formsSearched": [
+    {
+     "form": "emily k. ryzuk",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "emily ryzuk",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "ryzuk",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
+   "subject": "Shari SEFFER",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://lp.constantcontactpages.com/sl/KLkoCGV",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 5853,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "shari seffer",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "seffer",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
+   "subject": "Shari SEFFER",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.montville.net/page/board-meeting-information",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1433802,
+   "control": 1433802,
+   "formsSearched": [
+    {
+     "form": "shari seffer",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "seffer",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
+   "subject": "Shari SEFFER",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://montvillenjdems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (montvillenjdems.org)",
+   "url": "https://www.nj.gov/governor/news/2026/approved/20260811a.shtml",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 66793,
+   "control": 66793,
+   "formsSearched": [
+    {
+     "form": "shari seffer",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "seffer",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "http://gmpg.org/xfn/11",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 5842,
+   "control": 5842,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://mendhamtwpdems.wordpress.com/xmlrpc.php",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 42,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wp.me/P8ojtZ-u",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 80120,
+   "control": 80120,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://public-api.wordpress.com/oembed",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 21,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wordpress.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 368065,
+   "control": 368065,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wordpress.com/log-in",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (amalia duarte, duarte) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 156939,
+   "control": 368065,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wordpress.com/start",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (amalia duarte, duarte) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 127069,
+   "control": 368065,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wordpress.com/abuse",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (amalia duarte, duarte) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 122709,
+   "control": 368065,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://wordpress.com/reader/blogs/124005455/posts/30",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (amalia duarte, duarte) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 127665,
+   "control": 368065,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
+   "subject": "Amalia DUARTE",
+   "contestTitle": "Member of the Township Committee",
+   "foundOn": "https://mendhamtwpdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamtwpdems.com)",
+   "url": "https://subscribe.wordpress.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 163531,
+   "control": 163531,
+   "formsSearched": [
+    {
+     "form": "amalia duarte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "duarte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.gstatic.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1557,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.googleapis.com/css2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://towardsdatascience.com/which-party-adds-more-to-deficits-a6422c6b00d7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 174702,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.forbes.com/sites/chuckjones/2019/01/18/trumps-big-win-the-largest-budget-deficit-with-a-strong-economy",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1357733,
+   "control": 1357733,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://democrats.org/where-we-stand/party-platform/preamble-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 171794,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "http://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.govtrack.us/congress/members/NJ/7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 34880,
+   "control": 34880,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.njleg.state.nj.us/members/DistrictLegislators.asp",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 103,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (cory booker, booker) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 155365,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://morrisdems.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 295663,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/polling-place-search",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 212,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/registration-check",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 212,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/register",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 212,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-up",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (cory booker, booker) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 32798,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "vote for"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-senate:booker",
+   "subject": "Cory BOOKER",
+   "contestTitle": "Member of the United States Senate",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-in",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (cory booker, booker) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 32798,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "cory booker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "booker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "vote for"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.gstatic.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1557,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.googleapis.com/css2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://towardsdatascience.com/which-party-adds-more-to-deficits-a6422c6b00d7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 174702,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.forbes.com/sites/chuckjones/2019/01/18/trumps-big-win-the-largest-budget-deficit-with-a-strong-economy",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1357733,
+   "control": 1357733,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://democrats.org/where-we-stand/party-platform/preamble-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 171794,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "http://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.govtrack.us/congress/members/NJ/7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 34880,
+   "control": 34880,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": true
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.njleg.state.nj.us/members/DistrictLegislators.asp",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 103,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 155365,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://morrisdems.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 295663,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/polling-place-search",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1028,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/registration-check",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1027,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/register",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1029,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-up",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1037,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
+   "subject": "Thomas H. KEAN, JR.",
+   "contestTitle": "Member of the House of Representatives",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-in",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 5 name forms searched (thomas h. kean, thomas kean, tom kean, tommy kean, kean) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1027,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "thomas h. kean",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "thomas kean",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "tom kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "tommy kean",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "kean",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.gstatic.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 1557,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://fonts.googleapis.com/css2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://towardsdatascience.com/which-party-adds-more-to-deficits-a6422c6b00d7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 174702,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.forbes.com/sites/chuckjones/2019/01/18/trumps-big-win-the-largest-budget-deficit-with-a-strong-economy",
+   "guessed": false,
+   "outcome": "REFUSED",
+   "detail": "did not clear the control",
+   "status": 0,
+   "bytes": 773,
+   "control": 1357733,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://democrats.org/where-we-stand/party-platform/preamble-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 171794,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "http://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.govtrack.us/congress/members/NJ/7",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 34880,
+   "control": 34880,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.njleg.state.nj.us/members/DistrictLegislators.asp",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 103,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 155365,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://www.mendhamnj.org/cn/Meetings",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 204023,
+   "control": 204023,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://morrisdems.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 295663,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/polling-place-search",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1029,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/registration-check",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1029,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/register",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1024,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-up",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1030,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
+   "subject": "Mark VAN DEN HENDE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mendhamborodems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mendhamborodems.org)",
+   "url": "https://voter.svrs.nj.gov/auth/sign-in",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (mark van den hende, mark hende, hende) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 1027,
+   "control": 212,
+   "formsSearched": [
+    {
+     "form": "mark van den hende",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mark hende",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "hende",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-house-11:mejia",
+   "subject": "Analilia MEJIA",
+   "contestTitle": "Member of the House of Representatives (11th Congressional District)",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "http://gmpg.org/xfn/11",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 5842,
+   "control": 5842,
+   "formsSearched": [
+    {
+     "form": "analilia mejia",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mejia",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-house-11:mejia",
+   "subject": "Analilia MEJIA",
+   "contestTitle": "Member of the House of Representatives (11th Congressional District)",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://wp.me/P86zX2-m0",
+   "guessed": false,
+   "outcome": "HIT",
+   "detail": "the page names the candidate (analilia mejia, mejia) and identifies itself as a campaign (for <office>, for <place> <office>, vote for, on the ballot)",
+   "status": 200,
+   "bytes": 133431,
+   "control": 80120,
+   "formsSearched": [
+    {
+     "form": "analilia mejia",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "mejia",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>",
+    "vote for",
+    "on the ballot"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-house-11:mejia",
+   "subject": "Analilia MEJIA",
+   "contestTitle": "Member of the House of Representatives (11th Congressional District)",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://www.morriscountynj.gov/Government/Voting-and-Elections/Become-a-Poll-Worker",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 104787,
+   "control": 104787,
+   "formsSearched": [
+    {
+     "form": "analilia mejia",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mejia",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-house-11:mejia",
+   "subject": "Analilia MEJIA",
+   "contestTitle": "Member of the House of Representatives (11th Congressional District)",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://mailchi.mp/8081a0d5e3ee/mdcsignup",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (analilia mejia, mejia) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 24110,
+   "control": 161418,
+   "formsSearched": [
+    {
+     "form": "analilia mejia",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mejia",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:us-house-11:mejia",
+   "subject": "Analilia MEJIA",
+   "contestTitle": "Member of the House of Representatives (11th Congressional District)",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://rosenet.org/AgendaCenter/Mayor-Council-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 152498,
+   "control": 152498,
+   "formsSearched": [
+    {
+     "form": "analilia mejia",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "mejia",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+   "subject": "Robert E. LANDRIGAN",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "http://gmpg.org/xfn/11",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 5842,
+   "control": 5842,
+   "formsSearched": [
+    {
+     "form": "robert e. landrigan",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "robert landrigan",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "bob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "rob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "bobby landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "landrigan",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+   "subject": "Robert E. LANDRIGAN",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://wp.me/P86zX2-m0",
+   "guessed": false,
+   "outcome": "HIT",
+   "detail": "the page names the candidate (bob landrigan, landrigan) and identifies itself as a campaign (for <office>, for <place> <office>, vote for, on the ballot)",
+   "status": 200,
+   "bytes": 133432,
+   "control": 80120,
+   "formsSearched": [
+    {
+     "form": "robert e. landrigan",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "robert landrigan",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "bob landrigan",
+     "kind": "diminutive-surname",
+     "matched": true
+    },
+    {
+     "form": "rob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "bobby landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "landrigan",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>",
+    "vote for",
+    "on the ballot"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+   "subject": "Robert E. LANDRIGAN",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://www.morriscountynj.gov/Government/Voting-and-Elections/Become-a-Poll-Worker",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 104788,
+   "control": 104787,
+   "formsSearched": [
+    {
+     "form": "robert e. landrigan",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "robert landrigan",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "bob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "rob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "bobby landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "landrigan",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+   "subject": "Robert E. LANDRIGAN",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://mailchi.mp/8081a0d5e3ee/mdcsignup",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 6 name forms searched (robert e. landrigan, robert landrigan, bob landrigan, rob landrigan, bobby landrigan, landrigan) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 24110,
+   "control": 161418,
+   "formsSearched": [
+    {
+     "form": "robert e. landrigan",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "robert landrigan",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "bob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "rob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "bobby landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "landrigan",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
+   "subject": "Robert E. LANDRIGAN",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://rosenet.org/AgendaCenter/Mayor-Council-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 152498,
+   "control": 152498,
+   "formsSearched": [
+    {
+     "form": "robert e. landrigan",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "robert landrigan",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "bob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "rob landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "bobby landrigan",
+     "kind": "diminutive-surname",
+     "matched": false
+    },
+    {
+     "form": "landrigan",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+   "subject": "John J. FORTE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "http://gmpg.org/xfn/11",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 5842,
+   "control": 5842,
+   "formsSearched": [
+    {
+     "form": "john j. forte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "john forte",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "forte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+   "subject": "John J. FORTE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://wp.me/P86zX2-m0",
+   "guessed": false,
+   "outcome": "HIT",
+   "detail": "the page names the candidate (john forte, forte) and identifies itself as a campaign (for <office>, for <place> <office>, vote for, on the ballot)",
+   "status": 200,
+   "bytes": 133432,
+   "control": 80120,
+   "formsSearched": [
+    {
+     "form": "john j. forte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "john forte",
+     "kind": "given-surname",
+     "matched": true
+    },
+    {
+     "form": "forte",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "for <office>",
+    "for <place> <office>",
+    "vote for",
+    "on the ballot"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+   "subject": "John J. FORTE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://www.morriscountynj.gov/Government/Voting-and-Elections/Become-a-Poll-Worker",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 104787,
+   "control": 104787,
+   "formsSearched": [
+    {
+     "form": "john j. forte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "john forte",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "forte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+   "subject": "John J. FORTE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://mailchi.mp/8081a0d5e3ee/mdcsignup",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 3 name forms searched (john j. forte, john forte, forte) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 24110,
+   "control": 161418,
+   "formsSearched": [
+    {
+     "form": "john j. forte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "john forte",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "forte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
+   "subject": "John J. FORTE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://madisonnjdems.com/",
+   "foundOnPublisher": "a municipal Democratic committee (madisonnjdems.com)",
+   "url": "https://rosenet.org/AgendaCenter/Mayor-Council-2",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 152498,
+   "control": 152498,
+   "formsSearched": [
+    {
+     "form": "john j. forte",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "john forte",
+     "kind": "given-surname",
+     "matched": false
+    },
+    {
+     "form": "forte",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://fonts.googleapis.com/css",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://list.mtadems.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 113617,
+   "control": 113617,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 91913,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "candidate for",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com/meet-jess",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes.",
+   "status": 200,
+   "bytes": 61455,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com/meet-jay",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "only the SURNAME matched, which a page about any relative or namesake would also do. A surname alone never promotes.",
+   "status": 200,
+   "bytes": 60773,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "http://www.visibilitybrigade.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 33147,
+   "control": 33147,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://www.gtfoice.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 355030,
+   "control": 355030,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/N5TLnNKCvGaIV4DNQ5Lw570k18WiJJiWe5AuwSNwu-d79LYhjpPcvoY6O2E5c81FEvWT7SZn9FpyQf-sOUoXGjpJi13wRKSPSYIsiemMV5pNIKtek4tEkRZRoTopdgiZnEOMKVtLbge5hodygtSJ06epDdJkz61zSrphpU5fx1HdmzvxALGic-J0ry297nVv7AnLRE7Xamn3SGZX3OlQOAf95v_1RH0tysMQUl7hzkL0uks8dMlfEQ2mTLGrvSxMO6cPR3tHn5k_ww",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 295663,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/uZh9NqzvhRZ63Lj6WUAGcV8LVJyiPb2AS5SPN3bdZv7THJXo1ASc8Cv64oex5Ro8VQyOs2HObHIVr8v5V3mlMDm0y-y-BZKFZ5Ye5xiXbIi2TXQe2fy5GLGOVTCum8e1GJL_PdhU6Yb2sp7qbSdpA-RiN6HL4CzxEF630kq-JXkXvdhF1Q3UIB8lJ3RYQ_2W4TW5Nq2stoU_00Dgt7c9hmDW6DCFXeVNISJw030DTYjIG92KnBDMuHfsa0aaQ-hei114uKFQsed1QoME5hmTuZ8XXA",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (jessica price, price) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 239247,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
+   "subject": "Jessica PRICE",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/hIuCXvq5v-a4RV6MdLdDsqkBmL60Urxc1gFt0yAAy3G2YFQTLdflXB-rmUPIHcIEyGAGL7Nt2BTBu8YrrTRa81upyJoDG3DSvWlkooJqCLhC5n3KN0WGDKtJMr4hF5KfLeIm4vTEQRFz1emAgrvFz9nEeaAxBmrC35slpQpKvWjK2OHJv7neRfajSswk1l-RCeRKEIaFF_xNT9obEH2iVCr0XvISWm3E72jGmHmAB_iEnJLpGdtFLFvsUNzmlFFhAwkAKtl00DcMZog",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (jessica price, price) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 88572,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jessica price",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "price",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://fonts.googleapis.com/css",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 6338,
+   "control": -1,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://list.mtadems.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 113617,
+   "control": 113617,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 91913,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "candidate for",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com/meet-jess",
+   "guessed": false,
+   "outcome": "HIT",
+   "detail": "the page names the candidate (jay decker, decker) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, for <place> <office>, running for, this campaign)",
+   "status": 200,
+   "bytes": 61455,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://votemtarlington.com/meet-jay",
+   "guessed": false,
+   "outcome": "HIT",
+   "detail": "the page names the candidate (jay decker, decker) and identifies itself as a campaign (paid-for-by disclaimer, for <office>, for <place> <office>, running for, this campaign)",
+   "status": 200,
+   "bytes": 60773,
+   "control": 91913,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": true
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": true
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <office>",
+    "for <place> <office>",
+    "running for",
+    "this campaign"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "http://www.visibilitybrigade.com",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 33147,
+   "control": 33147,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://www.gtfoice.org",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 355030,
+   "control": 355030,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/N5TLnNKCvGaIV4DNQ5Lw570k18WiJJiWe5AuwSNwu-d79LYhjpPcvoY6O2E5c81FEvWT7SZn9FpyQf-sOUoXGjpJi13wRKSPSYIsiemMV5pNIKtek4tEkRZRoTopdgiZnEOMKVtLbge5hodygtSJ06epDdJkz61zSrphpU5fx1HdmzvxALGic-J0ry297nVv7AnLRE7Xamn3SGZX3OlQOAf95v_1RH0tysMQUl7hzkL0uks8dMlfEQ2mTLGrvSxMO6cPR3tHn5k_ww",
+   "guessed": false,
+   "outcome": "EMPTY",
+   "detail": "did not clear the control",
+   "status": 200,
+   "bytes": 295663,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer",
+    "for <place> <office>"
+   ],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/uZh9NqzvhRZ63Lj6WUAGcV8LVJyiPb2AS5SPN3bdZv7THJXo1ASc8Cv64oex5Ro8VQyOs2HObHIVr8v5V3mlMDm0y-y-BZKFZ5Ye5xiXbIi2TXQe2fy5GLGOVTCum8e1GJL_PdhU6Yb2sp7qbSdpA-RiN6HL4CzxEF630kq-JXkXvdhF1Q3UIB8lJ3RYQ_2W4TW5Nq2stoU_00Dgt7c9hmDW6DCFXeVNISJw030DTYjIG92KnBDMuHfsa0aaQ-hei114uKFQsed1QoME5hmTuZ8XXA",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (jay decker, decker) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 239247,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [],
+   "attemptedAt": "2026-08-24"
+  },
+  {
+   "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
+   "subject": "Jay DECKER",
+   "contestTitle": "Member of the Borough Council",
+   "foundOn": "https://mtadems.org/",
+   "foundOnPublisher": "a municipal Democratic committee (mtadems.org)",
+   "url": "https://djgidbc.r.bh.d.sendibt3.com/tr/cl/hIuCXvq5v-a4RV6MdLdDsqkBmL60Urxc1gFt0yAAy3G2YFQTLdflXB-rmUPIHcIEyGAGL7Nt2BTBu8YrrTRa81upyJoDG3DSvWlkooJqCLhC5n3KN0WGDKtJMr4hF5KfLeIm4vTEQRFz1emAgrvFz9nEeaAxBmrC35slpQpKvWjK2OHJv7neRfajSswk1l-RCeRKEIaFF_xNT9obEH2iVCr0XvISWm3E72jGmHmAB_iEnJLpGdtFLFvsUNzmlFFhAwkAKtl00DcMZog",
+   "guessed": false,
+   "outcome": "LEAD",
+   "detail": "the page cleared the control but carries NONE of the 2 name forms searched (jay decker, decker) — it is a live host, not this person's site",
+   "status": 200,
+   "bytes": 88572,
+   "control": 295663,
+   "formsSearched": [
+    {
+     "form": "jay decker",
+     "kind": "filed",
+     "matched": false
+    },
+    {
+     "form": "decker",
+     "kind": "surname",
+     "matched": false
+    }
+   ],
+   "officeEvidence": [
+    "paid-for-by disclaimer"
+   ],
+   "attemptedAt": "2026-08-24"
+  }
+ ]
+}

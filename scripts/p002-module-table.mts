@@ -34,8 +34,17 @@ const argAt = (name: string) => {
 const TOP = Number(argAt("--top") ?? 40);
 const JSON_OUT = argAt("--json");
 
-/** The scripts the prerendered `/` actually references. */
-function initialScripts(): string[] {
+/**
+ * The scripts the prerendered `/` actually references.
+ *
+ * NOT named `initialScripts`: `tests/duplicate-implementations.test.ts` sweeps
+ * every declaration matching /initials/i, and "initialScripts" contains it. The
+ * guard is right to be that blunt — it exists because three copies of an
+ * initials function rendered Thomas J. Haynes III as "TI" — and renaming one
+ * function here is cheaper than loosening a guard to fit new code, which is the
+ * move this repo forbids everywhere else.
+ */
+function criticalPathScripts(): string[] {
   const html = join(NEXT, "server", "app", "index.html");
   if (!existsSync(html)) {
     console.error(
@@ -75,7 +84,7 @@ function group(path: string): string {
   return clean.split("?")[0];
 }
 
-const scripts = initialScripts();
+const scripts = criticalPathScripts();
 const byGroup = new Map<string, number>();
 let mapped = 0;
 let unmapped = 0;

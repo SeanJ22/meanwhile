@@ -60,7 +60,7 @@
     "regeneratedOn": "2026-08-25"
   },
   "docs/branch-manifest.md": {
-    "digest": "2cbc83868ddaf2f773ea4ce240e9cf3e7ad2847894fecbe12c6e03cfdf4decfc",
+    "digest": "3888b2f8cc2012a58df126feb0b07c80357ef63da756df3f9b3af0650375c92c",
     "files": 3,
     "entry": "scripts/branch-manifest-doc.mts",
     "regeneratedOn": "2026-08-25"

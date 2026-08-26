@@ -2164,3 +2164,103 @@ re-walked on a clock — a disallow is a host saying do not ask), `NO_ROBOTS`,
 `CANNOT_TELL`. Run 2026-08-26 over 21 hosts from this brief: **17 walkable, 4
 refused** — `sos.nh.gov`, `cfs.sos.nh.gov`, `irc.az.gov` and `govtrack.us`, the
 last two of which then answered at rung 3.
+
+## THE DESCENT — RULING 169, AND WHAT IT ADDS TO THIS FILE
+
+(Added 2026-08-26, the descent session, Item 3.)
+
+**RULING 169 — a walk is COUNTED or it did not happen.** Coverage is built by
+DESCENDING the tiers of government in order, because each tier publishes the
+tier beneath it. A tier is not complete until the tier above has been asked what
+is in it, and a body found only by per-entity search when the tier above
+publishes a list containing it is a **defect in the walk** rather than a find.
+
+Every level's site is walked as a tree and reported as counts — **links found ·
+followed · yielded · declined with reason · catalogued · bodies discovered that
+were not already in the registry** — plus the **pass count** and the **final
+pass's new-link count**. If the final pass found anything new, the walk was not
+finished and the session says so.
+
+The tiers, in descent order, and the list does not stop at its own bottom — a
+state with a layer not named here gets that layer added, and the addition is a
+finding:
+
+1. **State** — the state itself, its Secretary of State by division, its
+   legislature, its redistricting body, its courts, its education agency, its
+   open-data and transparency portals, its comptroller or auditor, its division
+   of local government.
+2. **Statewide and multi-county districts** — congressional, legislative,
+   judicial, education service agencies, regional authorities, councils of
+   government, transportation authorities.
+3. **County** (or parish, or borough) — the county itself, its clerk, recorder,
+   elections department, assessor, treasurer, board of supervisors or
+   commissioners, and every board, commission and authority it publishes.
+4. **Local and special districts** — school, fire, water, sanitation, library,
+   hospital, irrigation, transportation, community college, improvement,
+   taxing. **The layer most likely to be missing and the one a reader most
+   needs**, because these levy on a household's bill and appear on almost
+   nobody's list.
+5. **City** — the city, its clerk, its council, its boards and commissions.
+6. **Town, township, borough, village, plantation, unincorporated place** —
+   whatever this state actually calls them. The vocabulary is enumerated from
+   the state's own publications and a national one is never imposed.
+7. **Everything else the state names** — authorities, commissions, tribal
+   governments as their own sovereign category (RULING 119), and anything that
+   does not fit above.
+
+The machinery is `lib/hunt/descent.ts` and `pnpm descent --state <code>`.
+
+## RUNG 4 ON `robots.txt` ITSELF — THE PERMISSION QUESTION IS WALKED
+
+(Added 2026-08-26, the descent session. A wall that fell, recorded as a rung.)
+
+**`pnpm robots:sweep` asked rung 2 and read a rung-2 refusal as *the permission
+question is unanswerable*.** `CANNOT_TELL` refuses under RULING 148, correctly —
+so a host refusing this project's User-Agent became a host we may not walk, and
+the refusal looked like a rule rather than like a wall.
+
+**Measured 2026-08-26, and this is the cost:**
+
+| Host | Rung 2 | After escalation | What it is |
+|---|---|---|---|
+| `az.gov` | 403 | **ALLOWED**, rung 4 | **the top of the Arizona descent** |
+| `azed.gov` | 403 | **ALLOWED**, rung 4 | the state education agency — every school district |
+| `irc.az.gov` | 403 | **ALLOWED**, rung 4 | redistricting |
+| `nh.gov` | 403 | **ALLOWED**, rung 4 | **the top of the New Hampshire descent** |
+| `courts.nh.gov` | 403 | **ALLOWED**, rung 4 | the judiciary |
+| `education.nh.gov` | 403 | **ALLOWED**, rung 4 | every NH school district |
+| `revenue.nh.gov` | 403 | **ALLOWED**, rung 4 | the tax rate tables — the special-district layer |
+| `nhsba.org` | 403 | **ALLOWED**, rung 4 | the school boards association |
+
+**Arizona went from 12 walkable hosts to 15; New Hampshire and New Jersey
+together from 12 to 17. 39 hosts judged, 24 walkable before, 32 after.**
+
+**The wall is a TLS FINGERPRINT, not a header.** Node's `fetch` is refused with
+HTTP 403 under this project's User-Agent AND under a full Chrome header set;
+`curl` carrying that identical Chrome header set is admitted at HTTP 200.
+Headers are the same across those two and the client is not. That is rung 4 in
+as many words, and it is the **second** time this project has met it — the f
+session recorded it, and this session met it again in the instrument built to
+ask permission.
+
+*Recorded as a RULING 97 shape rather than smoothed:* the session of 2026-08-26
+that built the sweep had already written into this file that `irc.az.gov`
+*"answers HTTP 403 to a plain fetch and HTTP 200 to a full browser header set"*.
+The wall was recorded and never built into the instrument beside it, so the
+instrument went on refusing the host its own documentation said was reachable.
+**A wall that falls becomes a rung** — and a rung recorded in prose beside a
+tool that does not walk it is a discovery spent and kept only on paper.
+
+**This is a harder read of the rules, never a softer one.** Every rung asks the
+same host for the same file and obeys whatever comes back; a blanket
+`Disallow: /` read at rung 4 refuses exactly as it would at rung 2. What changed
+is only whether we managed to READ the host's rules before deciding we could
+not. The rung that answered is carried on the verdict, because a permission read
+that needed rung 4 is a weaker fact than one that did not.
+
+**Still refused after escalation, last tested 2026-08-26:** `sos.nh.gov` (503),
+`newburynh.org`, `doe.nh.gov`, `dra.nh.gov`, `nhdes.nh.gov`, `data.az.gov`
+(Cloudflare challenge or unresolved), and `ftp.azsos.gov` — which is **not a
+wall at all**: FTP has no `robots.txt`, so the sweep's question does not apply
+to it and a `CANNOT_TELL` there is the instrument being asked the wrong
+question rather than the host refusing.

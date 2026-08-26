@@ -4493,3 +4493,105 @@ grant exists to prevent, not merely to permit around.
 is SETTLED** — width matching the *Would you vote for them?* box, green, in both
 themes — and is not an open question. **`NS15`** closes on his authority: done,
 communicated.
+
+## Two rulings of 2026-08-26 — the descent
+
+Adopted 2026-08-26, the descent session, Items 3 and 9. **RULINGS 169 and 170.**
+`CLAUDE.md` carries both, because both bind every session rather than deciding
+one row.
+
+### RULING 169 — a walk is COUNTED or it did not happen
+
+Adopted 2026-08-26, the descent session, Item 3. Supersedes nothing. It is the
+**operation-count rule** — *an operation that can return nothing must be asked
+what it returned* — pointed at a SITE WALK rather than at an adapter, and it is
+the instrument RULING 93 has never had.
+
+**Coverage is built by DESCENDING the tiers of government in order, because each
+tier publishes the tier beneath it. A tier is not complete until the tier above
+has been asked what is in it. A body found only by per-entity search, when the
+tier above publishes a list containing it, is a DEFECT IN THE WALK rather than a
+find.**
+
+**And every level's walk is REPORTED AS COUNTS: links found, links followed,
+what each yielded, what was declined and why.** *"We walked the site"* without
+those numbers is not a walk, and no report may claim one.
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is a diagnosis rather than an argument.*
+
+RULING 93 has said *ask what the tier above publishes about the tier below*
+since 2026-08-22. RULING 166 has said *the body's own publication is rung one*
+since 2026-08-26. RULING 90 has said *exhaustion is argued, never asserted*.
+None of them changed the behaviour, and the reason is that **not one of them
+produces a number.** A session can satisfy all three in its own belief and be
+graded identically to a session that walked one page — because the report shape
+they produce is the same report shape.
+
+Every session picked a body and hunted it. **No session had walked a tier top to
+bottom**, and nothing in the process could tell the difference. That is RULING
+88's diagnosis exactly, one level up: what changes behaviour is a required
+output that cannot be produced by walking a list.
+
+- **A count is per LEVEL, per STATE**, never one number for a run. A run total
+  hides the level that returned nothing, which is the level somebody needed.
+- **DECLINED carries its reason** — disallowed, off-scope, already recorded,
+  unreachable — because a declined link and a followed link that yielded nothing
+  are completely different facts, and a bare *followed* count runs them
+  together.
+- **The number that says whether the descent WORKED is bodies discovered that
+  were not already in the registry.** Every other column measures effort.
+- **The walk states its PASS COUNT and the final pass's new-link count. If the
+  final pass found anything new, the walk was not finished and the session says
+  so.** Following links produces more links; a walk that stops while its last
+  pass was still producing has stopped, not finished.
+- **Zero at a tier FAILS LOUDLY** (RULING 159). Zero counties in a US state is a
+  broken walk, never a finding.
+
+*What this does NOT license.* It is not a licence to count instead of hunting. A
+high followed-count with no bodies discovered is a session that walked a site
+thoroughly and learned nothing, and the report says that too.
+
+### RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence
+
+Adopted 2026-08-26, the descent session, Item 9. **Amends RULING 94** under the
+RULING 99 procedure. RULING 94's five moves stand, its placement between Tier B
+and Tier C stands, and its void condition stands. What changes is what reaching
+the end of them MEANS.
+
+**RULING 94's five moves are the OPENING, not the count. Running them does not
+earn an absence and never has.** An absence is earned only by the argument
+RULING 90 requires.
+
+**A session that has exhausted its ideas says "I have run out of ideas" — which
+is a claim about the session — rather than "this is not published", which is a
+claim about the government. Only one of those is ever true here.**
+
+**Any cap in any brief — five moves, N routes, a list of seven — is a FLOOR.**
+Reaching the end of a list is not completion. **A brief that appears to cap
+effort is misdrafted, and the session says so rather than obeying the cap.**
+
+*The rationale stays attached.* RULING 94 phrased its moves as five numbered
+questions so they could not go stale, and the numbering was read as the job.
+That is the same failure RULING 61 named about the manifest — *trying
+thirty-seven routes and stopping does not tell you the forty-third would have
+failed either* — arriving through the door built to prevent it. A protocol with
+a terminating condition is a checklist, and a checklist completed is a session
+that believes it complied.
+
+**The standard, in the author's words: what would the most diligent, persistent
+person do if they got stuck? Keep looking. Find another avenue.**
+
+**And the productive question is not "where would this be published?" It is
+"WHO WAS COMPELLED TO WRITE THIS DOWN?"** Governments are forced by statute to
+produce documents nobody thinks of as directories — the municipal code that
+establishes every board by ordinance, the tax rate table that must list every
+levying district because somebody has to be billed, the legal notice published
+in a newspaper of record, the budget and the audit, the minutes of the tier
+above recording an appointment, the annual report, the state oversight
+directory. **Those documents are where the dark bodies are**, and none of them
+was in the ladder on the day this was adopted.
+
+*This does not narrow RULING 144.* An argued absence may still be built from
+walls, and it still expires the day a wall falls. What it forbids is arriving at
+that argument by counting.

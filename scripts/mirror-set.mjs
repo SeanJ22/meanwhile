@@ -79,6 +79,20 @@ export const MIRRORED_DOCS = [
   { mirrorName: "coverage-matrix.csv", repoPath: "docs/coverage-matrix.csv" },
 
   { mirrorName: "CLAUDE.md", repoPath: "CLAUDE.md" },
+  /*
+   * **JOINED 2026-08-26 (the descent session, Item 1).** `docs/rulings.md` is
+   * the append-only record of every decision that is not law, and every brief
+   * for days has ordered sessions to READ it and hardcode from it. It was the
+   * one such file unreadable from outside the repo: `CLAUDE.md`, `state.md`,
+   * `source-ladder.md`, `context.md`, both tracker views and the gap ledger all
+   * mirror, and this did not.
+   *
+   * That is RULING 108's failure pointed at a different file — anything that
+   * must be read at session start lives where it can be read. And it is the
+   * sentence written at the head of nearly every entry inside it: a ruling the
+   * author cannot read is a ruling that does not bind him. He reads the folder.
+   */
+  { mirrorName: "rulings.md", repoPath: "docs/rulings.md" },
   { mirrorName: "abuse-policy.md", repoPath: "docs/abuse-policy.md" },
   { mirrorName: "vendor-review.md", repoPath: "docs/vendor-review.md" },
   // Joined 2026-08-13: a standing document that constrains what gets built,

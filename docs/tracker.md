@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **288 open**, 436 resolved.
+- **294 open**, 436 resolved.
 - **51 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
   - Visual feedback — **2**
-  - Data infrastructure — **1**
+  - Data infrastructure — **3**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **2**
@@ -214,7 +214,7 @@ The last 14 of 3208 line(s) the run printed:
 
 Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies, officeholders, candidates, meetings, the ballot.
 
-**32 open · 5 resolved.**
+**33 open · 5 resolved.**
 
 ### P1
 
@@ -283,6 +283,8 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 **NH03** — The town's own pages state terms ending 2021, 2022 and 2023 for its Cemetery Trustees, and March 2021 for one Planning Board alternate. Those are the town's current published words and they are up to five years out of date. We render them as published, which is honest, and a reader may still be looking at people who left.
 
 **NH116** — He is running for US Senate and is owed a photo at 03255. His campaign site publishes exactly one picture of him: a clean solo studio portrait, refused on 2026-08-24 on two stated grounds rather than on composition. The file is named 'Picture Trinity campaign shot high def 2007 001.jpg' - the publisher dating it to 2007, nineteen years ago - and it is served at 220px in 5,699 bytes, which is below any size this product could render as a portrait.
+
+**NH220** — The permission read now walks the ladder to rung 4 and recovered az.gov, azed.gov, irc.az.gov, nh.gov, courts.nh.gov, education.nh.gov, revenue.nh.gov and nhsba.org — all of which the sweep had been refusing. sos.nh.gov still answers HTTP 503 to every client tried, so the may-we-walk question is UNANSWERED and the walk is refused under RULING 148. Also still refused: newburynh.org, doe.nh.gov, dra.nh.gov, nhdes.nh.gov and data.az.gov.
 
 **NH35** — Warner's own boards index names 26 governing bodies. Its calendar files sittings for 16 of them. The other ten are named in the registry and ship KNOWN_UNCOVERED: the Cemetery Trustees, the Community Power Committee, the Corridor Committee, the Economic Development Advisory Committee, the Groundwater Protection Committee, the Highway Safety Committee, the Housing Advisory Committee, the Joint Loss Management Committee, the Mink Hills Recreation Committee and the Record Preservation Committee.
 
@@ -476,9 +478,13 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**77 open · 105 resolved.**
+**82 open · 105 resolved.**
 
 ### P1
+
+**NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
+
+**NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -511,6 +517,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH197** — Every meetings adapter clips to the same 90 days at fetch time and the snapshot stamps generatedAt minutes later, so every 90d-clipped source lands within about a day and a half of its own edge permanently, by construction. That is not eight sources about to fail; it is the architecture. R59's clerksboards failure was one of them crossing on a day when the gap between the two clocks happened to be wide enough.
 
 **NH206** — Two different clocks decide two different things, and only one of them has an alarm. The F22 staleness guard measures a source's oldest row against the SNAPSHOT'S OWN generatedAt, so when it trips the refresh fails loudly at Validate before committing and nothing is written — that is the clerksboards failure of 2026-08-25 and it works. What a reader sees is clipped against NOW instead, and now keeps moving while a frozen snapshot does not. So every day the push stays blocked, more committed rows fall outside the serving window and quietly stop appearing on a reader's calendar, with no test failing and no run going red — because the F22 guard only runs while a refresh is being BUILT, which is precisely the thing that has stopped. Measured 2026-08-26: 0 of 449 rows have fallen out and the snapshot is 0.41 days old, so this is a mechanism rather than a live wound today. pnpm source:headroom now prints both clocks and the fallen-out count so the next session does not re-derive the distinction. What is still owed is an alarm on the second clock: something that goes red when the committed snapshot has aged past a stated threshold, independent of whether a refresh ever runs.
+
+**NH217** — pnpm descent walked NJ, AZ and NH on 2026-08-26 and every one of the three ended with its final pass still producing: NJ queued 1,885 new links, AZ 1,986, NH 771. Under RULING 169 that means the walk stopped rather than finished, and the ledger says so on its own verdict line. Continuing is a matter of re-running with more passes and a higher budget; nothing is blocked.
+
+**NH218** — The descent named 1,392 candidate governing bodies across NJ, AZ and NH that the registry does not already match. A candidate is a link whose text named a governing body. Confirming it is a body, resolving it to a division and minting an id is the next motion, and it has not begun. Until it does, these are a work queue in states/<code>/descent-candidates.md and not coverage.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -593,6 +603,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH17** — The consolidated miss list says newbury.nh.gov/sitemap.xml is a 403 and that robots declares none. It answers HTTP 200 at 43,484 bytes. A sitemap is the discovery rung for every page on a site, and this one has been closed to us on a stale reading.
 
 **NH211** — Walked 2026-08-26 while looking for a route that geocodes a STREET rather than an address - which is exactly what the narrowing chip wants and what the onelineaddress endpoint cannot do. tigerweb.geo.census.gov answers robots.txt with HTTP 200 carrying a WAF body: 'The requested URL was rejected. Please consult with your administrator.' That is a 200 that is not a document (RULING 93), so the may-we-walk verdict is UNKNOWN, and RULING 148 says unknown REFUSES. No route was built. It is worth a decision because the host is the Census Bureau, already an approved source (D53), publishing the same TIGER data this product already ships committed - so the refusal is about reachability and permission rather than about the source.
+
+**NH219** — pnpm tenancy separates bodies on a platform we already read from bodies on a platform we merely recognise, because those need completely different responses. The second column across NJ, AZ and NH holds 17 hosts on eCode360, Granicus ViewPublisher, PrimeGov, CivicClerk, eSCRIBE and NovusAgenda. That is scoped work — we know the vendor — as distinct from the 87 hosts where nothing machine-readable was detected at all, which is a hunt.
 
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 

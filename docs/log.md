@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **145 sessions.**
+Newest first. **146 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -66,6 +66,19 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
   | ##[error]Process completed with exit code 1.
 
 [job-watch:intake-tripwire.yml]
+
+**Needs Sean.** Nothing.
+
+## descent-0826 · 2026-08-26
+
+**What it started.** 6 row(s) opened, 6 still open.
+
+- **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in. *(open)*
+- **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see. *(open)*
+- **NH217** — pnpm descent walked NJ, AZ and NH on 2026-08-26 and every one of the three ended with its final pass still producing: NJ queued 1,885 new links, AZ 1,986, NH 771. Under RULING 169 that means the walk stopped rather than finished, and the ledger says so on its own verdict line. Continuing is a matter of re-running with more passes and a higher budget; nothing is blocked. *(open)*
+- **NH218** — The descent named 1,392 candidate governing bodies across NJ, AZ and NH that the registry does not already match. A candidate is a link whose text named a governing body. Confirming it is a body, resolving it to a division and minting an id is the next motion, and it has not begun. Until it does, these are a work queue in states/<code>/descent-candidates.md and not coverage. *(open)*
+- **NH219** — pnpm tenancy separates bodies on a platform we already read from bodies on a platform we merely recognise, because those need completely different responses. The second column across NJ, AZ and NH holds 17 hosts on eCode360, Granicus ViewPublisher, PrimeGov, CivicClerk, eSCRIBE and NovusAgenda. That is scoped work — we know the vendor — as distinct from the 87 hosts where nothing machine-readable was detected at all, which is a hunt. *(open)*
+- **NH220** — The permission read now walks the ladder to rung 4 and recovered az.gov, azed.gov, irc.az.gov, nh.gov, courts.nh.gov, education.nh.gov, revenue.nh.gov and nhsba.org — all of which the sweep had been refusing. sos.nh.gov still answers HTTP 503 to every client tried, so the may-we-walk question is UNANSWERED and the walk is refused under RULING 148. Also still refused: newburynh.org, doe.nh.gov, dra.nh.gov, nhdes.nh.gov and data.az.gov. *(open)*
 
 **Needs Sean.** Nothing.
 

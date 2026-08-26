@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 17:38:37 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:15:19 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 181 recorded
+## Rulings — 183 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -451,6 +451,8 @@ from. Each entry there names what it supersedes.
 - RULING 166 — the body's own publication is rung one, and its bulk download is rung zero
 - RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere
 - RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief
+- RULING 169 — a walk is COUNTED or it did not happen
+- RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -615,13 +617,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 17:38:36 EDT
-branch: claude/all-open-board-second-0826
-head sha: 945e84b7edbb6ae719063833b8ce70dfc7190d4a
-head subject: The two things the brief was right about, on a board that was already worked
-origin/main sha: 3e727522bfe7e94fca026b81a61d60ea5b0f5ac6
-origin/main subject: Merge pull request #196 from SeanJ22/claude/close-out-audits-0826
-local main sha: 3e727522bfe7e94fca026b81a61d60ea5b0f5ac6
+generated: 2026-08-26 19:15:19 EDT
+branch: claude/descent-0826
+head sha: 1cfac3220ae7297d84fa59b38e8a196ad791e50b
+head subject: The descent: walk the tiers, count the walk (RULING 169)
+origin/main sha: 1f2430a1aa95b30fb01544eb7a62184b9132bd5f
+origin/main subject: 8.26 walkthrough captures (#199)
+local main sha: 1f2430a1aa95b30fb01544eb7a62184b9132bd5f
 local main matches origin/main: yes
 working tree: clean
 open prs: none

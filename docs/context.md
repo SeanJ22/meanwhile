@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 04:39:06 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 10:29:41 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1059 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1063 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 174 recorded
+## Rulings — 177 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -444,6 +444,9 @@ from. Each entry there names what it supersedes.
 - RULING 159 — a counting script fails loudly when its denominator is zero
 - RULING 160 — in-cycle sales are allowed, and equal solicitation is the constraint that carries neutrality
 - RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch
+- RULING 162 — a bypass is only as safe as the paths it can carry
+- RULING 163 — the answer to "is the protection still what we think" is a command
+- RULING 164 — a workflow reports every failure, not just the first
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -608,18 +611,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 04:39:06 EDT
-branch: claude/all-open-0826
-head sha: e496cf2fa78384f7698444beaf84c47637b8bf4a
-head subject: The expansion entry RULING 88 owes, and the exemption deliberately not claimed
-origin/main sha: cc8bbefb2c1c9f9dd76b2e3c8b3828e81aa0ebe9
-origin/main subject: Merge pull request #185 from SeanJ22/claude/part2-0825-closeout
-local main sha: cc8bbefb2c1c9f9dd76b2e3c8b3828e81aa0ebe9
+generated: 2026-08-26 10:29:40 EDT
+branch: claude/unblock-pushers-0826
+head sha: b9e714dd60d1c39e0479e2e5c458fc29b363bd0e
+head subject: Unblock the scheduled pushers: a scoped bypass is only as safe as its allowlist
+origin/main sha: 1c2e9164f2dcf03ff3dbaf432c9b3de843198543
+origin/main subject: Merge pull request #189 from SeanJ22/claude/all-open-0826-tracker
+local main sha: 1c2e9164f2dcf03ff3dbaf432c9b3de843198543
 local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 348 (pass)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:18735
+last recorded status from: docs/state.md:18738
 ```

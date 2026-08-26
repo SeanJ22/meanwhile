@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:27:57 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:42:44 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 183 recorded
+## Rulings — 184 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -453,6 +453,7 @@ from. Each entry there names what it supersedes.
 - RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief
 - RULING 169 — a walk is COUNTED or it did not happen
 - RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence
+- RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -617,13 +618,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 19:27:56 EDT
-branch: claude/descent-expansion-0826
-head sha: 79e09c8f9e9e74674e589abeafe996c66c464869
-head subject: Expansion: six routes that did not exist this morning (RULING 88)
-origin/main sha: 3a32c917ceb5fc4d955b10379cc59c3c218a2f2c
-origin/main subject: Session handoff: 2 commit(s) from claude/descent-0826 (#200)
-local main sha: 3a32c917ceb5fc4d955b10379cc59c3c218a2f2c
+generated: 2026-08-26 19:42:44 EDT
+branch: claude/measure-standard-0826
+head sha: f52c9223c199655e08fa4b5be06b9bbf95cf46e6
+head subject: RULING 171: what DONE means for a ballot measure, and the money is a PAIR
+origin/main sha: 9daf9e5555769938591029db21d969a644ffbba6
+origin/main subject: Session handoff: 2 commit(s) from claude/descent-expansion-0826 (#201)
+local main sha: 9daf9e5555769938591029db21d969a644ffbba6
 local main matches origin/main: yes
 working tree: clean
 open prs: none

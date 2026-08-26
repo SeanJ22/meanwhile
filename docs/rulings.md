@@ -4595,3 +4595,91 @@ was in the ladder on the day this was adopted.
 *This does not narrow RULING 144.* An argued absence may still be built from
 walls, and it still expires the day a wall falls. What it forbids is arriving at
 that argument by counting.
+
+## RULING 171 — the measure standard, and equal effort for and against
+
+Adopted 2026-08-26, the descent session, Item 6a. `CLAUDE.md` carries it: it
+binds every session and it constrains what may be rendered to a reader.
+
+### RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR
+
+**A measure is DONE when it carries all seven, and there are no tiers of it:**
+
+1. **The official text and official summary**, from the certifying body, cited.
+2. **A plain-language decoding** — what it actually does, for a reader with no
+   civic background. This is the product's founding promise.
+3. **The household cost in units a person feels.** A sales-tax measure is a rate
+   change; the reader wants dollars. A school override is a levy on assessed
+   value; the reader wants what it does to their bill. **Where the body
+   publishes an official fiscal estimate, cite it. Where it does not, say so —
+   never estimate it ourselves.**
+4. **Who certified it**, by what authority, and on what date it appears.
+5. **The money FOR.**
+6. **The money AGAINST.**
+7. **A Sources section** to the same standard as a candidate card.
+
+**EQUAL EFFORT FOR AND AGAINST IS CONSTITUTIONAL** and follows directly from
+equal-effort-per-candidate. **Showing who funded the yes and not the no is
+taking a side by omission.** Both sides ship at equal depth or neither ships,
+and **the check REFUSES rather than reports** — a report of asymmetry is
+something somebody reads after the asymmetric card has already been in front of
+a reader.
+
+**The vote-recommendation ban is unchanged.** No score, no ranking, no lean, no
+aggregate. The household-cost field is a FACT ABOUT A BILL and never an argument
+about it.
+
+*The rationale stays attached, because a stripped rule reads as guidance.*
+
+There is a definition of done for a CANDIDATE, enforced by `pnpm kelly` under
+RULING 143. **There was none for a measure.** So the first measures to land
+would have landed at whatever depth was convenient on the day, and **that depth
+would have become the standard by default** — a standard nobody chose, set by
+whichever measure happened to be easiest to research.
+
+The measures are already real. Vail Unified has published an **Override
+Reauthorization 2026** that does not appear at `85641`, and Pima County's
+Propositions 418 and 419 were on a **March 2026** ballot. What was missing was
+the definition, which is why this is adopted before the corpus exists rather
+than after.
+
+**Why a tiered standard was refused**, exactly as it was for candidates: a tier
+tracks which measures had well-funded campaigns, which is the information
+asymmetry the equal-effort rule exists to catch.
+
+**Two states are findings about the world, and each carries a required
+companion** — because an unsourced finding is an assertion, which is the thing
+this product exists not to make:
+
+- **`NONE_REGISTERED`** — this contest has no registered committee on this side.
+  Legal only on the money fields, and only with **the filing officer named**. It
+  is NEVER interchangeable with `NOT_HUNTED`; collapsing them would let a
+  session skip the harder side and call it an absence.
+- **`NO_OFFICIAL_ESTIMATE`** — the certifying body publishes no fiscal estimate.
+  It carries **where we looked**, and it is the only honest answer for household
+  cost in that case. This product does not estimate a household's bill itself:
+  the never-generate-a-position rule, pointed at money.
+
+**Two clocks, and the money's is the shorter.** Certified text does not change
+after certification, so it carries the 14-day body-and-roster clock. Committee
+filings move on statutory deadlines and a three-week-old contribution total
+describes a different race, so the money carries the 7-day candidate-field
+clock. **A presence expires as well as an absence** — one side going stale is
+one side unshown, and it re-opens the asymmetry block automatically.
+
+**`BLOCKED_ASYMMETRIC` is deliberately its own verdict** rather than a thinner
+`OWED`. A measure missing its plain-language decoding needs MORE HUNTING; a
+measure whose money is one-sided must NOT SHIP whatever else it carries. Those
+are different instructions and one verdict cannot give both.
+
+The machinery is `lib/hunt/measure-depth.ts` and `pnpm measures`, guarded in
+`tests/measure-depth.test.ts` — whose load-bearing case is the one a report
+could never enforce: **six of seven fields complete and one-sided money still
+blocks.** The state is DERIVED and never stored, for RULING 116's reason: a
+`measureDepth: "DONE"` column would go stale the moment any source moved and
+nothing would notice.
+
+*Measured on adoption:* the standard exists and **the corpus is empty**.
+`pnpm measures` exits NON-ZERO and says so in words rather than printing a green
+board about a population nobody has assembled — RULING 159's earned zero, named
+at the moment it would have been most tempting to skip.

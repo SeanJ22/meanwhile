@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 15:40:38 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 16:13:53 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -614,14 +614,14 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 15:40:37 EDT
-branch: claude/tracker-transaction-0826
-head sha: 12563be422fd1f2c88b35494f1a438cc50db3066
-head subject: A tracker write is one transaction, or it is a corruption
-origin/main sha: 270899d4912819bcd47a53507f5ad36669b30918
-origin/main subject: FEC snapshot refresh: 2026-08-26T19:33Z
-local main sha: 12563be422fd1f2c88b35494f1a438cc50db3066
-local main matches origin/main: no — 1 commit(s) behind, 1 ahead
+generated: 2026-08-26 16:13:53 EDT
+branch: claude/close-out-audits-0826
+head sha: 9e3efc18d3709d61f32be0ad7a6bb75b06d5756d
+head subject: The four audit tables the close-out owed, and the clock that moves
+origin/main sha: 4dc0156da7932453ea305e9d4849589dde415754
+origin/main subject: Merge pull request #195 from SeanJ22/claude/tracker-transaction-0826
+local main sha: 9e3efc18d3709d61f32be0ad7a6bb75b06d5756d
+local main matches origin/main: no — 0 commit(s) behind, 1 ahead
 working tree: clean
 open prs: none
 last recorded tests: 463 (fail)

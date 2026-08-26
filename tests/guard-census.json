@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 249,
-    "named": 2393,
+    "files": 250,
+    "named": 2396,
     "dynamic": 6
   },
   "files": {
@@ -3531,6 +3531,14 @@
         "R45: no workflow pins an action major that targets Node 20",
         "R45: setup-node never tries to restore a cache before pnpm exists",
         "the workflow set is still the nine this rule was audited against"
+      ],
+      "dynamic": 0
+    },
+    "tests/workflow-permissions.test.ts": {
+      "names": [
+        "THE PLANT: the guard catches a pusher whose permissions block is gone",
+        "every workflow that pushes main declares contents: write",
+        "refresh-daily is the consolidated pusher and carries the declaration"
       ],
       "dynamic": 0
     },

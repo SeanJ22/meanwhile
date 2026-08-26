@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 00:50:42 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-25 -->
-Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 04:39:06 EDT.
+Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1039 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1059 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 169 recorded
+## Rulings — 174 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -439,6 +439,11 @@ from. Each entry there names what it supersedes.
 - RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
 - RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one
 - RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence
+- RULING 157 — a fix is verified against a case it was NOT derived from
+- RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session
+- RULING 159 — a counting script fails loudly when its denominator is zero
+- RULING 160 — in-cycle sales are allowed, and equal solicitation is the constraint that carries neutrality
+- RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -540,7 +545,7 @@ Source: `docs/tracker.csv`, every row with Priority `P0`. Notes clipped to 130 c
 | PB14 | RULING 7's equal-depth gate withholds most contests, and it b… | Done | 2026-08-20 (Prompt C item 2) CLOSED BY RULING 18. The author ruled: the gate is re-aimed at HUNT COMPLETION rather than field pre… |
 | D73 | LIVE DATA LOSS: both sold stores stopped recording for 4h18m,… | Done | 2026-08-20 (Prompt C). FIXED UNDER THE BRIEF'S LIVE-DATA-LOSS EXCEPTION and named here rather than absorbed. WHAT WAS APPLIED, in… |
 
-## Ripcords — 6
+## Ripcords — 7
 
 Source: `lib/ripcords.ts`, the state of record. State below is the **committed**
 position; each flag can be flipped without a deploy via its environment variable
@@ -576,6 +581,11 @@ position; each flag can be flipped without a deploy via its environment variable
 - Open question: Operational, not legal: held open for live-attack response — is the store currently under an attack that per-device limits cannot absorb?
 - Closer: The author — pulled during an attack, restored when the attack ends
 
+**`ripcord.unsourcedFallback`** — **live** · env `WTP_RIPCORD_UNSOURCED_FALLBACK` · rows ASK-12
+
+- Open question: Product, not legal: does an unsourced general answer stay unmistakable from a sourced civic one in front of a real reader? The whole trust posture of this product is that it does not answer what it cannot source, and an answer a reader mistakes for sourced spends that.
+- Closer: The author — he is the one who looks at it; pulled the moment the separation reads as thin
+
 ## Last 10 tracker status change(s), most recent first
 
 Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of 30 available. 96 row(s) first appeared in those commits and are not listed — a new row has no status to have changed.
@@ -598,18 +608,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 00:50:42 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-25 -->
-branch: claude/part2-0825
-head sha: 1b2dc79b5c7ea582000e5fda8d675bc2b6c0ab4f
-head subject: Part 2 visual feedback: six classes closed, and the predicates that hid them
-origin/main sha: 706c934b7a9b0997226942cb939c1a50487b2e77
-origin/main subject: Merge pull request #183 from SeanJ22/claude/red-main-0825
-local main sha: 706c934b7a9b0997226942cb939c1a50487b2e77
+generated: 2026-08-26 04:39:06 EDT
+branch: claude/all-open-0826
+head sha: e496cf2fa78384f7698444beaf84c47637b8bf4a
+head subject: The expansion entry RULING 88 owes, and the exemption deliberately not claimed
+origin/main sha: cc8bbefb2c1c9f9dd76b2e3c8b3828e81aa0ebe9
+origin/main subject: Merge pull request #185 from SeanJ22/claude/part2-0825-closeout
+local main sha: cc8bbefb2c1c9f9dd76b2e3c8b3828e81aa0ebe9
 local main matches origin/main: yes
 working tree: clean
 open prs: none
-last recorded tests: 1442 (fail)
+last recorded tests: 348 (pass)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:14496
+last recorded status from: docs/state.md:18735
 ```

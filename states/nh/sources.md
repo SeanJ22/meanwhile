@@ -293,3 +293,35 @@ rosters 14 days, walled sources 14 days. Every row above carries the date it was
 last walked. A row past its window is **STALE** and is re-walked before it is
 relied on. Re-walk with `pnpm robots:sweep` for the permission question and the
 per-source route for the content.
+
+---
+
+## THE DESCENT — every level walked, and its counts (RULING 169)
+
+**Walked 2026-08-26** by `pnpm descent --state nh`, 2 pass(es).
+The full walk is `states/nh/descent.md`; every candidate it named is
+`states/nh/descent-candidates.md`. This section is the REGISTER entry for it.
+
+| Tier | Found | Followed | Yielded | Barren | Declined | Candidates NEW | Candidates known |
+|---|---|---|---|---|---|---|---|
+| `state` | 2 | 2 | 2 | 0 | 0 | **53** | 0 |
+| `multi-county` | 55 | 33 | 13 | 20 | 22 | **105** | 20 |
+| `special-district` | 26 | 26 | 19 | 7 | 0 | **61** | 0 |
+| `minor-civil` | 8 | 6 | 1 | 5 | 2 | **9** | 0 |
+| `county` | 8 | 8 | 3 | 5 | 0 | **9** | 2 |
+
+**99 links found · 75 followed · 237 CANDIDATE bodies not already matched in the registry.**
+
+**THE WALK STOPPED, IT DID NOT FINISH.** Pass 2 queued
+**771** link(s) that were never followed. RULING 169: if the final pass found
+anything new, the walk was not finished and the session says so. Those links are the next
+session's resume point, and they are held in the frontier the run rebuilt rather than in a list
+anybody has to remember.
+
+**They are CANDIDATES and not bodies.** A candidate is a link whose text named a governing body;
+confirming it, resolving it to a division and giving it an id is the next motion. Reporting the
+number as *bodies discovered* would be a claim about coverage this product does not have.
+
+**Freshness: last walked 2026-08-26.** RULING 96 — a source past expiry is re-walked or
+reported STALE with its date. Bodies and rosters carry a 14-day clock (RULING 53).
+

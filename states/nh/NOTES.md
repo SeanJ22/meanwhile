@@ -284,3 +284,95 @@ is UNANSWERED rather than answered no. Last tested **2026-08-26**. Rungs 4, 5 an
 6 are unwalked. `docs/sources.md` records a 2.95 MB HTTP 200 from
 `sos.nh.gov/elections/campaign-finance/` on 2026-08-24, so **the wall is
 intermittent**, which is itself the finding.
+
+## 2026-08-26 — THE DESCENT, AND THE GATE THAT REFUSED IT FIRST
+
+`pnpm descent --state nh`, 2 passes. **99 links found · 75 followed · 237
+candidate bodies not already matched in the registry**, across five tiers. Full
+counts in `states/nh/descent.md`.
+
+**THE WALK STOPPED, IT DID NOT FINISH.** Pass 2 queued **771** links never
+followed.
+
+### The first run was REFUSED, and that is the design working
+
+The first New Hampshire descent walked six levels and 75 links and threw at the
+end:
+
+> DESCENT REFUSED — NH has no walk at tier "county". Every US state has one, so
+> its absence is a broken walk rather than a finding (RULING 159).
+
+**The session had given New Hampshire no county seed.** That is RULING 159
+catching a session's own omission rather than a host's refusal, and it is
+exactly what the assertion is for: a run that had quietly reported six tiers
+would have read as *New Hampshire has no counties*, under a total that looked
+healthy. The seeds now carry `nhcounties.org` and `merrimackcounty.net`.
+
+### New Hampshire's county tier is strange enough to write down
+
+The ten counties run the **nursing home**, the **house of corrections** and the
+**registry of deeds**, and the **county convention is the state
+representatives elected from that county** rather than a separately elected
+body. **A reader has county government and did not elect anybody to it under
+that name.** That is a who-governs problem this product has not solved.
+
+### The Census calls New Hampshire's towns TOWNSHIPS, and they are not
+
+| | Census 2022 | New Hampshire's own word |
+|---|---|---|
+| Municipal | 13 | **city**, and 13 is right |
+| Township | **223** | **TOWN** — New Hampshire has no townships |
+
+A New Hampshire town is a general-purpose government that governs itself at
+**town meeting**. It is not a county subdivision and not the Midwestern survey
+township the Census class name evokes. Rendering *township* to a reader in
+Newbury would be the RULING 114 failure — a class stamp that reads as a false
+claim about how somebody is governed. Full table at `states/TIERS.md`.
+
+### The wall that fell — every NH state host was being refused by our own instrument
+
+`pnpm robots:sweep` asked rung 2 and read a rung-2 refusal as *the permission
+question is unanswerable*, which REFUSES the walk under RULING 148. Escalating
+the permission read to **rung 4** recovered, all at HTTP 200 with ordinary
+permissive rules:
+
+**`nh.gov`** (the top of the descent), **`courts.nh.gov`**,
+**`education.nh.gov`** (every NH school district), **`revenue.nh.gov`** (the tax
+rate tables, which is the special-district layer itemised) and **`nhsba.org`**.
+
+The wall is a **TLS fingerprint**: Node's `fetch` is refused under this
+project's User-Agent AND under a full Chrome header set, and `curl` carrying
+that identical header set is admitted. Second time this project has met it.
+
+**Still refused after escalation, last tested 2026-08-26:** `sos.nh.gov` (503),
+`newburynh.org`, `doe.nh.gov`, `dra.nh.gov`, `nhdes.nh.gov`. Dated measurements
+on a 14-day clock, not standing properties (RULING 53). Rungs 5 and 6 are the
+next moves and this session did not walk them for these hosts.
+
+### Tenancy — ZERO reachable, and that is the finding
+
+`states/nh/tenancy.md`: 59 hosts known, 45 probed, 1 refused. **0 reachable now**
+by any adapter this project already runs, 2 on a platform we recognise, 42 with
+nothing machine-readable detected.
+
+New Jersey returned 9 and Arizona 5. **New Hampshire's small towns are not on
+the vendor platforms this project reads at all** — which is consistent with what
+the repo already knows about them, and is the reason NH coverage has always cost
+hand work (RULING 60). It also means the cheap-coverage route that just opened
+in two states does not exist here.
+
+### Extraction verified against rendered content — the first time, ever
+
+- **Merrimack County Delegation — 3 of 6 absent** (James MacKay, Karen Ebel,
+  Michael Moffett; Thomas Schamberg partial).
+- **Kearsarge Regional School Board — 2 of 12 absent** (Michael Bessette,
+  Lawrence LeBoeuf).
+- **Merrimack County Board of Commissioners — COULD NOT ASSERT.** Its source is
+  a PDF annual report and this reader reads HTML. The first run reported all
+  three commissioners as DISAGREED — an accusation against a roster there is no
+  evidence against, produced by asking an instrument the wrong question. Fixed
+  before the number was reported. **Ladder rung 9 is owed here**: PDFs ARE data.
+- **Every Newbury body — 100% agreement**, across the Selectboard, Planning
+  Board, ZBA, Conservation Commission, Advisory Budget Committee, Blodgett Sewer
+  User Advisory Committee, Cemetery Trustees and Joint Loss Management
+  Committee. 56 names, 56 agreed.

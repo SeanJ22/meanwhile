@@ -3485,6 +3485,110 @@ row, which is re-identifiable against the FEC's own public search in about a
 minute. The row had to stop being a row. Guarded in
 `tests/donor-aggregation.test.ts`.
 
+## TWO RULINGS OF 2026-08-26 — THE DESCENT
+
+(Adopted 2026-08-26, the descent session, Items 3 and 9. **RULINGS 169 and
+170.** `docs/rulings.md` carries both in plain language, because a ruling the
+author cannot read is a ruling that does not bind him — and as of this session
+that file reaches the Drive mirror, so he can.)
+
+### RULING 169 — A WALK IS COUNTED OR IT DID NOT HAPPEN
+
+(Adopted 2026-08-26, Item 3. Supersedes nothing. It is the **operation-count
+rule** — *an operation that can return nothing must be asked what it returned* —
+pointed at a SITE WALK rather than at an adapter, and it is the instrument
+RULING 93 has never had.)
+
+**Coverage is built by DESCENDING the tiers of government in order, because each
+tier publishes the tier beneath it. A tier is not complete until the tier above
+has been asked what is in it. A body found only by per-entity search, when the
+tier above publishes a list containing it, is a DEFECT IN THE WALK rather than a
+find.**
+
+**Every level's site is walked as a tree and the walk is REPORTED AS COUNTS:
+links found, links followed, what each yielded, what was declined and why.**
+*"We walked the site"* without those numbers is not a walk, and no report may
+claim one.
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is a diagnosis rather than an argument.*
+
+RULING 93 has said *ask what the tier above publishes about the tier below*
+since 2026-08-22. RULING 166 has said *the body's own publication is rung one*.
+RULING 90 has said *exhaustion is argued, never asserted*. Behaviour did not
+change, and the reason is that **not one of them produces a number.** A session
+can satisfy all three in its own belief and be graded identically to a session
+that walked one page, because the report shape is the same either way.
+
+Every session picked a body and hunted it. **No session had walked a tier top to
+bottom**, and nothing in the process could tell the difference. That is RULING
+88's diagnosis one level up: what changes behaviour is a required output that
+cannot be produced by walking a list.
+
+- **A count is per LEVEL, per STATE**, never one number for a run. A run total
+  hides the level that returned nothing, which is the level somebody needed.
+- **DECLINED carries its reason** — disallowed, off-scope, already recorded,
+  unreachable. A declined link and a followed link that yielded nothing are
+  completely different facts, and a bare *followed* count runs them together.
+- **The number that says whether the descent WORKED is bodies discovered that
+  were not already in the registry.** Every other column measures effort.
+- **The walk states its PASS COUNT and the final pass's new-link count. If the
+  final pass found anything new, the walk was not finished and the session says
+  so.**
+- **Zero at a tier FAILS LOUDLY** (RULING 159). Zero counties in a US state is a
+  broken walk, never a finding.
+
+*What this does NOT license.* It is not a licence to count instead of hunting. A
+high followed-count with no bodies discovered is a session that walked a site
+thoroughly and learned nothing, and the report says that too.
+
+The machinery is `lib/hunt/descent.ts` and `pnpm descent`, guarded in
+`tests/descent.test.ts`.
+
+### RULING 170 — NO NUMBER OF ATTEMPTS EARNS AN ABSENCE, AND A PROTOCOL THAT TERMINATES IS NOT PERSISTENCE
+
+(Adopted 2026-08-26, Item 9. **Amends RULING 94** under the RULING 99
+procedure. RULING 94's five moves stand, its placement between Tier B and Tier C
+stands, and its void condition stands. What changes is what reaching the end of
+them MEANS.)
+
+**RULING 94's five moves are the OPENING, not the count. Running them does not
+earn an absence and never has.** An absence is earned only by the argument
+RULING 90 requires.
+
+**A session that has exhausted its ideas says "I have run out of ideas" — which
+is a claim about the session — rather than "this is not published", which is a
+claim about the government. Only one of those is ever true here.**
+
+**Any cap in any brief — five moves, N routes, a list of seven — is a FLOOR.**
+Reaching the end of a list is not completion. **A brief that appears to cap
+effort is misdrafted, and the session says so rather than obeying the cap.**
+
+*The rationale stays attached.* RULING 94 phrased its moves as five numbered
+questions so they could not go stale, and the numbering was read as the job.
+That is the failure RULING 61 already named about the manifest — *trying
+thirty-seven routes and stopping does not tell you the forty-third would have
+failed either* — arriving through the door built to prevent it. A protocol with
+a terminating condition is a checklist, and a checklist completed is a session
+that believes it complied.
+
+**The standard, in the author's words: what would the most diligent, persistent
+person do if they got stuck? Keep looking. Find another avenue.**
+
+**And the productive question is not "where would this be published?" It is
+"WHO WAS COMPELLED TO WRITE THIS DOWN?"** Governments are forced by statute to
+produce documents nobody thinks of as directories — the municipal code that
+establishes every board by ordinance, the tax rate table that must list every
+levying district because somebody has to be billed, the legal notice in a
+newspaper of record, the budget and the audit, the minutes of the tier above
+recording an appointment, the annual report, the state oversight directory.
+**Those documents are where the dark bodies are**, and none of them was in the
+ladder on the day this was adopted.
+
+*This does not narrow RULING 144.* An argued absence may still be built from
+walls and still expires the day a wall falls. What it forbids is arriving at
+that argument by counting.
+
 ## Ask before
 
 Adding a user data field. Adding an external source. Anything that ranks, scores, or orders candidates. Anything that renders one user's input — or any aggregate of it — back to users. Anything that changes how reactions are bucketed or exported.

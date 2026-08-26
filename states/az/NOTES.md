@@ -124,3 +124,107 @@ are unwalked. Last tested **2026-08-26**.
 `az_site_sliver` is a Drupal module **mandated on every Arizona state government
 website**, which makes its presence a fingerprint for verifying a site is
 genuinely official — a second signal beside `cisagov/dotgov-data`.
+
+## 2026-08-26 — RULING 97 ANSWERED FOR SEAN'S PIMA FINDS
+
+He supplied eight Pima and Vail URLs in the descent brief:
+`pima.gov/394/Elections`, `pima.gov/810/Upcoming-Elections-and-Events`,
+`pima.gov/2619/Administration`, `pima.gov/2317/Board-of-Supervisors`,
+`pima.gov/2312/Clerk-of-the-Board`, `pima.legistar.com/Calendar.aspx`,
+`vailschooldistrict.org/page/override-reauthorization-2026` and
+`vailschooldistrict.org/page/governing-board`.
+
+**RULING 97 says a founder find is a defect in the discovery process, and that
+absorbing it as a new manifest entry and moving on is NOT an adequate
+response.** Three questions, answered.
+
+### 1. What procedure would have found these without him?
+
+**Descending the county's own site as a tree.** Every one of the eight is
+reachable from `pima.gov` by following links — `2619/Administration` names the
+departments, `2490/Departments-Offices` names 71 more, and the Board of
+Supervisors page names the five district pages. Nothing exotic was required:
+the county publishes an index of itself and nobody had opened it.
+
+`vailschooldistrict.org/page/governing-board` is one link from the district's
+own front page, and the override page is one link from that.
+
+### 2. Why did that procedure not run?
+
+**Because it did not exist.** This project had:
+
+- a LADDER (fourteen rungs) — how to get bytes past a wall,
+- a TREE (RULING 52) — where else a fact might live,
+- a MANIFEST (RULING 61) — the named routes to a field,
+- TIERS (RULING 84) — which routes to walk first,
+- and RULING 93 — ask what the tier above publishes about the tier below.
+
+**Not one of them walks a site.** Every instrument in the list starts from a
+FIELD that is already owed about an entity that is already named, and asks
+where to get it. None of them starts from a GOVERNMENT and asks what is in it.
+So a county publishing an index of its own departments was invisible to the
+whole apparatus, because no instrument's input was ever *a county*.
+
+That is why RULING 93 changed no behaviour despite being law since
+2026-08-22: it is a principle with no output, and a session could satisfy it in
+its own belief while walking one page.
+
+### 3. What changed so it runs next time?
+
+**`pnpm descent --state <code>`** — `scripts/descent.mts`, `lib/hunt/descent.ts`,
+`lib/hunt/descent-seeds.ts`, `lib/hunt/descent-walk.ts`. It takes a STATE, walks
+the seven tiers in descent order, follows what each level names, and reports
+per level: **links found · followed · yielded · barren · declined with reason ·
+catalogued · candidate bodies not already matched in the registry**, plus the
+pass count and the final pass's new-link count.
+
+**RULING 169 makes the count mandatory** — *a walk is counted or it did not
+happen* — so a session cannot report a walk it did not take, and a walk still
+producing links at its final pass reports STOPPED rather than FINISHED.
+
+**`lib/hunt/descent-gate.ts` refuses a hunt for a state nobody has descended**,
+the way `state-registry-gate.ts` refuses one for a state nobody has enumerated.
+
+*And it worked on the first run, against his own finds:* the Arizona descent
+reached `pima.gov/2490/Departments-Offices` (71 candidates), `pima.gov/District1`,
+`District2` and `District4`, none of which he named, by following the pages he
+did. **The procedure now finds more than the founder did**, which is the only
+adequate answer to RULING 97.
+
+### What is still owed on the eight
+
+`pima.gov/810/Upcoming-Elections-and-Events` and
+`vailschooldistrict.org/page/override-reauthorization-2026` were **NOT walked
+this session** — they are ballot-measure sources and Item 5 was not reached.
+Named here rather than left implicit.
+
+## 2026-08-26 — THE TIER VOCABULARY, AND ARIZONA'S MISSING LAYER
+
+Written in full at `states/TIERS.md`. The Arizona headline:
+
+**Arizona has NO minor-civil-division tier.** The 2022 Census of Governments
+records **0 townships** in Arizona against 239 in New Jersey and 223 in New
+Hampshire. Territory outside an incorporated city or town is **unincorporated**
+and the COUNTY is its municipal government — there is no town clerk to ask.
+
+So the Arizona descent walking no tier-6 level is a **correct measurement of the
+state rather than a gap in the walk**, and it is written down so no later
+session reads it as one. This is RULING 60's warning arriving as a measurement:
+every branch this project built before Arizona was built against New England
+town government.
+
+## 2026-08-26 — PLATFORM TENANCY, THE INVERSE QUESTION
+
+`pnpm tenancy --state az` — 85 hosts known from the descent, 45 probed, 13
+refused on permission. **5 reachable now** by an adapter this project already
+runs, **3 on a platform we recognise and cannot read**, 24 with nothing
+machine-readable detected.
+
+The five, none of them connected: **`gilacountyaz.gov` (Revize)**,
+**`navajocountyaz.gov`**, **`pinalcountyaz.gov`** and
+**`santacruzcountyaz.gov`** (CivicPlus). Table at `states/az/tenancy.md`.
+
+**Pima's Legistar tenant was ALREADY WIRED** — `lib/sources/legistar/clients.ts`
+carries it as the only client, with two venues and their coordinates. The
+brief's Item 4 premise that *nobody asked the county whether it had a tenant* is
+wrong against the repo, and is recorded as wrong rather than worked around.

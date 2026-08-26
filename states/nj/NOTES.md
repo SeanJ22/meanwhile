@@ -143,3 +143,76 @@ No NJ lobbyist registry. No NJ League of Municipalities walk. No answer on
 whether the Legislature publishes bulk data or runs an online testimony system —
 `njleg.state.nj.us` was walked (HTTP 200, 928,917 B) and the question was not
 answered from it. Dated gaps, not absences.
+
+## 2026-08-26 — THE DESCENT, AND WHAT IT FOUND IN MORRIS COUNTY
+
+`pnpm descent --state nj`, 2 passes. **194 links found · 88 followed · 489
+candidate bodies not already matched in the registry**, across six tiers. Full
+counts in `states/nj/descent.md`, every candidate named in
+`states/nj/descent-candidates.md`, and the register entry appended to
+`sources.md`.
+
+**THE WALK STOPPED, IT DID NOT FINISH.** Pass 2 queued **1,885** links that were
+never followed. RULING 169: if the final pass found anything new, the walk was
+not finished and the session says so.
+
+### The tenancy find, and it is the most actionable thing here
+
+**`morriscountynj.gov` links out to `morriscountynj.iqm2.com/Citizens/LegalNotice.aspx`.**
+This project has an **IQM2 adapter** (`lib/sources/iqm2/`) and Morris County is
+the county containing **07866**. It has never been connected.
+
+That is the cheapest coverage in the product — an adapter we already own, a
+tenant we already found, a county a reader is standing in — and it was invisible
+because nothing had ever asked the inverse question. Every adapter here was
+wired one tenant at a time for a body somebody had already decided to cover;
+`pnpm tenancy` walks IN from a platform we read and asks who else is on it.
+
+`states/nj/tenancy.md`: 374 hosts known, 45 probed, 3 refused on permission —
+**9 reachable now**, 12 on a platform we recognise and cannot read (eCode360,
+Granicus ViewPublisher, PrimeGov), 21 with nothing machine-readable detected.
+
+**A caveat recorded rather than smoothed.** Several of the nine were matched on
+`cp-civicplusuniversity2.civicplus.com`, which is CivicPlus's own
+customer-training footer link and appears on every site the vendor builds. It is
+genuine evidence the vendor built the site, and it is the WEAKEST form of that
+evidence — nothing like `morriscountynj.iqm2.com/Citizens/LegalNotice.aspx`,
+which is a real tenant path. The detector now labels vendor boilerplate in its
+own evidence string so the two cannot be read as the same fact.
+
+**And two of the nine are not government bodies at all** — `assemblydems.com`
+and `njassemblygop.com` are party caucus sites the legislature's own pages link
+to. The detector is recall-first by design (RULING 57) and this is what paying
+for that looks like; they are named here so the nine is read honestly.
+
+### Extraction verified against rendered content — the first time, ever
+
+`pnpm verify:extraction`, 2026-08-26. New Jersey's rows:
+
+- **Rockaway Township Board of Education — 6 of 7 names absent** from
+  `rocktwp.net/page/board-members`.
+- **Rockaway Township Council — 1 absent** (Joseph Jackson).
+- **Kinnelon Borough Council — 1 absent** (James J. Freda).
+- **Denville Township Council and Morristown Town Council — DISALLOWED.** Not a
+  wall (RULING 148): the host says do not ask, and it is never re-walked on a
+  clock. Their rosters are therefore unverified and stay that way.
+
+### The Census disagreement, named and NOT resolved
+
+New Jersey publishes **564** municipalities in five statutory forms — borough,
+township, town, city, village. The 2022 Census of Governments records **320
+Municipal + 239 Township = 559**, collapsing four of the five forms into one
+class. **The Census has no word for BOROUGH**, which is what most of Morris
+County is.
+
+Five rows apart, and RULING 57 says two official enumerations that disagree is a
+FINDING. It is recorded and not closed; closing it needs a third branch walked.
+Full table at `states/TIERS.md`.
+
+### What was NOT walked, said plainly
+
+`elec.nj.gov` answered HTTP 200 and **FAILED ITS CONTROL STRING** — "ELEC" was
+absent from the body it returned, which is RULING 93's *a 200 whose content is
+not about the thing asked for is not a document*. The prior session recorded an
+Imperva challenge on that host; this run did not establish which it was, and did
+not walk past it.

@@ -59,7 +59,11 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // a reader; the mirror is the author's own folder rather than a reader
   // surface, and that distinction is the whole of why it belongs here and is
   // forbidden in `app/`.
-  assert.equal(MIRRORED_DOCS.length, 24, "the canonical set changed size — was that a decision?");
+  // TWENTY-FIVE since 2026-08-26, and it was a decision: `docs/rulings.md`, the
+  // append-only record every brief orders sessions to read and hardcode from,
+  // and the one such file that was unreachable from outside the repo. RULING
+  // 108's failure aimed at a different file.
+  assert.equal(MIRRORED_DOCS.length, 25, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -102,7 +106,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // counterpart, so it is drift-checkable like the rest — which is the point of
   // putting a generated artifact in the canonical set rather than declaring it
   // an extra.
-  assert.equal(COPIED_DOCS.length, 22);
+  // Twenty-three copied since 2026-08-26: docs/rulings.md has a repo counterpart
+  // like the rest. It is the file every brief orders sessions to read, and the
+  // only such file that could not be read from outside the repo (RULING 108).
+  assert.equal(COPIED_DOCS.length, 23);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 

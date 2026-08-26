@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **282 open**, 420 resolved.
+- **283 open**, 420 resolved.
 - **48 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -715,7 +715,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**24 open · 73 resolved.**
+**25 open · 73 resolved.**
 
 ### P1
 
@@ -738,6 +738,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH180** — Measured 2026-08-25 by part2-0825. The file stood at 203,556 bytes at session start against a 204,800-byte per-file cap on the Drive code mirror — 1,244 bytes of headroom, 99.4% spent before the session wrote a line. Four fixes with their rationale attached took it past, and the cap was raised from 200 KB to 256 KB in scripts/mirror-code.mjs. THAT IS THE SECOND RAISE ON THE SAME FILE FOR THE SAME REASON: the author raised it from 120 KB on 2026-08-17 when the same thing happened. RULING 106 says a third raise is the wrong answer — raising a limit treats a symptom and by the third time the limit is the problem. The measurement that says the cap has stopped measuring what it was for: 116,399 of 205,461 bytes are COMMENT PROSE, across 300 blocks, against 89,062 bytes of actual CSS. The cap exists so the design tokens stay reachable in the mirror; the tokens are in the 89 KB and the ceiling is being spent by session rationale that CLAUDE.md requires to stay attached, so trimming it is not available. The structural options are to split the stylesheet so the tokens mirror on their own, or to mirror tokens rather than the whole file. Both change what the author reads and are his call.
 
 **NH181** — Found 2026-08-25 by part2-0825 while closing NS16. The 8/25 Part 2 document is now at docs/feedback/we-the-people-feedback-2026-08-25-part2.md and is the FIRST one that has ever been there. The captures for every batch are committed and reachable; the DOCUMENTS are not. Missing: the 8/22 walkthrough (captures at docs/feedback/2026-08-22/, 21 files), the 8/24 walkthrough (docs/feedback/8.24/, 16 files) and the 8/25 morning walkthrough (docs/feedback/8.25/, 19 files). Each has been cited as authoritative by at least one session brief, and RULING 108 says anything a session must read at session start lives in the repo. docs/feedback/README.md is the index and names all three as missing. Only the author can supply the text — a session cannot reconstruct a dictation it never had.
+
+**NH195** — Found 2026-08-25 by part2-0825, and only because pnpm handoff checks for a clean tree at the end. tests/context-pinned-conduct.test.ts calls writeContext(null, OPTIONS) at line 305 with generatedAt: 'test' and stampToday: '2026-08-23'. RULING 108 correctly made the repo copy of docs/context.md the PRIMARY output, written FIRST and never guarded — which means the test's own call writes into the working tree. After any pnpm test the orientation file every session is told to open first reads 'Written by pnpm handoff at test', 'Session day 2026-08-23', and '_No git facts available this run._' instead of the branch, the head sha, origin/main and the recorded gate results. THE COMMITTED FILE IS FINE this time: handoff regenerates and commits it during --ship, and the degradation happened afterwards when handoff's own gate run invoked the suite. But the ordering is luck, not design — a session that runs the suite after shipping and then commits a stray file would ship the degraded copy, and nothing would go red. This is RULING 92's shape with the generator writing itself: the artifact is real, the writer is a test, and the value it writes is a fixture. The fix is for the test to write to a temp directory, or for writeContext to take an explicit destination, rather than for anyone to remember to git checkout the file.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

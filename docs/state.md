@@ -4,9 +4,14 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-26 — **The brief described a board that had already been
+Last updated: 2026-08-26 — **Every instrument this project had started from a
+field that was already owed. None of them started from a government and asked
+what was in it.** The descent session; its record is the LAST section of this
+file. **UNFINISHED — all three walks stopped rather than finished.**
+
+Previous: 2026-08-26 — **The brief described a board that had already been
 worked, and the two things nobody had touched were both real.** The
-all-open-board (second) session; its record is the LAST section of this file.
+all-open-board (second) session.
 
 Previous: 2026-08-26 — **The bypass is only as safe as the paths it can
 carry.** The unblock-pushers session.
@@ -19446,3 +19451,275 @@ conflicted paths are now read BEFORE the abort and named in the reason, with
 enumerated set was verified against what the job actually writes rather than
 against the list the brief supplied: **5 of 5 match, 0 differences.** `NH204`
 closed on it.
+
+---
+
+# 2026-08-26 — The descent. Every instrument this project had started from a field that was already owed.
+
+**The descent session.** Three code merges: `3a32c91` (the descent),
+`9daf9e5` (the expansion record — docs only, correctly not deployed under
+RULING 124), and the measure standard. Production deploy
+`6a8f753094faae000770cdfa`, state **ready**, serving `3a32c91` (RULING 152).
+
+## UNFINISHED SESSION
+
+Stated in those words at the top, per the brief. **The work is not finished and
+it is not close.** What follows is what was built, then the exact resume point,
+then every item not reached, named.
+
+## The diagnosis, which is the finding underneath every other finding
+
+This project had a **ladder** (fourteen rungs — how to get bytes past a wall), a
+**tree** (RULING 52 — where else a fact might live), a **manifest** (RULING 61 —
+the named routes to a field), **tiers** (RULING 84 — which routes to walk
+first), and **RULING 93** — ask what the tier above publishes about the tier
+below.
+
+**Not one of them walks a site.** Every instrument in that list starts from a
+FIELD that is already owed about an entity that is already named. **None of them
+starts from a GOVERNMENT and asks what is in it.** So a county publishing an
+index of its own departments was invisible to the entire apparatus, because no
+instrument's input was ever *a county*.
+
+That is why RULING 93 changed no behaviour despite being law since 2026-08-22.
+It is a principle with no output, and a session could satisfy it in its own
+belief while walking one page.
+
+## RULING 169 — a walk is COUNTED or it did not happen
+
+Coverage is built by descending the tiers in order. Every level reports **links
+found · followed · yielded · barren · declined with its reason · catalogued ·
+candidate bodies not already matched** — per level, per state — plus the pass
+count and the final pass's new-link count.
+
+`lib/hunt/descent.ts`, `lib/hunt/descent-gate.ts`, `lib/hunt/descent-seeds.ts`,
+`lib/hunt/descent-walk.ts`, `scripts/descent.mts` (`pnpm descent --state <code>`),
+18 guards in `tests/descent.test.ts`.
+
+## RULING 170 — no number of attempts earns an absence
+
+RULING 94's five moves are the OPENING, not the count. Any cap in any brief is a
+FLOOR. **A session out of ideas says "I have run out of ideas" — a claim about
+the session — rather than "this is not published", a claim about the government.**
+
+## RULING 171 — the measure standard, and the money is a PAIR
+
+Seven fields, no tiers. **Equal effort for and against is constitutional**, and
+the check REFUSES rather than reports. `lib/hunt/measure-depth.ts`,
+`pnpm measures`, 9 guards.
+
+## THE WALL THAT FELL, and it was our own instrument
+
+`pnpm robots:sweep` asked rung 2 and read a rung-2 refusal as *the permission
+question is unanswerable*. `CANNOT_TELL` REFUSES under RULING 148 — so **a host
+refusing our User-Agent had become a host we may not walk**, and the refusal
+looked like a rule rather than like a wall.
+
+Escalating the permission read to **rung 4** recovered, all at HTTP 200 with
+ordinary permissive rules: **`az.gov` and `nh.gov` — the tops of two descents** —
+plus `azed.gov` (every AZ school district), `irc.az.gov`, `courts.nh.gov`,
+`education.nh.gov`, `revenue.nh.gov` and `nhsba.org`.
+
+**39 hosts judged, 24 walkable before, 32 after.**
+
+The wall is a **TLS fingerprint**: Node's `fetch` is refused under our UA AND
+under a full Chrome header set; `curl` carrying that identical header set is
+admitted. Second time this project has met it.
+
+**And it is a RULING 97 shape.** The session that built the sweep had already
+written into `docs/source-ladder.md` that `irc.az.gov` falls at rung 3 — and
+never built it into the instrument beside it. A rung recorded in prose next to a
+tool that does not walk it is a discovery spent and kept only on paper.
+
+## The walk, counted
+
+| | Links found | Followed | Candidates NEW | Final pass queued |
+|---|---|---|---|---|
+| **New Jersey** | 194 | 88 | **489** | 1,885 |
+| **Arizona** | 175 | 98 | **666** | 1,986 |
+| **New Hampshire** | 99 | 75 | **237** | 771 |
+
+**ALL THREE WALKS STOPPED. NONE FINISHED.** Every one ended with its final pass
+still producing, which under RULING 169 is a stop rather than a finish, and each
+ledger says so on its own verdict line.
+
+**They are CANDIDATES, not bodies.** 1,392 across three states, and **none has
+been promoted.** Confirming one, resolving it to a division and minting an id is
+a separate motion that has not started. Reporting the number as *bodies
+discovered* would be a claim about coverage this product does not have.
+
+**Two calibrations made from live output rather than guessed**, both planted in
+tests: a municipal job board yielded **154** false candidates because every
+posting carries the word *Township*, and a calendar month view yielded **214**
+because the slug fallback read the **hostname** on `rockawaytownship.org`. Both
+were found by opening the file, not by reading the count — the count looked like
+the descent working.
+
+**The NH gate refused the first NH walk** for having no county seed, after 75
+links. RULING 159 catching a session's own omission, which is what it is for: a
+run that had quietly reported six tiers would have read as *New Hampshire has no
+counties*.
+
+## The inverse question nobody had asked
+
+Nine adapters, every one wired a tenant at a time for a body somebody had
+already decided to cover. **Nothing had ever asked: given a body, is it already
+on a platform we can read?**
+
+`pnpm tenancy` — 518 hosts known, 135 probed. **14 reachable now** by an adapter
+we already run, 17 on a platform we recognise and cannot read, 87 with nothing
+machine-readable detected.
+
+**`morriscountynj.gov` → `morriscountynj.iqm2.com/Citizens/LegalNotice.aspx`.**
+Morris County is the county containing **07866** and we have an IQM2 adapter.
+Never connected. Also unwired: `gilacountyaz.gov` (Revize), and
+`navajocountyaz.gov`, `pinalcountyaz.gov`, `santacruzcountyaz.gov` (CivicPlus).
+
+**New Hampshire returned ZERO**, which is its own finding: NH's small towns are
+not on these platforms at all, and the cheap-coverage route that just opened in
+two states does not exist there.
+
+## The first extraction verification in this project's history
+
+Before today, extraction had **never** been verified against rendered content
+for any body — **0 of 42**. A silently failed extraction leaves a plausible
+value behind, so no existing check could catch it: every instrument here asks
+*did something come back*, and something did.
+
+**42 sampled · 39 read · 232 names agreed · 11 partial · 22 ABSENT from the page
+they were sourced from.**
+
+**Vail Unified School District — 5 of 6 absent**, including **John Carruth**, the
+literal case `docs/source-ladder.md` already names as the shape of this defect.
+Also: Rockaway Township Board of Education (6), Merrimack County Delegation (3),
+Kearsarge Regional School Board (2), Tucson Unified (1), Rockaway Township
+Council (1), Kinnelon Borough Council (1). **Every Newbury body: 56 of 56.**
+
+**One false alarm caught and fixed before the number was reported.** Merrimack
+County's Board of Commissioners is sourced from a PDF; the reader strips HTML
+tags and handed a PDF's bytes produced noise, so all three commissioners came
+back DISAGREED — an accusation against a roster there is no evidence against.
+It reports `COULD_NOT_ASSERT` now, and **ladder rung 9 is owed** there.
+
+**And the measurement is not stable between runs.** Two runs fifteen minutes
+apart differ by three names. That is a fact about live pages and the reason this
+is a dated measurement rather than a verdict.
+
+## The tier vocabulary — `states/TIERS.md`
+
+**Arizona has NO minor-civil-division tier.** 0 townships in the Census against
+239 in NJ and 223 in NH. Territory outside an incorporated city or town is
+unincorporated and the COUNTY is its municipal government. **So the Arizona
+descent walking no tier-6 level is a correct measurement of the state, not a gap
+in the walk** — written down so no later session reads it as one.
+
+**The Census calls New Hampshire's 223 TOWNS "townships".** They are not: a NH
+town is a general-purpose government that governs itself at town meeting.
+Rendering *township* to a reader in Newbury would be RULING 114's false claim
+about how somebody is governed.
+
+**The Census has no word for BOROUGH**, which is what most of Morris County is.
+NJ publishes 564 municipalities in five statutory forms; the Census records 559
+in two classes. **Five rows apart, recorded as a finding and NOT closed** —
+closing it needs a third branch walked (RULING 57).
+
+## Expansion (RULING 88) — six routes, with literal URLs and yields including zero
+
+Full record in `docs/source-ladder.md`. The organising question was RULING 170's:
+**who was COMPELLED to write this down?**
+
+**Municode's own JSON API, at rung 7.** `library.municode.com/nj` answers HTTP
+200 with 6,095 bytes and the control string **absent** — a JavaScript shell.
+`api.municode.com/Clients/stateAbbr?stateAbbr=NJ` answers at **rung 2** with the
+data: **22 NJ, 30 AZ, 6 NH** municipalities carrying name, address, phone and
+website. The municipal code matters because **every board and commission is
+established by ordinance there**, including bodies that publish nothing of their
+own. Generalises nationally.
+
+**The honest zero:** `Meetings` is `null` on all 22 NJ records. **The phone
+arrives as seven digits with no area code** and is not shippable as a contact.
+
+**404 IS NOT A WALL** — and this session's own probe script said it was until it
+was fixed mid-run. Three of four failing routes were wrong guesses, which calls
+for finding the real path, not recording an absence. The NH tax rate table
+proves it both ways: two guessed paths refused, and the path **followed** from
+the index actually fetched answered at rung 3 with 241,456 bytes.
+
+**A defect in our own instrument, named rather than smoothed.** The NH Village
+District href came back **truncated by a scratch extraction regex**; the
+truncated URL returned 403; the probe labelled it a wall. It is not a wall — it
+is our broken link extraction, and calling it one would have been a false claim
+about a government.
+
+## THE RESUME POINT, exactly
+
+- **State · tier · level · last link.** All three states are mid-walk at **pass
+  2 of 2**. NJ stopped with **1,885** queued links, AZ with **1,986**, NH with
+  **771**. The frontier is rebuilt from `lib/hunt/descent-seeds.ts` rather than
+  stored, so the next session resumes with
+  `pnpm descent --state <code> --passes 4 --budget 120` and continues from
+  seeds it already has. Nothing is lost and nothing needs re-deriving.
+- **The catalog is consistent.** Every state carries `descent.json`,
+  `descent.md`, `descent-candidates.md`, `tenancy.md` and a register section in
+  `sources.md`, each with its last-walked date. Nothing is half-written.
+
+## EVERY ITEM NOT REACHED, named
+
+**Item 3 — the walk did not finish.** Three states, 4,642 links queued and never
+followed. 1,392 candidates named and **zero promoted to bodies**.
+
+**Item 5 — ballots at every tier. NOT STARTED.** No certifying-body-per-tier
+table for any of the four zips. No ballot-source coverage denominator. The NH
+and NJ filing-officer statutes were done by the PRIOR session and are not this
+session's work. **No per-state election-date table.** **What March town meeting
+means for `03255`'s Kelly certification: not answered.** Town meeting as
+simultaneously a meeting and a ballot: not recommended on. **Vail's override:
+not resolved.** **No "no local election" string audited across any zip.**
+**County elections departments not registered as PRIMARY.**
+
+**Item 6b — the polling model. NOT STARTED.** Not recorded per zip, not rendered
+before any list, vote-center list not ingested from the county, `BOS DISTRICT`
+not used, and the geocoding build-time-versus-runtime line not stated per piece
+of work.
+
+**Item 7 — rosters. HALF DONE.** The extraction verification ran. **The
+challenge-at-200 re-walk did NOT** — no body whose record shows a successful
+fetch with no extracted content was re-walked, and the number that gained
+content is unmeasured.
+
+**Item 9 — the compelled-publication routes.** Walked: municipal code (Municode
+API, eCode360 partial), NH tax rate table, NJ legal notices. **NOT walked:** the
+tax rate table for NJ and AZ; budget and audit documents, including NJ DLGS's
+*user-friendly budget* which lists officials outright; minutes of the tier
+above; annual reports; state oversight directories — **and `education.nh.gov`
+and `azed.gov` were made WALKABLE this session and their directories were not
+walked**; public records requests; AZ and NH legal notices.
+
+**This session stopped short of the end of the brief's own list and says so in
+those words.** Under RULING 170 that list was a floor, so stopping before its
+end is stopping early twice over.
+
+**Item 12 — close.** `pnpm db:surfaces` **6 of 6**. Three merges through
+branch protection on three green checks each, no override.
+
+## The close-out contract, answered
+
+- **Expansion routes conceived: 6.** Returning rows: **4 of 6** (the permission
+  ladder, Municode's API, the NH followed path, njpublicnotices). Returning
+  zero: **2 of 6** (eCode360's deep link and API — both wrong guesses rather
+  than walls, which is a different fact).
+- **Stuck protocols run: 0.** No field reached the point of needing one, because
+  no field was hunted to Tier C this session. **Fields returned to owed for a
+  missing stuck protocol: 0.**
+- **Credentials proven: 15 of 15** (`pnpm credentials`, RULING 95, before item
+  one).
+- **Sources past expiry: 19 of 89.** `pnpm sources:freshness` — 89 entries, 70
+  carrying a date, 19 past expiry or unknown. The stale set is dominated by the
+  general search indexes and by register PROSE headings the sweep reads as
+  entries, which is worth a look on its own: a heading counted as a source
+  inflates the denominator and makes the register look better dated than it is.
+
+**All seven contract figures are answered.** The first draft of this report said
+the last one was not measured; it was measurable in one command, and reporting
+it as unmeasured would have been a session describing its own convenience as a
+limit.

@@ -78,6 +78,7 @@ import {
   writeStore,
 } from "./tracker-core.mjs";
 import { buildWorkbook, readWorkbook } from "./xlsx.mjs";
+import { reconcileTracker, reconciliationReport } from "../lib/ops/tracker-transaction.ts";
 
 const MODE = process.argv[2] ?? "views";
 /** Who a SESSION-authored resolution closes as. The author needs no flag. */
@@ -1148,6 +1149,110 @@ function modeAdd(working, resolved, sections) {
 }
 
 
+
+/* ------------------------------------------------------- the transaction --- */
+
+/**
+ * THE END OF THE TRANSACTION: read it all back, and refuse if it disagrees.
+ * (2026-08-26, Addendum 2 item 3.)
+ *
+ * `add` already writes the store, the ledger and all four generated views in
+ * ONE process. What was missing is anything that reads the result back — so a
+ * write that half-landed reported success, and the disagreement surfaced days
+ * later as four red guards on `main`.
+ *
+ * This is RULING 113 pointed at the tracker's own writer: where a step's
+ * product can be observed, observe it AT the step. It reads from DISK, never
+ * from the in-memory values the write just used, because comparing a writer to
+ * itself proves only that the code is deterministic (RULING 147).
+ *
+ * It EXITS NON-ZERO on any disagreement. A half transaction that exits 0 is the
+ * thing this exists to stop.
+ */
+function reconcileAfterWrite(addedIds) {
+  const working = readStore(WORKING_CSV);
+  const ledger = readLedger();
+  const sections = readSections();
+  const census = p1Census(working, sections);
+  const needsSean = census.find((c) => c.slug === "needs-sean");
+
+  const md = existsSync(join(ROOT, "docs/tracker.md"))
+    ? readFileSync(join(ROOT, "docs/tracker.md"), "utf8")
+    : "";
+  const stated = /\*\*(\d+) open\*\*/.exec(md);
+
+  const failures = reconcileTracker(
+    {
+      workingIds: working.map((r) => (r.ID ?? "").trim()).filter(Boolean),
+      claimedIds: ledger.flatMap((e) => e.ids ?? []),
+      statedOpenCount: stated ? Number(stated[1]) : null,
+      needsSeanP1: needsSean ? needsSean.P1 : 0,
+      trackerMdSaysStopped: md.includes("STOPPED"),
+      logRegenerated: existsSync(join(ROOT, "docs/log.md")),
+    },
+    addedIds,
+  );
+
+  console.log(reconciliationReport(failures));
+  if (failures.length > 0) process.exit(1);
+}
+
+/**
+ * CLAIM ORPHAN ROWS, CANONICALLY. (2026-08-26, Addendum 2 item 1.)
+ *
+ * A row that reached a store with no ledger entry claiming it is a half
+ * transaction that already landed — `JOB04` and `JOB05` are the instance, and
+ * they landed because `job-watch` was permitted to commit the store and not the
+ * ledger beside it.
+ *
+ * **The repair has to be an OPERATION and not a hand edit**, and this session
+ * learned that the hard way: the first repair appended the entry to
+ * `docs/tracker-opened.json` with a one-off script, which is exactly the class
+ * of act the ledger exists to make impossible. This is the instrument that
+ * should have done it.
+ *
+ * It attributes each orphan to the session the ROW ITSELF names in `Opened by`,
+ * so the historical fact stays true — `job-watch` opened those rows because
+ * those runs failed — rather than being reattributed to whoever ran the repair.
+ * A row whose `Opened by` is empty is REFUSED rather than guessed at.
+ */
+function modeClaim(working, resolved) {
+  const ledger = readLedger();
+  const claimed = new Set(ledger.flatMap((e) => e.ids ?? []));
+  const orphans = [...working, ...resolved]
+    .map((r) => ({ id: (r.ID ?? "").trim(), by: (r["Opened by"] ?? "").trim() }))
+    .filter((r) => r.id && !claimed.has(r.id));
+
+  console.log(`\ntracker claim — ${STAMP}\n`);
+  if (orphans.length === 0) {
+    console.log("  nothing to claim        every row in both stores is claimed by a ledger entry");
+    return { working, resolved };
+  }
+
+  const refused = orphans.filter((o) => !o.by);
+  if (refused.length > 0) {
+    console.error(
+      `  REFUSED                ${refused.map((o) => o.id).join(", ")} carry no \`Opened by\`, so this ` +
+        "cannot say who opened them. Attributing them to the session running the repair would " +
+        "replace the historical fact with a convenience.",
+    );
+    process.exit(1);
+  }
+
+  const bySession = new Map();
+  for (const o of orphans) {
+    if (!bySession.has(o.by)) bySession.set(o.by, []);
+    bySession.get(o.by).push(o.id);
+  }
+  for (const [session, ids] of bySession) {
+    ledger.push({ session, opened: STAMP, ids });
+    console.log(`  claimed                ${ids.join(", ")} -> ${session}`);
+  }
+  writeFileSync(join(ROOT, OPENED_JSON), JSON.stringify(ledger, null, 2) + "\n", "utf8");
+  console.log(`  written                ${OPENED_JSON} (${ledger.length} entries)`);
+  return { working, resolved };
+}
+
 /* ------------------------------------------------------------------ note --- */
 
 /**
@@ -1669,17 +1774,24 @@ if (MODE === "open") {
   modeViews(working, resolved, sections);
 } else if (MODE === "add") {
   let confirmation;
+  const before = new Set(working.map((r) => (r.ID ?? "").trim()));
   ({ working, resolved, confirmation } = modeAdd(working, resolved, sections));
   modeViews(working, resolved, sections);
   /* LAST, on purpose — see modeAdd. The views summary is long and a
    * confirmation printed before it is a confirmation the operator cannot see. */
   console.log(confirmation);
+  /* THE TRANSACTION ENDS HERE, and it ends by reading itself back off disk. */
+  reconcileAfterWrite(working.map((r) => (r.ID ?? "").trim()).filter((id) => id && !before.has(id)));
+} else if (MODE === "claim") {
+  ({ working, resolved } = modeClaim(working, resolved));
+  modeViews(working, resolved, sections);
+  reconcileAfterWrite([]);
 } else if (MODE === "reopen") {
   ({ working, resolved } = modeReopen(working, resolved, sections));
   modeViews(working, resolved, sections);
 } else {
   console.error(
-    `unknown mode "${MODE}" — expected open, views, move, resolve, reopen, add, amend or note`,
+    `unknown mode "${MODE}" — expected open, views, move, resolve, reopen, add, amend, claim or note`,
   );
   process.exit(2);
 }

@@ -80,10 +80,36 @@ function git(args) {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 64 * 1024 * 1024,
+      /*
+       * LOG NOISE, REMOVED AT ITS SOURCE. (2026-08-26.)
+       *
+       * `actions/checkout` clones at depth 1, so `<sha>^` does not exist in a
+       * CI checkout and every parent read prints
+       * `fatal: invalid object name '<sha>^'` to stderr. The reads themselves
+       * are already handled — the `catch` returns null and the caller skips the
+       * commit — but four `fatal:` lines in a green test log is a reader being
+       * told something is on fire when nothing is.
+       *
+       * `stdio: pipe` captures git's stderr instead of inheriting the parent's.
+       * The absence is still reported, by `parentUnavailable` below, in words
+       * that say what actually happened.
+       */
+      stdio: ["ignore", "pipe", "pipe"],
     }).trim();
   } catch {
     return null;
   }
+}
+
+/**
+ * Whether the parent of a commit is reachable in this checkout.
+ *
+ * Kept apart from "the parent has no tracker in it" (RULING 24): a shallow
+ * clone that cannot SEE the parent and a parent that genuinely carried no
+ * tracker file are different facts, and only one of them is about the data.
+ */
+function parentUnavailable(sha) {
+  return git(["rev-parse", "--verify", "--quiet", `${sha}^`]) === null;
 }
 
 /** Collapse a multi-line CSV cell to one line, marking any clip. */
@@ -227,12 +253,15 @@ export function readStatusChanges(limit = 10, maxCommits = 30) {
     "--",
     "docs/tracker.csv",
   ]);
-  if (!log) return { changes: [], scannedCommits: 0, newRows: 0, exhausted: true };
+  if (!log) return { changes: [], scannedCommits: 0, shallowParents: 0, newRows: 0, exhausted: true };
 
   const commits = log.split("\n").filter(Boolean);
   const changes = [];
   let scanned = 0;
   let newRows = 0;
+  /* Commits whose parent this checkout cannot reach. Counted and reported, so
+   * a shallow clone reads as a shallow clone rather than as a quiet board. */
+  let shallow = 0;
 
   const statusesAt = (rev) => {
     const text = git(["show", `${rev}:docs/tracker.csv`]);
@@ -249,8 +278,15 @@ export function readStatusChanges(limit = 10, maxCommits = 30) {
     const subject = subjectParts.join("\t");
 
     const after = statusesAt(sha);
+    if (after === null) continue;
+    // A shallow checkout cannot see the parent. Say so once, in words, rather
+    // than letting git print `fatal:` into a green log for every commit.
+    if (parentUnavailable(sha)) {
+      shallow += 1;
+      continue;
+    }
     const before = statusesAt(`${sha}^`);
-    if (after === null || before === null) continue;
+    if (before === null) continue;
 
     for (const [id, status] of after) {
       const was = before.get(id);
@@ -267,6 +303,7 @@ export function readStatusChanges(limit = 10, maxCommits = 30) {
   return {
     changes,
     scannedCommits: scanned,
+    shallowParents: shallow,
     newRows,
     exhausted: scanned >= commits.length && changes.length < limit,
     availableCommits: commits.length,
@@ -586,7 +623,10 @@ export async function buildContext({
       `Source: git history of \`docs/tracker.csv\` (first-parent), ${history.scannedCommits} commit(s) walked` +
         `${history.availableCommits ? ` of ${history.availableCommits} available` : ""}. ` +
         `${history.newRows} row(s) first appeared in those commits and are not listed — ` +
-        `a new row has no status to have changed.`,
+        `a new row has no status to have changed.` +
+        (history.shallowParents
+          ? ` ${history.shallowParents} commit(s) could not be compared because this checkout is SHALLOW and does not carry their parent — that is a fact about the clone, not about the tracker.`
+          : ""),
       "",
     );
     if (cutNote) put(cutNote, "");

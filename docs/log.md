@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **142 sessions.**
+Newest first. **143 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -41,6 +41,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done. *(open)*
 
 **Needs Sean.** NH204
+
+## deploy-key-cutover-0826 · 2026-08-26
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NH206** — Two different clocks decide two different things, and only one of them has an alarm. The F22 staleness guard measures a source's oldest row against the SNAPSHOT'S OWN generatedAt, so when it trips the refresh fails loudly at Validate before committing and nothing is written — that is the clerksboards failure of 2026-08-25 and it works. What a reader sees is clipped against NOW instead, and now keeps moving while a frozen snapshot does not. So every day the push stays blocked, more committed rows fall outside the serving window and quietly stop appearing on a reader's calendar, with no test failing and no run going red — because the F22 guard only runs while a refresh is being BUILT, which is precisely the thing that has stopped. Measured 2026-08-26: 0 of 449 rows have fallen out and the snapshot is 0.41 days old, so this is a mechanism rather than a live wound today. pnpm source:headroom now prints both clocks and the fallen-out count so the next session does not re-derive the distinction. What is still owed is an alarm on the second clock: something that goes red when the committed snapshot has aged past a stated threshold, independent of whether a refresh ever runs. *(open)*
+- **NH207** — Everything for the cutover is in place and verified: your ruleset is Active with the Deploy keys bypass in exempt mode, the classic rule is gone, wtp-scheduled-pushers is the one write-enabled deploy key, PUSH_DEPLOY_KEY exists, and the pushers now push over SSH as that key. pnpm protection:verify reads INTACT, 9 of 9. The one thing not proven is that the key actually works: last_used on it is still null, meaning it has never authenticated to anything. A session cannot prove it — proving it means a real push to main, which needs your key. THE QUESTION: how do you want the first proof run? (a) Dispatch refresh-daily with all_sources=true and read the four log lines in docs/deploy-key-setup.md Step 5 — the fullest proof, and it moves real data. (b) Dispatch it and let a session watch and report, so you do not have to read logs. (c) Wait for tomorrow's scheduled run and let it prove itself, accepting one more day of stale data. Recommended: (b). Note that a GREEN run is also what an early exit looks like — refresh-daily skips the push entirely when no artifact moved — so the proof is the log lines and the key's last_used field, never the colour. *(open)*
+
+**Needs Sean.** NH207
 
 ## all-open-0826 · 2026-08-26
 

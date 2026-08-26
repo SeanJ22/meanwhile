@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **283 open**, 430 resolved.
-- **50 waiting on Sean** — the first section below.
+- **285 open**, 430 resolved.
+- **51 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**50 open · 48 resolved.**
+**51 open · 48 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -46,6 +46,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH203** — The protection you turned on 2026-08-25 does exactly what you asked and, as a side effect, no scheduled workflow can commit anything any more. All eight pushers push DIRECTLY to main, which the protection now forbids for everyone including the actions bot. Nothing has been silently lost - every run goes red and says so - but no refresh has landed since.
 
 **NH204** — Every scheduled workflow now declares the paths it may push, and seven of the eight write only under data/ or one generated report. job-watch is the exception: it writes docs/tracker-working.csv, because committing the Needs Sean row it raises IS its whole function under RULING 56 — it is the only channel that reaches you when a scheduled job has failed twice running. The brief for this session said the allowlist must never include the tracker stores. Read strictly, that ends the alarm.
+
+**NH207** — Everything for the cutover is in place and verified: your ruleset is Active with the Deploy keys bypass in exempt mode, the classic rule is gone, wtp-scheduled-pushers is the one write-enabled deploy key, PUSH_DEPLOY_KEY exists, and the pushers now push over SSH as that key. pnpm protection:verify reads INTACT, 9 of 9. The one thing not proven is that the key actually works: last_used on it is still null, meaning it has never authenticated to anything. A session cannot prove it — proving it means a real push to main, which needs your key. THE QUESTION: how do you want the first proof run? (a) Dispatch refresh-daily with all_sources=true and read the four log lines in docs/deploy-key-setup.md Step 5 — the fullest proof, and it moves real data. (b) Dispatch it and let a session watch and report, so you do not have to read logs. (c) Wait for tomorrow's scheduled run and let it prove itself, accepting one more day of stale data. Recommended: (b). Note that a GREEN run is also what an early exit looks like — refresh-daily skips the push entirely when no artifact moved — so the proof is the log lines and the key's last_used field, never the colour.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -445,7 +447,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**75 open · 105 resolved.**
+**76 open · 105 resolved.**
 
 ### P1
 
@@ -478,6 +480,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts.
 
 **NH197** — Every meetings adapter clips to the same 90 days at fetch time and the snapshot stamps generatedAt minutes later, so every 90d-clipped source lands within about a day and a half of its own edge permanently, by construction. That is not eight sources about to fail; it is the architecture. R59's clerksboards failure was one of them crossing on a day when the gap between the two clocks happened to be wide enough.
+
+**NH206** — Two different clocks decide two different things, and only one of them has an alarm. The F22 staleness guard measures a source's oldest row against the SNAPSHOT'S OWN generatedAt, so when it trips the refresh fails loudly at Validate before committing and nothing is written — that is the clerksboards failure of 2026-08-25 and it works. What a reader sees is clipped against NOW instead, and now keeps moving while a frozen snapshot does not. So every day the push stays blocked, more committed rows fall outside the serving window and quietly stop appearing on a reader's calendar, with no test failing and no run going red — because the F22 guard only runs while a refresh is being BUILT, which is precisely the thing that has stopped. Measured 2026-08-26: 0 of 449 rows have fallen out and the snapshot is 0.41 days old, so this is a mechanism rather than a live wound today. pnpm source:headroom now prints both clocks and the fallen-out count so the next session does not re-derive the distinction. What is still owed is an alarm on the second clock: something that goes red when the committed snapshot has aged past a stated threshold, independent of whether a refresh ever runs.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 

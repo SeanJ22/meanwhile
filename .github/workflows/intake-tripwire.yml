@@ -139,6 +139,8 @@ jobs:
 
       - name: Commit the report if changed
         if: ${{ !cancelled() && steps.tripwire.outcome == 'success' }}
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           if git diff --quiet -- docs/intake-report.md; then
             echo "report unchanged — nothing to commit"

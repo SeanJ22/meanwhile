@@ -129,6 +129,8 @@ jobs:
 
       - name: Commit
         if: steps.diff.outputs.changed == 'true'
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           # Re-checked at the point of committing, so a stale `changed` output
           # can never push an empty commit.

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 253,
-    "named": 2423,
+    "files": 254,
+    "named": 2456,
     "dynamic": 6
   },
   "files": {
@@ -1100,6 +1100,30 @@
         "RULING 159: a measured population reports both numbers",
         "RULING 159: a zero denominator with no stated reason THROWS",
         "RULING 159: an empty population WITH a reason is COULD_NOT_ASSERT, never a pass"
+      ],
+      "dynamic": 0
+    },
+    "tests/deploy-key-ssh.test.ts": {
+      "names": [
+        "RULING 165: RUNNER_TEMP is preferred, because the runner destroys it whatever we do",
+        "RULING 165: a key pasted without its trailing newline is repaired",
+        "RULING 165: a key path with a space survives GIT_SSH_COMMAND's word splitting",
+        "RULING 165: a key root inside a synced folder is REFUSED, by name",
+        "RULING 165: a key root inside the repository is REFUSED",
+        "RULING 165: a relative key root is refused rather than resolved",
+        "RULING 165: a structurally valid key is accepted",
+        "RULING 165: an ABSENT secret is refused, and the message names the secret",
+        "RULING 165: an EMPTY secret is refused and named as what a missing secret looks like",
+        "RULING 165: every GitHub remote shape resolves to the same SSH URL",
+        "RULING 165: every workflow that pushes main passes PUSH_DEPLOY_KEY to the push step",
+        "RULING 165: host verification is PINNED and the disable flags are absent",
+        "RULING 165: materialising with an unusable secret THROWS and writes nothing",
+        "RULING 165: no refusal message can carry key material",
+        "RULING 165: the PUBLIC half pasted into the secret is refused, and says so",
+        "RULING 165: the deploy key is required by the DESTINATION, not by the environment",
+        "RULING 165: the key lands outside the repo, 0600, and cleanup removes it",
+        "RULING 165: the ordinary ephemeral root is accepted",
+        "RULING 165: the pinned known_hosts is a real known_hosts, one host per line"
       ],
       "dynamic": 0
     },
@@ -2553,7 +2577,16 @@
         "RULING 163: classic protection left ON beside the ruleset still blocks the bot, and is reported",
         "RULING 163: no protection at all is DRIFTED and says so plainly",
         "RULING 163: the ruleset end state is INTACT — this is what Sean is clicking toward",
-        "RULING 163: today's classic protection is DRIFTED only on the missing bot bypass"
+        "RULING 163: today's classic protection is DRIFTED only on the missing bot bypass",
+        "RULING 165: ZERO write-enabled deploy keys is DRIFT — a bypass granted to an empty category",
+        "RULING 165: a SECOND write-enabled deploy key is DRIFT — the bypass is category-wide",
+        "RULING 165: a read-only deploy key beside the pusher is fine and is not miscounted",
+        "RULING 165: a ruleset that drops the deletion and force-push rules is DRIFTED",
+        "RULING 165: bypass mode `always` reads as DRIFTED, never as agreement",
+        "RULING 165: shape `both` is DRIFTED — the two mechanisms STACK and the key is still refused",
+        "RULING 165: the LIVE ruleset read from the API on 2026-08-26 is INTACT",
+        "RULING 165: the bypass must be Deploy keys — an Actions-app grant is DRIFT, not agreement",
+        "RULING 24 + 164: an UNREAD deploy-key list is cannot-tell, never a pass"
       ],
       "dynamic": 0
     },
@@ -2585,7 +2618,12 @@
         "R48: a push that cannot land never reports success",
         "R48: every workflow that pushes main goes through the protected push",
         "R48: two runs pushing into the same window both land their work",
-        "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux"
+        "RULING 13: the PR-gating workflow runs the suite, lint and types on Linux",
+        "RULING 157: the cutover holds for job-watch — a profile it was NOT derived from",
+        "RULING 165: a missing deploy key FAILS CLOSED and names the secret",
+        "RULING 165: a push carrying a disallowed path is REFUSED, names it, and nothing lands",
+        "RULING 165: the key material is cleaned up when the push FAILS, not only when it succeeds",
+        "RULING 165: the same push WITHOUT the offending path succeeds and lands"
       ],
       "dynamic": 0
     },

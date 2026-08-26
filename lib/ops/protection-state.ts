@@ -33,10 +33,30 @@ export interface ProtectionReading {
   readonly classic: ClassicProtection | null;
   /** `repos/{o}/{r}/rulesets` expanded, filtered to those targeting the default branch. */
   readonly rulesets: readonly Ruleset[];
+  /**
+   * `repos/{o}/{r}/keys`, or `null` when it could not be read.
+   *
+   * **The bypass is granted to the Deploy keys CATEGORY, not to one key** —
+   * `bypass_actors` comes back with `actor_type: "DeployKey"` and
+   * `actor_id: null`, and there is no way to name a single key. So every
+   * write-enabled deploy key on this repository inherits the bypass, and the
+   * count is part of the protection state rather than a separate curiosity.
+   * One is the intended state. Two is a second key nobody decided to trust.
+   */
+  readonly deployKeys: readonly DeployKeyRow[] | null;
   /** True only when every API call this reading needed actually answered. */
   readonly complete: boolean;
   /** Why the reading is incomplete. Empty when it is complete. */
   readonly unreachable: readonly string[];
+}
+
+export interface DeployKeyRow {
+  readonly id?: number;
+  readonly title?: string;
+  /** GitHub's own field name. `false` means the key can WRITE. */
+  readonly read_only?: boolean;
+  readonly created_at?: string;
+  readonly last_used?: string | null;
 }
 
 export interface ClassicProtection {
@@ -70,8 +90,26 @@ export interface Ruleset {
   }[];
 }
 
-/** The GitHub Actions app. Its bypass is the ONE grant the scheduled pushers get. */
+/** The GitHub Actions app. Kept because the API still names it; see below. */
 export const ACTIONS_APP_ID = 15368;
+
+/**
+ * THE ACTIONS-APP PATH IS SETTLED AND CLOSED (2026-08-26, RULING 165).
+ *
+ * The two acceptable machine paths below were written while one question was
+ * genuinely open: whether a branch ruleset's `Add bypass` list offers the
+ * GitHub Actions app as a selectable actor. **It does not.** Confirmed against
+ * the live UI on 2026-08-26 — the Apps tab, filtered on `actions`, returns zero
+ * suggestions. The community reports were right and the documentation was not.
+ *
+ * So the bypass is a **deploy key** and there is no longer a choice to name.
+ * `isMachineActor` keeps both because the API could still report either and a
+ * reader of this file should not have to guess what an `Integration` bypass
+ * would mean — but `judgeProtection` now asserts DeployKey specifically. An
+ * Actions-app bypass appearing here would mean the platform changed under us,
+ * which is a finding rather than an agreement.
+ */
+export const BYPASS_MODE_REQUIRED = "exempt";
 
 /**
  * The two actors that are MACHINES rather than people, and are therefore the
@@ -225,33 +263,112 @@ export function judgeProtection(
     }
   }
   assertions.push({
-    name: "no human or admin can bypass",
+    name: "no human, admin, role or team can bypass",
     ok: humanBypass.length === 0,
-    detail: humanBypass.length === 0 ? "nobody but the Actions app" : humanBypass.join("; "),
+    detail:
+      humanBypass.length === 0
+        ? "no Actor, RepositoryRole, Team or OrganizationAdmin grant — only the machine bypass below"
+        : humanBypass.join("; "),
   });
 
-  /* --- the bot's bypass, present and scoped to exactly the Actions app --- */
+  /* --- deletions and force pushes stay barred --- */
 
-  const botGrants = active.flatMap((r) =>
+  const deletionBarred =
+    (hasClassic && reading.classic?.allow_deletions?.enabled !== true) ||
+    active.some((r) => r.rules?.some((rule) => rule.type === "deletion"));
+  assertions.push({
+    name: "the branch cannot be deleted",
+    ok: deletionBarred,
+    detail: deletionBarred ? "yes" : "NO — main could be deleted outright",
+  });
+
+  const forceBarred =
+    (hasClassic && reading.classic?.allow_force_pushes?.enabled !== true) ||
+    active.some((r) => r.rules?.some((rule) => rule.type === "non_fast_forward"));
+  assertions.push({
+    name: "force pushes are blocked",
+    ok: forceBarred,
+    detail: forceBarred ? "yes" : "NO — history on main could be rewritten",
+  });
+
+  /* --- the machine bypass: Deploy keys, exempt, and exactly one --- */
+
+  const machineGrants = active.flatMap((r) =>
     (r.bypass_actors ?? [])
       .filter(isMachineActor)
       .map((a) => ({
         ruleset: r.name ?? String(r.id),
         mode: a.bypass_mode ?? "?",
-        via: a.actor_type === "DeployKey" ? "a deploy key" : "the GitHub Actions app",
+        type: a.actor_type ?? "?",
+        via: a.actor_type === "DeployKey" ? "the Deploy keys category" : "the GitHub Actions app",
       })),
   );
-  const botOk = botGrants.length === 1;
+
+  const single = machineGrants.length === 1 ? machineGrants[0] : null;
+  const grantOk = single !== null && single.type === "DeployKey" && single.mode === BYPASS_MODE_REQUIRED;
   assertions.push({
-    name: "the Actions app has exactly one scoped bypass",
-    ok: botOk,
-    detail: botOk
-      ? `granted via ${botGrants[0].via} on ruleset "${botGrants[0].ruleset}" (${botGrants[0].mode}); the hard path allowlist ` +
-        "in lib/ops/push-allowlist.ts is what keeps it unable to carry code"
-      : botGrants.length === 0
+    name: "the scheduled-push bypass is Deploy keys, exempt, and the only one",
+    ok: grantOk,
+    detail: grantOk
+      ? `granted to ${single!.via} on ruleset "${single!.ruleset}" in ${BYPASS_MODE_REQUIRED} mode; ` +
+        "the hard path allowlist in lib/ops/push-allowlist.ts is the ONLY thing left between a " +
+        "scheduled job and main, because an exempt actor skips the ruleset outright"
+      : machineGrants.length === 0
         ? "ABSENT — the scheduled pushers cannot push, and every refresh goes red at the push. " +
-          "This is the pre-change state; see docs/branch-protection-clicklist.md."
-        : `${botGrants.length} separate grants; expected exactly one`,
+          "See docs/deploy-key-setup.md."
+        : machineGrants.length > 1
+          ? `${machineGrants.length} separate machine grants; expected exactly one`
+          : single!.type !== "DeployKey"
+            ? `granted to ${single!.type}, not DeployKey. The Actions app is NOT selectable in a ` +
+              "ruleset's Add bypass list (confirmed against the live UI 2026-08-26), so this " +
+              "means the platform changed — a finding, not an agreement."
+            : `mode is "${single!.mode}", not "${BYPASS_MODE_REQUIRED}". An always-allow bypass still ` +
+              "EVALUATES the ruleset and waves the actor through afterward; exempt skips enforcement " +
+              "outright, which is what GitHub recommends for trusted high-volume automation and is " +
+              "what a scheduled deploy-key push is. This is DRIFT, not agreement.",
+  });
+
+  /* --- how many keys inherit that category-wide bypass --- */
+
+  if (reading.deployKeys === null) {
+    assertions.push({
+      name: "exactly one write-enabled deploy key exists",
+      ok: null,
+      detail:
+        "the deploy-key list could not be read. The bypass is granted to the CATEGORY, so the " +
+        "count is part of the protection state and an unread count is not a pass (RULING 24).",
+    });
+  } else {
+    const writable = reading.deployKeys.filter((k) => k.read_only === false);
+    const ok = writable.length === 1;
+    assertions.push({
+      name: "exactly one write-enabled deploy key exists",
+      ok,
+      detail: ok
+        ? `1 of ${reading.deployKeys.length} deploy key(s) can write: "${writable[0].title ?? "(untitled)"}". ` +
+          "That one is the scheduled pushers'."
+        : writable.length === 0
+          ? `0 of ${reading.deployKeys.length} deploy key(s) can write — the bypass is granted to a ` +
+            "category with nothing in it, so no scheduled push can land."
+          : `${writable.length} of ${reading.deployKeys.length} deploy key(s) can write: ` +
+            `${writable.map((k) => `"${k.title ?? "(untitled)"}"`).join(", ")}. ` +
+            "The bypass is CATEGORY-WIDE, so every one of these silently holds it. Each is a " +
+            "separate route past every rule in the ruleset, and only one was decided on.",
+    });
+  }
+
+  /* --- the two shapes are additive, and both at once is drift --- */
+
+  assertions.push({
+    name: "exactly one protection mechanism is in force",
+    ok: shape !== "both",
+    detail:
+      shape === "both"
+        ? "BOTH classic branch protection and a ruleset target main. They STACK: classic " +
+          "protection has no per-actor bypass list, so it refuses the deploy key whatever the " +
+          "ruleset grants. The change looks done and no scheduled push can land. Delete the " +
+          "classic rule."
+        : `${shape} only`,
   });
 
   const failed = assertions.filter((a) => a.ok === false);

@@ -182,6 +182,8 @@ jobs:
       # ONE COMMIT, however many sources moved. This is the whole saving.
       - name: Commit
         if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           if git diff --quiet -- data/; then
             echo "unchanged at commit time — nothing to commit"

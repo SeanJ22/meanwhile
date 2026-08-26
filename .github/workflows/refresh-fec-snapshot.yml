@@ -149,6 +149,8 @@ jobs:
       - name: Commit if changed
         # A simulated run reaches the gate and stops here: it must never commit.
         if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           if git diff --quiet -- data/fec/fec-2026.json; then
             echo "snapshot unchanged — nothing to commit"

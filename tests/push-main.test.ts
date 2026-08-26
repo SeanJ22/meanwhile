@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -379,4 +379,235 @@ test("Prompt C 1b: the bundle scan still reports CANNOT RUN rather than passing"
     /t\.skip\("CANNOT RUN: no \.next\/static/,
     "the bundle scan must report that it could not run, never pass silently",
   );
+});
+
+/* ---- 3. the deploy-key cutover, both directions on a real repository ------ */
+
+/**
+ * THE DEPLOY-KEY CUTOVER (2026-08-26, RULING 165).
+ *
+ * The ruleset's bypass is granted to the **Deploy keys** category with mode
+ * `exempt`, so a scheduled push skips the ruleset outright rather than being
+ * evaluated and waved through. **There is nothing left on the server between a
+ * scheduled job and `main`** — `lib/ops/push-allowlist.ts` is the whole of it.
+ *
+ * A guard that refuses everything passes a refusal test on its own. Both
+ * directions are therefore required, against real git repositories on disk and
+ * through the actual command line the workflows run, not through an imported
+ * function: the guard is wired in the direct-invocation block, and asserting
+ * against `classifyPushPaths` would be asserting that the code the fix
+ * introduced does what the code does (RULING 153).
+ */
+
+/** Run `scripts/push-main.mjs` exactly as a workflow does, against a scratch repo. */
+function runPusherCli(repo: string, workflow: string) {
+  const r = spawnSync(
+    process.execPath,
+    [
+      "--experimental-strip-types",
+      "--import",
+      "./scripts/register-test-loader.mjs",
+      "scripts/push-main.mjs",
+      "--workflow",
+      workflow,
+      "--cwd",
+      repo,
+      "--attempts",
+      "2",
+    ],
+    { cwd: ROOT, encoding: "utf8", env: { ...process.env, GIT_TERMINAL_PROMPT: "0" } },
+  );
+  return { status: r.status, out: `${r.stdout ?? ""}${r.stderr ?? ""}` };
+}
+
+/** A bare origin with one commit on `main`, plus a clone standing in for the runner. */
+function scratchPair(prefix: string) {
+  const scratch = mkdtempSync(join(tmpdir(), prefix));
+  const origin = join(scratch, "origin.git");
+  git(["init", "--bare", "--initial-branch=main", origin], scratch);
+  const seed = join(scratch, "seed");
+  git(["clone", origin, seed], scratch);
+  git(["config", "user.name", "seed"], seed);
+  git(["config", "user.email", "seed@example.invalid"], seed);
+  commitFile(seed, "README.md", "start\n");
+  git(["push", "origin", "main"], seed);
+  const run = clone(origin, join(scratch, "run"), "scheduled-bot");
+  return { scratch, origin, run };
+}
+
+/** The SHA `main` points at inside a bare repository. */
+function originHead(origin: string) {
+  return git(["rev-parse", "main"], origin);
+}
+
+/** Stage and commit a set of files, creating directories as needed. */
+function commitPaths(repo: string, paths: Record<string, string>) {
+  for (const [rel, body] of Object.entries(paths)) {
+    mkdirSync(dirname(join(repo, rel)), { recursive: true });
+    writeFileSync(join(repo, rel), body);
+    git(["add", rel], repo);
+  }
+  git(["commit", "-m", "scheduled artifact"], repo);
+}
+
+test("RULING 165: a push carrying a disallowed path is REFUSED, names it, and nothing lands", () => {
+  const { scratch, origin, run } = scratchPair("wtp-cutover-refuse-");
+  try {
+    const before = originHead(origin);
+
+    // The real shape of the hole this guards: the orchestrated refresh's own
+    // artifact, plus one file of executable code smuggled alongside it.
+    commitPaths(run, {
+      "data/meetings-snapshot.json": '{"sources":[]}\n',
+      "scripts/anything.mjs": "// code a scheduled job may never write\n",
+    });
+
+    const { status, out } = runPusherCli(run, "refresh-daily");
+
+    assert.notEqual(status, 0, "a refused push must exit non-zero");
+    assert.ok(/PATH GUARD REFUSED THIS PUSH/.test(out), "it refuses loudly");
+    assert.ok(out.includes("scripts/anything.mjs"), "the OFFENDING PATH is named, not merely counted");
+    assert.ok(!out.includes("nothing to push"), "a refusal never wears the clothes of a no-op");
+    assert.equal(originHead(origin), before, "NOTHING LANDED — origin's main is exactly where it was");
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+test("RULING 165: the same push WITHOUT the offending path succeeds and lands", () => {
+  const { scratch, origin, run } = scratchPair("wtp-cutover-allow-");
+  try {
+    const before = originHead(origin);
+
+    commitPaths(run, { "data/meetings-snapshot.json": '{"sources":[]}\n' });
+
+    const { status, out } = runPusherCli(run, "refresh-daily");
+
+    assert.equal(status, 0, `a permitted push must succeed: ${out}`);
+    assert.ok(/path guard PASSED for refresh-daily/.test(out), "the guard says it passed, by profile name");
+    assert.ok(/pushed on attempt 1 of 2/.test(out), "the push step actually ran and said so");
+    assert.notEqual(originHead(origin), before, "origin's main moved");
+    assert.ok(
+      git(["show", "--name-only", "--format=", "main"], origin).includes("data/meetings-snapshot.json"),
+      "the artifact is what landed",
+    );
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+/**
+ * RULING 157 — A FIX IS VERIFIED AGAINST A CASE IT WAS NOT DERIVED FROM.
+ *
+ * The cutover was derived from `refresh-daily`: it is the workflow in
+ * `docs/refresh-unblock-runbook.md`, the one whose three refused runs
+ * (`32955499285`, `32951929034`, `32950685105`) are the failures being fixed,
+ * and the profile both tests above use.
+ *
+ * **The independent case is `job-watch`**, and it is independent in the way
+ * that matters rather than merely in name: it is the ONLY profile whose grant
+ * lies outside `data/` (`TRACKER_ROW_GRANT`), the only one whose allowlist is a
+ * single EXACT FILE rather than a directory prefix, and the only pusher whose
+ * commit is an alarm rather than an artifact. A directory-prefix rule that
+ * happened to match by prefix would pass `refresh-daily` and fail here.
+ */
+test("RULING 157: the cutover holds for job-watch — a profile it was NOT derived from", () => {
+  const { scratch, origin, run } = scratchPair("wtp-cutover-derived-");
+  try {
+    // Direction 1: job-watch may not write the neighbouring resolved store,
+    // which NEVER_PUSHABLE bars outright (RULING 37 — the author closes rows).
+    const before = originHead(origin);
+    commitPaths(run, {
+      "docs/tracker-working.csv": "id,section\nJOB99,needs-sean\n",
+      "docs/tracker-resolved.csv": "id,section\nJOB98,needs-sean\n",
+    });
+    const refused = runPusherCli(run, "job-watch");
+    assert.notEqual(refused.status, 0, "the resolved store is refused");
+    assert.ok(refused.out.includes("docs/tracker-resolved.csv"), "the offending path is named");
+    assert.equal(originHead(origin), before, "nothing landed");
+
+    // Direction 2: the row it is actually for does land.
+    git(["reset", "--hard", "origin/main"], run);
+    commitPaths(run, { "docs/tracker-working.csv": "id,section\nJOB99,needs-sean\n" });
+    const allowed = runPusherCli(run, "job-watch");
+    assert.equal(allowed.status, 0, `the Needs Sean row must land: ${allowed.out}`);
+    assert.ok(/path guard PASSED for job-watch/.test(allowed.out));
+    assert.notEqual(originHead(origin), before, "the alarm reached main");
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+/**
+ * THE PRIVATE KEY IS REMOVED ON THE FAILURE PATH.
+ *
+ * This is the assertion the whole credential discipline rests on, and it is
+ * only reachable on a path that authenticates to github.com — which would need
+ * a real private key and a network call, both forbidden. `resolveTransport` is
+ * the DECLARED SEAM (RULING 130's pattern): production passes nothing and walks
+ * the real resolution, and this hands in a transport whose push cannot succeed.
+ */
+test("RULING 165: the key material is cleaned up when the push FAILS, not only when it succeeds", () => {
+  const { scratch, run } = scratchPair("wtp-cutover-cleanup-");
+  try {
+    commitPaths(run, { "data/meetings-snapshot.json": "{}\n" });
+
+    const keyDir = mkdtempSync(join(tmpdir(), "wtp-fake-keydir-"));
+    const keyPath = join(keyDir, "id_deploy");
+    writeFileSync(keyPath, "not-a-key\n");
+
+    let cleaned = 0;
+    const result = pushMain({
+      cwd: run,
+      attempts: 1,
+      log: () => {},
+      resolveTransport: () => ({
+        ok: true,
+        // A path that cannot be pushed to by any route, so the loop exhausts.
+        target: join(scratch, "does-not-exist.git"),
+        env: {},
+        ssh: true,
+        cleanup: () => {
+          cleaned += 1;
+          rmSync(keyDir, { recursive: true, force: true });
+        },
+      }),
+    });
+
+    assert.equal(result.ok, false, "the push failed, which is the case under test");
+    assert.equal(cleaned, 1, "cleanup ran exactly once on the failure path");
+    assert.ok(!existsSync(keyPath), "the key file is GONE after a failed push");
+    assert.ok(!existsSync(keyDir), "so is its directory");
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
+});
+
+test("RULING 165: a missing deploy key FAILS CLOSED and names the secret", () => {
+  const { scratch, run } = scratchPair("wtp-cutover-nokey-");
+  try {
+    commitPaths(run, { "data/meetings-snapshot.json": "{}\n" });
+
+    // A github.com remote with no PUSH_DEPLOY_KEY in the environment. This is
+    // precisely what a workflow looks like when somebody adds a ninth pusher
+    // and forgets the one plumbing line.
+    git(["remote", "set-url", "origin", "https://github.com/SeanJ22/We-The-People.git"], run);
+
+    const result = pushMain({
+      cwd: run,
+      attempts: 1,
+      log: () => {},
+      env: { RUNNER_TEMP: scratch },
+    });
+
+    assert.equal(result.ok, false, "it must not push");
+    assert.ok(result.reason.includes("PUSH_DEPLOY_KEY"), `the failure names the secret: ${result.reason}`);
+    assert.equal(result.attempts, 0, "it never even attempted — it failed before the network");
+    assert.ok(
+      !/nothing to push|no changes|skipp/i.test(result.reason),
+      "a missing credential may never degrade to a no-op (RULINGS 100, 113, 159)",
+    );
+  } finally {
+    rmSync(scratch, { recursive: true, force: true });
+  }
 });

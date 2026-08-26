@@ -93,6 +93,8 @@ jobs:
       # whose only output is a row appended to the working store. That file, and
       # nothing else, is what this job commits.
       - name: Commit any row it opened
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           if git diff --quiet -- docs/tracker-working.csv; then
             echo "no row opened — nothing to commit"

@@ -224,6 +224,8 @@ jobs:
       - name: Commit
         # A simulated run reaches the gate and stops here: it must never commit.
         if: steps.diff.outputs.changed == 'true' && steps.diff.outputs.simulated != 'true'
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
         run: |
           # The real diff is re-checked at the point of committing, so a
           # simulated or stale `changed` output can never push an empty commit.

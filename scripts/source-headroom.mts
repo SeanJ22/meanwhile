@@ -96,6 +96,74 @@ export function headroomFor(
   return out.sort((a, b) => (a.headroomDays ?? Infinity) - (b.headroomDays ?? Infinity));
 }
 
+/* -------------------------------------------------------------------------- */
+/* THE SECOND CLOCK (2026-08-26, the deploy-key cutover session)               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * **THE TABLE ABOVE CANNOT CROSS BY THE PASSAGE OF TIME, AND THREE SESSIONS
+ * RUNNING HAVE READ IT AS THOUGH IT COULD.**
+ *
+ * `headroomDays` is `oldestRow + window - generatedAt`. **Both of those terms
+ * are frozen values inside a committed artifact**, so the number is arithmetic
+ * over two constants — it is identical to the digit on every run until a
+ * refresh lands, and a brief expecting it to have moved is expecting the wrong
+ * thing. That is not a defect in the guard: it is the right question for the
+ * F22 guard, which measures a snapshot against the instant it was built.
+ *
+ * It is the wrong question for a READER. What a reader sees is clipped against
+ * **now**, and `now` moves while the snapshot does not. So a snapshot that
+ * stops refreshing loses reader-visible rows one day at a time, and **nothing
+ * goes red when it does** — the F22 guard cannot see it, because the guard only
+ * runs when a refresh is being built, which is exactly the thing that has
+ * stopped happening.
+ *
+ * Two clocks, both reported, neither standing in for the other (the two-numbers
+ * rule). The guard clock is the standing figure for "will the refresh commit";
+ * this one is the standing figure for "is the calendar still whole".
+ */
+export interface ServingClock {
+  /** How old the committed snapshot is right now, in days. */
+  readonly snapshotAgeDays: number;
+  /** Rows inside the serving window when the snapshot was written, outside it now. */
+  readonly fallenOutOfServing: number;
+  readonly totalRows: number;
+  /** Per source, only where it is non-zero. */
+  readonly bySource: readonly { readonly source: string; readonly dropped: number }[];
+}
+
+export function servingClockFor(
+  snapshot: NonNullable<ReturnType<typeof readSnapshot>>,
+  now: number,
+): ServingClock {
+  const generatedAt = Date.parse(snapshot.generatedAt);
+  if (!Number.isFinite(generatedAt)) {
+    throw new Error("the snapshot has no readable generatedAt — nothing can be measured against it");
+  }
+
+  const guardEdge = generatedAt - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+  const servingEdge = now - CONCLUDED_LOOKBACK_DAYS * 86_400_000;
+
+  const dropped = new Map<string, number>();
+  let total = 0;
+  for (const meeting of snapshot.meetings) {
+    total += 1;
+    const at = Date.parse(meeting.startsAt);
+    if (!Number.isFinite(at)) continue;
+    if (at >= guardEdge && at < servingEdge) {
+      const source = meeting.id.split(":")[0];
+      dropped.set(source, (dropped.get(source) ?? 0) + 1);
+    }
+  }
+
+  return {
+    snapshotAgeDays: Math.round(((now - generatedAt) / 86_400_000) * 100) / 100,
+    fallenOutOfServing: [...dropped.values()].reduce((a, b) => a + b, 0),
+    totalRows: total,
+    bySource: [...dropped].map(([source, d]) => ({ source, dropped: d })).sort((a, b) => b.dropped - a.dropped),
+  };
+}
+
 if (import.meta.filename === process.argv[1]) {
   const snapshot = readSnapshot(ROOT);
   if (!snapshot) throw new Error("no committed meetings snapshot to measure");
@@ -134,5 +202,27 @@ if (import.meta.filename === process.argv[1]) {
   console.log(`\n  ${floorLine(measured)}`);
   if (tight.length > 0) {
     console.log(`  tight: ${tight.map((r) => `${r.source} (${r.headroomDays}d)`).join(", ")}`);
+  }
+
+  // THE SECOND CLOCK. The table above is frozen against the snapshot's own
+  // generatedAt; this one moves. Both, always — neither stands in for the other.
+  const serving = servingClockFor(snapshot, Date.now());
+  console.log(
+    `\n  the headroom column above is measured against the SNAPSHOT'S generatedAt and is a ` +
+      "CONSTANT until a refresh lands — it cannot cross by the passage of time.",
+  );
+  console.log(`  snapshot age right now: ${serving.snapshotAgeDays}d`);
+  console.log(
+    `  rows inside the serving window when it was written and outside it now: ` +
+      `${serving.fallenOutOfServing} of ${serving.totalRows}` +
+      (serving.bySource.length > 0
+        ? ` — ${serving.bySource.map((s) => `${s.source} ${s.dropped}`).join(", ")}`
+        : ""),
+  );
+  if (serving.fallenOutOfServing > 0) {
+    console.log(
+      "  Those rows have left a reader's calendar with NOTHING going red: the F22 guard only " +
+        "runs while a refresh is being built, which is the thing that has stopped.",
+    );
   }
 }

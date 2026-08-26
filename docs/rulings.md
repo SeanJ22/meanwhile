@@ -4187,3 +4187,117 @@ pass, so any step carrying it must have its outcome read by something
 downstream. `tests/workflow-failure-reporting.test.ts` sweeps every workflow for
 it, asserts a floor so a reader that matched nothing cannot report green
 (RULING 159), and is shown catching a planted one.
+
+
+## ONE RULING OF 2026-08-26 — THE DEPLOY-KEY CUTOVER
+
+Adopted 2026-08-26 by the deploy-key cutover session. **RULING 165.**
+
+**A numbering near-collision, named rather than smoothed** (RULING 99). This
+session drafted its ruling as 164 and wrote that number into five files before
+discovering that the unblock-pushers session, earlier the same day, had already
+spent 164 on *a workflow reports every failure, not just the first*. The forty
+references were renumbered to 165 in one sweep and 164 was left exactly where it
+was. `docs/rulings.md` is append-only, so renumbering the one that already
+shipped would have left dangling references in a record whose whole value is
+that it does not move — the same reasoning that gave RULINGS 83 through 87 their
+numbers on 2026-08-22.
+
+### RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held
+
+**What this replaces, and why.** RULING 162 built a per-workflow path allowlist
+to make a scoped bypass safe, on the assumption that the bypass would be granted
+to the GitHub Actions app. **It cannot be.** A branch ruleset's `Add bypass`
+list does not offer GitHub Actions as a selectable actor — confirmed by Sean
+against the live UI on 2026-08-26, Apps tab filtered on `actions`, zero
+suggestions. The community reports were right and the documentation was not.
+
+So the bypass is granted to the **Deploy keys** category, and the eight
+scheduled pushers stop using the default `GITHUB_TOKEN` over HTTPS.
+
+**The cutover is in `scripts/push-main.mjs` and `lib/ops/deploy-key-ssh.ts`, and
+nowhere else.** All eight pushers already routed through that one script. Eight
+edits in eight workflows would be eight places to drift, and a ninth pusher
+would inherit whichever copy nobody updated. *The one thing that could not live
+there is the secret REFERENCE — `${{ secrets.* }}` is only expressible in
+workflow YAML — so each pusher carries one plumbing line, and a test asserts all
+eight carry it against a stated denominator, which turns eight lines into a
+guarded invariant rather than eight places to drift.*
+
+**Two facts about the bypass make the allowlist matter more than it did
+yesterday, not less.**
+
+- **It is CATEGORY-WIDE.** `bypass_actors` reports `DeployKey` with
+  `actor_id: null`; there is no way to name a single key. Every write-enabled
+  deploy key on the repository holds it. One is the intended state, and
+  `pnpm protection:verify` now counts them and goes red at two.
+- **Its mode is `exempt`, and that is Sean's settled decision.** An `always`
+  bypass still EVALUATES the ruleset and waves the actor through afterward;
+  `exempt` skips enforcement outright, which is what GitHub recommends for
+  trusted high-volume automation and what a scheduled deploy-key push is. The
+  consequence is stated rather than left implied: **an exempt key skips every
+  rule in the ruleset, not only the ones that were blocking it. There is nothing
+  left on the server between a scheduled job and `main`.**
+  `lib/ops/push-allowlist.ts` is the whole of it, and it is unchanged and
+  unweakened by this cutover.
+
+**THE CREDENTIAL RULE SHAPED EVERY DESIGN DECISION, and it is absolute.** On
+2026-08-25 a `curl` reporting flag printed nine credential values into a
+transcript that mirrors to Drive, and all nine required rotation (RULING 127). A
+private key is that failure with a worse blast radius. So:
+
+- **No private key is generated, printed, echoed, or written by any session.**
+  Sean generates the keypair locally, puts the public half in Deploy keys and
+  the private half in the `PUSH_DEPLOY_KEY` secret. Code references the secret
+  by name and never reads its value. **A design that would require a session to
+  hold the private key is a wrong design and is changed.**
+- **No diagnostic may carry key material.** Every refusal describes the key's
+  SHAPE — absent, empty, missing its header, public half pasted by mistake — and
+  the test proves it by handing in a marker and asserting it does not come back
+  out.
+- **The key file never lands in the repository or a synced folder.**
+  `refuseUnsafeKeyRoot` turns that from a habit into a check, refusing rather
+  than silently relocating.
+- **It is removed on every exit path, the failure path included** — a `finally`
+  around the push loop, proved through a declared seam because the real path
+  needs a private key and a network call.
+- **Even the tests hold no key.** A structural placeholder exercises every
+  decision the module makes, which are all about shape and placement. Generating
+  a throwaway keypair to make a test feel more real would put private-key
+  material into a test run, a temp folder and a CI log.
+
+**HOST VERIFICATION IS PINNED, NEVER DISABLED.** The obvious way to make an
+unattended SSH push work is `StrictHostKeyChecking=no`, and that turns every
+push into an unauthenticated one. `GITHUB_HOST_KEYS` is a DECLARED constant read
+from GitHub's own `meta` endpoint — a value fetched at push time from the host
+you are about to authenticate is not verification, it is a round trip. *Verified
+against the live endpoint on adoption: `ssh -T git@github.com` with only these
+keys pinned and no identity offered returned `Permission denied (publickey)`,
+which means host verification SUCCEEDED and only authentication failed. A wrong
+pin fails earlier and differently.*
+
+**A MISSING CREDENTIAL IS A RED RUN AND MAY NEVER DEGRADE TO "NOTHING TO PUSH".**
+That shape — a mechanism reporting success for work it did not do — has been
+sighted enough times in this repo to have its own rulings (100, 113, 159). The
+empty-string case is the one that matters: **in GitHub Actions an unset secret
+interpolates to `""`**, so a check that only tested for `undefined` would sail
+straight past a missing repository secret.
+
+**The proof is both directions, on a real repository, through the command line
+the workflows actually run.** A guard that refuses everything passes a refusal
+test on its own. A commit carrying `scripts/anything.mjs` alongside the snapshot
+is refused with the path named and origin's `main` unmoved; the same commit
+without it lands. Asserting against `classifyPushPaths` would have proved that
+the code the fix introduced does what the code does (RULING 153) — the guard is
+wired in the direct-invocation block, so that is where it is exercised.
+
+**And it is verified against a case it was not derived from** (RULING 157). The
+cutover was derived from `refresh-daily`. The independent case is `job-watch`,
+independent in the way that matters rather than in name: the only profile whose
+grant lies outside `data/`, the only one whose allowlist is a single exact file
+rather than a directory prefix, and the only pusher whose commit is an alarm
+rather than an artifact.
+
+*Measured on adoption: 1 of 1 write-enabled deploy key; `pnpm protection:verify`
+INTACT, 9 of 9, against the live API; 8 of 8 pushers plumbed; 46 guards passing
+across the three affected test files.*

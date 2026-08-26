@@ -17,6 +17,16 @@
  *
  * `cannot-tell` exits NON-ZERO on purpose. No credential is not a pass.
  *
+ * **IT IS STANDALONE, AND IT IS NOT WIRED INTO `pnpm gates` — `NH205`.**
+ * Reading branch protection needs an ADMIN-scoped token. Putting an admin token
+ * into CI so that CI can check that CI cannot bypass protection hands every
+ * workflow the credential that would let it edit the protection it is checking.
+ * The check would then be verifying a rule it had just been given the power to
+ * remove, which is RULING 147's compare-a-parser-to-itself one floor up and a
+ * far worse trade than running this by hand from a session. It runs at
+ * close-out, by a person or a session that already holds the token, and it says
+ * `cannot-tell` and exits non-zero anywhere that does not.
+ *
  * Usage:
  *   node scripts/protection-verify.mjs
  *   node scripts/protection-verify.mjs --json
@@ -79,7 +89,24 @@ function read() {
     unreachable.push(`rulesets: ${listRes.reason}`);
   }
 
-  return { classic, rulesets, complete: unreachable.length === 0, unreachable };
+  /*
+   * THE DEPLOY KEYS, BECAUSE THE BYPASS IS GRANTED TO THE CATEGORY.
+   * (2026-08-26, RULING 165.)
+   *
+   * `bypass_actors` names `DeployKey` with `actor_id: null` — there is no way
+   * to grant it to ONE key. Every write-enabled deploy key on this repository
+   * therefore holds the bypass, so the count belongs in the protection reading
+   * and not in a separate report somebody remembers to run.
+   *
+   * `null` when unread, which is NOT an empty list: a count nobody could read
+   * must never be judged as one.
+   */
+  const keysRes = api(`repos/${REPO}/keys`);
+  let deployKeys = null;
+  if (keysRes.ok) deployKeys = keysRes.body ?? [];
+  else unreachable.push(`keys: ${keysRes.reason}`);
+
+  return { classic, rulesets, deployKeys, complete: unreachable.length === 0, unreachable };
 }
 
 const reading = read();

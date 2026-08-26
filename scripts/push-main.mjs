@@ -44,6 +44,12 @@
 
 import { spawnSync } from "node:child_process";
 
+import {
+  DEPLOY_KEY_SECRET,
+  isGitHubTarget,
+  materialiseDeployKey,
+  sshUrlForGitHub,
+} from "../lib/ops/deploy-key-ssh.ts";
 import { classifyPushPaths } from "../lib/ops/push-allowlist.ts";
 
 const DEFAULT_ATTEMPTS = 5;
@@ -60,8 +66,14 @@ function opt(argv, name) {
  * for the log line we print ourselves — a git error nobody printed is the
  * silent-failure shape this whole file exists to remove.
  */
-function git(args, cwd) {
-  const r = spawnSync("git", args, { cwd, encoding: "utf8" });
+function git(args, cwd, env) {
+  const r = spawnSync("git", args, {
+    cwd,
+    encoding: "utf8",
+    // RULING 146 — no command a session runs may be capable of prompting. Git's
+    // own credential helpers will happily block on a terminal for hours.
+    env: { ...process.env, GIT_TERMINAL_PROMPT: "0", ...(env ?? {}) },
+  });
   return {
     ok: r.status === 0,
     status: r.status,
@@ -148,20 +160,106 @@ export function guardPushPaths({ cwd = process.cwd(), workflowId, remote = "orig
   return decision;
 }
 
+/**
+ * THE DEPLOY-KEY CUTOVER (2026-08-26, RULING 165), AND IT LIVES HERE BECAUSE
+ * ALL EIGHT PUSHERS ALREADY COME THROUGH THIS FILE.
+ *
+ * The ruleset's bypass is granted to Deploy keys, so the push has to arrive as
+ * a deploy key — which means SSH, which means a private key, which means the
+ * whole of `lib/ops/deploy-key-ssh.ts` and its credential discipline.
+ *
+ * **The switch is the DESTINATION, never the environment.** Pushing to
+ * github.com requires the key and fails closed without it. Pushing anywhere
+ * else — the bare repositories this guard's own proofs run against — needs no
+ * key and must not demand one, or the proof could never run on a machine that
+ * correctly holds no private key.
+ *
+ * Returns `{ ok: true, target, env, cleanup }` or `{ ok: false, reason }`. The
+ * caller MUST call `cleanup()` from a `finally`.
+ */
+export function resolvePushTransport({ cwd, remote, log = console.log, env = /** @type {import("../lib/ops/deploy-key-ssh.ts").EnvLike} */ (process.env) } = {}) {
+  // A remote may be a name or a URL. `get-url` resolves the name; a URL that is
+  // not a configured name comes back as itself.
+  const configured = git(["remote", "get-url", remote], cwd);
+  const url = configured.ok ? configured.stdout : remote;
+
+  if (!isGitHubTarget(url)) {
+    log(`push-main: pushing to ${url}, which is not github.com — no deploy key needed for this target`);
+    return { ok: true, target: remote, env: {}, cleanup: () => {}, ssh: false };
+  }
+
+  const sshUrl = sshUrlForGitHub(url);
+  if (!sshUrl) {
+    return {
+      ok: false,
+      reason:
+        `the remote "${remote}" resolves to ${url}, which is a github.com URL this reader could ` +
+        "not turn into an SSH URL. It is refusing rather than falling back to HTTPS, because " +
+        "HTTPS is the transport the ruleset now refuses.",
+    };
+  }
+
+  try {
+    const handle = materialiseDeployKey({ raw: env[DEPLOY_KEY_SECRET], repoRoot: cwd, env });
+    log(`push-main: pushing to ${sshUrl} as a deploy key; key material at ${handle.keyPath} (removed on every exit path)`);
+    return {
+      ok: true,
+      target: sshUrl,
+      env: { GIT_SSH_COMMAND: handle.sshCommand },
+      cleanup: handle.cleanup,
+      ssh: true,
+    };
+  } catch (e) {
+    // `materialiseDeployKey` throws shape-only messages by construction; no key
+    // material can reach this string.
+    return { ok: false, reason: String(e instanceof Error ? e.message : e) };
+  }
+}
+
 export function pushMain({
   cwd = process.cwd(),
   remote = "origin",
   branch = "main",
   attempts = DEFAULT_ATTEMPTS,
   log = console.log,
+  env = /** @type {import("../lib/ops/deploy-key-ssh.ts").EnvLike} */ (process.env),
+  /**
+   * THE DECLARED SEAM (RULING 130's pattern). Production passes nothing and
+   * walks the real transport resolution above.
+   *
+   * It exists because the thing most worth proving here — that the private key
+   * is removed when the push FAILS — is only reachable on a path that
+   * authenticates to github.com, and a test that did that would need a real
+   * private key and a network call. Both are forbidden. A named seam is how
+   * that path becomes observable without either.
+   */
+  resolveTransport = resolvePushTransport,
 } = {}) {
   const head = git(["rev-parse", "HEAD"], cwd);
   if (!head.ok) {
     return { ok: false, attempts: 0, reason: `cannot read HEAD: ${head.stderr}` };
   }
 
+  const transport = resolveTransport({ cwd, remote, log, env });
+  if (!transport.ok) {
+    // FAIL CLOSED AND LOUD. A missing credential must never degrade to
+    // "nothing to push" or a silent skip — that shape is the one this repo has
+    // named three times (RULINGS 100, 113, 159).
+    return { ok: false, attempts: 0, reason: `cannot authenticate the push — ${transport.reason}` };
+  }
+
+  try {
+    return pushLoop({ cwd, remote, branch, attempts, log, transport });
+  } finally {
+    // Runs on the failure path, on the throw path, and on the happy path. The
+    // key file outliving the push is the whole thing this `finally` is for.
+    transport.cleanup();
+  }
+}
+
+function pushLoop({ cwd, remote, branch, attempts, log, transport }) {
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const push = git(["push", remote, `HEAD:${branch}`], cwd);
+    const push = git(["push", transport.target, `HEAD:${branch}`], cwd, transport.env);
     if (push.ok) {
       log(`push-main: pushed on attempt ${attempt} of ${attempts}`);
       return { ok: true, attempts: attempt, reason: "pushed" };
@@ -279,9 +377,9 @@ if (invokedDirectly) {
   if (guard.verdict !== "allowed") process.exit(1);
 
   const result = pushMain({
-    cwd: opt(argv, "cwd") ?? process.cwd(),
-    remote: opt(argv, "remote") ?? "origin",
-    branch: opt(argv, "branch") ?? "main",
+    cwd,
+    remote,
+    branch,
     attempts: Number(opt(argv, "attempts") ?? DEFAULT_ATTEMPTS),
   });
   if (!result.ok) {

@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 16:13:53 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 17:38:37 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1075 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1085 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 180 recorded
+## Rulings — 181 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -450,6 +450,7 @@ from. Each entry there names what it supersedes.
 - RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held
 - RULING 166 — the body's own publication is rung one, and its bulk download is rung zero
 - RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere
+- RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -614,18 +615,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 16:13:53 EDT
-branch: claude/close-out-audits-0826
-head sha: 9e3efc18d3709d61f32be0ad7a6bb75b06d5756d
-head subject: The four audit tables the close-out owed, and the clock that moves
-origin/main sha: 4dc0156da7932453ea305e9d4849589dde415754
-origin/main subject: Merge pull request #195 from SeanJ22/claude/tracker-transaction-0826
-local main sha: 9e3efc18d3709d61f32be0ad7a6bb75b06d5756d
-local main matches origin/main: no — 0 commit(s) behind, 1 ahead
+generated: 2026-08-26 17:38:36 EDT
+branch: claude/all-open-board-second-0826
+head sha: 945e84b7edbb6ae719063833b8ce70dfc7190d4a
+head subject: The two things the brief was right about, on a board that was already worked
+origin/main sha: 3e727522bfe7e94fca026b81a61d60ea5b0f5ac6
+origin/main subject: Merge pull request #196 from SeanJ22/claude/close-out-audits-0826
+local main sha: 3e727522bfe7e94fca026b81a61d60ea5b0f5ac6
+local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19237
+last recorded status from: docs/state.md:19240
 ```

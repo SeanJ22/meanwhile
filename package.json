@@ -257,7 +257,8 @@
     "sweep:absence-claims": "tsx scripts/sweep-absence-claims.mts",
     "incumbency:census": "tsx scripts/incumbency-census.mts",
     "verify:incumbency": "tsx scripts/verify-incumbency-0826.mts",
-    "tracker:claim": "node scripts/tracker.mjs claim"
+    "tracker:claim": "node scripts/tracker.mjs claim",
+    "shoot:align2": "tsx scripts/shoot-align2-0826.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

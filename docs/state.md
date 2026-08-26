@@ -4,9 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-26 — **The bypass is only as safe as the paths it can
-carry.** The unblock-pushers session; its record is the LAST section of this
-file.
+Last updated: 2026-08-26 — **The brief described a board that had already been
+worked, and the two things nobody had touched were both real.** The
+all-open-board (second) session; its record is the LAST section of this file.
+
+Previous: 2026-08-26 — **The bypass is only as safe as the paths it can
+carry.** The unblock-pushers session.
 
 Previous: 2026-08-26 — **Four instruments were reporting on things they had
 never looked at.** The all-open-board session.
@@ -19276,3 +19279,170 @@ Two things follow, and the second is ours rather than GitHub's:
   superseded run is the RULING 115 failure. `NH208` carries both, and asks
   whether `main:green` should judge the latest run per context name — which is
   what branch protection itself does.
+
+---
+
+## 2026-08-26 — the all-open-board session, second run
+
+**The brief described a board that had already been worked.** It was written
+against `cc8bbef` and asked for three rulings to be adopted, an instrument
+backlog to be cleared, and roughly twenty visual items to be built. `main` was
+at `3e72752`, forty-four commits further on, and a session earlier the same day
+— literally named `all-open-board` in the rows it opened — had done most of it.
+
+That is stated first because it is the session's largest finding, and because
+re-doing shipped work would have been the expensive way to discover it.
+
+### What the brief asked for that was already law or already shipped
+
+| The brief asked for | Found in the repo |
+| --- | --- |
+| three rulings: derived-case verification, shed-requires-proof, denominator floor | already **RULING 157, 158, 159**, adopted 2026-08-26 with the same content |
+| Item 11, in-cycle sales amendment and solicitation ledger | already **RULING 160**, in `CLAUDE.md`, with `lib/business/solicitation-ledger.ts` |
+| Item 10, questionnaire: 150 to 200 words, "Meanwhile", closing note, symmetry tests | already `INSTRUMENT_VERSION = "v2"`, adopted 2026-08-25 |
+| Item 0 instruments: `NH182`, `NH195`, `NH196`, `RO05`, `NH180` | all five **Resolved** |
+| Item 12 backlog: `NH179`, `NH176`, `R59` | all three **Resolved** |
+| `NS20`, `NS21`, `RO04`, `NS15` | all four **Resolved** |
+| Items 3 to 8, the visual work: `LAY-11`, `DARK-2`, `DARK-3`, `BAL-14` through `BAL-24`, `MAP-2`, `VOT-1`, `LBL-2`, `BC-26`, `BC-27`, `BC-29`, `ASK-12` | every one carries code and a dated comment in the tree |
+
+Two of the brief's ids carried **no code reference anywhere**: `OFF-5` and
+`OFF-6`. Both turned out to be data questions rather than build questions, and
+both are answered below.
+
+### The two things nobody had touched, and both were real
+
+**1. Address narrowing refused any street numbered above 800.** Sean's report
+was that `10723 South Bear Table Tank Drive` at `85641` came back with *we
+couldn't place it*. The brief framed this as possibly a privacy breach — a live
+Census geocode where the settled architecture was supposed to be TIGER
+precompute.
+
+**The privacy premise is wrong, and the copy is accurate.**
+`app/api/geocode/route.ts` is a live, stateless proxy to the Census Bureau; the
+disclosure beside the field says the address passes through our server to the
+U.S. Census Bureau's free address lookup, and that is exactly what happens.
+There is no build-time precompute for street addresses — TIGER precompute
+covers ZCTA and division GEOMETRY, which is a different question. Nothing leaves
+the device that the reader was not told about.
+
+**The placement failure was a class defect in the sampling ladder.**
+`SAMPLE_HOUSE_NUMBERS` is a fixed `[1, 50, 200, 800]`. That street's address
+range is **10701 to 10899**, so all four samples sit below it, all four return
+zero matches, and zero matches ends as a refusal. Probed against the Bureau on
+2026-08-26: **1, 50, 200, 800, 2000, 5000, 10000, 12000 and 15000 all return 0
+matches on that street; 10701, 10723 and 10800 each return 1.** A wider blind
+ladder therefore cannot fix it — which matters, because a wider ladder is the
+obvious fix and it does not work. Address ranges are per block face.
+
+The fix uses the MAGNITUDE of the number the reader already typed, and **still
+never sends the number itself**: it is coarsened down to its hundred block and
+the samples are that block's own offsets. A reader typing 10723 causes requests
+for 10701, 10725, 10775 and 10799 — four addresses on their block, none of them
+theirs, with a collision shifted rather than dropped.
+
+**Parity is load-bearing, and a first attempt got it wrong.** The Bureau indexes
+each SIDE of a street as its own range. On East Colossal Cave Road, 85641,
+13002, 13024, 13074 and 13098 all match and **13001 and 13025 both return
+zero**. The first version ignored parity and the independent case failed —
+which is RULING 157 producing its deliverable rather than a clean run that
+proved nothing.
+
+*Measured across all four pilot zips, 20 addresses: **16 placed, 4 refused**.
+Three of the four refusals are streets the Bureau itself does not hold — the
+absence is the Bureau's, not ours. The fourth, 100 Mount Hope Road at 07866,
+returns `CROSSES`, which is the designed honest answer that asks the reader for
+a house number rather than guessing a point.*
+
+**2. ALIGN-2 — the indentation spec was reversed, and repeated seat labels
+collapse.** This is recorded as a SPECIFICATION CHANGE and not a recurrence:
+`ALIGN-1` ruled on 2026-08-25 that names indented right were wrong, the prior
+session removed indentation across 21 person rows at 3 viewports correctly to
+that spec, and **none of it regressed**. Sean changed the spec on 8/26.
+
+The heading now sits at the margin and the people step in 10px beneath it. And
+the card no longer prints U.S. Senator twice at every Arizona zip: it printed
+one heading per PERSON because the render mapped over people.
+`lib/officials/seat-grouping.ts` folds consecutive same-label entries into one
+group with a conservatively pluralised heading, so **the Senate is the example
+and the class is any multi-seat body** — a two-member state house district, five
+county supervisors, a multi-member school board.
+
+*Verified at three viewports with `pnpm shoot:align2`: **5 holder blocks, +10px
+each, 9 headings, 0 repeated, 0 measurement failures**, and one capture read as
+an image. The card's own width is unchanged at 406 / 460 / 460 px.*
+
+*The first version of that measurement reported **+0px at every viewport with
+the CSS working perfectly** — it measured the block's border box, and
+`padding-left` moves a block's children rather than its own left edge. An
+assertion satisfied by the wrong box (RULING 153), caught because the number was
+implausible rather than because anything failed.*
+
+### A guard that was structurally red
+
+The suite went red on `NH206`'s serving-edge guard at **1 of 447 rows with the
+snapshot 0.07 days old** — one hour and forty minutes after `refresh-daily` run
+`33005902616` landed green. Nothing had stopped landing.
+
+The guard asserted zero rows fallen out of the serving window. That window looks
+back 90 days, so a row falls out when its start sits in a band **exactly as wide
+as the snapshot's own age**. 447 rows over 90 days is about five a day, so one
+day of age is worth roughly five crossings. Zero is not reachable.
+
+That is RULING 116's shape — a guard pinning the size of a gap that time creates
+— and RULING 115's cost, an alarm that fires on the normal operating state. The
+assertion moved to the snapshot's **AGE** (two days: the daily cadence plus one
+missed run), which is what frozen means and what the row was always about, with
+the crossing count reported beside it and a second assertion that the shedding
+is explicable by that age. **The detector is untouched** and the
+constructed-crossing test still proves it catches one. `NH212` is open for Sean
+to overrule it.
+
+### The data answers
+
+- **`BC-28`** — Morris Hills Regional genuinely has no roster. Audited against
+  `data/audit/universe-07866.json`: **413 units carry an NJ ocd id, 187 of them
+  school districts; 23 have a roster and 390 do not.** This is NOT the
+  partial-extraction defect it was suspected of being — the universe NAMES all
+  413, which is RULING 57 working. The NJ hunt named them all and hunted a
+  fraction. What was reported complete was the 07866 **ballot** (272
+  candidacies), a different denominator from district-level roster coverage.
+- **`OFF-7`** — already fixed on 2026-08-25, and it holds. Audited every roster:
+  **42 bodies, 3 render an executive slot, 39 out of scope, 0 wrong.** Kearsarge
+  resolves Michael Bessette, Interim Superintendent of Schools, not Lawrence
+  LeBoeuf, Business Administrator.
+- **`OFF-6`** — **3 of 3** superintendents held anywhere in the product carry no
+  portrait. Three further school districts hold no superintendent at all.
+- **`OFF-5`** — re-walked 2026-08-26 and the 8/25 answer holds: **nothing held**,
+  not a fetch problem. Both the council and mayor pages answer 200 with full
+  content and carry only site chrome. **Expansion route (RULING 88):**
+  `/directory.aspx`, the CivicPlus staff directory, 376 KB, never walked before
+  — **0 portraits**. A conceived route returning nothing is a reported success;
+  the invention is the deliverable.
+- **The September 1 absence expiry** was re-walked earlier the same day: **1,162
+  argued absences, 0 voided, 0 walled**, all now expiring 2026-09-02. <!-- expected-future: the RULING 53 expiry the absence records themselves carry, read out of data/hunt/argued-absences-*.json on 2026-08-26 — a data value, not a stamp -->
+
+  *The brief put that expiry a day earlier and six days out. It moved because
+  the re-walk the brief asked for had already been run earlier the same day,
+  which reset every clock.*
+
+### `JOB04`, diagnosed to cause
+
+Run `33004557882` failed at Commit. `push-main.mjs` classified the rejection
+correctly as a RACE, rebased, and **the rebase conflicted** — two writers had
+regenerated the same governed artifact. The refusal is the design and it stays:
+auto-resolving would silently drop one run's regeneration in favour of
+another's.
+
+What was wrong is that the failure reason was git's own conflict hint, which
+names no path and sends every reader to the job log. Diagnosing it meant
+fetching the whole log to learn one fact the process already had in hand. The
+conflicted paths are now read BEFORE the abort and named in the reason, with
+*could not read them* and *there were none at all* kept as states distinct from
+*here they are* (RULING 24, RULING 159).
+
+### Rulings
+
+**RULING 168** — Sean's ratification of the `job-watch` tracker grant. The
+enumerated set was verified against what the job actually writes rather than
+against the list the brief supplied: **5 of 5 match, 0 differences.** `NH204`
+closed on it.

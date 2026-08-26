@@ -50,7 +50,12 @@ import { haversineKm } from "./distance.ts";
  *    street, a bad response, a network refusal, a timeout — returns `null`,
  *    and the caller keeps exactly the behaviour that shipped before.
  * 3. **The reader's own house number is never sent.** The sampled numbers are
- *    this module's, and a number the reader types anyway is stripped.
+ *    always this module's own. Until 2026-08-26 a number the reader typed was
+ *    simply discarded; it is now read for its MAGNITUDE and then discarded,
+ *    because the magnitude is the only thing that can name the reader's block
+ *    and the ladder that ignored it could not place most of the American West.
+ *    The number itself still never leaves this function — see
+ *    `sampleNumbersFor`, which is where that promise is kept and tested.
  */
 
 /** The Census Bureau's one-line address endpoint. No key, no account. */
@@ -98,6 +103,90 @@ export interface StreetPoint {
  */
 export function streetOnly(input: string): string {
   return input.trim().replace(/^\s*#?\d+[a-z]?\s+/i, "").trim();
+}
+
+/**
+ * The leading house number a reader typed, or null (the Vail defect,
+ * 2026-08-26).
+ *
+ * `streetOnly` throws this away, and throwing it away is what made the
+ * placement failure a CLASS rather than one address. The number is read here
+ * so its MAGNITUDE can be used, and it is never itself sent — see
+ * `sampleNumbersFor`.
+ */
+export function houseNumberIn(input: string): number | null {
+  const match = /^\s*#?(\d+)[a-z]?\s+\S/i.exec(input.trim());
+  if (!match) return null;
+  const n = Number(match[1]);
+  return Number.isInteger(n) && n > 0 && n < 1_000_000 ? n : null;
+}
+
+/**
+ * The house numbers this module will ask the Bureau about.
+ *
+ * ## The defect this closes, stated before the code
+ *
+ * `10723 South Bear Table Tank Drive, 85641` is a real Vail address. The
+ * Bureau geocodes it on the first try. This product told the reader
+ * *"We couldn't place 10723 South Bear Table Tank Drive in 85641."*
+ *
+ * The reason is the fixed ladder: the street's address range is
+ * **10701-10899**, and `SAMPLE_HOUSE_NUMBERS` asks about 1, 50, 200 and 800.
+ * All four sit below the range, all four return zero matches, and zero
+ * matches ends as a refusal. Probed 2026-08-26 against the Bureau: 1, 50,
+ * 200, 800, 2000, 5000, 10000, 12000 and 15000 all return **0 matches** on
+ * that street; 10701, 10723 and 10800 each return **1**.
+ *
+ * **So a wider blind ladder cannot fix this**, and that matters — it is the
+ * obvious fix and it does not work. Address ranges are per block face. The
+ * only thing that reliably names the reader's block is the magnitude of the
+ * number they already typed.
+ *
+ * This is not a rural curiosity. Grid addressing — where the house number
+ * encodes distance from a datum — is how most of the American West is
+ * numbered, and it is exactly the territory RULING 57 sends this product
+ * into.
+ *
+ * ## What is sent, and what is never sent
+ *
+ * **The reader's own house number is never sent, and that promise is kept
+ * literally rather than approximately.** What is used is its magnitude: the
+ * number is coarsened DOWN to its hundred block, and the samples are that
+ * block's own offsets. A reader who types 10723 causes requests for 10700,
+ * 10725, 10775 and 10799 — four addresses on their block, none of them
+ * theirs. Where an offset would collide with the typed number it is shifted,
+ * so the promise holds for every input rather than for most of them.
+ *
+ * With no number typed, the historical ladder is returned unchanged. That
+ * path is the one every existing reader is on, and it does not move.
+ */
+export function sampleNumbersFor(house: number | null): number[] {
+  if (house === null) return [...SAMPLE_HOUSE_NUMBERS];
+
+  // PARITY IS LOAD-BEARING, and it is the half a first attempt got wrong.
+  //
+  // The Bureau indexes each SIDE of a street as its own address range, so a
+  // street is commonly even-only or odd-only in a given range. Probed
+  // 2026-08-26 on `East Colossal Cave Road, 85641`: 13000, 13002, 13010,
+  // 13024, 13050, 13074 and 13098 every one returns a match, and 13001 and
+  // 13025 both return ZERO. A ladder that ignores parity asks the empty side
+  // of the street and concludes the street is not there — the same false
+  // absence, one layer in.
+  const parity = house % 2;
+  const base = Math.floor(house / 100) * 100;
+  const numbers: number[] = [];
+  for (const offset of [0, 24, 74, 98]) {
+    // A block starting at 0 has no house 0; the lowest that can exist is 1.
+    let candidate = Math.max(1, base + offset + parity);
+    // The reader's own number never leaves this function. A collision is
+    // shifted by TWO rather than one, because a one-step shift would land on
+    // the empty side of the street and throw the sample away.
+    if (candidate === house) candidate = offset === 98 ? house - 2 : house + 2;
+    if (candidate > 0 && candidate !== house && !numbers.includes(candidate)) {
+      numbers.push(candidate);
+    }
+  }
+  return numbers;
 }
 
 /** The URL for one sampled address. Exported so a test can read it offline. */
@@ -269,13 +358,27 @@ export async function sampleStreetPoints(
 ): Promise<{ lat: number; lng: number }[]> {
   const cleaned = streetOnly(street);
   if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return [];
-  return sampleStreet(cleaned, zip, options);
+  return sampleStreet(
+    cleaned,
+    zip,
+    options,
+    sampleNumbersFor(houseNumberIn(street)),
+  );
 }
 
+/**
+ * The numbers are a REQUIRED parameter and deliberately have no default.
+ *
+ * A default would be `SAMPLE_HOUSE_NUMBERS`, which is the fixed ladder that
+ * caused the Vail defect — so a call site added later could reintroduce it by
+ * saying nothing at all. Required, the compiler makes every caller state which
+ * ladder it means, which is the difference between enforced and remembered.
+ */
 async function sampleStreet(
   cleaned: string,
   zip: string,
   options: GeocodeOptions,
+  numbers: readonly number[],
 ): Promise<{ lat: number; lng: number }[]> {
   const impl = options.fetchImpl ?? fetch;
   const deadline = Date.now() + (options.timeoutMs ?? 8000);
@@ -284,7 +387,7 @@ async function sampleStreet(
   // Serialized, in the retrieval manners this project uses everywhere: one
   // request at a time against a single public tenant, and a clock that stops
   // the whole thing rather than letting a slow host hold the reader.
-  for (const number of SAMPLE_HOUSE_NUMBERS) {
+  for (const number of numbers) {
     if (options.signal?.aborted || Date.now() > deadline) break;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), Math.max(0, deadline - Date.now()));
@@ -315,7 +418,12 @@ export async function locateStreetInZip(
   const cleaned = streetOnly(street);
   if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return null;
 
-  const points = await sampleStreet(cleaned, zip, options);
+  const points = await sampleStreet(
+    cleaned,
+    zip,
+    options,
+    sampleNumbersFor(houseNumberIn(street)),
+  );
   const midpoint = coherentMidpoint(points);
   if (!midpoint) return null;
 
@@ -356,7 +464,12 @@ export async function lookupStreetInZip(
   const cleaned = streetOnly(street);
   if (cleaned.length < 3 || !/^\d{5}$/.test(zip)) return { kind: "NOT_FOUND" };
 
-  const points = await sampleStreet(cleaned, zip, options);
+  const points = await sampleStreet(
+    cleaned,
+    zip,
+    options,
+    sampleNumbersFor(houseNumberIn(street)),
+  );
   if (points.length === 0) return { kind: "NOT_FOUND" };
 
   const midpoint = coherentMidpoint(points);

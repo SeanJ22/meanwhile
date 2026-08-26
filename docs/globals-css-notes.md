@@ -2747,3 +2747,24 @@ is exactly what RULING 106 says to fix at the source rather than by clipping.
  * mechanism as before, driven from the other side.
  */
 ```
+
+## ALIGN-2 (2026-08-26) — the names sit under their heading, indented
+
+**This is a SPECIFICATION CHANGE and not a recurrence.** `ALIGN-1` (2026-08-25)
+ruled that names indented to the RIGHT of their heading were wrong, and that
+session removed the indentation across 21 person rows at 3 viewports —
+correctly, to the spec it was given. Sean changed the spec on 2026-08-26.
+
+The new spec, from his 8/26 walkthrough: the heading sits at the margin and the
+people sit a small step in beneath it, so `AZ-6` reads as the container and the
+name below it as its occupant. A subparagraph indent — deliberate and small,
+not a column.
+
+`10px` rather than a token step: the person rows are `0.8125rem` and the
+headings `0.6875rem`, and anything larger reads as a second column, which is
+the arrangement `ALIGN-1` was adopted to remove. The class is applied to the
+block that WRAPS the holders, never to a row, so a body with five members
+indents once as a group rather than five times as five rows.
+
+Paired with the seat-label collapse in `lib/officials/seat-grouping.ts`: one
+heading per body, however many seats it holds.

@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **285 open**, 433 resolved.
+- **288 open**, 436 resolved.
 - **51 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**51 open · 51 resolved.**
+**51 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -70,8 +70,6 @@ The last 14 of 3208 line(s) the run printed:
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
-**NH204** — Every scheduled workflow now declares the paths it may push, and seven of the eight write only under data/ or one generated report. job-watch is the exception: it writes docs/tracker-working.csv, because committing the Needs Sean row it raises IS its whole function under RULING 56 — it is the only channel that reaches you when a scheduled job has failed twice running. The brief for this session said the allowlist must never include the tracker stores. Read strictly, that ends the alarm.
-
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
   Waiting on reaction capture (P03).
@@ -89,6 +87,8 @@ The last 14 of 3208 line(s) the run printed:
 **NH174** — pnpm door2 walked all 19 candidacies on the 07866 ballot who are people this repo already records sitting on a governing body — the class your 8/24 ruling pre-approves — at the MEMBER'S OWN page rather than the body's index, which was NJ13's defect. 19 of 19 pages answered, 0 walls. Six portraits found, four of them new: Jennifer Rowland (Chatham Township), Russell Goodwin and Michael Dominianni (Chester Borough), Sean Mabey (Kinnelon), Kyle Russell and Melissa Florance-Lynch (Pequannock). Each is name-matched on the person's own municipal .gov page, read as an img element and never an og:image. ZERO shipped, which is the rule for a candidate portrait and is not something a hunt gets to decide. The queue is data/photos/door2-incumbents-2026-08-25.json. Two phones from the same walk DID ship — Nancy Verga and Melissa Fostle — because a number a town publishes beside a named member is a fact checkable by dialling it, where a portrait's failure mode is a wrong face beside a real name.
 
 **NH208** — CORRECTED TWICE, and both corrections are recorded rather than left standing. NOTHING IS WRONG WITH YOUR RULESET and no setting needs changing — the row's title still says otherwise because the amend tool deliberately cannot edit a title, so read this instead of it. Both PRs this session merged on green required checks with no override, no admin flag and no auto-merge. What actually happened is that GitHub Actions was running badly behind on this repository for about two hours on 2026-08-26. Observed across four separate events: PR 191 opening created NO GitHub Actions check suite at all (only a Claude-app and a Netlify-app suite, both sitting queued with zero runs); closing and reopening it created none either; a push to the branch fired one but GitHub queued it against the PREVIOUS head SHA, so the current head still had nothing; and the push events onto main for both f6ef545 and 343ca7e registered nothing for roughly twenty-five minutes each, so pnpm main:green read CANNOT TELL through six minutes of polling on a commit that was in fact fine. Meanwhile every workflow_dispatch started within seconds. Everything else was ruled out: Actions enabled, all nine workflows active, the token carrying workflow scope, and the commits attributed to SeanJ22. The delayed runs did all eventually arrive and go green, and each merge unblocked on its own once they did. THE SECOND FINDING, and it is ours rather than GitHub's: dispatching build-check to work around the lag is not free. build-check carries concurrency cancel-in-progress on the ref, so a dispatch racing a late event-run CANCELS one of them — and pnpm main:green counts every check-run on the commit rather than the latest per context name, so it reported main 343ca7e as RED with two cancelled checks while GitHub's own filter=latest view showed all three required contexts SUCCESS from the newer run. Branch protection uses the latest per name, so main was genuinely green the whole time and the alarm was ours. An instrument that cries wolf on a superseded run is the thing RULING 115 warns about, and RULING 75's whole value is that main:green can be trusted. THE QUESTION: (a) fix main:green to judge the LATEST check-run per context name, matching what branch protection actually evaluates — small, and it removes a false RED that will recur every time anyone dispatches a check by hand; (b) leave it strict and accept that a hand-dispatched check can produce a false RED; (c) also keep this row open as a watch on the GitHub-side lag until two more session PRs open cleanly. Recommended: (a) and (c).
+
+**NH212** — The guard asserted fallenOutOfServing === 0. The serving window looks back 90 days, so a row falls out when its start sits between generatedAt-90d and now-90d - a band exactly as wide as the snapshot's own age. 447 rows over 90 days is about five a day, so one day of age is worth roughly five crossings. On 2026-08-26 it went red at 1 of 447 with the snapshot 0.07 days old, one hour and forty minutes after refresh-daily run 33005902616 landed GREEN. Nothing had stopped landing; a meeting had concluded and aged past ninety days. That is RULING 116's shape - a guard pinning the size of a gap time creates - and RULING 115's cost, an alarm firing on the normal operating state. I moved the assertion to the snapshot's AGE (two days: the daily cadence plus one missed run), which is what FROZEN means and what this row was about, and kept the crossing count reported beside it plus a second assertion that the shedding is explicable by that age. The detector is untouched and the constructed-crossing test still proves it catches one. QUESTION: keep the age-based assertion, or do you want the stricter zero-crossing reading back with the daily refresh cadence tightened to match it?
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -294,7 +294,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**42 open · 5 resolved.**
+**43 open · 5 resolved.**
 
 ### P1
 
@@ -311,6 +311,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH175** — 2026-general-candidate-order-081026.pdf, the third document on the Morris County Clerk's candidates page. Read 2026-08-25: 7 pages, every one rendering with NO text layer, so the extractor correctly reports ZERO_ROWS with the reason 'this is a scanned PDF. The next rung is OCR (lib/extract/ocr.ts), NOT a finding that the document is empty'. Both the filing parser and nj:filing:check exclude it by name and say why, which is right — including it would produce a guaranteed zero-row parse. What it carries is the BALLOT POSITION of every candidate, drawn by lot, which decides the order a reader meets them on a real ballot and which this product does not hold. lib/extract/ocr.ts exists. Nobody has pointed it at this document.
 
 **NH191** — From the 8/25 Part 2 walkthrough, captures 17-30-28 and 17-30-58. The Morris Hills Regional School District card reads We haven't sourced who leads this body yet and We know this division has a governing body because its boundary exists. We haven't sourced who sits on it. Sean finds this hard to believe given New Jersey was supposed to be complete. The audit he asks for is whether the NJ hunt actually finished or silently skipped districts — a possible partial-extraction defect of the class RULING 100 governs, seen six times before — and the deliverable is the DISTRICT-LEVEL COVERAGE DENOMINATOR for New Jersey. One number is already measured and is a start: pnpm nj:wire reports 20 bodies wired and 19 owed of 39 MUNICIPALITIES, which is a municipal denominator and says nothing about school districts. Not reached by part2-0825.
+
+**NH213** — Sean found Morris Hills Regional School District rendering 'We haven't sourced who runs it yet' and doubted it, given New Jersey was supposed to be complete. Audited 2026-08-26 against data/audit/universe-07866.json, the official universe: 413 units carry an NJ ocd id, 187 of them school districts. 23 have a roster in BODY_ROSTERS; 390 do not, and Morris Hills is one of them. This is NOT the partial-extraction defect it was suspected of being - the universe NAMES all 413, which is RULING 57 working, named first and hunted second. The NJ hunt did not silently skip districts; it named them all and hunted a fraction. What was reported complete was the 07866 BALLOT (272 candidacies), which is a different denominator from district-level roster coverage, and the two were being read as one.
 
 **NH38** — Six of the 40 New Jersey senators carry a websiteUrl on assemblydems.com or njassemblygop.com - a party caucus page for the Assembly, for people who now sit in the Senate. Two of them, John McKeon and Parker Space, answer HTTP 404 and surfaced in the officials audit as MISS-404.
 
@@ -390,7 +392,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**18 open · 0 resolved.**
+**19 open · 0 resolved.**
 
 ### P2
 
@@ -401,6 +403,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH192** — From the 8/25 Part 2 walkthrough, capture 17-28-02, which shows John Carruth's large battlecard rendering JC initials. Third session in which a missing official photo has been reported. THE STANDING RULE Sean states with it, which outlives the instance: superintendent photos are almost always on the district site under a link that simply says superintendent, and they are captured everywhere. He allows that 85641 may not have been through the Arizona hunt yet, so this instance may resolve on its own; the standing rule applies regardless. The deliverable is how many districts across all four pilot zips lack a superintendent photo, then the hunt. Not reached by part2-0825.
 
 **NH201** — The denominator Sean asked for, and it turned up a second finding larger than the one he reported. Half the school districts in the registry have no superintendent row of any kind, so a missing photo is not their problem yet - a missing person is.
+
+**NH214** — Sean's standing rule from the 8/26 walkthrough: superintendent photos are almost always on the district site under a link that simply says 'superintendent', and should be captured everywhere. Audited 2026-08-26 across every roster: 42 bodies hold a roster, 6 are school districts, and 3 hold a substantive superintendent - Dr. Gabriel Trujillo (Tucson Unified), John Carruth (Vail Unified) and Michael Bessette (Interim Superintendent, Kearsarge). NONE of the three has a portrait. The other 3 school districts - Rockaway Township, Sunnyside Unified and Amphitheater Unified - hold no superintendent at all, which is a separate and larger gap. Note the correction that produced this number: a first pass read a photoUrl field off the roster member and reported 'NO PHOTO' for all three, and that field does not exist on RosterMember - photos live in the content-addressed asset store. The count is right; the first instrument was measuring nothing.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -434,7 +438,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**13 open · 39 resolved.**
+**13 open · 40 resolved.**
 
 ### P1
 
@@ -472,7 +476,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**76 open · 105 resolved.**
+**77 open · 105 resolved.**
 
 ### P1
 
@@ -588,6 +592,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH17** — The consolidated miss list says newbury.nh.gov/sitemap.xml is a 403 and that robots declares none. It answers HTTP 200 at 43,484 bytes. A sitemap is the discovery rung for every page on a site, and this one has been closed to us on a stale reading.
 
+**NH211** — Walked 2026-08-26 while looking for a route that geocodes a STREET rather than an address - which is exactly what the narrowing chip wants and what the onelineaddress endpoint cannot do. tigerweb.geo.census.gov answers robots.txt with HTTP 200 carrying a WAF body: 'The requested URL was rejected. Please consult with your administrator.' That is a 200 that is not a document (RULING 93), so the may-we-walk verdict is UNKNOWN, and RULING 148 says unknown REFUSES. No route was built. It is worth a decision because the host is the Census Bureau, already an approved source (D53), publishing the same TIGER data this product already ships committed - so the refusal is about reachability and permission rather than about the source.
+
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 
 **NH40** — cfs.sos.nh.gov holds first-party contact details for every New Hampshire candidate who registered a committee, and it refuses rungs 2, 3, 4 and 6 with an Akamai 403 - headless Chromium, a real Chrome channel and a masked user agent alike. A visible browser on the same machine and the same IP gets HTTP 200. It was harvested by hand this session through the app's own XHR at rung 7, which is a procedure and not a script, so nothing in CI can repeat it.
@@ -658,7 +664,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**30 open · 140 resolved.**
+**30 open · 141 resolved.**
 
 ### P1
 

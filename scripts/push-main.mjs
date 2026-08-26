@@ -349,15 +349,50 @@ function pushLoop({ cwd, remote, branch, attempts, log, transport }) {
 
     const rebase = git(["rebase", `${remote}/${branch}`], cwd);
     if (!rebase.ok) {
-      // Leave the tree clean so the runner's teardown is not the thing that
-      // resolves it, and fail loudly: a conflict between two bots editing the
-      // same governed artifact is a real finding, not a retry case.
+      /*
+       * THE REFUSAL IS THE DESIGN AND IT STAYS. A conflict between two bots
+       * editing the same governed artifact is a real finding, not a retry
+       * case — auto-resolving it would silently drop one run's regeneration
+       * of an artifact in favour of another's, which is a worse outcome than
+       * a red run somebody reads.
+       *
+       * WHAT CHANGED (JOB04, 2026-08-26). The reason was git's own conflict
+       * hint — *"Resolve all conflicts manually, mark them as resolved with
+       * git add/rm"* — which names no path and sends every reader to the log.
+       * That is RULING 113's failure exactly: an absence that CAN name what it
+       * saw points at the reader instead of the writer. Diagnosing run
+       * 33004557882 meant fetching the whole job log to learn one fact the
+       * process already had in its hand.
+       *
+       * The conflicted paths are read BEFORE the abort, because `rebase
+       * --abort` is what destroys them.
+       */
+      const conflicted = git(["diff", "--name-only", "--diff-filter=U"], cwd);
+      const paths = conflicted.ok
+        ? conflicted.stdout.split("\n").map((p) => p.trim()).filter(Boolean)
+        : [];
       git(["rebase", "--abort"], cwd);
       if (stashed) git(["stash", "pop"], cwd);
+      /*
+       * RULING 24 / RULING 159: "could not read the conflicted paths" is a
+       * DIFFERENT state from "there were none", and zero conflicted paths on a
+       * failed rebase is not an earned zero — it means something other than a
+       * content conflict stopped the replay. Neither may print like the other.
+       */
+      const named =
+        !conflicted.ok
+          ? "the conflicted paths could NOT be read, so this names none"
+          : paths.length === 0
+            ? "the rebase failed with NO conflicted path, so the cause is not a content conflict"
+            : `${paths.length} conflicted path(s): ${paths.join(", ")}`;
       return {
         ok: false,
         attempts: attempt,
-        reason: `rebase onto ${remote}/${branch} conflicted: ${rebase.stderr || rebase.stdout}`,
+        reason:
+          `rebase onto ${remote}/${branch} conflicted — ${named}. ` +
+          `Two writers regenerated the same governed artifact; this run REFUSES to ` +
+          `resolve that automatically rather than drop one of them. ` +
+          `Underlying git output: ${rebase.stderr || rebase.stdout}`,
       };
     }
 

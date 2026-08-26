@@ -33,12 +33,24 @@
  * **It is allowed to go red on a quiet night, and that is the point.** If the
  * daily refresh stops landing, this is what says so — loudly, in a place
  * somebody is already looking, rather than in a table nobody ran.
+ *
+ * ## CORRECTED 2026-08-26 — what "stops landing" had to become
+ *
+ * The first version asserted ZERO crossings, and zero is not reachable: the
+ * crossing band is exactly as wide as the snapshot's own age, so any snapshot
+ * older than an instant has shed something. It went red 1 hour 40 minutes
+ * after a green refresh. The assertion is now the snapshot's AGE — which is
+ * what "frozen" means — with the crossing count reported beside it and a
+ * second assertion that the shedding is explicable BY that age. The full
+ * reasoning sits on the assertion itself rather than here, where the reader
+ * arrives at it.
  */
 
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import { test } from "node:test";
 
+import { CONCLUDED_LOOKBACK_DAYS } from "../lib/meetings/constants.ts";
 import { readSnapshot } from "../lib/meetings/snapshot.ts";
 import { servingClockFor } from "../scripts/source-headroom.mts";
 
@@ -48,7 +60,17 @@ import { servingClockFor } from "../scripts/source-headroom.mts";
 // that ruling exists to refuse.
 const ROOT = join(import.meta.dirname, "..");
 
-test("NH206: no committed row has fallen out of the serving window", () => {
+/**
+ * How old the committed snapshot may be before it counts as FROZEN.
+ *
+ * Two days: the daily cadence RULING 124 set, plus one missed run. One day
+ * would go red on the ordinary gap between a run and the next; three would let
+ * two consecutive silent failures pass, and two consecutive failures is
+ * precisely the evidence RULING 115 says is worth waking somebody for.
+ */
+const MAX_SNAPSHOT_AGE_DAYS = 2;
+
+test("NH206: the committed snapshot is not FROZEN, and its shedding is explicable", () => {
   const snapshot = readSnapshot(ROOT);
   assert.ok(snapshot, "there is no committed meetings snapshot to measure — that is a broken read, not a clean board");
 
@@ -58,14 +80,75 @@ test("NH206: no committed row has fallen out of the serving window", () => {
   // holding no rows would otherwise report zero crossings and read as health.
   assert.ok(clock.totalRows > 0, "the snapshot holds no meetings at all, so nothing could have crossed");
 
-  assert.equal(
-    clock.fallenOutOfServing,
-    0,
-    `${clock.fallenOutOfServing} of ${clock.totalRows} committed row(s) were inside the serving window when the ` +
-      `snapshot was written and are outside it NOW. The snapshot is ${clock.snapshotAgeDays} day(s) old. ` +
-      `By source: ${clock.bySource.map((s) => `${s.source} ${s.dropped}`).join(", ") || "none"}. ` +
+  /*
+   * CORRECTED 2026-08-26 by the all-open-board session, and the correction is
+   * recorded rather than made quietly, because it MOVES A GUARD.
+   *
+   * ## What this asserted, and why it could not hold
+   *
+   * It asserted `fallenOutOfServing === 0`. **That is the size of a gap the
+   * architecture creates by itself**, which is the shape RULING 116 forbids —
+   * a guard that goes red because time passed rather than because anything
+   * broke.
+   *
+   * The arithmetic, measured rather than argued. The serving window looks back
+   * `CONCLUDED_LOOKBACK_DAYS` = 90 days. A row "falls out" when its start sits
+   * between `generatedAt - 90d` and `now - 90d` — a band exactly as wide as
+   * the snapshot's own age. The committed snapshot holds 447 rows over that
+   * window, about five a day, so **an age of one day is worth roughly five
+   * crossings and an age of one hour is worth a fraction of one**. On
+   * 2026-08-26 this went red at 1 of 447 with the snapshot **0.07 days old** —
+   * one hour and forty minutes after `refresh-daily` run 33005902616 landed
+   * green. Nothing had stopped landing. A meeting had simply concluded and
+   * aged past ninety days, which is the window doing its job.
+   *
+   * With the daily cadence that is a red suite on most days, and RULING 115 is
+   * the cost: the price of an alarm that fires on the normal operating state is
+   * never the false alarm, it is the real one nobody reads.
+   *
+   * ## What it asserts now, and why this is the same protection
+   *
+   * The row `NH206` is about a **FROZEN** snapshot — "loses reader-visible rows
+   * one day at a time and nothing goes red". Frozen is a fact about the
+   * snapshot's AGE, and age is the invariant; the crossings are the
+   * CONSEQUENCE. So the assertion moves to age, and the crossing count is
+   * reported beside it on every run — both numbers, neither standing in for
+   * the other (the two-numbers rule), which is what the module this reads from
+   * already says about its own two clocks.
+   *
+   * The detector is untouched: `servingClockFor` still measures crossings, the
+   * constructed-crossing test below still proves it catches one, and this still
+   * runs in the SUITE rather than during a refresh build — which was the whole
+   * of what was missing.
+   *
+   * A row is open for Sean to overrule this if he wants the stricter reading.
+   */
+  assert.ok(
+    clock.snapshotAgeDays <= MAX_SNAPSHOT_AGE_DAYS,
+    `the committed meetings snapshot is ${clock.snapshotAgeDays} day(s) old, past the ` +
+      `${MAX_SNAPSHOT_AGE_DAYS}-day ceiling — the daily refresh has stopped landing, and production ` +
+      `is serving a calendar that loses reader-visible rows every day it stays frozen. ` +
+      `${clock.fallenOutOfServing} of ${clock.totalRows} committed row(s) have already fallen out of the ` +
+      `serving window since it was written` +
+      `${clock.bySource.length > 0 ? ` (by source: ${clock.bySource.map((s) => `${s.source} ${s.dropped}`).join(", ")})` : ""}. ` +
       "This is the SERVING EDGE, which moves — not the headroom column, which is frozen. " +
-      "The daily refresh has not landed recently enough; run `pnpm source:headroom` and dispatch refresh-daily.",
+      "Run `pnpm source:headroom` and dispatch refresh-daily.",
+  );
+
+  /*
+   * The DIRECTION, which age alone does not cover (RULING 116 asks for the
+   * invariant AND the direction). A fresh snapshot that has already shed a
+   * large share of its rows is not explained by the passage of time, and that
+   * is a real finding rather than a clock — it would mean the snapshot was
+   * built holding rows that were already at the edge.
+   */
+  const sheddablePerDay = clock.totalRows / CONCLUDED_LOOKBACK_DAYS;
+  const explicable = Math.ceil(sheddablePerDay * (clock.snapshotAgeDays + 1) * 3);
+  assert.ok(
+    clock.fallenOutOfServing <= explicable,
+    `${clock.fallenOutOfServing} of ${clock.totalRows} row(s) have fallen out of the serving window, and the ` +
+      `snapshot's age of ${clock.snapshotAgeDays} day(s) can only explain about ${explicable}. ` +
+      "That is not the clock moving — the snapshot was committed holding rows already at its edge.",
   );
 });
 

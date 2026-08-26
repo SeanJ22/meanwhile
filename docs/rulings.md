@@ -4441,3 +4441,55 @@ the names leaves an amount, a city and a date per row, which is re-identifiable
 against the FEC's own public search in about a minute — the product would have
 published the same record with one column hidden. The row had to stop being a
 row.*
+
+## One ruling of 2026-08-26 — the all-open-board session
+
+Adopted 2026-08-26, from Sean's all-open-board brief. **RULING 168.** `CLAUDE.md`
+does not carry it: it is a decision about one row and one workflow, not a law
+that binds every session, and the record-what-is-not-law rule puts it here.
+
+### RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief
+
+Recorded the way **RULING 161** recorded his decisions of 2026-08-26 and
+**RULING 151** those of 2026-08-25 — so that a close has an authority which
+exists, rather than a session deciding for him.
+
+**`NH204` — RATIFIED IN FULL.** His words: the grant covers the complete
+transaction, not one file.
+
+*The reasoning he gave, recorded because a paraphrase of a decision is a
+different decision.* `job-watch` opens a tracker row when a scheduled job fails
+twice running, and **that row is the only channel telling him the alarms are
+broken.** The row cannot reconcile unless its derived views are written with it.
+The 2026-08-26 corruption happened precisely because the row landed and the
+views did not.
+
+**The enumerated set, verified against what the job actually writes rather than
+against the list the brief supplied.** The brief named five paths and asked for
+any difference to be reported. **There is none — 5 of 5 match**, and each is
+already justified individually in `lib/ops/push-allowlist.ts`:
+
+| Path | Why it is in the transaction |
+| --- | --- |
+| `docs/tracker-working.csv` | the row itself (`TRACKER_ROW_GRANT`) |
+| `docs/tracker.md` | the readable view, regenerated in the same `tracker add` call |
+| `docs/log.md` | the session-by-session record, same call |
+| `docs/tracker-opened.json` | the opened-row ledger the guards reconcile against |
+| `docs/tracker.xlsx` | the workbook Sean actually reads |
+
+**Still barred outright, and this does not change:** `docs/rulings.md`, the
+resolved tracker store, and every prefix in `NEVER_PUSHABLE` — `.github/`,
+`scripts/`, `lib/`, `app/`, `components/`, `tests/`, `CLAUDE.md`. The grant is
+enumerated paths only and **a path not named is refused**, checked twice by two
+lists that are not derived from each other (RULING 147).
+
+**The write is atomic** — row, session attribution, section state, derived
+views, recount and reconciliation assertion, all or nothing. `scripts/tracker.mjs`
+already refuses a whole batch rather than writing the good half of it, which is
+the property this ratification depends on: a partial success is the defect the
+grant exists to prevent, not merely to permit around.
+
+*Also recorded from the same brief, so the close has an authority:* **`BAL-14`
+is SETTLED** — width matching the *Would you vote for them?* box, green, in both
+themes — and is not an open question. **`NS15`** closes on his authority: done,
+communicated.

@@ -19245,3 +19245,34 @@ renumbered to **165** in one sweep and 164 was left exactly where it was.
 `docs/rulings.md` is append-only, and renumbering the one that already shipped
 would leave dangling references in a record whose whole value is that it does
 not move.
+
+### Postscript — `main` is green, and the instrument said otherwise
+
+Written after the close-out merged, because the finding only exists once the
+merge has happened.
+
+`main` at `343ca7e` carries **six** check-runs: three `success` started
+`17:08:22Z`, three `cancelled` started `17:07:04Z`. Branch protection evaluates
+the **latest per context name**, and GitHub's own `filter=latest` view returns
+all three required contexts as `success` — so `main` is green and both merges
+were correct.
+
+`pnpm main:green` reported **RED**, because it counts every check-run on the
+commit rather than the latest per name. The cancelled three were **this
+session's own hand dispatch**, cancelled by `build-check.yml`'s
+`concurrency: cancel-in-progress` when the long-delayed `push`-event run finally
+started twenty-five minutes late.
+
+Two things follow, and the second is ours rather than GitHub's:
+
+- **GitHub Actions ran badly behind on this repository for about two hours** —
+  four separate events registered no suite for twenty minutes or more, while
+  every `workflow_dispatch` started within seconds. Ruled out: Actions enabled,
+  nine workflows `active`, `workflow` scope on the token, commits attributed.
+- **Dispatching a check by hand to work around that lag is not free.** It races
+  the late event-run, one of the two is cancelled, and `main:green` reads the
+  superseded cancellation as a failure. **RULING 75's whole value is that
+  `main:green` can be trusted**, and an instrument that cries wolf on a
+  superseded run is the RULING 115 failure. `NH208` carries both, and asks
+  whether `main:green` should judge the latest run per context name — which is
+  what branch protection itself does.

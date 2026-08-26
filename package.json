@@ -261,7 +261,8 @@
     "shoot:align2": "tsx scripts/shoot-align2-0826.mts",
     "descent": "tsx scripts/descent.mts",
     "tenancy": "tsx scripts/tenancy.mts",
-    "verify:extraction": "tsx scripts/verify-extraction.mts"
+    "verify:extraction": "tsx scripts/verify-extraction.mts",
+    "measures": "tsx scripts/measure-scoreboard.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

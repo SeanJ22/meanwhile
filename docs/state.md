@@ -4,9 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-26 — **Four instruments were reporting on things they had
-never looked at.** The all-open-board session; its record is the LAST section of
-this file.
+Last updated: 2026-08-26 — **The bypass is only as safe as the paths it can
+carry.** The unblock-pushers session; its record is the LAST section of this
+file.
+
+Previous: 2026-08-26 — **Four instruments were reporting on things they had
+never looked at.** The all-open-board session.
 
 Previous: 2026-08-25 — **Six classes closed, and the predicates that hid
 them.** Part 2 visual feedback.
@@ -18969,3 +18972,82 @@ hunting on its own would miss them again the same way.
   03255 carries 124, with four 03255 candidacies holding every arguable field
   already. The expiry moved to 2026-09-02, so **the cliff is gone rather than <!-- expected-future: 2026-09-02, the RULING 53 expiry the 2026-08-26 re-test stamped on all 1,162 -->
   deferred**.
+
+
+---
+
+## The eight pushers, the bypass, and the allowlist that makes it safe
+
+The unblock-pushers session, 2026-08-26. Branch `claude/unblock-pushers-0826`.
+
+**Nothing about this repository's settings was changed by this session.** The
+settings change is Sean's, and it is written out click by click in
+`docs/branch-protection-clicklist.md`.
+
+### What was wrong
+
+Protection turned on 2026-08-25 forbids a direct push to `main` from everyone,
+the Actions bot included. **All eight scheduled pushers push directly**, so
+since that date every one of them has failed at the push. Read verbatim from
+run `32955499285`:
+
+```
+remote: - Changes must be made through a pull request.
+remote: - 3 of 3 required status checks are expected.
+ ! [remote rejected] HEAD -> main (protected branch hook declined)
+```
+
+Nothing was silently lost — `scripts/push-main.mjs` retries five times with a
+rebase between each and then goes red rather than exiting zero having lost its
+commit, which is R48's machinery working correctly. But the data ages.
+
+### The finding that led the session
+
+**The allowlist was derived from what the pushers actually write**, read off
+their own `git add` lines rather than from what they were expected to write.
+That reading found `job-watch` running `git add docs/` — the **whole
+directory** — while needing exactly one file in it. `docs/` holds
+`rulings.md`, the resolved tracker store and every generated report, so anything
+left dirty in the runner's tree by an earlier step would have been swept into a
+bot commit and pushed to `main` unreviewed.
+
+Nothing had gone wrong yet. The blast radius was simply far larger than the
+job's purpose, and it is the reason the allowlist is **per-workflow** rather
+than one shared list — a shared list is the union of eight workflows' needs, so
+the FEC refresher would be permitted to write the ballot.
+
+### What shipped
+
+- **`lib/ops/push-allowlist.ts`** — a per-workflow path allowlist enforced
+  inside `scripts/push-main.mjs`, the one script all eight already go through.
+  It fails closed on an unknown workflow id, an unreadable diff, an **empty**
+  diff, and any path outside the profile. A second independent list bars
+  `.github/`, `scripts/`, `lib/`, `tests/`, `CLAUDE.md`, `docs/rulings.md` and
+  the resolved tracker store outright. RULING 162.
+- **`pnpm protection:verify`** — the live-API assertion of the intended end
+  state. It understands classic protection *and* rulesets, reports `shape:
+  both` for the trap where classic is left on beside a ruleset, and exits
+  non-zero on `cannot-tell`. RULING 163. **Standalone, not in `pnpm gates`**:
+  reading branch protection needs admin scope the gates job does not have and
+  should not be given.
+- **Every-failure reporting.** 9 workflows audited, 3 short-circuiting on
+  independent steps, 3 fixed. RULING 164, and the general rule it carries is
+  that a `continue-on-error` step whose outcome nobody reads is a swallowed
+  failure.
+
+### The one grant outside `data/`, stated rather than absorbed
+
+`job-watch` may write `docs/tracker-working.csv`. The brief said the allowlist
+never includes the tracker stores; read strictly that ends `job-watch`, whose
+whole function under RULING 56 is to commit the Needs Sean row it raises — the
+only channel that reaches a person when a scheduled job fails twice running.
+The grant is to one workflow for one file, and `NH204` asks Sean to ratify or
+overrule it.
+
+### Headroom, re-confirmed and unmoved
+
+`pnpm source:headroom`, 2026-08-26: **8 of 11 meetings sources under 14 days**,
+`ical` at 0.63d and `clerksboards` at 6.38d having already crossed its window.
+**Identical to the digit to the prior session's measurement**, because nothing
+has landed since. `NH197` already covers all eight as one architectural fact
+and no duplicate rows were opened.

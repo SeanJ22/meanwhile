@@ -4049,3 +4049,141 @@ exhausted absence.
 to say."* Three options with side-by-side captures and a recommendation; the
 row that carries it asks him a question with four answers rather than asking
 him to specify a fix.
+
+
+---
+
+## THREE RULINGS OF 2026-08-26 — THE SCHEDULED PUSHERS
+
+(Adopted 2026-08-26, the unblock-pushers session. **RULINGS 162, 163 and 164.**
+Recorded here rather than in `CLAUDE.md`: these govern how this repository's own
+plumbing behaves, not what the product may claim about a government. If Sean
+wants any of them to bind as law he writes it into `CLAUDE.md` and this entry
+says so.)
+
+### RULING 162 — a bypass is only as safe as the paths it can carry
+
+**A scheduled workflow that pushes to `main` declares which paths it may write,
+and the shared pusher refuses anything else. Fail closed, per workflow, with no
+skip flag.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.*
+Hardening `main` on 2026-08-25 blocked all eight scheduled pushers, which push
+directly. Sean ruled for a scoped bypass for the Actions bot — and **a bypass
+that could carry code is the 8/25 hole reopened.** That hole was sessions
+merging red code through PRs with nothing required; the actor was Claude Code
+and the payload was code. The allowlist is what makes the payload structurally
+incapable of being code, which is the only reason the bypass is acceptable at
+all.
+
+- **PER-WORKFLOW, not one global list.** A single list is the union of eight
+  workflows' needs, so the FEC refresher would be permitted to write the ballot.
+  Each profile grants exactly what its own workflow writes, so the blast radius
+  of any one of them is one artifact.
+- **It fails closed in FOUR directions**: an unknown or absent workflow id, a
+  diff that could not be read, an **empty** diff, and any path outside the
+  profile. The empty case is the one that looks harmless — a push of nothing is
+  a path check with nothing to check, which is RULING 159's earned zero.
+- **A second, independent list bars the dangerous prefixes outright**, so a
+  profile widened by mistake still cannot admit `.github/`, `scripts/`, `lib/`,
+  `tests/`, `CLAUDE.md`, `docs/rulings.md` or the resolved tracker store.
+  Re-deriving one list from the other would prove the file equals itself
+  (RULING 147).
+- **It lives in `scripts/push-main.mjs`**, the one script all eight already go
+  through. Eight copies of a guard is eight places for it to drift, and a ninth
+  pusher would inherit the copy nobody remembered to add.
+
+**THE LIST IS DERIVED FROM WHAT THE PUSHERS ACTUALLY WRITE**, read off their own
+`git add` lines, never from what they were expected to write. That reading is
+what produced the finding: **`job-watch` ran `git add docs/` — the whole
+directory — while needing exactly one file in it.** `docs/` holds `rulings.md`,
+the resolved tracker store and every generated report, so anything left dirty in
+the runner's tree by an earlier step would have been swept into a bot commit and
+pushed to `main` unreviewed. Nothing had gone wrong yet; the blast radius was
+simply far larger than the job's purpose.
+
+**One grant sits outside `data/` and it is named rather than absorbed.**
+`job-watch` may write `docs/tracker-working.csv`, because RULING 56 makes
+committing the Needs Sean row its entire function, and that row is the only
+channel that reaches a person when a scheduled job fails twice running. The
+brief said the allowlist never includes the tracker stores; read strictly that
+ends the alarm. The grant is made to one workflow for one file, reported, and
+rowed for Sean to overrule (`NH204`).
+
+`lib/ops/push-allowlist.ts`, guarded in `tests/push-allowlist.test.ts`, whose
+load-bearing case is a workflow that did not exist when the guard was written:
+a guardless pusher is constructed, caught, and gone when the test ends
+(RULING 157).
+
+### RULING 163 — the answer to "is the protection still what we think" is a command
+
+**Branch protection is asserted against the live API by `pnpm protection:verify`,
+which exits non-zero on drift and on could-not-tell.**
+
+*The rationale.* `main` was hardened by hand and read back once, into a ruling,
+as a table. **A table in a document is a claim about a server on the day
+somebody looked.** Protection is edited in a web UI by a person, under no diff
+and no review, and nothing in this repo would have noticed a checkbox coming
+off — which is how the 8/25 chain started.
+
+- **`cannot-tell` is not a pass** and exits `2`. No credential is not a pass
+  (RULING 24, RULING 125).
+- **It understands classic protection AND rulesets**, because the scoped bypass
+  moves `main` from one to the other and a verifier that knew only the shape it
+  was written against would report `cannot-tell` on the day it is most wanted.
+  It reports `shape: both`, which is the trap: the two are **additive**, so
+  leaving classic in place means the bot is still refused while the ruleset
+  looks correct.
+- **It closes the half of RULING 156 that no ruleset existed for.** That ruling
+  anchors the required-context names against `build-check.yml` and fails in both
+  directions; it cannot see a name registered on a *branch*. Moving to a ruleset
+  re-registers all three names BY HAND, which is exactly when a typo enters. A
+  context spelled `gates (test, lint, tsc)` reads as MISSING, never as
+  agreement.
+- **It is STANDALONE, not in `pnpm gates`**, and the reason is stated rather
+  than assumed: it needs `gh` authenticated with admin scope, which reading
+  branch protection requires and which the gates job — running with
+  `contents: read` — has neither.
+
+`lib/ops/protection-state.ts` holds the judgement with no network in it, so the
+intended end state is testable and was pinned in `tests/protection-state.test.ts`
+**before it existed on the server**, which is the only way a click-list can be
+checked against anything.
+
+### RULING 164 — a workflow reports every failure, not just the first
+
+**Independent steps run to completion and report together. A genuinely
+dependent step says "stopped here, N not attempted" rather than letting a
+skipped step read as a passing one. And a `continue-on-error` step whose
+outcome nobody reads is a swallowed failure.**
+
+*The rationale.* Three failures were once stacked in run order in this repo,
+each invisible until the one before it was fixed. **A workflow that reports only
+its first failure makes the number of remaining defects unbounded** — nobody can
+know how many lie between the current failure and the end, so every fix costs
+another round trip through CI. It is the same family as every instrument defect
+this repo has named: a mechanism reporting less than it knows.
+
+*Measured on adoption: 9 workflows audited, 3 short-circuiting on independent
+steps and 3 fixed, 6 legitimately dependent with the reason stated.*
+
+- **`intake-tripwire`** ran three independent checks unguarded and in sequence —
+  the schema gate, the write alarm and the tripwire — so the first failure ended
+  the job. A schema that has drifted is precisely when the write alarm is most
+  worth reading, so letting the gate suppress it is the wrong way round.
+- **`refresh-daily`**'s go-red-for-failed-sources step lacked `always()`, so a
+  validation failure hid which sources had failed. **Its sibling in
+  `refresh-meetings-snapshot` already carried the guard** — an independent case,
+  and the one that proves the correct form (RULING 157).
+- **`refresh-nj-filing`** carried `continue-on-error: true` on the clerk-count
+  reconciliation with **nothing reading `steps.pair.outcome` afterwards**, so a
+  disagreement between the clerk's published count and what we render was
+  swallowed whole and the run finished green. It stays non-blocking, as
+  designed, and becomes visible.
+
+**The general rule is the third one, and it is the class rather than the
+instance** (RULING 136): `continue-on-error` converts a failure into a silent
+pass, so any step carrying it must have its outcome read by something
+downstream. `tests/workflow-failure-reporting.test.ts` sweeps every workflow for
+it, asserts a floor so a reader that matched nothing cannot report green
+(RULING 159), and is shown catching a planted one.

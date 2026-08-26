@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 250,
-    "named": 2396,
+    "files": 253,
+    "named": 2423,
     "dynamic": 6
   },
   "files": {
@@ -2543,6 +2543,39 @@
       ],
       "dynamic": 0
     },
+    "tests/protection-state.test.ts": {
+      "names": [
+        "RULING 156 + 163: a RENAMED required context reads as MISSING, not as agreement",
+        "RULING 163: a bypass granted to anyone but the Actions app is DRIFTED",
+        "RULING 163: a ruleset that forgets strict is DRIFTED",
+        "RULING 163: an EVALUATE-mode ruleset does not count as protection",
+        "RULING 163: an unreadable API is COULD-NOT-TELL, never intact",
+        "RULING 163: classic protection left ON beside the ruleset still blocks the bot, and is reported",
+        "RULING 163: no protection at all is DRIFTED and says so plainly",
+        "RULING 163: the ruleset end state is INTACT — this is what Sean is clicking toward",
+        "RULING 163: today's classic protection is DRIFTED only on the missing bot bypass"
+      ],
+      "dynamic": 0
+    },
+    "tests/push-allowlist.test.ts": {
+      "names": [
+        "RULING 157: the audit catches a guardless pusher it was not derived from",
+        "RULING 162: NEVER_PUSHABLE overrides a profile that was widened by mistake",
+        "RULING 162: a path outside the profile is refused and NAMED",
+        "RULING 162: an EMPTY diff refuses — zero is a result that must be earned",
+        "RULING 162: an UNREADABLE diff refuses — it is not an empty diff",
+        "RULING 162: an unknown workflow id refuses rather than inheriting a grant",
+        "RULING 162: build-check mentions the pusher in prose and is NOT read as one",
+        "RULING 162: every workflow that pushes main declares a profile and stages only what it grants",
+        "RULING 162: no --workflow id refuses, and does not read as an empty diff",
+        "RULING 162: one refresher may not write another's artifact",
+        "RULING 162: the git add reader ignores comments, so a mention is not a stage",
+        "RULING 162: the happy path is allowed, and states its count",
+        "RULING 162: the tracker grant is to job-watch ALONE",
+        "RULING 162: traversal and absolute paths are refused before any rule is consulted"
+      ],
+      "dynamic": 0
+    },
     "tests/push-main.test.ts": {
       "names": [
         "F25: every workflow job is bounded well under the platform's six hours",
@@ -3531,6 +3564,15 @@
         "R45: no workflow pins an action major that targets Node 20",
         "R45: setup-node never tries to restore a cache before pnpm exists",
         "the workflow set is still the nine this rule was audited against"
+      ],
+      "dynamic": 0
+    },
+    "tests/workflow-failure-reporting.test.ts": {
+      "names": [
+        "RULING 164: a continue-on-error step must have its outcome READ somewhere",
+        "RULING 164: a failed SOURCE is reported even when validation also fails",
+        "RULING 164: intake-tripwire asks all three of its independent questions",
+        "RULING 164: the swallowed-failure reader catches a planted one"
       ],
       "dynamic": 0
     },

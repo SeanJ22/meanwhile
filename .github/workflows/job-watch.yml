@@ -78,15 +78,29 @@ jobs:
         if: always()
         run: corepack pnpm stale
 
+      # THE PATH IS THE ONE FILE, NOT THE DIRECTORY (2026-08-26, RULING 162).
+      #
+      # This read `git diff --quiet -- docs/` and `git add docs/` — the WHOLE
+      # directory — while needing exactly one file in it. `docs/` holds
+      # `rulings.md`, the resolved tracker store, the gap ledger and every
+      # generated report, so any of those left dirty in the runner's tree by an
+      # earlier step would have been swept into this bot's commit and pushed to
+      # `main` unreviewed. Nothing had gone wrong yet; the blast radius was
+      # simply far larger than the job's purpose, and it is the reason the
+      # allowlist below is per-workflow rather than one shared list.
+      #
+      # `pnpm watch:workflows --open` writes through `scripts/tracker.mjs add`,
+      # whose only output is a row appended to the working store. That file, and
+      # nothing else, is what this job commits.
       - name: Commit any row it opened
         run: |
-          if git diff --quiet -- docs/; then
+          if git diff --quiet -- docs/tracker-working.csv; then
             echo "no row opened — nothing to commit"
             exit 0
           fi
           git config user.name "job-watch[bot]"
           git config user.email "noreply@github.com"
-          git add docs/
+          git add docs/tracker-working.csv
           git commit -m "Job watch: a scheduled job has failed twice in a row"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow job-watch

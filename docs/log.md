@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **140 sessions.**
+Newest first. **142 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -25,6 +25,23 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
+## unblock-pushers-0826-nonhunt · 2026-08-26
+
+**What it finished.** 1 row(s).
+
+- **NH202** — The daily refresh had three failures stacked in run order, and each one was invisible until the one before it was fixed. That is not bad luck; it is a property of a pipeline whose steps run in sequence and whose only report is the first failure.
+
+**Needs Sean.** Nothing.
+
+## unblock-pushers-0826 · 2026-08-26
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NH204** — Every scheduled workflow now declares the paths it may push, and seven of the eight write only under data/ or one generated report. job-watch is the exception: it writes docs/tracker-working.csv, because committing the Needs Sean row it raises IS its whole function under RULING 56 — it is the only channel that reaches you when a scheduled job has failed twice running. The brief for this session said the allowlist must never include the tracker stores. Read strictly, that ends the alarm. *(open)*
+- **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done. *(open)*
+
+**Needs Sean.** NH204
+
 ## all-open-0826 · 2026-08-26
 
 **What it finished.** 9 row(s).
@@ -39,14 +56,13 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH176** — Measured 2026-08-25 against one local production build, four consecutive runs, no code or data changing between them. Every run: 372 passed, 6 declared COULD NOT RUN, and exactly ONE failure — a different one each time. Run 1: [promptD] the schema check, which was REAL and deterministic (the local Neon branch was at 19 of 21 migrations) and has passed on every run since it was applied. Run 2: [g12] an exact name navigates and asks nothing at 07866, offered="Board of County Commissioners — Board of County Commissioners - Work Session" — the IDENTICAL string that PASSED in run 1. Run 3: [g5] north Tucson renders crisp, not muted, at city zoom, delta 8.61 against a 2.5 threshold. Run 4: [g12] again, at 03255 this time. WHY THIS IS A P1 RATHER THAN AN ANNOYANCE: the whole premise of this suite is that a failure is a NAMED REGRESSION — 'the win <session> shipped is undone' — and every session is required to run it and report the result. A suite that fails one arbitrary check per run teaches a session to look at the failure, decide it is probably the flaky kind, and move on. That is the CLAUDE.md failure this repo names most often, arriving through the instrument built to prevent it, and it means the ONE deterministic failure in run 1 could just as easily have been shrugged off. THE SHAPE OF THE FLAKES: both families settle a browser interaction or measure a canvas. g12 waits for the ask box to route and reads what it offered; g5 diffs a rendered map region against the same region with an effect off. Both are timing-dependent and both already carry settle logic — the question is whether the settle condition is the right one, not whether to raise a threshold. Raising a threshold to fit the change it was supposed to catch is what a ceiling raised to fit is (CLAUDE.md), and this row is not a request to do that. WHAT WOULD SETTLE IT: run walk:all N times against one unchanged build and record which check identities fail at least once — the suite already prints stable check identities, so the census is mechanical. A flaky identity is then a known set a run can report against, which is the difference between 'one check failed, and it is one of the four we know are timing-dependent' and 'something broke'.
 - **NH179** — Item 13's machinery shipped 2026-08-25: lib/ops/flake-quarantine.ts classifies a check from N runs of one unchanged build, walk:all consults docs/walk-flakes.json and reports a quarantined check as its own fourth outcome that is never counted passing, and pnpm flake:sweep runs the walk N times and writes the verdict. 8 guards, including NH176's four real runs replayed. WHAT IS NOT DONE: the sweep has not been run, so docs/walk-flakes.json does not exist and nothing is quarantined yet. The classifier is deliberately unable to call anything flaky from one run — it takes a PASS on the same unchanged tree — so a single walk cannot populate it. Run pnpm flake:sweep --runs=3 --write against one local production build and the quarantine fills itself; until then walk:all behaves exactly as it did before, which is the honest state rather than a silent one.
 
-**What it started.** 7 row(s) opened, 7 still open.
+**What it started.** 7 row(s) opened, 6 still open.
 
 - **NH197** — Every meetings adapter clips to the same 90 days at fetch time and the snapshot stamps generatedAt minutes later, so every 90d-clipped source lands within about a day and a half of its own edge permanently, by construction. That is not eight sources about to fail; it is the architecture. R59's clerksboards failure was one of them crossing on a day when the gap between the two clocks happened to be wide enough. *(open)*
 - **NH198** — Sean found Morris Hills Regional School District rendering 'We haven't sourced who runs it yet' and said he found that hard to believe given New Jersey was supposed to be complete. He was right to doubt it, and the cause is a process defect rather than a data gap: the hunt ran a municipal enumeration and its denominator never contained the school districts. *(open)*
 - **NH199** — Two props the map passes down the who-governs card reach the bottom of the chain and are never called. Found while clearing lint warnings, which is the only reason anybody noticed. *(open)*
 - **NH200** — You said the map lines and yellow are overwhelming in dark view and that the same rendering reads fine in light, and you deliberately did not specify a fix. Three concrete options are captured side by side for you to react to. Nothing shipped. *(open)*
 - **NH201** — The denominator Sean asked for, and it turned up a second finding larger than the one he reported. Half the school districts in the registry have no superintendent row of any kind, so a missing photo is not their problem yet - a missing person is. *(open)*
-- **NH202** — The daily refresh had three failures stacked in run order, and each one was invisible until the one before it was fixed. That is not bad luck; it is a property of a pipeline whose steps run in sequence and whose only report is the first failure. *(open)*
 - **NH203** — The protection you turned on 2026-08-25 does exactly what you asked and, as a side effect, no scheduled workflow can commit anything any more. All eight pushers push DIRECTLY to main, which the protection now forbids for everyone including the actions bot. Nothing has been silently lost - every run goes red and says so - but no refresh has landed since. *(open)*
 
 **Needs Sean.** NH200, NH203

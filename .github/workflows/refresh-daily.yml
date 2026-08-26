@@ -191,13 +191,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/ docs/refresh-run.md
           git commit -m "Daily refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow refresh-daily
 
       # Code 2 fails the job HERE — after the healthy sources' data is safely on
       # main. The run is red, the broken source is named in the log and in
       # docs/refresh-run.md, and RULING 12 still holds.
       - name: Go red for the failed sources
-        if: steps.refresh.outputs.refresh_exit == '2'
+        if: always() && steps.refresh.outputs.refresh_exit == '2'
         run: |
           echo "One or more sources failed this run. Their names are in the step log above and in docs/refresh-run.md."
           exit 1

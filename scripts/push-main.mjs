@@ -44,6 +44,8 @@
 
 import { spawnSync } from "node:child_process";
 
+import { classifyPushPaths } from "../lib/ops/push-allowlist.ts";
+
 const DEFAULT_ATTEMPTS = 5;
 
 /** Read an option that takes a value; returns undefined when absent. */
@@ -66,6 +68,84 @@ function git(args, cwd) {
     stdout: (r.stdout ?? "").trim(),
     stderr: (r.stderr ?? "").trim(),
   };
+}
+
+/**
+ * The paths the commit(s) about to be pushed would introduce, or `null` when
+ * that could not be determined.
+ *
+ * `null` is NOT an empty list, and the caller must keep them apart — an
+ * unreadable diff is a question the guard could not answer, and answering it
+ * "nothing changed" would be the silent pass this whole guard exists to remove.
+ *
+ * TWO READINGS, AND THE METHOD USED IS PRINTED RATHER THAN HIDDEN. The precise
+ * one is everything on HEAD that is not yet on the remote branch. It needs a
+ * resolvable remote-tracking ref, which a shallow `actions/checkout` normally
+ * has but is not guaranteed. The fallback is the tip commit's own diff against
+ * its parent, which is exact for every pusher in this repo because each makes
+ * exactly ONE commit — and it is narrower rather than laxer, so falling back
+ * cannot admit a path the precise reading would have caught.
+ */
+export function changedPathsForPush({ cwd, remote = "origin", branch = "main", log = console.log } = {}) {
+  const range = git(["diff", "--name-only", `${remote}/${branch}..HEAD`], cwd);
+  if (range.ok) {
+    log(`push-main: path guard reading ${remote}/${branch}..HEAD`);
+    return range.stdout ? range.stdout.split("\n") : [];
+  }
+
+  const tip = git(["show", "--name-only", "--format=", "HEAD"], cwd);
+  if (tip.ok) {
+    log(
+      `push-main: ${remote}/${branch} did not resolve (${range.stderr || "no reason given"}); ` +
+        "path guard reading the tip commit's own diff instead",
+    );
+    return tip.stdout ? tip.stdout.split("\n") : [];
+  }
+
+  log(`push-main: could not read the changed paths at all — ${tip.stderr || range.stderr}`);
+  return null;
+}
+
+/**
+ * THE ALLOWLIST GUARD (2026-08-26, RULING 162).
+ *
+ * Runs before any push. Returns the decision rather than exiting, so the caller
+ * decides — and the direct-invocation block below exits non-zero on anything
+ * that is not `allowed`.
+ *
+ * It is here, in the ONE script all eight scheduled pushers already go through,
+ * rather than as a step copied into eight workflow files. Eight copies of a
+ * guard is eight places for it to drift, and a ninth pusher would inherit the
+ * copy nobody remembered to add.
+ */
+export function guardPushPaths({ cwd = process.cwd(), workflowId, remote = "origin", branch = "main", log = console.log } = {}) {
+  const changed = changedPathsForPush({ cwd, remote, branch, log });
+  const decision = classifyPushPaths({ profileId: workflowId, changed });
+
+  if (decision.verdict === "allowed") {
+    log(`push-main: path guard PASSED for ${decision.profileId} — ${decision.reason}`);
+    return decision;
+  }
+
+  // Loud and specific: which workflow, which run, which path (the brief).
+  const run = process.env.GITHUB_RUN_ID
+    ? `${process.env.GITHUB_WORKFLOW ?? "?"} run ${process.env.GITHUB_RUN_ID}`
+    : "local invocation (no GITHUB_RUN_ID)";
+  console.error("");
+  console.error("push-main: PATH GUARD REFUSED THIS PUSH");
+  console.error(`  verdict   ${decision.verdict}`);
+  console.error(`  workflow  ${decision.profileId ?? "(none given)"}  ·  ${run}`);
+  console.error(`  reason    ${decision.reason}`);
+  if (decision.offenders.length > 0) {
+    console.error("  paths outside the allowlist:");
+    for (const p of decision.offenders) console.error(`    - ${p}`);
+  }
+  console.error(
+    "  Nothing was pushed. The scheduled bypass exists to carry machine-generated data " +
+      "and nothing else; widening it is a decision for the author, not for a workflow.",
+  );
+  console.error("");
+  return decision;
 }
 
 export function pushMain({
@@ -189,6 +269,15 @@ const invokedDirectly = (process.argv[1] ?? "")
 
 if (invokedDirectly) {
   const argv = process.argv.slice(2);
+  const cwd = opt(argv, "cwd") ?? process.cwd();
+  const remote = opt(argv, "remote") ?? "origin";
+  const branch = opt(argv, "branch") ?? "main";
+
+  // The guard runs FIRST and there is no flag that skips it. An escape hatch on
+  // a gate is how the gate stops meaning anything.
+  const guard = guardPushPaths({ cwd, workflowId: opt(argv, "workflow"), remote, branch });
+  if (guard.verdict !== "allowed") process.exit(1);
+
   const result = pushMain({
     cwd: opt(argv, "cwd") ?? process.cwd(),
     remote: opt(argv, "remote") ?? "origin",

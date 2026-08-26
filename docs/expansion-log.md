@@ -1026,3 +1026,117 @@ they are INFRASTRUCTURE rather than expansion — RULING 89 draws that line
 explicitly, and calling them expansion is the exact misreading it forbids. They
 reach a required CI check, not a field owed to a reader. They are recorded in
 RULING 155 and in the tracker, which is where they belong.
+
+---
+
+## all-open-0826 · 2026-08-26
+
+**The board was opened whole, and it carried retrieval — so this is not a
+non-hunt session and the exemption is not claimed.** Five routes that did not
+exist at session start. **Two returned rows, one returned an explicit and useful
+ZERO, and two are audit routes rather than field routes** — the distinction is
+drawn below rather than blurred, because RULING 89 says expansion is a new route
+to a FIELD ALREADY OWED and an instrument is not that, however useful.
+
+### The Rockaway Township pages, read for images rather than for text
+
+- **Conceived:** `OFF-5` had been recorded by a prior session as *nothing held,
+  not a fetch problem*, and Sean's instruction was that the session determines
+  this rather than reading it off a file. RULING 157's question asked literally:
+  *what case would test this that the prior conclusion was not derived from?*
+  The answer was to re-fetch independently and read the IMAGE MARKUP rather than
+  the prose, because "no portraits" is a claim about `<img>` elements and the
+  prior record was a claim about a page.
+- **Query:** both pages, with the identified `User-Agent` the four limits
+  require, and every `<img>` enumerated rather than eyeballed:
+  ```
+  curl -A "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)" \
+    https://www.rockawaytownship.org/157/Township-Council
+  curl -A "we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)" \
+    https://www.rockawaytownship.org/228/Mayor
+  ```
+- **Returned:** HTTP 200 and 112,596 B; HTTP 200 and 106,107 B. **Eight images
+  on one page and seven on the other, and every one is site chrome** — an
+  emergency-alert dot, the banner, a search icon, a PUBLIC NOTICES graphic, the
+  township logo, the smart911 logo, the Google Translate icon. Not one bears a
+  member's name. **The prior conclusion is confirmed by an independent route**,
+  which is what RULING 157 asks for and is a reported success rather than a
+  wasted fetch.
+- **Generalises:** YES, to every CivicPlus-shaped municipal site — enumerate
+  `<img>` and classify chrome by `alt` text rather than deciding from the page's
+  appearance. It is a cheap, mechanical answer to *does this body publish
+  portraits at all*, which is the question that precedes any portrait hunt.
+
+### The absence re-walk as a ROUTE, run six days before its own expiry
+
+- **Conceived:** RULING 53 makes an absence a measurement with a shelf life, and
+  every one of the 1,162 carried the same date. The observation that produced
+  the route: *an absence that expires unexamined becomes a silent hole in the
+  matrix, and the one day it must not be re-walked is the day it expires.*
+- **Query:** the five-move stuck protocol per candidate per field, paced at one
+  query every 9,000 ms so a refusal would be the host's rather than ours:
+  ```
+  pnpm absences --zip=07866 --write
+  pnpm absences --zip=03255 --write
+  ```
+- **Returned:** **319 queries run, 319 answered, 0 WALLED.** 1,162 absences
+  re-argued, 0 voided. The zero walled is the finding: the previous pass earned
+  part of its absences out of refusals under RULING 144 — the weakest kind there
+  is — and this pass never needed that clause once.
+- **Generalises:** YES, to every zip. The value is not the absences; it is that
+  running the protocol EARLY converts an expiry cliff into a rolling re-walk,
+  and the walled count is the number that says whether an absence is argued or
+  merely defended.
+
+### The gap ledger asked about a LAYER rather than about a body
+
+- **Conceived:** `BC-28` — Sean found Morris Hills Regional dark and said he
+  found it hard to believe New Jersey was complete. Every existing route asks
+  *does THIS body have a roster*. The question that produced this one was RULING
+  93's descend-the-hierarchy move turned sideways: *what does the official
+  universe say about the LAYER, and how does our count split by layer?*
+- **Query:** the 07866 entry of the Census-of-Governments enumeration in
+  `data/derived/gap-ledger.json`, split against the registry by layer —
+  `pnpm nj:districts`.
+- **Returned:** **the official universe holds 27 governments at 07866, 4 of them
+  school districts, and 3 of the 4 are dark. The registry holds 23 New Jersey
+  rosters: 22 municipal governing bodies and 1 school board.** A hunt that
+  returned 22 of one layer and 1 of another did not run out of reach — its
+  denominator never contained the other layer.
+- **Generalises:** YES, to every state and every layer. **This is the route that
+  would have caught it without Sean** (RULING 97), and the answer to *why did
+  that procedure not run* is that no procedure compared our coverage to the
+  official universe BY LAYER — only in total, where 23 of 27 reads as almost
+  finished.
+
+### Two AUDIT routes, named as such rather than counted as field routes
+
+**Neither reaches a field a reader sees, so neither is expansion under RULING
+89. They are listed because the ruling asks for routes that did not exist at
+session start, and pretending an instrument is a hunt would be the more
+convenient error.**
+
+- **`pnpm source:headroom`** — conceived from `R59`: the daily refresh failed on
+  a source crossing its own edge, and *how close is every source to its edge*
+  was a number nobody was printing. Returned **8 of 11 sources under 14 days**,
+  and the finding that this is structural rather than eight sources about to
+  fail.
+- **`pnpm office:audit`** — conceived from RULING 157 applied to `OFF-7`:
+  Kearsarge is the case the fix came from, so the class needed a route that
+  walks every body. Returned **42 bodies, 3 in scope, 3 correct, 0 wrong**, with
+  Tucson Unified and Vail Unified as the independent cases.
+
+### What I would try if there were no manifest at all
+
+RULING 90's obligation, answered for the field that ended this session unfound —
+**a superintendent photograph, 0 of 3 held.**
+
+- **What a person with a browser would type:** `vail unified superintendent` —
+  and Sean's own standing rule says the answer is on the district site behind a
+  link that says nothing more than *superintendent*. That is a Tier B route this
+  session did NOT walk, and saying so is the honest report: the denominator was
+  the deliverable the brief asked for and the hunt behind it is `NH192`, still
+  open.
+- **The larger finding the measurement produced:** 3 of 6 districts hold no
+  superintendent ROW AT ALL. A missing person precedes a missing picture, and no
+  photo route can close a gap where nobody is named.

@@ -18961,8 +18961,11 @@ hunting on its own would miss them again the same way.
   rather than an exhausted absence.
 - **The 1,162 argued absences all expired on one date and the re-test pass was
   run now rather than on the day.** They carried 2026-09-01. <!-- expected-future: 2026-09-01, the RULING 53 expiry every argued absence carried before the 2026-08-26 re-test moved it -->
-  At 07866 all **276 candidacies were re-walked, 276 queries answered and 0
-  walled** — which matters, because the previous pass had built absences partly
-  out of refusals under RULING 144 and this one did not. **1,038 of 1,038 still
-  hold; 0 resolved to a found value; 0 needed re-argument**, and the expiry
-  moved a week out. The cliff is gone rather than deferred.
+  Both zips re-walked: **319 queries run, 319 answered, 0 WALLED** — and the
+  zero is the part worth keeping, because the previous pass had earned some of
+  these out of refusals under RULING 144, which is the weakest kind of absence
+  there is, and this one never needed that clause. **1,162 of 1,162 still hold;
+  0 resolved to a found value; 0 needed re-argument.** 07866 carries 1,038 and
+  03255 carries 124, with four 03255 candidacies holding every arguable field
+  already. The expiry moved to 2026-09-02, so **the cliff is gone rather than <!-- expected-future: 2026-09-02, the RULING 53 expiry the 2026-08-26 re-test stamped on all 1,162 -->
+  deferred**.

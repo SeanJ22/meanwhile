@@ -2264,3 +2264,191 @@ that needed rung 4 is a weaker fact than one that did not.
 wall at all**: FTP has no `robots.txt`, so the sweep's question does not apply
 to it and a `CANNOT_TELL` there is the instrument being asked the wrong
 question rather than the host refusing.
+
+## EXPANSION — routes that did not exist at session start (RULING 88)
+
+**2026-08-26, the descent session, Items 8 and 9.** Every route below was
+conceived this session, walked with the literal URL recorded, and its yield
+reported **including zero**. RULING 88: *a newly conceived route that returns
+nothing is a REPORTED SUCCESS, not a defect. The invention is the deliverable,
+not the yield.*
+
+The organising question was RULING 170's, not *where would this be published*
+but **WHO WAS COMPELLED TO WRITE THIS DOWN?**
+
+### 1. The permission read, walked up the ladder — GENERALISES TO EVERY HOST
+
+**How conceived.** `pnpm robots:sweep` reported `CANNOT_TELL` for `az.gov`, and
+`CANNOT_TELL` refuses the walk under RULING 148. The question asked was *does
+this host permit us* and the question that should have been asked was *did we
+manage to READ this host's rules*.
+
+**Literal probe.** `curl -sL -A '<Chrome UA>' https://az.gov/robots.txt`
+
+**Returned.** HTTP 200, 2,189 bytes, an ordinary permissive Drupal `robots.txt`
+— where Node's `fetch` carrying the identical Chrome header set gets HTTP 403.
+
+**Yield.** **Arizona 12 walkable hosts → 15. New Hampshire and New Jersey 12 →
+17. Across 39 hosts judged: 24 walkable → 32.** Recovered: `az.gov` and
+`nh.gov` (the tops of two descents), `azed.gov` (every AZ school district),
+`irc.az.gov`, `courts.nh.gov`, `education.nh.gov`, `revenue.nh.gov` (the tax
+rate tables), `nhsba.org`.
+
+**Generalises?** **To every host this project will ever ask about.** Built into
+`scripts/robots-sweep.mts` rather than left as a note — which is the RULING 97
+point, because the prior session had ALREADY WRITTEN into `docs/source-ladder.md`
+that `irc.az.gov` falls at rung 3 and did not build it into the instrument
+beside it.
+
+### 2. Municode's own JSON API — RUNG 7, and it generalises to ~3,000 municipalities
+
+**How conceived.** RULING 170's question. **The municipal code is where every
+board, commission and authority is ESTABLISHED BY ORDINANCE** — the
+administration chapter enumerates them with legal force, including bodies that
+publish nothing of their own. So: who hosts municipal codes? Municode and
+eCode360 host thousands.
+
+`library.municode.com/nj` answers **HTTP 200 with 6,095 bytes and the control
+string ABSENT** — a JavaScript shell, which a status check alone reads as
+success (RULING 93). That is rung 7 in as many words: *the page's own network
+calls — the JSON endpoint feeding the widget is usually right there, and it is
+better data than the HTML.*
+
+**Literal URL.** `https://api.municode.com/Clients/stateAbbr?stateAbbr=NJ`
+
+**Returned.** HTTP 200, JSON, at **rung 2** — no wall at all once the right door
+was asked.
+
+| State | Municipalities with a hosted code | With phone | With website |
+|---|---|---|---|
+| **NJ** | **22** | 19 | 21 |
+| **AZ** | **30** | — | — |
+| **NH** | **6** | — | — |
+
+Each record carries `ClientName`, `Address`, `City`, `ZipCode`, `Phone`,
+`Website` and `Meetings`.
+
+**The honest zero:** **`Meetings` is `null` on every one of the 22 NJ records.**
+The field exists and is empty. Reported as a success under RULING 88 — the route
+is real and that particular field is not populated.
+
+**And a data-quality caveat rather than a silent ship:** the phone arrives as
+`5470711` — **seven digits, no area code**. That is not a phone number a reader
+can dial, and shipping it into the Kelly phone field would be manufacturing a
+contact. It needs the area code resolved from the address before it is worth
+anything.
+
+**Generalises?** **Yes, nationally.** One parser reads every state's list, and
+`api.municode.com/States/` enumerates them.
+
+### 3. eCode360 — HIT at the index, and the deep link was a WRONG GUESS
+
+**Literal URLs and what each returned:**
+
+- `https://ecode360.com/` — **HIT, rung 4**, HTTP 200, 23,002 bytes.
+- `https://ecode360.com/RO1256` — **rungs 2 and 3 HTTP 403, rung 4 HTTP 404.**
+- `https://ecode360.com/api/search/customers?state=NJ` — **rung 4 HTTP 404.**
+
+**Both of the last two are WRONG GUESSES, not walls, and the distinction is the
+finding.** A 404 says *there is no document at this path* — the response is to
+find the real path. A 403 says *we are refused* — the response is another rung.
+Recording a guessed URL's 404 as a wall would manufacture a retrieval history
+nobody walked, and it is what the first version of this session's own probe
+script did until it was fixed mid-run.
+
+**Not resolved this session.** eCode360's real per-municipality identifiers and
+its actual API shape are owed.
+
+### 4. The NH tax rate tables — FOLLOWED rather than guessed
+
+**How conceived.** RULING 170 again: **somebody has to be billed**, so every
+levying district must appear on a rate table. That is the special-district layer
+itemised by statute — the layer RULING 57 says a reader most needs and almost
+nobody lists.
+
+**The guess failed and the follow succeeded, which is the lesson:**
+
+- **Guessed:** `revenue.nh.gov/mun-prop/municipal/documents/2024-tax-rates.pdf`
+  — rung 2 HTTP 403, rung 4 HTTP 403.
+- **Guessed:** `revenue.nh.gov/property-tax/municipal-and-property-division` —
+  refused.
+- **FOLLOWED from the index this session actually fetched:**
+  `https://www.revenue.nh.gov/property-tax-rates-related-data` — **HIT, rung 3,
+  HTTP 200, 241,456 bytes.**
+
+The index at `revenue.nh.gov/mun-prop/municipal/index.htm` (HTTP 200, rung 3,
+241,419 bytes) yielded **78 links**, of which 2 matched the compelled-publication
+shapes — one of them a **Village District** document, which is exactly the NH
+twig layer.
+
+**A defect in this session's own instrument, recorded rather than smoothed:**
+the Village District href came back TRUNCATED by the scratch extraction regex
+(`.../municipal-ad`), and the truncated URL then returned 403 — which the probe
+labelled a wall. **It is not a wall; it is our own broken link extraction.**
+Naming it as a wall would have been a false claim about a government, which is
+the one failure this product cannot survive.
+
+### 5. NJ statutory legal notices
+
+**How conceived.** Statutory publication in a newspaper of record — meetings,
+budget hearings, bond ordinances, sample ballots — each naming the body and the
+date. Many states run a statewide aggregator.
+
+**Literal URL.** `https://www.njpublicnotices.com/`
+
+**Returned.** **HIT, rung 2, HTTP 200, 238,886 bytes**, control present.
+
+**Not walked further this session.** Its search interface, its coverage and its
+terms are unexamined, and it is a commercial aggregator rather than a `.gov`
+publication — so the RULING 70 licensing question applies before anything is
+taken from it.
+
+### 6. Platform tenancy, asked as the INVERSE question — GENERALISES
+
+**How conceived.** Nine adapters, each wired one tenant at a time for a body
+somebody had already decided to cover. **Nothing had ever asked the inverse:
+given a body, is it already on a platform we can read?**
+
+**Literal instrument.** `pnpm tenancy --state <code>`, reading the descent's own
+candidate hosts.
+
+**Returned.** 518 hosts known across three states, 135 probed, **14 reachable
+now** by an adapter this project already runs, 17 on a platform we recognise and
+cannot read, 87 with nothing machine-readable detected.
+
+**The find that matters:** **`morriscountynj.gov` → `morriscountynj.iqm2.com/Citizens/LegalNotice.aspx`.**
+Morris County is the county containing **07866** and this project has an IQM2
+adapter. **New Hampshire returned ZERO**, which is its own finding about how
+NH's small towns publish.
+
+**Generalises?** To every state and every platform, and the platform list is
+data rather than code.
+
+---
+
+### The routes NAMED in the brief and NOT walked this session
+
+Named individually rather than counted, because RULING 170 says reaching the end
+of a list is not completion — and this session did not even reach the end of the
+list.
+
+- **The tax rate table for NJ and AZ** — only NH was walked.
+- **Budget and audit documents** — NJ's Division of Local Government Services
+  *user-friendly budget* per municipality, which lists officials outright; state
+  comptroller and auditor per-entity audits. The AZ Auditor General URL tried
+  was a wrong guess (404) and the real one was not found.
+- **Minutes of the tier above** — a county board's minutes recording
+  appointments to the boards beneath it.
+- **Annual reports** — a town's annual report carrying every board's membership
+  and the moderator's certified results.
+- **State oversight directories** — the education agency's district and
+  superintendent directory, the fire marshal's fire-district directory, the
+  library commission's library-board directory. `education.nh.gov` and
+  `azed.gov` were made WALKABLE this session and their directories were not
+  walked.
+- **Public records requests**, named per RULING 94 and not made.
+- **AZ and NH legal notices**, and the statewide aggregators for both.
+
+**This session stopped short of the end of the brief's own list, and says so in
+those words.** Under RULING 170 that list was a floor and not a ceiling, so
+stopping before its end is stopping early twice over.

@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:15:19 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:27:57 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -617,13 +617,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 19:15:19 EDT
-branch: claude/descent-0826
-head sha: 1cfac3220ae7297d84fa59b38e8a196ad791e50b
-head subject: The descent: walk the tiers, count the walk (RULING 169)
-origin/main sha: 1f2430a1aa95b30fb01544eb7a62184b9132bd5f
-origin/main subject: 8.26 walkthrough captures (#199)
-local main sha: 1f2430a1aa95b30fb01544eb7a62184b9132bd5f
+generated: 2026-08-26 19:27:56 EDT
+branch: claude/descent-expansion-0826
+head sha: 79e09c8f9e9e74674e589abeafe996c66c464869
+head subject: Expansion: six routes that did not exist this morning (RULING 88)
+origin/main sha: 3a32c917ceb5fc4d955b10379cc59c3c218a2f2c
+origin/main subject: Session handoff: 2 commit(s) from claude/descent-0826 (#200)
+local main sha: 3a32c917ceb5fc4d955b10379cc59c3c218a2f2c
 local main matches origin/main: yes
 working tree: clean
 open prs: none

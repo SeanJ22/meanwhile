@@ -91,11 +91,17 @@ for (let i = 1; i <= RUNS; i += 1) {
      * being an exception carrying data, and the elapsed stamps and heartbeats
      * the walk now prints are echoed as they arrive.
      */
-    const result = spawnSync("pnpm", ["run", "walk:all"], {
+    /*
+     * `pnpm.cmd` on Windows rather than `shell: true`. Node deprecates passing
+     * args with a shell (DEP0190) because they are concatenated rather than
+     * escaped — harmless here, since both args are literals in this file, and
+     * still worth not doing: a warning nobody can act on is noise in the one
+     * instrument whose whole job is to make a signal legible.
+     */
+    const result = spawnSync(process.platform === "win32" ? "pnpm.cmd" : "pnpm", ["run", "walk:all"], {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 256 * 1024 * 1024,
-      shell: process.platform === "win32",
     });
     output = `${result.stdout ?? ""}${result.stderr ?? ""}`;
     for (const line of output.split(/\r?\n/)) {

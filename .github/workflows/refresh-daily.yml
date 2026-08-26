@@ -44,6 +44,28 @@ on:
         type: boolean
         default: false
 
+# THE CONSOLIDATION DROPPED THIS, AND EVERY DAILY REFRESH HAS BEEN UNABLE TO
+# COMMIT SINCE. (Found 2026-08-26 by re-dispatching Refresh after R59.)
+#
+# RULING 124 folded five refresh workflows into this one. All five declared
+# `contents: write`; this one declared nothing, so its token is read-only and
+# `scripts/push-main.mjs` gets HTTP 403 — "Write access to repository not
+# granted" — on all five of its retries. The retries are not the bug and they
+# behaved correctly: it went red rather than exiting zero having lost the
+# commit it had just made.
+#
+# IT WAS INVISIBLE BECAUSE THE RUN NEVER REACHED THE COMMIT STEP. Validate
+# failed first — on the F22 window guard, and then on the questionnaire
+# artifact behind it — so a defect at the LAST step sat behind two at an
+# earlier one. Fixing those two is what surfaced this, which is the honest
+# order and not a regression.
+#
+# `intake-tripwire`, `job-watch`, `refresh-nj-filing` and
+# `refresh-meetings-snapshot` all still carry it. This is the only pusher
+# that did not.
+permissions:
+  contents: write
+
 concurrency:
   # Two runs of this pushing `main` at once is R48's data loss with a shorter
   # window. One at a time; a queued run picks up whatever the first committed.

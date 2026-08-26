@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:42:44 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:52:31 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1085 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1099 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -618,18 +618,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 19:42:44 EDT
-branch: claude/measure-standard-0826
-head sha: f52c9223c199655e08fa4b5be06b9bbf95cf46e6
-head subject: RULING 171: what DONE means for a ballot measure, and the money is a PAIR
-origin/main sha: 9daf9e5555769938591029db21d969a644ffbba6
-origin/main subject: Session handoff: 2 commit(s) from claude/descent-expansion-0826 (#201)
-local main sha: 9daf9e5555769938591029db21d969a644ffbba6
+generated: 2026-08-26 19:52:31 EDT
+branch: claude/descent-closeout-0826
+head sha: df196529a02091e929ad536f781667867f22353d
+head subject: Close-out: the descent, and every item this session did not reach
+origin/main sha: f735791efd09eb4fba46665bee1aa89be4367c80
+origin/main subject: Session handoff: 2 commit(s) from claude/measure-standard-0826 (#202)
+local main sha: f735791efd09eb4fba46665bee1aa89be4367c80
 local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19240
+last recorded status from: docs/state.md:19245
 ```

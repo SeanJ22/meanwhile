@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **285 open**, 430 resolved.
-- **51 waiting on Sean** — the first section below.
+- **286 open**, 430 resolved.
+- **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**51 open · 48 resolved.**
+**52 open · 48 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -64,6 +64,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH165** — Rule 4 of your BC-11 ruling is built: nothing typed into Speak Your Mind is ever auto-forwarded, and content the triage reads as a threat or as menacing is stored with review_state HELD and excluded from everything. What does not exist is the surface where you READ that queue and act on it - which is exactly what T05 says about the abuse policy generally. This row links the two: the HOLD half now has a concrete first surface, and the REVIEW half is still yours to unblock. T05 stays open and only you close it. The tiers are docs/abuse-policy.md's own T1/T2/T3, not new ones, and the rules that decide are lib/speak/triage.ts with the harsh-political-speech cases planted in the test so over-filtering fails the build.
 
 **NH174** — pnpm door2 walked all 19 candidacies on the 07866 ballot who are people this repo already records sitting on a governing body — the class your 8/24 ruling pre-approves — at the MEMBER'S OWN page rather than the body's index, which was NJ13's defect. 19 of 19 pages answered, 0 walls. Six portraits found, four of them new: Jennifer Rowland (Chatham Township), Russell Goodwin and Michael Dominianni (Chester Borough), Sean Mabey (Kinnelon), Kyle Russell and Melissa Florance-Lynch (Pequannock). Each is name-matched on the person's own municipal .gov page, read as an img element and never an og:image. ZERO shipped, which is the rule for a candidate portrait and is not something a hunt gets to decide. The queue is data/photos/door2-incumbents-2026-08-25.json. Two phones from the same walk DID ship — Nancy Verga and Melissa Fostle — because a number a town publishes beside a named member is a fact checkable by dialling it, where a portrait's failure mode is a wrong face beside a real name.
+
+**NH208** — PR 191 is the first pull request opened under the ruleset you created on 2026-08-26, and it could not be merged. All three required contexts are GREEN on its head commit — build (default), build (standalone) and gates (test, lint, tsc), all success, all from the GitHub Actions app — and the pull request still reads BLOCKED with its status-check rollup empty. Ruled out this session: Actions is enabled, all nine workflows are active, the token carries the workflow scope, and a manual dispatch on the same branch ran and went green in three minutes. Closing and reopening the pull request changed nothing. The remaining suspect is a setting inside your ruleset: require_extra_approval_for_unattributed_changes is ON. Every commit this project makes carries a Co-Authored-By trailer naming Claude, and that address is not a GitHub account — so GitHub may be classifying every session commit as an unattributed change and demanding an approval that the required-approvals count of zero says is not needed. A session cannot approve a pull request authored by your own account. THE QUESTION: which do you want? (a) Turn require_extra_approval_for_unattributed_changes OFF in the ruleset — one checkbox, and it restores the behaviour every session had before today. (b) Leave it on and approve each session PR yourself — safe, but it makes every unattended run stop and wait for you, which is the thing RULING 146 exists to prevent. (c) Leave it on and drop the Co-Authored-By trailer from commit messages — cheapest to automate, but it removes the attribution the repo has carried since it started. Recommended: (a).
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 

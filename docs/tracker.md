@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **266 open**, 416 resolved.
+- **267 open**, 416 resolved.
 - **47 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -25,7 +25,7 @@ and when. Nothing is ever deleted.
   - Data infrastructure — **1**
   - Product / UI — **1**
   - Constitution & rules — **1**
-  - Repo & ops — **4**
+  - Repo & ops — **5**
 
 No section is over the five-P1 cap.
 
@@ -689,7 +689,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**21 open · 71 resolved.**
+**22 open · 71 resolved.**
 
 ### P1
 
@@ -700,6 +700,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
 
 **NH176** — Measured 2026-08-25 against one local production build, four consecutive runs, no code or data changing between them. Every run: 372 passed, 6 declared COULD NOT RUN, and exactly ONE failure — a different one each time. Run 1: [promptD] the schema check, which was REAL and deterministic (the local Neon branch was at 19 of 21 migrations) and has passed on every run since it was applied. Run 2: [g12] an exact name navigates and asks nothing at 07866, offered="Board of County Commissioners — Board of County Commissioners - Work Session" — the IDENTICAL string that PASSED in run 1. Run 3: [g5] north Tucson renders crisp, not muted, at city zoom, delta 8.61 against a 2.5 threshold. Run 4: [g12] again, at 03255 this time. WHY THIS IS A P1 RATHER THAN AN ANNOYANCE: the whole premise of this suite is that a failure is a NAMED REGRESSION — 'the win <session> shipped is undone' — and every session is required to run it and report the result. A suite that fails one arbitrary check per run teaches a session to look at the failure, decide it is probably the flaky kind, and move on. That is the CLAUDE.md failure this repo names most often, arriving through the instrument built to prevent it, and it means the ONE deterministic failure in run 1 could just as easily have been shrugged off. THE SHAPE OF THE FLAKES: both families settle a browser interaction or measure a canvas. g12 waits for the ask box to route and reads what it offered; g5 diffs a rendered map region against the same region with an effect off. Both are timing-dependent and both already carry settle logic — the question is whether the settle condition is the right one, not whether to raise a threshold. Raising a threshold to fit the change it was supposed to catch is what a ceiling raised to fit is (CLAUDE.md), and this row is not a request to do that. WHAT WOULD SETTLE IT: run walk:all N times against one unchanged build and record which check identities fail at least once — the suite already prints stable check identities, so the census is mechanical. A flaky identity is then a known set a run can report against, which is the difference between 'one check failed, and it is one of the four we know are timing-dependent' and 'something broke'.
+
+**RO04** — The gates (test - lint - tsc) check has failed on main since 2026-08-25. Test passes, types pass, and both builds pass; LINT alone fails, with exactly 2 errors and 28 warnings. Both errors are the react-hooks/set-state-in-effect rule: components/map/map-entry.tsx:894 (setPopupMeeting(null) and setOfficialPopup(null) in an effect keyed on ui.selectedVenueKey and ui.selectedDistrictOcdId) and components/speak/speak-your-mind.tsx:120 (setOpen(false) in an effect keyed on subjectId). Reproduced locally at 70fed47 with the identical 2 errors and 30 problems, so it is not a CI-only condition. Last green Build check on main was 0160e3b at 19:18Z on 2026-08-25; the merge of PR 180 (9a2a8d7) was CANCELLED and never proved green, then 13f4fcf and 70fed47 both failed with the same two errors. Introduced by the previous session: 57ceaba (Item 9, the small cards stop scrolling sideways) added the map-entry effect and a9d0555 (Item 10, the large cards learn the difference between a person and a body) added the speak-your-mind effect. Both effects are RESET-ON-KEY-CHANGE patterns, which is the case React documents as not needing an effect at all, so the fix is likely derive-during-render or a key prop rather than a disable comment. NOT FIXED HERE: the 8/25 Part 2 visual brief carries an explicit precondition that a red main stops the session and belongs to the recovery brief. Note for whoever takes it: both files are exactly the surfaces the Part 2 items 7, 9 and 13 would edit, so the recovery and that work will collide if run in parallel.
 
 ### P2
 

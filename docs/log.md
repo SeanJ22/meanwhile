@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **136 sessions.**
+Newest first. **137 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## visual-part2-0825 · 2026-08-25
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **RO04** — The gates (test - lint - tsc) check has failed on main since 2026-08-25. Test passes, types pass, and both builds pass; LINT alone fails, with exactly 2 errors and 28 warnings. Both errors are the react-hooks/set-state-in-effect rule: components/map/map-entry.tsx:894 (setPopupMeeting(null) and setOfficialPopup(null) in an effect keyed on ui.selectedVenueKey and ui.selectedDistrictOcdId) and components/speak/speak-your-mind.tsx:120 (setOpen(false) in an effect keyed on subjectId). Reproduced locally at 70fed47 with the identical 2 errors and 30 problems, so it is not a CI-only condition. Last green Build check on main was 0160e3b at 19:18Z on 2026-08-25; the merge of PR 180 (9a2a8d7) was CANCELLED and never proved green, then 13f4fcf and 70fed47 both failed with the same two errors. Introduced by the previous session: 57ceaba (Item 9, the small cards stop scrolling sideways) added the map-entry effect and a9d0555 (Item 10, the large cards learn the difference between a person and a body) added the speak-your-mind effect. Both effects are RESET-ON-KEY-CHANGE patterns, which is the case React documents as not needing an effect at all, so the fix is likely derive-during-render or a key prop rather than a disable comment. NOT FIXED HERE: the 8/25 Part 2 visual brief carries an explicit precondition that a red main stops the session and belongs to the recovery brief. Note for whoever takes it: both files are exactly the surfaces the Part 2 items 7, 9 and 13 would edit, so the recovery and that work will collide if run in parallel. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## one-session-0825-nonhunt · 2026-08-25
 

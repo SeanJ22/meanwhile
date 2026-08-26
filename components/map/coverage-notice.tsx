@@ -27,6 +27,7 @@ import {
 import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
+import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 
 /**
  * Says which rung of the cascade produced what's on screen, and — when there is
@@ -747,7 +748,7 @@ function CoverageBody({
                   className="flex items-baseline justify-between gap-3 pb-1 text-[0.75rem] leading-snug"
                 >
                   <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
-                  <span className="block">
+                  <span className="block person-under-heading">
                     <Holder
                       holder={holder}
                       onOpen={
@@ -931,7 +932,7 @@ function CoverageBody({
                     className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    <span className="block">
+                    <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList
                           holders={seat.representatives}
@@ -955,7 +956,7 @@ function CoverageBody({
                     className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{readerOfficeTitle(holder.officeTitle)}</span>
-                    <span className="block">
+                    <span className="block person-under-heading">
                       <Holder
                         holder={holder}
                         onOpen={
@@ -997,7 +998,7 @@ function CoverageBody({
                     className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
-                    <span className="block">
+                    <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList
                           holders={seat.representatives}
@@ -1012,22 +1013,43 @@ function CoverageBody({
                     </span>
                   </li>
                 ))}
-                {senators.map((holder) => (
+                {/*
+                  ALIGN-2 (2026-08-26, the author's 8/26 walkthrough). This
+                  used to map over PEOPLE and emit a heading per person, so
+                  every Arizona zip printed `U.S. Senator` twice — once above
+                  Mark Kelly and once above Ruben Gallego.
+
+                  RULING 136: the senators are the EXAMPLE. The grouping is in
+                  `lib/officials/seat-grouping.ts` so that every multi-seat
+                  body — a two-member state house district, five county
+                  supervisors, a multi-member school board — gets one heading
+                  and a list, rather than the Senate getting a special case.
+
+                  The callback still receives the SINGULAR office title. A
+                  person holds `U.S. Senator`; the plural is a heading over a
+                  list and is not anybody's job.
+                */}
+                {groupBySeatLabel(
+                  senators.map((holder) => ({ label: "U.S. Senator", member: holder })),
+                ).map((group) => (
                   <li
-                    key={holder.id}
+                    key={group.members[0].id}
                     className="text-[0.75rem] leading-snug"
                   >
-                    <span className={TYPE_LABEL_CLASS}>U.S. Senator</span>
-                    <span className="block">
-                      <Holder
-                        holder={holder}
-                        onOpen={
-                          onOpenOfficial
-                            ? () =>
-                                onOpenOfficial(holder, "U.S. Senator", "national", null)
-                            : undefined
-                        }
-                      />
+                    <span className={TYPE_LABEL_CLASS}>{group.label}</span>
+                    <span className="block person-under-heading">
+                      {group.members.map((holder) => (
+                        <Holder
+                          key={holder.id}
+                          holder={holder}
+                          onOpen={
+                            onOpenOfficial
+                              ? () =>
+                                  onOpenOfficial(holder, group.singular, "national", null)
+                              : undefined
+                          }
+                        />
+                      ))}
                     </span>
                   </li>
                 ))}

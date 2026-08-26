@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 254,
-    "named": 2456,
+    "files": 261,
+    "named": 2525,
     "dynamic": 6
   },
   "files": {
@@ -1250,6 +1250,16 @@
       ],
       "dynamic": 0
     },
+    "tests/donor-aggregation.test.ts": {
+      "names": [
+        "an individual may never render a filed name or a filed place; an organization may",
+        "the aggregate's parts equal its whole",
+        "the candidate's own money is a SUBSET of the total, not a sibling of it",
+        "the funding section renders no contributor name that could be an individual",
+        "the shape sweep catches a planted individual-donor row"
+      ],
+      "dynamic": 0
+    },
     "tests/dotgov.test.ts": {
       "names": [
         "DOMAINS ARE NOT A DENOMINATOR, and the file says so",
@@ -1345,6 +1355,21 @@
         "partials: the census separates what could be checked from what was",
         "partials: the guard would CATCH a truncation — it is not green about nothing",
         "partials: the least-documented members are not filtered out for being thin"
+      ],
+      "dynamic": 0
+    },
+    "tests/failure-diagnosis.test.ts": {
+      "names": [
+        "a credential refusal is POLICY — every retry presents the same credential",
+        "a losing race IS retried, because rebasing changes the input",
+        "a ruleset refusal is POLICY and is NOT retried",
+        "an unrecognised failure says so LOUDLY and shows what it saw",
+        "an unrecognised rejection is retried and says it is unrecognised",
+        "every failure class carries at least one shape and a remedy that is not a pointer",
+        "every scheduled pusher ends with the diagnosing step",
+        "the diagnoser names the ruleset refusal from the real log",
+        "the diagnoser recognises the store-and-views disagreement it was NOT derived from",
+        "the diagnoser reports EVERY matching class, not the first (RULING 164)"
       ],
       "dynamic": 0
     },
@@ -1548,6 +1573,7 @@
         "M80: a browser goes through the proxy; the server calls the Bureau direct",
         "M80: the geocode route writes NOTHING — no log, no store, no echo",
         "M80: the promise changed in the same commit, on both surfaces",
+        "the Vail defect: a high house number is placed, and is never itself sent",
         "the answer resolves to the point, and the house number is never kept",
         "the author's ruling: a crossing street is a question, not a refusal",
         "the house number never reaches the narrowing store or a log"
@@ -1679,6 +1705,30 @@
         "A-001 · no two reader collection stores share a joinable value space",
         "A-001 · run_id is the one handle shared across reader stores, and it names a WALK",
         "A-001 · the contact handle is minted at random, not derived from the address"
+      ],
+      "dynamic": 0
+    },
+    "tests/incumbency.test.ts": {
+      "names": [
+        "DERIVED CASE — Gregory M. Sargent and Daniel E. Innis, whom the first matcher got WRONG",
+        "a generational suffix never lands in the surname",
+        "a non-elected office renders no Incumbent/Challenger label at all (BC-26, RULING 118)",
+        "a sitting member sharing a surname with a candidate we cannot match FAILS CLOSED",
+        "a sitting member who is simply not running does NOT make the contest unknown",
+        "a sitting officeholder resolves to INCUMBENT even when the name forms differ",
+        "an ambiguous match FAILS CLOSED — the contest, not one card, reads UNKNOWN",
+        "an initial is not a nickname — J. does not match James",
+        "electedStatus NEW means sitting — reading it otherwise mislabels two real people",
+        "every candidate handed in gets a decision — none may fall through",
+        "neither voting-record empty state asserts a fact about a person",
+        "no holder record resolves the WHOLE CONTEST to UNKNOWN, never to challengers",
+        "the NH contest title parses into the county-and-district pair the roster is keyed on",
+        "the ballot card no longer turns a falsy incumbency flag into 'Challenger'",
+        "the ballot page reads incumbency from the contest resolution, not from the FEC join",
+        "the committed roster answers for Merrimack House District 7 and names Ebel",
+        "the corpus was taken from the BODY and says so",
+        "the shape sweep catches the line it was written for",
+        "the three not-yet-sourced labels are distinct, and the third is about us"
       ],
       "dynamic": 0
     },
@@ -1908,14 +1958,22 @@
         "A-008 · a real failure beside a stillborn check is still RED, and both are named",
         "A-008 · a stillborn check beside work still running reports PENDING, naming both",
         "A-008 · one passing check beside one stillborn REQUIRED check is not GREEN",
+        "NH208: a stillborn run never overwrites a real verdict from the same context",
+        "NH208: a superseded cancellation does not make a healthy commit read RED",
+        "NH208: latestPerName reduces to one run per name and keeps every distinct name",
+        "NH208: the LATEST run still decides, so a genuine later failure is RED",
+        "a CANCELLED check reads UNKNOWN — never pass, and never red either",
+        "a cancelled check beside a passing one still refuses GREEN",
         "a check still running is PENDING, which is not green",
         "a genuinely failing check is still RED",
         "a long run with no steps is still judged on the steps, not the clock",
         "a mixed run judges what RAN and names what did not",
         "a run that completed with NO STEPS never started",
         "a run that recorded even one step DID start, however it ended",
+        "a timed-out check is still RED — it ran and told us something bad",
         "all checks passing is the only GREEN",
         "an in-flight run is not judged at all",
+        "build-check gives every push to main its own concurrency group",
         "every check stillborn reads CANNOT TELL, never RED",
         "no check at all is CANNOT TELL, not GREEN"
       ],
@@ -2999,11 +3057,14 @@
     "tests/search-pool.test.ts": {
       "names": [
         "a 202 is a refusal — DuckDuckGo's challenge is not a search that found nothing",
+        "a page with the subject in RESULT TEXT still names the subject",
+        "a search page that echoes the query and returns nothing does NOT name the subject",
         "docs/sources.md records the same verdict as the module, for the same hosts",
         "every engine in the pool quotes the robots.txt line that permits its path",
         "every exclusion says WHY and carries a date, and none is a placeholder",
         "mojeek and brave are named as DISALLOWED, not as walls — they answered fine",
         "no engine in the pool is one this project recorded as DISALLOWED",
+        "stripQueryEcho removes the metadata and the attribute echoes and nothing else",
         "the content control catches a shell that answers identically to an impossible query",
         "the control query is an identifier nothing could match",
         "the search pool asks permission before it asks anything else"
@@ -3019,6 +3080,17 @@
         "onSearchPick opens a card for the rows it cannot fly to",
         "the place card elects nobody to stand for the place",
         "the rows that carry neither venue nor geometry are exactly the kinds with a card fallback"
+      ],
+      "dynamic": 0
+    },
+    "tests/seat-grouping.test.ts": {
+      "names": [
+        "ALIGN-2: a single seat keeps its singular heading and is never pluralised",
+        "ALIGN-2: grouping is CONSECUTIVE, so a chosen order is never reordered",
+        "ALIGN-2: the class, not the instance — cases the fix was NOT derived from",
+        "ALIGN-2: the pluraliser declines to guess rather than inventing a title",
+        "ALIGN-2: the who-governs card calls the shared helper and indents the block",
+        "ALIGN-2: two senators collapse to ONE heading, pluralised"
       ],
       "dynamic": 0
     },
@@ -3041,6 +3113,13 @@
       "names": [
         "no client component takes a render prop or an injected function",
         "the about-area page passes ShuffledFacts nothing but data"
+      ],
+      "dynamic": 0
+    },
+    "tests/serving-edge.test.ts": {
+      "names": [
+        "NH206 — THE INSTRUMENT IS SHOWN CATCHING A CONSTRUCTED CROSSING",
+        "NH206: the committed snapshot is not FROZEN, and its shedding is explicable"
       ],
       "dynamic": 0
     },
@@ -3239,6 +3318,17 @@
       ],
       "dynamic": 0
     },
+    "tests/state-registry-gate.test.ts": {
+      "names": [
+        "DERIVED-CASE PROOF: a constructed registry-less state is refused, then removed",
+        "a code that is not a state is refused rather than guessed at",
+        "a state with NO folder is refused, and the refusal names what to create",
+        "requireStateRegistry THROWS, so a caller that forgot to check still cannot hunt",
+        "the row counter does not count headers or separators as sources",
+        "the three pilot states are registered, and the gate says so with a count"
+      ],
+      "dynamic": 0
+    },
     "tests/state-vocabulary.test.ts": {
       "names": [
         "D52: a state with no terms carries a refusal with its rungs",
@@ -3352,6 +3442,20 @@
         "the stated open count equals the rows underneath it, section by section",
         "the two stores reconcile as a pair against the frozen tracker",
         "the workbook round-trips, and a shared-string sheet reads as text"
+      ],
+      "dynamic": 0
+    },
+    "tests/tracker-transaction.test.ts": {
+      "names": [
+        "EVERY failure is reported, never the first (RULING 164)",
+        "THE SHIPPED SHAPE: a row in the store that no ledger entry claims is REFUSED",
+        "THE WRITER: recording a synthetic failed workflow lands all five parts together",
+        "a complete transaction reconciles",
+        "a duplicate row is a distinct failure from a missing one",
+        "a section AT the cap is not over it — the boundary runs the right way",
+        "a section over the P1 cap that is not marked stopped is REFUSED",
+        "a stated open count that is not the store's is REFUSED",
+        "a view stating NO count is refused, and is not the same failure as a wrong one"
       ],
       "dynamic": 0
     },

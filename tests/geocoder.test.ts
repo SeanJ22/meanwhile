@@ -10,6 +10,8 @@ import {
   SAMPLE_HOUSE_NUMBERS,
   censusGeocodeUrl,
   coherentMidpoint,
+  houseNumberIn,
+  sampleNumbersFor,
   locateStreetInZip,
   locateAddressInZip,
   lookupStreetInZip,
@@ -170,8 +172,58 @@ test("D53: the lookup never sends a reader's number and stops at four samples", 
     assert.ok(url.includes("07866"), "the zip is what scopes the lookup");
   }
   // The numbers sent are this module's, and they are stated.
-  for (const n of SAMPLE_HOUSE_NUMBERS) {
-    assert.ok(asked.some((u) => u.includes(`address=${n} Green Pond Road`)));
+  //
+  // AMENDED 2026-08-26, the Vail defect. This assertion used to name
+  // `SAMPLE_HOUSE_NUMBERS` here, and that was the fixed ladder which could not
+  // place any street numbered above 800 — 10723 South Bear Table Tank Drive in
+  // 85641 is the reported instance. The guard is not weakened: it still names
+  // every number, and it still proves 808 was not one of them. What changed is
+  // WHICH numbers are correct for an input that carries a house number.
+  for (const n of sampleNumbersFor(houseNumberIn("808 Green Pond Road"))) {
+    assert.ok(
+      asked.some((u) => u.includes(`address=${n} Green Pond Road`)),
+      `sample ${n} was never asked for`,
+    );
+  }
+  assert.deepEqual(
+    sampleNumbersFor(houseNumberIn("808 Green Pond Road")),
+    [800, 824, 874, 898],
+    "the block ladder for 808 is its own hundred block, even side",
+  );
+});
+
+test("the Vail defect: a high house number is placed, and is never itself sent", () => {
+  // The reported instance. Every number in the old fixed ladder — 1, 50, 200,
+  // 800 — returns ZERO matches on this street, whose range is 10701-10899.
+  assert.equal(houseNumberIn("10723 South Bear Table Tank Drive"), 10723);
+  const vail = sampleNumbersFor(10723);
+  assert.deepEqual(vail, [10701, 10725, 10775, 10799]);
+  assert.ok(!vail.includes(10723), "the reader's own house number was sent");
+
+  // PARITY. The Bureau indexes each side of a street as its own range, so an
+  // even-side street answers nothing to an odd number. Probed 2026-08-26 on
+  // East Colossal Cave Road, 85641: 13002/13024/13074/13098 all match and
+  // 13001/13025 both return zero. This is the case the fix was NOT derived
+  // from, and the first version of it failed here (RULING 157).
+  const evenSide = sampleNumbersFor(13000);
+  assert.deepEqual(evenSide, [13002, 13024, 13074, 13098]);
+  assert.ok(!evenSide.includes(13000), "the reader's own house number was sent");
+  for (const n of evenSide) assert.equal(n % 2, 0, `${n} broke parity`);
+  for (const n of sampleNumbersFor(10723)) assert.equal(n % 2, 1, `${n} broke parity`);
+
+  // No number typed is the path every existing reader is on. It does not move.
+  assert.equal(houseNumberIn("Green Pond Road"), null);
+  assert.deepEqual(sampleNumbersFor(null), [...SAMPLE_HOUSE_NUMBERS]);
+
+  // The promise holds for EVERY input, not for most of them. A collision is
+  // shifted by two so it stays on the reader's own side of the street.
+  for (let house = 1; house <= 4000; house++) {
+    const numbers = sampleNumbersFor(house);
+    assert.ok(!numbers.includes(house), `house ${house} would have been sent`);
+    assert.equal(numbers.length, 4, `house ${house} lost a sample`);
+    for (const n of numbers) {
+      assert.ok(n > 0, `house ${house} produced a non-positive sample ${n}`);
+    }
   }
 });
 

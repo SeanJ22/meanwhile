@@ -5263,3 +5263,8 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
     opacity: 0.8;
   }
 }
+
+/* ALIGN-2 (2026-08-26) — THE NAMES SIT UNDER THEIR HEADING, INDENTED — docs/globals-css-notes.md#align-2-2026-08-26-the-names-sit-under-their-heading-indented */
+.person-under-heading {
+  padding-left: 10px;
+}

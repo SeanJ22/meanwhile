@@ -141,9 +141,24 @@ export const BATTLECARD_SECTIONS: readonly BattlecardSectionSpec[] = [
  * ours to make.
  */
 export function votingRecordEmptyLine(holdsOrHeldTheOffice: boolean): string {
+  /*
+   * ITEM 13 (2026-08-26) — AN ABSENCE MAY DESCRIBE OUR SOURCING AND MAY NEVER
+   * ASSERT A FACT ABOUT A PERSON.
+   *
+   * The second branch used to read "People who have not held this office don't
+   * have a voting record to show." That is a claim about the reader's
+   * candidate, it is not an empty state, and on 2026-08-26 the product was
+   * making it on the card of Karen Ebel, the sitting Deputy Speaker of the New
+   * Hampshire House — because the flag behind it came from a lookup that is
+   * federal-only by construction.
+   *
+   * BOTH BRANCHES NOW DESCRIBE US. The distinction BC-2 was built for survives
+   * in what is named — a record IN THIS OFFICE versus a record at all — and
+   * neither sentence says anything about what the person has or has not done.
+   */
   return holdsOrHeldTheOffice
-    ? "We haven't collected this person's voting record yet."
-    : "People who have not held this office don't have a voting record to show.";
+    ? "We haven't sourced this person's voting record in this office yet."
+    : "We haven't sourced a voting record for this person yet.";
 }
 
 /** Reader-facing title for a section id. Never an enum value on a surface. */

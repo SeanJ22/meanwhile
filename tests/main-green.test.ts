@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 // A `.mjs` sibling, imported for its decision functions only — the CLI half is
@@ -104,7 +106,7 @@ test("a mixed run judges what RAN and names what did not", () => {
   assert.equal(v.verdict, "unknown", "a check with no verdict is not a passing check");
   assert.notEqual(v.verdict, "red", "the stillborn one is not counted as a failure");
   assert.deepEqual(v.failed, []);
-  assert.deepEqual(v.neverStarted, ["gates"], "the check nobody has a verdict for is NAMED");
+  assert.deepEqual((v as { neverStarted?: string[] }).neverStarted, ["gates"], "the check nobody has a verdict for is NAMED");
 });
 
 /**
@@ -132,7 +134,7 @@ test("A-008 · one passing check beside one stillborn REQUIRED check is not GREE
     at("gates (test · lint · tsc)"),
   ]);
   assert.equal(v.verdict, "unknown", "GREEN here is the A-008 false green");
-  assert.deepEqual(v.neverStarted, ["gates (test · lint · tsc)"]);
+  assert.deepEqual((v as { neverStarted?: string[] }).neverStarted, ["gates (test · lint · tsc)"]);
   assert.match(v.why, /NOT green/, "the reason has to say why it is not green");
   assert.match(v.why, /gates/, "and it has to name the check nobody has a verdict for");
 });
@@ -150,7 +152,7 @@ test("A-008 · a real failure beside a stillborn check is still RED, and both ar
   ]);
   assert.equal(v.verdict, "red");
   assert.deepEqual(v.failed, ["gates (failure)"]);
-  assert.deepEqual(v.neverStarted, ["build (standalone)"]);
+  assert.deepEqual((v as { neverStarted?: string[] }).neverStarted, ["build (standalone)"]);
 });
 
 /**
@@ -165,7 +167,7 @@ test("A-008 · a stillborn check beside work still running reports PENDING, nami
   ]);
   assert.equal(v.verdict, "pending");
   assert.deepEqual(v.pending, ["build"]);
-  assert.deepEqual(v.neverStarted, ["gates"]);
+  assert.deepEqual((v as { neverStarted?: string[] }).neverStarted, ["gates"]);
 });
 
 test("no check at all is CANNOT TELL, not GREEN", () => {
@@ -280,4 +282,78 @@ test("NH208: latestPerName reduces to one run per name and keeps every distinct 
   assert.equal(reduced.length, 2, "three runs across two names reduce to two");
   assert.deepEqual(reduced.map((r) => r.name).sort(), ["a", "b"], "no name is dropped");
   assert.equal(reduced.find((r) => r.name === "a")?.conclusion, "success", "the later run wins");
+});
+
+test("a CANCELLED check reads UNKNOWN — never pass, and never red either", () => {
+  // The real shape, 2026-08-26: five commits landed on `main` in two minutes
+  // and every one of their build checks was killed by the next push.
+  // 1bf635d, a9fb8cc, 3be63c6, 48ebed9 and b85f572 are not passed and not
+  // failed — they are unjudged, and a verdict has to be able to say that.
+  const v = verdictFromCheckRuns([
+    {
+      name: "build (default)",
+      status: "completed",
+      conclusion: "cancelled",
+      started_at: "2026-08-26T17:54:58Z",
+      completed_at: "2026-08-26T17:55:20Z",
+      steps: [{ name: "Build", conclusion: "cancelled" }],
+    },
+  ]);
+  assert.equal(v.verdict, "unknown", `saw ${v.verdict}: ${v.why}`);
+  assert.match(v.why, /CANCELLED/);
+  assert.deepEqual(v.failed, [], "a cancelled check is not a failing check either");
+});
+
+test("a timed-out check is still RED — it ran and told us something bad", () => {
+  // The direction that matters: narrowing `cancelled` out of the failure set
+  // must not have narrowed the detector. A job GitHub killed at six hours is
+  // not the same as a job another push superseded.
+  const v = verdictFromCheckRuns([
+    {
+      name: "build (default)",
+      status: "completed",
+      conclusion: "timed_out",
+      started_at: "2026-08-26T10:00:00Z",
+      completed_at: "2026-08-26T16:00:00Z",
+      steps: [{ name: "Build", conclusion: "timed_out" }],
+    },
+  ]);
+  assert.equal(v.verdict, "red");
+});
+
+test("a cancelled check beside a passing one still refuses GREEN", () => {
+  const v = verdictFromCheckRuns([
+    {
+      name: "build (default)",
+      status: "completed",
+      conclusion: "success",
+      started_at: "2026-08-26T17:00:00Z",
+      completed_at: "2026-08-26T17:10:00Z",
+      steps: [{ name: "Build", conclusion: "success" }],
+    },
+    {
+      name: "gates (test · lint · tsc)",
+      status: "completed",
+      conclusion: "cancelled",
+      started_at: "2026-08-26T17:00:00Z",
+      completed_at: "2026-08-26T17:01:00Z",
+      steps: [{ name: "Test", conclusion: "cancelled" }],
+    },
+  ]);
+  assert.equal(v.verdict, "unknown", "one unjudged required context is enough to refuse green");
+});
+
+test("build-check gives every push to main its own concurrency group", () => {
+  // The fix for the shape above lives in the workflow, so the guard reads the
+  // workflow. Asserting it in main-green.mjs would prove that the code the fix
+  // introduced does what the code does (RULING 153).
+  const yml = readFileSync(join(import.meta.dirname, "..", ".github/workflows/build-check.yml"), "utf8");
+  const group = /group:\s*(.+)/.exec(yml)?.[1] ?? "";
+  assert.match(
+    group,
+    /github\.sha/,
+    "a push to main must key its concurrency group on the COMMIT, or the next push cancels this " +
+      "commit's check and leaves it unjudged on main forever",
+  );
+  assert.match(group, /github\.event_name == 'push'/, "and pull requests keep the old superseding behaviour");
 });

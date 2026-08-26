@@ -25,6 +25,7 @@ import {
   SEARCH_POOL,
   SEARCH_POOL_EXCLUDED,
   namesSubject,
+  stripQueryEcho,
 } from "../lib/hunt/search-pool.ts";
 
 const ROOT = join(import.meta.dirname, "..");
@@ -118,4 +119,60 @@ describe("the search pool asks permission before it asks anything else", () => {
   it("the control query is an identifier nothing could match", () => {
     assert.match(SEARCH_CONTROL_QUERY, /zzqxwv/, "the control must be an invented token, not a rare word");
   });
+});
+
+/* -------------------------------------------------------------------------- */
+/* THE ECHO STRIPPER (2026-08-26) — the control was counting the query back    */
+/* -------------------------------------------------------------------------- */
+
+it("a search page that echoes the query and returns nothing does NOT name the subject", () => {
+  // Captured from `4get.ca/web?s=Karen+Ebel+New+Hampshire` on 2026-08-26. The
+  // real page was 7,154 bytes, the control 7,274 — the "answer" was SMALLER
+  // than the answer to an impossible query — and the surname appeared eight
+  // times, every one of them an echo.
+  const echoed =
+    '<html lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8">' +
+    "<title>Karen Ebel New Hampshire (web)</title>" +
+    '<meta name="description" content="4get: Web search results for &quot;Karen Ebel New Hampshire&quot;"></head>' +
+    '<body><input type="text" value="Karen Ebel New Hampshire" name="s">' +
+    '<div class="tabs"><a href="/web?s=Karen+Ebel+New+Hampshire" class="tab selected">Web</a>' +
+    '<a href="/images?s=Karen+Ebel+New+Hampshire" class="tab">Images</a>' +
+    '<a href="/videos?s=Karen+Ebel+New+Hampshire" class="tab">Videos</a>' +
+    '<a href="/news?s=Karen+Ebel+New+Hampshire" class="tab">News</a>' +
+    '<a href="/music?s=Karen+Ebel+New+Hampshire" class="tab">Music</a></div>' +
+    "<div class=\"results\"></div></body></html>";
+  const control = '<html lang="en"><head><title>zzq (web)</title></head><body><div class="results"></div></body></html>';
+
+  assert.equal(
+    (echoed.match(/Ebel/g) ?? []).length,
+    8,
+    "precondition: the captured page really does carry the surname eight times",
+  );
+  assert.equal(
+    namesSubject(echoed, control, "Ebel", "Karen Ebel New Hampshire"),
+    false,
+    "eight echoes of the query is not a page about the subject — this is the measurement " +
+      "docs/sources.md recorded on 2026-08-25 as the engine working",
+  );
+});
+
+it("a page with the subject in RESULT TEXT still names the subject", () => {
+  // The direction that matters more: stripping the echo must not have blinded
+  // the control to a real result.
+  const real =
+    '<html><head><title>Karen Ebel New Hampshire (web)</title></head><body>' +
+    '<input value="Karen Ebel New Hampshire" name="s">' +
+    '<div class="results"><a href="https://gc.nh.gov/house/members/member.aspx?member=377093">' +
+    "Representative Karen Ebel (D) Merrimack - District 7</a>" +
+    "<p>Ebel serves on the Finance committee.</p></div></body></html>";
+  const control = "<html><head><title>zzq (web)</title></head><body></body></html>";
+  assert.equal(namesSubject(real, control, "Ebel", "Karen Ebel New Hampshire"), true);
+});
+
+it("stripQueryEcho removes the metadata and the attribute echoes and nothing else", () => {
+  const body = '<title>Foo Bar</title><a href="/web?s=Foo+Bar">tab</a><p>Foo Bar appears here too</p>';
+  const stripped = stripQueryEcho(body, "Foo Bar");
+  assert.ok(!stripped.includes("<title>"), "the title is gone");
+  assert.ok(!/href="[^"]*Foo\+Bar/.test(stripped), "the echoing attribute is gone");
+  assert.ok(stripped.includes("Foo Bar appears here too"), "body text survives");
 });

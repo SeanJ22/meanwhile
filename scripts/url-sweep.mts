@@ -42,6 +42,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { floored } from "../lib/ops/denominator-floor.ts";
+
 const ROOT = process.cwd();
 
 /** Where a URL was found, and what that says about whether it is wired in. */
@@ -245,6 +247,10 @@ if (invokedDirectly) {
     process.exit(1);
   }
 
+  // RULING 159 — the floor is asserted BEFORE the count is reported, and it
+  // throws rather than printing a zero that reads like a clean board.
+  const floor = floored("url:sweep", "git grep over docs/, lib/, scripts/, states/, app/, components/, data/", rows.length, rows.length);
+  void floor;
   const counts = countsFor(rows);
   if (process.argv.includes("--json")) {
     console.log(JSON.stringify({ counts, rows }, null, 2));

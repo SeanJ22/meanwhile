@@ -20,6 +20,7 @@
 
 import { execFileSync } from "node:child_process";
 
+import { floored } from "../lib/ops/denominator-floor.ts";
 import { renderStandings, standingFor, type JobStanding, type WorkflowRun } from "../lib/ops/job-watch.ts";
 
 /**
@@ -98,6 +99,11 @@ if (rows.length === 0) {
   );
   process.exit(1);
 }
+
+// RULING 159 — the floor is asserted before anything is reported. A table of
+// zero workflows is a broken read, not a quiet fleet.
+const floor = floored("jobs:status", "the eight scheduled pushers", WATCHED.length, rows.length);
+void floor;
 
 if (process.argv.includes("--json")) {
   console.log(JSON.stringify({ asOf: asOf.toISOString(), rows, unreadable }, null, 2));

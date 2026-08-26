@@ -766,3 +766,15 @@ honest line inside, or stays open showing the line. The battlecard chose to
 stay open. This card carries more sections, so the same choice costs more
 vertical space here — and the whole reason M93 exists is that the card is
 crowding.
+
+
+## Reference bookmarks — recorded here so they are NOT registered as civic sources
+
+(Added 2026-08-26, the sources-and-incumbency session, draining docs/sources/inbox.md.)
+
+A design link that arrives in a bag of civic links needs somewhere to land that
+is not the source registry. Registering it there would put a marketing blog in a
+file whose whole claim is that every row is a government publication or a
+classified third party.
+
+- **Neumorphism in user interfaces** — https://www.breakfreegraphics.com/design-blog/neumorphism-in-user-interfaces/ — a design reference Sean bookmarked. Not a civic source, not registered as one, and nothing in the committed token set derives from it.

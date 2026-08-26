@@ -198,8 +198,8 @@ export function fundingAnswerForTarget(targetKey: string): FundingAnswer {
   const absence = fundingAbsenceForTarget(targetKey);
   if (absence) {
     const statement = absence.reason.startsWith("registered with the FEC")
-      ? `No campaign money reported for this election: this candidate is registered with the FEC but has not filed financial reports for the 2026 cycle.`
-      : `No campaign money reported: we found no committee registered with the FEC for this candidacy. Candidates who raise or spend under $5,000 don't have to register.`;
+      ? `The FEC shows this candidate registered, with no financial reports filed for the 2026 cycle, so we have no campaign money to show.`
+      : `We found no committee registered with the FEC for this candidacy, so we have no campaign money to show. Candidates who raise or spend under $5,000 don't have to register.`;
     return {
       kind: "absence",
       data: {

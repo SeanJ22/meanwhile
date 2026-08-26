@@ -11,6 +11,7 @@ import {
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
+import { incumbencyLabel, type Incumbency } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
@@ -73,7 +74,7 @@ export function CandidateBattlecard({
   partyLine,
   partyLabel = null,
   photoUrl = null,
-  incumbent = false,
+  incumbency = "UNKNOWN",
   speakContext = null,
   subjectId,
   sections,
@@ -114,8 +115,19 @@ export function CandidateBattlecard({
    * and never a completeness marker: both candidates in a contest carry a
    * chip, one reading `Incumbent` and the other `Challenger`, so neither is
    * marked by the presence or absence of a badge (RULING 42).
+   *
+   * **THREE STATES, NOT A BOOLEAN (2026-08-26, Items 10-15).** This was
+   * `incumbent?: boolean` rendered as `incumbent ? "Incumbent" : "Challenger"`,
+   * fed by a lookup that is federal-only by construction. Every state and local
+   * candidate in this product therefore rendered `Challenger`, including every
+   * actual incumbent — a component default converting an absence into a
+   * specific, checkable, false claim about a named person, which is the render-
+   * default rule verbatim.
+   *
+   * The third state is resolved PER CONTEST, so it is never worn by one card in
+   * a race and not the other.
    */
-  incumbent?: boolean;
+  incumbency?: Incumbency;
   /** Where the reader is, for the Speak Your Mind row. Never who they are. */
   speakContext?: { lat?: number | null; lng?: number | null } | null;
   /** Already-formatted party text. Display only — nothing here ranks. */
@@ -292,7 +304,19 @@ export function CandidateBattlecard({
                       anything about the people, which is exactly what RULING 42
                       deleted from these cards once already.
                     */}
-                    <IdentityChip>{incumbent ? "Incumbent" : "Challenger"}</IdentityChip>
+                    {/*
+                      The third state renders in the GAP'S OWN REGISTER, never
+                      dressed as one of the first two. A recorded standing is a
+                      fact about the person; "we haven't sourced this" is a fact
+                      about us, and a colour is a claim too — so it carries the
+                      `id-chip-unsourced` class rather than the neutral outline
+                      the other two share.
+                    */}
+                    <IdentityChip
+                      className={incumbency === "UNKNOWN" ? "id-chip-unsourced" : undefined}
+                    >
+                      {incumbencyLabel(incumbency)}
+                    </IdentityChip>
                   </div>
                 </div>
               </div>

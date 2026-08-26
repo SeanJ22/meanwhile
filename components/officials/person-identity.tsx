@@ -46,13 +46,23 @@ export function IdentityChip({
   children,
   /** The party chip, and only the party chip, fills. */
   fill,
+  /**
+   * An extra class for a chip that is a fact about OUR SOURCING rather than
+   * about the person. (2026-08-26.)
+   *
+   * A named gap renders in the gap's own register — the render-default rule
+   * says a colour is a claim too, so "we haven't sourced who holds this seat"
+   * may not wear the same outline as "Incumbent".
+   */
+  className,
 }: {
   children: React.ReactNode;
   fill?: string;
+  className?: string;
 }) {
   return (
     <span
-      className="id-chip"
+      className={className ? `id-chip ${className}` : "id-chip"}
       data-fill={fill ? "true" : undefined}
       style={fill ? ({ "--chip-fill": fill } as React.CSSProperties) : undefined}
     >

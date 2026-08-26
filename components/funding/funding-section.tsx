@@ -322,6 +322,16 @@ function ContributorColumn({
  * here would read as a claim about the whole book rather than about the FEC's
  * top receipts, which is all the snapshot holds.
  */
+/**
+ * The bucket for filings that carried no state.
+ *
+ * A NAMED GAP rather than an inline default: the render-default sweep flags a
+ * sentence appearing after `??`, and it is right to — that is the shape that
+ * turns an absence into an assertion. Naming it says what it is, which is a
+ * fact about the FILING and not about the donor.
+ */
+const STATE_NOT_ON_FILING = "State not stated on the filing";
+
 function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }) {
   if (aggregate.donors === 0) return null;
   const fromStrangers = aggregate.amount - aggregate.candidateOwnMoney;
@@ -379,7 +389,7 @@ function IndividualDonorsPanel({ aggregate }: { aggregate: IndividualAggregate }
               className="flex items-baseline justify-between gap-3 border-b border-[var(--panel-border)] py-1 text-[0.6875rem] last:border-0"
             >
               <span className="min-w-0 text-paper">
-                {share.state ?? "State not stated on the filing"}
+                {share.state ?? STATE_NOT_ON_FILING}
                 <span className="text-muted">
                   {" "}
                   · {share.donors.toLocaleString("en-US")}{" "}

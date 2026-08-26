@@ -210,14 +210,32 @@ export function verdictFromCheckRuns(allCheckRuns) {
     .filter((c) => c.status !== "completed")
     .map((c) => c.name);
 
+  /*
+   * A CANCELLED CHECK IS UNKNOWN, NEVER PASS AND NEVER RED. (2026-08-26.)
+   *
+   * `cancelled` is the one conclusion that means *this check did not finish
+   * asking its question*. Five commits landed on `main` in two minutes on
+   * 2026-08-26 and every one of their checks was killed by the next push, so
+   * those commits are not passed and not failed — they are unjudged, and
+   * RULING 24 says a check that could not reach its subject must never print
+   * like one that did. Reporting them RED would be almost as wrong in the
+   * other direction: it names a defect that was never observed and sends a
+   * reader hunting for it.
+   *
+   * It is kept apart from `timed_out`, which IS red: a job GitHub killed at
+   * six hours ran and told us something bad.
+   */
+  const cancelled = checkRuns
+    .filter((c) => c.status === "completed" && c.conclusion === "cancelled" && !neverStarted(c))
+    .map((c) => c.name);
+
   // `neutral` and `skipped` are completed-and-not-failing. Everything else that
-  // completed without success is a failure, including `cancelled` and
-  // `timed_out` — a job GitHub killed at six hours told us nothing good.
+  // completed without success is a failure, including `timed_out`.
   const failed = checkRuns
     .filter(
       (c) =>
         c.status === "completed" &&
-        !["success", "neutral", "skipped"].includes(c.conclusion) &&
+        !["success", "neutral", "skipped", "cancelled"].includes(c.conclusion) &&
         // A run that never started is not a failing check. Where SOME runs
         // started and some did not, the ones that ran are still judged — the
         // stillborn ones are named separately rather than counted as red.
@@ -273,6 +291,25 @@ export function verdictFromCheckRuns(allCheckRuns) {
       failed,
       pending,
       neverStarted: stillborn,
+    };
+  }
+  /*
+   * CANCELLED, fourth, and it also forces CANNOT-TELL. It sits BELOW pending
+   * and stillborn because those two are more specific diagnoses, and ABOVE
+   * green because nothing may return GREEN while a check was killed before it
+   * answered.
+   */
+  if (cancelled.length > 0) {
+    return {
+      verdict: UNKNOWN,
+      why:
+        `${cancelled.length} of ${checkRuns.length} check(s) were CANCELLED — ${cancelled.join(", ")}. ` +
+        "A cancelled check did not finish asking its question, so this commit is not passed and not " +
+        "failed. On `main` that usually means another push superseded it, which build-check.yml no " +
+        "longer allows between different commits; re-run the check on this commit to get a verdict",
+      failed,
+      pending,
+      cancelled,
     };
   }
   return { verdict: GREEN, why: `${checkRuns.length} check(s) passed`, failed, pending };

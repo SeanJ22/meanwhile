@@ -19051,3 +19051,197 @@ overrule it.
 **Identical to the digit to the prior session's measurement**, because nothing
 has landed since. `NH197` already covers all eight as one architectural fact
 and no duplicate rows were opened.
+
+
+## The deploy-key cutover — and why the allowlist is now the only wall
+
+The deploy-key cutover session, 2026-08-26. Branch
+`claude/deploy-key-cutover-0826`. Code SHA `82d544e`, close-out `b3b597a`,
+merged as `f6ef545`. **Production is serving `f6ef545`** — deploy
+`6a8f171fb97a2300083b19c2`, state `ready`, read from Netlify's deploy API
+(RULING 152).
+
+**No repository setting was changed by this session and no credential was
+generated, read, printed or written.** Both were Sean's, and both were already
+done when the session opened.
+
+### What the prior session could not settle, settled
+
+RULING 162's scoped bypass was designed for the **GitHub Actions app**. That
+app is **not offered** in a branch ruleset's `Add bypass` list — Sean confirmed
+it against the live UI, Apps tab filtered on `actions`, zero suggestions. The
+community reports were right and the documentation was not.
+
+So the bypass is granted to the **Deploy keys** category, and the eight
+scheduled pushers stop using the default `GITHUB_TOKEN` over HTTPS.
+
+### Sean's end state, verified from the API rather than from his account of it
+
+| | |
+| --- | --- |
+| Ruleset | `main` · `21572280` · **Active** · targets `~DEFAULT_BRANCH` |
+| Rules | deletion barred · non-fast-forward barred · PR required (0 approvals) · status checks required, strict |
+| Contexts | `build (default)`, `build (standalone)`, `gates (test · lint · tsc)` — all three by name |
+| Bypass | `DeployKey`, `actor_id: null`, mode **`exempt`** |
+| Classic rule | **GONE** — `branches/main/protection` returns HTTP 404 |
+| Deploy keys | **1 of 1 write-enabled**: `wtp-scheduled-pushers`, created `15:32:24Z`, `last_used` **null** |
+| Secret | `PUSH_DEPLOY_KEY`, created `15:34:39Z` |
+
+`pnpm protection:verify` — **INTACT, 9 of 9**.
+
+**No pre-existing write-enabled deploy key was found**, which was the P1 the
+inventory existed to catch. The intended end state — exactly one write-enabled
+key, and it is the pushers' — holds today.
+
+### Two facts about this bypass that make the allowlist matter MORE, not less
+
+**It is category-wide.** `bypass_actors` names `DeployKey` with
+`actor_id: null`; there is no way to grant it to one key. **Every**
+write-enabled deploy key on this repository inherits it. `protection:verify`
+now counts them and goes red at two.
+
+**Its mode is `exempt`, and the consequence is stated rather than left
+implied.** An `always` bypass still evaluates the ruleset and waves the actor
+through afterward; `exempt` skips enforcement **outright** — not only the rules
+that were blocking the push, but every rule in the ruleset. **There is nothing
+left on GitHub's side between a scheduled job and `main`.**
+`lib/ops/push-allowlist.ts` is the whole of it, and it is unchanged and
+unweakened by this cutover. Every one of its 14 existing guards still passes,
+`PUSHER_PROFILES` and `NEVER_PUSHABLE` are byte-identical.
+
+### What shipped
+
+- **`lib/ops/deploy-key-ssh.ts`** — SSH URL derivation, key-shape judgement,
+  the pinned host keys, and the ephemeral key file with its cleanup handle.
+- **`scripts/push-main.mjs`** — the cutover itself, in the one script all eight
+  pushers already routed through. *The one thing that could not live there is
+  the secret REFERENCE: `${{ secrets.* }}` is only expressible in workflow
+  YAML. Each pusher carries one plumbing line, and a test asserts all eight
+  carry it against a stated denominator of 8 — which turns eight lines into a
+  guarded invariant rather than eight places to drift.*
+- **`pnpm protection:verify`, from 5 assertions to 9** — deletions barred,
+  force pushes blocked, the bypass being `DeployKey`/`exempt` *specifically*,
+  the write-enabled deploy-key count, and **`shape: both` now reading as
+  DRIFTED** rather than merely being reported. RULING 163 made that state
+  visible; that was not enough, because the one arrangement in which the whole
+  cutover silently does nothing could still read `intact`.
+
+### The credential discipline, and what it cost to hold
+
+Nothing about the private key was ever held by this session.
+
+- **No refusal message can carry key material** — proved by handing a marker
+  string in and asserting it does not come back out.
+- **The key file is refused a home** inside the repository or any synced folder
+  (`refuseUnsafeKeyRoot`), rather than silently relocated.
+- **It is removed on every exit path, the failure path included.** That
+  assertion is only reachable on a path that authenticates to github.com, which
+  needs a real key and a network call. `resolveTransport` is the declared seam
+  (RULING 130's pattern) that makes it observable without either.
+- **Even the tests hold no key.** A structural placeholder — real BEGIN/END
+  lines, a body of `x` — exercises every decision the module makes, all of
+  which are about shape and placement. Generating a throwaway keypair to make a
+  test feel more real would put private-key material into a test run, a temp
+  folder and a CI log, which is the RULING 127 leak with extra steps.
+
+**Host verification is pinned, never disabled**, and the pin was checked
+against an external anchor rather than against itself: `ssh -T git@github.com`
+with only `GITHUB_HOST_KEYS` pinned and no identity offered returned
+`Permission denied (publickey)` — **authentication failed and host verification
+did not**, which is the only outcome a correct pin produces.
+
+### The proof, both directions, on real repositories
+
+Through the actual command line the workflows run, not through an imported
+function — the guard is wired in the direct-invocation block, and asserting
+against `classifyPushPaths` would have proved that the code the fix introduced
+does what the code does (RULING 153).
+
+- A commit carrying `data/meetings-snapshot.json` **and** `scripts/anything.mjs`
+  is **REFUSED**, the offending path named, exit non-zero, and origin's `main`
+  **exactly where it was**.
+- The same commit without it **lands**, with `path guard PASSED for
+  refresh-daily` and `pushed on attempt 1 of 2` in the log.
+
+**The derived-case proof (RULING 157) is `job-watch`**, and it is independent in
+the way that matters rather than in name: the only profile whose grant lies
+outside `data/`, the only allowlist that is a single exact file rather than a
+directory prefix, and the only pusher whose commit is an alarm rather than an
+artifact. A prefix rule that happened to match would pass `refresh-daily` and
+fail there.
+
+### Item 6 — the headroom table cannot cross, and the clock that can has no alarm
+
+**This is the third session to measure these numbers and the third to get them
+identical to the digit, and the reason is arithmetic rather than stagnation.**
+
+`headroom = oldestRow + window − generatedAt`, and **both terms are frozen
+values inside a committed artifact**. The number is a constant until a refresh
+lands. **Nothing has crossed and nothing in that table can cross by the passage
+of time.** The prior close-out's *"`clerksboards` at 6.38d having already
+crossed its window"* is corrected here: 6.38d is 6.38 days of margin, not a
+deficit.
+
+`ical`'s margin, stated exactly: the F22 guard passes when
+`oldestRow ≥ generatedAt − (window + 1 day)`, the day being the fetch-to-stamp
+clock gap. `ical` sits at **+0.63d**, so **1.63 days** of margin. Measured
+against today's wall clock instead it is **+0.21d**, still inside.
+
+**The clock that does move is the SERVING edge, and crossing it fails
+silently.** Two edges, two completely different failures:
+
+| Edge crossed | What happens | Anything red? |
+| --- | --- | --- |
+| **Guard** — a newly-fetched row older than `generatedAt − (window + 1d)` | the refresh fails at `Validate before committing`; **nothing is committed** | **yes, loudly** |
+| **Serving** — a committed row older than `now − window` | the row is clipped out of a reader's calendar | **no. nothing at all.** |
+
+The F22 guard cannot see the second, because it only runs while a refresh is
+being **built** — which is precisely the thing the push blocker has stopped.
+**Measured 2026-08-26: 0 of 449 rows have fallen out, snapshot age 0.41 days.**
+A mechanism, not a live wound. `pnpm source:headroom` now prints both clocks
+and the fallen-out count. `NH206`.
+
+### What is NOT proven, and only Sean can prove it
+
+**`last_used` on the deploy key is still `null`. It has never authenticated.**
+Everything else is verified; that one fact needs a real push to `main`, which
+needs his key. `NH207` asks him how he wants the first proof run, and
+`docs/refresh-unblock-runbook.md` carries the dispatch and — the part that
+matters — **how to tell a genuine success from an early exit**, because
+`refresh-daily` skips the push entirely when no artifact moved and reports
+success either way.
+
+### The merge itself was the session's other finding
+
+**PR #191 could not merge for roughly an hour on three green checks.** The
+`pull_request` event on OPEN created **no GitHub Actions check suite at all** —
+only a Claude-app and a Netlify-app suite, both sitting `queued` with zero runs.
+Close-and-reopen created none either. A push to the branch did fire one, but
+GitHub queued it against the **previous** head SHA, so the current head still
+had nothing.
+
+Ruled out: Actions enabled, all nine workflows `active`, the token carrying
+`workflow` scope, the commit attributed to `SeanJ22`. Two `workflow_dispatch`
+runs on the branch ref both started immediately and went green in about three
+minutes each — which is how the required contexts finally reached the head SHA.
+Once six green check-runs were present the state went `CLEAN` and **the merge
+went through with no override, no `--admin` and no auto-merge.** `NH208`, which
+also records that the session's first reading of the cause — the ruleset's
+unattributed-changes setting — **was wrong**, and says so rather than leaving it
+standing.
+
+### Gates
+
+`pnpm gates` — **7 of 7**: `lint` PASS · `tsc` PASS · `assert:browser` PASS ·
+`test` PASS · `build` PASS · `test:bundle` PASS · `build:standalone` PASS.
+**2,463 tests, 0 fail**, against a 2,430 baseline. `pnpm db:surfaces` **6 of 6**.
+
+### RULING 165, and the collision it nearly caused
+
+Drafted as **164** and written into five files before the number turned out to
+be spent — the unblock-pushers session had taken it earlier the same day for
+*a workflow reports every failure, not just the first*. Forty references were
+renumbered to **165** in one sweep and 164 was left exactly where it was.
+`docs/rulings.md` is append-only, and renumbering the one that already shipped
+would leave dangling references in a record whose whole value is that it does
+not move.

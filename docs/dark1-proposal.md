@@ -50,13 +50,21 @@ lines on screen — so the map still reads as busy, and now it reads as
 inconsistently busy, which is worse than uniform. It also makes the LOCAL tier
 the quietest thing on a local-government map.
 
-**Option C fixes the wrong problem and costs something real.** It is genuinely
-calmer, but it is calmer because two governments stopped being drawn. This
-product names the twig as readily as the trunk (RULING 57), and a school
-district a reader can see a meeting pin for but cannot see the boundary of is a
-worse answer than a slightly busy map. If density is the real complaint, the
-honest lever is the Filters panel's existing DISTRICT TYPES control, which is a
-reader's choice rather than ours.
+**Option C fixes the wrong problem and costs something real, and the capture
+puts a number on the cost.** The rail's own stat tile reads **193 Districts in
+view** on every other capture and **144** on this one: forty-nine governments
+stopped being drawn, and the map says so on screen. It is calmer for exactly
+that reason. This product names the twig as readily as the trunk (RULING 57),
+and a school district a reader can see a meeting pin for but cannot see the
+boundary of is a worse answer than a slightly busy map.
+
+It also does not deliver much calm for the price — read side by side with
+`dark-00-today.png`, the yellow municipal lattice C was supposed to thin is
+almost entirely still there, because the layers it drops are not the dense ones.
+
+If density really is the complaint, the honest lever already exists and belongs
+to the reader rather than to us: the Filters panel's DISTRICT TYPES control,
+which the same captures show reading `8 OF 8`.
 
 ## Why the fix belongs in the dark theme only
 

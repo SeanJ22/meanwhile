@@ -40,7 +40,7 @@ import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { makeRunId, syntheticRunHeaders } from "../lib/db/run-marker.ts";
-import { decodePng, patchStats, regionChange } from "./png.mts";
+import { decodePng, regionChange } from "./png.mts";
 import { launchGuarded } from "./browser.mts";
 
 const BASE = (process.env.SHOOT_BASE_URL ?? "https://sparkwtp.netlify.app").replace(/\/$/, "");

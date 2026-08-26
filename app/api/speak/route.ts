@@ -45,7 +45,7 @@ export const runtime = "nodejs";
 
 
 const MAX_BODY_BYTES = 8192;
-const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING"]);
+const SUBJECT_TYPES = new Set(["OFFICIAL", "BODY", "MEETING", "CANDIDATE"]);
 
 export async function POST(request: Request) {
   // The master intake ripcord closes this surface with everything else it
@@ -159,7 +159,7 @@ export async function POST(request: Request) {
 
   try {
     const stored = await writeSpeakYourMind({
-      subjectType: submission.subjectType as "OFFICIAL" | "BODY" | "MEETING",
+      subjectType: submission.subjectType as "OFFICIAL" | "BODY" | "MEETING" | "CANDIDATE",
       subjectId: submission.subjectId,
       ocdIds,
       divisionVintage: DIVISION_VINTAGE,

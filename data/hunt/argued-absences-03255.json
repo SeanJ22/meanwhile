@@ -1,9 +1,9 @@
 {
   "note": "Argued absences under RULING 143 and RULING 94, made earnable by RULING 144: a walled move is a recorded move carrying its date, and the absence expires on its seven-day window or the day any wall in it falls, whichever is first. Moves 2 through 5 are answered from walks that happened, with the artifact named; move 1 is a live query per candidate through the control-checked engine pool in lib/hunt/search-pool.ts. Written by scripts/argue-absences-0825.mts.",
   "zip": "03255",
-  "walkedAt": "2026-08-25",
+  "walkedAt": "2026-08-26",
   "pacing": {
-    "delayMs": 6000,
+    "delayMs": 9000,
     "why": "A refusal caused by our own request rate, recorded as a wall, would be a fact about the script wearing the clothes of a fact about the web. The pace is stated so a reader can judge whether a wall was earned."
   },
   "totals": {
@@ -53,9 +53,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cinde Warmington (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cinde Warmington (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:warmington-cinde",
@@ -92,9 +92,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cinde Warmington (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cinde Warmington (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:ayotte-kelly",
@@ -131,9 +131,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kelly Ayotte (Governor). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kelly Ayotte (Governor). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:fife-shaun",
@@ -170,9 +170,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Shaun Fife (Governor). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Shaun Fife (Governor). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:fife-shaun",
@@ -209,9 +209,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Shaun Fife (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Shaun Fife (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:fife-shaun",
@@ -248,9 +248,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Shaun Fife (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Shaun Fife (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -287,9 +287,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Bob Wayne McClory (Governor). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Bob Wayne McClory (Governor). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -326,9 +326,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Bob Wayne McClory (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Bob Wayne McClory (Governor). The certified filing does not publish a phone; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -365,9 +365,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Bob Wayne McClory (Governor). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Bob Wayne McClory (Governor). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -404,9 +404,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Bob Wayne McClory (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Bob Wayne McClory (Governor). The certified filing does not publish a verifiedPage; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:governor:mcclory-bob-wayne",
@@ -443,9 +443,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Bob Wayne McClory (Governor). The certified filing does not publish a campaignSite; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Bob Wayne McClory (Governor). The certified filing does not publish a campaignSite; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -482,9 +482,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for David Jarvis (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for David Jarvis (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -521,9 +521,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for David Jarvis (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for David Jarvis (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -560,9 +560,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for David Jarvis (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for David Jarvis (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -599,9 +599,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for David Jarvis (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for David Jarvis (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:jarvis-david",
@@ -638,9 +638,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for David Jarvis (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for David Jarvis (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:manzur-karishma",
@@ -677,9 +677,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Karishma Manzur (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Karishma Manzur (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:manzur-karishma",
@@ -716,9 +716,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Karishma Manzur (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Karishma Manzur (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:pappas-chris",
@@ -755,9 +755,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Chris Pappas (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Chris Pappas (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
@@ -794,9 +794,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Maxwell L. Saal (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Maxwell L. Saal (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:vail-john",
@@ -833,9 +833,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for John Vail (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for John Vail (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:vail-john",
@@ -872,9 +872,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for John Vail (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for John Vail (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:vail-john",
@@ -911,9 +911,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for John Vail (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for John Vail (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:alciere-tom",
@@ -950,9 +950,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tom Alciere (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tom Alciere (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:alciere-tom",
@@ -989,9 +989,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tom Alciere (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tom Alciere (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:alciere-tom",
@@ -1028,9 +1028,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tom Alciere (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tom Alciere (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:brown-scott-p-",
@@ -1067,9 +1067,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Scott P. Brown (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Scott P. Brown (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:danley-sky",
@@ -1106,9 +1106,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sky Danley (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sky Danley (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:martin-andy",
@@ -1145,9 +1145,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Andy Martin (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Andy Martin (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:martin-andy",
@@ -1184,9 +1184,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Andy Martin (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Andy Martin (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:martin-andy",
@@ -1223,9 +1223,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Andy Martin (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Andy Martin (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -1262,9 +1262,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Mary Maxwell (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Mary Maxwell (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -1301,9 +1301,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Mary Maxwell (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Mary Maxwell (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -1340,9 +1340,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Mary Maxwell (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Mary Maxwell (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -1379,9 +1379,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Mary Maxwell (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Mary Maxwell (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:maxwell-mary",
@@ -1418,9 +1418,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Mary Maxwell (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Mary Maxwell (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -1457,9 +1457,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -1496,9 +1496,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -1535,9 +1535,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -1574,9 +1574,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
@@ -1613,9 +1613,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard A. McMenamon II (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -1652,9 +1652,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a photo; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -1691,9 +1691,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a phone; 7 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -1730,9 +1730,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a contact; 6 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -1769,9 +1769,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
@@ -1808,9 +1808,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sabrina Ann Smith (United States Senator). The certified filing does not publish a campaignSite; 9 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-senate:sununu-john-e-",
@@ -1847,9 +1847,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for John E. Sununu (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for John E. Sununu (United States Senator). The certified filing does not publish a verifiedPage; 1 of 13 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:goodlander-maggie",
@@ -1886,9 +1886,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Maggie Goodlander (Representative in Congress, District 2). The certified filing does not publish a contact; 4 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Maggie Goodlander (Representative in Congress, District 2). The certified filing does not publish a contact; 4 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -1925,9 +1925,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a photo; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a photo; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -1964,9 +1964,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a phone; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a phone; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -2003,9 +2003,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a contact; 4 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a contact; 4 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -2042,9 +2042,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
@@ -2081,9 +2081,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a campaignSite; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Michael Anthony Callis (Representative in Congress, District 2). The certified filing does not publish a campaignSite; 5 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:nicholson-dan",
@@ -2120,9 +2120,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dan Nicholson (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dan Nicholson (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:orlando-victor",
@@ -2159,9 +2159,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Victor Orlando (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Victor Orlando (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:us-house-2:tang-williams-lily",
@@ -2198,9 +2198,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Lily Tang Williams (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Lily Tang Williams (Representative in Congress, District 2). The certified filing does not publish a verifiedPage; 2 of 6 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
@@ -2237,9 +2237,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a photo; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a photo; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
@@ -2276,9 +2276,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a phone; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a phone; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-senate-7:harned-rebecca",
@@ -2315,9 +2315,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a verifiedPage; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Rebecca Harned (State Senator, District 7). The certified filing does not publish a verifiedPage; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:ebel-karen-elizabeth",
@@ -2354,9 +2354,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Karen Elizabeth Ebel (State Representative, Merrimack County District 7). The certified filing does not publish a campaignSite; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Karen Elizabeth Ebel (State Representative, Merrimack County District 7). The certified filing does not publish a campaignSite; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -2393,9 +2393,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a photo; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a photo; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -2432,9 +2432,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -2471,9 +2471,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a contact; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a contact; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -2510,9 +2510,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a verifiedPage; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a verifiedPage; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:state-house-merrimack-7:rusis-cynthia",
@@ -2549,9 +2549,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a campaignSite; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Cynthia Rusis (State Representative, Merrimack County District 7). The certified filing does not publish a campaignSite; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:menard-tobin",
@@ -2588,9 +2588,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a photo; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a photo; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:menard-tobin",
@@ -2627,9 +2627,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:menard-tobin",
@@ -2666,9 +2666,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Tobin Menard (Executive Councilor, District 2). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -2705,9 +2705,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a photo; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a photo; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -2744,9 +2744,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -2783,9 +2783,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -2822,9 +2822,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:executive-council-2:strathdee-kim",
@@ -2861,9 +2861,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a campaignSite; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kim Strathdee (Executive Councilor, District 2). The certified filing does not publish a campaignSite; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
@@ -2900,9 +2900,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Vincent S. Ribas (Merrimack County Commissioner, Second District). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Vincent S. Ribas (Merrimack County Commissioner, Second District). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:ribas-vincent-s-",
@@ -2939,9 +2939,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Vincent S. Ribas (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Vincent S. Ribas (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -2978,9 +2978,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a photo; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a photo; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -3017,9 +3017,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a phone; 2 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -3056,9 +3056,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a contact; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -3095,9 +3095,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:bilodeau-richard",
@@ -3134,9 +3134,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Richard Bilodeau (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
@@ -3173,9 +3173,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Harold F. French (Merrimack County Commissioner, Second District). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Harold F. French (Merrimack County Commissioner, Second District). The certified filing does not publish a verifiedPage; 1 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-commissioner-2:french-harold-f-",
@@ -3212,9 +3212,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Harold F. French (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Harold F. French (Merrimack County Commissioner, Second District). The certified filing does not publish a campaignSite; 0 of 3 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
@@ -3251,9 +3251,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
@@ -3290,9 +3290,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:shephard-peter",
@@ -3329,9 +3329,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Peter Shephard (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
@@ -3368,9 +3368,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
@@ -3407,9 +3407,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
@@ -3446,9 +3446,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
@@ -3485,9 +3485,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:cassidy-frank-t-",
@@ -3524,9 +3524,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a campaignSite; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Frank T. Cassidy (Merrimack County Sheriff). The certified filing does not publish a campaignSite; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
@@ -3563,9 +3563,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jason Gerhard (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jason Gerhard (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:gerhard-jason",
@@ -3602,9 +3602,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jason Gerhard (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jason Gerhard (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:weir-ben",
@@ -3641,9 +3641,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a photo; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:weir-ben",
@@ -3680,9 +3680,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a phone; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:weir-ben",
@@ -3719,9 +3719,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a contact; 1 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-sheriff:weir-ben",
@@ -3758,9 +3758,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Ben Weir (Merrimack County Sheriff). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:endres-steven",
@@ -3797,9 +3797,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a photo; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a photo; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:endres-steven",
@@ -3836,9 +3836,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:endres-steven",
@@ -3875,9 +3875,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Steven Endres (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:hagaman-meg",
@@ -3914,9 +3914,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Meg Hagaman (Merrimack County Attorney). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Meg Hagaman (Merrimack County Attorney). The certified filing does not publish a contact; 2 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:hagaman-meg",
@@ -3953,9 +3953,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Meg Hagaman (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Meg Hagaman (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:raiche-jon",
@@ -3992,9 +3992,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jon Raiche (Merrimack County Attorney). The certified filing does not publish a phone; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jon Raiche (Merrimack County Attorney). The certified filing does not publish a phone; 3 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:raiche-jon",
@@ -4031,9 +4031,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jon Raiche (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jon Raiche (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-attorney:rogers-sarah",
@@ -4070,9 +4070,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Sarah Rogers (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Sarah Rogers (Merrimack County Attorney). The certified filing does not publish a verifiedPage; 0 of 4 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
@@ -4109,9 +4109,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a photo; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a photo; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
@@ -4148,9 +4148,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
@@ -4187,9 +4187,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a contact; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a contact; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
@@ -4226,9 +4226,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a verifiedPage; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a verifiedPage; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:donnelly-kathleen",
@@ -4265,9 +4265,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Kathleen Donnelly (Merrimack County Treasurer). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -4304,9 +4304,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a photo; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a photo; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -4343,9 +4343,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a phone; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -4382,9 +4382,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a contact; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a contact; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -4421,9 +4421,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a verifiedPage; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a verifiedPage; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:county-treasurer:schuett-dianne-e-",
@@ -4460,9 +4460,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Dianne E. Schuett (Merrimack County Treasurer). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
@@ -4499,9 +4499,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a photo; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a photo; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
@@ -4538,9 +4538,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a phone; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a phone; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
@@ -4577,9 +4577,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a contact; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a contact; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
@@ -4616,9 +4616,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a verifiedPage; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a verifiedPage; 1 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:davis-erica-s-",
@@ -4655,9 +4655,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Erica S. Davis (Merrimack County Register of Deeds). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-deeds:morse-samantha",
@@ -4694,9 +4694,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Samantha Morse (Merrimack County Register of Deeds). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Samantha Morse (Merrimack County Register of Deeds). The certified filing does not publish a campaignSite; 0 of 2 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
@@ -4733,9 +4733,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a photo; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a photo; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
@@ -4772,9 +4772,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a phone; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a phone; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
@@ -4811,9 +4811,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a contact; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a contact; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     },
     {
       "candidacyId": "ballot-nh-merrimack:register-of-probate:bradstreet-jane",
@@ -4850,9 +4850,9 @@
           "reached": true
         }
       ],
-      "at": "2026-08-25",
-      "expiresOn": "2026-09-01",
-      "argument": "Five moves walked on 2026-08-25 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a campaignSite; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
+      "at": "2026-08-26",
+      "expiresOn": "2026-09-02",
+      "argument": "Five moves walked on 2026-08-26 for Jane Bradstreet (Merrimack County Register of Probate). The certified filing does not publish a campaignSite; 0 of 1 in the same contest hold one; the compiled press and party corpora do not carry one for them; the municipality's own site does not name them. The general web index answered and carried none."
     }
   ]
 }

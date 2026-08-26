@@ -80,6 +80,22 @@ const STAYS_IN_REPO = [
    * single file that replaces itself.
    */
   /^docs\/photo-review\//,
+  /*
+   * **Joined 2026-08-26: a session's PROPOSAL captures.** `DARK-1` is the
+   * first — Sean asked for options with side-by-side captures to react to,
+   * and `/screenshots/` is gitignored, so writing them there would leave the
+   * whole deliverable on one machine.
+   *
+   * This is the same reason `docs/feedback/` is on this list, pointed the
+   * other way: that directory is an input a SESSION must reach, and this is
+   * an output SEAN must reach. RULING 108 covers both — anything that has to
+   * be read lives in the repo.
+   *
+   * Not RULING 20's class either. A proposal batch is a fixed set captured
+   * once for one decision, at 1x rather than 2x to keep it proportionate; it
+   * is never re-fetched, and once he rules on it it stops mattering.
+   */
+  /^docs\/proposals\//,
 ];
 
 interface Manifest {

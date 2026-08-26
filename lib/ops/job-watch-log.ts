@@ -109,7 +109,6 @@ export function stripLogScaffolding(line: string): string {
   // The leading ISO timestamp GitHub stamps on every line.
   out = out.replace(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z\s?/, "");
   // ANSI colour, which reads as `^[[36;1m` in a CSV cell.
-  // eslint-disable-next-line no-control-regex
   out = out.replace(/\[[0-9;]*m/g, "");
   return out.trimEnd();
 }

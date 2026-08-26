@@ -10,6 +10,9 @@ import {
   type BattlecardSectionId,
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
+import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
+import { SpeakYourMind } from "@/components/speak/speak-your-mind";
+import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
 import {
   positionsEmptyLine,
@@ -68,12 +71,53 @@ import {
 export function CandidateBattlecard({
   name,
   partyLine,
+  partyLabel = null,
+  photoUrl = null,
+  incumbent = false,
+  speakContext = null,
   subjectId,
   sections,
   holdsOrHeldTheOffice = false,
   questionnaire = UNESTABLISHED,
 }: {
   name: string;
+  /**
+   * **BAL-18 (2026-08-25) — the party is a COLOURED PILL, matching the map.**
+   *
+   * Sean: *"party affiliation renders as gray text. Make it a colored pill —
+   * the party's color — matching the map card."* The map card has always done
+   * this, through `IdentityChip fill={partyColorVar(...)}`; the ballot card
+   * rendered `text-muted` prose. Same person, same card, two renderings.
+   *
+   * `partyLine` is kept as the FALLBACK for a surface that has already
+   * formatted something richer than a bare label, so nothing that renders
+   * today can render nothing tomorrow.
+   */
+  partyLabel?: string | null;
+  /**
+   * **BAL-17 (2026-08-25) — the photo, in both Arizona and New Jersey.**
+   *
+   * The map card renders `IdentityPortrait`; this one rendered no circle at
+   * all. It is the SAME component here, so the geometry cannot drift and a
+   * photo-less candidate gets the identical circle with initials rather than a
+   * smaller shape (the four-door photo rule's own reason).
+   */
+  photoUrl?: string | null;
+  /**
+   * **BAL-20 (2026-08-25) — incumbency, stated, and stated HERE.**
+   *
+   * Sean: *"the ballot card is exactly where incumbency belongs."* It renders
+   * as an outlined chip beside the party pill — the same `chips` slot the map
+   * card uses for it — so the two surfaces say it the same way.
+   *
+   * It is a FACT ABOUT THE PERSON (do they hold this office), never a ranking
+   * and never a completeness marker: both candidates in a contest carry a
+   * chip, one reading `Incumbent` and the other `Challenger`, so neither is
+   * marked by the presence or absence of a badge (RULING 42).
+   */
+  incumbent?: boolean;
+  /** Where the reader is, for the Speak Your Mind row. Never who they are. */
+  speakContext?: { lat?: number | null; lng?: number | null } | null;
   /** Already-formatted party text. Display only — nothing here ranks. */
   partyLine?: React.ReactNode;
   /**
@@ -175,7 +219,28 @@ export function CandidateBattlecard({
           they are siblings in one column, so the width is shared by
           construction rather than by a number typed twice.
         */
-        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--speak-navy)] bg-[var(--speak-navy)] px-3 py-2 text-center text-[0.8125rem] font-semibold text-[var(--speak-on-navy)] transition-colors hover:border-[var(--speak-navy-hover)] hover:bg-[var(--speak-navy-hover)]"
+
+        /*
+          **BAL-14 (2026-08-25) — SEAN SETTLED THIS, AND IT SUPERSEDES BAL-13.**
+
+          BAL-13, on 2026-08-25 that morning, made this control navy for a good
+          reason: a FILLED control among outline controls reads as the action.
+          The mechanism stays and only the hue moves. His words, and the reason
+          is his: GREEN, because it is the only option that does not compete
+          with the red and blue of party affiliation — which now sit on this
+          very card as a coloured pill under BAL-18, directly above this button.
+
+          Both themes, and the token is theme-aware for DARK-2 reason: the navy
+          it replaced did not survive a dark ground, and shipping a second
+          control with the same defect on the same day would be the fix and the
+          bug in one commit.
+
+          `w-full` is untouched, which is the other half of what he asked for:
+          the width matches the "Would you vote for them?" panel below because
+          they are siblings in one column, so it is shared by construction
+          rather than by a number typed twice.
+        */
+        className="mt-2 w-full cursor-pointer rounded-md border border-[var(--battlecard-green)] bg-[var(--battlecard-green)] px-3 py-2 text-center text-[0.8125rem] font-semibold text-[var(--battlecard-on-green)] transition-colors hover:border-[var(--battlecard-green-hover)] hover:bg-[var(--battlecard-green-hover)]"
       >
         View Battlecard
       </button>
@@ -192,16 +257,44 @@ export function CandidateBattlecard({
         >
           <div className="account-modal" data-candidate-battlecard>
             <header className="account-modal-header">
-              <div className="min-w-0">
-                <p className="popup-type" style={{ color: "var(--accent-local)" }}>
-                  Candidate
-                </p>
-                <p className="truncate text-[1rem] font-semibold tracking-tight">
-                  {name}
-                </p>
-                {partyLine && (
-                  <p className="text-[0.75rem] text-muted">{partyLine}</p>
-                )}
+              {/*
+                **BAL-17, BAL-18 and BAL-20 — the ballot card's header is the
+                MAP card's header.** (2026-08-25, Sean's walkthrough.)
+
+                His frame for all three: *same person, same card, same
+                rendering; the map version is the reference.* So the pieces are
+                the map's own components rather than a second implementation
+                that looks like them — `IdentityPortrait` for the circle and
+                `IdentityChip` for the pills. RULING 103 is why: three separate
+                copies of an initials function once rendered the same person
+                three different ways, and the fix for that is to have one.
+              */}
+              <div className="flex min-w-0 flex-1 items-start gap-3">
+                <IdentityPortrait name={name} photoUrl={photoUrl} />
+
+                <div className="min-w-0 flex-1">
+                  <p className="popup-type" style={{ color: "var(--accent-local)" }}>
+                    Candidate
+                  </p>
+                  <p className="truncate text-[1rem] font-semibold tracking-tight">
+                    {name}
+                  </p>
+
+                  <div className="id-chip-row">
+                    {partyLabel ? (
+                      <IdentityChip fill={partyColorVar(partyLabel)}>{partyLabel}</IdentityChip>
+                    ) : (
+                      partyLine && <span className="text-[0.75rem] text-muted">{partyLine}</span>
+                    )}
+                    {/*
+                      BAL-20: BOTH candidates carry a chip. A badge worn only by
+                      the incumbent is a marker tracking incumbency rather than
+                      anything about the people, which is exactly what RULING 42
+                      deleted from these cards once already.
+                    */}
+                    <IdentityChip>{incumbent ? "Incumbent" : "Challenger"}</IdentityChip>
+                  </div>
+                </div>
               </div>
 
               <button
@@ -293,6 +386,26 @@ export function CandidateBattlecard({
 
                 LEVEL register — a claim surface, about our own coverage.
               */}
+              {/*
+                **BAL-19 (2026-08-25) — Speak Your Mind is on the ballot card
+                too.** Sean: *"the Speak Your Mind pill is absent from the
+                ballot section. Add it."*
+
+                It sits BELOW the seven sections and ABOVE the collection note,
+                which is the same place it occupies on the map's person card:
+                after the evidence, because it is the reader's turn once they
+                have read what we hold, and before the note, because the note is
+                the last word about the card as a whole.
+              */}
+              <div className="mt-5">
+                <SpeakYourMind
+                  subjectType="CANDIDATE"
+                  subjectId={subjectId}
+                  subject={name}
+                  context={speakContext ?? undefined}
+                />
+              </div>
+
               <p
                 data-collection-note
                 className="mt-6 text-[0.75rem] leading-relaxed text-voice"

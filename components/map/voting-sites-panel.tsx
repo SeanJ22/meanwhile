@@ -10,6 +10,8 @@ import {
   UNPLACED_SITE_LINE,
   type VotingSite,
   type VotingSitesAnswer,
+  milesLabel,
+  sitesNearestFirst,
 } from "@/lib/ballot/voting-sites";
 
 /**
@@ -44,6 +46,15 @@ import {
 export interface VotingSitesPanelProps {
   /** Lift the pinnable sites so the map can draw them. */
   onSites: (sites: { id: string; name: string; lat: number; lng: number }[]) => void;
+  /**
+   * **VOT-1: lift the RESOLVED POINT so the map can draw the ten-mile ring.**
+   *
+   * It is the point and never the address — the same line `VotingSitesAnswer`
+   * already draws: *only ever the resolved POINT, never the address that
+   * produced it*. A street address is a reader's home; a point on a map they
+   * are already looking at is the answer they asked for.
+   */
+  onAddressPoint?: (point: { lat: number; lng: number } | null) => void;
   /** Which pin is selected, so the list can scroll it into view. */
   selectedSiteId: string | null;
   onSelectSite: (id: string | null) => void;
@@ -58,6 +69,7 @@ type State =
 
 export function VotingSitesPanel({
   onSites,
+  onAddressPoint,
   selectedSiteId,
   onSelectSite,
   onClose,
@@ -111,6 +123,15 @@ export function VotingSitesPanel({
         .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng })),
     );
   }, [state]);
+
+  // VOT-1: the ring follows the same lifecycle as the pins — it appears with
+  // an answer and it is cleared when the panel closes, so a ring can never
+  // outlive the address that justified it.
+  useEffect(() => {
+    onAddressPoint?.(state.kind === "answered" ? state.answer.point : null);
+  }, [state, onAddressPoint]);
+
+  useEffect(() => () => onAddressPoint?.(null), [onAddressPoint]);
 
   useEffect(() => () => onSitesRef.current([]), []);
 
@@ -244,12 +265,27 @@ export function VotingSitesPanel({
               </div>
             )}
 
+            {/*
+              **VOT-1 (2026-08-25) — NEAREST FIRST, AND THE WHOLE COUNTY STAYS.**
+
+              Sean: *"Where can I vote? returns everywhere in the county — that
+              is correct and stays. The defect is ordering."* So this is a SORT
+              and never a filter: `sitesNearestFirst` returns every site it was
+              given, and `tests/voting-sites-order.test.ts` asserts that against
+              the input rather than trusting it.
+
+              Distance is a neutral criterion and this is not the never-rank
+              rule's territory: that rule governs ordering PEOPLE by fit, and
+              this is geography — the same order for everyone who types the same
+              address, expressing no judgement about any site.
+            */}
             {j.sites.length > 0 && (
               <ul className="voting-sites">
-                {j.sites.map((site) => (
+                {sitesNearestFirst(j.sites, state.answer.point).map(({ site, miles }) => (
                   <SiteRow
                     key={site.id}
                     site={site}
+                    miles={miles}
                     selected={site.id === selectedSiteId}
                     onSelect={() =>
                       onSelectSite(site.id === selectedSiteId ? null : site.id)
@@ -280,10 +316,13 @@ const KIND_LABEL: Record<VotingSite["kind"], string> = {
 
 function SiteRow({
   site,
+  miles,
   selected,
   onSelect,
 }: {
   site: VotingSite;
+  /** VOT-1: miles from the address the reader typed, or null if unplaceable. */
+  miles: number | null;
   selected: boolean;
   onSelect: () => void;
 }) {
@@ -294,6 +333,10 @@ function SiteRow({
         <span className="voting-site-name">{site.name}</span>
       </button>
       <p className="voting-site-address">{site.address}</p>
+      {/* VOT-1: the distance, stated. A null renders NOTHING (RULING 28) —
+          an unplaced site already carries its own named gap below, and a dash
+          or an "unknown" here would be a second sentence about the same fact. */}
+      {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{KIND_LABEL[site.kind]}</p>
       {site.serves && <p className="voting-site-serves">{site.serves}</p>}

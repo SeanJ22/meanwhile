@@ -45,14 +45,6 @@ import { CardSection } from "./card-section";
  * keyed on the wrong thing.
  */
 
-interface DirectoryOffice {
-  city: string | null;
-  state: string | null;
-  address: string | null;
-  zip: string | null;
-  phone: string | null;
-}
-
 export function MemberDirectory({ holder }: { holder: SeatHolder }) {
   return <MemberDirectoryInner key={holder.id} holder={holder} />;
 }

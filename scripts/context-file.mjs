@@ -753,11 +753,27 @@ export async function writeContext(mirrorDir, options) {
    * already documents — a document cannot name the commit that contains it —
    * and chasing it is what would merge forever.
    */
+  /*
+   * **`repoRoot` — WHY A REDIRECT EXISTS AT ALL.** (2026-08-25, `NH195`.)
+   *
+   * RULING 108 made the repo copy the PRIMARY output, written first and never
+   * guarded. That is right, and it had one consequence nobody costed: the
+   * test that proves it runs `writeContext` for real, so `pnpm test`
+   * OVERWROTE `docs/context.md` with fixture values — `generatedAt: "test"`,
+   * no git facts — and the next session opened its orientation file on that.
+   *
+   * The fix is NOT to guard the write or to skip it under test, because both
+   * of those stop the test proving the thing it exists to prove. It is to let
+   * a caller say WHERE the repo root is. The write still happens, still
+   * first, still unguarded; the test points it at a temp directory and then
+   * asserts the file landed there. Production passes nothing and gets ROOT.
+   */
+  const repoRoot = options?.repoRoot ?? ROOT;
   if (!options?.mirrorOnly) {
     // PRIMARY — the repo copy. Written first, and never guarded by a
     // try/catch: if this fails the run has not produced the thing it exists
     // to produce.
-    writeFileSync(join(ROOT, CONTEXT_REPO_PATH), built.text, "utf8");
+    writeFileSync(join(repoRoot, CONTEXT_REPO_PATH), built.text, "utf8");
   }
 
   // SECOND — the author's mirror. Best-effort by design.

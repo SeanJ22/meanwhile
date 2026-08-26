@@ -224,16 +224,28 @@ export function CandidateCard({
                 {links.official.label ?? "official site"}
               </a>
             )}
-            {links?.campaign && (
-              <a
-                href={links.campaign.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-              >
-                {links.campaign.label ?? "campaign site"}
-              </a>
-            )}
+            {/*
+              **BAL-15 (2026-08-25) — the campaign site, the email and the
+              mailing address MOVED INTO THE BATTLECARD.**
+
+              Sean red-boxed exactly this row and the address line under it on
+              `17-37-45`, and gave the reason rather than only the change:
+              *"we always want people to choose the battlecard, in the
+              campaign's own words. Stripping the ballot page drives them
+              there."*
+
+              **Nothing is deleted.** The ballot POINTS and the battlecard
+              HOLDS: the official site stays here, because it is the one link
+              that answers *who is this in office* rather than *what does their
+              campaign say*, and the phone stays because a number a reader can
+              tap now is not extra text. Everything else renders inside the
+              card, under Sources, with the same provenance it always carried.
+
+              Equal-effort neutrality applies and the mechanism is structural,
+              not remembered: this treatment lands on `CandidateCard`, which is
+              the ONE component every candidate in every contest renders
+              through, so it cannot land for one candidate and not another.
+            */}
             {!links?.official && !links?.campaign && filedSiteUrl && (
               <a
                 href={filedSiteUrl}
@@ -242,14 +254,6 @@ export function CandidateCard({
                 className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
               >
                 site (as filed)
-              </a>
-            )}
-            {card?.email && (
-              <a
-                href={`mailto:${card.email}`}
-                className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-              >
-                {card.email}
               </a>
             )}
             {card?.phone && (
@@ -295,14 +299,16 @@ export function CandidateCard({
           source class. A null renders NOTHING — no row, no label, no dash
           (RULING 28).
         */}
-        {card?.filedAddress && (
-          <p className="mt-1 text-[0.75rem] text-muted-foreground">
-            <span>{card.filedAddress}</span>
-            {card.filedAddressSource && (
-              <span className="opacity-80"> — {card.filedAddressSource}</span>
-            )}
-          </p>
-        )}
+        {/*
+          **BAL-15 (2026-08-25): the filed address moved into the battlecard.**
+
+          RULING 54's reasoning is untouched and travels WITH it — the address
+          is on a public form the candidate submitted for exactly this purpose,
+          for some of them it is the only route to reach them at all, it is
+          never a link, and it carries its source. What changed is WHERE a
+          reader finds it: one tap into the card rather than as a fourth line
+          of small type on a ballot row.
+        */}
 
         {/* Item 12: directly beneath the links row — a candidate we hold
             little about still gets the same door, because the pill is where

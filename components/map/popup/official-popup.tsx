@@ -27,7 +27,7 @@ import {
   summaryPendingForBill,
 } from "@/lib/votes/bill-summaries";
 
-import { PopupCard, PopupRow, PopupSectionLabel } from "./popup-card";
+import { PopupCard, PopupSectionLabel } from "./popup-card";
 
 /**
  * The rep surfaces (3c), in the two-tier architecture:

@@ -43,7 +43,7 @@ The same five questions we sent everyone running for {OFFICE}
 
 > Hello {GIVEN_NAME} {FAMILY_NAME},
 >
-> We're We The People. We're building a free, non-partisan site that shows
+> We're Meanwhile. We're building a free, non-partisan site that shows
 > people what's on their ballot and who is running, using public records —
 > filings, meeting records, votes and campaign finance reports.
 >
@@ -53,7 +53,7 @@ The same five questions we sent everyone running for {OFFICE}
 >
 > **What we're asking.** Five questions. Three are the same for everyone running
 > for anything; two are about this kind of office. Each answer has a limit of
-> 150 words — the same limit for every question and every candidate.
+> 200 words — the same limit for every question and every candidate.
 >
 > **What happens to your answers.** They publish on your page on our site
 > exactly as you write them. We don't edit them, shorten them, summarise them,
@@ -90,9 +90,38 @@ The same five questions we sent everyone running for {OFFICE}
 > If you have a question, or you'd rather not be contacted about this again,
 > reply to this email. A person reads it.
 >
-> — We The People
+> — Meanwhile
 > {CONTACT_EMAIL}
 > {SITE_URL}
+
+---
+
+## The closing note — SEPARATE from the questionnaire
+
+*Added 2026-08-25 with instrument version `v2`. The text is Sean's, verbatim.*
+
+It sits BELOW the signature, under its own rule, in its own section — visually
+and structurally outside the message about the questions, so it cannot read as
+a sixth question or as a condition on the five. It is a business offer and it
+is presented as one.
+
+> One more thing, separate from the questionnaire: Meanwhile offers campaigns
+> and organizations anonymized, aggregate insight into what constituents in a
+> race care about — available to everyone, at the same published rates. If
+> you'd like to hear when insights for your race are available, sign up here.
+
+**There is NO TIMING PROMISE here and none may be added anywhere downstream** —
+not in the copy, not in the confirmation, not in the ledger, not in a reply. *If
+you'd like to hear when insights for your race are available* is conditional on
+availability; a date we then miss would be worse than no date, and this is a
+message to somebody standing in a live election.
+
+**The list is stored BUSINESS-SIDE.** It is not reader data. It does not reach
+the search log or the reactions store and it shares no joinable column with
+either (RULING 132). The copy is held in `lib/questionnaire/instrument.ts` as
+`CLOSING_NOTE`, which `questionsFor()` cannot return and `allQuestions()` does
+not contain — asserted in `tests/questionnaire.test.ts`, because *structurally
+distinct* is a claim and a claim is something a test can hold.
 
 ---
 
@@ -111,7 +140,7 @@ The same five questions we sent everyone running for {OFFICE}
 >
 > If you'd rather we stopped emailing you about this, reply and we'll stop.
 >
-> — We The People
+> — Meanwhile
 > {CONTACT_EMAIL}
 
 ---

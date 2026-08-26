@@ -720,3 +720,83 @@ export function districtsAt(
 
   return hits;
 }
+
+/**
+ * **MAP-2 (2026-08-25) — THE BOUNDS OF ONE SELECTED DISTRICT.**
+ *
+ * Sean: *"clicking a shaded area renders it off-center. The map moves to center
+ * the selected area — whatever the user clicked becomes front and center."* His
+ * `17-25-38` shows the Vail Unified polygon sitting in the bottom-right corner
+ * of the viewport with most of it off screen.
+ *
+ * **Applies to EVERY clickable area type**, which is what makes this a function
+ * over `DistrictType` rather than a branch on school districts: the type is the
+ * parameter, so a district type added later gets the behaviour by existing
+ * rather than by somebody remembering to add it.
+ *
+ * ## Why `queryRenderedFeatures` and not the source data
+ *
+ * The rendered features are what the reader is actually looking at. Reading the
+ * source would give geometry for polygons that are not drawn — a district
+ * clipped away at this zoom, or one from a layer that has not loaded — and
+ * flying the camera to a shape nobody can see is worse than not moving.
+ *
+ * **A district that is not on screen returns `null`** rather than a guessed
+ * box, and the caller then leaves the camera alone. That is the honest answer:
+ * a fit computed from nothing would be a camera move justified by no geometry.
+ */
+export function boundsOfDistrict(
+  map: MapLibreMap,
+  type: DistrictType,
+  ocdId: string,
+): [[number, number], [number, number]] | null {
+  const layers = [lineLayerId(type), fillLayerId(type)].filter((id) =>
+    Boolean(map.getLayer(id)),
+  );
+  if (layers.length === 0) return null;
+
+  let features: MapGeoJSONFeature[];
+  try {
+    features = map.queryRenderedFeatures({ layers }) as MapGeoJSONFeature[];
+  } catch {
+    return null;
+  }
+
+  let west = Infinity;
+  let south = Infinity;
+  let east = -Infinity;
+  let north = -Infinity;
+  let found = 0;
+
+  const walk = (coords: unknown): void => {
+    if (!Array.isArray(coords)) return;
+    if (typeof coords[0] === "number" && typeof coords[1] === "number") {
+      const [lng, lat] = coords as [number, number];
+      if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
+      if (lng < west) west = lng;
+      if (lng > east) east = lng;
+      if (lat < south) south = lat;
+      if (lat > north) north = lat;
+      return;
+    }
+    for (const c of coords) walk(c);
+  };
+
+  for (const feature of features) {
+    if (String(feature.id ?? "") !== ocdId) continue;
+    const geometry = feature.geometry as { coordinates?: unknown } | undefined;
+    if (!geometry?.coordinates) continue;
+    found += 1;
+    walk(geometry.coordinates);
+  }
+
+  // The floor (RULING 159): no matching feature is NOT an empty box. A bounds
+  // of `Infinity` would fly the camera somewhere nobody asked for, and a
+  // silently returned zero-size box would read as a district with no extent.
+  if (found === 0 || !Number.isFinite(west) || !Number.isFinite(north)) return null;
+
+  return [
+    [west, south],
+    [east, north],
+  ];
+}

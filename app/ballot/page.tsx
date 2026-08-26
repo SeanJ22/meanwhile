@@ -17,12 +17,14 @@ import {
 import {
   linksForCandidacy,
   linksForNominee,
+  type CandidateLinks,
 } from "@/lib/ballot/candidate-sites";
 import { blurbForContestTitle } from "@/lib/officials/office-blurbs";
 import { surnameDisplayCase } from "@/lib/ballot/name-case";
 import {
   cardForCandidacy,
   cardForNominee,
+  type CandidateCardData,
 } from "@/lib/ballot/candidate-cards";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
@@ -87,9 +89,12 @@ import type {
   Candidacy,
   Contest,
 } from "@/lib/ballot/types";
+import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
+import { groupAbsences } from "@/lib/ballot/absence-grouping";
 import { sharedNotesFor } from "@/lib/ballot/shared-notes";
 import { resolveZip } from "@/lib/geo/zcta";
 import { divisionsAt } from "@/lib/registry/server";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { PRODUCT_NAME } from "@/lib/brand";
 import {
   IncumbencyFootnote,
@@ -350,6 +355,9 @@ function CandidateFunding({
 async function BallotBattlecard({
   name,
   partyLine,
+  partyLabel = null,
+  card,
+  links = null,
   targetKey,
   contestTitle,
   contestOcdId,
@@ -358,6 +366,20 @@ async function BallotBattlecard({
 }: {
   name: string;
   partyLine: React.ReactNode;
+  /**
+   * BAL-18: the raw label, so the card can render the map's coloured pill
+   * rather than grey prose. `partyLine` stays as the fallback.
+   */
+  partyLabel?: string | null;
+  /**
+   * BAL-17: the candidate's own card row, which is where the portrait lives
+   * and where the four-door photo rule has already had its say — a photo that
+   * failed review is already `null` here (`lib/ballot/candidate-cards.ts`), so
+   * this surface cannot resurrect one the review process removed.
+   */
+  card?: CandidateCardData | null;
+  /** BAL-15: the campaign site, so the battlecard can hold what the row let go. */
+  links?: CandidateLinks | null;
   /** The candidate key — `${contest.id}|${nominee.name}` or a candidacy id. */
   targetKey: string;
   contestTitle: string;
@@ -393,6 +415,16 @@ async function BallotBattlecard({
     <CandidateBattlecard
       name={name}
       partyLine={partyLine}
+      partyLabel={partyLabel}
+      photoUrl={card?.photoUrl ?? null}
+      /*
+       * BAL-20. `incumbentHolderFor` is the SAME lookup BC-2 already uses to
+       * decide which Voting record empty state applies — one resolution, so the
+       * card cannot say "Challenger" in the header and render a voting record
+       * below it.
+       */
+      incumbent={holder !== null}
+      speakContext={context ? { lat: context.lat, lng: context.lng } : null}
       subjectId={targetKey}
       /*
        * BC-2. A fact about the PERSON — do they hold or have they held this
@@ -430,7 +462,26 @@ async function BallotBattlecard({
         record: holder ? (
           <RecentVotes holder={holder} reactionContext={context} />
         ) : null,
-        sources: holder ? <CandidateSources holder={holder} /> : null,
+        /*
+         * **BAL-15 (2026-08-25).** Sources now carries three things the ballot
+         * row let go of, plus the sentence Sean asked for about the tagline.
+         *
+         * It renders even where there is no officeholder record — which is the
+         * change that matters for equal effort. `CandidateSources` returns
+         * `null` for a challenger, so before this the Sources section on a
+         * challenger's card was the honest empty line while an incumbent's
+         * listed provenance. The contact a challenger DID publish now reaches
+         * the same place, on the same card, in the same section.
+         */
+        sources: (
+          <>
+            {holder && <CandidateSources holder={holder} />}
+            <CandidateContact card={card ?? null} links={links} />
+            <p className="mt-2 text-[0.6875rem] leading-relaxed text-muted">
+              {TAGLINE_SOURCE_NOTE}
+            </p>
+          </>
+        ),
       }}
     />
   );
@@ -650,15 +701,39 @@ export default async function BallotPage({
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
-      {/* 6b: the way back, top-left — the map is where the reader came from. */}
-      <p className="text-[0.8125rem]">
-        <Link
-          href="/"
-          className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-        >
-          ← Back to the map
-        </Link>
-      </p>
+      {/*
+        **DARK-3 (2026-08-25) — THE TOGGLE IS ON THIS PAGE TOO.**
+
+        Sean: *"no theme toggle on the ballot page; switching requires going
+        back to the map."* The control lived only in the map sidebar, so a
+        reader who came here to read a ballot in the dark had to leave the
+        thing they came for, switch, and come back — which is the
+        reader-friction rule almost exactly: an unnecessary trip between a
+        reader and what they are trying to do.
+
+        **IT IS THE SAME COMPONENT, not a second one.** `ThemeToggle` reads
+        and writes `wtp.theme` through `useStoredTheme`, so the setting
+        persists across the session no matter WHERE it was switched — which is
+        the second half of what he asked for, and it is true by construction
+        rather than by a second implementation agreeing with the first
+        (RULING 103).
+
+        It sits on the back-link row rather than in a bar of its own: that row
+        is already the page chrome, and a new bar would push the ballot itself
+        further down the first screen.
+      */}
+      <div className="flex items-center justify-between gap-3">
+        {/* 6b: the way back, top-left — the map is where the reader came from. */}
+        <p className="text-[0.8125rem]">
+          <Link
+            href="/"
+            className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
+          >
+            ← Back to the map
+          </Link>
+        </p>
+        <ThemeToggle className="shrink-0" />
+      </div>
       <p className="t-eyebrow mt-4 text-muted">{PRODUCT_NAME}</p>
       <h1 className="mt-1.5 text-2xl font-semibold tracking-tight">
         What&apos;s on the ballot{zip ? ` near ${zip}` : ""}
@@ -780,11 +855,47 @@ export default async function BallotPage({
                   sibling.
                 */}
                 {regStep && (
-                  <li>
+                  <li data-dated-event>
                     Register to vote by{" "}
                     <span className="font-mono text-[0.8125rem] font-semibold">
                       {formatDateMDY(regStep.date)}
                     </span>
+                    {/*
+                      **BAL-21 (2026-08-25) — EVERY DATE THAT MATTERS GETS THE
+                      SAME TREATMENT.**
+
+                      Sean red-boxed the empty space right here on `17-44-07`:
+                      election day had an Add to calendar, in-person early
+                      voting had one, and the New Jersey registration deadline
+                      — October 13th, 2026 — had nothing beside it. It is the
+                      one date on this card a reader can MISS ENTIRELY and be
+                      unable to fix afterwards, which makes it the worst one to
+                      leave unsaveable.
+
+                      `isUpcoming` guards it exactly as the early-voting window
+                      is guarded: a deadline that has already passed gets no
+                      control, because offering to put a dead date in somebody
+                      calendar is friction that buys them nothing.
+
+                      MTG-4 (8/22) is what the event carries: a title naming
+                      the state and the act, and a description that says what
+                      the date is for rather than repeating the label.
+                    */}
+                    {isUpcoming({ start: regStep.date, end: null }) && (
+                      <>
+                        {" "}
+                        <AddToCalendar
+                          event={{
+                            id: `ballot-${set.election.state}-${regStep.date}-registration-deadline`,
+                            title: `Voter registration deadline (${set.election.state})`,
+                            allDayDate: regStep.date,
+                            description:
+                              regStep.detail ??
+                              `Last day to register to vote in ${set.election.state} for the November 3rd, 2026 general election. Your ballot, with sources: found via ${PRODUCT_NAME}.`,
+                          }}
+                        />
+                      </>
+                    )}
                   </li>
                 )}
                 {earlyStep && (
@@ -1353,6 +1464,9 @@ export default async function BallotPage({
                           <BallotBattlecard
                             name={nominee.name}
                             partyLine={nominee.partyLabel}
+                            partyLabel={nominee.partyLabel ?? null}
+                            card={cardForNominee(contest.id, nominee.name)}
+                            links={linksForNominee(contest.id, nominee.name)}
                             targetKey={`${contest.id}|${nominee.name}`}
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
@@ -1501,6 +1615,9 @@ export default async function BallotPage({
                             <BallotBattlecard
                               name={`${cand.givenName} ${surnameDisplayCase(cand.familyName)}`}
                               partyLine={cand.partyLabel}
+                              partyLabel={cand.partyLabel ?? null}
+                              card={cardForCandidacy(cand.id)}
+                              links={linksForCandidacy(cand.id)}
                               targetKey={cand.id}
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
@@ -1863,10 +1980,28 @@ export default async function BallotPage({
 
       {matched && matched.contests.length > 0 && (
         <>
-          {matched.absences.map((absence) => (
+          {/*
+            **BAL-24 (2026-08-25) — WHY THIS IS GROUPED AND NOT DEDUPED.**
+
+            Sean drew an arrow between two blocks on `17-46-00` that both open
+            "NO LOCAL ELECTION — the Morris County Clerk's 2026 general-election
+            candidate list carries this entry for …". Read as an image they
+            differ by two words: one is DENVILLE TOWNSHIP and the other is
+            ROCKAWAY TOWNSHIP.
+
+            **It is not one record through two paths.** 07866 straddles both
+            municipalities, so a reader there is owed both facts, and filtering
+            the output would have deleted a true sourced statement about a real
+            government. `groupAbsences` merges only where the sentence, the
+            source, the URL and the read date all agree, and it NAMES every
+            jurisdiction in the merged sentence — nothing is lost, and the
+            reader stops being shown the same sentence twice.
+          */}
+          {groupAbsences(matched.absences).map((absence) => (
             <section
-              key={absence.ocdId}
+              key={absence.key}
               className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4"
+              data-absence-count={absence.members.length}
             >
               <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
                 {absence.statement}

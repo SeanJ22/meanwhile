@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-25 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,18 +14,18 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **284 open**, 420 resolved.
+- **280 open**, 429 resolved.
 - **48 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **2**
   - New Hampshire hunt — **2**
-  - New Jersey hunt — **0**
+  - New Jersey hunt — **1**
   - Arizona hunt — **0**
   - Visual feedback — **2**
-  - Data infrastructure — **2**
+  - Data infrastructure — **1**
   - Product / UI — **1**
   - Constitution & rules — **1**
-  - Repo & ops — **3**
+  - Repo & ops — **2**
 
 No section is over the five-P1 cap.
 
@@ -35,15 +35,13 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**48 open · 47 resolved.**
+**48 open · 48 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
 ### P1
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
-
-**NS15** — pnpm walk:all found it: the deploy's database was missing two committed migrations, 0019_next_scarlet_witch and 0020_dazzling_deathbird, both of which create and extend the speak_your_mind table. They were merged this morning with the feature (1803be2) and never applied. The surface is LIVE — components/speak/speak-your-mind.tsx renders inside the official and entity modals and /api/speak answers — so on production every insert naming those columns failed, the route caught it, and the page served normally. A reader typing what they would say to their representative got no error and their words were dropped. THE SESSION APPLIED THEM rather than opening this and waiting, because it is live data loss on a collection surface and the migrations are additive and were authored to be applied: 6 statements, journal now 21 of 21 committed and 0 pending, verified by a second dry run. This row is here because you should know a session wrote to the production database, and because the question worth your judgement is the OTHER half: how many readers typed into that box between the merge and now, and whether anything should be said to them. Nothing about the identity boundary changed — speak_key_hash carries its own digest prefix per RULING 141 and tests/db-schema.test.ts passes.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -110,6 +108,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH166** — OFF-3 asked for the superintendent's photo from the TUSD site, queued for your review under the photo rules, with the rest of the board swept alongside. NOT DONE this session and reported as not done rather than smoothed. Two things you may want to rule on. First, the four-door rule: a district's own site publishing a portrait of its own superintendent is door 2, an official government-published portrait, and TUSD is not a .gov host - so whether door 2 reaches a school district's own domain is your call and not a session's. Second, the app spells him Gabriel Trujillo; the 8/24 brief dictated Gabrielle. The naming rule says the app's spelling is authoritative, so nothing was changed - but if the app is wrong, that is a data fix and it wants your word first. The board's other five members already carry portraits; he is the one initials circle on that card.
 
 **NH194** — From the 8/25 Part 2 walkthrough, capture 17-33-54, confirmed independently in this session's own desktop-01-map-wgh.png: in dark mode the district boundaries render as saturated yellow and orange across the whole viewport and dominate everything else on the map. The same rendering reads fine in light mode. Sean has said all he intends to say — tone down the contrast, no rework — and explicitly does not want the fix specified for him. The deliverable is a WRITTEN PROPOSAL with two or three concrete options and side-by-side captures in both themes, plus a recommendation, and NO map colour change ships until he reacts. THE ASK: once the proposal exists, which of the options do you want, or none of them? Not produced by part2-0825, which shed from the bottom of its item list — so what is owed him first is the proposal, and this row cannot close until that exists.
+
+**NH200** — You said the map lines and yellow are overwhelming in dark view and that the same rendering reads fine in light, and you deliberately did not specify a fix. Three concrete options are captured side by side for you to react to. Nothing shipped.
 
 **NS10** — RULING 119 gives tribal nations their own category, and they needed identifiers. The canonical national list of government identifiers - opencivicdata/ocd-division-ids - has no tribal category at all: read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal, and searching it for the three nations by name returns only Navajo COUNTY, Arizona. So this project minted its own, built on the Census Bureau's own codes for tribal areas with the federal code recorded beside each one.
 
@@ -263,7 +263,11 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**41 open · 5 resolved.**
+**42 open · 5 resolved.**
+
+### P1
+
+**NH198** — Sean found Morris Hills Regional School District rendering 'We haven't sourced who runs it yet' and said he found that hard to believe given New Jersey was supposed to be complete. He was right to doubt it, and the cause is a process defect rather than a data gap: the hunt ran a municipal enumeration and its denominator never contained the school districts.
 
 ### P2
 
@@ -355,7 +359,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**17 open · 0 resolved.**
+**18 open · 0 resolved.**
 
 ### P2
 
@@ -364,6 +368,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions.
 
 **NH192** — From the 8/25 Part 2 walkthrough, capture 17-28-02, which shows John Carruth's large battlecard rendering JC initials. Third session in which a missing official photo has been reported. THE STANDING RULE Sean states with it, which outlives the instance: superintendent photos are almost always on the district site under a link that simply says superintendent, and they are captured everywhere. He allows that 85641 may not have been through the Arizona hunt yet, so this instance may resolve on its own; the standing rule applies regardless. The deliverable is how many districts across all four pilot zips lack a superintendent photo, then the hunt. Not reached by part2-0825.
+
+**NH201** — The denominator Sean asked for, and it turned up a second finding larger than the one he reported. Half the school districts in the registry have no superintendent row of any kind, so a missing photo is not their problem yet - a missing person is.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -435,13 +441,11 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**75 open · 104 resolved.**
+**75 open · 105 resolved.**
 
 ### P1
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
-
-**R59** — Both Refresh (daily, all sources) runs on 2026-08-25 failed at the 'Validate before committing' step, so NOTHING was committed and the meetings snapshot has not refreshed: run 32833989579 at 09:49Z on schedule against 2f86b57, and run 32890394279 at 19:35Z by manual dispatch against 0160e3b. The failing guard is the F22 assertion in tests/refresh-corollary.test.ts - 'every source whose rows outrun the serving window declares its own' - and the single offender is clerksboards, reported as 'oldest row 2026-05-27, declared window 90d'. This is DATE DRIFT rather than a code change: 90 days before 2026-08-25 is 2026-05-27, so the oldest row has just reached the edge of the declared window, which is why the same guard PASSES locally on the same tree and failed on the runner. It will fail on every run from here as the gap widens. The fix the assertion itself names is to declare publishedLookbackDays on the clerksboards adapter, with null meaning the publisher's whole archive; the judgement is which of those clerksboards actually wants, and that is a question about the source rather than about the guard. NOT DIAGNOSED FURTHER HERE - the recovery brief's scope was green main and the accounting, and this is recorded rather than fixed. NOTE ON RULING 115: two consecutive failures normally raise a Needs Sean row, and only one of these two runs was on its own cadence; the other was a manual dispatch and is a drill by that ruling's test.
 
 ### P2
 
@@ -468,6 +472,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH110** — walk:all against production on 2026-08-23, deploy 6a8ba907304b640008d06090, reports one regression: lib/db/migrations/0016_known_cerebro.sql is in the tree and has not been applied to the live database. It creates three tables and nothing else - questionnaire_invitations, questionnaire_responses and questionnaire_tokens - with no ALTER and no DROP, so it touches no existing data. It arrived with the questionnaire stack merged in 9399a69. NO READER IS AFFECTED TODAY: nothing has been sent, all 272 invitations carry invitedOn null, and the route catches the failed insert and still serves the page. It becomes blocking the moment a candidate can submit an answer, because the answer would have nowhere to land.
 
 **NH140** — Found while building the A-002 conservation contract. In boardbook, civicplus, diligent, clerksboards and legistar the counter TALLIES an online-only meeting that is then kept per D18; in iqm2 and revize the same field is a real drop with a continue behind it. One field name, two meanings, in a shared type. Conservation works around it with a declared countedButProduced term; the real fix is moving the kept-tally out of the drop counts.
+
+**NH197** — Every meetings adapter clips to the same 90 days at fetch time and the snapshot stamps generatedAt minutes later, so every 90d-clipped source lands within about a day and a half of its own edge permanently, by construction. That is not eight sources about to fail; it is the architecture. R59's clerksboards failure was one of them crossing on a day when the gap between the two clocks happened to be wide enough.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -619,7 +625,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**29 open · 140 resolved.**
+**30 open · 140 resolved.**
 
 ### P1
 
@@ -660,6 +666,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH167** — LAY-4 puts Who Governs Here and the meetings count in a floating region beneath the rail, and both live in one fixed flex column so they cannot overlap at any viewport. At 1440x900 the rail wants 662px and the who-governs card wants 350px or more against 876px of column, so they do not both fit and something is always scrolling. The rail is capped at 58% of the column: at 70% the card had 100px, less than its own header. Both scroll internally so nothing is unreachable either way, and WGH-6 is the real answer - clicking Who Governs Here minimizes the rail and the card takes the whole column. The number decides what a reader sees BEFORE they choose, and it is the kind of call worth looking at on a real screen.
 
 **NH168** — MTG-6 titles a venue card with the body and MTG-7 puts the sitting's own name on the entry beneath. Where a source publishes a DIFFERENT bodyName per sitting - Tucson Unified does, with names like GOVERNING BOARD AGENDA SPECIAL MEETING - the entry carries something distinct and it reads well. Where a source publishes ONE name for every sitting, as Tucson Parks and Recreation does, the entry repeats the card title. Sean's own reference capture 12-01-44 shows the same repetition and he marked only the jurisdiction prefix, so nothing was changed here. Worth a look on a real card: the honest options are to drop the entry title where it equals the card title, or to leave it as the anchor for the date and the agenda link.
+
+**NH199** — Two props the map passes down the who-governs card reach the bottom of the chain and are never called. Found while clearing lint warnings, which is the only reason anybody noticed.
 
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
@@ -715,15 +723,13 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**26 open · 73 resolved.**
+**19 open · 80 resolved.**
 
 ### P1
 
 **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
 
 **NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
-
-**NH176** — Measured 2026-08-25 against one local production build, four consecutive runs, no code or data changing between them. Every run: 372 passed, 6 declared COULD NOT RUN, and exactly ONE failure — a different one each time. Run 1: [promptD] the schema check, which was REAL and deterministic (the local Neon branch was at 19 of 21 migrations) and has passed on every run since it was applied. Run 2: [g12] an exact name navigates and asks nothing at 07866, offered="Board of County Commissioners — Board of County Commissioners - Work Session" — the IDENTICAL string that PASSED in run 1. Run 3: [g5] north Tucson renders crisp, not muted, at city zoom, delta 8.61 against a 2.5 threshold. Run 4: [g12] again, at 03255 this time. WHY THIS IS A P1 RATHER THAN AN ANNOYANCE: the whole premise of this suite is that a failure is a NAMED REGRESSION — 'the win <session> shipped is undone' — and every session is required to run it and report the result. A suite that fails one arbitrary check per run teaches a session to look at the failure, decide it is probably the flaky kind, and move on. That is the CLAUDE.md failure this repo names most often, arriving through the instrument built to prevent it, and it means the ONE deterministic failure in run 1 could just as easily have been shrugged off. THE SHAPE OF THE FLAKES: both families settle a browser interaction or measure a canvas. g12 waits for the ask box to route and reads what it offered; g5 diffs a rendered map region against the same region with an effect off. Both are timing-dependent and both already carry settle logic — the question is whether the settle condition is the right one, not whether to raise a threshold. Raising a threshold to fit the change it was supposed to catch is what a ceiling raised to fit is (CLAUDE.md), and this row is not a request to do that. WHAT WOULD SETTLE IT: run walk:all N times against one unchanged build and record which check identities fail at least once — the suite already prints stable check identities, so the census is mechanical. A flaky identity is then a known set a run can report against, which is the difference between 'one check failed, and it is one of the four we know are timing-dependent' and 'something broke'.
 
 ### P2
 
@@ -733,15 +739,7 @@ CI, tests, workflows, storage, the machinery the project runs on.
 
 **NH177** — Read from Netlify's deploy API on 2026-08-25 while answering Item 6's verdict (a). Of the last 60 production deploys, these reached state 'error' and were never published: 3449eb8 (PR #177), 41113c1 (PR #171), 55d3047 (PR #170) and e0f6426 (this morning's intake tripwire). Three are real CODE merges. Each was covered by a later successful merge so nothing was permanently lost — but between the merge and that later deploy production was serving older code, and no instrument in this repo reports it. This is NJ25's shape still alive. It did NOT cause any of the six recurrences in Item 6 (all three testable claims were live in d43adf7 during Sean's walk), which is why it is a row rather than part of that verdict. RULING 152 now says a reader-facing DONE names the deploy that carries it; what is still missing is something that NOTICES an errored deploy without being asked. pnpm deploy:live answers for the tip only.
 
-**NH179** — Item 13's machinery shipped 2026-08-25: lib/ops/flake-quarantine.ts classifies a check from N runs of one unchanged build, walk:all consults docs/walk-flakes.json and reports a quarantined check as its own fourth outcome that is never counted passing, and pnpm flake:sweep runs the walk N times and writes the verdict. 8 guards, including NH176's four real runs replayed. WHAT IS NOT DONE: the sweep has not been run, so docs/walk-flakes.json does not exist and nothing is quarantined yet. The classifier is deliberately unable to call anything flaky from one run — it takes a PASS on the same unchanged tree — so a single walk cannot populate it. Run pnpm flake:sweep --runs=3 --write against one local production build and the quarantine fills itself; until then walk:all behaves exactly as it did before, which is the honest state rather than a silent one.
-
-**NH180** — Measured 2026-08-25 by part2-0825. The file stood at 203,556 bytes at session start against a 204,800-byte per-file cap on the Drive code mirror — 1,244 bytes of headroom, 99.4% spent before the session wrote a line. Four fixes with their rationale attached took it past, and the cap was raised from 200 KB to 256 KB in scripts/mirror-code.mjs. THAT IS THE SECOND RAISE ON THE SAME FILE FOR THE SAME REASON: the author raised it from 120 KB on 2026-08-17 when the same thing happened. RULING 106 says a third raise is the wrong answer — raising a limit treats a symptom and by the third time the limit is the problem. The measurement that says the cap has stopped measuring what it was for: 116,399 of 205,461 bytes are COMMENT PROSE, across 300 blocks, against 89,062 bytes of actual CSS. The cap exists so the design tokens stay reachable in the mirror; the tokens are in the 89 KB and the ceiling is being spent by session rationale that CLAUDE.md requires to stay attached, so trimming it is not available. The structural options are to split the stylesheet so the tokens mirror on their own, or to mirror tokens rather than the whole file. Both change what the author reads and are his call.
-
 **NH181** — Found 2026-08-25 by part2-0825 while closing NS16. The 8/25 Part 2 document is now at docs/feedback/we-the-people-feedback-2026-08-25-part2.md and is the FIRST one that has ever been there. The captures for every batch are committed and reachable; the DOCUMENTS are not. Missing: the 8/22 walkthrough (captures at docs/feedback/2026-08-22/, 21 files), the 8/24 walkthrough (docs/feedback/8.24/, 16 files) and the 8/25 morning walkthrough (docs/feedback/8.25/, 19 files). Each has been cited as authoritative by at least one session brief, and RULING 108 says anything a session must read at session start lives in the repo. docs/feedback/README.md is the index and names all three as missing. Only the author can supply the text — a session cannot reconstruct a dictation it never had.
-
-**NH195** — Found 2026-08-25 by part2-0825, and only because pnpm handoff checks for a clean tree at the end. tests/context-pinned-conduct.test.ts calls writeContext(null, OPTIONS) at line 305 with generatedAt: 'test' and stampToday: '2026-08-23'. RULING 108 correctly made the repo copy of docs/context.md the PRIMARY output, written FIRST and never guarded — which means the test's own call writes into the working tree. After any pnpm test the orientation file every session is told to open first reads 'Written by pnpm handoff at test', 'Session day 2026-08-23', and '_No git facts available this run._' instead of the branch, the head sha, origin/main and the recorded gate results. THE COMMITTED FILE IS FINE this time: handoff regenerates and commits it during --ship, and the degradation happened afterwards when handoff's own gate run invoked the suite. But the ordering is luck, not design — a session that runs the suite after shipping and then commits a stray file would ship the degraded copy, and nothing would go red. This is RULING 92's shape with the generator writing itself: the artifact is real, the writer is a test, and the value it writes is a fixture. The fix is for the test to write to a temp directory, or for writeContext to take an explicit destination, rather than for anyone to remember to git checkout the file.
-
-**NH196** — 2026-08-25, part2-0825. Run as `SHOOT_BASE_URL=http://localhost:3177 corepack pnpm -s walk:all` against a freshly built default-mode local production server answering HTTP 200 on that port. It emitted NOTHING — not a header, not a first check, not an error — for twenty minutes, and was killed under RULING 146's five-silent-minutes rule. Two facts worth keeping. FIRST, the default base is port 3000 and there is no flag for it: running `pnpm walk:all` with a server on any other port fails with a raw ECONNREFUSED stack trace naming ::1:3000, which is a correct refusal wearing the least readable possible face. SHOOT_BASE_URL is the only way in and the script's own header documents it, so this is a discoverability defect rather than a wall. SECOND, whether the silence is buffering through `pnpm -s` with no TTY, or a genuine hang, is UNDETERMINED — a zero-byte output file cannot tell those apart, which is exactly the ambiguity RULING 24 says must not be collapsed. The standing rule in CLAUDE.md is that every session ends by running this suite, so a suite that cannot be observed while it runs is a suite sessions will stop running. It needs to print its first check before it does any work. NH176 already records a separate defect in it — a different single check failing on each of four consecutive runs against an unchanged tree.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
@@ -761,8 +759,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 
 **NH178** — Reproduced 2026-08-25. deploy:live reads Netlify correctly and prints the full verdict — site, main tip, last deployable, live deploy id and state, live commit, and CURRENT — and then dies with 'Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src/win/async.c, line 94' and ELIFECYCLE exit code 3221226505. That is a libuv teardown crash on Windows, after the work is done. It matters because RULING 125 makes this the ONE production question a close-out asks, and any caller that gates on its exit code reads a successful read as a failure — the exact shape of the defect NJ25 is about. The verdict itself is trustworthy; the exit code is not.
 
-**NH182** — Found 2026-08-25 by part2-0825. scripts/shoot-part2-0825.mts captures phone/tablet/desktop for ALIGN-1, LBL-2 and BAL-23 and its Filters steps do NOT reach the Filters panel: the sidebar is closed at capture time, so the button-text selector finds nothing and the two captures named filters-open and filters-collapsed are both of the Who Governs Here panel instead. Reported rather than smoothed. It means LAY-11 was NOT visually verified this session, and it means the protected Filters push-down was not captured either — both are asserted from source reading only. The fix is to open the sidebar (the hamburger at top-left) before looking for the Filters control. The ALIGN-1 and LBL-2 measurements in the same script ARE real and carry a denominator floor that throws rather than reporting a zero it did not earn.
-
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 
 **PD02** — The local development database is eight migrations behind production, so nothing can be tried locally against the real schema.
@@ -772,8 +768,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
-
-**RO05** — Left standing deliberately by the recovery session of 2026-08-25, whose brief put them out of scope in as many words. Counted after the two RO04 errors were fixed: 28 warnings, 0 errors. The dominant category by far is @typescript-eslint/no-unused-vars, which the config allows to be silenced by prefixing the name with an underscore - it covers unused imports in components/map/coverage-notice.tsx, components/map/map-canvas.tsx, components/map/popup/official-popup.tsx, components/officials/member-directory.tsx, hooks/use-recent-zips.ts, lib/photos/review.ts, lib/signal/aggregate.ts and scripts/deploy-live.mjs, and unused args in components/ballot/where-to-vote.tsx. One is a different shape and is worth a moment rather than a rename: lib/ops/job-watch-log.ts:112 carries an eslint-disable for no-control-regex that reports as an UNUSED directive, meaning the rule it suppresses no longer fires there and the comment is now noise. None of these can turn red on their own, since eslint exits non-zero on errors only.
 
 ---
 

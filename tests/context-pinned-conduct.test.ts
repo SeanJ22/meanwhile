@@ -31,7 +31,8 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { buildContext, CAP_BYTES, CONTEXT_REPO_PATH, writeContext } from "../scripts/context-file.mjs";
@@ -283,7 +284,7 @@ test("RULING 108: the generator writes the repo copy first and never guards it",
    * so an unreachable Drive cannot cost a session its orientation file.
    */
   const src = readFileSync(join(ROOT, "scripts", "context-file.mjs"), "utf8");
-  const repoWrite = src.indexOf(`writeFileSync(join(ROOT, CONTEXT_REPO_PATH)`);
+  const repoWrite = src.indexOf(`writeFileSync(join(repoRoot, CONTEXT_REPO_PATH)`);
   const mirrorWrite = src.indexOf(`writeFileSync(join(mirrorDir, "context.md")`);
   assert.ok(repoWrite > 0, "the generator no longer writes a repo copy");
   assert.ok(mirrorWrite > 0, "the generator no longer writes the mirror copy");
@@ -302,8 +303,30 @@ test("RULING 108: an unreachable mirror does not stop the repo copy", async () =
    * The exact condition a session runs under: no Drive. The repo write must
    * still happen and the mirror failure must be REPORTED rather than thrown.
    */
-  const built = await writeContext(null, OPTIONS);
-  assert.equal(built.repoPath, CONTEXT_REPO_PATH);
-  assert.equal(built.mirrored, false, "no mirror was given, so none may be reported as written");
-  assert.ok(existsSync(join(ROOT, CONTEXT_REPO_PATH)), "the repo copy was not written");
+  /*
+   * **The write is REDIRECTED, and that is `NH195`.** This test used to run
+   * the real generator against the real repo root, so every `pnpm test`
+   * overwrote `docs/context.md` with `generatedAt: "test"` and no git facts
+   * — and the next session opened its orientation file on that. The proof is
+   * unchanged in substance: the repo copy is still written, still first,
+   * still unguarded. It is asserted at a temp root instead of at ours, and
+   * the real file is compared before and after so a regression is caught
+   * here rather than by a session reading fixture values as orientation.
+   */
+  const sandbox = mkdtempSync(join(tmpdir(), "wtp-context-"));
+  mkdirSync(join(sandbox, "docs"), { recursive: true });
+  const before = readFileSync(join(ROOT, CONTEXT_REPO_PATH), "utf8");
+  try {
+    const built = await writeContext(null, { ...OPTIONS, repoRoot: sandbox });
+    assert.equal(built.repoPath, CONTEXT_REPO_PATH);
+    assert.equal(built.mirrored, false, "no mirror was given, so none may be reported as written");
+    assert.ok(existsSync(join(sandbox, CONTEXT_REPO_PATH)), "the repo copy was not written");
+  } finally {
+    rmSync(sandbox, { recursive: true, force: true });
+  }
+  assert.equal(
+    readFileSync(join(ROOT, CONTEXT_REPO_PATH), "utf8"),
+    before,
+    "the suite overwrote the real docs/context.md — that is NH195 and it must never come back",
+  );
 });

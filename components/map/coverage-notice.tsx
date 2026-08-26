@@ -1,6 +1,5 @@
 "use client";
 
-import { AddressPrompt } from "@/components/address/address-prompt";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import {
   CouldGovernMark,
@@ -331,8 +330,6 @@ function CoverageBody({
   ocdIdsWithMeetings = [],
   onOpenOfficial,
   onOpenBody,
-  onNarrowApplied,
-  onStreetPoint,
   onAddressResolved,
   onAddressCleared,
 }: {
@@ -343,8 +340,6 @@ function CoverageBody({
   ocdIdsWithMeetings?: string[];
   onOpenOfficial?: OpenOfficial;
   onOpenBody?: (body: CoveredBody) => void;
-  onNarrowApplied?: () => void;
-  onStreetPoint?: (point: StreetPoint) => void;
   /** WGH-5: the reader settled their address, on any surface. */
   onAddressResolved?: (scope: { divisionIds: string[]; contestIds: string[] }) => void;
   /** They asked for the whole area back. */
@@ -1157,8 +1152,6 @@ export function CoverageNotice({
   onOpenOfficial,
   onOpenBody,
   onMinimize,
-  onNarrowApplied,
-  onStreetPoint,
   onAddressResolved,
   onAddressCleared,
   pillCluster,
@@ -1304,8 +1297,6 @@ export function CoverageNotice({
           ocdIdsWithMeetings={ocdIdsWithMeetings}
           onOpenOfficial={onOpenOfficial}
           onOpenBody={onOpenBody}
-          onNarrowApplied={onNarrowApplied}
-          onStreetPoint={onStreetPoint}
           onAddressResolved={onAddressResolved}
           onAddressCleared={onAddressCleared}
         />

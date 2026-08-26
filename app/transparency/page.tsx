@@ -113,14 +113,41 @@ export default function TransparencyPage() {
             {/* Kept on one source line: the guard in tests/ask-box.test.ts
                 pins this exact phrase, and a reflow that split it would
                 retire the no-AI guarantee by accident. */}
-            No AI writes the answer, and every answer comes from the same
-            sourced records the rest of the site shows. A question that routes
+            No AI writes a SOURCED answer, and every sourced answer comes from
+            the same records the rest of the site shows. A question that routes
             records the topic (like &quot;libraries&quot;), not your words. A
             question we can&apos;t route records its text, up to 200
             characters, so we can learn to answer it — with nothing about who
             asked. Anything shaped like a phone number, an email address, or a
             street address is automatically blanked out first. Even so, please
             don&apos;t put personal details in a question.
+          </p>
+          <p>
+            {/*
+              **ASK-12 (2026-08-25).** The ripcord doctrine's fourth clause: the
+              transparency page changes in the SAME COMMIT that ships the
+              feature. `ripcord.unsourcedFallback` is the switch, and this
+              paragraph is the disclosure.
+
+              The sentence above was "No AI writes the answer" and it is now
+              scoped to SOURCED answers rather than deleted — it was true of
+              every answer until today and it is still true of every answer
+              this site sources. Scoping it is the honest edit; leaving it would
+              have made the page wrong, and cutting it would have thrown away a
+              commitment the product still keeps.
+            */}
+            <strong>
+              One kind of answer here is not sourced, and it says so on itself.
+            </strong>{" "}
+            If your question turns out not to be about government at all —
+            &quot;why is it raining&quot; — we now send it to Anthropic&apos;s
+            Claude and show you what it says. That answer is labelled, in plain
+            words, as not having come from any public record and not having been
+            checked by us. It never carries sources, because it has none. We try
+            the sourced answer first every time, and a question that IS about
+            your government is never answered this way — if we cannot source it,
+            we say so and keep looking. This is on while the site is in testing,
+            and it can be switched off in one place.
           </p>
         </Section>
 

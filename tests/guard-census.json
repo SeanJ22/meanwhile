@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 242,
-    "named": 2341,
+    "files": 249,
+    "named": 2393,
     "dynamic": 6
   },
   "files": {
@@ -13,6 +13,17 @@
         "no unrecorded sentence-shaped render default exists",
         "the baseline only shrinks — a recorded entry that is gone must be removed",
         "the shape catches every instance the class was named from"
+      ],
+      "dynamic": 0
+    },
+    "tests/absence-grouping.test.ts": {
+      "names": [
+        "BAL-24 — THE LOAD-BEARING CASE: nothing is ever dropped",
+        "BAL-24: a DIFFERENT authority never merges",
+        "BAL-24: a DIFFERENT read date never merges — two dates are two claims",
+        "BAL-24: a sentence that does not carry the shape renders exactly as it did",
+        "BAL-24: names join the way a sentence does",
+        "BAL-24: two townships collapse to ONE block that names BOTH"
       ],
       "dynamic": 0
     },
@@ -243,6 +254,17 @@
         "BC-1: every card carries the same seven sections, always",
         "BC-2: an empty section is never a per-card completeness statement",
         "BC-2: the two empty states exist and are distinguishable"
+      ],
+      "dynamic": 0
+    },
+    "tests/bc-26.test.ts": {
+      "names": [
+        "BC-26 — THE CLASS: every non-elected role in the registry, with its denominator",
+        "BC-26 — THE DERIVED CASE: a superintendent gets no Incumbent chip",
+        "BC-26: an ELECTED seat still carries its chip, both ways",
+        "BC-26: an unknown or empty title defaults to ELECTED, which is the safe direction",
+        "BC-26: the elected EXCEPTIONS survive the appointed patterns",
+        "BC-26: the electedness predicate AGREES with the runs-it-day-to-day slot"
       ],
       "dynamic": 0
     },
@@ -1070,6 +1092,17 @@
       ],
       "dynamic": 0
     },
+    "tests/denominator-floor.test.ts": {
+      "names": [
+        "RULING 159 + RULING 116: every counting script is floored or on the baseline, and the list only shrinks",
+        "RULING 159 — THE PLANT: a selector that matched nothing throws and NAMES the selector",
+        "RULING 159: a matched count larger than its own population THROWS",
+        "RULING 159: a measured population reports both numbers",
+        "RULING 159: a zero denominator with no stated reason THROWS",
+        "RULING 159: an empty population WITH a reason is COULD_NOT_ASSERT, never a pass"
+      ],
+      "dynamic": 0
+    },
     "tests/deploy-paths.test.ts": {
       "names": [
         "a docs-only commit cancels; one shipping path anywhere in it builds",
@@ -1670,6 +1703,7 @@
         "OFF-7: an ACTING mayor presides where there is no substantive one",
         "OFF-7: an interim fills a slot the substantive holder has left empty",
         "OFF-7: no shipped roster puts a non-superintendent above a superintendent",
+        "OFF-7: the CLASS — every body in the registry, with its denominator",
         "OFF-7: the interim superintendent leads the roster, ahead of the administrator",
         "OFF-7: the interim superintendent — not the business administrator — runs it day to day",
         "OFF-7: the shipped Kearsarge roster still holds the interim superintendent"
@@ -2406,6 +2440,16 @@
       ],
       "dynamic": 0
     },
+    "tests/pill-sizing.test.ts": {
+      "names": [
+        "BAL-12: a reason for a difference that no longer exists is removed",
+        "BAL-12: every sizing difference from the reference has a STATED REASON",
+        "BAL-12: the ACTION pills share one inset and one tap target",
+        "BAL-12: the TAG pills carry the reference treatment exactly",
+        "BAL-12: the census reaches the stylesheet at all"
+      ],
+      "dynamic": 0
+    },
     "tests/plural.test.ts": {
       "names": [
         "CSV parsing handles quoted fields with embedded commas",
@@ -2533,6 +2577,11 @@
     },
     "tests/questionnaire.test.ts": {
       "names": [
+        "questionnaire v2: the closing note carries NO timing promise",
+        "questionnaire v2: the closing note is NOT part of the instrument",
+        "questionnaire v2: the closing note publishes verbatim, exactly as Sean wrote it",
+        "questionnaire v2: the instrument is at v2, and the limit is 200 everywhere",
+        "questionnaire v2: the invitation names the product, and only in the invitation",
         "questionnaire: a WITHDRAWAL is indistinguishable from never having answered",
         "questionnaire: a contest with one unreachable candidate invites NOBODY",
         "questionnaire: a generated invitation claims NO send that has not happened",
@@ -2989,6 +3038,18 @@
       ],
       "dynamic": 0
     },
+    "tests/solicitation-ledger.test.ts": {
+      "names": [
+        "RULING 160 + RULING 132: the ledger shares no VALUE SPACE with reader data",
+        "RULING 160 — THE LOAD-BEARING CASE: a uniform rate sheet with a one-sided customer list is a BREACH, by name",
+        "RULING 160: a contest nobody was approached about is NOT a breach",
+        "RULING 160: an offer cannot carry a price of its own",
+        "RULING 160: an unaligned buyer is COUNTED, never taken as a side",
+        "RULING 160: constraint 4 — an offer at a rate that is not on the published card is off-catalog",
+        "RULING 160: the worked example reconciles — both sides approached, same published rate, same day"
+      ],
+      "dynamic": 0
+    },
     "tests/source-adapters.test.ts": {
       "names": [
         "A-006 · a walk that ends because the server stopped offering pages still succeeds",
@@ -3223,6 +3284,20 @@
       ],
       "dynamic": 0
     },
+    "tests/unsourced-fallback.test.ts": {
+      "names": [
+        "ASK-12 — LAST, NEVER FIRST: a question the router ANSWERED never falls back",
+        "ASK-12 — THE LOAD-BEARING CASE: an unsourced answer carries NO sources field at all",
+        "ASK-12 — THE OTHER LOAD-BEARING CASE: a CIVIC question we have not sourced is OWED, not generated",
+        "ASK-12: it is a DIFFERENT KIND, so it cannot be rendered where a routed answer goes",
+        "ASK-12: pulling the ripcord closes it in ONE place, with no code change",
+        "ASK-12: the SOURCED refusal is unchanged — the civic path did not move",
+        "ASK-12: the flag exists, is NAMED, and is ON for the testing window",
+        "ASK-12: the mark is PLAIN LANGUAGE, and it is not a footnote",
+        "ASK-12: the out-of-scope class Sean named DOES fall back"
+      ],
+      "dynamic": 0
+    },
     "tests/verification-vocabulary.test.ts": {
       "names": [
         "'not yet' survives where it belongs, and is never filled in with a guess",
@@ -3285,6 +3360,18 @@
         "17: no reader-facing placeholder carries a region-specific address",
         "17: the placeholder address is exactly the approved string",
         "BAL-2: the state's tool is reached through the pill, not offered beside it"
+      ],
+      "dynamic": 0
+    },
+    "tests/voting-sites-order.test.ts": {
+      "names": [
+        "VOT-1 — THE LOAD-BEARING CASE: every site comes back, sorted or not",
+        "VOT-1: a distance reads as a sentence, and one mile is singular",
+        "VOT-1: an UNPLACED site keeps its published order after the placed ones",
+        "VOT-1: the closest placed site is first",
+        "VOT-1: the distance is a real great-circle measure, checked against a known pair",
+        "VOT-1: the radius Sean named is the radius the map draws",
+        "VOT-1: with NO resolved point the authority's own order stands"
       ],
       "dynamic": 0
     },

@@ -26,8 +26,6 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { Page } from "playwright";
-
 import { launchGuarded, seedZip } from "./browser.mts";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");

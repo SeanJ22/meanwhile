@@ -1,5 +1,9 @@
 "use client";
 
+// VOT-1: the ring is drawn at the radius the panel sorts by, so the picture
+// and the list can never disagree about what "near" means.
+import { NEARBY_RADIUS_MILES } from "@/lib/ballot/voting-sites";
+
 // MapLibre 6 dropped its default export; everything is named now.
 import {
   AttributionControl,
@@ -31,10 +35,10 @@ import { viewportRadiusKm } from "@/lib/map/viewport-radius";
 import {
   DISTRICT_TYPES,
   addDistrictLayer,
+  boundsOfDistrict,
   districtLayerPresent,
   districtsAt,
   drawnDistrictsOn,
-  firstSymbolLayerId,
   loadDistricts,
   removeDistrictLayer,
   setNarrowedDistricts,
@@ -228,6 +232,14 @@ interface MapCanvasProps {
    * neither.
    */
   votingSites?: VotingSitePin[];
+  /**
+   * **VOT-1: the point the reader's typed address resolved to.**
+   *
+   * Only the POINT ever reaches the map. The address itself never leaves the
+   * panel — it is the reader's home, and the resolved point is the answer they
+   * asked to see.
+   */
+  votingAddressPoint?: { lat: number; lng: number } | null;
   onSelectVotingSite?: (id: string) => void;
   /** The site whose card is open, so its pin can show it. */
   selectedVotingSiteId?: string | null;
@@ -283,6 +295,7 @@ export function MapCanvas({
   allowAutoFrame,
   focusStateOcdId = null,
   votingSites,
+  votingAddressPoint = null,
   onSelectVotingSite,
   selectedVotingSiteId = null,
 }: MapCanvasProps) {
@@ -929,6 +942,97 @@ export function MapCanvas({
     }
   }, [votingSites]);
 
+  /*
+   * **VOT-1 (2026-08-25) — THE TEN-MILE RING AROUND THE ENTERED ADDRESS.**
+   *
+   * Sean: *"Draw a roughly 10-mile radius on the map around the entered
+   * address and surface the closest locations first, keeping the full county
+   * list available."* The ring is the half a reader can SEE: the list is sorted
+   * nearest-first in the panel, and the ring says what "near" means on this map
+   * at this zoom without anybody having to read a number.
+   *
+   * **It is a boundary drawn for orientation and it is never a filter.** Every
+   * county site stays in the list, pinned and reachable, inside the ring and
+   * out — which is Sean's own first clause and the thing the ring is most
+   * likely to be mistaken for.
+   *
+   * Drawn as a GeoJSON polygon rather than a circle-radius paint property,
+   * because a `circle-radius` is in SCREEN PIXELS: it would stay the same size
+   * on screen as the reader zooms, so it would describe ten miles at exactly
+   * one zoom level and lie at every other. A projected polygon is ten miles on
+   * the ground at all of them.
+   */
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const SOURCE = "voting-address-ring";
+    const FILL = "voting-address-ring-fill";
+    const LINE = "voting-address-ring-line";
+
+    const clear = () => {
+      if (map.getLayer(LINE)) map.removeLayer(LINE);
+      if (map.getLayer(FILL)) map.removeLayer(FILL);
+      if (map.getSource(SOURCE)) map.removeSource(SOURCE);
+    };
+
+    if (!votingAddressPoint) {
+      clear();
+      return;
+    }
+
+    const { lat, lng } = votingAddressPoint;
+    const STEPS = 96;
+    const milesPerDegLat = 69.0;
+    const milesPerDegLng = Math.max(0.0001, 69.172 * Math.cos((lat * Math.PI) / 180));
+    const ring: [number, number][] = [];
+    for (let i = 0; i <= STEPS; i += 1) {
+      const angle = (i / STEPS) * 2 * Math.PI;
+      ring.push([
+        lng + (NEARBY_RADIUS_MILES / milesPerDegLng) * Math.cos(angle),
+        lat + (NEARBY_RADIUS_MILES / milesPerDegLat) * Math.sin(angle),
+      ]);
+    }
+
+    const data = {
+      type: "Feature" as const,
+      properties: {},
+      geometry: { type: "Polygon" as const, coordinates: [ring] },
+    };
+
+    const existing = map.getSource(SOURCE) as { setData?: (d: unknown) => void } | undefined;
+    if (existing?.setData) {
+      existing.setData(data);
+      return;
+    }
+
+    try {
+      map.addSource(SOURCE, { type: "geojson", data });
+      map.addLayer({
+        id: FILL,
+        type: "fill",
+        source: SOURCE,
+        paint: { "fill-color": "#7c5cff", "fill-opacity": 0.06 },
+      });
+      map.addLayer({
+        id: LINE,
+        type: "line",
+        source: SOURCE,
+        paint: {
+          "line-color": "#7c5cff",
+          "line-width": 1.25,
+          "line-opacity": 0.5,
+          "line-dasharray": [3, 3],
+        },
+      });
+    } catch {
+      // The style is not ready. The ring is orientation, never data — a map
+      // without it is still correct, so this never becomes a thrown error on
+      // a surface whose job is to answer where somebody votes.
+    }
+
+    return clear;
+  }, [votingAddressPoint]);
+
   // Selection is a data attribute on the element, so it survives re-renders.
   useEffect(() => {
     for (const [id, marker] of votePinsRef.current) {
@@ -1255,6 +1359,40 @@ export function MapCanvas({
       selectedDistrict?.type ?? null,
       selectedDistrict?.ocdId ?? null,
     );
+
+    /*
+     * **MAP-2 (2026-08-25) — WHATEVER THE READER CLICKED BECOMES FRONT AND
+     * CENTRE.**
+     *
+     * Sean: *"clicking a shaded area renders it off-center. The map moves to
+     * center the selected area."* On `17-25-38` the Vail Unified polygon sits
+     * in the bottom-right corner with most of it off screen — the shading is
+     * correct and the reader still cannot see the thing they just asked about.
+     *
+     * **This is an EXPLICIT reader action, so it is allowed to move the
+     * camera**, and that distinction is the whole reason it is safe here. The
+     * g4 item 5 defect was an AUTOMATIC reframe on a timer dragging a reader
+     * back after they had panned away; `userMovedRef` guards that one and is
+     * deliberately NOT consulted here. A click is the reader asking, and
+     * refusing to move because they panned earlier would be the map ignoring
+     * them.
+     *
+     * A deselect moves nothing: `selectedDistrict` is null, there is nothing to
+     * centre on, and yanking the camera when a reader dismisses something is
+     * the opposite of what they asked for.
+     *
+     * Bounds come from what is RENDERED. A district not on screen returns
+     * null and the camera stays where it is, rather than flying to a box
+     * computed from no geometry.
+     */
+    if (!selectedDistrict) return;
+    const bounds = boundsOfDistrict(map, selectedDistrict.type, selectedDistrict.ocdId);
+    if (!bounds) return;
+    map.fitBounds(bounds, {
+      padding: { top: 96, bottom: 128, left: 64, right: 64 },
+      maxZoom: METRO_ZOOM,
+      duration: prefersReducedMotion() ? 0 : 900,
+    });
   }, [selectedDistrict, districtTypes]);
 
   // Narrowed-division shading (item 7): same feature-state mechanism,

@@ -50,7 +50,17 @@ function hashRunId(runId: string): string {
   return createHash("sha256").update(`${SPEAK_RUN_PREFIX}${runId}`).digest("hex");
 }
 
-export type SpeakSubjectType = "OFFICIAL" | "BODY" | "MEETING";
+/**
+ * **DERIVED from the column, not typed twice** (2026-08-25, `BAL-19`).
+ *
+ * This was a second hand-written copy of the same union that lives in
+ * `lib/speak/client.ts`, and adding `CANDIDATE` to the schema and to the
+ * client left this one behind — RULING 103 exactly: a duplicate
+ * implementation that a symptom grep cannot find, because it is not the same
+ * text as the thing it duplicates. Reading it off the column means the two
+ * cannot diverge again on this side.
+ */
+export type SpeakSubjectType = (typeof speakYourMind.subjectType.enumValues)[number];
 
 export type SpeakWriteResult =
   /** It is in the store. The only outcome a reader may be thanked for. */

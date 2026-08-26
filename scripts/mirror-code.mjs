@@ -124,8 +124,24 @@ export const ID_MAP_PATH = "docs/mirror-code-ids.json";
  * mirror on their own, or mirroring tokens rather than the whole file — are
  * the author's call and are `RO06`. Nothing here trims a rationale to fit,
  * because a stripped rule reads as guidance.
+ *
+ * ## AND THE CAP CAME BACK DOWN (2026-08-25, `NH180`, Sean's ruling)
+ *
+ * He ruled the structural option rather than the number: **strip the prose into
+ * its own file.** `app/globals.css` went from **206,120 bytes to 134,880** —
+ * every one of the 125 comment blocks over 300 bytes moved verbatim to
+ * `docs/globals-css-notes.md`, each leaving a one-line pointer at its rule, so
+ * the trail from a declaration to the decision behind it is unbroken. **The CSS
+ * itself is byte-identical**, asserted by comparing both files with every
+ * comment stripped: 82,089 bytes before and 82,089 after.
+ *
+ * **So the raise is REVERSED, not merely justified.** 200 KB was the value
+ * before the stopgap and it is the value again — with 65 KB of headroom under
+ * it rather than 1,244 bytes. That is the difference between fixing the cause
+ * and moving the ceiling, and RULING 106 is explicit about which of the two
+ * this file was doing on 2026-08-25.
  */
-export const MAX_FILE_BYTES = 256 * 1024;
+export const MAX_FILE_BYTES = 200 * 1024;
 export const MAX_TOTAL_BYTES = 1.5 * 1024 * 1024;
 
 /* ------------------------------------------------------- hard exclusions --- */

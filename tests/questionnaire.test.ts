@@ -15,6 +15,7 @@ import {
 } from "../lib/questionnaire/auth.ts";
 import {
   CLASS_QUESTIONS,
+  CLOSING_NOTE,
   CORE_QUESTIONS,
   INSTRUMENT_VERSION,
   OFFICE_CLASSES,
@@ -739,4 +740,113 @@ test("questionnaire: the core three are asked of every office class, unchanged",
       `${officeClass} does not open with the identical core`,
     );
   }
+});
+
+/* ========================================================================== */
+/* v2 (2026-08-25) — the revision, and the symmetry guarantee under it         */
+/* ========================================================================== */
+
+/*
+ * **A version bump that leaves the symmetry tests behind breaks the guarantee
+ * SILENTLY**, which is why these ship in the same commit as the bump rather
+ * than after it. Every one of them is about the four changes `v2` carries.
+ */
+
+test("questionnaire v2: the instrument is at v2, and the limit is 200 everywhere", () => {
+  assert.equal(INSTRUMENT_VERSION, "v2", "the four v2 changes shipped without the version moving");
+  assert.equal(WORD_LIMIT, 200);
+  // Restated against the LITERAL rather than the constant. Asserting
+  // `wordLimit === WORD_LIMIT` proves the file equals itself (RULING 147); the
+  // number Sean asked for is 200 and that is what a candidate is held to.
+  for (const q of allQuestions()) {
+    assert.equal(q.wordLimit, 200, `${q.id} is not at the v2 limit`);
+  }
+});
+
+test("questionnaire v2: the closing note is NOT part of the instrument", () => {
+  /*
+   * "Structurally distinct" is a claim, so it is held as one. The offer may
+   * never be reachable through the function that produces what a candidate is
+   * asked — a solicitation inside a symmetric instrument lets a candidate read
+   * the five questions as conditioned on it.
+   */
+  assert.ok(CLOSING_NOTE.length > 0);
+  const everyQuestionText = allQuestions()
+    .map((q) => `${q.id} ${q.text}`)
+    .join(" \u0000 ");
+  assert.ok(
+    !everyQuestionText.includes("aggregate insight"),
+    "the closing note leaked into the question set",
+  );
+  for (const officeClass of OFFICE_CLASSES) {
+    const asked = questionsFor(officeClass);
+    assert.ok(
+      !asked.some((q) => q.text.includes("published rates") || q.text.includes("sign up here")),
+      `${officeClass} would be asked the business offer as a question`,
+    );
+    // And the count is unchanged by the addition — five questions, still.
+    assert.equal(asked.length, 5, `${officeClass} no longer asks exactly five`);
+  }
+});
+
+test("questionnaire v2: the closing note carries NO timing promise", () => {
+  /*
+   * Searched BY SHAPE, never by string (RULING 110). A promise is a commitment
+   * to a WHEN, and it can be spelled a hundred ways; what they share is a
+   * future-dated commitment attached to us delivering something.
+   */
+  const TIMING_SHAPES: Array<[string, RegExp]> = [
+    ["a named month", /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i],
+    ["a week or day count", /\b(?:in|within|after)\s+\d+\s*(?:days?|weeks?|months?)\b/i],
+    ["soon / shortly", /\b(soon|shortly|imminently|any day now)\b/i],
+    ["a will-by promise", /\bwill (?:be )?(?:available|ready|published|released|sent)\b/i],
+    ["before the election", /\bbefore (?:the )?(?:election|november|the vote)\b/i],
+    ["a date", /\b\d{4}-\d{2}-\d{2}\b/],
+  ];
+  for (const [name, shape] of TIMING_SHAPES) {
+    assert.ok(!shape.test(CLOSING_NOTE), `the closing note carries a timing promise (${name})`);
+  }
+  // The instrument is shown catching a real one, so a sweep that matches
+  // nothing can never be mistaken for copy that is clean.
+  const planted = `${CLOSING_NOTE} Insights will be available before the election.`;
+  assert.ok(
+    TIMING_SHAPES.some(([, shape]) => shape.test(planted)),
+    "the timing sweep cannot catch a planted promise — it is measuring nothing",
+  );
+});
+
+test("questionnaire v2: the invitation names the product, and only in the invitation", () => {
+  const message = readFileSync(join(ROOT, "docs", "candidate-questionnaire-invitation.md"), "utf8");
+  assert.match(message, /We're Meanwhile\./, "the invitation does not name the product");
+  assert.ok(
+    !/>\s*— We The People/i.test(message),
+    "a sign-off still carries the repo name",
+  );
+  /*
+   * **SCOPE: the invitation string only.** The name is leaning Meanwhile and is
+   * NOT settled (`B01`), and the repo name is deliberately unchanged — the
+   * outbound User-Agent carries the repo URL as its contact route for public
+   * bodies, and a body with our identifier in last week's logs must find the
+   * same one this week. A repo-wide rename here would be a session failure.
+   */
+  const brand = readFileSync(join(ROOT, "lib", "brand.ts"), "utf8");
+  assert.match(brand, /export const PRODUCT_NAME = "Meanwhile";/);
+});
+
+test("questionnaire v2: the closing note publishes verbatim, exactly as Sean wrote it", () => {
+  // A paraphrase of a commercial offer is a different offer, so the text is
+  // pinned rather than described.
+  assert.equal(
+    CLOSING_NOTE,
+    "One more thing, separate from the questionnaire: Meanwhile offers campaigns " +
+      "and organizations anonymized, aggregate insight into what constituents in a " +
+      "race care about — available to everyone, at the same published rates. If " +
+      "you'd like to hear when insights for your race are available, sign up here.",
+  );
+  const message = readFileSync(join(ROOT, "docs", "candidate-questionnaire-invitation.md"), "utf8");
+  const inDoc = message.replace(/\n>\s*/g, " ").replace(/\s+/g, " ");
+  assert.ok(
+    inDoc.includes("One more thing, separate from the questionnaire: Meanwhile offers campaigns"),
+    "the invitation document and the constant carry different offers",
+  );
 });

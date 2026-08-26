@@ -1,5 +1,6 @@
 import { TIER_LABEL, type Tier } from "../ocd/tiers.ts";
 
+import { standingChipMayAttach } from "./elected-role.ts";
 import type { SeatHolder } from "./lookup.ts";
 
 /**
@@ -43,8 +44,23 @@ export function identityChipsFor(
   if (chamber) chips.push(chamber);
   else chips.push(TIER_LABEL[tier]);
 
-  if (standing === "INCUMBENT") chips.push("Incumbent");
-  if (standing === "CHALLENGER") chips.push("Challenger");
+  /*
+   * **BC-26 (2026-08-25) — the standing chip is GATED ON ELECTEDNESS.**
+   *
+   * The doc block above said Incumbent is "definitional on an officeholder
+   * card: this person holds this seat". That is true of an elected seat and
+   * false of a hired job, and the difference is not cosmetic — `Incumbent` is
+   * the word that pairs with `Challenger`, so it asserts an election the
+   * reader could vote in. Vail's superintendent was carrying it.
+   *
+   * The gate is asked ONCE, in `lib/officials/elected-role.ts`, rather than
+   * re-decided per surface (RULING 118's own structure, and RULING 103's
+   * reason).
+   */
+  if (standing && standingChipMayAttach(holder.officeTitle)) {
+    if (standing === "INCUMBENT") chips.push("Incumbent");
+    if (standing === "CHALLENGER") chips.push("Challenger");
+  }
 
   return chips;
 }

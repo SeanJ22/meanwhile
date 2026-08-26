@@ -25,7 +25,8 @@ export function getOrCreateSpeakKey(): string {
   return getOrCreateBrowserKey(KEY_STORAGE);
 }
 
-export type SpeakSubjectType = "OFFICIAL" | "BODY" | "MEETING";
+/** BAL-19 (2026-08-25): a CANDIDATE is not an OFFICIAL. See `lib/db/schema.ts`. */
+export type SpeakSubjectType = "OFFICIAL" | "BODY" | "MEETING" | "CANDIDATE";
 
 /**
  * What the surface may tell the reader afterwards.

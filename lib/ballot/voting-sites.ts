@@ -340,3 +340,95 @@ export function directionsUrl(site: VotingSite): string {
   const query = `${site.name}, ${site.address}`;
   return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(query)}`;
 }
+
+/**
+ * **VOT-1 (2026-08-25) — NEAREST FIRST, AND NOTHING IS REMOVED.**
+ *
+ * Sean: *"Where can I vote? returns everywhere in the county — that is correct
+ * and stays. The defect is ordering: the top result sits several miles from the
+ * entered address."*
+ *
+ * Both halves matter and they pull in opposite directions, which is why this is
+ * a SORT and never a filter. Returning the whole county is the honest answer —
+ * a reader may vote at a site across it, and quietly hiding the far ones would
+ * be this product deciding on their behalf. But a list whose first row is six
+ * miles away when there is one three streets over is a list that answers the
+ * question badly while containing the right answer.
+ *
+ * **This is not an ordering by fit.** The never-rank rule governs CANDIDATES —
+ * ordering people by anything but a neutral criterion. Distance from a point
+ * the reader typed is as neutral a criterion as ballot order: it is a fact
+ * about geography, it is the same for everyone who types that address, and it
+ * expresses no judgement about the sites.
+ *
+ * **An unplaced site keeps its place rather than sinking.** A site the
+ * geocoder could not resolve has `lat`/`lng` of null (see `VotingSite`), and
+ * sorting it to the bottom would be a retrieval failure on OUR side quietly
+ * demoting a location the authority genuinely published — the refresh
+ * corollary, one layer up. They hold their published order after the placed
+ * ones, with their own named gap already rendered beside them.
+ */
+
+/** Great-circle miles between two points. */
+export function milesBetween(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+): number {
+  const R = 3958.7613; // mean Earth radius, statute miles
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(b.lat - a.lat);
+  const dLng = toRad(b.lng - a.lng);
+  const s =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+
+/**
+ * The ring Sean asked for, in miles.
+ *
+ * *"Draw a roughly 10-mile radius on the map around the entered address."* His
+ * word is *roughly*, and it is recorded as his rather than presented as a
+ * derived number — nothing about polling-place law makes ten miles a
+ * threshold, and a comment claiming otherwise would be a manufactured basis.
+ */
+export const NEARBY_RADIUS_MILES = 10;
+
+export interface SiteWithDistance {
+  site: VotingSite;
+  /** Null where the site could not be placed, or no address point resolved. */
+  miles: number | null;
+}
+
+/**
+ * Order one jurisdiction's sites nearest-first. **Every site comes back.**
+ */
+export function sitesNearestFirst(
+  sites: readonly VotingSite[],
+  point: { lat: number; lng: number } | null,
+): SiteWithDistance[] {
+  const measured = sites.map((site) => ({
+    site,
+    miles:
+      point && typeof site.lat === "number" && typeof site.lng === "number"
+        ? milesBetween(point, { lat: site.lat, lng: site.lng })
+        : null,
+  }));
+
+  // No point resolved: nothing to sort by, so the authority's own published
+  // order stands. A sort with no basis would shuffle a list for no reason and
+  // read as an ordering the reader could not account for.
+  if (!point) return measured;
+
+  const placed = measured
+    .filter((m) => m.miles !== null)
+    .sort((a, b) => (a.miles as number) - (b.miles as number));
+  const unplaced = measured.filter((m) => m.miles === null);
+  return [...placed, ...unplaced];
+}
+
+/** How a distance reads on a card. One decimal under ten miles, else whole. */
+export function milesLabel(miles: number): string {
+  const rounded = miles < 10 ? Math.round(miles * 10) / 10 : Math.round(miles);
+  return `${rounded} ${rounded === 1 ? "mile" : "miles"} away`;
+}

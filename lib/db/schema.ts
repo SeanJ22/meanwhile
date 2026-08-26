@@ -1012,7 +1012,23 @@ export const speakYourMind = pgTable(
     occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
     /** What kind of public thing this was said to. */
     subjectType: text("subject_type", {
-      enum: ["OFFICIAL", "BODY", "MEETING"],
+      /*
+       * **`CANDIDATE` added 2026-08-25 (`BAL-19`).** Sean asked for Speak Your
+       * Mind on the ballot battlecard, and a person standing for an office they
+       * do not hold is not an `OFFICIAL` — recording them as one would be a
+       * false claim about a named person, in the store itself.
+       *
+       * **NO MIGRATION IS OWED, and that is checked rather than assumed.** The
+       * column is plain `text NOT NULL` in `0019_next_scarlet_witch.sql` with
+       * no CHECK constraint, so this list is a TypeScript narrowing: widening
+       * it changes what the code will write and nothing about the table.
+       *
+       * RULING 141's first rule is untouched. The subject id stays a PUBLIC
+       * candidate key, nothing here identifies who is speaking, and no new
+       * join path to any other store is created by naming a fourth kind of
+       * public thing a reader can speak to.
+       */
+      enum: ["OFFICIAL", "BODY", "MEETING", "CANDIDATE"],
     }).notNull(),
     /** The subject's own public identifier — an ocd-id, a body id, a meeting id. */
     subjectId: text("subject_id").notNull(),

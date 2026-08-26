@@ -4,7 +4,6 @@ import {
   SCALE_BREAKS,
   VERIFICATION_TIERS,
   questionForRow,
-  scaleForTargetType,
   valuesForScaleVersion,
   type ReactionTargetType,
   type ReactionValue,

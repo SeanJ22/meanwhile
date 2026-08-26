@@ -45,7 +45,7 @@
  * Usage:
  *   pnpm ship:approved data/photos/approved-<date>.json [--dry]
  */
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { stripImageMetadata } from "./strip-image-metadata.mts";

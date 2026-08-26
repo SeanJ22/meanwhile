@@ -4,8 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-25 — **Six classes closed, and the predicates that hid
-them.** Part 2 visual feedback; its record is the LAST section of this file.
+Last updated: 2026-08-26 — **Four instruments were reporting on things they had
+never looked at.** The all-open-board session; its record is the LAST section of
+this file.
+
+Previous: 2026-08-25 — **Six classes closed, and the predicates that hid
+them.** Part 2 visual feedback.
 
 Previous: 2026-08-24 — **Every finding was reasoned, so every fix was
 reproduced first.** The audit remediation. The previous entries follow the
@@ -15,9 +19,7 @@ Previous: 2026-08-24 — **The county filed 202 empty cells, and the filed
 email was a campaign site nobody had read.** The overnight depth hunt.
 
 Previous: 2026-08-23 — **The captures were in the repo this time, and reading
-them found the fix.** Hunt 6 hardening and the 8/22 visual pass. Its record is the
-last section of this file.
-
+them found the fix.** Hunt 6 hardening and the 8/22 visual pass.
 The section below is the previous entry, kept: **Rockaway Borough was never
 missing from this product's data. It was invisible to five instruments that
 agreed with themselves about the wrong answer.** NJ Hunt 2, Rockaway Township
@@ -18771,3 +18773,199 @@ Branch protection reads back from the API exactly as intended — PR required, t
 ### What was shed, and where it stopped
 
 The brief's shed-order clause says shed from the bottom. Items 9 through 14 were not reached, plus LAY-11 from item 8. Every one is rowed with its capture named: `NH183` LAY-11, `NH184` DARK-2/DARK-3, `NH185` the ballot battlecard family, `NH186` BAL-15, `NH187` BAL-24, `NH188` MAP-2/VOT-1, `NH189` BC-26/BC-27/BC-29, `NH190` BAL-11/BAL-12, `NH191` BC-28, `NH192` OFF-6, `NH193` ASK-12, `NH194` DARK-1.
+
+---
+
+# 2026-08-26 — the all-open-board session
+
+**Four instruments were reporting on things they had never looked at.**
+
+The board was opened whole by Sean's ruling — no staggering, instrument defects
+and the data pipeline and the shed visual work and the carried backlog all in
+one list. What the session found is that the through-line was already there in
+the brief and nobody had named it: *the capture script reported `0 offenders`
+about a panel it never opened*, and that is the same sentence as *the Chromium
+step installed nothing and reported success*, and as *six silent partial
+extractions*, and — found here — as **`pnpm questionnaire:doc --write`
+regenerating nothing and exiting 0 on every Windows machine since it was
+written**, because its main-module guard split a backslash path on `/`.
+
+An empty result and a healthy result are the same six characters. That is
+RULING 159, and it is the third venue for a failure this repo has now written
+down three times.
+
+## The three rulings this session was required to write, and did
+
+**RULING 157 — a fix is verified against a case it was NOT derived from.** The
+prior session produced four reconciliations and all four came back *predicate
+too narrow*: every earlier fix was real, live, and wrong about a case it had
+never seen. `MTG-9` shipped wrong against a district whose bad data was clean
+because it had been validated against one whose bad data was noisy. **The fix
+passed because the test case was the source of the fix.** So the independent
+case is now named in the report, by id, and "audited across the class" — a
+claim with no case in it — does not satisfy it.
+
+**RULING 158 — a shed requires a measurement and a reason.** The prior session
+shed more than half its visual work at 56% context usage and called it a shed.
+Below 80% there is room: stopping is an unfinished session and is reported as
+one. **This session shed nothing.**
+
+**RULING 159 — a counting script fails loudly when its denominator is zero.**
+`lib/ops/denominator-floor.ts`, three states kept apart (measured,
+could-not-assert with a reason, and a throw), no skip flag. The repo-wide audit
+is `pnpm floor:audit`: **275 counting scripts, 214 with no floor**, recorded as
+a shrink-only baseline that pins the invariant and the direction rather than the
+size of the gap (RULING 116).
+
+**It caught something on its first run.** The rebuilt capture script refused
+with *"clicking Filters did not change aria-expanded"* rather than writing a
+capture it had not earned — and the refusal was right twice over, first because
+the read happened before React re-rendered, and then, once fixed, it passed.
+
+## The instruments, and what each of them was actually doing
+
+**`NH196` — `walk:all` was never hanging.** Run four ways against no server the
+header prints in seconds; run against a local build it completes in about 24
+minutes: **368 passed, 0 regressions, 11 could not run.** The prior session hit
+a foreground command whose output the harness holds until exit, on a run that
+takes longer than the 20 minutes it was given. Every check line now carries
+elapsed `mm:ss` and a heartbeat fires after 30 quiet seconds — on the
+verification run it fired twice, both times across a real 57-second gap between
+checks, which is exactly the condition that used to read as silence.
+
+**`NH195` — the suite was overwriting the orientation file.** RULING 108 made
+the repo copy of `docs/context.md` primary, written first and never guarded, and
+the test proving it ran the real generator against the real root. So every
+`pnpm test` left `docs/context.md` reading *Written by pnpm handoff at test*.
+The fix is a redirect, not a guard: the write still happens, still first, still
+unguarded, at a temp root — and the real file is now compared byte for byte
+before and after, so the regression fails here rather than in a session opening
+on fixture values.
+
+**`NH182` — the camera was pointed at the wrong panel.** The Filters captures
+ran after `Who governs here` had been clicked, so the WGH panel was over the
+rail and both captures photographed it. The control is `button.filters-title`,
+read off the live DOM rather than guessed a fourth time.
+
+**`NH180` — the third raise did not happen.** `app/globals.css` was 206,120
+bytes and 57% comment prose, and its mirror cap had been raised twice for the
+same reason. Sean ruled the structural option: 125 blocks moved verbatim to
+`docs/globals-css-notes.md`, each leaving a pointer at its own rule. **134,880
+bytes, and the CSS is byte-identical — 82,089 bytes of code before and after,
+compared with comments stripped.** The cap is 200 KB again, asserted, with 65 KB
+of headroom instead of 1,244 bytes.
+
+**`RO05` — 28 lint warnings to 0**, none of them suppressed: twenty dead
+imports, five dead locals, one dead interface, one stale disable directive, and
+two underscore-prefixed tuple positions. One real finding fell out and is rowed:
+the map's `onNarrowApplied` and `onStreetPoint` reach the who-governs card and
+are consumed by nothing.
+
+## `R59` — the guard was right and the data was the problem
+
+The daily refresh had failed both runs of 2026-08-25 at *Validate*, on
+`clerksboards`: oldest row 2026-05-27 against a declared 90-day window, on the
+day ninety days before was exactly 2026-05-27. **The code cause was already
+fixed and already merged** — the fetch-clock/stamp-clock reconciliation landed
+in `5ddcd44`, after both failed runs and inside `cc8bbef` — and that is a clock
+gap of one day, not a widened window.
+
+What was still owed was freshness, and it was done rather than assumed: a live
+`pnpm refresh:daily --all`, **5 sources clean of 5**, moved `clerksboards`
+from 2026-05-27 to 2026-06-03. The guard passes on real data.
+
+**The audit turned up something the brief did not expect.** `pnpm
+source:headroom` reports every source's distance from its own edge, and **8 of
+11 sit under 14 days**. That is not eight sources about to fail — it is
+structural: every adapter clips to the same 90 days at fetch time and the
+snapshot stamps `generatedAt` minutes later, so every 90d-clipped source lives
+within about a day and a half of its edge permanently. The brief asked for a row
+per source; there is **one row naming all eight**, because eight identical rows
+describing one architectural fact are eight copies of a finding rather than
+eight findings. The thing worth watching is the clock gap, not the headroom.
+
+## The visual work, closed at the class
+
+`LAY-11` was shed last session with captures of the wrong panel. Measured at
+three viewports against a local production build: **395px of empty rail at
+430×932, 283px at 834×1112, 71px at 1440×900**, Filters closed. The cause was
+LAY-7 nine hours earlier, which gave the rail the column's remainder. The two
+children swap: the rail hugs its content, the floaters take the remainder and
+were already bottom-aligned. **1px at all three afterwards**, and the protected
+push-down survives BY CONSTRUCTION rather than by promise — a zero shrink factor
+means a growing rail cannot give the height back, so opening Filters still
+pushes the floaters down and off, exactly as `17-18-13` photographs.
+
+`BAL-24` is the one worth reading twice. Sean drew an arrow between two
+identical-looking *NO LOCAL ELECTION* blocks. Read as images they differ by two
+words: **one is Denville Township and the other is Rockaway Township.** It was
+never one record through two paths — 07866 straddles both municipalities and a
+reader there is owed both facts. **Deduping would have deleted a true, sourced
+statement about a real government.** They merge only when the sentence, the
+source, the URL and the read date all agree, every jurisdiction is named in the
+merged sentence, and the test asserts the member count against the input across
+every shape.
+
+`BC-26` closed at the class with its denominator: **5 of 284 roster members
+carried a false `Incumbent` chip** — three superintendents, a district clerk and
+a business administrator. It is RULING 118's reasoning one word over:
+*Incumbent* is the word that pairs with *Challenger*, so it asserts an election
+the reader could vote in, and a superintendent has none. The predicate is asked
+once and is asserted to AGREE with the runs-it-day-to-day slot, because two
+vocabularies for one fact is how a renamed copy survives a fix.
+
+`OFF-7`'s class: **42 bodies, 3 in scope, 3 correct, 0 wrong** — verified
+against Tucson Unified and Vail Unified, neither of which the fix was derived
+from.
+
+`BAL-12`: **39 pill rules, 11 declarations normalised, and the split now reads
+23 uniform / 16 different with a stated reason / 0 different with no reason.**
+A reason for a difference that no longer exists also fails the build, which is
+the direction nobody watches.
+
+## `ASK-12`, and the wall around it
+
+Sean allowed the unsourced fallback on one condition — a sourced civic answer
+and an unsourced general answer must never be confusable — so the separation is
+structural in four ways, none of which is a rendering choice: a different result
+type, **no sources field existing on the shape at all**, a plain-language mark
+carried on the record so it cannot render without one, and a `shouldFallBack`
+that refuses unless the sourced router has already declined. **A civic question
+we cannot source is explicitly ineligible** — it stays owed, because handing it
+to a general model would convert a gap in our research into a plausible sentence
+about a real government that nobody can check.
+
+The transparency page changed in the same commit, as the doctrine requires, and
+the sentence *No AI writes the answer* was **scoped rather than deleted**: it
+was true of every answer until today and is still true of every answer this site
+sources.
+
+## `BC-28` — Sean was right to doubt it
+
+Morris Hills Regional rendering *we haven't sourced who runs it yet* is not a
+data gap. **The registry holds 23 New Jersey rosters: 22 municipal governing
+bodies and 1 school board.** Against the official universe at 07866 — 27
+governments, 4 of them school districts — **3 of 4 are dark.** A hunt that
+returned 22 of one layer and 1 of another did not run out of reach; its
+denominator never contained the other layer. That is a process defect, and more
+hunting on its own would miss them again the same way.
+
+## What is measured and still owed
+
+- **`OFF-6`: 0 of 3 superintendents carry a photo**, and the larger finding is
+  that **3 of 6 districts hold no superintendent row at all** — a missing person
+  before a missing picture.
+- **`OFF-5` determined by our own fetch, not read off a file**: both Rockaway
+  Township pages answer HTTP 200 with full content and every image on them is
+  site chrome. Nothing held, not a fetch problem — and a dated measurement
+  rather than an exhausted absence.
+- **The 1,162 argued absences all expired on one date and the re-test pass was
+  run now rather than on the day.** They carried 2026-09-01. <!-- expected-future: 2026-09-01, the RULING 53 expiry every argued absence carried before the 2026-08-26 re-test moved it -->
+  Both zips re-walked: **319 queries run, 319 answered, 0 WALLED** — and the
+  zero is the part worth keeping, because the previous pass had earned some of
+  these out of refusals under RULING 144, which is the weakest kind of absence
+  there is, and this one never needed that clause. **1,162 of 1,162 still hold;
+  0 resolved to a found value; 0 needed re-argument.** 07866 carries 1,038 and
+  03255 carries 124, with four 03255 candidacies holding every arguable field
+  already. The expiry moved to 2026-09-02, so **the cliff is gone rather than <!-- expected-future: 2026-09-02, the RULING 53 expiry the 2026-08-26 re-test stamped on all 1,162 -->
+  deferred**.

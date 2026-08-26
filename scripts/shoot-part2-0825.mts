@@ -183,6 +183,8 @@ let clippedTotal = 0;
 let measuredRuns = 0;
 let indentTotal = 0;
 let indentOffenders = 0;
+/** LAY-11: the empty panel below the rail's last row, per viewport. */
+const lay11: Array<{ viewport: string; trailingPx: number }> = [];
 
 for (const vp of VIEWPORTS) {
   console.log(`\n=== ${vp.name} ${vp.width}x${vp.height} ===`);
@@ -220,13 +222,85 @@ for (const vp of VIEWPORTS) {
 
     await shot(page, `${vp.name}-01-map-wgh`);
 
-    /* LAY-11: Filters collapsed, then expanded — the protected push-down. */
-    await page.evaluate(`[...document.querySelectorAll("button,summary")].find((b)=>/filters/i.test(b.textContent||""))?.click()`);
+    await context.close();
+  }
+
+  /*
+   * --- LAY-11: the SIDEBAR, in its own context ---------------------------
+   *
+   * **`NH182`: this is why the previous run's Filters captures were of the
+   * wrong panel.** They were taken in the block above, AFTER
+   * `Who governs here` had been clicked — so the WGH panel was over the rail
+   * and both `filters-open` and `filters-collapsed` photographed it. The
+   * clicks may well have landed; the CAMERA was pointed somewhere else. And
+   * the selector was `?.click()`, which returns `undefined` on a miss and
+   * throws nothing, so a run that hit nothing exited clean (RULING 159).
+   *
+   * Three things changed. The sidebar gets its OWN page with no panel over
+   * it. The control is `button.filters-title`, read off the live DOM rather
+   * than guessed. And every step is ASSERTED: the rail is confirmed present
+   * and visible, the control is confirmed found, and `aria-expanded` is
+   * confirmed to have actually flipped — a click that changed nothing is a
+   * failure here, not a capture.
+   */
+  {
+    const { context, page } = await open(vp, "07866");
+
+    const railOk = await page.evaluate(
+      `(() => { const s = document.querySelector("aside.sidebar"); if (!s) return "no aside.sidebar in the DOM"; const r = s.getBoundingClientRect(); if (r.width < 40 || r.height < 40) return "aside.sidebar is present but not laid out (" + Math.round(r.width) + "x" + Math.round(r.height) + ")"; return "ok"; })()`,
+    );
+    if (railOk !== "ok") throw new Error(`LAY-11 capture: ${railOk as string}`);
+
+    /*
+     * Click Filters, then read `aria-expanded` AFTER a paint.
+     *
+     * The first version read it synchronously in the same expression that
+     * clicked, and it always came back unchanged — React had not re-rendered
+     * yet. That would have been a capture step reporting a failure that did
+     * not happen, which is the mirror of the empty-success shape and just as
+     * useless. The click and the read are two evaluations with a wait between.
+     */
+    const READ_EXPANDED = `document.querySelector("button.filters-title")?.getAttribute("aria-expanded") ?? null`;
+    const CLICK = `(() => {
+      const b = document.querySelector("button.filters-title");
+      if (!b) return false;
+      b.click();
+      return true;
+    })()`;
+
+    /** The LAY-11 measurement: empty panel below the rail's last child. */
+    const TRAILING = `(() => {
+      const s = document.querySelector("aside.sidebar");
+      if (!s) return null;
+      const last = s.children[s.children.length - 1];
+      if (!last) return null;
+      return Math.round(s.getBoundingClientRect().bottom - last.getBoundingClientRect().bottom);
+    })()`;
+
+    const closedGap = (await page.evaluate(TRAILING)) as number | null;
+    if (closedGap === null) throw new Error("LAY-11 capture: the rail has no children to measure against");
+    console.log(`  LAY-11 ${vp.name}: ${closedGap}px of empty panel below the rail's last row, Filters CLOSED`);
+    lay11.push({ viewport: vp.name, trailingPx: closedGap });
+    await shot(page, `${vp.name}-05-filters-collapsed`);
+
+    const before = (await page.evaluate(READ_EXPANDED)) as string | null;
+    const clicked = (await page.evaluate(CLICK)) as boolean;
+    if (!clicked) {
+      throw new Error("LAY-11 capture: button.filters-title was not on the page — the rail was never reached");
+    }
     await page.waitForTimeout(900);
-    await shot(page, `${vp.name}-02-filters-open`);
-    await page.evaluate(`[...document.querySelectorAll("button,summary")].find((b)=>/filters/i.test(b.textContent||""))?.click()`);
-    await page.waitForTimeout(900);
-    await shot(page, `${vp.name}-03-filters-collapsed`);
+    const after = (await page.evaluate(READ_EXPANDED)) as string | null;
+    if (before === after) {
+      throw new Error(
+        `LAY-11 capture: clicking Filters did not change aria-expanded (${String(before)}) — the click hit nothing that matters`,
+      );
+    }
+    const opened = { before, after };
+    await shot(page, `${vp.name}-06-filters-open`);
+    const openGap = (await page.evaluate(TRAILING)) as number | null;
+    console.log(
+      `  LAY-11 ${vp.name}: Filters OPEN — aria-expanded ${String(opened.before)} -> ${String(opened.after)}, ${String(openGap)}px trailing`,
+    );
 
     await context.close();
   }
@@ -282,6 +356,8 @@ console.log(`person rows measured        ${indentTotal}`);
 console.log(`  indented more than 2px    ${indentOffenders}   (ALIGN-1: must be 0)`);
 console.log(`letter-spaced runs measured ${measuredRuns}`);
 console.log(`  clipped                   ${clippedTotal}   (LBL-2: must be 0)`);
+console.log("LAY-11 trailing empty panel, Filters CLOSED (must be <= 2px):");
+for (const r of lay11) console.log(`  ${r.viewport.padEnd(9)} ${r.trailingPx}px`);
 console.log(`captures written to         ${OUT}`);
 
 await browser.close();
@@ -316,4 +392,24 @@ if (indentOffenders > 0) {
 }
 if (clippedTotal > 0) {
   throw new Error(`LBL-2: ${clippedTotal} letter-spaced run(s) still clip`);
+}
+
+/*
+ * **LAY-11's floor.** The same reasoning as ALIGN-1's above: a run that
+ * measured no viewports would report an empty list and read as success
+ * (RULING 159). Sean ruled the rail ends where its content ends, so the
+ * trailing empty panel is zero within a pixel or two of subpixel layout.
+ */
+if (lay11.length !== VIEWPORTS.length) {
+  throw new Error(
+    `LAY-11 was measured at ${lay11.length} of ${VIEWPORTS.length} viewport(s) — the verdict is about nothing`,
+  );
+}
+const lay11Offenders = lay11.filter((r) => r.trailingPx > 2);
+if (lay11Offenders.length > 0) {
+  throw new Error(
+    `LAY-11: ${lay11Offenders
+      .map((r) => `${r.viewport} ${r.trailingPx}px`)
+      .join(", ")} of empty panel below the rail's last row`,
+  );
 }

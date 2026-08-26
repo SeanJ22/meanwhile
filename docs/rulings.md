@@ -3670,3 +3670,76 @@ and the reader-friction rule counts that as a defect with the same standing as
 a wrong number, with exactly three exceptions, of which "consent to collection"
 is one. The fine print IS that consent line; the paragraph was the essay around
 it.
+
+
+---
+
+### RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one
+
+(Adopted 2026-08-25, Sean's authority, from the recovery brief that followed
+`RO04`. It is the operation-count rule — *an operation that can return nothing
+must be asked what it returned* — pointed at the GATE SET rather than at a
+single gate, and it is RULING 113's sibling: that ruling asks whether a step did
+the thing, and this asks whether the step was ever run at all.)
+
+**A session may not claim local gates green unless it ran the exact gate set CI
+requires and named each gate with its individual result in its report.**
+
+*The rationale stays attached, because a stripped rule reads as guidance — and
+here the rationale is a measurement rather than an argument.*
+
+On 2026-08-25 the one-session-0825 run reported passing the full local gates:
+**2,295 of 2,295 tests, `walk:all` exit 0, the deploy confirmed serving the
+work.** It merged twice on that confidence. **`pnpm lint` was failing the entire
+time**, on two `react-hooks/set-state-in-effect` errors, and `main` was red
+across both merges.
+
+**The report was true about every gate it ran.** That is the whole finding.
+Nothing in the repo asked it to run the one that was failing, because the local
+door did not know that gate existed:
+
+| | the local door ran | CI required |
+| --- | --- | --- |
+| `pnpm build` (default) | yes | yes |
+| build, standalone mode | no | yes |
+| `pnpm test` | no | yes |
+| **`pnpm lint`** | **no** | **yes** |
+| `tsc --noEmit` | no | yes |
+| `assert:browser` | no | yes |
+| `test:bundle` | no | yes |
+
+`pnpm handoff --ship` calls itself the single door everything merges through and
+`pnpm closeout` is RULING 75's gated door. **Both ran `pnpm run build` and
+nothing else** — one of CI's seven commands. A session using either door
+correctly, reporting honestly, still shipped red. **This is a hole in a door,
+not a careless session**, and every session that used the door inherited it.
+
+- **The local gate command is `pnpm gates`**, and it runs the set CI requires.
+  Each gate is reported BY NAME with its own result, because a summary line
+  cannot be written from a single aggregate boolean and "gates green" is exactly
+  the sentence that was true and useless.
+- **The gate set is anchored EXTERNALLY** (RULING 147).
+  `tests/gate-parity.test.ts` reads `.github/workflows/build-check.yml` and
+  fails when a command CI runs is absent locally. A check that re-derived the
+  expected set from the local set would prove the file equals itself, and would
+  have agreed with the hole every day it lived.
+- **Every gate runs even after one fails**, mirroring the workflow's
+  `if: always()`. A session gets all seven answers from one run rather than
+  discovering them one merge at a time.
+- **There is no skip flag**, for the reason the build gate already gives: an
+  escape hatch on a gate is how the gate stops meaning anything.
+
+*What the instrument taught about itself, recorded because it is the same class
+of defect one floor up.* The first version of `scripts/gates.mjs` ran its gates
+**on import**, so `tests/gate-parity.test.ts` importing the gate list executed
+the whole suite — and the `process.exit()` at the end of that run killed the
+test process after the first test. **A four-test file reported `pass 1, fail 0`
+and a green tick.** It was caught by reading the run's own output rather than
+its exit status: `test … PASS (1s)` for a 2,295-test suite is not a pass. That
+is RULING 62's shape — a suite quietly reporting on fewer guards than it holds —
+arriving through an imported side effect.
+
+*And the parity test is shown catching the real hole* (RULING 110). Removing the
+lint entry from the gate list fails two of its four assertions by name. A sweep
+that cannot find the defect it was written for is a sweep reporting green about
+nothing.

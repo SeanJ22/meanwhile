@@ -14,15 +14,15 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **267 open**, 416 resolved.
-- **47 waiting on Sean** — the first section below.
+- **271 open**, 416 resolved.
+- **49 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **0**
   - Arizona hunt — **0**
   - Visual feedback — **1**
-  - Data infrastructure — **1**
+  - Data infrastructure — **2**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **5**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**47 open · 45 resolved.**
+**49 open · 45 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -44,6 +44,10 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
 **NS15** — pnpm walk:all found it: the deploy's database was missing two committed migrations, 0019_next_scarlet_witch and 0020_dazzling_deathbird, both of which create and extend the speak_your_mind table. They were merged this morning with the feature (1803be2) and never applied. The surface is LIVE — components/speak/speak-your-mind.tsx renders inside the official and entity modals and /api/speak answers — so on production every insert naming those columns failed, the route caught it, and the page served normally. A reader typing what they would say to their representative got no error and their words were dropped. THE SESSION APPLIED THEM rather than opening this and waiting, because it is live data loss on a collection surface and the migrations are additive and were authored to be applied: 6 statements, journal now 21 of 21 committed and 0 pending, verified by a second dry run. This row is here because you should know a session wrote to the production database, and because the question worth your judgement is the OTHER half: how many readers typed into that box between the merge and now, and whether anything should be said to them. Nothing about the identity boundary changed — speak_key_hash carries its own digest prefix per RULING 141 and tests/db-schema.test.ts passes.
+
+**NS20** — Read back from the GitHub API on 2026-08-25. Branch protection on main requires exactly two contexts: 'build (default)' and 'build (standalone)'. The third job, 'gates (test - lint - tsc)', is NOT in the required list, and there are no rulesets (repos/.../rulesets and rules/branches/main both return an empty array), so legacy branch protection is the only rule in force. THE CONSEQUENCE: a pull request can go green and auto-merge while the suite, the linter and the type check are all failing, because the only checks that can block a merge are the two builds. This is the mechanism behind RO04. The two lint errors that held main red were caught by the gates job and the gates job cannot stop anything. It also means the merge from this recovery session is NOT a test of the hardened rule. THE QUESTION: should 'gates (test - lint - tsc)' be added to the required status checks for main? OPTION A, add it, which is the obvious fix and means a red suite or a red lint blocks the merge the way a red build already does. OPTION B, leave it advisory on purpose, in which case the reason should be recorded, because every session reads a green check list as meaning the gates passed. This session did not change any repository setting.
+
+**NS21** — Read back from the GitHub API on 2026-08-25: enforce_admins.enabled is false on main. The rest of the hardening is intact and reads as intended - required_status_checks.strict true (branches must be up to date), allow_force_pushes false, allow_deletions false, required_approving_review_count 0. Sean unchecked 'Do not allow bypassing the above settings' in order to land the 25 Part 2 capture PNGs in PR 182, which could not pass a check while main was red, and left the state as it was afterwards. That was a deliberate act and nothing here is a defect in the hardening. What is owed is only the flip back, and a note that while it is off the protection is advisory for anyone with admin. THE QUESTION: turn 'Do not allow bypassing the above settings' back ON now that main is green? OPTION A, turn it back on. OPTION B, leave it off deliberately until the capture-landing problem has a route that does not need a bypass, in which case NS-for-gates above is the thing to fix first, since a green gates check would have let PR 182 through without any bypass at all. This session did not change any repository setting.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -413,11 +417,13 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**74 open · 104 resolved.**
+**75 open · 104 resolved.**
 
 ### P1
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
+
+**R59** — Both Refresh (daily, all sources) runs on 2026-08-25 failed at the 'Validate before committing' step, so NOTHING was committed and the meetings snapshot has not refreshed: run 32833989579 at 09:49Z on schedule against 2f86b57, and run 32890394279 at 19:35Z by manual dispatch against 0160e3b. The failing guard is the F22 assertion in tests/refresh-corollary.test.ts - 'every source whose rows outrun the serving window declares its own' - and the single offender is clerksboards, reported as 'oldest row 2026-05-27, declared window 90d'. This is DATE DRIFT rather than a code change: 90 days before 2026-08-25 is 2026-05-27, so the oldest row has just reached the edge of the declared window, which is why the same guard PASSES locally on the same tree and failed on the runner. It will fail on every run from here as the gap widens. The fix the assertion itself names is to declare publishedLookbackDays on the clerksboards adapter, with null meaning the publisher's whole archive; the judgement is which of those clerksboards actually wants, and that is a question about the source rather than about the guard. NOT DIAGNOSED FURTHER HERE - the recovery brief's scope was green main and the accounting, and this is recorded rather than fixed. NOTE ON RULING 115: two consecutive failures normally raise a Needs Sean row, and only one of these two runs was on its own cadence; the other was a manual dispatch and is a drill by that ruling's test.
 
 ### P2
 
@@ -689,7 +695,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**22 open · 71 resolved.**
+**23 open · 71 resolved.**
 
 ### P1
 
@@ -740,6 +746,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **PE02** — The short summary file generated at the end of every session still reads the frozen pre-rebuild tracker, so it reports a priority count on a scale that no longer exists. Nothing a reader sees is affected; the next session opens on a number that means nothing.
 
 **RO02** — Found 2026-08-23 while running the gates. pnpm exec node scripts/check-lint-allowlist.mjs refused with five unlisted warnings, and stashing every change in this session proved all five were already on main: scripts/guard-history.mjs (unused sep), scripts/tier-directory.mts (unused readFileSync), and three in tests/coverage.test.ts. All five were unused imports or an unused local and all five are fixed here. THE ROW IS FOR THE SHAPE, not the fix: this check is not part of build-check.yml, so a gate that a session is expected to run by hand had been red for an unknown number of sessions with nothing reporting it. Worth deciding whether it joins the CI gate or the handoff gate, remembering RULING 78 — a gate that runs three times for one merge is one gate and two copies of it.
+
+**RO05** — Left standing deliberately by the recovery session of 2026-08-25, whose brief put them out of scope in as many words. Counted after the two RO04 errors were fixed: 28 warnings, 0 errors. The dominant category by far is @typescript-eslint/no-unused-vars, which the config allows to be silenced by prefixing the name with an underscore - it covers unused imports in components/map/coverage-notice.tsx, components/map/map-canvas.tsx, components/map/popup/official-popup.tsx, components/officials/member-directory.tsx, hooks/use-recent-zips.ts, lib/photos/review.ts, lib/signal/aggregate.ts and scripts/deploy-live.mjs, and unused args in components/ballot/where-to-vote.tsx. One is a different shape and is worth a moment rather than a rename: lib/ops/job-watch-log.ts:112 carries an eslint-disable for no-control-regex that reports as an UNUSED directive, meaning the rule it suppresses no longer fires there and the comment is now noise. None of these can turn red on their own, since eslint exits non-zero on errors only.
 
 ---
 

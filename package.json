@@ -20,6 +20,7 @@
     "cf:agencies": "tsx scripts/build-state-cf-agencies.mts",
     "chrome:sweep": "tsx scripts/chrome-sweep.mts",
     "closeout": "node scripts/close-out.mjs",
+    "gates": "node scripts/gates.mjs",
     "class:sweep": "tsx scripts/class-stamp-sweep.mts",
     "definitions:verify": "tsx scripts/definitions-verify.mts",
     "assert:browser": "tsx scripts/assert-browser.mts",

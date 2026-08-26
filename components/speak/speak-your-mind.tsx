@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 
@@ -104,7 +104,7 @@ export function SpeakYourMind({
   useDismissOnOutside(rootRef, () => setOpen(false), open);
 
   /*
-   * **BC-20 — A TAB SWITCH COLLAPSES IT.**
+   * **BC-20 — A TAB SWITCH COLLAPSES IT, AND THE KEY IS WHAT DOES IT.**
    *
    * The panel lives inside a tabbed card and inside a sectioned one. Moving
    * away and back should not find half-typed text under a heading a reader
@@ -112,13 +112,23 @@ export function SpeakYourMind({
    * `subjectId` changing is also what happens when a reader opens a
    * different card entirely, which wants the same answer.
    *
-   * The parent keys this component on the tab, so a tab change unmounts and
-   * remounts it; this effect is what makes the SUBJECT change do the same
-   * thing without depending on a key.
+   * **This used to be an effect calling `setOpen(false)` on `[subjectId]`,
+   * and it was removed 2026-08-25 (RO04).** It was `react-hooks/
+   * set-state-in-effect`, one of the two errors that held `main` red — and
+   * the comment it carried already named its own replacement: *the parent
+   * keys this component on the tab, so a tab change unmounts and remounts
+   * it.* Every call site now keys on the SUBJECT as well, so a subject
+   * change is the same unmount-and-remount a tab change always was. There is
+   * no effect, no handler, and nothing for a future call site to forget.
+   *
+   * **The effect was also strictly weaker than the key, and the gap was a
+   * data one.** It reset `open` and nothing else, so `text` survived a
+   * subject change: type about one person, switch, reopen, and their words
+   * are sitting in the box under somebody else's name — one Send away from
+   * being stored against the wrong `subjectId`. Remounting clears `text`,
+   * `sending` and `result` with `open`, which is what the first paragraph
+   * asked for all along.
    */
-  useEffect(() => {
-    setOpen(false);
-  }, [subjectId]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [result, setResult] = useState<SpeakResult | null>(null);

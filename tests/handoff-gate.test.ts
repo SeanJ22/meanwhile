@@ -54,18 +54,29 @@ test("the gate runs the command Netlify runs, and has no way to be skipped", () 
   const gateAt = HANDOFF.indexOf("function buildGate()");
   const gate = HANDOFF.slice(gateAt, HANDOFF.indexOf("function ship()"));
 
-  // The same command as `netlify.toml`'s `corepack pnpm run build`. A `tsc`
-  // run is NOT equivalent: tsconfig includes `.next/types/**/*.ts`, which
-  // Next generates during a build, so a bare tsc checks whatever those files
-  // said last time.
+  // A `tsc` run is NOT equivalent: tsconfig includes `.next/types/**/*.ts`,
+  // which Next generates during a build, so a bare tsc checks whatever those
+  // files said last time.
   // Matched on the command TEXT rather than an args array: the gate spawns
   // through a shell with one literal string, because `execFileSync` cannot
   // run pnpm's `.cmd` shim on Windows at all. This assertion caught that
   // change the moment it was made, which is the assertion working.
+  //
+  // **WIDENED 2026-08-25 (RO04, RULING 155), deliberately and not silently.**
+  // This asserted `pnpm run build` from 2026-08-16, and it was RIGHT that the
+  // gate must cover the deploy command — it was WRONG that the deploy command
+  // is the whole gate. CI requires seven commands across three jobs; the door
+  // ran one of them, `pnpm lint` was among the six it did not, and `main` went
+  // red across two merges while every local gate reported green.
+  //
+  // So the assertion moves UP a level rather than being loosened: the gate
+  // must run `pnpm run gates`, and `tests/gate-parity.test.ts` is what holds
+  // that set equal to the workflow's. The build is still gated — it is one of
+  // the seven, and the `netlify.toml` assertion below is untouched.
   assert.match(
     gate,
-    /execSync\(\s*"pnpm run build"/,
-    "the gate must run `pnpm run build` — the command Netlify runs",
+    /execSync\(\s*"pnpm run gates"/,
+    "the gate must run `pnpm run gates` — the whole set CI requires, not the build alone (RULING 155)",
   );
   const netlify = readFileSync(join(ROOT, "netlify.toml"), "utf8");
   assert.match(

@@ -888,12 +888,40 @@ function MapEntryInner() {
    *
    * Selecting NOTHING is a close and clears nothing — dismissing one card must
    * never dismiss the others with it.
+   *
+   * **This was an EFFECT until 2026-08-25 (RO04), and it was one of the two
+   * `react-hooks/set-state-in-effect` errors that held `main` red.** It is
+   * now React's documented adjust-state-during-render pattern instead: the
+   * previous selection is held in state, and a CHANGE to it is detected
+   * while rendering rather than after painting.
+   *
+   * **Why this and not a `key`,** which is how the same problem was solved in
+   * `speak-your-mind.tsx` the same day: these two popups are THIS component's
+   * own state, and remounting the map to clear a popup would tear down the
+   * MapLibre canvas with it. Keying is the right answer when a child owns the
+   * state; adjusting during render is the right answer when the component
+   * that owns the state is the one that has to react.
+   *
+   * **The semantics are preserved exactly, including the two subtleties the
+   * effect had.** Selecting nothing still clears nothing — the guard moved
+   * inside the transition rather than in front of it. And the comparison is
+   * on a COMPOSED key, so venue→district and district→venue are transitions
+   * too, not just null→value; the effect got that from having both values in
+   * its dependency array.
+   *
+   * Clearing on FIRST RENDER is not needed and does not happen: `prevSelection`
+   * initialises to the current selection, and both popups start `null` anyway,
+   * so there has never been anything to clear on mount.
    */
-  useEffect(() => {
-    if (!ui.selectedVenueKey && !ui.selectedDistrictOcdId) return;
-    setPopupMeeting(null);
-    setOfficialPopup(null);
-  }, [ui.selectedVenueKey, ui.selectedDistrictOcdId]);
+  const selectionKey = `${ui.selectedVenueKey ?? ""}\u0000${ui.selectedDistrictOcdId ?? ""}`;
+  const [prevSelectionKey, setPrevSelectionKey] = useState(selectionKey);
+  if (selectionKey !== prevSelectionKey) {
+    setPrevSelectionKey(selectionKey);
+    if (ui.selectedVenueKey || ui.selectedDistrictOcdId) {
+      setPopupMeeting(null);
+      setOfficialPopup(null);
+    }
+  }
 
   // Clicking INTO a new district is a question about who governs there —
   // the card answers. Re-selecting the same district changes nothing.

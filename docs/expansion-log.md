@@ -974,3 +974,55 @@ returned nothing for a reason that is itself the finding.
   and this ballot is mostly the people running against them — the equal-effort
   asymmetry arriving from the source rather than from our effort, and the reason
   challengers need routes that are not directories.
+
+---
+
+## visual-part2-0825 · 2026-08-25
+
+**NO ROUTES, AND THE REASON IS NOT AN EMPTY IMAGINATION.** This session halted
+at its own precondition before item 1. The 8/25 Part 2 visual brief opens with a
+binding stop — *if `main` is red when you start, stop, row it, and report; the
+recovery brief owns that, not this one* — and `main` was red at `70fed47`, and
+had already been red at `13f4fcf` before the session touched anything.
+
+**It therefore performed no retrieval at all.** RULING 88's expansion
+requirement is about a new route to a FIELD ALREADY OWED — a fact about a
+government this product has not yet obtained. Nothing on this session's item
+list was ever reached, so there was no owed field to invent a route to.
+
+**It carries no `-nonhunt` marker and is not claiming the exemption**, which is
+why this entry exists rather than a silence. The marker is typed into
+`--session=<label>` and may never be inferred; the label was written before the
+precondition fired, when the session still expected to be a visual pass. That is
+a fact about when the label was chosen, not a licence to read one in afterwards.
+
+**What it did instead, recorded where it belongs.** It fast-forwarded a stale
+local `main` from `13f4fcf` to `70fed47`, which is what made the 25 Part 2
+captures reachable on disk at all; it diagnosed the red to two
+`react-hooks/set-state-in-effect` errors and reproduced them locally; it bounded
+the failure in time to the last green Build check at `0160e3b`; and it opened
+`RO04`. All of that is retrieval about this repository, not about a government,
+and none of it is a route.
+
+---
+
+## recovery-main-green-0825-nonhunt · 2026-08-25
+
+**EXEMPT, and the marker is in the session id rather than in this sentence** —
+`-nonhunt`, per the rule at the top of this file, because inference is how an
+exemption becomes a habit.
+
+**Why it qualifies.** This session hunted nothing and reached no public record.
+Its brief scoped it to exactly two things: getting `main` green, and the
+accounting behind why it went red. It fixed the two
+`react-hooks/set-state-in-effect` errors `RO04` named, closed the gate-set hole
+underneath them, and read GitHub's own API for the branch-protection and
+workflow-run facts its report owed. Every one of those is a fact about this
+repository's own machinery.
+
+**The nearest thing to an invention, named so it is not claimed as one.**
+`scripts/gates.mjs` and `tests/gate-parity.test.ts` are new instruments, and
+they are INFRASTRUCTURE rather than expansion — RULING 89 draws that line
+explicitly, and calling them expansion is the exact misreading it forbids. They
+reach a required CI check, not a field owed to a reader. They are recorded in
+RULING 155 and in the tracker, which is where they belong.

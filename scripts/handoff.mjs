@@ -55,13 +55,23 @@
  *
  * **Under `--ship` there is a sixth, and it runs before anything is pushed:**
  *
- *   6. the deploy gate       `pnpm build` — the same command Netlify runs —
- *                            with `tsconfig.tsbuildinfo` cleared first. A
- *                            failure refuses the ship and prints the
- *                            diagnostic, because Netlify's build log is
- *                            behind the author's login. See `buildGate()`
- *                            for why it is the build rather than `tsc`, and
- *                            for the pre-push hook that was rejected.
+ *   6. the deploy gate       `pnpm gates` — the gate set CI REQUIRES: lint,
+ *                            tsc, the browser assertion, the suite, and the
+ *                            build in both modes, with `tsconfig.tsbuildinfo`
+ *                            cleared first. A failure refuses the ship and
+ *                            prints the diagnostic, because Netlify's build
+ *                            log is behind the author's login. See
+ *                            `buildGate()` for why it is the build rather
+ *                            than `tsc` alone, and for the pre-push hook that
+ *                            was rejected.
+ *
+ *                            **It ran `pnpm build` and nothing else until
+ *                            2026-08-25 (RO04, RULING 155).** CI required
+ *                            seven commands; this door ran one of them. Lint
+ *                            was in CI's set and not this one, so a session
+ *                            could pass this door, report green gates
+ *                            truthfully, and leave `main` red — which is
+ *                            exactly what happened, twice, on 2026-08-25.
  *
  * `pnpm session:start` is the bookend, and checks the things that are wrong at
  * the *start* of a session — stale local main, a clobbered CLAUDE.md, a port
@@ -1212,7 +1222,19 @@ function buildGate() {
      * not run" is not trustworthy in either direction, which is why the two
      * are separated below.
      */
-    execSync("pnpm run build", {
+    /*
+     * `pnpm run gates`, NOT `pnpm run build` (RO04, 2026-08-25, RULING 155).
+     *
+     * This gate ran the build and only the build from 2026-08-16 until today,
+     * and CI requires seven commands across three jobs. **Lint was the one in
+     * CI's set and not this one**, so the one-session-0825 run passed this
+     * door twice, truthfully reported green gates, and left `main` red both
+     * times. The hole was in the door, not in the session.
+     *
+     * `scripts/gates.mjs` holds the set and `tests/gate-parity.test.ts` keeps
+     * it equal to the workflow's, so this cannot silently narrow again.
+     */
+    execSync("pnpm run gates", {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
@@ -1224,7 +1246,7 @@ function buildGate() {
     if (typeof error.status !== "number") {
       fail(
         "ship · build",
-        `refused — the gate could not RUN pnpm build (${error.message?.split("\n")[0] ?? "no status"}); this is the gate failing, not the tree`,
+        `refused — the gate could not RUN pnpm gates (${error.message?.split("\n")[0] ?? "no status"}); this is the gate failing, not the tree`,
       );
       return false;
     }
@@ -1269,7 +1291,7 @@ function buildGate() {
         .find((l) => neverStarted.test(l));
       fail(
         "ship · build",
-        `refused — the gate could not RUN pnpm build; the build never started, so this ` +
+        `refused — the gate could not RUN pnpm gates; the gates never started, so this ` +
           `says NOTHING about the tree. The tool's own words: ${words}. ` +
           `If this is the corepack/pnpm version guard, run "pnpm handoff --ship" ` +
           `directly rather than through corepack.`,
@@ -1286,13 +1308,13 @@ function buildGate() {
         .filter((l) => /error TS\d+|Failed to (compile|type check)/.test(l))
         .slice(0, 4)
         .join(" · ") || `exit ${error.status}, and no TS diagnostic in the output`;
-    fail("ship · build", `refused — pnpm build failed: ${diagnostic}`);
+    fail("ship · build", `refused — pnpm gates failed: ${diagnostic}`);
     return false;
   }
 
   ok(
     "ship · build",
-    `pnpm build clean in ${Math.round((Date.now() - started) / 1000)}s — the same command Netlify runs`,
+    `pnpm gates clean in ${Math.round((Date.now() - started) / 1000)}s — every gate CI requires (RULING 155)`,
   );
   return true;
 }

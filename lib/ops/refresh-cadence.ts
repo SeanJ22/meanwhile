@@ -90,8 +90,32 @@ export const REFRESH_SOURCES: readonly RefreshSource[] = [
      * published count and ours is a real alarm about a rebuild that just
      * happened rather than a complaint about one that never got to run.
      */
-    commands: ["nj:ballot --write", "nj:filing:check"],
-    governs: ["data/ballot/"],
+    /*
+     * **AND THE INVITATIONS ARTIFACT IS REGENERATED IN THE SAME STEP.**
+     * (2026-08-26, found by re-dispatching Refresh after R59's window fix.)
+     *
+     * `data/questionnaire/invitations-nj-morris-2026.json` is generated FROM the
+     * clerk filing and embeds its `collectedAt` — a READ STAMP under RULING
+     * 107, which SHOULD move when the filing is re-read. So every successful
+     * `nj:ballot --write` makes that artifact stale by exactly one field, and
+     * `tests/generated-artifacts.test.ts` refuses it byte-for-byte under
+     * RULING 92.
+     *
+     * That is RULING 102's shape one step downstream: fixing a generator is not
+     * finished until its output is regenerated, and here the INPUT moved and
+     * nothing downstream re-ran. It stayed invisible while the F22 window guard
+     * was failing first — the run never got far enough to reach it.
+     *
+     * The regeneration belongs HERE rather than in the workflow, beside the
+     * command whose success creates the staleness, so a source added later
+     * cannot inherit the hazard by being added somewhere else.
+     */
+    commands: [
+      "nj:ballot --write",
+      "nj:filing:check",
+      "questionnaire:invitations --write",
+    ],
+    governs: ["data/ballot/", "data/questionnaire/"],
     cadence: "weekly",
     // The election is 2026-11-03. expected-future-date: the general election.
     elevatedUntil: { cadence: "daily", until: "2026-11-03" },

@@ -23,11 +23,16 @@
  * gates truthfully — it ran them before the file existed.
  *
  * So close-out is a door, and this is the gate on it. It is the SAME gate the
- * ship uses — `pnpm build`, the literal command `netlify.toml` gives Netlify,
- * which type-checks everything `tsconfig.json` includes, `scripts/` included.
- * A doc-only close-out passes it in the time a build takes and that is the
- * price; the alternative is a gate that guesses which commits are "just docs",
- * and the commit that caused this looked exactly like just docs.
+ * ship uses — `pnpm gates`, which runs the set CI requires: lint, tsc, the
+ * browser assertion, the suite, and the build in both modes. A doc-only
+ * close-out pays for all of it and that is the price; the alternative is a
+ * gate that guesses which commits are "just docs", and the commit that caused
+ * this looked exactly like just docs.
+ *
+ * **It was `pnpm build` alone until 2026-08-25 (RO04, RULING 155)**, which
+ * type-checks the tree but does not lint it. Two `react-hooks/
+ * set-state-in-effect` errors passed this door and CI caught them, and `main`
+ * stayed red across two merges while every local gate reported green.
  *
  * ─────────────────────────────────────────────────────────────────────────────
  * 2026-08-24 — RULING 124 item 5: THIS TOOL NO LONGER PUSHES.
@@ -86,10 +91,15 @@ const git = gitFor(ROOT);
  * that did not run may not pass — but they say different things.
  */
 function gate() {
-  console.log("close-out gate · pnpm build (the command netlify.toml gives Netlify)\n");
+  console.log("close-out gate · pnpm gates (the gate set CI requires — RULING 155)\n");
   const started = Date.now();
   try {
-    execSync("pnpm run build", {
+    /*
+     * `pnpm run gates`, NOT `pnpm run build` (RO04, 2026-08-25, RULING 155).
+     * RULING 75 made this the gated door and it gated one of CI's seven
+     * commands. See the note at the same change in `handoff.mjs`.
+     */
+    execSync("pnpm run gates", {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
@@ -97,21 +107,21 @@ function gate() {
   } catch (error) {
     const out = `${error.stdout ?? ""}${error.stderr ?? ""}`;
     if (typeof error.status !== "number") {
-      say("✗", "gate", `could not RUN pnpm build (${error.message?.split("\n")[0] ?? "no status"}) — this is the gate failing, not the tree`);
+      say("✗", "gate", `could not RUN pnpm gates (${error.message?.split("\n")[0] ?? "no status"}) — this is the gate failing, not the tree`);
       return false;
     }
     const diagnostics = out
       .split("\n")
       .filter((l) => /error TS\d+|Failed to compile|Failed to type check/.test(l))
       .slice(0, 12);
-    say("✗", "gate", `pnpm build refused (exit ${error.status})`);
+    say("✗", "gate", `pnpm gates refused (exit ${error.status})`);
     for (const line of diagnostics) console.log(`    ${line.trim()}`);
     if (diagnostics.length === 0) {
-      console.log("    no TS diagnostic in the output — read the full log with `pnpm build`");
+      console.log("    no TS diagnostic in the output — read the full log with `pnpm gates`");
     }
     return false;
   }
-  say("✓", "gate", `pnpm build clean in ${Math.round((Date.now() - started) / 1000)}s`);
+  say("✓", "gate", `pnpm gates clean in ${Math.round((Date.now() - started) / 1000)}s`);
   return true;
 }
 

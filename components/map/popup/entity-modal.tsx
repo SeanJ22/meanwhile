@@ -592,7 +592,16 @@ function BodySections({
               author did not put it.
             */}
             {section.id === "sources" && (
+              /*
+                `key` on the SUBJECT (RO04, 2026-08-25). The panel used to
+                collapse itself with an effect on `[subjectId]`; that effect
+                was `react-hooks/set-state-in-effect` and is gone. This
+                sectioned variant has no tab to key on, so the subject IS the
+                key here — a reader opening a different card gets a fresh
+                panel rather than the last one's half-typed text.
+              */
               <SpeakYourMind
+                key={subject.subjectId}
                 subjectType={subject.subjectKind}
                 subjectId={subject.subjectId}
                 subject={subject.title}
@@ -894,7 +903,7 @@ export function EntityModal({
               handler, no effect, and nothing for a future tab to forget.
             */}
             <SpeakYourMind
-              key={tab}
+              key={`${tab}:${subject.subjectId}`}
               subjectType={subject.subjectKind}
               subjectId={subject.subjectId}
               subject={subject.title}

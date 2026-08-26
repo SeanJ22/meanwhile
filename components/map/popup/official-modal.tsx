@@ -265,6 +265,13 @@ export function OfficialModal({
             middle of them would blunt it.
           */}
           <SpeakYourMind
+            /*
+              `key` on the person (RO04, 2026-08-25) — see the note in
+              speak-your-mind.tsx. This card has no tab, so the holder is the
+              key: moving from one official to another must never leave what
+              a reader typed about the first sitting under the second's name.
+            */
+            key={holder.id}
             subjectType="OFFICIAL"
             subjectId={holder.id}
             subject={holder.name}

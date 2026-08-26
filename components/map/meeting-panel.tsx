@@ -79,24 +79,27 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
     >
       <header className="flex items-start justify-between gap-3 border-b border-rule px-5 py-4">
         <div className="min-w-0">
-          {/* What it is FIRST (3): a single sitting leads with who is
-              meeting; the venue is where, and where comes after what. A
-              multi-meeting venue leads with the count — the list below is
-              the what. */}
-          {/* MTG-6 (2026-08-24): the count line, unchanged — it is the one
-              part of this header the author's captures leave alone. */}
-          <p className="notice-eyebrow">
+          {/* **MTG-9 (2026-08-25): THE ENTITY IS THE FIRST THING ON THE CARD.**
+
+              His spec capture `17-20-07` numbers the header outright — the
+              entity, then the count, then the address — and the reason is in
+              his own words: *the user has to understand what they are looking
+              at.* The count led, so the first line a reader met was a number
+              about a body nobody had named yet.
+
+              MTG-6/MTG-8 unchanged in substance: the BODY is the title and the
+              building is where. `venueBodyTitle` is the shared descent — see
+              its note in `lib/map/format.ts` for why a distinct-`bodyName`
+              count was the wrong question, and for the rung MTG-9 added when a
+              shared `bodyName` turned out to name a sitting. */}
+          <h2 className="font-display text-lg font-semibold leading-snug tracking-tight text-paper">
+            {cardTitle.title}
+          </h2>
+          <p className="notice-eyebrow mt-1.5">
             {venue.meetings.length === 1
               ? "Public meeting"
               : `${venue.meetings.length} public meetings`}
           </p>
-          {/* MTG-6 / MTG-8: the BODY is the title, and the building is where.
-              `venueBodyTitle` is the shared descent — see its note in
-              `lib/map/format.ts` for why a distinct-`bodyName` count was the
-              wrong question and what it was actually measuring. */}
-          <h2 className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight text-paper">
-            {cardTitle.title}
-          </h2>
           {/* MTG-6: venue name and address, in gray, beneath — the Parks and
               Recreation pattern the author named as the reference. Where the
               building IS the title there is nothing left to repeat under it,
@@ -149,7 +152,16 @@ export function MeetingPanel({ venue, onClose, onOpenMeeting }: MeetingPanelProp
             <p className="t-structure sticky top-0 z-[1] bg-[var(--panel)] px-5 py-2 text-label">
               {group.label}
             </p>
-            <div className="divide-y divide-rule-soft">
+            {/* **MTG-10 (2026-08-25): the rules between sittings are gone.**
+
+                His `17-20-07` boxes the empty strip each divider sits in and
+                the note is *extra lines that serve no apparent purpose.* They
+                had one — separating the entries — and the vertical rhythm
+                already does it, which is the identical decision this
+                stylesheet records for `.person-row`: *the rules are gone; the
+                vertical rhythm does the separating.* Same reader, same
+                objection, same answer. */}
+            <div>
               {group.meetings.map((meeting) => (
                 <MeetingEntry
                   key={meeting.id}

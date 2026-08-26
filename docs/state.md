@@ -4,9 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-24 — **Every finding was reasoned, so every fix was
-reproduced first.** The audit remediation; its record is the LAST section of this
-file. The previous entries follow the summary below.
+Last updated: 2026-08-25 — **Six classes closed, and the predicates that hid
+them.** Part 2 visual feedback; its record is the LAST section of this file.
+
+Previous: 2026-08-24 — **Every finding was reasoned, so every fix was
+reproduced first.** The audit remediation. The previous entries follow the
+summary below.
 
 Previous: 2026-08-24 — **The county filed 202 empty cells, and the filed
 email was a campaign site nobody had read.** The overnight depth hunt.
@@ -18721,3 +18724,50 @@ wall recorded as permanent; the hyperlocal press surface with terms read first;
 and a tier-above directory inversion for New Hampshire that returned **zero**,
 for a reason that is itself the finding — a directory publishes the people who
 HOLD offices, and this ballot is mostly the people running against them.
+
+
+---
+
+## 2026-08-25 — Part 2 visual feedback: six classes closed, and the predicates that hid them
+
+**Session `part2-0825`. Started from `706c934`, confirmed GREEN on the server before item one. 7 of 7 gates green at close. 2,348 tests, 0 failures — +49 guards over the 2,299 baseline.**
+
+Every id in Sean's 8/25 Part 2 walkthrough is an EXAMPLE and the defect is the CLASS (RULING 136). Four of the six items worked are RECURRENCES, so the reconciliation came before the fix in each case — a third pass at the same component with the same approach is how a fourth sighting is produced.
+
+### The captures were mapped wrong on 19 of 25 rows
+
+25 PNGs on disk against 25 table rows — the inventory was right. **Which issue each one depicts was wrong on nineteen of them**, and on two of the four the brief called specifications. The document says outright that its mapping was inferred from capture times; it is correct for the first seven rows and then slips by one and never recovers, because a walk photographs in the order it browses and dictates in the order it thinks.
+
+A **fifth** annotated specification nobody had named turned up at `17-53-26` — the Kearsarge small battlecard with a red box round its whole roster and an arrow pointing left. The feedback document says that image *appears not to have been captured*. It is the last capture in the walk. `docs/feedback/8.25/Part2/capture-map.md` carries the corrected mapping, read as images, 25 of 25.
+
+### The four reconciliations, each verdict (b) — the predicate did not cover the reported case
+
+**LBL-2, third pass — too narrow twice over.** The sweep read `tracking-\[0\.1[0-9]*em\]`, anchored on the digit 1, so `0.2em` — the most-used tracking in the product — was invisible: **41 inline runs, 20 seen, 21 not.** And it read only `.tsx`, while OFF-2's own note said the pin it missed lived in the stylesheet: **38 letter-spaced selectors there, 4 compensated, 14 at label size with none.** Neither earlier fix regressed; both are still asserted. 21 + 13 compensated, two exemptions named with their reasons. Rendered result on a local production build: **30 letter-spaced runs measured, 0 clipped.**
+
+**MTG-9, second pass.** The descent's first rung took a shared `bodyName` as proof the string names a body. Vail publishes `Governing Board Meeting` on all eleven sittings with the district sitting in `jurisdiction`. TUSD — the district MTG-6 was built and validated against — varies its `bodyName` per sitting, so that case never executed rung one at all. **The fix was measured on NOISY bad data and shipped wrong on CLEAN bad data**, which is RULING 114's shape: a constant wrong value reads as more authoritative than a varying one. 29 venue cards swept, **2 offenders, 0 false positives among the other 14** — and the second offender is a single-sitting venue inside Tucson Unified itself, unreachable by the first fix's own validation because one meeting always shares one `bodyName`.
+
+**OFF-7, second pass.** `DEPUTY` read `vice|deputy|acting|assistant|interim` and was used to REFUSE. **A deputy holds a different, junior office; an interim holds THIS one, right now.** Michael Bessette, Interim Superintendent of Schools, was refused, and the next executive pattern matched Lawrence LeBoeuf, Business Administrator — so a school district's card read *runs it day to day · Business Administrator* and its roster led with him. The data held Bessette in eleventh place the whole time; this was a selection bug and never a sourcing gap. A deputy, a vice chair and an *Acting Deputy Superintendent* are all still refused.
+
+**BAL-23 — WGH-5 holds.** The narrow-it flow does run through the shared component, so the routing was not the defect. The shared component had one `className` prop reaching both the collapsed chip and the open form, and the ballot passed `ballot-top-pill` — `display: inline-flex; align-items: center; min-height: 40px; border-radius: 999px`. Four consumers, one affected, and the hole was in the component rather than in the caller.
+
+### ALIGN-1 was one declaration
+
+`.person-row { justify-content: flex-end }`. It is the shared row on the who-governs card and on both blocks of every small battlecard — which is why the four surfaces Sean named are four renderings of one line of CSS. **21 person rows measured across three viewports on a local production build: 0 indented.** Swept for the class rather than assumed: a row that puts the NAME first and a label after it — `justify-between` on the ballot candidate card, the door overlay's seat list, the `.pk`/`.pv` fact table — already reads left to right and was left alone. Right-aligning a trailing LABEL is not indenting a NAME.
+
+### The instrument that reported green about nothing was mine
+
+The first run of `pnpm shoot:part2` printed `indented more than 2px: 0` having never opened the Who Governs Here panel — three guessed selectors, none of them hit, `querySelectorAll(".person-row")` empty, clean exit. **A zero-row extraction reported as a healthy result, in the instrument written to measure it.** It now asserts the panel open, carries a denominator floor, and throws rather than reporting a zero it did not earn.
+
+### Two findings about this repo rather than about the product
+
+**`app/globals.css` is 57% comment prose** — 116,399 of 205,461 bytes across 300 blocks, against 89,062 bytes of actual CSS — and it hit the Drive mirror's per-file cap for the **second** time, having stood at 99.4% of the ceiling before this session wrote a line. The cap was raised 120 KB → 200 KB on 2026-08-17 for exactly the same reason and is now 256 KB, with the measurement recorded on it. RULING 106 says a third raise is the wrong answer and by then the limit is the problem; the structural options — split the stylesheet, or mirror the tokens rather than the file — change what Sean reads and are his call (`NH180`).
+
+**Running `pnpm test` overwrites `docs/context.md` with fixture values** — `generatedAt: "test"`, session day 2026-08-23, and `_No git facts available this run._` where the branch, head SHA and gate results belong. RULING 108 correctly made the repo copy the primary output, written first and never guarded, which means the test's own `writeContext` call lands in the working tree. The committed copy is right this time only because handoff regenerates and commits it during `--ship` and the degradation happened afterwards, inside handoff's own gate run. That ordering is luck rather than design, and it was found only because handoff checks for a clean tree (`NH195`).
+
+### NS20/NS21 close on the server, and RULING 156 closes the hole under them
+
+Branch protection reads back from the API exactly as intended — PR required, three required contexts, branches up to date, force pushes and deletions off, and `enforce_admins: true`. The hole underneath is the NAME. GitHub matches a required context against a check-run name as a literal string, so renaming a job means the required check never arrives — and GitHub does not treat a missing required check as a failure, it simply has nothing to wait for. **Protection disarms itself with nothing anywhere going red, and the disarming edit looks like tidying.** `REQUIRED_CONTEXTS` is checked against the job names the workflow actually produces, matrix expanded, anchored on the workflow file rather than on itself (RULING 147), with three plants proving the guard catches a real rename and a fourth proving an unresolvable name throws rather than shrinking the set.
+
+### What was shed, and where it stopped
+
+The brief's shed-order clause says shed from the bottom. Items 9 through 14 were not reached, plus LAY-11 from item 8. Every one is rowed with its capture named: `NH183` LAY-11, `NH184` DARK-2/DARK-3, `NH185` the ballot battlecard family, `NH186` BAL-15, `NH187` BAL-24, `NH188` MAP-2/VOT-1, `NH189` BC-26/BC-27/BC-29, `NH190` BAL-11/BAL-12, `NH191` BC-28, `NH192` OFF-6, `NH193` ASK-12, `NH194` DARK-1.

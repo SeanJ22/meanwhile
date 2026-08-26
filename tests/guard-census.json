@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 235,
-    "named": 2288,
+    "files": 242,
+    "named": 2341,
     "dynamic": 6
   },
   "files": {
@@ -13,6 +13,18 @@
         "no unrecorded sentence-shaped render default exists",
         "the baseline only shrinks — a recorded entry that is gone must be removed",
         "the shape catches every instance the class was named from"
+      ],
+      "dynamic": 0
+    },
+    "tests/address-prompt-placement.test.ts": {
+      "names": [
+        "BAL-23: every consumer passes its class to the slot it belongs in",
+        "BAL-23: no OTHER wrapper takes the form's class either",
+        "BAL-23: no open-form wrapper takes the trigger's class",
+        "BAL-23: the ballot page passes its pill to the TRIGGER",
+        "BAL-23: the open form gets its own row inside the ballot's pill strip",
+        "BAL-23: the pill class is still a pill for the collapsed control",
+        "BAL-23: the trigger and the form take DIFFERENT class props"
       ],
       "dynamic": 0
     },
@@ -1437,6 +1449,15 @@
       ],
       "dynamic": 0
     },
+    "tests/gate-parity.test.ts": {
+      "names": [
+        "gate parity · every command CI runs as a gate is in the local gate set",
+        "gate parity · every gate names the CI job it stands in for",
+        "gate parity · lint is in the local gate set, by name",
+        "gate parity · the instrument actually reads the workflow"
+      ],
+      "dynamic": 0
+    },
     "tests/generated-artifacts.test.ts": {
       "names": [
         "RULING 102: every registered artifact records its generator's digest",
@@ -1639,6 +1660,22 @@
       ],
       "dynamic": 0
     },
+    "tests/interim-office-holder.test.ts": {
+      "names": [
+        "OFF-7: Vail — OFF-4's reference card — is unchanged",
+        "OFF-7: a SUBSTANTIVE holder still outranks a temporary one for the same office",
+        "OFF-7: a deputy, a vice chair and an assistant are STILL refused",
+        "OFF-7: a junior word still binds through a temporary qualifier",
+        "OFF-7: a superintendent outranks an administrator in the roster order",
+        "OFF-7: an ACTING mayor presides where there is no substantive one",
+        "OFF-7: an interim fills a slot the substantive holder has left empty",
+        "OFF-7: no shipped roster puts a non-superintendent above a superintendent",
+        "OFF-7: the interim superintendent leads the roster, ahead of the administrator",
+        "OFF-7: the interim superintendent — not the business administrator — runs it day to day",
+        "OFF-7: the shipped Kearsarge roster still holds the interim superintendent"
+      ],
+      "dynamic": 0
+    },
     "tests/iqm2-revize.test.ts": {
       "names": [
         "iqm2: normalize places every row, resolves both venues, keeps agenda links honest",
@@ -1737,7 +1774,11 @@
     },
     "tests/label-tracking.test.ts": {
       "names": [
+        "LBL-2: an exemption names a selector that actually exists and is spaced",
+        "LBL-2: every letter-spaced LABEL RUN in globals.css trims its trailing space",
         "LBL-2: the shared letter-spaced label classes trim their trailing space",
+        "LBL-2: the stylesheet sweep catches a real offender",
+        "LBL-2: the stylesheet sweep reaches the stylesheet",
         "LBL-2: the sweep reaches the tree it claims to",
         "OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinned ones",
         "OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed",
@@ -1902,6 +1943,18 @@
         "summaries describe, never advocate",
         "the analyses store is populated, with its counts stated and consistent",
         "the ballot surface labels the summary and renders the official text"
+      ],
+      "dynamic": 0
+    },
+    "tests/meeting-card-title.test.ts": {
+      "names": [
+        "MTG-9: TUSD's single-sitting audit-committee venue — the instance nobody reported",
+        "MTG-9: Vail — the reported instance — now names the district",
+        "MTG-9: a body-titled card still wins over its jurisdiction",
+        "MTG-9: no venue card in the shipped snapshot is titled with a sitting",
+        "MTG-9: the building is still the last rung, and still says so",
+        "MTG-9: the shape does not fire on a real body name",
+        "MTG-9: the sweep reaches the corpus it claims to"
       ],
       "dynamic": 0
     },
@@ -2170,6 +2223,20 @@
       ],
       "dynamic": 0
     },
+    "tests/one-at-a-time.test.ts": {
+      "names": [
+        "BC-16: closing one card does not silently close the other",
+        "BC-16: opening a district card still closes an open venue card",
+        "BC-16: opening a venue card still closes an open district card",
+        "MAP-3: an area click still leaves Who Governs Here open",
+        "MAP-3: takeForeground does not run on an area click",
+        "MTG-11: Ask dismisses the small card, and only when OPENING",
+        "MTG-11: all three foreground controls call it",
+        "MTG-11: dismissal is ONE function, not three copies",
+        "MTG-11: the voting control dismisses BEFORE it opens"
+      ],
+      "dynamic": 0
+    },
     "tests/org-characterization.test.ts": {
       "names": [
         "every curated bio names its source class",
@@ -2249,6 +2316,17 @@
         "no person this product holds carries a name that cannot stand as one",
         "the display helper renders the named gap, never the fragment",
         "the top-office slots render through the gap-aware helper"
+      ],
+      "dynamic": 0
+    },
+    "tests/person-row-alignment.test.ts": {
+      "names": [
+        "ALIGN-1: both consumers of the shared row still use it",
+        "ALIGN-1: no OTHER rule right-justifies a person row",
+        "ALIGN-1: the row is still a wrapping baseline row (NH-1 is not undone)",
+        "ALIGN-1: the shared person row flows from the left",
+        "WGH-11: the could-govern mark is inside the name's own flex item",
+        "WGH-11: the mark keeps the styling that only works once it is inline"
       ],
       "dynamic": 0
     },
@@ -2659,6 +2737,16 @@
         "touching the district-type group turns the overlay on — except clear"
       ],
       "dynamic": 2
+    },
+    "tests/required-checks.test.ts": {
+      "names": [
+        "a renamed gates job is caught",
+        "a renamed matrix leg is caught",
+        "an unresolvable job name is refused rather than dropped",
+        "every required context is a check the workflow actually produces",
+        "the workflow produces no check outside the required set"
+      ],
+      "dynamic": 0
     },
     "tests/reset-registry.test.ts": {
       "names": [

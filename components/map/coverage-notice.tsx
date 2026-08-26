@@ -619,36 +619,61 @@ function CoverageBody({
                 Still the division label and never an invented name: Body.name
                 is null on derived rows, and the text is Census's.
               */}
-              {onOpenBody ? (
-                <button
-                  type="button"
-                  onClick={() => onOpenBody(body)}
-                  title={`More about ${body.name ?? body.divisionLabel}`}
-                  className="cursor-pointer text-left text-[0.8125rem] leading-snug text-paper hover:text-link hover:underline"
-                >
-                  {body.name ?? body.divisionLabel}
-                </button>
-              ) : (
-                <span className="text-[0.8125rem] leading-snug">
-                  {body.name ?? body.divisionLabel}
-                </span>
-              )}
               {/*
-                RULING 71 (NJ Hunt 3, 2026-08-22). This card's heading is "Who
-                governs here", and at a zip that crosses a municipal line it had
-                no way to say that two of eight bodies govern everyone and six
-                govern some readers and not others. The pill says which.
+                **WGH-11 (2026-08-25) — THE MARK SITS AGAINST THE WORD IT
+                ANNOTATES, so it is inside the NAME's flex item.**
 
-                Only bodies whose territory covers PART of the zip carry it, and
-                only when the reader TYPED a zip — a panned viewport names no
-                place, so `couldGovern` is absent and nothing renders.
+                It used to be the row's own second child. The row is
+                `justify-between` with three children, so the asterisk was
+                distributed into the dead space between the body name and the
+                right-aligned type label — the author's `17-30-58` shows the
+                marks on `Rockaway township`, `Denville township` and
+                `Rockaway` floating a third of the way across the panel, nowhere
+                near the words they belong to.
 
-                It is an INVITATION, not a disclosure of our incompleteness: we
-                hold Rockaway Borough's government and Rockaway Township's, both
-                in full, and what is unsettled is which is the reader's. RULING
-                44 is not weakened; see components/ballot/jurisdiction-note.tsx.
+                **He is fine with the asterisk existing** — his objection is the
+                placement, not the mark, which is why this moves it rather than
+                taking the RULING 138 route and removing it. `.could-govern-mark`
+                already carried `display: inline; margin-left: 3px`, which was
+                doing exactly nothing while the element was a flex ITEM: flex
+                blows away `display: inline` on its children, and a 3px margin
+                is invisible against a `justify-between` gap. Wrapping is the
+                whole fix; the mark's own CSS was right all along.
               */}
-              {body.couldGovern && <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />}
+              <span className="inline-flex items-baseline">
+                {onOpenBody ? (
+                  <button
+                    type="button"
+                    onClick={() => onOpenBody(body)}
+                    title={`More about ${body.name ?? body.divisionLabel}`}
+                    className="cursor-pointer text-left text-[0.8125rem] leading-snug text-paper hover:text-link hover:underline"
+                  >
+                    {body.name ?? body.divisionLabel}
+                  </button>
+                ) : (
+                  <span className="text-[0.8125rem] leading-snug">
+                    {body.name ?? body.divisionLabel}
+                  </span>
+                )}
+                {/*
+                  RULING 71 (NJ Hunt 3, 2026-08-22). This card's heading is "Who
+                  governs here", and at a zip that crosses a municipal line it had
+                  no way to say that two of eight bodies govern everyone and six
+                  govern some readers and not others. The pill says which.
+
+                  Only bodies whose territory covers PART of the zip carry it, and
+                  only when the reader TYPED a zip — a panned viewport names no
+                  place, so `couldGovern` is absent and nothing renders.
+
+                  It is an INVITATION, not a disclosure of our incompleteness: we
+                  hold Rockaway Borough's government and Rockaway Township's, both
+                  in full, and what is unsettled is which is the reader's. RULING
+                  44 is not weakened; see components/ballot/jurisdiction-note.tsx.
+                */}
+                {body.couldGovern && (
+                  <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />
+                )}
+              </span>
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
@@ -1209,7 +1234,7 @@ export function CoverageNotice({
           below it cannot be scrolled away. */}
       <div className="coverage-notice-head">
         <p
-          className={`font-mono text-[0.625rem] uppercase tracking-[0.2em] ${accent}`}
+          className={`font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
         >
           {label}
         </p>

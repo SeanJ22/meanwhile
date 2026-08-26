@@ -3743,3 +3743,63 @@ arriving through an imported side effect.
 lint entry from the gate list fails two of its four assertions by name. A sweep
 that cannot find the defect it was written for is a sweep reporting green about
 nothing.
+
+### RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence
+
+(Adopted 2026-08-25, closing `NS20` and `NS21`. It is RULING 155's shape one
+floor up: that ruling closed a gate set with a hole in it, and this closes the
+hole that would put a hole back in it without anyone editing a gate.)
+
+**Sean hardened `main` himself on 2026-08-25, and it reads back from the GitHub
+API exactly as intended.** `repos/SeanJ22/We-The-People/branches/main/protection`
+returns, on that date:
+
+| What the row asked for | What the API returns |
+| --- | --- |
+| PR required, approvals off | `required_pull_request_reviews` present, `required_approving_review_count: 0` |
+| Three required contexts | `build (default)`, `build (standalone)`, **`gates (test · lint · tsc)`** |
+| Branches up to date | `required_status_checks.strict: true` |
+| **Do not allow bypassing** | **`enforce_admins.enabled: true`** |
+| No force pushes, no deletions | `allow_force_pushes: false`, `allow_deletions: false` |
+
+`NS20` asked for the gates job to become a required check and `NS21` asked for
+bypassing to be turned back off. Both hold. **Both close on the API response**,
+which is a server fact rather than a claim about the working tree (RULING 75's
+third part, and RULING 125's reason for asking Netlify rather than the site).
+
+**The hole underneath them is the NAME.** GitHub matches a required context
+against the check-run name a workflow reports, as a literal string. Two of the
+three are matrix legs — `build (${{ matrix.mode }})` — and the third carries a
+middot-separated display name that a tidying edit would change without a second
+thought. **Rename the job and the required context never arrives, and GitHub
+does not treat that as a failure: there is nothing to wait for, so the merge
+button turns green.** Protection disarms itself with nothing anywhere going red.
+
+That is the same failure mode as the gate set RULING 155 was adopted over — a
+check reporting nothing because it is not running, rather than a check that
+fails — and it is worse here, because the disarming edit looks like tidying.
+
+- **The anchor is the WORKFLOW FILE** (RULING 147). `REQUIRED_CONTEXTS` in
+  `lib/ops/required-checks.ts` is a transcription of what the branch says;
+  `contextsProducedByWorkflow` parses `.github/workflows/build-check.yml` and
+  expands its matrix to derive what the workflow actually reports. Re-deriving
+  one from the other would prove the file equals itself and would agree with a
+  rename on every run, forever.
+- **It fails in BOTH directions.** A required context the workflow no longer
+  produces is protection disarmed; a check the workflow produces that the branch
+  does not require is a gate nobody has to pass.
+- **A rename is not forbidden — a SILENT rename is.** It has to move the
+  workflow and the constant in one diff and then be re-registered on the branch.
+  That is the mechanism `tests/guard-census.json` already uses to let a guard
+  leave: leaving is allowed, leaving unnoticed is not.
+- **A name this reader cannot resolve is REFUSED, never dropped.** A parser that
+  quietly skipped an unexpandable job would under-report the produced set, and
+  an under-reported set reads as agreement — RULING 100's partial, wearing a
+  test's clothes.
+
+*And the instrument is shown catching the real thing* (RULING 110). Three plants
+run against the shipped workflow text: the gates job renamed to
+`gates (test, lint, tsc)`, the `default` matrix leg renamed to `plain`, and a
+job name carrying an expression the reader does not know. The first two drop a
+required context; the third throws. `tests/required-checks.test.ts`, five
+assertions.

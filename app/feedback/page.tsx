@@ -30,7 +30,7 @@ export default function FeedbackPage() {
   return (
     <main className="min-h-dvh overflow-y-auto bg-[var(--bg,#101014)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+        <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
           {PRODUCT_NAME}
         </p>
         {/* Interaction surface, so the ask may be warm. */}
@@ -48,7 +48,7 @@ export default function FeedbackPage() {
 
         {/* Every word below is a claim, so every word below is level. */}
         <section className="mt-10 border-t border-[var(--panel-border)] pt-6">
-          <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-signal">
+          <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             What happens to this
           </h2>
           <div className="mt-2.5 space-y-3 text-[0.875rem] leading-relaxed text-paper-dim">

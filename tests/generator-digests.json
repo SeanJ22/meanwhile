@@ -72,7 +72,7 @@
     "regeneratedOn": "2026-08-25"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "59eecd4db3814c0a1dd0ba96c6fbb7833e9ccab070aa63482ebe0fa50ad52ab2",
+    "digest": "5b5907c9cefc2a918d80abf72ee611dc7661bec1d4feffcb64ea538b00de55c4",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-25"
@@ -84,7 +84,7 @@
     "regeneratedOn": "2026-08-25"
   },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "59eecd4db3814c0a1dd0ba96c6fbb7833e9ccab070aa63482ebe0fa50ad52ab2",
+    "digest": "5b5907c9cefc2a918d80abf72ee611dc7661bec1d4feffcb64ea538b00de55c4",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-25"

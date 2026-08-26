@@ -95,14 +95,37 @@ export const MANIFEST_PATH = "docs/code-manifest.md";
 export const ID_MAP_PATH = "docs/mirror-code-ids.json";
 
 /**
- * 200 KB per file, 1.5 MB total. Binary KB, stated so the number is checkable.
+ * 256 KB per file, 1.5 MB total. Binary KB, stated so the number is checkable.
  *
  * The per-file cap was 120 KB for one day. `app/globals.css` shipped at 120,124
  * bytes against a 122,880-byte ceiling — 2,756 bytes of headroom, so the design
  * tokens would have fallen out of the reviewer's reach on their next edit. The
  * author raised it to 200 KB on 2026-08-17 rather than watch that happen.
+ *
+ * **RAISED TO 256 KB ON 2026-08-25, AND THIS IS THE SECOND TIME FOR THE SAME
+ * FILE FOR THE SAME REASON. That is the finding, not the number** (`RO06`).
+ *
+ * The measurement, because a ceiling moves only on proof. `app/globals.css`
+ * stood at **203,556 bytes at the start of the part2-0825 session — 1,244
+ * bytes of headroom**, having spent 99.4% of the ceiling before that session
+ * wrote a line. Four fixes with their rationale attached took it past.
+ *
+ * And the measurement that says the cap has stopped measuring what it was for:
+ * **116,399 of its 205,461 bytes are COMMENT PROSE — 57%, across 300 blocks,
+ * against 89,062 bytes of actual CSS.** This cap exists so the design tokens
+ * stay reachable in the author's mirror; the tokens are in the 89 KB and the
+ * ceiling is being spent by session rationale that CLAUDE.md requires to stay
+ * attached. Raising the number keeps the file reachable, which is the cap's
+ * purpose, and does not touch the growth.
+ *
+ * **A third raise is the wrong answer and RULING 106 says so in as many words:
+ * raising a limit treats a symptom, and by the third time the limit is the
+ * problem.** The structural options — splitting the stylesheet so the tokens
+ * mirror on their own, or mirroring tokens rather than the whole file — are
+ * the author's call and are `RO06`. Nothing here trims a rationale to fit,
+ * because a stripped rule reads as guidance.
  */
-export const MAX_FILE_BYTES = 200 * 1024;
+export const MAX_FILE_BYTES = 256 * 1024;
 export const MAX_TOTAL_BYTES = 1.5 * 1024 * 1024;
 
 /* ------------------------------------------------------- hard exclusions --- */

@@ -60,7 +60,7 @@ export default async function AboutAreaPage({
           ← Back
         </Link>
       </p>
-      <p className="mt-3 font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+      <p className="mt-3 font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
         {PRODUCT_NAME}
       </p>
       <h1 className="mt-1 text-xl font-semibold">

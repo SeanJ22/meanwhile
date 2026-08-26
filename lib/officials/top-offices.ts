@@ -70,8 +70,47 @@ interface OfficePattern {
   test: RegExp;
 }
 
-/** Never the deputy. A vice chair is not who presides. */
-const DEPUTY = /\b(vice|deputy|acting|assistant|interim)\b/i;
+/**
+ * Never the deputy. A vice chair is not who presides.
+ *
+ * **OFF-7 (2026-08-25) — `acting` and `interim` came OUT of this list, and the
+ * reconciliation is why.**
+ *
+ * OFF-4 shipped this precedence on 2026-08-24 and it did not regress: Vail
+ * Unified still resolves John Carruth, *Superintendent*, into the day-to-day
+ * slot, which is the card the author names as the reference. **The predicate is
+ * what was wrong, and it was wrong by conflating two different words.**
+ *
+ * At Kearsarge the roster holds **Michael Bessette, Interim Superintendent of
+ * Schools**. `interim` was in this pattern, so he was refused; the next
+ * `EXECUTIVE` pattern is `administrator`, which matched **Lawrence LeBoeuf,
+ * Business Administrator** — and the card put the business administrator at the
+ * top of a school district and under the words *runs it day to day*. The
+ * author's `17-53-26` shows the data holding Bessette in eleventh place while
+ * LeBoeuf leads. **The data was there the whole time. This is a selection bug,
+ * not a sourcing gap**, exactly as the feedback says.
+ *
+ * **A DEPUTY holds a DIFFERENT, JUNIOR office. An INTERIM holds THIS office,
+ * temporarily.** A vice chair is not the chair; an interim superintendent is
+ * the superintendent right now, and is who a reader needs. The feedback
+ * document says so outright: *the superintendent OR INTERIM SUPERINTENDENT is
+ * always at the top.*
+ *
+ * `acting` goes with it for the same reason — an acting mayor is the mayor
+ * today. And the junior words still bind through a qualifier: *Acting Deputy
+ * Superintendent* is still refused, because `deputy` is still here.
+ */
+const SUBORDINATE = /\b(vice|deputy|assistant)\b/i;
+
+/**
+ * Holding this office temporarily. Not a lesser office — the same one.
+ *
+ * Used to RANK rather than to refuse: where a body publishes both a
+ * substantive holder and an interim one, the substantive holder wins; where it
+ * publishes only the interim, the interim fills the slot rather than handing it
+ * to whoever matched the next pattern down.
+ */
+const TEMPORARY = /\b(acting|interim)\b/i;
 
 /**
  * The ELECTED head — whoever the body's own published title says leads it.
@@ -127,15 +166,24 @@ export function topOfficesFor(holders: readonly SeatHolder[]): TopOffice[] {
 
   const pick = (patterns: OfficePattern[]): TopOffice | null => {
     for (const pattern of patterns) {
-      const hit = holders.find((h) => {
+      const eligible = holders.filter((h) => {
         const title = h.officeTitle ?? "";
         if (!pattern.test.test(title)) return false;
         // A vice chair is not who presides, and a deputy administrator is not
         // who runs it. Pima publishes the vice chair ABOVE the chair.
-        if (DEPUTY.test(title)) return false;
+        if (SUBORDINATE.test(title)) return false;
         return !found.some((f) => f.holder.id === h.id);
       });
-      if (hit) return { holder: hit, role: pattern.role };
+      if (eligible.length === 0) continue;
+      /*
+       * OFF-7: a substantive holder outranks a temporary one for the SAME
+       * office, and a temporary holder still outranks the next pattern down.
+       * Kearsarge publishes only an Interim Superintendent, so the second
+       * clause is what stops the Business Administrator taking the slot.
+       */
+      const hit =
+        eligible.find((h) => !TEMPORARY.test(h.officeTitle ?? "")) ?? eligible[0]!;
+      return { holder: hit, role: pattern.role };
     }
     return null;
   };
@@ -249,16 +297,51 @@ export function runsSomething(divisionType: string | null | undefined): boolean 
  * into two groups, never a sort — CLAUDE.md's never-rank rule is about ordering
  * people by fit or merit, and "the appointed executive first" is a neutral
  * structural criterion of the kind that rule explicitly permits.
+ *
+ * ## OFF-7 (2026-08-25) — this had the SAME two defects as `topOfficesFor`
+ *
+ * It shares the predicate, so it shared the bug: `interim` was refused, and at
+ * Kearsarge the executive group therefore held **Lawrence LeBoeuf, Business
+ * Administrator** and not **Michael Bessette, Interim Superintendent of
+ * Schools**. The author's `17-53-26` is that list — LeBoeuf first, Bessette
+ * eleventh, behind nine board members.
+ *
+ * And the partition was FLAT. Every `EXECUTIVE` match landed in one group in
+ * published order, so even once Bessette was eligible the administrator would
+ * still have led him, because the roster publishes LeBoeuf first. The group is
+ * now ordered by WHICH executive pattern matched — the table above is already
+ * written in order of seniority, `superintendent` before
+ * `administrator|manager` — with a substantive holder ahead of a temporary one
+ * inside the same pattern.
+ *
+ * That is still a neutral structural criterion and still not a ranking of
+ * people: it orders OFFICES, by the same table the card's who-runs-it slot
+ * already uses, so the two cannot disagree about who leads a body.
  */
 export function rosterInReadingOrder<T extends { officeTitle: string | null }>(
   holders: readonly T[],
 ): T[] {
-  const isExecutive = (holder: T) => {
+  /** Which EXECUTIVE pattern this title matches, or -1. Lower is more senior. */
+  const executiveRank = (holder: T): number => {
     const title = holder.officeTitle ?? "";
-    if (DEPUTY.test(title)) return false;
-    return EXECUTIVE.some((pattern) => pattern.test.test(title));
+    if (SUBORDINATE.test(title)) return -1;
+    return EXECUTIVE.findIndex((pattern) => pattern.test.test(title));
   };
-  const executives = holders.filter(isExecutive);
-  const rest = holders.filter((holder) => !isExecutive(holder));
+
+  const executives = holders
+    .map((holder, index) => ({ holder, index, rank: executiveRank(holder) }))
+    .filter((entry) => entry.rank >= 0)
+    .sort(
+      (a, b) =>
+        a.rank - b.rank ||
+        /* A substantive holder ahead of an acting or interim one. */
+        Number(TEMPORARY.test(a.holder.officeTitle ?? "")) -
+          Number(TEMPORARY.test(b.holder.officeTitle ?? "")) ||
+        /* Otherwise the body's own published order, untouched. */
+        a.index - b.index,
+    )
+    .map((entry) => entry.holder);
+
+  const rest = holders.filter((holder) => executiveRank(holder) < 0);
   return [...executives, ...rest];
 }

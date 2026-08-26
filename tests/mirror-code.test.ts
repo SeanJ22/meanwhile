@@ -305,7 +305,18 @@ test("the size caps are the stated ones and today's allowlist fits", () => {
   // session wrote a line. The measurement that matters is in the script: 57%
   // of that file is comment prose. A THIRD raise is the wrong answer
   // (RULING 106); the structural fix is RO06 and it is the author's call.
-  assert.equal(MAX_FILE_BYTES, 256 * 1024);
+  //
+  // **AND IT CAME BACK DOWN, the same day** (`NH180`, Sean's ruling). He took
+  // the structural option: the prose was stripped into
+  // `docs/globals-css-notes.md` — 125 comment blocks moved VERBATIM, each
+  // leaving a one-line pointer at its rule — and `app/globals.css` went from
+  // 206,120 bytes to 134,880 with the CSS itself byte-identical (82,089 bytes
+  // of code before and after, comments stripped from both sides).
+  //
+  // So 200 KB is the value again, with roughly 65 KB of headroom under it
+  // rather than 1,244 bytes. **The assertion is what makes the reversal real**:
+  // without it a later session raises the number back and nothing objects.
+  assert.equal(MAX_FILE_BYTES, 200 * 1024);
   assert.equal(MAX_TOTAL_BYTES, 1.5 * 1024 * 1024);
 
   let total = 0;

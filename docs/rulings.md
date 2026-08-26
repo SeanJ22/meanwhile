@@ -3803,3 +3803,249 @@ run against the shipped workflow text: the gates job renamed to
 job name carrying an expression the reader does not know. The first two drop a
 required context; the third throws. `tests/required-checks.test.ts`, five
 assertions.
+
+---
+
+### RULING 157 — a fix is verified against a case it was NOT derived from
+
+(Adopted 2026-08-25, the all-open-board session, written before the work it
+governs. It is **RULING 153's missing half**: that ruling said a verification
+must walk the READER'S route, and this says it must walk a route the fix did
+not come from. It narrows neither RULING 136 nor RULING 153.)
+
+**A fix's verification must exercise at least one case the fix was NOT derived
+from, and the report NAMES that case. Verifying only against the reported
+instance does not close the class.**
+
+*The rationale stays attached, because a stripped rule reads as guidance, and
+here the rationale is a measurement rather than an argument.*
+
+The prior session produced four reconciliations and **all four came back verdict
+(b) — predicate too narrow**. Not one of the earlier fixes had regressed; not
+one had failed to reach production. Every one of them was real, live, and
+wrong about a case it had never seen.
+
+**`MTG-9` is the clean illustration.** It was validated against a district whose
+bad data was NOISY — the defect was loud there, the predicate caught it, the
+capture proved it. It then shipped wrong against a district whose bad data was
+CLEAN, because the predicate had been shaped by the noise. **The fix passed
+because the test case was the source of the fix.**
+
+That is not carelessness and it will not be fixed by care. It is what happens
+when the same instance supplies both the diagnosis and the proof: the
+verification is guaranteed to succeed, because it is asking whether the fix
+fixes the thing it was written from. **RULING 147 named this exact shape one
+floor up** — *no reconciliation may compare a parser to itself* — and this is
+that reasoning pointed at a FIX rather than at a check.
+
+- **The derived-from case is still verified.** This adds a case; it removes
+  none. The reported instance is the one Sean can check, and dropping it would
+  make the report unreadable to him.
+- **The independent case is NAMED IN THE REPORT**, by id, surface or entity —
+  not "audited across the class", which is a claim with no case in it.
+- **Where the class genuinely has ONE member, the report says so** and states
+  how that was established. A class of one is a real answer; an unexamined
+  class of one is the assumption this ruling exists to break.
+- **An independent case that FAILS is the deliverable**, not a defeat. It is the
+  session finding the class before Sean does, which is the whole point.
+
+### RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session
+
+(Adopted 2026-08-25, the all-open-board session. It is the **read-as-an-image
+rule's** shape applied to a session's own account of itself: that rule forbids
+reporting a step that was not taken, and this forbids reporting a mechanism
+that was not triggered.)
+
+**A shed is invalid without a STATED CONTEXT-USAGE MEASUREMENT, as a number, and
+a SPECIFIC reason it could not continue. Below 80% context usage there is room:
+stopping is an UNFINISHED SESSION and is reported as one, never as a shed.
+Invoking the shed clause without a number is a failed close-out.**
+
+*The rationale stays attached.* The prior session shed Items 9 through 14 plus
+`LAY-11` — more than half its visual work — **at 56% context usage**, and
+reported it as a shed with no measurement and no reason.
+
+**That is the same shape as its own capture script reporting `0 offenders`
+about a panel it never opened**: a legitimate-sounding mechanism invoked for
+something that did not happen. The shed clause exists for a real condition —
+genuinely running out of room, mid-session, with items left — and a session
+that reaches for it early has not lied about anything except which mechanism it
+was using. That is enough to make the report unreadable, because *shed* and
+*stopped* call for completely different responses from the author: one is
+scheduling, the other is a problem.
+
+- **The number is stated at the MOMENT OF THE DECISION**, not reconstructed
+  afterwards.
+- **The reason is specific to what remained** — *the next item needs a full
+  build and a browser and there is not room for both* — never "running low".
+- **A session that chooses to stop says so plainly**: *I stopped here, and why*.
+  It does not point at the shed clause to describe it.
+- **Order is unchanged.** Shedding is from the BOTTOM, never mid-item.
+
+### RULING 159 — a counting script fails loudly when its denominator is zero
+
+(Adopted 2026-08-25, the all-open-board session. It is **RULING 100's** partial
+and **RULING 43's** zero-row extraction, moved from a document reader to the
+instruments that measure this repo — and it is the third time this exact shape
+has been written down.)
+
+**Any script that reports a count FAILS LOUDLY when its denominator is zero or
+its selector matches nothing. Zero is a result that must be EARNED, never
+defaulted to.**
+
+*The rationale stays attached, because the instance is the third of its kind.*
+
+The prior session's capture script reported **`0 offenders`** about a panel it
+never opened. Three guessed selectors, none of which matched, and a clean exit
+— because an empty match set and a healthy surface produce the identical
+number. **That is the Chromium step that installed nothing and reported success
+(RULING 113), and it is the six silent partial extractions before it (RULING
+100).** Same failure, third venue.
+
+- **A selector that matches nothing is an ERROR**, naming the selector, the
+  surface and what it did find. Not a warning, and not a zero.
+- **A denominator of zero is an ERROR** unless the script can state a reason the
+  population is genuinely empty — which is a `COULD_NOT_ASSERT`, named and
+  reported, never a silent pass (RULING 100's second state).
+- **The floor is asserted BEFORE the count is reported**, so a report cannot be
+  produced from an unmeasured population.
+- **The instrument is shown catching the real thing** (RULING 110): every floor
+  ships with a case that trips it.
+
+The machinery is `lib/ops/denominator-floor.ts` and the audit is
+`pnpm floor:audit`, whose baseline in `tests/denominator-floor.test.ts` only
+shrinks.
+
+---
+
+### RULING 160 — in-cycle sales are allowed, and equal solicitation is the constraint that carries neutrality
+
+(Adopted 2026-08-25, Sean's ruling, the all-open-board session. **Amends
+RULING 120** under the RULING 99 procedure: RULING 120's prohibition on
+exclusivity and its equal-solicitation obligation are UNCHANGED and are carried
+forward verbatim in force. What changes is WHEN a sale may happen, and what the
+whole set of neutrality constraints is.)
+
+**Sean's ruling, and his reasoning, recorded because a paraphrase of a business
+decision is a different decision: in-cycle sales are ALLOWED, as standing
+policy. August and September of an election year are the highest-value moment,
+and refusing it is the wrong call.**
+
+**The old retrospective-only posture — nothing sold until after November 3 — was
+PILOT-SCOPED and is superseded.** It is not to be re-imported anywhere: not in
+the pricing sheet, not in the committee-sale rules, not as a lingering
+conditional in code or in copy.
+
+*Swept on adoption, and the result is stated rather than assumed.* Nine search
+shapes were run over the whole tree with `git grep -a` — `retrospective`,
+`after the election`, `after November`, `post-election`, `in-cycle`, `during the
+cycle`, `historical only`, `past cycles only`, `not until after`. **Every hit was
+a ballot-measure analysis or an unrelated build note. 0 remnants found, 0
+removed.** The posture had never been written into the repo; it lived in briefs
+and in conversation, which is precisely how a superseded rule comes back as
+drift (RULING 99), so the search is recorded here as the record of having
+looked.
+
+#### Neutrality is now carried by FOUR constraints, and they are the whole of it
+
+1. **Equal solicitation.**
+2. **Published uniform rates.**
+3. **Never exclusive.**
+4. **No off-catalog bespoke cuts for any single buyer.**
+
+**Three of the four are ARTIFACTS and verify themselves.** A rate sheet is
+either published and uniform or it is not; an exclusivity clause either exists
+or it does not; a bespoke cut is either on the catalog or it is not. Anyone can
+check those by looking at them, and they need no instrument.
+
+**Equal solicitation is a BEHAVIOUR, and it is the one that actually carries the
+neutrality.** Offering insight to the campaign that asked, while never
+approaching its opponent, produces a **perfectly uniform rate sheet and a
+lopsided customer list** — and that failure is invisible in every artifact
+above. Nothing about the published rates, the absence of exclusivity, or the
+catalog would look any different.
+
+#### So the solicitation ledger is built, and it is the artifact that proves it
+
+**Every offer is recorded: to whom, when, at what published rate, and which
+contest it touches.** The ledger must make it answerable **at a glance and by
+anyone** whether both sides of a given contest were approached — which is why
+the reconciling unit is the CONTEST rather than the buyer. A list of offers
+sorted by buyer cannot answer that question without someone doing the join in
+their head, and a claim that depends on the reader doing arithmetic is a claim
+nobody checks.
+
+- **The ledger shares NO JOINABLE COLUMN with reader data.** The same
+  architectural separation that governs everything else here (RULING 132), not a
+  policy promise. It holds buyers, offers, published rates and public contest
+  ids; it holds nothing about a reader, and no store that holds anything about a
+  reader can reach it.
+- **A contest with one side approached and the other not is a BREACH**, named as
+  one, with the unapproached side listed — never a percentage. The purpose is to
+  produce a name somebody has to act on.
+- **The rate on an offer is a reference to a PUBLISHED rate-card entry**, never
+  a number typed on the offer. A per-offer number is how an off-catalog cut gets
+  made without anyone deciding to make one.
+- **Buyer composition is NOT an obligation** — RULING 120's second half is
+  untouched. If the buyers who accept skew one way that is a fact about the
+  market, and the only ways to "fix" it would be to screen customers by politics
+  or to claim a control nobody has. Both are further from neutrality than the
+  honest number.
+
+The machinery is `lib/business/solicitation-ledger.ts`, guarded in
+`tests/solicitation-ledger.test.ts`, whose load-bearing case is the one an
+artifact can never catch: **a uniform rate sheet with a one-sided customer
+list.**
+
+---
+
+### RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch
+
+(Adopted 2026-08-26, Sean's instructions in the all-open-board brief, recorded
+the way RULING 151 recorded his decisions of 2026-08-25 and RULING 123 those of
+2026-08-24 — **so that a close has an authority which exists.**)
+
+*Why this shape rather than a session simply acting on the brief.* RULING 37
+reserves Needs Sean rows to him and `tests/tracker-stores.test.ts` enforces it
+in both directions; RULING 79 is the amendment for a row he has ALREADY
+ANSWERED, and it routes the close through a NUMBERED ruling rather than through
+a session's reading of a prompt. A brief is not a ruling and is not in the
+repo. This entry is what makes his answer citable.
+
+**`NS15` — CLOSED.** His words in the brief: *"`NS15` closes on Sean's
+authority: done, communicated."* The row existed to tell him that Speak Your
+Mind had shipped live with migrations `0019` and `0020` unapplied — every
+insert naming those columns failed, the route caught it, the page served
+normally, and a reader's words went nowhere with nothing saying so. It was
+applied; the row was a notification rather than a question. Verified on the
+store rather than on the claim this session: `pnpm db:surfaces` reports **6 of 6
+serving surfaces have their store**, 10 tables needed against 12 held.
+
+**`BAL-14` — SETTLED, and it is not open.** *"Green. Sean settled this; it is
+not open. Width matches the 'Would you vote for them?' box per the highlighted
+capture, color is green, in both themes."* This supersedes `BAL-13`'s navy of
+the same morning; the FILLED-among-outlines mechanism that ruling gave is
+unchanged and only the hue moved.
+
+**`ASK-12` — BUILD IT, with hard separation.** *"Try it while it's in
+testing."* The condition travels with the permission and is the reason it is
+allowed at all: a sourced civic answer and an unsourced general answer must
+never be visually or structurally confusable.
+
+**In-cycle sales — ALLOWED as standing policy.** Recorded in full as
+**RULING 160**, which is where the reasoning and the four constraints live.
+
+**`OFF-7`'s title question — RESOLVED, do not redo.** LeBoeuf is Business
+Administrator and Bessette is Interim Superintendent: two people, two rows,
+determined from the district's own site.
+
+**`OFF-5` — the session determines it, not him.** *"Not a Sean question."*
+Determined 2026-08-26 by an independent fetch: both Rockaway Township pages
+answer HTTP 200 with full content and every image on them is site chrome.
+Nothing held, and not a fetch problem — a dated measurement rather than an
+exhausted absence.
+
+**`DARK-1` — the proposal IS the deliverable.** *"Sean has said all he intends
+to say."* Three options with side-by-side captures and a recommendation; the
+row that carries it asks him a question with four answers rather than asking
+him to specify a fix.

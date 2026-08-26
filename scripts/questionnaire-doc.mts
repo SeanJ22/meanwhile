@@ -187,6 +187,26 @@ function main(): void {
   console.log(`  document             WRITTEN (${wanted.length} bytes)`);
 }
 
-if (process.argv[1] && import.meta.url.endsWith(process.argv[1].split("/").pop() ?? "")) {
+/*
+ * **THE MAIN-MODULE GUARD, AND IT NEVER FIRED ON WINDOWS.** (Found 2026-08-25.)
+ *
+ * It was `import.meta.url.endsWith(process.argv[1].split("/").pop())`. On
+ * Windows `process.argv[1]` is `C:\Users\...\scripts\questionnaire-doc.mts` —
+ * BACKSLASHES — so splitting on `/` returns the whole path as its only
+ * segment, `.pop()` hands back that whole path, and a `file:///C:/...` URL
+ * never ends with it. **So `main()` did not run, the command printed nothing,
+ * and it exited 0.** `pnpm questionnaire:doc --write` reported success and
+ * regenerated nothing; the staleness was caught only because a test compares
+ * the document to the instrument.
+ *
+ * That is the empty-success shape RULING 159 was adopted over, in a generator
+ * rather than in a sweep — and it is worse here, because RULING 102 makes
+ * regenerating an artifact the completion condition for fixing its generator.
+ *
+ * `import.meta.filename` is the platform-native path Node resolves, and
+ * comparing it to `process.argv[1]` is the same comparison with no string
+ * surgery in the middle. Every other script in this repo uses that form.
+ */
+if (import.meta.filename === process.argv[1]) {
   main();
 }

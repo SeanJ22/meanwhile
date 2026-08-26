@@ -239,7 +239,14 @@
     "photos:verify": "tsx scripts/verify-staged-portraits.mts",
     "matrix": "tsx scripts/coverage-matrix.mts",
     "flake:sweep": "tsx scripts/flake-sweep.mts",
-    "shoot:part2": "tsx scripts/shoot-part2-0825.mts"
+    "shoot:part2": "tsx scripts/shoot-part2-0825.mts",
+    "source:headroom": "tsx scripts/source-headroom.mts",
+    "floor:audit": "tsx scripts/floor-audit.mts",
+    "office:audit": "tsx scripts/top-office-audit.mts",
+    "pills": "tsx scripts/pill-census.mts",
+    "nj:districts": "tsx scripts/nj-district-coverage.mts",
+    "dark1": "tsx scripts/dark1-proposal.mts",
+    "shoot:battlecard": "tsx scripts/shoot-battlecard-0826.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

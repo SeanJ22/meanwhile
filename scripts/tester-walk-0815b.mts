@@ -76,7 +76,7 @@ async function enterZip(target: string) {
   const [lat, lng] = ZCTA[target];
   await page.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
   await page.evaluate(
-    ([z, la, ln]) => {
+    ([z, _la, _ln]) => {
       localStorage.setItem("wtp.approximate_location", JSON.stringify({ zip: z, savedAt: "2026-08-15T12:00:00.000Z" }));
       localStorage.setItem("wtp.tutorial_seen", "1");
     },

@@ -50,9 +50,7 @@ import { VotingSitesPanel } from "@/components/map/voting-sites-panel";
  * it is named honestly at the point of the link rather than being silently a
  * different behaviour from its neighbour.
  */
-export function WhereToVote({
-  fallback,
-}: {
+export function WhereToVote({}: {
   /**
    * The state's own lookup, for the reader we cannot answer in-app.
    *

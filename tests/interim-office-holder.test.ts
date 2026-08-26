@@ -229,3 +229,49 @@ test("OFF-7: no shipped roster puts a non-superintendent above a superintendent"
   }
   assert.deepEqual(offenders, [], "a district holding a superintendent does not lead with one");
 });
+
+/* ========================================================================== */
+/* RULING 157 — the class, verified against cases the fix was NOT derived from */
+/* ========================================================================== */
+
+test("OFF-7: the CLASS — every body in the registry, with its denominator", async () => {
+  /*
+   * **RULING 136: the id names an instance, the defect is the class.**
+   * **RULING 157: a fix verified only against the case it was derived from has
+   * not closed anything** — the predicate was shaped by that case, so it is
+   * guaranteed to pass there.
+   *
+   * Kearsarge is the DERIVED case. The independent cases are **Tucson Unified**
+   * and **Vail Unified**, and they are named here rather than described,
+   * because "audited across the class" is a claim with no case in it.
+   *
+   * Reported as a three-way split (RULING 105): a bare "0 wrong" says nothing
+   * about how many bodies were even eligible to be wrong.
+   */
+  const { auditTopOffices } = await import("../scripts/top-office-audit.mts");
+  const rows = auditTopOffices();
+
+  // The floor (RULING 159). A registry that failed to load reports zero wrong
+  // slots and reads as a clean bill of health.
+  assert.ok(rows.length >= 20, `the audit read only ${rows.length} roster(s) — it did not reach the registry`);
+
+  const wrong = rows.filter((r) => r.verdict === "WRONG");
+  assert.deepEqual(
+    wrong.map((r) => `${r.bodyName}: ${r.reason}`),
+    [],
+    "a body has the wrong person in the runs-it-day-to-day slot",
+  );
+
+  const inScope = rows.filter((r) => r.verdict !== "OUT_OF_SCOPE");
+  assert.ok(
+    inScope.length >= 3,
+    `only ${inScope.length} body publishes an executive title — the class check is about nothing`,
+  );
+
+  // THE INDEPENDENT CASES, by name.
+  for (const name of ["Tucson Unified School District Governing Board", "Vail Unified School District Governing Board"]) {
+    const row = rows.find((r) => r.bodyName === name);
+    assert.ok(row, `${name} is not in the registry — the independent case for OFF-7 is gone`);
+    assert.equal(row.verdict, "CORRECT", `${name} — an independent case regressed`);
+  }
+});

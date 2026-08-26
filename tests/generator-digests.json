@@ -54,7 +54,7 @@
     "regeneratedOn": "2026-08-25"
   },
   "data/questionnaire/invitations-nj-morris-2026.json": {
-    "digest": "4ac73f637e38a470265bc3093b11b028d9d495158c05bbcc4c0640ba98e88068",
+    "digest": "6eda47f82d79330d35379f7210ae1cd5e88f73362c25bdce8d19a8af1c5dd854",
     "files": 4,
     "entry": "scripts/questionnaire-invitations.mts",
     "regeneratedOn": "2026-08-25"
@@ -66,7 +66,7 @@
     "regeneratedOn": "2026-08-25"
   },
   "docs/candidate-questionnaire.md": {
-    "digest": "65c1cadf8471ca65ba292e40d9e68c8b6987dac19d0d460c3b4f7a0a1a25a68a",
+    "digest": "4ca1316c5aa9e99245282b70b5d28f60e0da64a0e99a94e01db7f3b778586bba",
     "files": 2,
     "entry": "scripts/questionnaire-doc.mts",
     "regeneratedOn": "2026-08-25"

@@ -136,23 +136,6 @@ async function openList(page: { evaluate: (s: string) => Promise<unknown>; waitF
   await page.waitForTimeout(600);
 }
 
-/** Measure a rendered string against its own box, and print the numbers. */
-const MEASURE = `(selector) => {
-  const out = [];
-  for (const el of document.querySelectorAll(selector)) {
-    const box = el.getBoundingClientRect();
-    out.push({
-      text: (el.textContent || "").trim(),
-      width: Math.round(box.width),
-      scrollWidth: el.scrollWidth,
-      clipped: el.scrollWidth > Math.ceil(box.width) + 1,
-      overflow: getComputedStyle(el).overflow,
-      textOverflow: getComputedStyle(el).textOverflow,
-      whiteSpace: getComputedStyle(el).whiteSpace,
-    });
-  }
-  return out;
-}`;
 
 /* ------------------------------------------------- the meetings list --- */
 {

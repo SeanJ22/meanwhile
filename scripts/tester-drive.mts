@@ -88,7 +88,6 @@ if (doShading) {
 }
 
 // Open the first meeting pin's card (3a check).
-const marker = page.locator("button[aria-label]").filter({ hasText: "" });
 const markers = await page.locator(".maplibregl-marker button, .maplibregl-marker").all();
 if (markers.length > 0) {
   await markers[0].click({ force: true });

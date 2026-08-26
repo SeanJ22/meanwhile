@@ -35,11 +35,9 @@
  * need completely different responses.
  */
 
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
 import { today } from "./doc-dates.mjs";
 
-import { KELLY_FIELDS, type KellyReading, type KellyField } from "../lib/hunt/kelly-depth.ts";
+import { KELLY_FIELDS, type KellyReading } from "../lib/hunt/kelly-depth.ts";
 import { BALLOTS, kellyRows, loadKellyInputs } from "../lib/hunt/coverage-matrix.ts";
 
 const ROOT = process.cwd();
@@ -74,7 +72,6 @@ if (!BALLOTS[ZIP]) {
 }
 
 const inputs = loadKellyInputs(ROOT, ZIP);
-const ballot = { contests: inputs.contests, candidacies: inputs.candidacies };
 const rows: KellyReading[] = kellyRows(inputs, TODAY);
 const absencesOnFile = inputs.absenceCount;
 

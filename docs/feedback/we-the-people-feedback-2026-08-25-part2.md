@@ -420,3 +420,21 @@ returns none of them to him.
   panel width, the MAP-3 two-card pattern, the Vail Unified small battlecard,
   light-mode navy-and-white Speak Your Mind, and the shadowing on the voting
   pills.
+
+---
+
+## What the all-open-board session of 2026-08-26 did with each of them
+
+*Appended so the file does not carry stale questions. Zero of the seven went
+back to Sean as a question; the one that is his to decide went back as a
+PROPOSAL with captures, which is what he asked for.*
+
+| Item | What happened |
+|---|---|
+| **ASK-12** | **BUILT**, behind `ripcord.unsourcedFallback`, ON for the testing window. The separation is structural rather than stylistic: a different result type (`UNSOURCED`), no sources field existing on it at all, a plain-language mark carried ON the record so it cannot render without one, and a `shouldFallBack` that refuses unless the sourced router has already declined. A civic question we cannot source is explicitly NOT eligible — it stays owed. The sourced refusal is asserted unchanged, verbatim. The transparency page changed in the same commit, as the ripcord doctrine requires. 9 guards in `tests/unsourced-fallback.test.ts`. |
+| **DARK-1** | **PROPOSAL DELIVERED, nothing shipped.** `docs/dark1-proposal.md` plus five captures in `screenshots/dark1-proposal/` — the light control, dark as it renders today, and three options each changing exactly one thing. Recommendation is **A**, with the reasons read off the images. Rowed as Needs Sean with the question stated as a choice between four answers. |
+| **BAL-14** | **SETTLED BY SEAN AND BUILT.** Green, full width, both themes. `--battlecard-green` is its own token rather than a reuse of `--party-green`, because a control tinted with a PARTY colour on a card that now also renders a party pill is a coincidence waiting to be read as a claim. |
+| **OFF-7** | **RESOLVED, not redone.** LeBoeuf is Business Administrator and Bessette is Interim Superintendent — two people, two rows, determined from the district's own site by the prior session. The selection bug is fixed and the CLASS is now audited: 42 bodies, 3 in scope, 3 correct, 0 wrong — verified against Tucson Unified and Vail Unified, neither of which the fix was derived from. |
+| **BAL-12** | **MEASURED AND NORMALISED.** 39 pill rules; 11 declarations normalised to the reference; the split now reads 23 uniform, 16 different with a stated reason, **0 different with no reason**. Every reason is written down in `tests/pill-sizing-reasons.json` and a reason for a difference that no longer exists fails the build. |
+| **BAL-11** | **SHIPPED AS BUILT, with the recommendation stated.** Both conversions exist and sit together directly under the page heading (`desktop-04-ballot-top.png`). The placement is correct as it stands and the reason is legible in the capture: the two top pills act on the WHOLE PAGE, and the two inside the election box act on that box's subject. That is a meaningful grouping rather than the inconsistency BAL-11 was opened over, so it ships rather than going back as a question. |
+| **OFF-5** | **DETERMINED — nothing held, not a fetch problem.** Re-fetched independently on 2026-08-26 rather than read off the prior session's file: both `rockawaytownship.org/157/Township-Council` and `/228/Mayor` answer HTTP 200 with full content (112,596 B and 106,107 B), and every image on both pages is site chrome — an emergency-alert dot, the banner, a search icon, a PUBLIC NOTICES graphic, the township logo, the smart911 logo, the Google Translate icon. Not one bears a member's name. This is a DATED MEASUREMENT and not an exhausted absence: the five-move stuck protocol has not been run for these people, so the field stays owed on its RULING 53 clock. |

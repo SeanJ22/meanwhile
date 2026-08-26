@@ -1197,7 +1197,7 @@ for (const p of proven) {
   bySubject.get(p.candidacyId)!.push(p);
 }
 console.log(`  distinct candidacies with a proven site: ${bySubject.size}\n`);
-for (const [id, rows] of bySubject) {
+for (const [, rows] of bySubject) {
   console.log(`    ${rows[0].subject.padEnd(30)} ${[...new Set(rows.map((r) => r.siteUrl))].join(", ")}`);
 }
 

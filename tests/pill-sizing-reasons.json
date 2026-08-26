@@ -1,0 +1,52 @@
+{
+  "note": "BAL-12 (2026-08-25). Every pill rule whose sizing DELIBERATELY differs from the voting-pill reference, with the reason. RULING 105: a pill is either RENDERING UNIFORM, OUT OF SCOPE WITH A REASON, or DIFFERING WITH NO REASON — and only the third is a defect. A rule may leave this file only by becoming uniform; a rule may join it only with a reason somebody wrote.",
+  "recordedOn": "2026-08-25",
+  "reference": ".vote-pill",
+  "reasons": [
+    {
+      "selector": ".ask-pill",
+      "props": ["padding", "font-size"],
+      "reason": "An ACTION pill, not a label. It carries a 44px tap target and reader-size type because a reader types into what it opens; the reference is a 22px non-tappable tag. The horizontal inset IS normalised to the action-pill inset (14px)."
+    },
+    {
+      "selector": ".speak-pill",
+      "props": ["padding", "font-size"],
+      "reason": "An ACTION pill with a 44px tap target. Its inset is normalised to 14px; its type is the section-title size deliberately, so the row reads as one of the sections around it (BC-21)."
+    },
+    {
+      "selector": ".contact-pill",
+      "props": ["padding", "font-size"],
+      "reason": "An ACTION pill with a 44px tap target — a phone number a reader taps. Inset normalised to 14px."
+    },
+    {
+      "selector": ".contact-pill-row[data-compact] .contact-pill",
+      "props": ["padding", "font-size"],
+      "reason": "The compact variant of an action pill, for a card that carries several. It is deliberately tighter than its own base rule, which is a decision about density on one surface rather than a drift from the reference."
+    },
+    {
+      "selector": ".ballot-pill-main",
+      "props": ["padding", "font-size"],
+      "reason": "The PRIMARY door on the map. Making the primary control the size of a secondary one changes what the page means, not how it is spaced — and BAL-12 asks for uniform sizing where the difference has no reason, which this one does."
+    },
+    {
+      "selector": ".ballot-pill-zip",
+      "props": ["padding", "font-size"],
+      "reason": "The zip chip INSIDE the ballot pill. It is sized against its parent rather than against the page, and matching it to the reference would make a nested control the same size as the thing containing it."
+    },
+    {
+      "selector": ".ballot-pill-soon",
+      "props": ["font-size"],
+      "reason": "A superscript-scale note inside the ballot pill, not a pill in its own right despite the class name."
+    },
+    {
+      "selector": ".ballot-top-pill .address-prompt-trigger",
+      "props": ["padding", "font-size"],
+      "reason": "An ACTION pill in the ballot's top row, sized with its siblings in that row."
+    },
+    {
+      "selector": ".ballot-top-pill:has(> .address-prompt-trigger)",
+      "props": ["padding"],
+      "reason": "Zero padding on purpose: the wrapper hands its whole box to the trigger inside it, so padding here would double the inset."
+    }
+  ]
+}

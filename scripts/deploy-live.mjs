@@ -32,7 +32,6 @@
  * Netlify → User settings → Applications.
  */
 
-import { existsSync, readFileSync } from "node:fs";
 import { DEPLOY_EXIT, verdictForDeploys } from "../lib/ops/deploy-verdict.ts";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";

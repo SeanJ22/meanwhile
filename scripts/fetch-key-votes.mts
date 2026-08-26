@@ -42,7 +42,6 @@ import { fileURLToPath } from "node:url";
 import {
   KEY_VOTES,
   type KeyVoteEntry,
-  type RollCallRef,
 } from "../lib/votes/key-votes.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

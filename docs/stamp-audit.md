@@ -8,7 +8,7 @@ walked straight past the `Author-revised` stamp on the disclosure rule.
 each one, and the corrected date is typed into `CLAUDE.md` by hand from
 `pnpm stamp` or from the recovered column below.**
 
-Run on 2026-08-24 (America/Phoenix). 113 stamp(s) audited.
+Run on 2026-08-26 (America/Phoenix). 136 stamp(s) audited.
 
 **Method.** Each rule's opening clause — the bold title it leads with — is a
 long string that entered `CLAUDE.md` once. `git log -S<clause> -- CLAUDE.md`
@@ -113,15 +113,15 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
 | RULING 115 — A DRILL IS NOT A FAILURE | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
 | RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | 2026-08-24 | 2026-08-24 | 0 | `76f2e04` Item 10: RULINGS 115 and 116 — the drill, and the frozen gap |
-| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | 2026-08-24 | **NOT FOUND** | — | — |
-| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | 2026-08-24 | **NOT FOUND** | — | — |
+| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
+| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | 2026-08-24 | 2026-08-24 | 0 | `d8be1e8` The performance audit, and the eight rulings the two audits produced |
 | Disclosure at the point of capture — the one-time acknowl… | 2026-08-13 | 2026-08-13 | 0 | `8fa5759` 3: the defect batch — what-first titles, the narrowing modal, the one-time disclosure, candidate reactions, the mayor, the past, the smalls |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | 2026-08-20 | 2026-08-20 | 0 | `0beba26` Prompt E: the tracker becomes a queue that empties, and the badge comes off the least-resourced candidate |
@@ -141,12 +141,35 @@ lying. The recovered dates come from the unfiltered pickaxe.
 | RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
 | RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
 | RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | 2026-08-24 | 2026-08-24 | 0 | `25c9a80` State campaign money: the drop-down that structurally could not fill |
+| THE SIX RULINGS OF 2026-08-24 — SEAN'S VISUAL WALKTHROUGH | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 136 — FEEDBACK NAMES EXAMPLES; A FIX CLOSES THE CL… | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 137 — FOR LAYOUT, AN ANNOTATED IMAGE IS THE SPEC A… | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 138 — DISPLAY CONSOLIDATES SOURCES; THE RECORD IS … | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 139 — THE PRODUCT NEVER ANNOUNCES ITS OWN FAILURE | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 140 — DATES SPELL OUT, PRODUCT-WIDE | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| RULING 141 — THE SPEAK YOUR MIND STORE'S FOUR RULES | 2026-08-24 | 2026-08-24 | 0 | `4fbb744` Rulings 136-141, and six tracker rows that took four attempts to land |
+| TWO RULINGS OF 2026-08-24 — THE LINE IN THE SAND AND THE … | 2026-08-24 | 2026-08-25 | -1 d | `5ddf038` NJ depth: the search engines are closed, so the newspapers answered instead (#174) |
+| RULING 142 — THE LINE IN THE SAND, AND NOTHING COLLECTED … | 2026-08-24 | 2026-08-25 | -1 d | `5ddf038` NJ depth: the search engines are closed, so the newspapers answered instead (#174) |
+| RULING 143 — WHAT DONE MEANS FOR 07866, AND IT IS PER CAN… | 2026-08-24 | 2026-08-25 | -1 d | `5ddf038` NJ depth: the search engines are closed, so the newspapers answered instead (#174) |
+| TWO RULINGS OF 2026-08-25 — THE FINAL PASS | 2026-08-25 | 2026-08-25 | 0 | `faebc11` RULINGS 144 and 145 — walls may build an absence, and a platform page is a campaign site |
+| RULING 144 — AN ARGUED ABSENCE MAY BE BUILT FROM WALLS, A… | 2026-08-25 | 2026-08-25 | 0 | `faebc11` RULINGS 144 and 145 — walls may build an absence, and a platform page is a campaign site |
+| RULING 145 — A PLATFORM-HOSTED CAMPAIGN PRESENCE FILLS TH… | 2026-08-25 | 2026-08-25 | 0 | `faebc11` RULINGS 144 and 145 — walls may build an absence, and a platform page is a campaign site |
+| THE SIX RULINGS OF 2026-08-25 — THE ONE-SESSION BRIEF | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 146 — A SESSION RUNS UNATTENDED, AND NOTHING IT RU… | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 147 — NO RECONCILIATION MAY COMPARE A PARSER TO IT… | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 148 — THE MAY-WE-WALK VERDICT IS ENFORCED BY THE F… | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 149 — THE COVERAGE MATRIX IS GENERATED, INTERNAL, … | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 150 — A NEEDS SEAN ROW STATES ITS ASK AS AN ANSWER… | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| RULING 151 — THE AUTHOR'S TRACKER DECISIONS OF 2026-08-25… | 2026-08-25 | 2026-08-25 | 0 | `fdd7978` Six rulings, five of them written before the work they govern |
+| TWO RULINGS OF 2026-08-25 — THE RECONCILIATION | 2026-08-25 | 2026-08-25 | 0 | `5f8ce19` The reconciliation: six DONEs, and the verdict the brief expected did not happen once |
+| RULING 152 — a reader-facing DONE names the production de… | 2026-08-25 | 2026-08-25 | 0 | `5f8ce19` The reconciliation: six DONEs, and the verdict the brief expected did not happen once |
+| RULING 153 — a fix is verified on the reader's path, not … | 2026-08-25 | 2026-08-25 | 0 | `5f8ce19` The reconciliation: six DONEs, and the verdict the brief expected did not happen once |
 
 ## What the deltas say
 
-- **3 stamp(s) disagree with git history.**
-- **0 stamp(s) are still later than today** (2026-08-24) — a date that had not happened when it was written.
-- **9 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
+- **6 stamp(s) disagree with git history.**
+- **0 stamp(s) are still later than today** (2026-08-26) — a date that had not happened when it was written.
+- **0 stamp(s) could not be recovered** and are printed `NOT FOUND` rather than guessed.
 - **2 stamp(s) disagree BY DESIGN and the author has ruled them expected** — listed below, and still carrying their real delta in the table above.
 
 ### Ruled expected, not defects
@@ -170,6 +193,9 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | `CLAUDE.md:960` | 2026-08-14 | 2026-08-20 | -6 d | claimed date is later than the introducing commit |
 | `CLAUDE.md:1038` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
 | `CLAUDE.md:1226` | 2026-08-22 | 2026-08-23 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:2850` | 2026-08-24 | 2026-08-25 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:2857` | 2026-08-24 | 2026-08-25 | -1 d | claimed date is later than the introducing commit |
+| `CLAUDE.md:2901` | 2026-08-24 | 2026-08-25 | -1 d | claimed date is later than the introducing commit |
 
 ## The literal `--diff-filter=A` result, per stamp
 
@@ -260,15 +286,15 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | TWO RULINGS OF 2026-08-24 — THE DRILL AND THE FROZEN GAP | none | 1 |
 | RULING 115 — A DRILL IS NOT A FAILURE | none | 1 |
 | RULING 116 — A GUARD MAY PIN AN INVARIANT OR A DIRECTION,… | none | 1 |
-| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | none | 0 |
-| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | none | 0 |
-| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | none | 0 |
-| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | none | 0 |
-| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | none | 0 |
-| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | none | 0 |
-| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | none | 0 |
-| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | none | 0 |
-| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | none | 0 |
+| THE EIGHT RULINGS OF 2026-08-24 — THE AUDIT REMEDIATION | none | 1 |
+| RULING 128 — EXTRACTION CONSERVES, AND THE SUM IS EXACT | none | 1 |
+| RULING 129 — A SAFETY CAP IS A FAILURE BOUNDARY, NEVER AN… | none | 1 |
+| RULING 130 — EVERY TRANSPORT SUCCESS PASSES ONE SHARED DO… | none | 1 |
+| RULING 131 — A PARTIAL SOURCE IS A FIRST-CLASS RESULT | none | 1 |
+| RULING 132 — THE IDENTITY BOUNDARY IS PROVEN OVER VALUE S… | none | 1 |
+| RULING 133 — A PERFORMANCE CHANGE SHIPS WITH ITS MEASUREM… | none | 1 |
+| RULING 134 — AN INSTRUMENT WITHOUT A COMMITTED BASELINE I… | none | 1 |
+| RULING 135 — A FENCE BARS ACTING ON CONTENT, NEVER COMMIT… | none | 1 |
 | Disclosure at the point of capture — the one-time acknowl… | none | 1 |
 | RULING 37 — WHO MAY MOVE A ROW, AND IT CUTS BOTH WAYS. | none | 1 |
 | RULING 38 — THE AUTHOR'S RESOLUTION NOTES ARE INSTRUCTION… | none | 1 |
@@ -288,6 +314,29 @@ well would leave nothing to re-audit if the ruling is ever revisited.
 | RULING 125 — VERIFICATION HAPPENS ON THE LOCAL PRODUCTION… | none | 1 |
 | RULING 126 — CAMPAIGN-FINANCE DATA RENDERS FOR READERS AN… | none | 1 |
 | RULING 127 — NO TOOL PRINTS A CREDENTIAL VALUE, AND THE G… | none | 1 |
+| THE SIX RULINGS OF 2026-08-24 — SEAN'S VISUAL WALKTHROUGH | none | 1 |
+| RULING 136 — FEEDBACK NAMES EXAMPLES; A FIX CLOSES THE CL… | none | 1 |
+| RULING 137 — FOR LAYOUT, AN ANNOTATED IMAGE IS THE SPEC A… | none | 1 |
+| RULING 138 — DISPLAY CONSOLIDATES SOURCES; THE RECORD IS … | none | 1 |
+| RULING 139 — THE PRODUCT NEVER ANNOUNCES ITS OWN FAILURE | none | 1 |
+| RULING 140 — DATES SPELL OUT, PRODUCT-WIDE | none | 1 |
+| RULING 141 — THE SPEAK YOUR MIND STORE'S FOUR RULES | none | 1 |
+| TWO RULINGS OF 2026-08-24 — THE LINE IN THE SAND AND THE … | none | 1 |
+| RULING 142 — THE LINE IN THE SAND, AND NOTHING COLLECTED … | none | 1 |
+| RULING 143 — WHAT DONE MEANS FOR 07866, AND IT IS PER CAN… | none | 1 |
+| TWO RULINGS OF 2026-08-25 — THE FINAL PASS | none | 1 |
+| RULING 144 — AN ARGUED ABSENCE MAY BE BUILT FROM WALLS, A… | none | 1 |
+| RULING 145 — A PLATFORM-HOSTED CAMPAIGN PRESENCE FILLS TH… | none | 1 |
+| THE SIX RULINGS OF 2026-08-25 — THE ONE-SESSION BRIEF | none | 1 |
+| RULING 146 — A SESSION RUNS UNATTENDED, AND NOTHING IT RU… | none | 1 |
+| RULING 147 — NO RECONCILIATION MAY COMPARE A PARSER TO IT… | none | 1 |
+| RULING 148 — THE MAY-WE-WALK VERDICT IS ENFORCED BY THE F… | none | 1 |
+| RULING 149 — THE COVERAGE MATRIX IS GENERATED, INTERNAL, … | none | 1 |
+| RULING 150 — A NEEDS SEAN ROW STATES ITS ASK AS AN ANSWER… | none | 1 |
+| RULING 151 — THE AUTHOR'S TRACKER DECISIONS OF 2026-08-25… | none | 1 |
+| TWO RULINGS OF 2026-08-25 — THE RECONCILIATION | none | 1 |
+| RULING 152 — a reader-facing DONE names the production de… | none | 1 |
+| RULING 153 — a fix is verified on the reader's path, not … | none | 1 |
 
 A `1` in the last column means the clause entered the file exactly once and
 the recovery is unambiguous. Anything higher means the string was touched more

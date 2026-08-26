@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { subscribeToStorage } from "@/lib/state/subscribe-to-storage";
 
 /**

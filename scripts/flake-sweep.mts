@@ -20,7 +20,7 @@
  * calling the difference a flake.
  */
 
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -37,7 +37,29 @@ const WRITE = process.argv.includes("--write");
 function readRun(output: string): Map<string, RunOutcome> {
   const out = new Map<string, RunOutcome>();
   for (const line of output.split(/\r?\n/)) {
-    const m = /^\s{2}(ok  |FAIL|QUAR|\?\?  )\s*(\[[^\]]+\][^—]*?)\s*(?:—.*)?$/.exec(line);
+    /*
+     * **THE ELAPSED STAMP SITS BETWEEN THE MARK AND THE IDENTITY**
+     * (2026-08-26, `NH196`).
+     *
+     * `walk:all` now prints `  ok   03:46 [g4] …` so a reader can tell a slow
+     * run from a stopped one. That put an `mm:ss` token exactly where this
+     * parser expected a `[`, and the regex stopped matching every passing and
+     * failing line — leaving only the `??` lines, which carry no stamp.
+     *
+     * **It was caught before it produced anything, and how it would have
+     * failed is why it mattered:** the sweep would have read a handful of
+     * outcomes per walk, classified almost nothing, and written a quarantine
+     * file that read as a clean result. Ninety minutes of walks reporting on
+     * checks it never parsed — RULING 159, inside the instrument built to
+     * measure flakiness.
+     *
+     * The stamp is OPTIONAL rather than required, so a walk from before the
+     * change and one from after it read identically.
+     */
+    const m =
+      /^\s{2}(ok  |FAIL|QUAR|\?\?  )\s*(?:\d{2}:\d{2}\s+)?(\[[^\]]+\][^—]*?)\s*(?:—.*)?$/.exec(
+        line,
+      );
     if (!m) continue;
     const mark = m[1].trim();
     const identity = m[2].trim();
@@ -55,13 +77,31 @@ for (let i = 1; i <= RUNS; i += 1) {
   console.log(`\n=== walk ${i} of ${RUNS} ===`);
   let output = "";
   try {
-    output = execSync("pnpm run walk:all", {
+    /*
+     * **`spawnSync`, not `execSync`, and the reason is `NH196`'s** (2026-08-26).
+     *
+     * `execSync` throws on a non-zero exit and hands the caller stdout on the
+     * error — which works, and which also means NOTHING reaches a reader until
+     * the walk is over. A walk takes about half an hour. So this script sat
+     * silent for half an hour per run, three runs deep, and a reader could not
+     * tell it from a hang — the exact ambiguity `walk:all` just stopped having,
+     * reintroduced one layer up by its own runner.
+     *
+     * `spawnSync` does not throw on a non-zero exit, so the failure path stops
+     * being an exception carrying data, and the elapsed stamps and heartbeats
+     * the walk now prints are echoed as they arrive.
+     */
+    const result = spawnSync("pnpm", ["run", "walk:all"], {
       cwd: ROOT,
       encoding: "utf8",
       maxBuffer: 256 * 1024 * 1024,
+      shell: process.platform === "win32",
     });
+    output = `${result.stdout ?? ""}${result.stderr ?? ""}`;
+    for (const line of output.split(/\r?\n/)) {
+      if (/^\s{2}(ok  |FAIL|QUAR|\?\?  |\.\.  )/.test(line)) console.log(`    ${line.trim()}`);
+    }
   } catch (error) {
-    // A failing walk EXITS NON-ZERO by design, and its stdout is the data.
     output = String((error as { stdout?: string }).stdout ?? "");
   }
   const parsed = readRun(output);

@@ -131,9 +131,33 @@ export function FundingDisplay({
         </div>
       )}
 
+      {/*
+        **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
+
+        Sean red-boxed both of these headings on `17-41-20`: they were
+        expanded by default in the large battlecard. His ruling is the one
+        BAL-8 already made about the provisions list — *the content is good,
+        the user opens it by choice.*
+
+        Nothing here is removed, reworded or shortened. Every sentence still
+        carries its own denominator and its own LEVEL register, and the
+        summary bar names exactly what is behind it, which is what keeps
+        this on the right side of the reader-friction rule: the defect that
+        rule names is a click that buys the reader nothing, and this one
+        buys a card a reader can get to the bottom of.
+
+        The control is `provisions-summary`, reused rather than
+        reimplemented — RULING 103 is what happens when a treatment gets a
+        second implementation under a second name.
+      */}
       {data.contributorsShown && data.concentrationSentences.length > 0 && (
-        <div className="mt-3">
-          <p className={SECTION_LABEL_CLASS}>Where that money came from</p>
+        <details className="mt-3" data-money-origin>
+          <summary className="provisions-summary">
+            <span aria-hidden="true" className="provisions-caret">
+              ›
+            </span>
+            Where that money came from
+          </summary>
           {/*
             D06 (2026-08-18). Placed AFTER the contributions table on
             purpose: these are figures ABOUT the rows above, and a summary
@@ -160,12 +184,36 @@ export function FundingDisplay({
               </li>
             ))}
           </ul>
-        </div>
+        </details>
       )}
 
+      {/*
+        **BAL-16 (2026-08-25) — COLLAPSED BY DEFAULT, SAME RULE AS BAL-8.**
+
+        Sean red-boxed both of these headings on `17-41-20`: they were
+        expanded by default in the large battlecard. His ruling is the one
+        BAL-8 already made about the provisions list — *the content is good,
+        the user opens it by choice.*
+
+        Nothing here is removed, reworded or shortened. Every sentence still
+        carries its own denominator and its own LEVEL register, and the
+        summary bar names exactly what is behind it, which is what keeps
+        this on the right side of the reader-friction rule: the defect that
+        rule names is a click that buys the reader nothing, and this one
+        buys a card a reader can get to the bottom of.
+
+        The control is `provisions-summary`, reused rather than
+        reimplemented — RULING 103 is what happens when a treatment gets a
+        second implementation under a second name.
+      */}
       {data.contributorsShown && data.typeConcentrationSentences.length > 0 && (
-        <div className="mt-3">
-          <p className={SECTION_LABEL_CLASS}>What kind of money it was</p>
+        <details className="mt-3" data-money-kind>
+          <summary className="provisions-summary">
+            <span aria-hidden="true" className="provisions-caret">
+              ›
+            </span>
+            What kind of money it was
+          </summary>
           {/*
             D06's third feature (2026-08-19, g20), on the author's ruling
             "Accept": concentration on the FEC's OWN axis, because an
@@ -191,7 +239,7 @@ export function FundingDisplay({
               </li>
             ))}
           </ul>
-        </div>
+        </details>
       )}
 
       <p className="mt-2 text-[0.625rem] text-muted">

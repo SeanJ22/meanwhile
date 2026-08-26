@@ -117,8 +117,20 @@ test("the two the ruling names by hand are contactable", () => {
 });
 
 test("the card renders the address as a FACT, not as a tappable affordance", () => {
-  const card = read("components", "ballot", "candidate-card.tsx");
-  assert.match(card, /card\?\.filedAddress &&/, "the card renders it");
+  /*
+   * **BAL-15 (2026-08-25): it moved, and this test moved WITH it.**
+   *
+   * The filed address rendered on the ballot ROW until 2026-08-25, when Sean
+   * ruled that the campaign site, the email and the mailing address belong in
+   * the battlecard — *the ballot points; the battlecard holds*. RULING 54's
+   * reasoning is untouched and travelled with the markup: the address is still
+   * published, still carries its source, and is still NOT a link.
+   *
+   * The test follows the code rather than being deleted, which is RULING 62's
+   * whole point — a guard that stops existing reports `fail 0`.
+   */
+  const card = read("components", "ballot", "candidate-contact.tsx");
+  assert.match(card, /address &&/, "the card renders it");
   assert.match(card, /filedAddressSource/, "and renders its source beside it");
   /*
    * A `mailto:` or `tel:` is an invitation to act now. A mailing address is a
@@ -126,7 +138,7 @@ test("the card renders the address as a FACT, not as a tappable affordance", () 
    * overstate what it is — and would be a click-to-act gesture on a named
    * private residence.
    */
-  const block = card.slice(card.indexOf("card?.filedAddress &&"));
+  const block = card.slice(card.indexOf("{address &&"));
   const rendered = block.slice(0, block.indexOf("</p>"));
   assert.ok(!/href=/.test(rendered), "the filed address must not be a link");
 });

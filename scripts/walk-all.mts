@@ -260,9 +260,54 @@ function check(session: string, name: string, ok: boolean, evidence = ""): boole
   else quarantined.push(`${identity}${evidence ? ` — ${evidence}` : ""}`);
 
   const mark = outcome === "PASS" ? "ok  " : outcome === "FAIL" ? "FAIL" : "QUAR";
-  console.log(`  ${mark} ${identity}${evidence ? ` — ${evidence}` : ""}`);
+  console.log(`  ${mark} ${elapsed()} ${identity}${evidence ? ` — ${evidence}` : ""}`);
   return ok;
 }
+
+/*
+ * ## PROGRESS IS PRINTED, BECAUSE SILENCE WAS AMBIGUOUS (`NH196`, 2026-08-25)
+ *
+ * A prior session ran this against a live local build, saw ZERO BYTES for
+ * twenty minutes, and killed it under RULING 146's five-silent-minutes rule.
+ * It could not tell a hang from buffering, and neither could anything else:
+ * the run emitted nothing until it finished, so a healthy slow run and a dead
+ * one were byte-identical.
+ *
+ * Determined 2026-08-25: **it was never a hang.** The header prints within
+ * seconds under `tsx`, `pnpm`, `pnpm -s` and `corepack pnpm -s` alike — the
+ * silence was the harness holding a foreground command's output until exit.
+ * That is a real problem anyway, because it makes the five-minute rule
+ * unusable on the one instrument every session is required to run.
+ *
+ * So every line now carries ELAPSED SECONDS, and a HEARTBEAT fires whenever a
+ * single check has been running longer than the threshold. A reader — human or
+ * harness — can now tell "slow" from "stopped" by looking, which is the whole
+ * of what was missing.
+ */
+const STARTED_AT = Date.now();
+function elapsed(): string {
+  const s = Math.round((Date.now() - STARTED_AT) / 1000);
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
+
+const HEARTBEAT_MS = 30_000;
+let lastLineAt = Date.now();
+const heartbeat = setInterval(() => {
+  const quiet = Math.round((Date.now() - lastLineAt) / 1000);
+  if (quiet * 1000 >= HEARTBEAT_MS) {
+    console.log(
+      `  ..  ${elapsed()} still working — ${quiet}s since the last check ` +
+        `(${passed} passed, ${failures.length} failed, ${blocked.length} could not run so far)`,
+    );
+  }
+}, HEARTBEAT_MS);
+heartbeat.unref();
+
+const rawLog = console.log.bind(console);
+console.log = ((...args: unknown[]) => {
+  lastLineAt = Date.now();
+  rawLog(...(args as []));
+}) as typeof console.log;
 
 /**
  * A check that could not RUN is not a check that failed.

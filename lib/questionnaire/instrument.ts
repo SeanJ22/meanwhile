@@ -35,7 +35,7 @@
  *   claim about a body wearing a question mark — the thing `CLAUDE.md` forbids
  *   everywhere else. Every class question ASKS rather than tells, which is why
  *   none of them carries a list of powers as a preamble.
- * - **Word limits are identical for every question and every candidate.** 150
+ * - **Word limits are identical for every question and every candidate.** 200
  *   words, five times, for everybody. A per-question or per-class limit would
  *   be a second thing that has to be argued as symmetric; one number is not
  *   arguable.
@@ -51,11 +51,29 @@
  * `tests/questionnaire.test.ts` fails the build if the two diverge.
  */
 
-/** The version every response records. Bumping it is a decision, never a tidy-up. */
-export const INSTRUMENT_VERSION = "v1";
+/**
+ * The version every response records. Bumping it is a decision, never a tidy-up.
+ *
+ * **`v1` -> `v2`, 2026-08-25 — ONE revision carrying FOUR changes**, because a
+ * version is what a symmetry claim is anchored to and four bumps would mean
+ * four instruments could have been answered in one contest. The four:
+ *
+ * 1. The word limit goes 150 -> 200, uniformly, on every question.
+ * 2. The invitation names the product **Meanwhile** rather than the repo name.
+ * 3. A separated closing note offers the insights list — structurally outside
+ *    the instrument, so it cannot read as a sixth question.
+ * 4. The symmetry tests move with it, because a bump that leaves them behind
+ *    breaks the one guarantee this instrument exists to make, silently.
+ *
+ * **Nothing has been sent under `v1`.** Every invitation row still carries
+ * `invitedOn: null`, so no candidate has answered the old instrument and no
+ * contest is split across two. Had one been sent, this bump would have been a
+ * much larger decision than a constant.
+ */
+export const INSTRUMENT_VERSION = "v2";
 
 /** The day this version was fixed. From `pnpm stamp`, never a plausible date. */
-export const INSTRUMENT_VERSION_ADOPTED = "2026-08-23";
+export const INSTRUMENT_VERSION_ADOPTED = "2026-08-25";
 
 /**
  * **THE WORD LIMIT, ONE NUMBER, EVERYWHERE.**
@@ -64,8 +82,12 @@ export const INSTRUMENT_VERSION_ADOPTED = "2026-08-23";
  * Truncation must never quietly favour the terse or the verbose, so nothing is
  * ever cut: an over-limit answer is REFUSED at submit time with its own count
  * shown, and the candidate edits it themselves. See `checkWordLimit` below.
+ *
+ * **150 -> 200 on 2026-08-25 (`v2`), uniformly.** Uniformly is the whole of
+ * it: a limit raised on some questions and not others would be a second thing
+ * that has to be argued as symmetric, and one number is not arguable.
  */
-export const WORD_LIMIT = 150;
+export const WORD_LIMIT = 200;
 
 /**
  * The office classes the class layer is keyed to.
@@ -356,3 +378,42 @@ export function checkWordLimit(answer: string, limit: number = WORD_LIMIT): Word
       : `This answer is ${words} words. The limit is ${limit} for every question, and it is the same for everyone running. Please shorten it before sending — we won't cut it for you.`,
   };
 }
+
+/**
+ * **THE CLOSING NOTE — SEPARATE FROM THE INSTRUMENT, AND STRUCTURALLY SO.**
+ * (Added 2026-08-25 with `v2`.)
+ *
+ * Sean's copy, verbatim and not to be paraphrased: a paraphrase of a commercial
+ * offer is a different offer.
+ *
+ * ## Why it is a constant HERE and not a sixth question
+ *
+ * It is not part of the instrument and it may never become part of it. Every
+ * word in `CORE_QUESTIONS` and `CLASS_QUESTIONS` is asked identically of every
+ * candidate BECAUSE symmetry is the whole claim; this is a business
+ * solicitation, and a solicitation inside a symmetric instrument would let a
+ * candidate read the questions as conditioned on it.
+ *
+ * So it lives outside both arrays, `questionsFor()` cannot return it,
+ * `allQuestions()` does not contain it, and `tests/questionnaire.test.ts`
+ * asserts both — because "structurally distinct" is a claim, and the way to
+ * make it checkable is that the function producing the instrument literally
+ * cannot produce this.
+ *
+ * ## What is deliberately NOT in the text
+ *
+ * **No timing promise, anywhere.** Not in this copy, not in the confirmation,
+ * not in the ledger. *If you'd like to hear when insights for your race are
+ * available* is a conditional on availability, not a commitment to a date, and
+ * nothing downstream may add one — a date we then miss is worse than no date,
+ * and this is a message to a candidate in a live election.
+ *
+ * The list is stored BUSINESS-SIDE. It is not reader data, it does not touch
+ * the search log or the reactions store, and it shares no joinable column with
+ * either (RULING 132).
+ */
+export const CLOSING_NOTE =
+  "One more thing, separate from the questionnaire: Meanwhile offers campaigns " +
+  "and organizations anonymized, aggregate insight into what constituents in a " +
+  "race care about — available to everyone, at the same published rates. If " +
+  "you'd like to hear when insights for your race are available, sign up here.";

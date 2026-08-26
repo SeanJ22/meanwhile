@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "generatedBy": "scripts/questionnaire-invitations.mts",
   "note": "READY TO SEND, NOT SENT. Every row carries invitedOn: null and remindedOn: []. A date on either is written only by the code path that performs the send (RULING 107). Emails are the candidates' own filed contact from the Morris County Clerk's certified candidate PDF, which is public record; they are held for sending and are never rendered.",
-  "instrumentVersion": "v1",
+  "instrumentVersion": "v2",
   "plannedInvitedOn": "2026-09-08",
   "plannedRemindersOn": [
     "2026-09-22",
@@ -15,7 +15,7 @@
       "candidacyId": "ballot-nj-morris:us-senate:murphy",
       "contestId": "ballot-nj-morris:us-senate",
       "email": "jerseyjustin4senate@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -35,7 +35,7 @@
       "candidacyId": "ballot-nj-morris:us-senate:booker",
       "contestId": "ballot-nj-morris:us-senate",
       "email": "bookerteam@corybooker.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -55,7 +55,7 @@
       "candidacyId": "ballot-nj-morris:us-senate:fernandez",
       "contestId": "ballot-nj-morris:us-senate",
       "email": "info@veronicaforsenate.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -75,7 +75,7 @@
       "candidacyId": "ballot-nj-morris:us-senate:kuniansky",
       "contestId": "ballot-nj-morris:us-senate",
       "email": "njswpcampaign@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -95,7 +95,7 @@
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
       "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
       "email": "tom@tomkean.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -115,7 +115,7 @@
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
       "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
       "email": "rebecca@rebeccabennettforcongress.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -135,7 +135,7 @@
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana",
       "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
       "email": "lanaleguia@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -155,7 +155,7 @@
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick",
       "contestId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7",
       "email": "stopisraelsgenocide.nj7@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -175,7 +175,7 @@
       "candidacyId": "ballot-nj-morris:us-house-11:hathaway",
       "contestId": "ballot-nj-morris:us-house-11",
       "email": "info@joehathawayforcongress.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -195,7 +195,7 @@
       "candidacyId": "ballot-nj-morris:us-house-11:mejia",
       "contestId": "ballot-nj-morris:us-house-11",
       "email": "info@analiliafornj.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -215,7 +215,7 @@
       "candidacyId": "ballot-nj-morris:us-house-11:bond",
       "contestId": "ballot-nj-morris:us-house-11",
       "email": "abondhopefortomorrow@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "federal_legislative",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -235,7 +235,7 @@
       "candidacyId": "ballot-nj-morris:county-commissioner:selen",
       "contestId": "ballot-nj-morris:county-commissioner",
       "email": "selentayfun@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "county_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -255,7 +255,7 @@
       "candidacyId": "ballot-nj-morris:county-commissioner:russo",
       "contestId": "ballot-nj-morris:county-commissioner",
       "email": "info@morrisdems.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "county_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -275,7 +275,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:wrobel-mark-f",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton",
       "email": "wrobel@greenbriarcapital.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -295,7 +295,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:di-salvo-melissa",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton",
       "email": "disalvommsu@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -315,7 +315,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:ezzi-robert",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton",
       "email": "blezzi@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -335,7 +335,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:de-venezia-marie",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton",
       "email": "Marie.devenezia@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -355,7 +355,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:murray-robert-j",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton",
       "email": "Rmurray697@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -375,7 +375,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:nanda-rajat",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton",
       "email": "RNANDA7@GMAIL.COM",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -395,7 +395,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:flaherty-seamus-g",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton",
       "email": "sgflaherty@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -415,7 +415,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:weisman-benjamin",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton",
       "email": "benforboonton@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -435,7 +435,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township",
       "email": "brianh@pfcompass.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -455,7 +455,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:haggart-brian",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township",
       "email": "bhaggart0091@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -475,7 +475,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:menard-raymond",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township",
       "email": "raymondmenard@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -495,7 +495,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township",
       "email": "john.moran@transunion.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -515,7 +515,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-mayor-place-butler:martinez-ryan",
       "contestId": "ballot-nj-morris:butler-borough-mayor-place-butler",
       "email": "JRyanMartinez78@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -535,7 +535,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler",
       "email": "Rverdonik@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -555,7 +555,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler",
       "email": "marcpicc@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -575,7 +575,7 @@
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:barrette-joseph",
       "contestId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham",
       "email": "jbarrette.chathamboroughzboa@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -595,7 +595,7 @@
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:hull-arianna-sophia",
       "contestId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham",
       "email": "a.sophia.hull@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -615,7 +615,7 @@
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:eck-nicholas-c",
       "contestId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham",
       "email": "nick.eck@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -635,7 +635,7 @@
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rubino-ronald",
       "contestId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township",
       "email": "realrrr@verizon.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -655,7 +655,7 @@
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
       "contestId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township",
       "email": "rowlandandmchugh4chathamtwp@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -675,7 +675,7 @@
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:hugh-martin-mc",
       "contestId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township",
       "email": "rowlandandmchugh4chathamtwp@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -695,7 +695,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-mayor-place-chester:goodwin-russell",
       "contestId": "ballot-nj-morris:chester-borough-mayor-place-chester",
       "email": "russellgoodwin@comcast.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -715,7 +715,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:marshuetz-gary",
       "contestId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester",
       "email": "gmarshuetz@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -735,7 +735,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:dominianni-michael",
       "contestId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester",
       "email": "dominacb@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -755,7 +755,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:uhlik-allison",
       "contestId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester",
       "email": "allison.uhlik@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -775,7 +775,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:saracena-vanessa",
       "contestId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester",
       "email": "vanescena@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -795,7 +795,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:di-paolo-joseph",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township",
       "email": "jdipaolo@chestertownship.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -815,7 +815,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:schellhorn-tara",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township",
       "email": "tara.schellhorn@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -835,7 +835,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:judd-andrew-b",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township",
       "email": "andyjudd71@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -855,7 +855,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:fitting-adam-e",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township",
       "email": "a.fitting@me.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -875,7 +875,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover:wittner-sandra",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover",
       "email": "sandramwittner@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -895,7 +895,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-2-place-dover:seanor-krista",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-2-place-dover",
       "email": "klseanor@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -915,7 +915,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-3-place-dover:plastoris-alice",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-3-place-dover",
       "email": "aplastoris@plastoris.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -935,7 +935,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-4-place-dover:tapia-elizabeth",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-4-place-dover",
       "email": "elizabethtapia0721@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -955,7 +955,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:maio-jr-frank-a-de",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township",
       "email": "frankd@easthanovertownship.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -975,7 +975,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:martorelli-michael",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township",
       "email": "michaelm@easthanovertownship.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -995,7 +995,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:ritrivi-nicholas",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park",
       "email": "nritrivi@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1015,7 +1015,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:boer-marc-de",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park",
       "email": "marcdeboer10@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1035,7 +1035,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:havens-ellsworth",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park",
       "email": "ellsworthhavens@msn.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1055,7 +1055,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:upton-john-william",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park",
       "email": "J-W-Upton@att.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1075,7 +1075,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:cahill-brian",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township",
       "email": "bcahill5@verizon.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1095,7 +1095,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:mihalko-michael",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township",
       "email": "Tentrent@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1115,7 +1115,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:saleh-ahmad",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township",
       "email": "ahmrez87@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1135,7 +1135,7 @@
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:chipperson-rita-c",
       "contestId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township",
       "email": "rcc@chippersonlaw.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1155,7 +1155,7 @@
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m",
       "contestId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township",
       "email": "cmyates@cmyates.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1175,7 +1175,7 @@
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:gray-ashley",
       "contestId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township",
       "email": "ashleyaliciagray@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1195,7 +1195,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-mayor-place-jefferson-township:wilsusen-eric-f",
       "contestId": "ballot-nj-morris:jefferson-township-mayor-place-jefferson-township",
       "email": "16efwil@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1215,7 +1215,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township",
       "email": "msenatore72@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1235,7 +1235,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:galfo-thomas-g",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township",
       "email": "tgalfoforjefferson@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1255,7 +1255,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:ioffredo-yvonne",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township",
       "email": "yvonne.ioffredo.lh@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1275,7 +1275,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:peters-christopher-a",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township",
       "email": "christopher.peters.a@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1295,7 +1295,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:torres-alejandro",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township",
       "email": "alejandrofortownshipcouncil@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1315,7 +1315,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-mayor-place-kinnelon:freda-james-j",
       "contestId": "ballot-nj-morris:kinnelon-borough-mayor-place-kinnelon",
       "email": "jimwfreda@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1335,7 +1335,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon",
       "email": "mabes3123@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1355,7 +1355,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:frank-cynthia",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon",
       "email": "cynthia.frank25@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1375,7 +1375,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-mayor-place-lincoln-park:runfeldt-david",
       "contestId": "ballot-nj-morris:lincoln-park-borough-mayor-place-lincoln-park",
       "email": "Runfeldtd@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1395,7 +1395,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:foreman-kenneth-r",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "rrforeman@optimum.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1415,7 +1415,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:dubowsky-bruce",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "Bdubowsky@vno.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1435,7 +1435,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:cassidy-william-t",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "55coachbc@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1455,7 +1455,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:gibbons-john-c",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "Jack.gibbons.65@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1475,7 +1475,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:walker-lisa",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "LisaWalker4LP@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1495,7 +1495,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:ottah-priscilla",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park",
       "email": "Ijeazinge@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1515,7 +1515,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:liberato-frank",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township",
       "email": "frankl@longhillnj.gov",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1535,7 +1535,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:dorsi-matthew",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township",
       "email": "matthewcdorsi@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1555,7 +1555,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:patel-mansi",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township",
       "email": "mansi416@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1575,7 +1575,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:hands-david",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township",
       "email": "davidhands87@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1595,7 +1595,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township:fettes-theresa",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township",
       "email": "tdill915@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1615,7 +1615,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township:foley-jason",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township",
       "email": "jason.foley@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1635,7 +1635,7 @@
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
       "contestId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison",
       "email": "bobemt01@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1655,7 +1655,7 @@
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
       "contestId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison",
       "email": "fortejj77@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1675,7 +1675,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-mayor-place-mendham:kelly-james-r",
       "contestId": "ballot-nj-morris:mendham-borough-mayor-place-mendham",
       "email": "james@kellyplumbingheating.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1695,7 +1695,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham",
       "email": "mfalthoff@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1715,7 +1715,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:murphy-joseph-m",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham",
       "email": "jcmcam@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1735,7 +1735,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:schreibman-dan",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham",
       "email": "dan.local@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1755,7 +1755,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham",
       "email": "markvandenhende@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1775,7 +1775,7 @@
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary",
       "contestId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township",
       "email": "gary@garykapner.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1795,7 +1795,7 @@
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
       "contestId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township",
       "email": "duarte4mendham@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1815,7 +1815,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township",
       "email": "mkayne@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1835,7 +1835,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:witty-june-b",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township",
       "email": "junewitty@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1855,7 +1855,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township",
       "email": "emilyryzuk@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1875,7 +1875,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township",
       "email": "montvillenjdems@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1895,7 +1895,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
       "contestId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains",
       "email": "nancyjverga@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1915,7 +1915,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:karr-jason-c",
       "contestId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains",
       "email": "jckarrmp@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1935,7 +1935,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:bruhn-jr-arthur-j-art",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains",
       "email": "art@shadetreegarage.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1955,7 +1955,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:nichol-sheryl-mc",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains",
       "email": "mcnichol1972@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1975,7 +1975,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:connor-lee-lusardi",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains",
       "email": "leelusardi@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -1995,7 +1995,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:denova-rosaria",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains",
       "email": "onerosaria@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2015,7 +2015,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:talarico-george",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township",
       "email": "grtalarico@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2035,7 +2035,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:grizzetti-joscelin",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township",
       "email": "jos.grizz@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2055,7 +2055,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:lyon-stephanie",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township",
       "email": "stephanie.j.lyon@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2075,7 +2075,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:godwin-jeremy-b",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township",
       "email": "jgformorris@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2095,7 +2095,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:biehl-john",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township",
       "email": "jbiehl.morristwp.dist15@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2115,7 +2115,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:rothman-samantha-g",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township",
       "email": "samantha.rothman@mac.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2135,7 +2135,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-mayor-place-mount-arlington:stanzilis-michael",
       "contestId": "ballot-nj-morris:mount-arlington-borough-mayor-place-mount-arlington",
       "email": "mstanzilis@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2155,7 +2155,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington",
       "email": "fostlemelissa@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2175,7 +2175,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:delaney-john-jack",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington",
       "email": "jackdelaney@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2195,7 +2195,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington",
       "email": "jessicasprice@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2215,7 +2215,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington",
       "email": "jaybrockdecker@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2235,7 +2235,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stelling-lucas-a",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes",
       "email": "lucasstelling@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2255,7 +2255,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stuart-mark-a",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes",
       "email": "markstuartnj@protonmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2275,7 +2275,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:hilton-andrew",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes",
       "email": "ahhilton@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2295,7 +2295,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:menard-thomas",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes",
       "email": "thomasdmenard@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2315,7 +2315,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes",
       "email": "melissa.muilenburg@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2335,7 +2335,7 @@
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:sylvester-jr-john",
       "contestId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong",
       "email": "jsylvester@netcong.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2355,7 +2355,7 @@
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:nametko-joseph-a",
       "contestId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong",
       "email": "jnametko@netcong.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2375,7 +2375,7 @@
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:franchi-ruocco-michele-a",
       "contestId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong",
       "email": "franchifamly@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2395,7 +2395,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:quigley-kimberley-r",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township",
       "email": "kimquigley@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2415,7 +2415,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:russell-kyle",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township",
       "email": "kyle5russ@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2435,7 +2435,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township",
       "email": "melissaflorancelynch@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2455,7 +2455,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:mancuso-michael",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township",
       "email": "mancusocampaign@fastmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2475,7 +2475,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:anderson-vincent",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township",
       "email": "vinnyanderson@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2495,7 +2495,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:forstenhausler-mark-h",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "mforstenhausler@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2515,7 +2515,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:nisivoccia-lou",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "lou@nisivocciaconsulting.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2535,7 +2535,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:thornton-denise",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "dsthornton@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2555,7 +2555,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:ruffo-travis",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "truffo67@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2575,7 +2575,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:beecher-jr-stephen-w",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "sbvt058@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2595,7 +2595,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:rietzke-amy-l",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "amy.rietzke@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2615,7 +2615,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:sisco-howard",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "hcsisco@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2635,7 +2635,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:lynch-meghan",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township",
       "email": "meghan.lynch39@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2655,7 +2655,7 @@
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:kheyfets-michael",
       "contestId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale",
       "email": "mkheyfets@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2675,7 +2675,7 @@
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:pellegrini-vincent",
       "contestId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale",
       "email": "vlp5855@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2695,7 +2695,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway",
       "email": "mburnside238@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2715,7 +2715,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway",
       "email": "patrickmcdonald105@email.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2735,7 +2735,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:dawkins-jr-clifford-d",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway",
       "email": "cliff.dawkinsesq@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2755,7 +2755,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:natale-angelo",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway",
       "email": "josephandsonssllc@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2775,7 +2775,7 @@
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:janone-james-m",
       "contestId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens",
       "email": "jamesjanone@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2795,7 +2795,7 @@
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:hale-stuart",
       "contestId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens",
       "email": "seanjakrealty@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2815,7 +2815,7 @@
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:lorenzo-ismael",
       "contestId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens",
       "email": "lorenzo4town@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2835,7 +2835,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-township-committee-place-washington-township:drake-joshua-a",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-township-committee-place-washington-township",
       "email": "drakepandh@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2855,7 +2855,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-mayor-place-wharton:binkoski-vincent",
       "contestId": "ballot-nj-morris:wharton-borough-mayor-place-wharton",
       "email": "vbinkoski@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2875,7 +2875,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-mayor-place-wharton:ghebreal-robin",
       "contestId": "ballot-nj-morris:wharton-borough-mayor-place-wharton",
       "email": "rghebreal1027@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2895,7 +2895,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton",
       "email": "analaura.jones@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2915,7 +2915,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:digennaro-mark",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton",
       "email": "markmo3@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2935,7 +2935,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:rogers-william-b",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton",
       "email": "wbrogers1797@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2955,7 +2955,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:murphy-morris-jayne",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton",
       "email": "jmurphymorris@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2975,7 +2975,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:o-halloran-brianna",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district",
       "email": "mrsbriannaohalloran@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -2995,7 +2995,7 @@
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:darling-jennifer",
       "contestId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district",
       "email": "ljcdarling@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3015,7 +3015,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:cabana-christine",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district",
       "email": "christine@cabanafamily.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3035,7 +3035,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:mills-benjamin",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district",
       "email": "ben.p.mills@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3055,7 +3055,7 @@
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:feldmann-jessica",
       "contestId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district",
       "email": "jessicamfeldmann@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3075,7 +3075,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:gogel-michael",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district",
       "email": "mgogel10@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3095,7 +3095,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:karpowich-jason",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district",
       "email": "jbkarpo@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3115,7 +3115,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:tadros-jane",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district",
       "email": "jtadros3@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3135,7 +3135,7 @@
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:meo-roberto-di",
       "contestId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district",
       "email": "rdimeo@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3155,7 +3155,7 @@
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:ryan-michael",
       "contestId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham",
       "email": "michaelryan143@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3175,7 +3175,7 @@
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:weber-jill",
       "contestId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham",
       "email": "jillweber@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3195,7 +3195,7 @@
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-board-of-education-place-chatham-township:smith-bradley",
       "contestId": "ballot-nj-morris:chatham-township-member-of-the-board-of-education-place-chatham-township",
       "email": "bradleywsmithjr@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3215,7 +3215,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:arostegui-erick",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district",
       "email": "erick_arostegui@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3235,7 +3235,7 @@
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:ramamurthy-srividya",
       "contestId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district",
       "email": "vidy2409@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3255,7 +3255,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:byszewski-carolyn-cici",
       "contestId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district",
       "email": "carolyn.byszewski@chester-nj.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3275,7 +3275,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:dundon-suzanne",
       "contestId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district",
       "email": "suzannedundon5@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3295,7 +3295,7 @@
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:fantin-angela",
       "contestId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district",
       "email": "abilella@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3315,7 +3315,7 @@
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:maher-william",
       "contestId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp",
       "email": "wpmaher@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3335,7 +3335,7 @@
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin",
       "contestId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp",
       "email": "wserafin@mhrd.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3355,7 +3355,7 @@
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach",
       "contestId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp",
       "email": "broach@joineei.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3375,7 +3375,7 @@
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:cappello-dino-f",
       "contestId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district",
       "email": "dinocappello@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3395,7 +3395,7 @@
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:andersen-michael-w",
       "contestId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district",
       "email": "andersenmw@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3415,7 +3415,7 @@
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:morissette-cameron",
       "contestId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district",
       "email": "cameron.morissette@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3435,7 +3435,7 @@
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:kim-won-james",
       "contestId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district",
       "email": "jimwonkim@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3455,7 +3455,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:frisk-jamie",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district",
       "email": "jcfrisk@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3475,7 +3475,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:bermudez-joshua",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district",
       "email": "joshuabermudez205@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3495,7 +3495,7 @@
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:lazo-yonatan",
       "contestId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district",
       "email": "yonatanlazo@icloud.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3515,7 +3515,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district:lomio-michael",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district",
       "email": "mlomio@hpreg.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3535,7 +3535,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:soto-brittany",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district",
       "email": "BQS5070@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3555,7 +3555,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:muscillo-cara",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district",
       "email": "cara.muscillo@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3575,7 +3575,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:ucci-jr-vincent-a",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district",
       "email": "vucci9@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3595,7 +3595,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:mitchell-stephanie-a",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district",
       "email": "stephanieann410@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3615,7 +3615,7 @@
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:gilmore-meghan",
       "contestId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district",
       "email": "gilmorePR@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3635,7 +3635,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:ratz-allen",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district",
       "email": "allen.ratz@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3655,7 +3655,7 @@
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:morgese-erin",
       "contestId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district",
       "email": "erinotoole16@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3675,7 +3675,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district:pombo-michael-c",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district",
       "email": "pombo4hanover@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3695,7 +3695,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:cabe-william-mc",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district",
       "email": "BestForChildren2023@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3715,7 +3715,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:mattessich-christopher",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district",
       "email": "RadiusRecycling@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3735,7 +3735,7 @@
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:kowalski-joseph",
       "contestId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district",
       "email": "JosephKForex@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3755,7 +3755,7 @@
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:anastasiou-alexander-h",
       "contestId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district",
       "email": "ahadmd73@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3775,7 +3775,7 @@
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:singh-abhinov",
       "contestId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district",
       "email": "abisingh@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3795,7 +3795,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:phalon-patrick-a",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district",
       "email": "patrickphalon1@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3815,7 +3815,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:poulas-stacey",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district",
       "email": "staceympoulas@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3835,7 +3835,7 @@
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:grater-jaime",
       "contestId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district",
       "email": "jaime.grater@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3855,7 +3855,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:brino-matthew-d-di",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district",
       "email": "matthewdibrino@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3875,7 +3875,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:donaldson-jean-t",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district",
       "email": "donaldsons@me.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3895,7 +3895,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:schwartz-daniel",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district",
       "email": "dschwartz4boe@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3915,7 +3915,7 @@
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:hodas-david",
       "contestId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district",
       "email": "DavidHodas4BOE@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3935,7 +3935,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:aiello-jennifer",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district",
       "email": "jmg1216@icloud.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3955,7 +3955,7 @@
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:vandervalk-elizabeth",
       "contestId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district",
       "email": "lizvv1012@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3975,7 +3975,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:melapioni-christina",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district",
       "email": "christina.melapioni@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -3995,7 +3995,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:case-kim",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district",
       "email": "kimcase11@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4015,7 +4015,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:paschke-tanya",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district",
       "email": "tanyalpaschke@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4035,7 +4035,7 @@
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:calabrese-eric",
       "contestId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district",
       "email": "ericcalabrese@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4055,7 +4055,7 @@
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:duran-david",
       "contestId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district",
       "email": "davidduran@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4075,7 +4075,7 @@
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:ellis-lisa",
       "contestId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district",
       "email": "lellis444@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4095,7 +4095,7 @@
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:fontes-eric",
       "contestId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district",
       "email": "ejfontes@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4115,7 +4115,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:mullany-ryan",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district",
       "email": "ryan@themullanys.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4135,7 +4135,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:nichol-michael",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district",
       "email": "mnichol03@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4155,7 +4155,7 @@
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:laud-stephen-mc",
       "contestId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district",
       "email": "smclaud@verizon.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4175,7 +4175,7 @@
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:strobel-robert",
       "contestId": "ballot-nj-morris:mendham-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district",
       "email": "robostrobel@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4195,7 +4195,7 @@
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:gondek-richard",
       "contestId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district",
       "email": "rgondek@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4215,7 +4215,7 @@
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:kallianpurkar-namita",
       "contestId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district",
       "email": "nkallianpurkar@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4235,7 +4235,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:daughtry-joseph",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "josephdaughtry@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4255,7 +4255,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:pisano-ryan",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "ryanpisano@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4275,7 +4275,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:palma-michael-j",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "palmamj2@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4295,7 +4295,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:shenkman-jennifer",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "jsshenkman@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4315,7 +4315,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:trivedi-ronak",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "ronak.trivedi@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4335,7 +4335,7 @@
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:lieberman-susan",
       "contestId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district",
       "email": "suealex85@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4355,7 +4355,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:longo-shawna",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district",
       "email": "shawnalongo@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4375,7 +4375,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:piccirillo-anoli",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district",
       "email": "Anoli79@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4395,7 +4395,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:rawding-denise",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district",
       "email": "deniserawding9@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4415,7 +4415,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:persak-steven",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district",
       "email": "spersak@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4435,7 +4435,7 @@
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:goscinski-steve",
       "contestId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district",
       "email": "stevegoscinski@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4455,7 +4455,7 @@
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-board-of-education-school-district-morris-township-school-district:rowan-charles",
       "contestId": "ballot-nj-morris:morris-township-member-of-the-board-of-education-school-district-morris-township-school-district",
       "email": "cwrowan@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4475,7 +4475,7 @@
       "candidacyId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:wall-elisabeth-l",
       "contestId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown",
       "email": "elisabethlwall@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4495,7 +4495,7 @@
       "candidacyId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:hernandez-jennifer",
       "contestId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown",
       "email": "hernandez.jen1984@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4515,7 +4515,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:svenningsen-karl",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district",
       "email": "kesvenn@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4535,7 +4535,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:eckert-melissa",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district",
       "email": "meckert@mtarlingtonk8.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4555,7 +4555,7 @@
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:byrne-rachel",
       "contestId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district",
       "email": "rbyrne@mtarlingtonk8.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4575,7 +4575,7 @@
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:oneill-jeannie",
       "contestId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district",
       "email": "JLynnKerr@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4595,7 +4595,7 @@
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:wetzel-alyssa",
       "contestId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district",
       "email": "alyssawetzel83@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4615,7 +4615,7 @@
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:orzillo-marc",
       "contestId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district",
       "email": "marc.orzillo@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4635,7 +4635,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:bollenbach-jessica",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "thebollenbachfamily@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4655,7 +4655,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:levin-erez",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "elevin11@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4675,7 +4675,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:forman-sara",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "sara.forman@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4695,7 +4695,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:armani-megan",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "megan.armani@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4715,7 +4715,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:parker-jennifer",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "jenparkerlondon@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4735,7 +4735,7 @@
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:veigh-julia-mc",
       "contestId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district",
       "email": "juliamcveigh24@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4755,7 +4755,7 @@
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:koster-jr-edward-j",
       "contestId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district",
       "email": "ejk30092@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4775,7 +4775,7 @@
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:albensi-kimberly",
       "contestId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district",
       "email": "albensi.kim@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4795,7 +4795,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:trivedi-jaya",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "jaya.boe2026@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4815,7 +4815,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:reddy-trivikrama",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "drreddy.boe@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4835,7 +4835,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:pujara-akshay",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "akshay.boe2026@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4855,7 +4855,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:berrios-timothy",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "tberrios@optonline.net",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4875,7 +4875,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:raia-jack",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "jackraia@aol.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4895,7 +4895,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:dellafave-nicole",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "Ndellafave0709@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4915,7 +4915,7 @@
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:wright-wendy",
       "contestId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district",
       "email": "wendywright4boe@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4935,7 +4935,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:wiswesser-christina",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district",
       "email": "ccal1823@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4955,7 +4955,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:trombetta-amanda",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district",
       "email": "amandatrombetta26@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4975,7 +4975,7 @@
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:gitin-timothy",
       "contestId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district",
       "email": "timothygitin@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -4995,7 +4995,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:lifshey-christina-nina",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "lifsheyc2@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5015,7 +5015,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:adams-amanda",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "amandashope17@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5035,7 +5035,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:bhatia-rachel",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "rachelgbhatia@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5055,7 +5055,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:weiner-joshua",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "jlweiner0731@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5075,7 +5075,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:epstein-sheldon",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "sheldonepstein@hotmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5095,7 +5095,7 @@
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:vo-lam",
       "contestId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district",
       "email": "lamvo428@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5115,7 +5115,7 @@
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-board-of-education-school-district-riverdale-borough-school-district:thomas-marybeth",
       "contestId": "ballot-nj-morris:riverdale-borough-member-of-the-board-of-education-school-district-riverdale-borough-school-district",
       "email": "mthomas@rpsnj.org",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5135,7 +5135,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:graf-edward",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district",
       "email": "edwardgraf@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5155,7 +5155,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:long-jaclyn-d",
       "contestId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district",
       "email": "JLong11884@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5175,7 +5175,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:mezik",
       "contestId": "ballot-nj-morris:rockaway-twp-boe",
       "email": "lisa.mezik@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5195,7 +5195,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:nydegger",
       "contestId": "ballot-nj-morris:rockaway-twp-boe",
       "email": "russellnydegger@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5215,7 +5215,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:mamoun",
       "contestId": "ballot-nj-morris:rockaway-twp-boe",
       "email": "monirrockaway@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5235,7 +5235,7 @@
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno",
       "contestId": "ballot-nj-morris:rockaway-twp-boe-unexpired",
       "email": "oborno@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5255,7 +5255,7 @@
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:colucci-anne-thereze",
       "contestId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district",
       "email": "acolucci2122@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5275,7 +5275,7 @@
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:bonilla-camilo",
       "contestId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district",
       "email": "camilob1986@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5295,7 +5295,7 @@
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:galdieri-valerie",
       "contestId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district",
       "email": "vgaldieri@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5315,7 +5315,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:bliesath-suzanne",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district",
       "email": "doggiedoc007@yahoo.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5335,7 +5335,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:moliterno-elizabeth-liz",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "liz29mill@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5355,7 +5355,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:spadaccini-camillia",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "CamSpad4BOE@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5375,7 +5375,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:bravo-laurie",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "lauriembravo@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5395,7 +5395,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:hare-padraig-sean",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "share06@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5415,7 +5415,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:dressler-peter",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "peterjdressler@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5435,7 +5435,7 @@
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:whitney-nicholas-j",
       "contestId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township",
       "email": "whitneynick2003@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "municipal_governing",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5455,7 +5455,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:rice-cristina",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district",
       "email": "cristinarice09@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5475,7 +5475,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:astrologo-anthony",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district",
       "email": "aastrologo112@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5495,7 +5495,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:gonzalez-gabriel",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district",
       "email": "djbeast@me.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [
@@ -5515,7 +5515,7 @@
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-unexpired-term-school-district-wharton-borough-school-district:pascale-colleen-f",
       "contestId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-unexpired-term-school-district-wharton-borough-school-district",
       "email": "colleenpascale@gmail.com",
-      "instrumentVersion": "v1",
+      "instrumentVersion": "v2",
       "officeClass": "school_board",
       "plannedInvitedOn": "2026-09-08",
       "plannedRemindersOn": [

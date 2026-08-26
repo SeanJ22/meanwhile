@@ -995,12 +995,6 @@ function MapEntryInner() {
    * battlecard did its own narrower version six hundred lines down. See
    * `representationForDivision`.
    */
-  const holdersFor = useCallback(
-    (ocdId: string): SeatHolder[] =>
-      representationForDivision(current?.coverage ?? null, ocdId),
-    [current],
-  );
-
   /**
    * The SELECTED division's officeholders, resolved by the division's own
    * key rather than by where the reader is standing (M112, 2026-08-16).
@@ -1489,6 +1483,10 @@ function MapEntryInner() {
    */
   const [votingOpen, setVotingOpen] = useState(false);
   const [votingPins, setVotingPins] = useState<VotingSitePin[]>([]);
+  /** VOT-1: the point the reader's address resolved to, for the ten-mile ring. */
+  const [votingAddressPoint, setVotingAddressPoint] = useState<{ lat: number; lng: number } | null>(
+    null,
+  );
   const [selectedVotingSiteId, setSelectedVotingSiteId] = useState<string | null>(
     null,
   );
@@ -2018,6 +2016,7 @@ function MapEntryInner() {
             allowAutoFrame={view?.kind !== "settled"}
             focusStateOcdId={focusState.activeOcdId}
             votingSites={votingPins}
+            votingAddressPoint={votingAddressPoint}
             onSelectVotingSite={setSelectedVotingSiteId}
             selectedVotingSiteId={selectedVotingSiteId}
           />
@@ -2063,6 +2062,7 @@ function MapEntryInner() {
               {votingOpen ? (
                 <VotingSitesPanel
                   onSites={setVotingPins}
+                  onAddressPoint={setVotingAddressPoint}
                   selectedSiteId={selectedVotingSiteId}
                   onSelectSite={setSelectedVotingSiteId}
                   onClose={closeVoting}

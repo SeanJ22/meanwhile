@@ -591,22 +591,13 @@ function BodySections({
               reordering a section cannot silently move the pill somewhere the
               author did not put it.
             */}
-            {section.id === "sources" && (
-              /*
-                `key` on the SUBJECT (RO04, 2026-08-25). The panel used to
-                collapse itself with an effect on `[subjectId]`; that effect
-                was `react-hooks/set-state-in-effect` and is gone. This
-                sectioned variant has no tab to key on, so the subject IS the
-                key here — a reader opening a different card gets a fresh
-                panel rather than the last one's half-typed text.
-              */
-              <SpeakYourMind
-                key={subject.subjectId}
-                subjectType={subject.subjectKind}
-                subjectId={subject.subjectId}
-                subject={subject.title}
-              />
-            )}
+            {/*
+              **BC-29 (2026-08-25): the body card's in-section pill is GONE**,
+              and it moved rather than being deleted — it renders at the pinned
+              foot below, with every other card shape. Two placements for one
+              control was the thing that let the tabbed card ship a clipped one
+              while the body card's was fine.
+            */}
             <CardSection title={section.title} meta={section.meta}>
               {section.content ?? <Empty>{section.absence}</Empty>}
             </CardSection>
@@ -886,8 +877,35 @@ export function EntityModal({
           the pill itself to satisfy "above Sources"; the tabbed card and the
           place card have no such section and take it here.
         */}
-        {!subject.bodyCard && (
-          <div className="account-modal-body pt-0">
+        {/*
+          **BC-29 (2026-08-25) — IT IS A PINNED FOOT NOW, ON EVERY CARD SHAPE.**
+
+          Sean, on the Kearsarge card: *"the Speak Your Mind pill sits in a
+          small scroll region of its own. It becomes a floating pill fixed at
+          the bottom. Only the board member list scrolls. Speak Your Mind stays
+          put and is never covered by anything. Applies to every large
+          battlecard with a scrolling list."*
+
+          The container was a SECOND `account-modal-body` — `flex: 1` with its
+          own `overflow-y: auto` — so two siblings both claimed the remaining
+          height and both grew scrollbars, and the pill ended up clipped inside
+          a strip of its own. `account-modal-foot` is `flex: 0 0 auto`, so the
+          list above takes the remainder and scrolls alone.
+
+          **The `!subject.bodyCard` condition is GONE, and that is the "every
+          card shape" half.** It existed so the body card could place its own
+          pill above its Sources SECTION while the tabbed card took one here;
+          two placements, one of which is now the wrong one. Pinned at the foot
+          is below everything on every shape, which still satisfies BC-20's
+          actual requirement — reachable from anywhere on the card — and now
+          satisfies Sean's stronger one, that it is never scrolled away from.
+
+          Exactly ONE pill still renders per card, which is what the earlier
+          two-pill defect was measured on: the body card's in-section render
+          went with the condition.
+        */}
+        {(
+          <div className="account-modal-foot">
             {/*
               **BC-20 (2026-08-25) — A TAB SWITCH COLLAPSES IT TO ITS PILL.**
 

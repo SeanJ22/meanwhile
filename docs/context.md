@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 10:29:41 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 12:43:46 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1063 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1073 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 177 recorded
+## Rulings — 178 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -447,6 +447,7 @@ from. Each entry there names what it supersedes.
 - RULING 162 — a bypass is only as safe as the paths it can carry
 - RULING 163 — the answer to "is the protection still what we think" is a command
 - RULING 164 — a workflow reports every failure, not just the first
+- RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -611,18 +612,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 10:29:40 EDT
-branch: claude/unblock-pushers-0826
-head sha: b9e714dd60d1c39e0479e2e5c458fc29b363bd0e
-head subject: Unblock the scheduled pushers: a scoped bypass is only as safe as its allowlist
-origin/main sha: 1c2e9164f2dcf03ff3dbaf432c9b3de843198543
-origin/main subject: Merge pull request #189 from SeanJ22/claude/all-open-0826-tracker
-local main sha: 1c2e9164f2dcf03ff3dbaf432c9b3de843198543
+generated: 2026-08-26 12:43:46 EDT
+branch: claude/deploy-key-cutover-closeout-0826
+head sha: 6b6cdf1e860c03828ac9f77071e13a4b58358f0d
+head subject: Close-out: the deploy-key cutover, and the two things it corrected on its way out
+origin/main sha: f6ef545c23dd3729cd6c5f06548ffc26f8408d05
+origin/main subject: Merge pull request #191 from SeanJ22/claude/deploy-key-cutover-0826
+local main sha: f6ef545c23dd3729cd6c5f06548ffc26f8408d05
 local main matches origin/main: yes
 working tree: clean
 open prs: none
-last recorded tests: 348 (pass)
+last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:18738
+last recorded status from: docs/state.md:19237
 ```

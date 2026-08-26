@@ -150,15 +150,58 @@ export const SEARCH_POOL_EXCLUDED: ReadonlyArray<{
 export const SEARCH_CONTROL_QUERY = "zzqxwvnonexistent99 zzqxwvnonexistent98";
 
 /**
+ * THE ECHO STRIPPER, AND IT IS THE WHOLE OF WHY THE CONTROL WAS UNSOUND.
+ * (2026-08-26, the sources-and-incumbency session.)
+ *
+ * **A search page repeats the query back at you before it has found anything.**
+ * `4get.ca` puts it in the `<title>`, in the `<meta name="description">`, in the
+ * search box's `value=`, and in six tab links (`/web?s=`, `/images?s=`,
+ * `/videos?s=`, `/news?s=`, `/music?s=`, `/scraper?s=`). Ask it for
+ * *Karen Ebel New Hampshire* and the word **Ebel appears eight times in a page
+ * with zero results in it**, measured 2026-08-26.
+ *
+ * That is exactly what `docs/sources.md` recorded on 2026-08-25 as *"HTTP 200,
+ * 7,228 B naming the subject 8 times, against a 7,274 B control"* and read as
+ * the one compliant general index working. **It was eight echoes.** The control
+ * was RULING 110's wrong-form search living inside the instrument built to
+ * prevent wrong-form searches: it asked whether the letters appear, not whether
+ * the page is ABOUT the subject.
+ *
+ * So the query's own echo is removed before the question is asked. What is left
+ * is body text and result links, and a subject named THERE is a result.
+ */
+export function stripQueryEcho(body: string, subject: string): string {
+  let out = body;
+  // The document's own metadata about the query.
+  out = out.replace(/<title[^>]*>[\s\S]*?<\/title>/gi, " ");
+  out = out.replace(/<meta[^>]+name=["']description["'][^>]*>/gi, " ");
+  out = out.replace(/<meta[^>]+property=["']og:[^"']*["'][^>]*>/gi, " ");
+  // Any attribute value carrying the query — the input box, the tab links, the
+  // autocomplete, and whatever else an interface echoes it into.
+  const term = subject.trim();
+  if (term.length > 0) {
+    const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const plussed = escaped.replace(/\s+/g, "[+%20\\s]+");
+    out = out.replace(new RegExp(`[a-zA-Z-]+=["'][^"']*${plussed}[^"']*["']`, "gi"), " ");
+  }
+  return out;
+}
+
+/**
  * Does the engine's answer name the subject, where its answer to an impossible
  * query does not?
  *
  * The subject term is the SURNAME rather than the full name, because engines
  * break a quoted phrase across markup and a full-name test would report a miss
  * on a page that plainly names the person.
+ *
+ * **The query's own echo is stripped first** — see `stripQueryEcho`. Without
+ * that, every engine "names" every subject on every query, forever, including
+ * on a page with nothing in it.
  */
-export function namesSubject(body: string, controlBody: string, subject: string): boolean {
+export function namesSubject(body: string, controlBody: string, subject: string, query?: string): boolean {
   const term = subject.toLowerCase();
   if (term.length < 3) return false;
-  return body.toLowerCase().includes(term) && !controlBody.toLowerCase().includes(term);
+  const cleaned = stripQueryEcho(body, query ?? subject).toLowerCase();
+  return cleaned.includes(term) && !controlBody.toLowerCase().includes(term);
 }

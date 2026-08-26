@@ -211,3 +211,76 @@ Pond Dam Precinct**, both administered from Washington, 14.89 km.
 special districts at any vintage, so whether either reaches Newbury is
 `UNRESOLVED` — a work item, never a `false`. Full enumeration and method per
 row in `docs/universe-03255.md` and `data/audit/universe-03255.json`.
+
+
+## 2026-08-26 — THE WALL AT `gc.nh.gov` HAS FALLEN, AND THE BODY PUBLISHES IN BULK
+
+(The sources-and-incumbency session. **Append-only**: the 2026-08-13 entry above
+stays exactly as written, because a deleted rung comes back as drift. This is
+the dated note beside it.)
+
+**The 2026-08-13 record says the General Court "resets the TLS handshake from
+every non-browser client (curl/schannel, Node fetch) before any HTTP happens",
+and that "no inline verification of NH member pages is possible from this
+pipeline". Re-walked 2026-08-26: BOTH halves are now false.**
+
+| Route | 2026-08-13 | 2026-08-26 |
+|---|---|---|
+| `gc.nh.gov/downloads/` | TLS reset | **HTTP 200**, 19,736 B, rung 2, plain `curl` |
+| `gc.nh.gov/downloads/Members.txt` | — | **HTTP 200**, 82,694 B |
+| `gc.nh.gov/house/members/member.aspx?member=377093` | "not possible" | **HTTP 200**, 37,915 B |
+| `www.gencourt.state.nh.us/downloads/` | — | **HTTP 301 to `gc.nh.gov`** |
+
+That is RULING 52 and RULING 53 doing exactly what they were adopted for: a wall
+is one measurement on one date, never a standing property, and `gc.nh.gov` was
+already one of the three walls the NH Hunt 3 session found had fallen after
+being recorded emphatically.
+
+**`gc.nh.gov` is CANONICAL. `gencourt.state.nh.us` redirects to it.** Both
+hostnames serve the same body, and the project's bookmarks carried both without
+saying which was which.
+
+### What the body publishes, which nobody here had asked
+
+Full detail is in `states/nh/sources.md`. The short version, because it changes
+how New Hampshire is hunted:
+
+- **A bulk roster of the whole legislature**, tab-delimited, 408 rows, with
+  phone, work email, committees and `electedStatus`. **406 of 408 emails, 266
+  of 408 phones**, in one fetch.
+- **A public read-only SQL Server**, live, whose schema joins legislators to
+  roll calls on a stable `EmployeeNo` with no name matching at all.
+- **An online testimony system whose submissions are themselves data** —
+  `houseRemoteTestify` carries the text, the town and the committee.
+
+### The trap in `electedStatus`, and it mislabels real people
+
+The field reads ` Incumbent` **with a leading space** (279 rows), `new` (109),
+`Former` (18) and empty (2). **`new` means sitting.** It describes what the
+person was at the LAST election, not whether they are in office now — 279 + 109
+= 388 sitting members across a 400-seat House and a 24-seat Senate, which is a
+chamber with vacancies.
+
+Reading `new` as *not sitting* would mark **Daniel E. Innis**, the sitting
+Senator for District 7, and **Gregory M. Sargent**, a sitting representative for
+Merrimack 7, as non-incumbents.
+
+### Name forms: three spellings of one person
+
+| Where | Karen | Gregory | Daniel |
+|---|---|---|---|
+| the ballot corpus (filed name) | Karen Elizabeth Ebel | Gregory M. Sargent | Daniel E. Innis |
+| the General Court's roster | Karen E. Ebel | Greg Sargent | Dan Innis |
+| the officeholder registry | Karen Ebel | Greg Sargent | Dan Innis |
+
+**Candidates file under legal names and serve under working names.** Any join on
+a name string breaks on exactly this, and it broke on two of these three.
+
+### The walls that stand, dated
+
+`sos.nh.gov` and `cfs.sos.nh.gov` answer **HTTP 403 to both a plain client and
+a full browser header set, on `robots.txt` itself** — so the permission question
+is UNANSWERED rather than answered no. Last tested **2026-08-26**. Rungs 4, 5 and
+6 are unwalked. `docs/sources.md` records a 2.95 MB HTTP 200 from
+`sos.nh.gov/elections/campaign-finance/` on 2026-08-24, so **the wall is
+intermittent**, which is itself the finding.

@@ -1,0 +1,7418 @@
+{
+  "source": {
+    "url": "https://gc.nh.gov/downloads/Members.txt",
+    "org": "New Hampshire General Court",
+    "collectedAt": "2026-08-26",
+    "note": "Taken at rung zero under RULING 166 — the body's own bulk download, before any aggregator. electedStatus is the body's own statement of who currently sits."
+  },
+  "counts": {
+    "logicalInput": 408,
+    "produced": 408,
+    "dropped": 0,
+    "statedTotal": null,
+    "verdict": "COULD_NOT_ASSERT"
+  },
+  "byStatus": {
+    "INCUMBENT": 279,
+    "NEW": 109,
+    "FORMER": 18,
+    "UNSTATED": 2
+  },
+  "byChamber": {
+    "S": 24,
+    "H": 384
+  },
+  "members": [
+    {
+      "chamber": "S",
+      "familyName": "Abbas",
+      "givenName": "Daryl",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "22",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3077",
+      "email": "Daryl.Abbas@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary",
+        "Education",
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Aldrich",
+      "givenName": "Glen",
+      "middleName": "C",
+      "seatNo": "2080",
+      "county": "Belknap",
+      "district": "6",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 527-8726",
+      "email": "Glennaldrich@proton.me",
+      "town": "Gilford",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Alexander",
+      "givenName": "Joe",
+      "middleName": "H.",
+      "seatNo": "2100",
+      "county": "Hillsborough",
+      "district": "29",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 856-5227",
+      "email": "Joe.Alexander@gc.nh.gov",
+      "town": "Goffstown",
+      "committees": [
+        "Judiciary",
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Almy",
+      "givenName": "Susan",
+      "middleName": "W",
+      "seatNo": "5005",
+      "county": "Grafton",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "susan.almy@comcast.net",
+      "town": "Lebanon",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Altschiller",
+      "givenName": "Debra",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "24",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-7875",
+      "email": "Debra.Altschiller@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration",
+        "Judiciary",
+        "Education",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ames",
+      "givenName": "Dick",
+      "middleName": null,
+      "seatNo": "5020",
+      "county": "Cheshire",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 532-6781",
+      "email": "amesinjaffrey@gmail.com",
+      "town": "Jaffrey",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ammon",
+      "givenName": "Keith",
+      "middleName": "Michael",
+      "seatNo": "2003",
+      "county": "Hillsborough",
+      "district": "42",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 296-9879",
+      "email": "Keith.Ammon@gc.nh.gov",
+      "town": "New Boston",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Andrus",
+      "givenName": "Louise",
+      "middleName": null,
+      "seatNo": "2094",
+      "county": "Merrimack",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 648-2510",
+      "email": "Louise.Andrus@gc.nh.gov",
+      "town": "Salisbury",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ankarberg",
+      "givenName": "Aidan",
+      "middleName": null,
+      "seatNo": "3059",
+      "county": "Strafford",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "I",
+      "title": "Representative",
+      "phone": null,
+      "email": "Aidan.Ankarberg@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Aron",
+      "givenName": "Michael",
+      "middleName": null,
+      "seatNo": "2051",
+      "county": "Sullivan",
+      "district": "8",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 835-2188",
+      "email": "Michael.Aron@gc.nh.gov",
+      "town": "South Acworth",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Aron",
+      "givenName": "Judy",
+      "middleName": "F.",
+      "seatNo": "2053",
+      "county": "Sullivan",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 835-2188",
+      "email": "Judy.Aron@gc.nh.gov",
+      "town": "South Acworth",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Aures",
+      "givenName": "Cyril",
+      "middleName": "Nicholas",
+      "seatNo": "1016",
+      "county": "Merrimack",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Cyril.Aures@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Avard",
+      "givenName": "Kevin",
+      "middleName": "A.",
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3479",
+      "email": "Kevin.Avard@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Energy and Natural Resources",
+        "Health and Human Services",
+        "Rules and Enrolled Bills"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Avellani",
+      "givenName": "Lino",
+      "middleName": "M",
+      "seatNo": "2043",
+      "county": "Carroll",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 858-5196",
+      "email": "lino.avellani@gc.nh.gov",
+      "town": "Sanbornville",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Aylward",
+      "givenName": "Deborah",
+      "middleName": null,
+      "seatNo": "1005",
+      "county": "Merrimack",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Deborah.Aylward@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bailey",
+      "givenName": "Glenn",
+      "middleName": null,
+      "seatNo": "2020",
+      "county": "Strafford",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 755-2756",
+      "email": "grbailey@metrocast.net",
+      "town": "Milton",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Balboni",
+      "givenName": "Peggy",
+      "middleName": null,
+      "seatNo": "5032",
+      "county": "Rockingham",
+      "district": "38",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Peggy.Balboni@gc.nh.gov",
+      "town": "Rye Beach",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Baldwin",
+      "givenName": "Heather",
+      "middleName": "P",
+      "seatNo": "4094",
+      "county": "Grafton",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Heather.Baldwin@gc.nh.gov",
+      "town": "Thornton",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ball",
+      "givenName": "Lorie",
+      "middleName": null,
+      "seatNo": "3085",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 770-7319",
+      "email": "Lorie.Ball@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Barbour",
+      "givenName": "Liz",
+      "middleName": "F",
+      "seatNo": "2044",
+      "county": "Hillsborough",
+      "district": "35",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Liz.Barbour@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Barton",
+      "givenName": "Joseph",
+      "middleName": "J",
+      "seatNo": "3114",
+      "county": "Grafton",
+      "district": "1",
+      "electedStatus": "UNSTATED",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Joseph.Barton@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bay",
+      "givenName": "Luz",
+      "middleName": null,
+      "seatNo": "4039",
+      "county": "Strafford",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 743-3440",
+      "email": "Luz.Bay@gc.nh.gov",
+      "town": "Dover",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Beauchemin",
+      "givenName": "Paige",
+      "middleName": null,
+      "seatNo": "4096",
+      "county": "Hillsborough",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 296-5489",
+      "email": "paige.beauchemin@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Beaulier",
+      "givenName": "Calvin",
+      "middleName": null,
+      "seatNo": "2046",
+      "county": "Grafton",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Calvin.Beaulier@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Belcher",
+      "givenName": "Mike",
+      "middleName": "S",
+      "seatNo": "3047",
+      "county": "Carroll",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Mike.Belcher@gc.nh.gov",
+      "town": "Wakefield",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs",
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bennett",
+      "givenName": "Cindy",
+      "middleName": "Lynn",
+      "seatNo": "1022",
+      "county": "Rockingham",
+      "district": "4",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 493-8265",
+      "email": "Cindy.Bennett@gc.nh.gov",
+      "town": "Raymond",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Berch",
+      "givenName": "Paul",
+      "middleName": "S.",
+      "seatNo": "3103",
+      "county": "Cheshire",
+      "district": "6",
+      "electedStatus": "FORMER",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 852-6541",
+      "email": "Paul.Berch@gc.nh.gov",
+      "town": "Westmoreland",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Berezhny",
+      "givenName": "Lex",
+      "middleName": null,
+      "seatNo": "2011",
+      "county": "Grafton",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Lex.Berezhny@gc.nh.gov",
+      "town": "Grafton",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bergeron",
+      "givenName": "Dan",
+      "middleName": "H",
+      "seatNo": "4069",
+      "county": "Hillsborough",
+      "district": "16",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 682-8961",
+      "email": "Dan.Bergeron@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bernardy",
+      "givenName": "JD",
+      "middleName": null,
+      "seatNo": "3040",
+      "county": "Rockingham",
+      "district": "36",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 969-5796",
+      "email": "jd.bernardy@comcast.net",
+      "town": "South Hampton",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Berry",
+      "givenName": "Ross",
+      "middleName": null,
+      "seatNo": "3119",
+      "county": "Hillsborough",
+      "district": "44",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 803-3448",
+      "email": "Ross.Berry@gc.nh.gov",
+      "town": "Weare",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Birdsell",
+      "givenName": "Regina",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "19",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3479",
+      "email": "Regina.Birdsell@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Commerce",
+        "Health and Human Services"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bixby",
+      "givenName": "Peter",
+      "middleName": "W",
+      "seatNo": "4077",
+      "county": "Strafford",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 749-5659",
+      "email": "Peter.Bixby@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bjelobrk",
+      "givenName": "Marie Louise",
+      "middleName": null,
+      "seatNo": "2084",
+      "county": "Grafton",
+      "district": "5",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Marie.Bjelobrk@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Boehm",
+      "givenName": "Ralph",
+      "middleName": "G",
+      "seatNo": "2055",
+      "county": "Hillsborough",
+      "district": "38",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 860-6309",
+      "email": "rgboehm@comcast.net",
+      "town": "Litchfield",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bogert",
+      "givenName": "Steven",
+      "middleName": "T",
+      "seatNo": "2005",
+      "county": "Belknap",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 528-0613",
+      "email": "Steven.Bogert@gc.nh.gov",
+      "town": "Laconia",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bolton",
+      "givenName": "Bill",
+      "middleName": "R",
+      "seatNo": "5041",
+      "county": "Grafton",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 236-1812",
+      "email": "Bill.Bolton@gc.nh.gov",
+      "town": "Plymouth",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Booras",
+      "givenName": "Efstathia",
+      "middleName": "S",
+      "seatNo": "5035",
+      "county": "Hillsborough",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Efstathia.Booras@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bordes",
+      "givenName": "Mike",
+      "middleName": null,
+      "seatNo": "3044",
+      "county": "Belknap",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(516) 369-1167",
+      "email": "mike.bordes@gc.nh.gov",
+      "town": "Laconia",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Boudman",
+      "givenName": "Bobbi",
+      "middleName": null,
+      "seatNo": "3083",
+      "county": "Carroll",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Bobbi.Boudman@gc.nh.gov",
+      "town": "Wolfeboro",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Boyd",
+      "givenName": "Bill",
+      "middleName": null,
+      "seatNo": "2010",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 660-6077",
+      "email": "Bill.Boyd@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Boyd",
+      "givenName": "Stephen",
+      "middleName": "E.",
+      "seatNo": "3030",
+      "county": "Merrimack",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 203-0746",
+      "email": "stepheneboyd@gmail.com",
+      "town": "Hooksett",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bricchi",
+      "givenName": "Tracy",
+      "middleName": "Anne",
+      "seatNo": "4060",
+      "county": "Merrimack",
+      "district": "15",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Tracy.Bricchi@gc.nh.gov",
+      "town": "Penacook",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bridle",
+      "givenName": "Nicholas",
+      "middleName": "D.",
+      "seatNo": "1020",
+      "county": "Rockingham",
+      "district": "29",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Nicholas.Bridle@gc.nh.gov",
+      "town": "Hampton",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Brown",
+      "givenName": "Pam",
+      "middleName": null,
+      "seatNo": "3039",
+      "county": "Rockingham",
+      "district": "14",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(818) 700-1853",
+      "email": "Pam.Brown@gc.nh.gov",
+      "town": "Kingston",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Brown",
+      "givenName": "Richard",
+      "middleName": "R",
+      "seatNo": "2095",
+      "county": "Carroll",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Richard.Brown@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Bryer",
+      "givenName": "Scott",
+      "middleName": "R",
+      "seatNo": "2072",
+      "county": "Rockingham",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Scott.Bryer@gc.nh.gov",
+      "town": "Northwood",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Buco",
+      "givenName": "Thomas",
+      "middleName": "L",
+      "seatNo": "4095",
+      "county": "Carroll",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 986-5629",
+      "email": "Tom.Buco@gc.nh.gov",
+      "town": "Conway",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Burnham",
+      "givenName": "Claudine",
+      "middleName": "R",
+      "seatNo": "1006",
+      "county": "Strafford",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Claudine.Burnham@gc.nh.gov",
+      "town": "Milton",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Burroughs",
+      "givenName": "Anita",
+      "middleName": "D",
+      "seatNo": "5017",
+      "county": "Carroll",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 986-6216",
+      "email": "Anita.Burroughs@gc.nh.gov",
+      "town": "Glen",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Burton",
+      "givenName": "Wayne",
+      "middleName": "M.",
+      "seatNo": "4061",
+      "county": "Strafford",
+      "district": "10",
+      "electedStatus": "FORMER",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 868-5037",
+      "email": "Wayne.Burton@gc.nh.gov",
+      "town": "Durham",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Butler",
+      "givenName": "Billie",
+      "middleName": null,
+      "seatNo": "4019",
+      "county": "Strafford",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": null,
+      "town": "Concord",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cahill",
+      "givenName": "Michael",
+      "middleName": "D",
+      "seatNo": "3097",
+      "county": "Rockingham",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 380-1736",
+      "email": "Michael.Cahill@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cambrils",
+      "givenName": "Jose",
+      "middleName": "E",
+      "seatNo": "1008",
+      "county": "Merrimack",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 731-8287",
+      "email": "Jose4NH@comcast.net",
+      "town": "Loudon",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Caplan",
+      "givenName": "Tony",
+      "middleName": "M",
+      "seatNo": "4029",
+      "county": "Merrimack",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 428-7042",
+      "email": "Tony.Caplan@gc.nh.gov",
+      "town": "Henniker",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Carson",
+      "givenName": "Sharon",
+      "middleName": "M.",
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3266",
+      "email": "Sharon.Carson@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Capital Budget",
+        "Finance",
+        "Judiciary",
+        "Rules and Enrolled Bills",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Chourasia",
+      "givenName": "Manoj",
+      "middleName": null,
+      "seatNo": "4081",
+      "county": "Hillsborough",
+      "district": "11",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Manoj.Chourasia@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Chretien",
+      "givenName": "Suzanne",
+      "middleName": "L",
+      "seatNo": "4059",
+      "county": "Hillsborough",
+      "district": "19",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Suzanne.Chretien@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cloutier",
+      "givenName": "John",
+      "middleName": "R",
+      "seatNo": "4053",
+      "county": "Sullivan",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 542-6190",
+      "email": "jocloutier@comcast.net",
+      "town": "Claremont",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Coker",
+      "givenName": "Matthew",
+      "middleName": null,
+      "seatNo": "2035",
+      "county": "Belknap",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Matthew.Coker@gc.nh.gov",
+      "town": "Meredith",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Colby",
+      "givenName": "Eleana",
+      "middleName": "Marie",
+      "seatNo": "3101",
+      "county": "Merrimack",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 545-1484",
+      "email": "Eleana.Colby@gc.nh.gov",
+      "town": "Bow",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Colcombe",
+      "givenName": "Rich�",
+      "middleName": null,
+      "seatNo": "1028",
+      "county": "Hillsborough",
+      "district": "30",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Riche.Colcombe@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cole",
+      "givenName": "Brian",
+      "middleName": "D",
+      "seatNo": "3090",
+      "county": "Hillsborough",
+      "district": "26",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 670-8045",
+      "email": "Brian.Cole@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Ways and Means",
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Comtois",
+      "givenName": "Barbara",
+      "middleName": null,
+      "seatNo": "2054",
+      "county": "Belknap",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 776-8989",
+      "email": "Barbara.Comtois@gc.nh.gov",
+      "town": "Center Barnstead",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Corcoran",
+      "givenName": "Travis",
+      "middleName": "James",
+      "seatNo": "1024",
+      "county": "Hillsborough",
+      "district": "28",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "tjic2020@gmail.com",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cormen",
+      "givenName": "Thomas",
+      "middleName": "H",
+      "seatNo": "4030",
+      "county": "Grafton",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 707-6994",
+      "email": "Thomas.Cormen@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Cornell",
+      "givenName": "Patricia",
+      "middleName": null,
+      "seatNo": "5034",
+      "county": "Hillsborough",
+      "district": "22",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 644-5480",
+      "email": "patricia.cornell@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Crawford",
+      "givenName": "Karel",
+      "middleName": "A.",
+      "seatNo": "3066",
+      "county": "Carroll",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 253-7857",
+      "email": "karel.crawford@gc.nh.gov",
+      "town": "Center Harbor",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Creighton",
+      "givenName": "James",
+      "middleName": "L",
+      "seatNo": "2042",
+      "county": "Hillsborough",
+      "district": "30",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 588-2739",
+      "email": "creighton4nh@gmail.com",
+      "town": "Antrim",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Damon",
+      "givenName": "Hope",
+      "middleName": "E",
+      "seatNo": "5019",
+      "county": "Sullivan",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "603-848-4257",
+      "email": "Hope.Damon@gc.nh.gov",
+      "town": "Croydon",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Daniels",
+      "givenName": "Gary",
+      "middleName": "L.",
+      "seatNo": "2007",
+      "county": "Hillsborough",
+      "district": "43",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 673-3065",
+      "email": "Gary.Daniels@gc.nh.gov",
+      "town": "Milford",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Darby",
+      "givenName": "Will",
+      "middleName": null,
+      "seatNo": "3100",
+      "county": "Hillsborough",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 891-2865",
+      "email": "Will.Darby@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dargie",
+      "givenName": "Paul",
+      "middleName": "P",
+      "seatNo": "3056",
+      "county": "Hillsborough",
+      "district": "43",
+      "electedStatus": "FORMER",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 672-5336",
+      "email": "Paul.Dargie@gc.nh.gov",
+      "town": "Milford",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Davis",
+      "givenName": "Fred",
+      "middleName": "E",
+      "seatNo": "4063",
+      "county": "Hillsborough",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Fred.Davis@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Davis",
+      "givenName": "Arnold",
+      "middleName": "G",
+      "seatNo": "2063",
+      "county": "Coos",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Arnold.Davis@gc.nh.gov",
+      "town": "Berlin",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "de Vries",
+      "givenName": "Erica",
+      "middleName": "R",
+      "seatNo": "4049",
+      "county": "Rockingham",
+      "district": "29",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 777-7658",
+      "email": "Erica.deVries@gc.nh.gov",
+      "town": "Hampton",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "DeDe-Poulin",
+      "givenName": "Denise",
+      "middleName": null,
+      "seatNo": "2059",
+      "county": "Strafford",
+      "district": "6",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Denise.DeDePoulin@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "DeLemus",
+      "givenName": "Susan",
+      "middleName": "C",
+      "seatNo": "1039",
+      "county": "Strafford",
+      "district": "1",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 335-5119",
+      "email": "Susan.DeLemus@gc.nh.gov",
+      "town": "Farmington",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "DeRoy",
+      "givenName": "Susan",
+      "middleName": "G",
+      "seatNo": "1030",
+      "county": "Strafford",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Susan.DeRoy@gc.nh.gov",
+      "town": "New Durham",
+      "committees": [
+        "Executive Departments and Administration",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "DeSimone",
+      "givenName": "Debra",
+      "middleName": "L",
+      "seatNo": "1001",
+      "county": "Rockingham",
+      "district": "18",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 362-4314",
+      "email": "debra.desimone@gc.nh.gov",
+      "town": "Atkinson",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "DeVito",
+      "givenName": "Sayra",
+      "middleName": "Lynn",
+      "seatNo": "3019",
+      "county": "Rockingham",
+      "district": "8",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(405) 590-0911",
+      "email": "Sayra.DeVito@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Devoid",
+      "givenName": "Ricky",
+      "middleName": "J",
+      "seatNo": "3061",
+      "county": "Merrimack",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 848-2551",
+      "email": "Rick.Devoid@gc.nh.gov",
+      "town": "Boscawen",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "DiSilvestro",
+      "givenName": "Linda",
+      "middleName": "A.",
+      "seatNo": "4093",
+      "county": "Hillsborough",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 645-6729",
+      "email": "Linda.Disilvestro@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dolan",
+      "givenName": "Tom",
+      "middleName": null,
+      "seatNo": "3063",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 434-5461",
+      "email": "Tom.Dolan@gc.nh.gov",
+      "town": "Londonderry",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dolan",
+      "givenName": "William",
+      "middleName": null,
+      "seatNo": "3079",
+      "county": "Hillsborough",
+      "district": "9",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "William.Dolan@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Donnelly",
+      "givenName": "Tanya",
+      "middleName": null,
+      "seatNo": "1035",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(978) 482-7434",
+      "email": "Tanya.Donnelly@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Drago",
+      "givenName": "Mike",
+      "middleName": null,
+      "seatNo": "1004",
+      "county": "Rockingham",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Mike.Drago@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Drew",
+      "givenName": "Matt",
+      "middleName": null,
+      "seatNo": "3020",
+      "county": "Hillsborough",
+      "district": "19",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Matt.Drew@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Drye",
+      "givenName": "Margaret",
+      "middleName": "M",
+      "seatNo": "1023",
+      "county": "Sullivan",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Margaret.Drye@gc.nh.gov",
+      "town": "Plainfield",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dumais",
+      "givenName": "Russell",
+      "middleName": null,
+      "seatNo": "3035",
+      "county": "Belknap",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 293-2014",
+      "email": "Russell.Dumais@gc.nh.gov",
+      "town": "Gilford",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dumont",
+      "givenName": "Dillon",
+      "middleName": "J",
+      "seatNo": "2047",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Dillon.Dumont@gc.nh.gov",
+      "town": "Hudson",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dunn",
+      "givenName": "Ron",
+      "middleName": "C",
+      "seatNo": "3012",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Ron.Dunn@gc.nh.gov",
+      "town": "Londonderry",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Dupont",
+      "givenName": "Pierre",
+      "middleName": "M",
+      "seatNo": "2026",
+      "county": "Hillsborough",
+      "district": "20",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Pierre.Dupont@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Durkin",
+      "givenName": "Sean",
+      "middleName": "C",
+      "seatNo": "2050",
+      "county": "Coos",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "seandurkin4NH@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ebel",
+      "givenName": "Karen",
+      "middleName": "E",
+      "seatNo": "4005",
+      "county": "Merrimack",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 748-3876",
+      "email": "Karen.Ebel@gc.nh.gov",
+      "town": "New London",
+      "committees": [
+        "Rules",
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Edgar",
+      "givenName": "Michael",
+      "middleName": "A",
+      "seatNo": "4054",
+      "county": "Rockingham",
+      "district": "29",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 926-1878",
+      "email": "Michael.Edgar@gc.nh.gov",
+      "town": "Hampton",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Edwards",
+      "givenName": "Jess",
+      "middleName": null,
+      "seatNo": "2099",
+      "county": "Rockingham",
+      "district": "31",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "jess.edwards@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Elberger",
+      "givenName": "Susan",
+      "middleName": "A",
+      "seatNo": "3072",
+      "county": "Hillsborough",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Susan.Elberger@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "England",
+      "givenName": "Myles",
+      "middleName": null,
+      "seatNo": "4037",
+      "county": "Strafford",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Myles.England@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Erf",
+      "givenName": "Keith",
+      "middleName": null,
+      "seatNo": "3089",
+      "county": "Hillsborough",
+      "district": "28",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Keith.Erf@gc.nh.gov",
+      "town": "Weare",
+      "committees": [
+        "Finance",
+        "Finance - Division II",
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Farrington",
+      "givenName": "Samuel",
+      "middleName": "G",
+      "seatNo": "3115",
+      "county": "Strafford",
+      "district": "8",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 948-6240",
+      "email": "Samuel.Farrington@gc.nh.gov",
+      "town": "Rochester",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Faulkner",
+      "givenName": "Barry",
+      "middleName": null,
+      "seatNo": "4055",
+      "county": "Cheshire",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "fbfaulkner@outlook.com",
+      "town": "Swanzey",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Fedolfi",
+      "givenName": "Jim",
+      "middleName": "L",
+      "seatNo": "1002",
+      "county": "Hillsborough",
+      "district": "30",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 464-3050",
+      "email": "jfedolfi@comcast.net",
+      "town": "Hillsborough",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Fellows",
+      "givenName": "Sallie",
+      "middleName": "D",
+      "seatNo": "4056",
+      "county": "Grafton",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 536-3123",
+      "email": "Sallie.Fellows@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Fenton",
+      "givenName": "Donovan",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Cheshire",
+      "district": "10",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-3469",
+      "email": "Donovan.Fenton@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Capital Budget",
+        "Transportation",
+        "Ways and Means",
+        "Commerce"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Flanagan",
+      "givenName": "Jack",
+      "middleName": "B.",
+      "seatNo": "1034",
+      "county": "Hillsborough",
+      "district": "45",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jack.Flanagan@gc.nh.gov",
+      "town": "Brookline",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Foote",
+      "givenName": "Charles",
+      "middleName": "H",
+      "seatNo": "1026",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Charles.Foote@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Public Works and Highways",
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ford",
+      "givenName": "Mary",
+      "middleName": "J",
+      "seatNo": "2019",
+      "county": "Rockingham",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 722-5775",
+      "email": "Mary.Ford@gc.nh.gov",
+      "town": "Chester",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Foss",
+      "givenName": "Lily",
+      "middleName": "M",
+      "seatNo": "4047",
+      "county": "Hillsborough",
+      "district": "41",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Lily.Foss@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Fox",
+      "givenName": "Dru",
+      "middleName": null,
+      "seatNo": "4050",
+      "county": "Cheshire",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 352-2332",
+      "email": "Dru.Fox@gc.nh.gov",
+      "town": "Keene",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Foxx",
+      "givenName": "Loren",
+      "middleName": "E",
+      "seatNo": "3078",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Loren.Foxx@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Fracht",
+      "givenName": "David",
+      "middleName": null,
+      "seatNo": "4046",
+      "county": "Grafton",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "David.fracht@gc.nh.gov",
+      "town": "Enfield",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Franz",
+      "givenName": "Linda",
+      "middleName": null,
+      "seatNo": "2074",
+      "county": "Grafton",
+      "district": "6",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(508) 341-9021",
+      "email": "Linda.Franz@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Freeman",
+      "givenName": "Lisa",
+      "middleName": "M",
+      "seatNo": "3043",
+      "county": "Belknap",
+      "district": "8",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Lisa.Freeman@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture",
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gagne",
+      "givenName": "Larry",
+      "middleName": "G",
+      "seatNo": "2052",
+      "county": "Hillsborough",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "lgagne25@comcast.net",
+      "town": "Manchester",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gallager",
+      "givenName": "Eric",
+      "middleName": "B",
+      "seatNo": "3075",
+      "county": "Merrimack",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "eric.gallager@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "S",
+      "familyName": "Gannon",
+      "givenName": "Bill",
+      "middleName": "M.",
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "23",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3077",
+      "email": "William.Gannon@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration",
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Georges",
+      "givenName": "Mary",
+      "middleName": "Ngwanda",
+      "seatNo": "5009",
+      "county": "Hillsborough",
+      "district": "23",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 264-7083",
+      "email": "Mary.Georges@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Germana",
+      "givenName": "Nicholas",
+      "middleName": "A",
+      "seatNo": "4004",
+      "county": "Cheshire",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 762-8139",
+      "email": "Nicholas.Germana@gc.nh.gov",
+      "town": "Keene",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Giasson",
+      "givenName": "Henry",
+      "middleName": "R",
+      "seatNo": "3016",
+      "county": "Hillsborough",
+      "district": "29",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 930-2019",
+      "email": "Henry.Giasson@gc.nh.gov",
+      "town": "Goffstown",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gibbs",
+      "givenName": "Merryl",
+      "middleName": null,
+      "seatNo": "3033",
+      "county": "Merrimack",
+      "district": "23",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 224-2239",
+      "email": "Merryl.Gibbs@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gilman",
+      "givenName": "Julie",
+      "middleName": "D",
+      "seatNo": "3051",
+      "county": "Rockingham",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 580-1393",
+      "email": "Julie.Gilman@gc.nh.gov",
+      "town": "Exeter",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gilmore",
+      "givenName": "Gary",
+      "middleName": "R",
+      "seatNo": "4084",
+      "county": "Strafford",
+      "district": "16",
+      "electedStatus": "FORMER",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 534-6800",
+      "email": "gilmoregary256@gmail.com",
+      "town": "Dover",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Girard",
+      "givenName": "Dale",
+      "middleName": "R",
+      "seatNo": "3049",
+      "county": "Sullivan",
+      "district": "6",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 543-1770",
+      "email": "Dale.Girard@gc.nh.gov",
+      "town": "Claremont",
+      "committees": [
+        "Municipal and County Government",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gonzalez",
+      "givenName": "Ernesto",
+      "middleName": "L",
+      "seatNo": "2083",
+      "county": "Merrimack",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Ernesto.Gonzalez@gc.nh.gov",
+      "town": "Franklin",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gorski",
+      "givenName": "Ted",
+      "middleName": null,
+      "seatNo": "1041",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "ted.gorski@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gould",
+      "givenName": "Linda",
+      "middleName": "R",
+      "seatNo": "3031",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 472-3877",
+      "email": "linda.gould@gc.nh.gov",
+      "town": "Bedford",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Granger",
+      "givenName": "Michael",
+      "middleName": "E",
+      "seatNo": "1007",
+      "county": "Strafford",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 815-1143",
+      "email": "Michael.Granger@gc.nh.gov",
+      "town": "Milton Mills",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Grant",
+      "givenName": "George",
+      "middleName": "C",
+      "seatNo": "2069",
+      "county": "Sullivan",
+      "district": "5",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 748-0309",
+      "email": "George.Grant@gc.nh.gov",
+      "town": "Sunapee",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Gray",
+      "givenName": "James",
+      "middleName": "P.",
+      "seatNo": "0",
+      "county": "Strafford",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-4980",
+      "email": "James.Gray@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Capital Budget",
+        "Finance",
+        "Election Law and Municipal Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gregg",
+      "givenName": "Alicia",
+      "middleName": "C",
+      "seatNo": "4034",
+      "county": "Hillsborough",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Alicia.Gregg@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Griffin",
+      "givenName": "Gerald",
+      "middleName": null,
+      "seatNo": "2078",
+      "county": "Hillsborough",
+      "district": "42",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 673-7467",
+      "email": "Gerald.Griffin@gc.nh.gov",
+      "town": "Mont Vernon",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Grill",
+      "givenName": "Jessica",
+      "middleName": null,
+      "seatNo": "4087",
+      "county": "Hillsborough",
+      "district": "18",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 566-6132",
+      "email": "Jessica.Grill@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Grossman",
+      "givenName": "Gaby",
+      "middleName": "M",
+      "seatNo": "4033",
+      "county": "Rockingham",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 418-4685",
+      "email": "Gaby.Grossman@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Gruber",
+      "givenName": "James",
+      "middleName": null,
+      "seatNo": "4073",
+      "county": "Cheshire",
+      "district": "16",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 313-1277",
+      "email": "James.Gruber@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Grund",
+      "givenName": "Stephanie",
+      "middleName": null,
+      "seatNo": "3057",
+      "county": "Hillsborough",
+      "district": "34",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 769-1390",
+      "email": "Stephanie.Grund@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Guthrie",
+      "givenName": "Joseph",
+      "middleName": "A.",
+      "seatNo": "3015",
+      "county": "Rockingham",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 489-1228",
+      "email": "lojogut@gmail.com",
+      "town": "Hampstead",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Guzofski",
+      "givenName": "James",
+      "middleName": "H",
+      "seatNo": "3027",
+      "county": "Rockingham",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 767-0696",
+      "email": "James.Guzofski@gc.nh.gov",
+      "town": "Northwood",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hakken-Phillips",
+      "givenName": "Mary",
+      "middleName": "A",
+      "seatNo": "5002",
+      "county": "Grafton",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Mary.HakkenPhillips@gc.nh.gov",
+      "town": "Hanover",
+      "committees": [
+        "Finance",
+        "Finance - Division II"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hall",
+      "givenName": "Robley",
+      "middleName": null,
+      "seatNo": "2056",
+      "county": "Strafford",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 531-7190",
+      "email": "Robley.Hall@gc.nh.gov",
+      "town": "Farmington",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hall",
+      "givenName": "Muriel",
+      "middleName": "C",
+      "seatNo": "5033",
+      "county": "Merrimack",
+      "district": "9",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 224-9017",
+      "email": "Muriel.Hall@gc.nh.gov",
+      "town": "Bow",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hamblen",
+      "givenName": "Joseph",
+      "middleName": null,
+      "seatNo": "3096",
+      "county": "Carroll",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Joseph.Hamblen@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Harb",
+      "givenName": "Robert",
+      "middleName": "D",
+      "seatNo": "2064",
+      "county": "Rockingham",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Robert.Harb@gc.nh.gov",
+      "town": "Plaistow",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Harrington",
+      "givenName": "Michael",
+      "middleName": "D",
+      "seatNo": "2008",
+      "county": "Strafford",
+      "district": "18",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 942-8691",
+      "email": "harringt@metrocast.net",
+      "town": "Strafford",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Harriott-Gathright",
+      "givenName": "Linda",
+      "middleName": "C",
+      "seatNo": "4065",
+      "county": "Hillsborough",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 880-4537",
+      "email": "linda.harriottgathright@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Harvey",
+      "givenName": "Cathryn",
+      "middleName": "A",
+      "seatNo": "3077",
+      "county": "Cheshire",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 363-4424",
+      "email": "Cathryn.Harvey@gc.nh.gov",
+      "town": "Spofford",
+      "committees": [
+        "Municipal and County Government",
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Harvey-Bolia",
+      "givenName": "Juliet",
+      "middleName": null,
+      "seatNo": "2004",
+      "county": "Belknap",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 941-4932",
+      "email": "Juliet.HarveyBolia@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hegner",
+      "givenName": "Karen",
+      "middleName": "A",
+      "seatNo": "4048",
+      "county": "Hillsborough",
+      "district": "41",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 520-7644",
+      "email": "Karen.Hegner@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hemingway",
+      "givenName": "Wayne",
+      "middleName": "J",
+      "seatNo": "3037",
+      "county": "Sullivan",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 477-4407",
+      "email": "Wayne.Hemingway@gc.nh.gov",
+      "town": "Claremont",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Herbert",
+      "givenName": "Christopher",
+      "middleName": "J.",
+      "seatNo": "5008",
+      "county": "Hillsborough",
+      "district": "24",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 867-4711",
+      "email": "Chris.Herbert@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hicks",
+      "givenName": "Matthew",
+      "middleName": "S",
+      "seatNo": "3050",
+      "county": "Merrimack",
+      "district": "24",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Matthew.Hicks@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hill",
+      "givenName": "Gregory",
+      "middleName": "G.",
+      "seatNo": "1043",
+      "county": "Merrimack",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(617) 590-4027",
+      "email": "greghillnh@gmail.com",
+      "town": "Northfield",
+      "committees": [
+        "Legislative Administration",
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Horrigan",
+      "givenName": "Timothy",
+      "middleName": "O.",
+      "seatNo": "4075",
+      "county": "Strafford",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 969-3823",
+      "email": "Timothy.Horrigan@gc.nh.gov",
+      "town": "Durham",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Howard",
+      "givenName": "Heath",
+      "middleName": null,
+      "seatNo": "3076",
+      "county": "Strafford",
+      "district": "4",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 413-0090",
+      "email": "Heath.Howard@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Howard",
+      "givenName": "Molly",
+      "middleName": "C",
+      "seatNo": "4068",
+      "county": "Hillsborough",
+      "district": "31",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 525-9330",
+      "email": "Molly.Howard@gc.nh.gov",
+      "town": "Hancock",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Howland",
+      "givenName": "Allan",
+      "middleName": null,
+      "seatNo": "3058",
+      "county": "Strafford",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Allan.Howland@gc.nh.gov",
+      "town": "Durham",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Hunt",
+      "givenName": "John",
+      "middleName": "B.",
+      "seatNo": "4099",
+      "county": "Cheshire",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 345-1129",
+      "email": "jbhunt@prodigy.net",
+      "town": "Rindge",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Innis",
+      "givenName": "Daniel",
+      "middleName": "E.",
+      "seatNo": "0",
+      "county": "Belknap",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-2609",
+      "email": "Daniel.Innis@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Commerce",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Jack",
+      "givenName": "Martin",
+      "middleName": "L.",
+      "seatNo": "3081",
+      "county": "Hillsborough",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 318-0457",
+      "email": "Martin.Jack@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Jacobs",
+      "givenName": "Samantha",
+      "middleName": null,
+      "seatNo": "4097",
+      "county": "Cheshire",
+      "district": "15",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 721-1067",
+      "email": "Samantha.Jacobs@gc.nh.gov",
+      "town": "Keene",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Janigian",
+      "givenName": "John",
+      "middleName": "C",
+      "seatNo": "3005",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 770-8230",
+      "email": "John.Janigian@gc.nh.gov",
+      "town": "Salem",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Jeudy",
+      "givenName": "Jean",
+      "middleName": "L.",
+      "seatNo": "5001",
+      "county": "Hillsborough",
+      "district": "23",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 645-5290",
+      "email": "jean.jeudy@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Johnson",
+      "givenName": "Erik",
+      "middleName": "R",
+      "seatNo": "3107",
+      "county": "Strafford",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Erik.Johnson@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Jones",
+      "givenName": "Philip",
+      "middleName": "M",
+      "seatNo": "3104",
+      "county": "Cheshire",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 499-8648",
+      "email": "Philip.Jones@gc.nh.gov",
+      "town": "Keene",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Juris",
+      "givenName": "Louis",
+      "middleName": "C",
+      "seatNo": "5039",
+      "county": "Hillsborough",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(617) 293-2083",
+      "email": "Louis.Juris@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kaczynski",
+      "givenName": "Thomas",
+      "middleName": "L",
+      "seatNo": "1036",
+      "county": "Strafford",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 332-7310",
+      "email": "thomas.kaczynski@gc.nh.gov",
+      "town": "Rochester",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Karasinski",
+      "givenName": "Sly",
+      "middleName": null,
+      "seatNo": "2086",
+      "county": "Cheshire",
+      "district": "10",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Sly.Karasinski@gc.nh.gov",
+      "town": "North Swanzey",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Katsakiores",
+      "givenName": "Phyllis",
+      "middleName": "M",
+      "seatNo": "3001",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 434-9587",
+      "email": "pkatsakiores@comcast.net",
+      "town": "Derry",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kelley",
+      "givenName": "Diane",
+      "middleName": "E.",
+      "seatNo": "2082",
+      "county": "Hillsborough",
+      "district": "32",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 484-1377",
+      "email": "Diane.Kelley@gc.nh.gov",
+      "town": "Temple",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kelly",
+      "givenName": "Eileen",
+      "middleName": "S",
+      "seatNo": "4012",
+      "county": "Merrimack",
+      "district": "8",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 848-2870",
+      "email": "Eileen.Kelly@gc.nh.gov",
+      "town": "Bradford",
+      "committees": [
+        "Finance",
+        "Finance - Division II"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kenny",
+      "givenName": "Catherine",
+      "middleName": "M",
+      "seatNo": "2018",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 883-7535",
+      "email": "Cathy.Kenny@gc.nh.gov",
+      "town": "Hudson",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kerwin",
+      "givenName": "Erin",
+      "middleName": null,
+      "seatNo": "4045",
+      "county": "Hillsborough",
+      "district": "40",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Erin.Kerwin@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kesselring",
+      "givenName": "Steven",
+      "middleName": null,
+      "seatNo": "2027",
+      "county": "Hillsborough",
+      "district": "18",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 203-9924",
+      "email": "Steven.Kesselring@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Khan",
+      "givenName": "Aboul",
+      "middleName": "B",
+      "seatNo": "3014",
+      "county": "Rockingham",
+      "district": "30",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 474-1496",
+      "email": "Aboul.Khan@gc.nh.gov",
+      "town": "Seabrook",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "King",
+      "givenName": "Seth",
+      "middleName": null,
+      "seatNo": "2081",
+      "county": "Coos",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 837-7195",
+      "email": "Seth.King@gc.nh.gov",
+      "town": "Whitefield",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kluger",
+      "givenName": "Lee Ann",
+      "middleName": null,
+      "seatNo": "5030",
+      "county": "Hillsborough",
+      "district": "6",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "LeeAnn.Kluger@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Knab",
+      "givenName": "Allison",
+      "middleName": null,
+      "seatNo": "4042",
+      "county": "Rockingham",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 580-5896",
+      "email": "Allison.Knab@gc.nh.gov",
+      "town": "Stratham",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kofalt",
+      "givenName": "Jim",
+      "middleName": "A",
+      "seatNo": "2101",
+      "county": "Hillsborough",
+      "district": "32",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jim.Kofalt@gc.nh.gov",
+      "town": "Wilton",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\"",
+        "Rules"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Korzen",
+      "givenName": "Lori",
+      "middleName": "E",
+      "seatNo": "2088",
+      "county": "Coos",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 723-9901",
+      "email": "Lori.Korzen@gc.nh.gov",
+      "town": "Berlin",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Kuttab",
+      "givenName": "Katelyn",
+      "middleName": "T",
+      "seatNo": "3064",
+      "county": "Rockingham",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Katelyn.Kuttab@gc.nh.gov",
+      "town": "Windham",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Labrie",
+      "givenName": "Brian",
+      "middleName": "H",
+      "seatNo": "1011",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 765-1198",
+      "email": "Brian.Labrie@gc.nh.gov",
+      "town": "Bedford",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ladd",
+      "givenName": "Rick",
+      "middleName": "M",
+      "seatNo": "2014",
+      "county": "Grafton",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "rick.ladd@gc.nh.gov",
+      "town": "Haverhill",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "LaMontagne",
+      "givenName": "Jessica",
+      "middleName": "Finn",
+      "seatNo": "4009",
+      "county": "Strafford",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jessica.Lamontagne@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lane",
+      "givenName": "Connie",
+      "middleName": "Boyles",
+      "seatNo": "4041",
+      "county": "Merrimack",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Connie.Lane@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Lang",
+      "givenName": "Timothy",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Belknap",
+      "district": "2",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-2117",
+      "email": "Timothy.Lang@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration",
+        "Finance",
+        "Ways and Means",
+        "Election Law and Municipal Affairs",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Larochelle",
+      "givenName": "John",
+      "middleName": "H",
+      "seatNo": "4091",
+      "county": "Strafford",
+      "district": "19",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "John.Larochelle@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lascelles",
+      "givenName": "Richard",
+      "middleName": "W.",
+      "seatNo": "2096",
+      "county": "Hillsborough",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 325-5523",
+      "email": "richard.lascelles@gc.nh.gov",
+      "town": "Litchfield",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Layon",
+      "givenName": "Erica",
+      "middleName": "J",
+      "seatNo": "2030",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Erica.Layon@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Leapley",
+      "givenName": "Nicole",
+      "middleName": "M",
+      "seatNo": "5014",
+      "county": "Hillsborough",
+      "district": "22",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 206-5667",
+      "email": "Nicole.Leapley@gc.nh.gov",
+      "town": "Manchester",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Leavitt",
+      "givenName": "John",
+      "middleName": "A",
+      "seatNo": "1027",
+      "county": "Merrimack",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "John.Leavitt@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "LeClerc",
+      "givenName": "Daniel",
+      "middleName": "J",
+      "seatNo": "4086",
+      "county": "Hillsborough",
+      "district": "34",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 365-6006",
+      "email": "Daniel.LeClerc@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Leishman",
+      "givenName": "Peter",
+      "middleName": "R",
+      "seatNo": "5037",
+      "county": "Hillsborough",
+      "district": "33",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 924-0004",
+      "email": "prleishman@aol.com",
+      "town": "Peterborough",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Levesque",
+      "givenName": "Cassandra",
+      "middleName": "N",
+      "seatNo": "4043",
+      "county": "Strafford",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Cassandra.Levesque@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Litchfield",
+      "givenName": "Melissa",
+      "middleName": "A.",
+      "seatNo": "3117",
+      "county": "Rockingham",
+      "district": "32",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 731-1047",
+      "email": "Melissa.Litchfield@gc.nh.gov",
+      "town": "Brentwood",
+      "committees": [
+        "Special Committee on COVID Response Efficacy",
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lloyd",
+      "givenName": "Christal",
+      "middleName": "R",
+      "seatNo": "4079",
+      "county": "Hillsborough",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Christal.Lloyd@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Long",
+      "givenName": "Patrick",
+      "middleName": "N",
+      "seatNo": "3080",
+      "county": "Hillsborough",
+      "district": "26",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 316-6938",
+      "email": "PatrickN.Long@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Long",
+      "givenName": "Pat",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "20",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-2104",
+      "email": "pat.long@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Health and Human Services",
+        "Election Law and Municipal Affairs",
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Louis",
+      "givenName": "Darrell",
+      "middleName": "A",
+      "seatNo": "2068",
+      "county": "Grafton",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 444-4801",
+      "email": "Darrell.Louis@gc.nh.gov",
+      "town": "Littleton",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Love",
+      "givenName": "David",
+      "middleName": "C",
+      "seatNo": "2091",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "David.Love@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lovett",
+      "givenName": "Peter",
+      "middleName": null,
+      "seatNo": "4044",
+      "county": "Grafton",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 759-5454",
+      "email": "Peter.Lovett@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\"",
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lucas",
+      "givenName": "Janet",
+      "middleName": "Marie",
+      "seatNo": "3098",
+      "county": "Grafton",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Janet.Lucas@gc.nh.gov",
+      "town": "Campton",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lundgren",
+      "givenName": "David",
+      "middleName": "C",
+      "seatNo": "3065",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 432-3499",
+      "email": "Qtipnh@aol.com",
+      "town": "Londonderry",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Luneau",
+      "givenName": "David",
+      "middleName": "J.",
+      "seatNo": "5018",
+      "county": "Merrimack",
+      "district": "9",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 746-6484",
+      "email": "dluneauNH@gmail.com",
+      "town": "Hopkinton",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Lynn",
+      "givenName": "Bob",
+      "middleName": "J.",
+      "seatNo": "2090",
+      "county": "Rockingham",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 235-7952",
+      "email": "rjlynn4@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "MacDonald",
+      "givenName": "Wayne",
+      "middleName": "D.",
+      "seatNo": "3008",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 434-8191",
+      "email": "elephantsmarching@msn.com",
+      "town": "Londonderry",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "MacDonald",
+      "givenName": "John",
+      "middleName": "T",
+      "seatNo": "2076",
+      "county": "Carroll",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 387-5255",
+      "email": "John.MacDonald@gc.nh.gov",
+      "town": "Wolfeboro Falls",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "MacKay",
+      "givenName": "James",
+      "middleName": "R",
+      "seatNo": "4023",
+      "county": "Merrimack",
+      "district": "18",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 224-0623",
+      "email": "james.mackay@mygait.com",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "MacKenzie",
+      "givenName": "Mark",
+      "middleName": "S",
+      "seatNo": "4088",
+      "county": "Hillsborough",
+      "district": "40",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Mark.MacKenzie@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Maggiore",
+      "givenName": "Jim",
+      "middleName": "V.",
+      "seatNo": "3052",
+      "county": "Rockingham",
+      "district": "23",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 556-0073",
+      "email": "Jim.Maggiore@gc.nh.gov",
+      "town": "North Hampton",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Malloy",
+      "givenName": "Dennis",
+      "middleName": "J",
+      "seatNo": "5006",
+      "county": "Rockingham",
+      "district": "24",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 970-1827",
+      "email": "dennis.malloy@gc.nh.gov",
+      "town": "Greenland",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Malone",
+      "givenName": "Amy",
+      "middleName": "L",
+      "seatNo": "4036",
+      "county": "Strafford",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Amy.Malone@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mandelbaum",
+      "givenName": "Jennifer",
+      "middleName": null,
+      "seatNo": "3071",
+      "county": "Rockingham",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 203-9596",
+      "email": "JenForNH@gmail.com",
+      "town": "Portsmouth",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mannion",
+      "givenName": "Tim",
+      "middleName": "E",
+      "seatNo": "3084",
+      "county": "Hillsborough",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Tim.Mannion@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mannion",
+      "givenName": "Tom",
+      "middleName": "D",
+      "seatNo": "2062",
+      "county": "Hillsborough",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Tom.Mannion@gc.nh.gov",
+      "town": "Pelham",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mannion",
+      "givenName": "Dennis",
+      "middleName": null,
+      "seatNo": "2089",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Dennis.Mannion@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Manohar",
+      "givenName": "Sanjeev",
+      "middleName": "K",
+      "seatNo": "3054",
+      "county": "Hillsborough",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Sanjeev.Manohar@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Manos",
+      "givenName": "Zoe",
+      "middleName": "R",
+      "seatNo": "4025",
+      "county": "Rockingham",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "zoe.manos@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Markell",
+      "givenName": "Jay",
+      "middleName": "D",
+      "seatNo": "3070",
+      "county": "Rockingham",
+      "district": "18",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 362-8144",
+      "email": "Jay.Markell@gc.nh.gov",
+      "town": "Atkinson",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\"",
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mattson",
+      "givenName": "Rita",
+      "middleName": "G",
+      "seatNo": "2087",
+      "county": "Cheshire",
+      "district": "18",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Rita.Mattson@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mazur",
+      "givenName": "Lisa",
+      "middleName": "R",
+      "seatNo": "3009",
+      "county": "Hillsborough",
+      "district": "44",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Lisa.Mazur@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McAleer",
+      "givenName": "Chris",
+      "middleName": "R",
+      "seatNo": "3034",
+      "county": "Carroll",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 383-6767",
+      "email": "Chris.McAleer@gc.nh.gov",
+      "town": "Jackson",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "McConkey",
+      "givenName": "Mark",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Carroll",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-8631",
+      "email": "mark.mcconkey@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Capital Budget",
+        "Transportation",
+        "Energy and Natural Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McDonnell",
+      "givenName": "Valerie",
+      "middleName": "E",
+      "seatNo": "2017",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 327-6718",
+      "email": "Valerie.McDonnell@gc.nh.gov",
+      "town": "Salem",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McFarlane",
+      "givenName": "Donald",
+      "middleName": "S",
+      "seatNo": "2093",
+      "county": "Grafton",
+      "district": "18",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 523-7412",
+      "email": "Donald.McFarlane@gc.nh.gov",
+      "town": "Orange",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McGhee",
+      "givenName": "Kat",
+      "middleName": null,
+      "seatNo": "4031",
+      "county": "Hillsborough",
+      "district": "35",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Kat.McGhee@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "McGough",
+      "givenName": "Tim",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "11",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-8718",
+      "email": "Tim.McGough@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "McGrath",
+      "givenName": "Linda",
+      "middleName": null,
+      "seatNo": "3093",
+      "county": "Rockingham",
+      "district": "40",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 498-9984",
+      "email": "Linda.McGrath@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McGuire",
+      "givenName": "Carol",
+      "middleName": "M",
+      "seatNo": "2031",
+      "county": "Merrimack",
+      "district": "27",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 782-4918",
+      "email": "mcguire4house@gmail.com",
+      "town": "Epsom",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McGuire",
+      "givenName": "Dan",
+      "middleName": null,
+      "seatNo": "3006",
+      "county": "Merrimack",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 782-4918",
+      "email": "Dan.McGuire@gc.nh.gov",
+      "town": "Epsom",
+      "committees": [
+        "Finance",
+        "Finance - Division II",
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McLean",
+      "givenName": "Mark",
+      "middleName": null,
+      "seatNo": "2034",
+      "county": "Hillsborough",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 668-0076",
+      "email": "mark.mclean@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "McMahon",
+      "givenName": "Charles",
+      "middleName": "E",
+      "seatNo": "2079",
+      "county": "Rockingham",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 432-8787",
+      "email": "cmcmahon55@gmail.com",
+      "town": "Windham",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mehegan",
+      "givenName": "Peter",
+      "middleName": "L.",
+      "seatNo": "2085",
+      "county": "Merrimack",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Peter.Mehegan@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Melvin",
+      "givenName": "Charles",
+      "middleName": "R",
+      "seatNo": "1019",
+      "county": "Rockingham",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 819-6280",
+      "email": "Charlie.Melvin@gc.nh.gov",
+      "town": "Newton",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Meuse",
+      "givenName": "David",
+      "middleName": "James",
+      "seatNo": "4066",
+      "county": "Rockingham",
+      "district": "37",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "David.Meuse@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Miles",
+      "givenName": "Julie",
+      "middleName": null,
+      "seatNo": "2058",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 930-3296",
+      "email": "Julie.Miles@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Commerce and Consumer Affairs",
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Miller",
+      "givenName": "Seth",
+      "middleName": "B",
+      "seatNo": "3108",
+      "county": "Strafford",
+      "district": "21",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Seth.Miller@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Milz",
+      "givenName": "David",
+      "middleName": "E",
+      "seatNo": "1018",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "david.milz@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Miner",
+      "givenName": "Laurence",
+      "middleName": "A",
+      "seatNo": "3048",
+      "county": "Rockingham",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Laurence.Miner@gc.nh.gov",
+      "town": "Fremont",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Minor",
+      "givenName": "Sheri",
+      "middleName": null,
+      "seatNo": "2036",
+      "county": "Belknap",
+      "district": "5",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 520-5340",
+      "email": "Sheri.Minor@gc.nh.gov",
+      "town": "Laconia",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Moffett",
+      "givenName": "Michael",
+      "middleName": "I",
+      "seatNo": "2023",
+      "county": "Merrimack",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 491-0553",
+      "email": "michael.moffett@gc.nh.gov",
+      "town": "Loudon",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Mooney",
+      "givenName": "Maureen",
+      "middleName": "C.",
+      "seatNo": "2098",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "maureen.mooney@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Morency",
+      "givenName": "Pete",
+      "middleName": null,
+      "seatNo": "2025",
+      "county": "Coos",
+      "district": "5",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 752-7325",
+      "email": "Peter.Morency@gc.nh.gov",
+      "town": "Berlin",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Morse",
+      "givenName": "Bryan",
+      "middleName": null,
+      "seatNo": "1021",
+      "county": "Merrimack",
+      "district": "3",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "603-393-3263",
+      "email": "Bryan.Morse@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Muirhead",
+      "givenName": "Russell",
+      "middleName": null,
+      "seatNo": "4040",
+      "county": "Grafton",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 727-6065",
+      "email": "Russell.Muirhead@gc.nh.gov",
+      "town": "Hanover",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Muns",
+      "givenName": "Chris",
+      "middleName": null,
+      "seatNo": "4011",
+      "county": "Rockingham",
+      "district": "29",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Chris.Muns@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Murphy",
+      "givenName": "Mary",
+      "middleName": null,
+      "seatNo": "2067",
+      "county": "Hillsborough",
+      "district": "27",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 265-1978",
+      "email": "Mary.Murphy@gc.nh.gov",
+      "town": "Francestown",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\"",
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Murphy",
+      "givenName": "Nancy",
+      "middleName": "A",
+      "seatNo": "4090",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 424-0254",
+      "email": "Nancy.Murphy@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Murphy",
+      "givenName": "Denis",
+      "middleName": "Vincent",
+      "seatNo": "2060",
+      "county": "Cheshire",
+      "district": "11",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 762-3102",
+      "email": "Denis.Murphy@gc.nh.gov",
+      "town": "Winchester",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Murphy",
+      "givenName": "Keith",
+      "middleName": "R.",
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "16",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-4063",
+      "email": "Keith.Murphy@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Ways and Means",
+        "Commerce",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Murray",
+      "givenName": "Megan",
+      "middleName": "A",
+      "seatNo": "5031",
+      "county": "Hillsborough",
+      "district": "37",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Megan.Murray@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Murray",
+      "givenName": "Alissandra",
+      "middleName": null,
+      "seatNo": "4020",
+      "county": "Hillsborough",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Alissandra.Murray@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Nadeau",
+      "givenName": "Brian",
+      "middleName": "G",
+      "seatNo": "3046",
+      "county": "Rockingham",
+      "district": "4",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Brian.Nadeau@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Nagel",
+      "givenName": "David",
+      "middleName": "J",
+      "seatNo": "3109",
+      "county": "Belknap",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 491-5708",
+      "email": "davidnagelmd@gmail.com",
+      "town": "Gilmanton",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Nalevanko",
+      "givenName": "Rich",
+      "middleName": "M",
+      "seatNo": "2070",
+      "county": "Cheshire",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 835-2564",
+      "email": "Rich.Nalevanko@gc.nh.gov",
+      "town": "Alstead",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Nelson",
+      "givenName": "Jodi",
+      "middleName": "L",
+      "seatNo": "2032",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(508) 397-9999",
+      "email": "jodi.nelson@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Newell",
+      "givenName": "Jodi",
+      "middleName": "K",
+      "seatNo": "4067",
+      "county": "Cheshire",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jodi.Newell@gc.nh.gov",
+      "town": "Keene",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Newman",
+      "givenName": "Sue",
+      "middleName": "A",
+      "seatNo": "5025",
+      "county": "Hillsborough",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 880-8973",
+      "email": "sue.newman@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Newman",
+      "givenName": "Ray",
+      "middleName": "E",
+      "seatNo": "5024",
+      "county": "Hillsborough",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Ray.Newman@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Newsom",
+      "givenName": "James",
+      "middleName": null,
+      "seatNo": "4057",
+      "county": "Merrimack",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 731-1108",
+      "email": "James.Newsom@gc.nh.gov",
+      "town": "Contoocook",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Noble",
+      "givenName": "Kristin",
+      "middleName": null,
+      "seatNo": "2016",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Kristin.Noble@gc.nh.gov",
+      "town": "Bedford",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Notter",
+      "givenName": "Jeanine",
+      "middleName": "M",
+      "seatNo": "1003",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "jeanine.notter@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Legislative Administration",
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ohm",
+      "givenName": "Bill",
+      "middleName": "H",
+      "seatNo": "1032",
+      "county": "Hillsborough",
+      "district": "10",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 891-2306",
+      "email": "Bill.Ohm@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "O'Rorke",
+      "givenName": "Terri",
+      "middleName": null,
+      "seatNo": "4058",
+      "county": "Cheshire",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "terri.ororke@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Osborne",
+      "givenName": "Jason",
+      "middleName": "M.",
+      "seatNo": "2001",
+      "county": "Rockingham",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 391-2138",
+      "email": "Jason@Osborne4NH.com",
+      "town": "Auburn",
+      "committees": [
+        "Rules",
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ouellet",
+      "givenName": "Mike",
+      "middleName": null,
+      "seatNo": "3025",
+      "county": "Coos",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 331-2159",
+      "email": "Mike.Ouellet@gc.nh.gov",
+      "town": "Colebrook",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Packard",
+      "givenName": "Sherman",
+      "middleName": "A.",
+      "seatNo": "6002",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 271-3661",
+      "email": "sherman.packard@gc.nh.gov",
+      "town": "Londonderry",
+      "committees": [
+        "Rules"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Paige",
+      "givenName": "David",
+      "middleName": null,
+      "seatNo": "5043",
+      "county": "Carroll",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "David.Paige@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Paige",
+      "givenName": "Mark",
+      "middleName": null,
+      "seatNo": "4008",
+      "county": "Rockingham",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "mark.paige@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Palmer",
+      "givenName": "William",
+      "middleName": "S",
+      "seatNo": "3074",
+      "county": "Sullivan",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 675-2117",
+      "email": "William.Palmer@gc.nh.gov",
+      "town": "Cornish",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\"",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Paquette",
+      "givenName": "Kathleen",
+      "middleName": null,
+      "seatNo": "3069",
+      "county": "Hillsborough",
+      "district": "25",
+      "electedStatus": "UNSTATED",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 305-2774",
+      "email": "Kathleen.Paquette@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Parshall",
+      "givenName": "Lucius",
+      "middleName": null,
+      "seatNo": "5023",
+      "county": "Cheshire",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 400-0342",
+      "email": "Lucius.Parshall@gc.nh.gov",
+      "town": "Marlborough",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Pauer",
+      "givenName": "Diane",
+      "middleName": null,
+      "seatNo": "2077",
+      "county": "Hillsborough",
+      "district": "36",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 801-5088",
+      "email": "Diane.Pauer@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Payeur",
+      "givenName": "Stephanie",
+      "middleName": "R",
+      "seatNo": "5040",
+      "county": "Merrimack",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Stephanie.Payeur@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Pearl",
+      "givenName": "Howard",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Merrimack",
+      "district": "17",
+      "electedStatus": "NEW",
+      "party": "r",
+      "title": "Senator",
+      "phone": "(603) 271-4151",
+      "email": "Howard.Pearl@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration",
+        "Finance",
+        "Energy and Natural Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Pearson",
+      "givenName": "Wayne",
+      "middleName": null,
+      "seatNo": "3082",
+      "county": "Strafford",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Wayne.Pearson@gc.nh.gov",
+      "town": "Rollinsford",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Pearson",
+      "givenName": "Stephen",
+      "middleName": "C.",
+      "seatNo": "2075",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 548-8523",
+      "email": "Steve.Pearson@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Pearson",
+      "givenName": "Mark",
+      "middleName": "A",
+      "seatNo": "1009",
+      "county": "Rockingham",
+      "district": "34",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 571-0205",
+      "email": "Mark.Pearson@gc.nh.gov",
+      "town": "Hampstead",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Peeples",
+      "givenName": "Raymond",
+      "middleName": "C.",
+      "seatNo": "3021",
+      "county": "Hillsborough",
+      "district": "14",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 424-1557",
+      "email": "Raymond.Peeples@gc.nh.gov",
+      "town": "Litchfield",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Perez",
+      "givenName": "Kristine",
+      "middleName": null,
+      "seatNo": "2071",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Kristine.Perez@gc.nh.gov",
+      "town": "Londonderry",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Perkins Kwoka",
+      "givenName": "Rebecca",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Rockingham",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-3207",
+      "email": "Rebecca.PerkinsKwoka@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Rules and Enrolled Bills",
+        "Election Law and Municipal Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Peternel",
+      "givenName": "Katy",
+      "middleName": null,
+      "seatNo": "2015",
+      "county": "Carroll",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 387-5876",
+      "email": "Katy.Peternel@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Petrigno",
+      "givenName": "Peter",
+      "middleName": null,
+      "seatNo": "4032",
+      "county": "Hillsborough",
+      "district": "43",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Peter.Petrigno@gc.nh.gov",
+      "town": "Milford",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Pitaro",
+      "givenName": "Matthew",
+      "middleName": null,
+      "seatNo": "2049",
+      "county": "Merrimack",
+      "district": "11",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 210-2347",
+      "email": "Matthew.Pitaro@gc.nh.gov",
+      "town": "Allenstown",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Plamondon",
+      "givenName": "Marc",
+      "middleName": "W",
+      "seatNo": "4085",
+      "county": "Hillsborough",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "marc.plamondon@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Plante",
+      "givenName": "Raymond",
+      "middleName": "S",
+      "seatNo": "3094",
+      "county": "Merrimack",
+      "district": "27",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 351-0994",
+      "email": "Ray.Plante@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ploszaj",
+      "givenName": "Tom",
+      "middleName": null,
+      "seatNo": "3060",
+      "county": "Belknap",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 279-9965",
+      "email": "tom.ploszaj@gc.nh.gov",
+      "town": "Center Harbor",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Polozov",
+      "givenName": "Yury",
+      "middleName": null,
+      "seatNo": "1038",
+      "county": "Merrimack",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Yury.Polozov@gc.nh.gov",
+      "town": "Hooksett",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\"",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Popovici-Muller",
+      "givenName": "Daniel",
+      "middleName": null,
+      "seatNo": "3088",
+      "county": "Rockingham",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Daniel.PopoviciMuller@gc.nh.gov",
+      "town": "Windham",
+      "committees": [
+        "Finance",
+        "Finance - Division II",
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Porcelli",
+      "givenName": "Susan",
+      "middleName": "M",
+      "seatNo": "3068",
+      "county": "Rockingham",
+      "district": "19",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(617) 594-0209",
+      "email": "Susan.Porcelli@gc.nh.gov",
+      "town": "Hampton Falls",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Post",
+      "givenName": "Lisa",
+      "middleName": "C.M.",
+      "seatNo": "3091",
+      "county": "Hillsborough",
+      "district": "42",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(802) 730-5401",
+      "email": "Lisacmpost@gmail.com",
+      "town": "Lyndeborough",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Potenza",
+      "givenName": "Kelley",
+      "middleName": "L",
+      "seatNo": "3023",
+      "county": "Strafford",
+      "district": "19",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 456-1741",
+      "email": "Kelley.Potenza@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Potucek",
+      "givenName": "John",
+      "middleName": "Michael",
+      "seatNo": "1010",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 432-9049",
+      "email": "John.Potucek@gc.nh.gov",
+      "town": "Derry",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Preece",
+      "givenName": "David",
+      "middleName": "John",
+      "seatNo": "4015",
+      "county": "Hillsborough",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 682-0123",
+      "email": "David.Preece@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Prentiss",
+      "givenName": "Suzanne",
+      "middleName": "M.",
+      "seatNo": "0",
+      "county": "Grafton",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-3091",
+      "email": "Suzanne.Prentiss@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation",
+        "Education",
+        "Health and Human Services"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Presa",
+      "givenName": "Adam",
+      "middleName": "Joseph",
+      "seatNo": "2038",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 921-0028",
+      "email": "adam.presa@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Proulx",
+      "givenName": "Mark",
+      "middleName": "L",
+      "seatNo": "3092",
+      "county": "Hillsborough",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 669-7179",
+      "email": "Mark.Proulx@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Prout",
+      "givenName": "Andrew",
+      "middleName": "J.",
+      "seatNo": "1033",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 265-0771",
+      "email": "Andrew.Prout@gc.nh.gov",
+      "town": "Hudson",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Prudhomme-O'Brien",
+      "givenName": "Katherine",
+      "middleName": "J.",
+      "seatNo": "2040",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 339-4598",
+      "email": "kpo@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Qualey",
+      "givenName": "James",
+      "middleName": "R",
+      "seatNo": "3118",
+      "county": "Cheshire",
+      "district": "18",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 562-8951",
+      "email": "Jim.Qualey@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Raymond",
+      "givenName": "Heather",
+      "middleName": null,
+      "seatNo": "4035",
+      "county": "Hillsborough",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Heather.Raymond@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Raynolds",
+      "givenName": "Ned",
+      "middleName": null,
+      "seatNo": "4027",
+      "county": "Rockingham",
+      "district": "39",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Ned.Raynolds@gc.nh.gov",
+      "town": "Portsmouth",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Read",
+      "givenName": "Ellen",
+      "middleName": "D",
+      "seatNo": "5042",
+      "county": "Rockingham",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(352) 978-7692",
+      "email": "ellen4nh@gmail.com",
+      "town": "Newmarket",
+      "committees": []
+    },
+    {
+      "chamber": "S",
+      "familyName": "Reardon",
+      "givenName": "Tara",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Merrimack",
+      "district": "15",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-7875",
+      "email": "Tara.Reardon@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration",
+        "Judiciary",
+        "Commerce"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Reinfurt",
+      "givenName": "Sherri",
+      "middleName": "L",
+      "seatNo": "3022",
+      "county": "Hillsborough",
+      "district": "29",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Sherri.Reinfurt@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rhodes",
+      "givenName": "Jennifer",
+      "middleName": "M",
+      "seatNo": "3003",
+      "county": "Cheshire",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 762-8069",
+      "email": "Jennifer.Rhodes@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Ricciardi",
+      "givenName": "Denise",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Cheshire",
+      "district": "9",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-1403",
+      "email": "Denise.Ricciardi@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation",
+        "Commerce"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rice",
+      "givenName": "Kimberly",
+      "middleName": "A",
+      "seatNo": "1017",
+      "county": "Hillsborough",
+      "district": "38",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 417-1227",
+      "email": "Kimberly.Rice@gc.nh.gov",
+      "town": "Hudson",
+      "committees": [
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Richards",
+      "givenName": "Beth",
+      "middleName": "S.",
+      "seatNo": "3055",
+      "county": "Merrimack",
+      "district": "17",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 219-0038",
+      "email": "bethrichardsforward3@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Rochefort",
+      "givenName": "David",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Grafton",
+      "district": "1",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-8631",
+      "email": "david.rochefort@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Health and Human Services",
+        "Election Law and Municipal Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rockmore",
+      "givenName": "Ellen",
+      "middleName": "B",
+      "seatNo": "4071",
+      "county": "Grafton",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 643-0169",
+      "email": "Ellen.Rockmore@gc.nh.gov",
+      "town": "Hanover",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Roesener",
+      "givenName": "James",
+      "middleName": "Leon",
+      "seatNo": "4018",
+      "county": "Merrimack",
+      "district": "22",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "James.Roesener@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rollins",
+      "givenName": "Skip",
+      "middleName": "A.",
+      "seatNo": "1025",
+      "county": "Sullivan",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 504-8501",
+      "email": "skip.rollins@gc.nh.gov",
+      "town": "Newport",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rombeau",
+      "givenName": "Catherine",
+      "middleName": "A",
+      "seatNo": "4010",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Catherine.Rombeau@gc.nh.gov",
+      "town": "Bedford",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Rosenwald",
+      "givenName": "Cindy",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-3207",
+      "email": "Cindy.Rosenwald@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Ways and Means",
+        "Energy and Natural Resources",
+        "Rules and Enrolled Bills",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Roy",
+      "givenName": "Terry",
+      "middleName": "W",
+      "seatNo": "3002",
+      "county": "Rockingham",
+      "district": "31",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 239-3369",
+      "email": "Terry.Roy@gc.nh.gov",
+      "town": "Deerfield",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Rung",
+      "givenName": "Rosemarie",
+      "middleName": null,
+      "seatNo": "5007",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Rosemarie.Rung@gc.nh.gov",
+      "town": "Merrimack",
+      "committees": [
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ryan",
+      "givenName": "Linda",
+      "middleName": "V",
+      "seatNo": "3110",
+      "county": "Hillsborough",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 320-2463",
+      "email": "Linda.Ryan@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sabourin dit Choini�re",
+      "givenName": "Matt",
+      "middleName": "R",
+      "seatNo": "3028",
+      "county": "Rockingham",
+      "district": "30",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 519-5656",
+      "email": "Matt.Sabourin@gc.nh.gov",
+      "town": "Seabrook",
+      "committees": [
+        "\"Science, Technology and Energy\"",
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Salvi",
+      "givenName": "Santosh",
+      "middleName": null,
+      "seatNo": "5012",
+      "county": "Hillsborough",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Santosh.Salvi@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sargent",
+      "givenName": "Gregory",
+      "middleName": "M",
+      "seatNo": "4072",
+      "county": "Merrimack",
+      "district": "7",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 674-5253",
+      "email": "Gregory.Sargent@gc.nh.gov",
+      "town": "New London",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Schamberg",
+      "givenName": "Thomas",
+      "middleName": "C",
+      "seatNo": "5011",
+      "county": "Merrimack",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 715-6778",
+      "email": "Tom.Schamberg@gc.nh.gov",
+      "town": "Wilmot",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Scherr",
+      "givenName": "Buzz",
+      "middleName": null,
+      "seatNo": "4089",
+      "county": "Rockingham",
+      "district": "26",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 498-6916",
+      "email": "buzzfornh@gmail.com",
+      "town": "Portsmouth",
+      "committees": [
+        "Criminal Justice and Public Safety"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Schmidt",
+      "givenName": "Peter",
+      "middleName": "B",
+      "seatNo": "5036",
+      "county": "Strafford",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 969-1043",
+      "email": "peterbarrettschmidt@gmail.com",
+      "town": "Dover",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Schneller",
+      "givenName": "John",
+      "middleName": null,
+      "seatNo": "3036",
+      "county": "Hillsborough",
+      "district": "2",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 488-5941",
+      "email": "John.Schneller@gc.nh.gov",
+      "town": "Bedford",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Schultz",
+      "givenName": "Kris",
+      "middleName": null,
+      "seatNo": "4021",
+      "county": "Merrimack",
+      "district": "29",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 275-2227",
+      "email": "Kris.Schultz@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Scully",
+      "givenName": "Kevin",
+      "middleName": "J",
+      "seatNo": "1014",
+      "county": "Hillsborough",
+      "district": "8",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Kevin.Scully@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture",
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Seaworth",
+      "givenName": "Brian",
+      "middleName": null,
+      "seatNo": "2041",
+      "county": "Merrimack",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 722-0807",
+      "email": "brian.seaworth@gc.nh.gov",
+      "town": "Pembroke",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\"",
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "See",
+      "givenName": "Alvin",
+      "middleName": "B",
+      "seatNo": "2028",
+      "county": "Merrimack",
+      "district": "26",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 798-3427",
+      "email": "Alvin.See@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Seibert",
+      "givenName": "Christine",
+      "middleName": null,
+      "seatNo": "4078",
+      "county": "Hillsborough",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 892-2685",
+      "email": "Christine.Seibert@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "State-Federal Relations and Veterans Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Selby",
+      "givenName": "Donald",
+      "middleName": "Evan",
+      "seatNo": "3095",
+      "county": "Rockingham",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Donald.Selby@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Selig",
+      "givenName": "Loren",
+      "middleName": null,
+      "seatNo": "5028",
+      "county": "Strafford",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Loren.Selig@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sellers",
+      "givenName": "John",
+      "middleName": null,
+      "seatNo": "2009",
+      "county": "Grafton",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "John.Sellers@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sheehan",
+      "givenName": "Vanessa",
+      "middleName": "L",
+      "seatNo": "1040",
+      "county": "Hillsborough",
+      "district": "43",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 320-6111",
+      "email": "vanessa@vanessa4nh.com",
+      "town": "Milford",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Simpson",
+      "givenName": "Alexis",
+      "middleName": "H",
+      "seatNo": "4001",
+      "county": "Rockingham",
+      "district": "33",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 303-4722",
+      "email": "Alexis.Simpson@gc.nh.gov",
+      "town": "Exeter",
+      "committees": [
+        "Rules"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sirois",
+      "givenName": "Shane",
+      "middleName": "A",
+      "seatNo": "1031",
+      "county": "Hillsborough",
+      "district": "32",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Shane.Sirois@gc.nh.gov",
+      "town": "New Ipswich",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Slottje",
+      "givenName": "Jeremy",
+      "middleName": null,
+      "seatNo": "2029",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": null,
+      "town": "Hudson",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Smith",
+      "givenName": "Steven",
+      "middleName": "D",
+      "seatNo": "2006",
+      "county": "Sullivan",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 826-5940",
+      "email": "Steven.Smith@gc.nh.gov",
+      "town": "Charlestown",
+      "committees": [
+        "Rules",
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Smith",
+      "givenName": "Marjorie",
+      "middleName": "K.",
+      "seatNo": "4064",
+      "county": "Strafford",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 868-7500",
+      "email": "msmithpen@aol.com",
+      "town": "Durham",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Smith",
+      "givenName": "Jonathan",
+      "middleName": "H",
+      "seatNo": "2066",
+      "county": "Carroll",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 651-1137",
+      "email": "Jonathan.Smith@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Smith",
+      "givenName": "Geoffrey",
+      "middleName": null,
+      "seatNo": "4080",
+      "county": "Strafford",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Geoff.Smith@gc.nh.gov",
+      "town": "Dover",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Snodgrass",
+      "givenName": "Jim",
+      "middleName": null,
+      "seatNo": "5021",
+      "county": "Merrimack",
+      "district": "28",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jim.Snodgrass@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sofikitis",
+      "givenName": "Catherine",
+      "middleName": "M",
+      "seatNo": "5027",
+      "county": "Hillsborough",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "CSofikitis@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Environment and Agriculture"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sorensen",
+      "givenName": "Carrie",
+      "middleName": null,
+      "seatNo": "4070",
+      "county": "Rockingham",
+      "district": "28",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Carrie.Sorensen@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Soti",
+      "givenName": "Julius",
+      "middleName": "F",
+      "seatNo": "2021",
+      "county": "Rockingham",
+      "district": "35",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 404-1115",
+      "email": "rep.jsoti@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Soucy",
+      "givenName": "Timothy",
+      "middleName": "A.",
+      "seatNo": "4098",
+      "county": "Merrimack",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 305-5012",
+      "email": "Tim.Soucy@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Southworth",
+      "givenName": "Thomas",
+      "middleName": "L",
+      "seatNo": "4076",
+      "county": "Strafford",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 742-0556",
+      "email": "Thomas.Southworth@gc.nh.gov",
+      "town": "Dover",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Spahr",
+      "givenName": "Terry",
+      "middleName": null,
+      "seatNo": "4083",
+      "county": "Grafton",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(610) 420-1787",
+      "email": "Terry.Spahr@gc.nh.gov",
+      "town": "Hanover",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Spier",
+      "givenName": "Carry",
+      "middleName": null,
+      "seatNo": "5016",
+      "county": "Hillsborough",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 860-4385",
+      "email": "Carry.Spier@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Spillane",
+      "givenName": "James",
+      "middleName": "A",
+      "seatNo": "3024",
+      "county": "Rockingham",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 463-5623",
+      "email": "James@JamesSpillane.org",
+      "town": "Deerfield",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Spilsbury",
+      "givenName": "Walter",
+      "middleName": null,
+      "seatNo": "2012",
+      "county": "Sullivan",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Walter.Spilsbury@gc.nh.gov",
+      "town": "Charlestown",
+      "committees": [
+        "Finance",
+        "Finance - Division II",
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "St. Clair",
+      "givenName": "Charlie",
+      "middleName": "G.",
+      "seatNo": "4092",
+      "county": "Belknap",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 387-5944",
+      "email": "Charlie.StClair@gc.nh.gov",
+      "town": "Laconia",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Staub",
+      "givenName": "Kathy",
+      "middleName": null,
+      "seatNo": "4062",
+      "county": "Hillsborough",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 624-0249",
+      "email": "Kathy.Staub@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Stavis",
+      "givenName": "Laurel",
+      "middleName": null,
+      "seatNo": "3053",
+      "county": "Grafton",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Laurel.Stavis@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Stone",
+      "givenName": "John",
+      "middleName": "Joseph",
+      "seatNo": "5022",
+      "county": "Strafford",
+      "district": "12",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 833-0433",
+      "email": "biggamehunter53@aol.com",
+      "town": "Somersworth",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Stringham",
+      "givenName": "Jerry",
+      "middleName": "M.",
+      "seatNo": "3106",
+      "county": "Grafton",
+      "district": "3",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 239-2310",
+      "email": "Jerry.Stringham@gc.nh.gov",
+      "town": "Lincoln",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Suiter",
+      "givenName": "John",
+      "middleName": "W.",
+      "seatNo": "3032",
+      "county": "Hillsborough",
+      "district": "36",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "John.Suiter@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sullivan",
+      "givenName": "Jared",
+      "middleName": null,
+      "seatNo": "3102",
+      "county": "Grafton",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jared.Sullivan@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sullivan",
+      "givenName": "Brian",
+      "middleName": "M",
+      "seatNo": "5003",
+      "county": "Sullivan",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 381-7889",
+      "email": "brian.sullivan@gc.nh.gov",
+      "town": "Grantham",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\"",
+        "Rules"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Sullivan",
+      "givenName": "Victoria",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Hillsborough",
+      "district": "18",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-3324",
+      "email": "victoria.sullivan@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Ways and Means",
+        "Education",
+        "Children and Family Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Summers",
+      "givenName": "James",
+      "middleName": null,
+      "seatNo": "3026",
+      "county": "Rockingham",
+      "district": "20",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 320-1572",
+      "email": "James.Summers@gc.nh.gov",
+      "town": "Newton",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Swanson",
+      "givenName": "Dale",
+      "middleName": null,
+      "seatNo": "4074",
+      "county": "Hillsborough",
+      "district": "5",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 759-4241",
+      "email": "Dale.Swanson@gc.nh.gov",
+      "town": "Nashua",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sweeney",
+      "givenName": "Joe",
+      "middleName": null,
+      "seatNo": "2002",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 327-7184",
+      "email": "Joe.Sweeney@gc.nh.gov",
+      "town": "Salem",
+      "committees": [
+        "Rules",
+        "Finance",
+        "Finance - Division I"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sykes",
+      "givenName": "George",
+      "middleName": "E",
+      "seatNo": "4052",
+      "county": "Grafton",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 667-1834",
+      "email": "George.Sykes@gc.nh.gov",
+      "town": "Lebanon",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Sytek",
+      "givenName": "John",
+      "middleName": "J",
+      "seatNo": "2033",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 893-8889",
+      "email": "john.sytek@gc.nh.gov",
+      "town": "Salem",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Taylor",
+      "givenName": "Brian",
+      "middleName": "R.",
+      "seatNo": "2061",
+      "county": "Carroll",
+      "district": "8",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 986-8316",
+      "email": "Brian.Taylor@gc.nh.gov",
+      "town": "Freedom",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Telerski",
+      "givenName": "Laura",
+      "middleName": "Damphousse",
+      "seatNo": "4002",
+      "county": "Hillsborough",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 320-3957",
+      "email": "Laura.Telerski@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tellez",
+      "givenName": "Trinidad",
+      "middleName": null,
+      "seatNo": "4028",
+      "county": "Hillsborough",
+      "district": "40",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Trinidad.Tellez@gc.nh.gov",
+      "town": "Hooksett",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tenczar",
+      "givenName": "Jeffrey",
+      "middleName": null,
+      "seatNo": "3045",
+      "county": "Hillsborough",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Jeffrey.Tenczar@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Terry",
+      "givenName": "Paul",
+      "middleName": "A",
+      "seatNo": "1012",
+      "county": "Belknap",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Paul.Terry@gc.nh.gov",
+      "town": "Alton",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Thackston",
+      "givenName": "Dick",
+      "middleName": "H",
+      "seatNo": "2024",
+      "county": "Cheshire",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 313-1231",
+      "email": "thackston3@aol.com",
+      "town": "Troy",
+      "committees": [
+        "Commerce and Consumer Affairs",
+        "Housing"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Thibault",
+      "givenName": "James",
+      "middleName": "R",
+      "seatNo": "3112",
+      "county": "Merrimack",
+      "district": "25",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 800-6180",
+      "email": "James.Thibault@gc.nh.gov",
+      "town": "Franklin",
+      "committees": [
+        "Executive Departments and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Thomas",
+      "givenName": "Douglas",
+      "middleName": "W.",
+      "seatNo": "3041",
+      "county": "Rockingham",
+      "district": "16",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 490-3226",
+      "email": "doug.thomasnh@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Thomas",
+      "givenName": "Wendy",
+      "middleName": "Ellen N",
+      "seatNo": "5026",
+      "county": "Hillsborough",
+      "district": "12",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Wendy.Thomas@gc.nh.gov",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tierney",
+      "givenName": "James",
+      "middleName": "W",
+      "seatNo": "2039",
+      "county": "Coos",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 636-2889",
+      "email": "James.Tierney@gc.nh.gov",
+      "town": "Groveton",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Toner",
+      "givenName": "Travis",
+      "middleName": "J",
+      "seatNo": "3086",
+      "county": "Belknap",
+      "district": "4",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 219-2689",
+      "email": "Travis.Toner@gc.nh.gov",
+      "town": "Belmont",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tremblay",
+      "givenName": "Marc",
+      "middleName": "D",
+      "seatNo": "3011",
+      "county": "Coos",
+      "district": "5",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 915-0302",
+      "email": "marc.tremblay@gc.nh.gov",
+      "town": "Berlin",
+      "committees": [
+        "\"Resources, Recreation and Development\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tripp",
+      "givenName": "Richard",
+      "middleName": "P",
+      "seatNo": "3018",
+      "county": "Rockingham",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Richard.Tripp@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Trottier",
+      "givenName": "Douglas",
+      "middleName": "R.",
+      "seatNo": "3116",
+      "county": "Belknap",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 455-0997",
+      "email": "douglastrottier1@gmail.com",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Tudor",
+      "givenName": "Paul",
+      "middleName": "D",
+      "seatNo": "3087",
+      "county": "Rockingham",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(781) 953-6950",
+      "email": "paultudor.1strockingham@gmail.com",
+      "town": "Concord",
+      "committees": [
+        "Fish and Game and Marine Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Turcotte",
+      "givenName": "Len",
+      "middleName": "P",
+      "seatNo": "2065",
+      "county": "Strafford",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "lenturcotte@metrocast.net",
+      "town": "Barrington",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Turer",
+      "givenName": "Eric",
+      "middleName": "S",
+      "seatNo": "4024",
+      "county": "Rockingham",
+      "district": "6",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 642-4888",
+      "email": "Eric.Turer@gc.nh.gov",
+      "town": "Brentwood",
+      "committees": [
+        "Judiciary"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ulery",
+      "givenName": "Jordan",
+      "middleName": "G.",
+      "seatNo": "3004",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 882-8979",
+      "email": "repulery@comcast.net",
+      "town": "Hudson",
+      "committees": [
+        "Ways and Means"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Vallone",
+      "givenName": "Mark",
+      "middleName": "A",
+      "seatNo": "5015",
+      "county": "Rockingham",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 770-4088",
+      "email": "Mark.Vallone@gc.nh.gov",
+      "town": "Epping",
+      "committees": [
+        "Public Works and Highways"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Vandecasteele",
+      "givenName": "Susan",
+      "middleName": "J",
+      "seatNo": "3017",
+      "county": "Rockingham",
+      "district": "25",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "susanjonvan@gmail.com",
+      "town": "Concord",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Varney",
+      "givenName": "Peter",
+      "middleName": "R.",
+      "seatNo": "2022",
+      "county": "Belknap",
+      "district": "7",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 765-6380",
+      "email": "pvarney@atsnh.com",
+      "town": "Alton",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Veilleux",
+      "givenName": "Daniel",
+      "middleName": "T.",
+      "seatNo": "4051",
+      "county": "Hillsborough",
+      "district": "34",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Daniel.Veilleux@gc.nh.gov",
+      "town": "Amherst",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Verville",
+      "givenName": "Kevin",
+      "middleName": "G.",
+      "seatNo": "1029",
+      "county": "Rockingham",
+      "district": "2",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 731-0654",
+      "email": "kevin.verville@gc.nh.gov",
+      "town": "Deerfield",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Vose",
+      "givenName": "Michael",
+      "middleName": null,
+      "seatNo": "3042",
+      "county": "Rockingham",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 734-4084",
+      "email": "michael.vose@gc.nh.gov",
+      "town": "Epping",
+      "committees": [
+        "\"Science, Technology and Energy\""
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wade",
+      "givenName": "Alice",
+      "middleName": null,
+      "seatNo": "4017",
+      "county": "Strafford",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "Alice.Wade@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Walker",
+      "givenName": "David",
+      "middleName": "E",
+      "seatNo": "2057",
+      "county": "Strafford",
+      "district": "19",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "David.Walker@gc.nh.gov",
+      "town": "Rochester",
+      "committees": [
+        "Municipal and County Government"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wall",
+      "givenName": "Janet",
+      "middleName": "G",
+      "seatNo": "4022",
+      "county": "Strafford",
+      "district": "11",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": null,
+      "email": "janet.wall@gc.nh.gov",
+      "town": "Madbury",
+      "committees": [
+        "Legislative Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wallner",
+      "givenName": "Mary Jane",
+      "middleName": null,
+      "seatNo": "4014",
+      "county": "Merrimack",
+      "district": "19",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 225-5249",
+      "email": "mjwallner@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Finance",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Walsh",
+      "givenName": "Thomas",
+      "middleName": "C",
+      "seatNo": "1042",
+      "county": "Merrimack",
+      "district": "10",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 623-4104",
+      "email": "Thomas.Walsh@gc.nh.gov",
+      "town": "Hooksett",
+      "committees": [
+        "Transportation"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Walsh",
+      "givenName": "Lilli",
+      "middleName": "M",
+      "seatNo": "3029",
+      "county": "Rockingham",
+      "district": "15",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Lilli.Walsh@gc.nh.gov",
+      "town": "Hampstead",
+      "committees": [
+        "Commerce and Consumer Affairs"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Ward",
+      "givenName": "Gerald",
+      "middleName": "W.R.",
+      "seatNo": "4038",
+      "county": "Rockingham",
+      "district": "27",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 436-6142",
+      "email": "ward4staterep@gmail.com",
+      "town": "Portsmouth",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Ward",
+      "givenName": "Ruth",
+      "middleName": null,
+      "seatNo": "0",
+      "county": "Cheshire",
+      "district": "8",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Senator",
+      "phone": "(603) 271-2609",
+      "email": "Ruth.Ward@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Transportation",
+        "Education",
+        "Rules and Enrolled Bills",
+        "Education Finance"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Warden",
+      "givenName": "Mark",
+      "middleName": null,
+      "seatNo": "2097",
+      "county": "Hillsborough",
+      "district": "39",
+      "electedStatus": "FORMER",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 391-2888",
+      "email": "Mark.Warden@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "\"Labor, Industrial and Rehabilitative Services\""
+      ]
+    },
+    {
+      "chamber": "S",
+      "familyName": "Watters",
+      "givenName": "David",
+      "middleName": "H.",
+      "seatNo": "0",
+      "county": "Strafford",
+      "district": "4",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Senator",
+      "phone": "(603) 271-2104",
+      "email": "David.Watters@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Capital Budget",
+        "Finance",
+        "Energy and Natural Resources"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Weber",
+      "givenName": "Lucy",
+      "middleName": "McVitty",
+      "seatNo": "4003",
+      "county": "Cheshire",
+      "district": "5",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 499-0282",
+      "email": "Lucy.weber@gc.nh.gov",
+      "town": "Walpole",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\"",
+        "Rules"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Weinstein",
+      "givenName": "Toni",
+      "middleName": null,
+      "seatNo": "4082",
+      "county": "Rockingham",
+      "district": "10",
+      "electedStatus": "NEW",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 770-4867",
+      "email": "Toni.Weinstein@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Education Funding"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Weyler",
+      "givenName": "Kenneth",
+      "middleName": "L",
+      "seatNo": "3007",
+      "county": "Rockingham",
+      "district": "14",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 642-3518",
+      "email": "kweyler@aol.com",
+      "town": "Kingston",
+      "committees": [
+        "Finance",
+        "Finance - Division I",
+        "Finance - Division II",
+        "Finance - Division III"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wheeler",
+      "givenName": "Jonah",
+      "middleName": "Orion",
+      "seatNo": "5038",
+      "county": "Hillsborough",
+      "district": "33",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 831-9916",
+      "email": "Jonah.Wheeler@gc.nh.gov",
+      "town": "Peterborough",
+      "committees": [
+        "Environment and Agriculture",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wherry",
+      "givenName": "Robert",
+      "middleName": "J",
+      "seatNo": "3062",
+      "county": "Hillsborough",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 247-7409",
+      "email": "Robert.Wherry@gc.nh.gov",
+      "town": "Hudson",
+      "committees": [
+        "Election Law",
+        "Special Committee on COVID Response Efficacy"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wilhelm",
+      "givenName": "Matthew",
+      "middleName": "B.",
+      "seatNo": "5004",
+      "county": "Hillsborough",
+      "district": "21",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 377-6214",
+      "email": "Matt.Wilhelm@gc.nh.gov",
+      "town": "Manchester",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wilson",
+      "givenName": "Vicki",
+      "middleName": "A",
+      "seatNo": "2092",
+      "county": "Rockingham",
+      "district": "9",
+      "electedStatus": "NEW",
+      "party": "R",
+      "title": "Representative",
+      "phone": null,
+      "email": "Vicki.Wilson@gc.nh.gov",
+      "town": "Sandown",
+      "committees": []
+    },
+    {
+      "chamber": "H",
+      "familyName": "Wood",
+      "givenName": "Clayton",
+      "middleName": "D",
+      "seatNo": "1015",
+      "county": "Merrimack",
+      "district": "13",
+      "electedStatus": "INCUMBENT",
+      "party": "R",
+      "title": "Representative",
+      "phone": "(603) 396-6663",
+      "email": "Clayton.Wood@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "Election Law"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Woodcock",
+      "givenName": "Stephen",
+      "middleName": "L",
+      "seatNo": "5029",
+      "county": "Carroll",
+      "district": "1",
+      "electedStatus": "INCUMBENT",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 356-2904",
+      "email": "stevewoodcock.rep@gmail.com",
+      "town": "Center Conway",
+      "committees": [
+        "Education Policy and Administration"
+      ]
+    },
+    {
+      "chamber": "H",
+      "familyName": "Woods",
+      "givenName": "Gary",
+      "middleName": "L",
+      "seatNo": "3073",
+      "county": "Merrimack",
+      "district": "30",
+      "electedStatus": "FORMER",
+      "party": "D",
+      "title": "Representative",
+      "phone": "(603) 228-3827",
+      "email": "Gary.Woods@gc.nh.gov",
+      "town": "Concord",
+      "committees": [
+        "\"Health, Human Services and Elderly Affairs\""
+      ]
+    }
+  ]
+}

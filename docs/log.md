@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **143 sessions.**
+Newest first. **144 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -42,15 +42,42 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 **Needs Sean.** NH204
 
+## sources-and-incumbency 2026-08-26 · 2026-08-26
+
+**What it finished.** 3 row(s).
+
+- **NH203** — The protection you turned on 2026-08-25 does exactly what you asked and, as a side effect, no scheduled workflow can commit anything any more. All eight pushers push DIRECTLY to main, which the protection now forbids for everyone including the actions bot. Nothing has been silently lost - every run goes red and says so - but no refresh has landed since.
+- **NH207** — Everything for the cutover is in place and verified: your ruleset is Active with the Deploy keys bypass in exempt mode, the classic rule is gone, wtp-scheduled-pushers is the one write-enabled deploy key, PUSH_DEPLOY_KEY exists, and the pushers now push over SSH as that key. pnpm protection:verify reads INTACT, 9 of 9. The one thing not proven is that the key actually works: last_used on it is still null, meaning it has never authenticated to anything. A session cannot prove it — proving it means a real push to main, which needs your key. THE QUESTION: how do you want the first proof run? (a) Dispatch refresh-daily with all_sources=true and read the four log lines in docs/deploy-key-setup.md Step 5 — the fullest proof, and it moves real data. (b) Dispatch it and let a session watch and report, so you do not have to read logs. (c) Wait for tomorrow's scheduled run and let it prove itself, accepting one more day of stale data. Recommended: (b). Note that a GREEN run is also what an early exit looks like — refresh-daily skips the push entirely when no artifact moved — so the proof is the log lines and the key's last_used field, never the colour.
+- **JOB05** — The scheduled job intake-tripwire.yml failed on its two most recent runs (32961466707 and 32840268606), both at: Commit the report if changed. Over its last 14 completed runs it has failed 4 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
+
+WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:intake-tripwire.yml]
+
+**Needs Sean.** Nothing.
+
 ## deploy-key-cutover-0826 · 2026-08-26
 
-**What it started.** 3 row(s) opened, 3 still open.
+**What it started.** 3 row(s) opened, 2 still open.
 
 - **NH206** — Two different clocks decide two different things, and only one of them has an alarm. The F22 staleness guard measures a source's oldest row against the SNAPSHOT'S OWN generatedAt, so when it trips the refresh fails loudly at Validate before committing and nothing is written — that is the clerksboards failure of 2026-08-25 and it works. What a reader sees is clipped against NOW instead, and now keeps moving while a frozen snapshot does not. So every day the push stays blocked, more committed rows fall outside the serving window and quietly stop appearing on a reader's calendar, with no test failing and no run going red — because the F22 guard only runs while a refresh is being BUILT, which is precisely the thing that has stopped. Measured 2026-08-26: 0 of 449 rows have fallen out and the snapshot is 0.41 days old, so this is a mechanism rather than a live wound today. pnpm source:headroom now prints both clocks and the fallen-out count so the next session does not re-derive the distinction. What is still owed is an alarm on the second clock: something that goes red when the committed snapshot has aged past a stated threshold, independent of whether a refresh ever runs. *(open)*
-- **NH207** — Everything for the cutover is in place and verified: your ruleset is Active with the Deploy keys bypass in exempt mode, the classic rule is gone, wtp-scheduled-pushers is the one write-enabled deploy key, PUSH_DEPLOY_KEY exists, and the pushers now push over SSH as that key. pnpm protection:verify reads INTACT, 9 of 9. The one thing not proven is that the key actually works: last_used on it is still null, meaning it has never authenticated to anything. A session cannot prove it — proving it means a real push to main, which needs your key. THE QUESTION: how do you want the first proof run? (a) Dispatch refresh-daily with all_sources=true and read the four log lines in docs/deploy-key-setup.md Step 5 — the fullest proof, and it moves real data. (b) Dispatch it and let a session watch and report, so you do not have to read logs. (c) Wait for tomorrow's scheduled run and let it prove itself, accepting one more day of stale data. Recommended: (b). Note that a GREEN run is also what an early exit looks like — refresh-daily skips the push entirely when no artifact moved — so the proof is the log lines and the key's last_used field, never the colour. *(open)*
 - **NH208** — CORRECTED TWICE, and both corrections are recorded rather than left standing. NOTHING IS WRONG WITH YOUR RULESET and no setting needs changing — the row's title still says otherwise because the amend tool deliberately cannot edit a title, so read this instead of it. Both PRs this session merged on green required checks with no override, no admin flag and no auto-merge. What actually happened is that GitHub Actions was running badly behind on this repository for about two hours on 2026-08-26. Observed across four separate events: PR 191 opening created NO GitHub Actions check suite at all (only a Claude-app and a Netlify-app suite, both sitting queued with zero runs); closing and reopening it created none either; a push to the branch fired one but GitHub queued it against the PREVIOUS head SHA, so the current head still had nothing; and the push events onto main for both f6ef545 and 343ca7e registered nothing for roughly twenty-five minutes each, so pnpm main:green read CANNOT TELL through six minutes of polling on a commit that was in fact fine. Meanwhile every workflow_dispatch started within seconds. Everything else was ruled out: Actions enabled, all nine workflows active, the token carrying workflow scope, and the commits attributed to SeanJ22. The delayed runs did all eventually arrive and go green, and each merge unblocked on its own once they did. THE SECOND FINDING, and it is ours rather than GitHub's: dispatching build-check to work around the lag is not free. build-check carries concurrency cancel-in-progress on the ref, so a dispatch racing a late event-run CANCELS one of them — and pnpm main:green counts every check-run on the commit rather than the latest per context name, so it reported main 343ca7e as RED with two cancelled checks while GitHub's own filter=latest view showed all three required contexts SUCCESS from the newer run. Branch protection uses the latest per name, so main was genuinely green the whole time and the alarm was ours. An instrument that cries wolf on a superseded run is the thing RULING 115 warns about, and RULING 75's whole value is that main:green can be trusted. THE QUESTION: (a) fix main:green to judge the LATEST check-run per context name, matching what branch protection actually evaluates — small, and it removes a false RED that will recur every time anyone dispatches a check by hand; (b) leave it strict and accept that a hand-dispatched check can produce a false RED; (c) also keep this row open as a watch on the GitHub-side lag until two more session PRs open cleanly. Recommended: (a) and (c). *(open)*
 
-**Needs Sean.** NH207, NH208
+**Needs Sean.** NH208
 
 ## all-open-0826 · 2026-08-26
 
@@ -66,16 +93,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH176** — Measured 2026-08-25 against one local production build, four consecutive runs, no code or data changing between them. Every run: 372 passed, 6 declared COULD NOT RUN, and exactly ONE failure — a different one each time. Run 1: [promptD] the schema check, which was REAL and deterministic (the local Neon branch was at 19 of 21 migrations) and has passed on every run since it was applied. Run 2: [g12] an exact name navigates and asks nothing at 07866, offered="Board of County Commissioners — Board of County Commissioners - Work Session" — the IDENTICAL string that PASSED in run 1. Run 3: [g5] north Tucson renders crisp, not muted, at city zoom, delta 8.61 against a 2.5 threshold. Run 4: [g12] again, at 03255 this time. WHY THIS IS A P1 RATHER THAN AN ANNOYANCE: the whole premise of this suite is that a failure is a NAMED REGRESSION — 'the win <session> shipped is undone' — and every session is required to run it and report the result. A suite that fails one arbitrary check per run teaches a session to look at the failure, decide it is probably the flaky kind, and move on. That is the CLAUDE.md failure this repo names most often, arriving through the instrument built to prevent it, and it means the ONE deterministic failure in run 1 could just as easily have been shrugged off. THE SHAPE OF THE FLAKES: both families settle a browser interaction or measure a canvas. g12 waits for the ask box to route and reads what it offered; g5 diffs a rendered map region against the same region with an effect off. Both are timing-dependent and both already carry settle logic — the question is whether the settle condition is the right one, not whether to raise a threshold. Raising a threshold to fit the change it was supposed to catch is what a ceiling raised to fit is (CLAUDE.md), and this row is not a request to do that. WHAT WOULD SETTLE IT: run walk:all N times against one unchanged build and record which check identities fail at least once — the suite already prints stable check identities, so the census is mechanical. A flaky identity is then a known set a run can report against, which is the difference between 'one check failed, and it is one of the four we know are timing-dependent' and 'something broke'.
 - **NH179** — Item 13's machinery shipped 2026-08-25: lib/ops/flake-quarantine.ts classifies a check from N runs of one unchanged build, walk:all consults docs/walk-flakes.json and reports a quarantined check as its own fourth outcome that is never counted passing, and pnpm flake:sweep runs the walk N times and writes the verdict. 8 guards, including NH176's four real runs replayed. WHAT IS NOT DONE: the sweep has not been run, so docs/walk-flakes.json does not exist and nothing is quarantined yet. The classifier is deliberately unable to call anything flaky from one run — it takes a PASS on the same unchanged tree — so a single walk cannot populate it. Run pnpm flake:sweep --runs=3 --write against one local production build and the quarantine fills itself; until then walk:all behaves exactly as it did before, which is the honest state rather than a silent one.
 
-**What it started.** 7 row(s) opened, 6 still open.
+**What it started.** 7 row(s) opened, 5 still open.
 
 - **NH197** — Every meetings adapter clips to the same 90 days at fetch time and the snapshot stamps generatedAt minutes later, so every 90d-clipped source lands within about a day and a half of its own edge permanently, by construction. That is not eight sources about to fail; it is the architecture. R59's clerksboards failure was one of them crossing on a day when the gap between the two clocks happened to be wide enough. *(open)*
 - **NH198** — Sean found Morris Hills Regional School District rendering 'We haven't sourced who runs it yet' and said he found that hard to believe given New Jersey was supposed to be complete. He was right to doubt it, and the cause is a process defect rather than a data gap: the hunt ran a municipal enumeration and its denominator never contained the school districts. *(open)*
 - **NH199** — Two props the map passes down the who-governs card reach the bottom of the chain and are never called. Found while clearing lint warnings, which is the only reason anybody noticed. *(open)*
 - **NH200** — You said the map lines and yellow are overwhelming in dark view and that the same rendering reads fine in light, and you deliberately did not specify a fix. Three concrete options are captured side by side for you to react to. Nothing shipped. *(open)*
 - **NH201** — The denominator Sean asked for, and it turned up a second finding larger than the one he reported. Half the school districts in the registry have no superintendent row of any kind, so a missing photo is not their problem yet - a missing person is. *(open)*
-- **NH203** — The protection you turned on 2026-08-25 does exactly what you asked and, as a side effect, no scheduled workflow can commit anything any more. All eight pushers push DIRECTLY to main, which the protection now forbids for everyone including the actions bot. Nothing has been silently lost - every run goes red and says so - but no refresh has landed since. *(open)*
 
-**Needs Sean.** NH200, NH203
+**Needs Sean.** NH200
 
 ## visual-part2-0825 · 2026-08-25
 
@@ -441,11 +467,37 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## job-watch · 2026-08-22
 
-**What it started.** 3 row(s) opened, 1 still open.
+**What it started.** 5 row(s) opened, 2 still open.
 
 - **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml] *(open)*
+- **JOB04** — The scheduled job refresh-daily.yml failed on its two most recent runs (32955499285 and 32833989579), both at: Commit. Over its last 6 completed runs it has failed 6 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
 
-**Needs Sean.** Nothing.
+WHAT THE FAILING RUN PRINTED (run 32955499285). The line(s) that NAME the failure:
+  !   agenda fetch failed for legistar:pima:1803: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1803_A_Board_of_Supervisors_26-06-09_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1817: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1817_A_Board_of_Supervisors_26-06-23_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1821: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf
+  !   REFUSED rows (no division)     0, across 0 named jurisdiction/office pair(s)
+  !   276 built + 0 refused = 276 vs 276 read  (accounted)
+
+The last 14 of 3208 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:refresh-daily.yml] *(open)*
+
+**Needs Sean.** JOB04
 
 ## NJHUNT2 · 2026-08-22
 

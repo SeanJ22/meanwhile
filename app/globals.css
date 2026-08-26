@@ -1906,6 +1906,22 @@ label:has(> input[type="checkbox"]) {
   color: var(--party-on);
 }
 
+/* A chip that is a fact about OUR SOURCING rather than about the person.
+   (2026-08-26, Items 10-15.)
+
+   The render-default rule says a named gap renders in the gap's own register,
+   and that a colour is a claim too: "we haven't sourced who holds this seat"
+   may not wear the same outline as "Incumbent". A dashed border and a dimmer
+   foreground say "this is about our record" without inventing a new scale.
+   The height and the radius do not move — a different SIZE would make the same
+   claim a second time, and sizes creep. */
+.id-chip-unsourced {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--panel-border) 70%, transparent);
+  color: color-mix(in srgb, var(--text-dim) 75%, transparent);
+  font-weight: 500;
+}
+
 .id-header--lg .id-chip {
   height: 28px;
   padding: 0 13px;

@@ -1,0 +1,157 @@
+/**
+ * EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
+ * (2026-08-26, the sources-and-incumbency session. Item 8a of that brief. It is
+ * RULING 164 — a workflow reports every failure, not just the first — carried
+ * one step further: reporting a failure is not the same as NAMING it.)
+ *
+ * **`Error: Process completed with exit code 1` is not an error message. It is
+ * the absence of one.** Sean has been pasting workflow logs that end in exactly
+ * that line, and every failure has therefore been handled as an incident rather
+ * than as a class, so the next one arrives looking new.
+ *
+ * This is the class list. A workflow's last step runs `pnpm diagnose` on the
+ * failure path, which reads the job's own log and prints:
+ *
+ *   - for a KNOWN class, the class and the remedy in plain words
+ *   - for an UNKNOWN failure, that it is unknown, loudly, with what it saw
+ *
+ * **The unknown case is the load-bearing one.** An unrecognised failure is the
+ * one most worth a person's attention, and today it is indistinguishable from
+ * the six that are already understood. A diagnoser that printed nothing when it
+ * recognised nothing would be the capture script reporting `0 offenders` about
+ * a panel it never opened (RULING 159).
+ *
+ * **The class list only grows.** A cause diagnosed once is never diagnosed
+ * twice: the shape goes in here, with the remedy, and every workflow inherits
+ * it because they all call the same step.
+ */
+
+/** One recognised way a job in this repository dies. */
+export interface FailureClass {
+  readonly id: string;
+  /** What a reader should do, in plain words. Never "see the logs". */
+  readonly remedy: string;
+  /**
+   * The shapes this class takes in a job log. SHAPES, not strings (RULING 110)
+   * — each is proved against a real captured log line in
+   * `tests/failure-classes.test.ts`.
+   */
+  readonly shapes: readonly RegExp[];
+}
+
+export const FAILURE_CLASSES: readonly FailureClass[] = [
+  {
+    id: "push-refused-by-ruleset",
+    remedy:
+      "The branch ruleset refused this push. The bypass is granted to the Deploy keys category, " +
+      "which means SSH: confirm this job passes PUSH_DEPLOY_KEY to the step that runs " +
+      "scripts/push-main.mjs, and that the push target is git@github.com and not an https URL. " +
+      "An HTTPS push authenticates as the Actions app, which has no bypass. See " +
+      "docs/deploy-key-setup.md.",
+    shapes: [/\bGH013\b/, /repository rule violations/i, /\bGH006\b/, /protected branch (update failed|hook declined)/i],
+  },
+  {
+    id: "push-outside-allowlist",
+    remedy:
+      "This workflow tried to push a path it does not declare. Either narrow what it stages, or " +
+      "declare the path in lib/ops/push-allowlist.ts with the reason — declaring it is a decision, " +
+      "not a formality. Widening a profile to a whole directory is refused.",
+    shapes: [/PATH GUARD REFUSED THIS PUSH/, /paths outside the allowlist/i],
+  },
+  {
+    id: "deploy-key-missing-or-malformed",
+    remedy:
+      "The PUSH_DEPLOY_KEY secret is absent, empty, or is not an OpenSSH private key. In GitHub " +
+      "Actions an unset secret interpolates to an empty string, so this is what a missing repository " +
+      "secret looks like from inside the job. The public half belongs in Settings -> Deploy keys; " +
+      "the private half is the secret.",
+    shapes: [/PUSH_DEPLOY_KEY is (not set|set but EMPTY|malformed)/i, /does not look like an OpenSSH private key/i],
+  },
+  {
+    id: "tracker-store-and-views-disagree",
+    remedy:
+      "A tracker store was written without its generated views, or the other way round. Run " +
+      "`corepack pnpm tracker:views`, commit docs/tracker.md, docs/log.md, docs/tracker-opened.json " +
+      "and docs/tracker.xlsx alongside the store, and check the pusher's allowlist grants all five.",
+    shapes: [
+      /states an open count other than/i,
+      /the stated open count is the store's/i,
+      /no session's ledger entry claims them/i,
+      /must say the section is stopped/i,
+    ],
+  },
+  {
+    id: "browser-not-installed",
+    remedy:
+      "The gate needs Chromium and could not find it where it looked. Check the install step's own " +
+      "log for the directory it wrote to and compare it against the path lib/ops/chromium-pin.ts " +
+      "searches — Chrome for Testing writes chrome-linux64/chrome, the legacy layout was " +
+      "chrome-linux/chrome (RULING 113).",
+    shapes: [/NO CHROMIUM INSTALLED/i, /Executable doesn't exist at/i, /browserType\.launch/i],
+  },
+  {
+    id: "staleness-guard",
+    remedy:
+      "A source's oldest row has crossed its allowed age. The refresh is refusing to commit a " +
+      "snapshot it knows is stale rather than shipping it quietly. Run `pnpm source:headroom` and " +
+      "read the SERVING-EDGE column, which is the clock that moves.",
+    shapes: [/headroom/i, /oldest row/i, /past its RULING 53 window/i],
+  },
+  {
+    id: "credential-missing",
+    remedy:
+      "A required secret is not set in this job's environment. Add it to the step's `env:` block; a " +
+      "repository secret that exists is still invisible to a step that does not name it.",
+    shapes: [/is not set in this job's environment/i, /secret [A-Z_]+ not set/i, /missing (api )?key/i],
+  },
+  {
+    id: "gate-suite-failed",
+    remedy:
+      "The test suite refused the change. The failing assertions are named above this line; each " +
+      "one states what it expected and what it saw. Nothing here is a flake to re-run past.",
+    shapes: [/✖ failing tests:/, /ELIFECYCLE\s+Test failed/],
+  },
+];
+
+export type DiagnosisVerdict = "KNOWN" | "UNKNOWN";
+
+export interface Diagnosis {
+  readonly verdict: DiagnosisVerdict;
+  readonly classes: readonly FailureClass[];
+  /** Ready to print. Always populated, for both verdicts. */
+  readonly message: string;
+}
+
+/**
+ * Read a job log and name what killed it.
+ *
+ * EVERY matching class is reported, not the first (RULING 164). A run that hit
+ * a credential problem AND a stale source has two things wrong with it, and
+ * naming one sends the reader back for a second round.
+ */
+export function diagnose(log: string, tail: readonly string[] = []): Diagnosis {
+  const hits = FAILURE_CLASSES.filter((c) => c.shapes.some((s) => s.test(log)));
+
+  if (hits.length > 0) {
+    const lines = [
+      `diagnose: ${hits.length} known failure class(es) recognised in this job's log.`,
+      "",
+      ...hits.flatMap((c) => [`  [${c.id}]`, `    ${c.remedy}`, ""]),
+    ];
+    return { verdict: "KNOWN", classes: hits, message: lines.join("\n") };
+  }
+
+  const lines = [
+    "diagnose: THIS FAILURE IS NOT ONE THIS REPOSITORY RECOGNISES.",
+    "",
+    "  That is the most interesting kind and it is said loudly on purpose: an unrecognised",
+    "  failure is indistinguishable from an understood one when nothing names it. Read the",
+    "  lines below, then add its shape and its remedy to lib/ops/failure-classes.ts so the",
+    "  next run diagnoses itself.",
+    "",
+    ...(tail.length > 0
+      ? ["  the last lines this reader saw:", ...tail.map((l) => `    ${l}`)]
+      : ["  (no log tail was captured — that is itself a defect in the diagnosing step)"]),
+  ];
+  return { verdict: "UNKNOWN", classes: [], message: lines.join("\n") };
+}

@@ -59,6 +59,7 @@ import { registrationLinkFor } from "@/lib/ballot/registration-links";
 import { pollingPlaceLinkFor } from "@/lib/ballot/polling-place-links";
 import { WhereToVote } from "@/components/ballot/where-to-vote";
 import { incumbentHolderFor } from "@/lib/ballot/incumbent-record";
+import { contestIncumbency } from "@/lib/ballot/incumbency-resolve";
 import {
   IncumbentNameLink,
 } from "@/components/ballot/incumbent-record-link";
@@ -362,6 +363,8 @@ async function BallotBattlecard({
   contestTitle,
   contestOcdId,
   federal,
+  contestCandidates,
+  contestId,
   context,
 }: {
   name: string;
@@ -387,6 +390,20 @@ async function BallotBattlecard({
   contestOcdId: string;
   /** Whether the contest is federal, which decides whether FEC money applies. */
   federal: boolean;
+  /**
+   * EVERY name in this contest, because incumbency is resolved PER CONTEST.
+   * (2026-08-26, Items 10-15.)
+   *
+   * Either the seat's holder is known — in which case exactly the people who
+   * hold it read `Incumbent` and everyone else in the contest reads
+   * `Challenger` — or the holder is not known, in which case EVERY candidate in
+   * the contest reads the same not-yet-sourced line. Resolved per candidate,
+   * one card at a time, it would put a sourcing state on the card of whichever
+   * person we happen to know less about, which is the per-card completeness
+   * marker RULING 42 deleted.
+   */
+  contestCandidates: readonly { key: string; display: string; targetKey: string }[];
+  contestId: string;
   context: { zip: string; lat: number; lng: number } | null;
 }) {
   /*
@@ -397,6 +414,36 @@ async function BallotBattlecard({
    * render committees for the same person in another.
    */
   const holder = await incumbentHolderFor(targetKey);
+
+  /*
+   * ITEMS 10-15 (2026-08-26) — INCUMBENCY COMES FROM HOLDING THE OFFICE.
+   *
+   * This used to be `incumbent={holder !== null}` off the line above, and the
+   * line above is the FEC funding join, which its own doc block calls "federal
+   * only by construction". Every non-federal candidate in the product therefore
+   * arrived here as `false` and the card rendered `Challenger` — including for
+   * Karen Ebel, the sitting Deputy Speaker of the New Hampshire House.
+   *
+   * `contestIncumbency` reads the OFFICEHOLDER side, per contest, and returns
+   * three states. A miss is UNKNOWN, never `Challenger`.
+   */
+  const incumbency = await contestIncumbency(
+    { id: contestId, title: contestTitle, ocdId: contestOcdId, candidates: contestCandidates, federal },
+    incumbentHolderFor,
+  );
+  const standing = incumbency.decisions.get(targetKey) ?? {
+    standing: "UNKNOWN" as const,
+    basis: "this candidate was not among the names this contest was resolved against",
+    source: null,
+  };
+
+  /*
+   * The officeholder record to READ VOTES FROM. The federal join first,
+   * because it is exact; otherwise the officeholder the contest resolution
+   * matched to this candidate by seat.
+   */
+  const recordHolder = holder ?? incumbency.holderFor.get(targetKey) ?? null;
+
   const officeBlurb = blurbForContestTitle(contestTitle, contestOcdId);
   const positions = positionsFor(targetKey);
   /*
@@ -418,12 +465,12 @@ async function BallotBattlecard({
       partyLabel={partyLabel}
       photoUrl={card?.photoUrl ?? null}
       /*
-       * BAL-20. `incumbentHolderFor` is the SAME lookup BC-2 already uses to
-       * decide which Voting record empty state applies — one resolution, so the
-       * card cannot say "Challenger" in the header and render a voting record
-       * below it.
+       * BAL-20, corrected 2026-08-26. It used to read `incumbent={holder !==
+       * null}` — a BOOLEAN off a federal-only lookup, so a null meant
+       * `Challenger` rather than "we have not sourced this". Three states now,
+       * resolved per contest, and the third is visibly about our sourcing.
        */
-      incumbent={holder !== null}
+      incumbency={standing.standing}
       speakContext={context ? { lat: context.lat, lng: context.lng } : null}
       subjectId={targetKey}
       /*
@@ -433,7 +480,7 @@ async function BallotBattlecard({
        * because of COPY rather than data, which is the information asymmetry
        * the equal-effort rule exists to catch.
        */
-      holdsOrHeldTheOffice={holder !== null}
+      holdsOrHeldTheOffice={recordHolder !== null}
       sections={{
         /* BC-6: mandatory for every candidate and every elected official.
            Somebody voting for governor needs to know what a governor does. */
@@ -459,8 +506,26 @@ async function BallotBattlecard({
         /* BC-3: the record, in the card. Not `columns` — the two-column form
            builds its own top-level sections, which would compete with the
            seven this card owns. */
-        record: holder ? (
-          <RecentVotes holder={holder} reactionContext={context} />
+        /*
+         * ITEM 14 (2026-08-26) — THE PANEL GATES ON WHETHER RECORDS EXIST,
+         * NOT ON THE FEDERAL JOIN.
+         *
+         * `holder` alone is `incumbentHolderFor`, which reads the FEC funding
+         * snapshot and needs a `congress:` roster id. So a sitting state
+         * legislator with roll calls already in
+         * `data/votes/state-votes-snapshot.json` had NO DOOR to them: whether
+         * someone has held office and whether we hold voting records for them
+         * are two different questions, and collapsing them is why a sitting
+         * Deputy Speaker rendered blank while her votes sat in a committed
+         * file.
+         *
+         * `recordHolder` is the federal join OR the officeholder the contest
+         * resolution matched by seat. Verified 2026-08-26: Karen Ebel resolves
+         * to `plural:947e2e2b-04eb-4f92-9f83-aef8760517e0`, which carries
+         * positions in the snapshot.
+         */
+        record: recordHolder ? (
+          <RecentVotes holder={recordHolder} reactionContext={context} />
         ) : null,
         /*
          * **BAL-15 (2026-08-25).** Sources now carries three things the ballot
@@ -1471,6 +1536,12 @@ export default async function BallotPage({
                             contestTitle={contest.title}
                             contestOcdId={contest.ocdId}
                             federal={isFederalContest(contest)}
+                            contestId={contest.id}
+                            contestCandidates={lineup.nominees.map((n) => ({
+                              key: `${contest.id}|${n.name}`,
+                              display: n.name,
+                              targetKey: `${contest.id}|${n.name}`,
+                            }))}
                             context={
                               centroid && zip
                                 ? { zip, lat: centroid.lat, lng: centroid.lng }
@@ -1622,6 +1693,12 @@ export default async function BallotPage({
                               contestTitle={contest.title}
                               contestOcdId={contest.ocdId}
                               federal={isFederalContest(contest)}
+                              contestId={contest.id}
+                              contestCandidates={candidatesOf(set, contest).map((x) => ({
+                                key: x.id,
+                                display: `${x.givenName} ${surnameDisplayCase(x.familyName)}`,
+                                targetKey: x.id,
+                              }))}
                               context={
                                 centroid && zip
                                   ? { zip, lat: centroid.lat, lng: centroid.lng }

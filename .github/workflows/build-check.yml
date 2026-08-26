@@ -50,8 +50,44 @@ on:
 permissions:
   contents: read
 
+# NO COMMIT ON `main` MAY END WITH A CANCELLED CHECK. (2026-08-26.)
+#
+# **Measured, not argued.** On 2026-08-26 between 17:54 and 17:56 the eight
+# scheduled pushers were dispatched to prove the deploy key. Five landed commits
+# inside two minutes — `1bf635d`, `a9fb8cc`, `3be63c6`, `48ebed9`, `b85f572` —
+# and **every one of their build checks was CANCELLED by the next push**. Those
+# five commits sit on `main` in a state that is not passed and not failed. The
+# sixth, `de75436`, was the only one that ran to completion.
+#
+# **This is the #288 shape arriving from the other side.** Branch protection
+# governs PULL REQUESTS; these are direct pushes that bypass it by design under
+# RULING 165's deploy-key bypass. So the ruleset cannot see them, and the only
+# thing that could say whether they were sound was a check that got killed
+# halfway. With eight pushers on schedules this is most nights, not an edge.
+#
+# **THE ROUTE CHOSEN, and the one rejected, stated so it is not re-litigated.**
+#
+# REJECTED — *skip build-check for bot pushes that touch only `data/`.* It is
+# tempting: a data commit cannot break lint or types. But it CAN break the
+# build, because `pnpm build` reads the committed data at build time — that is
+# the whole reason `next.config.ts` names those files for tracing. A malformed
+# snapshot would then land on `main` unchecked, which is the exact outcome this
+# fix exists to prevent, arriving through the door labelled convenience.
+#
+# CHOSEN — **a push to `main` gets its own concurrency group, keyed on the
+# COMMIT.** Two different commits can no longer cancel one another; a re-run or
+# a duplicate event on the SAME commit still supersedes, which is correct
+# because it is the same question asked twice. Pull requests keep the old
+# behaviour unchanged: a PR merges one head, so a superseded run on an older
+# head is genuinely irrelevant, and that is where RULING 78's cost saving
+# actually came from.
+#
+# THE COST, STATED. N pushes to `main` now cost N runs instead of one. Under
+# RULING 124 a normal night is ONE orchestrated commit; the five above were a
+# manual fleet proof. The bound is the number of commits, and every one of them
+# is a commit somebody chose to make.
 concurrency:
-  group: build-check-${{ github.ref }}
+  group: build-check-${{ github.ref }}${{ github.event_name == 'push' && format('-{0}', github.sha) || '' }}
   cancel-in-progress: true
 
 jobs:

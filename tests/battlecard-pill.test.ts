@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { claimsInText } from "../lib/text/absence-claims.ts";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -123,11 +124,31 @@ test("BC-2: the two empty states exist and are distinguishable", () => {
   const never = votingRecordEmptyLine(false);
   assert.notEqual(held, never, "one sentence cannot carry two different facts");
 
-  // The incumbent case is about US. The challenger case is about THEIR
-  // situation. The reader must be able to tell which.
-  assert.match(held, /we haven't collected/i);
-  assert.match(never, /have not held this office/i);
-  assert.doesNotMatch(never, /we haven't|we have not/i, "their situation is not our gap");
+  /*
+   * **THIS GUARD IS REWRITTEN, EXPLICITLY, IN THE SAME COMMIT AS THE COPY IT
+   * GUARDS.** (2026-08-26, Item 13.)
+   *
+   * It used to REQUIRE the defect. It asserted `never` matched
+   * `/have not held this office/` and that it did NOT say "we haven't" —
+   * so a guard written to protect BC-2's distinction was, by construction,
+   * pressure to keep a sentence that asserts a fact about a named person.
+   * On 2026-08-26 the product was making that assertion on the card of Karen
+   * Ebel, the sitting Deputy Speaker of the New Hampshire House.
+   *
+   * **BC-2's distinction survives and is still asserted**, one line up: the
+   * two sentences must differ, because a record IN THIS OFFICE and a record at
+   * all are different gaps. What is gone is the requirement that the second one
+   * explain itself by describing the candidate's life.
+   */
+  assert.match(held, /^We haven't sourced this person's voting record in this office/);
+  assert.match(never, /^We haven't sourced a voting record for this person/);
+  assert.doesNotMatch(
+    never,
+    /have not held|has not held|never held/i,
+    "an absence describes our sourcing and never asserts a fact about a person",
+  );
+  assert.deepEqual(claimsInText(held), [], "the incumbent line makes no claim about the person either");
+  assert.deepEqual(claimsInText(never), []);
 });
 
 test("BC-2: an empty section is never a per-card completeness statement", () => {

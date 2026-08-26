@@ -99,3 +99,47 @@ Eighteen in Morris County per the 2022 Census of Governments; two are curated
 (RVRSA — Rockaway Township is a member municipality — and the Soil
 Conservation District). **None of the county's twelve fire districts covers
 Rockaway Township**: its fire service is municipal. Checked, not assumed.
+
+
+## 2026-08-26 — THE CENTRALISED SHAPE, AND THE WALL THAT ANSWERS HTTP 200
+
+(The sources-and-incumbency session. Append-only.)
+
+**New Jersey centralises campaign-finance filing on ONE statewide authority**,
+ELEC, under N.J.S.A. 19:44A — the opposite of Arizona's statutory routing to 109
+separate filing officers, and the same shape as New Hampshire's.
+
+**The citation is recorded as PARTIALLY UNVERIFIED and that is deliberate.** This
+session did not read the statutory text from an authoritative host:
+`elec.nj.gov` serves a challenge and `law.justia.com` answered **HTTP 403** at
+rung 3 on 2026-08-26. The chapter citation comes from this project's own prior
+records, not from a read performed this session.
+
+### `elec.nj.gov` is a wall that answers HTTP 200
+
+Re-confirmed 2026-08-26, byte-identical in shape to the 2026-08-24 record: an
+**Imperva/Incapsula challenge served at HTTP 200 with a 212-byte body** carrying
+`<META NAME="robots" CONTENT="noindex,nofollow">` and an `_Incapsula_Resource`
+script. **A status check reads that as healthy.**
+
+**The WEBSITE is walled and the DATA is not.** `njelecefilesearch.com` answers
+and is wired. Recording ELEC as unreachable would be true of one host and false
+of the fact.
+
+### The state publishes the municipal directory itself
+
+`nj.gov/nj/gov/county/localgov.shtml` — re-walked 2026-08-26, HTTP 200,
+114,118 B, **618 outbound links, all 21 counties named, Rockaway Township
+present**. `docs/sources.md` records 624 entities on 2026-08-22 from the
+committed walk; **both numbers are stated** rather than one being chosen — a page
+that changes is not two instruments disagreeing.
+
+The parent `nj.gov/nj/gov/county/` still answers **HTTP 200 with a styled "Page
+not found"**. Control strings stay mandatory on directory routes.
+
+### What was NOT looked for, said plainly
+
+No NJ lobbyist registry. No NJ League of Municipalities walk. No answer on
+whether the Legislature publishes bulk data or runs an online testimony system —
+`njleg.state.nj.us` was walked (HTTP 200, 928,917 B) and the question was not
+answered from it. Dated gaps, not absences.

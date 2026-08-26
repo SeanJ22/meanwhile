@@ -116,7 +116,55 @@ export function neverStarted(check) {
   return done - started < 15_000;
 }
 
-export function verdictFromCheckRuns(checkRuns) {
+/**
+ * `NH208` (2026-08-26, Item 8b(a2)) — THE LATEST RUN PER CHECK NAME, NEVER ALL
+ * OF THEM.
+ *
+ * `build-check.yml` carries `concurrency: cancel-in-progress` on the ref, so a
+ * re-run, a hand dispatch racing a late event-run, or two pushes seconds apart
+ * leave SUPERSEDED runs on the commit with `conclusion: cancelled`. This file
+ * counted every check-run, so one superseded cancellation made it report RED on
+ * a commit that is fine — while **branch protection itself judges
+ * `?filter=latest`**, which showed all three contexts `success`. A verifier
+ * that disagrees with the thing it verifies is worse than no verifier.
+ *
+ * Observed on 2026-08-26 across four commits: three `Build check` runs on `main`
+ * came back `cancelled` inside twenty minutes, each superseded by the next
+ * push's run, and every one of them was a healthy commit.
+ *
+ * The tiebreak is `started_at`, then `completed_at`, then array position. A run
+ * with NO `started_at` — the stillborn shape — never wins over one that started,
+ * because "the runner was never allocated" must not be allowed to overwrite a
+ * real verdict from the same context.
+ */
+export function latestPerName(checkRuns) {
+  const best = new Map();
+  for (let i = 0; i < checkRuns.length; i += 1) {
+    const c = checkRuns[i];
+    const prior = best.get(c.name);
+    if (prior === undefined) {
+      best.set(c.name, { check: c, index: i });
+      continue;
+    }
+    const started = (x) => Date.parse(x.started_at ?? "") || 0;
+    const completed = (x) => Date.parse(x.completed_at ?? "") || 0;
+    const priorStillborn = neverStarted(prior.check);
+    const thisStillborn = neverStarted(c);
+    if (priorStillborn !== thisStillborn) {
+      if (priorStillborn) best.set(c.name, { check: c, index: i });
+      continue;
+    }
+    const byStart = started(c) - started(prior.check);
+    const byEnd = completed(c) - completed(prior.check);
+    if (byStart > 0 || (byStart === 0 && byEnd > 0) || (byStart === 0 && byEnd === 0 && i > prior.index)) {
+      best.set(c.name, { check: c, index: i });
+    }
+  }
+  return [...best.values()].map((v) => v.check);
+}
+
+export function verdictFromCheckRuns(allCheckRuns) {
+  const checkRuns = Array.isArray(allCheckRuns) ? latestPerName(allCheckRuns) : allCheckRuns;
   if (!Array.isArray(checkRuns) || checkRuns.length === 0) {
     return {
       verdict: UNKNOWN,
@@ -162,14 +210,32 @@ export function verdictFromCheckRuns(checkRuns) {
     .filter((c) => c.status !== "completed")
     .map((c) => c.name);
 
+  /*
+   * A CANCELLED CHECK IS UNKNOWN, NEVER PASS AND NEVER RED. (2026-08-26.)
+   *
+   * `cancelled` is the one conclusion that means *this check did not finish
+   * asking its question*. Five commits landed on `main` in two minutes on
+   * 2026-08-26 and every one of their checks was killed by the next push, so
+   * those commits are not passed and not failed — they are unjudged, and
+   * RULING 24 says a check that could not reach its subject must never print
+   * like one that did. Reporting them RED would be almost as wrong in the
+   * other direction: it names a defect that was never observed and sends a
+   * reader hunting for it.
+   *
+   * It is kept apart from `timed_out`, which IS red: a job GitHub killed at
+   * six hours ran and told us something bad.
+   */
+  const cancelled = checkRuns
+    .filter((c) => c.status === "completed" && c.conclusion === "cancelled" && !neverStarted(c))
+    .map((c) => c.name);
+
   // `neutral` and `skipped` are completed-and-not-failing. Everything else that
-  // completed without success is a failure, including `cancelled` and
-  // `timed_out` — a job GitHub killed at six hours told us nothing good.
+  // completed without success is a failure, including `timed_out`.
   const failed = checkRuns
     .filter(
       (c) =>
         c.status === "completed" &&
-        !["success", "neutral", "skipped"].includes(c.conclusion) &&
+        !["success", "neutral", "skipped", "cancelled"].includes(c.conclusion) &&
         // A run that never started is not a failing check. Where SOME runs
         // started and some did not, the ones that ran are still judged — the
         // stillborn ones are named separately rather than counted as red.
@@ -225,6 +291,25 @@ export function verdictFromCheckRuns(checkRuns) {
       failed,
       pending,
       neverStarted: stillborn,
+    };
+  }
+  /*
+   * CANCELLED, fourth, and it also forces CANNOT-TELL. It sits BELOW pending
+   * and stillborn because those two are more specific diagnoses, and ABOVE
+   * green because nothing may return GREEN while a check was killed before it
+   * answered.
+   */
+  if (cancelled.length > 0) {
+    return {
+      verdict: UNKNOWN,
+      why:
+        `${cancelled.length} of ${checkRuns.length} check(s) were CANCELLED — ${cancelled.join(", ")}. ` +
+        "A cancelled check did not finish asking its question, so this commit is not passed and not " +
+        "failed. On `main` that usually means another push superseded it, which build-check.yml no " +
+        "longer allows between different commits; re-run the check on this commit to get a verdict",
+      failed,
+      pending,
+      cancelled,
     };
   }
   return { verdict: GREEN, why: `${checkRuns.length} check(s) passed`, failed, pending };

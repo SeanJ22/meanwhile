@@ -1967,3 +1967,200 @@ out.**
 **`go.boarddocs.com` continues to answer HTTP 403** to the agenda fetch for
 `apptegy:vail` on every run (seen again 2026-08-20). Rung 3 reached; unchanged
 since 2026-08-18 and still open.
+
+---
+
+## RULING 166 — THE BODY'S OWN PUBLICATION IS RUNG ONE, AND ITS BULK DOWNLOAD IS RUNG ZERO
+
+(Adopted 2026-08-26, Sean's ruling, the sources-and-incumbency session.
+`docs/rulings.md` carries it in full. **It amends RULING 84 and it changes how
+every rung below is REACHED**, so it sits here at the top of the evidence rather
+than at the end of it.)
+
+**Before any aggregator, any third party, and any per-entity search, the
+governing body that holds the office is walked first. Where that body offers a
+bulk download, the bulk file is taken before any page-by-page retrieval.**
+
+### Tier A splits, and the split is the whole amendment
+
+| Tier | What is in it | Walked |
+|---|---|---|
+| **A0** | The body's own publication, and the tier above it in government (RULING 93). Bulk download first, then the body's own pages. | FIRST, always |
+| **A1** | Third-party compilations that answer many entities at once — Wikipedia, LegiScan, Citizens Count, Open States, GovTrack. | after A0 |
+| **B** | The entity's own official source, per entity. | unchanged |
+| **C** | Per-entity search. | unchanged |
+
+**A bulk file is rung ZERO because it is not a retrieval problem at all.** The
+fourteen rungs are about getting bytes past a wall. A published `.txt` of a
+whole roster has no wall in front of it, and a session that walks rungs 2
+through 6 against a body's individual member pages while that file sits one
+directory away has not been defeated by anything — it never asked.
+
+### The evidence this was adopted on, walked 2026-08-26
+
+**`gc.nh.gov/downloads/` — the New Hampshire General Court's own downloads
+page.** `www.gencourt.state.nh.us/downloads/` redirects (HTTP 301) to it, so
+**`gc.nh.gov` is canonical** and both hostnames serve the same body. The page
+carries, all at HTTP 200 to a plain rung-2 fetch with an identified User-Agent:
+
+| File | Bytes | What it is |
+|---|---|---|
+| `/downloads/Members.txt` | 82,694 | **408 rows**, tab-delimited, 28 columns |
+| `/downloads/Members.xls`, `/downloads/Members.xlsx` | — | the same roster, spreadsheet form |
+| `/downloads/ODBC and Data Table Structure.pdf` | 189,320 | the public SQL Server's connection details and schema |
+| `/dynamicdatadump` | 21,659 | a further bulk surface, not yet parsed |
+
+`Members.txt`'s columns: `LastName`, `FirstName`, `MiddleName`,
+`LegislativeBody`, `seatno`, `County`, `District`, **`electedStatus`**,
+`Address`, `address2`, `city`, `Zipcode`, `State`, `Phone`, `WorkEmail`,
+`party`, `GenderCode`, `PersonTitle`, and `Committee1`-`Committee5` each with a
+phone number.
+
+**Measured on the file itself, 2026-08-26:** 408 rows — **384 House, 24
+Senate**. `electedStatus` reads ` Incumbent` for 279 (note the LEADING SPACE — a
+naive equality comparison against `"Incumbent"` fails on every one of them),
+`new` for 109, `Former` for 18, and empty for 2. **406 of 408 carry a work
+email; 266 of 408 carry a phone.**
+
+*The pair, stated rather than blended (the two-numbers rule).* The brief that
+ordered this work said **424 seats — 400 representatives and 24 senators**. The
+body's own file carries **408 rows, 384 of them House**. Those are different
+measurements of different things: 400 is the constitutional size of the House,
+and the file is the roster of PEOPLE, which carries vacancies as absences and
+carries 18 `Former` members as rows. Neither number is wrong and they are not
+interchangeable.
+
+**The public SQL Server is LIVE, and the address in the brief was wrong.**
+
+| Host | Source of the address | TCP 1433, probed 2026-08-26 |
+|---|---|---|
+| `66.211.150.69\sqlexpress` | **the body's own PDF at `gc.nh.gov`** | **OPEN** |
+| `216.177.20.245\sqlexpress` | the session brief | `ECONNREFUSED` |
+
+Credentials as published by the body: `publicuser` / `PublicAccess`, default
+database `NHLegislatureDB`. **These are published by the General Court for
+public read access and are not an access control being circumvented** — the
+public-records rule's prohibition is on authenticating PAST a control, and this
+is a credential the body prints in a public PDF for exactly this use.
+
+The PDF's own table names are **`legislators`** and **`rollcallhistory`**, not
+`tbllegislators` and `tblrollcallhistory` as the brief had them. Its schema, as
+published:
+
+- `legislators` — `PersonID` int, **`EmployeeNo` varchar**, `LastName`,
+  `FirstName`, `MiddleName`, `LegislativeBody`, `SeatNo`, `CountyCode`,
+  `District`, `Party`, `Street`, `Address2`, `City`, `State`, `ZipCode`,
+  `EMailAddress1`
+- `rollcallhistory` — `sessionYear`, `legislativeBody`, `voteSequenceNumber`,
+  **`employeeNumber` varchar**, `condensedBillNo`, `vote`
+- `rollcallsummary`, `sponsors` (`employeeNo`, `PersonID`), `docket`,
+  `committees`, `county`, `subject`
+- **`housedistricts` and `senatedistricts`** — `countycode`, `districtcode`,
+  `ward`, `town`. That is a town-to-district resolver published by the body.
+
+**`EmployeeNo` is the stable key** joining a legislator to their roll calls with
+no name matching whatsoever, and the body documents it as such.
+
+**What the member-page id is NOT.** Karen Ebel's member page is
+`gc.nh.gov/house/members/member.aspx?member=377093`. Her `seatno` in
+`Members.txt` is **4005**. They are different identifiers, and no roster page
+this session walked exposes the `member=` id:
+`house/members/memberlookup.aspx` gives 404, `house/members/wml.aspx` 404,
+`house/members/memberlisting.aspx` 404, and `house/members/` answers HTTP 200 at
+122,319 bytes carrying **zero** `member.aspx?member=` links — it points at the
+three download files instead, which is the page telling you to take the bulk
+file. Recorded as an honest gap with its rungs, not as an absence.
+
+**`ftp://ftp.azsos.gov/cfsdata2/` — Arizona's campaign-finance reference
+tables.** Named in the state's own *Bulk Filing Guide* (revised **28 July
+2026**, so current), anonymous, and answering. Fourteen files listed. Pulled
+2026-08-26:
+
+| File | Rows | What it is |
+|---|---|---|
+| `Committees.txt` | **8,828** | every registered AZ committee: id, name, address, **committee type**, organization date, termination date. **1,958 carry no termination date.** |
+| `Jurisdictions.txt` | **109** | **1 State, 15 County, 93 City/Town** — the A.R.S. section 16-928 filing-officer universe, published by the state |
+| `Counties.txt` | 15 | |
+| `Elections.txt` | 37 | |
+| `ConsolidatedElectionDates.txt` | 33 | |
+
+Also on the FTP: `TransactionTypes.txt`, `AllowedInitialTransactions.txt`,
+`AllowedOffsetTransactions.txt`, `TransactionTypesAllowedByCommittee.txt`,
+`AdvertisingModes.txt`, `BallotMeasures.txt`, `ReportingPeriods.txt`,
+`SampleDatafile.txt`, `BulkFilingGuide.doc`.
+
+**The answer to "does AZ expose bulk data or only a search UI", plainly, both
+halves.** Bulk EXTRACT of transactions — **no**; the Bulk Filing Guide is an
+UPLOAD specification for committees filing INTO the system, not a download
+format. Bulk REFERENCE TABLES including the complete committee register —
+**yes**, at the anonymous FTP path above, which the state publishes in its own
+guide and which nobody in this project had ever walked.
+
+**Committee types, as filed** (the top of 8,828): 3,767 Candidate (not
+participating in Clean Elections), 988 PAC, **810 Candidate (participating in
+Clean Elections)**, 492 Support/Oppose (Ballot Measure), 464 PAC (Standing),
+328 Independent Expenditures (Corp/LLC/Labor Org). *Clean Elections
+participation is therefore already a filed, bulk-available, binary fact about
+every Arizona candidate committee — the field the brief asked for, in a file.*
+
+## THE SECRETARY OF STATE IS A BODY, AND IT IS A NAMED RUNG
+
+(Adopted 2026-08-26, Item 4 of the sources-and-incumbency brief. It is
+RULING 166's A0 applied to the office that publishes more distinct civic
+datasets per fetch than anywhere else in a state.)
+
+**Every state runs a Secretary of State or equivalent that publishes several
+DISTINCT civic datasets under one roof, and no session in this project had ever
+walked it as a body.** It is walked division by division, and each division is
+its own registry row.
+
+The divisions, enumerated so a session in a new state knows what to look for:
+
+1. **Elections division** — candidate filings, ballot certification, polling
+   places, the election calendar.
+2. **Campaign finance system** — receipts, expenditures, filing entities, and
+   (where it exists) the bulk reference tables.
+3. **Lobbyist registry** — who is retained, by whom, on what subject.
+4. **Clerk directory** — municipal clerks with contact detail.
+5. **Business / entity registry** — where relevant to committees and PACs.
+
+Walked 2026-08-26 for the three pilot states. Per-state detail is in
+`states/<state>/sources.md`; the reachability summary is here because it is
+retrieval evidence:
+
+| Division | NH | AZ | NJ |
+|---|---|---|---|
+| Elections | `sos.nh.gov` — **rung 2 and rung 3 both HTTP 403** | `azsos.gov/elections/...` — HTTP 200 | `elec.nj.gov` — HTTP 200 but a **212-byte shell**; the data is on `njelecefilesearch.com` |
+| Campaign finance | `cfs.sos.nh.gov` — **HTTP 403 at rungs 2 and 3** | `azsos.gov/elections/campaign-finance-reporting` 275 KB, plus the FTP above | `njelecefilesearch.com` — already WIRED |
+| Lobbyist registry | `sos.nh.gov/lobbyists` — **HTTP 403** | `azsos.gov/elections/lobbying` — **HTTP 200, 285 KB** | not located this session |
+| Clerk directory | not located this session | `azsos.gov/elections/about-elections/county-election-contact-info` — **HTTP 200, all 15 counties named** | `nj.gov/nj/gov/county/localgov.shtml` — **HTTP 200, 618 outbound links, all 21 counties, Rockaway Township present** |
+| Election calendar | — | `azsos.gov/elections/calendar-dates` — HTTP 200 | — |
+
+**`sos.nh.gov` and `cfs.sos.nh.gov` are WALLED, not disallowed, and the
+distinction is load-bearing.** Their `robots.txt` answers **HTTP 403** to both a
+plain client and a full browser header set, which means the permission question
+is UNANSWERED rather than answered no. Under RULING 148 an unanswered permission
+question refuses the walk; under RULING 53 a wall carries a date and is
+re-walked on a 14-day clock. Both are true at once and neither cancels the
+other: **the next rung to try is 4 (a different client), then 5 (a different
+egress), then 6 (the live browser)** — not a cleverer request to the same door.
+Last tested **2026-08-26**.
+
+**`irc.az.gov` — the Arizona Independent Redistricting Commission — answers
+HTTP 403 to a plain fetch and HTTP 200 to a full browser header set on
+`robots.txt`.** A rung-3 wall that falls, recorded as a rung.
+
+## `pnpm robots:sweep` — THE PERMISSION QUESTION, ASKED AT SCALE
+
+(Added 2026-08-26.) `scripts/robots-sweep.mts`. RULING 148 says the may-we-walk
+verdict is enforced by the fetcher and never remembered by a session; today it
+is enforced for exactly one population, the general search indexes in
+`lib/hunt/search-pool.ts`. This makes the question cheap to ask about many hosts
+at once, so a session enumerating a state's sources answers the permission
+column for every one of them **before** it walks any of them.
+
+Four verdicts, and `CANNOT_TELL` refuses: `ALLOWED`, `DISALLOWED` (never
+re-walked on a clock — a disallow is a host saying do not ask), `NO_ROBOTS`,
+`CANNOT_TELL`. Run 2026-08-26 over 21 hosts from this brief: **17 walkable, 4
+refused** — `sos.nh.gov`, `cfs.sos.nh.gov`, `irc.az.gov` and `govtrack.us`, the
+last two of which then answered at rung 3.

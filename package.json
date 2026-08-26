@@ -247,7 +247,16 @@
     "nj:districts": "tsx scripts/nj-district-coverage.mts",
     "dark1": "tsx scripts/dark1-proposal.mts",
     "shoot:battlecard": "tsx scripts/shoot-battlecard-0826.mts",
-    "protection:verify": "node scripts/protection-verify.mjs"
+    "protection:verify": "node scripts/protection-verify.mjs",
+    "robots:sweep": "tsx scripts/robots-sweep.mts",
+    "url:sweep": "tsx scripts/url-sweep.mts",
+    "diagnose": "tsx scripts/diagnose-failure.mts",
+    "jobs:status": "tsx scripts/jobs-status.mts",
+    "state:discover": "tsx scripts/state-discover.mts",
+    "nh:members": "tsx scripts/nh-gencourt-members.mts",
+    "sweep:absence-claims": "tsx scripts/sweep-absence-claims.mts",
+    "incumbency:census": "tsx scripts/incumbency-census.mts",
+    "verify:incumbency": "tsx scripts/verify-incumbency-0826.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

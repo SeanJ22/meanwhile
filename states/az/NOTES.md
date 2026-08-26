@@ -70,3 +70,57 @@ lacks. Four serving the target zips are curated (RTA, Rio Nuevo, Rincon Valley
 FD, Corona de Tucson FD); the other twenty are enumerated in
 `data/audit/gus-2022-clip-counties.json` and are backlog, each implicitly
 NOT_ATTEMPTED.
+
+
+## 2026-08-26 — THE FILING OFFICER IS A STATUTE, AND THE STATE PUBLISHES ITS OWN TABLES
+
+(The sources-and-incumbency session. Append-only.)
+
+**A.R.S. § 16-928, read from `azleg.gov` on 2026-08-26**, routes
+campaign-finance filing by which election the money influences: the **Secretary
+of State** for statewide and legislative; **the county officer in charge of
+elections** for county, **school district, community college district** and
+special taxing district; the **city or town clerk** for city and town.
+
+*Two corrections to how this was carried in the brief that ordered the walk:*
+the county-level officer is *the county officer in charge of elections*, a
+single defined role, not "recorder, elections department or board of
+supervisors"; and the statute explicitly names **school and community college
+districts**, which is the tier this product reaches and nobody else does.
+
+**109 filing jurisdictions — 1 state, 15 counties, 93 cities and towns**, from
+the state's own `Jurisdictions.txt`. That is the denominator any Arizona
+campaign-finance coverage claim needs.
+
+### `ftp://ftp.azsos.gov/cfsdata2/` — anonymous, live, never walked before
+
+Named in Arizona's own *Bulk Filing Guide* (revised **28 July 2026**). Fourteen
+files. **`Committees.txt` carries 8,828 committees** with type, address and
+organisation/termination dates; **1,958 carry no termination date**.
+
+**Clean Elections participation is a FILED FIELD already in bulk** — 810
+participating candidate committees against 3,767 not participating. No
+per-candidate hunt is needed for it.
+
+**Bulk extract of the MONEY: no.** The guide is an UPLOAD specification. Bulk
+reference tables: yes, at the path above.
+
+### Vendors, and the route to local money at scale
+
+**EasyVote** serves Pima County's campaign-finance portal. A vendor serving one
+county serves others, so local finance portals get the agenda-platform
+treatment: identify the vendor, then ask whether a tenant list exists. **Whether
+an EasyVote tenant list exists is UNANSWERED as of 2026-08-26.**
+
+### Walls, dated
+
+`irc.az.gov` — the Independent Redistricting Commission — answers **HTTP 403 to
+a plain fetch and HTTP 200 to a full browser header set on `robots.txt`**. A
+rung-3 wall that falls. The site itself was still 403 at rung 3; rungs 4, 5 and 6
+are unwalked. Last tested **2026-08-26**.
+
+### Registered and set aside
+
+`az_site_sliver` is a Drupal module **mandated on every Arizona state government
+website**, which makes its presence a fingerprint for verifying a site is
+genuinely official — a second signal beside `cisagov/dotgov-data`.

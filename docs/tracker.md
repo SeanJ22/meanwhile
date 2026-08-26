@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **283 open**, 420 resolved.
+- **284 open**, 420 resolved.
 - **48 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -715,7 +715,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**25 open · 73 resolved.**
+**26 open · 73 resolved.**
 
 ### P1
 
@@ -740,6 +740,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH181** — Found 2026-08-25 by part2-0825 while closing NS16. The 8/25 Part 2 document is now at docs/feedback/we-the-people-feedback-2026-08-25-part2.md and is the FIRST one that has ever been there. The captures for every batch are committed and reachable; the DOCUMENTS are not. Missing: the 8/22 walkthrough (captures at docs/feedback/2026-08-22/, 21 files), the 8/24 walkthrough (docs/feedback/8.24/, 16 files) and the 8/25 morning walkthrough (docs/feedback/8.25/, 19 files). Each has been cited as authoritative by at least one session brief, and RULING 108 says anything a session must read at session start lives in the repo. docs/feedback/README.md is the index and names all three as missing. Only the author can supply the text — a session cannot reconstruct a dictation it never had.
 
 **NH195** — Found 2026-08-25 by part2-0825, and only because pnpm handoff checks for a clean tree at the end. tests/context-pinned-conduct.test.ts calls writeContext(null, OPTIONS) at line 305 with generatedAt: 'test' and stampToday: '2026-08-23'. RULING 108 correctly made the repo copy of docs/context.md the PRIMARY output, written FIRST and never guarded — which means the test's own call writes into the working tree. After any pnpm test the orientation file every session is told to open first reads 'Written by pnpm handoff at test', 'Session day 2026-08-23', and '_No git facts available this run._' instead of the branch, the head sha, origin/main and the recorded gate results. THE COMMITTED FILE IS FINE this time: handoff regenerates and commits it during --ship, and the degradation happened afterwards when handoff's own gate run invoked the suite. But the ordering is luck, not design — a session that runs the suite after shipping and then commits a stray file would ship the degraded copy, and nothing would go red. This is RULING 92's shape with the generator writing itself: the artifact is real, the writer is a test, and the value it writes is a fixture. The fix is for the test to write to a temp directory, or for writeContext to take an explicit destination, rather than for anyone to remember to git checkout the file.
+
+**NH196** — 2026-08-25, part2-0825. Run as `SHOOT_BASE_URL=http://localhost:3177 corepack pnpm -s walk:all` against a freshly built default-mode local production server answering HTTP 200 on that port. It emitted NOTHING — not a header, not a first check, not an error — for twenty minutes, and was killed under RULING 146's five-silent-minutes rule. Two facts worth keeping. FIRST, the default base is port 3000 and there is no flag for it: running `pnpm walk:all` with a server on any other port fails with a raw ECONNREFUSED stack trace naming ::1:3000, which is a correct refusal wearing the least readable possible face. SHOOT_BASE_URL is the only way in and the script's own header documents it, so this is a discoverability defect rather than a wall. SECOND, whether the silence is buffering through `pnpm -s` with no TTY, or a genuine hang, is UNDETERMINED — a zero-byte output file cannot tell those apart, which is exactly the ambiguity RULING 24 says must not be collapsed. The standing rule in CLAUDE.md is that every session ends by running this suite, so a suite that cannot be observed while it runs is a suite sessions will stop running. It needs to print its first check before it does any work. NH176 already records a separate defect in it — a different single check failing on each of four consecutive runs against an unchanged tree.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

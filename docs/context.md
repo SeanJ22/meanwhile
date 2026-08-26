@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
-Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 00:50:42 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-25 -->
+Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -597,5 +597,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-26 00:50:42 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-25 -->
+branch: claude/part2-0825
+head sha: 1b2dc79b5c7ea582000e5fda8d675bc2b6c0ab4f
+head subject: Part 2 visual feedback: six classes closed, and the predicates that hid them
+origin/main sha: 706c934b7a9b0997226942cb939c1a50487b2e77
+origin/main subject: Merge pull request #183 from SeanJ22/claude/red-main-0825
+local main sha: 706c934b7a9b0997226942cb939c1a50487b2e77
+local main matches origin/main: yes
+working tree: clean
+open prs: none
+last recorded tests: 1442 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:14496
+```

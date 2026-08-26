@@ -236,7 +236,7 @@ jobs:
           git add data/meetings-snapshot.json
           git commit -m "Snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow refresh-meetings-snapshot
 
       # NH31, second half. The commit is behind us; now the run goes red.
       #

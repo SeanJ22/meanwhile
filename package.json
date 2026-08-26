@@ -246,7 +246,8 @@
     "pills": "tsx scripts/pill-census.mts",
     "nj:districts": "tsx scripts/nj-district-coverage.mts",
     "dark1": "tsx scripts/dark1-proposal.mts",
-    "shoot:battlecard": "tsx scripts/shoot-battlecard-0826.mts"
+    "shoot:battlecard": "tsx scripts/shoot-battlecard-0826.mts",
+    "protection:verify": "node scripts/protection-verify.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

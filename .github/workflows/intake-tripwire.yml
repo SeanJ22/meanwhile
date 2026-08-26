@@ -92,7 +92,26 @@ jobs:
       # name, which is how the wrong database gets touched later. Both scripts
       # print the role and host they connected to, so the log says what was
       # actually asked.
+      # THREE INDEPENDENT QUESTIONS, AND ALL THREE ARE ASKED (2026-08-26,
+      # RULING 164).
+      #
+      # These ran unguarded and in sequence, so the FIRST failure ended the
+      # job and the other two were never attempted. Defects stacked in run
+      # order cost one session each, because each is invisible until the one
+      # before it is fixed — and nobody can know how many lie between the
+      # current failure and the end.
+      #
+      # They are INDEPENDENT questions: the schema gate asks whether
+      # production carries this checkout's migrations, the write alarm asks
+      # whether a sold store refused a write, and the tripwire computes the
+      # day counts. A schema that has drifted is precisely when the write
+      # alarm is most worth reading, so letting the gate suppress it is the
+      # wrong way round.
+      #
+      # `!cancelled()` rather than `always()`: a cancelled run should stop,
+      # and `always()` would drive on through the cancellation.
       - name: Schema gate — does production have the migrations this checkout commits?
+        id: schema
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: corepack pnpm db:check
@@ -103,11 +122,15 @@ jobs:
       # different on purpose — "I looked and found nothing" and "I could not
       # look" printed identically for four hours once already.
       - name: Write alarm — did a sold store refuse a write in the last day?
+        id: alarms
+        if: ${{ !cancelled() }}
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: corepack pnpm alarms --hours=24
 
       - name: Run the tripwire
+        id: tripwire
+        if: ${{ !cancelled() }}
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           WTP_PRODUCTION_DATABASE_URL_WRITE: ${{ secrets.DATABASE_URL }}
@@ -115,6 +138,7 @@ jobs:
         run: corepack pnpm intake:tripwire
 
       - name: Commit the report if changed
+        if: ${{ !cancelled() && steps.tripwire.outcome == 'success' }}
         run: |
           if git diff --quiet -- docs/intake-report.md; then
             echo "report unchanged — nothing to commit"
@@ -125,4 +149,26 @@ jobs:
           git add docs/intake-report.md
           git commit -m "Intake tripwire report: $(date -u +%Y-%m-%dT%H:%MZ)"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow intake-tripwire
+
+
+      # EVERY FAILURE, NOT JUST THE FIRST (RULING 164). This prints all three
+      # outcomes together, so one run answers all three questions rather than
+      # three round trips — and it names what was SKIPPED rather than letting
+      # a skipped step read as a passing one.
+      - name: What every check said
+        if: ${{ !cancelled() }}
+        run: |
+          echo "schema gate  ${{ steps.schema.outcome }}"
+          echo "write alarm  ${{ steps.alarms.outcome }}"
+          echo "tripwire     ${{ steps.tripwire.outcome }}"
+          echo "commit       ${{ steps.tripwire.outcome == 'success' && 'attempted' || 'NOT ATTEMPTED — the tripwire did not produce a report' }}"
+          failed=0
+          for o in "${{ steps.schema.outcome }}" "${{ steps.alarms.outcome }}" "${{ steps.tripwire.outcome }}"; do
+            if [ "$o" = "failure" ]; then failed=$((failed+1)); fi
+          done
+          if [ "$failed" -gt 0 ]; then
+            echo "::error title=Intake tripwire::$failed of 3 checks FAILED. All three ran; every failure is named above."
+            exit 1
+          fi
+          echo "3 of 3 checks ran and passed."

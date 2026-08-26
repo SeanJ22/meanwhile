@@ -141,4 +141,24 @@ jobs:
           git add data/ballot/
           git commit -m "NJ filing refresh: the clerk republished, $(date -u +%Y-%m-%dT%H:%MZ)"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow refresh-nj-filing
+      # EVERY FAILURE, NOT JUST THE FIRST (2026-08-26, RULING 164).
+      #
+      # The clerk-count check above carries `continue-on-error: true` so a
+      # divergence does not stop the rebuild — which is right, and was the
+      # stated design. What was missing is the other half: NOTHING read
+      # `steps.pair.outcome` afterwards, so a failed reconciliation between the
+      # clerk's published count and what we render was swallowed whole and
+      # the run finished green. A check whose verdict nobody reads is a check
+      # that is not running.
+      #
+      # It stays NON-BLOCKING and becomes VISIBLE: a warning annotation on the
+      # run, named, with the rebuild's own outcome beside it.
+      - name: What every check said
+        if: always()
+        run: |
+          echo "clerk-count pair   ${{ steps.pair.outcome }}"
+          echo "artifact changed   ${{ steps.diff.outputs.changed }}"
+          if [ "${{ steps.pair.outcome }}" = "failure" ]; then
+            echo "::warning title=NJ filing pair::The clerk's published count and what we render DISAGREE. That is a finding, not an error (RULING 147) — it is reported here rather than swallowed, and it did not stop the rebuild."
+          fi

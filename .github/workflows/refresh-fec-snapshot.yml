@@ -159,4 +159,4 @@ jobs:
           git add data/fec/fec-2026.json
           git commit -m "FEC snapshot refresh: $(date -u +%Y-%m-%dT%H:%MZ)"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
-          node scripts/push-main.mjs
+          node scripts/push-main.mjs --workflow refresh-fec-snapshot

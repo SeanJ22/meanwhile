@@ -153,7 +153,13 @@ test("R48: every workflow that pushes main goes through the protected push", () 
     for (const line of text.split("\n")) {
       const command = line.trim();
       if (/^git push\b/.test(command)) bare.push(`${file}: ${command}`);
-      if (command === "node scripts/push-main.mjs") pushers.push(file);
+      // Anchored at the start and allowed to carry arguments. It was an exact
+      // string equality until 2026-08-26, when RULING 162 gave every pusher a
+      // `--workflow <id>` declaring which path allowlist it pushes under — and
+      // an equality match would have read all eight as ZERO pushers while
+      // asserting the count was eight. That is the shape RULING 110 names: a
+      // search in the wrong FORM, reporting an absence it never looked for.
+      if (/^node scripts\/push-main\.mjs(\s|$)/.test(command)) pushers.push(file);
     }
   }
 

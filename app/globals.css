@@ -920,6 +920,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-inline-end: -1px;
   color: var(--text-dim);
 }
 
@@ -1116,6 +1117,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.6px;
+  margin-inline-end: -0.6px;
   color: var(--text-muted);
   padding: 6px 12px 3px;
   background: var(--panel-bg);
@@ -1413,6 +1415,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.2px;
+  margin-inline-end: -1.2px;
   color: var(--text-dim);
   display: flex;
   align-items: center;
@@ -1484,6 +1487,7 @@ main[data-sidebar="closed"] .maplibregl-ctrl-top-left {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.1px;
+  margin-inline-end: -1.1px;
   color: var(--text-dim);
   margin-bottom: 8px;
   display: flex;
@@ -1872,6 +1876,7 @@ label:has(> input[type="checkbox"]) {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  margin-inline-end: -0.12em;
   opacity: 0.72;
 }
 
@@ -1994,6 +1999,7 @@ label:has(> input[type="checkbox"]) {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.15em;
+  margin-inline-end: -0.15em;
   text-transform: uppercase;
   color: var(--text-muted);
 }
@@ -2511,12 +2517,25 @@ label:has(> input[type="checkbox"]) {
  * stated point of this class and it is why the fix lands here rather than on
  * the one panel the author was looking at.
  */
+/*
+ * **ALIGN-1 (2026-08-25) — EVERYTHING READS LEFT TO RIGHT. NOTHING INDENTS
+ * RIGHT.** The most repeated complaint of the 8/25 evening walkthrough, and one
+ * declaration behind all of it: `justify-content` was `flex-end`, so every
+ * name sat pushed right of the district it serves while the district's own
+ * label sat at the left margin. Drawn in his `17-18-44`, `17-30-58` and
+ * `17-53-26`, each with an arrow pointing left.
+ *
+ * `.person-row` is SHARED — the who-governs card and both blocks of the small
+ * battlecard — which is why the four surfaces he named are one line of CSS.
+ * `flex-start` is stated rather than deleted so the next edit cannot
+ * reintroduce this by leaving it out. `tests/person-row-alignment.test.ts`.
+ */
 .person-row {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: baseline;
-  justify-content: flex-end;
+  justify-content: flex-start;
   column-gap: 8px;
   row-gap: 2px;
   padding: 5px 0;
@@ -3252,6 +3271,7 @@ label:has(> input[type="checkbox"]) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.1px;
+  margin-inline-end: -1.1px;
   cursor: pointer;
   text-align: left;
 }
@@ -3406,6 +3426,7 @@ label:has(> input[type="checkbox"]) {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  margin-inline-end: -0.8px;
   color: var(--text-dim);
 }
 
@@ -3415,6 +3436,7 @@ label:has(> input[type="checkbox"]) {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.8px;
+  margin-inline-end: -0.8px;
   color: var(--tier-accent, var(--text-muted));
 }
 
@@ -3595,6 +3617,7 @@ label:has(> input[type="checkbox"]) {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  margin-inline-end: -1px;
   color: var(--text-muted);
 }
 
@@ -4510,6 +4533,7 @@ button.jurisdiction-badge-action:focus-visible {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.3px;
+  margin-inline-end: -1.3px;
   /* Room for the expand button, which is absolutely positioned over this row. */
   padding-right: 28px;
 }
@@ -4608,6 +4632,7 @@ button.jurisdiction-badge-action:focus-visible {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.4px;
+  margin-inline-end: -1.4px;
   color: var(--text-dim);
 }
 
@@ -5854,6 +5879,33 @@ main[data-sidebar="closed"] .map-top-row {
 }
 
 /* ---------------------------------------------------------------------------
+   LBL-2, THIRD PASS (2026-08-25) — THE PREDICATE COULD NOT SEE 0.2em, AND HAD
+   NEVER READ THIS FILE.
+
+   Every `margin-inline-end: -Xem` beside a `letter-spacing: X` in this
+   stylesheet is one of these: the tracking's space sits past the final glyph,
+   so any clipping right edge takes the space and then the letter.
+
+   Measured on adoption — 41 inline runs in `app/`+`components/`, 20 visible to
+   the old `0.1[0-9]*em` predicate and 21 not; 38 letter-spaced selectors here,
+   4 compensated and 14 at 0.05em or more with none. The reconciliation, the
+   two named exemptions and their reasons are in
+   `tests/label-tracking.test.ts`, which is where they are enforced.
+   --------------------------------------------------------------------------- */
+
+.trailing-space-trimmed-6 {
+  margin-inline-end: -0.06em;
+}
+
+.trailing-space-trimmed-8 {
+  margin-inline-end: -0.08em;
+}
+
+.trailing-space-trimmed-20 {
+  margin-inline-end: -0.2em;
+}
+
+/* ---------------------------------------------------------------------------
    LAY-4 / LAY-3 (2026-08-24, the author's annotated capture 11-55-29) —
    THE FLOATING CARDS BELONG UNDER THE RAIL, AND THE COLUMN IS WHAT PROVES
    THEY CANNOT COLLIDE.
@@ -6441,6 +6493,18 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 14px;
+}
+
+/*
+ * **BAL-23 (2026-08-25) — the open form takes its OWN ROW.** The pill class no
+ * longer reaches the form (see `address-prompt.tsx`); this fixes the
+ * PLACEMENT, because the form is a flex item in a row it shares with the
+ * *Moving here?* pill and without a basis it gets whatever is left. Covers
+ * every state of the prompt, not only the street ask.
+ */
+.ballot-top-pills .address-prompt {
+  flex: 1 0 100%;
+  margin-top: 0;
 }
 
 .ballot-top-pill,

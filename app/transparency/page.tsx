@@ -44,7 +44,7 @@ function Section({
 }) {
   return (
     <section className="mt-8">
-      <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-signal">
+      <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
         {title}
       </h2>
       <div className="mt-2.5 space-y-3 text-[0.9375rem] leading-relaxed text-paper-dim">
@@ -58,7 +58,7 @@ export default function TransparencyPage() {
   return (
     <main className="min-h-dvh overflow-y-auto bg-[var(--bg,#101014)]">
       <div className="mx-auto max-w-2xl px-5 py-10 sm:py-14">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+        <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
           {PRODUCT_NAME}
         </p>
         <h1 className="mt-2 text-2xl font-semibold text-paper">

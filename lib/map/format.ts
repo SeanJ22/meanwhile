@@ -175,7 +175,60 @@ export function locationLine(
  * subject. It is reported as its own outcome rather than folded in, because
  * "we titled this by the venue" and "this venue hosts one body" are different
  * facts and a card that ran them together is what this fixes.
+ *
+ * ## MTG-9 (2026-08-25, second pass) — a shared `bodyName` is not always a BODY
+ *
+ * **The reconciliation, because the brief asks for one rather than a fix.**
+ * The MTG-6 descent above is correct and did not regress. Its FIRST RUNG is
+ * what is too narrow: it takes a shared `bodyName` as proof that the string
+ * names an institution, and at Vail the source publishes
+ * `bodyName: "Governing Board Meeting"` on all eleven sittings with the entity
+ * in `jurisdiction: "Vail Unified School District, AZ"`. So the card headlined
+ * *Governing Board Meeting* over the district's own calendar and nothing on it
+ * said whose calendar it was — which is the same sentence MTG-6 was raised
+ * over, arriving through the rung that was supposed to fix it.
+ *
+ * **Why the first pass could not have caught it, and this is the part worth
+ * keeping.** TUSD — the district MTG-6 was built and validated against —
+ * publishes a DIFFERENT `bodyName` per sitting, so `bodies.size` was greater
+ * than one, the rung fell through, and the jurisdiction gave the right answer.
+ * The fix was measured on the case where the bad data was NOISY and ships
+ * wrong on the case where the bad data is CLEAN. **A constant wrong value looks
+ * more authoritative than a varying one**, which is RULING 114's shape: closing
+ * a rung to one answer is what made a wrong answer possible.
+ *
+ * **Measured across the committed snapshot on adoption: 29 venue cards — 16
+ * titled by `bodyName`, 13 by jurisdiction, 0 by the building. Two of the 16
+ * carry a sitting name, 0 false positives among the other 14.** The second is
+ * `AGENDA FOR AUDIT COMMITTEE MEETING`, a single sitting in **Tucson Unified**
+ * — the very district the first fix was validated in. A one-meeting venue
+ * always has `bodies.size === 1`, so it could never reach the rung that saved
+ * its multi-sitting neighbour.
+ *
+ * The test is a SHAPE and not a word list of known-bad names (RULING 110): an
+ * institution is named for what it IS and a sitting for what HAPPENS —
+ * *Tucson Parks and Recreation Commission* against *Governing Board Meeting*.
+ * `tests/meeting-card-title.test.ts` runs it over every venue in the shipped
+ * snapshot, so a new source publishing this way fails a test rather than a
+ * card.
  */
+
+/**
+ * A name that describes an EVENT rather than an institution.
+ *
+ * Deliberately narrow. These five words name a thing that happens at a time;
+ * no body in the shipped corpus is called one of them, and the 14 legitimate
+ * body-titled cards are checked against it in the test. A body whose real name
+ * genuinely contains one — a *Hearing Board*, say — would need the word in a
+ * position this does not match, and that is a case to add with its evidence
+ * rather than to guess at now.
+ */
+const SITTING_SHAPED = /\b(?:meeting|agenda|session|hearing|workshop)\b/i;
+
+export function namesASitting(bodyName: string): boolean {
+  return SITTING_SHAPED.test(bodyName);
+}
+
 export function venueBodyTitle(
   meetings: Pick<Meeting, "bodyName" | "jurisdiction">[],
   venueName: string,
@@ -183,7 +236,7 @@ export function venueBodyTitle(
   const bodies = new Set(
     meetings.map((m) => (m.bodyName ?? "").trim()).filter(Boolean),
   );
-  if (bodies.size === 1) {
+  if (bodies.size === 1 && !namesASitting([...bodies][0]!)) {
     return { title: [...bodies][0]!, basis: "body" };
   }
 

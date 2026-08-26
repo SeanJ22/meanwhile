@@ -42,7 +42,7 @@ export function DistrictToggle({
           disabled={disabled}
           onChange={(event) => onChange(event.target.checked)}
         />
-        <span className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-paper-dim">
+        <span className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-paper-dim">
           Show districts
         </span>
       </label>

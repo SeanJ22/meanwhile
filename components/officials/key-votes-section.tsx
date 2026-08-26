@@ -254,7 +254,7 @@ function KeyVoteGroupBlock({
             <p className="text-[0.8125rem] font-medium leading-snug text-paper">
               {row.entry.title}
               {row.entry.pending && (
-                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 text-[0.5625rem] font-semibold uppercase tracking-[0.06em] text-muted">
+                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 text-[0.5625rem] font-semibold uppercase trailing-space-trimmed-6 tracking-[0.06em] text-muted">
                   not law yet
                 </span>
               )}

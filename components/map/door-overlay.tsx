@@ -115,7 +115,7 @@ export function DoorOverlay({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-signal">
+          <h2 className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
           <button

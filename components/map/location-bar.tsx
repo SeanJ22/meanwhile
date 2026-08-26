@@ -63,7 +63,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
     return (
       <div className="panel pointer-events-auto flex items-stretch">
         <div className="px-4 py-2.5">
-          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Showing
           </p>
           <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">
@@ -79,7 +79,7 @@ export function LocationBar({ zip, meetingCount, onChange }: LocationBarProps) {
           data-meeting-count={meetingCount}
           className="hidden border-l border-rule-soft px-4 py-2.5 sm:block"
         >
-          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-muted">
+          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-muted">
             Meetings
           </p>
           <p className="mt-0.5 font-mono text-lg leading-none tabular-nums text-paper">

@@ -102,7 +102,17 @@ export function BallotNarrowing({
       <AddressPrompt
         zip={zip}
         trigger="Narrow this to where you live"
-        className={className}
+        /*
+         * **BAL-23 (2026-08-25): the pill class places the COLLAPSED CONTROL
+         * and never the open form.** It arrives here as `ballot-top-pill`,
+         * which is `display: inline-flex; min-height: 40px; border-radius:
+         * 999px` — right for a chip, ruinous for a three-block form. Passed as
+         * `className` it reached both, and the author's `17-44-49` is the
+         * result: the ask wrapped one word per line, the promise overflowed to
+         * the right, and the form fought the sibling pill for the same flex
+         * row. See the prop's own note in `address-prompt.tsx`.
+         */
+        triggerClassName={className}
         onResolved={({ contestIds }) => {
           // An empty confirmed list is a real answer and must not read as a
           // failure: the reader's street resolved nothing we hold a ballot for,

@@ -82,7 +82,25 @@ test("4a: the Ask pill opens Ask and nothing else", async () => {
     join(ROOT, "components", "map", "map-entry.tsx"),
     "utf8",
   );
-  const toggle = /const onToggleAsk = useCallback\(\(open: boolean\) => \{([\s\S]*?)\n  \}, \[\]\);/.exec(
+  /*
+   * **MTG-11 (2026-08-25): the dependency array is matched loosely now, and
+   * this rule is UNCHANGED.**
+   *
+   * It read `\}, \[\]\);` — an EMPTY deps array — so the guard went red the
+   * moment the handler acquired a dependency, reporting "the Ask toggle is
+   * missing" about a handler sitting right there. That is a guard pinned to an
+   * incidental fact rather than to its own claim (RULING 116's shape).
+   *
+   * **4a and MTG-11 do not conflict, and the distinction is the point.** 4a is
+   * about SURFACES — the who-governs card, the sidebar, the large card — and
+   * its named defect is that tapping Ask used to un-collapse the who-governs
+   * card. MTG-11 is about the SMALL CARDS, the venue and district selections,
+   * and the author's `17-22-03` shows the eight-meeting Vail card still open
+   * behind *Where can I vote?*. Ask dismisses those and still touches no
+   * surface, which is what the forbidden list below asserts and what the test
+   * beneath this one asserts positively.
+   */
+  const toggle = /const onToggleAsk = useCallback\(\(open: boolean\) => \{([\s\S]*?)\n  \}, \[[^\]]*\]\);/.exec(
     entry,
   );
   assert.ok(toggle, "the Ask toggle is missing");

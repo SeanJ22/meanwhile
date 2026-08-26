@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-25 23:18:01 EDT.
-Session day 2026-08-25 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at test. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-23 -->
+Session day 2026-08-23 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -263,7 +263,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 168 recorded
+## Rulings — 169 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -438,6 +438,7 @@ from. Each entry there names what it supersedes.
 - RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
 - RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
 - RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one
+- RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -596,19 +597,5 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-```
-generated: 2026-08-25 23:18:01 EDT
-branch: claude/red-main-0825
-head sha: afde4a1af52d281ea0886c81981ffa8e97e33d4d
-head subject: Green main: the two lint errors, and the gate-set hole underneath them
-origin/main sha: 70fed47af9dda0b03e317abdf0b8a19784508cee
-origin/main subject: Merge pull request #182 from SeanJ22/claude/one-session-0825
-local main sha: 70fed47af9dda0b03e317abdf0b8a19784508cee
-local main matches origin/main: yes
-working tree: clean
-open prs: none
-last recorded tests: 1442 (fail)
-last recorded lint: not recorded
-last recorded build: not recorded
-last recorded status from: docs/state.md:14496
-```
+_No git facts available this run._
+

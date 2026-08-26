@@ -184,6 +184,34 @@ function MapEntryInner() {
   const ui = useUi();
   const dispatch = useUiDispatch();
 
+  /**
+   * **MTG-11 (2026-08-25) — ONE THING UP AT A TIME, AND IT NOW REACHES BEYOND
+   * CARDS.** BC-16 made two SMALL CARDS exclude each other. The author's
+   * `17-22-03` and `17-23-22` show the same overlap one layer out: he opens
+   * *Where can I vote?*, and the eight-meeting Vail card is still sitting on
+   * the right — in `17-23-22` it is still there while he reads a polling
+   * address. His arrow marks the meetings card. *Clicking anywhere else means
+   * the meetings card goes back to not being viewed.*
+   *
+   * So the three controls that take the foreground — **Where can I vote?, Ask,
+   * and Change Zip** — dismiss whichever small card is open.
+   *
+   * **THE MAP-3 EXCEPTION SURVIVES BY CONSTRUCTION, and that is why this is a
+   * dispatch rather than an effect.** Who Governs Here and an area's
+   * battlecard appearing together on an AREA CLICK is deliberate and the
+   * author says so outright. This closes the venue and district selections and
+   * touches neither the Who Governs Here panel nor anything an area click
+   * does; nothing here runs on an area click at all. `tests/one-at-a-time.test.ts`
+   * asserts both halves.
+   *
+   * **It is one direction only.** No surface closes Ask — the note on
+   * `askOpen` records that as deliberate and it is untouched.
+   */
+  const takeForeground = useCallback(() => {
+    dispatch({ type: "select/venue", key: null });
+    dispatch({ type: "select/district", ocdId: null, districtType: null });
+  }, [dispatch]);
+
   const [result, setResult] = useState<TaggedResult | null>(null);
   /**
    * How the meetings fetch failed, when it did: the HTTP status the service
@@ -1469,18 +1497,21 @@ function MapEntryInner() {
     setVotingPins([]);
     setSelectedVotingSiteId(null);
   }, []);
+
   // 4a: focus lands in the input the expansion just mounted. One frame,
   // because the input is a child of the pill's own cluster rather than a
   // surface that has to be opened first.
   const onToggleAsk = useCallback((open: boolean) => {
     setAskOpen(open);
     if (!open) return;
+    takeForeground(); // MTG-11
+
     requestAnimationFrame(() => {
       document
         .querySelector<HTMLInputElement>("[data-ask-panel] [data-ask-box]")
         ?.focus({ preventScroll: true });
     });
-  }, []);
+  }, [takeForeground]);
 
   /*
    * 6f: Near me resolves districts, through the SAME machinery a narrowed
@@ -1830,7 +1861,10 @@ function MapEntryInner() {
         <div className="rail-column">
           <Sidebar
             onReset={onReset}
-            onChangeLocation={() => setWelcomeRequested(true)}
+            onChangeLocation={() => {
+              takeForeground(); // MTG-11
+              setWelcomeRequested(true);
+            }}
             showDistricts={showDistricts}
             districtsFailed={districtsFailed}
             onToggleDistricts={setShowDistricts}
@@ -2037,7 +2071,10 @@ function MapEntryInner() {
                 <button
                   type="button"
                   className="voting-open-button"
-                  onClick={() => setVotingOpen(true)}
+                  onClick={() => {
+                    takeForeground(); // MTG-11
+                    setVotingOpen(true);
+                  }}
                 >
                   Where can I vote?
                 </button>
@@ -2975,7 +3012,7 @@ function SearchFailedNotice({
 }) {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
+      <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Search failed
       </p>
       <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-text-dim">
@@ -3003,7 +3040,7 @@ function SearchFailedNotice({
 function TileNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-danger">
+      <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
       {/*

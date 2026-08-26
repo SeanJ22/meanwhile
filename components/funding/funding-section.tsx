@@ -234,7 +234,7 @@ function ContributorColumn({
   if (groups.length === 0) return null;
   return (
     <div>
-      <p className="text-[0.625rem] font-semibold uppercase tracking-[0.08em] text-muted">
+      <p className="text-[0.625rem] font-semibold uppercase trailing-space-trimmed-8 tracking-[0.08em] text-muted">
         {title}
       </p>
       <ul className="mt-1" data-contributor-group={title}>

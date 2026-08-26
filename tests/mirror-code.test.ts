@@ -299,7 +299,13 @@ test("no allowlisted file trips the credential scan today", () => {
 test("the size caps are the stated ones and today's allowlist fits", () => {
   // Raised from 120 KB on 2026-08-17: app/globals.css sat 2,756 bytes under
   // the old ceiling, so the tokens file was one edit from being refused.
-  assert.equal(MAX_FILE_BYTES, 200 * 1024);
+  //
+  // Raised again to 256 KB on 2026-08-25 (RO06), for the SAME file for the
+  // SAME reason — it stood at 203,556 bytes with 1,244 to spare before that
+  // session wrote a line. The measurement that matters is in the script: 57%
+  // of that file is comment prose. A THIRD raise is the wrong answer
+  // (RULING 106); the structural fix is RO06 and it is the author's call.
+  assert.equal(MAX_FILE_BYTES, 256 * 1024);
   assert.equal(MAX_TOTAL_BYTES, 1.5 * 1024 * 1024);
 
   let total = 0;

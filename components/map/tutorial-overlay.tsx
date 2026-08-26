@@ -93,7 +93,7 @@ export function TutorialOverlay({ active }: { active: boolean }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-3">
-          <p className="font-mono text-[0.625rem] uppercase tracking-[0.2em] text-signal">
+          <p className="font-mono text-[0.625rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             Quick tour · {step + 1} of {STEPS.length}
           </p>
           <button

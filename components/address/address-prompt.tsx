@@ -79,8 +79,33 @@ export interface AddressPromptProps {
   trigger?: string;
   /** Render expanded from the start — the who-governs pill opens straight in. */
   startOpen?: boolean;
-  /** Extra class on the wrapper so a surface can place it. */
+  /**
+   * Extra class on the OPEN FORM's wrapper so a surface can place it.
+   *
+   * **BAL-23 (2026-08-25) — this used to be applied to the collapsed trigger
+   * TOO, and that is what broke the ballot's narrow-it flow.**
+   *
+   * The ballot page passed `ballot-top-pill`, which is exactly right for the
+   * collapsed control — it IS a pill — and is a catastrophe on the open form:
+   * `display: inline-flex; align-items: center; min-height: 40px; padding: 0
+   * 16px; border-radius: 999px`. One prop reaching both slots turned the
+   * form's three blocks into flex items in a row, so *What street do you live
+   * on?* was squeezed to its minimum-content width and wrapped one word per
+   * line, the promise paragraph overflowed to the right, and the whole thing
+   * sat inside a 40px pill it could never fit — inside a `display: flex`
+   * container it was also sharing with the *Moving here?* pill. The author's
+   * `17-44-49` is that, and his words are *very ugly, convoluted, a disaster.*
+   *
+   * A collapsed control and an expanded form are different shapes and always
+   * were; the prop that placed them was not. `triggerClassName` places the
+   * control, this places the form, and neither can reach the other.
+   */
   className?: string;
+  /**
+   * Extra class on the COLLAPSED TRIGGER's wrapper. See `className` above —
+   * a pill class belongs here and only here.
+   */
+  triggerClassName?: string;
 }
 
 type Phase = "IDLE" | "ASKING" | "WORKING" | "NEEDS_NUMBER" | "SETTLED" | "FAILED";
@@ -93,6 +118,7 @@ export function AddressPrompt({
   trigger = "Add your address",
   startOpen = false,
   className,
+  triggerClassName,
 }: AddressPromptProps) {
   const [phase, setPhase] = useState<Phase>(startOpen ? "ASKING" : "IDLE");
   const [street, setStreet] = useState("");
@@ -232,7 +258,7 @@ export function AddressPrompt({
   /* ------------------------------------------------------------- idle --- */
   if (phase === "IDLE") {
     return (
-      <p className={className}>
+      <p className={triggerClassName}>
         <button type="button" className="address-prompt-trigger" onClick={() => setPhase("ASKING")}>
           {trigger} <span aria-hidden="true">→</span>
         </button>

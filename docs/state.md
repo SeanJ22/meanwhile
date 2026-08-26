@@ -18959,5 +18959,10 @@ hunting on its own would miss them again the same way.
   Township pages answer HTTP 200 with full content and every image on them is
   site chrome. Nothing held, not a fetch problem — and a dated measurement
   rather than an exhausted absence.
-- **The 1,162 argued absences all expire on 2026-09-01**, one date, and the <!-- expected-future: 2026-09-01, the single RULING 53 expiry every argued absence carries -->
-  re-test pass was run now rather than on the day.
+- **The 1,162 argued absences all expired on one date and the re-test pass was
+  run now rather than on the day.** They carried 2026-09-01. <!-- expected-future: 2026-09-01, the RULING 53 expiry every argued absence carried before the 2026-08-26 re-test moved it -->
+  At 07866 all **276 candidacies were re-walked, 276 queries answered and 0
+  walled** — which matters, because the previous pass had built absences partly
+  out of refusals under RULING 144 and this one did not. **1,038 of 1,038 still
+  hold; 0 resolved to a found value; 0 needed re-argument**, and the expiry
+  moved a week out. The cliff is gone rather than deferred.

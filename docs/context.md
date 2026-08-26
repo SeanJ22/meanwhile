@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 15:11:50 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 15:40:38 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -614,14 +614,14 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 15:11:50 EDT
-branch: claude/sources-and-incumbency-0826
-head sha: 906b597043776859f7dda18ce319c4aa73c431a6
-head subject: The ladder was inverted, and every candidate read Challenger
-origin/main sha: de754364ec00a8cb855165f310e093c47c0e1104
-origin/main subject: FEC snapshot refresh: 2026-08-26T17:59Z
-local main sha: b85f572345e8068baae5119d481837ef0a54295f
-local main matches origin/main: no — 1 commit(s) behind
+generated: 2026-08-26 15:40:37 EDT
+branch: claude/tracker-transaction-0826
+head sha: 12563be422fd1f2c88b35494f1a438cc50db3066
+head subject: A tracker write is one transaction, or it is a corruption
+origin/main sha: 270899d4912819bcd47a53507f5ad36669b30918
+origin/main subject: FEC snapshot refresh: 2026-08-26T19:33Z
+local main sha: 12563be422fd1f2c88b35494f1a438cc50db3066
+local main matches origin/main: no — 1 commit(s) behind, 1 ahead
 working tree: clean
 open prs: none
 last recorded tests: 463 (fail)

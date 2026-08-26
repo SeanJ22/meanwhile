@@ -185,3 +185,85 @@ export function failedTwiceInWindow(runs: WorkflowRun[]): {
   }
   return null;
 }
+
+/* -------------------------------------------------------------------------- */
+/* THE STANDING STATUS TABLE (2026-08-26, Item 8b(b))                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * One scheduled workflow's standing, as a row.
+ *
+ * **DAYS SINCE LAST SUCCESS IS THE NUMBER THAT MATTERS, and it is why this
+ * exists rather than a look at the Actions tab.** Reported as a last outcome
+ * alone, a job that has failed silently for a week looks identical to one that
+ * ran an hour ago and failed once: both say `failure`. The gap between now and
+ * the last time the job actually did its work is the only figure that separates
+ * a blip from a data path that has been dead since Tuesday.
+ *
+ * `null` is kept apart from a number in both directions (RULING 24): no run at
+ * all, and no SUCCESSFUL run in the window read, are different facts and
+ * neither may print as a number of days.
+ */
+export interface JobStanding {
+  readonly workflow: string;
+  readonly lastRunAt: string | null;
+  readonly lastConclusion: string | null;
+  readonly lastSuccessAt: string | null;
+  /** null when no success appears in the runs read — NOT the same as zero. */
+  readonly daysSinceLastSuccess: number | null;
+  readonly consecutiveFailures: number;
+  readonly runsRead: number;
+}
+
+/**
+ * Build one workflow's standing from its runs, newest first.
+ *
+ * `asOf` is a parameter and never a clock call, so this is testable and so the
+ * caller — which knows when it ran — owns the time (RULING 107's shape: a run
+ * stamp comes from the caller, never from inside a pure reader).
+ */
+export function standingFor(workflow: string, runs: WorkflowRun[], asOf: Date): JobStanding {
+  const completed = completedRuns(runs, asOf);
+  const newestFirst = [...completed].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+
+  const last = newestFirst[0] ?? null;
+  const lastSuccess = newestFirst.find((r) => r.conclusion === "success") ?? null;
+
+  let consecutiveFailures = 0;
+  for (const r of newestFirst) {
+    if (r.conclusion === "success") break;
+    consecutiveFailures += 1;
+  }
+
+  const daysSinceLastSuccess =
+    lastSuccess === null
+      ? null
+      : Math.max(0, (asOf.getTime() - Date.parse(lastSuccess.createdAt)) / 86_400_000);
+
+  return {
+    workflow,
+    lastRunAt: last?.createdAt ?? null,
+    lastConclusion: last?.conclusion ?? null,
+    lastSuccessAt: lastSuccess?.createdAt ?? null,
+    daysSinceLastSuccess: daysSinceLastSuccess === null ? null : Math.round(daysSinceLastSuccess * 100) / 100,
+    consecutiveFailures,
+    runsRead: completed.length,
+  };
+}
+
+/** Render the table. Plain text, so it reads in a workflow log. */
+export function renderStandings(rows: readonly JobStanding[]): string {
+  const head = ["workflow", "last run", "outcome", "last success", "days since", "consec fail", "runs read"];
+  const body = rows.map((r) => [
+    r.workflow,
+    r.lastRunAt ?? "never",
+    r.lastConclusion ?? "—",
+    r.lastSuccessAt ?? "NONE IN WINDOW",
+    r.daysSinceLastSuccess === null ? "UNKNOWN" : String(r.daysSinceLastSuccess),
+    String(r.consecutiveFailures),
+    String(r.runsRead),
+  ]);
+  const widths = head.map((h, i) => Math.max(h.length, ...body.map((b) => b[i].length)));
+  const line = (cells: string[]) => cells.map((c, i) => c.padEnd(widths[i])).join("  ");
+  return [line(head), line(widths.map((w) => "-".repeat(w))), ...body.map(line)].join("\n");
+}

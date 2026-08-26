@@ -116,7 +116,55 @@ export function neverStarted(check) {
   return done - started < 15_000;
 }
 
-export function verdictFromCheckRuns(checkRuns) {
+/**
+ * `NH208` (2026-08-26, Item 8b(a2)) — THE LATEST RUN PER CHECK NAME, NEVER ALL
+ * OF THEM.
+ *
+ * `build-check.yml` carries `concurrency: cancel-in-progress` on the ref, so a
+ * re-run, a hand dispatch racing a late event-run, or two pushes seconds apart
+ * leave SUPERSEDED runs on the commit with `conclusion: cancelled`. This file
+ * counted every check-run, so one superseded cancellation made it report RED on
+ * a commit that is fine — while **branch protection itself judges
+ * `?filter=latest`**, which showed all three contexts `success`. A verifier
+ * that disagrees with the thing it verifies is worse than no verifier.
+ *
+ * Observed on 2026-08-26 across four commits: three `Build check` runs on `main`
+ * came back `cancelled` inside twenty minutes, each superseded by the next
+ * push's run, and every one of them was a healthy commit.
+ *
+ * The tiebreak is `started_at`, then `completed_at`, then array position. A run
+ * with NO `started_at` — the stillborn shape — never wins over one that started,
+ * because "the runner was never allocated" must not be allowed to overwrite a
+ * real verdict from the same context.
+ */
+export function latestPerName(checkRuns) {
+  const best = new Map();
+  for (let i = 0; i < checkRuns.length; i += 1) {
+    const c = checkRuns[i];
+    const prior = best.get(c.name);
+    if (prior === undefined) {
+      best.set(c.name, { check: c, index: i });
+      continue;
+    }
+    const started = (x) => Date.parse(x.started_at ?? "") || 0;
+    const completed = (x) => Date.parse(x.completed_at ?? "") || 0;
+    const priorStillborn = neverStarted(prior.check);
+    const thisStillborn = neverStarted(c);
+    if (priorStillborn !== thisStillborn) {
+      if (priorStillborn) best.set(c.name, { check: c, index: i });
+      continue;
+    }
+    const byStart = started(c) - started(prior.check);
+    const byEnd = completed(c) - completed(prior.check);
+    if (byStart > 0 || (byStart === 0 && byEnd > 0) || (byStart === 0 && byEnd === 0 && i > prior.index)) {
+      best.set(c.name, { check: c, index: i });
+    }
+  }
+  return [...best.values()].map((v) => v.check);
+}
+
+export function verdictFromCheckRuns(allCheckRuns) {
+  const checkRuns = Array.isArray(allCheckRuns) ? latestPerName(allCheckRuns) : allCheckRuns;
   if (!Array.isArray(checkRuns) || checkRuns.length === 0) {
     return {
       verdict: UNKNOWN,

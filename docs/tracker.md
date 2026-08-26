@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **286 open**, 430 resolved.
-- **52 waiting on Sean** — the first section below.
+- **285 open**, 433 resolved.
+- **51 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **5**
+  - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **0**
@@ -35,19 +35,42 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**52 open · 48 resolved.**
+**51 open · 51 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
 ### P1
 
+**JOB04** — The scheduled job refresh-daily.yml failed on its two most recent runs (32955499285 and 32833989579), both at: Commit. Over its last 6 completed runs it has failed 6 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
+
+WHAT THE FAILING RUN PRINTED (run 32955499285). The line(s) that NAME the failure:
+  !   agenda fetch failed for legistar:pima:1803: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1803_A_Board_of_Supervisors_26-06-09_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1817: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/6/1817_A_Board_of_Supervisors_26-06-23_Online_Agenda.pdf
+  !   agenda fetch failed for legistar:pima:1821: Error: HTTP 404 for https://legistar.granicus.com/pima/meetings/2026/7/1821_A_Board_of_Supervisors_26-07-14_Online_Agenda.pdf
+  !   REFUSED rows (no division)     0, across 0 named jurisdiction/office pair(s)
+  !   276 built + 0 refused = 276 vs 276 read  (accounted)
+
+The last 14 of 3208 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:refresh-daily.yml]
+
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
-**NH203** — The protection you turned on 2026-08-25 does exactly what you asked and, as a side effect, no scheduled workflow can commit anything any more. All eight pushers push DIRECTLY to main, which the protection now forbids for everyone including the actions bot. Nothing has been silently lost - every run goes red and says so - but no refresh has landed since.
-
 **NH204** — Every scheduled workflow now declares the paths it may push, and seven of the eight write only under data/ or one generated report. job-watch is the exception: it writes docs/tracker-working.csv, because committing the Needs Sean row it raises IS its whole function under RULING 56 — it is the only channel that reaches you when a scheduled job has failed twice running. The brief for this session said the allowlist must never include the tracker stores. Read strictly, that ends the alarm.
-
-**NH207** — Everything for the cutover is in place and verified: your ruleset is Active with the Deploy keys bypass in exempt mode, the classic rule is gone, wtp-scheduled-pushers is the one write-enabled deploy key, PUSH_DEPLOY_KEY exists, and the pushers now push over SSH as that key. pnpm protection:verify reads INTACT, 9 of 9. The one thing not proven is that the key actually works: last_used on it is still null, meaning it has never authenticated to anything. A session cannot prove it — proving it means a real push to main, which needs your key. THE QUESTION: how do you want the first proof run? (a) Dispatch refresh-daily with all_sources=true and read the four log lines in docs/deploy-key-setup.md Step 5 — the fullest proof, and it moves real data. (b) Dispatch it and let a session watch and report, so you do not have to read logs. (c) Wait for tomorrow's scheduled run and let it prove itself, accepting one more day of stale data. Recommended: (b). Note that a GREEN run is also what an early exit looks like — refresh-daily skips the push entirely when no artifact moved — so the proof is the log lines and the key's last_used field, never the colour.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 

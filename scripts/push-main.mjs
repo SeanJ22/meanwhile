@@ -51,6 +51,7 @@ import {
   sshUrlForGitHub,
 } from "../lib/ops/deploy-key-ssh.ts";
 import { classifyPushPaths } from "../lib/ops/push-allowlist.ts";
+import { classifyRejection } from "../lib/ops/push-rejection.ts";
 
 const DEFAULT_ATTEMPTS = 5;
 
@@ -265,9 +266,32 @@ function pushLoop({ cwd, remote, branch, attempts, log, transport }) {
       return { ok: true, attempts: attempt, reason: "pushed" };
     }
 
+    const rejection = classifyRejection(push.stderr || push.stdout);
     log(
       `push-main: attempt ${attempt} of ${attempts} rejected — ${push.stderr || push.stdout}`,
     );
+    log(`push-main: rejection classified ${rejection.kind} — ${rejection.reason}`);
+
+    /*
+     * ITEM 8a(c), 2026-08-26 — A DETERMINISTIC REFUSAL IS NOT RETRIED.
+     *
+     * `job-watch` run 32989362288 spent attempts two through five re-pushing
+     * into `GH013: Repository rule violations`, rebasing between each, and
+     * printed the same sentence four extra times. A policy decision on the
+     * server cannot change between two attempts seconds apart; the retry
+     * exists for a RACE and for nothing else.
+     *
+     * UNKNOWN still retries. Treating an unrecognised transient as permanent
+     * would turn a recoverable run red, and the other direction costs seconds.
+     */
+    if (!rejection.retryable) {
+      return {
+        ok: false,
+        attempts: attempt,
+        reason: `${rejection.kind}: ${rejection.reason}`,
+      };
+    }
+
     if (attempt === attempts) break;
 
     const fetched = git(["fetch", remote, branch], cwd);

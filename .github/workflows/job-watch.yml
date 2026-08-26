@@ -102,7 +102,32 @@ jobs:
           fi
           git config user.name "job-watch[bot]"
           git config user.email "noreply@github.com"
-          git add docs/tracker-working.csv
+          # THE STORE AND ITS FOUR GENERATED VIEWS MOVE TOGETHER, OR main GOES
+          # RED (2026-08-26, Item 8a(b)). `pnpm watch:workflows --open` writes
+          # through `scripts/tracker.mjs add`, which regenerates tracker.md,
+          # log.md, tracker-opened.json and tracker.xlsx from the store in the
+          # same call. Committing the store alone leaves four files behind in
+          # the runner's tree and four suite guards failing on the branch —
+          # measured on run 32996823803, which opened JOB04 and JOB05 and broke
+          # build check 32997211245. Each path is granted BY NAME in
+          # lib/ops/push-allowlist.ts with its reason; `docs/` as a directory is
+          # still refused, and NEVER_PUSHABLE still bars rulings.md and the
+          # resolved store whatever a profile says.
+          git add docs/tracker-working.csv docs/tracker.md docs/log.md docs/tracker-opened.json docs/tracker.xlsx
           git commit -m "Job watch: a scheduled job has failed twice in a row"
           # R48: rebase-before-push with retry. A rejected push never exits zero.
           node scripts/push-main.mjs --workflow job-watch
+
+      # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
+      #
+      # `Error: Process completed with exit code 1` is not an error message; it
+      # is the absence of one. This reads the job's own log and prints the
+      # failure CLASS and its remedy in plain words, or says loudly that the
+      # failure is unrecognised and shows what it saw. It never fails the job it
+      # is diagnosing — the job is already red, and a diagnoser that could turn a
+      # red run into a differently-red run would hide the cause it exists to name.
+      - name: Name the cause
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: corepack pnpm diagnose

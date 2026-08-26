@@ -4301,3 +4301,143 @@ rather than an artifact.
 *Measured on adoption: 1 of 1 write-enabled deploy key; `pnpm protection:verify`
 INTACT, 9 of 9, against the live API; 8 of 8 pushers plumbed; 46 guards passing
 across the three affected test files.*
+
+### RULING 166 — the body's own publication is rung one, and its bulk download is rung zero
+
+(Adopted 2026-08-26, Sean's ruling, the sources-and-incumbency session. **Amends
+RULING 84** under the RULING 99 procedure: RULING 84's three tiers stand and its
+cost-per-fact reasoning is untouched, and what changes is the ORDER INSIDE
+Tier A. Narrows nothing.)
+
+**Before any aggregator, any third party, and any per-entity search, the
+governing body that holds the office is walked first. Where that body offers a
+bulk download, the bulk file is taken before any page-by-page retrieval. A
+third-party source may only be reached after the body's own publication has been
+walked and what it carries has been recorded.**
+
+*Why this is being ruled now, stated plainly so it is not softened.* New
+Hampshire's state legislative data reached this product through **LegiScan — a
+third-party aggregator** — while the New Hampshire General Court publishes its
+own data directly, at `gc.nh.gov/downloads/`, including a downloads section
+carrying Member Data as `.txt`, `.xls` and `.xlsx` and an ODBC connection
+document for a public read-only SQL Server. That page exists precisely so
+consumers do not have to scrape the site. **The ladder was inverted.** LegiScan
+is a good source and stays in use; it simply is not rung one, and reaching it
+first meant no session ever asked what the body itself offered.
+
+**This is not a legislature rule.** It applies to every body in the product — a
+county, a school district, a city council, a state agency. The body that holds
+the office publishes its own officeholders, and the bodies that publish in bulk
+usually do so precisely to avoid being scraped.
+
+**The amendment to RULING 84, stated exactly.** That ruling's Tier A is *broad
+sources that answer many entities at once*, and its list mixes two kinds of
+thing: government publications (the Census of Governments, NCES, the Secretary
+of State, the county clerk) and third-party compilations (Wikipedia). Walked as
+one tier, a session may reach an encyclopedia before it reaches the body the
+encyclopedia is about. So Tier A splits:
+
+- **Tier A0 — the body's own publication, and the tier above it in government.**
+  Bulk download first, then the body's own pages. RULING 93's descend-the-
+  hierarchy move lives here: a directory the tier above publishes about the tier
+  below is the body's own publication about its subdivisions.
+- **Tier A1 — third-party compilations that answer many entities at once.**
+  Wikipedia, LegiScan, Citizens Count, Open States, GovTrack. Still Tier A,
+  still cheap, still walked before Tier B and Tier C — and now walked AFTER A0.
+
+Tier B (the entity's own official source, per entity) and Tier C (per-entity
+search) are unchanged.
+
+**A bulk file is rung zero because it is not a retrieval problem at all.** The
+fourteen rungs in `CLAUDE.md` are about getting bytes past a wall. A published
+`.txt` of the whole roster has no wall in front of it, and a session that walks
+rungs 2 through 6 against a body's individual member pages while that file sits
+one directory away has not been defeated by anything — it never asked.
+
+*What it returned on the day it was adopted, measured rather than argued.*
+`gc.nh.gov/downloads/Members.txt` is 82,694 bytes, 408 rows, tab-delimited, and
+carries per legislator: name in three parts, chamber, seat number, county,
+district, **`electedStatus`**, mailing address, phone, work email, party, title
+and up to five committee assignments with their phone numbers. **406 of 408 rows
+carry an email and 266 carry a phone** — two Kelly-standard fields for the whole
+of the New Hampshire General Court, in one fetch, from the body itself.
+`ftp://ftp.azsos.gov/cfsdata2/` — named in Arizona's own Bulk Filing Guide,
+revised 28 July 2026 — is anonymous, live, and carries **8,828 Arizona campaign
+committees** and the state's **109 campaign-finance filing jurisdictions**
+(1 state, 15 counties, 93 cities and towns). Neither had ever been walked.
+
+**And the ruling paid for itself twice over on adoption day**, which is the part
+worth keeping. The brief that ordered this work named the NH public SQL Server
+as `216.177.20.245\sqlexpress`. The body's own document at `gc.nh.gov` names
+`66.211.150.69\sqlexpress`. Probed the same hour: the brief's address is
+`ECONNREFUSED`, the body's answers with **TCP OPEN on 1433**. A session that had
+gone to the aggregator, or to the brief, and not to the body, would have
+recorded a dead endpoint.
+
+### RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere
+
+(Adopted 2026-08-26, Sean's authority, stated in the sources-and-incumbency
+brief as in force rather than as a proposal. It sits beside **RULING 126**,
+which walls campaign-finance data out of everything sold; this governs what may
+be shown to a READER, which is a different question and was open.)
+
+**Totals, source types, in-state versus out-of-state, and employer-level
+rollups. No individual donor name and no donor address renders anywhere in this
+product, for FEC data or for state data.**
+
+*The rationale stays attached, because a stripped rule reads as guidance.*
+Publishing them is lawful — that is what a disclosure regime is — and this
+product could render them and be within the law all day. **Rendering them
+searchably builds a way to locate private individuals by their politics**, next
+to a map, next to a zip box, in a product whose whole architecture is organised
+around a reader's address. This project will not build that, and the reason is
+not legal exposure.
+
+The measurement that makes it concrete rather than hypothetical: the FEC's
+individual-contribution schedule and New Hampshire's receipts file both carry
+contributor **name, street address, city, state, zip, occupation and employer**,
+and Arizona's Bulk Filing Guide (revised 28 July 2026) specifies the same seven
+fields as columns 10 through 22 of every filed transaction — `Occupation` and
+`Employer` are **conditionally REQUIRED** for individual contributions. Three
+states' worth of the same personal record, arriving through three different
+doors, is why this is a standing rule rather than a decision taken once per
+source.
+
+- **A donor is a private individual. A committee is not.** An organization
+  renders as filed, with its registered name and committee type, exactly as the
+  organizations-render-as-filed rule already requires. Nothing here narrows that.
+- **An employer-level rollup is an aggregate and is permitted**; a single row
+  that names one person's employer alongside their contribution is not, because
+  with a name attached it is the same record wearing a summary's clothes.
+- **This is a RENDER rule and not a COLLECTION rule.** The filings are retrieved
+  and held with their provenance intact — a claim about money still needs its
+  source record, and a source record we did not keep is a claim we cannot make.
+  What is forbidden is putting an individual donor in front of a reader.
+- **RULING 126 is untouched and is the other wall.** None of this data enters an
+  export, an aggregate, or anything sold, whatever level it is summarised to.
+
+*Audited on adoption across every funding surface, and the audit is the reason
+this entry exists in the shape it does. **The session first wrote that nothing
+rendered and the count changed was 0 of 0.** That was wrong, and it was wrong in
+the way this repo names most often: it was an assertion about a surface nobody
+had opened. `components/funding/funding-section.tsx` was rendering
+`group.contributorName` beside `{group.city}, {group.state}` for every itemized
+individual receipt in the snapshot, live, with `ripcord.fecContributorDisplay`
+not pulled.*
+
+***2 of 2 render sites changed.*** *The named one is the "Individual donors"
+column. The second is the SECOND-HOP panel — a joint fundraiser's own book,
+folded by a different call, concatenated into a different list, inside a
+collapsed `<details>` — and it is the case a fix aimed at the first would have
+left standing (RULING 103, RULING 157). Both now render*
+`lib/funding/donor-privacy.ts`'s *aggregate: a donor count, a filing count, a
+total, a state rollup that sums to it, and the candidate's own money held apart
+as a subset. Guarded in* `tests/donor-aggregation.test.ts` *— 5 assertions, the
+render half swept BY SHAPE with a planted violating component proving the sweep
+catches a real one.*
+
+*And the cheap fix was refused on purpose. Keeping the rows and dropping only
+the names leaves an amount, a city and a date per row, which is re-identifiable
+against the FEC's own public search in about a minute — the product would have
+published the same record with one column hidden. The row had to stop being a
+row.*

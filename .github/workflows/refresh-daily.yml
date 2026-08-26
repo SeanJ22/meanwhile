@@ -203,3 +203,17 @@ jobs:
         run: |
           echo "One or more sources failed this run. Their names are in the step log above and in docs/refresh-run.md."
           exit 1
+
+      # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
+      #
+      # `Error: Process completed with exit code 1` is not an error message; it
+      # is the absence of one. This reads the job's own log and prints the
+      # failure CLASS and its remedy in plain words, or says loudly that the
+      # failure is unrecognised and shows what it saw. It never fails the job it
+      # is diagnosing — the job is already red, and a diagnoser that could turn a
+      # red run into a differently-red run would hide the cause it exists to name.
+      - name: Name the cause
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: corepack pnpm diagnose

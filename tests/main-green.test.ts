@@ -4,7 +4,7 @@ import test from "node:test";
 // A `.mjs` sibling, imported for its decision functions only — the CLI half is
 // guarded behind an entry-point check and does not run on import, so nothing
 // here talks to GitHub.
-import { neverStarted, verdictFromCheckRuns } from "../scripts/main-green.mjs";
+import { latestPerName, neverStarted, verdictFromCheckRuns } from "../scripts/main-green.mjs";
 
 /**
  * **RULING 75's server-truth check, and the distinction it exists to hold.**
@@ -188,4 +188,96 @@ test("a check still running is PENDING, which is not green", () => {
     { ...at("b"), status: "in_progress", conclusion: null, steps: [{ name: "s" }] },
   ]);
   assert.equal(v.verdict, "pending");
+});
+
+/* -------------------------------------------------------------------------- */
+/* NH208 — THE LATEST RUN PER CHECK NAME (2026-08-26, Item 8b(a2))            */
+/* -------------------------------------------------------------------------- */
+
+test("NH208: a superseded cancellation does not make a healthy commit read RED", () => {
+  // The real shape, 2026-08-26: `build-check.yml` carries
+  // `concurrency: cancel-in-progress`, so a second push seconds later cancels
+  // the first run. Both check-runs stay on the commit. Branch protection judges
+  // `?filter=latest` and saw all three contexts `success`; this file counted
+  // every run and said RED.
+  const v = verdictFromCheckRuns([
+    {
+      name: "build (default)",
+      status: "completed",
+      conclusion: "cancelled",
+      started_at: "2026-08-26T17:02:00Z",
+      completed_at: "2026-08-26T17:03:00Z",
+      steps: [{ name: "Build", conclusion: "cancelled" }],
+    },
+    {
+      name: "build (default)",
+      status: "completed",
+      conclusion: "success",
+      started_at: "2026-08-26T17:22:00Z",
+      completed_at: "2026-08-26T17:30:00Z",
+      steps: [{ name: "Build", conclusion: "success" }],
+    },
+  ]);
+  assert.equal(v.verdict, "green", `a superseded cancellation is not a failure — saw ${v.verdict}: ${v.why}`);
+});
+
+test("NH208: the LATEST run still decides, so a genuine later failure is RED", () => {
+  // The direction that matters more. Narrowing to the latest run must not have
+  // narrowed the detector: an earlier success followed by a real failure is red.
+  const v = verdictFromCheckRuns([
+    {
+      name: "gates (test · lint · tsc)",
+      status: "completed",
+      conclusion: "success",
+      started_at: "2026-08-26T17:02:00Z",
+      completed_at: "2026-08-26T17:10:00Z",
+      steps: [{ name: "Test", conclusion: "success" }],
+    },
+    {
+      name: "gates (test · lint · tsc)",
+      status: "completed",
+      conclusion: "failure",
+      started_at: "2026-08-26T18:00:00Z",
+      completed_at: "2026-08-26T18:05:00Z",
+      steps: [{ name: "Test", conclusion: "failure" }],
+    },
+  ]);
+  assert.equal(v.verdict, "red");
+  assert.deepEqual(v.failed, ["gates (test · lint · tsc) (failure)"]);
+});
+
+test("NH208: a stillborn run never overwrites a real verdict from the same context", () => {
+  // `neverStarted` means the runner was never allocated. It is not a later
+  // opinion about the tree, so it must not win the tiebreak against a run that
+  // actually executed — that would turn a known-good commit into CANNOT TELL.
+  const v = verdictFromCheckRuns([
+    {
+      name: "build (standalone)",
+      status: "completed",
+      conclusion: "success",
+      started_at: "2026-08-26T17:02:00Z",
+      completed_at: "2026-08-26T17:12:00Z",
+      steps: [{ name: "Build", conclusion: "success" }],
+    },
+    {
+      name: "build (standalone)",
+      status: "completed",
+      conclusion: "cancelled",
+      started_at: null,
+      completed_at: null,
+      steps: [],
+    },
+  ]);
+  assert.equal(v.verdict, "green", `saw ${v.verdict}: ${v.why}`);
+});
+
+test("NH208: latestPerName reduces to one run per name and keeps every distinct name", () => {
+  const reduced = latestPerName([
+    { name: "a", status: "completed", conclusion: "cancelled", started_at: "2026-08-26T01:00:00Z", completed_at: "2026-08-26T01:01:00Z", steps: [{ name: "s", conclusion: "cancelled" }] },
+    { name: "a", status: "completed", conclusion: "success", started_at: "2026-08-26T02:00:00Z", completed_at: "2026-08-26T02:01:00Z", steps: [{ name: "s", conclusion: "success" }] },
+    { name: "b", status: "completed", conclusion: "success", started_at: "2026-08-26T02:00:00Z", completed_at: "2026-08-26T02:01:00Z", steps: [{ name: "s", conclusion: "success" }] },
+  ]);
+  assert.equal(reduced.length, 2, "three runs across two names reduce to two");
+  assert.deepEqual(reduced.map((r) => r.name).sort(), ["a", "b"], "no name is dropped");
+  assert.equal(reduced.find((r) => r.name === "a")?.conclusion, "success", "the later run wins");
 });

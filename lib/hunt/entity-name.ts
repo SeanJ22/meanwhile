@@ -157,7 +157,18 @@ const DOCUMENT_LEADS: readonly string[] = [
   "view", "download", "learn", "get", "make", "start", "check", "visit", "join",
   "become", "understand", "prepare", "how", "what", "why", "when", "where",
   "our", "your", "my",
+  /*
+   * Third calibration pass, off the Morris County directory walk. The county's
+   * "Authorities, Boards and Commissions" page links its own history pages —
+   * "Coat of Arms of Morris County", "History of the Morris County
+   * Courthouse", "Morris County, Past and Present" — and all three head on a
+   * word this file counts as governmental, because "county" is one.
+   */
+  "coat", "history", "story", "about",
 ];
+
+/** Heads that make a phrase a history or heritage page rather than a body. */
+const HERITAGE_HEADS: readonly string[] = ["present", "past", "courthouse", "heritage", "legacy", "arms"];
 
 /**
  * Plural nouns for PEOPLE. A page listing people is a roster, not a body.
@@ -293,6 +304,14 @@ export function readsAsBodyName(raw: string): EntityNameVerdict {
       isBody: false,
       name,
       basis: `heads on "${head}" with no organ of government named — this is a roster of people, and the body they serve is what belongs in the registry`,
+    };
+  }
+
+  if (HERITAGE_HEADS.includes(head)) {
+    return {
+      isBody: false,
+      name,
+      basis: `heads on "${head}", which makes this a history or heritage page about a government rather than a unit of one`,
     };
   }
 

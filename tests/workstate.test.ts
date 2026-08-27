@@ -569,7 +569,27 @@ test("the aggregate tail across all three states is 3,900 and is reported apart"
     resumable += h.discoveredNotProcessed.length;
   }
   assert.equal(tail, 3900, "every historical obligation is preserved, to the edge");
-  assert.equal(resumable, 1614, "and the resumable count is the real, addressable one");
+
+  /*
+   * THE RESUMABLE COUNT IS A FLOOR, NOT A CONSTANT.
+   *
+   * This read `assert.equal(resumable, 1614)` — the number the migration
+   * measured — and it began failing the first time a session DISCOVERED
+   * something: the descent-resume session walked Morris County's own boards
+   * directory on 2026-08-26 and persisted 24 new edges, which is the frontier
+   * doing exactly what RULING 181 built it to do.
+   *
+   * What that ruling actually protects is that the frontier is never REBUILT
+   * from seeds, and a rebuild shows up as the count FALLING. So the floor is
+   * asserted and growth is allowed. The historical tail above stays an
+   * equality, because that number may not move without a recovery walk
+   * accounting for it.
+   */
+  assert.ok(
+    resumable >= 1614,
+    `the resumable frontier fell from 1,614 to ${resumable} — a frontier was rebuilt from seeds rather than resumed`,
+  );
+  assert.ok(resumable > 0, "and it is the real, addressable count");
   assert.notEqual(tail + resumable, resumable, "the two are never collapsed into one number");
 });
 

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-26T00:00:00.000Z",
+ "generatedAt": "2026-08-27T00:00:00.000Z",
  "divisions": [
   {
    "ocdId": "ocd-division/country:us/state:az/county:yuma",
@@ -88234,6 +88234,66 @@
     "sourceOrg": "U.S. Census Bureau, 2022 Census of Governments",
     "collectedAt": "2026-08-26T00:00:00.000Z",
     "verifiedAt": "2026-08-26T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:nj/morris_county_housing_authority#governing",
+   "ocdId": null,
+   "name": "Housing Authority",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.morriscountynj.gov/Departments/Housing-Authority",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.morriscountynj.gov/Departments/Housing-Authority",
+    "sourceOrg": "www.morriscountynj.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:nj/morris_county_tax_board#governing",
+   "ocdId": null,
+   "name": "Tax Board",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "http://mcweb1.co.morris.nj.us/MCTaxBoard/",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "http://mcweb1.co.morris.nj.us/MCTaxBoard/",
+    "sourceOrg": "mcweb1.co.morris.nj.us",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:nj/morris_county_sheriff#governing",
+   "ocdId": null,
+   "name": "Morris County Sheriff's Office",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.morriscountynj.gov/Departments/Sheriff",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.morriscountynj.gov/Departments/Sheriff",
+    "sourceOrg": "www.morriscountynj.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
    }
   }
  ]

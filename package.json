@@ -282,7 +282,8 @@
     "route:redirected-directory": "tsx scripts/recover-redirected-directory.mts",
     "bodies:census-gap": "tsx scripts/census-gap-walk.mts",
     "ladder:monotonicity": "tsx scripts/ladder-monotonicity.mts",
-    "method:learn-descent": "tsx scripts/learn-descent-routes.mts"
+    "method:learn-descent": "tsx scripts/learn-descent-routes.mts",
+    "gov:directory": "tsx scripts/walk-government-directory.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

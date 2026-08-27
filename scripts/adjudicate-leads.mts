@@ -362,9 +362,31 @@ async function main(): Promise<void> {
   }
   const heldIds = new Set(registry.bodies.map((b) => b.id));
 
+  /*
+   * A LEAD ALREADY OPENED IS NOT RE-OPENED, UNLESS ASKED.
+   *
+   * `NEEDS_CLASSIFICATION` covers two different situations and only one of them
+   * is worth a fetch. A lead the NAME test could not read has never been
+   * opened, so opening it is new work. A lead whose PAGE was opened and did not
+   * name a body has already cost a request, and re-running this command was
+   * spending the whole budget on them again — 77 of 80 in one measured run,
+   * every one re-fetching a page whose answer was already on disk.
+   *
+   * The evidence string says which is which, because it was written to say so.
+   * `--recheck` opens them anyway, which is what a new method version or an
+   * expired absence (RULING 53) calls for — the point is that it is a
+   * DECISION rather than the default.
+   */
+  const alreadyOpened = (c: { state: string; evidence?: string }): boolean =>
+    c.state === "NEEDS_CLASSIFICATION" && /^the page named itself|^fetched HTTP/.test(c.evidence ?? "");
+
+  const recheck = has("recheck");
   const pending = w.candidates.filter(
-    (c) => c.state === "ENTITY_CANDIDATE" || c.state === "NEEDS_CLASSIFICATION",
+    (c) =>
+      (c.state === "ENTITY_CANDIDATE" || c.state === "NEEDS_CLASSIFICATION") &&
+      (recheck || !alreadyOpened(c)),
   );
+  const heldBack = w.candidates.filter((c) => alreadyOpened(c) && !recheck).length;
 
   /* ---- gate 1 and 2: offline, and every lead in the pool gets both ------- */
   const counts = {
@@ -665,6 +687,7 @@ async function main(): Promise<void> {
   /* ---- report: every count, with its denominator ------------------------- */
   console.log(`\n=== LEAD ADJUDICATION — ${state.toUpperCase()}${dry ? "  (DRY RUN — nothing written)" : ""}`);
   console.log(`unclassified leads seen        ${counts.seen}`);
+  console.log(`  held back, already opened    ${heldBack}   (their page answered already; --recheck opens them again)`);
   console.log(`  rejected as not a body       ${counts.rejected}`);
   for (const [rule, n] of [...rejectedBy.entries()].sort((a, b) => b[1] - a[1])) {
     console.log(`      ${String(n).padStart(4)}  ${rule}`);

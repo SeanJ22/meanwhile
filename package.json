@@ -275,7 +275,8 @@
     "method:prove": "tsx scripts/method-prove.mts",
     "stage1": "tsx scripts/stage1-cutover.mts",
     "descent:resume-proof": "tsx scripts/descent-resume-proof.mts",
-    "governance:accept": "tsx scripts/governance-accept.mts"
+    "governance:accept": "tsx scripts/governance-accept.mts",
+    "descent:handoff": "tsx scripts/descent-handoff.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

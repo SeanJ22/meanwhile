@@ -49,22 +49,14 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { politeGetText } from "../lib/sources/http.ts";
 import { recordCandidate } from "../lib/workstate/candidates.ts";
 import { deriveCursor, edgeId, loadWorkstream, recordDiscovery, recordProcessed, saveWorkstream } from "../lib/workstate/frontier.ts";
+import { flag, present, repeated } from "./cli-args.mts";
 import { today } from "./doc-dates.mjs";
 
 const ROOT = process.cwd();
 
-const has = (n: string): boolean => process.argv.includes(`--${n}`);
-function arg(n: string): string | undefined {
-  const i = process.argv.indexOf(`--${n}`);
-  return i >= 0 ? process.argv[i + 1] : undefined;
-}
-function argAll(n: string): string[] {
-  const out: string[] = [];
-  for (let i = 0; i < process.argv.length; i++) {
-    if (process.argv[i] === `--${n}` && process.argv[i + 1]) out.push(process.argv[i + 1]);
-  }
-  return out;
-}
+const has = (n: string): boolean => present(process.argv, n);
+const arg = (n: string): string | undefined => flag(process.argv, n);
+const argAll = (n: string): string[] => repeated(process.argv, n);
 
 async function main(): Promise<void> {
   const state = (arg("state") ?? "").trim().toLowerCase();

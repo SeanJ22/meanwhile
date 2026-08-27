@@ -65,6 +65,7 @@ import { learnRoute, recordRouteOutcome, type MethodKnowledge } from "../lib/met
 import { unknownApplicability } from "../lib/method/portability.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { browserProfileHeaders, sourceUserAgent } from "../lib/sources/http.ts";
+import { present, repeated } from "./cli-args.mts";
 import { today } from "./doc-dates.mjs";
 
 const run = promisify(execFile);
@@ -85,14 +86,8 @@ const STORE = join(ROOT, "data", "method", "knowledge.json");
 const ROUTE_ID = "ladder-rung-inversion";
 const NAME_ROUTE_ID = "identified-agent-refused";
 
-const has = (n: string): boolean => process.argv.includes(`--${n}`);
-function args(n: string): string[] {
-  const out: string[] = [];
-  for (let i = 0; i < process.argv.length; i++) {
-    if (process.argv[i] === `--${n}` && process.argv[i + 1]) out.push(process.argv[i + 1]);
-  }
-  return out;
-}
+const has = (n: string): boolean => present(process.argv, n);
+const args = (n: string): string[] => repeated(process.argv, n);
 
 type Verdict = { rung: number; name: string; status: number | "ERR"; bytes: number };
 

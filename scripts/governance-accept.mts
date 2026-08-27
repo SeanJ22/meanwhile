@@ -41,6 +41,8 @@ import {
   type Workstream,
 } from "../lib/workstate/workstream.ts";
 import { loadMethodStore, loadWorkstreamFor } from "../lib/workstate/load.ts";
+import { observeManifestWalk } from "../lib/method/observe.ts";
+import { MANIFEST_VERSION } from "../lib/hunt/branch-manifest.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -253,15 +255,62 @@ const C: Criterion[] = [
   {
     key: "method learning is operational",
     check: () => {
-      const src = readFileSync(join(ROOT, "scripts/descent.mts"), "utf8");
-      const writes = src.includes("recordRouteOutcome(") && src.includes("applyEarnedPortability(");
-      const lib = readFileSync(join(ROOT, "lib/method/knowledge.ts"), "utf8");
-      const earns = lib.includes("export function earnedPortability");
+      /*
+       * BEHAVIOURAL, not a source-string check.
+       *
+       * The previous version of this criterion asked whether `descent.mts`
+       * contained `recordRouteOutcome(` and `applyEarnedPortability(`. It did,
+       * and it passed — while writing those outcomes against ids it MINTED
+       * (`descent-tier-<tier>`), so all 61 INHERITED routes still had
+       * `outcomes: []`. The strings were present and the integration was not.
+       *
+       * So this runs the seam: a real inherited route id, read from the
+       * committed store, walked through `observeManifestWalk`, and checked for
+       * the observation landing under THAT id.
+       *
+       * Nothing is written to disk — the store is exercised in memory.
+       */
+      const k = method();
+      if (!k) return { pass: false, detail: "no method store" };
+
+      const inherited = k.routes.find((r) => r.origin.includes("branch-manifest"));
+      if (!inherited) return { pass: false, detail: "no inherited routes in the store" };
+
+      const before = inherited.outcomes.length;
+      const res = observeManifestWalk(
+        k,
+        {
+          field: "verifiedPage",
+          branches: [
+            {
+              route: inherited.id,
+              branch: `acceptance probe of ${inherited.id}`,
+              attemptedAt: TODAY,
+              result: "acceptance probe — not a real walk",
+              found: true,
+            },
+          ],
+          checkedAt: TODAY,
+          manifestVersion: MANIFEST_VERSION,
+        },
+        "acceptance-probe",
+      );
+      const after = res.knowledge.routes.find((r) => r.id === inherited.id);
+      const sameId = res.recorded.length === 1 && res.recorded[0].routeId === inherited.id;
+      const landed = (after?.outcomes.length ?? 0) === before + 1;
+      const noSynthetic = res.knowledge.routes.length === k.routes.length;
+
+      // And the executor is wired, so the seam is reachable in production.
+      const wired = readFileSync(join(ROOT, "scripts/manifest-walk.mts"), "utf8").includes(
+        "observeManifestWalk(",
+      );
+
       return {
-        pass: writes && earns,
-        detail: writes
-          ? "descent records route outcomes and applies earned portability through the canonical store"
-          : "no operational path writes route outcomes",
+        pass: sameId && landed && noSynthetic && wired,
+        detail: sameId && landed && noSynthetic
+          ? `an inherited route (${inherited.id}) receives its observation under its OWN canonical id; ` +
+            `0 synthetic routes minted; the manifest walk is wired${wired ? "" : " — BUT NOT CALLED BY THE EXECUTOR"}`
+          : `identity ${sameId}, landed ${landed}, no-synthetic ${noSynthetic}, wired ${wired}`,
       };
     },
   },

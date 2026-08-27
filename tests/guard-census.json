@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 270,
-    "named": 2672,
+    "files": 271,
+    "named": 2684,
     "dynamic": 6
   },
   "files": {
@@ -2254,6 +2254,23 @@
         "knowledge that has outgrown a still-closed conclusion is a validation failure",
         "no route-count cap exists anywhere in the method library",
         "the committed method store validates and preserves the legacy manifest"
+      ],
+      "dynamic": 0
+    },
+    "tests/method-observation.test.ts": {
+      "names": [
+        "A — a REAL inherited route executed successfully records YIELDED against its OWN id",
+        "B — the same seam records ZERO against the inherited id, and zero is knowledge",
+        "C — a wall records BLOCKED and an error records FAILED, and neither narrows",
+        "C2 — classification puts the wall before the emptiness",
+        "D — the executed route id and the recorded route id are the same, by construction",
+        "D2 — a branch that names no route is reported, never attached to a plausible one",
+        "D3 — a route the walk names but knowledge does not hold is reported, not invented",
+        "E — replaying the same walk does not duplicate evidence or multiply jurisdictions",
+        "F — earned portability sees outcomes written through the REAL seam, not injected ones",
+        "F2 — one jurisdiction through the real seam stays UNKNOWN and keeps inheriting",
+        "G — mechanical reopening still works after the wiring",
+        "the manifest walk — the real executor — observes into the canonical store"
       ],
       "dynamic": 0
     },

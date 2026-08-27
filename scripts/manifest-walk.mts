@@ -33,7 +33,14 @@
  * prints what it fetched and what it found, and a zero is an outcome with a
  * reason attached rather than a clean exit.
  */
-import { writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+import { applyEarnedPortability, type MethodKnowledge } from "../lib/method/knowledge.ts";
+import { observeManifestWalk } from "../lib/method/observe.ts";
+
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 import { today as stampToday } from "./doc-dates.mjs";
 import {
@@ -507,6 +514,73 @@ for (const field of MANIFEST_FIELDS) {
     manifestVersion: MANIFEST_VERSION,
   });
   console.log(`  ${field.padEnd(14)} exhausted=${v.exhausted}  walked ${v.walked.length}/${v.required.length}  ${v.reason.slice(0, 96)}`);
+}
+
+/*
+ * OBSERVE THE WALK INTO CANONICAL METHOD KNOWLEDGE.
+ *
+ * This is the seam the 2026-08-26 audit found missing. The method store had a
+ * writer, and `scripts/descent.mts` called it — but only for routes it MINTED,
+ * with ids shaped `descent-tier-<tier>`. The 61 routes the project already knew
+ * still had `outcomes: []`, so `host-inversion` could be walked here on every
+ * person and learn nothing.
+ *
+ * The route id is READ OFF THE BRANCH. `ManifestBranch.route` is the same field
+ * `judgeManifestWalk` uses to decide which routes were walked, so an inherited
+ * route that was executed receives the observation under its OWN id and no
+ * substitute can be introduced between the attempt and the record.
+ *
+ * `--observe` is required to write. A dry walk is a real use of this command,
+ * and a run that was only rehearsing must not teach the store that a route was
+ * attempted in a jurisdiction.
+ */
+if (process.argv.includes("--observe")) {
+  const storePath = join(ROOT, "data", "method", "knowledge.json");
+  if (existsSync(storePath)) {
+    let k = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
+    const jurisdiction = person.state.toLowerCase();
+    let recorded = 0;
+    let duplicates = 0;
+    let unattributed = 0;
+    const unknown = new Set<string>();
+
+    for (const field of MANIFEST_FIELDS) {
+      const res = observeManifestWalk(
+        k,
+        {
+          field: field as ManifestField,
+          branches: branchesFor(field as ManifestField),
+          checkedAt: today,
+          manifestVersion: MANIFEST_VERSION,
+        },
+        jurisdiction,
+      );
+      k = res.knowledge;
+      recorded += res.recorded.length;
+      duplicates += res.duplicates.length;
+      unattributed += res.unattributed;
+      for (const u of res.unknownRoutes) unknown.add(u);
+    }
+
+    // Portability is applied from the evidence now on the record. Widening
+    // needs breadth; narrowing needs a DECLARED jurisdictional failure, which
+    // this command never asserts — a walk that hit a wall is a fact about the
+    // wall (RULING 182).
+    const { knowledge, moved } = applyEarnedPortability(k);
+    writeFileSync(
+      storePath,
+      `${JSON.stringify({ ...knowledge, updatedOn: today }, null, 2)}\n`,
+      "utf8",
+    );
+    console.log(
+      `\n  METHOD STORE — ${recorded} outcome(s) recorded against canonical route ids, ` +
+        `${duplicates} already known, ${unattributed} branch(es) named no route`,
+    );
+    if (unknown.size > 0) {
+      console.log(`  routes walked that project knowledge does not hold: ${[...unknown].join(", ")}`);
+    }
+    for (const m of moved) console.log(`  ${m.id}: ${m.from} -> ${m.to} — ${m.because}`);
+  }
 }
 
 const out = arg("--json");

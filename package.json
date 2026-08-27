@@ -295,7 +295,8 @@
     "az:levy": "tsx scripts/az-county-levy.mts",
     "verify:composition": "tsx scripts/verify-composition-0827.mts",
     "coverage": "tsx scripts/coverage-four-layer.mts",
-    "doctor": "tsx scripts/doctor.mts"
+    "doctor": "tsx scripts/doctor.mts",
+    "corpus:check": "tsx scripts/corpus-check.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

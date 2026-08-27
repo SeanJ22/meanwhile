@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **314 open**, 439 resolved.
+- **311 open**, 442 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -498,7 +498,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**90 open · 107 resolved.**
+**88 open · 109 resolved.**
 
 ### P1
 
@@ -551,10 +551,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH231** — Our count of the governments covering a ZIP is built from each county's own roll. Districts formed in a neighbouring county but taxing land here are missing from it, and the shortfall looks like completeness.
 
 **NH237** — The same government has a curated row and a descent-promoted row. The promotion's duplicate check compares names, and the two spellings differ by one word, so it did not match.
-
-**NH241** — A storage-engine-independent contract for every locally fetched dataset or document: source URL, resolved URL, retrieved timestamp, content type, content hash, jurisdiction, source class, freshness, local path and permission metadata.
-
-**NH243** — A mechanical test that fails if a canonical product-serving write module imports the local corpus or analysis layer in a way that bypasses the governed ingestion and provenance path.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -812,7 +808,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**22 open · 81 resolved.**
+**21 open · 82 resolved.**
 
 ### P1
 
@@ -831,8 +827,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH181** — Found 2026-08-25 by part2-0825 while closing NS16. The 8/25 Part 2 document is now at docs/feedback/we-the-people-feedback-2026-08-25-part2.md and is the FIRST one that has ever been there. The captures for every batch are committed and reachable; the DOCUMENTS are not. Missing: the 8/22 walkthrough (captures at docs/feedback/2026-08-22/, 21 files), the 8/24 walkthrough (docs/feedback/8.24/, 16 files) and the 8/25 morning walkthrough (docs/feedback/8.25/, 19 files). Each has been cited as authoritative by at least one session brief, and RULING 108 says anything a session must read at session start lives in the repo. docs/feedback/README.md is the index and names all three as missing. Only the author can supply the text — a session cannot reconstruct a dictation it never had.
 
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
-
-**NH242** — An operator-safety and environment-readiness command reporting PASS / FAIL / MISSING / COULD_NOT_VERIFY / OPTIONAL per capability, with a concrete remediation on every non-PASS and a sentinel-secret regression test across every sink it writes.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

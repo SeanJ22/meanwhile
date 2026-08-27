@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 03:15:31 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 03:23:14 EDT.
 Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -992,10 +992,10 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-27 03:15:30 EDT
+generated: 2026-08-27 03:23:14 EDT
 branch: claude/descent-resume-0826
-head sha: 8a26e7468aa53967a55035c242ec09d1f90a0394
-head subject: Ask a government what governs inside it, and stop re-opening answered leads
+head sha: 016f2f1e39d1bee36dfee3f2126996641a138aa5
+head subject: Share the repeated-flag parser the duplicate guard caught
 origin/main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8
 origin/main subject: Wire inherited method routes to receive their own canonical outcomes (#207)
 local main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8

@@ -46,10 +46,8 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import {
-  governingRosterHoldersForDivision,
-  rosterHoldersForBody,
-} from "@/lib/registry/body-rosters";
+import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
+import { membersOfBody } from "@/lib/registry/body-composition";
 import {
   noteStateFor,
   representationForDivision,
@@ -2213,17 +2211,19 @@ function MapEntryInner() {
               meeting={popupMeeting}
               body={bodyFor(popupMeeting.ocdId)}
               // Tier-3 (5a): who sits on this body, curated with citations.
-              // The division fallback covers a meeting whose body is NEAR
-              // the searched point but does not contain it — a Sunnyside
-              // pin seen from downtown 85701 still names its board.
+              //
+              // The division fallback that used to sit here was removed on
+              // 2026-08-27 (Red Controls 2 and 3). Its stated purpose was
+              // real — a Sunnyside pin seen from downtown 85701 should still
+              // name its board — but it bought that by answering the body
+              // question with the division's government, which put the wrong
+              // five people on the CAWCD card and the Mayor and Council on 58
+              // appointed Tucson commissions. `membersOfBody` keeps the
+              // Sunnyside case working (that board HAS its own roster, keyed
+              // by body id, and a body id does not care which point was
+              // searched) without the claim.
               representation={
-                rosterHoldersForBody(
-                  bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
-                ).length > 0
-                  ? rosterHoldersForBody(
-                      bodyFor(popupMeeting.ocdId)?.bodyId ?? null,
-                    )
-                  : governingRosterHoldersForDivision(popupMeeting.ocdId)
+                membersOfBody(bodyFor(popupMeeting.ocdId)?.bodyId ?? null).members
               }
               onClose={() => setPopupMeeting(null)}
               onExpand={() =>
@@ -2431,11 +2431,15 @@ function meetingSubject(
   meeting: Meeting,
   body: CoveredBody | null = null,
 ): ModalSubject {
-  const direct = rosterHoldersForBody(body?.bodyId ?? null);
-  const roster =
-    direct.length > 0
-      ? direct
-      : governingRosterHoldersForDivision(meeting.ocdId);
+  /*
+   * The body holding this sitting, resolved EXPLICITLY (2026-08-27).
+   *
+   * The division fallback here made the same membership claim the body card
+   * made: a meeting on a county division showed the county board as the
+   * meeting body's members, whoever actually sits on it. A meeting popup is a
+   * reader-facing surface like any other, so it obeys the same rule.
+   */
+  const roster = membersOfBody(body?.bodyId ?? null).members;
   return {
     // What it is FIRST (3, tightened 3a 2026-08-16): the jurisdiction-
     // qualified body and sitting are the headline ("Vail Unified School
@@ -2519,10 +2523,22 @@ function bodySubject(
   body: CoveredBody,
   allMeetings: Meeting[] = [],
 ): ModalSubject {
-  const roster =
-    rosterHoldersForBody(body.bodyId).length > 0
-      ? rosterHoldersForBody(body.bodyId)
-      : governingRosterHoldersForDivision(body.ocdId);
+  /*
+   * **NO DIVISION FALLBACK** (2026-08-27, Red Controls 2 and 3).
+   *
+   * This used to be `own roster, else the DIVISION's governing roster`, and
+   * that fallback put the five Pima County Supervisors on the Central Arizona
+   * Water Conservation District card — a popularly elected 15-member board —
+   * and the Mayor and Council on 58 appointed Tucson commissions. 74 bodies
+   * rendered named members that way and through nothing else.
+   *
+   * `membersOfBody` resolves an EXPLICIT composition or returns nobody. A body
+   * that legally IS another government sitting as a board still renders their
+   * names, through a recorded and cited authority; a body whose membership is
+   * unsourced renders the named gap. See lib/registry/body-composition.ts.
+   */
+  const composition = membersOfBody(body.bodyId);
+  const roster = composition.members;
   const meetings = allMeetings
     .filter((m) => m.ocdId !== null && m.ocdId === body.ocdId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));

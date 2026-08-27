@@ -24,7 +24,7 @@
  */
 
 import type { SeatHolder } from "../officials/lookup.ts";
-import { seatHoldersForDivision } from "../registry/server.ts";
+import { seatHoldersForOffice } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
 
 import {
@@ -61,13 +61,32 @@ export interface ContestForIncumbency {
   readonly id: string;
   readonly title: string;
   /**
-   * The seat's own division key. **This is the join, and it is exact.**
+   * The seat's division key. **HALF of the join, and the half that was
+   * mistaken for the whole of it.**
    *
-   * `seatHoldersForDivision` is keyed by OCD-ID, so asking who sits in
-   * `ocd-division/country:us/state:nh/sldl:607` is a lookup rather than a
-   * search. Verified 2026-08-26: it returns Karen Ebel and Greg Sargent for
-   * that division, Dan Innis for `sldu:7`, Bergen and Webber for NJ `sldl:26`,
-   * and Volk and Keshel for AZ `sldl:17`.
+   * This comment used to say "This is the join, and it is exact", and it was
+   * exact only where a division hosts one elected office — legislative
+   * districts, which is what it was verified against on 2026-08-26 and which is
+   * why it looked right. It is not exact anywhere else, and the pilot ballots
+   * are mostly anywhere else:
+   *
+   * ```
+   * .../state:az            Governor, Secretary of State, Attorney General,
+   *                         State Treasurer, Superintendent of Public
+   *                         Instruction, State Mine Inspector, Corporation
+   *                         Commissioner — and the index holds two U.S. SENATORS
+   * .../state:nh            Governor and United States Senator
+   * .../place:butler        Mayor and Member of the Borough Council
+   * .../county:merrimack    Sheriff, Attorney, Treasurer, Register of Deeds,
+   *                         Register of Probate
+   * ```
+   *
+   * Asked for the AZ Governor contest, the division returned Mark Kelly and
+   * Ruben Gallego, and the sitting Governor was labelled **Challenger** on the
+   * ballot while her own map card said Incumbent.
+   *
+   * **The join is now `(ocdId, title)`** — see `seatHoldersForOffice`. The
+   * division still answers WHERE; `title` answers WHICH OFFICE.
    */
   readonly ocdId: string;
   readonly candidates: readonly ContestCandidate[];
@@ -101,7 +120,14 @@ export type FederalHolderLookup = (targetKey: string) => Promise<SeatHolder | nu
 export async function contestIncumbency(
   contest: ContestForIncumbency,
   federalHolderFor: FederalHolderLookup,
-  holdersForDivision: (ocdId: string) => Promise<SeatHolder[]> = seatHoldersForDivision,
+  /**
+   * Who holds THIS EXACT SEAT — the division AND the office.
+   *
+   * The parameter used to be `holdersForDivision` and took the ocdId alone.
+   * The signature was the defect: it could not express the question, so every
+   * caller asked the only question it could ask.
+   */
+  holdersForSeat: (ocdId: string, officeTitle: string) => Promise<SeatHolder[]> = seatHoldersForOffice,
 ): Promise<ContestIncumbencyResult> {
   const candidates = contest.candidates.map((c) => ({
     id: c.key,
@@ -112,16 +138,21 @@ export async function contestIncumbency(
   const officeIsElected = standingChipMayAttach(contest.title);
 
   /*
-   * BRANCH ONE, AND IT IS AN EXACT KEY JOIN: the registry, asked by the seat's
-   * own OCD-ID. No name matching reaches the SEAT at all — only the question of
-   * which candidate is which sitting member, which is a smaller question over a
+   * BRANCH ONE, AND IT IS AN EXACT KEY JOIN: the registry, asked by the seat —
+   * the division AND the office. No name matching reaches the SEAT at all; the
+   * only name question left is which candidate is which sitting member, over a
    * two-to-five-person population.
+   *
+   * **An office the vocabulary cannot classify returns nobody**, which becomes
+   * UNKNOWN below. That is the correct failure: the alternative is the
+   * division-wide list, and the division-wide list is what told a reader the
+   * Governor of Arizona was challenging for her own seat.
    */
-  const registryHolders = officeIsElected ? await holdersForDivision(contest.ocdId) : [];
+  const registryHolders = officeIsElected ? await holdersForSeat(contest.ocdId, contest.title) : [];
   let holders: SeatHolderRef[] = registryHolders.map((h) => ({
     ...splitDisplayName(h.name),
     personKey: null,
-    source: `the officeholder registry for ${contest.ocdId}`,
+    source: `the officeholder registry for ${h.officeTitle} on ${contest.ocdId}`,
   }));
 
   if (holders.length === 0 && contest.federal) {

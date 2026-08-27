@@ -4,11 +4,14 @@ import { join } from "node:path";
 import {
   holdersFor,
   indexByDivision,
+  stateOcdIdFrom,
   type OfficeholderIndex,
   type PhotoIndex,
   type SeatHolder,
 } from "../officials/lookup.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
+import { officeIdentity } from "../officials/office-identity.ts";
+import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
 
@@ -299,7 +302,67 @@ export async function seatHoldersForDivision(
   ocdId: string,
 ): Promise<SeatHolder[]> {
   const { officials } = await loaded();
-  return holdersFor(officials, ocdId);
+  /*
+   * **The statewide executives, and ONLY on the state division itself.**
+   * (2026-08-27, Red Control 1.)
+   *
+   * `STATEWIDE_EXECUTIVES` held Katie Hobbs — her office, party, official
+   * phone, email, contact form and page — and only `lib/registry/coverage.ts`
+   * read it. So her map card said Incumbent and the ballot, asking this
+   * function, could not see her at all and called her a Challenger. Folding the
+   * store in here is what stops one verified person having two answers; the
+   * alternative, a ballot-specific incumbent table, is a second copy of an
+   * already-sourced fact, and second copies are how surfaces come to disagree.
+   *
+   * The `=== stateOcdIdFrom(ocdId)` guard is not incidental. `statewideExecutivesFor`
+   * takes the divisions covering a POINT and answers with the governor once,
+   * which is right for the map card and wrong here: passing it `.../state:az/cd:6`
+   * derives `state:az` and hands back the Governor, so she would have joined the
+   * officeholder list of every congressional, legislative, county and place
+   * division in Arizona. Caught by the seat census, which showed `cd:6` holding
+   * two people where the roster holds one.
+   */
+  const statewide = stateOcdIdFrom(ocdId) === ocdId ? statewideExecutivesFor([ocdId]) : [];
+  return [...holdersFor(officials, ocdId), ...statewide];
+}
+
+/**
+ * **WHO HOLDS THIS EXACT OFFICE, ON THIS DIVISION.**
+ * (2026-08-27, the coverage-truth session. Red Control 1.)
+ *
+ * `seatHoldersForDivision` answers *who holds something here*, and for a
+ * division hosting one elected office those are the same question. **They are
+ * not the same question anywhere else**, and the pilot ballots are full of
+ * "anywhere else": seven statewide AZ offices share `.../state:az`, Governor
+ * and U.S. Senator share `.../state:nh`, Mayor and Borough Council share
+ * `.../place:butler`, five county row offices share `.../county:merrimack`.
+ *
+ * Asked for the AZ Governor contest, the division question returned **Mark
+ * Kelly and Ruben Gallego**. Katie Hobbs matched neither, and the ballot
+ * called the sitting Governor a Challenger while her own map card called her
+ * Incumbent.
+ *
+ * So a ballot asks THIS, with the contest's own title. An office the vocabulary
+ * cannot classify returns `[]`, which the resolver renders as UNKNOWN — never
+ * as the division-wide list, and never as Challenger.
+ *
+ * **The statewide executives participate here rather than being duplicated.**
+ * `STATEWIDE_EXECUTIVES` held Katie Hobbs, her office, her party, her official
+ * phone, email, contact form and page all along; only `lib/registry/coverage.ts`
+ * read it, so the map surface had her and the ballot surface could not see her.
+ * Folding it into the officeholder lookup itself is what stops one verified
+ * person having two different answers on two surfaces — the alternative, a
+ * ballot-specific incumbent table, is a second copy of a fact that is already
+ * sourced, and second copies are how surfaces come to disagree.
+ */
+export async function seatHoldersForOffice(
+  ocdId: string,
+  officeTitle: string,
+): Promise<SeatHolder[]> {
+  const office = officeIdentity(officeTitle);
+  if (office === null) return [];
+  const holders = await seatHoldersForDivision(ocdId);
+  return holders.filter((h) => officeIdentity(h.officeTitle) === office);
 }
 
 export async function coverageAt(

@@ -62,6 +62,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { appendPromotedBodies } from "../lib/registry/promoted-bodies.ts";
+import type { Body } from "../lib/registry/types.ts";
 
 import { loadWorkstream, saveWorkstream, deriveCursor } from "../lib/workstate/frontier.ts";
 import {
@@ -291,28 +292,19 @@ function namesEntity(name: string, doc: { title: string; headings: string[] }): 
 
 /** ------------------------------------------------------------------ registry */
 
-interface RegistryBody {
-  id: string;
-  /* Nullable, because a promoted body's division is genuinely not established
-   * by the descent — see the note where the row is built. */
-  ocdId: string | null;
-  name: string | null;
-  bodyClass: string;
-  bodyOrigin: string;
-  coverageStatus: string;
-  agendaSourceType: string;
-  agendaSourceRef: string | null;
-  meetingCadence: string | null;
-  homepageUrl: string | null;
-  demandCount: number;
-  sourceDataset: string;
-  provenance: {
-    sourceUrl: string | null;
-    sourceOrg: string | null;
-    collectedAt: string;
-    verifiedAt: string | null;
-  };
-}
+/*
+ * **THE CANONICAL `Body` TYPE, NOT A LOCAL COPY OF IT** (2026-08-27, NH232).
+ *
+ * A local `RegistryBody` interface stood here, structurally identical to
+ * `lib/registry/types.ts`'s `Body` except that it typed `bodyClass`,
+ * `bodyOrigin`, `coverageStatus`, `agendaSourceType` and `sourceDataset` as
+ * bare `string`. The compiler therefore never compared a promoted row against
+ * what the registry declares, and BOTH `PROMOTED_FROM_DESCENT_CANDIDATE` and
+ * `DESCENT` lived in 674 committed rows without ever being members of
+ * `BodyOrigin` or `SourceDataset`. A duplicate type is how two records of the
+ * same thing come to disagree; this file reads the real one now, and the two
+ * missing union members were added where they belong.
+ */
 
 function normName(s: string): string {
   return s
@@ -351,7 +343,7 @@ async function main(): Promise<void> {
   const registry = JSON.parse(readFileSync(registryPath, "utf8")) as {
     generatedAt: string;
     divisions: unknown[];
-    bodies: RegistryBody[];
+    bodies: Body[];
   };
 
   /* Every name the registry already holds, for this state, normalised once. */
@@ -459,7 +451,7 @@ async function main(): Promise<void> {
   }
 
   /* ---- gate 3: the network, and the only gate that promotes -------------- */
-  const promotedRows: RegistryBody[] = [];
+  const promotedRows: Body[] = [];
   const log: string[] = [];
 
   for (const lead of openable) {
@@ -625,7 +617,7 @@ async function main(): Promise<void> {
     if (!dry) verifyCandidate(w, lead.id, evidence);
     counts.verified += 1;
 
-    const row: RegistryBody = {
+    const row: Body = {
       id,
       /*
        * NULL, AND THE NULL IS THE HONEST ANSWER.

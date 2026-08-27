@@ -61,6 +61,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { appendPromotedBodies, loadPromotedBodies } from "../lib/registry/promoted-bodies.ts";
+import type { Body } from "../lib/registry/types.ts";
 import { decodeEntities, politeGetText } from "../lib/sources/http.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -96,28 +97,21 @@ interface GusUnit {
   active: string;
 }
 
-interface RegistryBody {
-  id: string;
-  ocdId: string | null;
-  name: string | null;
-  bodyClass: string;
-  bodyOrigin: string;
-  coverageStatus: string;
-  agendaSourceType: string;
-  agendaSourceRef: string | null;
-  meetingCadence: string | null;
-  homepageUrl: string | null;
-  demandCount: number;
-  sourceDataset: string;
-  censusId?: string;
-  censusUnitType?: string;
-  provenance: {
-    sourceUrl: string | null;
-    sourceOrg: string | null;
-    collectedAt: string;
-    verifiedAt: string | null;
-  };
-}
+/*
+ * **THE CANONICAL `Body` TYPE, NOT A LOCAL COPY OF IT** (2026-08-27, NH232).
+ *
+ * A `RegistryBody` interface stood here — the same shape as
+ * `lib/registry/types.ts`'s `Body`, with `bodyClass`, `bodyOrigin`,
+ * `coverageStatus`, `agendaSourceType` and `sourceDataset` widened to `string`.
+ * `scripts/adjudicate-leads.mts` carried its own identical copy. Two duplicate
+ * types meant neither promoter's rows were ever compared against what the
+ * registry declares, and `PROMOTED_FROM_CENSUS_OF_GOVERNMENTS` and `GUS_2022`
+ * sat in 57 committed rows while being members of no union at all.
+ *
+ * That is the same defect as NH232 one level down: a second copy of a
+ * definition, kept in step by nothing.
+ */
+type RegistryBody = Body;
 
 /** The state code each clipped county belongs to. */
 const COUNTY_STATE: Record<string, string> = {
@@ -336,7 +330,7 @@ async function main(): Promise<void> {
   const promotedStore = loadPromotedBodies();
   const knownBodies: RegistryBody[] = [
     ...registry.bodies,
-    ...(promotedStore.bodies as unknown as RegistryBody[]),
+    ...promotedStore.bodies,
   ];
   const held = new Map<string, string>();
   for (const b of knownBodies) {
@@ -483,7 +477,7 @@ async function main(): Promise<void> {
    * either of them had ever written and nothing went red.
    */
   if (!dry && added.length > 0) {
-    const appended = appendPromotedBodies(added as never);
+    const appended = appendPromotedBodies(added);
     console.log(
       `\nwrote ${appended.added} row(s) to lib/registry/promoted-bodies.json  (the canonical INPUT)` +
         (appended.skipped.length > 0 ? `\n  ${appended.skipped.length} already held by the store` : "") +

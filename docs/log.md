@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **146 sessions.**
+Newest first. **147 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,17 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## descent-resume-0826 · 2026-08-27
+
+**What it started.** 4 row(s) opened, 4 still open.
+
+- **NH221** — The descent and Census-of-Governments promotions on 2026-08-26 wrote 723 registry bodies with ocdId null, deliberately: the descent knows the tier it walked and the host it read, and neither establishes which census division a body governs. Writing the state division for all of them would be a plausible guess in the one field a reader uses to decide whether a body governs THEM. Attaching divisions with real evidence is the owed work. tests/registry-oracle.test.ts already refuses a non-null ocdId that resolves to no division, so the guard is in place; what is missing is the evidence route. *(open)*
+- **NH222** — Of 211 active governments in the 2022 Census of Governments clip for Pima AZ, Morris NJ and Merrimack NH, 35 reported no usable web address — Epsom Village District, Penacook Boscawen Water Precinct, Hardy Road Village District, BCEP Solid Waste District, seven Morris County township fire districts, and others. They are named in canonical state and are NOT absent: they levy, so somebody bills for them. The route not yet walked is the funder/auditor: NH DRA publishes municipal and village-district tax rate tables, NJ DCA Division of Local Government Services publishes fire-district budgets, and azauditor.gov publishes special-district reports. *(open)*
+- **NH223** — scripts/adjudicate-leads.mts implements its own rung 2/3/4 ladder and its own decodeEntities, both of which lib/sources/http.ts already exports. RULING 63: duplication is worse than a gap. The private ladder works — it sends a raw browser User-Agent, which is what passes the *.nh.gov family — but it lacks rung 3b, it does not pace itself, and it will drift from the shared one. scripts/census-gap-walk.mts was converted to politeGetText in the same session and is the model. *(open)*
+- **NH224** — mtoliveboe.org, the Mount Olive Township School District address reported to the Census Bureau, answers HTTP 200 and serves a Japanese personal-finance blog. WWW.MTLAKES.ORG no longer carries Mountain Lakes Borough School District content. Both districts exist and govern; the ADDRESS is stale. Neither was promoted, because the control requiring a page to name the entity refused them — which is the only thing standing between the registry and a link to a stranger's blog. The live addresses have not been hunted. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## unblock-pushers-0826-nonhunt · 2026-08-26
 

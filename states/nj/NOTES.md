@@ -216,3 +216,77 @@ absent from the body it returned, which is RULING 93's *a 200 whose content is
 not about the thing asked for is not a document*. The prior session recorded an
 Imperva challenge on that host; this run did not establish which it was, and did
 not walk past it.
+
+
+## 2026-08-26 — THE LEADS BECAME BODIES, AND TWO OFFICIAL DOMAINS HAVE LAPSED
+
+(The descent-resume session. Append-only.)
+
+### 192 New Jersey bodies promoted, from 489 leads
+
+The descent had left 489 unclassified New Jersey leads and **zero promoted
+bodies** — not a low number but a structurally pinned one, because nothing in
+the repository could perform the promotion transition at all. `pnpm
+leads:adjudicate-descent` is the path that was missing. Of the 489:
+
+```
+rejected as not a body            85
+  not a government publisher      57
+  prose, not an entity             9
+  court opinion                    9
+  navigation label                 7
+  not a document host              3
+name unreadable by method 0      103   <- a limit of the method, never a finding
+opened                           285
+  PROMOTED                       192
+```
+
+**The 57 rejections confirm a finding this file already carried.** The note
+above records `assemblydems.com` and `njassemblygop.com` as "not government
+bodies at all … named here so the nine is read honestly". That was prose; it is
+now a rule with a reason attached, in `lib/hunt/lead-triage.ts`, alongside
+`njlm.org` and `njsba.org`. **The League of Municipalities' own pages are not a
+tier of government** — but a municipality found ON its directory still
+survives, which is how 208 New Jersey towns were found and is why the rule is
+about the target's publisher and never about where the link was seen.
+
+### Two official domains no longer belong to the government that reported them
+
+Found by opening every Morris County government the 2022 Census of Governments
+names, against the website each one reported to the Census Bureau:
+
+- **`mtoliveboe.org`** — the Mount Olive Township School District's reported
+  address. It answers HTTP 200 and serves **a Japanese personal-finance blog**
+  (`すずブログ｜アラサー女子のゆるっと投資生活`). The domain has lapsed and been
+  re-registered.
+- **`WWW.MTLAKES.ORG`** — Mountain Lakes Borough School District's reported
+  address, now titled only `mtlakes.org`, with no district content.
+
+Neither is a wall and neither is an absence: the districts exist and govern. It
+is the ADDRESS that is stale, and the Census's `web_address` column is a 2022
+snapshot that nothing re-validates. **A registry that had trusted that column
+would be pointing readers at a stranger's blog.** Both are recorded as
+address-stale, and the control that caught them — requiring the page to name
+the entity — is the only reason they were not promoted as bodies.
+
+### The Census clip is a denominator this repo already owned
+
+`data/audit/gus-2022-clip-counties.json` holds **98 active Morris County
+governments**. Reconciled against the registry, 41 were held. The gap was
+already described in this file as backlog; walking it is what had not happened.
+
+**And the national file is committed too** —
+`data/reference/census_govt_units_2022.csv`, **88,748 active governments across
+52 state and territory codes, 38,046 carrying a web address**. The route built
+for three counties is national the day anyone points it at another FIPS code.
+
+### Still owed here, named rather than implied
+
+- `elec.nj.gov` — still the Imperva challenge at HTTP 200 recorded above. Not
+  re-walked this session; `njelecefilesearch.com` remains the route to the data.
+- **The Morris County IQM2 tenant** (`morriscountynj.iqm2.com`) is still not
+  wired, and this file still calls it "the cheapest coverage in the product".
+  This session did not reach it.
+- 103 New Jersey leads sit at `NEEDS_CLASSIFICATION` because the name test could
+  not read them — `Law Division - Civil Part` is a real court and the heuristic
+  cannot tell. That is a limit of method version 0, recorded as one.

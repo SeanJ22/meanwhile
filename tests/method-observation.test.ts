@@ -107,8 +107,26 @@ test("A — a REAL inherited route executed successfully records YIELDED against
       knowledge.routes.length,
       "no replacement route was minted for an inherited route that already existed",
     );
-    assert.ok(
-      !reloaded.routes.some((r) => r.id !== routeId && r.outcomes.length > 0),
+    /*
+     * "No OTHER route gained an outcome" is the claim, and it has to be made
+     * against what the store held BEFORE — not against zero.
+     *
+     * It was written as "no other route has any outcome at all", which was true
+     * only while no route in the committed store had ever been walked. The
+     * descent-resume session recorded the first real outcome on 2026-08-26
+     * (`redirected-directory-rehost`, 69 Arizona addresses), and this assertion
+     * began failing on a store that was doing exactly what it is for.
+     *
+     * A test that only passes while the project has done nothing is a test that
+     * has to be rewritten the first time it works.
+     */
+    const outcomesBefore = new Map(knowledge.routes.map((r) => [r.id, r.outcomes.length]));
+    const leaked = reloaded.routes.filter(
+      (r) => r.id !== routeId && r.outcomes.length !== (outcomesBefore.get(r.id) ?? 0),
+    );
+    assert.deepEqual(
+      leaked.map((r) => r.id),
+      [],
       "no other route received this observation",
     );
   } finally {
@@ -224,7 +242,15 @@ test("D2 — a branch that names no route is reported, never attached to a plaus
     const res = observeManifestWalk(knowledge, walk([anonymous]), "nh");
     assert.equal(res.unattributed, 1);
     assert.equal(res.recorded.length, 0, "an unattributed attempt teaches no route anything");
-    assert.ok(res.knowledge.routes.every((r) => r.outcomes.length === 0));
+    /* Against the pre-state, for the reason spelled out in test A: the store
+     * legitimately holds recorded outcomes now, and "no route learned
+     * ANYTHING, ever" was only ever a restatement of "nothing has run yet". */
+    const before = new Map(knowledge.routes.map((r) => [r.id, r.outcomes.length]));
+    assert.deepEqual(
+      res.knowledge.routes.filter((r) => r.outcomes.length !== (before.get(r.id) ?? 0)).map((r) => r.id),
+      [],
+      "an unattributed attempt changed some route's outcomes",
+    );
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

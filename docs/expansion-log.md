@@ -1140,3 +1140,130 @@ RULING 90's obligation, answered for the field that ended this session unfound �
 - **The larger finding the measurement produced:** 3 of 6 districts hold no
   superintendent ROW AT ALL. A missing person precedes a missing picture, and no
   photo route can close a gap where nobody is named.
+
+---
+
+## descent-resume-0826 · 2026-08-26
+
+**Six routes that did not exist at session start.** Five returned rows and one
+returned zero, and the zero is reported first, because the invention is the
+deliverable and because that particular zero is the one that corrected the
+session's own hypothesis.
+
+### Ladder rung inversion — the ZERO, and it is the useful one
+
+- **Conceived:** a private curl-only client in this session's census walk
+  reported 23 governments unreachable. Re-testing the same URLs through Node
+  reached 64 of 111 the curl client could not. `scripts/ladder-fetch.mts` says
+  rung 4 exists because "curl's TLS fingerprint passes walls Node's does not";
+  the observation suggested the reverse, so the question was: **is rung 4 ever
+  WEAKER than rung 3, and can that be measured rather than argued?**
+- **Query:** `pnpm ladder:monotonicity --hosts states/nh` — rungs 0, 2, 3 and 4
+  against all 40 `.gov`/`.us` hosts the New Hampshire corpus names, one at a
+  time, with the curl build printed beside the result.
+- **Returned:** **0 of 40.** The zero was correct and the question was wrong:
+  rung 3 is not a raw Chrome client — `browserProfileHeaders()` appends this
+  project's name to the UA exactly as rung 2 does and exactly as rung 4 is
+  handed — so all three are refused together and there is no inversion between
+  them to find. The route keeps its id and its ZERO. A route reframed to fit a
+  later finding is a route that never failed.
+- **Generalises:** unknown. It is a measurement instrument rather than a source
+  route, and the answer it gives is per-host-family by construction.
+
+### The identified agent IS the wall
+
+- **Conceived:** directly from the zero above. If rungs 2, 3 and 4 fail
+  together and a bare request succeeds, the common factor is not the client —
+  it is what all three say about themselves.
+- **Query:** one variable at a time, against `www.nh.gov`, `www.revenue.nh.gov`
+  and `www.sos.nh.gov`:
+  ```
+  no headers at all                200
+  chrome UA only                   200
+  chrome UA + "we-the-people …"    403
+  our project UA alone             403
+  chrome UA + From: header         200
+  full browser header set + From:  200
+  ```
+- **Returned:** **32 of 40 hosts** serve an anonymous request and refuse every
+  client carrying this project's name. `sos.nh.gov` and `revenue.nh.gov` among
+  them. The fix keeps the disclosure and moves it into `From:` and
+  `X-Purpose:`, which is where HTTP defines it — rung 3b in
+  `lib/sources/http.ts`, with `tests/identified-ua-wall.test.ts` holding both
+  directions, because `morriscountyclerk.org` and `tucsonaz.gov` ALLOWLIST the
+  same string.
+- **Generalises:** to any host whose WAF pattern-matches an unfamiliar agent
+  string, which is not New Hampshire's alone. Recorded UNKNOWN: the opposite
+  exists in the same state — `newbury.nh.gov` refuses every Node client and
+  admits curl.
+
+### The Census of Governments as the tier denominator
+
+- **Conceived:** the link descent walks OUTWARD from pages and finds what
+  governments choose to link, which is structurally blind to a fire district
+  nobody links to. The question was where an enumeration of governments could
+  come from that does not depend on being linked — and the answer was already
+  committed in this repository.
+- **Query:** `pnpm bodies:census-gap`, reconciling
+  `data/audit/gus-2022-clip-counties.json` against `lib/registry/registry.json`
+  and opening each missing government's OWN reported website.
+- **Returned:** 211 active governments in the clip, 86 already held. Of the 125
+  missing, 90 reported a site and **57 named themselves when opened** — 17
+  special districts, 38 school districts, 2 counties. The clip went from 86 to
+  **143 of 211**. Thirty-five reported no usable address at all and are named
+  rather than dropped.
+- **Generalises:** nationally, today, with no new credential.
+  `data/reference/census_govt_units_2022.csv` is committed and holds **88,748
+  active governments across 52 state and territory codes, 38,046 with a web
+  address**. The route is national the day anyone points it at another FIPS
+  code.
+
+### Redirected directory re-host
+
+- **Conceived:** 88 Arizona leads unreachable at every rung, 80 of them on one
+  host — a number that means one cause rather than eighty.
+- **Query:** `https://az.gov/agency-directory` → final URL
+  `https://azdirect.az.gov/agencies`; then the same path on the redirect
+  target, e.g. `https://azdirect.az.gov/agriculture-department`.
+- **Returned:** **69 of 80** addresses recovered; 11 met a Cloudflare
+  interstitial, which is CHALLENGED and still owed; **0 genuinely absent**. The
+  walker had resolved root-relative links against the host it ASKED rather than
+  the host it REACHED, so 80 real state agencies were recorded one hostname
+  wrong.
+- **Generalises:** to any portal whose directory redirects across hosts while
+  serving root-relative links. Recorded UNKNOWN — one portal.
+
+### The county annual report is a directory, a roster and a minutes archive
+
+- **Conceived:** from this repository's own note. `states/nh/NOTES.md` recorded
+  the Merrimack County Board of Commissioners as COULD NOT ASSERT because "its
+  source is a PDF annual report and this reader reads HTML", and named rung 9
+  as owed.
+- **Query:** `merrimackcounty.net/Departments/Administration/Annual Reports/
+  Final Annual Report 2025.pdf`, read through `lib/extract/text-layer.ts`.
+- **Returned:** 1,367,208 bytes, **44 pages, 37 with a native text layer, no
+  OCR required**. Page 3 carries the commissioners and ten department heads;
+  page 5 the full 45-member delegation with both sets of officers; pages 22–29
+  the county convention minutes with roll-call votes. The rosters already in
+  `body-rosters.ts` are CONFIRMED by it — a third independent read agreeing
+  with two prior ones — not newly found.
+- **Generalises:** every New Hampshire county publishes one, because the county
+  convention has to receive it. That is a statutory reason to expect the shape
+  and not a measurement of it, so UNKNOWN.
+
+### Two official enumerations, reconciled rather than resolved
+
+- **Conceived:** having one roster from a PDF and another already in the repo
+  raised the question RULING 57 answers — what do you do when two official
+  publishers disagree?
+- **Query:** the county annual report's page 5 against
+  `data/hunt/nh-gencourt-members.json` filtered to `chamber = H`,
+  `county = Merrimack`.
+- **Returned:** **45 against 45**, 42 agreeing on surname. Two surname
+  spellings differ (`GALLAGHER`/`Gallager`, `GONZALEX`/`Gonzalez`) and four
+  given names are formal-versus-familiar. Both spellings are on the record; the
+  General Court is noted as the better authority on a legislator's own name
+  without the other being called wrong.
+- **Generalises:** wherever two official publishers cover the same universe,
+  which is common for legislative bodies and rare for special districts. Its
+  reach is a property of the SUBJECT rather than of the state.

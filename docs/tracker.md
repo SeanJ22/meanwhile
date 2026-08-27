@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-26 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **294 open**, 436 resolved.
+- **298 open**, 436 resolved.
 - **51 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -296,7 +296,7 @@ Everything owed to a reader in New Hampshire — Newbury and 03255 first. Bodies
 
 Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
-**43 open · 5 resolved.**
+**44 open · 5 resolved.**
 
 ### P1
 
@@ -369,6 +369,8 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 **NH114** — data/hunt/nj-morris-certified-winners.json holds 263 rows and some of them carry an office that is plainly not an office. Carolyn Dempsey's reads 'DEMPSEY', Robert Simpson's reads 'SIMPSON' - the surname landing in the office field - and several read null outright, among them Robert H. Conley, Howard Kritz, Maria Cote, Louis R. Maffei and James A. Lynch. The row count is right and the names are right, so every count over this file reconciles and reports success.
 
 **NH173** — Read 2026-08-25. https://www.tapinto.net/robots.txt answers HTTP 403, so the policy that would say whether we may walk it cannot be read at all — and a 403 on a policy is not an implied yes. TAPinto is a hyperlocal NETWORK with per-town sites across New Jersey and is the largest press surface this county has that this project does not read; docs/sources.md already recorded it walled at rung 3 on 2026-08-24. lib/hunt/press-surface.ts records it as UNREADABLE, which is a third state beside PERMITTED and DISALLOWED and is deliberately not either. Routes not yet walked: the Internet Archive's capture of the robots.txt (rung 11), which would establish what the policy SAYS even if the live file refuses; and asking the publisher directly, which is rung 13 and is a real option for a local outlet.
+
+**NH224** — mtoliveboe.org, the Mount Olive Township School District address reported to the Census Bureau, answers HTTP 200 and serves a Japanese personal-finance blog. WWW.MTLAKES.ORG no longer carries Mountain Lakes Borough School District content. Both districts exist and govern; the ADDRESS is stale. Neither was promoted, because the control requiring a page to name the entity refused them — which is the only thing standing between the registry and a link to a stranger's blog. The live addresses have not been hunted.
 
 **NH57** — The welcome overlay offers four starting zips and labels 07866 'Rockaway Twp., NJ'. Two municipalities sit in that zip and the product now renders both, so the label names one of them and silently drops the other — for a Borough resident it is the wrong town.
 
@@ -478,7 +480,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**82 open · 105 resolved.**
+**84 open · 105 resolved.**
 
 ### P1
 
@@ -521,6 +523,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH217** — pnpm descent walked NJ, AZ and NH on 2026-08-26 and every one of the three ended with its final pass still producing: NJ queued 1,885 new links, AZ 1,986, NH 771. Under RULING 169 that means the walk stopped rather than finished, and the ledger says so on its own verdict line. Continuing is a matter of re-running with more passes and a higher budget; nothing is blocked.
 
 **NH218** — The descent named 1,392 candidate governing bodies across NJ, AZ and NH that the registry does not already match. A candidate is a link whose text named a governing body. Confirming it is a body, resolving it to a division and minting an id is the next motion, and it has not begun. Until it does, these are a work queue in states/<code>/descent-candidates.md and not coverage.
+
+**NH221** — The descent and Census-of-Governments promotions on 2026-08-26 wrote 723 registry bodies with ocdId null, deliberately: the descent knows the tier it walked and the host it read, and neither establishes which census division a body governs. Writing the state division for all of them would be a plausible guess in the one field a reader uses to decide whether a body governs THEM. Attaching divisions with real evidence is the owed work. tests/registry-oracle.test.ts already refuses a non-null ocdId that resolves to no division, so the guard is in place; what is missing is the evidence route.
+
+**NH222** — Of 211 active governments in the 2022 Census of Governments clip for Pima AZ, Morris NJ and Merrimack NH, 35 reported no usable web address — Epsom Village District, Penacook Boscawen Water Precinct, Hardy Road Village District, BCEP Solid Waste District, seven Morris County township fire districts, and others. They are named in canonical state and are NOT absent: they levy, so somebody bills for them. The route not yet walked is the funder/auditor: NH DRA publishes municipal and village-district tax rate tables, NJ DCA Division of Local Government Services publishes fire-district budgets, and azauditor.gov publishes special-district reports.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -774,7 +780,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**20 open · 81 resolved.**
+**21 open · 81 resolved.**
 
 ### P1
 
@@ -811,6 +817,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH171** — Run 32840268606, 2026-08-25 11:03 UTC. push-main.mjs retried five times and every attempt came back 'remote: fatal error in commit_refs' with '! [remote rejected] HEAD -> main (failure)'. That is a GitHub-side error rather than a rejected fast-forward — a rebase-and-retry cannot fix it and correctly did not. Nothing in this repo is broken by it and nothing was lost: the tripwire commits only under docs/, which the deploy filter classifies as non-shipping. Recorded so a SECOND occurrence is recognised as a pattern rather than diagnosed from scratch, and because RULING 24 says a check that could not run is reported separately from one that failed. If it recurs, the question is whether push-main should distinguish a remote-side fatal from a rejected push and stop retrying.
 
 **NH178** — Reproduced 2026-08-25. deploy:live reads Netlify correctly and prints the full verdict — site, main tip, last deployable, live deploy id and state, live commit, and CURRENT — and then dies with 'Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src/win/async.c, line 94' and ELIFECYCLE exit code 3221226505. That is a libuv teardown crash on Windows, after the work is done. It matters because RULING 125 makes this the ONE production question a close-out asks, and any caller that gates on its exit code reads a successful read as a failure — the exact shape of the defect NJ25 is about. The verdict itself is trustworthy; the exit code is not.
+
+**NH223** — scripts/adjudicate-leads.mts implements its own rung 2/3/4 ladder and its own decodeEntities, both of which lib/sources/http.ts already exports. RULING 63: duplication is worse than a gap. The private ladder works — it sends a raw browser User-Agent, which is what passes the *.nh.gov family — but it lacks rung 3b, it does not pace itself, and it will drift from the shared one. scripts/census-gap-walk.mts was converted to politeGetText in the same session and is the model.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

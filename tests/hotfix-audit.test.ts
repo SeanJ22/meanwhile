@@ -365,9 +365,30 @@ test("FINDING 4 — the real store round-trips a recorded outcome", () => {
 
 /* ============================================== NO DESCENT MUTATION */
 
-test("the hotfix did not advance the descent", () => {
-  // The scope forbids walking anything. This compares canonical state against
-  // the fingerprint taken before the first fix — identity, not just totals.
+test("the descent only ever grows from the hotfix fingerprint — nothing is lost or rewritten", () => {
+  /*
+   * WHAT THIS GUARD IS FOR NOW, AND WHY IT CHANGED.
+   *
+   * It was written for the 2026-08-26 hotfix session, whose scope forbade
+   * walking anything, and it asserted EQUALITY against a fingerprint taken
+   * before the first fix: same edges, same candidates, same promoted count.
+   *
+   * That made it a guard with a one-session lifespan. The descent is supposed
+   * to advance, and the next session that advanced it — the descent-resume
+   * session, which promoted 667 bodies and recovered 69 stranded Arizona
+   * addresses — was failed by a guard whose real complaint was that work had
+   * been done.
+   *
+   * The durable invariant underneath it is MONOTONICITY, and that one is worth
+   * keeping forever: canonical state may grow, and it may never shrink. An
+   * edge count that falls means a frontier was rebuilt from seeds instead of
+   * resumed (RULING 181); a candidate count that falls means leads were
+   * deleted rather than classified (RULING 88); a promoted count that falls
+   * means a body left the registry without anyone saying so.
+   *
+   * So equality becomes `>=`, the fingerprint stays exactly as it was, and the
+   * guard now catches the thing that would actually be a defect.
+   */
   const fp = join(ROOT, "docs", "governance", "hotfix-fingerprint.json");
   if (!existsSync(fp)) return;
   const before = JSON.parse(readFileSync(fp, "utf8")) as {
@@ -376,12 +397,28 @@ test("the hotfix did not advance the descent", () => {
   for (const [state, b] of Object.entries(before.states)) {
     const w = loadWorkstreamFor(ROOT, state);
     assert.ok(w, `${state} must still exist`);
-    assert.equal(w.edges.length, b.edges, `${state}: edge count changed`);
-    assert.equal(w.candidates.length, b.candidates, `${state}: candidate count changed`);
+    assert.ok(
+      w.edges.length >= b.edges,
+      `${state}: edge count FELL from ${b.edges} to ${w.edges.length} — a frontier was rebuilt, not resumed`,
+    );
+    assert.ok(
+      w.candidates.length >= b.candidates,
+      `${state}: candidate count FELL from ${b.candidates} to ${w.candidates.length} — leads were deleted rather than classified`,
+    );
+    assert.ok(
+      w.candidates.filter((c) => c.state === "BODY_PROMOTED").length >= b.promoted,
+      `${state}: promoted-body count FELL — a body left the registry without anyone saying so`,
+    );
+    /* The historical obligation is the one number that may NOT quietly move in
+     * either direction. It is discharged by a recovery walk that reports what
+     * it recovered, never by a run that stops mentioning it — which is exactly
+     * what happened to the cursor clause on 2026-08-26 before `deriveCursor`
+     * was made to derive it. */
+    const owed = (w.unmaterialized ?? []).reduce((n, u) => n + (u.count ?? 0), 0);
     assert.equal(
-      w.candidates.filter((c) => c.state === "BODY_PROMOTED").length,
-      b.promoted,
-      `${state}: promoted-body count changed — the hotfix promoted something`,
+      owed,
+      b.unmaterialized,
+      `${state}: the unmaterialized obligation moved from ${b.unmaterialized} to ${owed} without a recovery walk accounting for it`,
     );
   }
 });

@@ -376,3 +376,279 @@ in two states does not exist here.
   Board, ZBA, Conservation Commission, Advisory Budget Committee, Blodgett Sewer
   User Advisory Committee, Cemetery Trustees and Joint Loss Management
   Committee. 56 names, 56 agreed.
+
+
+## 2026-08-26 — OUR OWN NAME WAS THE WALL
+
+(The descent-resume session. Append-only.)
+
+**Thirty-odd `*.nh.gov` hosts were refusing this project because of the string
+we put in our `User-Agent` to be polite.** Not the TLS fingerprint, not the
+headers, not robots — the substring `we-the-people civic meeting index`, and
+nothing else.
+
+Isolated one variable at a time against `www.nh.gov`, `www.revenue.nh.gov` and
+`www.sos.nh.gov`. Identical on all three:
+
+| client | result |
+|---|---|
+| no headers at all | **200** |
+| Chrome UA only | **200** |
+| Chrome UA + our project suffix | **403** |
+| our project UA alone | **403** |
+| Chrome UA + `From:` header | **200** |
+| Chrome UA + `From:` + `X-Purpose:` | **200** |
+| full browser header set + `From:` | **200** |
+
+**This corrects an inference recorded earlier in this repo.** `lib/sources/http.ts`
+attributed the NH refusals to the TLS/HTTP2 client fingerprint and built rung 4
+(`curl`) on that reading. It is wrong for this family: `curl` carrying the same
+suffix is refused too, so rungs 2, 3 AND 4 fail together while a header-less
+request succeeds. `states/TIERS.md` says `nh.gov` was "walked 2026-08-26 at rung
+4 — the host refuses this project below that"; measured again today, rung 4 is
+refused as well, and what actually works is a clean UA.
+
+**The fix keeps the disclosure and moves it to the field HTTP defines for it.**
+`identificationHeaders()` / `identifiedBrowserHeaders()` in `lib/sources/http.ts`
+send `From:` (the requester's email, RFC 9110) and `X-Purpose:`. That is *more*
+machine-readable for an administrator than a suffix on a UA string, not less.
+
+**It is a RUNG (3b), not a replacement.** The identified `User-Agent` is still
+sent first, because some hosts ALLOWLIST it — `states/nj/NOTES.md` records
+`morriscountyclerk.org` and `states/az/NOTES.md` records `tucsonaz.gov` doing
+exactly that. `tests/identified-ua-wall.test.ts` holds both directions so a
+later session cannot tidy the suffix away.
+
+Confirmed through the real ladder after the change: `nh.gov`, `revenue.nh.gov`,
+`sos.nh.gov`, `education.nh.gov`, `courts.nh.gov` all HTTP 200.
+
+### The one host that is the other way round
+
+`newbury.nh.gov` refuses rungs 0, 2 and 3 and answers **curl at 200**. Both
+findings are real and they point opposite ways, which is the whole reason rung 4
+stays in the ladder and the whole reason the ladder is walked rather than
+assumed. `pnpm ladder:monotonicity --hosts states/nh` is the instrument.
+
+### Three hosts that resolve to nothing at all
+
+`doe.nh.gov`, `dra.nh.gov` and `nhdes.nh.gov` fail at every rung including a
+bare fetch — a DNS-level failure, not a refusal. They are aliases this repo has
+recorded that no longer resolve; the live hosts are `education.nh.gov`,
+`revenue.nh.gov` and `des.nh.gov`. Recorded as stale aliases, not as walls.
+
+### The county annual report is a PDF and it has now been READ
+
+`states/nh/NOTES.md` recorded the Merrimack County Board of Commissioners as
+**COULD NOT ASSERT** because "its source is a PDF annual report and this reader
+reads HTML", and named ladder rung 9 as owed. Walked 2026-08-26.
+
+`merrimackcounty.net/Departments/Administration/Annual Reports/Final Annual
+Report 2025.pdf` — **HTTP 200 at rung 3, 1,367,208 bytes, 44 pages, 37 with a
+native text layer, 7 without.** No OCR needed. `lib/extract/text-layer.ts` read
+it; the first attempt returned `CANNOT_RUN` with the reason *"Please provide
+binary data as `Uint8Array`, rather than `Buffer`"*, which is the layer
+behaving exactly as designed — **an extraction failure reported as one instead
+of as an empty document.**
+
+**What it holds, by page:**
+
+| page | content |
+|---|---|
+| 3 | County Directory — commissioners and ten department heads |
+| 5 | the full 45-member delegation, its officers, and the executive committee |
+| 22–29 | County Convention minutes, with roll-call votes |
+
+**The commissioners and the six delegation officers already in
+`lib/registry/body-rosters.ts` are CONFIRMED, not newly found.** Trachy (Chair,
+Franklin), Lovlien (Vice Chair, Pembroke), Shurtleff (Clerk); Luneau /
+Seaworth / Schamberg as delegation officers and MacKay / Ebel / Moffett as
+executive-committee officers. A prior session read this same document on
+2026-08-14 and 2026-08-20; this is a third independent read agreeing with both.
+
+**The 45 members remain unwritten as a county roster, deliberately.**
+`body-rosters.ts` argues the case in place — they hold their seats as state
+representatives, they are already the subject of this product's
+state-legislature data, and a second record of one person is two records that
+can drift. That decision is INHERITED here, not revisited.
+
+### Two official enumerations of the delegation, reconciled (RULING 57)
+
+The county's annual report against the General Court roster this project
+already holds (`data/hunt/nh-gencourt-members.json`, 408 members, filtered to
+`chamber = H` and `county = Merrimack`):
+
+```
+county annual report, page 5   45 representatives
+NH General Court roster        45 representatives
+agreed on surname              42
+```
+
+**The count agrees exactly.** The six disagreements are spelling, and they are
+recorded rather than resolved:
+
+| county annual report | NH General Court | |
+|---|---|---|
+| GALLAGHER, ERIC | Gallager, Eric (dist 20) | surname |
+| GONZALEX, ERNESTO | Gonzalez, Ernesto (dist 3) | surname |
+| DEVOID, RICK | Devoid, Ricky (dist 1) | given |
+| MCGUIRE, DANIEL | McGuire, Dan (dist 14) | given |
+| PLANTE, RAY | Plante, Raymond (dist 27) | given |
+| SCHAMBERG, TOM | Schamberg, Thomas (dist 6) | given |
+
+`GONZALEX` is almost certainly the county's typo and this file does not say so
+as a fact — **the General Court is the better authority on a legislator's own
+name**, because it is the body they sit in and its record carries the district,
+the party and the member's email beside it. Both spellings are on the record so
+a later reader can see which document said what.
+
+### The route, and what it is worth elsewhere
+
+`county-annual-report-directory`, persisted in `data/method/knowledge.json`.
+One PDF carried the commissioners, ten department heads, the whole legislative
+delegation, its two sets of officers, and minutes with recorded roll-call votes.
+**A county annual report is a directory, a roster and a minutes archive in one
+file**, and every New Hampshire county publishes one because the county
+convention has to receive it. Portability is UNKNOWN: one county, one year.
+
+**Provenance for the binary, which is NOT committed (RULING 73).**
+
+
+
+```
+url     https://www.merrimackcounty.net/Departments/Administration/Annual%20Reports/Final%20Annual%20Report%202025.pdf
+bytes   1367208
+sha256  84000f3d2b86cfd37df33fcafb81473d393a649deb3868f120df33fc24cb9901
+read    2026-08-26, rung 3, 44 pages / 37 carrying a native text layer, no OCR
+```
+
+The binary is deliberately absent from the repository: RULING 73 settles
+RULING 69 against RULING 20 by committing the CONTENT and the source's hash,
+never the file. What the document proves is written above; the hash is how a
+later session knows whether it is reading the same edition.
+
+### The village districts that publish nothing are billed by somebody
+
+Fifteen active Merrimack County governments reported **no website at all** to
+the Census Bureau. They are not absent — they levy, and `states/TIERS.md`
+already said where to look: *"revenue.nh.gov's municipal and property division
+publishes the rate tables precisely because somebody has to be billed."*
+
+That host had refused this project at every rung until rung 3b landed today.
+Walked 2026-08-27:
+
+```
+https://www.revenue.nh.gov/sitemap.xml
+  -> .../municipal-and-property-reports/municipal-and-village
+     -> 2024 Municipal and Village District Tax Rates   .xlsx   87,525 B
+        2024 Village District Tax Rates                 .pdf
+```
+
+**The division's landing page is JavaScript-driven** — 243,735 bytes carrying
+two usable anchors — so the page itself does not lead anywhere. `sitemap.xml`
+does, and it named 26 URLs mentioning rates, villages or precincts. That is the
+route: when a CMS renders its index in the browser, the sitemap is the index.
+
+The 2024 workbook has two sheets — **2024 Municipal Tax Rates** (265 rows) and
+**2024 Village Tax Rates** (180 rows). The village sheet is a town-header row
+followed by that town's districts, each named in its own column:
+
+```
+[ Andover  | 45628 ]
+[ Andover Fire Dist #1 | 0.38 ]
+[ Andover Village      | 0    ]
+```
+
+It names **10 of the 15** Merrimack governments the Census left blank:
+
+| Census says no website | DRA 2024 village sheet | rate |
+|---|---|---|
+| WARNER VILLAGE WATER DISTRICT | Warner Village Water | 2.97 |
+| EPSOM VILLAGE DISTRICT | Epsom Village | 0 |
+| PENACOOK BOSCAWEN WATER PRECINCT | Penacook-Boscawen Water | 0 |
+| HARDY ROAD VILLAGE DISTRICT | Hardy Road Village | 1.88 |
+| ANDOVER VILLAGE DISTRICT | Andover Village | 0 |
+| ANDOVER FIRE DISTRICT | Andover Fire Dist #1 | 0.38 |
+| HOOKSETT VILLAGE WATER PRECINCT | Hooksett Village Water | 0 |
+| HOPKINTON VILLAGE PRECINCT | Hopkinton Village | 0.24 |
+| HIGHLANDS VILLAGE DISTRICT | Highlands | 0 |
+| NORTHFIELD SEWER DISTRICT | Northfield Sewer | 0 |
+
+**A second correction.** The first version of this paragraph said the table
+names *Central Hooksett Water*, "one the Census clip does not carry at all".
+It does carry it — as a `SPECIAL_DISTRICT` **with a reported website**, which
+is precisely why it was not among the fifteen. Checking before writing would
+have cost one grep.
+
+What is true about it is worse, and is the finding below.
+
+The five that are absent: **East Andover Fire Precinct**, **BCEP Solid Waste
+District**, and the three school districts (Allenstown, Chichester, Henniker).
+That is a finding about the TABLE rather than about them — it lists districts
+that set a village tax rate, so a solid-waste district assessed through its
+member towns does not appear, and school districts are apportioned in a
+different DRA publication (*Regional and Cooperative School District
+Apportionments*). Another route is owed for those five.
+
+**A CORRECTION, RECORDED RATHER THAN OVERWRITTEN.** The first version of this
+section said *8 of 15* and printed a different list. That number came from
+matching each Census name's FIRST WORD against every cell in the workbook, which
+both over- and under-counted: it missed Warner, Highlands and Northfield Sewer,
+and it wrongly claimed East Andover Fire Precinct. Matching every distinctive
+word against the whole workbook then gave 13, which was wrong the other way —
+the municipal sheet lists all 265 towns, so "Chichester" matched the TOWN and
+said nothing about a district. Only the village sheet's own district column
+answers the question, and it says 10.
+
+**A rate of 0 is not an absence either.** Andover Village, Epsom Village,
+Hooksett Village Water and Hopkinton Village all appear with 0, which means the
+district exists, filed, and set no rate this year. A table that omitted them
+would be the absence; a zero beside a name is the opposite.
+
+### RULING 121's spanning pair, confirmed by the state's own arithmetic
+
+**Lake Todd Village appears TWICE in the 2024 table, at 0.24 and at 0.38**,
+each row flagged `*Apportioned`. `states/TIERS.md` records Lake Todd Village
+District as governing territory in **Bradford AND Newbury**; the two rates are
+its apportionment across the two towns, published by the state that computes
+them. Eastman Village appears three times and Granite Lake Village twice, for
+the same reason.
+
+That is a spanning special district evidenced by an independent official source
+rather than by this project's own boundary work — and 03255 is one of the two
+towns.
+
+*Lake Todd is itself in the Census clip, with a reported website. See below for
+what that address does.*
+
+### The Census web_address column is a 2022 snapshot and nothing re-validates it
+
+Six Merrimack special districts reported a website to the Census Bureau. Three
+of those addresses no longer reach the government that reported them, and so
+does the address given for **the pilot ZIP's own town**:
+
+| reported to the Census | what answers today |
+|---|---|
+| `newburyh.org` — **TOWN OF NEWBURY** | does not resolve at all |
+| `laketoddvillagedistrict.us` | HTTP 404 |
+| `centralhooksettwater.com` | "Default Parallels Plesk Panel Page" |
+
+New Jersey has the same shape: `mtoliveboe.org`, the Mount Olive Township
+School District's reported address, answers HTTP 200 and serves a Japanese
+personal-finance blog, and `WWW.MTLAKES.ORG` no longer carries Mountain Lakes
+Borough School District content.
+
+**Measured over the whole clip:** of the 90 governments that reported a usable
+address, 57 opened and named themselves, 25 were unreachable at every rung, and
+8 answered with a page about something else. **A third of the column did not
+lead to the government that filed it.**
+
+None of that makes any of these governments absent. Newbury's real site is
+`newbury.nh.gov`, which this project has been reading all along, and the DRA
+rate table proves Lake Todd and Central Hooksett Water both still levy. It is
+the ADDRESS that has rotted, in a column dated 2022 that no process re-checks.
+
+**The control is the only thing standing between that column and the
+registry.** `pnpm bodies:census-gap` promotes a body only when the page names
+the entity, which is why none of these five was written in — and why a walk
+that had trusted an HTTP 200 would have pointed readers at a stranger's blog
+and a parked server.

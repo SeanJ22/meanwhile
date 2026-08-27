@@ -59,6 +59,7 @@ import {
   resumeFrom,
   saveWorkstream,
 } from "../lib/workstate/frontier.ts";
+import { recordCandidate } from "../lib/workstate/candidates.ts";
 import type { Workstream } from "../lib/workstate/workstream.ts";
 import { loadMethodStore } from "../lib/workstate/load.ts";
 import {
@@ -391,6 +392,31 @@ async function main(): Promise<void> {
           if (isKnown) work.candidatesKnown += 1;
           else work.candidatesNew += 1;
           bodiesHere += 1;
+          /*
+           * PERSISTED AS A LEAD, IN THE PASS THAT NAMED IT.
+           *
+           * This line did not exist until 2026-08-26 (the descent-resume
+           * session), and its absence is why the coverage numerator could not
+           * move. `work.discovered` is an in-memory array that reaches
+           * `descent-candidates.md` and stops there; every candidate in
+           * canonical state got in by `workstream-migrate.mts` parsing that
+           * markdown ONCE. A walk could run forever and add no lead.
+           *
+           * That is RULING 181's defect wearing a different coat — the edge
+           * frontier was fixed by persisting on discovery and the candidate
+           * pool was not. It is fixed the same way and for the same reason.
+           *
+           * It is a LEAD. It is `ENTITY_CANDIDATE` and it counts toward
+           * nothing until something opens it (RULING 183).
+           */
+          recordCandidate(workstream, {
+            state,
+            tier,
+            url: l.url,
+            text: l.text,
+            fromEdge: edgeId(state, tier, link.url, link.text),
+            discoveredOn: stamp,
+          });
           /* Vocabulary is the state's OWN word for this tier, taken from the
            * state's own page rather than imposed (RULING 57, brief Item 2). */
           for (const w of ["township", "borough", "village", "plantation", "precinct", "parish", "town", "city", "district"]) {

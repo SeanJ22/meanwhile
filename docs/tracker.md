@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **307 open**, 437 resolved.
+- **306 open**, 438 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -398,7 +398,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**25 open · 0 resolved.**
+**24 open · 1 resolved.**
 
 ### P1
 
@@ -423,8 +423,6 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH228** — Five more governments might cover ZIP 85641. We have found each of them and we have not yet checked where their territory starts and stops, so we cannot say either way.
 
 **NH230** — We know two measures will be on the 85641 ballot this November, and we have the school district's own legal notice for one of them. We have not yet read the county's official ballot, which is the document that actually decides what a voter sees.
-
-**NH233** — The Rocking K South Community Facilities District is a verified government of ZIP 85641 - a separate political taxing subdivision with its own District Board and its own resolution series - and it renders to nobody, because the registry has no division as small as its territory.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 

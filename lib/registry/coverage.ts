@@ -8,6 +8,7 @@ import {
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
+import type { BodyTerritoryFile } from "./body-territory.ts";
 import type {
   Body,
   BodyClass,
@@ -308,6 +309,8 @@ export function summarizeCoverage(
    * always did — every caller that does not pass it is unaffected.
    */
   resolvedDivisions?: Division[],
+  /** Committed body-territory polygons for governments with no division (NH233). */
+  territory?: BodyTerritoryFile | null,
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -315,6 +318,7 @@ export function summarizeCoverage(
     divisionsById,
     allBodies,
     resolvedDivisions,
+    territory,
   );
 
   const covered: CoveredBody[] = bodies.map((body) => {

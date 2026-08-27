@@ -4,7 +4,7 @@
     "P-003: the geometry lib/registry/server.ts may read. Never hand-edited.",
     "Every .geojson in public/geo appears on exactly one of the two lists."
   ],
-  "generatedAt": "2026-08-24",
+  "generatedAt": "2026-08-27",
   "coveredStateFips": [
     "04",
     "33",
@@ -169,6 +169,10 @@
     }
   ],
   "excluded": [
+    {
+      "file": "body-territories.geojson",
+      "reason": "BODY territories, not DIVISION boundaries (NH233) — recorded plats belonging to governments the Census enumerates no division for, such as the Rocking K South Community Facilities District. It is loaded and point-tested by lib/registry/body-territory.ts on the same sweep, and it is excluded HERE because every feature in this manifest is keyed by ocdId and these features deliberately have none. Including it would make the division resolver answer with a body id, which is the join confusion this session spent its day removing."
+    },
     {
       "file": "cd119.geojson",
       "reason": "superseded by per-state derivatives for every covered state (cd119-04.geojson, cd119-33.geojson, cd119-34.geojson) — the same features, clipped, so loading both tests every polygon twice and the national file's other states not at all"

@@ -218,6 +218,21 @@ export const GENERATED: GeneratedArtifact[] = [
      * The ownership half lives in `tests/registry-ownership.test.ts`, which is
      * the guard that fails if any path other than the generator writes it.
      */
+    /*
+     * **NH233, registered the same day it was created.** The whole lesson of
+     * NH232 one row above is that a generated artifact nobody registered is an
+     * artifact three scripts can write; this one is registered before anything
+     * else can reach it.
+     */
+    path: "public/geo/body-territories.geojson",
+    command: "corepack pnpm cfd:territory --geojson public/geo/body-territories.geojson",
+    pure: false,
+    impurity:
+      "reads Pima County's ArcGIS Subdivisions layer for the recorded plat polygons and the Census " +
+      "Bureau's TIGERweb ZCTA service to point-test them. Both are live services, and the county " +
+      "re-recording a plat is a real change this artifact should pick up.",
+  },
+  {
     path: "lib/registry/registry.json",
     command: "corepack pnpm registry:build",
     pure: false,

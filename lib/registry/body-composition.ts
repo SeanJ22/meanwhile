@@ -210,6 +210,51 @@ export const BODY_COMPOSITIONS: readonly BodyComposition[] = [
   },
 
   /*
+   * ---- A community facilities district, aliased BY ITS OWN FORMATION DOC ---
+   *
+   * NH233's other half. `pnpm cfd:territory` reads each district's formation
+   * resolution to recover its LAND, and the same resolution states its BOARD —
+   * so the document that proves where it governs also proves who constitutes
+   * it, and reading one without the other would have left this body with a
+   * territory and an unknown roster.
+   *
+   * These two are the third distinct authority class for the same pattern, and
+   * the spread is the point: a county's special districts are aliased by
+   * STATUTE (A.R.S. Title 48 above), a city's housing authority by a COUNCIL
+   * ACTION recorded on an agenda, and a CFD by the RESOLUTION that created it.
+   * No single source would have found all three.
+   */
+  {
+    bodyId: "curated:az/pima-rocking-k-south-cfd#governing",
+    kind: "EXPLICIT_LEGAL_ALIAS",
+    aliasOfBodyId: PIMA_BOARD,
+    authority: {
+      quote:
+        "the members of the Pima County Board of Supervisors, ex officio (Resolution 2017-2 s.4). " +
+        "The County Administrator serves as District Administrator, the County Treasurer as " +
+        "District Treasurer, and the Clerk of the Board as District Clerk.",
+      sourceUrl: "https://content.civicplus.com/api/assets/8e51ea97-7725-4a0e-ab70-630811e7c22f",
+      sourceOrg:
+        "Pima County Resolution No. 2017-2, recorded 2017-02-14 as sequence 20170450755",
+      collectedAt: "2026-08-27",
+    },
+  },
+  {
+    bodyId: "wtp-body/country:us/state:az/wildflower_community_facilities_district#governing",
+    kind: "EXPLICIT_LEGAL_ALIAS",
+    aliasOfBodyId: PIMA_BOARD,
+    authority: {
+      quote:
+        "the members of the Pima County Board of Supervisors, sitting as the Board of Directors of " +
+        "the District (Resolution 2021-78).",
+      sourceUrl:
+        "https://content.civicplus.com/api/assets/az-pimacounty/93c68105-6282-4ba7-9103-568593e5a978",
+      sourceOrg: "Pima County Resolution No. 2021-78",
+      collectedAt: "2026-08-27",
+    },
+  },
+
+  /*
    * ---- Tucson's Public Housing Authority: alias PLUS a seat ---------------
    *
    * The author's visual review flagged this card because it showed the Mayor

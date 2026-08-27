@@ -11,6 +11,7 @@ import {
 } from "../officials/lookup.ts";
 import { ROSTER_FILES } from "../coverage/artifacts.ts";
 import { officeIdentity } from "../officials/office-identity.ts";
+import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { collapsePhotoIndexByPerson } from "../photos/person.ts";
@@ -36,6 +37,8 @@ import type { Division, Registry } from "./types.ts";
 
 interface Loaded {
   features: GeoFeature[];
+  /** Body territories for governments with no Census division (NH233). */
+  territory: BodyTerritoryFile | null;
   divisionsById: Map<string, Division>;
   registry: Registry;
   officials: OfficeholderIndex;
@@ -152,8 +155,40 @@ async function load(): Promise<Loaded> {
     // No manifest is a fine state: initials render instead.
   }
 
+  /*
+   * **NH233 — the territory file, loaded beside the boundary files.**
+   *
+   * A missing or unreadable file degrades to null, which means those bodies
+   * reach no reader — the state they were already in. It does NOT degrade to
+   * an empty answer for the divisions, and it is reported rather than
+   * swallowed: a territory file that silently stopped loading would un-govern
+   * a real district with no symptom, which is the NH232 shape.
+   */
+  let territory: BodyTerritoryFile | null = null;
+  try {
+    /*
+     * LITERAL PATH SEGMENTS, not the imported constant.
+     *
+     * Next traces this route to decide what ships. Given `join(root, SOME_CONST)`
+     * it cannot resolve the path statically, and the first version of this line
+     * blew the app trace from 215 files to 4,073 — it swallowed screenshots/,
+     * docs/feedback/ and all 1,005 official portraits. `pnpm build`'s own
+     * cardinality budget caught it, which is exactly what that budget is for.
+     *
+     * BODY_TERRITORY_FILE stays exported for the generator and the guards, so
+     * there is still one spelling of the path; this is the one place that
+     * spells it in segments, because the tracer has to read it.
+     */
+    territory = JSON.parse(
+      await readFile(join(root, "public", "geo", "body-territories.geojson"), "utf8"),
+    ) as BodyTerritoryFile;
+  } catch (error) {
+    console.error(`body territories (${BODY_TERRITORY_FILE}) could not be read`, error);
+  }
+
   return {
     features,
+    territory,
     divisionsById: new Map(registry.divisions.map((d) => [d.ocdId, d])),
     registry,
     officials: indexByDivision(sets, photos),
@@ -384,7 +419,7 @@ export async function coverageAt(
    */
   resolvedDivisions?: Division[],
 ): Promise<CoverageSummary> {
-  const { features, divisionsById, registry, officials } = await loaded();
+  const { features, divisionsById, registry, officials, territory } = await loaded();
   return summarizeCoverage(
     [lng, lat],
     features,
@@ -393,5 +428,6 @@ export async function coverageAt(
     meetingCount,
     officials,
     resolvedDivisions,
+    territory,
   );
 }

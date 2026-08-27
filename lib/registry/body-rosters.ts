@@ -521,10 +521,29 @@ export const BODY_ROSTERS: BodyRoster[] = [
         websiteUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
       },
       {
+        /*
+         * **ED BUSTER IS EDWARD BUSTER, AND HE HAS ALREADY BEEN REAPPOINTED**
+         * (the 85641 detective session, 2026-08-27).
+         *
+         * Vail is absent from the Pima County School Superintendent's 2026
+         * candidate-filing page, which reads as a district with no race. It is
+         * not: two seats were up, exactly two people filed, and on 2026-08-11
+         * the Board of Supervisors CANCELLED the election as uncontested and
+         * appointed them — Legistar matter 21690, File ID 20624, requested by
+         * the School Superintendent and recorded Approved.
+         *
+         * The other appointee is **Andrea Black**, who is deliberately NOT a
+         * member row here. She has been appointed to a term that begins after
+         * the November 3 election; adding her now would say she holds an office
+         * she does not yet hold. The reader gets the fact where it belongs — as
+         * a cited ballot absence on `/ballot`, in the authority's own terms,
+         * saying there is no Vail school board race and naming both appointees.
+         */
         id: "roster:vail#4",
         name: "Ed Buster",
         officeTitle: "Governing Board Member",
-        termNote: null,
+        termNote:
+          "Reappointed 2026-08-11 without an election: two seats were up, two candidates filed, and the Pima County Board of Supervisors cancelled the race as uncontested and appointed them.",
         email: null,
         phone: null,
         websiteUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",

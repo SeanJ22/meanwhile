@@ -1,6 +1,6 @@
 # Intake tripwire report
 
-Generated 2026-08-26T17:56:01.481Z by `scripts/intake-tripwire.mts` (T08 1f).
+Generated 2026-08-27T20:43:51.974Z by `scripts/intake-tripwire.mts` (T08 1f).
 Everything in this file is a date, a count, or a threshold — never an
 identifier. Flags are flagged, never auto-acted-on: the author decides.
 
@@ -10,7 +10,7 @@ Thresholds: a day flags on volume at max(30, 4× the trailing
 
 ## Flags
 
-- **FLAGGED 2026-08-26 — search_log VOLUME_SPIKE**: 164 rows against a trailing median of 32 over 7 prior days (flag threshold 128)
+- **FLAGGED 2026-08-26 — search_log VOLUME_SPIKE**: 193 rows against a trailing median of 32 over 7 prior days (flag threshold 128)
 
 ## Reactions store, trailing 30 days
 
@@ -28,7 +28,8 @@ Thresholds: a day flags on volume at max(30, 4× the trailing
 
 | Day (UTC) | Rows |
 |---|---|
-| 2026-08-26 | 164 |
+| 2026-08-27 | 32 |
+| 2026-08-26 | 193 |
 | 2026-08-25 | 57 |
 | 2026-08-24 | 32 |
 | 2026-08-23 | 65 |

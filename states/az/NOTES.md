@@ -228,3 +228,204 @@ The five, none of them connected: **`gilacountyaz.gov` (Revize)**,
 carries it as the only client, with two venues and their coordinates. The
 brief's Item 4 premise that *nobody asked the county whether it had a tenant* is
 wrong against the repo, and is recorded as wrong rather than worked around.
+
+## 2026-08-27 — WHAT ARIZONA COMPELS A GOVERNMENT TO FILE
+
+(The 85641 detective session. Append-only. The ZIP-specific findings are in
+`states/az/85641.md`; these are the ones true of the state.)
+
+### The state education agency is a MEETING source for every district
+
+**`budgetsystem.azed.gov/reports/submissionstatusview`** is the Arizona
+Department of Education's Finance Systems file-submission index, and it is the
+most useful thing found in Arizona this session. A Kendo grid over a plain GET
+handler — `?handler=submissionstatusreportdata`, with an antiforgery token
+minted from the page — returning **every document every Arizona LEA has filed
+with the state**, by fiscal year: 3,880 district filings for FY2026, 2,356 for
+FY2027. Each row carries a `FileSubmissionId` and downloads at
+`?handler=filedownload&submissionReferenceId=<id>`.
+
+Eighteen document templates for FY2026. The three that matter to a hunt:
+
+- **School District Meeting Notification** — the statutory notice required by
+  **A.R.S. § 15-905(C)**, carrying the meeting DATE, TIME, VENUE, ROOM, STREET
+  ADDRESS, city, state, zip, and a NAMED agenda contact with phone and email.
+- **District Annual Financial Report**
+- **District Expenditure Budget** — which also carries the district's primary
+  and secondary TAX RATES and its M&O budget limit.
+
+**This is how a district with no website still has a machine-readable
+meeting.** Empire Elementary No. 37 operates no schools and employs no staff;
+its board meeting, venue and agenda contact came out of here.
+
+Two parsing facts, both learned the hard way. The notice workbook is a fixed
+state template and its **column A holds numeric placeholders, not captions** —
+a label-based read of it returns nothing and must not be reported as a district
+with no meeting; read it by cell reference (C5 date, I5 time, C8 street, C9
+venue, F9 room, C10/F10/I10 city/state/zip, C13/I13/C14 agenda contact). And a
+bare integer in a value column is the template showing through, never a venue
+or a phone number. Times arrive both as text and as Excel day-fractions.
+
+The host serves a Cloudflare challenge to node's `fetch` and answers **curl**.
+Every request goes out at rung 4.
+
+### The transportation-only school district — a class, not an oddity
+
+A district that **operates no schools and employs no staff**, existing to pay
+tuition and transport its resident children to a neighbouring district. Pima
+County has two: **Empire Elementary No. 37** (to Sonoita Elementary, Santa Cruz
+County) and **Redington Elementary No. 44** (to Mammoth-San Manuel Unified).
+
+They will never have a website, so a blank website column for one of these is a
+**correct measurement of the government**, not a gap in the enumeration. The
+county school superintendent's own district directory is what names the class.
+
+### Unorganized territory is a status with an authority, not a gap
+
+**A.R.S. § 15-825.** Territory outside the boundaries of any local education
+agency, where school district property taxes are **not levied**. A child living
+there seeks open enrollment or a **certificate of educational convenience**
+from the **county school superintendent**, who is therefore their school
+authority. Pima routes applications through `cec.pima.gov` and pays mileage
+reimbursement.
+
+Any Arizona ZIP showing "School District Not Defined" in the county GIS should
+be read against this before it is called a coverage hole.
+
+### The county school superintendent is a filing officer, and publishes like one
+
+`www.schools.pima.gov` (ExpressionEngine — a CMS not previously in this
+project's vendor taxonomy; note the bare host fails HTTPS and the `www.` host
+answers). It publishes, for the whole county:
+
+- **the numbered school-district propositions** for the cycle, which is where a
+  local override or bond gets its ballot number;
+- **who filed for every governing board seat**, with filing date and signature
+  count, and the minimum signatures each district requires;
+- the district directory, including the transportation-only annotation;
+- the unorganized-territory rules above.
+
+Arizona's fifteen counties each have one of these offices. This is a
+per-county route, not a Pima one.
+
+### AN UNCONTESTED SCHOOL BOARD ELECTION IS CANCELLED AND THE SEAT IS APPOINTED
+
+The single most reader-facing Arizona finding of the session. The **Board of
+Supervisors**, on the School Superintendent's request, cancels the uncontested
+school-district governing board positions and **appoints the people who filed**.
+Pima did it for the November 3, 2026 general on **2026-08-11** (Legistar matter
+21690, File ID 20624, APPROVED).
+
+Consequences a hunt must not miss:
+
+- **A district absent from the candidate-filing list may have an election that
+  was cancelled, not an election with no candidates.** Vail Unified was absent
+  from the filing page and its two seats were filled by appointment.
+- **The appointment record is where a new board member's name first appears** —
+  Andrea Black joined Vail's board this way and appears in no roster page.
+- **A district with nobody filing gets recorded VACANCIES**, which is a real
+  civic fact: Empire Elementary No. 37 carries three.
+
+The cancellation matter is a Board of Supervisors agenda item, so it is in
+Legistar and in this repo's own meeting snapshots. **It was sitting in
+`data/meetings-snapshot.json` and nobody had opened it** — the RULING 97 shape
+again.
+
+### THE CERTIFIED CANVASS IS NOT THE BALLOT
+
+`states/az/NOTES.md` already records that **party lives in the certified PRIMARY
+canvass**. The other half of that is now measured, and it cuts the opposite way:
+
+**The canvass contains CONTESTED races only.** The Pima canvass says so in its
+own *"Master List of All Contested Races"* — 15 races, against **34 contests
+and 101 candidates** on the county's **Official Candidate List**, which is the
+record of what was PRINTED and therefore includes unopposed seats.
+
+So: **canvass for PARTY and for the RESULT; official candidate list for the
+BALLOT UNIVERSE.** Building a ballot from the canvass drops every uncontested
+seat silently, in the direction that looks like completeness.
+
+The Pima list also settles seat counts a statewide filing does not state — it
+is what gave Corporation Commissioner its "Vote for not more than 2".
+
+### County officers are on the PRESIDENTIAL cycle
+
+Pima's 2026 ballot carries Board of Supervisors **District 5 only**, Constables
+in Precincts **2, 3 and 9 only**, and no Sheriff, Assessor, Recorder, Treasurer,
+County Attorney or School Superintendent. Read from the official candidate list,
+which prints uncontested races — so this is the schedule, not a filing drought.
+
+### Joint districts cross county lines, and so do fire districts
+
+Measured on **Pima County JTED No. 11**: its territory is about **73%** of Pima
+County's area *and* contains sampled points in **PINAL COUNTY**. A "Pima County"
+district is not a Pima County shape.
+
+With Mescal-J6 (formed in Cochise), Sonoita-Elgin (serving Santa Cruz
+communities) and Empire Elementary's students attending a Santa Cruz district,
+that is **four separate classes** in which an Arizona district named for one
+county reaches into another. Treat a county-named district's territory as an
+open question until it is measured.
+
+### A district with no boundary layer still has a boundary
+
+Arizona community facilities districts are formed under **A.R.S. §§ 48-701 to
+48-725** by a county resolution that must recite the land — by recorded plat
+book and page, or by recorder sequence number, because the tax attaches to
+parcels. The county publishes its recorded subdivision plats as GIS for
+unrelated reasons. Join the two: `pnpm cfd:territory`.
+
+The formation resolution also answers **who governs it**: for both Pima CFDs,
+the members of the Board of Supervisors ex officio, with the County
+Administrator, County Treasurer and Clerk of the Board as District
+Administrator, Treasurer and Clerk. And **A.R.S. § 48-718 requires a copy of
+every CFD formation resolution and general plan to be filed with the ARIZONA
+DEPARTMENT OF REAL ESTATE** — a statewide CFD enumerator this project has never
+walked.
+
+### The districts the county board IS
+
+Arizona counties carry several separate political taxing subdivisions whose
+board is the Board of Supervisors sitting as them, each with its own budget and
+its own resolution series. In Pima: the Regional Flood Control District
+(A.R.S. § 48-3603), the Free Library District (§ 48-3901(C), levying countywide
+under § 48-3903), the **Stadium District** (§ 48-4202 — countywide, a class this
+project did not know existed), the two CFDs, and the **Ajo Domestic Water
+Improvement District**, which appears on the agenda under the literal heading
+*"BOARD OF SUPERVISORS SITTING AS OTHER BOARDS"*.
+
+**They have no separate agenda calendar and that is not a gap.** The Legistar
+Web API at `webapi.legistar.com/v1/pima/bodies` returns four bodies — the Board
+and its addenda. The districts' business is in `/matters`, searchable by
+`substringof('<district>', MatterTitle)`, carrying each district's own budget
+hearings and its own resolution numbering (2026-**RK1** for Rocking K South,
+WCFD1 for Wildflower).
+
+### CivicPlus ships its document tree into the page
+
+`content.civicplus.com/api/assets/<tenant>/<uuid>` — Pima's tenant is
+`az-pimacounty`. A CivicPlus page hydrates a catalogue of its documents into the
+served HTML with ids, filenames, slugs and a `parentId`. **Read the hydration
+state, not the anchors**: the Rocking K CFD page displayed thirteen document
+names and carried only five as anchors in the markup.
+
+### Permission and transport, dated 2026-08-27
+
+- **`vailschooldistrict.community.highbond.com` — `Disallow: /`.** Highbond is
+  REFUSED, not merely unbuilt. Never re-walked on a clock.
+- **`vailschools.novusagenda.com`** — robots.txt 404, `NO_ROBOTS`, walkable.
+- **`apps.arizona.vote`** — Cloudflare challenge at rungs 2, 3, 4, 5 AND the
+  live browser. `CANNOT_TELL`, not walked (RULING 182). It holds the official
+  general-election Candidate Listing; the same facts were obtained from
+  `apps.azsos.gov` and from the county's own publication.
+- **`www.azed.gov` challenges NON-DETERMINISTICALLY** — roughly one request in
+  three. A single-pass `robots:sweep` returns `CANNOT_TELL` and would refuse
+  the state education agency; a retry at rung 4 reads a standard Drupal
+  robots.txt allowing every content path. **Retry before believing a
+  CANNOT_TELL.**
+- **`apps.azsos.gov`** — ALLOWED, and it hosts every county's certified canvass
+  PDF. Pima's is 4,445 pages with a text layer on 4,435: the full
+  precinct-level Statement of Votes Cast.
+- **`webapi.legistar.com`, `gisdata.pima.gov`** — robots.txt 404, `NO_ROBOTS`.
+- **`schools.pima.gov`** fails HTTPS at the bare host; **`www.schools.pima.gov`**
+  answers. A transport quirk, not a refusal — the Mescal-J6 shape again.

@@ -947,12 +947,20 @@ function specialDistrictRows(): Body[] {
 function pima85641DistrictRows(): Body[] {
   const collected = "2026-08-27";
   const PIMA_LEGISTAR = "https://pima.legistar.com/Calendar.aspx";
+  const PIMA_COUNTY = "ocd-division/country:us/state:az/county:pima" as Body["ocdId"];
   const rows: Array<{
     slug: string;
     name: string;
     homepage: string;
     authority: string;
     territory: string;
+    /**
+     * The division a reader is matched against (`resolveAt` joins on `ocdId`
+     * and nothing else). `null` is not a shrug — it says this body's territory
+     * has no division in this registry, and the row below says which.
+     */
+    ocdId: Body["ocdId"];
+    wiring: string;
   }> = [
     {
       slug: "pima-rocking-k-south-cfd",
@@ -962,6 +970,9 @@ function pima85641DistrictRows(): Body[] {
         "A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio.",
       territory:
         "Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641.",
+      ocdId: null,
+      wiring:
+        "NOT MATCHED AT A POINT, and that is a stated gap rather than a silent one. This district is 2,047 acres of platted subdivision inside unincorporated Pima County, and the registry holds no division that small. Attaching it to county:pima would show a district that taxes 2,047 acres to every reader in a 9,200-square-mile county — a false claim about their government, in the direction that looks like coverage. What closes it is a division carrying the plat geometry the cfd:territory instrument already resolves.",
     },
     {
       slug: "pima-regional-flood-control-district",
@@ -971,6 +982,9 @@ function pima85641DistrictRows(): Body[] {
         "A.R.S. 48-3603; mandated in every Arizona county by 1978 legislation, with the county Board of Supervisors designated as the governing body.",
       territory:
         "aligned with the county boundary; levies a secondary property tax on all parcels within its jurisdiction. Tucson, Marana, Oro Valley and Sahuarita administer their own floodplain regulation under the 1984 amendments, which is a regulatory opt-out rather than a withdrawal from the district.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima is not an approximation. The district's own formation page says the 1978 legislation mandated one in every Arizona county and that the districts were set up to be aligned with county boundaries.",
     },
     {
       slug: "pima-county-free-library-district",
@@ -980,6 +994,9 @@ function pima85641DistrictRows(): Body[] {
         "A.R.S. 48-3901(C): the board of supervisors shall be the board of directors of the county free library district.",
       territory:
         "A.R.S. 48-3903 levies the district tax upon all property in the county and upon all property within incorporated cities and towns in the county.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima IS the statutory boundary — A.R.S. 48-3903 levies the tax upon all property in the county.",
     },
     {
       slug: "pima-county-stadium-district",
@@ -989,12 +1006,15 @@ function pima85641DistrictRows(): Body[] {
         "A.R.S. 48-4202(A) and (D): a countywide district whose board of directors, in a county under 1,500,000 people, is the county board of supervisors. 48-4202(K) makes it a tax levying public improvement district and a political taxing subdivision of the state.",
       territory:
         "countywide, including both the incorporated and unincorporated areas of the county (A.R.S. 48-4202(A)).",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima IS the statutory boundary — A.R.S. 48-4202(A) authorises a COUNTYWIDE district including both the incorporated and unincorporated areas of the county.",
     },
   ];
 
   return rows.map((row) => ({
     id: `curated:az/${row.slug}#governing`,
-    ocdId: null,
+    ocdId: row.ocdId,
     name: row.name,
     bodyClass: "GOVERNING" as const,
     bodyOrigin: "CURATED" as const,
@@ -1012,7 +1032,7 @@ function pima85641DistrictRows(): Body[] {
     sourceDataset: "GOV_DIRECTORY" as const,
     provenance: {
       sourceUrl: row.homepage,
-      sourceOrg: `Pima County; ${row.authority} Territory: ${row.territory}`,
+      sourceOrg: `Pima County; ${row.authority} Territory: ${row.territory} Wiring: ${row.wiring}`,
       collectedAt: collected,
       verifiedAt: collected,
     },

@@ -6,8 +6,8 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1253,
-    "verified": 726,
+    "swept": 1256,
+    "verified": 729,
     "mismatched": 0,
     "adjudicated": 1,
     "noSource": 526
@@ -12547,6 +12547,36 @@
       "rosterForm": null,
       "verdict": "NO-SOURCE",
       "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
+    },
+    {
+      "bodyId": "curated:az/pima-regional-flood-control-district#governing",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "curated:az/pima-county-free-library-district#governing",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "curated:az/pima-county-stadium-district#governing",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     }
   ]
 }

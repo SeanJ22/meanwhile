@@ -3,8 +3,8 @@
   "generatedBy": "scripts/stamp-body-forms.mts",
   "note": "The FORM of each body's government, stamped from committed data alone — TIGER's legal type code for the municipal layer, the Census independent/dependent classification for school districts, the division type for counties. It is NOT a form-specific definition: it names which form a body is, so the charter or statute read that writes those definitions is done once per distinct form rather than once per body. Every unstampable body is named with the input that was missing.",
   "counts": {
-    "bodiesWithADivision": 1253,
-    "alreadyCarryingAFormDefinition": 857,
+    "bodiesWithADivision": 1256,
+    "alreadyCarryingAFormDefinition": 860,
     "owedAFormDefinition": 396,
     "stamped": 393,
     "unstampable": 3,
@@ -10069,6 +10069,30 @@
       "formKey": "nh:school_district_dependent",
       "basis": "census-school-dependency",
       "basisDetail": "schoolDependency=DEPENDENT"
+    },
+    {
+      "bodyId": "curated:az/pima-regional-flood-control-district#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "curated:az/pima-county-free-library-district#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "curated:az/pima-county-stadium-district#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
     }
   ]
 }

@@ -46,6 +46,31 @@ const TIGERWEB =
 const GEOGRAPHIES =
   "https://geocoding.geo.census.gov/geocoder/geographies/coordinates";
 
+/**
+ * Just enough shape to read these two services safely.
+ *
+ * Deliberately NOT `any`: an optional-chained read through `any`
+ * silently yields `undefined` for a field the service renamed, and this
+ * file's whole job is to tell a real answer from a missing one.
+ */
+type JsonValue = unknown;
+
+interface TigerFeature {
+  geometry?: { rings?: Array<Array<[number, number]>> };
+}
+interface TigerResponse {
+  features?: TigerFeature[];
+}
+
+interface GeographyRow {
+  NAME?: string;
+  BASENAME?: string;
+  GEOID?: string;
+}
+interface GeographiesResponse {
+  result?: { geographies?: Record<string, GeographyRow[]> };
+}
+
 interface Ring {
   readonly ring: ReadonlyArray<readonly [number, number]>;
 }
@@ -55,7 +80,7 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-async function getJson(url: string, label: string): Promise<any> {
+async function getJson(url: string, label: string): Promise<JsonValue> {
   const res = await fetch(url, { headers: { "user-agent": UA, accept: "application/json" } });
   if (!res.ok) throw new Error(`${label}: HTTP ${res.status} for ${url}`);
   const text = await res.text();
@@ -74,7 +99,7 @@ async function zctaRings(zip: string): Promise<Ring[]> {
   const url =
     `${TIGERWEB}?where=${encodeURIComponent(`ZCTA5='${zip}'`)}` +
     "&outFields=ZCTA5,AREALAND&returnGeometry=true&outSR=4326&f=json";
-  const j = await getJson(url, "TIGERweb ZCTA");
+  const j = (await getJson(url, "TIGERweb ZCTA")) as TigerResponse;
   const features = j.features ?? [];
   if (features.length === 0) throw new Error(`TIGERweb returned no ZCTA polygon for ${zip}`);
   const rings: Ring[] = [];
@@ -115,8 +140,8 @@ async function geographiesAt(lon: number, lat: number): Promise<Record<string, s
   const url =
     `${GEOGRAPHIES}?x=${lon}&y=${lat}&benchmark=Public_AR_Current` +
     "&vintage=Current_Current&layers=all&format=json";
-  const j = await getJson(url, "census geographies");
-  const geos: Record<string, any[]> = j.result?.geographies ?? {};
+  const j = (await getJson(url, "census geographies")) as GeographiesResponse;
+  const geos: Record<string, GeographyRow[]> = j.result?.geographies ?? {};
   const out: Record<string, string> = {};
   for (const [layer, rows] of Object.entries(geos)) {
     if (!Array.isArray(rows) || rows.length === 0) continue;

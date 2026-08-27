@@ -16,6 +16,7 @@
 import { readFileSync } from "node:fs";
 
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -56,6 +57,16 @@ if (result.outcome !== "EXTRACTED") {
 }
 
 const pages = result.items ?? [];
+
+// RULING 159 — pages WITH TEXT against pages IN THE DOCUMENT. This is the
+// whole point of reading a PDF through the toolkit: 2 of 2 pages is a read
+// document and 0 of 40 is a scan, and a bare page count cannot tell them apart.
+floored(
+  "PDF pages carrying text",
+  path,
+  result.counts?.pages ?? pages.length,
+  result.counts?.pagesWithText ?? pages.length,
+);
 const range = arg("pages");
 let selected = pages;
 if (range) {

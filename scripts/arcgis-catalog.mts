@@ -22,6 +22,8 @@
 
 import { writeFileSync } from "node:fs";
 
+import { floored } from "../lib/ops/denominator-floor.ts";
+
 const UA = "we-the-people/1.0 (civic data; +mailto:seanj22@gmail.com)";
 
 function arg(name: string): string | undefined {
@@ -29,12 +31,20 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-async function j(url: string): Promise<any> {
+interface CatalogResponse {
+  error?: { code: number; message: string };
+  folders?: string[];
+  services?: Array<{ name: string; type: string }>;
+  layers?: Array<{ id: number; name: string; geometryType?: string; parentLayerId?: number }>;
+  tables?: Array<{ id: number; name: string }>;
+}
+
+async function j(url: string): Promise<CatalogResponse> {
   const res = await fetch(`${url}${url.includes("?") ? "&" : "?"}f=json`, {
     headers: { "user-agent": UA, accept: "application/json" },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = await res.json();
+  const body = (await res.json()) as CatalogResponse;
   if (body.error) throw new Error(`service error ${body.error.code}: ${body.error.message}`);
   return body;
 }
@@ -106,6 +116,13 @@ for (const s of services) {
     failed.push(`${s.name}: ${(e as Error).message}`);
   }
 }
+
+// RULING 159 — the layer count is reported against the SERVICES it was read
+// from. A catalog walk that reached no service must fail loudly rather than
+// print "0 layers", which reads as a government that publishes nothing and is
+// exactly the wrong conclusion — the real root was found only after five
+// guessed hostnames returned 404.
+floored("arcgis catalog layers", root, services.length, rows.length);
 
 console.log(`ARCGIS CATALOG — ${root}`);
 console.log(`  folders    ${folders.length}`);

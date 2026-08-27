@@ -77,13 +77,19 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-async function arcgis(url: string, params: Record<string, string>): Promise<any> {
+interface ArcGisResponse {
+  error?: { code: number; message: string };
+  count?: number;
+  features?: Array<{ attributes?: Record<string, unknown> }>;
+}
+
+async function arcgis(url: string, params: Record<string, string>): Promise<ArcGisResponse> {
   const q = new URLSearchParams({ f: "json", ...params });
   const res = await fetch(`${url}/query?${q}`, {
     headers: { "user-agent": UA, accept: "application/json" },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const j = await res.json();
+  const j = (await res.json()) as ArcGisResponse;
   // An ArcGIS service reports its errors INSIDE a 200. A caller that only
   // checks the status code reads an error object as an empty result set.
   if (j.error) throw new Error(`service error ${j.error.code}: ${j.error.message}`);
@@ -110,7 +116,7 @@ async function featuresAt(layer: DistrictLayer, p: Probe): Promise<string[]> {
     outFields: fields,
     returnGeometry: "false",
   });
-  return (j.features ?? []).map((f: any) => String(f.attributes?.[layer.nameField] ?? "(unnamed)"));
+  return (j.features ?? []).map((f) => String(f.attributes?.[layer.nameField] ?? "(unnamed)"));
 }
 
 /* ------------------------------------------------------------------ run */
@@ -126,10 +132,14 @@ if (!existsSync(layersPath)) {
   process.exit(2);
 }
 
-const universe = JSON.parse(readFileSync(pointsPath, "utf8"));
+interface Universe {
+  zip?: string;
+  combinations?: Array<{ at: [number, number]; count: number }>;
+}
+const universe = JSON.parse(readFileSync(pointsPath, "utf8")) as Universe;
 const layers = JSON.parse(readFileSync(layersPath, "utf8")).layers as DistrictLayer[];
 
-const probes: Probe[] = (universe.combinations ?? []).map((c: any, i: number) => ({
+const probes: Probe[] = (universe.combinations ?? []).map((c, i) => ({
   lon: c.at[0],
   lat: c.at[1],
   label: `combination ${i + 1} (${c.count} pt)`,

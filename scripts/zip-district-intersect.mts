@@ -50,13 +50,20 @@ function arg(name: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
-async function getJson(url: string, init?: RequestInit): Promise<any> {
+interface ArcGisResponse {
+  error?: { code: number; message: string };
+  count?: number;
+  exceededTransferLimit?: boolean;
+  features?: Array<{ attributes?: Record<string, unknown>; geometry?: { rings?: number[][][] } }>;
+}
+
+async function getJson(url: string, init?: RequestInit): Promise<ArcGisResponse> {
   const res = await fetch(url, {
     ...init,
     headers: { "user-agent": UA, accept: "application/json", ...(init?.headers ?? {}) },
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const body = await res.json();
+  const body = (await res.json()) as ArcGisResponse;
   if (body.error) throw new Error(`service error ${body.error.code}: ${body.error.message}`);
   return body;
 }

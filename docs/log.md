@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **147 sessions.**
+Newest first. **148 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -35,6 +35,20 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH224** — mtoliveboe.org, the Mount Olive Township School District address reported to the Census Bureau, answers HTTP 200 and serves a Japanese personal-finance blog. WWW.MTLAKES.ORG no longer carries Mountain Lakes Borough School District content. Both districts exist and govern; the ADDRESS is stale. Neither was promoted, because the control requiring a page to name the entity refused them — which is the only thing standing between the registry and a link to a stranger's blog. The live addresses have not been hunted. *(open)*
 
 **Needs Sean.** Nothing.
+
+## 2026-08-27 · AZ 85641 hyperfocus
+
+**What it started.** 7 row(s) opened, 7 still open.
+
+- **NH225** — Arizona's Department of Revenue website tells eight named AI crawlers to stay out, and ClaudeBot is one of them. It allows every other visitor. This product's reader identifies itself by its own name and a contact address, so the rule that applies to it is the allow-everyone rule. That is what the robots standard says, and it is also a judgement call, so it is yours rather than a session's. *(open)*
+- **NH226** — Two things this project has written down about Vail are wrong, and both are now measured. The stored board roster had six names when the board has five. And the research note says the Vail area is in one legislative district when it is in two. *(open)*
+- **NH227** — Seven governments that reach ZIP 85641 have been confirmed to govern there, but we have not yet listed the people who sit on them. *(open)*
+- **NH228** — Five more governments might cover ZIP 85641. We have found each of them and we have not yet checked where their territory starts and stops, so we cannot say either way. *(open)*
+- **NH229** — Every Vail school board agenda and minute sits on two meeting platforms this product cannot read yet. *(open)*
+- **NH230** — We know two measures will be on the 85641 ballot this November, and we have the school district's own legal notice for one of them. We have not yet read the county's official ballot, which is the document that actually decides what a voter sees. *(open)*
+- **NH231** — Our count of the governments covering a ZIP is built from each county's own roll. Districts formed in a neighbouring county but taxing land here are missing from it, and the shortfall looks like completeness. *(open)*
+
+**Needs Sean.** NH225
 
 ## unblock-pushers-0826-nonhunt · 2026-08-26
 

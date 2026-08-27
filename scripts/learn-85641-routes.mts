@@ -20,6 +20,7 @@ import {
   type MethodRoute,
 } from "../lib/method/knowledge.ts";
 import { unknownApplicability } from "../lib/method/portability.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 
 const STORE = "data/method/knowledge.json";
 const TODAY = process.env.WTP_TODAY ?? "2026-08-27";
@@ -365,6 +366,11 @@ for (const { route, outcome } of ROUTES) {
 }
 
 writeFileSync(STORE, JSON.stringify(k, null, 2) + "\n", "utf8");
+
+// RULING 159 — learned against ATTEMPTED. A run that learned nothing from a
+// non-empty ROUTES list has hit the duplicate refusal on every one, and that
+// is a defect to report rather than a quiet no-op.
+floored("routes learned", "the ROUTES list in this file", ROUTES.length, learned);
 
 console.log(`method version   ${startVersion} -> ${k.version}`);
 console.log(`routes           ${startRoutes} -> ${k.routes.length}`);

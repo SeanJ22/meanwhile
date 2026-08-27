@@ -2,24 +2,27 @@
  * `pnpm gov:directory` — OPEN A GOVERNMENT AND ASK WHAT GOVERNS INSIDE IT.
  * (2026-08-26, the descent-resume session. **RULING 93**, **RULING 183**.)
  *
- * ## The gap between two things that look the same
+ * ## What this is NOT, said first
  *
- * ```
- * found a government URL
- * enumerated what governs inside that government
- * ```
+ * It is **not** the instrument that made RULING 93 behave. That is
+ * `pnpm descent`, built by the session before this one, and
+ * `states/az/NOTES.md` records the case for it in full: before it existed the
+ * project had a ladder, a tree, a manifest and tiers, and *"not one of them
+ * walks a site … no instrument's input was ever a county"*. The descent
+ * answered that, and it works — it reached `pima.gov/2490/Departments-Offices`
+ * and its 71 candidates without anybody naming that page.
  *
- * The tier descent does the first. It follows links, records what it found,
- * and moves on — so a county whose front page links its boards directory
- * contributes one edge and, if the budget runs out before that edge is walked,
- * nothing at all. The county's own **"Authorities, Boards and Commissions"**
- * page is the answer to "what governs inside Morris County", and reaching it
- * is a matter of which pass the budget happened to end on.
+ * ## What it adds
  *
- * This asks a government directly, by name, and records what it says into
- * canonical state as leads — so the adjudicator can then open each one and
- * promote the real bodies. It is RULING 93's hierarchy descent as a motion
- * rather than as a hope.
+ * A directory reached by the tier descent is reached *eventually*, through a
+ * frontier shared with every other edge in the state and processed under a
+ * `--budget`. Pointing at one by name costs two requests and does not wait for
+ * a queue: Morris County's **"Authorities, Boards and Commissions"** page is
+ * the answer to "what governs inside Morris County", and this asks it directly.
+ *
+ * So the relationship is narrow-and-immediate beside broad-and-eventual. Both
+ * write to the same canonical state and the same candidate pool, and neither
+ * replaces the other.
  *
  * ## What it produces, and what it does NOT
  *

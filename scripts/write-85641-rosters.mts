@@ -227,6 +227,60 @@ const ROWS: Row[] = [
       "THE PRECINCT NUMBER IS DERIVED, NOT STATED. This page names Judge Raymond Carroll and the communities served but never the precinct number. The link to precinct 7 comes from the Constables page, which lists Constable Thomas Schenek as 'Green Valley, AZ / Justice Precinct 7', plus precinct 7's absence from the consolidated bench. Well supported, and still an inference — it is recorded as one so a later session can confirm it against a single authoritative page rather than re-deriving it.",
     people: [{ name: "Raymond Carroll", seat: "Judge, Green Valley Justice Court" }],
   },
+  {
+    body: "Sahuarita Unified School District No. 30 Governing Board",
+    bodyKind: "unified school district",
+    governs85641: "PARTIAL",
+    territoryEvidence:
+      "ZCTA polygon intersect against Pima County GIS Community2/14 School Districts. Found by the INTERSECT and not by the 96-point grid, so it reaches the zip without holding any sampled point — the reader population here may be small, and that is a different fact from zero.",
+    url: "https://www.susd30.us/governing-board",
+    rung: 6,
+    retrieval: "OK",
+    outcome: "EXTRACTED",
+    reason:
+      "rung 6: the roster renders client-side and the served HTML carries a reCAPTCHA frame and no members. The site's own sitemap gave the path after /governing-board-home returned a shell.",
+    people: [
+      { name: "John Sparks", seat: "Governing Board President", email: "jsparks1@sahuarita.net" },
+      { name: "Tony Bruno", seat: "Governing Board Clerk", email: "anthony.bruno@sahuarita.net" },
+      { name: "Denise Reis", seat: "Governing Board Member", email: "denise.reis@sahuarita.net" },
+      { name: "Raul Rodriguez", seat: "Governing Board Member", email: "raul.rodriguez@sahuarita.net" },
+      { name: "Amy Petersmarck", seat: "Governing Board Member", email: "amy.petersmarck@sahuarita.net" },
+    ],
+  },
+  {
+    body: "Tanque Verde Unified School District No. 13 Governing Board",
+    bodyKind: "unified school district",
+    governs85641: "PARTIAL",
+    territoryEvidence:
+      "ZCTA polygon intersect against Pima County GIS Community2/14 School Districts. Intersect only, as with Sahuarita.",
+    url: "https://www.tanqueverdeschools.org/page/board-members",
+    rung: 6,
+    retrieval: "OK",
+    outcome: "EXTRACTED",
+    reason:
+      "rung 6 — another Apptegy site, so the roster is client-rendered and the served HTML carries no names. Seats come from the profile headings the page renders.",
+    people: [
+      { name: "Beth Peterson", seat: "Board President" },
+      { name: "Thomas Trask", seat: "Board Clerk" },
+      { name: "Jeremy Schalk", seat: "Board Member" },
+      { name: "Anne Velosa", seat: "Board Member" },
+      { name: "Jeffrey Neff", seat: "Board Member" },
+    ],
+  },
+  {
+    body: "Empire Elementary School District No. 37",
+    bodyKind: "elementary school district",
+    governs85641: "VERIFIED",
+    territoryEvidence:
+      "8 of 96 sampled points, from the Census geographies endpoint AND Pima County GIS Community2/14",
+    url: "data/reference/nces_ccd_lea_directory_2025_26.csv",
+    rung: 1,
+    retrieval: "OK",
+    outcome: "ZERO_ROWS",
+    reason:
+      "NO ROSTER FOUND, AND NO WEBSITE FOUND. Two independent official enumerations record this district with an EMPTY website field — Pima County GIS Community2/14, and the NCES CCD LEA directory (nces_leaid 0402820, state id AZ-4415, Open as of 2025-10-01). Sahuarita and Tanque Verde both carry a URL in the same county column, so the blank is a property of this district's publishing rather than of the column. THIS IS 'WE HAVE NOT FOUND ONE', NEVER 'IT HAS NONE': the AZ Department of Education directory, the Pima County School Superintendent, the Auditor General's district reports and a records request to the address below are all unwalked. Recovered contact: 13200 E Greaterville Rd, Sonoita, AZ 85637-6421, (520) 455-0529.",
+    people: [],
+  },
 ];
 
 mkdirSync("docs/evidence", { recursive: true });

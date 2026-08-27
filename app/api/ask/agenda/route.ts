@@ -6,6 +6,7 @@ import {
   searchAgendas,
   type AgendaDocumentLike,
 } from "@/lib/routing/agenda-search";
+import { bindNamedEntity, type BindableEntity } from "@/lib/routing/named-entity";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
@@ -46,6 +47,44 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
  */
 
 export const runtime = "nodejs";
+
+/**
+ * The governments this corpus can answer ABOUT, named the way a reader names
+ * them — derived from the canonical division id and nothing else.
+ *
+ * The snapshot's own `bodyName` cannot be used for this. For Vail Unified it
+ * reads **"Governing Board Meeting"** — the meeting's title, carried onto the
+ * body — so an inventory built from it contains no government called "Vail"
+ * and the reader's word could never have matched. The division id does carry
+ * it, canonically and unambiguously:
+ *
+ *   ocd-division/country:us/state:az/school_district:vail_unified_district
+ *                                    ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^
+ *                                    divisionType    the name, slugged
+ *
+ * Un-slugging that is a mechanical read of an identifier this product mints
+ * itself, not a guess about what a government is called — and it is the same
+ * string the registry's own `divisionLabel` is built from.
+ */
+function snapshotEntities(
+  meetings: readonly { ocdId: string | null }[],
+): BindableEntity[] {
+  const seen = new Map<string, BindableEntity>();
+  for (const meeting of meetings) {
+    const ocdId = meeting.ocdId;
+    if (!ocdId || seen.has(ocdId)) continue;
+    const last = ocdId.split("/").pop() ?? "";
+    const [divisionType, slug] = last.split(":");
+    if (!divisionType || !slug) continue;
+    seen.set(ocdId, {
+      id: ocdId,
+      name: slug.replace(/_/g, " "),
+      nameClass: "body",
+      divisionType,
+    });
+  }
+  return [...seen.values()];
+}
 
 const MAX_BODY_BYTES = 2048;
 const MAX_QUESTION_CHARS = 200;
@@ -187,9 +226,55 @@ export async function POST(request: Request) {
   let eligibleIds: Set<string> | null = null;
   let placeless = 0;
   let outside = 0;
-  let scope: "divisions" | "radius" | "everything" = "everything";
+  let scope: "divisions" | "radius" | "everything" | "named-body" = "everything";
 
-  if (ocdIds.length > 0) {
+  /*
+   * **THE NAMED BODY IS A HARD RETRIEVAL CONSTRAINT (2026-08-27).**
+   *
+   * Every scope below this is about WHERE THE READER IS — their divisions,
+   * or a radius around them. That is the right default for "is there a data
+   * centre coming", and it is the wrong one the moment a question names a
+   * government: a search scoped to the reader's divisions will happily return
+   * a hit from a DIFFERENT body and the answer renders that body's name, which
+   * is the substitution defect this session was opened on.
+   *
+   * So the named body is resolved first and, when it resolves, it REPLACES the
+   * geographic scope rather than narrowing it. A reader asking about Vail gets
+   * Vail's agendas or an honest nothing — never a neighbouring district's.
+   */
+  const binding = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
+  if (binding.kind === "AMBIGUOUS" || binding.kind === "UNRESOLVED") {
+    /* A government was named that we cannot pin down. The rung says so and
+     * returns no hits — it does NOT fall through to the reader's divisions,
+     * because that is precisely how a different body came to answer. */
+    return Response.json({
+      mode: "topic",
+      topic: { id: topic.id, label: topic.label },
+      scope: "named-body",
+      namedEntity:
+        binding.kind === "AMBIGUOUS"
+          ? { state: "AMBIGUOUS", candidates: binding.candidates.map((c) => c.name) }
+          : { state: "UNRESOLVED", mention: binding.mention },
+      hits: [],
+      hitsFound: 0,
+      searched: 0,
+      unreadable: 0,
+      placeless: 0,
+      outside: 0,
+      divisionsAsked: ocdIds.length,
+      radiusMiles: null,
+    });
+  }
+
+  if (binding.kind === "BOUND") {
+    scope = "named-body";
+    eligibleIds = new Set(
+      snapshot.meetings
+        .filter((m) => m.ocdId === binding.entity.id)
+        .map((m) => m.id),
+    );
+    outside = snapshot.meetings.length - eligibleIds.size;
+  } else if (ocdIds.length > 0) {
     scope = "divisions";
     const wanted = new Set(ocdIds);
     eligibleIds = new Set(
@@ -218,6 +303,12 @@ export async function POST(request: Request) {
     mode: "topic",
     topic: { id: topic.id, label: topic.label },
     scope,
+    /* Which government this answer is ABOUT, when the reader named one. The
+     * client states it, so a bound answer can never read as a general one. */
+    namedEntity:
+      binding.kind === "BOUND"
+        ? { state: "BOUND", ocdId: binding.entity.id, name: binding.entity.name }
+        : null,
     radiusMiles: scope === "radius" ? radiusMiles : null,
     divisionsAsked: ocdIds.length,
     hits: hits.slice(0, MAX_HITS).map((hit) => {

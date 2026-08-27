@@ -771,6 +771,34 @@ export function AskBox({
       {asked &&
         !askWasAnswered(asked, { agendaHits: agenda?.hits.length ?? 0 }) && (
           <div data-ask-refusal className="mt-2.5">
+          {/*
+            **THE GOVERNMENT THEY NAMED, WHEN WE COULD NOT PIN IT DOWN**
+            (2026-08-27). Without this the refusal is honest but mute: a reader
+            who typed a district's name and got the general "we haven't routed
+            this" sentence cannot tell whether we misread the name, never held
+            that government, or simply do not answer questions of that shape.
+            It sits ABOVE the refusal because it is the more specific fact, and
+            it is the one that tells them what to try next.
+          */}
+          {asked.binding.kind === "UNRESOLVED" && (
+            <p
+              data-ask-entity-state="UNRESOLVED"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              We don&apos;t have a government recorded under &ldquo;
+              {asked.binding.mention}&rdquo;.
+            </p>
+          )}
+          {asked.binding.kind === "AMBIGUOUS" && (
+            <p
+              data-ask-entity-state="AMBIGUOUS"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              More than one government goes by that name —{" "}
+              {asked.binding.candidates.map((c) => c.name).join(" and ")}. Choose
+              one and we&apos;ll answer for it.
+            </p>
+          )}
           <p className="text-[0.8125rem] leading-relaxed text-voice">
             {asked.answer.statement}
           </p>

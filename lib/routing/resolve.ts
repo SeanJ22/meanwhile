@@ -7,6 +7,7 @@ import { topOfficesFor } from "../officials/top-offices.ts";
    view read. See `peopleFor` below for what reading a different one cost. */
 import { rosterHoldersForBody } from "../registry/body-rosters.ts";
 
+import type { NamedEntityBinding } from "./named-entity.ts";
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
 
 /**
@@ -111,9 +112,34 @@ function isOwnGoverningBody(body: CoveredBody): boolean {
 function bodiesFor(
   step: RouteStep,
   coverage: CoverageSummary,
+  binding: NamedEntityBinding = { kind: "NONE" },
 ): CoveredBody[] {
   if (!step.bodyTarget) return [];
-  return coverage.bodies.filter((body) => {
+
+  /*
+   * **THE NAMED ENTITY BINDS BEFORE THE CONTEXT DEFAULT (2026-08-27).**
+   *
+   * Everything below this block selects bodies out of the READER'S COVERAGE,
+   * which is resolved from where the reader is. That is the right default for
+   * the great majority of questions — "who fixes my pothole" is a question
+   * about here — and it was the WRONG answer for the one question class that
+   * says otherwise: a question that names a government.
+   *
+   * At a Tucson zip, *"What's on the Vail school district agenda?"* selected
+   * every school board in the reader's coverage and rendered Sunnyside
+   * Unified. Not as a guess, not hedged — as the answer. The reader's own word
+   * "Vail" never reached this function, so the default could not be overruled
+   * by it, and a reader had no way to see that the government they asked about
+   * was not the government they were told about.
+   *
+   * So a binding that named something the default cannot satisfy returns
+   * NOTHING here, and the caller states which case it was. An empty list
+   * renders as a NAMED GAP one level up; the default body never speaks over a
+   * name the reader gave.
+   */
+  if (binding.kind === "AMBIGUOUS" || binding.kind === "UNRESOLVED") return [];
+
+  const inScope = coverage.bodies.filter((body) => {
     if (!isOwnGoverningBody(body)) return false;
     if (step.bodyTarget === "county") return body.divisionType === "county";
     if (step.bodyTarget === "municipal") {
@@ -123,6 +149,23 @@ function bodiesFor(
       body.divisionType === "school_district" && body.bodyClass === "GOVERNING"
     );
   });
+
+  if (binding.kind !== "BOUND") return inScope;
+
+  /*
+   * A name WAS resolved. Retrieval is constrained to that government and to no
+   * other — matched on identity (the body id or the division id), never on the
+   * label, because two governments can share a name and a label match is how
+   * the substitution would come back through a different door.
+   *
+   * Zero survivors is a real and honest state: the reader named a government
+   * that this step's own coverage does not contain. That renders as the named
+   * gap, which is a true sentence, where the default would have been a false one.
+   */
+  const wanted = binding.entity.id;
+  return inScope.filter(
+    (body) => body.bodyId === wanted || body.ocdId === wanted,
+  );
 }
 
 /**
@@ -238,9 +281,46 @@ function peopleFor(
   return holders;
 }
 
+/** The pre-existing sentence, for a question that named nobody. Unchanged. */
+const UNSOURCED_HERE_GAP =
+  "We don't yet know enough here to route this — the general owner of this topic is the body described above, and we haven't sourced it for this area yet.";
+
+/**
+ * The honest sentence for a question that DID name a government.
+ *
+ * Each of these is a fact about OUR RECORD, which is what the render rule
+ * requires and what the Sunnyside answer got wrong: substituting a body we did
+ * hold for one the reader asked about turned our gap into a claim about a
+ * government. None of these sentences announces a failure or apologises — they
+ * state what is known and offer the narrowing (RULING 139).
+ *
+ * Null means the binding places no constraint, and the caller's own sentence
+ * about this area stands.
+ */
+function gapForBinding(binding: NamedEntityBinding): string | null {
+  if (binding.kind === "UNRESOLVED") {
+    return `We don't have a government recorded under "${binding.mention}". Searching for it by name will show what we do hold.`;
+  }
+  if (binding.kind === "AMBIGUOUS") {
+    const names = binding.candidates.map((c) => c.name);
+    return `More than one government here goes by that name — ${names.join(" and ")}. Choose one and we'll answer for it.`;
+  }
+  if (binding.kind === "BOUND") {
+    return `We hold ${binding.entity.name}, and we haven't sourced this topic for it yet.`;
+  }
+  return null;
+}
+
 export function resolveRouting(
   topicId: string,
   coverage: CoverageSummary,
+  /**
+   * The government the reader NAMED, when they named one (2026-08-27).
+   *
+   * Defaulted, so every existing caller and test is unaffected and keeps the
+   * context-default behaviour that is correct for a question naming nobody.
+   */
+  binding: NamedEntityBinding = { kind: "NONE" },
 ): RoutingAnswer {
   const topic = routeForTopic(topicId);
   if (!topic) {
@@ -256,13 +336,20 @@ export function resolveRouting(
   }
 
   const steps: ResolvedStep[] = topic.steps.map((step) => {
-    const bodies = bodiesFor(step, coverage);
+    const bodies = bodiesFor(step, coverage, binding);
     const people = peopleFor(step, coverage, bodies);
 
     let gap: string | null = null;
     if (bodies.length === 0 && people.length === 0) {
-      gap =
-        "We don't yet know enough here to route this — the general owner of this topic is the body described above, and we haven't sourced it for this area yet.";
+      /*
+       * WHOSE gap is this? The render rule requires the sentence to say, and
+       * after the binding rung there are three different true answers where
+       * there used to be one. Naming the wrong one is the same class of defect
+       * as naming the wrong body.
+       */
+      gap = step.bodyTarget
+        ? gapForBinding(binding) ?? UNSOURCED_HERE_GAP
+        : UNSOURCED_HERE_GAP;
     } else if (
       step.bodyTarget &&
       bodies.length > 0 &&

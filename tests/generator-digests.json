@@ -162,7 +162,7 @@
     "regeneratedOn": "2026-08-27"
   },
   "lib/registry/registry.json": {
-    "digest": "06d51699f83bcd735e04df1a7d89c8723caa940eed8aa58dd8f4a82dc0120cca",
+    "digest": "e4999af25c3ec848964928d3a5bdf67ff25fa60079d56504b75878ce47586dc3",
     "files": 13,
     "entry": "scripts/build-registry.ts",
     "regeneratedOn": "2026-08-27"

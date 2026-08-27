@@ -66,16 +66,29 @@ test("RED CONTROL: CAWCD cannot inherit the Pima County supervisors", () => {
   );
 
   const resolved = membersOfBody(CAWCD);
+  /*
+   * **AMENDED 2026-08-27, when the roster was wired.**
+   *
+   * This used to expect `UNKNOWN_COMPOSITION` and an EMPTY member list, which
+   * was true of the interim state — the wrong people had been removed and the
+   * right ones had not yet been collected — and is not the invariant. The
+   * invariant is the one this control's own name states: five county
+   * supervisors may never stand in for a fifteen-member elected water board.
+   *
+   * With the roster wired, "renders nothing" would be a WEAKER control than
+   * what is asserted now, and would fail for the good outcome.
+   */
   assert.equal(
     resolved.kind,
-    "UNKNOWN_COMPOSITION",
-    "CAWCD's membership is not sourced into a roster yet, so it must resolve as unknown",
+    "DIRECT_BODY_ROSTER",
+    "CAWCD's members are sourced from the board's own pages and must resolve through its own roster",
   );
-  /* Read the names BEFORE asserting the list is empty: `deepEqual(x, [])`
-   * narrows `x` to `never[]`, and the loop below would then be checking a
-   * type-level fact rather than a runtime one. */
   const names = new Set(resolved.members.map((m) => m.name));
-  assert.deepEqual(resolved.members, [], "CAWCD must render no members rather than the wrong ones");
+  assert.equal(
+    resolved.members.length,
+    15,
+    `CAWCD rendered ${resolved.members.length} members — the board has fifteen directly elected directors`,
+  );
 
   for (const s of supervisors) {
     assert.ok(
@@ -265,9 +278,22 @@ test("CONTROL: the removed fallback really would have inherited, on the bodies i
     wouldHaveInherited.length > 0,
     "the old fallback must still return the supervisors — otherwise this control is vacuous",
   );
-  assert.equal(
-    membersOfBody(CAWCD).members.length,
-    0,
-    "and the new resolver must not",
+
+  /*
+   * **AMENDED 2026-08-27.** This compared the new resolver's member COUNT to
+   * zero, which held only while CAWCD had no roster of its own. The live
+   * property is DISJOINTNESS: whoever the new resolver names, none of them may
+   * be a person the deleted fallback would have handed over. That is what the
+   * defect was, and unlike a count it keeps its meaning now the board has its
+   * own fifteen members — and would still catch the fallback coming back.
+   */
+  const inherited = new Set(wouldHaveInherited.map((h) => h.name));
+  const resolved = membersOfBody(CAWCD).members.map((m) => m.name);
+  assert.ok(resolved.length > 0, "CAWCD must name its own board for this comparison to mean anything");
+  const leaked = resolved.filter((name) => inherited.has(name));
+  assert.deepEqual(
+    leaked,
+    [],
+    `the new resolver handed back ${leaked.join(", ")} — people the deleted division fallback would have inherited`,
   );
 });

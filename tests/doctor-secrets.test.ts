@@ -103,81 +103,168 @@ test("a check that reports a problem must carry a remediation", () => {
 
 /* ------------------------------------- the sentinel, through the REAL command */
 
+/**
+ * The script, addressed ABSOLUTELY so the command can be driven from any working
+ * directory. Which matters, because the working directory is what decides
+ * whether doctor finds a `.env.local` at all.
+ */
+const DOCTOR = join(process.cwd(), "scripts", "doctor.mts");
+
+type DoctorRun = { stdout: string; stderr: string; report: string };
+
+function runDoctor(cwd: string, env: NodeJS.ProcessEnv, reportPath: string): DoctorRun {
+  let stdout = "";
+  let stderr = "";
+  try {
+    stdout = execFileSync(
+      process.execPath,
+      ["--experimental-strip-types", DOCTOR, "--json", reportPath],
+      { cwd, env, encoding: "utf8", maxBuffer: 1 << 26 },
+    );
+  } catch (error) {
+    /* A non-zero exit is EXPECTED and is not the thing under test — doctor
+     * exits 1 whenever anything is blocking. Both streams are captured off the
+     * failure exactly as they are off a success. */
+    const e = error as { stdout?: string; stderr?: string };
+    stdout = e.stdout ?? "";
+    stderr = e.stderr ?? "";
+  }
+  return { stdout, stderr, report: existsSync(reportPath) ? readFileSync(reportPath, "utf8") : "" };
+}
+
+/** Every sink doctor writes, checked for the sentinel and for DSN shape. */
+function assertNothingLeaked(run: DoctorRun, context: string): void {
+  assert.ok(
+    run.stdout.length > 0,
+    `doctor produced no stdout at all (${context}) — this test would then prove nothing`,
+  );
+
+  const sinks: [string, string][] = [
+    ["stdout", run.stdout],
+    ["stderr", run.stderr],
+    ["the JSON report", run.report],
+  ];
+
+  for (const [name, text] of sinks) {
+    for (const [what, needle] of [
+      ["the sentinel", SENTINEL],
+      ["a prefix of the sentinel", SENTINEL_PREFIX],
+      ["a suffix of the sentinel", SENTINEL_SUFFIX],
+    ] as const) {
+      assert.ok(
+        !text.includes(needle),
+        `${what} reached ${name} (${context}). doctor may emit a credential's NAME, its presence, ` +
+          `its validity state, a failure class and a remediation — and nothing else, through any ` +
+          `sink it writes.`,
+      );
+    }
+    /* The connection string's own shape, not just the sentinel inside it. */
+    assert.ok(
+      !/postgres:\/\/[^\s"@]+:[^\s"@]+@/.test(text),
+      `a credential-bearing connection string reached ${name} (${context})`,
+    );
+  }
+}
+
+/** A hostile environment: a sentinel key, and a DSN built to THROW on parse. */
+function hostileEnv(): NodeJS.ProcessEnv {
+  return {
+    ...process.env,
+    SOME_VENDOR_API_KEY: SENTINEL,
+    WTP_SENTINEL_TOKEN: SENTINEL,
+    /* MALFORMED ON PURPOSE — no scheme — so doctor's DSN shape check THROWS
+     * with the whole string in the message. That is the leak path this test
+     * exists to police; a well-formed DSN never reaches an error at all and
+     * the test would prove nothing. */
+    DATABASE_URL: `wtp_user:${SENTINEL}@db.example.neon.tech/neondb`,
+  };
+}
+
+test("SENTINEL: doctor leaks nothing when it READS a credential file full of secrets", () => {
+  /*
+   * **THE WHOLE COMMAND, WITH A REAL SECRET-BEARING `.env.local` ON DISK,
+   * THROUGH ITS FAILING PATHS, WITH EVERY SINK CAPTURED.**
+   *
+   * `.env.local` is the single most dangerous file doctor touches: it opens it,
+   * parses it, and reports on its contents. So the file is CONSTRUCTED here, in
+   * a temporary working directory, holding sentinels — rather than left to
+   * whatever the machine happens to have.
+   *
+   * That is not only determinism. Until this test constructed the file, the
+   * credential-reading path was never actually driven with a secret in it: on a
+   * developer's machine doctor read the real `.env.local` (whose values no test
+   * knows, so no test could assert they had not leaked), and on CI there is no
+   * `.env.local` at all, so the branch did not execute. Both were blind, and
+   * the CI one additionally made the usefulness assertion below unreachable —
+   * which is how this test came to fail on CI while passing locally.
+   */
+  const dir = mkdtempSync(join(tmpdir(), "wtp-doctor-envfile-"));
+  const report = join(dir, "doctor.json");
+  try {
+    writeFileSync(
+      join(dir, ".env.local"),
+      [
+        `SOME_VENDOR_API_KEY=${SENTINEL}`,
+        `WTP_SENTINEL_TOKEN=${SENTINEL}`,
+        `DATABASE_URL=postgres://wtp_user:${SENTINEL}@db.example.neon.tech/neondb`,
+        /* Deliberately NOT secret-shaped, so the count below also proves doctor
+         * counts by name shape rather than counting every line in the file.
+         * (`NOT_A_SECRET` would not do: it contains "SECRET" and is matched.) */
+        "WTP_PILOT_ZIP=85641",
+      ].join("\n"),
+      "utf8",
+    );
+
+    const run = runDoctor(dir, hostileEnv(), report);
+    assertNothingLeaked(run, "a constructed .env.local");
+
+    /*
+     * And it must still be USEFUL. Names, counts and states are exactly what may
+     * leave, and this run is the one where the count is DETERMINED: three of the
+     * four names written above are secret-shaped.
+     */
+    assert.match(
+      run.stdout,
+      /3 credential name\(s\) set/,
+      "doctor must still report credentials by count — a boundary that redacts everything is not a boundary, it is a broken tool",
+    );
+    assert.match(run.stdout, /DATABASE_URL/, "the variable NAME is not secret and is what a remediation needs");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("SENTINEL: doctor leaks nothing through stdout, stderr or its JSON report", () => {
   /*
-   * **THE WHOLE COMMAND, WITH A REAL SECRET IN ITS ENVIRONMENT, THROUGH ITS
-   * FAILING PATHS, WITH EVERY SINK CAPTURED.**
-   *
-   * The unit tests above prove the boundary function. This proves that the
-   * command actually uses it — on stdout, on stderr, and in the file it writes
-   * for a human to paste somewhere. Those are three different sinks and a leak
-   * in any one of them is the whole leak.
-   *
-   * The environment is deliberately hostile: a sentinel key, a sentinel-bearing
-   * connection string, and `.next` hidden so at least one check is forced down
-   * a non-PASS path.
+   * The same sentinel through the command AS THIS REPOSITORY ACTUALLY RUNS IT —
+   * real working directory, real artifacts, real `.env.local` or none. The test
+   * above controls the environment to make an assertion about the credential
+   * count possible; this one deliberately does not, because a boundary that
+   * only holds in a constructed directory is not the boundary that ships.
    */
   const dir = mkdtempSync(join(tmpdir(), "wtp-doctor-"));
   const report = join(dir, "doctor.json");
   try {
-    const env = {
-      ...process.env,
-      SOME_VENDOR_API_KEY: SENTINEL,
-      WTP_SENTINEL_TOKEN: SENTINEL,
-      /* MALFORMED ON PURPOSE — no scheme — so doctor's DSN shape check THROWS
-       * with the whole string in the message. That is the leak path this test
-       * exists to police; a well-formed DSN never reaches an error at all and
-       * the test would prove nothing. */
-      DATABASE_URL: `wtp_user:${SENTINEL}@db.example.neon.tech/neondb`,
-    };
+    const run = runDoctor(process.cwd(), hostileEnv(), report);
+    assertNothingLeaked(run, "the real working tree");
 
-    let stdout = "";
-    let stderr = "";
-    try {
-      stdout = execFileSync(
-        process.execPath,
-        ["--experimental-strip-types", "scripts/doctor.mts", "--json", report],
-        { cwd: process.cwd(), env, encoding: "utf8", maxBuffer: 1 << 26 },
-      );
-    } catch (error) {
-      /* A non-zero exit is EXPECTED and is not the thing under test — doctor
-       * exits 1 whenever anything is blocking. Both streams are captured off
-       * the failure exactly as they are off a success. */
-      const e = error as { stdout?: string; stderr?: string };
-      stdout = e.stdout ?? "";
-      stderr = e.stderr ?? "";
-    }
-
-    const sinks: [string, string][] = [
-      ["stdout", stdout],
-      ["stderr", stderr],
-      ["the JSON report", existsSync(report) ? readFileSync(report, "utf8") : ""],
-    ];
-
-    assert.ok(stdout.length > 0, "doctor produced no stdout at all — this test would then prove nothing");
-
-    for (const [name, text] of sinks) {
-      for (const [what, needle] of [
-        ["the sentinel", SENTINEL],
-        ["a prefix of the sentinel", SENTINEL_PREFIX],
-        ["a suffix of the sentinel", SENTINEL_SUFFIX],
-      ] as const) {
-        assert.ok(
-          !text.includes(needle),
-          `${what} reached ${name}. doctor may emit a credential's NAME, its presence, its validity ` +
-            `state, a failure class and a remediation — and nothing else, through any sink it writes.`,
-        );
-      }
-      /* The connection string's own shape, not just the sentinel inside it. */
-      assert.ok(
-        !/postgres:\/\/[^\s"@]+:[^\s"@]+@/.test(text),
-        `a credential-bearing connection string reached ${name}`,
-      );
-    }
-
-    /* And it must still be USEFUL: names and states are exactly what may leave. */
-    assert.match(stdout, /credential name\(s\) set/, "doctor must still report credentials by count/name");
-    assert.match(stdout, /DATABASE_URL/, "the variable NAME is not secret and is what a remediation needs");
+    /*
+     * USEFULNESS, asserted in the one way that is true on every machine. Whether
+     * `.env.local` exists differs between a developer's checkout and CI, so the
+     * COUNT is not assertable here — but a NAMED state always is, and the set is
+     * closed. Blank the credentials check and this fails on both.
+     */
+    assert.match(
+      run.stdout,
+      /credentials present in \.env\.local, by name/,
+      "the credentials check must still appear and still be named",
+    );
+    assert.match(
+      run.stdout,
+      /credential name\(s\) set|\.env\.local is absent/,
+      "the credentials check must report one of its two named states, never nothing",
+    );
+    assert.match(run.stdout, /DATABASE_URL/, "the variable NAME is not secret and is what a remediation needs");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }

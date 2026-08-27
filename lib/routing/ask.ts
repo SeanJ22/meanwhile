@@ -9,6 +9,11 @@ import {
   type NameableEntity,
 } from "./exact-name.ts";
 import { matchTopic, weakTopicMatch, type TopicMatch } from "./match.ts";
+import {
+  bindNamedEntity,
+  type BindableEntity,
+  type NamedEntityBinding,
+} from "./named-entity.ts";
 import { resolveRouting, type RoutingAnswer } from "./resolve.ts";
 
 /**
@@ -81,6 +86,16 @@ export interface AskAnswer {
   exactName: ExactNameMatch | null;
   /** The sub-threshold keyword winner. Diagnostic only; never rendered. */
   weak: TopicMatch | null;
+  /**
+   * The government the reader NAMED, reconciled against what we hold
+   * (2026-08-27). `NONE` for the great majority of questions, which name no
+   * government and are correctly answered from the reader's own context.
+   *
+   * Unlike `weak`, this one IS rendered: `AMBIGUOUS` and `UNRESOLVED` are
+   * sentences the reader has to see, because each of them replaced an answer
+   * that would otherwise have been about the wrong government.
+   */
+  binding: NamedEntityBinding;
 }
 
 export interface AskOptions {
@@ -120,9 +135,24 @@ export function answerQuestion(
   const match: TopicMatch | null =
     keyword ??
     (classified ? { topicId: classified, matchedOn: [], via: "classifier" } : null);
+
+  /*
+   * **THE BINDING RUNG RUNS BEFORE ROUTING** (2026-08-27), because a
+   * government the reader NAMED outranks the government their ZIP implies.
+   * See `named-entity.ts` for the defect this closes and the proof of it.
+   *
+   * The inventory is the search index the surface already has PLUS the
+   * reader's own covered bodies, and the second half is not redundant: covered
+   * bodies carry `divisionType`, which is what separates a school district
+   * from a town of the same name, and many of them carry no `name` at all —
+   * their readable label is `divisionLabel`. Binding on the same string the
+   * reader is shown is the point.
+   */
+  const binding = bindNamedEntity(text, bindableEntities(coverage, options.entities ?? []));
+
   // No match resolves the unmapped-topic id — resolveRouting returns the
   // refusal for anything it doesn't know, which is exactly the contract.
-  const answer = resolveRouting(match?.topicId ?? "", coverage);
+  const answer = resolveRouting(match?.topicId ?? "", coverage, binding);
   const contacts = match ? everydayContactsFor(match.topicId, zip) : [];
   /*
    * G05 rule 4d: an in-app destination, matched independently of the topic.
@@ -140,7 +170,40 @@ export function answerQuestion(
   // winner to name.
   const weak = keyword ? null : weakTopicMatch(text);
 
-  return { match, answer, contacts, destination, digest, exactName, weak };
+  return { match, answer, contacts, destination, digest, exactName, weak, binding };
+}
+
+/**
+ * Everything the reader could have NAMED, as the binding rung needs it.
+ *
+ * Two sources, deliberately merged rather than chosen between:
+ *
+ * - the **search index**, which is what the reader sees and can type; and
+ * - the reader's own **covered bodies**, which carry `divisionType` and whose
+ *   readable label is often `divisionLabel` rather than `name` — the Vail
+ *   school board's registry row has `name: null`, so an inventory built from
+ *   names alone could never have bound the very government the defect was
+ *   reported about.
+ *
+ * Ids are the registry's own, so a bound entity can be matched back to a
+ * covered body by identity rather than by label.
+ */
+function bindableEntities(
+  coverage: CoverageSummary,
+  entities: readonly NameableEntity[],
+): BindableEntity[] {
+  const out: BindableEntity[] = entities.map((e) => ({ ...e }));
+  for (const body of coverage.bodies) {
+    const label = body.name ?? body.divisionLabel;
+    if (!label) continue;
+    out.push({
+      id: body.bodyId,
+      name: label,
+      nameClass: "body",
+      divisionType: body.divisionType,
+    });
+  }
+  return out;
 }
 
 /**

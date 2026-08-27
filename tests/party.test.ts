@@ -215,21 +215,97 @@ const FORBIDDEN_PARTY_SOURCES = [
   "x.com",
 ];
 
-test("M62: no curated roster is left UNDETERMINED, and each cites what settled it", () => {
-  const undetermined = BODY_ROSTERS.filter((r) => r.partisanship === "UNDETERMINED");
+/**
+ * **THE ROSTERS WHOSE PARTISANSHIP IS GENUINELY STILL OPEN.**
+ *
+ * Every entry is a DECLARED work item, not an exemption. A roster may sit here
+ * only because the election-authority record that settles its seats has not
+ * been read yet — never because reading it was inconvenient, and never as a
+ * way to render a party we have not sourced. Nothing on this list renders a
+ * party to anybody: `UNDETERMINED` shows nothing, exactly as `NONPARTISAN`
+ * does, and the two are kept distinct so the reader's silence has a known
+ * cause.
+ *
+ * Emptying this list is the goal. Adding to it is a deliberate act that shows
+ * up in a diff, which is the protection the original assertion was really
+ * providing.
+ */
+const PARTISANSHIP_STILL_OPEN: readonly string[] = [
+  /*
+   * CAWCD, wired 2026-08-27. Fifteen directly elected directors, read from the
+   * district's own board pages, which state role and county for every member
+   * and party for none. That settles the PAGES and not the SEATS: whether a
+   * CAWCD director's office is contested on party lines has to come from an
+   * election authority's own record, and that record has not been read yet.
+   *
+   * Wiring it anyway is the point. Membership was verified and partisanship is
+   * unknown; those are independent facts, and CLAUDE.md's "show everything we
+   * find" forbids holding fifteen sourced people back from a reader because an
+   * orthogonal field is open. Tracked as its own work item.
+   */
+  "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+];
+
+test("M62: every roster is settled, or is a DECLARED open partisanship item", () => {
+  /*
+   * **AMENDED 2026-08-27.** This assertion used to read
+   * `undetermined.map(r => r.bodyId)` deepEqual `[]` — "M62 walked all twelve".
+   *
+   * That was true of the twelve rosters M62 walked, and it froze a COMPLETION
+   * MEASUREMENT into a permanent bar on ever adding a roster whose partisanship
+   * was still open. It is the coupling that kept the CAWCD board rendering
+   * nobody: fifteen people, verified from the body's own current publication,
+   * held back from a reader because a different and unrelated fact about their
+   * SEATS had not been sourced. `BodyRoster` itself has always allowed this —
+   * `UNDETERMINED` is documented as "not yet established … stays a work item"
+   * and `partisanshipSourceUrl` as "absent while UNDETERMINED".
+   *
+   * What the assertion was genuinely protecting is preserved and made
+   * sharper: a roster may not arrive with an unsourced partisanship SILENTLY.
+   * It must be named, so it costs a line in a diff and stays visible as owed.
+   */
+  const undetermined = BODY_ROSTERS.filter(
+    (r) => r.partisanship === "UNDETERMINED",
+  ).map((r) => r.bodyId);
+
+  const undeclared = undetermined.filter(
+    (id) => !PARTISANSHIP_STILL_OPEN.includes(id),
+  );
   assert.deepEqual(
-    undetermined.map((r) => r.bodyId),
+    undeclared,
     [],
-    `${undetermined.length} roster(s) still UNDETERMINED — M62 walked all twelve`,
+    `${undeclared.length} roster(s) are UNDETERMINED without being declared open — ` +
+      `add them to PARTISANSHIP_STILL_OPEN with the reason, or source the record`,
   );
 
-  // Stated with its denominator, so a roster added without a partisanship
-  // finding shows up as a number rather than slipping in as a default.
+  // And the list may not rot: an entry that has since been settled is removed.
+  const stale = PARTISANSHIP_STILL_OPEN.filter((id) => !undetermined.includes(id));
+  assert.deepEqual(
+    stale,
+    [],
+    `${stale.length} declared-open roster(s) are no longer UNDETERMINED — settled, so delete the entry`,
+  );
+
+  // A settled answer still has to cite what settled it.
+  for (const roster of BODY_ROSTERS) {
+    if (roster.partisanship === "UNDETERMINED") continue;
+    assert.ok(
+      roster.partisanshipSourceUrl,
+      `${roster.bodyId}: claims ${roster.partisanship} with no record`,
+    );
+  }
+
+  // Stated with its denominator, so the open set is a number rather than a
+  // silence, and M62's own cohort cannot quietly shrink.
   const settled = BODY_ROSTERS.filter((r) => r.partisanshipSourceUrl).length;
   assert.equal(
     settled,
-    BODY_ROSTERS.length,
-    `only ${settled} of ${BODY_ROSTERS.length} rosters cite a partisanship record`,
+    BODY_ROSTERS.length - undetermined.length,
+    `${settled} of ${BODY_ROSTERS.length} rosters cite a partisanship record, with ${undetermined.length} declared open`,
+  );
+  assert.ok(
+    settled >= 12,
+    `only ${settled} rosters are settled — M62 walked twelve and none may regress`,
   );
 });
 

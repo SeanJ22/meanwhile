@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **315 open**, 438 resolved.
+- **314 open**, 439 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **4**
+  - Data infrastructure — **3**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **2**
@@ -498,15 +498,13 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**91 open · 106 resolved.**
+**90 open · 107 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
-
-**NH240** — pnpm coverage --zip <zip>, comparing the authoritative world, verified evidence, canonical product state and the rendered reader state independently, with every delta classified as INTEGRITY_DEFECT or COVERAGE_GAP.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 

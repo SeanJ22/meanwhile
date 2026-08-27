@@ -38,19 +38,19 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## 2026-08-27 · coverage truth session
 
-**What it finished.** 2 row(s).
+**What it finished.** 3 row(s).
 
 - **NH232** — lib/registry/registry.json is written by two different things. pnpm registry:build regenerates it whole from the Census derivation plus the curated rows; scripts/adjudicate-leads.mts APPENDS a row to it every time a discovery lead is promoted to a body. So running the generator deletes every promotion, and the deletion looks like a normal regeneration.
 - **NH233** — The Rocking K South Community Facilities District is a verified government of ZIP 85641 - a separate political taxing subdivision with its own District Board and its own resolution series - and it renders to nobody, because the registry has no division as small as its territory.
+- **NH240** — pnpm coverage --zip <zip>, comparing the authoritative world, verified evidence, canonical product state and the rendered reader state independently, with every delta classified as INTEGRITY_DEFECT or COVERAGE_GAP.
 
-**What it started.** 9 row(s) opened, 9 still open.
+**What it started.** 9 row(s) opened, 8 still open.
 
 - **NH235** — The Central Arizona Water Conservation District's own board page names all 15 popularly elected members, their counties and their officers. The registry body now resolves to UNKNOWN_COMPOSITION - which is honest and is not the roster the reader is owed. *(open)*
 - **NH236** — Every City of Tucson board, committee and commission now resolves to UNKNOWN_COMPOSITION, because each was previously inheriting the Mayor and Council through the division fallback. The City Clerk publishes each board's actual membership. *(open)*
 - **NH237** — The same government has a curated row and a descent-promoted row. The promotion's duplicate check compares names, and the two spellings differ by one word, so it did not match. *(open)*
 - **NH238** — The body is listed in the sidebar's Bodies door and opens its card from there, and typing its name into the ask box offers no Body row at either Pima ZIP. *(open)*
 - **NH239** — CAWCD's own 2026 schedule lists board meetings on 3 September, 1 October, 5 November and 3 December. The snapshot carries September and stops. *(open)*
-- **NH240** — pnpm coverage --zip <zip>, comparing the authoritative world, verified evidence, canonical product state and the rendered reader state independently, with every delta classified as INTEGRITY_DEFECT or COVERAGE_GAP. *(open)*
 - **NH241** — A storage-engine-independent contract for every locally fetched dataset or document: source URL, resolved URL, retrieved timestamp, content type, content hash, jurisdiction, source class, freshness, local path and permission metadata. *(open)*
 - **NH242** — An operator-safety and environment-readiness command reporting PASS / FAIL / MISSING / COULD_NOT_VERIFY / OPTIONAL per capability, with a concrete remediation on every non-PASS and a sentinel-secret regression test across every sink it writes. *(open)*
 - **NH243** — A mechanical test that fails if a canonical product-serving write module imports the local corpus or analysis layer in a way that bypasses the governed ingestion and provenance path. *(open)*

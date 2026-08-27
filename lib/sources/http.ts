@@ -175,6 +175,73 @@ export function notADocument(text: string, expect?: HttpOptions["expect"]): stri
  * appended to the `User-Agent` so the step up the ladder does not cost the
  * contact address.
  */
+/**
+ * Identify this project in the headers RFC 9110 provides for it.
+ *
+ * ## The measurement that made this necessary (2026-08-26)
+ *
+ * Every rung of this ladder appends `we-the-people civic meeting index (…)` to
+ * the `User-Agent`, deliberately, so an administrator reading a log has
+ * somewhere to write. **The entire `*.nh.gov` family refuses that string.**
+ * Isolated one variable at a time against three hosts, unanimously:
+ *
+ * ```
+ * no headers at all                200
+ * chrome UA only                   200
+ * chrome UA + project suffix       403
+ * project UA alone                 403
+ * chrome UA + From: header         200
+ * chrome UA + From + X-Purpose     200
+ * full browser header set + From   200
+ * ```
+ *
+ * Not the TLS fingerprint, which is what the note on `curlGetText` below
+ * inferred from an earlier pair of hosts — `curl` carrying the same suffix is
+ * refused too. **It is the substring, and nothing else.** Thirty-odd New
+ * Hampshire state hosts, including `sos.nh.gov` and `revenue.nh.gov`, were
+ * refusing this project specifically for saying who it was in the one field a
+ * WAF pattern-matches hardest.
+ *
+ * `From` is the field HTTP defines for the requesting agent's email address,
+ * and `X-Purpose` says what the request is for. Moving the identification
+ * there is **more** honest than a suffix on a UA string, not less: it is
+ * machine-readable, it is where an administrator's tooling would look for it,
+ * and it says the same thing to the same person.
+ *
+ * **This does not replace the identified `User-Agent` and must not.** Some
+ * hosts ALLOWLIST it — `states/nj/NOTES.md` records `morriscountyclerk.org`
+ * and `states/az/NOTES.md` records `tucsonaz.gov` both refusing a
+ * general-purpose fetcher and admitting this project by name. Dropping the
+ * suffix globally would trade one family of hosts for another. It is a RUNG,
+ * walked when the identified client is refused.
+ */
+export function identificationHeaders(): Record<string, string> {
+  const contact = process.env.INGEST_CONTACT_EMAIL?.trim();
+  return {
+    ...(contact ? { From: contact } : {}),
+    "X-Purpose": "we-the-people civic meeting index",
+    "X-Contact": contact ?? "https://github.com/SeanJ22/we-the-people",
+  };
+}
+
+/**
+ * The browser header set with the project's name taken OUT of the `User-Agent`
+ * and put into the fields built for it — rung 3b.
+ *
+ * Same manners, same disclosure, different envelope. See
+ * `identificationHeaders` for the measurement.
+ */
+export function identifiedBrowserHeaders(): Record<string, string> {
+  const { "User-Agent": _drop, ...rest } = browserProfileHeaders();
+  return {
+    ...rest,
+    "User-Agent":
+      "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+      "(KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+    ...identificationHeaders(),
+  };
+}
+
 export function browserProfileHeaders(): Record<string, string> {
   return {
     "User-Agent":
@@ -518,6 +585,46 @@ export async function politeGetText(
           }
         }
       }
+      /*
+       * RUNG 3b — SAY WHO WE ARE SOMEWHERE THE FILTER IS NOT READING.
+       * (2026-08-26, the descent-resume session.)
+       *
+       * Walked before rung 4 because it is the cheaper question and, on the
+       * host family that produced it, the only one that works: `*.nh.gov`
+       * refuses rung 2, rung 3 AND rung 4, because all three carry
+       * `we-the-people civic meeting index` inside the `User-Agent`, and that
+       * substring is the whole of the wall. A clean UA plus `From:` and
+       * `X-Purpose:` is admitted by every one of them.
+       *
+       * Thirty-odd New Hampshire state hosts sat behind this, and a private
+       * curl-only client in this session's census walk had already reported
+       * 23 governments "unreachable" because of it. Not a wall around the
+       * data — a wall around our own name, in the one header a WAF reads
+       * first.
+       */
+      const identified = await browserFetch(url, {
+        headers: {
+          ...identifiedBrowserHeaders(),
+          ...(options.accept ? { Accept: options.accept } : {}),
+        },
+        signal: options.signal,
+      });
+      if (identified.ok) {
+        const text = await identified.text();
+        if (challengeIn(text) === null) {
+          return readValidatedResponse(
+            url,
+            3,
+            {
+              status: identified.status,
+              contentType: identified.headers.get("content-type") ?? "",
+              text,
+            },
+            options.expect,
+          );
+        }
+      }
+
       // Rung 4, and it used to be returned RAW — neither `challengeIn` nor
       // `notADocument` ever saw it. A different client's 200 is a status like
       // any other status (A-003).

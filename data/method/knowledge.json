@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 6,
   "updatedOn": "2026-08-26",
   "routes": [
     {
@@ -1456,6 +1456,162 @@
       "origin": "conceived 2026-08-26 while accounting for 88 unreachable Arizona leads: 80 shared one host, and varying the client showed the host was serving 404 for paths that resolve on the directory's redirect target",
       "learnedOn": "2026-08-26",
       "learnedAtVersion": 1
+    },
+    {
+      "id": "census-of-governments-gap-walk",
+      "title": "the Census of Governments as the tier denominator: reconcile an official enumeration against the registry, then open each missing government's OWN reported website",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "roster"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved against the 2022 Census of Governments clipped to three pilot counties. The national file is already committed at data/reference/census_govt_units_2022.csv — 88,748 active governments in 52 state/territory codes, 38,046 of them carrying a web address — so the SHAPE is national even though the walk so far is three counties."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "pilot-counties",
+          "walkedOn": "2026-08-26",
+          "rows": 57,
+          "outcome": "YIELDED",
+          "note": "211 governments in the clip, 86 already held; 90 of the 125 missing reported a website and 57 named themselves when opened"
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26: the link descent works OUTWARD from pages and finds what governments choose to link, which is structurally blind to a fire district nobody links to. This works INWARD from an enumeration that already exists.",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 2
+    },
+    {
+      "id": "county-annual-report-directory",
+      "title": "the county annual report PDF as directory, roster and minutes archive in one file — read the text layer, do not stop at the link",
+      "tier": "A1",
+      "fields": [
+        "body",
+        "roster",
+        "meeting",
+        "vote"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved on one New Hampshire county for one year. Every NH county publishes one because the county convention has to receive it, which is a statutory reason to expect the shape to repeat — and a reason is not a measurement."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-26",
+          "rows": 45,
+          "outcome": "YIELDED",
+          "note": "44 pages, 37 with a native text layer, no OCR needed: the commissioners and ten department heads on page 3, the full 45-member delegation and both sets of officers on page 5, county convention minutes with roll-call votes on pages 22-29. Confirmed a roster a prior session had already recorded, and reconciled it against the General Court roster 42/45 on surname."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26 from this repository's own note: `states/nh/NOTES.md` recorded the Merrimack County Board of Commissioners as COULD NOT ASSERT because 'its source is a PDF annual report and this reader reads HTML', and named ladder rung 9 as owed",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 3
+    },
+    {
+      "id": "official-enumeration-cross-check",
+      "title": "reconcile two INDEPENDENT official enumerations of the same body and record the disagreement rather than choosing one (RULING 57)",
+      "tier": "A0",
+      "fields": [
+        "roster",
+        "body"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved once, on a county delegation. The technique needs two official publishers of the same universe, which is common for legislative bodies and rare for special districts — so its reach is a property of the SUBJECT rather than of the state."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-26",
+          "rows": 6,
+          "outcome": "YIELDED",
+          "note": "45 against 45, 42 agreed on surname; 2 surname spellings and 4 given-name forms disagreed. Recorded on both sides rather than resolved."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26 while reading a county annual report against the General Court member roster the project already held; the counts agreed exactly and six names did not",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 4
+    },
+    {
+      "id": "ladder-rung-inversion",
+      "title": "ladder rung inversion: measure rungs 0/2/3/4 against a host family before trusting the numbering — a higher rung can be a WEAKER client",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "roster",
+        "meeting",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "measured across the *.nh.gov family, where rungs 2, 3 AND 4 are all refused 403 and a HEADER-LESS request is served 200. Isolating one variable at a time identified the cause: the substring `we-the-people civic meeting index`, which every rung puts in the User-Agent. Not the TLS stack — curl carrying the same suffix is refused too. The SHAPE — a WAF that pattern-matches an unfamiliar agent string, so that the politest client in the ladder is the one most likely to be refused — belongs to no single state, and one family is not evidence that it travels."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-26",
+          "rows": 0,
+          "outcome": "ZERO",
+          "note": "0 of 40 host(s) served rung 3 and refused rung 4, measured with curl 8.21.0 (x86_64-w64-mingw32) libcurl/8.21.0 Schannel zlib/1.3.2 brotli/1.2.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 WinLDAP"
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26 after a private curl-only client reported 23 governments unreachable that Node's fetch reached; rung-by-rung measurement across the NH state family showed every identified rung refused and a bare request served, which is the opposite of what the ladder's numbering implies",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 5
+    },
+    {
+      "id": "identified-agent-refused",
+      "title": "the identified agent is the wall: when every client carrying this project's name is refused and an anonymous one is served, move the identification to From:/X-Purpose: rather than removing it",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "roster",
+        "meeting",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "measured across the *.nh.gov family, where a raw Chrome User-Agent is served 200 and the same UA with `we-the-people civic meeting index` appended is refused 403. The SHAPE is a WAF pattern-matching an unfamiliar agent string, which is not New Hampshire's alone. The OPPOSITE also exists in the same state and must keep it honest: newbury.nh.gov refuses every Node client and admits curl, and morriscountyclerk.org and tucsonaz.gov both ALLOWLIST this project by name. Which way a host leans is measured, never assumed."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-26",
+          "rows": 32,
+          "outcome": "YIELDED",
+          "note": "32 of 40 host(s) served an anonymous request and refused EVERY client carrying this project's name; measured with curl 8.21.0 (x86_64-w64-mingw32) libcurl/8.21.0 Schannel zlib/1.3.2 brotli/1.2.0 zstd/1.5.7 libidn2/2.3.8 libpsl/0.21.5 libssh2/1.11.1 WinLDAP"
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26 by isolating one header at a time after every rung of the ladder was refused by hosts that served a bare request",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 6
     }
   ]
 }

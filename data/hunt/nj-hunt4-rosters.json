@@ -1,7 +1,7 @@
 {
   "route": "body-roster-page",
   "branch": "nj-municipal-roster",
-  "walkedAt": "2026-08-22",
+  "walkedAt": "2026-08-26",
   "index": "https://www.morriscountynj.gov/Residents/Community-Information/Cities-and-Towns",
   "results": [
     {
@@ -28,6 +28,7 @@
           "municipality": "butler",
           "pageUrl": "https://www.butlerborough.com/cn/contactinfo/?did=584",
           "names": [
+            "Ryan Martinez",
             "Raymond Verdonik",
             "Marc Piccirillo"
           ],
@@ -59,6 +60,7 @@
           "municipality": "butler",
           "pageUrl": "https://www.butlerborough.com/cn/webpage.cfm?tpid=3570",
           "names": [
+            "Ryan Martinez",
             "Raymond Verdonik",
             "Marc Piccirillo"
           ],
@@ -83,6 +85,7 @@
           "municipality": "butler",
           "pageUrl": "https://www.butlerborough.com/cn/TownCouncil/?tpid=2397",
           "names": [
+            "Ryan Martinez",
             "Raymond Verdonik",
             "Marc Piccirillo"
           ],
@@ -152,6 +155,7 @@
           "municipality": "chester",
           "pageUrl": "https://www.chesterborough.org/government/mayor",
           "names": [
+            "Russell Goodwin",
             "Gary Marshuetz",
             "Michael Dominianni"
           ],
@@ -232,7 +236,7 @@
     {
       "municipality": "hanover_township",
       "siteUrl": "https://www.hanovertownship.com/",
-      "pagesRead": 7,
+      "pagesRead": 5,
       "walls": [],
       "rows": []
     },
@@ -281,6 +285,7 @@
           "municipality": "jefferson_township",
           "pageUrl": "https://www.jeffersontownship.net/directory.aspx",
           "names": [
+            "Eric Wilsusen",
             "Melissa Senatore"
           ],
           "emails": [
@@ -507,6 +512,41 @@
       "rows": [
         {
           "municipality": "kinnelon",
+          "pageUrl": "https://www.kinnelonboro.org/cn/webpage.cfm?tpid=18488",
+          "names": [
+            "James Freda"
+          ],
+          "emails": [],
+          "phones": [
+            "973-838-5401"
+          ],
+          "images": [
+            "https://www.kinnelonboro.org/Images/facebook.png",
+            "https://www.kinnelonboro.org/images/YouTube.png",
+            "https://www.kinnelonboro.org/Images/32x32_w.png",
+            "https://www.kinnelonboro.org/cn/images/dropdown.gif"
+          ]
+        },
+        {
+          "municipality": "kinnelon",
+          "pageUrl": "https://www.kinnelonboro.org/cn/Mayor/?tpid=8659",
+          "names": [
+            "James Freda"
+          ],
+          "emails": [
+            "jfreda@kinnelonboro.org"
+          ],
+          "phones": [
+            "973-838-5401"
+          ],
+          "images": [
+            "https://www.kinnelonboro.org/Images/facebook.png",
+            "https://www.kinnelonboro.org/images/YouTube.png",
+            "https://www.kinnelonboro.org/Images/32x32_w.png"
+          ]
+        },
+        {
+          "municipality": "kinnelon",
           "pageUrl": "https://www.kinnelonboro.org/cn/TownCouncil/?tpid=8660",
           "names": [
             "Sean Mabey",
@@ -526,6 +566,7 @@
           "municipality": "kinnelon",
           "pageUrl": "https://www.kinnelonboro.org/cn/ContactInfo/?tpid=8664",
           "names": [
+            "James Freda",
             "Sean Mabey",
             "Cynthia Frank"
           ],
@@ -562,6 +603,7 @@
           "municipality": "lincoln_park",
           "pageUrl": "https://www.lincolnpark.org/directory.aspx",
           "names": [
+            "David Runfeldt",
             "William Cassidy"
           ],
           "emails": [
@@ -678,6 +720,34 @@
       "rows": [
         {
           "municipality": "mendham",
+          "pageUrl": "https://www.mendhamnj.org/cn/Mayor/?tpid=9671",
+          "names": [
+            "James Kelly"
+          ],
+          "emails": [
+            "jkelly@mendhamnj.org"
+          ],
+          "phones": [
+            "973-543-7152",
+            "(973) 543-7152"
+          ],
+          "images": [
+            "https://www.mendhamnj.org/images/new/rightTriangleRounded-sm.png",
+            "https://www.mendhamnj.org/images/new/Twitter_Circle.png",
+            "https://www.mendhamnj.org/images/new/new_instagram_50.png",
+            "https://www.mendhamnj.org/images/new/nixle-wide2.png",
+            "https://www.mendhamnj.org/cn/images/dropdown.gif",
+            "https://www.mendhamnj.org/images/sdl_8.png",
+            "https://www.mendhamnj.org/images/new/contacts-wh.png",
+            "https://www.mendhamnj.org/images/Code%20Enforcement%20Concern.png",
+            "https://www.mendhamnj.org/images/Report%20a%20Pot%20Hole(1).jpg.png",
+            "https://www.mendhamnj.org/images/JCPL%20OUTAGE.jpg.png",
+            "https://nj.myaccount.pseg.com/-/media/pseg/global/pseandg.ashx?h=62&amp;w=225&amp;la=en&amp;hash=6423EEEE3A61205BC18796BAECE98097",
+            "https://www.mendhamnj.org/images/new/poweredBy.svg"
+          ]
+        },
+        {
+          "municipality": "mendham",
           "pageUrl": "https://www.mendhamnj.org/cn/TownCouncil/?tpid=9705",
           "names": [
             "Marilyn Althoff"
@@ -765,7 +835,7 @@
     {
       "municipality": "montville_township",
       "siteUrl": "https://www.montvillenj.org/",
-      "pagesRead": 5,
+      "pagesRead": 4,
       "walls": [],
       "rows": [
         {
@@ -992,9 +1062,38 @@
     {
       "municipality": "morris_township",
       "siteUrl": "https://www.morristwp.com/",
-      "pagesRead": 6,
+      "pagesRead": 7,
       "walls": [],
-      "rows": []
+      "rows": [
+        {
+          "municipality": "morris_township",
+          "pageUrl": "https://www.morristwp.com/240/Township-Committee",
+          "names": [
+            "Samantha Rothman"
+          ],
+          "emails": [
+            "jsmith@morristwp.com",
+            "dguariglia@morristwp.com",
+            "sjonnada@morristwp.com",
+            "jgrayzel@morristwp.com",
+            "wravitz@morristwp.com"
+          ],
+          "phones": [
+            "973-326-7400"
+          ],
+          "images": [
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9967",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9968",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9988",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=10134",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9992",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9998",
+            "https://www.morristwp.com/ImageRepository/Document?documentID=9986",
+            "https://www.morristwp.com/ImageRepository/Document?documentId=9987",
+            "https://www.morristwp.com/Assets/Images/GoogleTranslate.gif"
+          ]
+        }
+      ]
     },
     {
       "municipality": "morristown",
@@ -1006,9 +1105,30 @@
     {
       "municipality": "mount_arlington",
       "siteUrl": "https://mountarlingtonnj.org/",
-      "pagesRead": 9,
-      "walls": [],
+      "pagesRead": 8,
+      "walls": [
+        {
+          "url": "https://mountarlingtonnj.org/https&#x3A;&#x2F;&#x2F;mountarlingtonnj.org&#x2F;event&#x2F;council-meeting-bh-4&#x2F;&#x3F;instance_id&#x3D;4219",
+          "wall": "HTTP 404 for https://mountarlingtonnj.org/https&#x3A;&#x2F;&#x2F;mountarlingtonnj.org&#x2F;event&#x2F;council-meeting-bh-4&#x2F;&#x3F;instance_id&#x3D;4219"
+        }
+      ],
       "rows": [
+        {
+          "municipality": "mount_arlington",
+          "pageUrl": "https://mountarlingtonnj.org/mayor/",
+          "names": [
+            "Michael Stanzilis"
+          ],
+          "emails": [
+            "info@mtarlingtonboro.com",
+            "mstanzilis@mtarlingtonboro.com"
+          ],
+          "phones": [],
+          "images": [
+            "https://mountarlingtonnj.org/wp-content/uploads/2022/01/MAyor-150x150.jpg",
+            "https://mountarlingtonnj.org/wp-content/plugins/wp-accessibility-helper/assets/images/accessibility-48.jpg"
+          ]
+        },
         {
           "municipality": "mount_arlington",
           "pageUrl": "https://mountarlingtonnj.org/boroughcouncil/",
@@ -1456,7 +1576,7 @@
       "walls": [
         {
           "url": "https://www.victorygardensnj.gov/",
-          "wall": "Cloudflare managed challenge at https://www.victorygardensnj.gov/ — HTTP 200 carrying a challenge page rather than the document, on both clients. This is a WALL, not an empty page."
+          "wall": "Cloudflare managed challenge at https://www.victorygardensnj.gov/ — HTTP 200 carrying a challenge page rather than the document. This is a WALL, not an empty page."
         }
       ],
       "rows": []

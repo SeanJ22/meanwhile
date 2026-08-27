@@ -91,8 +91,15 @@ const AS_OF = declaredSourceStamp({
    * was rewritten that day when `pnpm roster:hunt` grew its sitemap branch, and
    * the artifact was regenerated in the same commit — 19 bodies to 21, 126
    * members to 145.
+   *
+   * Moved to 2026-08-26 by the descent-resume session, and the input that moved
+   * is `lib/registry/registry.json`: 723 bodies were added to it that day — 666
+   * promoted from adjudicated descent leads and 57 from the 2022 Census of
+   * Governments — so the newest of these four inputs is now that file. The
+   * artifact is regenerated in this same commit, which is the half of
+   * RULING 102 that a stamp bump on its own would skip.
    */
-  readOn: "2026-08-24",
+  readOn: "2026-08-26",
   sources: SOURCE_FILES,
 });
 const DRY = process.argv.includes("--dry");

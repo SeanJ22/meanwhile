@@ -279,7 +279,10 @@
     "descent:handoff": "tsx scripts/descent-handoff.mts",
     "descent:fingerprint": "tsx scripts/descent-fingerprint.mts",
     "leads:adjudicate-descent": "tsx scripts/adjudicate-leads.mts",
-    "route:redirected-directory": "tsx scripts/recover-redirected-directory.mts"
+    "route:redirected-directory": "tsx scripts/recover-redirected-directory.mts",
+    "bodies:census-gap": "tsx scripts/census-gap-walk.mts",
+    "ladder:monotonicity": "tsx scripts/ladder-monotonicity.mts",
+    "method:learn-descent": "tsx scripts/learn-descent-routes.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

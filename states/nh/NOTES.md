@@ -573,8 +573,13 @@ It names **10 of the 15** Merrimack governments the Census left blank:
 | HIGHLANDS VILLAGE DISTRICT | Highlands | 0 |
 | NORTHFIELD SEWER DISTRICT | Northfield Sewer | 0 |
 
-**And it names one the Census clip does not carry at all** — *Central Hooksett
-Water*, listed under Hooksett beside the village water precinct.
+**A second correction.** The first version of this paragraph said the table
+names *Central Hooksett Water*, "one the Census clip does not carry at all".
+It does carry it — as a `SPECIAL_DISTRICT` **with a reported website**, which
+is precisely why it was not among the fifteen. Checking before writing would
+have cost one grep.
+
+What is true about it is worse, and is the finding below.
 
 The five that are absent: **East Andover Fire Precinct**, **BCEP Solid Waste
 District**, and the three school districts (Allenstown, Chichester, Henniker).
@@ -611,3 +616,39 @@ the same reason.
 That is a spanning special district evidenced by an independent official source
 rather than by this project's own boundary work — and 03255 is one of the two
 towns.
+
+*Lake Todd is itself in the Census clip, with a reported website. See below for
+what that address does.*
+
+### The Census web_address column is a 2022 snapshot and nothing re-validates it
+
+Six Merrimack special districts reported a website to the Census Bureau. Three
+of those addresses no longer reach the government that reported them, and so
+does the address given for **the pilot ZIP's own town**:
+
+| reported to the Census | what answers today |
+|---|---|
+| `newburyh.org` — **TOWN OF NEWBURY** | does not resolve at all |
+| `laketoddvillagedistrict.us` | HTTP 404 |
+| `centralhooksettwater.com` | "Default Parallels Plesk Panel Page" |
+
+New Jersey has the same shape: `mtoliveboe.org`, the Mount Olive Township
+School District's reported address, answers HTTP 200 and serves a Japanese
+personal-finance blog, and `WWW.MTLAKES.ORG` no longer carries Mountain Lakes
+Borough School District content.
+
+**Measured over the whole clip:** of the 90 governments that reported a usable
+address, 57 opened and named themselves, 25 were unreachable at every rung, and
+8 answered with a page about something else. **A third of the column did not
+lead to the government that filed it.**
+
+None of that makes any of these governments absent. Newbury's real site is
+`newbury.nh.gov`, which this project has been reading all along, and the DRA
+rate table proves Lake Todd and Central Hooksett Water both still levy. It is
+the ADDRESS that has rotted, in a column dated 2022 that no process re-checks.
+
+**The control is the only thing standing between that column and the
+registry.** `pnpm bodies:census-gap` promotes a body only when the page names
+the entity, which is why none of these five was written in — and why a walk
+that had trusted an HTTP 200 would have pointed readers at a stranger's blog
+and a parked server.

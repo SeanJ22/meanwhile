@@ -87,7 +87,7 @@ const ROUTES: Learned[] = [
       jurisdiction: "nh",
       rows: 45,
       outcome: "YIELDED",
-      note: "180-row village sheet; 10 of Merrimack's 15 no-website governments named, plus Central Hooksett Water which the Census clip does not carry at all. The five absent are two districts and three school districts, which are apportioned in a different DRA publication. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence.",
+      note: "180-row village sheet; 10 of Merrimack's 15 no-website governments named. The five absent are East Andover Fire Precinct, BCEP Solid Waste District and three school districts, which are apportioned in a different DRA publication. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence.",
     },
   },
   {
@@ -105,6 +105,23 @@ const ROUTES: Learned[] = [
       rows: 26,
       outcome: "YIELDED",
       note: "26 sitemap URLs mentioning rates, villages or precincts, one of which was the village-district tax-rate page the walk needed and the rendered page did not link",
+    },
+  },
+  {
+    id: "reported-address-has-rotted",
+    title:
+      "an official register's web-address column is a snapshot: re-validate it, and treat a page that does not name the government as a stale ADDRESS rather than an absent body",
+    tier: "A0",
+    fields: ["body", "source"],
+    note:
+      "measured across the 2022 Census of Governments clip for three counties. The column is dated 2022 and no process re-checks it. Every register with a URL column has this shape — a state agency directory, a school-district list, a licensing roster — so the CHECK travels even though the specific rot does not.",
+    origin:
+      "conceived 2026-08-27 after a promotion control refused a page: mtoliveboe.org, the Mount Olive Township School District's reported address, answers HTTP 200 and serves a Japanese personal-finance blog",
+    outcome: {
+      jurisdiction: "pilot-counties",
+      rows: 33,
+      outcome: "YIELDED",
+      note: "of 90 governments reporting a usable address, 57 opened and named themselves, 25 were unreachable at every rung and 8 answered with a page about something else — a THIRD of the column did not lead to the government that filed it. Named cases: newburyh.org (Town of Newbury, the pilot ZIP's own town) does not resolve; laketoddvillagedistrict.us 404s; centralhooksettwater.com serves a Parallels Plesk default page; mtoliveboe.org serves a Japanese finance blog; WWW.MTLAKES.ORG carries no district content. None is an absent government — Newbury's live site is newbury.nh.gov and the DRA rate table proves Lake Todd and Central Hooksett still levy.",
     },
   },
   {

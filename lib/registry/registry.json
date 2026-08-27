@@ -88475,6 +88475,26 @@
     "collectedAt": "2026-08-27",
     "verifiedAt": "2026-08-27"
    }
+  },
+  {
+   "id": "curated:az/central-arizona-water-conservation-district#governing",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Central Arizona Water Conservation District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "KNOWN_UNCOVERED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": "https://www.cap-az.com/meetings/",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.cap-az.com/board/board-members/",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.cap-az.com/board/board-members/",
+    "sourceOrg": "Pima County; a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county. Three are confirmed Pima County from their own pages — Karen Cesare, Pat Jacobs and Mark Taylor; four members' pages do not state a county and are NOT assigned to one here. Territory: it taxes every parcel in Pima County: Pima County Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water storage secondary at 0.0400 on the county's full $12,350,762,412 valuation, plus groundwater replenishment charged per acre-foot and per lot. That is how this district was found at all — it appears in no Pima County directory and on no boundary layer this project has walked. Wiring: county:pima UNDER-serves rather than over-serves, deliberately. The district also covers Maricopa and Pinal, so a reader there is governed by it and will not see it — but this product covers neither county, and the alternative (no division at all) would hide it from the readers it does cover. When Maricopa or Pinal is added, this row takes alsoServesOcdIds.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
   }
  ]
 }

@@ -6,8 +6,8 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1256,
-    "verified": 729,
+    "swept": 1257,
+    "verified": 730,
     "mismatched": 0,
     "adjudicated": 1,
     "noSource": 526
@@ -12570,6 +12570,16 @@
     },
     {
       "bodyId": "curated:az/pima-county-stadium-district#governing",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "curated:az/central-arizona-water-conservation-district#governing",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",

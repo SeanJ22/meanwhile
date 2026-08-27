@@ -14,13 +14,13 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **307 open**, 436 resolved.
+- **308 open**, 436 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
-  - Arizona hunt — **1**
+  - Arizona hunt — **2**
   - Visual feedback — **2**
   - Data infrastructure — **4**
   - Product / UI — **1**
@@ -398,11 +398,13 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**24 open · 0 resolved.**
+**25 open · 0 resolved.**
 
 ### P1
 
 **NH226** — Two things this project has written down about Vail are wrong, and both are now measured. The stored board roster had six names when the board has five. And the research note says the Vail area is in one legislative district when it is in two.
+
+**NH234** — A directly elected government that taxes every parcel in Pima County has no meeting adapter, and adding it to the registry correctly moved both Pima pilot zips from NONE_SCHEDULED to NO_SOURCE.
 
 ### P2
 

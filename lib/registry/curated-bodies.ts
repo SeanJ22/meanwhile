@@ -961,6 +961,19 @@ function pima85641DistrictRows(): Body[] {
      */
     ocdId: Body["ocdId"];
     wiring: string;
+    /**
+     * WHERE THIS BODY ACTUALLY MEETS — per row, not per function.
+     *
+     * The four districts the Board of Supervisors sits as have no calendar of
+     * their own and their business is on the county's Legistar calendar, which
+     * is a finding rather than a fallback. The Central Arizona Water
+     * Conservation District is the opposite: it is directly elected, it holds
+     * its own board meetings, and putting it on the county's calendar would
+     * send a reader to the wrong room.
+     */
+    agenda:
+      | { type: "LEGISTAR"; ref: string; status: "LIVE" }
+      | { type: "NONE"; ref: string | null; status: "KNOWN_UNCOVERED" };
   }> = [
     {
       slug: "pima-rocking-k-south-cfd",
@@ -973,6 +986,7 @@ function pima85641DistrictRows(): Body[] {
       ocdId: null,
       wiring:
         "NOT MATCHED AT A POINT, and that is a stated gap rather than a silent one. This district is 2,047 acres of platted subdivision inside unincorporated Pima County, and the registry holds no division that small. Attaching it to county:pima would show a district that taxes 2,047 acres to every reader in a 9,200-square-mile county — a false claim about their government, in the direction that looks like coverage. What closes it is a division carrying the plat geometry the cfd:territory instrument already resolves.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
       slug: "pima-regional-flood-control-district",
@@ -985,6 +999,7 @@ function pima85641DistrictRows(): Body[] {
       ocdId: PIMA_COUNTY,
       wiring:
         "county:pima is not an approximation. The district's own formation page says the 1978 legislation mandated one in every Arizona county and that the districts were set up to be aligned with county boundaries.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
       slug: "pima-county-free-library-district",
@@ -997,6 +1012,7 @@ function pima85641DistrictRows(): Body[] {
       ocdId: PIMA_COUNTY,
       wiring:
         "county:pima IS the statutory boundary — A.R.S. 48-3903 levies the tax upon all property in the county.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
       slug: "pima-county-stadium-district",
@@ -1009,6 +1025,24 @@ function pima85641DistrictRows(): Body[] {
       ocdId: PIMA_COUNTY,
       wiring:
         "county:pima IS the statutory boundary — A.R.S. 48-4202(A) authorises a COUNTYWIDE district including both the incorporated and unincorporated areas of the county.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
+    },
+    {
+      slug: "central-arizona-water-conservation-district",
+      name: "Central Arizona Water Conservation District Board of Directors",
+      homepage: "https://www.cap-az.com/board/board-members/",
+      authority:
+        "a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county. Three are confirmed Pima County from their own pages — Karen Cesare, Pat Jacobs and Mark Taylor; four members' pages do not state a county and are NOT assigned to one here.",
+      territory:
+        "it taxes every parcel in Pima County: Pima County Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water storage secondary at 0.0400 on the county's full $12,350,762,412 valuation, plus groundwater replenishment charged per acre-foot and per lot. That is how this district was found at all — it appears in no Pima County directory and on no boundary layer this project has walked.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima UNDER-serves rather than over-serves, deliberately. The district also covers Maricopa and Pinal, so a reader there is governed by it and will not see it — but this product covers neither county, and the alternative (no division at all) would hide it from the readers it does cover. When Maricopa or Pinal is added, this row takes alsoServesOcdIds.",
+      agenda: {
+        type: "NONE" as const,
+        ref: "https://www.cap-az.com/meetings/",
+        status: "KNOWN_UNCOVERED" as const,
+      },
     },
   ];
 
@@ -1019,13 +1053,22 @@ function pima85641DistrictRows(): Body[] {
     bodyClass: "GOVERNING" as const,
     bodyOrigin: "CURATED" as const,
     /*
-     * LIVE, not NOT_ATTEMPTED: the agenda hunt is done for these. The county's
-     * Legistar tenant is already wired, and each district's own budget
-     * hearings and resolutions are in it — searched and found, not assumed.
+     * The status is the ROW's, because the answer differs by row and averaging
+     * them would be a claim about all five.
+     *
+     * LIVE for the four the Board of Supervisors sits as: the agenda hunt is
+     * done for them. The county's Legistar tenant is already wired and each
+     * district's own budget hearings and resolutions are in it — searched and
+     * found, not assumed.
+     *
+     * KNOWN_UNCOVERED for the Central Arizona Water Conservation District: it
+     * is directly elected, it holds its own board meetings at a page this
+     * project has found and not yet read, and there is deliberately no way to
+     * record "gave up" here.
      */
-    coverageStatus: "LIVE" as const,
-    agendaSourceType: "LEGISTAR" as const,
-    agendaSourceRef: PIMA_LEGISTAR,
+    coverageStatus: row.agenda.status,
+    agendaSourceType: row.agenda.type,
+    agendaSourceRef: row.agenda.ref,
     meetingCadence: null,
     homepageUrl: row.homepage,
     demandCount: 0,

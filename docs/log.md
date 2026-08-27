@@ -52,10 +52,11 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## 2026-08-27 · 85641 detective session
 
-**What it started.** 2 row(s) opened, 2 still open.
+**What it started.** 3 row(s) opened, 3 still open.
 
 - **NH232** — lib/registry/registry.json is written by two different things. pnpm registry:build regenerates it whole from the Census derivation plus the curated rows; scripts/adjudicate-leads.mts APPENDS a row to it every time a discovery lead is promoted to a body. So running the generator deletes every promotion, and the deletion looks like a normal regeneration. *(open)*
 - **NH233** — The Rocking K South Community Facilities District is a verified government of ZIP 85641 - a separate political taxing subdivision with its own District Board and its own resolution series - and it renders to nobody, because the registry has no division as small as its territory. *(open)*
+- **NH234** — A directly elected government that taxes every parcel in Pima County has no meeting adapter, and adding it to the registry correctly moved both Pima pilot zips from NONE_SCHEDULED to NO_SOURCE. *(open)*
 
 **Needs Sean.** Nothing.
 

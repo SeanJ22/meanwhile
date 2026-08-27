@@ -298,11 +298,26 @@ test("85641 states the unincorporated fact and still names its government", () =
   // plainly that there is no city government.
   const coverage = coverageFor("85641", 0);
 
-  // NONE_SCHEDULED, not NO_SOURCE, since 2026-08-13: both of Vail's governing
-  // bodies (Pima County via Legistar, Vail Unified via its own site's events
-  // API) are LIVE in the composite, so an empty calendar is now a statement
-  // about the calendar rather than about our coverage.
-  assert.equal(coverage.state, "NONE_SCHEDULED");
+  /*
+   * NO_SOURCE again since 2026-08-27, and the regression is the system working.
+   *
+   * From 2026-08-13 this was NONE_SCHEDULED because both of Vail's governing
+   * bodies were LIVE, so an empty calendar was a statement about the calendar.
+   * The 85641 detective session then found a governing body nobody knew about:
+   * the CENTRAL ARIZONA WATER CONSERVATION DISTRICT, which levies on every
+   * parcel in Pima County (Resolution 2026-43, ad valorem secondary 0.1000 plus
+   * water storage 0.0400 on the county's whole valuation) and whose board is
+   * DIRECTLY ELECTED. It holds its own meetings and this project has no adapter
+   * for them.
+   *
+   * So there is now a government at this point whose calendar we cannot read,
+   * and NO_SOURCE is the true statement. Keeping NONE_SCHEDULED would require
+   * either hiding the district or pretending we can see its calendar, and
+   * CLAUDE.md forbids the first in as many words — collection state never
+   * governs display, and nothing is suppressed because something else is
+   * missing. The honest answer to this state is an adapter, not a quieter test.
+   */
+  assert.equal(coverage.state, "NO_SOURCE");
   assert.equal(coverage.unincorporated, true, "Vail is unincorporated and must say so");
 
   const labels = coverage.bodies.map((b) => b.divisionLabel);
@@ -341,9 +356,15 @@ test("nobody is ever told they have no representation", () => {
 
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
-  // Every body governing 85701 is LIVE as of 2026-08-13, so zero meetings is
-  // an empty calendar, not a coverage gap…
-  assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
+  /*
+   * 85701 was NONE_SCHEDULED from 2026-08-13 and is NO_SOURCE again from
+   * 2026-08-27, for the same reason as 85641 above: the Central Arizona Water
+   * Conservation District governs every parcel in Pima County, which includes
+   * this one, and no adapter reads its calendar. Both Pima zips move together
+   * because the district's territory is the county — which is itself the check
+   * that the finding was applied, rather than pinned to the zip that found it.
+   */
+  assert.equal(coverageFor("85701", 0).state, "NO_SOURCE");
   // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
   // GOVERNING body at the point without a source — was wired (M78). The two
   // bodies still unwired there are Rockaway's Environmental Commission and

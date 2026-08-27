@@ -75,6 +75,9 @@ import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { globalIntegrityLine } from "../lib/ops/integrity-claim.ts";
+import { answerQuestion } from "../lib/routing/ask.ts";
+import { resolveRouting } from "../lib/routing/resolve.ts";
 import { coverageAt } from "../lib/registry/server.ts";
 import { membersOfBody } from "../lib/registry/body-composition.ts";
 import { officeIdentity } from "../lib/officials/office-identity.ts";
@@ -217,6 +220,103 @@ function seamsIn(zip: string): { combinations: number; streets: number; detail: 
 }
 
 /* ------------------------------------------------------------ the measure */
+
+/**
+ * The Ask probes for one point, and what they found.
+ *
+ * A government from ANOTHER pilot is used as the "elsewhere" name, so the probe
+ * is a real government this product holds rather than an invented string — the
+ * defect was never about unknown names, it was about a known name being
+ * overridden by the reader's location.
+ */
+function askEntityProbes(
+  zip: string,
+  coverage: Awaited<ReturnType<typeof coverageAt>>,
+): { total: number; correct: number; substitutions: string[] } {
+  const localLabels = coverage.bodies
+    .map((b) => b.name ?? b.divisionLabel)
+    .filter((l): l is string => Boolean(l));
+
+  /* A government held by the product, deliberately NOT at this point. */
+  const elsewhere = ELSEWHERE_BY_ZIP[zip];
+  /*
+   * A government that IS at this point — and specifically a SCHOOL DISTRICT,
+   * because the probe question below says "school district" to make the topic
+   * route. The first version took any place or district, which produced
+   * *"What's on the Tucson school district agenda?"* about the CITY of Tucson
+   * and then flagged the correct answer (Tucson Unified) as a substitution. A
+   * probe has to ask a question that means what the checker assumes it means.
+   */
+  const local = coverage.bodies.find((b) => b.divisionType === "school_district");
+
+  const substitutions: string[] = [];
+  let total = 0;
+  let correct = 0;
+
+  /*
+   * **THE PROBE MUST ROUTE, OR IT PROVES NOTHING.**
+   *
+   * The first version of this asked *"What's on the Vail Unified District
+   * agenda?"* — which contains no topic keyword, so `matchTopic` returned null,
+   * no body was ever named, and the probe scored itself CORRECT. Disabling the
+   * repair did not make it fire. A probe that passes whether or not the defect
+   * is present is worse than no probe, because it reports green.
+   *
+   * So the question carries the words that actually route ("school district"),
+   * and a probe whose question fails to route is reported as a SUBSTITUTION
+   * rather than silently counted as a pass.
+   */
+  const probe = (name: string, question: string, forbidden: (named: string[]) => string[]) => {
+    total++;
+    const asked = answerQuestion(question, coverage, zip, { entities: [] });
+    if (asked.answer.kind !== "ROUTED") {
+      substitutions.push(
+        `PROBE DID NOT ROUTE: ${JSON.stringify(question)} produced no topic, so it tests nothing`,
+      );
+      return;
+    }
+    const named = asked.answer.steps.flatMap((s) => s.bodies.map((b) => b.label));
+    const wrong = forbidden(named);
+    if (wrong.length > 0) {
+      substitutions.push(`asked about "${name}", answered about ${wrong.join(", ")}`);
+    } else {
+      correct++;
+    }
+  };
+
+  if (elsewhere) {
+    /* A government we hold, deliberately not at this point. No LOCAL body may
+     * be named in reply — that is the reported defect exactly. */
+    probe(elsewhere, `What's on the ${elsewhere} school district agenda?`, (named) =>
+      named.filter((n) => localLabels.includes(n)),
+    );
+  }
+
+  if (local) {
+    /* And the reader's own government must still answer for them, or the
+     * repair has cost more than it fixed. */
+    const label = local.name ?? local.divisionLabel ?? "";
+    probe(label, `What's on the ${label} school district agenda?`, (named) =>
+      named.filter((n) => n !== label && localLabels.includes(n)),
+    );
+  }
+
+  return { total, correct, substitutions };
+}
+
+/**
+ * A government this product holds that is NOT at the given zip. Stated per zip
+ * rather than derived, so the probe cannot quietly become a self-comparison.
+ */
+const ELSEWHERE_BY_ZIP: Record<string, string> = {
+  /* Vail is ~30 miles from central Tucson and is the tester's own case. */
+  "85701": "Vail Unified District",
+  "85641": "Sunnyside Unified District",
+  "07866": "Kearsarge Regional School District",
+  /* A SCHOOL DISTRICT, like the others — the probe question says "school
+   * district", so naming a township here asked a question nobody would. */
+  "03255": "Morris Hills Regional School District",
+};
 
 async function measure(
   zip: string,
@@ -456,6 +556,45 @@ async function measure(
     }
   }
 
+  /* ---- Surface: Ask entity routing ------------------------------------- */
+  /*
+   * **THE SURFACE THAT WAS UNMEASURED WHILE IT CARRIED A DEFECT.**
+   * (2026-08-27.)
+   *
+   * A tester asked what was on the Vail school district agenda at a Tucson zip
+   * and was told about Sunnyside Unified. This instrument reported zero
+   * integrity defects that day, truthfully, because Ask was not one of the
+   * surfaces it measured — and "zero over the measured subset" is exactly the
+   * claim `lib/ops/integrity-claim.ts` now refuses to let a report compress.
+   *
+   * So Ask is measured here, through the SAME pure function the reader's
+   * surface calls, with the SAME coverage the serving path returns. Two probes,
+   * each aimed at one half of the contract:
+   *
+   * 1. **A government we hold but that is NOT at this point.** The answer may
+   *    not name a local body. Naming one is the reported defect exactly.
+   * 2. **A government that IS at this point.** The answer must still name it —
+   *    a repair that simply stopped answering whenever a name appears would
+   *    pass probe 1 and break the product, so both are required.
+   */
+  const askProbes = askEntityProbes(zip, served);
+  rows.push({
+    surface: "Ask entity routing (question names a government)",
+    external: null,
+    evidence: null,
+    product: askProbes.total,
+    served: askProbes.correct,
+    claimed: true,
+    delta: askProbes.substitutions.length > 0 ? "INTEGRITY_DEFECT" : "AGREES",
+    why:
+      askProbes.substitutions.length > 0
+        ? `Ask answered about a DIFFERENT government than the one named: ${askProbes.substitutions.join("; ")}`
+        : `${askProbes.correct} of ${askProbes.total} probe(s) bound to the government named, or said honestly that it could not be resolved. A named government is never silently replaced by the reader's own.`,
+  });
+  for (const substitution of askProbes.substitutions) {
+    defects.push(`${zip}: Ask substituted a government — ${substitution}`);
+  }
+
   /* ---- Surfaces this instrument does not reach -------------------------- */
   unmeasured.push(
     {
@@ -581,6 +720,19 @@ console.log(
 );
 
 /*
+ * **AND THE GLOBAL QUESTION, ANSWERED AS ITS OWN LINE** (2026-08-27).
+ *
+ * The paragraph above already said this in prose, and a session still
+ * compressed the run into "0 integrity defects" in its report — after which a
+ * tester found a reader-visible defect on Ask, one of the unmeasured surfaces.
+ * So the verdict is now a NAMED FIELD that a report can carry forward without
+ * having to re-derive it, and `lib/ops/integrity-claim.ts` holds the guard that
+ * catches the compression.
+ */
+const tally = { measured: surfaces, unmeasured, defects };
+console.log(`\n  ${globalIntegrityLine(tally)}`);
+
+/*
  * **THE INSTRUMENT IS SHOWN CATCHING THE REAL THING, ON EVERY RUN.**
  *
  * A coverage instrument written the same day its defects were repaired will
@@ -610,6 +762,45 @@ console.log(
     `  list yields ${control.defects.length} integrity defect(s) — the shape that rendered CAWCD's\n` +
     "  '0 upcoming'. The classifier fires, so the zero above is a measurement.",
 );
+
+/*
+ * **AND THE SAME CONTROL FOR THE ASK SURFACE** (2026-08-27).
+ *
+ * The Ask probe was added because a tester found a defect this instrument could
+ * not see. Its FIRST version could not see it either: the probe question
+ * carried no topic keyword, nothing routed, and it scored itself green whether
+ * or not the repair was in place. So the pre-repair path is re-run here on
+ * every run and is required to still produce the substitution.
+ *
+ * `resolveRouting` called WITHOUT a binding is exactly the code that shipped
+ * the Sunnyside answer.
+ */
+{
+  const point = ZIP_POINTS["85701"];
+  const cov = await coverageAt(point[0], point[1], 0);
+  const preRepair = resolveRouting("schools-policy", cov)
+    .steps.flatMap((s) => s.bodies.map((b) => b.label));
+  const bound = resolveRouting("schools-policy", cov, {
+    kind: "UNRESOLVED",
+    mention: "vail",
+  }).steps.flatMap((s) => s.bodies.map((b) => b.label));
+
+  if (preRepair.length === 0 || bound.length > 0) {
+    console.error(
+      "\ncoverage: the Ask entity-routing control did not reproduce the defect. Unbound routing " +
+        `named ${preRepair.length} body/bodies and a named-but-unresolved government still named ` +
+        `${bound.length}. The probe cannot distinguish the repaired path from the broken one and ` +
+        "is reporting green about nothing (RULING 110).",
+    );
+    process.exit(1);
+  }
+  console.log(
+    `\n  control: at 85701, routing a schools question with NO entity binding names\n` +
+      `  ${preRepair.join(", ")} — the reader's own district, which is what answered a question\n` +
+      "  about Vail. With the government named but unresolved it names none. The Ask probe\n" +
+      "  can tell those apart, so its zero above is a measurement.",
+  );
+}
 
 if (out) {
   writeFileSync(out, `${JSON.stringify({ generatedAt: snapshot.generatedAt, results }, null, 1)}\n`, "utf8");

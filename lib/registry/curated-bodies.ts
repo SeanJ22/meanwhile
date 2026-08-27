@@ -395,6 +395,15 @@ export const CURATED_BODIES: Body[] = [
   // Supervisors sitting as it. See `pima85641DistrictRows` below. ───────────
   ...pima85641DistrictRows(),
 
+  // ── The 85641 detective session (2026-08-27): the board that rules on a
+  // variance next door. Pima County has FIVE District Boards of Adjustment,
+  // one per Supervisor district, each with five members appointed by that
+  // Supervisor under A.R.S. 11-807. District 4 is 85641's, and its roster is
+  // in `lib/registry/body-rosters.ts`, read off its own agenda because the
+  // county's Boards of Adjustment page publishes a Members heading with
+  // nothing under it. ───────────────────────────────────────────────────────
+  pimaBoardOfAdjustmentDistrict4(),
+
   // ── The depth session (2026-08-15): Rockaway Township's other boards ────
   // One division, many bodies — the same shape as Tucson's, and the reason
   // 07866 read thin. The township's AgendaCenter enumerates exactly five
@@ -1090,6 +1099,51 @@ function pima85641DistrictRows(): Body[] {
       verifiedAt: collected,
     },
   }));
+}
+
+/**
+ * **PIMA COUNTY BOARD OF ADJUSTMENT, DISTRICT 4** — 85641's variance board.
+ * (2026-08-27.)
+ *
+ * COMMISSION rather than GOVERNING, and the distinction matters to the reader
+ * rather than to a taxonomy: this board is APPOINTED by one Supervisor under
+ * A.R.S. § 11-807, it rules on variances and interpretations of the zoning
+ * code and issues temporary use permits, and it does not govern. The coverage
+ * state deliberately does not turn on an unwired COMMISSION, because an
+ * advisory or quasi-judicial board with no calendar must not read as a
+ * government whose calendar is missing.
+ *
+ * KNOWN_UNCOVERED and not LIVE: its agendas are a list of CivicPlus documents
+ * on `pima.gov/2792` rather than a calendar any adapter here reads. The
+ * September 2026 agenda was read by hand for the roster, which is exactly why
+ * this is recorded as uncovered rather than as done — one agenda read is not a
+ * meeting source, and there is deliberately no way to record "gave up".
+ */
+function pimaBoardOfAdjustmentDistrict4(): Body {
+  const PIMA = "ocd-division/country:us/state:az/county:pima";
+  return {
+    id: `${PIMA}#board-of-adjustment-district-4`,
+    ocdId: PIMA as Body["ocdId"],
+    name: "Pima County Board of Adjustment, District 4",
+    bodyClass: "COMMISSION",
+    bodyOrigin: "CURATED",
+    coverageStatus: "KNOWN_UNCOVERED",
+    agendaSourceType: "NONE",
+    agendaSourceRef: "https://www.pima.gov/2792",
+    // From the county's own page: "Second Tuesday of Each Month at 1:30 pm
+    // (See Note)", the note being "Except as Noted".
+    meetingCadence: "Second Tuesday of each month at 1:30 pm, except as noted",
+    homepageUrl: "https://www.pima.gov/1027/Boards-of-Adjustment",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY",
+    provenance: {
+      sourceUrl: "https://www.pima.gov/1027/Boards-of-Adjustment",
+      sourceOrg:
+        "Pima County Development Services. The county's page: 'There are five District Boards of Adjustment, one from each Board of Supervisors District. Each Supervisorial District appoints five members from their District. The Boards of Adjustment rule on variance and interpretation requests of the Pima County Zoning Code and approve the issuance of temporary use permits in accordance with the ARS Sec. 11-807 and Chapter 18.93, Section 18.101.050 of the Zoning Code.' Staff Planner for District 4: Matthew Bacal.",
+      collectedAt: "2026-08-27",
+      verifiedAt: "2026-08-27",
+    },
+  };
 }
 
 /**

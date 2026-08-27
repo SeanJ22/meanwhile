@@ -6,8 +6,8 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1257,
-    "verified": 730,
+    "swept": 1258,
+    "verified": 731,
     "mismatched": 0,
     "adjudicated": 1,
     "noSource": 526
@@ -12580,6 +12580,16 @@
     },
     {
       "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",

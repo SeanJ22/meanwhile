@@ -88495,6 +88495,26 @@
     "collectedAt": "2026-08-27",
     "verifiedAt": "2026-08-27"
    }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Pima County Board of Adjustment, District 4",
+   "bodyClass": "COMMISSION",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "KNOWN_UNCOVERED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": "https://www.pima.gov/2792",
+   "meetingCadence": "Second Tuesday of each month at 1:30 pm, except as noted",
+   "homepageUrl": "https://www.pima.gov/1027/Boards-of-Adjustment",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1027/Boards-of-Adjustment",
+    "sourceOrg": "Pima County Development Services. The county's page: 'There are five District Boards of Adjustment, one from each Board of Supervisors District. Each Supervisorial District appoints five members from their District. The Boards of Adjustment rule on variance and interpretation requests of the Pima County Zoning Code and approve the issuance of temporary use permits in accordance with the ARS Sec. 11-807 and Chapter 18.93, Section 18.101.050 of the Zoning Code.' Staff Planner for District 4: Matthew Bacal.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
   }
  ]
 }

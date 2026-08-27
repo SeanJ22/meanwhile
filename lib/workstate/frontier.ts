@@ -36,6 +36,27 @@ export function edgeId(state: string, tier: string, url: string, text = ""): str
   return `edge-${h.slice(0, 12)}`;
 }
 
+/**
+ * Stable candidate id.
+ *
+ * **Hashes (state, url, text) and NOT the tier**, which is not an oversight:
+ * `workstream-migrate.mts` minted every candidate on disk with exactly these
+ * parts on 2026-08-26, and a live walk that re-finds a migrated lead has to
+ * land on the same id or it re-records it as new — inflating the denominator
+ * with a row that is the same lead, and silently resetting any classification
+ * the lead had already earned.
+ *
+ * The tier IS in `edgeId` because the same URL is legitimately declined at
+ * more than one tier and hashing the URL alone collided 7 times in AZ. A
+ * candidate does not have that problem: it is a named entity, and the same
+ * entity named at two tiers is one entity.
+ */
+export function candidateId(state: string, tier: string, url: string, text = ""): string {
+  void tier;
+  const h = createHash("sha256").update([state, url, text].join(" "), "utf8").digest("hex");
+  return `cand-${h.slice(0, 12)}`;
+}
+
 export function frontierPath(root: string, state: string): string {
   return join(root, "data", "workstate", `${state}.json`);
 }
@@ -178,6 +199,27 @@ export function deriveCursor(w: Workstream, state: string): string {
     next ? `next: ${next.id} ${next.url}` : "no next edge",
     `eligibility ${ELIGIBLE_EDGE_VERSION}`,
   ];
+  /*
+   * THE HISTORICAL OBLIGATION IS PART OF THE CURSOR, AND IT IS DERIVED.
+   *
+   * It was not, until 2026-08-26. `workstream-migrate.mts` WROTE the clause
+   * "unmaterialized obligation 1986 (legacy final pass, identities never
+   * persisted)" into the cursor string once, and this function never produced
+   * it — so the first command to regenerate a cursor silently dropped it, and
+   * the next session's handoff would have stopped mentioning 3,900 edges the
+   * project still owes. `descent.mts` had the same latent bug and would have
+   * hit it on its next pass.
+   *
+   * A cursor is GENERATED FROM CANONICAL STATE (RULING 181). An obligation
+   * that lives in `w.unmaterialized` and only reaches the cursor because one
+   * migration typed it there is not generated, it is remembered — and the
+   * thing about remembered strings is that they are lost exactly once.
+   */
+  const owed = w.unmaterialized ?? [];
+  const total = owed.reduce((n, u) => n + (u.count ?? 0), 0);
+  if (total > 0) {
+    parts.push(`unmaterialized obligation ${total} (legacy final pass, identities never persisted)`);
+  }
   return parts.join(" / ");
 }
 

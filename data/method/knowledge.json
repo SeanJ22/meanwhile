@@ -1,5 +1,5 @@
 {
-  "version": 0,
+  "version": 1,
   "updatedOn": "2026-08-26",
   "routes": [
     {
@@ -1426,6 +1426,36 @@
       "origin": "lib/hunt/branch-manifest.ts (v7)",
       "learnedAtVersion": 0,
       "learnedOn": null
+    },
+    {
+      "id": "redirected-directory-rehost",
+      "title": "redirected directory re-host: resolve a directory's links against the FINAL url, and retry a 404'd recorded link on the redirect target",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "roster"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "established on one state portal (az.gov -> azdirect.az.gov). The SHAPE — a portal whose directory redirects across hosts while serving root-relative links — is common enough to be worth inheriting, and one state is not evidence that it travels. Portability is earned from recorded outcomes."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-26",
+          "rows": 69,
+          "outcome": "YIELDED",
+          "note": "80 stranded lead(s) retried on the redirect target; 69 resolved, 11 met an interstitial, 0 still absent there"
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-26 while accounting for 88 unreachable Arizona leads: 80 shared one host, and varying the client showed the host was serving 404 for paths that resolve on the directory's redirect target",
+      "learnedOn": "2026-08-26",
+      "learnedAtVersion": 1
     }
   ]
 }

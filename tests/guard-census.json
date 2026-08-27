@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 271,
-    "named": 2684,
+    "files": 272,
+    "named": 2706,
     "dynamic": 6
   },
   "files": {
@@ -1718,7 +1718,7 @@
         "FINDING 4 — recording is idempotent across sessions",
         "FINDING 4 — the OPERATIONAL descent path writes outcomes through the canonical store",
         "FINDING 4 — the real store round-trips a recorded outcome",
-        "the hotfix did not advance the descent"
+        "the descent only ever grows from the hotfix fingerprint — nothing is lost or rewritten"
       ],
       "dynamic": 0
     },
@@ -1998,6 +1998,33 @@
         "OFF-2: EVERY letter-spaced run trims its trailing space, not only the pinned ones",
         "OFF-2: the six LBL-2 sites fixed on 2026-08-23 have NOT regressed",
         "OFF-2: the trim MATCHES its run's tracking, never a near-enough value"
+      ],
+      "dynamic": 0
+    },
+    "tests/lead-adjudication.test.ts": {
+      "names": [
+        "a body may not be promoted straight from a lead",
+        "a body word is necessary and nowhere near sufficient",
+        "a hyphenated word is not an acronym gloss",
+        "a menu label is rejected whole, never as a substring of a real name",
+        "a municipality found ON an association's directory still survives",
+        "a partisan caucus office is not a body of government",
+        "a plural organ anywhere means the page is a directory of bodies",
+        "a promotion without a registry id is refused — that is a lead with a better label",
+        "a re-record does not reset a classification already earned",
+        "a recorded lead is a lead, and raises coverage by nothing",
+        "a rejection keeps the row, its url and its reason — a zero-yield route is knowledge",
+        "an association's own material is not a unit of government",
+        "an unexplained classification is refused",
+        "candidateId matches the id the migration minted, so a live walk re-finds rather than re-creates",
+        "one verdict lands on every row naming the same entity",
+        "page furniture comes off the front of the recorded name",
+        "promotion is the only motion that raises the coverage numerator",
+        "recording the same lead twice does not inflate the denominator",
+        "the bodies these rules must never reject",
+        "triage rejects notices, assets and case records, each with its own reason",
+        "unclassified counts leads AND the ones the method could not read",
+        "verification without evidence is refused"
       ],
       "dynamic": 0
     },

@@ -449,10 +449,40 @@ test("THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF_WITH_
     assert.equal(h.workstream, "OPEN", `${f}: the workstream remains open`);
     assert.equal(h.graph, "EXPANDING", `${f}: the graph is still expanding`);
 
-    // The preceding session's measurement is PRESERVED, never inflated.
-    assert.equal(h.candidates.promoted, 0, `${f}: zero promoted bodies is the measured truth`);
-    assert.ok(h.candidates.candidates > 0, `${f}: and the leads are all persisted`);
-    assert.equal(h.candidates.coverageNumerator, 0);
+    /*
+     * THE INVARIANT IS THAT A LEAD IS NOT A BODY — never that there are no
+     * bodies.
+     *
+     * This read `promoted === 0` and `coverageNumerator === 0` when it was
+     * written, because at that moment nothing in the repository could perform
+     * the promotion transition and zero was the honest measurement. The
+     * descent-resume session built that path and promoted 667 bodies across
+     * the three states, every one of them from a page that was fetched and a
+     * control that held.
+     *
+     * Pinning the zero would have made the guard fire on the first session
+     * that did the work it was guarding — so what is pinned instead is the
+     * relationship RULING 183 actually cares about: the coverage numerator is
+     * the promoted count and NOTHING else, promoted bodies never exceed the
+     * leads they came from, and a promoted row always carries the registry id
+     * that makes it a body rather than a label.
+     */
+    assert.ok(h.candidates.candidates > 0, `${f}: the leads are all persisted`);
+    assert.equal(
+      h.candidates.coverageNumerator,
+      h.candidates.promoted,
+      `${f}: the coverage numerator is the promoted count and nothing else`,
+    );
+    assert.ok(
+      h.candidates.promoted <= h.candidates.candidates,
+      `${f}: more bodies than leads means something was counted twice`,
+    );
+    for (const c of w.candidates) {
+      if (c.state === "BODY_PROMOTED") {
+        assert.ok(c.bodyId, `${f}: ${c.id} is promoted with no registry id — that is a lead`);
+        assert.ok(c.evidence, `${f}: ${c.id} is promoted with no evidence`);
+      }
+    }
 
     // The remainder is explicit rather than implicit.
     assert.ok(h.resumeCursor, `${f}: an exact cursor exists`);

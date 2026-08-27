@@ -50,6 +50,16 @@ import {
 } from "../lib/hunt/descent.ts";
 import { seedsFor, type DescentSeed } from "../lib/hunt/descent-seeds.ts";
 import {
+  deriveCursor,
+  edgeId,
+  loadWorkstream,
+  recordDiscovery,
+  recordProcessed,
+  resumeFrom,
+  saveWorkstream,
+} from "../lib/workstate/frontier.ts";
+import type { Workstream } from "../lib/workstate/workstream.ts";
+import {
   controlHolds,
   extractLinks,
   isGovernmentHost,
@@ -208,10 +218,70 @@ async function main(): Promise<void> {
    * mean something and what the final pass's new-link count is measured from. */
   const frontier = new Map<TierId, FoundLink[]>();
 
+  /*
+   * RULING 181 — A FRONTIER IS STATE, NOT A RECIPE FOR RECREATING STATE.
+   *
+   * Seeds INITIALIZE a workstream that does not exist yet. Once one does, the
+   * canonical store is where outstanding work lives, and this run resumes from
+   * it rather than re-walking seeds to rediscover edges a previous session had
+   * already found.
+   *
+   * That was not true before 2026-08-26: the frontier lived only in this Map,
+   * and `descent.json` persisted its COUNT. NJ's last run left 1,986 edges
+   * queued and wrote down the number 1,986.
+   */
+  const ws = loadWorkstream(ROOT, state);
+  let resumed = 0;
+  if (ws) {
+    const r = resumeFrom(ROOT, state);
+    if (r) {
+      for (const [tier, queued] of r.queuedByTier) {
+        if (!levels.has(tier as TierId)) levels.set(tier as TierId, blankLevel(tier as TierId));
+        frontier.set(tier as TierId, [
+          ...(frontier.get(tier as TierId) ?? []),
+          ...queued.map((q) => ({ url: q.url, text: q.text })),
+        ]);
+        resumed += queued.length;
+      }
+      for (const u of r.visited) visited.add(u);
+      // A resumed URL is outstanding, not walked. Re-adding it to `visited`
+      // above would make the resume skip its own queue on the first pass.
+      for (const q of [...r.queuedByTier.values()].flat()) visited.delete(q.url);
+    }
+    console.log(
+      `RESUMED from canonical state — ${resumed} outstanding edge(s), ` +
+        `${ws.edges.length} persisted, seeds NOT consulted for outstanding work`,
+    );
+  }
+
+  // Seeds are still walked as the TOP of each tier — they are the tier above's
+  // own directory (RULING 93) and re-reading them is how a moved directory is
+  // noticed. What is no longer rebuilt from them is the OUTSTANDING QUEUE.
   for (const s of seeds) {
     if (!levels.has(s.tier)) levels.set(s.tier, blankLevel(s.tier));
+    if (visited.has(s.url)) continue;
     frontier.set(s.tier, [...(frontier.get(s.tier) ?? []), { url: s.url, text: s.publisher }]);
   }
+
+  const workstream: Workstream = ws ?? {
+    id: `descent:${state}`,
+    title: `Descent — ${state.toUpperCase()}`,
+    openedOn: stamp,
+    universe: {
+      authority: `descent tier structure declared by lib/hunt/descent-seeds.ts for ${state}`,
+      version: `seeded-${stamp}`,
+      members: [...new Set(seeds.map((s) => `${state}:${s.tier}`))],
+    },
+    items: [],
+    edges: [],
+    candidates: [],
+    permissions: [],
+    cursor: null,
+    convergence: null,
+    routesInherited: [],
+    routesLearned: [],
+    methodVersion: 0,
+  };
 
   let finalPassNewLinks = 0;
 
@@ -253,6 +323,10 @@ async function main(): Promise<void> {
 
         visited.add(link.url);
         spent += 1;
+        // The edge leaves the outstanding queue the moment it is walked, in
+        // canonical state as well as in memory. An edge that stayed
+        // DISCOVERED after being walked would be re-walked on every resume.
+        recordProcessed(workstream, edgeId(state, tier, link.url, link.text), "IN_PROGRESS", stamp);
         const page = await getPage(link.url);
         work.followed += 1;
 
@@ -311,7 +385,19 @@ async function main(): Promise<void> {
           }
           if (!looksLikeBody(l).isBody) continue;
           frontier.set(tier, [...(frontier.get(tier) ?? []), l]);
-          newThisPass += 1;
+          // PERSISTED IN THE SAME PASS THAT FOUND IT. If this process dies on
+          // the next line, this edge is on disk and the next session inherits
+          // it — which is the whole of RULING 181. Queuing it in memory and
+          // writing the COUNT is what left 3,900 edges unrecoverable.
+          const { isNew } = recordDiscovery(workstream, {
+            state,
+            tier,
+            url: l.url,
+            text: l.text,
+            parent: edgeId(state, tier, link.url, link.text),
+            discoveredOn: stamp,
+          });
+          if (isNew) newThisPass += 1;
         }
 
         if (bodiesHere > 0) {
@@ -320,6 +406,12 @@ async function main(): Promise<void> {
         } else {
           work.barren += 1;
         }
+        recordProcessed(
+          workstream,
+          edgeId(state, tier, link.url, link.text),
+          bodiesHere > 0 ? "INGESTED" : "WALKED_NO_YIELD",
+          stamp,
+        );
         console.log(
           `  rung ${page.rung}  HTTP ${page.status}  ${bodiesHere} bod${bodiesHere === 1 ? "y" : "ies"}  ${link.url}`,
         );
@@ -328,6 +420,21 @@ async function main(): Promise<void> {
 
     finalPassNewLinks = newThisPass;
     console.log(`--- pass ${pass}: ${newThisPass} new link(s) queued`);
+
+    /*
+     * Persist AFTER EVERY PASS, with the cursor derived from what is on disk.
+     * A run killed between passes therefore loses nothing it had discovered,
+     * and the next session resumes from the exact edge this one stopped at.
+     *
+     * `passes` and `budget` choose HOW MUCH queued work this run processes.
+     * They do not decide what work exists — that is the canonical store's job,
+     * and it is the distinction RULING 181 was adopted over.
+     */
+    workstream.cursor = `${deriveCursor(workstream, state)} / after pass ${pass} of ${passes}`;
+    saveWorkstream(ROOT, workstream);
+    console.log(
+      `    persisted ${workstream.edges.length} edge(s) to data/workstate/${state}.json`,
+    );
   }
 
   const run: DescentRun = {

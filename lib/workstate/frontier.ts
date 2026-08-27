@@ -1,0 +1,210 @@
+/**
+ * The canonical frontier — read and written by the descent itself.
+ *
+ * ## What this closes
+ *
+ * `scripts/descent.mts` built its frontier IN MEMORY from `descent-seeds.ts`
+ * and persisted only per-level counts. Measured at the migration HEAD:
+ * `finalPassNewLinks` was 1986 / 1143 / 771 for NJ / AZ / NH — **the number of
+ * outstanding edges was persisted; the edges were not.** So resuming meant
+ * re-walking seeds to rediscover work a previous session had already found,
+ * which is exactly what RULING 181 forbids.
+ *
+ * This module is the other half. Seeds INITIALIZE a workstream that does not
+ * exist yet; from then on the canonical store is where outstanding work lives,
+ * and `passes` and `budget` choose how much of it to process rather than
+ * deciding what it is.
+ *
+ * ## The one invariant
+ *
+ * **An edge discovered is an edge PERSISTED, in the same pass that found it.**
+ * Not summarized, not counted, not left for a later crawl to find again. If the
+ * process dies mid-run, everything it had discovered is on disk.
+ */
+
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { dirname, join } from "node:path";
+
+import { classifyEdge, ELIGIBLE_EDGE_VERSION } from "./eligibility.ts";
+import { type Disposition, type WorkEdge, OPEN_DISPOSITIONS } from "./types.ts";
+import type { Workstream } from "./workstream.ts";
+
+/** Stable edge id. The separator is a space, never a raw NUL byte. */
+export function edgeId(state: string, tier: string, url: string, text = ""): string {
+  const h = createHash("sha256").update([state, tier, url, text].join(" "), "utf8").digest("hex");
+  return `edge-${h.slice(0, 12)}`;
+}
+
+export function frontierPath(root: string, state: string): string {
+  return join(root, "data", "workstate", `${state}.json`);
+}
+
+export function loadWorkstream(root: string, state: string): Workstream | null {
+  const p = frontierPath(root, state);
+  if (!existsSync(p)) return null;
+  return JSON.parse(readFileSync(p, "utf8")) as Workstream;
+}
+
+export function saveWorkstream(root: string, w: Workstream): void {
+  const p = frontierPath(root, w.id.replace(/^descent:/, ""));
+  mkdirSync(dirname(p), { recursive: true });
+  writeFileSync(p, JSON.stringify(w, null, 2) + "\n", "utf8");
+}
+
+export interface QueuedEdge {
+  id: string;
+  url: string;
+  text: string;
+  tier: string;
+}
+
+export interface ResumeState {
+  workstream: Workstream;
+  /** Outstanding eligible work, by tier. Read from disk, never from seeds. */
+  queuedByTier: Map<string, QueuedEdge[]>;
+  /** Every URL already accounted for — so a resume never re-walks it. */
+  visited: Set<string>;
+  totalQueued: number;
+  /** True when this came from canonical state rather than from seeds. */
+  fromCanonicalState: boolean;
+}
+
+/**
+ * The resume read.
+ *
+ * **This is the function the resume proof exercises.** It touches no seed file
+ * and makes no network call: outstanding work is whatever the canonical store
+ * says is outstanding.
+ */
+export function resumeFrom(root: string, state: string): ResumeState | null {
+  const w = loadWorkstream(root, state);
+  if (!w) return null;
+
+  const queuedByTier = new Map<string, QueuedEdge[]>();
+  const visited = new Set<string>();
+  let totalQueued = 0;
+
+  for (const e of w.edges) {
+    // Every edge the store holds is accounted for. A processed edge is never
+    // re-walked; an outstanding one is queued rather than rediscovered.
+    visited.add(e.url);
+    if (!e.eligible) continue;
+    if (!OPEN_DISPOSITIONS.includes(e.disposition)) continue;
+    const list = queuedByTier.get(e.tier) ?? [];
+    list.push({ id: e.id, url: e.url, text: e.text, tier: e.tier });
+    queuedByTier.set(e.tier, list);
+    totalQueued += 1;
+  }
+
+  return { workstream: w, queuedByTier, visited, totalQueued, fromCanonicalState: true };
+}
+
+/**
+ * Record a newly discovered link as a persisted edge.
+ *
+ * Returns the edge whether it is new or already known, so a caller can never
+ * "discover" something twice and inflate a count.
+ */
+export function recordDiscovery(
+  w: Workstream,
+  input: {
+    state: string;
+    tier: string;
+    url: string;
+    text: string;
+    parent: string | null;
+    discoveredOn: string;
+  },
+): { edge: WorkEdge; isNew: boolean } {
+  const id = edgeId(input.state, input.tier, input.url, input.text);
+  const existing = w.edges.find((e) => e.id === id);
+  if (existing) return { edge: existing, isNew: false };
+
+  const verdict = classifyEdge({ text: input.text, url: input.url });
+  const edge: WorkEdge = {
+    id,
+    url: input.url,
+    text: input.text,
+    parent: input.parent,
+    state: input.state,
+    tier: input.tier,
+    level: input.tier,
+    // DISCOVERED and NOT processed. `processedOn` stays unset until something
+    // actually walks it — a discovery stamped as processed is the frontier
+    // silently shrinking, which is the defect this module exists to end.
+    disposition: "DISCOVERED",
+    discoveredOn: input.discoveredOn,
+    declinedReason: verdict.eligible ? undefined : verdict.reason,
+    eligible: verdict.eligible,
+  };
+  w.edges.push(edge);
+  return { edge, isNew: true };
+}
+
+/** Mark an edge processed, with the disposition the walk actually produced. */
+export function recordProcessed(
+  w: Workstream,
+  id: string,
+  disposition: Disposition,
+  on: string,
+  declinedReason?: string,
+): boolean {
+  const e = w.edges.find((x) => x.id === id);
+  if (!e) return false;
+  e.disposition = disposition;
+  e.processedOn = on;
+  if (declinedReason) e.declinedReason = declinedReason;
+  return true;
+}
+
+/**
+ * The cursor, DERIVED from state rather than narrated.
+ *
+ * RULING 180: the repository generates the handoff. A cursor a session composes
+ * is a cursor that can be wrong; this one cannot disagree with the store it is
+ * computed from.
+ */
+export function deriveCursor(w: Workstream, state: string): string {
+  const queued = w.edges.filter((e) => e.eligible && OPEN_DISPOSITIONS.includes(e.disposition));
+  const byTier = new Map<string, number>();
+  for (const e of queued) byTier.set(e.tier, (byTier.get(e.tier) ?? 0) + 1);
+  const next = queued[0];
+  const parts = [
+    `${state}`,
+    `${w.edges.length} edge(s) persisted`,
+    `${queued.length} eligible edge(s) outstanding`,
+    byTier.size ? `by tier: ${[...byTier].map(([t, n]) => `${t}=${n}`).join(", ")}` : "no tier has outstanding work",
+    next ? `next: ${next.id} ${next.url}` : "no next edge",
+    `eligibility ${ELIGIBLE_EDGE_VERSION}`,
+  ];
+  return parts.join(" / ");
+}
+
+/** Everything a Stage 1 resume proof needs to assert, in one shape. */
+export interface ResumeProof {
+  state: string;
+  loadedFromCanonicalState: boolean;
+  edgesPersisted: number;
+  outstandingEligible: number;
+  visitedUrls: number;
+  cursor: string;
+  /** Seeds were NOT consulted. Asserted by construction: this module cannot. */
+  seedsConsulted: false;
+  tiersWithWork: string[];
+}
+
+export function proveResume(root: string, state: string): ResumeProof | null {
+  const r = resumeFrom(root, state);
+  if (!r) return null;
+  return {
+    state,
+    loadedFromCanonicalState: r.fromCanonicalState,
+    edgesPersisted: r.workstream.edges.length,
+    outstandingEligible: r.totalQueued,
+    visitedUrls: r.visited.size,
+    cursor: deriveCursor(r.workstream, state),
+    seedsConsulted: false,
+    tiersWithWork: [...r.queuedByTier.keys()].sort(),
+  };
+}

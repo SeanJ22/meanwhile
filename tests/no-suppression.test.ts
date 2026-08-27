@@ -183,6 +183,28 @@ const RECORD_FILES = new Set([
   "docs/context.md",
 ]);
 
+/**
+ * The governance corpus, exempt for exactly the reason `CLAUDE.md` and
+ * `docs/rulings.md` are exempt directly above.
+ *
+ * On 2026-08-26 the law moved out of those two files into a canonical ledger
+ * and generated views. **The text did not change — its filename did.** These
+ * files carry the same rules the exempt files carried, including RULING 171's
+ * measure standard ("both sides ship at equal depth or neither ships"), which
+ * is a live requirement about EQUAL EFFORT and not a suppression path. It reads
+ * like one to a string sweep because the dead gates were specified in nearly the
+ * same words.
+ *
+ * **This adds no unscanned prose to the repository.** The legacy snapshots are
+ * byte-identical to files already exempt; the generated views are compiled from
+ * the ledger; and the ledger is the same law. Scanning them is scanning the
+ * same text a second time.
+ *
+ * What is still swept, and matters: every `.ts`, every component, every script,
+ * and every other document under `docs/`.
+ */
+const GOVERNANCE_PREFIXES = ["docs/governance/"];
+
 /** The sentences the two dead gates were specified in, before any code. */
 const DEAD_DOCTRINE = [
   "same depth",
@@ -235,6 +257,7 @@ test("RULING 27: no suppression path exists anywhere in the codebase", () => {
   let docsRead = 0;
   for (const f of docs) {
     if (RECORD_FILES.has(rel(f))) continue;
+    if (GOVERNANCE_PREFIXES.some((p) => rel(f).startsWith(p))) continue;
     docsRead += 1;
     const src = readFileSync(f, "utf8");
     for (const sym of SUPPRESSION_SYMBOLS) {

@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 261,
-    "named": 2525,
+    "files": 269,
+    "named": 2651,
     "dynamic": 6
   },
   "files": {
@@ -1165,6 +1165,29 @@
       ],
       "dynamic": 0
     },
+    "tests/descent.test.ts": {
+      "names": [
+        "DERIVED CASE (RULING 157) — the gate refuses a ledger it was not built from",
+        "PLANTED — a calendar day number on a township's own host is NOT a body",
+        "a control string is mandatory, because a 200 can be a Page not found",
+        "a level conserves: every followed link has exactly one disposition",
+        "a level that found links and walked none is a walk that did not run",
+        "a level with no read date reads as stale rather than fresh",
+        "a page ABOUT a body is not a body",
+        "a walk whose final pass was still producing STOPPED, and says so",
+        "assets are not documents, and government hosts are typed not listed",
+        "dark tiers are the map of what is missing",
+        "every seed declares the tier it is ABOUT, a publisher, a control and a reason",
+        "extraction does not die on a malformed href",
+        "links are extracted absolute, de-duplicated, and without fragments",
+        "staleness is measured, never guessed, and a missing stamp is not today",
+        "the descent gate refuses a state nobody has descended, and says what to run",
+        "the detector catches the twigs RULING 57 exists for",
+        "the tiers are seven, in descent order, and the order is the rule",
+        "zero counties in a US state is a broken walk, never a finding"
+      ],
+      "dynamic": 0
+    },
     "tests/discovery-tree.test.ts": {
       "names": [
         "RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale",
@@ -1592,6 +1615,67 @@
         "corpora: the licence was read from each repository's OWN LICENSE file",
         "corpora: the members the corpus genuinely does not carry are NAMED, not counted",
         "corpora: the photo fetcher walks the git road before recording an absence"
+      ],
+      "dynamic": 0
+    },
+    "tests/governance-atomicity.test.ts": {
+      "names": [
+        "a hand-edited generated view is caught by governance:check",
+        "every generated governance view reproduces byte-for-byte",
+        "no superseded operative text sits in current authority",
+        "shortening the constitution cannot delete law from the ledger",
+        "the constitution cannot claim a ruling the canonical ledger does not contain",
+        "the constitution stays a ROOT constitution, not a second copy of the policies",
+        "the legacy snapshots are preserved with their exact bytes"
+      ],
+      "dynamic": 0
+    },
+    "tests/governance-ledger.test.ts": {
+      "names": [
+        "a FACT may not be emitted as a current normative instruction",
+        "a TOMBSTONE may not read as current, and its id is never reused",
+        "a claim on an undeclared key, or an undeclared value, is refused",
+        "a fully superseded record may not still be current",
+        "a partial amendment must name what changed AND what survives",
+        "a session may not legislate — binding kinds require author provenance",
+        "boilerplate does not fire the duplicate detector",
+        "every active LAW_DECISION names where its operative text lives",
+        "every declared rule slot has exactly one current answer",
+        "every ruling id CLAUDE.md cites resolves to a record",
+        "legacy RULING references still resolve after the migration",
+        "no record with uncertain provenance binds",
+        "supersession cycles are caught",
+        "the ledger serializer round-trips byte-identically",
+        "the real ledger passes every structural check",
+        "two ACTIVE records claiming one rule slot differently is a build failure",
+        "undeclared duplicate canonical law fails; a declared relation permits it"
+      ],
+      "dynamic": 0
+    },
+    "tests/governance-questions.test.ts": {
+      "names": [
+        "Q: Are ruling numbers global or per-brief?",
+        "Q: Can a new route reopen an old converged or absent result?",
+        "Q: Can a session close a Needs Sean row?",
+        "Q: Can a state complete without teaching the project anything new?",
+        "Q: Can the next session resume the exact descent frontier without recrawling seeds?",
+        "Q: Does a new route learned in state 44 become available to state 45?",
+        "Q: If the current client cannot fetch robots.txt, what exactly is known about permission?",
+        "Q: Is an entity candidate the same thing as a body in the registry?",
+        "Q: Is the current route manifest complete?",
+        "Q: Under the replacement status model, how is the preceding descent session classified?",
+        "Q: What counts as an absence? Does any number of attempted routes earn one?",
+        "Q: What does CONVERGED_AS_OF actually mean?",
+        "Q: What exactly makes the workstream complete?",
+        "Q: What governs candidate display right now?",
+        "Q: What happens when a route is blocked?",
+        "Q: What if a session reaches its context limit before the workstream is complete?",
+        "Q: What is the current ballot-measure DONE standard?",
+        "Q: What is the current production-verification rule?",
+        "Q: What is the shipping / close-out path?",
+        "Q: What prevents the project from recursively crawling irrelevant links forever?",
+        "Q: Which document wins if history disagrees with current policy?",
+        "answering a CURRENT question never requires the history files"
       ],
       "dynamic": 0
     },
@@ -2036,6 +2120,20 @@
       ],
       "dynamic": 0
     },
+    "tests/measure-depth.test.ts": {
+      "names": [
+        "BOTH SIDES SHIP OR NEITHER DOES — and it REFUSES rather than reporting",
+        "NONE_REGISTERED is a finding and needs its filing officer; NOT_HUNTED is ours",
+        "NO_OFFICIAL_ESTIMATE is the only honest household cost when the body publishes none",
+        "a complete measure is DONE, and a missing field is OWED with the field named",
+        "a stale money reading on one side re-opens the asymmetry",
+        "neither side hunted is SYMMETRIC — and still does not ship",
+        "the money clock is SHORTER than the text clock, and both expire",
+        "the standard is seven fields and the money is a PAIR",
+        "the vote-recommendation ban is unchanged, and asserted where a measure is defined"
+      ],
+      "dynamic": 0
+    },
     "tests/measure-provisions.test.ts": {
       "names": [
         "Proposition 141's absences survive the fifth kind",
@@ -2114,6 +2212,25 @@
         "MTG-4: a created event carries the venue in its location field",
         "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
         "MTG-4: an online meeting's event still carries no invented address"
+      ],
+      "dynamic": 0
+    },
+    "tests/method-knowledge.test.ts": {
+      "names": [
+        "THE COMPOUNDING TEST — a 44th state inherits 76 methods and adds a 77th, with no cap to change",
+        "THE INHERIT-AND-INVENT TEST — neither inheritance nor invention disables the other",
+        "THE NON-FINAL-MANIFEST TEST — nothing represents the route list as exhaustive",
+        "THE VERSIONED-CONVERGENCE TEST — a new applicable route reopens an old absence",
+        "UNKNOWN portability is a VALID state and still inherits",
+        "a conclusion with no method version is refused — it could never be reopened",
+        "a duplicate route is reported as the defect RULING 63 names",
+        "a failed inherited route grows a sub-branch and is never deleted",
+        "a route is never generalized farther than its evidence supports",
+        "a route learned BEFORE a conclusion does not reopen it",
+        "a route proven in one shape does not silently travel to another",
+        "knowledge that has outgrown a still-closed conclusion is a validation failure",
+        "no route-count cap exists anywhere in the method library",
+        "the committed method store validates and preserves the legacy manifest"
       ],
       "dynamic": 0
     },
@@ -3341,6 +3458,27 @@
       ],
       "dynamic": 0
     },
+    "tests/stopping-legitimacy.test.ts": {
+      "names": [
+        "56% used, work remaining, no external stop -> EARLY_HANDOFF_WITH_CAPACITY",
+        "88% used, work remaining, state persisted, productive to the boundary -> CLEAN_HANDOFF_LIMIT_REACHED",
+        "ANTI-GAMING — the rule is written where a session reads it, not only in a brief",
+        "COMPLETE is derived from owed work, never claimed",
+        "Stage 1 does not wait on Stage 2 historical normalization",
+        "a platform signal qualifies without the percentage",
+        "a session may not award itself CLEAN_HANDOFF_LIMIT_REACHED at 56%",
+        "an external stop qualifies only when it is real",
+        "descent resumes against canonical state rather than rebuilding from seeds",
+        "every state resumes with outstanding work read from disk",
+        "missing canonical state outranks everything -> FAILED_CLOSEOUT",
+        "reaching the floor without working to it is still EARLY_HANDOFF_WITH_CAPACITY",
+        "the 80% figure is a FLOOR for one status, and not a target",
+        "the active frontier does not mutate during its own migration",
+        "the frontier was migrated ONCE, and does not need remigrating for Stage 2",
+        "the old permissive CLEAN_HANDOFF status no longer exists"
+      ],
+      "dynamic": 0
+    },
     "tests/strip-image-metadata.test.ts": {
       "names": [
         "JPEG: APP1 (EXIF) and COM go, JFIF and pixel data stay",
@@ -3723,6 +3861,34 @@
         "THE PLANT: the guard catches a pusher whose permissions block is gone",
         "every workflow that pushes main declares contents: write",
         "refresh-daily is the consolidated pusher and carries the declaration"
+      ],
+      "dynamic": 0
+    },
+    "tests/workstate.test.ts": {
+      "names": [
+        "THE EXACT-FRONTIER TEST — an OPEN workstream without a cursor is a defect",
+        "THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF_WITH_CAPACITY / OPEN / EXPANDING",
+        "THE LEAD-IS-NOT-A-BODY TEST — hundreds of candidates, zero promotions, numerator stays zero",
+        "THE PERMISSION-IS-NOT-TRANSPORT TEST — client A fails, client B reads, no DISALLOWED is manufactured",
+        "a BLOCKED route keeps the workstream OPEN and is never an absence",
+        "a detector cannot pass on false positives alone",
+        "a fully accounted workstream with a holding convergence IS complete",
+        "a promoted body with no registry id is a lead, not a body",
+        "a promotion with no evidence, and a rejection with no reason, both fail",
+        "a required child may not disappear",
+        "a workstream recording a permission verdict without a successful read fails validation",
+        "a workstream with no convergence record is EXPANDING, never quietly converged",
+        "an eligible edge advances an owed question; site chrome does not enlarge the graph",
+        "an ineligible edge must say why it does not enlarge the graph",
+        "an item may not be terminal while a required child is open",
+        "an unnamed blocker, and an undated recheck, are refused",
+        "an unread permission keeps the workstream OPEN and never reads as absence",
+        "convergence reopens on a newer method version, a changed universe, or expired freshness",
+        "every persisted edge carries a stable id, provenance and a disposition",
+        "every universe member gets exactly one disposition",
+        "the detector is CALIBRATED against known false positives, not merely non-zero output",
+        "the handoff is generated from state and omits no tail",
+        "the migrated frontier does not need seeds to name what it already knows"
       ],
       "dynamic": 0
     },

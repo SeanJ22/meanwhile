@@ -39,6 +39,96 @@ export const GENERATED: GeneratedArtifact[] = [
   },
   {
     /*
+     * The governance views (2026-08-26, the governance remediation).
+     *
+     * `docs/rulings.md` STOPPED BEING AN AUTHORITY on this date. It was a
+     * second hand-maintained record of decisions, written by hand in the same
+     * session that wrote them into `CLAUDE.md`, with nothing checking that the
+     * two agreed — and measured on migration, 87 of the 90 rulings held in both
+     * files had DIVERGED, with 697 substantial sentences living only in one and
+     * 699 only in the other.
+     *
+     * It is generated now, from `docs/governance/ledger.jsonl`, and kept so
+     * every `RULING n` reference in this repository still resolves.
+     *
+     * Pure: the compiler reads the committed ledger and the committed
+     * adoptions module, and nothing else. No clock, no network.
+     */
+    path: "docs/rulings.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/history.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/current-decisions.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/index.json",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  /*
+   * The nine domain policy modules. Each is a VIEW of the current law for one
+   * domain, generated from the ledger — never a second copy somebody
+   * maintains, which is what makes "one canonical source per rule" checkable
+   * rather than aspirational.
+   *
+   * Registered individually rather than by prefix so that a policy which stops
+   * being generated, or one that appears without a generator, is a diff.
+   */
+  {
+    path: "docs/governance/policies/discovery.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/rendering-neutrality.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/data-privacy.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/sources-licensing.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/shipping-ci.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/tracker-workflow.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/visual-feedback.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/business.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    path: "docs/governance/policies/meta-governance.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
+    /*
      * The question set as a document (2026-08-23, the questionnaire brief).
      * A HAND-WRITTEN copy of the questions is a second copy that can disagree
      * with the one candidates are actually asked, which is the drift the

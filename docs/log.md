@@ -47,13 +47,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH241** — A storage-engine-independent contract for every locally fetched dataset or document: source URL, resolved URL, retrieved timestamp, content type, content hash, jurisdiction, source class, freshness, local path and permission metadata.
 - **NH243** — A mechanical test that fails if a canonical product-serving write module imports the local corpus or analysis layer in a way that bypasses the governed ingestion and provenance path.
 
-**What it started.** 9 row(s) opened, 5 still open.
+**What it started.** 11 row(s) opened, 7 still open.
 
 - **NH235** — The Central Arizona Water Conservation District's own board page names all 15 popularly elected members, their counties and their officers. The registry body now resolves to UNKNOWN_COMPOSITION - which is honest and is not the roster the reader is owed. *(open)*
 - **NH236** — Every City of Tucson board, committee and commission now resolves to UNKNOWN_COMPOSITION, because each was previously inheriting the Mayor and Council through the division fallback. The City Clerk publishes each board's actual membership. *(open)*
 - **NH237** — The same government has a curated row and a descent-promoted row. The promotion's duplicate check compares names, and the two spellings differ by one word, so it did not match. *(open)*
 - **NH238** — The body is listed in the sidebar's Bodies door and opens its card from there, and typing its name into the ask box offers no Body row at either Pima ZIP. *(open)*
 - **NH239** — CAWCD's own 2026 schedule lists board meetings on 3 September, 1 October, 5 November and 3 December. The snapshot carries September and stops. *(open)*
+- **NH244** — The Central Arizona Water Conservation District board is popularly elected and serves every reader in 85641 and 85701. All four Pima County seats carry terms expiring 12-31-2026, so they are on the 2026 general ballot. The ballot corpus contains no CAWCD contest at all. *(open)*
+- **NH245** — Wiring the verified CAWCD roster into BODY_ROSTERS needs a partisanship value, and every roster in that store cites the record that settled it. Neither the board's own page nor any statute reached on 2026-08-27 states whether these seats carry a party. *(open)*
 
 **Needs Sean.** Nothing.
 

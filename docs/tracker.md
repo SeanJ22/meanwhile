@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **311 open**, 442 resolved.
+- **313 open**, 442 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
@@ -398,7 +398,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**26 open · 1 resolved.**
+**28 open · 1 resolved.**
 
 ### P1
 
@@ -428,6 +428,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 **NH236** — Every City of Tucson board, committee and commission now resolves to UNKNOWN_COMPOSITION, because each was previously inheriting the Mayor and Council through the division fallback. The City Clerk publishes each board's actual membership.
 
+**NH244** — The Central Arizona Water Conservation District board is popularly elected and serves every reader in 85641 and 85701. All four Pima County seats carry terms expiring 12-31-2026, so they are on the 2026 general ballot. The ballot corpus contains no CAWCD contest at all.
+
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
 **NH83** — Carried forward unchanged from AZ01. The 2026-08-23 session did not reach Arizona. Read as an image from the 8/22 capture of the ballot near 85701, the registration destination appears three times inside about ten lines: Check whether you're registered to vote as an inline link, the Secretary of State's own tool named beneath it, and a third box below the card repeating Check whether you're registered to vote. They deduplicate to ONE prominent pill pointing at the reader's Secretary of State, and the same pattern applies to polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-1 also still needs hunting and fishing and state abortion law in Know the basics, both written to the plain-language register with the law stated, its source named and a fetch date, and no position taken.
@@ -455,6 +457,10 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **HD29** — Two people are running for Arizona Superintendent of Public Instruction and two things about them have never been looked for.
 
 **HD30** — One person is running for Arizona's 20th state senate district and one thing about them has never been looked for.
+
+### P3
+
+**NH245** — Wiring the verified CAWCD roster into BODY_ROSTERS needs a partisanship value, and every roster in that store cites the record that settled it. Neither the board's own page nor any statute reached on 2026-08-27 states whether these seats carry a party.
 
 ## Visual feedback
 

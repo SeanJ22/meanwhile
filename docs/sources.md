@@ -606,3 +606,53 @@ The directory also lists four different Washington Townships across four
 counties, so the Morris one is identified by its position in the county section
 rather than by its name, which is exactly the Boonton / Boonton Township problem
 this project has already paid for once.
+
+## BOUNDARY AND DISTRICT SOURCES FOR AZ 85641 — walked 2026-08-27
+
+**These answer WHO GOVERNS AN ADDRESS**, which no source in the register above
+did. The finding that produced them: `docs/gap-ledger.md` recorded 24 Pima
+County special districts as territory-unresolvable because the national Census
+boundary files carry no special districts. **The county that LEVIES a district's
+tax publishes exactly where it starts and stops** — ask the levying authority,
+not the statistical one.
+
+| Source | Status | Access | Licence / terms | Tier | Last walked |
+| --- | --- | --- | --- | --- | --- |
+| **Pima County open-data ArcGIS — `gisdata.pima.gov/arcgis1`** | **WALKED — the primary district source** | Public ArcGIS REST. **34 services, 281 layers, 66 governance-shaped.** No key | `robots.txt` HTTP 404 → `NO_ROBOTS`, nothing forbids the path | A | 2026-08-27 |
+| **Census geographies — `geocoding.geo.census.gov/geocoder/geographies/coordinates`** | **WALKED** | `layers=all`, keyless, 96 points answered with 0 failures | United States government work — public domain | A | 2026-08-27 |
+| **TIGERweb ZCTA — `tigerweb.geo.census.gov`** | **WALKED** | ArcGIS REST; the ZCTA polygon, POSTed as query geometry | Public domain; `robots.txt` allows | A | 2026-08-27 |
+| **AZGeo Data Hub — `azgeo.az.gov`** | **WALKED** | **302 to `azgeo-data-hub-agic.hub.arcgis.com`.** The state hostname is a redirect; the hub is the real host | ALLOWED | A | 2026-08-27 |
+| **AZ fire service areas — `services6.arcgis.com/clPWQMwZfdWn4MQZ`** | **WALKED, and WEAKER than the county layer** | Arizona DFFM via AZGeo, `access: public` | Publisher's own disclaimer: boundaries **approximate**, purpose **wildfire dispatch**, last updated **September 2021**. Cite the county's taxation layer for legal territory | B | 2026-08-27 |
+| **ArcGIS Online sharing API — `www.arcgis.com/sharing/rest/search`** | **WALKED — as a DISCOVERY instrument** | Keyless. Finds a government's published layers, and its item `url` field names the real server root | ALLOWED | A | 2026-08-27 |
+| **Pima County sitemap — `www.pima.gov/sitemap.xml`** | **WALKED** | 1,748 URLs, 56 governance-shaped | `robots.txt` disallows Baiduspider and Yandex only | A | 2026-08-27 |
+| **Apptegy / Thrillshare CMS — `thrillshare-cmsv2.services.thrillshare.com`** | **WALKED** | Keyless. `/api/v2/s/<section>/directories` and `/api/v4/o/<org>/cms/*`. Org id is in the page's own hydration payload | `robots.txt` HTTP 404 → `NO_ROBOTS` | A | 2026-08-27 |
+| **Pima County Assessor — `asr.pima.gov`** | **DISALLOWED — NOT WALKED** | — | **`Disallow: /`.** RULING 148: a disallow is a host saying do not ask, and it is never re-walked on a clock. Nothing here came from it | — | 2026-08-27 |
+| **Pima County Treasurer — `to.pima.gov`** | **CANNOT_TELL — REFUSED** | Resolves to 159.233.179.13; HTTPS fails `ERR_TLS_CERT_ALTNAME_INVALID`, plain HTTP answers 500 | Not a permission verdict. A retired or misconfigured address; the Treasurer's live pages are on `www.pima.gov` | — | 2026-08-27 |
+| **AZ Dept of Revenue — `azdor.gov`** | **WALKED under `User-agent: *`** | `Allow: /` for `*`; sitemap 478 URLs | **Disallows eight named AI crawlers INCLUDING ClaudeBot**, and carries `Content-Signal: search=yes,ai-train=no,use=reference`. This client declares its own identity, so `*` is its group. **Needs Sean row NH225 carries the judgement call** | A | 2026-08-27 |
+| **Highbond — `vailschooldistrict.community.highbond.com`** | **FOUND, NO ADAPTER** | — | Vail USD's current agendas and minutes. Tracker NH229 | — | 2026-08-27 |
+| **NovusAGENDA — `vailschools.novusagenda.com`** | **FOUND, NO ADAPTER** | — | Vail USD agendas before 2017-03-14. Tracker NH229 | — | 2026-08-27 |
+| **CivicPlus tenant — `az-pimacounty.civicplus.pro`** | **LEAKED BY `pima.gov`'s own links** | — | The vendor tenant behind Pima County's site. Platform-tenancy lead, not yet walked | — | 2026-08-27 |
+
+### Three transport findings that are NOT permission verdicts
+
+**RULING 182 — permission state and transport state are orthogonal.** Each of
+these looked like a closed door and was not one.
+
+1. **`services6.arcgis.com/robots.txt` answers HTTP 403 with the body
+   `Invalid URL`** at rungs 2, 3 and 4 and under a bare Node fetch. It is a
+   multi-tenant host that routes only `/<orgId>/…` paths, so an apex request has
+   no tenant. The sweep correctly returns `CANNOT_TELL` and refuses; permission
+   was taken instead from the publishing government's own hub (ALLOWED) and the
+   item's `access: public` and licence fields.
+2. **`www.mescalj6fd.com` — a fire district that levies on 85641 — was
+   unwalkable because of a certificate.** It fails HTTPS with
+   `ERR_TLS_CERT_ALTNAME_INVALID` and serves `robots.txt` at **HTTP 200 over
+   plain http**. `pnpm robots:sweep` now falls back to plain HTTP when HTTPS
+   yields no answer at all, and still fails safe.
+3. **`gisopendata.az.gov` is NXDOMAIN** — a wrong guess at a hostname, not a
+   publisher that stopped publishing. So was
+   `gisdata.pima.gov/arcgis/rest/services`, which answers **404** while the real
+   root is `/arcgis1/`.
+
+**A 404 at a guessed path, a 403 at an unrouted apex, and a TLS mismatch are
+three different facts, and none of them is "this government publishes nothing".**

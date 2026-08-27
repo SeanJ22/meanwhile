@@ -14,13 +14,13 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **298 open**, 436 resolved.
-- **51 waiting on Sean** — the first section below.
+- **305 open**, 436 resolved.
+- **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
-  - Arizona hunt — **0**
+  - Arizona hunt — **1**
   - Visual feedback — **2**
   - Data infrastructure — **3**
   - Product / UI — **1**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**51 open · 52 resolved.**
+**52 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -89,6 +89,8 @@ The last 14 of 3208 line(s) the run printed:
 **NH208** — CORRECTED TWICE, and both corrections are recorded rather than left standing. NOTHING IS WRONG WITH YOUR RULESET and no setting needs changing — the row's title still says otherwise because the amend tool deliberately cannot edit a title, so read this instead of it. Both PRs this session merged on green required checks with no override, no admin flag and no auto-merge. What actually happened is that GitHub Actions was running badly behind on this repository for about two hours on 2026-08-26. Observed across four separate events: PR 191 opening created NO GitHub Actions check suite at all (only a Claude-app and a Netlify-app suite, both sitting queued with zero runs); closing and reopening it created none either; a push to the branch fired one but GitHub queued it against the PREVIOUS head SHA, so the current head still had nothing; and the push events onto main for both f6ef545 and 343ca7e registered nothing for roughly twenty-five minutes each, so pnpm main:green read CANNOT TELL through six minutes of polling on a commit that was in fact fine. Meanwhile every workflow_dispatch started within seconds. Everything else was ruled out: Actions enabled, all nine workflows active, the token carrying workflow scope, and the commits attributed to SeanJ22. The delayed runs did all eventually arrive and go green, and each merge unblocked on its own once they did. THE SECOND FINDING, and it is ours rather than GitHub's: dispatching build-check to work around the lag is not free. build-check carries concurrency cancel-in-progress on the ref, so a dispatch racing a late event-run CANCELS one of them — and pnpm main:green counts every check-run on the commit rather than the latest per context name, so it reported main 343ca7e as RED with two cancelled checks while GitHub's own filter=latest view showed all three required contexts SUCCESS from the newer run. Branch protection uses the latest per name, so main was genuinely green the whole time and the alarm was ours. An instrument that cries wolf on a superseded run is the thing RULING 115 warns about, and RULING 75's whole value is that main:green can be trusted. THE QUESTION: (a) fix main:green to judge the LATEST check-run per context name, matching what branch protection actually evaluates — small, and it removes a false RED that will recur every time anyone dispatches a check by hand; (b) leave it strict and accept that a hand-dispatched check can produce a false RED; (c) also keep this row open as a watch on the GitHub-side lag until two more session PRs open cleanly. Recommended: (a) and (c).
 
 **NH212** — The guard asserted fallenOutOfServing === 0. The serving window looks back 90 days, so a row falls out when its start sits between generatedAt-90d and now-90d - a band exactly as wide as the snapshot's own age. 447 rows over 90 days is about five a day, so one day of age is worth roughly five crossings. On 2026-08-26 it went red at 1 of 447 with the snapshot 0.07 days old, one hour and forty minutes after refresh-daily run 33005902616 landed GREEN. Nothing had stopped landing; a meeting had concluded and aged past ninety days. That is RULING 116's shape - a guard pinning the size of a gap time creates - and RULING 115's cost, an alarm firing on the normal operating state. I moved the assertion to the snapshot's AGE (two days: the daily cadence plus one missed run), which is what FROZEN means and what this row was about, and kept the crossing count reported beside it plus a second assertion that the shedding is explicable by that age. The detector is untouched and the constructed-crossing test still proves it catches one. QUESTION: keep the age-based assertion, or do you want the stricter zero-crossing reading back with the daily refresh cadence tightened to match it?
+
+**NH225** — Arizona's Department of Revenue website tells eight named AI crawlers to stay out, and ClaudeBot is one of them. It allows every other visitor. This product's reader identifies itself by its own name and a contact address, so the rule that applies to it is the allow-everyone rule. That is what the robots standard says, and it is also a judgement call, so it is yours rather than a session's.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -396,7 +398,11 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**19 open · 0 resolved.**
+**23 open · 0 resolved.**
+
+### P1
+
+**NH226** — Two things this project has written down about Vail are wrong, and both are now measured. The stored board roster had six names when the board has five. And the research note says the Vail area is in one legislative district when it is in two.
 
 ### P2
 
@@ -409,6 +415,12 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH201** — The denominator Sean asked for, and it turned up a second finding larger than the one he reported. Half the school districts in the registry have no superintendent row of any kind, so a missing photo is not their problem yet - a missing person is.
 
 **NH214** — Sean's standing rule from the 8/26 walkthrough: superintendent photos are almost always on the district site under a link that simply says 'superintendent', and should be captured everywhere. Audited 2026-08-26 across every roster: 42 bodies hold a roster, 6 are school districts, and 3 hold a substantive superintendent - Dr. Gabriel Trujillo (Tucson Unified), John Carruth (Vail Unified) and Michael Bessette (Interim Superintendent, Kearsarge). NONE of the three has a portrait. The other 3 school districts - Rockaway Township, Sunnyside Unified and Amphitheater Unified - hold no superintendent at all, which is a separate and larger gap. Note the correction that produced this number: a first pass read a photoUrl field off the roster member and reported 'NO PHOTO' for all three, and that field does not exist on RosterMember - photos live in the content-addressed asset store. The count is right; the first instrument was measuring nothing.
+
+**NH227** — Seven governments that reach ZIP 85641 have been confirmed to govern there, but we have not yet listed the people who sit on them.
+
+**NH228** — Five more governments might cover ZIP 85641. We have found each of them and we have not yet checked where their territory starts and stops, so we cannot say either way.
+
+**NH230** — We know two measures will be on the 85641 ballot this November, and we have the school district's own legal notice for one of them. We have not yet read the county's official ballot, which is the document that actually decides what a voter sees.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -480,7 +492,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**84 open · 105 resolved.**
+**86 open · 105 resolved.**
 
 ### P1
 
@@ -527,6 +539,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH221** — The descent and Census-of-Governments promotions on 2026-08-26 wrote 723 registry bodies with ocdId null, deliberately: the descent knows the tier it walked and the host it read, and neither establishes which census division a body governs. Writing the state division for all of them would be a plausible guess in the one field a reader uses to decide whether a body governs THEM. Attaching divisions with real evidence is the owed work. tests/registry-oracle.test.ts already refuses a non-null ocdId that resolves to no division, so the guard is in place; what is missing is the evidence route.
 
 **NH222** — Of 211 active governments in the 2022 Census of Governments clip for Pima AZ, Morris NJ and Merrimack NH, 35 reported no usable web address — Epsom Village District, Penacook Boscawen Water Precinct, Hardy Road Village District, BCEP Solid Waste District, seven Morris County township fire districts, and others. They are named in canonical state and are NOT absent: they levy, so somebody bills for them. The route not yet walked is the funder/auditor: NH DRA publishes municipal and village-district tax rate tables, NJ DCA Division of Local Government Services publishes fire-district budgets, and azauditor.gov publishes special-district reports.
+
+**NH229** — Every Vail school board agenda and minute sits on two meeting platforms this product cannot read yet.
+
+**NH231** — Our count of the governments covering a ZIP is built from each county's own roll. Districts formed in a neighbouring county but taxing land here are missing from it, and the shortfall looks like completeness.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 

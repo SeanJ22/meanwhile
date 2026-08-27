@@ -101,3 +101,13 @@ next-env.d.ts
 ~$*
 /.nh6tmp/
 .hunt-tmp/
+
+# Fetched document and page corpora. RULING 20: portraits and document corpora
+# do not go in git, because git keeps every version of every one of them
+# forever. These are reproducible: docs/evidence/az-85641-rosters.jsonl carries
+# the URL and the resolved final URL of every document read, which is the part
+# worth keeping.
+/data/hunt/85641-pdfs/
+/data/hunt/*.html
+/data/hunt/*.xml
+/data/hunt/vail-nuxt-payload.txt

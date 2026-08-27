@@ -99,6 +99,11 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     values: ["dual-write-claude-and-rulings", "canonical-ledger-and-generated-views"],
   },
   {
+    key: "session.stop_standard",
+    question: "What legitimately ends a session?",
+    values: ["measured-context-threshold", "work-author-or-external-condition"],
+  },
+  {
     key: "permission.transport_collapse",
     question: "Is a failure to retrieve a permission document a permission verdict?",
     values: ["collapses-to-disallowed", "orthogonal-cannot-tell"],

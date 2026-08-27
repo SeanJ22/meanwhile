@@ -276,6 +276,43 @@ async function readRobots(origin: string): Promise<RobotsRead> {
   const curled = await curlRobots(`${origin}/robots.txt`);
   if (curled) settle(curled.status, curled.text, 4);
 
+  /*
+   * RUNG 4b — THE SAME HOST OVER PLAIN HTTP.
+   *
+   * Tried only when `https` produced no answer at all, and only for an
+   * `https` origin. It is not a softer read: it is the SAME question asked at
+   * the only address this host actually answers.
+   *
+   * The case, measured 2026-08-27 during the AZ 85641 hunt:
+   * `www.mescalj6fd.com` — the Mescal-J6 Fire District, one of the four fire
+   * districts that levy on ZIP 85641 — resolves fine, and fails `https` with
+   * `ERR_TLS_CERT_ALTNAME_INVALID`. Its `robots.txt` answers **HTTP 200 over
+   * plain http**. Every https rung, including curl, returned nothing, so the
+   * sweep returned `CANNOT_TELL` and refused the walk — and a fire district
+   * that governs the target ZIP was recorded as unwalkable because of a
+   * certificate.
+   *
+   * **Small governments are frequently http-only**, and a permission instrument
+   * that can only ask over https cannot answer the permission question for
+   * them. That is a gap in the instrument, not a fact about the publisher.
+   *
+   * The verdict still fails safe: if http answers nothing either, the origin
+   * stays `CANNOT_TELL` and the walk stays refused.
+   */
+  if (out.status === null && origin.startsWith("https://")) {
+    const plain = origin.replace(/^https:/, "http:");
+    try {
+      const res = await fetch(`${plain}/robots.txt`, {
+        headers: RUNGS[0].headers,
+        redirect: "follow",
+        signal: AbortSignal.timeout(20_000),
+      });
+      settle(res.status, res.ok ? await res.text() : null, 4);
+    } catch {
+      /* Nothing at either scheme. CANNOT_TELL stands, and it refuses. */
+    }
+  }
+
   robotsCache.set(origin, out);
   return out;
 }

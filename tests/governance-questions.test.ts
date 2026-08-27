@@ -110,19 +110,64 @@ test("Q: What happens when a route is blocked?", () => {
   assert.ok(whereInLaw("BLOCKED_CURRENTLY", ROOT));
 });
 
-test("Q: What if a session reaches its context limit before the workstream is complete?", () => {
-  // Amended 2026-08-26 (RULING 187). The answer is no longer one status.
-  // Running out of context is only ONE legitimate reason to stop, and stopping
-  // with capacity remaining is a different, named outcome — so a session
-  // reading the constitution has to be able to tell which one applies to it.
-  const claude = flat(readFileSync(join(ROOT, "CLAUDE.md"), "utf8"));
-  assert.match(claude, /CLEAN_HANDOFF_LIMIT_REACHED/);
-  assert.match(claude, /EARLY_HANDOFF_WITH_CAPACITY. is REQUIRED/);
-  assert.match(claude, /Preservation quality is not permission to stop/i);
-  assert.match(claude, /at least 80% of usable context actually consumed/i);
-  assert.match(claude, /never a target/i);
+test("Q: When may a session stop before the workstream is complete?", () => {
+  // Amended 2026-08-27 (RULING 189). The old answer required the session to
+  // measure its own context and compare it to an 80% floor. It cannot measure
+  // that: one session reported ~4% used while the interface showed ~47%. So
+  // the constitution now names three real conditions and no threshold, and
+  // this test asserts the ABSENCE of the estimate as hard as the presence of
+  // the rule — a removed instruction that survives in the file a session reads
+  // is not removed.
+  const raw = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const claude = flat(raw);
+
+  assert.match(claude, /A session does not measure itself/i);
+  assert.match(claude, /KEEP WORKING WHILE AUTHORIZED EXECUTABLE WORK REMAINS/);
+  assert.match(claude, /STOP WHEN THE REQUESTED WORK IS ACTUALLY COMPLETE/);
+  assert.match(claude, /CLEAN_HANDOFF_AUTHOR_STOP/);
+  assert.match(claude, /CLEAN_HANDOFF_EXTERNAL_STOP.{0,2} is never INFERRED/i);
+  assert.match(claude, /MERGE CADENCE IS NOT SESSION CADENCE/i);
+  assert.match(claude, /PERSISTED RESUMABILITY IS NOT PERMISSION TO STOP/i);
+
+  for (const gone of [
+    "context_used_percent",
+    "context_remaining_percent",
+    "CLEAN_HANDOFF_LIMIT_REACHED",
+    "EARLY_HANDOFF_WITH_CAPACITY",
+    "80% of usable context",
+  ]) {
+    assert.ok(!raw.includes(gone), `the constitution still carries ${gone}`);
+  }
 });
 
+test("Q: is the context-usage stopping model gone from CURRENT authority?", () => {
+  // The policies are GENERATED from the ledger, so this is the check that the
+  // amendment actually retired RULING 187 rather than leaving it standing
+  // beside its replacement. RULING 189's own body names what it removed —
+  // that is a description, not an instruction — so the guard reads every
+  // OTHER current law record.
+  const recs = readFileSync(join(ROOT, "docs/governance/ledger.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((l) => JSON.parse(l) as { id: string; status: string; kind: string; body: string });
+  const current = recs.filter(
+    (r) => (r.status === "ACTIVE" || r.status === "AMENDED") && r.id !== "R-0189",
+  );
+  assert.ok(current.length > 150, "the ledger must actually have been read");
+  const offenders = current.filter((r) =>
+    /context_used_percent|context_remaining_percent|80% of usable context|CLEAN_HANDOFF_LIMIT_REACHED|EARLY_HANDOFF_WITH_CAPACITY/.test(
+      r.body,
+    ),
+  );
+  assert.deepEqual(
+    offenders.map((r) => r.id),
+    [],
+    "current law still instructs a session to measure its own context",
+  );
+
+  const r187 = recs.find((r) => r.id === "R-0187");
+  assert.equal(r187?.status, "SUPERSEDED", "RULING 187 must be retired, not left current");
+});
 test("Q: What prevents the project from recursively crawling irrelevant links forever?", () => {
   assert.ok(whereInLaw("plausibly advances", ROOT) || whereInLaw("owed question", ROOT));
   // Whitespace-normalized: the constitution is hard-wrapped, so a sentence a
@@ -206,9 +251,9 @@ test("Q: Under the replacement status model, how is the preceding descent sessio
   const h = generateHandoff(
     w,
     { today: "2026-08-26", methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-    "EARLY_HANDOFF_WITH_CAPACITY",
+    "EARLY_HANDOFF",
   );
-  assert.equal(h.session, "EARLY_HANDOFF_WITH_CAPACITY");
+  assert.equal(h.session, "EARLY_HANDOFF");
   assert.equal(h.workstream, "OPEN");
   assert.equal(h.graph, "EXPANDING");
 });

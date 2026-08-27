@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 03:23:14 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 11:12:40 EDT.
 Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1099 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1106 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -793,15 +793,15 @@ from. Each entry there names what it supersedes.
 - RULING 177 — the subject universe may be bounded; the method never is  [R-0177 · LAW_DECISION · ACTIVE]
 - RULING 178 — inherit everything, assume it is incomplete, keep the learning  [R-0178 · LAW_DECISION · ACTIVE]
 - RULING 179 — convergence is versioned, and completion is derived from child state  [R-0179 · LAW_DECISION · ACTIVE]
-- RULING 180 — session status, workstream status and graph status are three different facts  [R-0180 · LAW_DECISION · ACTIVE]
+- RULING 180 — session status, workstream status and graph status are three different facts  [R-0180 · LAW_DECISION · AMENDED]
 - RULING 181 — a frontier is state, not a recipe for recreating state  [R-0181 · LAW_DECISION · ACTIVE]
 - RULING 182 — permission state and transport state are orthogonal  [R-0182 · LAW_DECISION · ACTIVE]
 - RULING 183 — a lead is not a body  [R-0183 · LAW_DECISION · ACTIVE]
 - RULING 184 — blocked is a real state, and a finite attempt count never earns absence  [R-0184 · LAW_DECISION · ACTIVE]
 - RULING 185 — the authority precedence model  [R-0185 · LAW_DECISION · ACTIVE]
 - RULING 186 — a session opens on task-relevant current authority, never on the full history  [R-0186 · LAW_DECISION · ACTIVE]
-- RULING 187 — a well-preserved handoff is not automatically a legitimate stop  [R-0187 · LAW_DECISION · ACTIVE]
 - RULING 188 — the descent freezes only for the minimum safe state cutover  [R-0188 · LAW_DECISION · ACTIVE]
+- RULING 189 — a session does not measure its own context, and stops for real reasons only  [R-0189 · LAW_DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -992,13 +992,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-27 03:23:14 EDT
-branch: claude/descent-resume-0826
-head sha: 016f2f1e39d1bee36dfee3f2126996641a138aa5
-head subject: Share the repeated-flag parser the duplicate guard caught
-origin/main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8
-origin/main subject: Wire inherited method routes to receive their own canonical outcomes (#207)
-local main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8
+generated: 2026-08-27 11:12:40 EDT
+branch: claude/85641-hyperfocus-0827
+head sha: 74094e96a4e3789e5fb95b1ac0c86aceba466922
+head subject: Session record: the stopping model, and 85641
+origin/main sha: 0f5f43424540dcd617ce3de2c1f98c778185664e
+origin/main subject: Session handoff: 6 commit(s) from claude/descent-resume-0826 (#208)
+local main sha: 0f5f43424540dcd617ce3de2c1f98c778185664e
 local main matches origin/main: yes
 working tree: clean
 open prs: none

@@ -283,7 +283,12 @@
     "bodies:census-gap": "tsx scripts/census-gap-walk.mts",
     "ladder:monotonicity": "tsx scripts/ladder-monotonicity.mts",
     "method:learn-descent": "tsx scripts/learn-descent-routes.mts",
-    "gov:directory": "tsx scripts/walk-government-directory.mts"
+    "gov:directory": "tsx scripts/walk-government-directory.mts",
+    "zip:governing": "tsx scripts/zip-governing-universe.mts",
+    "zip:intersect": "tsx scripts/zip-district-intersect.mts",
+    "district:probe": "tsx scripts/district-territory-probe.mts",
+    "arcgis:catalog": "tsx scripts/arcgis-catalog.mts",
+    "pdf:read": "tsx scripts/read-pdf.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

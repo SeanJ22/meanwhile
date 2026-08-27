@@ -74,6 +74,40 @@ const ROUTES: Learned[] = [
     },
   },
   {
+    id: "who-bills-for-it",
+    title:
+      "a government that publishes nothing is still billed for: find the state agency that computes its tax rate, and read the rate table",
+    tier: "A1",
+    fields: ["body"],
+    note:
+      "proved on New Hampshire's Department of Revenue Administration, whose 2024 workbook names 8 of the 15 Merrimack County governments the Census of Governments recorded with NO website. The SHAPE is statutory rather than local — a district that levies must have its rate set and published by somebody — and the specific publisher differs per state, so the route travels further than the URL does.",
+    origin:
+      "conceived 2026-08-27 from this repository's own note: states/TIERS.md said 'revenue.nh.gov's municipal and property division publishes the rate tables precisely because somebody has to be billed', and that host had refused this project at every rung until rung 3b landed the same day",
+    outcome: {
+      jurisdiction: "nh",
+      rows: 45,
+      outcome: "YIELDED",
+      note: "45 village/precinct rows statewide in the 2024 workbook; 8 of Merrimack's 15 no-website governments named. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence.",
+    },
+  },
+  {
+    id: "sitemap-when-the-index-is-javascript",
+    title:
+      "when a CMS renders its own index in the browser, sitemap.xml is the index — read it instead of the page",
+    tier: "A0",
+    fields: ["body", "meeting", "source"],
+    note:
+      "proved on revenue.nh.gov, whose Municipal and Property Division landing page is 243,735 bytes carrying two usable anchors while its sitemap named 26 URLs about rates, villages and precincts. Any CMS that hydrates its navigation has this shape; recorded UNKNOWN because one site is not a measurement of how common it is.",
+    origin:
+      "conceived 2026-08-27 after a division landing page returned almost no links despite being a quarter of a megabyte — the giveaway that the navigation is built client-side",
+    outcome: {
+      jurisdiction: "nh",
+      rows: 26,
+      outcome: "YIELDED",
+      note: "26 sitemap URLs mentioning rates, villages or precincts, one of which was the village-district tax-rate page the walk needed and the rendered page did not link",
+    },
+  },
+  {
     id: "official-enumeration-cross-check",
     title:
       "reconcile two INDEPENDENT official enumerations of the same body and record the disagreement rather than choosing one (RULING 57)",

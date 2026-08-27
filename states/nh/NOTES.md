@@ -525,3 +525,63 @@ The binary is deliberately absent from the repository: RULING 73 settles
 RULING 69 against RULING 20 by committing the CONTENT and the source's hash,
 never the file. What the document proves is written above; the hash is how a
 later session knows whether it is reading the same edition.
+
+### The village districts that publish nothing are billed by somebody
+
+Fifteen active Merrimack County governments reported **no website at all** to
+the Census Bureau. They are not absent — they levy, and `states/TIERS.md`
+already said where to look: *"revenue.nh.gov's municipal and property division
+publishes the rate tables precisely because somebody has to be billed."*
+
+That host had refused this project at every rung until rung 3b landed today.
+Walked 2026-08-27:
+
+```
+https://www.revenue.nh.gov/sitemap.xml
+  -> .../municipal-and-property-reports/municipal-and-village
+     -> 2024 Municipal and Village District Tax Rates   .xlsx   87,525 B
+        2024 Village District Tax Rates                 .pdf
+```
+
+**The division's landing page is JavaScript-driven** — 243,735 bytes carrying
+two usable anchors — so the page itself does not lead anywhere. `sitemap.xml`
+does, and it named 26 URLs mentioning rates, villages or precincts. That is the
+route: when a CMS renders its index in the browser, the sitemap is the index.
+
+The 2024 workbook holds **45 rows naming a village or precinct, statewide**, and
+it names **8 of the 15** Merrimack governments the Census left blank:
+
+| Census says no website | DRA 2024 rate |
+|---|---|
+| EPSOM VILLAGE DISTRICT | 0 |
+| PENACOOK BOSCAWEN WATER PRECINCT | named |
+| HARDY ROAD VILLAGE DISTRICT | 1.88 |
+| ANDOVER VILLAGE DISTRICT | 0 |
+| ANDOVER FIRE DISTRICT | named |
+| EAST ANDOVER FIRE PRECINCT | named |
+| HOOKSETT VILLAGE WATER PRECINCT | 0 |
+| HOPKINTON VILLAGE PRECINCT | 0.24 |
+
+The other seven — Warner Village Water, BCEP Solid Waste, Highlands Village,
+Northfield Sewer, and three school districts — are **not in this table**, which
+is a finding about the table rather than about them: it lists village districts
+that set a tax rate, and a solid-waste district assessed through its member
+towns would not appear. Another route is owed for those.
+
+**A rate of 0 is not an absence either.** Andover Village, Epsom Village,
+Hooksett Village Water and Hopkinton Village all appear with 0, which means the
+district exists, filed, and set no rate this year. A table that omitted them
+would be the absence; a zero beside a name is the opposite.
+
+### RULING 121's spanning pair, confirmed by the state's own arithmetic
+
+**Lake Todd Village appears TWICE in the 2024 table, at 0.24 and at 0.38**,
+each row flagged `*Apportioned`. `states/TIERS.md` records Lake Todd Village
+District as governing territory in **Bradford AND Newbury**; the two rates are
+its apportionment across the two towns, published by the state that computes
+them. Eastman Village appears three times and Granite Lake Village twice, for
+the same reason.
+
+That is a spanning special district evidenced by an independent official source
+rather than by this project's own boundary work — and 03255 is one of the two
+towns.

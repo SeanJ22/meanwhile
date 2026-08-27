@@ -1,6 +1,6 @@
 {
-  "version": 6,
-  "updatedOn": "2026-08-26",
+  "version": 8,
+  "updatedOn": "2026-08-27",
   "routes": [
     {
       "id": "party-county-directory",
@@ -1480,6 +1480,13 @@
           "rows": 57,
           "outcome": "YIELDED",
           "note": "211 governments in the clip, 86 already held; 90 of the 125 missing reported a website and 57 named themselves when opened"
+        },
+        {
+          "jurisdiction": "pilot-counties",
+          "walkedOn": "2026-08-27",
+          "rows": 57,
+          "outcome": "YIELDED",
+          "note": "211 governments in the clip, 86 already held; 90 of the 125 missing reported a website and 57 named themselves when opened"
         }
       ],
       "subBranches": [],
@@ -1512,6 +1519,13 @@
           "rows": 45,
           "outcome": "YIELDED",
           "note": "44 pages, 37 with a native text layer, no OCR needed: the commissioners and ten department heads on page 3, the full 45-member delegation and both sets of officers on page 5, county convention minutes with roll-call votes on pages 22-29. Confirmed a roster a prior session had already recorded, and reconciled it against the General Court roster 42/45 on surname."
+        },
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-27",
+          "rows": 45,
+          "outcome": "YIELDED",
+          "note": "44 pages, 37 with a native text layer, no OCR needed: the commissioners and ten department heads on page 3, the full 45-member delegation and both sets of officers on page 5, county convention minutes with roll-call votes on pages 22-29. Confirmed a roster a prior session had already recorded, and reconciled it against the General Court roster 42/45 on surname."
         }
       ],
       "subBranches": [],
@@ -1539,6 +1553,13 @@
         {
           "jurisdiction": "nh",
           "walkedOn": "2026-08-26",
+          "rows": 6,
+          "outcome": "YIELDED",
+          "note": "45 against 45, 42 agreed on surname; 2 surname spellings and 4 given-name forms disagreed. Recorded on both sides rather than resolved."
+        },
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-27",
           "rows": 6,
           "outcome": "YIELDED",
           "note": "45 against 45, 42 agreed on surname; 2 surname spellings and 4 given-name forms disagreed. Recorded on both sides rather than resolved."
@@ -1612,6 +1633,66 @@
       "origin": "conceived 2026-08-26 by isolating one header at a time after every rung of the ladder was refused by hosts that served a bare request",
       "learnedOn": "2026-08-26",
       "learnedAtVersion": 6
+    },
+    {
+      "id": "who-bills-for-it",
+      "title": "a government that publishes nothing is still billed for: find the state agency that computes its tax rate, and read the rate table",
+      "tier": "A1",
+      "fields": [
+        "body"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved on New Hampshire's Department of Revenue Administration, whose 2024 workbook names 8 of the 15 Merrimack County governments the Census of Governments recorded with NO website. The SHAPE is statutory rather than local — a district that levies must have its rate set and published by somebody — and the specific publisher differs per state, so the route travels further than the URL does."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-27",
+          "rows": 45,
+          "outcome": "YIELDED",
+          "note": "45 village/precinct rows statewide in the 2024 workbook; 8 of Merrimack's 15 no-website governments named. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 from this repository's own note: states/TIERS.md said 'revenue.nh.gov's municipal and property division publishes the rate tables precisely because somebody has to be billed', and that host had refused this project at every rung until rung 3b landed the same day",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 7
+    },
+    {
+      "id": "sitemap-when-the-index-is-javascript",
+      "title": "when a CMS renders its own index in the browser, sitemap.xml is the index — read it instead of the page",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "meeting",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved on revenue.nh.gov, whose Municipal and Property Division landing page is 243,735 bytes carrying two usable anchors while its sitemap named 26 URLs about rates, villages and precincts. Any CMS that hydrates its navigation has this shape; recorded UNKNOWN because one site is not a measurement of how common it is."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "nh",
+          "walkedOn": "2026-08-27",
+          "rows": 26,
+          "outcome": "YIELDED",
+          "note": "26 sitemap URLs mentioning rates, villages or precincts, one of which was the village-district tax-rate page the walk needed and the rendered page did not link"
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 after a division landing page returned almost no links despite being a quarter of a megabyte — the giveaway that the navigation is built client-side",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 8
     }
   ]
 }

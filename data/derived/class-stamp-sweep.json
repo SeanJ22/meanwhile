@@ -12549,7 +12549,7 @@
       "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
     },
     {
-      "bodyId": "curated:az/pima-regional-flood-control-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",
@@ -12559,7 +12559,7 @@
       "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     },
     {
-      "bodyId": "curated:az/pima-county-free-library-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",
@@ -12569,7 +12569,7 @@
       "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     },
     {
-      "bodyId": "curated:az/pima-county-stadium-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",
@@ -12579,7 +12579,7 @@
       "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     },
     {
-      "bodyId": "curated:az/central-arizona-water-conservation-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
       "label": "Pima",
       "state": "AZ",
       "stamped": "county",

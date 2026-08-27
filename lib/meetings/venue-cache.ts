@@ -74,6 +74,8 @@ export const PLACELESS_LOCATIONS = [
   // Tucson Clerk's boards pages publish these for virtual-only bodies.
   "microsoft teams (virtual)",
   "microsoft teams virtual",
+  // CivicClerk's own value for an online sitting (CAWCD, 2026-08-27).
+  "virtual event",
 ];
 
 /** Reduce a location string to something two spellings of one room agree on. */
@@ -1248,6 +1250,80 @@ export const VENUE_CACHE: VenueEntry[] = [
     coordinateSourceUrl:
       "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=148%20West%20Main%20Street%2C%20Warner%2C%20NH%2003278&benchmark=Public_AR_Current&format=json",
     verifiedAt: "2026-08-21",
+  },
+
+  // ── CivicClerk: Central Arizona Water Conservation District ─────────────
+  // The district's sittings are in PHOENIX and its readers here are in Pima
+  // County, 180 km away. That is not a mismatch to hide: it taxes every parcel
+  // in Pima County and this is where it decides. `match` is the API's own
+  // assembled address string verbatim, punctuation and doubled commas
+  // included, because venueKey strips them and a tidied copy would stop
+  // matching the day the tenant tidies theirs.
+  {
+    sourceId: "civicclerk",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    tenant: "capaz",
+    match: "23636 N. 7th Street -, Board Room,, Phoenix, AZ, 85024",
+    name: "CAP Headquarters, Board Room",
+    address: "23636 N 7th Street, Phoenix, AZ 85024",
+    lat: 33.701204,
+    lng: -112.065793,
+    addressSourceUrl: "https://capaz.portal.civicclerk.com",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=23636%20N%207th%20Street%2C%20Phoenix%2C%20AZ%2085024&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-27",
+  },
+  {
+    sourceId: "civicclerk",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    tenant: "capaz",
+    match:
+      "23636 N 7th Street, - Lake Mead Conference Room - Building 2 -, Phoenix, AZ, 85024",
+    name: "CAP Headquarters, Lake Mead Conference Room, Building 2",
+    address: "23636 N 7th Street, Phoenix, AZ 85024",
+    lat: 33.701204,
+    lng: -112.065793,
+    addressSourceUrl: "https://capaz.portal.civicclerk.com",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=23636%20N%207th%20Street%2C%20Phoenix%2C%20AZ%2085024&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-27",
+  },
+  {
+    /*
+     * The SAME room as the row above, spelt differently by the same tenant on
+     * a different event — the room name and the building swap places. venueKey
+     * strips punctuation and case but not word order, which is deliberate:
+     * fuzzy matching a venue is how a reader ends up at the wrong address. A
+     * new published spelling gets a new row, and until it does the meeting
+     * drops and is counted as an unknown venue rather than pinned to a guess.
+     */
+    sourceId: "civicclerk",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    tenant: "capaz",
+    match:
+      "23636 N 7th Street, Building 2 - Lake Mead Conference Room, Phoenix, AZ, 85024",
+    name: "CAP Headquarters, Lake Mead Conference Room, Building 2",
+    address: "23636 N 7th Street, Phoenix, AZ 85024",
+    lat: 33.701204,
+    lng: -112.065793,
+    addressSourceUrl: "https://capaz.portal.civicclerk.com",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=23636%20N%207th%20Street%2C%20Phoenix%2C%20AZ%2085024&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-27",
+  },
+  {
+    sourceId: "civicclerk",
+    bodyOcdId: "ocd-division/country:us/state:az/county:pima",
+    tenant: "capaz",
+    match: "Musical Instrument Museum, 4725 E Mayo Blvd, Phoenix, AZ, 85050",
+    name: "Musical Instrument Museum",
+    address: "4725 E Mayo Boulevard, Phoenix, AZ 85050",
+    lat: 33.668572,
+    lng: -111.979311,
+    addressSourceUrl: "https://capaz.portal.civicclerk.com",
+    coordinateSourceUrl:
+      "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=4725%20E%20Mayo%20Blvd%2C%20Phoenix%2C%20AZ%2085050&benchmark=Public_AR_Current&format=json",
+    verifiedAt: "2026-08-27",
   },
 ];
 

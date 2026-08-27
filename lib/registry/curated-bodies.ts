@@ -973,7 +973,7 @@ function pima85641DistrictRows(): Body[] {
      */
     agenda:
       | { type: "LEGISTAR"; ref: string; status: "LIVE" }
-      | { type: "NONE"; ref: string | null; status: "KNOWN_UNCOVERED" };
+      | { type: "CIVICCLERK"; ref: string; status: "LIVE" };
   }> = [
     {
       slug: "pima-rocking-k-south-cfd",
@@ -989,7 +989,7 @@ function pima85641DistrictRows(): Body[] {
       agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
-      slug: "pima-regional-flood-control-district",
+      slug: "regional-flood-control-district",
       name: "Pima County Regional Flood Control District Board of Directors",
       homepage: "https://www.pima.gov/1427/Flood-Control",
       authority:
@@ -1002,7 +1002,7 @@ function pima85641DistrictRows(): Body[] {
       agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
-      slug: "pima-county-free-library-district",
+      slug: "free-library-district",
       name: "Pima County Free Library District Board of Directors",
       homepage: "https://www.library.pima.gov/",
       authority:
@@ -1015,7 +1015,7 @@ function pima85641DistrictRows(): Body[] {
       agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
     },
     {
-      slug: "pima-county-stadium-district",
+      slug: "stadium-district",
       name: "Pima County Stadium District Board of Directors",
       homepage: "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
       authority:
@@ -1039,15 +1039,25 @@ function pima85641DistrictRows(): Body[] {
       wiring:
         "county:pima UNDER-serves rather than over-serves, deliberately. The district also covers Maricopa and Pinal, so a reader there is governed by it and will not see it — but this product covers neither county, and the alternative (no division at all) would hide it from the readers it does cover. When Maricopa or Pinal is added, this row takes alsoServesOcdIds.",
       agenda: {
-        type: "NONE" as const,
-        ref: "https://www.cap-az.com/meetings/",
-        status: "KNOWN_UNCOVERED" as const,
+        type: "CIVICCLERK" as const,
+        ref: "https://capaz.portal.civicclerk.com",
+        status: "LIVE" as const,
       },
     },
   ];
 
+  /*
+   * THE ID FORM FOLLOWS WHETHER THE BODY HAS A DIVISION.
+   *
+   * `Body` documents its id as `<ocdId>#<slot>`, and `tests/source-adapters`
+   * holds the same invariant against every wiring row: an ocdId that is not
+   * null must be the body id with the slot removed. A body that HAS a division
+   * therefore takes the division form — the same shape Tucson's 56 boards use
+   * under `place:tucson` — and only a division-less body falls back to
+   * `curated:`, which is D28's case and Rocking K South's.
+   */
   return rows.map((row) => ({
-    id: `curated:az/${row.slug}#governing`,
+    id: row.ocdId ? `${row.ocdId}#${row.slug}` : `curated:az/${row.slug}#governing`,
     ocdId: row.ocdId,
     name: row.name,
     bodyClass: "GOVERNING" as const,
@@ -1061,10 +1071,10 @@ function pima85641DistrictRows(): Body[] {
      * district's own budget hearings and resolutions are in it — searched and
      * found, not assumed.
      *
-     * KNOWN_UNCOVERED for the Central Arizona Water Conservation District: it
-     * is directly elected, it holds its own board meetings at a page this
-     * project has found and not yet read, and there is deliberately no way to
-     * record "gave up" here.
+     * LIVE for the Central Arizona Water Conservation District too, but by a
+     * different route: it is directly elected and holds its own meetings, and
+     * its CivicClerk tenant answers its own OData API. Sending its readers to
+     * the county calendar would have sent them to the wrong room.
      */
     coverageStatus: row.agenda.status,
     agendaSourceType: row.agenda.type,

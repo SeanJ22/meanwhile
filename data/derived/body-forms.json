@@ -10071,7 +10071,7 @@
       "basisDetail": "schoolDependency=DEPENDENT"
     },
     {
-      "bodyId": "curated:az/pima-regional-flood-control-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
       "ocdId": "ocd-division/country:us/state:az/county:pima",
       "hasFormDefinition": true,
       "formKey": "az:county",
@@ -10079,7 +10079,7 @@
       "basisDetail": "divisionType=county"
     },
     {
-      "bodyId": "curated:az/pima-county-free-library-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
       "ocdId": "ocd-division/country:us/state:az/county:pima",
       "hasFormDefinition": true,
       "formKey": "az:county",
@@ -10087,7 +10087,7 @@
       "basisDetail": "divisionType=county"
     },
     {
-      "bodyId": "curated:az/pima-county-stadium-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
       "ocdId": "ocd-division/country:us/state:az/county:pima",
       "hasFormDefinition": true,
       "formKey": "az:county",
@@ -10095,7 +10095,7 @@
       "basisDetail": "divisionType=county"
     },
     {
-      "bodyId": "curated:az/central-arizona-water-conservation-district#governing",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
       "ocdId": "ocd-division/country:us/state:az/county:pima",
       "hasFormDefinition": true,
       "formKey": "az:county",

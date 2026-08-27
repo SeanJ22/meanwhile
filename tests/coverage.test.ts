@@ -299,25 +299,25 @@ test("85641 states the unincorporated fact and still names its government", () =
   const coverage = coverageFor("85641", 0);
 
   /*
-   * NO_SOURCE again since 2026-08-27, and the regression is the system working.
+   * NONE_SCHEDULED since 2026-08-13, and it SURVIVED a real test of itself on
+   * 2026-08-27 — which is worth recording, because the survival was earned.
    *
-   * From 2026-08-13 this was NONE_SCHEDULED because both of Vail's governing
-   * bodies were LIVE, so an empty calendar was a statement about the calendar.
-   * The 85641 detective session then found a governing body nobody knew about:
-   * the CENTRAL ARIZONA WATER CONSERVATION DISTRICT, which levies on every
-   * parcel in Pima County (Resolution 2026-43, ad valorem secondary 0.1000 plus
-   * water storage 0.0400 on the county's whole valuation) and whose board is
-   * DIRECTLY ELECTED. It holds its own meetings and this project has no adapter
-   * for them.
+   * That day found a governing body nobody knew about: the CENTRAL ARIZONA
+   * WATER CONSERVATION DISTRICT, which levies on every parcel in Pima County
+   * (Resolution 2026-43, ad valorem secondary 0.1000 plus water storage 0.0400
+   * on the county's whole valuation) and whose board is DIRECTLY ELECTED. Its
+   * own meetings page renders no meeting, so adding it turned this assertion to
+   * NO_SOURCE — correctly, because there was now a government here whose
+   * calendar we could not read.
    *
-   * So there is now a government at this point whose calendar we cannot read,
-   * and NO_SOURCE is the true statement. Keeping NONE_SCHEDULED would require
-   * either hiding the district or pretending we can see its calendar, and
-   * CLAUDE.md forbids the first in as many words — collection state never
-   * governs display, and nothing is suppressed because something else is
-   * missing. The honest answer to this state is an adapter, not a quieter test.
+   * The available shortcut was to leave the district out and keep the greener
+   * state. CLAUDE.md forbids exactly that: collection state never governs
+   * display. So the district went in, and then the adapter did — its CivicClerk
+   * tenant slug is in its own page's `clerkEmbedProps` and the portal's OData
+   * API answers a plain GET. Every governing body at this point is LIVE again,
+   * and an empty calendar is once more a statement about the calendar.
    */
-  assert.equal(coverage.state, "NO_SOURCE");
+  assert.equal(coverage.state, "NONE_SCHEDULED");
   assert.equal(coverage.unincorporated, true, "Vail is unincorporated and must say so");
 
   const labels = coverage.bodies.map((b) => b.divisionLabel);
@@ -357,14 +357,15 @@ test("nobody is ever told they have no representation", () => {
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
   /*
-   * 85701 was NONE_SCHEDULED from 2026-08-13 and is NO_SOURCE again from
-   * 2026-08-27, for the same reason as 85641 above: the Central Arizona Water
-   * Conservation District governs every parcel in Pima County, which includes
-   * this one, and no adapter reads its calendar. Both Pima zips move together
-   * because the district's territory is the county — which is itself the check
-   * that the finding was applied, rather than pinned to the zip that found it.
+   * 85701 moved with 85641 through the Central Arizona Water Conservation
+   * District episode of 2026-08-27 described above — out of NONE_SCHEDULED
+   * when the district was added with no adapter, and back into it when the
+   * CivicClerk adapter landed. Both Pima zips move together because the
+   * district's territory is the county, which is itself the check that the
+   * finding was applied to the district's real reach rather than pinned to the
+   * zip that happened to find it.
    */
-  assert.equal(coverageFor("85701", 0).state, "NO_SOURCE");
+  assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
   // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
   // GOVERNING body at the point without a source — was wired (M78). The two
   // bodies still unwired there are Rockaway's Environmental Commission and

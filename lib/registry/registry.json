@@ -88417,7 +88417,7 @@
    }
   },
   {
-   "id": "curated:az/pima-regional-flood-control-district#governing",
+   "id": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
    "name": "Pima County Regional Flood Control District Board of Directors",
    "bodyClass": "GOVERNING",
@@ -88437,7 +88437,7 @@
    }
   },
   {
-   "id": "curated:az/pima-county-free-library-district#governing",
+   "id": "ocd-division/country:us/state:az/county:pima#free-library-district",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
    "name": "Pima County Free Library District Board of Directors",
    "bodyClass": "GOVERNING",
@@ -88457,7 +88457,7 @@
    }
   },
   {
-   "id": "curated:az/pima-county-stadium-district#governing",
+   "id": "ocd-division/country:us/state:az/county:pima#stadium-district",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
    "name": "Pima County Stadium District Board of Directors",
    "bodyClass": "GOVERNING",
@@ -88477,14 +88477,14 @@
    }
   },
   {
-   "id": "curated:az/central-arizona-water-conservation-district#governing",
+   "id": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
    "ocdId": "ocd-division/country:us/state:az/county:pima",
    "name": "Central Arizona Water Conservation District Board of Directors",
    "bodyClass": "GOVERNING",
    "bodyOrigin": "CURATED",
-   "coverageStatus": "KNOWN_UNCOVERED",
-   "agendaSourceType": "NONE",
-   "agendaSourceRef": "https://www.cap-az.com/meetings/",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "CIVICCLERK",
+   "agendaSourceRef": "https://capaz.portal.civicclerk.com",
    "meetingCadence": null,
    "homepageUrl": "https://www.cap-az.com/board/board-members/",
    "demandCount": 0,

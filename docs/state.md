@@ -19723,3 +19723,147 @@ branch protection on three green checks each, no override.
 the last one was not measured; it was measurable in one command, and reporting
 it as unmeasured would have been a session describing its own convenience as a
 limit.
+
+---
+
+# 2026-08-27 — REMOVE THE FAKE STOPPING MODEL, THEN HYPERFOCUS 85641
+
+Branch `claude/85641-hyperfocus-0827`, from `0f5f434`. Two ordered jobs, both
+done, one planned merge at the real end.
+
+## JOB 1 — the context-usage stopping model is gone (RULING 189)
+
+**A session was required to record `context_used_percent` and
+`context_remaining_percent` at every non-`COMPLETE` close, and one status
+carried an 80% floor. The model does not possess that measurement.** A session
+reported approximately 4% used while the interface it was running inside
+displayed roughly 47%, and the classifier believed it, because a number was all
+it was given.
+
+A guessed quantity dressed as a measurement is worse than no quantity at all: it
+made a status that reads as success purchasable with an estimate, and it gave a
+session a standing reason to reason about its own capacity instead of about the
+work.
+
+**The threshold is gone and nothing replaces it** — not elapsed minutes, token
+guesses, message counts, commit counts, fatigue or a work quota.
+
+```
+SESSION: COMPLETE
+         CLEAN_HANDOFF_AUTHOR_STOP
+         CLEAN_HANDOFF_EXTERNAL_STOP
+         EARLY_HANDOFF
+         FAILED_CLOSEOUT
+```
+
+**Two non-reasons are refused mechanically**, and each names a stop this
+repository has actually made:
+
+1. **Self-estimated capacity** — the removed model's entire content.
+2. **Merge cadence** — the preceding descent session stopped on *"one planned
+   merge per session (RULING 1), now taken"* while **1,720** executable items
+   were owed. RULING 1 governs shipping cadence, not session duration.
+
+`pnpm workstream:close --context-used 47` now exits 2 and says why. RULING 187
+is **SUPERSEDED** rather than amended, so its text stops being compiled into
+current authority and stops instructing sessions to measure what they cannot
+measure; RULING 180 is **AMENDED** for the vocabulary. The compiler now applies
+status resolutions AFTER adoption, so an amendment can retire a record in the
+same compile, and adoptions carry their own date rather than the remediation
+date.
+
+**Resumability is untouched** — 1,954 persisted edges, 1,700 outstanding,
+resumed with no seed crawl.
+
+## JOB 2 — 85641
+
+The full record is **`states/az/85641.md`**. The headline findings:
+
+**The levying authority publishes what the Census does not.**
+`docs/gap-ledger.md` recorded 24 Pima County special districts as
+territory-unresolvable, because the national boundary join "resolved 47,834 of
+the country's 90,837 governments and not one special district — the boundaries
+are not published anywhere in that data at all." True of that dataset, false of
+the world. **The county that levies a district's tax has to know exactly where
+it starts and stops**, and Pima County publishes `Districts - Fire Taxation` and
+`Districts - Pima Community College Taxation` as open ArcGIS layers. A route
+gap wearing an absence's clothes.
+
+**85641 is not one place.** 96 interior sample points, 0 failed reads, **44
+distinct governing combinations**. Two standing claims corrected: *"Vail in
+LD-17"* (52 of 96 points are LD-19 — six legislators, not three) and *"Vail has
+no municipal government"* (true of Vail; 85641 also holds City of Tucson
+territory in Wards 4 and 5).
+
+**Both spatial instruments were run, and they disagree on purpose.** The
+96-point grid found 39 governing units; the ZCTA polygon intersect found 55
+features across 18 layers — **six governing units sampling missed entirely**,
+including two fire districts. A finite sample count never earns an absence.
+
+**A per-county denominator undercounts.** Two of the four fire districts levying
+on 85641 are not Pima districts: Mescal-J6 was established by the **Cochise**
+County Board of Supervisors, and Sonoita-Elgin serves **Santa Cruz** County
+communities. A district is counted where it was formed and levies where its
+territory reaches. `gap-ledger`'s "28 governments touching this zip" was not
+merely unresolved but too small.
+
+**Both named wounds closed.** The Vail governing-board page serves 1.44 MB of
+HTML with no roster in it — which is why five of six stored names verified as
+absent; every name would have. The real board is five members. Override
+Reauthorization 2026 walked to the statutory Notice of Election: 12.5% for
+FY2027/28 plus six years, ~$5,102,762, $1.61 per $100 of secondary assessed
+valuation, A.R.S. § 15-481(P), special election 2026-11-03 <!-- expected-future: AZ general polling day, from the district Notice of Election -->, election authority
+Pima County Elections — with the Spanish text from the same authority, and a
+second county measure on the same ballot.
+
+**Rosters: 11 bodies, 35 people**, in `docs/evidence/az-85641-rosters.jsonl`.
+Three of the four school-district boards in this ZIP render client-side, so an
+extractor reading served HTML reports all three as having no board while
+returning HTTP 200.
+
+**Empire Elementary No. 37** governs 8 of 96 points and has no website in
+*either* official enumeration. Recorded as *"we have not found one"*, never
+*"it has none"*, with address and phone recovered from NCES and four unwalked
+avenues named.
+
+## Instruments
+
+Five new commands, each enforcing a control query and reporting a failed layer
+as `LAYER_FAILED` rather than as zero districts: `zip:governing`,
+`zip:intersect`, `district:probe`, `arcgis:catalog`, `pdf:read`.
+
+**Two instrument defects, both found by the work rather than by review.**
+`pnpm robots:sweep` could only ask over HTTPS, so `www.mescalj6fd.com` — a fire
+district that **levies on 85641** — was unwalkable because of a certificate; it
+serves `robots.txt` at HTTP 200 over plain http. It now falls back, and still
+fails safe. `pnpm pdf:read` printed "0 bytes" beside a successful extraction
+because pdfjs detaches the buffer.
+
+## Method
+
+**Version 9 → 19, routes 70 → 80**, each carrying its literal measured outcome.
+
+## Numbers
+
+- **Credentials: 15 of 15 proven** (`pnpm credentials`), including
+  `CENSUS_API_KEY`, which the AZ enumeration doc recorded as invalid.
+- **Gates: 7 of 7 green.** `governance:check` 13 checks / 0 issues,
+  `method:check` 0 issues, workstream validation 0 issues.
+- **ArcGIS layers enumerated: 281** across 34 services; 66 governance-shaped.
+- **Boundary layers walked: 20**, 0 failed.
+- **Tracker: 7 rows opened** (NH225–NH231), one of them a Needs Sean.
+
+## Needs Sean
+
+**`azdor.gov` allows `*` while disallowing eight named AI crawlers, ClaudeBot
+among them** (NH225). This client has always declared its own identity, so `*`
+is its rule group and the walk is permitted by the standard. A host that has
+thought about AI crawlers specifically has expressed something, and taking the
+`*` rule silently would have hidden that.
+
+## What remains for 85641
+
+Named in NH226–NH231, none of it an absence: Board of Adjustment District 4 and
+a page that states JP Precinct 7's number; the CFD, Flood Control, Library and
+RTA boundaries; adapters for Highbond and NovusAGENDA; and Pima County's own
+certified ballot for the thirteen 85641 precincts.

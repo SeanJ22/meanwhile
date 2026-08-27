@@ -276,9 +276,19 @@ tuition and transport its resident children to a neighbouring district. Pima
 County has two: **Empire Elementary No. 37** (to Sonoita Elementary, Santa Cruz
 County) and **Redington Elementary No. 44** (to Mammoth-San Manuel Unified).
 
-They will never have a website, so a blank website column for one of these is a
-**correct measurement of the government**, not a gap in the enumeration. The
-county school superintendent's own district directory is what names the class.
+A blank website column for one of these is **a dated measurement of what two
+official enumerations hold** — Pima County GIS and the NCES CCD LEA directory
+both record Empire's as blank. The transportation-only structure helps explain
+it: no schools, no staff, little to publish and nobody to publish it.
+
+**That explains the blank; it does not make it permanent.** (Corrected
+2026-08-27; this passage previously said such districts would never have a
+website and that the blank column was therefore a correct measurement of the
+government rather than a gap in the enumeration.) No source consulted says such
+a district cannot or will not publish, and treating the blank as permanent
+retires the recheck on a field that can change. What is recorded is the blank,
+its date, and the filing system that answered instead. The county school
+superintendent's own district directory is what names the class.
 
 ### Unorganized territory is a status with an authority, not a gap
 

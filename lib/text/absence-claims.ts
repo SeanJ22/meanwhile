@@ -76,7 +76,67 @@ export const CLAIM_SHAPES: readonly ClaimShape[] = [
       "'We found no committee registered with the FEC' is the same fact, honestly attributed.",
     re: /^\s*(?:no|none)\s+(?:campaign\s+money|contributions?|filings?|committees?)\s+reported\b/i,
   },
+  {
+    /*
+     * **THE SAME DEFECT, ABOUT A GOVERNMENT INSTEAD OF A PERSON.**
+     * (2026-08-27, the coverage-truth session.)
+     *
+     * Every shape above guards a claim about a PERSON, and the sweep reported
+     * a clean 0 while four documents in this repository carried
+     *
+     *   "It will never have a website. It has no staff to build one."
+     *
+     * about Empire Elementary School District No. 37. The evidence behind that
+     * sentence is real and it is narrower than the sentence: the district is
+     * transportation-only, it operates no schools, it employs no staff, and
+     * two official enumerations record its website field as BLANK. None of
+     * that establishes that it can never publish one.
+     *
+     * **A plausible cause is not a verified permanent fact**, and the harm is
+     * specific: a permanent absence retires the recheck. `RECHECK_DUE` exists
+     * because a government's publishing can change, and a document that says
+     * "never" tells every later session not to look.
+     *
+     * Deliberately narrow. It catches a FUTURE-TENSE claim of permanent
+     * absence about a thing a government could publish or hold. It does not
+     * catch the honest forms — "we have not found one", "the field is blank",
+     * "no source we reached publishes it" — which are the sentences this
+     * product must be able to say, and which are planted in `KNOWN_GOOD`.
+     */
+    id: "asserted-permanent-absence",
+    why:
+      "asserts that a government will NEVER have something. We can know a field is blank today; we " +
+      "cannot know it is blank forever, and 'never' retires the recheck on a fact that can change.",
+    /*
+     * TWO NARROWINGS, both learned by running it over 90,721 prose sentences:
+     *
+     * - **`would` is out.** "Reading the register would never have surfaced
+     *   it" is a counterfactual about an instrument, not a claim about a
+     *   government's future, and it appears in five governance documents.
+     * - **The verb must take an OBJECT** — an article or a possessive. That is
+     *   what separates "will never have a website" from "would never have
+     *   surfaced it", where `have` is an auxiliary rather than the claim.
+     */
+    re: /\b(?:will|can|shall)\s+never\s+(?:have|publish|post|maintain|operate|hold)\s+(?:a|an|its|their|one)\b/i,
+  },
 ];
+
+/**
+ * A sentence that QUOTES a claim in order to correct it.
+ *
+ * A repository that records what it fixed will keep the wrong sentence on the
+ * page, in quotes, beside the right one — which is the whole point of
+ * recording it. A sweep with no notion of this either flags every correction
+ * forever or gets loosened until it stops working, and the second is how a
+ * guard dies. Same reasoning as `SPECIMEN_FILES` in the sweep script, at
+ * sentence rather than file scale.
+ */
+const CORRECTION_MARKERS =
+  /\bcorrected\s+\d{4}-\d{2}-\d{2}|\bthis\s+(?:read|said)\b|\bpreviously\s+read\b|\bused\s+to\s+(?:read|say)\b/i;
+
+export function isCorrectionNote(text: string): boolean {
+  return CORRECTION_MARKERS.test(text);
+}
 
 /**
  * Lines that MUST NOT be flagged. Planted here, beside the defects, so the
@@ -93,6 +153,12 @@ export const KNOWN_GOOD: readonly string[] = [
   "We could not place this address on the map, so it has no pin.",
   "We found no committee registered with the FEC for this candidacy.",
   "Candidates who raise or spend under $5,000 don't have to register.",
+  /* The honest forms of the Empire sentence — every one is a fact about a
+   * measurement or about us, and every one must stay sayable. */
+  "Two official enumerations record this district's website field as blank.",
+  "We have not found a website for this district.",
+  "No source we reached publishes a website for this body.",
+  "This district operates no schools and employs no staff.",
 ];
 
 export interface ClaimHit {

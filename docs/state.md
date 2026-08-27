@@ -19917,8 +19917,12 @@ A.R.S. § 15-905(C) compels a hearing notice, and `budgetsystem.azed.gov` posts
 it: date, time, venue, street address, named agenda contact, plus the district's
 tax rates. **Empire Elementary School District No. 37 operates no schools and
 employs no staff** — a *transportation-only district*, a class this project did
-not know existed — so it will never have a website, and its board meeting came
-out of a filing system instead.
+not know existed — and two official enumerations record its website field as
+BLANK, which that structure helps explain. Its board meeting came out of a
+filing system instead. *(Corrected 2026-08-27: this said the district would
+never have a website. The evidence supports the blank field and its likely
+cause; it does not establish permanent absence, and a plausible explanation is
+not a verified permanent fact.)*
 
 **3. The canvass is not the ballot.** A certified canvass carries CONTESTED
 races only; the election authority's OFFICIAL CANDIDATE LIST is the ballot

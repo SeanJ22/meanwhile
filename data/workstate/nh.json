@@ -3512,6 +3512,92 @@
       "discoveredOn": "2026-08-26",
       "declinedReason": "no owed question is plausibly advanced by this link's text or URL",
       "eligible": false
+    },
+    {
+      "id": "edge-92d62dc01d91",
+      "url": "https://merrimackcounty.net/departments/index.php",
+      "text": "government directory",
+      "parent": null,
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "INGESTED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true,
+      "processedOn": "2026-08-27"
+    },
+    {
+      "id": "edge-616d811f71d3",
+      "url": "https://merrimackcounty.net/departments/board_of_commissioners_/index.php",
+      "text": "Board of Commissioners",
+      "parent": "edge-92d62dc01d91",
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "DISCOVERED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true
+    },
+    {
+      "id": "edge-dfa874eef2c7",
+      "url": "https://merrimackcounty.net/departments/departments/county_attorney/index.php",
+      "text": "County Attorney",
+      "parent": "edge-92d62dc01d91",
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "DISCOVERED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true
+    },
+    {
+      "id": "edge-6db38b8810bb",
+      "url": "https://merrimackcounty.net/elected_officials/index.php",
+      "text": "government directory",
+      "parent": null,
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "INGESTED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true,
+      "processedOn": "2026-08-27"
+    },
+    {
+      "id": "edge-51d38c579f08",
+      "url": "https://merrimackcounty.net/elected_officials/board_of_commissioners_/index.php",
+      "text": "Board of Commissioners",
+      "parent": "edge-6db38b8810bb",
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "DISCOVERED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true
+    },
+    {
+      "id": "edge-f18a2f986cf7",
+      "url": "https://merrimackcounty.net/elected_officials/departments/county_attorney/index.php",
+      "text": "County Attorney",
+      "parent": "edge-6db38b8810bb",
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "DISCOVERED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true
+    },
+    {
+      "id": "edge-b993e3722f22",
+      "url": "https://merrimackcounty.net/elected_officials/elected_officials/board_of_commissioners/index.php",
+      "text": "Board of Commissioners",
+      "parent": "edge-6db38b8810bb",
+      "state": "nh",
+      "tier": "county",
+      "level": "county",
+      "disposition": "DISCOVERED",
+      "discoveredOn": "2026-08-27",
+      "eligible": true
     }
   ],
   "candidates": [
@@ -6453,10 +6539,62 @@
       "tier": "town, township, borough, village, plantation, unincorporated place",
       "discoveredOn": "2026-08-26",
       "rejectedReason": "not-a-government-publisher: published by the New Hampshire Municipal Association, a private membership association of municipalities; its own pages describe its members, and are not a unit of government"
+    },
+    {
+      "id": "cand-0b091f871c45",
+      "state": "ENTITY_CANDIDATE",
+      "text": "Board of Commissioners",
+      "url": "https://merrimackcounty.net/departments/board_of_commissioners_/index.php",
+      "fromEdge": "edge-92d62dc01d91",
+      "jurisdiction": "nh",
+      "tier": "county",
+      "discoveredOn": "2026-08-27"
+    },
+    {
+      "id": "cand-15c7bc165091",
+      "state": "DUPLICATE",
+      "text": "County Attorney",
+      "url": "https://merrimackcounty.net/departments/departments/county_attorney/index.php",
+      "fromEdge": "edge-92d62dc01d91",
+      "jurisdiction": "nh",
+      "tier": "county",
+      "discoveredOn": "2026-08-27",
+      "evidence": "the registry already holds this body as wtp-body/country:us/state:nh/county_attorney#governing; this lead is a NEW ROUTE to a known body, which is knowledge about the route"
+    },
+    {
+      "id": "cand-97533d3cd2cd",
+      "state": "ENTITY_CANDIDATE",
+      "text": "Board of Commissioners",
+      "url": "https://merrimackcounty.net/elected_officials/board_of_commissioners_/index.php",
+      "fromEdge": "edge-6db38b8810bb",
+      "jurisdiction": "nh",
+      "tier": "county",
+      "discoveredOn": "2026-08-27"
+    },
+    {
+      "id": "cand-a57cdb90c03b",
+      "state": "DUPLICATE",
+      "text": "County Attorney",
+      "url": "https://merrimackcounty.net/elected_officials/departments/county_attorney/index.php",
+      "fromEdge": "edge-6db38b8810bb",
+      "jurisdiction": "nh",
+      "tier": "county",
+      "discoveredOn": "2026-08-27",
+      "evidence": "the registry already holds this body as wtp-body/country:us/state:nh/county_attorney#governing; this lead is a NEW ROUTE to a known body, which is knowledge about the route"
+    },
+    {
+      "id": "cand-33b510655fe7",
+      "state": "ENTITY_CANDIDATE",
+      "text": "Board of Commissioners",
+      "url": "https://merrimackcounty.net/elected_officials/elected_officials/board_of_commissioners/index.php",
+      "fromEdge": "edge-6db38b8810bb",
+      "jurisdiction": "nh",
+      "tier": "county",
+      "discoveredOn": "2026-08-27"
     }
   ],
   "permissions": [],
-  "cursor": "nh / 283 edge(s) persisted / 250 eligible edge(s) outstanding / by tier: state=53, statewide and multi-county districts=125, county=10, local and special districts=58, town, township, borough, village, plantation, unincorporated place=4 / next: edge-c7bc1fef450f https://www.banking.nh.gov/ / eligibility ee-v1-2026-08-26 / unmaterialized obligation 771 (legacy final pass, identities never persisted)",
+  "cursor": "nh / 290 edge(s) persisted / 255 eligible edge(s) outstanding / by tier: state=53, statewide and multi-county districts=125, county=15, local and special districts=58, town, township, borough, village, plantation, unincorporated place=4 / next: edge-c7bc1fef450f https://www.banking.nh.gov/ / eligibility ee-v1-2026-08-26 / unmaterialized obligation 771 (legacy final pass, identities never persisted) / adjudicated 5 lead(s) on 2026-08-27",
   "convergence": null,
   "unmaterialized": [
     {

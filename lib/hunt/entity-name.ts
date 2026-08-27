@@ -122,6 +122,11 @@ const ARTIFACT_HEADS: readonly string[] = [
    * Clerk, and neither word is this one.
    */
   "records", "record", "copies", "copy",
+  /* Fourth calibration pass, off the Pima County directory walk — every one of
+   * these headed a link on the county's own Government or Departments page. */
+  "media", "code", "codes", "requirement", "requirements", "network", "networks",
+  "study", "studies", "weather", "transparency", "bonds", "wage", "wages",
+  "access", "system", "systems",
   /*
    * REMOVED, and the removal is the point: `elections`, `services`, `records`,
    * `archives` and `library` were all in this list until a probe ran the real
@@ -169,6 +174,24 @@ const DOCUMENT_LEADS: readonly string[] = [
 
 /** Heads that make a phrase a history or heritage page rather than a body. */
 const HERITAGE_HEADS: readonly string[] = ["present", "past", "courthouse", "heritage", "legacy", "arms"];
+
+/**
+ * Nouns that say WHERE a government is, never WHAT it is.
+ *
+ * A phrase heading on one of these is a body only when it is the government's
+ * whole name — "Pima County", "Cape May County", "Rockaway Township". Pima
+ * County's own directory also links "Watchable Wildlife in Pima County",
+ * "Outdoor Lighting Codes in Pima County" and "Warrant resolution in Pima
+ * County", every one of which heads on "county" and is a topic page.
+ *
+ * The separator is LENGTH, because that is what actually distinguishes them:
+ * a government's name is two or three words and a sentence about the place is
+ * five or six.
+ */
+const GEOGRAPHY_HEADS: readonly string[] = [
+  "county", "city", "town", "township", "borough", "village", "plantation", "state",
+];
+const GEOGRAPHY_HEAD_MAX_WORDS = 3;
 
 /**
  * Plural nouns for PEOPLE. A page listing people is a roster, not a body.
@@ -219,7 +242,16 @@ const PLURAL_ORGANS: readonly string[] = [
 ];
 
 /** Leading phrases that describe a page about a body rather than the body. */
-const LEADING_NOISE = /^(about the|about|welcome to the|welcome to|the|contact the|contact|meet the|meet|visit the|visit|inside the|inside)\s+/i;
+/*
+ * `meet`, `contact` and `visit` are stripped only as "<verb> the", never bare.
+ *
+ * Bare `meet` turned Pima County's **"Meet & Confer Committee - AFSCME"** into
+ * a body named **"& Confer Committee"**. The phrase these were written for is
+ * "Meet the Board" — the verb plus an article — and dropping the article from
+ * the pattern made the rule fire on any name that happens to open with one of
+ * those words.
+ */
+const LEADING_NOISE = /^(about the|about|welcome to the|welcome to|the|contact the|meet the|visit the|inside the)\s+/i;
 
 export interface EntityNameVerdict {
   readonly isBody: boolean;
@@ -304,6 +336,14 @@ export function readsAsBodyName(raw: string): EntityNameVerdict {
       isBody: false,
       name,
       basis: `heads on "${head}" with no organ of government named — this is a roster of people, and the body they serve is what belongs in the registry`,
+    };
+  }
+
+  if (GEOGRAPHY_HEADS.includes(head) && t.length > GEOGRAPHY_HEAD_MAX_WORDS) {
+    return {
+      isBody: false,
+      name,
+      basis: `heads on "${head}", which says WHERE and not WHAT, and runs to ${t.length} words — a government's name is two or three, and this length is a sentence about the place`,
     };
   }
 

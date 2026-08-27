@@ -88295,6 +88295,106 @@
     "collectedAt": "2026-08-27T00:00:00.000Z",
     "verifiedAt": "2026-08-27T00:00:00.000Z"
    }
+  },
+  {
+   "id": "wtp-body/country:us/state:az/office_ombudsman_citizens_aide#governing",
+   "ocdId": null,
+   "name": "OCA - Office of Ombudsman-Citizens’ Aide",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://azdirect.az.gov/office-ombudsman-citizens%E2%80%99-aide",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://azdirect.az.gov/office-ombudsman-citizens%E2%80%99-aide",
+    "sourceOrg": "azdirect.az.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:az/county_government#governing",
+   "ocdId": null,
+   "name": "County Government",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/182/County-Government",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/182/County-Government",
+    "sourceOrg": "www.pima.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:az/clerk_superior_court#governing",
+   "ocdId": null,
+   "name": "Pima County Clerk of the Superior Court",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.cosc.pima.gov/home.asp?include=pages/welcome.htm",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.cosc.pima.gov/home.asp?include=pages/welcome.htm",
+    "sourceOrg": "www.cosc.pima.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:az/meet_confer_committee#governing",
+   "ocdId": null,
+   "name": "Meet & Confer Committee",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/680/Meet-Confer-Committee---AFSCME",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/680/Meet-Confer-Committee---AFSCME",
+    "sourceOrg": "www.pima.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
+  },
+  {
+   "id": "wtp-body/country:us/state:az/district_projects_benefiting_city_tucson#governing",
+   "ocdId": null,
+   "name": "District Projects Benefiting the City of Tucson",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "PROMOTED_FROM_DESCENT_CANDIDATE",
+   "coverageStatus": "NOT_ATTEMPTED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": null,
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/1520/District-Projects-Benefiting-the-City-of",
+   "demandCount": 0,
+   "sourceDataset": "DESCENT",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1520/District-Projects-Benefiting-the-City-of",
+    "sourceOrg": "www.pima.gov",
+    "collectedAt": "2026-08-27T00:00:00.000Z",
+    "verifiedAt": "2026-08-27T00:00:00.000Z"
+   }
   }
  ]
 }

@@ -96,6 +96,10 @@ const NOT_A_DOCUMENT_HOST: readonly { host: string; what: string }[] = [
   { host: "powerbi.com", what: "a third-party dashboard embed" },
   { host: "twitter.com", what: "a social network" },
   { host: "x.com", what: "a social network" },
+  /* Found on Pima County's own Government page, which embeds a weather widget
+   * whose link text reads "PIMA COUNTY WEATHER" — a body word, a government's
+   * name, and a commercial forecast service. */
+  { host: "forecast7.com", what: "a commercial weather service" },
 ];
 
 /** Extensions that cannot be a body's own page under any reading. */

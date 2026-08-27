@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at governance remediation close-out. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-26 -->
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 22:50:17 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -991,5 +991,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
-_No git facts available this run._
-
+```
+generated: 2026-08-26 22:50:16 EDT
+branch: claude/governance-remediation-0826
+head sha: febd62426cc70087b3af5253709379cf10675582
+head subject: Governance remediation Stage 2: classification, accounting, legacy consumer migration
+origin/main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
+origin/main subject: Session handoff: 2 commit(s) from claude/descent-closeout-0826 (#203)
+local main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
+local main matches origin/main: yes
+working tree: clean
+open prs: none
+last recorded tests: 463 (fail)
+last recorded lint: not recorded
+last recorded build: not recorded
+last recorded status from: docs/state.md:19245
+```

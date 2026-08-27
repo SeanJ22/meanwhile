@@ -262,7 +262,20 @@
     "descent": "tsx scripts/descent.mts",
     "tenancy": "tsx scripts/tenancy.mts",
     "verify:extraction": "tsx scripts/verify-extraction.mts",
-    "measures": "tsx scripts/measure-scoreboard.mts"
+    "measures": "tsx scripts/measure-scoreboard.mts",
+    "governance:import": "tsx scripts/governance-import.mts",
+    "governance:compile": "tsx scripts/governance-compile.mts",
+    "governance:check": "tsx scripts/governance-check.mts",
+    "governance:open": "tsx scripts/governance-open.mts",
+    "workstream:migrate": "tsx scripts/workstream-migrate.mts",
+    "workstream:status": "tsx scripts/workstream-status.mts",
+    "workstream:close": "tsx scripts/workstream-close.mts",
+    "method:check": "tsx scripts/method-check.mts",
+    "method:ingest": "tsx scripts/method-ingest.mts",
+    "method:prove": "tsx scripts/method-prove.mts",
+    "stage1": "tsx scripts/stage1-cutover.mts",
+    "descent:resume-proof": "tsx scripts/descent-resume-proof.mts",
+    "governance:accept": "tsx scripts/governance-accept.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -1,0 +1,4301 @@
+{
+  "generatedBy": "pnpm governance:compile",
+  "neverHandEdit": true,
+  "snapshot": "7246b7d97f5c315c",
+  "counts": {
+    "records": 225,
+    "current": 205,
+    "law": 178,
+    "decisions": 27,
+    "historical": 20
+  },
+  "records": [
+    {
+      "id": "R-0001",
+      "aliases": [
+        "RULING 1",
+        "R1",
+        "R-1"
+      ],
+      "title": "RULING 1 — merge cadence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-19",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:45"
+    },
+    {
+      "id": "R-0002",
+      "aliases": [
+        "RULING 2",
+        "R2",
+        "R-2"
+      ],
+      "title": "RULING 2 — full-page screenshots are read as images",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "visual-feedback",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/visual-feedback.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:55"
+    },
+    {
+      "id": "R-0003",
+      "aliases": [
+        "RULING 3",
+        "R3",
+        "R-3"
+      ],
+      "title": "RULING 3 — the organic census is closed as a question",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:66"
+    },
+    {
+      "id": "R-0004",
+      "aliases": [
+        "RULING 4",
+        "R4",
+        "R-4"
+      ],
+      "title": "RULING 4 — `CLAUDE.md` has no rules 4g or 4h",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:73"
+    },
+    {
+      "id": "R-0005",
+      "aliases": [
+        "RULING 5",
+        "R5",
+        "R-5"
+      ],
+      "title": "RULING 5 — `walk:all` does not tap reactions",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:77"
+    },
+    {
+      "id": "R-0006",
+      "aliases": [
+        "RULING 6",
+        "R6",
+        "R-6"
+      ],
+      "title": "RULING 6 — the coverage tier vocabulary, used verbatim everywhere",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:85"
+    },
+    {
+      "id": "R-0007",
+      "aliases": [
+        "RULING 7",
+        "R7",
+        "R-7"
+      ],
+      "title": "RULING 7 — a zip below Tier 2 renders what is known and names what is not",
+      "kind": "LAW_DECISION",
+      "status": "SUPERSEDED",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:92"
+    },
+    {
+      "id": "R-0008",
+      "aliases": [
+        "RULING 8",
+        "R8",
+        "R-8"
+      ],
+      "title": "RULING 8 — no API client was built in Prompt C",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:102"
+    },
+    {
+      "id": "R-0009",
+      "aliases": [
+        "RULING 9",
+        "R9",
+        "R-9"
+      ],
+      "title": "RULING 9 — Census counts governments; the product renders bodies",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:105"
+    },
+    {
+      "id": "R-0010",
+      "aliases": [
+        "RULING 10",
+        "R10",
+        "R-10"
+      ],
+      "title": "RULING 10 — ZCTA is not a ZIP code",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:110"
+    },
+    {
+      "id": "R-0011",
+      "aliases": [
+        "RULING 11",
+        "R11",
+        "R-11"
+      ],
+      "title": "RULING 11 — not issued",
+      "kind": "TOMBSTONE",
+      "status": "RETIRED",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:114"
+    },
+    {
+      "id": "R-0012",
+      "aliases": [
+        "RULING 12",
+        "R12",
+        "R-12"
+      ],
+      "title": "RULING 12 — WALL versus JOB",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:120"
+    },
+    {
+      "id": "R-0013",
+      "aliases": [
+        "RULING 13",
+        "R13",
+        "R-13"
+      ],
+      "title": "RULING 13 — a green build check does not mean the tests ran",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:127"
+    },
+    {
+      "id": "R-0014",
+      "aliases": [
+        "RULING 14",
+        "R14",
+        "R-14"
+      ],
+      "title": "RULING 14 — path comparisons may not assume a separator",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:132"
+    },
+    {
+      "id": "R-0015",
+      "aliases": [
+        "RULING 15",
+        "R15",
+        "R-15"
+      ],
+      "title": "RULING 15 — the Kearsarge 15-row floor is retired",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:137"
+    },
+    {
+      "id": "R-0016",
+      "aliases": [
+        "RULING 16",
+        "R16",
+        "R-16"
+      ],
+      "title": "RULING 16 — the retrieval-mechanics ladder in `CLAUDE.md` is canonical",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:141"
+    },
+    {
+      "id": "R-0017",
+      "aliases": [
+        "RULING 17",
+        "R17",
+        "R-17"
+      ],
+      "title": "RULING 17 — `walledAtRung` values written before F22 are provenance-unknown",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:153"
+    },
+    {
+      "id": "R-0018",
+      "aliases": [
+        "RULING 18",
+        "R18",
+        "R-18"
+      ],
+      "title": "RULING 18 — hunt-completion gating",
+      "kind": "LAW_DECISION",
+      "status": "SUPERSEDED",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:159"
+    },
+    {
+      "id": "R-0019",
+      "aliases": [
+        "RULING 19",
+        "R19",
+        "R-19"
+      ],
+      "title": "RULING 19 — the nonpartisanship and committee-sale section is deferred",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:189"
+    },
+    {
+      "id": "R-0020",
+      "aliases": [
+        "RULING 20",
+        "R20",
+        "R-20"
+      ],
+      "title": "RULING 20 — portraits and PDF corpora do not go in git",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:193"
+    },
+    {
+      "id": "R-0021",
+      "aliases": [
+        "RULING 21",
+        "R21",
+        "R-21"
+      ],
+      "title": "RULING 21 — `DATA_GOV_API_KEY` exists",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:197"
+    },
+    {
+      "id": "R-0022",
+      "aliases": [
+        "RULING 22",
+        "R22",
+        "R-22"
+      ],
+      "title": "RULING 22 — recorded by description, and dead",
+      "kind": "LAW_DECISION",
+      "status": "SUPERSEDED",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:383"
+    },
+    {
+      "id": "R-0023",
+      "aliases": [
+        "RULING 23",
+        "R23",
+        "R-23"
+      ],
+      "title": "RULING 23 — the four-state field is data, not a gate",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:405"
+    },
+    {
+      "id": "R-0024",
+      "aliases": [
+        "RULING 24",
+        "R24",
+        "R-24"
+      ],
+      "title": "RULING 24 — a check that cannot run says so",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:413"
+    },
+    {
+      "id": "R-0025",
+      "aliases": [
+        "RULING 25",
+        "R25",
+        "R-25"
+      ],
+      "title": "RULING 25 — reader-facing behaviour is not degraded to fix an internal problem",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:419"
+    },
+    {
+      "id": "R-0026",
+      "aliases": [
+        "RULING 26",
+        "R26",
+        "R-26"
+      ],
+      "title": "RULING 26 — SHOW EVERYTHING WE FIND",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:324"
+    },
+    {
+      "id": "R-0027",
+      "aliases": [
+        "RULING 27",
+        "R27",
+        "R-27"
+      ],
+      "title": "RULING 27 — no suppression path may exist in the codebase",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:357"
+    },
+    {
+      "id": "R-0028",
+      "aliases": [
+        "RULING 28",
+        "R28",
+        "R-28"
+      ],
+      "title": "RULING 28 — absence is one buried annotation per contest, never a per-field indicator",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:367"
+    },
+    {
+      "id": "R-0029",
+      "aliases": [
+        "RULING 29",
+        "R29",
+        "R-29"
+      ],
+      "title": "RULING 29 — three priority levels, ranked inside a section and never across sections",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:500"
+    },
+    {
+      "id": "R-0030",
+      "aliases": [
+        "RULING 30",
+        "R30",
+        "R-30"
+      ],
+      "title": "RULING 30 — five P1 rows maximum per section, and an over-cap section is STOPPED",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:529"
+    },
+    {
+      "id": "R-0031",
+      "aliases": [
+        "RULING 31",
+        "R31",
+        "R-31"
+      ],
+      "title": "RULING 31 — Needs Sean is always the first section",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:538"
+    },
+    {
+      "id": "R-0032",
+      "aliases": [
+        "RULING 32",
+        "R32",
+        "R-32"
+      ],
+      "title": "RULING 32 — every row has a home",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:554"
+    },
+    {
+      "id": "R-0033",
+      "aliases": [
+        "RULING 33",
+        "R33",
+        "R-33"
+      ],
+      "title": "RULING 33 — gaps are not tracker rows",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:562"
+    },
+    {
+      "id": "R-0034",
+      "aliases": [
+        "RULING 34",
+        "R34",
+        "R-34"
+      ],
+      "title": "RULING 34 — the reader artifacts are generated, and hold no duplicated content",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:576"
+    },
+    {
+      "id": "R-0035",
+      "aliases": [
+        "RULING 35",
+        "R35",
+        "R-35"
+      ],
+      "title": "RULING 35 — every section is a queue that empties",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:589"
+    },
+    {
+      "id": "R-0036",
+      "aliases": [
+        "RULING 36",
+        "R36",
+        "R-36"
+      ],
+      "title": "RULING 36 — three resolution states, and only these three",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:602"
+    },
+    {
+      "id": "R-0037",
+      "aliases": [
+        "RULING 37",
+        "R37",
+        "R-37"
+      ],
+      "title": "RULING 37 — who may move a row",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:616"
+    },
+    {
+      "id": "R-0038",
+      "aliases": [
+        "RULING 38",
+        "R38",
+        "R-38"
+      ],
+      "title": "RULING 38 — the author's resolution notes are instructions, not commentary",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:629"
+    },
+    {
+      "id": "R-0039",
+      "aliases": [
+        "RULING 39",
+        "R39",
+        "R-39"
+      ],
+      "title": "RULING 39 — resolution timestamps are written by the script, not by the spreadsheet",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:638"
+    },
+    {
+      "id": "R-0040",
+      "aliases": [
+        "RULING 40",
+        "R40",
+        "R-40"
+      ],
+      "title": "RULING 40 — attribution has no soft landing",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-17",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:649"
+    },
+    {
+      "id": "R-0041",
+      "aliases": [
+        "RULING 41",
+        "R41",
+        "R-41"
+      ],
+      "title": "RULING 41 — the author writes rows too",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:665"
+    },
+    {
+      "id": "R-0042",
+      "aliases": [
+        "RULING 42",
+        "R42",
+        "R-42"
+      ],
+      "title": "RULING 42 — the page-level disclosure replaces `THIN_CANDIDATE_LINE`",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:683"
+    },
+    {
+      "id": "R-0043",
+      "aliases": [
+        "RULING 43",
+        "R43",
+        "R-43"
+      ],
+      "title": "RULING 43 — a source may not report success with zero normalized rows from a non-zero fetch",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:717"
+    },
+    {
+      "id": "R-0044",
+      "aliases": [
+        "RULING 44",
+        "R44",
+        "R-44"
+      ],
+      "title": "RULING 44 — per-card completeness statements are gone, in any wording",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0042"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:741"
+    },
+    {
+      "id": "R-0045",
+      "aliases": [
+        "RULING 45",
+        "R45",
+        "R-45"
+      ],
+      "title": "RULING 45 — the Kelly standard, and there are no tiers of it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:760"
+    },
+    {
+      "id": "R-0046",
+      "aliases": [
+        "RULING 46",
+        "R46",
+        "R-46"
+      ],
+      "title": "RULING 46 — the author may delete a row outright; a session never may",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0036",
+          "changed": "the author may delete a row outright, which RULING 36's three resolution states did not provide for",
+          "survives": "RULING 35's 'nothing is ever deleted' governs WORK rows — a session may not erase its own row by marking it done"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:767"
+    },
+    {
+      "id": "R-0047",
+      "aliases": [
+        "RULING 47",
+        "R47",
+        "R-47"
+      ],
+      "title": "RULING 47 — the per-card issue count is removed",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:785"
+    },
+    {
+      "id": "R-0048",
+      "aliases": [
+        "RULING 48",
+        "R48",
+        "R-48"
+      ],
+      "title": "RULING 48 — a session may not use git to revert the author's files",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:803"
+    },
+    {
+      "id": "R-0049",
+      "aliases": [
+        "RULING 49",
+        "R49",
+        "R-49"
+      ],
+      "title": "RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0001",
+          "changed": "a merge taken to satisfy a mid-session instruction from the author does not count against the one-merge cap",
+          "survives": "RULING 1 still caps merges; RULING 38 still makes the author's note binding on the session that reads it"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:820"
+    },
+    {
+      "id": "R-0050",
+      "aliases": [
+        "RULING 50",
+        "R50",
+        "R-50"
+      ],
+      "title": "RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:829"
+    },
+    {
+      "id": "R-0051",
+      "aliases": [
+        "RULING 51",
+        "R51",
+        "R-51"
+      ],
+      "title": "RULING 51 — the collection disclosure renders once per surface, and there are two surfaces",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:863"
+    },
+    {
+      "id": "R-0052",
+      "aliases": [
+        "RULING 52",
+        "R52",
+        "R-52"
+      ],
+      "title": "RULING 52 — discovery is a tree, not a ladder",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1749"
+    },
+    {
+      "id": "R-0053",
+      "aliases": [
+        "RULING 53",
+        "R53",
+        "R-53"
+      ],
+      "title": "RULING 53 — recorded absences expire",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1768"
+    },
+    {
+      "id": "R-0054",
+      "aliases": [
+        "RULING 54",
+        "R54",
+        "R-54"
+      ],
+      "title": "RULING 54 — the filed mailing address renders",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1780"
+    },
+    {
+      "id": "R-0055",
+      "aliases": [
+        "RULING 55",
+        "R55",
+        "R-55"
+      ],
+      "title": "RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1805"
+    },
+    {
+      "id": "R-0056",
+      "aliases": [
+        "RULING 56",
+        "R56",
+        "R-56"
+      ],
+      "title": "RULING 56 — a scheduled job that fails tells someone",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1831"
+    },
+    {
+      "id": "R-0057",
+      "aliases": [
+        "RULING 57",
+        "R57",
+        "R-57"
+      ],
+      "title": "RULING 57 — every twig is named",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:891"
+    },
+    {
+      "id": "R-0058",
+      "aliases": [
+        "RULING 58",
+        "R58",
+        "R-58"
+      ],
+      "title": "RULING 58 — `VERIFIED_ABSENT` requires two INDEPENDENT branches",
+      "kind": "LAW_DECISION",
+      "status": "SUPERSEDED",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:927"
+    },
+    {
+      "id": "R-0059",
+      "aliases": [
+        "RULING 59",
+        "R59",
+        "R-59"
+      ],
+      "title": "RULING 59 — the page says one thing about completeness and nothing else",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-21",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:951"
+    },
+    {
+      "id": "R-0060",
+      "aliases": [
+        "RULING 60",
+        "R60",
+        "R-60"
+      ],
+      "title": "RULING 60 — the session hand-works bodies, and that is the point",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:999"
+    },
+    {
+      "id": "R-0061",
+      "aliases": [
+        "RULING 61",
+        "R61",
+        "R-61"
+      ],
+      "title": "RULING 61 — the branch manifest, and what exhaustion means",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0058"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1039"
+    },
+    {
+      "id": "R-0062",
+      "aliases": [
+        "RULING 62",
+        "R62",
+        "R-62"
+      ],
+      "title": "RULING 62 — a test file may not lose guards silently",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1087"
+    },
+    {
+      "id": "R-0063",
+      "aliases": [
+        "RULING 63",
+        "R63",
+        "R-63"
+      ],
+      "title": "RULING 63 — every zip inherits; no zip starts from scratch",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1129"
+    },
+    {
+      "id": "R-0064",
+      "aliases": [
+        "RULING 64",
+        "R64",
+        "R-64"
+      ],
+      "title": "RULING 64 — shared office contacts are published, labeled as the office",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1167"
+    },
+    {
+      "id": "R-0065",
+      "aliases": [
+        "RULING 65",
+        "R65",
+        "R-65"
+      ],
+      "title": "RULING 65 — the footer-address branch",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1178"
+    },
+    {
+      "id": "R-0066",
+      "aliases": [
+        "RULING 66",
+        "R66",
+        "R-66"
+      ],
+      "title": "RULING 66 — Facebook by compliant routes only",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1186"
+    },
+    {
+      "id": "R-0067",
+      "aliases": [
+        "RULING 67",
+        "R67",
+        "R-67"
+      ],
+      "title": "RULING 67 — an enumeration states its geography and is checked externally",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1198"
+    },
+    {
+      "id": "R-0068",
+      "aliases": [
+        "RULING 68",
+        "R68",
+        "R-68"
+      ],
+      "title": "RULING 68 — control queries are mandatory",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1211"
+    },
+    {
+      "id": "R-0069",
+      "aliases": [
+        "RULING 69",
+        "R69",
+        "R-69"
+      ],
+      "title": "RULING 69 — reference data belongs in the repo, named and refreshable",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1220"
+    },
+    {
+      "id": "R-0070",
+      "aliases": [
+        "RULING 70",
+        "R70",
+        "R-70"
+      ],
+      "title": "RULING 70 — Ballotpedia is not scraped",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-21",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1229"
+    },
+    {
+      "id": "R-0071",
+      "aliases": [
+        "RULING 71",
+        "R71",
+        "R-71"
+      ],
+      "title": "RULING 71 — a zip cannot answer \"who governs you\"; a street address can",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1236"
+    },
+    {
+      "id": "R-0072",
+      "aliases": [
+        "RULING 72",
+        "R72",
+        "R-72"
+      ],
+      "title": "RULING 72 — a walled host is never evidence a body is unreachable",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1271"
+    },
+    {
+      "id": "R-0073",
+      "aliases": [
+        "RULING 73",
+        "R73",
+        "R-73"
+      ],
+      "title": "RULING 73 — large reference documents: commit the CONTENT, never the binary",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1284"
+    },
+    {
+      "id": "R-0074",
+      "aliases": [
+        "RULING 74",
+        "R74",
+        "R-74"
+      ],
+      "title": "RULING 74 — an address, once given, is never asked for twice",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1299"
+    },
+    {
+      "id": "R-0075",
+      "aliases": [
+        "RULING 75",
+        "R75",
+        "R-75"
+      ],
+      "title": "RULING 75 — a close-out commit is gated like any other commit to `main`",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1323"
+    },
+    {
+      "id": "R-0076",
+      "aliases": [
+        "RULING 76",
+        "R76",
+        "R-76"
+      ],
+      "title": "RULING 76 — session-dated scripts are COMMITTED, and held to every standard",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1369"
+    },
+    {
+      "id": "R-0077",
+      "aliases": [
+        "RULING 77",
+        "R77",
+        "R-77"
+      ],
+      "title": "RULING 77 — verify locally, ship once",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1409"
+    },
+    {
+      "id": "R-0078",
+      "aliases": [
+        "RULING 78",
+        "R78",
+        "R-78"
+      ],
+      "title": "RULING 78 — CI runs where it earns its cost",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1437"
+    },
+    {
+      "id": "R-0079",
+      "aliases": [
+        "RULING 79",
+        "R79",
+        "R-79"
+      ],
+      "title": "RULING 79 — a ruling closes the Needs Sean row it answers",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "tracker.needs_sean_closure",
+          "value": "author-or-answering-ruling"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0037",
+          "changed": "where a dated ruling demonstrably answers a Needs Sean row, the session marks it Resolved and records the ruling number and shipping SHA",
+          "survives": "RULING 37's rule that only the author closes a Needs Sean row stands for every row awaiting his judgement, and sessions still OPEN rows"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1459"
+    },
+    {
+      "id": "R-0080",
+      "aliases": [
+        "RULING 80",
+        "R80",
+        "R-80"
+      ],
+      "title": "RULING 80 — the committed geometry follows the reader, not the county",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1487"
+    },
+    {
+      "id": "R-0081",
+      "aliases": [
+        "RULING 81",
+        "R81",
+        "R-81"
+      ],
+      "title": "RULING 81 — an exhausted Actions balance is not a broken tree",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1514"
+    },
+    {
+      "id": "R-0082",
+      "aliases": [
+        "RULING 82",
+        "R82",
+        "R-82"
+      ],
+      "title": "RULING 82 — the job watcher's sampling was the defect, not its logic",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1534"
+    },
+    {
+      "id": "R-0083",
+      "aliases": [
+        "RULING 83",
+        "R83",
+        "R-83"
+      ],
+      "title": "RULING 83 — the free-source floor",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1579"
+    },
+    {
+      "id": "R-0084",
+      "aliases": [
+        "RULING 84",
+        "R84",
+        "R-84"
+      ],
+      "title": "RULING 84 — the manifest is tiered, and walked in order",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0061",
+          "changed": "the manifest's SHAPE — every route carries a tier and the tiers are walked in order",
+          "survives": "the manifest's BAR does not change; RULING 61's named-list exhaustion is untouched"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1599"
+    },
+    {
+      "id": "R-0085",
+      "aliases": [
+        "RULING 85",
+        "R85",
+        "R-85"
+      ],
+      "title": "RULING 85 — the two-click test",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1616"
+    },
+    {
+      "id": "R-0086",
+      "aliases": [
+        "RULING 86",
+        "R86",
+        "R-86"
+      ],
+      "title": "RULING 86 — per-state source enumeration precedes the hunt",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0063"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1632"
+    },
+    {
+      "id": "R-0087",
+      "aliases": [
+        "RULING 87",
+        "R87",
+        "R-87"
+      ],
+      "title": "RULING 87 — Wikipedia is a Tier A discovery source, never a source of record",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1646"
+    },
+    {
+      "id": "R-0088",
+      "aliases": [
+        "RULING 88",
+        "R88",
+        "R-88"
+      ],
+      "title": "RULING 88 — the expansion requirement",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2006"
+    },
+    {
+      "id": "R-0089",
+      "aliases": [
+        "RULING 89",
+        "R89",
+        "R-89"
+      ],
+      "title": "RULING 89 — expansion is not a side quest",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2043"
+    },
+    {
+      "id": "R-0090",
+      "aliases": [
+        "RULING 90",
+        "R90",
+        "R-90"
+      ],
+      "title": "RULING 90 — exhaustion must be argued, not asserted",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1686"
+    },
+    {
+      "id": "R-0091",
+      "aliases": [
+        "RULING 91",
+        "R91",
+        "R-91"
+      ],
+      "title": "RULING 91 — every key in `.env.local` is a Tier A route and is walked",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1852"
+    },
+    {
+      "id": "R-0092",
+      "aliases": [
+        "RULING 92",
+        "R92",
+        "R-92"
+      ],
+      "title": "RULING 92 — fix the generator, never the artifact",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1879"
+    },
+    {
+      "id": "R-0093",
+      "aliases": [
+        "RULING 93",
+        "R93",
+        "R-93"
+      ],
+      "title": "RULING 93 — ask what the tier above publishes about the tier below",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1908"
+    },
+    {
+      "id": "R-0094",
+      "aliases": [
+        "RULING 94",
+        "R94",
+        "R-94"
+      ],
+      "title": "RULING 94 — the stuck protocol",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2069"
+    },
+    {
+      "id": "R-0095",
+      "aliases": [
+        "RULING 95",
+        "R95",
+        "R-95"
+      ],
+      "title": "RULING 95 — credentials are proven, not assumed",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2108"
+    },
+    {
+      "id": "R-0096",
+      "aliases": [
+        "RULING 96",
+        "R96",
+        "R-96"
+      ],
+      "title": "RULING 96 — sources have freshness",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0053"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2140"
+    },
+    {
+      "id": "R-0097",
+      "aliases": [
+        "RULING 97",
+        "R97",
+        "R-97"
+      ],
+      "title": "RULING 97 — a founder find is a class-wide defect",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2167"
+    },
+    {
+      "id": "R-0098",
+      "aliases": [
+        "RULING 98",
+        "R98",
+        "R-98"
+      ],
+      "title": "RULING 98 — exploration holds a guaranteed position in item order",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2200"
+    },
+    {
+      "id": "R-0099",
+      "aliases": [
+        "RULING 99",
+        "R99",
+        "R-99"
+      ],
+      "title": "RULING 99 — the amendment procedure",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2222"
+    },
+    {
+      "id": "R-0100",
+      "aliases": [
+        "RULING 100",
+        "R100",
+        "R-100"
+      ],
+      "title": "RULING 100 — a partial answer that adds up is still a wrong answer",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2252"
+    },
+    {
+      "id": "R-0101",
+      "aliases": [
+        "RULING 101",
+        "R101",
+        "R-101"
+      ],
+      "title": "RULING 101 — our own identifier never leaves our own site",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2268"
+    },
+    {
+      "id": "R-0102",
+      "aliases": [
+        "RULING 102",
+        "R102",
+        "R-102"
+      ],
+      "title": "RULING 102 — fixing the recipe is not finished until you re-cook the dish",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0092",
+          "changed": "RULING 92 is given an end condition: a generator whose digest moved fails the build until its artifact is regenerated and the digest re-recorded",
+          "survives": "RULING 92's rule that you fix the generator and never the output stands in full"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2282"
+    },
+    {
+      "id": "R-0103",
+      "aliases": [
+        "RULING 103",
+        "R103",
+        "R-103"
+      ],
+      "title": "RULING 103 — a sweep looks for the same code twice, not just the same symptom",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2296"
+    },
+    {
+      "id": "R-0104",
+      "aliases": [
+        "RULING 104",
+        "R104",
+        "R-104"
+      ],
+      "title": "RULING 104 — a file you put in the repo is something a session must go and read",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0094"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2312"
+    },
+    {
+      "id": "R-0105",
+      "aliases": [
+        "RULING 105",
+        "R105",
+        "R-105"
+      ],
+      "title": "RULING 105 — say what is rendering, what is out of scope, and what is still dark",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2326"
+    },
+    {
+      "id": "R-0106",
+      "aliases": [
+        "RULING 106",
+        "R106",
+        "R-106"
+      ],
+      "title": "RULING 106 — no generated file has a size limit",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2338"
+    },
+    {
+      "id": "R-0107",
+      "aliases": [
+        "RULING 107",
+        "R107",
+        "R-107"
+      ],
+      "title": "RULING 107 — a freshness date is written only by the code that read the source",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2356"
+    },
+    {
+      "id": "R-0108",
+      "aliases": [
+        "RULING 108",
+        "R108",
+        "R-108"
+      ],
+      "title": "RULING 108 — anything a session must read at the start lives in the repository",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2374"
+    },
+    {
+      "id": "R-0109",
+      "aliases": [
+        "RULING 109",
+        "R109",
+        "R-109"
+      ],
+      "title": "RULING 109 — a brief says what it needs to run, and the session checks before item one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2392"
+    },
+    {
+      "id": "R-0110",
+      "aliases": [
+        "RULING 110",
+        "R110",
+        "R-110"
+      ],
+      "title": "RULING 110 — a search that finds nothing must show it looked in the right FORM",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2408"
+    },
+    {
+      "id": "R-0111",
+      "aliases": [
+        "RULING 111",
+        "R111",
+        "R-111"
+      ],
+      "title": "RULING 111 — a join is never a lookup for a fact that lives on only one side",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2424"
+    },
+    {
+      "id": "R-0112",
+      "aliases": [
+        "RULING 112",
+        "R112",
+        "R-112"
+      ],
+      "title": "RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2469"
+    },
+    {
+      "id": "R-0113",
+      "aliases": [
+        "RULING 113",
+        "R113",
+        "R-113"
+      ],
+      "title": "RULING 113 — a step that reports success is asked whether it did the thing",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2521"
+    },
+    {
+      "id": "R-0114",
+      "aliases": [
+        "RULING 114",
+        "R114",
+        "R-114"
+      ],
+      "title": "RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-23",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2542"
+    },
+    {
+      "id": "R-0115",
+      "aliases": [
+        "RULING 115",
+        "R115",
+        "R-115"
+      ],
+      "title": "RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2562"
+    },
+    {
+      "id": "R-0116",
+      "aliases": [
+        "RULING 116",
+        "R116",
+        "R-116"
+      ],
+      "title": "RULING 116 — a guard may pin an invariant or a direction, never the size of a gap",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2582"
+    },
+    {
+      "id": "R-0117",
+      "aliases": [
+        "RULING 117",
+        "R117",
+        "R-117"
+      ],
+      "title": "RULING 117 — the asset store has a public address, and a restore is proved by hash",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2602"
+    },
+    {
+      "id": "R-0118",
+      "aliases": [
+        "RULING 118",
+        "R118",
+        "R-118"
+      ],
+      "title": "RULING 118 — an appointed official never carries the govern verb",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2620"
+    },
+    {
+      "id": "R-0119",
+      "aliases": [
+        "RULING 119",
+        "R119",
+        "R-119"
+      ],
+      "title": "RULING 119 — a sovereign tribal nation is its own category of government",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2636"
+    },
+    {
+      "id": "R-0120",
+      "aliases": [
+        "RULING 120",
+        "R120",
+        "R-120"
+      ],
+      "title": "RULING 120 — equal solicitation is the obligation; who buys is not",
+      "kind": "LAW_DECISION",
+      "status": "AMENDED",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/business.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2652"
+    },
+    {
+      "id": "R-0121",
+      "aliases": [
+        "RULING 121",
+        "R121",
+        "R-121"
+      ],
+      "title": "RULING 121 — one body that spans two towns has one identity, and renders in both",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2666"
+    },
+    {
+      "id": "R-0122",
+      "aliases": [
+        "RULING 122",
+        "R122",
+        "R-122"
+      ],
+      "title": "RULING 122 — a page on a party's own site can be a candidate's page, with the host named",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2680"
+    },
+    {
+      "id": "R-0123",
+      "aliases": [
+        "RULING 123",
+        "R123",
+        "R-123"
+      ],
+      "title": "RULING 123 — the author's decisions of 2026-08-24, recorded as a batch",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2692"
+    },
+    {
+      "id": "R-0124",
+      "aliases": [
+        "RULING 124",
+        "R124",
+        "R-124"
+      ],
+      "title": "RULING 124 — a commit that cannot change what a reader sees does not cost a deploy",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "shipping.closeout_path",
+          "value": "no-separate-push"
+        },
+        {
+          "key": "refresh.cadence",
+          "value": "orchestrated-daily-per-source-rate"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0078",
+          "changed": "the ORCHESTRATOR runs once daily and each SOURCE inside it runs at the rate its own data moves, replacing RULING 78's flat once-daily cadence for every scheduled refresh",
+          "survives": "RULING 78's rule that a gate running three times for one merge is one gate and two copies of it, and that nothing stops gating"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2721"
+    },
+    {
+      "id": "R-0125",
+      "aliases": [
+        "RULING 125",
+        "R125",
+        "R-125"
+      ],
+      "title": "RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "verification.target",
+          "value": "local-production-build"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2751"
+    },
+    {
+      "id": "R-0126",
+      "aliases": [
+        "RULING 126",
+        "R126",
+        "R-126"
+      ],
+      "title": "RULING 126 — campaign-finance data renders for readers and never enters anything sold",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2769"
+    },
+    {
+      "id": "R-0127",
+      "aliases": [
+        "RULING 127",
+        "R127",
+        "R-127"
+      ],
+      "title": "RULING 127 — no tool prints a credential value, and the guard is the values themselves",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2787"
+    },
+    {
+      "id": "R-0128",
+      "aliases": [
+        "RULING 128",
+        "R128",
+        "R-128"
+      ],
+      "title": "RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2820"
+    },
+    {
+      "id": "R-0129",
+      "aliases": [
+        "RULING 129",
+        "R129",
+        "R-129"
+      ],
+      "title": "RULING 129 — a safety cap is a failure boundary, never an implicit end of data",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2855"
+    },
+    {
+      "id": "R-0130",
+      "aliases": [
+        "RULING 130",
+        "R130",
+        "R-130"
+      ],
+      "title": "RULING 130 — every transport success passes one shared document finalizer",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2878"
+    },
+    {
+      "id": "R-0131",
+      "aliases": [
+        "RULING 131",
+        "R131",
+        "R-131"
+      ],
+      "title": "RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2900"
+    },
+    {
+      "id": "R-0132",
+      "aliases": [
+        "RULING 132",
+        "R132",
+        "R-132"
+      ],
+      "title": "RULING 132 — the identity boundary is proven over VALUE SPACES, not column names",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2925"
+    },
+    {
+      "id": "R-0133",
+      "aliases": [
+        "RULING 133",
+        "R133",
+        "R-133"
+      ],
+      "title": "RULING 133 — a performance change ships with its measurement",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2961"
+    },
+    {
+      "id": "R-0134",
+      "aliases": [
+        "RULING 134",
+        "R134",
+        "R-134"
+      ],
+      "title": "RULING 134 — an instrument without a committed baseline is unfinished",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:2990"
+    },
+    {
+      "id": "R-0135",
+      "aliases": [
+        "RULING 135",
+        "R135",
+        "R-135"
+      ],
+      "title": "RULING 135 — a fence bars acting on content, never committing Sean's artifacts",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0104",
+          "changed": "a file the author places in the repo is registered into git UNREAD — committing is registration, not action",
+          "survives": "RULING 104 in full; it narrows nothing, and the fence on the file's CONTENT stands in full force"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3010"
+    },
+    {
+      "id": "R-0136",
+      "aliases": [
+        "RULING 136",
+        "R136",
+        "R-136"
+      ],
+      "title": "RULING 136 — feedback names examples; a fix closes the class",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "visual-feedback",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/visual-feedback.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3042"
+    },
+    {
+      "id": "R-0137",
+      "aliases": [
+        "RULING 137",
+        "R137",
+        "R-137"
+      ],
+      "title": "RULING 137 — for layout, an annotated image is the spec, and it outranks prose",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "visual-feedback",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/visual-feedback.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3073"
+    },
+    {
+      "id": "R-0138",
+      "aliases": [
+        "RULING 138",
+        "R138",
+        "R-138"
+      ],
+      "title": "RULING 138 — display consolidates sources; the record is never deleted",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3103"
+    },
+    {
+      "id": "R-0139",
+      "aliases": [
+        "RULING 139",
+        "R139",
+        "R-139"
+      ],
+      "title": "RULING 139 — the product never announces its own failure",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3136"
+    },
+    {
+      "id": "R-0140",
+      "aliases": [
+        "RULING 140",
+        "R140",
+        "R-140"
+      ],
+      "title": "RULING 140 — dates spell out, product-wide",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3165"
+    },
+    {
+      "id": "R-0141",
+      "aliases": [
+        "RULING 141",
+        "R141",
+        "R-141"
+      ],
+      "title": "RULING 141 — the Speak Your Mind store's four rules",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "data-privacy",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/data-privacy.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3191"
+    },
+    {
+      "id": "R-0142",
+      "aliases": [
+        "RULING 142",
+        "R142",
+        "R-142"
+      ],
+      "title": "RULING 142 — the line in the sand, and nothing collected before it is ever sold",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3235"
+    },
+    {
+      "id": "R-0143",
+      "aliases": [
+        "RULING 143",
+        "R143",
+        "R-143"
+      ],
+      "title": "RULING 143 — what DONE means for 07866, and it is per candidate",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-24",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3281"
+    },
+    {
+      "id": "R-0144",
+      "aliases": [
+        "RULING 144",
+        "R144",
+        "R-144"
+      ],
+      "title": "RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3318"
+    },
+    {
+      "id": "R-0145",
+      "aliases": [
+        "RULING 145",
+        "R145",
+        "R-145"
+      ],
+      "title": "RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3373"
+    },
+    {
+      "id": "R-0146",
+      "aliases": [
+        "RULING 146",
+        "R146",
+        "R-146"
+      ],
+      "title": "RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3418"
+    },
+    {
+      "id": "R-0147",
+      "aliases": [
+        "RULING 147",
+        "R147",
+        "R-147"
+      ],
+      "title": "RULING 147 — no reconciliation may compare a parser to itself",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3441"
+    },
+    {
+      "id": "R-0148",
+      "aliases": [
+        "RULING 148",
+        "R148",
+        "R-148"
+      ],
+      "title": "RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3466"
+    },
+    {
+      "id": "R-0149",
+      "aliases": [
+        "RULING 149",
+        "R149",
+        "R-149"
+      ],
+      "title": "RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3492"
+    },
+    {
+      "id": "R-0150",
+      "aliases": [
+        "RULING 150",
+        "R150",
+        "R-150"
+      ],
+      "title": "RULING 150 — a Needs Sean row states its ask as an answerable question, with options",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3512"
+    },
+    {
+      "id": "R-0151",
+      "aliases": [
+        "RULING 151",
+        "R151",
+        "R-151"
+      ],
+      "title": "RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3531"
+    },
+    {
+      "id": "R-0152",
+      "aliases": [
+        "RULING 152",
+        "R152",
+        "R-152"
+      ],
+      "title": "RULING 152 — a reader-facing DONE names the production deploy that is serving it",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3551"
+    },
+    {
+      "id": "R-0153",
+      "aliases": [
+        "RULING 153",
+        "R153",
+        "R-153"
+      ],
+      "title": "RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3580"
+    },
+    {
+      "id": "R-0154",
+      "aliases": [
+        "RULING 154",
+        "R154",
+        "R-154"
+      ],
+      "title": "RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3622"
+    },
+    {
+      "id": "R-0155",
+      "aliases": [
+        "RULING 155",
+        "R155",
+        "R-155"
+      ],
+      "title": "RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3677"
+    },
+    {
+      "id": "R-0156",
+      "aliases": [
+        "RULING 156",
+        "R156",
+        "R-156"
+      ],
+      "title": "RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3747"
+    },
+    {
+      "id": "R-0157",
+      "aliases": [
+        "RULING 157",
+        "R157",
+        "R-157"
+      ],
+      "title": "RULING 157 — a fix is verified against a case it was NOT derived from",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3809"
+    },
+    {
+      "id": "R-0158",
+      "aliases": [
+        "RULING 158",
+        "R158",
+        "R-158"
+      ],
+      "title": "RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3852"
+    },
+    {
+      "id": "R-0159",
+      "aliases": [
+        "RULING 159",
+        "R159",
+        "R-159"
+      ],
+      "title": "RULING 159 — a counting script fails loudly when its denominator is zero",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3885"
+    },
+    {
+      "id": "R-0160",
+      "aliases": [
+        "RULING 160",
+        "R160",
+        "R-160"
+      ],
+      "title": "RULING 160 — in-cycle sales are allowed, and equal solicitation is the constraint that carries neutrality",
+      "kind": "LAW_DECISION",
+      "status": "SUPERSEDED",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": "2026-08-25",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0120",
+          "changed": "in-cycle sales are ALLOWED as standing policy, superseding the pilot-scoped retrospective-only posture, and neutrality is carried by four named constraints",
+          "survives": "RULING 120's prohibition on exclusivity and its equal-solicitation obligation are UNCHANGED and carried forward verbatim in force, as is buyer composition not being an obligation"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:3921"
+    },
+    {
+      "id": "R-0161",
+      "aliases": [
+        "RULING 161",
+        "R161",
+        "R-161"
+      ],
+      "title": "RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-26",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4002"
+    },
+    {
+      "id": "R-0162",
+      "aliases": [
+        "RULING 162",
+        "R162",
+        "R-162"
+      ],
+      "title": "RULING 162 — a bypass is only as safe as the paths it can carry",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-25",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4064"
+    },
+    {
+      "id": "R-0163",
+      "aliases": [
+        "RULING 163",
+        "R163",
+        "R-163"
+      ],
+      "title": "RULING 163 — the answer to \"is the protection still what we think\" is a command",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4118"
+    },
+    {
+      "id": "R-0164",
+      "aliases": [
+        "RULING 164",
+        "R164",
+        "R-164"
+      ],
+      "title": "RULING 164 — a workflow reports every failure, not just the first",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4153"
+    },
+    {
+      "id": "R-0165",
+      "aliases": [
+        "RULING 165",
+        "R165",
+        "R-165"
+      ],
+      "title": "RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4206"
+    },
+    {
+      "id": "R-0166",
+      "aliases": [
+        "RULING 166",
+        "R166",
+        "R-166"
+      ],
+      "title": "RULING 166 — the body's own publication is rung one, and its bulk download is rung zero",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "discovery.source_order",
+          "value": "body-own-publication-first"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0084",
+          "changed": "the ORDER INSIDE Tier A: the body's own publication is A0 and its bulk download is taken first, before A1 third-party compilations",
+          "survives": "RULING 84's three tiers stand and its cost-per-fact reasoning is untouched; it narrows nothing"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4305"
+    },
+    {
+      "id": "R-0167",
+      "aliases": [
+        "RULING 167",
+        "R167",
+        "R-167"
+      ],
+      "title": "RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4377"
+    },
+    {
+      "id": "R-0168",
+      "aliases": [
+        "RULING 168",
+        "R168",
+        "R-168"
+      ],
+      "title": "RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief",
+      "kind": "RATIFICATION",
+      "status": "HISTORICAL",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-26",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4451"
+    },
+    {
+      "id": "R-0169",
+      "aliases": [
+        "RULING 169",
+        "R169",
+        "R-169"
+      ],
+      "title": "RULING 169 — a walk is COUNTED or it did not happen",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4503"
+    },
+    {
+      "id": "R-0170",
+      "aliases": [
+        "RULING 170",
+        "R170",
+        "R-170"
+      ],
+      "title": "RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0094",
+          "changed": "what reaching the end of the five moves MEANS — running them does not earn an absence and never has; any cap in any brief is a FLOOR",
+          "survives": "RULING 94's five moves stand, its placement between Tier B and Tier C stands, and its void condition stands"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4555"
+    },
+    {
+      "id": "R-0171",
+      "aliases": [
+        "RULING 171",
+        "R171",
+        "R-171"
+      ],
+      "title": "RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:4599"
+    },
+    {
+      "id": "R-0172",
+      "aliases": [
+        "RULING 172",
+        "R172",
+        "R-172"
+      ],
+      "title": "RULING 172 — current authority and history are separate systems",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0173",
+      "aliases": [
+        "RULING 173",
+        "R173",
+        "R-173"
+      ],
+      "title": "RULING 173 — CLAUDE.md is the root constitution and carries current law only",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0174",
+      "aliases": [
+        "RULING 174",
+        "R174",
+        "R-174"
+      ],
+      "title": "RULING 174 — binding authority requires author provenance",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0175",
+      "aliases": [
+        "RULING 175",
+        "R175",
+        "R-175"
+      ],
+      "title": "RULING 175 — supersession is structured data, and a partial amendment names both halves",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0176",
+      "aliases": [
+        "RULING 176",
+        "R176",
+        "R-176"
+      ],
+      "title": "RULING 176 — governance changes are atomic",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "rulings.id_namespace",
+          "value": "global-immutable"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0177",
+      "aliases": [
+        "RULING 177",
+        "R177",
+        "R-177"
+      ],
+      "title": "RULING 177 — the subject universe may be bounded; the method never is",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "discovery.completion_model",
+          "value": "bounded-universe-versioned-convergence"
+        },
+        {
+          "key": "discovery.method_growth",
+          "value": "living-versioned-never-final"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0178",
+      "aliases": [
+        "RULING 178",
+        "R178",
+        "R-178"
+      ],
+      "title": "RULING 178 — inherit everything, assume it is incomplete, keep the learning",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0179",
+      "aliases": [
+        "RULING 179",
+        "R179",
+        "R-179"
+      ],
+      "title": "RULING 179 — convergence is versioned, and completion is derived from child state",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0180",
+      "aliases": [
+        "RULING 180",
+        "R180",
+        "R-180"
+      ],
+      "title": "RULING 180 — session status, workstream status and graph status are three different facts",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0181",
+      "aliases": [
+        "RULING 181",
+        "R181",
+        "R-181"
+      ],
+      "title": "RULING 181 — a frontier is state, not a recipe for recreating state",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0182",
+      "aliases": [
+        "RULING 182",
+        "R182",
+        "R-182"
+      ],
+      "title": "RULING 182 — permission state and transport state are orthogonal",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "permission.transport_collapse",
+          "value": "orthogonal-cannot-tell"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0183",
+      "aliases": [
+        "RULING 183",
+        "R183",
+        "R-183"
+      ],
+      "title": "RULING 183 — a lead is not a body",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0184",
+      "aliases": [
+        "RULING 184",
+        "R184",
+        "R-184"
+      ],
+      "title": "RULING 184 — blocked is a real state, and a finite attempt count never earns absence",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "discovery.absence_standard",
+          "value": "argued-never-counted"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0170"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0185",
+      "aliases": [
+        "RULING 185",
+        "R185",
+        "R-185"
+      ],
+      "title": "RULING 185 — the authority precedence model",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0186",
+      "aliases": [
+        "RULING 186",
+        "R186",
+        "R-186"
+      ],
+      "title": "RULING 186 — a session opens on task-relevant current authority, never on the full history",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0187",
+      "aliases": [
+        "RULING 187",
+        "R187",
+        "R-187"
+      ],
+      "title": "RULING 187 — a well-preserved handoff is not automatically a legitimate stop",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0180",
+          "changed": "the session-status vocabulary expands from three values to five, and a measured stop accounting is required at every non-COMPLETE close",
+          "survives": "RULING 180's separation of session, workstream and graph status; that the repository generates the handoff; that item completion is derived from child state; and that lost or unrepresented remainder is failure"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0188",
+      "aliases": [
+        "RULING 188",
+        "R188",
+        "R-188"
+      ],
+      "title": "RULING 188 — the descent freezes only for the minimum safe state cutover",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-26",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-C-commands-package-json-s-scripts-block-is-the-list",
+      "aliases": [],
+      "title": "`package.json`'s `scripts` block is the list.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2299"
+    },
+    {
+      "id": "R-C-discovery-conduct-more-principles-will-not-fix-this",
+      "aliases": [],
+      "title": "More principles will not fix this.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:1071"
+    },
+    {
+      "id": "R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am",
+      "aliases": [],
+      "title": "THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:1224"
+    },
+    {
+      "id": "R-C-discovery-conduct-why-this-section-exists-and-it-is-a-diagnosis",
+      "aliases": [],
+      "title": "Why this section exists, and it is a diagnosis rather than an exhortation.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:1065"
+    },
+    {
+      "id": "R-C-external-sources-docs-sources-md-is-the-source-of-record-for-wha",
+      "aliases": [],
+      "title": "`docs/sources.md` IS THE SOURCE OF RECORD FOR WHAT RESOURCES EXIST.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-22",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2204"
+    },
+    {
+      "id": "R-C-external-sources-the-register-is-docs-sources-md-and-this-sectio",
+      "aliases": [],
+      "title": "The register is `docs/sources.md`, and this section is the law that governs it.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2234"
+    },
+    {
+      "id": "R-C-non-negotiables-in-code-the-deferral-boundary-falls-between-subj",
+      "aliases": [],
+      "title": "THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSIDE ONE",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-17",
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:907"
+    },
+    {
+      "id": "R-C-non-negotiables-in-code-the-ladder-exhaustively-and-it-is-the-on",
+      "aliases": [],
+      "title": "THE LADDER, EXHAUSTIVELY — AND IT IS THE ONLY NUMBERED ONE",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:99"
+    },
+    {
+      "id": "R-C-non-negotiables-in-code-the-transparency-mandate",
+      "aliases": [],
+      "title": "THE TRANSPARENCY MANDATE",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-16",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:78"
+    },
+    {
+      "id": "R-C-reaction-capture-candidates",
+      "aliases": [],
+      "title": "Candidates",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2153"
+    },
+    {
+      "id": "R-C-reaction-capture-disclosure-at-the-point-of-capture-the-one-time",
+      "aliases": [],
+      "title": "Disclosure at the point of capture — the one-time acknowledged notice.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "visual-feedback",
+      "adopted": "2026-08-13",
+      "operativePolicy": "docs/governance/policies/visual-feedback.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2157"
+    },
+    {
+      "id": "R-C-reaction-capture-incumbent-and-challenger-reactions-are-stored-a",
+      "aliases": [],
+      "title": "Incumbent and challenger reactions are stored and aggregated in separate buckets.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "data-privacy",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/data-privacy.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2155"
+    },
+    {
+      "id": "R-C-reaction-capture-measures",
+      "aliases": [],
+      "title": "Measures",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "rendering-neutrality",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2149"
+    },
+    {
+      "id": "R-C-reaction-capture-moderation-runs-before-any-export",
+      "aliases": [],
+      "title": "Moderation runs before any export.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/business.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2159"
+    },
+    {
+      "id": "R-C-reaction-capture-the-free-text-input-carries-a-threat-notice",
+      "aliases": [],
+      "title": "The free-text input carries a threat notice.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2164"
+    },
+    {
+      "id": "R-C-repo-layout-an-agent-does-not-know-today-s-date-and-a-date-not-r",
+      "aliases": [],
+      "title": "An agent does not know today's date, and a date not read from the system clock is a fabrication.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2278"
+    },
+    {
+      "id": "R-C-repo-layout-one-code-merge-per-session-close-out-records-may-fol",
+      "aliases": [],
+      "title": "One CODE merge per session; close-out records may follow as separate named commits.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-19",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2273"
+    },
+    {
+      "id": "R-C-repo-layout-priority-is-three-levels-ranked-inside-a-section-and",
+      "aliases": [],
+      "title": "Priority is three levels, ranked inside a section and never across them",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2271"
+    },
+    {
+      "id": "R-C-repo-layout-task-status-lives-in-the-two-tracker-stores-and-the",
+      "aliases": [],
+      "title": "Task status lives in the TWO TRACKER STORES, and the tracker is a queue that empties.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "derived_from",
+          "target": "R-0035"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2261"
+    },
+    {
+      "id": "R-C-repo-layout-the-one-exception-and-it-is-the-only-one",
+      "aliases": [],
+      "title": "The one exception, and it is the only one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2275"
+    },
+    {
+      "id": "R-C-repo-layout-the-tree-is-the-tree-read-it",
+      "aliases": [],
+      "title": "The tree is the tree; read it.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2257"
+    },
+    {
+      "id": "R-C-signal-integrity-every-export-reports-its-confidence-mix",
+      "aliases": [],
+      "title": "Every export reports its confidence mix.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/business.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:2182"
+    },
+    {
+      "id": "R-C-stack-this-section-names-decisions-never-versions",
+      "aliases": [],
+      "title": "This section names DECISIONS, never versions.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-20",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:65"
+    },
+    {
+      "id": "R-C-the-order-of-every-trade-correct-first-fast-second-nothing-third",
+      "aliases": [],
+      "title": "Correct first. Fast second. Nothing third.",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/governance/legacy/CLAUDE.pre-remediation.md:76"
+    },
+    {
+      "id": "R-X-f02-the-committee-denominator-is-per-representat",
+      "aliases": [],
+      "title": "`F02` — the committee denominator is PER REPRESENTATIVE (2026-08-20)",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:267"
+    },
+    {
+      "id": "R-X-f03-closed-and-vail-s-superintendent-is-john-car",
+      "aliases": [],
+      "title": "`F03` — closed, and Vail's superintendent is John Carruth (2026-08-20)",
+      "kind": "ACCEPTANCE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:284"
+    },
+    {
+      "id": "R-X-f21-closed-as-correct-as-shipped-2026-08-20",
+      "aliases": [],
+      "title": "`F21` — closed as correct-as-shipped (2026-08-20)",
+      "kind": "ACCEPTANCE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:262"
+    },
+    {
+      "id": "R-X-not-applicable-moved-nothing-out-of-the-249-2026",
+      "aliases": [],
+      "title": "`NOT_APPLICABLE` moved NOTHING out of the 249 (2026-08-20)",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-16",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:465"
+    },
+    {
+      "id": "R-X-rulings-83-through-87-the-five-process-rulings-o",
+      "aliases": [],
+      "title": "RULINGS 83 THROUGH 87 — the five process rulings of NJ Hunt 5",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1555"
+    },
+    {
+      "id": "R-X-rulings-88-and-89-deliberately-unassigned",
+      "aliases": [],
+      "title": "RULINGS 88 AND 89 — deliberately unassigned",
+      "kind": "TOMBSTONE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-08-22",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:1669"
+    },
+    {
+      "id": "R-X-the-12-1-and-13-2-visual-calls-accepted-2026-08-",
+      "aliases": [],
+      "title": "The 12.1 and 13.2 visual calls — accepted (2026-08-20)",
+      "kind": "ACCEPTANCE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "visual-feedback",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:278"
+    },
+    {
+      "id": "R-X-the-is-reserved-across-the-whole-ballot-page-202",
+      "aliases": [],
+      "title": "The `*` is reserved across the whole ballot page (2026-08-20)",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:453"
+    },
+    {
+      "id": "R-X-the-organic-census-closed-2026-08-20",
+      "aliases": [],
+      "title": "The organic census — closed (2026-08-20)",
+      "kind": "ACCEPTANCE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:281"
+    },
+    {
+      "id": "R-X-the-repeatability-bar-2026-08-20",
+      "aliases": [],
+      "title": "The repeatability bar (2026-08-20)",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "discovery",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:306"
+    },
+    {
+      "id": "R-X-the-two-portraits-accepted-2026-08-20",
+      "aliases": [],
+      "title": "The two portraits — accepted (2026-08-20)",
+      "kind": "ACCEPTANCE",
+      "status": "HISTORICAL",
+      "provenance": "observed_fact",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:275"
+    },
+    {
+      "id": "R-X-the-zip-order-2026-08-20",
+      "aliases": [],
+      "title": "The zip order (2026-08-20)",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
+      "domain": "meta-governance",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:290"
+    },
+    {
+      "id": "R-X-thin-candidate-line-was-kept-on-the-card-2026-08",
+      "aliases": [],
+      "title": "`THIN_CANDIDATE_LINE` was KEPT on the card (2026-08-20)",
+      "kind": "FACT",
+      "status": "HISTORICAL",
+      "provenance": "author_confirmed",
+      "domain": "rendering-neutrality",
+      "adopted": "2026-08-20",
+      "operativePolicy": null,
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "docs/rulings.md:428"
+    }
+  ]
+}

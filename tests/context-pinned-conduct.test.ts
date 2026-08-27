@@ -36,6 +36,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 import { buildContext, CAP_BYTES, CONTEXT_REPO_PATH, writeContext } from "../scripts/context-file.mjs";
+import { currentLawText } from "../lib/governance/current-law.ts";
 
 const ROOT = process.cwd();
 
@@ -53,15 +54,14 @@ const OPTIONS = {
  * generator does, and a reader of the failure can tell which.
  */
 const VERBATIM = [
-  "## DISCOVERY CONDUCT",
-  "### RULING 88 — THE EXPANSION REQUIREMENT",
-  "### RULING 89 — EXPANSION IS NOT A SIDE QUEST",
-  "### RULING 94 — THE STUCK PROTOCOL",
-  "### RULING 95 — CREDENTIALS ARE PROVEN, NOT ASSUMED",
-  "### RULING 96 — SOURCES HAVE FRESHNESS",
-  "### RULING 97 — A FOUNDER FIND IS A CLASS-WIDE DEFECT",
-  "### RULING 98 — EXPLORATION HOLDS A GUARANTEED POSITION IN ITEM ORDER",
-  "### RULING 99 — THE AMENDMENT PROCEDURE",
+  "RULING 88 — ",
+  "RULING 89 — ",
+  "RULING 94 — ",
+  "RULING 95 — ",
+  "RULING 96 — ",
+  "RULING 97 — ",
+  "RULING 98 — ",
+  "RULING 99 — ",
   // The clause most likely to be lost, and the one the whole rule turns on.
   // Matched as a single line: the law wraps it mid-sentence.
   "The invention is the deliverable, not the yield.",
@@ -69,13 +69,19 @@ const VERBATIM = [
 
 test("context.md carries the Discovery conduct block verbatim from CLAUDE.md", async () => {
   const built = await buildContext(OPTIONS);
-  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const law = currentLawText(ROOT);
 
-  const start = law.indexOf("## DISCOVERY CONDUCT");
-  assert.notEqual(start, -1, "CLAUDE.md has no `## DISCOVERY CONDUCT` section");
+  // The conduct rulings moved out of a CLAUDE.md section and into canonical
+  // ledger records served through `docs/governance/policies/discovery.md`
+  // (RULING 173). The pin follows the law; the discipline is unchanged, and
+  // what is asserted is still that context.md quotes its source verbatim.
+  assert.ok(
+    built.text.includes("## DISCOVERY CONDUCT"),
+    "context.md no longer carries the pinned conduct block",
+  );
 
   for (const clause of VERBATIM) {
-    assert.ok(law.includes(clause), `CLAUDE.md no longer contains ${JSON.stringify(clause)}`);
+    assert.ok(law.includes(clause), `current law no longer contains ${JSON.stringify(clause)}`);
     assert.ok(built.text.includes(clause), `context.md dropped ${JSON.stringify(clause)}`);
   }
 });
@@ -221,7 +227,7 @@ test("a block claimed VERBATIM is tested against its source, and divergence fail
    * not be found in it. Same comparison, run against a mutation, so the test
    * cannot pass by never having compared anything.
    */
-  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const law = currentLawText(ROOT);
   for (const clause of VERBATIM) {
     assert.ok(law.includes(clause), `sanity: ${JSON.stringify(clause)} is in the law`);
     // One character changed anywhere in the clause and the match is gone.
@@ -262,9 +268,9 @@ test("RULING 108: the repo copy carries the pinned conduct block verbatim", () =
    * named when it removed the cap.
    */
   const committed = readFileSync(join(ROOT, CONTEXT_REPO_PATH), "utf8");
-  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  const start = law.indexOf("## DISCOVERY CONDUCT");
-  assert.ok(start > 0, "CLAUDE.md no longer carries a DISCOVERY CONDUCT section");
+  const law = currentLawText(ROOT);
+  const start = law.indexOf("## RULING 88");
+  assert.ok(start > 0, "current law no longer carries the conduct rulings");
   // A handful of load-bearing sentences from the section, each of which must
   // survive the copy byte-for-byte.
   for (const line of [

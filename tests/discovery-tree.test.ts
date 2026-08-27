@@ -15,6 +15,7 @@ import {
   verdictOf,
 } from "../lib/hunt/discovery.ts";
 import { isEvidencedAbsence } from "../lib/ballot/hunt-state.ts";
+import { currentLawText } from "../lib/governance/current-law.ts";
 
 /**
  * **RULING 52 — discovery is a tree, not a ladder.**
@@ -210,7 +211,7 @@ test("RULING 52 and RULING 53 are law in CLAUDE.md, with their rationale", () =>
    * including the locked-building passage, which is the part that makes the
    * difference between "try harder" and "a ladder has one direction".
    */
-  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const law = currentLawText(ROOT);
   assert.match(law, /RULING 52/, "RULING 52 is written into the constitution");
   assert.match(law, /RULING 53/, "RULING 53 is written into the constitution");
   assert.match(law, /front door is locked/i, "the locked-building rationale is attached");
@@ -261,7 +262,7 @@ test("no wall in CLAUDE.md is stated as a standing property", () => {
    * it. A broader "no wall language anywhere" rule would fire on the ladder's
    * own description of what a wall IS.
    */
-  const law = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  const law = currentLawText(ROOT);
   const HOSTS = ["gc.nh.gov", "sos.nh.gov", "kearsarge.org"];
   const undated: string[] = [];
   /*
@@ -272,11 +273,25 @@ test("no wall in CLAUDE.md is stated as a standing property", () => {
    * rule against the wrong text, and the fix is the granularity rather than the
    * paragraph.
    */
-  for (const para of law.split(/\n\s*\n/)) {
+  /*
+   * By RECORD, not by paragraph — the same reasoning one level up, applied
+   * again after the 2026-08-26 governance migration.
+   *
+   * Current law is now generated per record, and each record opens with a
+   * metadata line carrying its adopted date. RULING 166 writes its measurements
+   * as "on the day it was adopted" and names `gc.nh.gov` three paragraphs
+   * later, so a paragraph-granular check reports a standing-property violation
+   * against text that is dated — by its own record, one paragraph up.
+   *
+   * The rule is unchanged and still binding: a wall is recorded with the date
+   * it was last tested, never as a standing property. What moved is the unit
+   * the date attaches to.
+   */
+  for (const record of law.split(/\n(?=## )/)) {
     for (const host of HOSTS) {
-      if (!para.includes(host)) continue;
-      if (!/\d{4}-\d{2}-\d{2}/.test(para)) {
-        undated.push(`${host}: ${para.replace(/\s+/g, " ").trim().slice(0, 90)}`);
+      if (!record.includes(host)) continue;
+      if (!/\d{4}-\d{2}-\d{2}/.test(record)) {
+        undated.push(`${host}: ${record.replace(/\s+/g, " ").trim().slice(0, 90)}`);
       }
     }
   }

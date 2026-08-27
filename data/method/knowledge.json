@@ -1,0 +1,1431 @@
+{
+  "version": 0,
+  "updatedOn": "2026-08-26",
+  "routes": [
+    {
+      "id": "party-county-directory",
+      "title": "The COUNTY party's own directory of its municipal committees",
+      "tier": "A1",
+      "fields": [
+        "verifiedPage",
+        "campaignSite",
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The SHAPE travels — a county party that runs municipal committees generally lists them. The URL does not, and the same walk on 2026-08-25 measured Morris County's Republican committee publishing NO per-municipality directory at all, which is why `party-municipal-committee-gop-shape` exists beside this."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Morris County Republican Committee, 2026-08-25",
+          "failedOn": "It publishes no per-municipality directory this walk could find. Walked at its own depth on the same day — `morrisgop.org/officials` answers 200 — and its county page carries a 2024 executive board rather than 2026 municipal committees.",
+          "reason": "inherited route failed here; replaced by: `party-municipal-committee-gop-shape`: probe the domain shapes a municipal Republican committee actually registers. 195 probes over 39 municipalities returned 20 live documents.",
+          "replacedBy": "`party-municipal-committee-gop-shape`: probe the domain shapes a municipal Republican committee actually registers. 195 probes over 39 municipalities returned 20 live documents."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "party-municipal-committee-gop-shape",
+      "title": "A municipal party committee reached by the DOMAIN SHAPE its siblings use",
+      "tier": "B",
+      "fields": [
+        "verifiedPage",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The METHOD travels — RULING 94's third move is shape-testing and it applies anywhere. The specific shapes are American two-party naming conventions and will not survive a jurisdiction with different party structures."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "host-inversion",
+      "title": "Ask a PAGE whose page it is, rather than asking each candidate about each page",
+      "tier": "A1",
+      "fields": [
+        "campaignSite",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Yes, unconditionally. It is a way of reading a corpus rather than a place to look, and it costs one fetch per host where a cross product costs one per candidate-host pair."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "general-web-index",
+      "title": "A general web index that answers this project, control-checked",
+      "tier": "C",
+      "fields": [
+        "photo",
+        "blurb",
+        "contact",
+        "campaignSite",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Yes, everywhere. And the wall it replaces was real: DuckDuckGo, Bing and Yahoo all refuse, and all three front the same two or three indexes — which is why independence is counted over what a branch goes THROUGH."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Startpage and searx.be, 2026-08-25",
+          "failedOn": "Both answer HTTP 200 with BYTE-IDENTICAL bodies for a real query and for an identifier that cannot exist. A JavaScript shell, and a 'no result' from either would be indistinguishable from a wall.",
+          "reason": "inherited route failed here; replaced by: Refused by the control query and recorded in `SEARCH_POOL_REFUSED` with the date, rather than deleted — the next session that thinks of Startpage can see it was tried and why the answer was no.",
+          "replacedBy": "Refused by the control query and recorded in `SEARCH_POOL_REFUSED` with the date, rather than deleted — the next session that thinks of Startpage can see it was tried and why the answer was no."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "tier-above-directory-inversion",
+      "title": "The directory the tier ABOVE publishes about the tier below, read by inversion",
+      "tier": "A1",
+      "fields": [
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The technique travels; the seeds are per-state (RULING 60). New Hampshire's ballot at 03255 is federal, statewide and county with no municipal layer, and its legislators live on a General Court roster with no New Jersey equivalent."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Merrimack County, New Hampshire, 2026-08-25",
+          "failedOn": "92 pages crawled across five official seeds returned 0 NEW verified pages. A tier-above directory publishes the people who HOLD offices, and this ballot is mostly the people running against them.",
+          "reason": "inherited route failed here; replaced by: For a challenger the routes are `general-web-index`, `press-outlet-wp-search` and the candidate's own filed materials. This route is not a way to reach a challenger and recording it as one would be an absence built on the wrong question.",
+          "replacedBy": "For a challenger the routes are `general-web-index`, `press-outlet-wp-search` and the candidate's own filed materials. This route is not a way to reach a challenger and recording it as one would be an absence built on the wrong question."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-state",
+      "title": "The state's own candidate filing — the Secretary of State or state election division",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The INSTITUTION travels — every state has one. The route does not: fifty different sites, formats and access postures, and NJ/AZ each need their own walk."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "New Jersey Division of Elections, 2026-08-22",
+          "failedOn": "`www.nj.gov` sits behind Imperva and refused rungs 2 and 3 on one run — and answered rung 2 plainly on several others within the same minute. An intermittent wall, and a single reading of it recorded as a property of the source is the shape `gc.nh.gov` and `sos.nh.gov` were both wrongly recorded under",
+          "reason": "inherited route failed here; replaced by: rung 4 — `curl`, whose TLS fingerprint passes what Node's does not — cleared it on the run that rungs 2 and 3 refused. And the state publishes the contact document SEPARATELY from the candidate list: `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. A session that reads only the candidate list finds no contact and records an absence that the neighbouring file disproves.",
+          "replacedBy": "rung 4 — `curl`, whose TLS fingerprint passes what Node's does not — cleared it on the run that rungs 2 and 3 refused. And the state publishes the contact document SEPARATELY from the candidate list: `...-candidates-us-house-emails-<MMDDYY>.pdf` beside `...-candidates-us-house.pdf`. A session that reads only the candidate list finds no contact and records an absence that the neighbouring file disproves."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-county",
+      "title": "The county's own filing or election office record",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Uneven, and this is the route whose unevenness the NJ Hunt was run to measure. New England counties are thin and publish a name and a town; New Jersey's county clerks publish the contact itself. The INSTITUTION is near-universal — every state has a county-level election office — and what it PUBLISHES is a per-state publishing practice with no national floor."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Morris County, New Jersey, 2026-08-22",
+          "failedOn": "nothing failed — this is the reverse entry, and it is recorded here because RULING 60 is about what a route does in a new SHAPE, which includes doing better",
+          "reason": "inherited route failed here; replaced by: the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current.",
+          "replacedBy": "the clerk's own candidates page names its current PDFs and the PDFs carry a real text layer: 272 candidates county-wide, 260 with a filed email and 260 with a filed street address, all fifteen 07866 candidates among them, at rung 2. The version segment in the asset path (`/v/9/`) changes on every revision and both revisions stay reachable, so discovery reads the page's own hrefs and takes the newest — a hardcoded URL here reads a superseded filing as current."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-town-clerk",
+      "title": "The town or city clerk's record",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Strong in New England town government, where the clerk is the record. Weaker where a county runs everything."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-campaign-finance-state",
+      "title": "State campaign-finance filings — receipts and expenditures reports",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The institution is universal; thresholds are not — a small local candidate may file nothing."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "New Jersey ELEC, 2026-08-22",
+          "failedOn": "`elec.nj.gov` serves an Imperva/Incapsula challenge page rather than the site — 212 bytes at rung 2, recorded here since 2026-08-19 and unchanged on re-walk today. This is a WALL and it is named, not defeated",
+          "reason": "inherited route failed here; replaced by: `filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52.",
+          "replacedBy": "`filing-county` reaches the same fields for New Jersey without touching ELEC at all: the county clerk's filed-candidate PDF carries the contact and the address the finance portal would have been asked for. A walled route is not a lost fact when a different branch holds the same fact — RULING 52."
+        },
+        {
+          "jurisdiction": "New Jersey ELEC, off the web entirely — 2026-08-22 (NJ Hunt 2, RULING 69)",
+          "failedOn": "the Imperva wall above was recorded as though it were the whole of ELEC. It is the whole of ELEC'S WEBSITE, which is a different and much smaller thing, and reading one as the other is how a host becomes a permanent wall in this repo",
+          "reason": "inherited route failed here; replaced by: the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80.",
+          "replacedBy": "the FEC's Combined Federal/State Disclosure and Election Directory names ELEC's staff and its OFF-WEB contact: Amanda S. Haines, Executive Director, 25 South Stockton Street, 5th Floor, Trenton NJ 08608, PO Box 185, Trenton NJ 08625-0185, 609/292-8700. A telephone and a postal address are a compliant route to a public record that a WAF cannot refuse, and they take this from rung 2 straight to rung 13 — the body's own records-request path — without touching the challenge page at all. Committed at `data/reference/fec_combined_federal_state_disclosure_directory.pdf`, page 80."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-campaign-finance-local",
+      "title": "A LOCAL candidate's campaign-finance filing, where the state requires one below state office",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Only where the state imposes a local filing obligation, and that is genuinely uneven — New Jersey does, New Hampshire does not for these offices. A session in a state without the obligation should record this route as NOT APPLICABLE with the reason, never as an absence."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-fec",
+      "title": "FEC filings for a federal candidate — Form 2 Statement of Candidacy, Form 1 Statement of Organization",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally, exactly. Federal candidates only."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-ethics-disclosure",
+      "title": "State ethics or financial-disclosure filings",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Varies sharply — some states publish these, some make them request-only."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "filing-prior-candidacy",
+      "title": "The same person's records from an EARLIER cycle",
+      "tier": "A1",
+      "fields": [
+        "photo",
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere, and it is systematically under-used. A first-time candidate has none, which is itself information."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "voter-file-extract",
+      "title": "The public voter file or checklist extract",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Legally uneven and slow. It is a named route because it exists, not because it is often the right one."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "body-roster-page",
+      "title": "The body's own roster or membership page, where the person holds or held office",
+      "tier": "B",
+      "fields": [
+        "photo",
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Universal in principle. The CMS families change everything in practice — see the playbook's VTS, Apptegy, CivicPlus and TownCloud entries."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Kearsarge Regional School District, 2026-08-21",
+          "failedOn": "the roster page's visible cells carry no email",
+          "reason": "inherited route failed here; replaced by: read the cell's own href — nine board emails were in mailto: links (rung 4)",
+          "replacedBy": "read the cell's own href — nine board emails were in mailto: links (rung 4)"
+        },
+        {
+          "jurisdiction": "Morris County, New Jersey municipalities, 2026-08-22",
+          "failedOn": "nothing failed — this entry records TOOLING built for an existing route, not a new route. `pnpm roster:hunt` walks this branch across an index of sites instead of one body at a time, and `lib/hunt/roster-page.ts` reads the roster off the page",
+          "reason": "inherited route failed here; replaced by: 39 sites walked, 13 returned a roster, 11 of those on a page whose OWN heading names a governing body — the control that matters, because anchor text alone chose Chatham Township's Mayors Wellness Advisory Committee as its governing body. The page carries what the encyclopedia never does: a ward, a term, a direct extension and an email per member. Two defects worth carrying forward: `<br id=\"isPasted\">` is what a WYSIWYG editor emits and a `<br>`-only pattern silently glues names to emails (four of Rockaway's nine members vanished that way), and a page may disagree with itself — Rockaway's council page shows one address over a `mailto:` for a different one.",
+          "replacedBy": "39 sites walked, 13 returned a roster, 11 of those on a page whose OWN heading names a governing body — the control that matters, because anchor text alone chose Chatham Township's Mayors Wellness Advisory Committee as its governing body. The page carries what the encyclopedia never does: a ward, a term, a direct extension and an email per member. Two defects worth carrying forward: `<br id=\"isPasted\">` is what a WYSIWYG editor emits and a `<br>`-only pattern silently glues names to emails (four of Rockaway's nine members vanished that way), and a page may disagree with itself — Rockaway's council page shows one address over a `mailto:` for a different one."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "legislative-directory",
+      "title": "The state legislature's own member directory",
+      "tier": "A1",
+      "fields": [
+        "photo",
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state has one. NH publishes NO House portrait and a Senate portrait per SEAT rather than per person — see the playbook."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "town-report",
+      "title": "The town's annual report",
+      "tier": "B",
+      "fields": [
+        "contact",
+        "verifiedPage",
+        "blurb"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "A New England institution above all. A township elsewhere may publish nothing like it; a county may publish an annual report that serves the same purpose."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "minutes-naming-them",
+      "title": "Minutes of the body, or of another body, that name the person",
+      "tier": "B",
+      "fields": [
+        "verifiedPage",
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Universal, and slow. It is the route that finds people nothing else names."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "gov-staff-directory",
+      "title": "Any .gov staff or official directory the person appears in",
+      "tier": "B",
+      "fields": [
+        "photo",
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Wide. Anything on a .gov site is official by the author's ruling, which makes door 4 unusually reachable here."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "campaign-site",
+      "title": "The campaign's own domain",
+      "tier": "B",
+      "fields": [
+        "photo",
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere a candidate has bought a domain, which in small races is a minority."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "campaign-social",
+      "title": "The campaign's social presence — Facebook, X, Instagram, LinkedIn, Bluesky, YouTube, TikTok",
+      "tier": "B",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere, and it MATTERS MOST in the smallest races — a campaign that lives on Facebook still has a campaign site, and recording that as nothing penalises exactly the candidates least able to buy a domain."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "Merrimack County Attorney, 2026-08-21",
+          "failedOn": "a search snippet carried a plausible-looking bio",
+          "reason": "inherited route failed here; replaced by: open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim",
+          "replacedBy": "open the page in a live browser and read it — the snippet is not the source, and a snippet-sourced blurb is a generated claim"
+        },
+        {
+          "jurisdiction": "every Newbury county candidate, 2026-08-21",
+          "failedOn": "facebook.com renders ~950 KB and ZERO characters of readable text to a headless browser — rung 6 does not clear it, and the wall is deliberate anti-automation defence rather than a bug to route around",
+          "reason": "inherited route failed here; replaced by: RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated.",
+          "replacedBy": "RULING 66: the five compliant routes below — `ad-library`, `social-archive`, `social-mirror`, `news-embed`, and the campaign's own site's link to the page. Authenticated or credentialed access is NEVER attempted: it breaches the platform's terms, risks the account it runs under, and RULING 12 says such a wall is NAMED, not defeated."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "ad-library",
+      "title": "The Meta Ad Library — mandatory public disclosure for political advertising",
+      "tier": "A1",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally and by law — political-ad disclosure is mandatory, so a candidate who buys a single ad appears. Silent on campaigns that never advertise, which in the smallest races is most of them; that silence is a fact about spending, not about the candidate."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "social-archive",
+      "title": "An archived capture of the campaign's social page",
+      "tier": "B",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere the page has been captured, which is uneven for small campaigns and good for anything that drew attention. A capture is DATED and says so — it is evidence about that date, never about today."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "social-mirror",
+      "title": "The same content cross-posted to a platform that is not walled",
+      "tier": "B",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Broadly, and it is the single most useful of these five in practice. A campaign posting only to Facebook is real and is the case this route does not reach."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "news-embed",
+      "title": "Local news coverage that quotes, embeds or screenshots the social page",
+      "tier": "C",
+      "fields": [
+        "blurb",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere there is still a paper. It is also the best AUTHENTICITY evidence in this manifest for a social page, which the campaign-site rule requires before a social page may be linked at all."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "candidate-platform",
+      "title": "A civic platform carrying a page per candidate — GoodParty.org is the live case",
+      "tier": "A1",
+      "fields": [
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally in principle — the platform lists races in every state — and its COVERAGE per race is unknown outside Morris County, where it was 28% of the ballot. Treat that as a measurement to be re-taken, never as a property of the route."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "donation-platform",
+      "title": "The donation page — ActBlue, WinRed, Anedot, or the committee's own",
+      "tier": "B",
+      "fields": [
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally. Absent in races too small to raise money."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "domain-search",
+      "title": "A direct search for a campaign domain by candidate name",
+      "tier": "C",
+      "fields": [
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere. Cheap, and the one route that finds an unlinked site."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "local-newspaper",
+      "title": "The local newspaper's coverage",
+      "tier": "C",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere there is still a paper, which is the shrinking part. Where the paper is dead, rung 11 is the route."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "candidate-interview",
+      "title": "A candidate interview or Q&A feature",
+      "tier": "C",
+      "fields": [
+        "blurb",
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere, and systematically under-used relative to what it yields."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "lwv-questionnaire",
+      "title": "A League of Women Voters / Vote411 candidate questionnaire",
+      "tier": "A1",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally, unevenly. It is a QUESTIONNAIRE RESPONSE — an evidenced source class — and not an endorsement, so the advocacy-source prohibition does not reach it."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "announcement-archive",
+      "title": "The announcement — the 'X announces a run' item, wherever it landed",
+      "tier": "C",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere. Every campaign starts once."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "party-committee-roster",
+      "title": "The party committee's own roster — town, county or state",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere. A ROSTER is a record; an endorsement LIST is somebody's judgement and is never a position source."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "employer-listing",
+      "title": "The employer or professional listing, where public",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere somebody is employed publicly. Silent on the retired and the self-employed."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "licensing-board",
+      "title": "A professional licensing board — bar, real estate, medical, insurance, engineering",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally, per profession. It is a PUBLIC REGISTER and the address on it is the one the licensee published."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "bar-directory",
+      "title": "The state or county bar directory, for an attorney candidate",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state has a bar. It reaches only lawyers — but county-attorney and judicial races are full of them, which is where it earns its place."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "business-registry",
+      "title": "The Secretary of State's corporate registry",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "All fifty states run one. Formats differ; the institution does not."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "nonprofit-filing",
+      "title": "IRS Form 990 and state charity filings where the person is an officer or director",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Nationally, exactly — it is federal."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "civic-organisation",
+      "title": "A civic, fraternal or service organisation listing — Rotary, Lions, Grange, VFW, historical society, library trustees",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Small-town America broadly. It is the route RULING 57's twigs are actually reachable through."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "congregation-listing",
+      "title": "A church or congregation listing naming the person",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Broad but shallow. Named because it exists and has yielded elsewhere; walked with care, since a person's congregation is not a fact this product publishes."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "chamber-directory",
+      "title": "A chamber of commerce or local business directory",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere there is a chamber, which is most places."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "professional-directory",
+      "title": "LinkedIn and general professional directories",
+      "tier": "C",
+      "fields": [
+        "campaignSite",
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere, weakly. Login walls are named, not defeated, and a profile is not the person's words about their candidacy."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "alumni-obituary-archive",
+      "title": "Alumni notes, announcement and obituary archives naming the person or their family",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere, as a BRIDGE route. It rarely produces a Kelly field directly and often produces the key to one."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "prior-employer-release",
+      "title": "A prior employer's press release naming the person",
+      "tier": "C",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere somebody has worked somewhere that publishes."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "search-index",
+      "title": "The search index itself, worked as a route rather than as a reflex",
+      "tier": "C",
+      "fields": [
+        "photo",
+        "blurb",
+        "contact",
+        "campaignSite",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere. Cheapest route in the manifest, and never sufficient on its own."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "web-archive",
+      "title": "The Internet Archive, of any route above that is now dead",
+      "tier": "B",
+      "fields": [
+        "photo",
+        "blurb",
+        "contact",
+        "campaignSite",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Everywhere. It has already produced a shipped portrait here (Harold French's Senate portrait, from a 2022 capture)."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "records-request",
+      "title": "The body's own public-records request path, walked as a named route",
+      "tier": "B",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state has a records law. It is SLOW, which is a reason to file it early in a hunt and never a reason to skip it."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "wikipedia-municipality",
+      "title": "The Wikipedia article for the municipality, read as a TEMPLATED ROSTER",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Roughly 19,000 US municipality articles share this template, so one parser reads all of them. New England town articles and New Jersey municipality articles both parse. Where it will break is a place with no article at all, and the smallest twigs RULING 57 exists for are exactly those."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "wikipedia-election",
+      "title": "The Wikipedia article for the state's election in this cycle",
+      "tier": "A1",
+      "fields": [
+        "campaignSite",
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Federal and statewide races are covered in every state. County and municipal races are almost never covered, so this route is broad and SHALLOW where the ballot is deep."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "press-outlet-map",
+      "title": "The outlets a state's own encyclopedia citations cluster in, queried through their OWN site search rather than through a general engine",
+      "tier": "A1",
+      "fields": [
+        "blurb",
+        "contact",
+        "campaignSite"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The METHOD travels to every state; the LIST does not, and is rebuilt per state. That is the point of it — it is a curated map of who covers this state, derived rather than guessed."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "nces-district-directory",
+      "title": "The NCES public-school-district directory record for a school district",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state. It is a federal collection with a uniform schema, which is why it is already the coverage denominator for school districts."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "wikipedia-government-graph",
+      "title": "The government GRAPH, crawled — not a list of named articles but every link that resolves to a governmental entity touching this zip, followed again from each",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The METHOD travels everywhere — every state has a Government of {state} article and roughly 19,000 municipalities have one. What does NOT travel is the category vocabulary: a state whose agencies are categorised differently needs its patterns added, and that is a sub-branch rather than a failure."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "congress-api",
+      "title": "The Congress.gov API — sitting members of the federal delegation",
+      "tier": "A1",
+      "fields": [
+        "photo",
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state and every cycle. It is a federal API with a uniform schema."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "fec-committee-contact",
+      "title": "The FEC committee record behind a federal candidate — treasurer, address, agent phone",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every state, FEDERAL office only. It reaches nothing below Congress, which is most of a county ballot."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "openstates-bulk",
+      "title": "The Open States / Plural BULK legislator file, already committed to this repo",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "All fifty states — it is one national file. It carries NO photo and NO bio, which is what the caucus walk is for; the caucus walk is not for assembling the roster, because the roster is already here."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "govinfo-cdir",
+      "title": "govinfo — the federal document collections, including the Congressional Directory",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Federal only, every state."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "census-acs-api",
+      "title": "The Census ACS API — the demographic layer behind a zip",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Every zip in the country — WHEN the credential works. Walked 2026-08-22 and the host refused the held key with `X-DataWebAPI-KeyError: 1`; a keyless call is refused too. Recorded as a dated wall on the CREDENTIAL, never as a property of the source."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "lda-filings",
+      "title": "The Senate Lobbying Disclosure Act database",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Federal only, and it closes NOTHING at a county or municipal ballot — stated plainly rather than softened, because the register's job is to let the author decide whether a credential earns its place."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "tier-directory-federal",
+      "title": "USA.gov's directories of the tier below it — every state's government, election office, governor and local-government directory",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "NATIONAL BY CONSTRUCTION — this is one federal publication covering all fifty states, which is the whole point of RULING 93. What it points AT differs per state, and that is the next route down."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "tier-directory-state-localgov",
+      "title": "A state's own directory of its counties and municipalities, with each one's official website",
+      "tier": "A1",
+      "fields": [
+        "contact",
+        "verifiedPage"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The INSTITUTION is near-universal — a state that does not publish a list of its own municipalities is rare. The URL, the shape and the completeness are per-state and unknown until walked. New Jersey's is one page of `<li><a>`; nothing says the next one is."
+      },
+      "outcomes": [],
+      "subBranches": [
+        {
+          "jurisdiction": "New Jersey, 2026-08-22",
+          "failedOn": "`nj.gov/nj/gov/county/` — the path USA.gov itself publishes — answers HTTP 200 with a styled 'Page not found' body",
+          "reason": "inherited route failed here; replaced by: the document is at `/nj/gov/county/localgov.shtml`. Found by walking path variants at rungs 2 and 3. This is why every directory route declares a control string: a status check alone reads the dead path as a success.",
+          "replacedBy": "the document is at `/nj/gov/county/localgov.shtml`. Found by walking path variants at rungs 2 and 3. This is why every directory route declares a control string: a status check alone reads the dead path as a success."
+        }
+      ],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    },
+    {
+      "id": "usmayors-directory",
+      "title": "The US Conference of Mayors' directory of member cities and their mayors",
+      "tier": "A1",
+      "fields": [
+        "contact"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "Member cities only — it is a membership organisation, so its universe is self-selected and skews large. A small township is not in it, which is precisely the coverage this product exists to reach."
+      },
+      "outcomes": [],
+      "subBranches": [],
+      "origin": "lib/hunt/branch-manifest.ts (v7)",
+      "learnedAtVersion": 0,
+      "learnedOn": null
+    }
+  ]
+}

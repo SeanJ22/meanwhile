@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 19:52:31 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 22:50:17 EDT.
 Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -28,47 +28,59 @@ Source: docs/state.md §7 — Where the phases stand.
 
 <!-- PINNED: never trimmed. Verbatim from CLAUDE.md. -->
 
-> **Source: `CLAUDE.md`, the `## DISCOVERY CONDUCT` section, verbatim.**
+> **Source: `docs/governance/ledger.jsonl`, the canonical governance store, verbatim.**
+> Both hand-written copies of each ruling are carried where they diverged.
 > `CLAUDE.md` is the authority; this is a copy of it, pinned here because the
 > failure RULING 88 fixes is a session not knowing there was anything to look up.
 > `tests/context-pinned-conduct.test.ts` fails the build if the two diverge.
 
 ## DISCOVERY CONDUCT
 
-(Adopted 2026-08-22, the author's Discovery Conduct brief, item 3. Eight rulings
-adopted together — **RULINGS 88, 89, 94, 95, 96, 97, 98 and 99** — held in full
-here rather than as pointers. `docs/rulings.md` carries them with the same text
-and the letter-to-number mapping the brief's A-through-H lettering maps onto.)
 
-**Why this section exists, and it is a diagnosis rather than an exhortation.**
 
-Sessions walk the routes the brief names and no others. **This is not
-disobedience; it is what the system asks for.** Scope is a ceiling by rule, the
-branch manifest is a checklist with a completion condition, the discipline rules
-correctly make speculative moves feel like confessable defects, and — the part
-nothing had noticed — **no report contract has ever asked a session what it
-found that was NOT on the list.** A session that walked eleven known routes and
-a session that invented three new ones produced identically-shaped reports and
-were graded the same.
+*Pinned VERBATIM from `docs/governance/ledger.jsonl`, the canonical governance store. Nothing here is composed.*
 
-The consequences are measured, not asserted. **Wikipedia as a Tier A source was
-identified by the author, not by a session**, and when finally walked it
-returned 261 officials, 898 rows, 818 citations confirmed against primary
-sources (91.1%), and 174 governing bodies against a registry holding 12. **API
-credentials the author personally obtained sat uncalled** until NJ Hunt 5 called
-several and closed 119 owed fields in one run; the Census key was invalid and
-that was found only because something finally hit it. **A paid search API was
-recommended** while Wikipedia's Rockaway Township page — two clicks from a plain
-Google search, carrying the mayor, nine council members, seven county
-commissioners and the county constitutional officers, all footnoted — had never
-been opened.
 
-**More principles will not fix this.** RULING 90 and RULING 93 are principles and
-behaviour did not change. What changes behaviour is **a required output that
-cannot be produced by walking a list**. That is RULING 88. The other seven make
-it real.
 
-### RULING 88 — THE EXPANSION REQUIREMENT
+### RULING 88 — the expansion requirement
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, from the author's brief, item
+3A). Law: written into `CLAUDE.md` under **Discovery conduct**. **Supersedes
+nothing. It gives RULING 90 the required output it was missing.***
+
+**Every hunt report carries an EXPANSION section, and it lists routes that did
+not exist at session start.**
+
+For each one, four things:
+
+1. **How it was conceived** — what question or observation led to it.
+2. **The literal query or URL** that produced it. Not a description of the
+   search; the text that was typed.
+3. **What it returned, including zero.**
+4. **Whether it generalises to a class of entities**, or only reached the one
+   thing it was invented for.
+
+**A hunt report with an EMPTY expansion section fails the item.** Not a note, not
+a caveat — the item does not pass. This is deliberately the same consequence
+RULING 90 already attaches to the sentence "nothing further".
+
+**A newly conceived route that returns NOTHING is a reported SUCCESS.** The
+invention is the deliverable; the yield is not. This clause is load-bearing and
+is the one most likely to be quietly ignored, because every other rule in this
+project rewards rows found. A session that conceives four routes and gets zero
+rows from all four has done the thing this ruling asks for, and its report says
+so without apology.
+
+*Why a required output rather than another principle.* Because a principle can
+be satisfied by a session that believes it complied, and this one cannot: there
+is either a route in the section that did not exist this morning, or there is
+not. It is the first rule in this file that is checkable against a session's
+imagination rather than its diligence.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **Every hunt report carries an EXPANSION section listing routes that did not
 exist at session start.** For each one: **how it was conceived**, **the literal
@@ -90,7 +102,34 @@ without apology.
 satisfied by a session that believes it complied. This cannot: either there is a
 route in the section that did not exist this morning, or there is not.
 
-### RULING 89 — EXPANSION IS NOT A SIDE QUEST
+### RULING 89 — expansion is not a side quest
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3B). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It bounds RULING 88** and it is
+inseparable from it.*
+
+**Expansion is a NEW ROUTE TO A FIELD ALREADY OWED on the item list.**
+
+**A side quest is a new capability, a new surface, new infrastructure, or work
+on a zip that is not the current zip.**
+
+- Expansion is **required**.
+- Side quests remain **forbidden** and become tracker rows. Writing the row is
+  the whole response — the standing rule is unchanged.
+- **A session citing RULING 88 while building infrastructure has committed a
+  scope breach, and reports it as one.**
+
+*Why this ships in the same breath as RULING 88.* Because "you must invent new
+routes" is one sentence away from "you may build anything you can justify", and
+that reading would undo the scope discipline that keeps a session finishing what
+it started. The test is narrow and it is about the DESTINATION, not the
+technique: does this route end at a field the item list already owes? If yes it
+is expansion, however novel the method. If no, it is a row.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **Expansion is a NEW ROUTE TO A FIELD ALREADY OWED on the item list. A side
 quest is a new capability, a new surface, new infrastructure, or work on a zip
@@ -107,7 +146,47 @@ reading would undo the scope discipline that keeps a session finishing what it
 started. The test is about the DESTINATION, not the technique: does this route
 end at a field the item list already owes?
 
-### RULING 94 — THE STUCK PROTOCOL
+### RULING 94 — the stuck protocol
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3C). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It sits between RULING 84's tiers
+and any recorded absence**, and it is what RULING 90's "what would I try if
+there were no manifest at all" looks like as a procedure.*
+
+**When a field is unfound after Tier A and Tier B — before any absence is
+recorded, and before Tier C per-entity search begins — run five moves. Record
+the literal query text or URL and the result for each.**
+
+1. **What would a person with a browser type right now?** Type it.
+2. **What does the tier above publish about the tier below?** Federal publishes
+   states; states publish counties and municipalities; counties publish towns
+   and districts. Descend the hierarchy; do not guess sideways. (RULING 93.)
+3. **What did entities of this same shape do?** If one township posts a clerk's
+   PDF, the other twenty may. **Test the shape, not the instance.**
+4. **Who else needed this badly enough to have compiled it already?** Courts,
+   local news, the League of Women Voters, unions, chambers of commerce,
+   libraries, universities.
+5. **One lateral query phrased exactly as "where else can I find this"** for the
+   specific fact, on a general search engine.
+
+**A recorded absence with no stuck-protocol block is VOID, and the field returns
+to owed.**
+
+*Why questions rather than a list of URLs.* A fixed list goes stale and becomes
+the next thing a session walks instead of thinking. These are five questions
+precisely so they cannot be completed — the answer is different in every state,
+which is the point.
+
+*Where it sits, exactly.* After Tier A and Tier B, BEFORE Tier C. That placement
+is the whole economy of it: per-entity search is the expensive tier, and four of
+these five moves are broad routes that may answer for fifty entities at once.
+NJ Hunt 4 spent an entire search budget on 272 individuals and never once asked
+where all 272 live.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **When a field is unfound after Tier A and Tier B — before any absence is
 recorded, and before Tier C per-entity search begins — run five moves and record
@@ -137,7 +216,40 @@ and four of these five moves are broad routes that may answer for fifty entities
 at once. NJ Hunt 4 spent its entire search budget on 272 individuals and never
 once asked where all 272 live.
 
-### RULING 95 — CREDENTIALS ARE PROVEN, NOT ASSUMED
+### RULING 95 — credentials are proven, not assumed
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3D). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It makes RULING 91 checkable** —
+RULING 91 says every key is a Tier A route that gets walked; this says how the
+walk is proven.*
+
+**Every hunt session regenerates `docs/credential-ledger.md` at session start by
+CALLING each key.**
+
+- **A key not called this session is reported as UNPROVEN.** Not assumed
+  working, not carried forward from the last session's table.
+- **An invalid key opens a Needs Sean P1 row the same session.**
+
+*Why calling and not reading.* The register can only say which files reference a
+key. It cannot say whether the key works, and the difference has cost real
+findings: `CENSUS_API_KEY` was invalid and nothing discovered it until something
+finally hit the endpoint. Reading the register would never have surfaced it, at
+any level of care.
+
+*And why the bar is "is the body about the thing we asked for".* Because the
+Census host answers a rejected key with **HTTP 200 and an HTML page titled
+"Invalid Key"**. A check written against the status code reads a dead credential
+as healthy. The ledger's control is that the body parsed as the data requested,
+plus a deliberately bogus second request that must come back DIFFERENT
+(RULING 68).
+
+The generator is `scripts/credential-ledger.mts` (`pnpm credentials`). The
+artifact is never hand-edited (RULING 92).
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **Every hunt session regenerates `docs/credential-ledger.md` at session start by
 CALLING each key.** A key not called this session is reported as **unproven** —
@@ -158,7 +270,35 @@ bogus second request that must come back DIFFERENT (RULING 68).
 The generator is `scripts/credential-ledger.mts` (`pnpm credentials`), and the
 artifact is never hand-edited (RULING 92).
 
-### RULING 96 — SOURCES HAVE FRESHNESS
+### RULING 96 — sources have freshness
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3E). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It extends RULING 53's expiry
+discipline from ABSENCES to SOURCES.***
+
+**`docs/sources.md` carries a LAST-WALKED DATE on every entry, keyed or not.**
+
+The expiry windows are the ones that already govern absences, unchanged:
+
+- **candidate fields — 7 days**
+- **bodies and rosters — 14 days**
+- **walled sources — 14 days**
+
+- **A source past its expiry is re-walked, or reported STALE with its date.**
+- **A source walked but not recorded is a DEFECT**, because the next session
+  re-derives it.
+
+*Why sources and not just absences.* RULING 53 made an absence a measurement
+with a shelf life. A source is the same kind of claim wearing a friendlier face:
+*this endpoint answers, this licence permits, this is where the list lives*.
+Every one of those can stop being true without anything in this repo noticing,
+and a register with no dates cannot tell a session which of its rows are
+observations and which are folklore.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **`docs/sources.md` carries a LAST-WALKED DATE on every entry, keyed or not**,
 with the expiry discipline that already governs absences under RULING 53:
@@ -174,7 +314,41 @@ and every one of those can stop being true without anything here noticing. A
 register with no dates cannot tell a session which of its rows are observations
 and which are folklore.
 
-### RULING 97 — A FOUNDER FIND IS A CLASS-WIDE DEFECT
+### RULING 97 — a founder find is a class-wide defect
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3F). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It applies the named-instance rule
+to the DISCOVERY PROCESS itself.***
+
+**When the author finds a source, route, or fact the sessions did not, that is a
+DEFECT IN THE DISCOVERY PROCESS** — handled exactly like a named instance of a
+class-wide defect in code.
+
+The next session answers three questions in its report:
+
+1. **What procedure would have found this without him?**
+2. **Why did that procedure not run?**
+3. **What changed so that it runs next time?**
+
+**Absorbing the find as a new manifest entry and moving on is NOT an adequate
+response.** That is fixing the named instance and reporting it closed, which the
+constitution already forbids everywhere else.
+
+**Manifest growth that comes only from the author is the failure this ruling
+names.**
+
+*What it cost to learn.* Wikipedia as a Tier A source was identified by him, not
+by a session. When it was finally walked it returned **261 officials, 898 rows,
+818 citations confirmed against primary sources (91.1%), and 174 governing
+bodies against a registry holding 12**. The response at the time was to add
+Wikipedia to the manifest — a correct action and an insufficient one, because
+nothing about the process that missed it for six sessions changed, and the next
+find came the same way.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **When the author finds a source, route, or fact the sessions did not, that is a
 DEFECT IN THE DISCOVERY PROCESS**, handled like a named instance of a class-wide
@@ -189,7 +363,30 @@ response** — that is fixing the named instance and reporting it closed, which
 the named-instance rule already forbids everywhere else. **Manifest growth that
 comes only from the author is the failure this ruling names.**
 
-### RULING 98 — EXPLORATION HOLDS A GUARANTEED POSITION IN ITEM ORDER
+### RULING 98 — exploration holds a guaranteed position in item order
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3G). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It binds the CHAT THAT WRITES
+BRIEFS as much as the session that executes them**, which no other rule in this
+file does.*
+
+**In every hunt brief, expansion work is its own NUMBERED ITEM, and it is NEVER
+LAST.**
+
+*The reason, stated plainly because it is a fact about how this system actually
+behaves.* Whatever sits at item 1 eats the run. Expansion placed at the tail
+never happens, because it is scheduled to begin after exhaustion — and
+exhaustion never arrives, by design: RULING 90 exists precisely to stop a
+session declaring it. So a brief that puts exploration last has not deprioritised
+it; it has cancelled it, while appearing to require it.
+
+This is the one ruling here that a session cannot comply with on its own. It is
+an instruction to whoever writes the brief.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **In every hunt brief, expansion work is its own NUMBERED ITEM and is NEVER
 LAST. This binds the chat writing briefs as much as the session executing
@@ -202,7 +399,38 @@ exhaustion never arrives, by design, since RULING 90 exists precisely to stop a
 session declaring it. **A brief that puts exploration last has not
 deprioritised it; it has cancelled it, while appearing to require it.**
 
-### RULING 99 — THE AMENDMENT PROCEDURE
+### RULING 99 — the amendment procedure
+
+
+*Adopted 2026-08-22 (Discovery Conduct session, item 3H). Law: `CLAUDE.md`,
+**Discovery conduct**. **Supersedes nothing. It generalises the 2026-08-22
+renumber**, which is the precedent and the format.*
+
+**Every ruling in this file is amendable. A ruling is changed only by a LATER
+DATED RULING that:**
+
+1. **names the number it supersedes**,
+2. **states what changed and why**, and
+3. **adds a mapping line in BOTH `docs/rulings.md` and `CLAUDE.md`.**
+
+**Rulings are never edited in place and never silently dropped.** A superseded
+ruling STAYS IN THE FILE, marked superseded, carrying its successor's number.
+
+*The precedent.* On 2026-08-22 a brief adopted five rulings as 81 through 85
+while a session earlier the same day had already spent 81 and 82. Renumbering
+the two that shipped would have left dangling references in an append-only
+record whose entire value is that it does not move. The five took 83 through 87
+with a mapping table in both files, and both numbers a search would find still
+find the rule. That is the shape every amendment takes from here.
+
+*Why the file, and not memory.* Because a superseded ruling that is deleted
+comes back as drift. Something in this project reads it, cites it, or reasons
+from it, and nothing says it was overturned — which is the exact failure
+`docs/rulings.md` was created to end.
+
+---
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
 
 **Every ruling is amendable. A ruling is changed only by a LATER DATED RULING
 that names the number it supersedes, states what changed and why, and adds a
@@ -221,41 +449,166 @@ through 87 with a mapping table in both files. Every amendment takes that shape.
 drift — something reads it, cites it, or reasons from it, and nothing says it
 was overturned. That is the exact failure `docs/rulings.md` was created to end.
 
-### THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED
+### RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence
 
-(Adopted 2026-08-22, the same brief, item 5.) **`docs/report-contract.md` is the
-close-out contract every hunt session answers.** A brief may ADD to it; a brief
-does not subtract from it.
 
-**What was found when this was written:** there was no template. The contract
-lived in each session's own brief, rewritten by the chat every time — which is
-precisely why the one figure that would have caught the discovery failure had
-never appeared in it. **A contract that is rewritten every session cannot
-accumulate.**
+Adopted 2026-08-26, the descent session, Item 9. **Amends RULING 94** under the
+RULING 99 procedure. RULING 94's five moves stand, its placement between Tier B
+and Tier C stands, and its void condition stands. What changes is what reaching
+the end of them MEANS.
 
-It enumerates seven required figures, each with its denominator: **expansion
-routes conceived**, **routes returning rows (N of N)**, **routes returning zero
-(N of N)**, **stuck protocols run**, **fields returned to owed for a missing
-stuck protocol**, **credentials proven (N of M)**, and **sources past expiry
-(N of M)**. **A report missing any of these is INCOMPLETE and the session says
-so about itself.**
+**RULING 94's five moves are the OPENING, not the count. Running them does not
+earn an absence and never has.** An absence is earned only by the argument
+RULING 90 requires.
 
-### THE MAPPING TABLE — the brief's letters against the numbers they carry
+**A session that has exhausted its ideas says "I have run out of ideas" — which
+is a claim about the session — rather than "this is not published", which is a
+claim about the government. Only one of those is ever true here.**
 
-| The brief called it | It is law as | Its name |
-| --- | --- | --- |
-| A | **RULING 88** | The expansion requirement |
-| B | **RULING 89** | Expansion is not a side quest |
-| C | **RULING 94** | The stuck protocol |
-| D | **RULING 95** | Credentials are proven, not assumed |
-| E | **RULING 96** | Sources have freshness |
-| F | **RULING 97** | A founder find is a class-wide defect |
-| G | **RULING 98** | Exploration holds a guaranteed position in item order |
-| H | **RULING 99** | The amendment procedure |
+**Any cap in any brief — five moves, N routes, a list of seven — is a FLOOR.**
+Reaching the end of a list is not completion. **A brief that appears to cap
+effort is misdrafted, and the session says so rather than obeying the cap.**
 
-**88 and 89 were held open on 2026-08-22** so the author could claim them rather
-than have `docs/rulings.md` renumber a ruling of his. He claimed them here. C
-through H continue from 93, the highest then in use.
+*The rationale stays attached.* RULING 94 phrased its moves as five numbered
+questions so they could not go stale, and the numbering was read as the job.
+That is the same failure RULING 61 named about the manifest — *trying
+thirty-seven routes and stopping does not tell you the forty-third would have
+failed either* — arriving through the door built to prevent it. A protocol with
+a terminating condition is a checklist, and a checklist completed is a session
+that believes it complied.
+
+**The standard, in the author's words: what would the most diligent, persistent
+person do if they got stuck? Keep looking. Find another avenue.**
+
+**And the productive question is not "where would this be published?" It is
+"WHO WAS COMPELLED TO WRITE THIS DOWN?"** Governments are forced by statute to
+produce documents nobody thinks of as directories — the municipal code that
+establishes every board by ordinance, the tax rate table that must list every
+levying district because somebody has to be billed, the legal notice published
+in a newspaper of record, the budget and the audit, the minutes of the tier
+above recording an appointment, the annual report, the state oversight
+directory. **Those documents are where the dark bodies are**, and none of them
+was in the ladder on the day this was adopted.
+
+*This does not narrow RULING 144.* An argued absence may still be built from
+walls, and it still expires the day a wall falls. What it forbids is arriving at
+that argument by counting.
+
+*The other hand-written copy of this rule, from `CLAUDE.md`:*
+
+(Adopted 2026-08-26, Item 9. **Amends RULING 94** under the RULING 99
+procedure. RULING 94's five moves stand, its placement between Tier B and Tier C
+stands, and its void condition stands. What changes is what reaching the end of
+them MEANS.)
+
+**RULING 94's five moves are the OPENING, not the count. Running them does not
+earn an absence and never has.** An absence is earned only by the argument
+RULING 90 requires.
+
+**A session that has exhausted its ideas says "I have run out of ideas" — which
+is a claim about the session — rather than "this is not published", which is a
+claim about the government. Only one of those is ever true here.**
+
+**Any cap in any brief — five moves, N routes, a list of seven — is a FLOOR.**
+Reaching the end of a list is not completion. **A brief that appears to cap
+effort is misdrafted, and the session says so rather than obeying the cap.**
+
+*The rationale stays attached.* RULING 94 phrased its moves as five numbered
+questions so they could not go stale, and the numbering was read as the job.
+That is the failure RULING 61 already named about the manifest — *trying
+thirty-seven routes and stopping does not tell you the forty-third would have
+failed either* — arriving through the door built to prevent it. A protocol with
+a terminating condition is a checklist, and a checklist completed is a session
+that believes it complied.
+
+**The standard, in the author's words: what would the most diligent, persistent
+person do if they got stuck? Keep looking. Find another avenue.**
+
+**And the productive question is not "where would this be published?" It is
+"WHO WAS COMPELLED TO WRITE THIS DOWN?"** Governments are forced by statute to
+produce documents nobody thinks of as directories — the municipal code that
+establishes every board by ordinance, the tax rate table that must list every
+levying district because somebody has to be billed, the legal notice in a
+newspaper of record, the budget and the audit, the minutes of the tier above
+recording an appointment, the annual report, the state oversight directory.
+**Those documents are where the dark bodies are**, and none of them was in the
+ladder on the day this was adopted.
+
+*This does not narrow RULING 144.* An argued absence may still be built from
+walls and still expires the day a wall falls. What it forbids is arriving at
+that argument by counting.
+
+### RULING 177 — the subject universe may be bounded; the method never is
+
+**THE UNIVERSE OF OWED SUBJECTS MAY BE BOUNDED. THE UNIVERSE OF METHODS IS
+NOT. THE EFFORT PERMITTED TO COMPLETE AN OWED ITEM IS NOT ARBITRARILY CAPPED.**
+
+This is the correction to two bad architectures at once.
+
+**BAD:** try N things; N things failed; therefore absent.
+**ALSO BAD:** follow every hyperlink forever; completion has no possible
+boundary.
+
+A current workstream may have a defined denominator. The discovery method
+itself is permanently open-ended. **"Bounded universe" applies ONLY to the
+subjects currently owed** — never to the method, the route manifest, the source
+vocabulary, the platform vocabulary, the government-type vocabulary, or the
+retrieval technique.
+
+**A discovered route enlarges the active graph only when it plausibly advances
+an owed question.** A government page does not recursively make every hyperlink
+on the internet owed. That is what keeps this bounded without capping effort.
+
+### RULING 178 — inherit everything, assume it is incomplete, keep the learning
+
+**A method that works across 43 states is not "the method." It is the method
+learned so far.**
+
+If the repository knows 76 routes and those routes work across 43 states, that
+means WE CURRENTLY KNOW 76 ROUTES. It does not mean THERE ARE 76 ROUTES. If the
+next seven states require 11 more, the system learns those 11, records them,
+classifies where they apply, and future sessions inherit all 87. Then 88. There
+is no maximum.
+
+- **A new route is PROJECT KNOWLEDGE, not session knowledge.** Every successful
+  new avenue is persisted so another session never rediscovers it.
+- **A failed inherited route is also knowledge.** It grows a sub-branch naming
+  the jurisdictional shape it failed in and the date, and it is never deleted.
+- **Every route carries applicability metadata.** Nationwide, state-specific,
+  state-family, government-type, publisher, platform, document-type,
+  jurisdiction, or **unknown portability — which is a VALID state.** Do not
+  generalize farther than the evidence supports.
+- **A NEW JURISDICTION IS PRESUMED CAPABLE OF TEACHING THE PROJECT A NEW
+  METHOD.** "Nothing new learned" is a legitimate measured result only after
+  genuine expansion work occurred. It may never be inferred merely because all
+  inherited routes completed.
+- **New knowledge reopens old conclusions.** When a route is learned, prior
+  items recorded absent, blocked, dark or converged are identified
+  MECHANICALLY, their exhaustion state is invalidated where the route applies,
+  and they return to owed. This is structural, never something a future session
+  is expected to remember.
+
+**Inheritance is the STARTING advantage of a new state, never its constraint.**
+
+### RULING 184 — blocked is a real state, and a finite attempt count never earns absence
+
+**Delete the false binary `taken OR absent`.** Source and work dispositions
+represent at least: `UNWALKED`, `DISCOVERED`, `IN_PROGRESS`, `INGESTED`,
+`POINTER_ONLY`, `WALKED_NO_YIELD`, `BLOCKED_CURRENTLY`,
+`REQUIRES_NEW_ADAPTER`, `RECORDS_REQUEST_PENDING`, `NOT_APPLICABLE`,
+`RECHECK_DUE`.
+
+A CAPTCHA is not absence. Missing tooling is not absence. A pending records
+request is not absence. A third-party pointer is not necessarily something to
+ingest. A presently prohibited route is not absence.
+
+**Five moves, seven tiers, N routes, every manifest entry, every known branch —
+these are FLOORS and instruments. Reaching their end never means "therefore the
+information does not exist."**
+
+If a session has no further avenue it says **"I have run out of ideas"**, which
+is a claim about the session. It is never "the government does not publish
+this", which is a claim about a government.
 
 *(Pinned verbatim from `CLAUDE.md` by `scripts/context-file.mjs`. Every other
 section of this file is an index; this one is the text, because the failure it
@@ -263,197 +616,218 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 184 recorded
+## Rulings — 205 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
 told to hardcode a ruling as fact reads the file rather than the chat it came
 from. Each entry there names what it supersedes.
 
-- RULING 1 — merge cadence
-- RULING 2 — full-page screenshots are read as images
-- RULING 3 — the organic census is closed as a question
-- RULING 4 — `CLAUDE.md` has no rules 4g or 4h
-- RULING 5 — `walk:all` does not tap reactions
-- RULING 6 — the coverage tier vocabulary, used verbatim everywhere
-- RULING 7 — a zip below Tier 2 renders what is known and names what is not
-- RULING 8 — no API client was built in Prompt C
-- RULING 9 — Census counts governments; the product renders bodies
-- RULING 10 — ZCTA is not a ZIP code
-- RULING 11 — not issued
-- RULING 12 — WALL versus JOB
-- RULING 13 — a green build check does not mean the tests ran
-- RULING 14 — path comparisons may not assume a separator
-- RULING 15 — the Kearsarge 15-row floor is retired
-- RULING 16 — the retrieval-mechanics ladder in `CLAUDE.md` is canonical
-- RULING 17 — `walledAtRung` values written before F22 are provenance-unknown
-- RULING 18 — hunt-completion gating
-- RULING 19 — the nonpartisanship and committee-sale section is deferred
-- RULING 20 — portraits and PDF corpora do not go in git
-- RULING 21 — `DATA_GOV_API_KEY` exists
-- `F21` — closed as correct-as-shipped (2026-08-20)
-- `F02` — the committee denominator is PER REPRESENTATIVE (2026-08-20)
-- The two portraits — accepted (2026-08-20)
-- The 12.1 and 13.2 visual calls — accepted (2026-08-20)
-- The organic census — closed (2026-08-20)
-- `F03` — closed, and Vail's superintendent is John Carruth (2026-08-20)
-- The zip order (2026-08-20)
-- The repeatability bar (2026-08-20)
-- RULING 26 — SHOW EVERYTHING WE FIND
-- RULING 27 — no suppression path may exist in the codebase
-- RULING 28 — absence is one buried annotation per contest, never a per-field indicator
-- RULING 22 — recorded by description, and dead
-- RULING 23 — the four-state field is data, not a gate
-- RULING 24 — a check that cannot run says so
-- RULING 25 — reader-facing behaviour is not degraded to fix an internal problem
-- `THIN_CANDIDATE_LINE` was KEPT on the card (2026-08-20)
-- The `*` is reserved across the whole ballot page (2026-08-20)
-- `NOT_APPLICABLE` moved NOTHING out of the 249 (2026-08-20)
-- RULING 29 — three priority levels, ranked inside a section and never across sections
-- RULING 30 — five P1 rows maximum per section, and an over-cap section is STOPPED
-- RULING 31 — Needs Sean is always the first section
-- RULING 32 — every row has a home
-- RULING 33 — gaps are not tracker rows
-- RULING 34 — the reader artifacts are generated, and hold no duplicated content
-- RULING 35 — every section is a queue that empties
-- RULING 36 — three resolution states, and only these three
-- RULING 37 — who may move a row
-- RULING 38 — the author's resolution notes are instructions, not commentary
-- RULING 39 — resolution timestamps are written by the script, not by the spreadsheet
-- RULING 40 — attribution has no soft landing
-- RULING 41 — the author writes rows too
-- RULING 42 — the page-level disclosure replaces `THIN_CANDIDATE_LINE`
-- RULING 43 — a source may not report success with zero normalized rows from a non-zero fetch
-- RULING 44 — per-card completeness statements are gone, in any wording
-- RULING 45 — the Kelly standard, and there are no tiers of it
-- RULING 46 — the author may delete a row outright; a session never may
-- RULING 47 — the per-card issue count is removed
-- RULING 48 — a session may not use git to revert the author's files
-- RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence
-- RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again
-- RULING 51 — the collection disclosure renders once per surface, and there are two surfaces
-- RULING 57 — every twig is named
-- RULING 58 — `VERIFIED_ABSENT` requires two INDEPENDENT branches
-- RULING 59 — the page says one thing about completeness and nothing else
-- RULING 60 — the session hand-works bodies, and that is the point
-- RULING 61 — the branch manifest, and what exhaustion means
-- RULING 62 — a test file may not lose guards silently
-- RULING 63 — every zip inherits; no zip starts from scratch
-- RULING 64 — shared office contacts are published, labeled as the office
-- RULING 65 — the footer-address branch
-- RULING 66 — Facebook by compliant routes only
-- RULING 67 — an enumeration states its geography and is checked externally
-- RULING 68 — control queries are mandatory
-- RULING 69 — reference data belongs in the repo, named and refreshable
-- RULING 70 — Ballotpedia is not scraped
-- RULING 71 — a zip cannot answer "who governs you"; a street address can
-- RULING 72 — a walled host is never evidence a body is unreachable
-- RULING 73 — large reference documents: commit the CONTENT, never the binary
-- RULING 74 — an address, once given, is never asked for twice
-- RULING 75 — a close-out commit is gated like any other commit to `main`
-- RULING 76 — session-dated scripts are COMMITTED, and held to every standard
-- RULING 77 — verify locally, ship once
-- RULING 78 — CI runs where it earns its cost
-- RULING 79 — a ruling closes the Needs Sean row it answers
-- RULING 80 — the committed geometry follows the reader, not the county
-- RULING 81 — an exhausted Actions balance is not a broken tree
-- RULING 82 — the job watcher's sampling was the defect, not its logic
-- RULINGS 83 THROUGH 87 — the five process rulings of NJ Hunt 5
-- RULING 83 — the free-source floor
-- RULING 84 — the manifest is tiered, and walked in order
-- RULING 85 — the two-click test
-- RULING 86 — per-state source enumeration precedes the hunt
-- RULING 87 — Wikipedia is a Tier A discovery source, never a source of record
-- RULINGS 88 AND 89 — deliberately unassigned
-- RULING 90 — exhaustion must be argued, not asserted
-- RULING 52 — discovery is a tree, not a ladder
-- RULING 53 — recorded absences expire
-- RULING 54 — the filed mailing address renders
-- RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE
-- RULING 56 — a scheduled job that fails tells someone
-- RULING 91 — every key in `.env.local` is a Tier A route and is walked
-- RULING 92 — fix the generator, never the artifact
-- RULING 93 — ask what the tier above publishes about the tier below
-- RULING 88 — the expansion requirement
-- RULING 89 — expansion is not a side quest
-- RULING 94 — the stuck protocol
-- RULING 95 — credentials are proven, not assumed
-- RULING 96 — sources have freshness
-- RULING 97 — a founder find is a class-wide defect
-- RULING 98 — exploration holds a guaranteed position in item order
-- RULING 99 — the amendment procedure
-- RULING 100 — a partial answer that adds up is still a wrong answer
-- RULING 101 — our own identifier never leaves our own site
-- RULING 102 — fixing the recipe is not finished until you re-cook the dish
-- RULING 103 — a sweep looks for the same code twice, not just the same symptom
-- RULING 104 — a file you put in the repo is something a session must go and read
-- RULING 105 — say what is rendering, what is out of scope, and what is still dark
-- RULING 106 — no generated file has a size limit
-- RULING 107 — a freshness date is written only by the code that read the source
-- RULING 108 — anything a session must read at the start lives in the repository
-- RULING 109 — a brief says what it needs to run, and the session checks before item one
-- RULING 110 — a search that finds nothing must show it looked in the right FORM
-- RULING 111 — a join is never a lookup for a fact that lives on only one side
-- RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped
-- RULING 113 — a step that reports success is asked whether it did the thing
-- RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence
-- RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one
-- RULING 116 — a guard may pin an invariant or a direction, never the size of a gap
-- RULING 117 — the asset store has a public address, and a restore is proved by hash
-- RULING 118 — an appointed official never carries the govern verb
-- RULING 119 — a sovereign tribal nation is its own category of government
-- RULING 120 — equal solicitation is the obligation; who buys is not
-- RULING 121 — one body that spans two towns has one identity, and renders in both
-- RULING 122 — a page on a party's own site can be a candidate's page, with the host named
-- RULING 123 — the author's decisions of 2026-08-24, recorded as a batch
-- RULING 124 — a commit that cannot change what a reader sees does not cost a deploy
-- RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench
-- RULING 126 — campaign-finance data renders for readers and never enters anything sold
-- RULING 127 — no tool prints a credential value, and the guard is the values themselves
-- RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact
-- RULING 129 — a safety cap is a failure boundary, never an implicit end of data
-- RULING 130 — every transport success passes one shared document finalizer
-- RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`
-- RULING 132 — the identity boundary is proven over VALUE SPACES, not column names
-- RULING 133 — a performance change ships with its measurement
-- RULING 134 — an instrument without a committed baseline is unfinished
-- RULING 135 — a fence bars acting on content, never committing Sean's artifacts
-- RULING 136 — feedback names examples; a fix closes the class
-- RULING 137 — for layout, an annotated image is the spec, and it outranks prose
-- RULING 138 — display consolidates sources; the record is never deleted
-- RULING 139 — the product never announces its own failure
-- RULING 140 — dates spell out, product-wide
-- RULING 141 — the Speak Your Mind store's four rules
-- RULING 142 — the line in the sand, and nothing collected before it is ever sold
-- RULING 143 — what DONE means for 07866, and it is per candidate
-- RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls
-- RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled
-- RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question
-- RULING 147 — no reconciliation may compare a parser to itself
-- RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session
-- RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader
-- RULING 150 — a Needs Sean row states its ask as an answerable question, with options
-- RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch
-- RULING 152 — a reader-facing DONE names the production deploy that is serving it
-- RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion
-- RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not
-- RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one
-- RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence
-- RULING 157 — a fix is verified against a case it was NOT derived from
-- RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session
-- RULING 159 — a counting script fails loudly when its denominator is zero
-- RULING 160 — in-cycle sales are allowed, and equal solicitation is the constraint that carries neutrality
-- RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch
-- RULING 162 — a bypass is only as safe as the paths it can carry
-- RULING 163 — the answer to "is the protection still what we think" is a command
-- RULING 164 — a workflow reports every failure, not just the first
-- RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held
-- RULING 166 — the body's own publication is rung one, and its bulk download is rung zero
-- RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere
-- RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief
-- RULING 169 — a walk is COUNTED or it did not happen
-- RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence
-- RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR
+- RULING 1 — merge cadence  [R-0001 · LAW_DECISION · ACTIVE]
+- RULING 2 — full-page screenshots are read as images  [R-0002 · LAW_DECISION · ACTIVE]
+- RULING 3 — the organic census is closed as a question  [R-0003 · DECISION · ACTIVE]
+- RULING 4 — `CLAUDE.md` has no rules 4g or 4h  [R-0004 · DECISION · ACTIVE]
+- RULING 5 — `walk:all` does not tap reactions  [R-0005 · LAW_DECISION · ACTIVE]
+- RULING 6 — the coverage tier vocabulary, used verbatim everywhere  [R-0006 · LAW_DECISION · ACTIVE]
+- RULING 9 — Census counts governments; the product renders bodies  [R-0009 · DECISION · ACTIVE]
+- RULING 10 — ZCTA is not a ZIP code  [R-0010 · DECISION · ACTIVE]
+- RULING 12 — WALL versus JOB  [R-0012 · DECISION · ACTIVE]
+- RULING 13 — a green build check does not mean the tests ran  [R-0013 · DECISION · ACTIVE]
+- RULING 14 — path comparisons may not assume a separator  [R-0014 · DECISION · ACTIVE]
+- RULING 15 — the Kearsarge 15-row floor is retired  [R-0015 · DECISION · ACTIVE]
+- RULING 16 — the retrieval-mechanics ladder in `CLAUDE.md` is canonical  [R-0016 · LAW_DECISION · ACTIVE]
+- RULING 17 — `walledAtRung` values written before F22 are provenance-unknown  [R-0017 · DECISION · ACTIVE]
+- RULING 19 — the nonpartisanship and committee-sale section is deferred  [R-0019 · DECISION · ACTIVE]
+- RULING 20 — portraits and PDF corpora do not go in git  [R-0020 · LAW_DECISION · ACTIVE]
+- RULING 23 — the four-state field is data, not a gate  [R-0023 · LAW_DECISION · ACTIVE]
+- RULING 24 — a check that cannot run says so  [R-0024 · LAW_DECISION · ACTIVE]
+- RULING 25 — reader-facing behaviour is not degraded to fix an internal problem  [R-0025 · DECISION · ACTIVE]
+- RULING 26 — SHOW EVERYTHING WE FIND  [R-0026 · LAW_DECISION · ACTIVE]
+- RULING 27 — no suppression path may exist in the codebase  [R-0027 · LAW_DECISION · ACTIVE]
+- RULING 28 — absence is one buried annotation per contest, never a per-field indicator  [R-0028 · LAW_DECISION · ACTIVE]
+- RULING 29 — three priority levels, ranked inside a section and never across sections  [R-0029 · LAW_DECISION · ACTIVE]
+- RULING 30 — five P1 rows maximum per section, and an over-cap section is STOPPED  [R-0030 · LAW_DECISION · ACTIVE]
+- RULING 31 — Needs Sean is always the first section  [R-0031 · DECISION · ACTIVE]
+- RULING 32 — every row has a home  [R-0032 · LAW_DECISION · ACTIVE]
+- RULING 33 — gaps are not tracker rows  [R-0033 · LAW_DECISION · ACTIVE]
+- RULING 34 — the reader artifacts are generated, and hold no duplicated content  [R-0034 · DECISION · ACTIVE]
+- RULING 35 — every section is a queue that empties  [R-0035 · LAW_DECISION · ACTIVE]
+- RULING 36 — three resolution states, and only these three  [R-0036 · DECISION · ACTIVE]
+- RULING 37 — who may move a row  [R-0037 · LAW_DECISION · AMENDED]
+- RULING 38 — the author's resolution notes are instructions, not commentary  [R-0038 · LAW_DECISION · ACTIVE]
+- RULING 39 — resolution timestamps are written by the script, not by the spreadsheet  [R-0039 · DECISION · ACTIVE]
+- RULING 40 — attribution has no soft landing  [R-0040 · DECISION · ACTIVE]
+- RULING 41 — the author writes rows too  [R-0041 · LAW_DECISION · ACTIVE]
+- RULING 42 — the page-level disclosure replaces `THIN_CANDIDATE_LINE`  [R-0042 · LAW_DECISION · ACTIVE]
+- RULING 43 — a source may not report success with zero normalized rows from a non-zero fetch  [R-0043 · LAW_DECISION · ACTIVE]
+- RULING 44 — per-card completeness statements are gone, in any wording  [R-0044 · LAW_DECISION · ACTIVE]
+- RULING 45 — the Kelly standard, and there are no tiers of it  [R-0045 · LAW_DECISION · ACTIVE]
+- RULING 46 — the author may delete a row outright; a session never may  [R-0046 · DECISION · ACTIVE]
+- RULING 47 — the per-card issue count is removed  [R-0047 · LAW_DECISION · ACTIVE]
+- RULING 48 — a session may not use git to revert the author's files  [R-0048 · DECISION · ACTIVE]
+- RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence  [R-0049 · LAW_DECISION · ACTIVE]
+- RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again  [R-0050 · LAW_DECISION · ACTIVE]
+- RULING 51 — the collection disclosure renders once per surface, and there are two surfaces  [R-0051 · LAW_DECISION · ACTIVE]
+- RULING 52 — discovery is a tree, not a ladder  [R-0052 · LAW_DECISION · ACTIVE]
+- RULING 53 — recorded absences expire  [R-0053 · LAW_DECISION · ACTIVE]
+- RULING 54 — the filed mailing address renders  [R-0054 · LAW_DECISION · ACTIVE]
+- RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE  [R-0055 · LAW_DECISION · ACTIVE]
+- RULING 56 — a scheduled job that fails tells someone  [R-0056 · LAW_DECISION · ACTIVE]
+- RULING 57 — every twig is named  [R-0057 · LAW_DECISION · ACTIVE]
+- RULING 59 — the page says one thing about completeness and nothing else  [R-0059 · DECISION · ACTIVE]
+- RULING 60 — the session hand-works bodies, and that is the point  [R-0060 · LAW_DECISION · ACTIVE]
+- RULING 61 — the branch manifest, and what exhaustion means  [R-0061 · LAW_DECISION · ACTIVE]
+- RULING 62 — a test file may not lose guards silently  [R-0062 · LAW_DECISION · ACTIVE]
+- RULING 63 — every zip inherits; no zip starts from scratch  [R-0063 · LAW_DECISION · ACTIVE]
+- RULING 64 — shared office contacts are published, labeled as the office  [R-0064 · LAW_DECISION · ACTIVE]
+- RULING 65 — the footer-address branch  [R-0065 · LAW_DECISION · ACTIVE]
+- RULING 66 — Facebook by compliant routes only  [R-0066 · LAW_DECISION · ACTIVE]
+- RULING 67 — an enumeration states its geography and is checked externally  [R-0067 · LAW_DECISION · ACTIVE]
+- RULING 68 — control queries are mandatory  [R-0068 · LAW_DECISION · ACTIVE]
+- RULING 69 — reference data belongs in the repo, named and refreshable  [R-0069 · LAW_DECISION · ACTIVE]
+- RULING 70 — Ballotpedia is not scraped  [R-0070 · LAW_DECISION · ACTIVE]
+- RULING 71 — a zip cannot answer "who governs you"; a street address can  [R-0071 · DECISION · ACTIVE]
+- RULING 72 — a walled host is never evidence a body is unreachable  [R-0072 · LAW_DECISION · ACTIVE]
+- RULING 73 — large reference documents: commit the CONTENT, never the binary  [R-0073 · DECISION · ACTIVE]
+- RULING 74 — an address, once given, is never asked for twice  [R-0074 · DECISION · ACTIVE]
+- RULING 75 — a close-out commit is gated like any other commit to `main`  [R-0075 · LAW_DECISION · ACTIVE]
+- RULING 76 — session-dated scripts are COMMITTED, and held to every standard  [R-0076 · LAW_DECISION · ACTIVE]
+- RULING 77 — verify locally, ship once  [R-0077 · LAW_DECISION · ACTIVE]
+- RULING 78 — CI runs where it earns its cost  [R-0078 · LAW_DECISION · AMENDED]
+- RULING 79 — a ruling closes the Needs Sean row it answers  [R-0079 · LAW_DECISION · ACTIVE]
+- RULING 80 — the committed geometry follows the reader, not the county  [R-0080 · LAW_DECISION · ACTIVE]
+- RULING 81 — an exhausted Actions balance is not a broken tree  [R-0081 · LAW_DECISION · ACTIVE]
+- RULING 82 — the job watcher's sampling was the defect, not its logic  [R-0082 · LAW_DECISION · ACTIVE]
+- RULING 83 — the free-source floor  [R-0083 · LAW_DECISION · ACTIVE]
+- RULING 84 — the manifest is tiered, and walked in order  [R-0084 · LAW_DECISION · AMENDED]
+- RULING 85 — the two-click test  [R-0085 · LAW_DECISION · ACTIVE]
+- RULING 86 — per-state source enumeration precedes the hunt  [R-0086 · LAW_DECISION · ACTIVE]
+- RULING 87 — Wikipedia is a Tier A discovery source, never a source of record  [R-0087 · LAW_DECISION · ACTIVE]
+- RULING 88 — the expansion requirement  [R-0088 · LAW_DECISION · ACTIVE]
+- RULING 89 — expansion is not a side quest  [R-0089 · LAW_DECISION · ACTIVE]
+- RULING 90 — exhaustion must be argued, not asserted  [R-0090 · LAW_DECISION · ACTIVE]
+- RULING 91 — every key in `.env.local` is a Tier A route and is walked  [R-0091 · DECISION · ACTIVE]
+- RULING 92 — fix the generator, never the artifact  [R-0092 · LAW_DECISION · AMENDED]
+- RULING 93 — ask what the tier above publishes about the tier below  [R-0093 · LAW_DECISION · ACTIVE]
+- RULING 94 — the stuck protocol  [R-0094 · LAW_DECISION · AMENDED]
+- RULING 95 — credentials are proven, not assumed  [R-0095 · LAW_DECISION · ACTIVE]
+- RULING 96 — sources have freshness  [R-0096 · LAW_DECISION · ACTIVE]
+- RULING 97 — a founder find is a class-wide defect  [R-0097 · LAW_DECISION · ACTIVE]
+- RULING 98 — exploration holds a guaranteed position in item order  [R-0098 · LAW_DECISION · ACTIVE]
+- RULING 99 — the amendment procedure  [R-0099 · LAW_DECISION · ACTIVE]
+- RULING 100 — a partial answer that adds up is still a wrong answer  [R-0100 · LAW_DECISION · ACTIVE]
+- RULING 101 — our own identifier never leaves our own site  [R-0101 · LAW_DECISION · ACTIVE]
+- RULING 102 — fixing the recipe is not finished until you re-cook the dish  [R-0102 · LAW_DECISION · ACTIVE]
+- RULING 103 — a sweep looks for the same code twice, not just the same symptom  [R-0103 · LAW_DECISION · ACTIVE]
+- RULING 104 — a file you put in the repo is something a session must go and read  [R-0104 · LAW_DECISION · AMENDED]
+- RULING 105 — say what is rendering, what is out of scope, and what is still dark  [R-0105 · LAW_DECISION · ACTIVE]
+- RULING 106 — no generated file has a size limit  [R-0106 · LAW_DECISION · ACTIVE]
+- RULING 107 — a freshness date is written only by the code that read the source  [R-0107 · LAW_DECISION · ACTIVE]
+- RULING 108 — anything a session must read at the start lives in the repository  [R-0108 · LAW_DECISION · ACTIVE]
+- RULING 109 — a brief says what it needs to run, and the session checks before item one  [R-0109 · LAW_DECISION · ACTIVE]
+- RULING 110 — a search that finds nothing must show it looked in the right FORM  [R-0110 · LAW_DECISION · ACTIVE]
+- RULING 111 — a join is never a lookup for a fact that lives on only one side  [R-0111 · LAW_DECISION · ACTIVE]
+- RULING 112 — a first-party instrument is symmetric by construction, or it is not shipped  [R-0112 · LAW_DECISION · ACTIVE]
+- RULING 113 — a step that reports success is asked whether it did the thing  [R-0113 · LAW_DECISION · ACTIVE]
+- RULING 114 — a layer that always renders must be right, because finishing it removed the honest silence  [R-0114 · LAW_DECISION · ACTIVE]
+- RULING 115 — a drill is not a failure, and an alarm that cannot tell them apart spends the next real one  [R-0115 · LAW_DECISION · ACTIVE]
+- RULING 116 — a guard may pin an invariant or a direction, never the size of a gap  [R-0116 · LAW_DECISION · ACTIVE]
+- RULING 117 — the asset store has a public address, and a restore is proved by hash  [R-0117 · LAW_DECISION · ACTIVE]
+- RULING 118 — an appointed official never carries the govern verb  [R-0118 · LAW_DECISION · ACTIVE]
+- RULING 119 — a sovereign tribal nation is its own category of government  [R-0119 · LAW_DECISION · ACTIVE]
+- RULING 120 — equal solicitation is the obligation; who buys is not  [R-0120 · LAW_DECISION · AMENDED]
+- RULING 121 — one body that spans two towns has one identity, and renders in both  [R-0121 · LAW_DECISION · ACTIVE]
+- RULING 122 — a page on a party's own site can be a candidate's page, with the host named  [R-0122 · LAW_DECISION · ACTIVE]
+- RULING 123 — the author's decisions of 2026-08-24, recorded as a batch  [R-0123 · LAW_DECISION · ACTIVE]
+- RULING 124 — a commit that cannot change what a reader sees does not cost a deploy  [R-0124 · LAW_DECISION · ACTIVE]
+- RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench  [R-0125 · LAW_DECISION · ACTIVE]
+- RULING 126 — campaign-finance data renders for readers and never enters anything sold  [R-0126 · LAW_DECISION · ACTIVE]
+- RULING 127 — no tool prints a credential value, and the guard is the values themselves  [R-0127 · LAW_DECISION · ACTIVE]
+- RULING 128 — extraction conserves: every input has exactly one disposition, and the sum is exact  [R-0128 · LAW_DECISION · ACTIVE]
+- RULING 129 — a safety cap is a failure boundary, never an implicit end of data  [R-0129 · LAW_DECISION · ACTIVE]
+- RULING 130 — every transport success passes one shared document finalizer  [R-0130 · LAW_DECISION · ACTIVE]
+- RULING 131 — a partial source is a first-class result, and completeness is never inferred from `ok: true`  [R-0131 · LAW_DECISION · ACTIVE]
+- RULING 132 — the identity boundary is proven over VALUE SPACES, not column names  [R-0132 · LAW_DECISION · ACTIVE]
+- RULING 133 — a performance change ships with its measurement  [R-0133 · LAW_DECISION · ACTIVE]
+- RULING 134 — an instrument without a committed baseline is unfinished  [R-0134 · LAW_DECISION · ACTIVE]
+- RULING 135 — a fence bars acting on content, never committing Sean's artifacts  [R-0135 · LAW_DECISION · ACTIVE]
+- RULING 136 — feedback names examples; a fix closes the class  [R-0136 · LAW_DECISION · ACTIVE]
+- RULING 137 — for layout, an annotated image is the spec, and it outranks prose  [R-0137 · LAW_DECISION · ACTIVE]
+- RULING 138 — display consolidates sources; the record is never deleted  [R-0138 · LAW_DECISION · ACTIVE]
+- RULING 139 — the product never announces its own failure  [R-0139 · LAW_DECISION · ACTIVE]
+- RULING 140 — dates spell out, product-wide  [R-0140 · LAW_DECISION · ACTIVE]
+- RULING 141 — the Speak Your Mind store's four rules  [R-0141 · LAW_DECISION · ACTIVE]
+- RULING 142 — the line in the sand, and nothing collected before it is ever sold  [R-0142 · LAW_DECISION · ACTIVE]
+- RULING 143 — what DONE means for 07866, and it is per candidate  [R-0143 · LAW_DECISION · ACTIVE]
+- RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls  [R-0144 · LAW_DECISION · ACTIVE]
+- RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled  [R-0145 · LAW_DECISION · ACTIVE]
+- RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question  [R-0146 · LAW_DECISION · ACTIVE]
+- RULING 147 — no reconciliation may compare a parser to itself  [R-0147 · LAW_DECISION · ACTIVE]
+- RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session  [R-0148 · LAW_DECISION · ACTIVE]
+- RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader  [R-0149 · LAW_DECISION · ACTIVE]
+- RULING 150 — a Needs Sean row states its ask as an answerable question, with options  [R-0150 · LAW_DECISION · ACTIVE]
+- RULING 151 — Sean's tracker decisions of 2026-08-25, recorded as a batch  [R-0151 · LAW_DECISION · ACTIVE]
+- RULING 152 — a reader-facing DONE names the production deploy that is serving it  [R-0152 · LAW_DECISION · ACTIVE]
+- RULING 153 — a fix is verified on the reader's path, not on the path that satisfies the assertion  [R-0153 · LAW_DECISION · ACTIVE]
+- RULING 154 — the Speak Your Mind disclosure leaves the panel, and the commitment does not  [R-0154 · DECISION · ACTIVE]
+- RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one  [R-0155 · LAW_DECISION · ACTIVE]
+- RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence  [R-0156 · LAW_DECISION · ACTIVE]
+- RULING 157 — a fix is verified against a case it was NOT derived from  [R-0157 · LAW_DECISION · ACTIVE]
+- RULING 158 — a shed requires a measurement and a reason, or it is an unfinished session  [R-0158 · LAW_DECISION · ACTIVE]
+- RULING 159 — a counting script fails loudly when its denominator is zero  [R-0159 · LAW_DECISION · ACTIVE]
+- RULING 161 — Sean's tracker decisions of 2026-08-26, recorded as a batch  [R-0161 · DECISION · ACTIVE]
+- RULING 162 — a bypass is only as safe as the paths it can carry  [R-0162 · LAW_DECISION · ACTIVE]
+- RULING 163 — the answer to "is the protection still what we think" is a command  [R-0163 · LAW_DECISION · ACTIVE]
+- RULING 164 — a workflow reports every failure, not just the first  [R-0164 · LAW_DECISION · ACTIVE]
+- RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held  [R-0165 · LAW_DECISION · ACTIVE]
+- RULING 166 — the body's own publication is rung one, and its bulk download is rung zero  [R-0166 · LAW_DECISION · ACTIVE]
+- RULING 167 — donor rendering is AGGREGATE ONLY, and no individual donor name or address renders anywhere  [R-0167 · LAW_DECISION · ACTIVE]
+- RULING 169 — a walk is COUNTED or it did not happen  [R-0169 · LAW_DECISION · ACTIVE]
+- RULING 170 — no number of attempts earns an absence, and a protocol that TERMINATES is not persistence  [R-0170 · LAW_DECISION · ACTIVE]
+- RULING 171 — A BALLOT MEASURE IS DONE AT SEVEN FIELDS, AND THE MONEY IS A PAIR  [R-0171 · LAW_DECISION · ACTIVE]
+- RULING 172 — current authority and history are separate systems  [R-0172 · LAW_DECISION · ACTIVE]
+- RULING 173 — CLAUDE.md is the root constitution and carries current law only  [R-0173 · LAW_DECISION · ACTIVE]
+- RULING 174 — binding authority requires author provenance  [R-0174 · LAW_DECISION · ACTIVE]
+- RULING 175 — supersession is structured data, and a partial amendment names both halves  [R-0175 · LAW_DECISION · ACTIVE]
+- RULING 176 — governance changes are atomic  [R-0176 · LAW_DECISION · ACTIVE]
+- RULING 177 — the subject universe may be bounded; the method never is  [R-0177 · LAW_DECISION · ACTIVE]
+- RULING 178 — inherit everything, assume it is incomplete, keep the learning  [R-0178 · LAW_DECISION · ACTIVE]
+- RULING 179 — convergence is versioned, and completion is derived from child state  [R-0179 · LAW_DECISION · ACTIVE]
+- RULING 180 — session status, workstream status and graph status are three different facts  [R-0180 · LAW_DECISION · ACTIVE]
+- RULING 181 — a frontier is state, not a recipe for recreating state  [R-0181 · LAW_DECISION · ACTIVE]
+- RULING 182 — permission state and transport state are orthogonal  [R-0182 · LAW_DECISION · ACTIVE]
+- RULING 183 — a lead is not a body  [R-0183 · LAW_DECISION · ACTIVE]
+- RULING 184 — blocked is a real state, and a finite attempt count never earns absence  [R-0184 · LAW_DECISION · ACTIVE]
+- RULING 185 — the authority precedence model  [R-0185 · LAW_DECISION · ACTIVE]
+- RULING 186 — a session opens on task-relevant current authority, never on the full history  [R-0186 · LAW_DECISION · ACTIVE]
+- RULING 187 — a well-preserved handoff is not automatically a legitimate stop  [R-0187 · LAW_DECISION · ACTIVE]
+- RULING 188 — the descent freezes only for the minimum safe state cutover  [R-0188 · LAW_DECISION · ACTIVE]
+- `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
+- More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
+- THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
+- Why this section exists, and it is a diagnosis rather than an exhortation.  [R-C-discovery-conduct-why-this-section-exists-and-it-is-a-diagnosis · LAW_DECISION · ACTIVE]
+- `docs/sources.md` IS THE SOURCE OF RECORD FOR WHAT RESOURCES EXIST.  [R-C-external-sources-docs-sources-md-is-the-source-of-record-for-wha · LAW_DECISION · ACTIVE]
+- The register is `docs/sources.md`, and this section is the law that governs it.  [R-C-external-sources-the-register-is-docs-sources-md-and-this-sectio · LAW_DECISION · ACTIVE]
+- THE DEFERRAL BOUNDARY FALLS BETWEEN SUBJECTS, NEVER INSIDE ONE  [R-C-non-negotiables-in-code-the-deferral-boundary-falls-between-subj · LAW_DECISION · ACTIVE]
+- THE LADDER, EXHAUSTIVELY — AND IT IS THE ONLY NUMBERED ONE  [R-C-non-negotiables-in-code-the-ladder-exhaustively-and-it-is-the-on · LAW_DECISION · ACTIVE]
+- THE TRANSPARENCY MANDATE  [R-C-non-negotiables-in-code-the-transparency-mandate · LAW_DECISION · ACTIVE]
+- Candidates  [R-C-reaction-capture-candidates · LAW_DECISION · ACTIVE]
+- Disclosure at the point of capture — the one-time acknowledged notice.  [R-C-reaction-capture-disclosure-at-the-point-of-capture-the-one-time · LAW_DECISION · ACTIVE]
+- Incumbent and challenger reactions are stored and aggregated in separate buckets.  [R-C-reaction-capture-incumbent-and-challenger-reactions-are-stored-a · LAW_DECISION · ACTIVE]
+- Measures  [R-C-reaction-capture-measures · LAW_DECISION · ACTIVE]
+- Moderation runs before any export.  [R-C-reaction-capture-moderation-runs-before-any-export · LAW_DECISION · ACTIVE]
+- The free-text input carries a threat notice.  [R-C-reaction-capture-the-free-text-input-carries-a-threat-notice · LAW_DECISION · ACTIVE]
+- An agent does not know today's date, and a date not read from the system clock is a fabrication.  [R-C-repo-layout-an-agent-does-not-know-today-s-date-and-a-date-not-r · LAW_DECISION · ACTIVE]
+- One CODE merge per session; close-out records may follow as separate named commits.  [R-C-repo-layout-one-code-merge-per-session-close-out-records-may-fol · LAW_DECISION · ACTIVE]
+- Priority is three levels, ranked inside a section and never across them  [R-C-repo-layout-priority-is-three-levels-ranked-inside-a-section-and · LAW_DECISION · ACTIVE]
+- Task status lives in the TWO TRACKER STORES, and the tracker is a queue that empties.  [R-C-repo-layout-task-status-lives-in-the-two-tracker-stores-and-the · LAW_DECISION · ACTIVE]
+- The one exception, and it is the only one  [R-C-repo-layout-the-one-exception-and-it-is-the-only-one · LAW_DECISION · ACTIVE]
+- The tree is the tree; read it.  [R-C-repo-layout-the-tree-is-the-tree-read-it · LAW_DECISION · ACTIVE]
+- Every export reports its confidence mix.  [R-C-signal-integrity-every-export-reports-its-confidence-mix · LAW_DECISION · ACTIVE]
+- This section names DECISIONS, never versions.  [R-C-stack-this-section-names-decisions-never-versions · LAW_DECISION · ACTIVE]
+- Correct first. Fast second. Nothing third.  [R-C-the-order-of-every-trade-correct-first-fast-second-nothing-third · LAW_DECISION · ACTIVE]
+- The repeatability bar (2026-08-20)  [R-X-the-repeatability-bar-2026-08-20 · DECISION · ACTIVE]
+- The zip order (2026-08-20)  [R-X-the-zip-order-2026-08-20 · DECISION · ACTIVE]
 
 ## P0 tracker rows — 93 of 456 rows
 
@@ -618,13 +992,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 19:52:31 EDT
-branch: claude/descent-closeout-0826
-head sha: df196529a02091e929ad536f781667867f22353d
-head subject: Close-out: the descent, and every item this session did not reach
-origin/main sha: f735791efd09eb4fba46665bee1aa89be4367c80
-origin/main subject: Session handoff: 2 commit(s) from claude/measure-standard-0826 (#202)
-local main sha: f735791efd09eb4fba46665bee1aa89be4367c80
+generated: 2026-08-26 22:50:16 EDT
+branch: claude/governance-remediation-0826
+head sha: febd62426cc70087b3af5253709379cf10675582
+head subject: Governance remediation Stage 2: classification, accounting, legacy consumer migration
+origin/main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
+origin/main subject: Session handoff: 2 commit(s) from claude/descent-closeout-0826 (#203)
+local main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
 local main matches origin/main: yes
 working tree: clean
 open prs: none

@@ -356,19 +356,38 @@ export async function readRipcords() {
  * a session that needs one reads the file.
  */
 function readRulings() {
+  /*
+   * Read from the CANONICAL LEDGER (2026-08-26).
+   *
+   * This parsed `### ` headings out of `docs/rulings.md`. That file is
+   * GENERATED now and emits `## RULING n`, so the parse would have returned
+   * nothing — and unlike two of its sibling guards, this one would at least
+   * have said so, because it treats an empty read as a `failure` rather than as
+   * an empty document. That is the operation-count rule doing its job.
+   *
+   * Asking the ledger is better still: the index is built from the record a
+   * ruling actually exists in, so it cannot drift when the human-readable view
+   * is reformatted again.
+   */
   let text;
+  const LEDGER = "docs/governance/ledger.jsonl";
   try {
-    text = readFileSync(join(ROOT, "docs/rulings.md"), "utf8");
+    text = readFileSync(join(ROOT, LEDGER), "utf8");
   } catch (error) {
-    return { headings: [], failure: `could not read docs/rulings.md: ${error.message}` };
+    return { headings: [], failure: `could not read ${LEDGER}: ${error.message}` };
   }
-  const headings = text
-    .split("\n")
-    .filter((line) => line.startsWith("### "))
-    .map((line) => line.slice(4).trim());
+  const headings = [];
+  for (const line of text.split("\n")) {
+    if (!line.trim()) continue;
+    const rec = JSON.parse(line);
+    // The index names CURRENT authority. History is retrieved on demand
+    // (RULING 186), so a superseded rule does not belong in a startup index.
+    if (!["ACTIVE", "AMENDED"].includes(rec.status)) continue;
+    headings.push(`${rec.title}  [${rec.id} · ${rec.kind} · ${rec.status}]`);
+  }
   return {
     headings,
-    failure: headings.length === 0 ? "docs/rulings.md carries no `###` ruling headings" : null,
+    failure: headings.length === 0 ? `${LEDGER} carries no current records` : null,
   };
 }
 
@@ -395,29 +414,85 @@ function readRulings() {
  * **Nothing is composed.** The text is `CLAUDE.md`'s own, sliced between its
  * heading and the next `##`, so it cannot drift from the law it quotes.
  */
+/**
+ * **The source moved on 2026-08-26 and the discipline did not.**
+ *
+ * The conduct rulings used to sit in a `## DISCOVERY CONDUCT` section of
+ * `CLAUDE.md`. They are now canonical RECORDS in the ledger, served as current
+ * law through `docs/governance/policies/discovery.md`, and the constitution
+ * carries the cross-cutting summary rather than a second copy (RULING 173).
+ *
+ * So the pin follows the law. What is unchanged, and is the whole point:
+ * **nothing is composed.** Each ruling is sliced out of the policy between its
+ * own `## ` heading and the next, so this block cannot drift from the law it
+ * quotes — and `tests/context-pinned-conduct.test.ts` still tests it against
+ * that source.
+ *
+ * Sliced BY ID rather than by a section heading, because the policy is
+ * generated per record and no longer has an enclosing section to cut at. A
+ * ruling that goes missing from the ledger therefore takes this block red
+ * rather than quietly shrinking it.
+ */
+const CONDUCT_RULINGS = [88, 89, 94, 95, 96, 97, 98, 99, 170, 177, 178, 184];
+
 function readDiscoveryConduct() {
+  // Read from the LEDGER, not from a policy file. The conduct rulings span four
+  // domains — 88 and 98 file under discovery, 95 under sources-licensing, 99
+  // and 176 under meta-governance — so slicing one policy would silently drop
+  // four of them and report a shorter block as healthy. The ledger is the one
+  // place all of them are, by construction.
+  const source = "docs/governance/ledger.jsonl";
   let text;
   try {
-    text = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+    text = readFileSync(join(ROOT, source), "utf8");
   } catch (error) {
-    return { body: "", failure: `could not read CLAUDE.md: ${error.message}` };
+    return { body: "", failure: `could not read ${source}: ${error.message}` };
   }
-  const lines = text.split("\n");
-  const start = lines.findIndex((l) => /^##\s+DISCOVERY CONDUCT\s*$/i.test(l));
-  if (start < 0) {
+
+  const byId = new Map();
+  for (const line of text.split("\n")) {
+    if (!line.trim()) continue;
+    const r = JSON.parse(line);
+    byId.set(r.id, r);
+  }
+
+  const parts = [];
+  const missing = [];
+  for (const n of CONDUCT_RULINGS) {
+    const id = `R-${String(n).padStart(4, "0")}`;
+    const r = byId.get(id);
+    // A conduct ruling that is no longer CURRENT law takes this block red
+    // rather than quietly shrinking it — the whole point of pinning.
+    if (!r || !["ACTIVE", "AMENDED"].includes(r.status)) {
+      missing.push(`RULING ${n}${r ? ` (${r.status})` : " (absent)"}`);
+      continue;
+    }
+    // BOTH copies, where a rule had two. RULING 88's load-bearing clause —
+    // "The invention is the deliverable, not the yield." — survives only in the
+    // constitution's copy, and it is the clause the whole ruling turns on. A
+    // pin that quoted one copy would drop it while reporting a healthy block.
+    const variantText = (r.variants ?? [])
+      .map((v) => `\n\n*The other hand-written copy of this rule, from \`${v.source}\`:*\n\n${v.body}`)
+      .join("");
+    parts.push(`### ${r.title}\n\n${r.body}${variantText}`.trimEnd());
+  }
+
+  if (missing.length) {
     return {
       body: "",
-      failure: "CLAUDE.md carries no `## DISCOVERY CONDUCT` heading — the section was renamed or removed",
+      failure: `${missing.join(", ")} — the conduct rulings are no longer all current law`,
     };
   }
-  let end = lines.length;
-  for (let i = start + 1; i < lines.length; i++) {
-    if (/^##\s+/.test(lines[i]) && !/^###/.test(lines[i])) {
-      end = i;
-      break;
-    }
-  }
-  const body = lines.slice(start, end).join("\n").trimEnd();
+
+  const body = [
+    "## DISCOVERY CONDUCT",
+    "",
+    `*Pinned VERBATIM from \`${source}\`, the canonical governance store. Nothing here is composed.*`,
+    "",
+    ...parts,
+  ]
+    .join("\n\n")
+    .trimEnd();
   return {
     body,
     failure: body.length < 500 ? `the section is only ${body.length} bytes — it looks truncated or emptied` : null,
@@ -539,7 +614,12 @@ export async function buildContext({
       put(
         "<!-- PINNED: never trimmed. Verbatim from CLAUDE.md. -->",
         "",
-        "> **Source: `CLAUDE.md`, the `## DISCOVERY CONDUCT` section, verbatim.**",
+        // The source moved on 2026-08-26 and the line has to move with it. A
+        // provenance claim that names the wrong file is worse than none: it
+        // sends a reader to a document that no longer holds the text, and it
+        // is the exact shape of stale confidence this repository refuses.
+        "> **Source: `docs/governance/ledger.jsonl`, the canonical governance store, verbatim.**",
+        "> Both hand-written copies of each ruling are carried where they diverged.",
         "> `CLAUDE.md` is the authority; this is a copy of it, pinned here because the",
         "> failure RULING 88 fixes is a session not knowing there was anything to look up.",
         "> `tests/context-pinned-conduct.test.ts` fails the build if the two diverge.",

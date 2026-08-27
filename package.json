@@ -291,7 +291,8 @@
     "pdf:read": "tsx scripts/read-pdf.mts",
     "method:learn-85641": "tsx scripts/learn-85641-routes.mts",
     "cfd:territory": "tsx scripts/cfd-territory.mts",
-    "ballot:az-pima-update": "tsx scripts/ballot-az-pima-2026-update.mts"
+    "ballot:az-pima-update": "tsx scripts/ballot-az-pima-2026-update.mts",
+    "az:levy": "tsx scripts/az-county-levy.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

@@ -969,7 +969,7 @@ function pima85641DistrictRows(): Body[] {
       authority:
         "A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio.",
       territory:
-        "Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641.",
+        "Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641. It LEVIES: Pima County Resolution 2026-43 (adopted 2026-08-17) sets its FY2026/27 secondary tax on a $38,682,735 valuation at 0.5000 for maintenance and operation and 1.8800 for bond indebtedness — $920,649 at a combined 2.3800.",
       ocdId: null,
       wiring:
         "NOT MATCHED AT A POINT, and that is a stated gap rather than a silent one. This district is 2,047 acres of platted subdivision inside unincorporated Pima County, and the registry holds no division that small. Attaching it to county:pima would show a district that taxes 2,047 acres to every reader in a 9,200-square-mile county — a false claim about their government, in the direction that looks like coverage. What closes it is a division carrying the plat geometry the cfd:territory instrument already resolves.",

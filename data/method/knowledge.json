@@ -1,5 +1,5 @@
 {
-  "version": 25,
+  "version": 26,
   "updatedOn": "2026-08-27",
   "routes": [
     {
@@ -2212,6 +2212,36 @@
       "origin": "conceived 2026-08-27 after pnpm robots:sweep returned CANNOT_TELL for www.azed.gov, which would have refused the Arizona Department of Education — the authority holding the filings for a school district with no website.",
       "learnedOn": "2026-08-27",
       "learnedAtVersion": 25
+    },
+    {
+      "id": "county-levy-resolution-is-the-taxing-universe",
+      "title": "the county board's annual LEVY RESOLUTION enumerates every entity that taxes property in the county — a government that publishes nothing still cannot avoid it, because somebody has to collect its money",
+      "tier": "A0",
+      "fields": [
+        "body",
+        "territory"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved on Pima County, where A.R.S. 42-17101 to 42-17110 require the board to adopt one resolution each August levying for every entity. The STATUTE is Arizona-wide, so the route reaches all fifteen counties; every state with county-collected property tax has some equivalent, which is why it is recorded UNKNOWN rather than claimed."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-27",
+          "rows": 143,
+          "outcome": "YIELDED",
+          "note": "143 levy lines across 38 taxing jurisdictions and classes, from RESOLUTION NO. 2026-43 adopted 2026-08-17. It CORRECTED the county: Pima publishes a Community Facilities Districts page listing TWO and its levy names NINE. It produced whole classes this project had no vocabulary for — irrigation districts levying per acre rather than ad valorem, a health district, domestic water improvement districts, twenty street lighting improvement districts, an unorganized school district tax, a fire district assistance tax, and the Central Arizona Water Conservation District. It independently confirmed the cross-county fire districts: Mescal-J6 levies 2.1487 and Sonoita-Elgin 3.2500 on Pima property, which the project had only inferred from a GIS layer. And it gave Rocking K South CFD a rate for a reader: 0.5000 M&O plus 1.8800 bond on a 38,682,735 valuation."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 as the Arizona form of the who-bills-for-it route this project learned against New Hampshire. It was reached for because a hunt needs a denominator it did not write itself, and every other enumeration walked this session was a government describing its own scope.",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 26
     }
   ]
 }

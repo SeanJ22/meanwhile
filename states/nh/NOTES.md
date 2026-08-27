@@ -548,25 +548,51 @@ two usable anchors — so the page itself does not lead anywhere. `sitemap.xml`
 does, and it named 26 URLs mentioning rates, villages or precincts. That is the
 route: when a CMS renders its index in the browser, the sitemap is the index.
 
-The 2024 workbook holds **45 rows naming a village or precinct, statewide**, and
-it names **8 of the 15** Merrimack governments the Census left blank:
+The 2024 workbook has two sheets — **2024 Municipal Tax Rates** (265 rows) and
+**2024 Village Tax Rates** (180 rows). The village sheet is a town-header row
+followed by that town's districts, each named in its own column:
 
-| Census says no website | DRA 2024 rate |
-|---|---|
-| EPSOM VILLAGE DISTRICT | 0 |
-| PENACOOK BOSCAWEN WATER PRECINCT | named |
-| HARDY ROAD VILLAGE DISTRICT | 1.88 |
-| ANDOVER VILLAGE DISTRICT | 0 |
-| ANDOVER FIRE DISTRICT | named |
-| EAST ANDOVER FIRE PRECINCT | named |
-| HOOKSETT VILLAGE WATER PRECINCT | 0 |
-| HOPKINTON VILLAGE PRECINCT | 0.24 |
+```
+[ Andover  | 45628 ]
+[ Andover Fire Dist #1 | 0.38 ]
+[ Andover Village      | 0    ]
+```
 
-The other seven — Warner Village Water, BCEP Solid Waste, Highlands Village,
-Northfield Sewer, and three school districts — are **not in this table**, which
-is a finding about the table rather than about them: it lists village districts
-that set a tax rate, and a solid-waste district assessed through its member
-towns would not appear. Another route is owed for those.
+It names **10 of the 15** Merrimack governments the Census left blank:
+
+| Census says no website | DRA 2024 village sheet | rate |
+|---|---|---|
+| WARNER VILLAGE WATER DISTRICT | Warner Village Water | 2.97 |
+| EPSOM VILLAGE DISTRICT | Epsom Village | 0 |
+| PENACOOK BOSCAWEN WATER PRECINCT | Penacook-Boscawen Water | 0 |
+| HARDY ROAD VILLAGE DISTRICT | Hardy Road Village | 1.88 |
+| ANDOVER VILLAGE DISTRICT | Andover Village | 0 |
+| ANDOVER FIRE DISTRICT | Andover Fire Dist #1 | 0.38 |
+| HOOKSETT VILLAGE WATER PRECINCT | Hooksett Village Water | 0 |
+| HOPKINTON VILLAGE PRECINCT | Hopkinton Village | 0.24 |
+| HIGHLANDS VILLAGE DISTRICT | Highlands | 0 |
+| NORTHFIELD SEWER DISTRICT | Northfield Sewer | 0 |
+
+**And it names one the Census clip does not carry at all** — *Central Hooksett
+Water*, listed under Hooksett beside the village water precinct.
+
+The five that are absent: **East Andover Fire Precinct**, **BCEP Solid Waste
+District**, and the three school districts (Allenstown, Chichester, Henniker).
+That is a finding about the TABLE rather than about them — it lists districts
+that set a village tax rate, so a solid-waste district assessed through its
+member towns does not appear, and school districts are apportioned in a
+different DRA publication (*Regional and Cooperative School District
+Apportionments*). Another route is owed for those five.
+
+**A CORRECTION, RECORDED RATHER THAN OVERWRITTEN.** The first version of this
+section said *8 of 15* and printed a different list. That number came from
+matching each Census name's FIRST WORD against every cell in the workbook, which
+both over- and under-counted: it missed Warner, Highlands and Northfield Sewer,
+and it wrongly claimed East Andover Fire Precinct. Matching every distinctive
+word against the whole workbook then gave 13, which was wrong the other way —
+the municipal sheet lists all 265 towns, so "Chichester" matched the TOWN and
+said nothing about a district. Only the village sheet's own district column
+answers the question, and it says 10.
 
 **A rate of 0 is not an absence either.** Andover Village, Epsom Village,
 Hooksett Village Water and Hopkinton Village all appear with 0, which means the

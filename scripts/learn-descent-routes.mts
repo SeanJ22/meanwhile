@@ -80,14 +80,14 @@ const ROUTES: Learned[] = [
     tier: "A1",
     fields: ["body"],
     note:
-      "proved on New Hampshire's Department of Revenue Administration, whose 2024 workbook names 8 of the 15 Merrimack County governments the Census of Governments recorded with NO website. The SHAPE is statutory rather than local — a district that levies must have its rate set and published by somebody — and the specific publisher differs per state, so the route travels further than the URL does.",
+      "proved on New Hampshire's Department of Revenue Administration, whose 2024 village sheet names 10 of the 15 Merrimack County governments the Census of Governments recorded with NO website. The SHAPE is statutory rather than local — a district that levies must have its rate set and published by somebody — and the specific publisher differs per state, so the route travels further than the URL does.",
     origin:
       "conceived 2026-08-27 from this repository's own note: states/TIERS.md said 'revenue.nh.gov's municipal and property division publishes the rate tables precisely because somebody has to be billed', and that host had refused this project at every rung until rung 3b landed the same day",
     outcome: {
       jurisdiction: "nh",
       rows: 45,
       outcome: "YIELDED",
-      note: "45 village/precinct rows statewide in the 2024 workbook; 8 of Merrimack's 15 no-website governments named. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence.",
+      note: "180-row village sheet; 10 of Merrimack's 15 no-website governments named, plus Central Hooksett Water which the Census clip does not carry at all. The five absent are two districts and three school districts, which are apportioned in a different DRA publication. Lake Todd Village appears TWICE at 0.24 and 0.38, both flagged *Apportioned — independent official evidence for the Bradford/Newbury spanning district RULING 121 names. A rate of 0 is a district that filed and set no rate, not an absence.",
     },
   },
   {

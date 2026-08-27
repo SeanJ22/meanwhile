@@ -4,10 +4,11 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-27 — **Every government this session added was found
+Last updated: 2026-08-27 — **Every defect this session repaired was invisible to a count.** The coverage-truth session; its record is the LAST section of this file.
+
+Previous: 2026-08-27 — **Every government this session added was found
 somewhere the government does not choose to publish. Not one of the seven came
-from a directory.** The 85641 detective session; its record is the LAST section
-of this file.
+from a directory.** The 85641 detective session.
 
 Previous: 2026-08-26 — **Every instrument this project had started from a
 field that was already owed. None of them started from a government and asked
@@ -20001,3 +20002,139 @@ question text is not published** — a $250,000,000 JTED bond on every 85641
 ballot whose text the district says is available only by request.
 
 **None of them is an absence.**
+
+---
+
+# 2026-08-27 — THE COVERAGE-TRUTH SESSION
+
+**Every defect this session repaired was invisible to a count, and every one of
+them was visible the moment two layers were asked the same question separately.**
+
+The session was gated behind two preflights and both were larger than the briefs
+that described them. It spent itself on those, on the four red controls the
+author's visual review produced, and on the three instruments the brief asked
+for. Ten commits, seven of seven gates green on each.
+
+## The five integrity defects, and what each one actually was
+
+**NH232 — the registry had four writers, not two.** `pnpm registry:build`
+regenerates `lib/registry/registry.json` whole; `adjudicate-leads.mts` and
+`census-gap-walk.mts` each appended promoted bodies to it in place; and
+`normalize-census-placeholders.mts` rewrote labels inside it. A generated output
+was three other scripts' canonical store, so running the generator deleted 731
+verified bodies — the promoted population that IS the coverage numerator the
+governance snapshot reports — and nothing went red. `lib/registry/promoted-bodies.json`
+is now the canonical INPUT, `appendPromotedBodies()` its only write path, and
+the generator merges it. Reconciled independently of the registry: 674 distinct
+`BODY_PROMOTED` bodyIds in canonical work state against 674 DESCENT rows, zero
+stranded either way.
+
+**A geographic key was being used where a seat key was required.** Ballot
+incumbency asked `seatHoldersForDivision(contest.ocdId)` — *who holds something
+in this division* — and read the answer as *who holds this seat*. For the AZ
+Governor contest that call returns **Mark Kelly and Ruben Gallego**, so the
+sitting Governor was labelled **Challenger** on the ballot while her own map
+card said Incumbent. Sixteen division keys in the pilot ballots host more than
+one elected office. `lib/officials/office-identity.ts` gives an office a
+canonical identity — built from the 52 distinct contest titles on the four pilot
+ballots, classifying all 141 contests with zero unclassified — and the join is
+now `(division, office)`.
+
+**A body was taking its members from its geography.** 74 of 1,998 registry
+bodies rendered named people through `governingRosterHoldersForDivision` and
+through nothing else: CAWCD showed the five Pima County Supervisors over a
+popularly elected 15-member board, and 58 appointed Tucson commissions each
+showed the Mayor and Council. Deleting the fallback alone would have replaced
+false claims with false absences, because some of those bodies really are
+another government sitting as a board — so `lib/registry/body-composition.ts`
+models the relationship explicitly and every alias carries the document that
+makes it lawful. **CAWCD and the flood control district hang off the same
+division and now give different answers**, which no geographic fallback could
+do.
+
+**A meeting was taking its body from its geography too.** 364 of 460 meetings
+would render on a body that did not hold them. `Meeting.bodyId` now travels from
+the wiring row that produced the meeting, across all 13 construction sites; 460
+of 460 carry one.
+
+**And a body's own schedule was rendering as its absence.** CAWCD's card read
+"0 upcoming" while the board's published 2026 schedule listed meetings on
+3 September, 1 October, 5 November and 3 December. The wiring was correct and the
+snapshot predated it — `civicclerk` did not appear in the snapshot's own list of
+sources at all, which made "returned nothing" and "was never asked"
+indistinguishable from the file.
+
+## Two claims corrected, and one government un-stranded
+
+**NH233.** The Rocking K South Community Facilities District is a taxing
+subdivision of 85641 that reached nobody, because the smallest division
+containing it is `county:pima` — 9,200 square miles against 2,047 acres — so its
+`ocdId` was correctly null and it was stranded. Worse, with a null `ocdId` the
+card said *"Boundary not published"*, which is false: the county recorder
+publishes it, as a recorded plat. The geometry was being fetched all along and
+discarded. It is now emitted and point-tested with the same even-odd
+implementation that decides every other government, and the answer is exact in
+both directions — a reader inside a Rocking K plat is governed by it; the Vail
+address at 10723 S Bear Table Tank Drive is not.
+
+**The Empire permanent-absence claim.** Four documents said the district *will
+never have a website*. The evidence — transportation-only, no schools, no staff,
+two official enumerations recording a blank website field — is real and narrower
+than the sentence. A permanent absence retires the recheck, which is how a
+plausible cause becomes a fact nobody looks at again.
+
+## Three instruments
+
+`pnpm coverage` compares four layers that do not share a source. Its two Census
+enumerators disagree by construction — the ZIP crosswalk resolves 0 of 39,555
+special districts nationally — and the disagreement is preserved rather than
+resolved. Across four pilots: **0 integrity defects over 20 measured surfaces,
+9 coverage gaps, and 16 surfaces named as unmeasurable with what is missing for
+each.**
+
+`pnpm run doctor` reports 15 capabilities with a remediation on every non-PASS,
+and never calls a credentialed endpoint. `pnpm corpus:check` measures seven
+artifact classes against a provenance contract: 4 conform, 1 supports change
+detection, and `public/geo/*.geojson` cannot say when it was retrieved — which
+is the gap that made a generator assert a retrieval that never happened.
+
+## What the instruments found about themselves
+
+Each of the three reported a false result before it reported a true one, and
+each failure is recorded where it happened rather than smoothed away:
+
+- `pnpm coverage` called 10 Newbury committees integrity defects for having
+  nothing scheduled. "Wired and silent" is two states and only one is a defect.
+- `pnpm verify:composition` reported three cards NOT REACHED that were one click
+  away, and printed "still showing inherited members" over cards it had never
+  opened.
+- `pnpm run doctor` reported that pnpm was not on PATH, on a machine running the
+  check through pnpm. And its sentinel-leak test passed with redaction disabled,
+  because nothing in doctor handled a value on a printing path.
+
+**A zero from an instrument nobody has seen fire is not a measurement.** Every
+guard this session shipped carries a control that replays the defect and
+requires it to still be caught.
+
+## The adversarial challenge
+
+Every reader-positive claim the author flagged was taken to a primary source,
+and the sources disagreed with the app four times out of four. Confirmed: the
+Tucson PHA really is the Mayor and Council — *plus a Resident Appointee* the
+seven-person roster dropped. Contradicted: CAWCD's board. Classified from its
+own page rather than from a search result: the Pima County Regional Affordable
+Housing Commission is advisory — *"to make recommendations to the Board"* — and
+is not a substitute for the Tucson PHA. And the supplied search summary claiming
+South Tucson's housing authority extends to Vail was **rejected**: the
+authority's own page says all its housing is within South Tucson's 1.2 square
+miles.
+
+## What is owed
+
+Eleven rows, each carrying what was measured rather than a restatement of the
+task: NH235–NH239 and NH244–NH245 from this session's own findings, and the
+remainder of Job 1's scope, which `pnpm coverage` prints as its own unmeasurable
+list on every run. The largest two: **the CAWCD board's four Pima seats are on
+the 2026 ballot and the ballot corpus holds no CAWCD contest at all**, and
+**58 Tucson commissions now correctly show no members**, whose real rosters the
+City Clerk publishes on a tenant this repository already fetches meetings from.

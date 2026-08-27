@@ -328,8 +328,25 @@ const rul: string[] = [
   "---",
   "",
 ];
-for (const r of records) {
-  if (r.id.startsWith("R-X-")) continue;
+/*
+ * THE `RULING n` SPACE HOLDS NUMBERED RULINGS AND NOTHING ELSE.
+ *
+ * This loop used to skip `R-X-*` and then assume everything remaining was
+ * numeric, so all 24 `R-C-*` records — the constitution's un-numbered law —
+ * rendered as `## RULING undefined`. That is worse than either alternative it
+ * sat between: it neither preserved the un-numbered namespace nor minted a
+ * number, it just produced a heading that resolves to nothing.
+ *
+ * Un-numbered records are NOT given numbers. They were never rulings, and
+ * spending immutable ids on them is the collision the amendment procedure
+ * exists to refuse. They are listed in their own section below, under their own
+ * ids, pointing at the policy that carries them — so nothing is discarded and
+ * nothing is silently promoted.
+ */
+const numbered = records.filter((r) => /^R-0*\d+$/.test(r.id));
+const unnumbered = records.filter((r) => !/^R-0*\d+$/.test(r.id));
+
+for (const r of numbered) {
   const n = /^R-0*(\d+)$/.exec(r.id)?.[1];
   rul.push(`## RULING ${n} — ${stripLeader(r.title)}`, "");
   rul.push(`*${r.kind} · ${r.status} · adopted ${r.adopted ?? "no date recorded"}*`, "");
@@ -346,6 +363,49 @@ for (const r of records) {
   if (r.relations.length) rul.push("");
   rul.push(r.body, "", ...renderVariants(r));
 }
+
+/*
+ * The un-numbered governance records, listed as what they are.
+ *
+ * `RULING n` is a compatibility surface: it exists so every `RULING 26` in this
+ * repository still resolves. These records never had a number, so they cannot
+ * appear there — but they are among the most load-bearing rules in the product
+ * (the transparency mandate, the fourteen-rung ladder, the four photo doors),
+ * and a compatibility view that simply dropped them would hide them from every
+ * reader who comes here first.
+ *
+ * So they are named, with their canonical ids and where their operative text
+ * lives. An INDEX, deliberately: the bodies are in the policies and in
+ * `history.md`, and copying them here would rebuild the duplication this whole
+ * migration removed.
+ */
+rul.push(
+  "---",
+  "",
+  "## Un-numbered governance records",
+  "",
+  "**These were never rulings and carry no ruling number.** They are law and",
+  "history that arrived without one — the constitution's own un-numbered rules",
+  "(`R-C-*`) and the un-numbered entries of the legacy rulings document",
+  "(`R-X-*`): acceptances, recorded measurements, reserved numbers.",
+  "",
+  "**No number is minted for them.** An adopted ruling number is immutable and",
+  "is never spent on a record that never had one (RULING 99, RULING 176).",
+  "",
+  "This is an index. Operative text lives in the policy named on each row, and",
+  "the full body is in `docs/governance/history.md`.",
+  "",
+  "| id | title | kind | status | operative text |",
+  "| --- | --- | --- | --- | --- |",
+);
+for (const r of unnumbered) {
+  rul.push(
+    `| \`${r.id}\` | ${escapePipes(stripLeader(r.title))} | ${r.kind} | ${r.status} | ` +
+      `${r.operativePolicy ? `\`${r.operativePolicy}\`` : "— (history)"} |`,
+  );
+}
+rul.push("");
+
 writeFileSync(join(ROOT, "docs", "rulings.md"), rul.join("\n"), "utf8");
 
 // --- 5. domain policy modules ---------------------------------------------

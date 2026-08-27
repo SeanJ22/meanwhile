@@ -142,7 +142,26 @@ RESOLVED — both files carry 169, 170 and 171 at the HEAD this was adopted
 against, measured rather than assumed. **The mismatch was never the defect. The
 architecture that permitted it was**, and a guard that only fixed the instance
 would be the named-instance failure this repository names most often.`,
-    claims: [{ key: "rulings.id_namespace", value: "global-immutable" }],
+    claims: [
+      { key: "rulings.id_namespace", value: "global-immutable" },
+      { key: "governance.amendment_procedure", value: "canonical-ledger-and-generated-views" },
+    ],
+    relations: [
+      {
+        kind: "amends",
+        target: "R-0099",
+        changed:
+          "RULING 99's third clause — that an amendment adds a mapping line in BOTH docs/rulings.md and CLAUDE.md. " +
+          "That dual write is retired: docs/rulings.md is a GENERATED compatibility view and CLAUDE.md is a root " +
+          "constitution carrying current cross-cutting law only, so neither can receive a hand-written mapping line. " +
+          "An amendment now lands as a canonical event in docs/governance/ledger.jsonl, and every view regenerates from it",
+        survives:
+          "RULING 99's first two clauses in full — an amendment is a LATER DATED ruling that names the number it " +
+          "supersedes and states what changed and why. So does everything else it established: rulings are never " +
+          "edited in place and never silently dropped, a superseded ruling stays in the record marked superseded and " +
+          "carrying its successor, and adopted numbers are immutable and never renumbered to tidy a sequence",
+      },
+    ],
   },
   {
     n: 177,
@@ -624,6 +643,15 @@ export const STATUS_RESOLUTIONS: Array<{ id: string; status: Status; by: string;
     status: "AMENDED",
     by: "R-0135",
     why: "RULING 135 refines RULING 104 and narrows nothing; committing is registration, not action.",
+  },
+  {
+    id: "R-0099",
+    status: "AMENDED",
+    by: "R-0176",
+    why:
+      "RULING 176 retires the dual-write clause and replaces it with the canonical ledger plus generated views. " +
+      "RULING 99 stays in force in everything else it says — the later-dated-ruling requirement, naming the " +
+      "predecessor, stating what changed, never editing in place, and immutable numbers.",
   },
   {
     id: "R-0092",

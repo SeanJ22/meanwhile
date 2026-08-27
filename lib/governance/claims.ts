@@ -94,6 +94,11 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     values: ["tier-a-flat", "body-own-publication-first"],
   },
   {
+    key: "governance.amendment_procedure",
+    question: "How is a rule amended, and where does the amendment land?",
+    values: ["dual-write-claude-and-rulings", "canonical-ledger-and-generated-views"],
+  },
+  {
     key: "permission.transport_collapse",
     question: "Is a failure to retrieve a permission document a permission verdict?",
     values: ["collapses-to-disallowed", "orthogonal-cannot-tell"],

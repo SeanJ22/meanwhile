@@ -200,8 +200,25 @@ test("descent resumes against canonical state rather than rebuilding from seeds"
   const frontier = readFileSync(join(ROOT, "lib/workstate/frontier.ts"), "utf8")
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/\/\/[^\n]*/g, "");
-  assert.ok(!/descent-seeds/.test(frontier), "the resume path may not consult seeds");
+
+  // The property is that the resume path cannot READ the seed list — it must
+  // neither import the module nor call its accessor. It is allowed to NAME the
+  // file in a refusal message, which is how a user is told where to add seeds
+  // for a jurisdiction that has none; a guard that banned the filename would be
+  // firing on the error text rather than on the dependency.
+  assert.ok(!/\bimport\b[^\n]*descent-seeds/.test(frontier), "the resume path may not import the seed module");
+  assert.ok(!/\bseedsFor\s*\(/.test(frontier), "the resume path may not read the seed list");
   assert.ok(!/\bfetch\(/.test(frontier), "the resume path may not make network calls");
+
+  // And the seed COUNT it is handed must be a parameter — a number the caller
+  // supplies — so a test can pass zero and see what the command would do.
+  // `[\s\S]` rather than the `s` flag — the build targets ES2017, where dotAll
+  // is a compile error rather than a runtime one.
+  assert.match(
+    frontier,
+    /planDescentStart\([\s\S]*?seedCount: number/,
+    "the seed count is an injected parameter",
+  );
 });
 
 test("every state resumes with outstanding work read from disk", () => {

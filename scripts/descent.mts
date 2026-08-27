@@ -53,12 +53,20 @@ import {
   deriveCursor,
   edgeId,
   loadWorkstream,
+  planDescentStart,
   recordDiscovery,
   recordProcessed,
   resumeFrom,
   saveWorkstream,
 } from "../lib/workstate/frontier.ts";
 import type { Workstream } from "../lib/workstate/workstream.ts";
+import { loadMethodStore } from "../lib/workstate/load.ts";
+import {
+  applyEarnedPortability,
+  learnRoute,
+  recordRouteOutcome,
+} from "../lib/method/knowledge.ts";
+import { unknownApplicability } from "../lib/method/portability.ts";
 import {
   controlHolds,
   extractLinks,
@@ -202,12 +210,27 @@ async function main(): Promise<void> {
    * as the level being finished. */
   const budget = Number(arg("budget") ?? 40);
 
+  /*
+   * The seed list no longer GATES the run — `planDescentStart` decides, and
+   * `scripts/descent-resume-proof.mts` calls the same function.
+   *
+   * This used to be `if (seeds.length === 0) throw`, which meant recovering
+   * 1,614 already-persisted edges depended on the seed initializer being
+   * present. The frontier helper was seed-free and the proof said so, but the
+   * executable command was not, and the proof never called it.
+   *
+   * Seeds still initialize a jurisdiction with no canonical state, and they are
+   * still tier roots worth re-reading (RULING 93). Neither is a prerequisite
+   * for resuming work already on disk.
+   */
   const seeds = seedsFor(state);
-  if (seeds.length === 0) {
-    throw new Error(
-      `DESCENT REFUSED — no seeds for "${state}". RULING 93: before hunting any tier, walk the directory the ` +
-        "tier above publishes about it. Add that state's seeds to lib/hunt/descent-seeds.ts first.",
-    );
+  const plan = planDescentStart(ROOT, state, seeds.length);
+  console.log(`PLAN ${plan.mode} — ${plan.reason}`);
+  if (plan.mode === "REFUSED") throw new Error(plan.reason);
+  if (plan.mode === "RESUME" && !plan.rootRecheckAvailable) {
+    // Named as its own skipped work rather than folded into recovery, so a
+    // report can never read a partial run as a complete one.
+    console.log("     top-of-tier recheck SKIPPED this run — no tier roots available");
   }
 
   const known = knownBodyNames(state);
@@ -468,6 +491,79 @@ async function main(): Promise<void> {
 
   const dir = join(ROOT, "states", state);
   mkdirSync(dir, { recursive: true });
+  /*
+   * WRITE WHAT THE ROUTES ACTUALLY DID (Finding 4 of the 2026-08-26 audit).
+   *
+   * Before this, `method-ingest` created 61 routes with `outcomes: []` and
+   * nothing ever wrote one. Every route could have stayed `UNKNOWN` forever
+   * while the report said "the first few descent runs will start classifying
+   * them" — a claim about an execution path that did not exist.
+   *
+   * The tier descent IS a route, and it is the one this command walks. Its
+   * outcome per tier is recorded here, through the canonical store, on the same
+   * run that earned it.
+   *
+   * ZERO is recorded, not swallowed: a walked tier that named no bodies is
+   * knowledge (RULING 88), and a route that keeps returning ZERO somewhere is
+   * exactly the evidence a later session needs.
+   */
+  const store = loadMethodStore(ROOT);
+  if (store) {
+    let k = store;
+    let recorded = 0;
+    for (const [tier, work] of levels) {
+      const routeId = `descent-tier-${tier}`;
+      // The tier route enters project knowledge the first time it is walked.
+      // No cap is consulted; there is none to consult.
+      if (!k.routes.some((r) => r.id === routeId)) {
+        k = learnRoute(
+          k,
+          {
+            id: routeId,
+            title: `tier descent — ${tier}: walk what the tier above publishes about this one`,
+            tier: "A0",
+            fields: ["body", "roster"],
+            applicability: unknownApplicability(
+              "the tier-descent shape; portability is EARNED from recorded outcomes, never assumed",
+            ),
+            outcomes: [],
+            subBranches: [],
+            origin: "scripts/descent.mts",
+            learnedOn: stamp,
+          },
+          stamp,
+        ).knowledge;
+      }
+      const res = recordRouteOutcome(k, routeId, {
+        jurisdiction: state,
+        walkedOn: stamp,
+        rows: work.candidatesNew,
+        // A tier that was walked and named nothing is ZERO. A tier nothing
+        // could be fetched from is FAILED — a fact about the attempt, and one
+        // that must never narrow the route's jurisdictional applicability.
+        outcome: work.followed === 0 ? "FAILED" : work.candidatesNew > 0 ? "YIELDED" : "ZERO",
+        note: `found ${work.found}, followed ${work.followed}, yielded ${work.yielded}, barren ${work.barren}`,
+      });
+      k = res.knowledge;
+      if (res.recorded) recorded += 1;
+    }
+
+    // Portability is applied from the evidence now on the record. Widening
+    // needs breadth; narrowing needs a DECLARED jurisdictional failure, which
+    // this command never asserts — a walk that could not fetch is a fact about
+    // the fetch (RULING 182).
+    const { knowledge, moved } = applyEarnedPortability(k);
+    writeFileSync(
+      join(ROOT, "data", "method", "knowledge.json"),
+      `${JSON.stringify({ ...knowledge, updatedOn: stamp }, null, 2)}\n`,
+      "utf8",
+    );
+    console.log(
+      `\nmethod store: ${recorded} outcome(s) recorded, ${moved.length} portability change(s), v${knowledge.version}`,
+    );
+    for (const m of moved) console.log(`  ${m.id}: ${m.from} -> ${m.to} — ${m.because}`);
+  }
+
   writeFileSync(join(dir, "descent.json"), `${JSON.stringify(run, null, 2)}\n`, "utf8");
 
   const v = walkVerdict(run);

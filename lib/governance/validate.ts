@@ -185,6 +185,92 @@ export function validateLedger(index: LedgerIndex, root: string = ROOT): Validat
     }
   }
 
+  // --- the compatibility view's CONTENT ------------------------------------
+  //
+  // "generated + registered" was the whole of the old check, and it passed
+  // happily while `docs/rulings.md` carried 24 `## RULING undefined` headings
+  // on live `main`. A view can be freshly generated, byte-reproducible, and
+  // still say nothing that resolves — freshness is not validity.
+  //
+  // So the content is checked: every `RULING n` heading must name a real
+  // numeric record, and every numeric record must appear.
+  check("compatibility-view-content");
+  const rulingsPath = join(root, "docs", "rulings.md");
+  if (existsSync(rulingsPath)) {
+    const text = readFileSync(rulingsPath, "utf8");
+
+    const undef = (text.match(/RULING undefined/g) ?? []).length;
+    if (undef > 0) {
+      bad("docs/rulings.md", "ruling-undefined", `${undef} heading(s) render as "RULING undefined"`);
+    }
+
+    const headings = [...text.matchAll(/^## RULING (.+?) —/gm)].map((m) => m[1].trim());
+    const numericIds = new Set(
+      records.filter((r) => /^R-0*\d+$/.test(r.id)).map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
+    );
+    const seenHeading = new Set<string>();
+    for (const h of headings) {
+      if (!/^\d+$/.test(h)) {
+        bad("docs/rulings.md", "malformed-ruling-heading", `"## RULING ${h}" is not a ruling number`);
+        continue;
+      }
+      seenHeading.add(String(Number(h)));
+      if (!numericIds.has(String(Number(h)))) {
+        bad(
+          "docs/rulings.md",
+          "heading-without-record",
+          `"## RULING ${h}" resolves to no canonical numeric record`,
+        );
+      }
+    }
+    for (const id of numericIds) {
+      if (!seenHeading.has(id)) {
+        bad(
+          `R-${id.padStart(4, "0")}`,
+          "record-omitted-from-compatibility-view",
+          "a numbered ruling is missing from docs/rulings.md, so a legacy reference to it stops resolving",
+        );
+      }
+    }
+    // And the un-numbered records are present as themselves, not dropped.
+    for (const r of records) {
+      if (/^R-0*\d+$/.test(r.id)) continue;
+      if (!text.includes(`\`${r.id}\``)) {
+        bad(r.id, "unnumbered-record-dropped", "an un-numbered governance record is absent from the compatibility view");
+      }
+    }
+  }
+
+  // --- an ACTIVE rule may not command the retired dual write ---------------
+  //
+  // Not a prose sweep — a check on the SEMANTIC CLAIM. Two rules can describe
+  // the amendment procedure in completely different words and still be the same
+  // contradiction, which is exactly why the claim model exists.
+  check("one-amendment-procedure");
+  const procedureHolders = records
+    .filter((r) => CURRENT_STATUSES.includes(r.status))
+    .filter((r) => r.claims.some((c) => c.key === "governance.amendment_procedure"));
+  const values = new Set(
+    procedureHolders.flatMap((r) =>
+      r.claims.filter((c) => c.key === "governance.amendment_procedure").map((c) => c.value),
+    ),
+  );
+  if (procedureHolders.length === 0) {
+    bad(
+      "governance.amendment_procedure",
+      "no-amendment-procedure",
+      "no ACTIVE record answers how law is amended — a session would have to guess",
+    );
+  }
+  if (values.has("dual-write-claude-and-rulings")) {
+    bad(
+      procedureHolders.map((r) => r.id).join(","),
+      "retired-dual-write-is-current",
+      "an ACTIVE rule still commands hand-editing CLAUDE.md and docs/rulings.md, which are now a root " +
+        "constitution and a GENERATED view — the procedure it describes cannot be followed",
+    );
+  }
+
   // --- policy modules exist and are registered -----------------------------
   check("policy-registration");
   const constitutionPath = join(root, "CLAUDE.md");

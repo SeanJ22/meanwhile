@@ -1,7 +1,7 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "7246b7d97f5c315c",
+  "snapshot": "5f5873564c723a3b",
   "counts": {
     "records": 225,
     "current": 205,
@@ -1934,7 +1934,7 @@
       ],
       "title": "RULING 99 — the amendment procedure",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
@@ -3472,9 +3472,20 @@
         {
           "key": "rulings.id_namespace",
           "value": "global-immutable"
+        },
+        {
+          "key": "governance.amendment_procedure",
+          "value": "canonical-ledger-and-generated-views"
         }
       ],
-      "relations": [],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0099",
+          "changed": "RULING 99's third clause — that an amendment adds a mapping line in BOTH docs/rulings.md and CLAUDE.md. That dual write is retired: docs/rulings.md is a GENERATED compatibility view and CLAUDE.md is a root constitution carrying current cross-cutting law only, so neither can receive a hand-written mapping line. An amendment now lands as a canonical event in docs/governance/ledger.jsonl, and every view regenerates from it",
+          "survives": "RULING 99's first two clauses in full — an amendment is a LATER DATED ruling that names the number it supersedes and states what changed and why. So does everything else it established: rulings are never edited in place and never silently dropped, a superseded ruling stays in the record marked superseded and carrying its successor, and adopted numbers are immutable and never renumbered to tidy a sequence"
+        }
+      ],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

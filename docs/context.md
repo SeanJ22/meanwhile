@@ -1,8 +1,8 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-26 22:50:17 EDT.
-Session day 2026-08-26 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 03:15:31 EDT.
+Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
@@ -714,7 +714,7 @@ from. Each entry there names what it supersedes.
 - RULING 96 — sources have freshness  [R-0096 · LAW_DECISION · ACTIVE]
 - RULING 97 — a founder find is a class-wide defect  [R-0097 · LAW_DECISION · ACTIVE]
 - RULING 98 — exploration holds a guaranteed position in item order  [R-0098 · LAW_DECISION · ACTIVE]
-- RULING 99 — the amendment procedure  [R-0099 · LAW_DECISION · ACTIVE]
+- RULING 99 — the amendment procedure  [R-0099 · LAW_DECISION · AMENDED]
 - RULING 100 — a partial answer that adds up is still a wrong answer  [R-0100 · LAW_DECISION · ACTIVE]
 - RULING 101 — our own identifier never leaves our own site  [R-0101 · LAW_DECISION · ACTIVE]
 - RULING 102 — fixing the recipe is not finished until you re-cook the dish  [R-0102 · LAW_DECISION · ACTIVE]
@@ -992,13 +992,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-26 22:50:16 EDT
-branch: claude/governance-remediation-0826
-head sha: febd62426cc70087b3af5253709379cf10675582
-head subject: Governance remediation Stage 2: classification, accounting, legacy consumer migration
-origin/main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
-origin/main subject: Session handoff: 2 commit(s) from claude/descent-closeout-0826 (#203)
-local main sha: 3136f028496e14a4f3addf3ec304f3cf13884506
+generated: 2026-08-27 03:15:30 EDT
+branch: claude/descent-resume-0826
+head sha: 8a26e7468aa53967a55035c242ec09d1f90a0394
+head subject: Ask a government what governs inside it, and stop re-opening answered leads
+origin/main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8
+origin/main subject: Wire inherited method routes to receive their own canonical outcomes (#207)
+local main sha: 35463215e59ea2b5d5567bf701199b3a5909c9f8
 local main matches origin/main: yes
 working tree: clean
 open prs: none

@@ -188,6 +188,8 @@ export function makeDiligentSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${m.Id}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: (m.CleanName ?? m.Name ?? bodyName).trim(),
           startsAt,

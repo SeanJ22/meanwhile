@@ -2539,8 +2539,22 @@ function bodySubject(
    */
   const composition = membersOfBody(body.bodyId);
   const roster = composition.members;
+  /*
+   * **THIS BODY'S SITTINGS, NOT THIS DIVISION'S** (2026-08-27, Red Control 4).
+   *
+   * The filter was `m.ocdId === body.ocdId`, which is a join only where a
+   * division holds one body. It does not: 364 of 460 meetings in the
+   * 2026-08-27 snapshot sat on a division with more than one body, so every
+   * one of Tucson's 58 appointed commissions showed all 80 City sittings and
+   * the Pima County Board of Supervisors' agenda appeared on the Central
+   * Arizona Water Conservation District's card.
+   *
+   * A meeting with no `bodyId` is shown here on NO card. That is deliberate:
+   * the map and the meeting list are division-scoped and still carry it, and a
+   * card that showed it would be claiming this body met.
+   */
   const meetings = allMeetings
-    .filter((m) => m.ocdId !== null && m.ocdId === body.ocdId)
+    .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   /*

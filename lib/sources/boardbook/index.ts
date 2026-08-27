@@ -230,6 +230,8 @@ export function makeBoardBookSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.orgId}:${row.meetingId ?? `${row.y}-${row.mo}-${row.d}`}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           // The portal's own header line, e.g. "REGULAR PUBLIC MEETING".
           title: row.title,

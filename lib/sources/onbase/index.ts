@@ -161,6 +161,8 @@ export function makeOnBaseSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug ?? "tucson"}:${row.meetingId}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: row.name,
           startsAt,

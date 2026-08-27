@@ -504,6 +504,8 @@ export function makeIcalSource(
         meetings.push({
           id,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
           title,
           startsAt: start.iso,

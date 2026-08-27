@@ -152,6 +152,34 @@ async function openBodyCard(
   return { opened: false, why: `${n} Body row(s) offered, none matching: ${labels.join(" | ")}` };
 }
 
+/**
+ * The second route to a body card: the sidebar's **Bodies here** door.
+ *
+ * The ask box does not offer every body — CAWCD is absent from its
+ * autocomplete at both Pima zips and IS listed in this door, which the first
+ * version of this script had no way to discover and therefore reported as
+ * "not reached" over a card sitting one click away. **One failed route is not
+ * an absence** (RULING 184), and the correct response to a route that did not
+ * answer is another route, not a verdict.
+ */
+async function openViaBodiesDoor(
+  page: Awaited<ReturnType<typeof browser.page>>,
+  bodyName: string,
+): Promise<{ opened: boolean; why: string }> {
+  const door = page.locator("button", { hasText: /Bodies here/ }).first();
+  if ((await door.count()) === 0) return { opened: false, why: "no Bodies door on this surface" };
+  await door.click({ timeout: 20_000 }).catch(() => {});
+  await page.waitForTimeout(2000);
+
+  const key = bodyName.toLowerCase().replace(/\s*\([^)]*\)/g, "").trim().slice(0, 20);
+  const row = page.locator(".door-panel li").filter({ hasText: new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i") }).first();
+  if ((await row.count()) === 0) return { opened: false, why: "the Bodies door lists no row for this name" };
+  await row.click({ timeout: 10_000 }).catch(() => {});
+  const card = page.locator(".account-modal").first();
+  const ok = await card.waitFor({ state: "visible", timeout: 8000 }).then(() => true).catch(() => false);
+  return ok ? { opened: true, why: "" } : { opened: false, why: "the Bodies door row opened no card" };
+}
+
 for (const subject of SUBJECTS) {
   const page = await browser.page({ viewport: { width: 1280, height: 900 } });
   await seedZip(page, subject.zip);
@@ -162,7 +190,13 @@ for (const subject of SUBJECTS) {
   console.log(`  expected   ${subject.expectation}`);
   console.log(`  was        ${subject.wasShowing}`);
 
-  const { opened, why } = await openBodyCard(page, subject.name);
+  let { opened, why } = await openBodyCard(page, subject.name);
+  if (!opened) {
+    /* Second route, before any verdict. */
+    const door = await openViaBodiesDoor(page, subject.name);
+    if (door.opened) { opened = true; why = ""; }
+    else why = `ask box: ${why}; bodies door: ${door.why}`;
+  }
 
   if (!opened) {
     console.log(`  NOT REACHED  ${why}.`);

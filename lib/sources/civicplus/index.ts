@@ -297,6 +297,8 @@ export function makeCivicPlusSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${event.uid}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: event.summary,
           startsAt,
@@ -365,6 +367,8 @@ export function makeCivicPlusSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:archive:${sitting.date}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: bodyName,
           startsAt,

@@ -219,6 +219,8 @@ export function makeIqm2Source(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${row.detailId}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName: row.board,
           title: row.type ? `${row.board} - ${row.type}` : row.board,
           startsAt,

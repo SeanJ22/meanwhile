@@ -225,6 +225,8 @@ export function makeCivicClerkSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${e.id}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: (e.eventName ?? bodyName).trim(),
           startsAt,

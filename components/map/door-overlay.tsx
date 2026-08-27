@@ -1,7 +1,6 @@
 "use client";
 
 import { X } from "lucide-react";
-import { sameName } from "@/lib/search/body-row";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
@@ -196,12 +195,22 @@ function BodiesDoor({
          * looser. The division is checked too — a body name alone is not a key,
          * and "Planning Board" exists in every town in the county.
          */
+        /*
+         * **NOW AN EXACT KEY** (2026-08-27, Red Control 4).
+         *
+         * This was `m.ocdId === body.ocdId && sameName(m.bodyName, body.name)`
+         * — division plus a normalised name comparison, which was the best key
+         * available and is the reason the comment above exists. Meetings carry
+         * `bodyId` from the wiring row that produced them now, so the row is a
+         * lookup rather than a comparison: no normalisation to get right, no
+         * "Planning Board" in nine towns to disambiguate, and a body whose name
+         * the source spells a third way still matches.
+         *
+         * `sameName` stays where it is and keeps its own callers; what changes
+         * is that this row no longer depends on two strings agreeing.
+         */
         const next = meetings.find(
-          (m) =>
-            m.status === "SCHEDULED" &&
-            m.ocdId === body.ocdId &&
-            body.name !== null &&
-            sameName(m.bodyName, body.name),
+          (m) => m.status === "SCHEDULED" && m.bodyId !== undefined && m.bodyId === body.bodyId,
         );
         return (
           <li

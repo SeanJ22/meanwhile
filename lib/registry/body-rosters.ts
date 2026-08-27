@@ -521,10 +521,29 @@ export const BODY_ROSTERS: BodyRoster[] = [
         websiteUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
       },
       {
+        /*
+         * **ED BUSTER IS EDWARD BUSTER, AND HE HAS ALREADY BEEN REAPPOINTED**
+         * (the 85641 detective session, 2026-08-27).
+         *
+         * Vail is absent from the Pima County School Superintendent's 2026
+         * candidate-filing page, which reads as a district with no race. It is
+         * not: two seats were up, exactly two people filed, and on 2026-08-11
+         * the Board of Supervisors CANCELLED the election as uncontested and
+         * appointed them — Legistar matter 21690, File ID 20624, requested by
+         * the School Superintendent and recorded Approved.
+         *
+         * The other appointee is **Andrea Black**, who is deliberately NOT a
+         * member row here. She has been appointed to a term that begins after
+         * the November 3 election; adding her now would say she holds an office
+         * she does not yet hold. The reader gets the fact where it belongs — as
+         * a cited ballot absence on `/ballot`, in the authority's own terms,
+         * saying there is no Vail school board race and naming both appointees.
+         */
         id: "roster:vail#4",
         name: "Ed Buster",
         officeTitle: "Governing Board Member",
-        termNote: null,
+        termNote:
+          "Reappointed 2026-08-11 without an election: two seats were up, two candidates filed, and the Pima County Board of Supervisors cancelled the race as uncontested and appointed them.",
         email: null,
         phone: null,
         websiteUrl: "https://www.vailschooldistrict.org/o/vsd/page/governing-board",
@@ -2300,6 +2319,131 @@ export const BODY_ROSTERS: BodyRoster[] = [
    * with the reason, and they are hunted again on their RULING 53 clock.
    */
   ...NJ_MORRIS_ROSTERS,
+
+  /**
+   * **PIMA COUNTY BOARD OF ADJUSTMENT, DISTRICT 4** — the board that rules on
+   * variances for ZIP 85641, whose roster was published where nobody looked.
+   * (The 85641 detective session, 2026-08-27.)
+   *
+   * The county's Boards of Adjustment page has a **Members** heading for each
+   * district with nothing under it — just the meeting cadence and the staff
+   * planner. That is not a parse failure; the county publishes the heading and
+   * no roster. `states/az/85641.md` had carried this board's roster as owed
+   * since the ZIP was first walked.
+   *
+   * **The names are on every agenda.** Each district's own agenda prints its
+   * board beside the Executive Secretary, and the district publishes an agenda
+   * archive going back years.
+   *
+   * ## Which is why this was read with `pdftotext -layout` and not pdfjs
+   *
+   * The agenda sets the board and the Executive Secretary in TWO COLUMNS. Read
+   * in reading order the run comes out
+   *
+   *     Board of Adjustment, District 4  Executive Secretary
+   *     Robert Fee (Acting Chair)  Marianna Kuglmeier  Greg Stanton …
+   *
+   * which makes Marianna Kuglmeier a board member and leaves the Executive
+   * Secretary unnamed. The layout read separates the columns and yields FIVE
+   * members and one Executive Secretary — which is the count the county's own
+   * page states: "Each Supervisorial District appoints five members from their
+   * District."
+   *
+   * That is the third document today where the two extractors disagree and the
+   * third time the answer was different, which is the whole rule: there is no
+   * right extractor, only a right one per document.
+   *
+   * APPOINTED, not elected — A.R.S. § 11-807, appointed by the Supervisor for
+   * this district — so `partisanship` is UNDETERMINED with no source, because
+   * no certified result exists to read one off.
+   */
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+    bodyName: "Pima County Board of Adjustment, District 4",
+    /*
+     * The BODY's own page, not the vendor's. The agenda PDF is served from
+     * CivicPlus's asset host, which is where the county's CMS keeps its files
+     * and not where the county publishes — `pima.gov/2792` is the District 4
+     * notices and agendas page, and it is the page a reader would open.
+     */
+    sourceUrl: "https://www.pima.gov/2792",
+    sourceOrg:
+      "Pima County Development Services — the District 4 Board of Adjustment meeting agenda for 2026-09-08, published on the county's District 4 notices and agendas page",
+    collectedAt: "2026-08-27",
+    /*
+     * NONPARTISAN, and the citation is the APPOINTMENT MECHANISM rather than a
+     * canvass — which is the honest record for a seat that is never on a
+     * ballot at all. The county's own page: each Supervisorial District
+     * appoints five members under A.R.S. § 11-807. There is no election, so
+     * there is no certified result to read a party off, and the definition is
+     * satisfied exactly: no party appears on the ballot for this office.
+     */
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: "https://www.pima.gov/1027/Boards-of-Adjustment",
+    members: [
+      {
+        id: "roster:pima-boa4#1",
+        name: "Robert Fee",
+        officeTitle: "Acting Chair",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+      {
+        id: "roster:pima-boa4#2",
+        name: "Greg Stanton",
+        officeTitle: "Board Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+      {
+        id: "roster:pima-boa4#3",
+        name: "William Yarnell",
+        officeTitle: "Board Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+      {
+        id: "roster:pima-boa4#4",
+        name: "Tim Healy",
+        officeTitle: "Board Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+      {
+        id: "roster:pima-boa4#5",
+        name: "Peter Backus",
+        officeTitle: "Board Member",
+        termNote: null,
+        email: null,
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+      {
+        /*
+         * The Executive Secretary is staff, not a member — she is in the
+         * agenda's second column under that heading. She is carried because a
+         * reader with a variance question needs the person who runs the
+         * board's business, and her title says plainly what she is.
+         */
+        id: "roster:pima-boa4#6",
+        name: "Marianna Kuglmeier",
+        officeTitle: "Executive Secretary",
+        termNote: null,
+        email: "DSDPlanning@pima.gov",
+        phone: null,
+        websiteUrl: "https://www.pima.gov/2792",
+      },
+    ],
+  },
 ];
 
 export function rosterForBody(bodyId: string | null): BodyRoster | null {

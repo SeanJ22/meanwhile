@@ -298,10 +298,25 @@ test("85641 states the unincorporated fact and still names its government", () =
   // plainly that there is no city government.
   const coverage = coverageFor("85641", 0);
 
-  // NONE_SCHEDULED, not NO_SOURCE, since 2026-08-13: both of Vail's governing
-  // bodies (Pima County via Legistar, Vail Unified via its own site's events
-  // API) are LIVE in the composite, so an empty calendar is now a statement
-  // about the calendar rather than about our coverage.
+  /*
+   * NONE_SCHEDULED since 2026-08-13, and it SURVIVED a real test of itself on
+   * 2026-08-27 — which is worth recording, because the survival was earned.
+   *
+   * That day found a governing body nobody knew about: the CENTRAL ARIZONA
+   * WATER CONSERVATION DISTRICT, which levies on every parcel in Pima County
+   * (Resolution 2026-43, ad valorem secondary 0.1000 plus water storage 0.0400
+   * on the county's whole valuation) and whose board is DIRECTLY ELECTED. Its
+   * own meetings page renders no meeting, so adding it turned this assertion to
+   * NO_SOURCE — correctly, because there was now a government here whose
+   * calendar we could not read.
+   *
+   * The available shortcut was to leave the district out and keep the greener
+   * state. CLAUDE.md forbids exactly that: collection state never governs
+   * display. So the district went in, and then the adapter did — its CivicClerk
+   * tenant slug is in its own page's `clerkEmbedProps` and the portal's OData
+   * API answers a plain GET. Every governing body at this point is LIVE again,
+   * and an empty calendar is once more a statement about the calendar.
+   */
   assert.equal(coverage.state, "NONE_SCHEDULED");
   assert.equal(coverage.unincorporated, true, "Vail is unincorporated and must say so");
 
@@ -341,8 +356,15 @@ test("nobody is ever told they have no representation", () => {
 
 test("finding meetings and finding nothing are different states", () => {
   assert.equal(coverageFor("85701", 4).state, "MEETINGS");
-  // Every body governing 85701 is LIVE as of 2026-08-13, so zero meetings is
-  // an empty calendar, not a coverage gap…
+  /*
+   * 85701 moved with 85641 through the Central Arizona Water Conservation
+   * District episode of 2026-08-27 described above — out of NONE_SCHEDULED
+   * when the district was added with no adapter, and back into it when the
+   * CivicClerk adapter landed. Both Pima zips move together because the
+   * district's territory is the county, which is itself the check that the
+   * finding was applied to the district's real reach rather than pinned to the
+   * zip that happened to find it.
+   */
   assert.equal(coverageFor("85701", 0).state, "NONE_SCHEDULED");
   // …and 07866 joined it on 2026-08-15, when Morris Hills Regional — the last
   // GOVERNING body at the point without a source — was wired (M78). The two

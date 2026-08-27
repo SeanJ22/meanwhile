@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 11:12:40 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 14:25:13 EDT.
 Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1106 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1113 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -992,18 +992,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-27 11:12:40 EDT
-branch: claude/85641-hyperfocus-0827
-head sha: 74094e96a4e3789e5fb95b1ac0c86aceba466922
-head subject: Session record: the stopping model, and 85641
-origin/main sha: 0f5f43424540dcd617ce3de2c1f98c778185664e
-origin/main subject: Session handoff: 6 commit(s) from claude/descent-resume-0826 (#208)
-local main sha: 0f5f43424540dcd617ce3de2c1f98c778185664e
+generated: 2026-08-27 14:25:13 EDT
+branch: claude/85641-detective-0827
+head sha: 8d355c8ae9d857e52345b066cf8ae78e22552cf0
+head subject: Session record: the 85641 detective session
+origin/main sha: 8f7d4d57bf2f9d947e7da3f9370e197d8c25f398
+origin/main subject: Session handoff: 6 commit(s) from claude/85641-hyperfocus-0827 (#209)
+local main sha: 8f7d4d57bf2f9d947e7da3f9370e197d8c25f398
 local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19245
+last recorded status from: docs/state.md:19250
 ```

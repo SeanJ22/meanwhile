@@ -88395,6 +88395,126 @@
     "collectedAt": "2026-08-27T00:00:00.000Z",
     "verifiedAt": "2026-08-27T00:00:00.000Z"
    }
+  },
+  {
+   "id": "curated:az/pima-rocking-k-south-cfd#governing",
+   "ocdId": null,
+   "name": "Rocking K South Community Facilities District Board",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+    "sourceOrg": "Pima County; A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio. Territory: Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641. It LEVIES: Pima County Resolution 2026-43 (adopted 2026-08-17) sets its FY2026/27 secondary tax on a $38,682,735 valuation at 0.5000 for maintenance and operation and 1.8800 for bond indebtedness — $920,649 at a combined 2.3800. Wiring: NOT MATCHED AT A POINT, and that is a stated gap rather than a silent one. This district is 2,047 acres of platted subdivision inside unincorporated Pima County, and the registry holds no division that small. Attaching it to county:pima would show a district that taxes 2,047 acres to every reader in a 9,200-square-mile county — a false claim about their government, in the direction that looks like coverage. What closes it is a division carrying the plat geometry the cfd:territory instrument already resolves.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Pima County Regional Flood Control District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/1427/Flood-Control",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1427/Flood-Control",
+    "sourceOrg": "Pima County; A.R.S. 48-3603; mandated in every Arizona county by 1978 legislation, with the county Board of Supervisors designated as the governing body. Territory: aligned with the county boundary; levies a secondary property tax on all parcels within its jurisdiction. Tucson, Marana, Oro Valley and Sahuarita administer their own floodplain regulation under the 1984 amendments, which is a regulatory opt-out rather than a withdrawal from the district. Wiring: county:pima is not an approximation. The district's own formation page says the 1978 legislation mandated one in every Arizona county and that the districts were set up to be aligned with county boundaries.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#free-library-district",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Pima County Free Library District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.library.pima.gov/",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.library.pima.gov/",
+    "sourceOrg": "Pima County; A.R.S. 48-3901(C): the board of supervisors shall be the board of directors of the county free library district. Territory: A.R.S. 48-3903 levies the district tax upon all property in the county and upon all property within incorporated cities and towns in the county. Wiring: county:pima IS the statutory boundary — A.R.S. 48-3903 levies the tax upon all property in the county.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#stadium-district",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Pima County Stadium District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+    "sourceOrg": "Pima County; A.R.S. 48-4202(A) and (D): a countywide district whose board of directors, in a county under 1,500,000 people, is the county board of supervisors. 48-4202(K) makes it a tax levying public improvement district and a political taxing subdivision of the state. Territory: countywide, including both the incorporated and unincorporated areas of the county (A.R.S. 48-4202(A)). Wiring: county:pima IS the statutory boundary — A.R.S. 48-4202(A) authorises a COUNTYWIDE district including both the incorporated and unincorporated areas of the county.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Central Arizona Water Conservation District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "CIVICCLERK",
+   "agendaSourceRef": "https://capaz.portal.civicclerk.com",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.cap-az.com/board/board-members/",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.cap-az.com/board/board-members/",
+    "sourceOrg": "Pima County; a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county. Three are confirmed Pima County from their own pages — Karen Cesare, Pat Jacobs and Mark Taylor; four members' pages do not state a county and are NOT assigned to one here. Territory: it taxes every parcel in Pima County: Pima County Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water storage secondary at 0.0400 on the county's full $12,350,762,412 valuation, plus groundwater replenishment charged per acre-foot and per lot. That is how this district was found at all — it appears in no Pima County directory and on no boundary layer this project has walked. Wiring: county:pima UNDER-serves rather than over-serves, deliberately. The district also covers Maricopa and Pinal, so a reader there is governed by it and will not see it — but this product covers neither county, and the alternative (no division at all) would hide it from the readers it does cover. When Maricopa or Pinal is added, this row takes alsoServesOcdIds.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+   "ocdId": "ocd-division/country:us/state:az/county:pima",
+   "name": "Pima County Board of Adjustment, District 4",
+   "bodyClass": "COMMISSION",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "KNOWN_UNCOVERED",
+   "agendaSourceType": "NONE",
+   "agendaSourceRef": "https://www.pima.gov/2792",
+   "meetingCadence": "Second Tuesday of each month at 1:30 pm, except as noted",
+   "homepageUrl": "https://www.pima.gov/1027/Boards-of-Adjustment",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1027/Boards-of-Adjustment",
+    "sourceOrg": "Pima County Development Services. The county's page: 'There are five District Boards of Adjustment, one from each Board of Supervisors District. Each Supervisorial District appoints five members from their District. The Boards of Adjustment rule on variance and interpretation requests of the Pima County Zoning Code and approve the issuance of temporary use permits in accordance with the ARS Sec. 11-807 and Chapter 18.93, Section 18.101.050 of the Zoning Code.' Staff Planner for District 4: Matthew Bacal.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
   }
  ]
 }

@@ -4,7 +4,12 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-26 — **Every instrument this project had started from a
+Last updated: 2026-08-27 — **Every government this session added was found
+somewhere the government does not choose to publish. Not one of the seven came
+from a directory.** The 85641 detective session; its record is the LAST section
+of this file.
+
+Previous: 2026-08-26 — **Every instrument this project had started from a
 field that was already owed. None of them started from a government and asked
 what was in it.** The descent session; its record is the LAST section of this
 file. **UNFINISHED — all three walks stopped rather than finished.**
@@ -19867,3 +19872,128 @@ Named in NH226–NH231, none of it an absence: Board of Adjustment District 4 an
 a page that states JP Precinct 7's number; the CFD, Flood Control, Library and
 RTA boundaries; adapters for Highbond and NovusAGENDA; and Pima County's own
 certified ballot for the thirteen 85641 precincts.
+
+# 2026-08-27 — THE DETECTIVE SESSION: 85641
+
+**Every government this session added was found somewhere the government does
+not choose to publish.** Not one of the seven came from a directory.
+
+## What a reader at 10723 S Bear Table Tank Drive, Vail AZ 85641 gets now
+
+**7 governing and advisory bodies, from 2.** Verified against a local
+production build, at a point two geocoders agree on to 8 metres.
+
+| Body | How it was found | Status |
+| --- | --- | --- |
+| Pima County | already held | LIVE |
+| **Regional Flood Control District** | A.R.S. 48-3603 + the district's own formation page | LIVE, Legistar |
+| **Free Library District** | A.R.S. 48-3901(C) and 48-3903 | LIVE, Legistar |
+| **Stadium District** | the county's own sitemap; A.R.S. 48-4202 | LIVE, Legistar |
+| **Central Arizona Water Conservation District** | the county's LEVY RESOLUTION | LIVE, **new CivicClerk adapter** |
+| Vail Unified | already held | LIVE |
+| **Board of Adjustment District 4** | its own agenda's second column | KNOWN_UNCOVERED |
+
+**And 23 ballot contests, from 18.** `/ballot?zip=85641` now renders
+Proposition 425 (Pima County's $70,000,000 Permanent Base Adjustment),
+Proposition 423 (the Vail override), Corporation Commissioner, the Vail
+school-board cancellation as a cited authority absence, and the Proposition 427
+coverage note. `/api/ballot/scope` at that address adds **State Senate and
+House District 17**, which half of 85641 sits in and which the file did not
+carry at all.
+
+## The five things worth carrying to another state
+
+**1. The county's LEVY RESOLUTION is the taxing universe.** A.R.S. §§ 42-17101
+to 42-17110: one resolution each August for every entity that taxes property in
+the county. A government can publish nothing, appear in no directory, own no
+domain and sit on no boundary layer, and it still cannot avoid being in it,
+because somebody has to collect its money. Pima's names **38 jurisdictions and
+classes across 143 levy lines** — and it CORRECTS the county: the county's own
+Community Facilities Districts page lists two, the levy names nine. `pnpm
+az:levy`.
+
+**2. The state education agency is a meeting source for every school district.**
+A.R.S. § 15-905(C) compels a hearing notice, and `budgetsystem.azed.gov` posts
+it: date, time, venue, street address, named agenda contact, plus the district's
+tax rates. **Empire Elementary School District No. 37 operates no schools and
+employs no staff** — a *transportation-only district*, a class this project did
+not know existed — so it will never have a website, and its board meeting came
+out of a filing system instead.
+
+**3. The canvass is not the ballot.** A certified canvass carries CONTESTED
+races only; the election authority's OFFICIAL CANDIDATE LIST is the ballot
+universe. Pima's canvass names 15 races and its candidate list 34 contests and
+101 candidates. Building a ballot from the canvass drops every unopposed seat
+silently, in the direction that looks like completeness.
+
+**4. A district with no boundary layer still has a boundary — as a PLAT.** A
+community facilities district is formed by a resolution that must recite its
+land by recorded book and page, and the county maps its recorded plats for
+unrelated reasons. `pnpm cfd:territory` joins them and point-tests the result.
+It PROMOTED Rocking K South (25 of 25 plats inside ZCTA 85641) and KILLED
+Wildflower (85757) in the same pass — a lead the project had carried as strong.
+
+**5. When a portal ships as an EMBED, the tenant slug is in the page.** The
+CAWCD's meetings page renders no meeting, and carries
+`window.clerkEmbedProps = {"tenant": "capaz"}`. With that, CivicClerk's own
+OData API answers a plain GET. New adapter, new `AgendaSourceType`.
+
+## Two corrections this session made to itself
+
+**An uncovered government correctly makes coverage look worse.** Adding the
+CAWCD with no adapter moved both Pima pilot ZIPs from `NONE_SCHEDULED` to
+`NO_SOURCE`. The available shortcut was to leave the district out and keep the
+greener number; CLAUDE.md forbids exactly that. The district went in, then the
+adapter did, and `tests/coverage.test.ts` records the arc rather than the
+answer.
+
+**All five district bodies were given the county's Legistar calendar, and one
+of them does not meet there.** Four are the Board of Supervisors sitting as
+them; the CAWCD is directly elected and holds its own meetings. Sending its
+readers to the county calendar would have sent them to the wrong room. The
+agenda source is now per row.
+
+## Instruments
+
+`pnpm cfd:territory`, `pnpm az:levy`, `lib/sources/civicclerk/`,
+`pnpm method:learn-85641`. Method version **19 → 27**, routes **80 → 88**.
+
+## The instrument finding that cost the most and matters most
+
+**Three documents from one county, three different correct PDF extractors.**
+The ballot candidate list needs `pdftotext -layout` for office attribution and
+pdfjs for name spelling — two of three extractors agreed with each other and
+were both wrong, welding a form's rule glyph onto a state senator's surname.
+The levy resolution needs pdfjs, because `-layout` offsets its label column one
+row from its numbers and would publish the Flood Control District's tax rate
+beside Debt Service. The Board of Adjustment agenda needs `-layout`, because
+pdfjs interleaves its two columns and makes the Executive Secretary a board
+member.
+
+**There is no right extractor, only a right one per document.** The check that
+makes it safe is to read a row whose answer you already know before trusting
+the run. That check caught a $146,498,365 school levy filed under HEALTH
+DISTRICTS during development.
+
+## Needs Sean
+
+**NH232 (P1) — `pnpm registry:build` silently discards every lead-promoted
+body.** `registry.json` is written by two things: the generator regenerates it
+whole, and `adjudicate-leads` appends a row on every promotion. A build with no
+source change at all drops 733 rows, 731 of them the `wtp-body/` ids that ARE
+the coverage numerator the governance snapshot reports. Nothing fails. This
+session hit it, merged its own rows by hand rather than ship the deletion, and
+is recording that the workaround becomes precedent unless it is fixed.
+
+`azdor.gov`'s AI-crawler question (NH225) is untouched and still open. This
+session routed around it rather than resolve it: the levy came from the county.
+
+## What remains for 85641
+
+Nine items in `states/az/85641.md`, restated there in full. The two largest:
+**Rocking K South CFD is verified and reaches no reader**, because the registry
+has no division as small as 2,047 acres (NH233); and **Proposition 427's
+question text is not published** — a $250,000,000 JTED bond on every 85641
+ballot whose text the district says is available only by request.
+
+**None of them is an absence.**

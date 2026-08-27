@@ -386,6 +386,24 @@ export const CURATED_BODIES: Body[] = [
   // still owed, and there is deliberately no way to record "gave up". ──────
   ...specialDistrictRows(),
 
+  // ── The 85641 detective session (2026-08-27): the districts the county
+  // BOARD IS. Four Pima County governments that a boundary-layer hunt could
+  // never find, because three of them publish no boundary and the fourth
+  // publishes its boundary as a subdivision plat. Each is a separate political
+  // taxing subdivision with its own budget, its own resolution series and its
+  // own District Board — and in every case that board is the Board of
+  // Supervisors sitting as it. See `pima85641DistrictRows` below. ───────────
+  ...pima85641DistrictRows(),
+
+  // ── The 85641 detective session (2026-08-27): the board that rules on a
+  // variance next door. Pima County has FIVE District Boards of Adjustment,
+  // one per Supervisor district, each with five members appointed by that
+  // Supervisor under A.R.S. 11-807. District 4 is 85641's, and its roster is
+  // in `lib/registry/body-rosters.ts`, read off its own agenda because the
+  // county's Boards of Adjustment page publishes a Members heading with
+  // nothing under it. ───────────────────────────────────────────────────────
+  pimaBoardOfAdjustmentDistrict4(),
+
   // ── The depth session (2026-08-15): Rockaway Township's other boards ────
   // One division, many bodies — the same shape as Tucson's, and the reason
   // 07866 read thin. The township's AgendaCenter enumerates exactly five
@@ -876,6 +894,257 @@ function specialDistrictRows(): Body[] {
   }));
 }
 
+/**
+ * **THE DISTRICTS THE COUNTY BOARD IS** — Pima County governments serving
+ * 85641 that no boundary layer names. (2026-08-27, the 85641 detective
+ * session.)
+ *
+ * ## Why these were invisible
+ *
+ * `states/az/85641.md` recorded the Flood Control District, the Library
+ * District and the two community facilities districts as LEADS, with the
+ * reason: "county-wide or near-county-wide taxing districts whose boundaries
+ * were not among the layers walked". Pima County's ArcGIS holds 34 services
+ * and 281 layers and publishes a boundary for NONE of them.
+ *
+ * Three of the four never will, and that is not a gap in the county's
+ * publishing — **their boundary is the county**, established by statute rather
+ * than by a polygon:
+ *
+ * - **Library District** — A.R.S. 48-3901(A) establishes it "for the county
+ *   and for all cities and towns within the county"; 48-3901(C): "The board of
+ *   supervisors shall be the board of directors". 48-3903 levies its tax "upon
+ *   all property in the county and upon all property within incorporated
+ *   cities and towns in the county".
+ * - **Stadium District** — A.R.S. 48-4202(A) authorises "a countywide district
+ *   to include both the incorporated and unincorporated areas of the county";
+ *   48-4202(D) makes the board of supervisors its board of directors in a
+ *   county under 1.5 million; 48-4202(K) makes it "a tax levying public
+ *   improvement district and a political taxing subdivision of this state".
+ *   **The project did not know this class of government existed.**
+ * - **Regional Flood Control District** — A.R.S. 48-3603(A): "a political
+ *   taxing subdivision of this state". The district's own formation page says
+ *   the 1978 legislation mandated one in every Arizona county, that they "were
+ *   set up to be aligned with county boundaries", and that they levy secondary
+ *   property taxes "on all parcels within their jurisdiction — not just
+ *   properties with identified flood risks". The 1984 amendments let
+ *   incorporated jurisdictions opt out of FLOODPLAIN REGULATION, which Tucson,
+ *   Marana, Oro Valley and Sahuarita did; that is a regulatory opt-out and not
+ *   a withdrawal from the district.
+ *
+ * The fourth, **Rocking K South CFD**, does have a boundary, and it is
+ * published as a recorded subdivision plat rather than as a district: its
+ * formation resolution recites "Blocks 1 through 14 of Rocking K South ...
+ * Book 64 of Maps and Plats, Page 85", and all 25 recorded Rocking K South
+ * plats in the county's own Subdivisions layer point-test inside ZCTA 85641.
+ * `pnpm cfd:territory --zip 85641` re-runs that check. **Wildflower CFD is
+ * deliberately NOT here**: the same route places its plat in ZCTA 85757, so a
+ * lead this project had carried as "a strong lead" for 85641 is a false
+ * positive, recorded as one.
+ *
+ * ## Why each has a District Board and no separate calendar
+ *
+ * Each is governed by the Board of Supervisors sitting as its board, so its
+ * business appears on the county's Legistar calendar as its own hearings under
+ * its own resolution series — RESOLUTION NO. 2026-RK1 "of the District Board
+ * of Rocking K South Community Facilities District", the Library District,
+ * Stadium District and Flood Control District final budgets each adopted as
+ * separate hearings on 2026-06-04. That is why `agendaSourceRef` is the county
+ * calendar for all four: it is not a placeholder, it is where these bodies
+ * actually meet.
+ */
+function pima85641DistrictRows(): Body[] {
+  const collected = "2026-08-27";
+  const PIMA_LEGISTAR = "https://pima.legistar.com/Calendar.aspx";
+  const PIMA_COUNTY = "ocd-division/country:us/state:az/county:pima" as Body["ocdId"];
+  const rows: Array<{
+    slug: string;
+    name: string;
+    homepage: string;
+    authority: string;
+    territory: string;
+    /**
+     * The division a reader is matched against (`resolveAt` joins on `ocdId`
+     * and nothing else). `null` is not a shrug — it says this body's territory
+     * has no division in this registry, and the row below says which.
+     */
+    ocdId: Body["ocdId"];
+    wiring: string;
+    /**
+     * WHERE THIS BODY ACTUALLY MEETS — per row, not per function.
+     *
+     * The four districts the Board of Supervisors sits as have no calendar of
+     * their own and their business is on the county's Legistar calendar, which
+     * is a finding rather than a fallback. The Central Arizona Water
+     * Conservation District is the opposite: it is directly elected, it holds
+     * its own board meetings, and putting it on the county's calendar would
+     * send a reader to the wrong room.
+     */
+    agenda:
+      | { type: "LEGISTAR"; ref: string; status: "LIVE" }
+      | { type: "CIVICCLERK"; ref: string; status: "LIVE" };
+  }> = [
+    {
+      slug: "pima-rocking-k-south-cfd",
+      name: "Rocking K South Community Facilities District Board",
+      homepage: "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+      authority:
+        "A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio.",
+      territory:
+        "Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641. It LEVIES: Pima County Resolution 2026-43 (adopted 2026-08-17) sets its FY2026/27 secondary tax on a $38,682,735 valuation at 0.5000 for maintenance and operation and 1.8800 for bond indebtedness — $920,649 at a combined 2.3800.",
+      ocdId: null,
+      wiring:
+        "NOT MATCHED AT A POINT, and that is a stated gap rather than a silent one. This district is 2,047 acres of platted subdivision inside unincorporated Pima County, and the registry holds no division that small. Attaching it to county:pima would show a district that taxes 2,047 acres to every reader in a 9,200-square-mile county — a false claim about their government, in the direction that looks like coverage. What closes it is a division carrying the plat geometry the cfd:territory instrument already resolves.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
+    },
+    {
+      slug: "regional-flood-control-district",
+      name: "Pima County Regional Flood Control District Board of Directors",
+      homepage: "https://www.pima.gov/1427/Flood-Control",
+      authority:
+        "A.R.S. 48-3603; mandated in every Arizona county by 1978 legislation, with the county Board of Supervisors designated as the governing body.",
+      territory:
+        "aligned with the county boundary; levies a secondary property tax on all parcels within its jurisdiction. Tucson, Marana, Oro Valley and Sahuarita administer their own floodplain regulation under the 1984 amendments, which is a regulatory opt-out rather than a withdrawal from the district.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima is not an approximation. The district's own formation page says the 1978 legislation mandated one in every Arizona county and that the districts were set up to be aligned with county boundaries.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
+    },
+    {
+      slug: "free-library-district",
+      name: "Pima County Free Library District Board of Directors",
+      homepage: "https://www.library.pima.gov/",
+      authority:
+        "A.R.S. 48-3901(C): the board of supervisors shall be the board of directors of the county free library district.",
+      territory:
+        "A.R.S. 48-3903 levies the district tax upon all property in the county and upon all property within incorporated cities and towns in the county.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima IS the statutory boundary — A.R.S. 48-3903 levies the tax upon all property in the county.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
+    },
+    {
+      slug: "stadium-district",
+      name: "Pima County Stadium District Board of Directors",
+      homepage: "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+      authority:
+        "A.R.S. 48-4202(A) and (D): a countywide district whose board of directors, in a county under 1,500,000 people, is the county board of supervisors. 48-4202(K) makes it a tax levying public improvement district and a political taxing subdivision of the state.",
+      territory:
+        "countywide, including both the incorporated and unincorporated areas of the county (A.R.S. 48-4202(A)).",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima IS the statutory boundary — A.R.S. 48-4202(A) authorises a COUNTYWIDE district including both the incorporated and unincorporated areas of the county.",
+      agenda: { type: "LEGISTAR" as const, ref: PIMA_LEGISTAR, status: "LIVE" as const },
+    },
+    {
+      slug: "central-arizona-water-conservation-district",
+      name: "Central Arizona Water Conservation District Board of Directors",
+      homepage: "https://www.cap-az.com/board/board-members/",
+      authority:
+        "a multi-county water conservation district, and the only body here whose board is DIRECTLY ELECTED rather than the Board of Supervisors sitting as it. Fifteen members, elected by county. Three are confirmed Pima County from their own pages — Karen Cesare, Pat Jacobs and Mark Taylor; four members' pages do not state a county and are NOT assigned to one here.",
+      territory:
+        "it taxes every parcel in Pima County: Pima County Resolution 2026-43 levies its ad valorem secondary at 0.1000 and its water storage secondary at 0.0400 on the county's full $12,350,762,412 valuation, plus groundwater replenishment charged per acre-foot and per lot. That is how this district was found at all — it appears in no Pima County directory and on no boundary layer this project has walked.",
+      ocdId: PIMA_COUNTY,
+      wiring:
+        "county:pima UNDER-serves rather than over-serves, deliberately. The district also covers Maricopa and Pinal, so a reader there is governed by it and will not see it — but this product covers neither county, and the alternative (no division at all) would hide it from the readers it does cover. When Maricopa or Pinal is added, this row takes alsoServesOcdIds.",
+      agenda: {
+        type: "CIVICCLERK" as const,
+        ref: "https://capaz.portal.civicclerk.com",
+        status: "LIVE" as const,
+      },
+    },
+  ];
+
+  /*
+   * THE ID FORM FOLLOWS WHETHER THE BODY HAS A DIVISION.
+   *
+   * `Body` documents its id as `<ocdId>#<slot>`, and `tests/source-adapters`
+   * holds the same invariant against every wiring row: an ocdId that is not
+   * null must be the body id with the slot removed. A body that HAS a division
+   * therefore takes the division form — the same shape Tucson's 56 boards use
+   * under `place:tucson` — and only a division-less body falls back to
+   * `curated:`, which is D28's case and Rocking K South's.
+   */
+  return rows.map((row) => ({
+    id: row.ocdId ? `${row.ocdId}#${row.slug}` : `curated:az/${row.slug}#governing`,
+    ocdId: row.ocdId,
+    name: row.name,
+    bodyClass: "GOVERNING" as const,
+    bodyOrigin: "CURATED" as const,
+    /*
+     * The status is the ROW's, because the answer differs by row and averaging
+     * them would be a claim about all five.
+     *
+     * LIVE for the four the Board of Supervisors sits as: the agenda hunt is
+     * done for them. The county's Legistar tenant is already wired and each
+     * district's own budget hearings and resolutions are in it — searched and
+     * found, not assumed.
+     *
+     * LIVE for the Central Arizona Water Conservation District too, but by a
+     * different route: it is directly elected and holds its own meetings, and
+     * its CivicClerk tenant answers its own OData API. Sending its readers to
+     * the county calendar would have sent them to the wrong room.
+     */
+    coverageStatus: row.agenda.status,
+    agendaSourceType: row.agenda.type,
+    agendaSourceRef: row.agenda.ref,
+    meetingCadence: null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: row.homepage,
+      sourceOrg: `Pima County; ${row.authority} Territory: ${row.territory} Wiring: ${row.wiring}`,
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
+
+/**
+ * **PIMA COUNTY BOARD OF ADJUSTMENT, DISTRICT 4** — 85641's variance board.
+ * (2026-08-27.)
+ *
+ * COMMISSION rather than GOVERNING, and the distinction matters to the reader
+ * rather than to a taxonomy: this board is APPOINTED by one Supervisor under
+ * A.R.S. § 11-807, it rules on variances and interpretations of the zoning
+ * code and issues temporary use permits, and it does not govern. The coverage
+ * state deliberately does not turn on an unwired COMMISSION, because an
+ * advisory or quasi-judicial board with no calendar must not read as a
+ * government whose calendar is missing.
+ *
+ * KNOWN_UNCOVERED and not LIVE: its agendas are a list of CivicPlus documents
+ * on `pima.gov/2792` rather than a calendar any adapter here reads. The
+ * September 2026 agenda was read by hand for the roster, which is exactly why
+ * this is recorded as uncovered rather than as done — one agenda read is not a
+ * meeting source, and there is deliberately no way to record "gave up".
+ */
+function pimaBoardOfAdjustmentDistrict4(): Body {
+  const PIMA = "ocd-division/country:us/state:az/county:pima";
+  return {
+    id: `${PIMA}#board-of-adjustment-district-4`,
+    ocdId: PIMA as Body["ocdId"],
+    name: "Pima County Board of Adjustment, District 4",
+    bodyClass: "COMMISSION",
+    bodyOrigin: "CURATED",
+    coverageStatus: "KNOWN_UNCOVERED",
+    agendaSourceType: "NONE",
+    agendaSourceRef: "https://www.pima.gov/2792",
+    // From the county's own page: "Second Tuesday of Each Month at 1:30 pm
+    // (See Note)", the note being "Except as Noted".
+    meetingCadence: "Second Tuesday of each month at 1:30 pm, except as noted",
+    homepageUrl: "https://www.pima.gov/1027/Boards-of-Adjustment",
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY",
+    provenance: {
+      sourceUrl: "https://www.pima.gov/1027/Boards-of-Adjustment",
+      sourceOrg:
+        "Pima County Development Services. The county's page: 'There are five District Boards of Adjustment, one from each Board of Supervisors District. Each Supervisorial District appoints five members from their District. The Boards of Adjustment rule on variance and interpretation requests of the Pima County Zoning Code and approve the issuance of temporary use permits in accordance with the ARS Sec. 11-807 and Chapter 18.93, Section 18.101.050 of the Zoning Code.' Staff Planner for District 4: Matthew Bacal.",
+      collectedAt: "2026-08-27",
+      verifiedAt: "2026-08-27",
+    },
+  };
+}
 
 /**
  * Wilmot NH's three wired boards (M123, 2026-08-19).

@@ -38,6 +38,7 @@ export type OfficeType =
   | "state-treasurer"
   | "superintendent-public-instruction"
   | "mine-inspector"
+  | "corporation-commissioner"
   | "county-sheriff"
   | "county-attorney"
   | "county-treasurer"
@@ -173,6 +174,12 @@ export const OFFICE_BLURBS: Readonly<Record<OfficeType, OfficeBlurb>> = {
   "mine-inspector": {
     text: "Your state mine inspector — an elected office only Arizona has — inspects active and abandoned mines for safety, and runs the program that fences off the state's roughly 100,000 abandoned mine openings. Call their office to report a dangerous open mine shaft.",
     basis: "Arizona Constitution, Article 19",
+    basisUrl: null,
+  },
+  "corporation-commissioner": {
+    text:
+      "Your corporation commissioners set the rates your regulated electric, gas, water and telephone utilities may charge, decide where power lines and plants may be built, and register every business incorporated in the state. Arizona is one of the few states where this job is elected rather than appointed. Contact the commission to object to a proposed utility rate increase, or to look up who owns a company.",
+    basis: "Arizona Constitution, Article 15",
     basisUrl: null,
   },
   "county-sheriff": {
@@ -361,6 +368,7 @@ export function officeTypeForTitle(title: string): OfficeType | null {
     return "superintendent-public-instruction";
   }
   if (t.includes("mine inspector")) return "mine-inspector";
+  if (t.includes("corporation commissioner")) return "corporation-commissioner";
   if (t.includes("sheriff")) return "county-sheriff";
   if (t.includes("county attorney")) return "county-attorney";
   if (t.includes("county treasurer")) return "county-treasurer";
@@ -423,6 +431,7 @@ export function officeTypeForContestTitle(title: string): OfficeType | null {
     return "superintendent-public-instruction";
   }
   if (t.includes("mine inspector")) return "mine-inspector";
+  if (t.includes("corporation commissioner")) return "corporation-commissioner";
   if (t.includes("sheriff")) return "county-sheriff";
   if (t.includes("register of deeds")) return "register-of-deeds";
   if (t.includes("register of probate")) return "register-of-probate";

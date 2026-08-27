@@ -7,6 +7,7 @@ import { makeApptegySource } from "../apptegy/index.ts";
 import { makeBoardBookSource } from "../boardbook/index.ts";
 import { makeCivicPlusSource } from "../civicplus/index.ts";
 import { makeClerksBoardsSource } from "../clerksboards/index.ts";
+import { makeCivicClerkSource } from "../civicclerk/index.ts";
 import { makeDiligentSource } from "../diligent/index.ts";
 import { makeIcalSource } from "../ical/index.ts";
 import { makeIqm2Source } from "../iqm2/index.ts";
@@ -120,6 +121,12 @@ export const CAPABILITIES: Array<{
     name: "diligent",
     types: ["DILIGENT", "CIVICWEB"],
     make: (rows) => makeDiligentSource(rows) as ReportingMeetingSource<unknown>,
+  },
+  {
+    name: "civicclerk",
+    types: ["CIVICCLERK"],
+    make: (rows) =>
+      makeCivicClerkSource(rows) as ReportingMeetingSource<unknown>,
   },
   {
     name: "clerksboards",

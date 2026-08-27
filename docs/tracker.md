@@ -14,15 +14,15 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **305 open**, 436 resolved.
+- **308 open**, 436 resolved.
 - **52 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **3**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
-  - Arizona hunt — **1**
+  - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **3**
+  - Data infrastructure — **4**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **2**
@@ -398,11 +398,13 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**23 open · 0 resolved.**
+**25 open · 0 resolved.**
 
 ### P1
 
 **NH226** — Two things this project has written down about Vail are wrong, and both are now measured. The stored board roster had six names when the board has five. And the research note says the Vail area is in one legislative district when it is in two.
+
+**NH234** — A directly elected government that taxes every parcel in Pima County has no meeting adapter, and adding it to the registry correctly moved both Pima pilot zips from NONE_SCHEDULED to NO_SOURCE.
 
 ### P2
 
@@ -421,6 +423,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH228** — Five more governments might cover ZIP 85641. We have found each of them and we have not yet checked where their territory starts and stops, so we cannot say either way.
 
 **NH230** — We know two measures will be on the 85641 ballot this November, and we have the school district's own legal notice for one of them. We have not yet read the county's official ballot, which is the document that actually decides what a voter sees.
+
+**NH233** — The Rocking K South Community Facilities District is a verified government of ZIP 85641 - a separate political taxing subdivision with its own District Board and its own resolution series - and it renders to nobody, because the registry has no division as small as its territory.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -492,13 +496,15 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**86 open · 105 resolved.**
+**87 open · 105 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
+
+**NH232** — lib/registry/registry.json is written by two different things. pnpm registry:build regenerates it whole from the Census derivation plus the curated rows; scripts/adjudicate-leads.mts APPENDS a row to it every time a discovery lead is promoted to a body. So running the generator deletes every promotion, and the deletion looks like a normal regeneration.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 

@@ -6,8 +6,8 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1253,
-    "verified": 726,
+    "swept": 1258,
+    "verified": 731,
     "mismatched": 0,
     "adjudicated": 1,
     "noSource": 526
@@ -12547,6 +12547,56 @@
       "rosterForm": null,
       "verdict": "NO-SOURCE",
       "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     }
   ]
 }

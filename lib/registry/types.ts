@@ -124,6 +124,18 @@ export type AgendaSourceType =
    */
   | "CLERKSBOARDS"
   /**
+   * CivicClerk — a meeting portal delivered as an embed script, whose tenant
+   * slug the host page carries in `window.clerkEmbedProps` and whose own
+   * public OData API answers an unauthenticated GET at
+   * `https://<tenant>.api.civicclerk.com/v1/Events`. First tenant: the Central
+   * Arizona Water Conservation District (2026-08-27).
+   *
+   * Kept distinct from `CIVICPLUS`, which is a different product from the same
+   * corporate family: a reader following a CivicPlus agenda link would not
+   * arrive here.
+   */
+  | "CIVICCLERK"
+  /**
    * BoardBook Premier (Sparq Data Solutions) — school-board agenda portal at
    * `meetings.boardbook.org/Public/Organization/<id>`, server-rendered with
    * the full meeting archive, per-row venue name AND street address, and

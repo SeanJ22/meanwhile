@@ -51,6 +51,7 @@ export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   apptegy: "their district website's events calendar",
   diligent: "their online agenda portal",
   clerksboards: "the clerk's board-of-supervisors calendar",
+  civicclerk: "their board's online meeting portal",
   boardbook: "their board's online meeting book",
   iqm2: "their online agenda portal",
   revize: "their town website's meetings page",

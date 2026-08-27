@@ -2030,6 +2030,40 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://bradfordnh.gov/pages/calendar",
     verifiedAt: "2026-08-21",
   },
+
+  // ── CivicClerk: the tenant slug is in the page ──────────────────────────
+  // The Central Arizona Water Conservation District taxes every parcel in
+  // Pima County, so it governs 85641 and 85701 alike. Its own meetings page
+  // renders no meeting — 222,565 bytes of served markup with no dated link
+  // and no iCalendar feed — but it carries
+  //   window.clerkEmbedProps = {"tenant":"capaz","categoryIds":"26,27,…"}
+  // beside CivicClerk's embed bundle, and with that slug the portal's own
+  // OData API answers a plain unauthenticated GET. Ladder rung 7: the same
+  // public data the page shows, in the form the page already receives it.
+  //
+  // The district was itself found in Pima County's levy resolution rather
+  // than in any directory, which is why this row exists at all.
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+    // The district covers Maricopa, Pinal and Pima. `county:pima` is the one
+    // this product serves; it under-serves rather than over-serves, and the
+    // registry row says so.
+    ocdId: "ocd-division/country:us/state:az/county:pima" as OcdId,
+    agendaSourceType: "CIVICCLERK",
+    jurisdiction: "Central Arizona Water Conservation District, AZ",
+    publishingOrg: "Central Arizona Water Conservation District",
+    timeZone: "America/Phoenix",
+    config: {
+      slug: "capaz",
+      apiBase: "https://capaz.api.civicclerk.com",
+      portalBase: "https://capaz.portal.civicclerk.com",
+    },
+    // The district's own meetings page — the page the tenant slug was read
+    // from, and the one a reader would look at.
+    noticeUrl: "https://www.cap-az.com/board/board-committee-meetings/",
+    verifiedAt: "2026-08-27",
+  },
 ];
 
 /** Rows a given adapter capability should serve. */

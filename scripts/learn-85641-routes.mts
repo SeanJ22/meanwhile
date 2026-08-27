@@ -1,380 +1,176 @@
 /**
- * The routes ZIP 85641 taught, recorded into cumulative project knowledge.
+ * `pnpm method:learn-85641` — PUT THE 85641 DETECTIVE SESSION'S ROUTES INTO
+ * PROJECT MEMORY. (2026-08-27. **RULING 178**, **RULING 88**, **RULING 61**.)
  *
- * RULING 178: a new route is PROJECT knowledge, persisted, classified by
- * portability ONLY from evidence, and inherited by every later jurisdiction.
- * Each entry below carries the literal outcome it was measured with, and every
- * portability class starts at what the evidence actually supports — one county
- * in one state is not a nationwide proof, and typing it as one is the failure
- * `applyEarnedPortability` exists to prevent.
+ * A route that exists only in a session report is a route the next session
+ * re-invents. Each of these was conceived because a specific owed fact about
+ * ZIP 85641 could not be reached by anything the project already knew, and each
+ * is recorded with what it actually returned — including the route whose
+ * headline result was a REJECTION, because a route that correctly refuses a
+ * lead is doing the job the ladder exists for.
  *
- * Run once. `learnRoute` refuses a duplicate id rather than deepening it.
+ * **Every one enters at `UNKNOWN` portability.** Each was proved in one place.
+ * RULING 178 is explicit that a route does not become nationwide by working
+ * somewhere; `UNKNOWN` still inherits to every jurisdiction, it simply does not
+ * claim.
+ *
+ * Idempotent: `learnRoute` refuses a duplicate id and says so, so re-running
+ * cannot inflate the method version or deepen a route's evidence.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
 
-import {
-  learnRoute,
-  recordRouteOutcome,
-  type MethodKnowledge,
-  type MethodRoute,
-} from "../lib/method/knowledge.ts";
-import { unknownApplicability } from "../lib/method/portability.ts";
-import { floored } from "../lib/ops/denominator-floor.ts";
+import { runLearnBatch, type LearnedRoute } from "../lib/method/learn-batch.ts";
+import { today } from "./doc-dates.mjs";
 
-const STORE = "data/method/knowledge.json";
-const TODAY = process.env.WTP_TODAY ?? "2026-08-27";
+const ROOT = process.cwd();
+const STORE = join(ROOT, "data", "method", "knowledge.json");
 
-type NewRoute = Omit<MethodRoute, "learnedAtVersion">;
-
-const ROUTES: Array<{ route: NewRoute; outcome: Parameters<typeof recordRouteOutcome>[2] }> = [
+const ROUTES: LearnedRoute[] = [
   {
-    route: {
-      id: "zip-polygon-intersect-district-layers",
-      title:
-        "hand a boundary layer the ZIP's own polygon and ask what INTERSECTS it — point sampling has holes a small district fits inside",
-      tier: "A0",
-      fields: ["body", "jurisdiction", "boundary"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "the instrument is ArcGIS spatialRel=esriSpatialRelIntersects with the ZCTA polygon POSTed as the geometry. " +
-          "Measured at 85641: a 96-point sampling grid found 39 governing units; the polygon intersect found 55 features " +
-          "across 18 layers, including SIX governing units sampling missed entirely — Mescal-J6 Fire District, " +
-          "Sahuarita Unified, Tanque Verde Unified, a second Board of Supervisors district, a second community-college " +
-          "taxation district and Tucson Ward 5. The route travels to any jurisdiction whose districts are published as " +
-          "queryable feature layers; whether THIS county publishes them does not.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "formation-document-to-recorded-plat-to-gis",
+    title:
+      "a special district with NO boundary layer anywhere: read its formation resolution, take the recorded-plat legal description out of it, look that plat up in the county's own subdivision layer, and point-test the polygon",
+    tier: "A1",
+    fields: ["body", "territory"],
+    note:
+      "proved on two Pima County community facilities districts. A CFD is formed by a county resolution that must recite the land by recorded book/page or sequence number, and the county publishes its recorded subdivision plats as a GIS layer for entirely unrelated reasons — so the join exists wherever a district is formed over platted land and the county maps its plats. That is a large class and not a universal one: a district formed over metes-and-bounds acreage has no plat to join to.",
+    origin:
+      "conceived 2026-08-27 because Pima County's ArcGIS catalogue (34 services, 281 layers) contains no community-facilities-district layer at all, and the project's standing record carried both CFDs as leads that 'cannot be resolved without a boundary'. The boundary was never going to be published as a boundary; it was published as a plat.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 55,
+      jurisdiction: "az",
+      rows: 29,
       outcome: "YIELDED",
       note:
-        "20 layers walked, 0 failed. 55 intersecting features across 18 layers. The same run measured how leaky " +
-        "sampling was: 6 governing units present in the intersect were absent from a 96-point grid.",
+        "Rocking K South CFD PROMOTED: its formation resolution 2017-2 (recorded 20170450755) recites 'Blocks 1 through 14 of Rocking K South ... Book 64 of Maps and Plats, Page 85'; 25 recorded Rocking K South plats in the county layer, and 25 of 25 point-test inside ZCTA 85641. Wildflower CFD REJECTED by the same route: its resolution 2021-78 recites sequence 20172440197, which the same layer places in ZCTA 85757 — the project had carried Wildflower as an 85641 lead. One route promoted a body and killed a false positive in the same pass.",
     },
   },
   {
-    route: {
-      id: "special-district-territory-from-county-tax-layer",
-      title:
-        "a special district's territory is published by the county that LEVIES it, as a taxation boundary layer — not by the Census, whose national boundary files carry no special districts at all",
-      tier: "A0",
-      fields: ["body", "jurisdiction", "boundary"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "docs/gap-ledger.md recorded 24 Pima County special districts as territory-UNRESOLVED because the national " +
-          "boundary join of 2026-08-24 'resolved 47,834 of the country's 90,837 governments and not one special " +
-          "district — the boundaries are not published anywhere in that data at all'. That was true of THAT DATASET " +
-          "and false of the world: Pima County publishes 'Districts - Fire Taxation' and 'Districts - Pima Community " +
-          "College Taxation' as open ArcGIS layers. The route is: ask the LEVYING authority, not the statistical one. " +
-          "Every state that funds special districts through county property tax has a levying authority with the same " +
-          "obligation; the publication format is what varies.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "state-education-agency-meeting-notice",
+    title:
+      "the state education agency's budget-filing system publishes a STATUTORY PUBLIC MEETING NOTICE for every school district — date, time, street address and a named agenda contact — so a district that publishes nothing itself still has a machine-readable meeting",
+    tier: "A1",
+    fields: ["meeting", "body", "contact"],
+    note:
+      "proved on Arizona, where A.R.S. 15-905(C) requires the notice and budgetsystem.azed.gov posts it as a filed workbook. The STATUTE is Arizona's; the SHAPE is that every state which reviews district budgets receives a hearing notice with it, so the route travels further than the URL does. Recorded UNKNOWN because one state is not a measurement.",
+    origin:
+      "conceived 2026-08-27 for Empire Elementary School District No. 37, which two independent official enumerations (Pima County GIS and the NCES CCD LEA directory) record with a BLANK website field. The district turned out to operate no schools and employ no staff, so it will never have a website — the meeting had to be found somewhere it is compelled to file rather than somewhere it chooses to publish.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 4,
+      jurisdiction: "az",
+      rows: 17,
       outcome: "YIELDED",
       note:
-        "four fire taxation districts intersect 85641 — CORONA DE TUCSON, MESCAL-J6, RINCON VALLEY, SONOITA ELGIN. " +
-        "MESCAL-J6 and SONOITA ELGIN appear in NEITHER the Census list of 24 Pima special districts NOR the state " +
-        "wildfire-dispatch layer, so the levying authority's own layer is the only source that named them.",
+        "the index is a Kendo grid over a plain GET handler: 3,880 district filings statewide for FY2026 and 2,356 for FY2027, each downloadable by submission id. 17 meeting notices parsed for the seven LEAs touching 85641, including Empire Elementary's own board meeting — 2026-07-13, 11:00AM, 200 N. Stone Ave., Tucson, agenda from Peter Laing at Peter.Laing@pima.gov. The same filings carry the district's primary and secondary tax rates and its M&O budget limit.",
     },
   },
   {
-    route: {
-      id: "arcgis-root-path-guess-is-not-an-absence",
-      title:
-        "a 404 at a guessed ArcGIS root means the guess was wrong, never that the government publishes no services — take the root from a portal item's own url field",
-      tier: "A0",
-      fields: ["source"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "`gisdata.pima.gov/arcgis/rest/services` answers 404 and the real root is `/arcgis1/`. Four other guessed " +
-          "hostnames also 404'd or failed to connect. The reliable route is to search the ArcGIS Online sharing API " +
-          "for the publisher's items and read the `url` field off one — it names the server, the folder and the layer " +
-          "index. Any ArcGIS-published government has this shape.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "official-candidate-list-is-the-ballot-not-the-canvass",
+    title:
+      "the certified canvass contains only CONTESTED races; the election authority's OFFICIAL CANDIDATE LIST is the ballot universe — build a ballot from the canvass and every unopposed seat vanishes silently",
+    tier: "A0",
+    fields: ["contest", "candidate"],
+    note:
+      "proved on Pima County, whose canvass carries its own 'Master List of All Contested Races' naming 15 races while the official candidate list carries 34 contests and 101 candidates. Any jurisdiction that canvasses contested races separately has this shape, and the failure mode is silent and looks like completeness, which is why the check is worth carrying everywhere.",
+    origin:
+      "conceived 2026-08-27 after the certified primary canvass showed Board of Supervisors District 5 and no District 2 or 4, and Constables in precincts 2, 3 and 9 and none in 7 or 8 — the exact districts governing 85641. Reading that as 'no race' would have been a false claim about an election; the official candidate list shows those seats are simply not scheduled this cycle.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 281,
+      jurisdiction: "az",
+      rows: 101,
       outcome: "YIELDED",
       note:
-        "eight guessed roots: five 404, two connection-failed, one exposed only a Utilities folder. The portal item " +
-        "url gave the real root in one call, and walking it enumerated 34 services and 281 layers, 66 of them " +
-        "governance-shaped.",
+        "34 contests and 101 candidates from the Pima County 2026 Official Candidate List, against 15 contested races in the canvass. It also settled a named absence the product was carrying: the curated Arizona ballot omitted Corporation Commissioner because no source stated how many seats were scheduled, and the candidate list says 'Vote for not more than 2'.",
     },
   },
   {
-    route: {
-      id: "vendor-api-leaked-by-hydration-payload",
-      title:
-        "a client-hydrated CMS ships its own vendor API endpoints in the page's hydration payload — read the payload, then call the API the page calls",
-      tier: "A1",
-      fields: ["roster", "official", "meeting", "document"],
-      applicability: {
-        ...unknownApplicability(),
-        platforms: ["apptegy"],
-        note:
-          "vailschooldistrict.org serves 1.44 MB of HTML with NO roster in it — which is exactly why an earlier " +
-          "extraction verification found five of six stored names absent from the page they were cited to. " +
-          "`window.clientWorkStateTemp` carries the Thrillshare org id and every CMS endpoint. The route is the " +
-          "general one: a hydrated page must tell the browser where its data lives, so the payload always names it.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "two-pdf-extractors-corrupt-different-things",
+    title:
+      "a multi-column form PDF needs TWO extractors and knowledge of which artefact each produces: layout order for WHICH OFFICE, a second engine for HOW THE NAME IS SPELT — a majority vote between engines gets it wrong",
+    tier: "A0",
+    fields: ["candidate", "roster"],
+    note:
+      "proved on a bilingual two-column ballot list. pdfjs interleaves the English and Spanish captions with the names, which attributes candidates to the wrong office; pdftotext preserves columns in -layout mode but merges the form's rule glyph into the following surname, in BOTH its modes. Two of three extractors agreed with each other and were both wrong, so the tie-break is not a vote. Every government form laid out in columns with rules beside the fields has this shape.",
+    origin:
+      "conceived 2026-08-27 when the layout extraction produced 'REP IGRIFFIN, GAIL' — a rule glyph welded to a state senator's surname — while the same tool's flat mode produced the identical corruption and the repo's own pdfjs extractor produced the clean name.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 20,
+      jurisdiction: "az",
+      rows: 101,
       outcome: "YIELDED",
       note:
-        "org 8164 and five CMS endpoints recovered from the payload. The staff directory answered 20 rows. It did " +
-        "NOT contain the governing board, so the payload route yielded the vendor API without yielding this " +
-        "particular roster — recorded as it happened rather than reframed.",
+        "101 candidates: 95 agreed across both extractors and 6 carried the rule glyph and were corrected with the correction recorded on the record rather than applied silently. A leading I is never simply stripped — IBARRA is a real surname — so a name neither pass confirms is reported UNCONFIRMED rather than edited.",
     },
   },
   {
-    route: {
-      id: "older-vendor-api-version-returns-redacted-fields",
-      title:
-        "when a vendor exposes two API versions, walk BOTH — the older one returned the email addresses the newer one replaced with the literal string \"hidden\"",
-      tier: "A1",
-      fields: ["contact", "email"],
-      applicability: {
-        ...unknownApplicability(),
-        platforms: ["apptegy"],
-        note:
-          "Thrillshare /api/v4/o/<org>/cms/directories returns `\"email\":\"hidden\"`; /api/v2/s/<section>/directories " +
-          "returns the real address for the same person and the same id. Neither endpoint is authenticated and " +
-          "neither is disallowed. The general shape — a newer API redacting a field its predecessor still serves — " +
-          "is not specific to this vendor, but the evidence so far is.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "cms-hydration-state-is-the-document-catalogue",
+    title:
+      "a hydrating CMS ships a catalogue of its documents INTO the page — ids, filenames, slugs, parent ids and tenant-scoped download URLs — so read the hydration state rather than the anchors the page chose to render",
+    tier: "A0",
+    fields: ["source", "document", "meeting"],
+    note:
+      "proved on CivicPlus, whose pages carry content.civicplus.com/api/assets/<tenant>/<uuid> URLs and a per-item record with a parentId, i.e. a tree. Recorded UNKNOWN: the same shape is expected of any React/Redux-hydrated government CMS, and expecting is not measuring.",
+    origin:
+      "conceived 2026-08-27 when a county CFD page rendered thirteen document names in its visible text and only five of them appeared as anchors in the served markup — the rest were reachable only through the embedded store.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 20,
+      jurisdiction: "az",
+      rows: 24,
       outcome: "YIELDED",
       note:
-        "same 20 people from both endpoints; v4 redacted every email to \"hidden\", v2 returned all 20.",
+        "recovered the formation resolutions, final petitions, general plans and official election canvasses for both Pima County community facilities districts, plus the county's 2026 election document family (official candidate list, proposition text, write-in list, vote-center locations, candidates filed, precinct committeemen filed). The formation resolutions are what made the territory route above possible.",
     },
   },
   {
-    route: {
-      id: "ballot-measure-from-the-body-statutory-notice-pdf",
-      title:
-        "the governing body's own statutory Notice of Election PDF carries the ballot question verbatim, the statute, the dollar amount, the tax rate and the election authority — a promotional page carries none of it",
-      tier: "A0",
-      fields: ["measure", "election", "ballot", "plain-language"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "Arizona requires the notice; the shape — a statutory pre-election notice naming the exact question — is " +
-          "general to jurisdictions with published election notices, and the statute citation is what makes the " +
-          "document findable. Also yields the SPANISH text of the same question from the same authority, which is a " +
-          "sourced translation rather than a generated one.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "single-pass-cannot-tell-may-be-a-flapping-wall",
+    title:
+      "a CANNOT_TELL on robots.txt from a single-pass sweep can be a NON-DETERMINISTIC challenge rather than a rule — retry the same rung before treating the host as unwalkable, and record which it was",
+    tier: "A0",
+    fields: ["source", "permission"],
+    note:
+      "measured on two Arizona hosts with opposite answers, which is the point: azed.gov serves a Cloudflare interstitial to roughly one request in three and the real robots.txt to the others, while apps.arizona.vote served the interstitial at every one of rungs 2, 3, 4, 5 and 6. A retry distinguishes them and nothing else does. RULING 182 still governs the unresolved case: the route fails safe and the FACT is hunted elsewhere.",
+    origin:
+      "conceived 2026-08-27 after pnpm robots:sweep returned CANNOT_TELL for www.azed.gov, which would have refused the Arizona Department of Education — the authority holding the filings for a school district with no website.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 1,
+      jurisdiction: "az",
+      rows: 2,
       outcome: "YIELDED",
       note:
-        "Vail USD No. 20 override continuation, 12.5% for FY2027/28 plus six years, ~$5,102,762, $1.61 per $100 of " +
-        "secondary assessed valuation, A.R.S. 15-481(P), special election 2026-11-03, election authority Pima County " +
-        "Elections. Two pages, English and Spanish, both extracted from the text layer.",
+        "www.azed.gov: rung 2 and 3 walled, rung 4 walled once then READ on retry — a standard Drupal robots.txt allowing every content path, so the department is WALKABLE and the single-pass verdict was wrong. apps.arizona.vote: walled at every rung including the live browser, so it stays CANNOT_TELL and is NOT walked; the general-election candidate list it holds was obtained instead from apps.azsos.gov and from the county's own publication.",
     },
   },
   {
-    route: {
-      id: "robots-named-crawler-group-is-not-the-star-group",
-      title:
-        "a host may disallow named AI crawlers while allowing `*` — the rule group that binds is the one matching the identity you actually declare, and it must be reported rather than quietly relied on",
-      tier: "A0",
-      fields: ["permission"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "azdor.gov carries `User-agent: ClaudeBot / Disallow: /` alongside `User-agent: * / Allow: /` and a " +
-          "Cloudflare Content-Signal of `search=yes,ai-train=no,use=reference`. This project's client has always " +
-          "identified as we-the-people/1.0 with a mailto, so `*` is its group and `Allow: /` is its rule. The route " +
-          "is the REPORTING obligation, not a technique: a host that has thought about AI crawlers specifically has " +
-          "expressed something, and a session that silently took the `*` rule would be hiding that from the author.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "county-levy-resolution-is-the-taxing-universe",
+    title:
+      "the county board's annual LEVY RESOLUTION enumerates every entity that taxes property in the county — a government that publishes nothing still cannot avoid it, because somebody has to collect its money",
+    tier: "A0",
+    fields: ["body", "territory"],
+    note:
+      "proved on Pima County, where A.R.S. 42-17101 to 42-17110 require the board to adopt one resolution each August levying for every entity. The STATUTE is Arizona-wide, so the route reaches all fifteen counties; every state with county-collected property tax has some equivalent, which is why it is recorded UNKNOWN rather than claimed.",
+    origin:
+      "conceived 2026-08-27 as the Arizona form of the who-bills-for-it route this project learned against New Hampshire. It was reached for because a hunt needs a denominator it did not write itself, and every other enumeration walked this session was a government describing its own scope.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 1,
+      jurisdiction: "az",
+      rows: 143,
       outcome: "YIELDED",
       note:
-        "azdor.gov names Amazonbot, Applebot-Extended, Bytespider, CCBot, ClaudeBot, Google-Extended, GPTBot and " +
-        "meta-externalagent with Disallow: /, and allows `*`. Recorded as a Needs Sean row rather than decided here.",
+        "143 levy lines across 38 taxing jurisdictions and classes, from RESOLUTION NO. 2026-43 adopted 2026-08-17. It CORRECTED the county: Pima publishes a Community Facilities Districts page listing TWO and its levy names NINE. It produced whole classes this project had no vocabulary for — irrigation districts levying per acre rather than ad valorem, a health district, domestic water improvement districts, twenty street lighting improvement districts, an unorganized school district tax, a fire district assistance tax, and the Central Arizona Water Conservation District. It independently confirmed the cross-county fire districts: Mescal-J6 levies 2.1487 and Sonoita-Elgin 3.2500 on Pima property, which the project had only inferred from a GIS layer. And it gave Rocking K South CFD a rate for a reader: 0.5000 M&O plus 1.8800 bond on a 38,682,735 valuation.",
     },
   },
   {
-    route: {
-      id: "tls-altname-failure-is-a-moved-host-not-a-wall",
-      title:
-        "a hostname that resolves but fails TLS with ERR_TLS_CERT_ALTNAME_INVALID is a RETIRED address, not a refusal — the office moved and the old name still has DNS",
-      tier: "A0",
-      fields: ["source"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "to.pima.gov (the Pima County Treasurer's historical hostname) resolves to 159.233.179.13, connects, and " +
-          "presents a certificate for another name; plain HTTP answers 500. curl reports only `000`, which reads " +
-          "identically to a network block, and the robots sweep therefore returned CANNOT_TELL and refused the walk. " +
-          "Node's fetch names the actual cause. The rule: when a sweep says CANNOT_TELL, ask a client that reports " +
-          "the TLS error before recording anything about the publisher.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
+    id: "embed-props-carries-the-vendor-tenant",
+    title:
+      "when a meeting portal ships as an EMBED SCRIPT, the host page carries the vendor tenant slug in its own config object — read it, then ask the vendor API directly",
+    tier: "A0",
+    fields: ["meeting", "source"],
+    note:
+      "proved on CivicClerk, whose embed reads window.clerkEmbedProps = {tenant, categoryIds} and whose API then answers an unauthenticated OData GET at <tenant>.api.civicclerk.com/v1/Events. The SHAPE is every embed-delivered portal: the browser has to be told which tenant to render, so the page must carry the identifier, and the identifier is the whole key. Recorded UNKNOWN because one vendor is not a measurement of the class.",
+    origin:
+      "conceived 2026-08-27 because the Central Arizona Water Conservation District governs 85641 and its own meetings page served 222,565 bytes with no dated meeting link and no iCalendar feed. The meetings were not missing from the page; the page was a client for a system whose name was in its own markup.",
     outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 1,
+      jurisdiction: "az",
+      rows: 14,
       outcome: "YIELDED",
       note:
-        "curl -> 000 (indistinguishable from a block); node fetch -> ERR_TLS_CERT_ALTNAME_INVALID. The host is " +
-        "misconfigured or retired, and the Treasurer's current pages are on www.pima.gov. No permission claim is made.",
-    },
-  },
-  {
-    route: {
-      id: "multi-tenant-vendor-apex-403-is-routing-not-permission",
-      title:
-        "a shared vendor host answering 403 `Invalid URL` at /robots.txt is refusing an unrouted path, not asserting a rule — take permission from the publishing government's own hub and the item's licence",
-      tier: "A0",
-      fields: ["permission"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "services6.arcgis.com serves org-scoped paths only, so a bare /robots.txt has no tenant and the router " +
-          "answers 403 with the body `Invalid URL`. The robots sweep correctly returns CANNOT_TELL and fails safe. " +
-          "RULING 182: permission state and transport state are orthogonal — the resolution is the PUBLISHER's " +
-          "permission (azgeo.az.gov -> azgeo-data-hub-agic.hub.arcgis.com, ALLOWED) plus the item's own access and " +
-          "licence fields, not a softer read of the vendor's robots.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
-    outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 1,
-      outcome: "YIELDED",
-      note:
-        "403 body is the literal string `Invalid URL` at rungs 2, 3 and 4 and under a bare Node fetch. The AZGeo " +
-        "item is access:public, publisher Arizona DFFM, and the state's own hub host allows the walk.",
-    },
-  },
-  {
-    route: {
-      id: "zip-crosses-districts-so-one-point-is-never-the-answer",
-      title:
-        "resolve a ZIP against every geography layer at MANY interior points — a ZIP is not a government and routinely holds several distinct governing combinations",
-      tier: "A0",
-      fields: ["jurisdiction", "district", "body"],
-      applicability: {
-        ...unknownApplicability(),
-        note:
-          "the Census geographies endpoint answers layers=all for a coordinate. Sampling the ZCTA polygon rather than " +
-          "its centroid is what makes a crossing visible. Measured at 85641: 44 distinct combinations across 96 " +
-          "points. The project's own prior research recorded 'Vail in LD-17' as a fact about the ZIP; 52 of 96 " +
-          "points are in LD-19.",
-      },
-      outcomes: [],
-      subBranches: [],
-      origin: "AZ 85641 hyperfocus, 2026-08-27",
-      learnedOn: TODAY,
-    },
-    outcome: {
-      jurisdiction: "az-pima-85641",
-      walkedOn: TODAY,
-      rows: 44,
-      outcome: "YIELDED",
-      note:
-        "96 interior points, 0 failed reads, 44 distinct combinations. Two legislative districts (17 and 19), two " +
-        "jurisdictions (unincorporated Pima County and City of Tucson), and three school-district situations " +
-        "including 12 points in 'School District Not Defined'.",
+        "15 events over the serving window, 14 normalized into meetings with venue, agenda flag and status — 13 placed at an address and 1 kept as an online sitting. The single drop is a CANCELED briefing whose location field is empty. It restored coverage at both Pima pilot zips, which had correctly fallen to NO_SOURCE when the district was added with no adapter.",
     },
   },
 ];
 
-let k = JSON.parse(readFileSync(STORE, "utf8")) as MethodKnowledge;
-const startVersion = k.version;
-const startRoutes = k.routes.length;
-
-let learned = 0;
-const duplicates: string[] = [];
-for (const { route, outcome } of ROUTES) {
-  const res = learnRoute(k, route, TODAY);
-  if (res.duplicate) {
-    // RULING 63: a route that already exists is a DEFECT reported as one, never
-    // quietly merged.
-    duplicates.push(route.id);
-    continue;
-  }
-  k = res.knowledge;
-  learned += 1;
-  const rec = recordRouteOutcome(k, route.id, outcome);
-  if (!rec.recorded) throw new Error(`outcome not recorded for ${route.id}: ${rec.reason}`);
-  k = rec.knowledge;
-}
-
-writeFileSync(STORE, JSON.stringify(k, null, 2) + "\n", "utf8");
-
-// RULING 159 — learned against ATTEMPTED. A run that learned nothing from a
-// non-empty ROUTES list has hit the duplicate refusal on every one, and that
-// is a defect to report rather than a quiet no-op.
-floored("routes learned", "the ROUTES list in this file", ROUTES.length, learned);
-
-console.log(`method version   ${startVersion} -> ${k.version}`);
-console.log(`routes           ${startRoutes} -> ${k.routes.length}`);
-console.log(`learned          ${learned}`);
-if (duplicates.length) {
-  console.log(`DUPLICATE IDS REFUSED (${duplicates.length}): ${duplicates.join(", ")}`);
-}
+runLearnBatch(STORE, ROUTES, today());

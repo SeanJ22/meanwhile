@@ -45,6 +45,7 @@ import { join } from "node:path";
 import {
   blocking,
   check,
+  detectPnpm,
   nameLooksSecret,
   needsRemediation,
   redact,
@@ -129,22 +130,15 @@ let pnpmError: unknown = null;
  * committed by the readiness tool: a fact about the instrument, reported as a
  * fact about the world.
  */
-const ua = process.env.npm_config_user_agent ?? "";
-const fromUa = /(?:^|\s)pnpm\/(\S+)/.exec(ua);
-if (fromUa) {
-  pnpmVersion = fromUa[1];
-} else {
+/* The rule itself lives in `lib/ops/doctor.ts` so a test can drive it with a
+ * spawn that throws — see `detectPnpm`, and the control in
+ * `tests/doctor-secrets.test.ts` that replays this exact false report. */
+const detected = detectPnpm(process.env.npm_config_user_agent, () =>
   /* Not run through pnpm — spawn, with a shell so Windows resolves the shim. */
-  try {
-    pnpmVersion = execFileSync("pnpm --version", {
-      encoding: "utf8",
-      shell: true,
-      maxBuffer: 1 << 20,
-    }).trim();
-  } catch (error) {
-    pnpmError = error;
-  }
-}
+  execFileSync("pnpm --version", { encoding: "utf8", shell: true, maxBuffer: 1 << 20 }),
+);
+pnpmVersion = detected.version ?? "";
+pnpmError = detected.error;
 if (pnpmVersion) {
   c("pnpm", "pnpm on PATH", "PASS", `pnpm ${pnpmVersion}`);
 } else {

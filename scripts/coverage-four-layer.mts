@@ -764,6 +764,48 @@ console.log(
 );
 
 /*
+ * **THE FALSE-POSITIVE CONTROL — the direction a defect-finder gets wrong.**
+ * (2026-08-27.)
+ *
+ * The `civicclerk` control above proves this instrument can FIRE. It says
+ * nothing about whether it fires on the innocent, and the first version of this
+ * instrument did exactly that: it reported 10 integrity defects at 03255 over
+ * Newbury committees — the Cemetery Trustees, the Septic Committee — whose only
+ * offence was having nothing scheduled. A small town committee with no upcoming
+ * sitting is the town's honest state.
+ *
+ * So both directions are controlled. The wired-and-silent class must still be
+ * PRESENT at 03255 (or this proves nothing) and must be classified as a GAP.
+ */
+{
+  const nh = results.find((r) => r.zip === "03255");
+  if (nh) {
+    const silentGap = nh.gaps.find((g) => g.includes("returned no sitting"));
+    const silentDefect = nh.defects.find((d) => d.includes("returned no sitting"));
+    if (!silentGap) {
+      console.error(
+        "\ncoverage: 03255 no longer reports any wired-and-silent body, so the false-positive " +
+          "control is vacuous — it cannot show that a body with nothing scheduled is still " +
+          "classified as a GAP rather than a defect (RULING 110).",
+      );
+      process.exit(1);
+    }
+    if (silentDefect) {
+      console.error(
+        `\ncoverage: a wired body whose source RAN and returned nothing is being reported as an ` +
+          `integrity defect again — "${silentDefect}". That is the Newbury committee false ` +
+          "positive: the town's honest state, called a defect by us.",
+      );
+      process.exit(1);
+    }
+    console.log(
+      `\n  control: at 03255 the wired-and-silent bodies are still present and are still a GAP,\n` +
+        "  not a defect — the Newbury committee false positive does not return.",
+    );
+  }
+}
+
+/*
  * **AND THE SAME CONTROL FOR THE ASK SURFACE** (2026-08-27).
  *
  * The Ask probe was added because a tester found a defect this instrument could

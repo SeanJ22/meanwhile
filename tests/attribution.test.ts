@@ -310,6 +310,9 @@ test("the write boundary refuses a snapshot that attributes an unresolved headin
   const meeting = {
     id: "legistar:pima:1824",
     ocdId: PIMA_HOST.ocdId,
+    /* Required of every meeting since 2026-08-27 — without it the snapshot is
+     * refused for the OLDER defect and this test never reaches its own. */
+    bodyId: PIMA_HOST.bodyId,
     bodyName: "Board of Supervisors",
     title: "Regular Meeting",
     startsAt: "2026-08-11T13:30:00-07:00",

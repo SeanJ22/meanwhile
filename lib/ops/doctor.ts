@@ -185,3 +185,39 @@ export function needsRemediation(r: CheckResult): boolean {
 export function blocking(results: readonly CheckResult[]): CheckResult[] {
   return results.filter((r) => r.state === "FAIL" || r.state === "MISSING");
 }
+
+/**
+ * **THE RUNNER'S OWN VERSION, ASKED RATHER THAN SPAWNED.**
+ * (Extracted 2026-08-27 so it can carry a regression control.)
+ *
+ * `pnpm run doctor` reported **`FAIL — pnpm is not on PATH`** on a machine that
+ * was running the check THROUGH pnpm. Twice, for two different reasons, and
+ * both are Windows: `execFileSync("pnpm")` is ENOENT because the executable is
+ * `pnpm.cmd`, and `execFileSync("pnpm.cmd")` is ENOENT too because `execFile`
+ * does no PATHEXT or shell resolution.
+ *
+ * That is a readiness tool reporting a fact about ITSELF as a fact about the
+ * world — the same class of defect as an empty fetch recorded as an absence,
+ * committed by the instrument built to catch it.
+ *
+ * The fix is not a better spawn. **pnpm already told us**: it sets
+ * `npm_config_user_agent` for every script it runs, so when doctor is invoked
+ * through pnpm the answer is in hand, exactly and for free, with no process and
+ * no PATH resolution to get wrong.
+ *
+ * Taking a `spawn` argument is what makes this testable: the control below can
+ * drive the user-agent path with a spawn that THROWS, proving the version came
+ * from the runner rather than from a spawn that happened to work.
+ */
+export function detectPnpm(
+  userAgent: string | undefined,
+  spawn: () => string,
+): { version: string | null; error: unknown } {
+  const fromUa = /(?:^|\s)pnpm\/(\S+)/.exec(userAgent ?? "");
+  if (fromUa) return { version: fromUa[1], error: null };
+  try {
+    return { version: spawn().trim() || null, error: null };
+  } catch (error) {
+    return { version: null, error };
+  }
+}

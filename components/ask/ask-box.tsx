@@ -544,6 +544,19 @@ export function AskBox({
   return (
     <div
       data-ask-panel
+      /*
+       * **WHICH GOVERNMENT THIS ANSWER IS ABOUT, INSPECTABLE FROM THE DOM**
+       * (2026-08-27). Not decoration and not analytics: the substitution defect
+       * was invisible precisely because nothing on the page said which entity
+       * had been resolved, so a walk could only guess from prose. The refusal
+       * branch renders a sentence for AMBIGUOUS and UNRESOLVED; this carries
+       * the verdict on EVERY path, including the routed one where the reader
+       * gets a real answer and the check still has to know what it is about.
+       */
+      data-ask-entity={asked ? asked.binding.kind : undefined}
+      data-ask-entity-id={
+        asked && asked.binding.kind === "BOUND" ? asked.binding.entity.id : undefined
+      }
       className="mt-3.5 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-3.5 shadow-[var(--shadow-panel)]"
     >
       <label

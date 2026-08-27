@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
 
-import { blocking, check, needsRemediation, redact } from "../lib/ops/doctor.ts";
+import { blocking, check, detectPnpm, needsRemediation, redact } from "../lib/ops/doctor.ts";
 
 /**
  * **A DIAGNOSTIC TOOL IS THE MOST DANGEROUS PLACE IN A REPOSITORY TO HANDLE A
@@ -297,4 +297,64 @@ test("SENTINEL: a check driven down a FAILING path still leaks nothing", () => {
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+/* ------------------------------- the instrument's own false report, replayed */
+
+test("PLANTED: doctor asks the RUNNER for pnpm rather than spawning it", () => {
+  /*
+   * **THE READINESS TOOL REPORTED A FACT ABOUT ITSELF AS A FACT ABOUT THE
+   * WORLD.** `pnpm run doctor` printed `FAIL — pnpm is not on PATH` on a
+   * machine that was running the check THROUGH pnpm — twice, for two different
+   * Windows reasons: `execFileSync("pnpm")` is ENOENT because the executable is
+   * `pnpm.cmd`, and `execFileSync("pnpm.cmd")` is ENOENT too because
+   * `execFile` does no PATHEXT resolution.
+   *
+   * The control is the whole point: the spawn is made to THROW. If the version
+   * still comes back, it came from the runner's own `npm_config_user_agent`
+   * and no process was involved. Restore either spawning implementation and
+   * this fails.
+   */
+  const explode = () => {
+    throw new Error("spawnSync pnpm ENOENT");
+  };
+
+  const throughPnpm = detectPnpm("pnpm/11.21.0 npm/? node/v24.19.0 win32 x64", explode);
+  assert.equal(
+    throughPnpm.version,
+    "11.21.0",
+    "doctor spawned a process instead of reading the user agent pnpm already set",
+  );
+  assert.equal(throughPnpm.error, null);
+
+  /* A GENUINE absence is still a genuine failure — the repair must not have
+   * turned the check into one that can never fail. */
+  const notPnpm = detectPnpm("npm/10.0.0 node/v24.19.0", explode);
+  assert.equal(notPnpm.version, null, "an absent pnpm must still report absent");
+  assert.ok(notPnpm.error, "and must carry the failure, not a silent null");
+
+  /* And the spawn path still works when it is the only one available. */
+  const spawned = detectPnpm(undefined, () => "10.33.0\n");
+  assert.equal(spawned.version, "10.33.0");
+});
+
+test("the documented invocation is `pnpm run doctor`, and the script exists under that name", () => {
+  /*
+   * pnpm OWNS the verb `doctor`: `pnpm doctor` runs pnpm's own installation
+   * check, prints "All checks passed" about pnpm, and never reaches this
+   * repository's script. An earlier brief asked for `pnpm doctor` and the right
+   * answer is not to fight the package manager for the name.
+   */
+  const pkg = JSON.parse(readFileSync(join(process.cwd(), "package.json"), "utf8")) as {
+    scripts: Record<string, string>;
+  };
+  assert.ok(pkg.scripts.doctor, "package.json has no `doctor` script");
+  assert.match(pkg.scripts.doctor, /doctor\.mts/);
+
+  const header = readFileSync(join(process.cwd(), "scripts/doctor.mts"), "utf8").slice(0, 2000);
+  assert.match(
+    header,
+    /pnpm run doctor/,
+    "the script must document the invocation that actually reaches it",
+  );
 });

@@ -88395,6 +88395,86 @@
     "collectedAt": "2026-08-27T00:00:00.000Z",
     "verifiedAt": "2026-08-27T00:00:00.000Z"
    }
+  },
+  {
+   "id": "curated:az/pima-rocking-k-south-cfd#governing",
+   "ocdId": null,
+   "name": "Rocking K South Community Facilities District Board",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+    "sourceOrg": "Pima County; A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio. Territory: Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "curated:az/pima-regional-flood-control-district#governing",
+   "ocdId": null,
+   "name": "Pima County Regional Flood Control District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/1427/Flood-Control",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/1427/Flood-Control",
+    "sourceOrg": "Pima County; A.R.S. 48-3603; mandated in every Arizona county by 1978 legislation, with the county Board of Supervisors designated as the governing body. Territory: aligned with the county boundary; levies a secondary property tax on all parcels within its jurisdiction. Tucson, Marana, Oro Valley and Sahuarita administer their own floodplain regulation under the 1984 amendments, which is a regulatory opt-out rather than a withdrawal from the district.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "curated:az/pima-county-free-library-district#governing",
+   "ocdId": null,
+   "name": "Pima County Free Library District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.library.pima.gov/",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.library.pima.gov/",
+    "sourceOrg": "Pima County; A.R.S. 48-3901(C): the board of supervisors shall be the board of directors of the county free library district. Territory: A.R.S. 48-3903 levies the district tax upon all property in the county and upon all property within incorporated cities and towns in the county.",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
+  },
+  {
+   "id": "curated:az/pima-county-stadium-district#governing",
+   "ocdId": null,
+   "name": "Pima County Stadium District Board of Directors",
+   "bodyClass": "GOVERNING",
+   "bodyOrigin": "CURATED",
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://pima.legistar.com/Calendar.aspx",
+   "meetingCadence": null,
+   "homepageUrl": "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+   "demandCount": 0,
+   "sourceDataset": "GOV_DIRECTORY",
+   "provenance": {
+    "sourceUrl": "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+    "sourceOrg": "Pima County; A.R.S. 48-4202(A) and (D): a countywide district whose board of directors, in a county under 1,500,000 people, is the county board of supervisors. 48-4202(K) makes it a tax levying public improvement district and a political taxing subdivision of the state. Territory: countywide, including both the incorporated and unincorporated areas of the county (A.R.S. 48-4202(A)).",
+    "collectedAt": "2026-08-27",
+    "verifiedAt": "2026-08-27"
+   }
   }
  ]
 }

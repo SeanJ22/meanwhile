@@ -386,6 +386,15 @@ export const CURATED_BODIES: Body[] = [
   // still owed, and there is deliberately no way to record "gave up". ──────
   ...specialDistrictRows(),
 
+  // ── The 85641 detective session (2026-08-27): the districts the county
+  // BOARD IS. Four Pima County governments that a boundary-layer hunt could
+  // never find, because three of them publish no boundary and the fourth
+  // publishes its boundary as a subdivision plat. Each is a separate political
+  // taxing subdivision with its own budget, its own resolution series and its
+  // own District Board — and in every case that board is the Board of
+  // Supervisors sitting as it. See `pima85641DistrictRows` below. ───────────
+  ...pima85641DistrictRows(),
+
   // ── The depth session (2026-08-15): Rockaway Township's other boards ────
   // One division, many bodies — the same shape as Tucson's, and the reason
   // 07866 read thin. The township's AgendaCenter enumerates exactly five
@@ -876,6 +885,139 @@ function specialDistrictRows(): Body[] {
   }));
 }
 
+/**
+ * **THE DISTRICTS THE COUNTY BOARD IS** — Pima County governments serving
+ * 85641 that no boundary layer names. (2026-08-27, the 85641 detective
+ * session.)
+ *
+ * ## Why these were invisible
+ *
+ * `states/az/85641.md` recorded the Flood Control District, the Library
+ * District and the two community facilities districts as LEADS, with the
+ * reason: "county-wide or near-county-wide taxing districts whose boundaries
+ * were not among the layers walked". Pima County's ArcGIS holds 34 services
+ * and 281 layers and publishes a boundary for NONE of them.
+ *
+ * Three of the four never will, and that is not a gap in the county's
+ * publishing — **their boundary is the county**, established by statute rather
+ * than by a polygon:
+ *
+ * - **Library District** — A.R.S. 48-3901(A) establishes it "for the county
+ *   and for all cities and towns within the county"; 48-3901(C): "The board of
+ *   supervisors shall be the board of directors". 48-3903 levies its tax "upon
+ *   all property in the county and upon all property within incorporated
+ *   cities and towns in the county".
+ * - **Stadium District** — A.R.S. 48-4202(A) authorises "a countywide district
+ *   to include both the incorporated and unincorporated areas of the county";
+ *   48-4202(D) makes the board of supervisors its board of directors in a
+ *   county under 1.5 million; 48-4202(K) makes it "a tax levying public
+ *   improvement district and a political taxing subdivision of this state".
+ *   **The project did not know this class of government existed.**
+ * - **Regional Flood Control District** — A.R.S. 48-3603(A): "a political
+ *   taxing subdivision of this state". The district's own formation page says
+ *   the 1978 legislation mandated one in every Arizona county, that they "were
+ *   set up to be aligned with county boundaries", and that they levy secondary
+ *   property taxes "on all parcels within their jurisdiction — not just
+ *   properties with identified flood risks". The 1984 amendments let
+ *   incorporated jurisdictions opt out of FLOODPLAIN REGULATION, which Tucson,
+ *   Marana, Oro Valley and Sahuarita did; that is a regulatory opt-out and not
+ *   a withdrawal from the district.
+ *
+ * The fourth, **Rocking K South CFD**, does have a boundary, and it is
+ * published as a recorded subdivision plat rather than as a district: its
+ * formation resolution recites "Blocks 1 through 14 of Rocking K South ...
+ * Book 64 of Maps and Plats, Page 85", and all 25 recorded Rocking K South
+ * plats in the county's own Subdivisions layer point-test inside ZCTA 85641.
+ * `pnpm cfd:territory --zip 85641` re-runs that check. **Wildflower CFD is
+ * deliberately NOT here**: the same route places its plat in ZCTA 85757, so a
+ * lead this project had carried as "a strong lead" for 85641 is a false
+ * positive, recorded as one.
+ *
+ * ## Why each has a District Board and no separate calendar
+ *
+ * Each is governed by the Board of Supervisors sitting as its board, so its
+ * business appears on the county's Legistar calendar as its own hearings under
+ * its own resolution series — RESOLUTION NO. 2026-RK1 "of the District Board
+ * of Rocking K South Community Facilities District", the Library District,
+ * Stadium District and Flood Control District final budgets each adopted as
+ * separate hearings on 2026-06-04. That is why `agendaSourceRef` is the county
+ * calendar for all four: it is not a placeholder, it is where these bodies
+ * actually meet.
+ */
+function pima85641DistrictRows(): Body[] {
+  const collected = "2026-08-27";
+  const PIMA_LEGISTAR = "https://pima.legistar.com/Calendar.aspx";
+  const rows: Array<{
+    slug: string;
+    name: string;
+    homepage: string;
+    authority: string;
+    territory: string;
+  }> = [
+    {
+      slug: "pima-rocking-k-south-cfd",
+      name: "Rocking K South Community Facilities District Board",
+      homepage: "https://www.pima.gov/1864/Rocking-K-South-Community-Facilities-Dis",
+      authority:
+        "A.R.S. 48-701 et seq.; formed by Pima County Resolution 2017-2 (2017-01-17), recorded as sequence 20170450755. The resolution makes the members of the Board of Supervisors the district's governing board ex officio.",
+      territory:
+        "Blocks 1 through 14 of Rocking K South, Book 64 of Maps and Plats, Page 85 — approximately 2,047 acres, wholly within unincorporated Pima County. All 25 recorded Rocking K South plats point-test inside ZCTA 85641.",
+    },
+    {
+      slug: "pima-regional-flood-control-district",
+      name: "Pima County Regional Flood Control District Board of Directors",
+      homepage: "https://www.pima.gov/1427/Flood-Control",
+      authority:
+        "A.R.S. 48-3603; mandated in every Arizona county by 1978 legislation, with the county Board of Supervisors designated as the governing body.",
+      territory:
+        "aligned with the county boundary; levies a secondary property tax on all parcels within its jurisdiction. Tucson, Marana, Oro Valley and Sahuarita administer their own floodplain regulation under the 1984 amendments, which is a regulatory opt-out rather than a withdrawal from the district.",
+    },
+    {
+      slug: "pima-county-free-library-district",
+      name: "Pima County Free Library District Board of Directors",
+      homepage: "https://www.library.pima.gov/",
+      authority:
+        "A.R.S. 48-3901(C): the board of supervisors shall be the board of directors of the county free library district.",
+      territory:
+        "A.R.S. 48-3903 levies the district tax upon all property in the county and upon all property within incorporated cities and towns in the county.",
+    },
+    {
+      slug: "pima-county-stadium-district",
+      name: "Pima County Stadium District Board of Directors",
+      homepage: "https://www.pima.gov/965/Stadium-District---Kino-Sports-Complex",
+      authority:
+        "A.R.S. 48-4202(A) and (D): a countywide district whose board of directors, in a county under 1,500,000 people, is the county board of supervisors. 48-4202(K) makes it a tax levying public improvement district and a political taxing subdivision of the state.",
+      territory:
+        "countywide, including both the incorporated and unincorporated areas of the county (A.R.S. 48-4202(A)).",
+    },
+  ];
+
+  return rows.map((row) => ({
+    id: `curated:az/${row.slug}#governing`,
+    ocdId: null,
+    name: row.name,
+    bodyClass: "GOVERNING" as const,
+    bodyOrigin: "CURATED" as const,
+    /*
+     * LIVE, not NOT_ATTEMPTED: the agenda hunt is done for these. The county's
+     * Legistar tenant is already wired, and each district's own budget
+     * hearings and resolutions are in it — searched and found, not assumed.
+     */
+    coverageStatus: "LIVE" as const,
+    agendaSourceType: "LEGISTAR" as const,
+    agendaSourceRef: PIMA_LEGISTAR,
+    meetingCadence: null,
+    homepageUrl: row.homepage,
+    demandCount: 0,
+    sourceDataset: "GOV_DIRECTORY" as const,
+    provenance: {
+      sourceUrl: row.homepage,
+      sourceOrg: `Pima County; ${row.authority} Territory: ${row.territory}`,
+      collectedAt: collected,
+      verifiedAt: collected,
+    },
+  }));
+}
 
 /**
  * Wilmot NH's three wired boards (M123, 2026-08-19).

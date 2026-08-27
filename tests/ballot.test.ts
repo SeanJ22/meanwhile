@@ -226,19 +226,49 @@ test("a Tucson voter (85701) sees the statewide slate, CD-7, LD-20 and the measu
 
   const candidacy = contests.filter((c) => c.type === "CANDIDACY");
   const measures = contests.filter((c) => c.type === "MEASURE");
-  // Denominators: 6 statewide offices + CD7 + LD20 senate + LD20 house = 9
-  // candidacy contests; 11 statewide measures.
-  assert.equal(candidacy.length, 9, candidacy.map((c) => c.id).join(", "));
-  assert.equal(measures.length, 11);
+  /*
+   * Denominators, moved 2026-08-27 and each move sourced.
+   *
+   * CANDIDACY 9 -> 10: Corporation Commissioner. It was omitted because no
+   * source stated how many of the five seats were scheduled this cycle, and a
+   * guessed seat count is a claim. The Pima County Official Candidate List
+   * states it — "Vote for not more than 2" — so the contest is now carried.
+   *
+   * MEASURES 11 -> 12: Proposition 425, Pima County's Permanent Base
+   * Adjustment. It is a COUNTY measure, so unlike the eleven statewide ones it
+   * is cited to the county rather than to the Legislative Council.
+   */
+  assert.equal(candidacy.length, 10, candidacy.map((c) => c.id).join(", "));
+  assert.equal(measures.length, 12, measures.map((c) => c.id).join(", "));
 
   const ids = new Set(contests.map((c) => c.id));
   assert.ok(ids.has("ballot-az-pima:us-house-7"));
   assert.ok(ids.has("ballot-az-pima:state-house-20"));
   assert.ok(!ids.has("ballot-az-pima:us-house-6"), "CD-6 must not leak into 85701");
 
-  // Every measure links the Legislative Council's adopted analysis.
-  for (const m of measures) {
+  /*
+   * Every STATEWIDE measure links the Legislative Council's adopted analysis.
+   *
+   * The Council analyses statewide measures and nothing else, so a county or
+   * school-district measure has no Council analysis to link and never will.
+   * The assertion is therefore scoped to the division it was always about, and
+   * the local measures are held to their OWN referring authority instead —
+   * which is a stricter test than dropping them from the loop, not a looser
+   * one.
+   */
+  const statewide = measures.filter(
+    (m) => m.ocdId === "ocd-division/country:us/state:az",
+  );
+  assert.equal(statewide.length, 11, statewide.map((m) => m.id).join(", "));
+  for (const m of statewide) {
     assert.match(m.provenance.sourceUrl ?? "", /azleg\.gov.*2026BallotMeasures/);
+  }
+  for (const m of measures.filter((m) => !statewide.includes(m))) {
+    assert.match(
+      m.provenance.sourceUrl ?? "",
+      /pima/,
+      `${m.id}: a local measure cites the authority that referred it`,
+    );
   }
 
   // The no-U.S.-Senate absence is stated and cited, never implied.
@@ -305,16 +335,54 @@ test("a Newbury voter (03255) sees the November slate, and March is stated, not 
   assert.ok((set.coverageNotes ?? []).length > 0);
 });
 
+/**
+ * **THE ELECTION AUTHORITY IS NOT ALWAYS THE SECRETARY OF STATE.**
+ *
+ * This allowed three hosts — the state Secretary of State and the Legislative
+ * Council — which was right while the file held statewide contests only. It is
+ * wrong for the tier this product actually reaches, and A.R.S. § 16-928 says
+ * so in as many words: filings route to the Secretary of State for statewide
+ * and legislative offices, to **the county officer in charge of elections**
+ * for county, school-district and special-taxing-district offices, and to the
+ * city or town clerk for municipal ones.
+ *
+ * So the list is by AUTHORITY, each entry naming which authority it is and for
+ * what. A URL that is merely official is still not enough: it has to be the
+ * body that runs, refers or files the thing being cited.
+ */
+const ELECTION_AUTHORITIES: { pattern: RegExp; who: string }[] = [
+  { pattern: /^https:\/\/azsos\.gov\//, who: "Arizona Secretary of State" },
+  {
+    pattern: /^https:\/\/apps\.azsos\.gov\//,
+    who: "Arizona Secretary of State — the application host its own election pages link, and where the certified county canvasses are published",
+  },
+  { pattern: /^https:\/\/www\.azleg\.gov\//, who: "Arizona Legislative Council" },
+  {
+    pattern: /^https:\/\/content\.civicplus\.com\/api\/assets\/az-pimacounty\//,
+    who: "Pima County Elections Department — the county officer in charge of elections under A.R.S. § 16-928, publishing through its own CMS asset host",
+  },
+  {
+    pattern: /^https:\/\/www\.schools\.pima\.gov\//,
+    who: "Pima County School Superintendent — the filing officer for school-district ballot measures and governing-board candidates in this county",
+  },
+  {
+    pattern: /^https:\/\/pima\.legistar\.com\//,
+    who: "Pima County Board of Supervisors — the body that cancels an uncontested school-district election and appoints to the seat",
+  },
+  { pattern: /^https:\/\/www\.sos\.nh\.gov\//, who: "New Hampshire Secretary of State" },
+];
+
 test("every AZ and NH ballot record is cited to an official source", async () => {
   for (const state of ["az", "nh"]) {
     const entry = BALLOT_SOURCES.find((s) => s.state === state);
     assert.ok(entry);
     const set = entry.source.normalize(await entry.source.fetch());
     for (const record of [...set.contests, ...set.candidacies, ...set.absences]) {
-      assert.match(
-        record.provenance.sourceUrl ?? "",
-        /^https:\/\/(azsos\.gov|www\.azleg\.gov|www\.sos\.nh\.gov)\//,
-        `${state}: every record cites the election authority or Legislative Council`,
+      const url = record.provenance.sourceUrl ?? "";
+      assert.ok(
+        ELECTION_AUTHORITIES.some((a) => a.pattern.test(url)),
+        `${state}: ${url} is not one of the named election authorities — ` +
+          `add the authority and say which body it is, or cite one that is already listed`,
       );
     }
   }

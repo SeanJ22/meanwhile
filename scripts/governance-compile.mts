@@ -45,21 +45,6 @@ const byId = new Map(records.map((r) => [r.id, r]));
 
 const applied = { claims: 0, statuses: 0, adopted: 0 };
 
-// --- 1. status resolutions -------------------------------------------------
-for (const res of STATUS_RESOLUTIONS) {
-  const r = byId.get(res.id);
-  if (!r) throw new Error(`status resolution targets a record that does not exist: ${res.id}`);
-  if (!byId.has(res.by)) throw new Error(`resolution ${res.id} cites missing ${res.by}`);
-  r.status = res.status;
-  // A record whose operative force moved has no CURRENT home. Pointing it at a
-  // policy would put retired text back in front of a session.
-  if (!CURRENT_STATUSES.includes(r.status)) r.operativePolicy = null;
-  if (!r.routingNotes.some((n) => n.startsWith("status resolved"))) {
-    r.routingNotes.push(`status resolved to ${res.status} by ${res.by}: ${res.why}`);
-  }
-  applied.statuses += 1;
-}
-
 // --- 1b. historical classification ------------------------------------------
 // The 43 records the mechanical importer honestly could not type. Each is
 // resolved from its OWN WORDS, with the supporting quote carried on the record
@@ -142,7 +127,10 @@ for (const d of NEW_DECISIONS) {
     provenance: d.provenance,
     domain: d.domain,
     title: d.title,
-    adopted: REMEDIATION_DATE,
+    // A later amendment carries its OWN date. Stamping every adoption with the
+    // remediation date would misdate a rule to the day before it was made, and
+    // every decision taken in between would appear to have been taken under it.
+    adopted: d.adopted ?? REMEDIATION_DATE,
     body: d.body,
     variants: [],
     relations: d.relations ?? [],
@@ -157,6 +145,31 @@ for (const d of NEW_DECISIONS) {
   byId.set(id, rec);
   applied.adopted += 1;
 }
+
+// --- 3b. status resolutions ------------------------------------------------
+// RUN AFTER ADOPTION, deliberately. A resolution names the record that took
+// over, and the record that takes over is frequently adopted in the SAME
+// compile — RULING 189 retiring RULING 187 is exactly that shape. Resolving
+// first meant a new amendment could retire nothing until a second run, and the
+// existence check below would fail on the first.
+//
+// It also fixes the precedence. Adoption regenerates the records this file
+// owns, so a status applied before it would simply be overwritten back to
+// ACTIVE. Supersession is the later word, and it must be the last one applied.
+for (const res of STATUS_RESOLUTIONS) {
+  const r = byId.get(res.id);
+  if (!r) throw new Error(`status resolution targets a record that does not exist: ${res.id}`);
+  if (!byId.has(res.by)) throw new Error(`resolution ${res.id} cites missing ${res.by}`);
+  r.status = res.status;
+  // A record whose operative force moved has no CURRENT home. Pointing it at a
+  // policy would put retired text back in front of a session.
+  if (!CURRENT_STATUSES.includes(r.status)) r.operativePolicy = null;
+  if (!r.routingNotes.some((n) => n.startsWith("status resolved"))) {
+    r.routingNotes.push(`status resolved to ${res.status} by ${res.by}: ${res.why}`);
+  }
+  applied.statuses += 1;
+}
+
 
 // The constitution's un-numbered law is NOT re-derived here. It was imported
 // ONCE, from the pinned pre-remediation snapshot, by `pnpm governance:import`.

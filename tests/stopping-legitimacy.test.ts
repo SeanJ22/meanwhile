@@ -5,9 +5,10 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
-  LIMIT_REACHED_FLOOR_PERCENT,
+  NON_REASONS,
   SESSION_STATUSES,
   classifySessionStop,
+  disqualifyingNonReason,
   type StopAccounting,
 } from "../lib/workstate/types.ts";
 import { proveResume } from "../lib/workstate/frontier.ts";
@@ -18,137 +19,254 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
  * THE STOPPING-LEGITIMACY TEST.
  *
  * Two independent questions at session close: **was the state preserved?** and
- * **was there a legitimate reason to stop?** The three-state model this
- * replaces could only express the first, so a session that preserved everything
- * and stopped at 56% with work remaining reported a status that read as
- * success.
+ * **was there a legitimate reason to stop?**
  *
- * **Preservation quality is not permission to stop.**
+ * The model that answered the second one used to compare a self-reported
+ * `context_used_percent` against an 80% floor. **A session cannot measure that
+ * quantity.** One reported approximately 4% used while the interface it was
+ * running inside displayed roughly 47%, and the classifier believed it, because
+ * a number was all it was given.
+ *
+ * RULING 189 removes the estimate and every proxy for it. What is left is three
+ * real conditions — the work is done, the author stopped it, something outside
+ * it actually prevented continuing — and this file's job is to prove that no
+ * fourth one can be smuggled back in as prose.
  */
 
 function accounting(over: Partial<StopAccounting> = {}): StopAccounting {
   return {
-    contextUsedPercent: 56,
-    contextRemainingPercent: 44,
     stopReason: "unspecified",
     executableOwedWorkRemaining: 12,
+    authorStop: false,
     externalStop: false,
     statePersisted: true,
-    productiveUntilBoundary: true,
     ...over,
   };
 }
 
-test("56% used, work remaining, no external stop -> EARLY_HANDOFF_WITH_CAPACITY", () => {
-  // The brief's exact case, and the one the preceding descent session hit.
-  const v = classifySessionStop(accounting());
-  assert.equal(v.status, "EARLY_HANDOFF_WITH_CAPACITY");
-  assert.match(v.reason, /44% of context remained/);
-  assert.match(v.reason, /12 executable item/);
+/* ==================================================================== */
+/* NO ESTIMATE IS ASKED FOR, AND NONE CAN BE SUPPLIED                    */
+/* ==================================================================== */
+
+test("the stop accounting has no field for a context estimate", () => {
+  // The load-bearing case, and the reason this amendment exists: the shape of
+  // the input is the whole of the incentive. A field named
+  // `contextUsedPercent` is a field a session will fill in, accurately or
+  // otherwise.
+  const keys = Object.keys(accounting());
+  assert.deepEqual(keys.sort(), [
+    "authorStop",
+    "executableOwedWorkRemaining",
+    "externalStop",
+    "statePersisted",
+    "stopReason",
+  ]);
+  for (const k of keys) {
+    assert.ok(!/context|percent|capacity|remaining_/i.test(k), `${k} reintroduces a self-measurement`);
+  }
 });
 
-test("a session may not award itself CLEAN_HANDOFF_LIMIT_REACHED at 56%", () => {
-  // The model does not award itself a status; the state does. A claim that the
-  // accounting does not support is REFUSED, and the refusal names the claim.
-  const v = classifySessionStop(accounting(), "CLEAN_HANDOFF_LIMIT_REACHED");
-  assert.equal(v.status, "EARLY_HANDOFF_WITH_CAPACITY");
-  assert.equal(v.refused, "CLEAN_HANDOFF_LIMIT_REACHED");
+test("classifySessionStop ignores any extra context field it is handed", () => {
+  // A caller carrying the old shape forward gets the same verdict as one that
+  // does not. There is no path by which a percentage changes an outcome.
+  const withGhost = classifySessionStop({
+    ...accounting(),
+    // @ts-expect-error — the removed field, offered deliberately.
+    contextUsedPercent: 95,
+    contextRemainingPercent: 5,
+    platformSignalledLimit: true,
+  });
+  assert.equal(withGhost.status, "EARLY_HANDOFF");
+  assert.equal(classifySessionStop(accounting()).status, withGhost.status);
 });
 
-test("88% used, work remaining, state persisted, productive to the boundary -> CLEAN_HANDOFF_LIMIT_REACHED", () => {
-  const v = classifySessionStop(
-    accounting({
-      contextUsedPercent: 88,
-      contextRemainingPercent: 12,
-      stopReason: "context boundary reached mid-item",
-    }),
-  );
-  assert.equal(v.status, "CLEAN_HANDOFF_LIMIT_REACHED");
-  assert.match(v.reason, /88%/);
-});
-
-test("the 80% figure is a FLOOR for one status, and not a target", () => {
-  assert.equal(LIMIT_REACHED_FLOOR_PERCENT, 80);
-  // Just under the floor is still early, however tidy the handoff.
-  assert.equal(
-    classifySessionStop(accounting({ contextUsedPercent: 79, contextRemainingPercent: 21 })).status,
-    "EARLY_HANDOFF_WITH_CAPACITY",
-  );
-  assert.equal(
-    classifySessionStop(accounting({ contextUsedPercent: 80, contextRemainingPercent: 20 })).status,
-    "CLEAN_HANDOFF_LIMIT_REACHED",
-  );
-});
-
-test("a platform signal qualifies without the percentage", () => {
-  // "the environment reports an imminent context limit, compaction event, or
-  // hard stop" is the other qualifying condition, and it does not require 80%.
-  const v = classifySessionStop(
-    accounting({ contextUsedPercent: 40, contextRemainingPercent: 60, platformSignalledLimit: true }),
-  );
-  assert.equal(v.status, "CLEAN_HANDOFF_LIMIT_REACHED");
-  assert.match(v.reason, /imminent limit/);
-});
-
-test("reaching the floor without working to it is still EARLY_HANDOFF_WITH_CAPACITY", () => {
-  // This is the anti-gaming rule made structural. Burning context and then
-  // stopping is not the same as working until the boundary, and the status
-  // model can tell them apart.
-  const v = classifySessionStop(
-    accounting({ contextUsedPercent: 91, contextRemainingPercent: 9, productiveUntilBoundary: false }),
-  );
-  assert.equal(v.status, "EARLY_HANDOFF_WITH_CAPACITY");
-  assert.match(v.reason, /did not continue productive authorized work/);
-});
-
-test("ANTI-GAMING — the rule is written where a session reads it, not only in a brief", () => {
-  // A rule against burning context to qualify for a tidier label cannot be
-  // fully enforced by a type. What CAN be enforced is that it is stated in
-  // current law and in the code a session touches at close.
-  const types = readFileSync(join(ROOT, "lib/workstate/types.ts"), "utf8");
-  assert.match(types, /never a target/i);
-  assert.match(types, /Consuming context in order\s+\*? ?to cross it is a defect|is a defect/i);
-  const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
-  assert.match(claude, /EARLY_HANDOFF_WITH_CAPACITY/);
-  assert.match(claude.replace(/\s+/g, " "), /floor for that status, never a target/i);
-});
-
-test("an external stop qualifies only when it is real", () => {
-  const external = classifySessionStop(
-    accounting({ externalStop: true, stopReason: "the author instructed the session to stop" }),
-  );
-  assert.equal(external.status, "CLEAN_HANDOFF_EXTERNAL_STOP");
-
-  // One blocked item does not qualify while other authorized work exists —
-  // that is represented by `executableOwedWorkRemaining` staying above zero and
-  // `externalStop` staying false. Skip forward instead.
-  assert.equal(
-    classifySessionStop(accounting({ externalStop: false, executableOwedWorkRemaining: 1 })).status,
-    "EARLY_HANDOFF_WITH_CAPACITY",
-  );
-});
-
-test("COMPLETE is derived from owed work, never claimed", () => {
-  assert.equal(
-    classifySessionStop(accounting({ executableOwedWorkRemaining: 0 })).status,
+test("the removed vocabulary is gone from the status list", () => {
+  const list = SESSION_STATUSES as readonly string[];
+  assert.ok(!list.includes("CLEAN_HANDOFF_LIMIT_REACHED"));
+  assert.ok(!list.includes("EARLY_HANDOFF_WITH_CAPACITY"));
+  assert.ok(!list.includes("CLEAN_HANDOFF"));
+  assert.equal(list.length, 5);
+  assert.deepEqual(list, [
     "COMPLETE",
+    "CLEAN_HANDOFF_AUTHOR_STOP",
+    "CLEAN_HANDOFF_EXTERNAL_STOP",
+    "EARLY_HANDOFF",
+    "FAILED_CLOSEOUT",
+  ]);
+});
+
+test("the closeout command refuses the removed flags rather than ignoring them", () => {
+  const src = readFileSync(join(ROOT, "scripts/workstream-close.mts"), "utf8");
+  // The flags are named ONCE, in the refusal list. Anywhere else would be a
+  // path that still reads them.
+  assert.match(src, /const REMOVED = \["--context-used", "--platform-limit", "--stopped-short"\]/);
+  const withoutRefusal = src.replace(/const REMOVED = \[[^\]]*\]/, "");
+  for (const flag of ["--context-used", "--platform-limit", "--stopped-short"]) {
+    assert.ok(
+      !new RegExp(`argv\\.(includes|indexOf)\\("${flag}"`).test(withoutRefusal),
+      `${flag} is still read`,
+    );
+  }
+  assert.ok(
+    !/contextUsedPercent|contextRemainingPercent|platformSignalledLimit/.test(src),
+    "the closeout still constructs a context accounting",
   );
-  // Claiming COMPLETE while work remains is refused.
+});
+
+/* ==================================================================== */
+/* THE THREE REAL REASONS                                                */
+/* ==================================================================== */
+
+test("A — completed authorized work closes COMPLETE, derived from owed work", () => {
+  assert.equal(classifySessionStop(accounting({ executableOwedWorkRemaining: 0 })).status, "COMPLETE");
+  // And claiming it while work remains is refused, with the claim named.
   const v = classifySessionStop(accounting({ executableOwedWorkRemaining: 3 }), "COMPLETE");
-  assert.equal(v.status, "EARLY_HANDOFF_WITH_CAPACITY");
+  assert.equal(v.status, "EARLY_HANDOFF");
   assert.equal(v.refused, "COMPLETE");
 });
 
-test("missing canonical state outranks everything -> FAILED_CLOSEOUT", () => {
+test("B — an explicit author stop is represented honestly", () => {
   const v = classifySessionStop(
-    accounting({ statePersisted: false, contextUsedPercent: 95, contextRemainingPercent: 5 }),
+    accounting({ authorStop: true, stopReason: "the author redirected the session to a new brief" }),
   );
+  assert.equal(v.status, "CLEAN_HANDOFF_AUTHOR_STOP");
+  assert.match(v.reason, /author explicitly stopped, redirected or narrowed/);
+});
+
+test("C — an actual external interruption is represented honestly, and is never inferred", () => {
+  const v = classifySessionStop(
+    accounting({ externalStop: true, stopReason: "the platform terminated the run" }),
+  );
+  assert.equal(v.status, "CLEAN_HANDOFF_EXTERNAL_STOP");
+
+  // One blocked item does not qualify while other authorized work exists. That
+  // is represented by `externalStop` staying false and owed work staying above
+  // zero — skip forward instead.
+  assert.equal(
+    classifySessionStop(accounting({ externalStop: false, executableOwedWorkRemaining: 1 })).status,
+    "EARLY_HANDOFF",
+  );
+});
+
+test("D — missing canonical state outranks everything", () => {
+  const v = classifySessionStop(accounting({ statePersisted: false, authorStop: true }));
   assert.equal(v.status, "FAILED_CLOSEOUT");
 });
 
-test("the old permissive CLEAN_HANDOFF status no longer exists", () => {
-  assert.ok(!(SESSION_STATUSES as readonly string[]).includes("CLEAN_HANDOFF"));
-  assert.equal(SESSION_STATUSES.length, 5);
+test("anything else, however well preserved, is EARLY_HANDOFF", () => {
+  const v = classifySessionStop(accounting({ stopReason: "the checklist finished" }));
+  assert.equal(v.status, "EARLY_HANDOFF");
+  assert.match(v.reason, /12 executable item/);
+  assert.match(v.reason, /the stop was still early/);
+});
+
+/* ==================================================================== */
+/* THE NON-REASONS                                                       */
+/* ==================================================================== */
+
+test("a self-estimated capacity cannot make a stop clean", () => {
+  for (const reason of [
+    "about 80% of usable context consumed",
+    "running low on context",
+    "context remaining was getting thin",
+    "an imminent compaction event",
+    "the token budget is nearly spent",
+    "roughly 47% of context used",
+  ]) {
+    const v = classifySessionStop(accounting({ externalStop: true, stopReason: reason }));
+    assert.equal(v.status, "EARLY_HANDOFF", `"${reason}" bought a clean stop`);
+    assert.match(v.reason, /self-estimated capacity/);
+  }
+});
+
+test("no other arbitrary proxy is accepted in its place", () => {
+  // RULING 189 names these specifically: swapping the unit does not make the
+  // guess a measurement.
+  for (const reason of [
+    "elapsed time suggests wrapping up",
+    "the message count is high",
+    "the command count is high",
+    "the commit count for the session is reached",
+    "the session work quota is met",
+    "fatigue",
+  ]) {
+    assert.equal(
+      classifySessionStop(accounting({ authorStop: true, stopReason: reason })).status,
+      "EARLY_HANDOFF",
+      `"${reason}" bought a clean stop`,
+    );
+  }
+});
+
+test("THE MERGE IS NOT A STOPPING CONDITION — the exact reason the last session gave", () => {
+  // Verbatim from the preceding descent session's close, which stopped while
+  // executable work remained. RULING 1 governs SHIPPING cadence; it says
+  // nothing about how long a session runs.
+  const v = classifySessionStop(
+    accounting({ externalStop: true, stopReason: "one planned merge per session (RULING 1), now taken" }),
+  );
+  assert.equal(v.status, "EARLY_HANDOFF");
+  assert.match(v.reason, /merge cadence/);
+  assert.match(v.reason, /shipping cadence, not session duration/);
+
+  for (const reason of [
+    "the planned merge has occurred",
+    "the merge is taken",
+    "already shipped for the session",
+    "merge cadence reached",
+  ]) {
+    assert.equal(
+      classifySessionStop(accounting({ authorStop: true, stopReason: reason })).status,
+      "EARLY_HANDOFF",
+      `"${reason}" bought a clean stop`,
+    );
+  }
+});
+
+test("a non-reason disqualifies a CLEAN status; it never blocks the close itself", () => {
+  // COMPLETE and FAILED_CLOSEOUT are derived from state, not from prose, so a
+  // badly-worded reason cannot change either one.
+  assert.equal(
+    classifySessionStop(
+      accounting({ executableOwedWorkRemaining: 0, stopReason: "the planned merge is taken" }),
+    ).status,
+    "COMPLETE",
+  );
+  assert.equal(
+    classifySessionStop(
+      accounting({ statePersisted: false, stopReason: "low on context", externalStop: true }),
+    ).status,
+    "FAILED_CLOSEOUT",
+  );
+  // And an ordinary early stop is not re-examined for wording: it is already
+  // reported as early.
+  const plain = classifySessionStop(accounting({ stopReason: "ran low on context" }));
+  assert.equal(plain.status, "EARLY_HANDOFF");
+  assert.ok(!plain.reason.includes("self-estimated capacity"));
+});
+
+test("every declared non-reason carries a name and a stated why", () => {
+  assert.ok(NON_REASONS.length >= 2);
+  for (const n of NON_REASONS) {
+    assert.ok(n.name.length > 3);
+    assert.ok(n.why.length > 20, `${n.name} must say why it is not a reason`);
+  }
+  assert.equal(disqualifyingNonReason("the work is genuinely finished"), null);
+  assert.equal(disqualifyingNonReason("the author said stop"), null);
+});
+
+test("the rule is written where a session reads it, not only in a brief", () => {
+  // A rule against self-measurement cannot be fully enforced by a type. What
+  // CAN be enforced is that it is stated in current law and in the code a
+  // session touches at close.
+  const types = readFileSync(join(ROOT, "lib/workstate/types.ts"), "utf8");
+  assert.match(types, /A session does not measure itself|cannot measure its own/i);
+  assert.match(types, /Persisted resumability is not permission to stop/i);
+
+  const claude = readFileSync(join(ROOT, "CLAUDE.md"), "utf8");
+  assert.match(claude, /EARLY_HANDOFF/);
+  assert.match(claude.replace(/\s+/g, " "), /A session does not measure itself/i);
+  assert.match(claude.replace(/\s+/g, " "), /MERGE CADENCE IS NOT SESSION CADENCE/i);
 });
 
 /* ===================================================================== */

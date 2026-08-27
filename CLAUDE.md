@@ -243,43 +243,54 @@ the promoted-body count. (RULING 183.)
 and the session keeps going.
 
 **Three independent statuses, and confusing them is a reporting defect**
-(RULING 180, amended by RULING 187):
+(RULING 180, amended by RULING 189):
 
 ```
 SESSION:    COMPLETE
-            CLEAN_HANDOFF_LIMIT_REACHED
+            CLEAN_HANDOFF_AUTHOR_STOP
             CLEAN_HANDOFF_EXTERNAL_STOP
-            EARLY_HANDOFF_WITH_CAPACITY
+            EARLY_HANDOFF
             FAILED_CLOSEOUT
 WORKSTREAM: OPEN | COMPLETE_AS_OF <date>
 GRAPH:      EXPANDING | CONVERGED_AS_OF <date>
 ```
 
-**There are TWO independent questions at close: was the state preserved, and
-was there a legitimate reason to stop?** A session may preserve everything
-perfectly and still stop too early. **Preservation quality is not permission to
-stop.**
+**A session does not measure itself** (RULING 189). It does not estimate context
+used or remaining, narrate approximate percentages, monitor its own context as a
+work-management signal, stop because it believes a threshold was reached, or
+call itself early on guessed capacity. There is no threshold, and no proxy for
+one — not elapsed minutes, token guesses, message counts, command counts, commit
+counts, fatigue, or a work quota.
 
-`CLEAN_HANDOFF_LIMIT_REACHED` requires all of: state persisted, cursor and
-remainder generated, executable work still owed, productive work continued to a
-real boundary, AND either **at least 80% of usable context actually consumed**
-or the environment reporting an imminent limit, compaction or hard stop.
+**The rule, entire:**
 
-**That 80% is a FLOOR FOR THAT STATUS, never a target.** It is a defect to
-consume context in order to qualify — no repeated analysis, no restating
-recorded work, no enlarged reports, no delayed correct action, no busywork.
-**If productive executable work remains, do that work.**
+```
+DO THE WORK THAT WAS ASKED FOR.
+KEEP WORKING WHILE AUTHORIZED EXECUTABLE WORK REMAINS.
+STOP WHEN THE REQUESTED WORK IS ACTUALLY COMPLETE, WHEN THE AUTHOR EXPLICITLY
+STOPS OR REDIRECTS THE SESSION, OR WHEN THE ENVIRONMENT ITSELF ACTUALLY
+PREVENTS CONTINUATION.
+```
 
-`EARLY_HANDOFF_WITH_CAPACITY` is REQUIRED when capacity and executable work both
-remain and no real external condition stopped the session — however excellent
-the handoff is. `CLEAN_HANDOFF_EXTERNAL_STOP` needs an actual external
-condition; **one blocked item does not qualify while other authorized work
-exists — skip forward.**
+`CLEAN_HANDOFF_EXTERNAL_STOP` is never INFERRED; **one blocked item does not
+qualify while other authorized work exists — skip forward.** `EARLY_HANDOFF` is
+what a voluntary stop with owed work is called, however excellent the handoff.
+
+**MERGE CADENCE IS NOT SESSION CADENCE.** RULING 1 governs shipping — verify
+locally, accumulate, ship once at the real end. **The planned merge having
+happened is not a reason to stop.** Delay the merge until the session is ready
+to end.
+
+**PERSISTED RESUMABILITY IS NOT PERMISSION TO STOP VOLUNTARILY.** Canonical
+state exists so an interrupted session can resume, not so this one can end.
 
 **The model does not award itself a status. The state does**
 (`classifySessionStop` in `lib/workstate/types.ts`). Every non-`COMPLETE` close
-records measured `context_used_percent`, `context_remaining_percent`, a specific
-`stop_reason`, and `executable_owed_work_remaining`.
+records a specific `stop_reason`, whether the author stopped the session,
+whether an actual external condition prevented continuing, and
+`executable_owed_work_remaining` — derived, never asserted. A stop reason that
+appeals to self-estimated capacity or to merge cadence cannot make a stop clean:
+it is refused, and the refusal names the non-reason.
 
 **The repository generates the handoff, not the model.** `pnpm workstream:close`
 produces the exact cursor and the exact unresolved set from canonical state. The

@@ -1,13 +1,13 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "5f5873564c723a3b",
+  "snapshot": "ec996408ba1ffab7",
   "counts": {
-    "records": 225,
+    "records": 226,
     "current": 205,
     "law": 178,
     "decisions": 27,
-    "historical": 20
+    "historical": 21
   },
   "records": [
     {
@@ -3564,7 +3564,7 @@
       ],
       "title": "RULING 180 — session status, workstream status and graph status are three different facts",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
@@ -3712,11 +3712,11 @@
       ],
       "title": "RULING 187 — a well-preserved handoff is not automatically a legitimate stop",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "provenance": "author_explicit",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
-      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "operativePolicy": null,
       "claims": [],
       "relations": [
         {
@@ -3745,6 +3745,43 @@
       "operativePolicy": "docs/governance/policies/meta-governance.md",
       "claims": [],
       "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0189",
+      "aliases": [
+        "RULING 189",
+        "R189",
+        "R-189"
+      ],
+      "title": "RULING 189 — a session does not measure its own context, and stops for real reasons only",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-27",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.stop_standard",
+          "value": "work-author-or-external-condition"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_full",
+          "target": "R-0187",
+          "changed": "the entire context-usage stopping model is removed — context_used_percent, context_remaining_percent, the 80% floor, the platform-limit signal, CLEAN_HANDOFF_LIMIT_REACHED and EARLY_HANDOFF_WITH_CAPACITY all go, because the session cannot measure the quantity they were built on",
+          "survives": "that a well-preserved handoff is not automatically a legitimate stop; that the two questions at close are independent; that the model does not award itself a status and a claim the state refuses is named; that COMPLETE is derived from owed work; and that an external stop must be real, one blocked item never qualifying while other authorized work exists"
+        },
+        {
+          "kind": "amends",
+          "target": "R-0180",
+          "changed": "the session-status vocabulary is COMPLETE | CLEAN_HANDOFF_AUTHOR_STOP | CLEAN_HANDOFF_EXTERNAL_STOP | EARLY_HANDOFF | FAILED_CLOSEOUT, and the stop accounting recorded at close carries no measurement of context",
+          "survives": "RULING 180's separation of session, workstream and graph status; that the repository generates the handoff and the model may not invent it; that item completion is derived from child state; and that lost or unrepresented remainder is failure"
+        }
+      ],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

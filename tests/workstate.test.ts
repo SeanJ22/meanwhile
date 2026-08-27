@@ -418,8 +418,8 @@ test("the handoff is generated from state and omits no tail", () => {
       },
     ],
   });
-  const h = generateHandoff(w, NOW, "EARLY_HANDOFF_WITH_CAPACITY");
-  assert.equal(h.session, "EARLY_HANDOFF_WITH_CAPACITY");
+  const h = generateHandoff(w, NOW, "EARLY_HANDOFF");
+  assert.equal(h.session, "EARLY_HANDOFF");
   assert.equal(h.workstream, "OPEN");
   assert.equal(h.open.length, 2, "every open child appears — no sampling, no top-N");
   assert.equal(h.blocked.length, 1);
@@ -429,7 +429,7 @@ test("the handoff is generated from state and omits no tail", () => {
 
 /* --------------------------------------------------- the migrated descent workstream */
 
-test("THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF_WITH_CAPACITY / OPEN / EXPANDING", () => {
+test("THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF / OPEN / EXPANDING", () => {
   const dir = join(ROOT, "data", "workstate");
   if (!existsSync(dir)) return;
   const files = readdirSync(dir).filter((f) => f.endsWith(".json") && f !== "migration-summary.json");
@@ -438,14 +438,15 @@ test("THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF_WITH_
   for (const f of files) {
     const w = JSON.parse(readFileSync(join(dir, f), "utf8")) as Workstream;
     const now = { today: "2026-08-26", methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION };
-    const h = generateHandoff(w, now, "EARLY_HANDOFF_WITH_CAPACITY");
+    const h = generateHandoff(w, now, "EARLY_HANDOFF");
 
-    // Amended 2026-08-26. The preceding descent session preserved its state
-    // well AND stopped at ~56% context with executable brief items remaining
-    // and no external stop. Those are two independent facts, and the earlier
-    // three-state model could only express the first. Its persistence quality
-    // stays a positive fact; it does not make the stopping decision correct.
-    assert.equal(h.session, "EARLY_HANDOFF_WITH_CAPACITY", `${f}: preservation quality is not permission to stop`);
+    // Amended 2026-08-27. The preceding descent session preserved its state
+    // well AND stopped while executable brief items remained, with neither an
+    // author stop nor an external condition. Those are two independent facts,
+    // and the earliest three-state model could only express the first. Its
+    // persistence quality stays a positive fact; it does not make the stopping
+    // decision correct.
+    assert.equal(h.session, "EARLY_HANDOFF", `${f}: preservation quality is not permission to stop`);
     assert.equal(h.workstream, "OPEN", `${f}: the workstream remains open`);
     assert.equal(h.graph, "EXPANDING", `${f}: the graph is still expanding`);
 
@@ -543,7 +544,7 @@ test("an unmaterialized obligation is counted, never resumable, and never comple
   assert.ok(v.blockedBy.some((b) => /unmaterialized obligation/.test(b)));
 
   // And it does NOT join the resumable edge count.
-  const h = generateHandoff(w, NOW, "EARLY_HANDOFF_WITH_CAPACITY");
+  const h = generateHandoff(w, NOW, "EARLY_HANDOFF");
   assert.equal(h.discoveredNotProcessed.length, 0, "an obligation has no addresses to resume");
   assert.equal(h.unmaterialized.outstanding, 1986);
   assert.match(h.unmaterialized.detail[0], /OPEN; discharge by:/);
@@ -562,7 +563,7 @@ test("the aggregate tail across all three states is 3,900 and is reported apart"
     const h = generateHandoff(
       w,
       { today: "2026-08-26", methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-      "EARLY_HANDOFF_WITH_CAPACITY",
+      "EARLY_HANDOFF",
     );
     assert.equal(h.unmaterialized.outstanding, count, `${state}: the historical count is preserved exactly`);
     tail += h.unmaterialized.outstanding;

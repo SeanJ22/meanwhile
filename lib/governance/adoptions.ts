@@ -27,6 +27,15 @@ export const REMEDIATION_DATE = "2026-08-26";
 interface NewDecision {
   n: number;
   title: string;
+  /**
+   * The adoption date, when it is NOT the remediation date.
+   *
+   * The remediation adopted 172-188 on one day, so the compiler stamped that
+   * one date on all of them. A later amendment adopted on a later day must
+   * carry its own — a ruling misdated to the day before is a ruling that claims
+   * to have governed decisions taken before it existed.
+   */
+  adopted?: string;
   domain: Domain;
   kind: RecordKind;
   provenance: Provenance;
@@ -485,6 +494,104 @@ was claimed.**`,
     ],
   },
   {
+    n: 189,
+    adopted: "2026-08-27",
+    title:
+      "RULING 189 — a session does not measure its own context, and stops for real reasons only",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A SESSION DOES NOT MEASURE ITSELF. The context-usage stopping model is
+REMOVED — every percentage, every threshold, and every proxy for one.**
+
+RULING 187 required a session to record \`context_used_percent\` and
+\`context_remaining_percent\` at every non-\`COMPLETE\` close, and gave one
+status an **80% floor**. The model does not possess that measurement. A
+session reported approximately **4% used / 96% remaining** while the
+interface it was running inside displayed a context gauge at roughly **47%**.
+The classifier believed the number, because a number was all it was given.
+
+**A guessed quantity dressed as a measurement is worse than no quantity.** It
+made a status that reads as success purchasable with an estimate, and it gave
+a session a standing reason to reason about its own capacity instead of about
+the work.
+
+**The operating rule, entire:**
+
+    DO THE WORK THAT WAS ASKED FOR.
+    KEEP WORKING WHILE AUTHORIZED EXECUTABLE WORK REMAINS.
+    STOP WHEN THE REQUESTED WORK IS ACTUALLY COMPLETE, WHEN THE AUTHOR
+    EXPLICITLY STOPS OR REDIRECTS THE SESSION, OR WHEN THE ENVIRONMENT
+    ITSELF ACTUALLY PREVENTS CONTINUATION.
+
+**A session does not estimate context used, estimate context remaining,
+narrate approximate percentages, monitor its own context as a work-management
+signal, stop because a threshold is thought to be reached, or classify itself
+as early on guessed capacity.** Nor is the percentage replaced by another
+arbitrary proxy — elapsed minutes, token guesses, message counts, command
+counts, commit counts, subjective fatigue, or a work quota. **It is a defect
+to consume context or produce prose in order to cross any threshold, and
+there is now no threshold to cross.**
+
+**The five statuses, replacing RULING 187's five:**
+
+    SESSION: COMPLETE
+             CLEAN_HANDOFF_AUTHOR_STOP
+             CLEAN_HANDOFF_EXTERNAL_STOP
+             EARLY_HANDOFF
+             FAILED_CLOSEOUT
+
+Every non-\`COMPLETE\` close records a specific \`stop_reason\`, whether the
+AUTHOR stopped the session, whether an ACTUAL external condition prevented
+continuing, and \`executable_owed_work_remaining\` — which is DERIVED from
+canonical state, never asserted. **No percentage is recorded and none is
+asked for.**
+
+**\`CLEAN_HANDOFF_EXTERNAL_STOP\` is never INFERRED.** One blocked item does
+not qualify while other authorized work exists — skip forward.
+
+**MERGE CADENCE IS NOT SESSION CADENCE.** RULING 1 governs shipping: verify
+locally, accumulate the session's work, ship once at the real end. **The fact
+that the planned merge has occurred is not a legitimate reason to stop**, and
+the normal answer is to DELAY the merge until the session is actually ready
+to end. The preceding descent session stopped on \`one planned merge per
+session (RULING 1), now taken\` while executable work remained; that is the
+wrong reading, and it is now refused mechanically. Any author-directed
+mid-session merge exception already in force is preserved.
+
+**PERSISTED RESUMABILITY IS NOT PERMISSION TO STOP VOLUNTARILY.** Canonical
+workstate, exact frontier persistence, exact resume cursors, unmaterialized-
+obligation accounting, generated handoffs, method knowledge, the state corpus
+and durable closeout records are all UNCHANGED and undiminished. They exist
+so that an interrupted session can be resumed. They are not a licence to end
+one.
+
+The machinery is \`classifySessionStop\` and \`NON_REASONS\` in
+\`lib/workstate/types.ts\`, guarded in \`tests/stopping-legitimacy.test.ts\`.
+**A stated stop reason that appeals to self-estimated capacity or to merge
+cadence cannot make a stop clean: it is refused, and the refusal names the
+non-reason it appealed to.**`,
+    claims: [{ key: "session.stop_standard", value: "work-author-or-external-condition" }],
+    relations: [
+      {
+        kind: "supersedes_full",
+        target: "R-0187",
+        changed:
+          "the entire context-usage stopping model is removed — context_used_percent, context_remaining_percent, the 80% floor, the platform-limit signal, CLEAN_HANDOFF_LIMIT_REACHED and EARLY_HANDOFF_WITH_CAPACITY all go, because the session cannot measure the quantity they were built on",
+        survives:
+          "that a well-preserved handoff is not automatically a legitimate stop; that the two questions at close are independent; that the model does not award itself a status and a claim the state refuses is named; that COMPLETE is derived from owed work; and that an external stop must be real, one blocked item never qualifying while other authorized work exists",
+      },
+      {
+        kind: "amends",
+        target: "R-0180",
+        changed:
+          "the session-status vocabulary is COMPLETE | CLEAN_HANDOFF_AUTHOR_STOP | CLEAN_HANDOFF_EXTERNAL_STOP | EARLY_HANDOFF | FAILED_CLOSEOUT, and the stop accounting recorded at close carries no measurement of context",
+        survives:
+          "RULING 180's separation of session, workstream and graph status; that the repository generates the handoff and the model may not invent it; that item completion is derived from child state; and that lost or unrepresented remainder is failure",
+      },
+    ],
+  },
+  {
     n: 188,
     title: "RULING 188 — the descent freezes only for the minimum safe state cutover",
     domain: "meta-governance",
@@ -602,6 +709,18 @@ export const CLAIM_ASSIGNMENTS: Array<{ id: string; key: string; value: string; 
  * a session's judgement**, which is why each carries a `why` quoting the basis.
  */
 export const STATUS_RESOLUTIONS: Array<{ id: string; status: Status; by: string; why: string }> = [
+  {
+    id: "R-0187",
+    status: "SUPERSEDED",
+    by: "R-0189",
+    why: "RULING 189 removes the context-usage stopping model RULING 187 was built on. Its operative text is retired rather than amended, because leaving it current would keep instructing sessions to measure a quantity they cannot measure; what survives of it travels on RULING 189's supersedes_full relation.",
+  },
+  {
+    id: "R-0180",
+    status: "AMENDED",
+    by: "R-0189",
+    why: "RULING 189 replaces the session-status vocabulary. RULING 180's three-axis separation, generated handoff and derived item completion all stand.",
+  },
   {
     id: "R-0058",
     status: "SUPERSEDED",

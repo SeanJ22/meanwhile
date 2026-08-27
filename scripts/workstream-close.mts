@@ -34,24 +34,36 @@ const full = argv.includes("--full");
 /**
  * The stop ACCOUNTING is the input. The session STATUS is derived from it.
  *
- * That inversion is RULING 187, and it is the whole of the amendment: a session
- * used to name its own status, and a well-preserved early stop could therefore
- * report a label that read as success. Now the session supplies measured
- * numbers and the state decides what they mean — and a status the numbers do
- * not support is refused by name.
+ * That inversion came in with RULING 187 and survives its retirement: a session used to
+ * name its own status, and a well-preserved early stop could therefore report a
+ * label that read as success.
  *
- * `--context-used` is REQUIRED unless the run is complete. Where the
- * environment exposes usage directly, that reading is passed here rather than
- * inferred.
+ * **What RULING 189 removed is the fake measurement.** This command used to
+ * require `--context-used` and classify from it — asking the model for a number
+ * it cannot know, and then treating the guess as evidence. One session reported
+ * ~4% while the interface showed roughly 47%.
+ *
+ * So there is no percentage here, and no proxy for one. The inputs are a
+ * specific stop reason, whether the AUTHOR stopped the session, whether an
+ * ACTUAL external condition prevented continuing, and the owed-work count —
+ * which is derived below rather than asserted.
  */
-const num = (name: string, fallback: number): number => {
-  const i = argv.indexOf(`--${name}`);
-  return i >= 0 ? Number(argv[i + 1]) : fallback;
-};
-const contextUsed = num("context-used", Number.NaN);
 const stopReason = argv[argv.indexOf("--stop-reason") + 1] ?? "";
+const authorStop = argv.includes("--author-stop");
 const externalStop = argv.includes("--external-stop");
-const platformSignalledLimit = argv.includes("--platform-limit");
+
+// A removed flag is REFUSED rather than ignored. A session carrying the old
+// invocation forward would otherwise be told nothing, and would go on believing
+// its context estimate had been recorded and had meant something.
+const REMOVED = ["--context-used", "--platform-limit", "--stopped-short"];
+const stale = REMOVED.filter((r) => argv.includes(r));
+if (stale.length) {
+  console.error(`${stale.join(", ")} was removed by RULING 189 (2026-08-27).`);
+  console.error("A session cannot measure its own context, so no status is derived from an");
+  console.error("estimate of it. Pass --stop-reason, and --author-stop or --external-stop only");
+  console.error("when one of those actually happened.");
+  process.exit(2);
+}
 
 const methodVersion = existsSync(METHOD)
   ? (JSON.parse(readFileSync(METHOD, "utf8")) as { version: number }).version
@@ -84,21 +96,18 @@ for (const f of files) {
   const h = generateHandoff(
     w,
     { today: TODAY, methodVersion, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-    "EARLY_HANDOFF_WITH_CAPACITY",
+    "EARLY_HANDOFF",
   );
   owedAcrossAll += h.open.length + h.discoveredNotProcessed.length + h.recheckDue.length;
 }
 
 const verdict = classifySessionStop(
   {
-    contextUsedPercent: Number.isFinite(contextUsed) ? contextUsed : 0,
-    contextRemainingPercent: Number.isFinite(contextUsed) ? 100 - contextUsed : 100,
     stopReason: stopReason || "not stated",
     executableOwedWorkRemaining: owedAcrossAll,
+    authorStop,
     externalStop,
-    platformSignalledLimit,
     statePersisted: true,
-    productiveUntilBoundary: !argv.includes("--stopped-short"),
   },
   argv.includes("--claim") ? (argv[argv.indexOf("--claim") + 1] as SessionStatus) : undefined,
 );
@@ -106,17 +115,17 @@ const sessionStatus = verdict.status;
 
 if (!statusOnly) {
   console.log("=".repeat(72));
-  console.log("STOP ACCOUNTING (RULING 187)");
+  console.log("STOP ACCOUNTING (RULING 180, amended by RULING 189)");
   console.log("=".repeat(72));
-  console.log(
-    `context_used_percent            ${Number.isFinite(contextUsed) ? contextUsed : "NOT MEASURED — pass --context-used"}`,
-  );
-  console.log(
-    `context_remaining_percent       ${Number.isFinite(contextUsed) ? 100 - contextUsed : "unknown"}`,
-  );
   console.log(`stop_reason                     ${stopReason || "NOT STATED — this is a defect"}`);
   console.log(`executable_owed_work_remaining  ${owedAcrossAll}   (derived, not asserted)`);
+  console.log(`author_stop                     ${authorStop}`);
   console.log(`external_stop                   ${externalStop}`);
+  console.log("");
+  console.log("No context percentage is recorded, and none is asked for: a session cannot");
+  console.log("measure its own capacity, and a guess dressed as a measurement bought a status");
+  console.log("that reads as success (RULING 189). Keep working while authorized executable");
+  console.log("work remains.");
   console.log("");
   console.log(`SESSION STATUS: ${sessionStatus}`);
   console.log(`  because: ${verdict.reason}`);

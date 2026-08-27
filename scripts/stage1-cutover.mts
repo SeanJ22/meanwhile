@@ -262,7 +262,7 @@ const CRITERIA: Criterion[] = [
         const h = generateHandoff(
           w,
           { today: TODAY, methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-          "EARLY_HANDOFF_WITH_CAPACITY",
+          "EARLY_HANDOFF",
         );
         if (!h.resumeCursor) bad.push(`${s}: no cursor`);
         if (h.workstream !== "OPEN") bad.push(`${s}: not OPEN`);

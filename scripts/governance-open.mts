@@ -118,7 +118,7 @@ if (wantWork) {
         // A session OPEN is not a session close, so no stopping claim is made
         // here. The status shown is the one the state supports for the run
         // being resumed, and the real verdict is computed at close.
-        "EARLY_HANDOFF_WITH_CAPACITY",
+        "EARLY_HANDOFF",
       );
       console.log("");
       console.log(`WORKSTREAM             ${w.id}`);

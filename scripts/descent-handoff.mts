@@ -63,7 +63,7 @@ for (const state of DESCENT_STATES) {
   const h = generateHandoff(
     w,
     { today: TODAY, methodVersion: method?.version ?? 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-    "EARLY_HANDOFF_WITH_CAPACITY",
+    "EARLY_HANDOFF",
   );
   const tail = aggregateTail(w.unmaterialized ?? []);
   totalEdges += p.edgesPersisted;

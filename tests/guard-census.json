@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 272,
-    "named": 2706,
+    "files": 273,
+    "named": 2715,
     "dynamic": 6
   },
   "files": {
@@ -1670,12 +1670,13 @@
         "Q: What exactly makes the workstream complete?",
         "Q: What governs candidate display right now?",
         "Q: What happens when a route is blocked?",
-        "Q: What if a session reaches its context limit before the workstream is complete?",
         "Q: What is the current ballot-measure DONE standard?",
         "Q: What is the current production-verification rule?",
         "Q: What is the shipping / close-out path?",
         "Q: What prevents the project from recursively crawling irrelevant links forever?",
+        "Q: When may a session stop before the workstream is complete?",
         "Q: Which document wins if history disagrees with current policy?",
+        "Q: is the context-usage stopping model gone from CURRENT authority?",
         "answering a CURRENT question never requires the history files"
       ],
       "dynamic": 0
@@ -1799,6 +1800,15 @@
         "ICAL: the Wilmot fixture reaches Wilmot's rows and only those",
         "ICAL: the fixture parses to the events it actually contains",
         "ICAL: the wired boards produce meetings, and the counts are stated"
+      ],
+      "dynamic": 0
+    },
+    "tests/identified-ua-wall.test.ts": {
+      "names": [
+        "a host that refuses our name is walked at rung 3b, not recorded as a wall",
+        "identificationHeaders names the project without a User-Agent at all",
+        "rung 3b keeps the identification and moves it out of the User-Agent",
+        "the identification still travels in the User-Agent on the early rungs"
       ],
       "dynamic": 0
     },
@@ -3527,22 +3537,26 @@
     },
     "tests/stopping-legitimacy.test.ts": {
       "names": [
-        "56% used, work remaining, no external stop -> EARLY_HANDOFF_WITH_CAPACITY",
-        "88% used, work remaining, state persisted, productive to the boundary -> CLEAN_HANDOFF_LIMIT_REACHED",
-        "ANTI-GAMING — the rule is written where a session reads it, not only in a brief",
-        "COMPLETE is derived from owed work, never claimed",
+        "A — completed authorized work closes COMPLETE, derived from owed work",
+        "B — an explicit author stop is represented honestly",
+        "C — an actual external interruption is represented honestly, and is never inferred",
+        "D — missing canonical state outranks everything",
         "Stage 1 does not wait on Stage 2 historical normalization",
-        "a platform signal qualifies without the percentage",
-        "a session may not award itself CLEAN_HANDOFF_LIMIT_REACHED at 56%",
-        "an external stop qualifies only when it is real",
+        "THE MERGE IS NOT A STOPPING CONDITION — the exact reason the last session gave",
+        "a non-reason disqualifies a CLEAN status; it never blocks the close itself",
+        "a self-estimated capacity cannot make a stop clean",
+        "anything else, however well preserved, is EARLY_HANDOFF",
+        "classifySessionStop ignores any extra context field it is handed",
         "descent resumes against canonical state rather than rebuilding from seeds",
+        "every declared non-reason carries a name and a stated why",
         "every state resumes with outstanding work read from disk",
-        "missing canonical state outranks everything -> FAILED_CLOSEOUT",
-        "reaching the floor without working to it is still EARLY_HANDOFF_WITH_CAPACITY",
-        "the 80% figure is a FLOOR for one status, and not a target",
+        "no other arbitrary proxy is accepted in its place",
         "the active frontier does not mutate during its own migration",
+        "the closeout command refuses the removed flags rather than ignoring them",
         "the frontier was migrated ONCE, and does not need remigrating for Stage 2",
-        "the old permissive CLEAN_HANDOFF status no longer exists"
+        "the removed vocabulary is gone from the status list",
+        "the rule is written where a session reads it, not only in a brief",
+        "the stop accounting has no field for a context estimate"
       ],
       "dynamic": 0
     },
@@ -3934,7 +3948,7 @@
     "tests/workstate.test.ts": {
       "names": [
         "THE EXACT-FRONTIER TEST — an OPEN workstream without a cursor is a defect",
-        "THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF_WITH_CAPACITY / OPEN / EXPANDING",
+        "THE HANDOFF MIGRATION TEST — the descent migrates as EARLY_HANDOFF / OPEN / EXPANDING",
         "THE LEAD-IS-NOT-A-BODY TEST — hundreds of candidates, zero promotions, numerator stays zero",
         "THE PERMISSION-IS-NOT-TRANSPORT TEST — client A fails, client B reads, no DISALLOWED is manufactured",
         "a BLOCKED route keeps the workstream OPEN and is never an absence",

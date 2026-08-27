@@ -519,7 +519,7 @@ const C: Criterion[] = [
         const h = generateHandoff(
           w,
           { today: TODAY, methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
-          "EARLY_HANDOFF_WITH_CAPACITY",
+          "EARLY_HANDOFF",
         );
         if (!h.resumeCursor) bad.push(`${s}: no cursor`);
       }
@@ -532,29 +532,47 @@ const C: Criterion[] = [
   {
     key: "stopping-legitimacy model",
     check: () => {
-      const early = classifySessionStop({
-        contextUsedPercent: 56,
-        contextRemainingPercent: 44,
-        stopReason: "checklist finished",
+      // RULING 189: no threshold, no percentage, no proxy. A stop is clean
+      // only when the author stopped the session or something outside it
+      // actually prevented continuing — and a stated reason that appeals to
+      // self-estimated capacity or to merge cadence is refused by name.
+      const base = {
         executableOwedWorkRemaining: 12,
+        authorStop: false,
         externalStop: false,
         statePersisted: true,
-        productiveUntilBoundary: true,
+      };
+      const early = classifySessionStop({ ...base, stopReason: "checklist finished" });
+      const guessed = classifySessionStop({
+        ...base,
+        stopReason: "about 80% of usable context consumed",
+        externalStop: true,
       });
-      const limit = classifySessionStop({
-        contextUsedPercent: 88,
-        contextRemainingPercent: 12,
-        stopReason: "boundary",
-        executableOwedWorkRemaining: 12,
-        externalStop: false,
-        statePersisted: true,
-        productiveUntilBoundary: true,
+      const cadence = classifySessionStop({
+        ...base,
+        stopReason: "one planned merge per session, now taken",
+        externalStop: true,
+      });
+      const author = classifySessionStop({
+        ...base,
+        stopReason: "the author redirected the session to a new brief",
+        authorStop: true,
+      });
+      const done = classifySessionStop({
+        ...base,
+        executableOwedWorkRemaining: 0,
+        stopReason: "the authorized work is complete",
       });
       return {
         pass:
-          early.status === "EARLY_HANDOFF_WITH_CAPACITY" &&
-          limit.status === "CLEAN_HANDOFF_LIMIT_REACHED",
-        detail: "5 statuses; 56% with work owed is EARLY_HANDOFF_WITH_CAPACITY; a claim the state refuses is named",
+          early.status === "EARLY_HANDOFF" &&
+          guessed.status === "EARLY_HANDOFF" &&
+          cadence.status === "EARLY_HANDOFF" &&
+          author.status === "CLEAN_HANDOFF_AUTHOR_STOP" &&
+          done.status === "COMPLETE" &&
+          !JSON.stringify(Object.keys(base)).includes("context"),
+        detail:
+          "5 statuses, none derived from a context estimate; a guessed capacity and a taken merge are both refused as reasons",
       };
     },
   },

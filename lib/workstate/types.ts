@@ -30,54 +30,104 @@
  * Session status — FIVE states, because "was the state preserved?" and "was
  * there a legitimate reason to stop?" are two independent questions.
  *
- * **The three-state model this replaces was too permissive** (amended
- * 2026-08-26, the mid-session amendment). It let a session preserve everything
- * perfectly, stop at 56% context with executable work remaining, and report
- * `CLEAN_HANDOFF` — a status that reads as success. Preservation quality is not
- * permission to stop, and conflating them made early stopping invisible.
+ * **The context-percentage model this replaces was fiction** (RULING 189,
+ * 2026-08-27). It asked the model for `context_used_percent` and
+ * `context_remaining_percent` and then classified from them. The model does not
+ * possess that measurement: a session reported ~4% used while the interface it
+ * was running inside displayed roughly 47%, and the classifier believed the
+ * number because a number was all it was given.
+ *
+ * A guessed quantity dressed as a measurement is worse than no quantity at all.
+ * It made a status that reads as success purchasable with an estimate, and it
+ * gave a session a reason to think about its own capacity instead of about the
+ * work.
+ *
+ * So there is no threshold here, and no proxy for one. **A session stops when
+ * the authorized work is done, when the author stops or redirects it, or when
+ * something outside it actually prevents continuing.** Nothing else is a
+ * reason, and the fourth state is the one that says so out loud.
  */
 export const SESSION_STATUSES = [
   /** The authorized work actually satisfies its completion rules. */
   "COMPLETE",
-  /** Ran productively to a real context boundary. See `qualifiesAsLimitReached`. */
-  "CLEAN_HANDOFF_LIMIT_REACHED",
+  /** The author explicitly stopped, redirected or narrowed the session. */
+  "CLEAN_HANDOFF_AUTHOR_STOP",
   /** An actual external condition prevented continued authorized work. */
   "CLEAN_HANDOFF_EXTERNAL_STOP",
-  /** Capacity and executable work both remained. The handoff may be excellent. */
-  "EARLY_HANDOFF_WITH_CAPACITY",
+  /** Stopped voluntarily with authorized executable work still owed. */
+  "EARLY_HANDOFF",
   /** Canonical state, remainder, shipping state or accounting is missing. */
   "FAILED_CLOSEOUT",
 ] as const;
 export type SessionStatus = (typeof SESSION_STATUSES)[number];
 
 /**
- * The floor for `CLEAN_HANDOFF_LIMIT_REACHED`.
+ * Stated reasons that are NOT reasons, and the mechanical refusal of each.
  *
- * **It is a FLOOR FOR THAT STATUS, never a target.** Consuming context in order
- * to cross it is a defect: repeating analysis, restating recorded work,
- * enlarging a report, or delaying a correct action to qualify for a tidier
- * label. If productive executable work remains, do that work instead.
+ * Both entries name a specific way this repository has already stopped a
+ * session early while believing it had a justification.
+ *
+ * 1. **Self-estimated capacity.** The removed model's whole content. A session
+ *    cannot measure its own context, so a stop reason that appeals to context
+ *    used, context remaining, a percentage, a token budget or an imminent
+ *    compaction is appealing to a guess. It never qualifies a clean stop, and
+ *    naming a different arbitrary proxy — elapsed minutes, message counts,
+ *    command counts, commit counts, a work quota, fatigue — is the same defect
+ *    with a new unit.
+ *
+ * 2. **Merge cadence.** The preceding descent session stopped because "one
+ *    planned merge per session (RULING 1), now taken" — while executable work
+ *    remained. RULING 1 governs SHIPPING cadence: verify locally, accumulate,
+ *    ship once. It says nothing about how long a session runs. **The planned
+ *    merge having happened is not a reason to stop; the answer is to delay the
+ *    merge until the session is actually ready to end.**
+ *
+ * This is deliberately narrow. It disqualifies a stated reason from making a
+ * stop CLEAN; it never blocks a close, and it never touches `COMPLETE` or
+ * `FAILED_CLOSEOUT`, which are derived from state rather than from prose.
  */
-export const LIMIT_REACHED_FLOOR_PERCENT = 80;
+export const NON_REASONS: ReadonlyArray<{ name: string; pattern: RegExp; why: string }> = [
+  {
+    name: "self-estimated capacity",
+    pattern:
+      /context (?:used|remaining|left|budget|window|limit|capacity|pressure)|\d+\s*%[^.]{0,24}context|(?:running |getting )?low on context|token budget|compact(?:ion|ing)|out of (?:context|tokens)|elapsed (?:time|minutes)|message count|command count|commit count|work quota|fatigue/i,
+    why: "a session cannot measure its own capacity, and an arbitrary proxy for it is the same guess in another unit",
+  },
+  {
+    name: "merge cadence",
+    pattern:
+      /planned merge|one merge per session|merge cadence|merge (?:is )?(?:taken|done|landed|complete)|already (?:merged|shipped)|shipped for the session|RULING 1\b/i,
+    why: "RULING 1 governs shipping cadence, not session duration — delay the merge instead of ending the session",
+  },
+];
+
+/** The non-reason a stated stop reason appeals to, or `null` if it is real. */
+export function disqualifyingNonReason(stopReason: string): { name: string; why: string } | null {
+  for (const n of NON_REASONS) {
+    if (n.pattern.test(stopReason)) return { name: n.name, why: n.why };
+  }
+  return null;
+}
 
 /**
- * What every non-`COMPLETE` close must record. Measured, never inferred —
- * where the environment exposes context usage directly, that reading is used.
+ * What every non-`COMPLETE` close must record.
+ *
+ * Every field is either DERIVED from canonical state or a plain fact about what
+ * happened. **None of them is an estimate**, and that is the point: the removed
+ * `contextUsedPercent` / `contextRemainingPercent` pair asked a session to
+ * report a number it had no way to know.
  */
 export interface StopAccounting {
-  contextUsedPercent: number;
-  contextRemainingPercent: number;
-  /** Specific. "ran low" is not a stop reason. */
+  /** Specific. "ran low" is not a stop reason, and neither is "the merge is taken". */
   stopReason: string;
+  /** Derived across every workstream, never asserted. */
   executableOwedWorkRemaining: number;
-  /** True only when an actual external condition prevented continued work. */
+  /** The author explicitly stopped, redirected or narrowed this session. */
+  authorStop: boolean;
+  /** An actual external condition prevented continuing. Never inferred. */
   externalStop: boolean;
-  /** The environment reported an imminent limit, compaction, or hard stop. */
-  platformSignalledLimit?: boolean;
   /** Canonical state fully persisted, cursor and remainder generated. */
   statePersisted: boolean;
-  /** The session kept doing authorized productive work until the boundary. */
-  productiveUntilBoundary: boolean;
 }
 
 export interface StopVerdict {
@@ -92,8 +142,14 @@ export interface StopVerdict {
  * Derive the session status from the accounting.
  *
  * **The model does not award itself a status; the state does.** A session that
- * claims `CLEAN_HANDOFF_LIMIT_REACHED` at 56% is refused here, and the refusal
- * names what it claimed — which is the whole point of moving this out of prose.
+ * claims a clean stop on a reason that is not a reason is refused here, and the
+ * refusal names both the claim and the non-reason it appealed to — which is the
+ * whole point of moving this out of prose.
+ *
+ * **Persisted resumability is not permission to stop voluntarily.** Canonical
+ * state exists so that an interrupted session can be resumed; a session that
+ * ends while it still has authorized executable work is `EARLY_HANDOFF` however
+ * perfect its handoff is.
  */
 export function classifySessionStop(
   a: StopAccounting,
@@ -115,35 +171,37 @@ export function classifySessionStop(
     return refuse("COMPLETE", "no executable owed work remains");
   }
 
+  // A stop reason is checked ONLY where it is doing work — that is, only where
+  // it is being offered as justification for a clean stop. An early handoff
+  // states whatever reason it states; it is already reported as early.
+  const nonReason =
+    a.authorStop || a.externalStop ? disqualifyingNonReason(a.stopReason) : null;
+
+  if (nonReason) {
+    return refuse(
+      "EARLY_HANDOFF",
+      `the stated reason appeals to ${nonReason.name} — ${nonReason.why}. ` +
+        `${a.executableOwedWorkRemaining} executable item(s) were owed, so the stop was early.`,
+    );
+  }
+
+  if (a.authorStop) {
+    return refuse(
+      "CLEAN_HANDOFF_AUTHOR_STOP",
+      "the author explicitly stopped, redirected or narrowed the session",
+    );
+  }
+
   if (a.externalStop) {
     return refuse(
       "CLEAN_HANDOFF_EXTERNAL_STOP",
-      "an external condition prevented continued authorized work",
-    );
-  }
-
-  const atBoundary =
-    a.contextUsedPercent >= LIMIT_REACHED_FLOOR_PERCENT || a.platformSignalledLimit === true;
-
-  if (atBoundary && a.productiveUntilBoundary) {
-    return refuse(
-      "CLEAN_HANDOFF_LIMIT_REACHED",
-      a.platformSignalledLimit
-        ? "the environment reported an imminent limit, and the session worked until it"
-        : `${a.contextUsedPercent}% of usable context consumed, at or above the ${LIMIT_REACHED_FLOOR_PERCENT}% floor, working until the boundary`,
-    );
-  }
-
-  if (atBoundary && !a.productiveUntilBoundary) {
-    return refuse(
-      "EARLY_HANDOFF_WITH_CAPACITY",
-      `${a.contextUsedPercent}% consumed, but the session did not continue productive authorized work to the boundary`,
+      "an actual external condition prevented continued authorized work",
     );
   }
 
   return refuse(
-    "EARLY_HANDOFF_WITH_CAPACITY",
-    `${a.contextRemainingPercent}% of context remained, ${a.executableOwedWorkRemaining} executable item(s) were owed, ` +
+    "EARLY_HANDOFF",
+    `${a.executableOwedWorkRemaining} executable item(s) were owed, the author did not stop the session, ` +
       "and no external condition prevented continuing. The handoff may be excellent; the stop was still early.",
   );
 }

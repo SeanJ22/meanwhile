@@ -1,5 +1,5 @@
 {
-  "version": 26,
+  "version": 27,
   "updatedOn": "2026-08-27",
   "routes": [
     {
@@ -2242,6 +2242,36 @@
       "origin": "conceived 2026-08-27 as the Arizona form of the who-bills-for-it route this project learned against New Hampshire. It was reached for because a hunt needs a denominator it did not write itself, and every other enumeration walked this session was a government describing its own scope.",
       "learnedOn": "2026-08-27",
       "learnedAtVersion": 26
+    },
+    {
+      "id": "embed-props-carries-the-vendor-tenant",
+      "title": "when a meeting portal ships as an EMBED SCRIPT, the host page carries the vendor tenant slug in its own config object — read it, then ask the vendor API directly",
+      "tier": "A0",
+      "fields": [
+        "meeting",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "proved on CivicClerk, whose embed reads window.clerkEmbedProps = {tenant, categoryIds} and whose API then answers an unauthenticated OData GET at <tenant>.api.civicclerk.com/v1/Events. The SHAPE is every embed-delivered portal: the browser has to be told which tenant to render, so the page must carry the identifier, and the identifier is the whole key. Recorded UNKNOWN because one vendor is not a measurement of the class."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-27",
+          "rows": 14,
+          "outcome": "YIELDED",
+          "note": "15 events over the serving window, 14 normalized into meetings with venue, agenda flag and status — 13 placed at an address and 1 kept as an online sitting. The single drop is a CANCELED briefing whose location field is empty. It restored coverage at both Pima pilot zips, which had correctly fallen to NO_SOURCE when the district was added with no adapter."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 because the Central Arizona Water Conservation District governs 85641 and its own meetings page served 222,565 bytes with no dated meeting link and no iCalendar feed. The meetings were not missing from the page; the page was a client for a system whose name was in its own markup.",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 27
     }
   ]
 }

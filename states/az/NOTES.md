@@ -429,3 +429,70 @@ names and carried only five as anchors in the markup.
 - **`webapi.legistar.com`, `gisdata.pima.gov`** — robots.txt 404, `NO_ROBOTS`.
 - **`schools.pima.gov`** fails HTTPS at the bare host; **`www.schools.pima.gov`**
   answers. A transport quirk, not a refusal — the Mescal-J6 shape again.
+
+### CivicClerk, and the tenant slug in the page
+
+**A meeting portal delivered as an EMBED SCRIPT has to tell the browser which
+tenant to render, so the identifier is in the host page's own markup.**
+
+The Central Arizona Water Conservation District's meetings page serves 222,565
+bytes with no dated meeting link and no iCalendar feed. Beside CivicClerk's
+embed bundle it carries:
+
+```js
+window.clerkEmbedProps = {"tenant": "capaz", "categoryIds": "26,27,28,29,30,34,35,37"};
+```
+
+With that slug the portal's own API answers a plain unauthenticated GET:
+
+```
+https://<tenant>.api.civicclerk.com/v1/Events
+```
+
+OData, so `$filter`, `$orderby` and `$top` all work. It returns the date, the
+start time, the body, the category, the venue with a street address, and flags
+for a published agenda and minutes. `NO_ROBOTS` on the API host; the portal
+host allows.
+
+`lib/sources/civicclerk/index.ts` reads it. **`CIVICCLERK` is a distinct
+`AgendaSourceType` from `CIVICPLUS`** — same corporate family, different
+products, and a reader following a CivicPlus agenda link would not arrive here.
+
+Two things worth carrying to the next tenant. The **category is the body** —
+"Board Meeting", "Finance, Audit and Power Committee" — and the event name is
+the sitting's title, so a row with no category is dropped rather than filed
+under the district at large. And the tenant **spells one room several ways**:
+CAP writes its Lake Mead Conference Room two ways and its Board Room a third,
+so each published spelling needs its own venue row.
+
+### The Central Arizona Water Conservation District
+
+A government that appears in no Pima County directory and on no boundary layer
+this project has walked. It was found only in the county's levy resolution,
+which is the entire argument for reading that document.
+
+- It levies **ad valorem secondary 0.1000 and water storage secondary 0.0400 on
+  the county's full valuation**, plus groundwater replenishment at $952.00 per
+  acre-foot and $33.52 per lot across 15,177 lots. So it governs every Pima
+  County ZIP.
+- **Its board is DIRECTLY ELECTED** — the only one of the five districts added
+  this day that is not the Board of Supervisors sitting as itself. Fifteen
+  members, elected by county. Three confirmed Pima County from their own pages:
+  **Karen Cesare, Pat Jacobs, Mark Taylor**. Four members' pages state no
+  county and are NOT assigned to one.
+- It covers **Maricopa, Pinal and Pima**, so it is a fourth class of
+  cross-county Arizona district.
+- **Its meetings are in Phoenix**, 180 km from Vail. That is not a mismatch to
+  hide: it taxes every parcel in Pima County and Phoenix is where it decides.
+
+### An uncovered government correctly makes coverage look worse
+
+Adding this district with no adapter moved both Pima pilot ZIPs from
+`NONE_SCHEDULED` to `NO_SOURCE`, because there was now a government at those
+points whose calendar could not be read. **That is the system working**, and
+the available shortcut — leave the district out, keep the greener state — is
+the one CLAUDE.md forbids in as many words: *collection state never governs
+display*, and nothing is suppressed because something else is missing.
+
+The district went in, and then the adapter did. `tests/coverage.test.ts` now
+records the arc rather than the answer.

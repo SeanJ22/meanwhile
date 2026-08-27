@@ -153,6 +153,24 @@ const ROUTES: LearnedRoute[] = [
         "143 levy lines across 38 taxing jurisdictions and classes, from RESOLUTION NO. 2026-43 adopted 2026-08-17. It CORRECTED the county: Pima publishes a Community Facilities Districts page listing TWO and its levy names NINE. It produced whole classes this project had no vocabulary for — irrigation districts levying per acre rather than ad valorem, a health district, domestic water improvement districts, twenty street lighting improvement districts, an unorganized school district tax, a fire district assistance tax, and the Central Arizona Water Conservation District. It independently confirmed the cross-county fire districts: Mescal-J6 levies 2.1487 and Sonoita-Elgin 3.2500 on Pima property, which the project had only inferred from a GIS layer. And it gave Rocking K South CFD a rate for a reader: 0.5000 M&O plus 1.8800 bond on a 38,682,735 valuation.",
     },
   },
+  {
+    id: "embed-props-carries-the-vendor-tenant",
+    title:
+      "when a meeting portal ships as an EMBED SCRIPT, the host page carries the vendor tenant slug in its own config object — read it, then ask the vendor API directly",
+    tier: "A0",
+    fields: ["meeting", "source"],
+    note:
+      "proved on CivicClerk, whose embed reads window.clerkEmbedProps = {tenant, categoryIds} and whose API then answers an unauthenticated OData GET at <tenant>.api.civicclerk.com/v1/Events. The SHAPE is every embed-delivered portal: the browser has to be told which tenant to render, so the page must carry the identifier, and the identifier is the whole key. Recorded UNKNOWN because one vendor is not a measurement of the class.",
+    origin:
+      "conceived 2026-08-27 because the Central Arizona Water Conservation District governs 85641 and its own meetings page served 222,565 bytes with no dated meeting link and no iCalendar feed. The meetings were not missing from the page; the page was a client for a system whose name was in its own markup.",
+    outcome: {
+      jurisdiction: "az",
+      rows: 14,
+      outcome: "YIELDED",
+      note:
+        "15 events over the serving window, 14 normalized into meetings with venue, agenda flag and status — 13 placed at an address and 1 kept as an online sitting. The single drop is a CANCELED briefing whose location field is empty. It restored coverage at both Pima pilot zips, which had correctly fallen to NO_SOURCE when the district was added with no adapter.",
+    },
+  },
 ];
 
 runLearnBatch(STORE, ROUTES, today());

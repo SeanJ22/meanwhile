@@ -356,19 +356,38 @@ export async function readRipcords() {
  * a session that needs one reads the file.
  */
 function readRulings() {
+  /*
+   * Read from the CANONICAL LEDGER (2026-08-26).
+   *
+   * This parsed `### ` headings out of `docs/rulings.md`. That file is
+   * GENERATED now and emits `## RULING n`, so the parse would have returned
+   * nothing — and unlike two of its sibling guards, this one would at least
+   * have said so, because it treats an empty read as a `failure` rather than as
+   * an empty document. That is the operation-count rule doing its job.
+   *
+   * Asking the ledger is better still: the index is built from the record a
+   * ruling actually exists in, so it cannot drift when the human-readable view
+   * is reformatted again.
+   */
   let text;
+  const LEDGER = "docs/governance/ledger.jsonl";
   try {
-    text = readFileSync(join(ROOT, "docs/rulings.md"), "utf8");
+    text = readFileSync(join(ROOT, LEDGER), "utf8");
   } catch (error) {
-    return { headings: [], failure: `could not read docs/rulings.md: ${error.message}` };
+    return { headings: [], failure: `could not read ${LEDGER}: ${error.message}` };
   }
-  const headings = text
-    .split("\n")
-    .filter((line) => line.startsWith("### "))
-    .map((line) => line.slice(4).trim());
+  const headings = [];
+  for (const line of text.split("\n")) {
+    if (!line.trim()) continue;
+    const rec = JSON.parse(line);
+    // The index names CURRENT authority. History is retrieved on demand
+    // (RULING 186), so a superseded rule does not belong in a startup index.
+    if (!["ACTIVE", "AMENDED"].includes(rec.status)) continue;
+    headings.push(`${rec.title}  [${rec.id} · ${rec.kind} · ${rec.status}]`);
+  }
   return {
     headings,
-    failure: headings.length === 0 ? "docs/rulings.md carries no `###` ruling headings" : null,
+    failure: headings.length === 0 ? `${LEDGER} carries no current records` : null,
   };
 }
 

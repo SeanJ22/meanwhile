@@ -2,7 +2,7 @@
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
     "files": 269,
-    "named": 2651,
+    "named": 2655,
     "dynamic": 6
   },
   "files": {
@@ -1626,6 +1626,7 @@
         "shortening the constitution cannot delete law from the ledger",
         "the constitution cannot claim a ruling the canonical ledger does not contain",
         "the constitution stays a ROOT constitution, not a second copy of the policies",
+        "the final governance acceptance gate passes",
         "the legacy snapshots are preserved with their exact bytes"
       ],
       "dynamic": 0
@@ -3572,8 +3573,8 @@
         "RULING 48: the hook is wired, and no committed script reverts a protected file",
         "RULING 79: a deliberately-unassigned ruling number is DECLARED, never merely absent",
         "RULING 79: a recorded ruling closes a Needs Sean row, and nothing else does",
-        "RULING 79: docs/rulings.md has no gap in its ruling numbers",
-        "RULING 79: the move script refuses a ruling that is not in docs/rulings.md",
+        "RULING 79: the canonical ledger has no gap in its ruling numbers",
+        "RULING 79: the move script refuses a ruling that is not in the canonical ledger",
         "amend touches the description and never the title or the section",
         "item 1.4: every row a session reported opening is present in a store",
         "item 8a: every row in both stores carries a plain-English description",
@@ -3881,11 +3882,14 @@
         "an eligible edge advances an owed question; site chrome does not enlarge the graph",
         "an ineligible edge must say why it does not enlarge the graph",
         "an item may not be terminal while a required child is open",
+        "an obligation may not be silently dropped, discharged without a count, or double-counted",
+        "an unmaterialized obligation is counted, never resumable, and never complete",
         "an unnamed blocker, and an undated recheck, are refused",
         "an unread permission keeps the workstream OPEN and never reads as absence",
         "convergence reopens on a newer method version, a changed universe, or expired freshness",
         "every persisted edge carries a stable id, provenance and a disposition",
         "every universe member gets exactly one disposition",
+        "the aggregate tail across all three states is 3,900 and is reported apart",
         "the detector is CALIBRATED against known false positives, not merely non-zero output",
         "the handoff is generated from state and omits no tail",
         "the migrated frontier does not need seeds to name what it already knows"

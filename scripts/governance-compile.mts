@@ -28,6 +28,7 @@ import {
   REMEDIATION_DATE,
   STATUS_RESOLUTIONS,
 } from "../lib/governance/adoptions.ts";
+import { CLASSIFICATIONS } from "../lib/governance/classification.ts";
 import { LEDGER_PATH, readLedger, writeLedger } from "../lib/governance/ledger.ts";
 import {
   CURRENT_STATUSES,
@@ -57,6 +58,45 @@ for (const res of STATUS_RESOLUTIONS) {
     r.routingNotes.push(`status resolved to ${res.status} by ${res.by}: ${res.why}`);
   }
   applied.statuses += 1;
+}
+
+// --- 1b. historical classification ------------------------------------------
+// The 43 records the mechanical importer honestly could not type. Each is
+// resolved from its OWN WORDS, with the supporting quote carried on the record
+// — so a later reader can check the classification against the entry rather
+// than taking this file's word for it.
+let classified = 0;
+for (const [id, c] of Object.entries(CLASSIFICATIONS)) {
+  const r = byId.get(id);
+  if (!r) throw new Error(`classification targets a record that does not exist: ${id}`);
+  if (r.uncertain.length === 0) continue;
+  r.kind = c.kind;
+  r.provenance = c.provenance;
+  // The uncertainty is RESOLVED, not deleted: what replaces it is the evidence
+  // that resolved it, so the doubt and its answer travel together.
+  r.uncertain = [];
+  r.routingNotes.push(`classified ${c.kind}/${c.provenance} from the entry's own words: ${c.evidence}`);
+  // STATUS FIRST, then the policy pointer. The other order looks equivalent and
+  // is not: these records were parked HISTORICAL while unclassified, so a
+  // pointer assigned before the promotion tested a status that had not moved
+  // yet and 17 newly-current rules shipped with no operative home. The
+  // `law-without-policy` check caught it.
+  if (c.kind === "TOMBSTONE") {
+    r.status = "RETIRED";
+  } else if (c.kind === "FACT" || c.kind === "RATIFICATION" || c.kind === "ACCEPTANCE") {
+    // A measurement, a confirmation and an approval are all history. None of
+    // them is a current instruction, and typing them as one is the failure the
+    // FACT-as-instruction check exists for.
+    r.status = "HISTORICAL";
+  } else if (r.status === "HISTORICAL") {
+    r.status = "ACTIVE";
+  }
+
+  r.operativePolicy =
+    c.kind === "LAW_DECISION" && CURRENT_STATUSES.includes(r.status)
+      ? `docs/governance/policies/${r.domain}.md`
+      : null;
+  classified += 1;
 }
 
 // --- 2. claim assignments --------------------------------------------------
@@ -353,6 +393,7 @@ for (const domain of DOMAINS) {
   writeFileSync(join(POLICY_DIR, `${domain}.md`), out.join("\n"), "utf8");
 }
 
+console.log(`historical classifications  ${classified}`);
 console.log(`constitution blocks         ${constitutionImported}`);
 console.log(`policy modules              ${DOMAINS.length}  ${JSON.stringify(policyCounts)}`);
 console.log(`status resolutions applied  ${applied.statuses}`);

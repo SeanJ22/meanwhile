@@ -200,3 +200,16 @@ test("no superseded operative text sits in current authority", () => {
     }
   }
 });
+
+test("the final governance acceptance gate passes", () => {
+  // The whole remediation brief, checked against measured state rather than
+  // asserted in a report. If a later change breaks any of the 27 criteria, the
+  // suite says which one — the same reason every other gate here exists.
+  const out = execFileSync(
+    process.execPath,
+    [join(ROOT, "node_modules", "tsx", "dist", "cli.mjs"), join(ROOT, "scripts", "governance-accept.mts")],
+    { cwd: ROOT, encoding: "utf8", stdio: "pipe" },
+  );
+  assert.match(out, /GOVERNANCE REMEDIATION: COMPLETE/);
+  assert.ok(!out.includes("FAIL "), `a governance acceptance criterion is failing:\n${out}`);
+});

@@ -22,8 +22,10 @@ import {
   type PermissionRecord,
   type SessionStatus,
   type WorkEdge,
+  type UnmaterializedObligation,
   type WorkstreamStatus,
   OPEN_DISPOSITIONS,
+  aggregateTail,
   TERMINAL_DISPOSITIONS,
   accountCandidates,
   convergenceHolds,
@@ -70,6 +72,12 @@ export interface Workstream {
   /** The exact cursor. Persisted, never reconstructed. */
   cursor: string | null;
   convergence: Convergence | null;
+  /**
+   * Work a previous run discovered whose identities were never persisted.
+   * Counted, never resumable, and it keeps this workstream OPEN until a
+   * recovery walk discharges it. See `UnmaterializedObligation`.
+   */
+  unmaterialized: UnmaterializedObligation[];
   /** Route ids inherited at open, and learned during the run. */
   routesInherited: string[];
   routesLearned: string[];
@@ -187,6 +195,18 @@ export function completion(
     );
   }
 
+  // An unmaterialized obligation is work the project OWES and cannot currently
+  // address. It is not resumable, so it never joins the queued count — and it
+  // is not finished, so it can never let a workstream close. Discharging it
+  // means re-materializing the edges, not deciding they no longer matter.
+  const tail = aggregateTail(w.unmaterialized ?? []);
+  if (tail.outstandingCount > 0) {
+    blockedBy.push(
+      `${tail.outstandingCount} unmaterialized obligation(s) carried: work a previous run discovered ` +
+        "whose identities were never persisted — counted, not resumable, and not discharged",
+    );
+  }
+
   let graph: GraphStatus = "EXPANDING";
   if (w.convergence) {
     const v = convergenceHolds(w.convergence, {
@@ -227,6 +247,13 @@ export interface Handoff {
   recheckDue: string[];
   permissionUnresolved: string[];
   candidates: ReturnType<typeof accountCandidates>;
+  /**
+   * The obligation this handoff is carrying but cannot address: counted,
+   * never resumable. Reported SEPARATELY from the resumable edges, because
+   * adding them would claim addresses the repository does not have and
+   * omitting them would discard work the project still owes.
+   */
+  unmaterialized: { outstanding: number; discharged: number; detail: string[] };
   /** Everything the completion verdict is waiting on. */
   blockedBy: string[];
 }
@@ -267,6 +294,15 @@ export function generateHandoff(
       .filter((p) => !mayWalk(p).allowed && p.permission === "CANNOT_TELL")
       .map((p) => `${p.host} (${p.transport}${p.failure ? `: ${p.failure}` : ""})`),
     candidates: accountCandidates(w.candidates),
+    unmaterialized: {
+      outstanding: aggregateTail(w.unmaterialized ?? []).outstandingCount,
+      discharged: aggregateTail(w.unmaterialized ?? []).dischargedCount,
+      detail: (w.unmaterialized ?? []).map(
+        (o) =>
+          `${o.id}: ${o.count} from ${o.source}` +
+          (o.dischargedOn ? ` — DISCHARGED ${o.dischargedOn} (${o.dischargedCount ?? 0} edges)` : ` — OPEN; discharge by: ${o.discharge}`),
+      ),
+    },
     blockedBy: verdict.blockedBy,
   };
 }
@@ -371,6 +407,36 @@ export function validateWorkstream(
     }
     if (p.transport !== "REACHABLE" && !p.failure) {
       bad(p.host, "unnamed-transport-failure", `${p.transport} with no named failure`);
+    }
+  }
+
+  // THE AGGREGATE-TAIL GUARD.
+  //
+  // An unmaterialized obligation is the one kind of work that cannot defend
+  // itself: it has a count and no addresses, so nothing downstream would notice
+  // it vanishing. Every field is therefore required, and a discharge has to say
+  // what discharged it.
+  for (const o of w.unmaterialized ?? []) {
+    if (!o.id) bad(w.id, "obligation-without-id", "an unmaterialized obligation must be addressable");
+    if (!Number.isFinite(o.count) || o.count <= 0) {
+      bad(o.id, "obligation-without-count", `count is ${o.count}; an obligation of zero is not an obligation`);
+    }
+    if (!o.source) bad(o.id, "obligation-without-source", "where the count came from must be stated");
+    if (!o.why) bad(o.id, "obligation-without-cause", "why the identities are gone must be stated");
+    if (!o.discharge) {
+      bad(o.id, "obligation-without-discharge", "an obligation with no path to discharge it is a wish");
+    }
+    if (o.dischargedOn && (o.dischargedCount === undefined || o.dischargedCount < 0)) {
+      bad(
+        o.id,
+        "discharge-without-count",
+        "a discharge must say how many real edges it produced — otherwise the tail was decided away rather than recovered",
+      );
+    }
+    // An obligation may not be counted twice: once as a tail and again as a
+    // real edge. That would inflate the outstanding work by 3,900.
+    if (w.edges.some((e) => e.id === o.id)) {
+      bad(o.id, "obligation-is-also-an-edge", "an obligation id collides with a persisted edge id");
     }
   }
 

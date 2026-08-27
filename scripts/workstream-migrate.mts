@@ -245,6 +245,36 @@ for (const state of STATES) {
       `defect RULING 181 names. Every edge discovered from this point forward is persisted.`,
   });
 
+  /*
+   * THE ACCOUNTING, KEPT HONEST IN BOTH DIRECTIONS.
+   *
+   * Two different populations, and collapsing them either way is a lie:
+   *
+   *   resumable   the eligible edges persisted with real addresses
+   *   obligation  `finalPassNewLinks` — a COUNT of edges the legacy run
+   *               discovered and never wrote down
+   *
+   * Adding them would claim addresses this repository does not have. Reporting
+   * only the resumable number would discard work a previous session genuinely
+   * did. So the obligation is carried as its own record: counted, never
+   * resumable, holding the workstream OPEN until a recovery walk discharges it
+   * with the number of real edges it produced.
+   */
+  const unmaterialized = [
+    {
+      id: `${state}:final-pass-tail`,
+      count: unrecoverableQueued,
+      source: `states/${state}/descent.json finalPassNewLinks`,
+      why:
+        "the legacy descent persisted per-level COUNTS and no edges; the identities of these " +
+        "links existed only in the run's memory and were lost when the process exited",
+      discharge:
+        `re-walk ${state} from the persisted frontier; every edge found from now on is persisted ` +
+        "as it is discovered, so this obligation can be discharged once and never re-incurred",
+      recordedOn: MIGRATED_ON,
+    },
+  ];
+
   const ws: Workstream = {
     id: `descent:${state}`,
     title: `Descent — ${state.toUpperCase()}`,
@@ -267,6 +297,7 @@ for (const state of STATES) {
     // workstream object exists to derive it from.
     cursor: null,
     convergence: null,
+    unmaterialized,
     routesInherited: [],
     routesLearned: [],
     methodVersion: 0,
@@ -282,7 +313,7 @@ for (const state of STATES) {
   // the legacy format never wrote the edges themselves down.
   ws.cursor =
     `${deriveCursor(ws, state)} / ` +
-    `${unrecoverableQueued} final-pass edges NOT persisted by the legacy format`;
+    `unmaterialized obligation ${unrecoverableQueued} (legacy final pass, identities never persisted)`;
 
   writeFileSync(join(OUT, `${state}.json`), JSON.stringify(ws, null, 2) + "\n", "utf8");
 

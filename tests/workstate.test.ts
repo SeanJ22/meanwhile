@@ -36,6 +36,7 @@ function ws(over: Partial<Workstream> = {}): Workstream {
     candidates: [],
     permissions: [],
     cursor: "a",
+    unmaterialized: [],
     convergence: {
       convergedAsOf: "2026-08-26",
       methodVersion: 7,
@@ -475,4 +476,111 @@ test("the migrated frontier does not need seeds to name what it already knows", 
     assert.ok(e.parent !== undefined, "every edge names where it came from");
     assert.ok(e.disposition, "every discovered source has a disposition");
   }
+});
+
+/* ============================================================== */
+/* THE AGGREGATE-TAIL GUARD                                        */
+/* ============================================================== */
+
+/**
+ * The 3,900-versus-1,614 accounting.
+ *
+ * Two different populations. **1,614** eligible edges are persisted and
+ * resumable — real, addressable, individually named on disk. **3,900** edges
+ * the legacy final pass queued, of which only the COUNT survived.
+ *
+ * Adding them claims 3,900 addresses the repository does not have. Reporting
+ * only 1,614 discards work a previous session genuinely did. Both are refused.
+ */
+
+test("an unmaterialized obligation is counted, never resumable, and never complete", () => {
+  const w = ws({
+    unmaterialized: [
+      {
+        id: "nj:final-pass-tail",
+        count: 1986,
+        source: "states/nj/descent.json finalPassNewLinks",
+        why: "the legacy descent persisted counts and no edges",
+        discharge: "re-walk nj from the persisted frontier",
+        recordedOn: "2026-08-26",
+      },
+    ],
+  });
+
+  // It holds the workstream OPEN even when everything else is terminal.
+  const v = completion(w, NOW);
+  assert.equal(v.workstream, "OPEN");
+  assert.ok(v.blockedBy.some((b) => /unmaterialized obligation/.test(b)));
+
+  // And it does NOT join the resumable edge count.
+  const h = generateHandoff(w, NOW, "EARLY_HANDOFF_WITH_CAPACITY");
+  assert.equal(h.discoveredNotProcessed.length, 0, "an obligation has no addresses to resume");
+  assert.equal(h.unmaterialized.outstanding, 1986);
+  assert.match(h.unmaterialized.detail[0], /OPEN; discharge by:/);
+});
+
+test("the aggregate tail across all three states is 3,900 and is reported apart", () => {
+  const dir = join(ROOT, "data", "workstate");
+  if (!existsSync(dir)) return;
+  const expected: Record<string, number> = { nj: 1986, az: 1143, nh: 771 };
+  let tail = 0;
+  let resumable = 0;
+  for (const [state, count] of Object.entries(expected)) {
+    const p = join(dir, `${state}.json`);
+    if (!existsSync(p)) continue;
+    const w = JSON.parse(readFileSync(p, "utf8")) as Workstream;
+    const h = generateHandoff(
+      w,
+      { today: "2026-08-26", methodVersion: 0, eligibleEdgeVersion: ELIGIBLE_EDGE_VERSION },
+      "EARLY_HANDOFF_WITH_CAPACITY",
+    );
+    assert.equal(h.unmaterialized.outstanding, count, `${state}: the historical count is preserved exactly`);
+    tail += h.unmaterialized.outstanding;
+    resumable += h.discoveredNotProcessed.length;
+  }
+  assert.equal(tail, 3900, "every historical obligation is preserved, to the edge");
+  assert.equal(resumable, 1614, "and the resumable count is the real, addressable one");
+  assert.notEqual(tail + resumable, resumable, "the two are never collapsed into one number");
+});
+
+test("an obligation may not be silently dropped, discharged without a count, or double-counted", () => {
+  const base = {
+    id: "x:tail",
+    count: 100,
+    source: "s",
+    why: "w",
+    discharge: "d",
+    recordedOn: "2026-08-26",
+  };
+
+  // Every field is required, because a count with no addresses cannot defend
+  // itself — nothing downstream would notice it vanishing.
+  for (const [field, broken] of [
+    ["obligation-without-count", { ...base, count: 0 }],
+    ["obligation-without-source", { ...base, source: "" }],
+    ["obligation-without-cause", { ...base, why: "" }],
+    ["obligation-without-discharge", { ...base, discharge: "" }],
+  ] as const) {
+    const issues = validateWorkstream(ws({ unmaterialized: [broken] }), NOW);
+    assert.ok(issues.some((i) => i.rule === field), `expected ${field}`);
+  }
+
+  // A discharge that does not say how many real edges it produced is a tail
+  // decided away rather than recovered.
+  assert.ok(
+    validateWorkstream(
+      ws({ unmaterialized: [{ ...base, dischargedOn: "2026-09-01" }] }),
+      NOW,
+    ).some((i) => i.rule === "discharge-without-count"),
+  );
+
+  // A legitimate discharge passes, and stops holding the workstream open.
+  const discharged = ws({
+    unmaterialized: [{ ...base, dischargedOn: "2026-09-01", dischargedCount: 97 }],
+  });
+  assert.deepEqual(validateWorkstream(discharged, NOW), []);
+  assert.ok(
+    !completion(discharged, NOW).blockedBy.some((b) => /unmaterialized/.test(b)),
+    "a discharged obligation stops blocking",
+  );
 });

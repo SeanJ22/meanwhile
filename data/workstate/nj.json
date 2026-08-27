@@ -16818,8 +16818,18 @@
     }
   ],
   "permissions": [],
-  "cursor": "nj / 798 edge(s) persisted / 664 eligible edge(s) outstanding / by tier: state=17, statewide and multi-county districts=158, county=62, local and special districts=48, city=13, town, township, borough, village, plantation, unincorporated place=366 / next: edge-ffd8421f356b https://www.nj.gov/mvc/locations/closing.htm / eligibility ee-v1-2026-08-26 / 1986 final-pass edges NOT persisted by the legacy format",
+  "cursor": "nj / 798 edge(s) persisted / 664 eligible edge(s) outstanding / by tier: state=17, statewide and multi-county districts=158, county=62, local and special districts=48, city=13, town, township, borough, village, plantation, unincorporated place=366 / next: edge-ffd8421f356b https://www.nj.gov/mvc/locations/closing.htm / eligibility ee-v1-2026-08-26 / unmaterialized obligation 1986 (legacy final pass, identities never persisted)",
   "convergence": null,
+  "unmaterialized": [
+    {
+      "id": "nj:final-pass-tail",
+      "count": 1986,
+      "source": "states/nj/descent.json finalPassNewLinks",
+      "why": "the legacy descent persisted per-level COUNTS and no edges; the identities of these links existed only in the run's memory and were lost when the process exited",
+      "discharge": "re-walk nj from the persisted frontier; every edge found from now on is persisted as it is discovered, so this obligation can be discharged once and never re-incurred",
+      "recordedOn": "2026-08-26"
+    }
+  ],
   "routesInherited": [],
   "routesLearned": [],
   "methodVersion": 0

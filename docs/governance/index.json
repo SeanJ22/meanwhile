@@ -1,13 +1,13 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "8ca04a2df1e4bf88",
+  "snapshot": "7246b7d97f5c315c",
   "counts": {
     "records": 225,
-    "current": 167,
-    "law": 161,
-    "decisions": 6,
-    "historical": 58
+    "current": 205,
+    "law": 178,
+    "decisions": 27,
+    "historical": 20
   },
   "records": [
     {
@@ -56,17 +56,15 @@
         "R-3"
       ],
       "title": "RULING 3 — the organic census is closed as a question",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:66"
     },
     {
@@ -77,17 +75,15 @@
         "R-4"
       ],
       "title": "RULING 4 — `CLAUDE.md` has no rules 4g or 4h",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:73"
     },
     {
@@ -155,17 +151,15 @@
         "R-8"
       ],
       "title": "RULING 8 — no API client was built in Prompt C",
-      "kind": "PENDING_INTERPRETATION",
+      "kind": "FACT",
       "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "provenance": "observed_fact",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:102"
     },
     {
@@ -176,17 +170,15 @@
         "R-9"
       ],
       "title": "RULING 9 — Census counts governments; the product renders bodies",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:105"
     },
     {
@@ -197,17 +189,15 @@
         "R-10"
       ],
       "title": "RULING 10 — ZCTA is not a ZIP code",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:110"
     },
     {
@@ -218,17 +208,15 @@
         "R-11"
       ],
       "title": "RULING 11 — not issued",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "kind": "TOMBSTONE",
+      "status": "RETIRED",
+      "provenance": "observed_fact",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:114"
     },
     {
@@ -239,17 +227,15 @@
         "R-12"
       ],
       "title": "RULING 12 — WALL versus JOB",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:120"
     },
     {
@@ -260,17 +246,15 @@
         "R-13"
       ],
       "title": "RULING 13 — a green build check does not mean the tests ran",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:127"
     },
     {
@@ -281,17 +265,15 @@
         "R-14"
       ],
       "title": "RULING 14 — path comparisons may not assume a separator",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:132"
     },
     {
@@ -302,17 +284,15 @@
         "R-15"
       ],
       "title": "RULING 15 — the Kearsarge 15-row floor is retired",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:137"
     },
     {
@@ -342,17 +322,15 @@
         "R-17"
       ],
       "title": "RULING 17 — `walledAtRung` values written before F22 are provenance-unknown",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:153"
     },
     {
@@ -382,17 +360,15 @@
         "R-19"
       ],
       "title": "RULING 19 — the nonpartisanship and committee-sale section is deferred",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:189"
     },
     {
@@ -422,17 +398,15 @@
         "R-21"
       ],
       "title": "RULING 21 — `DATA_GOV_API_KEY` exists",
-      "kind": "PENDING_INTERPRETATION",
+      "kind": "FACT",
       "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "provenance": "observed_fact",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:197"
     },
     {
@@ -500,17 +474,15 @@
         "R-25"
       ],
       "title": "RULING 25 — reader-facing behaviour is not degraded to fix an internal problem",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:419"
     },
     {
@@ -616,17 +588,15 @@
         "R-31"
       ],
       "title": "RULING 31 — Needs Sean is always the first section",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:538"
     },
     {
@@ -675,17 +645,15 @@
         "R-34"
       ],
       "title": "RULING 34 — the reader artifacts are generated, and hold no duplicated content",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:576"
     },
     {
@@ -715,17 +683,15 @@
         "R-36"
       ],
       "title": "RULING 36 — three resolution states, and only these three",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:602"
     },
     {
@@ -774,17 +740,15 @@
         "R-39"
       ],
       "title": "RULING 39 — resolution timestamps are written by the script, not by the spreadsheet",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:638"
     },
     {
@@ -795,17 +759,15 @@
         "R-40"
       ],
       "title": "RULING 40 — attribution has no soft landing",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-17",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:649"
     },
     {
@@ -897,17 +859,15 @@
         "R-45"
       ],
       "title": "RULING 45 — the Kelly standard, and there are no tiers of it",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:760"
     },
     {
@@ -918,8 +878,8 @@
         "R-46"
       ],
       "title": "RULING 46 — the author may delete a row outright; a session never may",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
@@ -933,9 +893,7 @@
           "survives": "RULING 35's 'nothing is ever deleted' governs WORK rows — a session may not erase its own row by marking it done"
         }
       ],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:767"
     },
     {
@@ -965,17 +923,15 @@
         "R-48"
       ],
       "title": "RULING 48 — a session may not use git to revert the author's files",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:803"
     },
     {
@@ -986,12 +942,12 @@
         "R-49"
       ],
       "title": "RULING 49 — a merge to satisfy a mid-session instruction from the author does not count against the cadence",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
       "claims": [],
       "relations": [
         {
@@ -1001,9 +957,7 @@
           "survives": "RULING 1 still caps merges; RULING 38 still makes the author's note binding on the session that reads it"
         }
       ],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:820"
     },
     {
@@ -1014,17 +968,15 @@
         "R-50"
       ],
       "title": "RULING 50 — photos-first ordering is presentation; withholding data is suppression, and the two are never conflated again",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:829"
     },
     {
@@ -1035,17 +987,15 @@
         "R-51"
       ],
       "title": "RULING 51 — the collection disclosure renders once per surface, and there are two surfaces",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:863"
     },
     {
@@ -1094,17 +1044,15 @@
         "R-54"
       ],
       "title": "RULING 54 — the filed mailing address renders",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1780"
     },
     {
@@ -1115,17 +1063,15 @@
         "R-55"
       ],
       "title": "RULING 55 — only a reviewed photo renders, and a decision is about an IMAGE",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/rendering-neutrality.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1805"
     },
     {
@@ -1193,17 +1139,15 @@
         "R-59"
       ],
       "title": "RULING 59 — the page says one thing about completeness and nothing else",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "rendering-neutrality",
       "adopted": "2026-08-21",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:951"
     },
     {
@@ -1295,17 +1239,15 @@
         "R-64"
       ],
       "title": "RULING 64 — shared office contacts are published, labeled as the office",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/discovery.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1167"
     },
     {
@@ -1316,17 +1258,15 @@
         "R-65"
       ],
       "title": "RULING 65 — the footer-address branch",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/discovery.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1178"
     },
     {
@@ -1337,17 +1277,15 @@
         "R-66"
       ],
       "title": "RULING 66 — Facebook by compliant routes only",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-21",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/discovery.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1186"
     },
     {
@@ -1358,17 +1296,15 @@
         "R-67"
       ],
       "title": "RULING 67 — an enumeration states its geography and is checked externally",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-22",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1198"
     },
     {
@@ -1398,17 +1334,15 @@
         "R-69"
       ],
       "title": "RULING 69 — reference data belongs in the repo, named and refreshable",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-22",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/discovery.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:1220"
     },
     {
@@ -3103,17 +3037,15 @@
         "R-155"
       ],
       "title": "RULING 155 — a session may not claim local gates green unless it ran the gate set CI requires, and named each one",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:3677"
     },
     {
@@ -3124,17 +3056,15 @@
         "R-156"
       ],
       "title": "RULING 156 — a required check is registered by NAME, and a rename disarms protection in silence",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:3747"
     },
     {
@@ -3247,17 +3177,15 @@
         "R-162"
       ],
       "title": "RULING 162 — a bypass is only as safe as the paths it can carry",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-25",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:4064"
     },
     {
@@ -3268,17 +3196,15 @@
         "R-163"
       ],
       "title": "RULING 163 — the answer to \"is the protection still what we think\" is a command",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-26",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:4118"
     },
     {
@@ -3289,17 +3215,15 @@
         "R-164"
       ],
       "title": "RULING 164 — a workflow reports every failure, not just the first",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-26",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:4153"
     },
     {
@@ -3310,17 +3234,15 @@
         "R-165"
       ],
       "title": "RULING 165 — the scheduled pushers authenticate as a deploy key, and the private half is never held",
-      "kind": "PENDING_INTERPRETATION",
-      "status": "HISTORICAL",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
       "provenance": "author_confirmed",
       "domain": "shipping-ci",
       "adopted": "2026-08-26",
-      "operativePolicy": null,
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:4206"
     },
     {
@@ -3381,17 +3303,15 @@
         "R-168"
       ],
       "title": "RULING 168 — Sean's ratification of the job-watch tracker grant, and his tracker decisions of that brief",
-      "kind": "PENDING_INTERPRETATION",
+      "kind": "RATIFICATION",
       "status": "HISTORICAL",
-      "provenance": "author_confirmed",
+      "provenance": "author_explicit",
       "domain": "tracker-workflow",
       "adopted": "2026-08-26",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "author voice not explicit in the entry and not cited by the constitution"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:4451"
     },
     {
@@ -4186,7 +4106,7 @@
       "id": "R-X-f02-the-committee-denominator-is-per-representat",
       "aliases": [],
       "title": "`F02` — the committee denominator is PER REPRESENTATIVE (2026-08-20)",
-      "kind": "INTERPRETATION",
+      "kind": "FACT",
       "status": "HISTORICAL",
       "provenance": "observed_fact",
       "domain": "discovery",
@@ -4194,9 +4114,7 @@
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "un-numbered entry: kind read from heading vocabulary"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:267"
     },
     {
@@ -4323,17 +4241,15 @@
       "id": "R-X-the-repeatability-bar-2026-08-20",
       "aliases": [],
       "title": "The repeatability bar (2026-08-20)",
-      "kind": "INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "observed_fact",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
       "domain": "discovery",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "un-numbered entry: kind read from heading vocabulary"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:306"
     },
     {
@@ -4355,17 +4271,15 @@
       "id": "R-X-the-zip-order-2026-08-20",
       "aliases": [],
       "title": "The zip order (2026-08-20)",
-      "kind": "INTERPRETATION",
-      "status": "HISTORICAL",
-      "provenance": "observed_fact",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_confirmed",
       "domain": "meta-governance",
       "adopted": "2026-08-20",
       "operativePolicy": null,
       "claims": [],
       "relations": [],
-      "uncertain": [
-        "un-numbered entry: kind read from heading vocabulary"
-      ],
+      "uncertain": [],
       "sourceRef": "docs/rulings.md:290"
     },
     {

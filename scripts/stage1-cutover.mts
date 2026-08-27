@@ -35,6 +35,7 @@ import {
   validateWorkstream,
   type Workstream,
 } from "../lib/workstate/workstream.ts";
+import { loadMethodStore, loadWorkstreamFor } from "../lib/workstate/load.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -49,15 +50,10 @@ interface Criterion {
 
 const index = loadIndex();
 
-function ws(state: string): Workstream | null {
-  const p = join(ROOT, "data", "workstate", `${state}.json`);
-  return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as Workstream) : null;
-}
-
-function methodStore(): MethodKnowledge | null {
-  const p = join(ROOT, "data", "method", "knowledge.json");
-  return existsSync(p) ? (JSON.parse(readFileSync(p, "utf8")) as MethodKnowledge) : null;
-}
+// Loading is SHARED with the final acceptance gate. Two gates reading the same
+// two stores is one job, and RULING 103 caught the second copy.
+const ws = (state: string) => loadWorkstreamFor(ROOT, state);
+const methodStore = () => loadMethodStore(ROOT);
 
 const CRITERIA: Criterion[] = [
   {
@@ -225,6 +221,33 @@ const CRITERIA: Criterion[] = [
         detail: enforced
           ? `${guarded ? "typed apart and guarded" : "typed apart, NOT guarded"}`
           : "not separated",
+      };
+    },
+  },
+  {
+    key: "aggregate-tail accounting",
+    label: "the historical obligation is preserved, counted apart, and never resumable",
+    check: () => {
+      const expected: Record<string, number> = { nj: 1986, az: 1143, nh: 771 };
+      let tail = 0;
+      let resumable = 0;
+      const wrong: string[] = [];
+      for (const s of STATES) {
+        const w = ws(s);
+        if (!w) continue;
+        const carried = (w.unmaterialized ?? []).reduce(
+          (n, o) => n + (o.dischargedOn ? 0 : o.count),
+          0,
+        );
+        if (carried !== expected[s]) wrong.push(`${s}: carrying ${carried}, history says ${expected[s]}`);
+        tail += carried;
+        resumable += w.edges.filter((e) => e.eligible && ["UNWALKED", "DISCOVERED", "IN_PROGRESS"].includes(e.disposition)).length;
+      }
+      return {
+        pass: wrong.length === 0 && tail === 3900,
+        detail: wrong.length
+          ? wrong.join("; ")
+          : `${resumable} resumable edge(s) + ${tail} unmaterialized obligation(s), reported apart and never summed`,
       };
     },
   },

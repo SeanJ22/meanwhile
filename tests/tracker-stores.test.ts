@@ -996,7 +996,7 @@ test("RULING 79: a recorded ruling closes a Needs Sean row, and nothing else doe
   assert.deepEqual(named.refusals, []);
 });
 
-test("RULING 79: the move script refuses a ruling that is not in docs/rulings.md", () => {
+test("RULING 79: the move script refuses a ruling that is not in the canonical ledger", () => {
   /*
    * The check that makes the whole thing safe, asserted against the SOURCE
    * because it lives in the script rather than in the rules module: a close
@@ -1005,10 +1005,18 @@ test("RULING 79: the move script refuses a ruling that is not in docs/rulings.md
    */
   const script = readFileSync(join(ROOT, "scripts", "tracker.mjs"), "utf8");
   assert.match(script, /--ruling=/, "the flag exists");
-  assert.match(script, /rulings\.md/, "the named ruling is checked against the record");
+  // The record moved from a markdown file to the canonical ledger on
+  // 2026-08-26. What this guard asserts is unchanged: the named ruling is
+  // checked against the RECORD, and one that is not there is refused BY NAME.
+  //
+  // The old version asserted `/rulings\.md/`, which kept passing after the
+  // script stopped reading that file — the string still appeared in a message.
+  // Asserting the resolver instead is what makes this test about behaviour.
+  assert.match(script, /ledger\.jsonl/, "the named ruling is checked against the canonical record");
+  assert.match(script, /ledgerIds\.has\(/, "and it is resolved against the ledger, not a heading");
   assert.match(
     script,
-    /is not recorded in docs\/rulings\.md/,
+    /is not in docs\/governance\/ledger\.jsonl/,
     "and a ruling that is not there is refused by name",
   );
   assert.match(
@@ -1018,7 +1026,7 @@ test("RULING 79: the move script refuses a ruling that is not in docs/rulings.md
   );
 });
 
-test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
+test("RULING 79: the canonical ledger has no gap in its ruling numbers", () => {
   /*
    * The hole this session found and filled. This file is "the append-only
    * record of every ruling that is not law", and it ran 1…51, 57… — rulings 52
@@ -1032,8 +1040,31 @@ test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
    *
    * RULING 11 is the one deliberate absence and is named as such in the file.
    */
-  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
-  const numbers = [...text.matchAll(/^### RULING (\d+)\b/gm)].map((m) => Number(m[1]));
+  /*
+   * Asked of the CANONICAL LEDGER, not of a markdown heading.
+   *
+   * **This guard was passing on zero input.** It matched `^### RULING n`
+   * against `docs/rulings.md`, which became GENERATED on 2026-08-26 and emits
+   * `## RULING n`. The pattern found nothing, `Math.max()` of an empty array
+   * returned `-Infinity`, the completeness loop never executed once, and the
+   * assertion compared `[]` to `[]` — green, forever, about nothing.
+   *
+   * A guard whose subject moved is worse than no guard, because the board still
+   * says the thing is checked. The ledger is where a ruling now exists, and a
+   * count is asserted below so this can never silently read nothing again.
+   */
+  const ledger = readFileSync(join(ROOT, "docs", "governance", "ledger.jsonl"), "utf8");
+  const numbers = ledger
+    .split("\n")
+    .filter((l) => l.trim())
+    .map((l) => JSON.parse(l) as { id: string })
+    .map((r) => /^R-0*(\d+)$/.exec(r.id)?.[1])
+    .filter((n): n is string => Boolean(n))
+    .map(Number);
+  assert.ok(
+    numbers.length > 150,
+    `the ruling completeness guard read ${numbers.length} rulings — it has stopped seeing its subject`,
+  );
   const seen = new Set(numbers);
 
   /*
@@ -1051,8 +1082,16 @@ test("RULING 79: docs/rulings.md has no gap in its ruling numbers", () => {
    * `CLAUDE.md` and never reached this file, and that failure produces no such
    * heading, so it still fails.
    */
-  for (const m of text.matchAll(/^### RULINGS? ([\d, ]+(?:AND\s+\d+)?)\s+—\s+deliberately unassigned/gim)) {
-    for (const n of m[1].match(/\d+/g) ?? []) seen.add(Number(n));
+  // A deliberately-unassigned number is now a TOMBSTONE record rather than a
+  // heading, which is strictly better: it is typed, it carries its own reason,
+  // and the validator already refuses anybody reusing its id. The exemption is
+  // still an explicit, arguable diff — it just lives in the ledger.
+  for (const line of ledger.split("\n").filter((l) => l.trim())) {
+    const rec = JSON.parse(line) as { id: string; kind: string; title: string; body: string };
+    if (rec.kind !== "TOMBSTONE") continue;
+    for (const n of `${rec.title} ${rec.body}`.match(/RULINGS?\s+([\d\s,ANDand]+)/)?.[1]?.match(/\d+/g) ?? []) {
+      seen.add(Number(n));
+    }
   }
 
   const highest = Math.max(...numbers);
@@ -1074,15 +1113,36 @@ test("RULING 79: a deliberately-unassigned ruling number is DECLARED, never mere
    * be a way to make any future gap legal by writing one heading, and nobody
    * would notice that the heading had stopped describing anything real.
    */
-  const text = readFileSync(join(ROOT, "docs", "rulings.md"), "utf8");
-  const declarations = [
-    ...text.matchAll(/^### RULINGS? ([\d, ]+(?:AND\s+\d+)?)\s+—\s+deliberately unassigned/gim),
-  ];
-  const numbers = new Set([...text.matchAll(/^### RULING (\d+)\b/gm)].map((m) => Number(m[1])));
+  /*
+   * A deliberately-unassigned number is a TOMBSTONE record now, which is
+   * strictly stronger than a heading: it is typed, it carries its own reason,
+   * and `governance:check` refuses anybody reusing its id.
+   *
+   * **This guard was also passing on zero input** before the migration — it
+   * matched `### RULINGS n AND m` against a file that had stopped emitting
+   * `###` headings, found no declarations, and looped over nothing. The count
+   * assertion below is what stops that recurring.
+   */
+  const records = readFileSync(join(ROOT, "docs", "governance", "ledger.jsonl"), "utf8")
+    .split("\n")
+    .filter((l) => l.trim())
+    .map((l) => JSON.parse(l) as { id: string; kind: string; title: string; body: string });
+
+  const declarations = records.filter((r) => r.kind === "TOMBSTONE");
+  const numbers = new Set(
+    records
+      .filter((r) => r.kind !== "TOMBSTONE")
+      .map((r) => Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))
+      .filter((n) => Number.isFinite(n)),
+  );
+
+  assert.ok(declarations.length > 0, "the tombstone declarations are readable");
+  assert.ok(numbers.size > 150, "the ruling numbers are readable");
 
   for (const d of declarations) {
-    const declared = (d[1].match(/\d+/g) ?? []).map(Number);
-    assert.ok(declared.length > 0, "a deliberately-unassigned heading names no numbers");
+    const block = `${d.title} ${d.body}`;
+    const declared = (block.match(/RULINGS?\s+([\d\s,ANDand]+)/)?.[1]?.match(/\d+/g) ?? []).map(Number);
+    assert.ok(declared.length > 0, "a tombstone that names no numbers declares nothing");
     /*
      * **A HELD NUMBER MAY BE CLAIMED, AND THE CLAIM IS A DATED LINE.**
      * (2026-08-22, the Discovery Conduct session.)
@@ -1097,7 +1157,6 @@ test("RULING 79: a deliberately-unassigned ruling number is DECLARED, never mere
      * use ACCOUNTED FOR*. An unclaimed number that turns up as a ruling is
      * still the contradiction this test was written for, and still fails.
      */
-    const block = text.slice(d.index ?? 0, text.indexOf("\n### ", (d.index ?? 0) + 5));
     const claimed = /\*\*CLAIMED \d{4}-\d{2}-\d{2}/.test(block);
     for (const n of declared) {
       if (claimed) {

@@ -461,6 +461,80 @@ export interface EligibilityVerdict {
   reason: string;
 }
 
+/** ------------------------------------ obligations we know of but cannot name */
+
+/**
+ * An UNMATERIALIZED OBLIGATION — work a previous run demonstrably discovered,
+ * whose COUNT survived but whose IDENTITIES did not.
+ *
+ * ## The accounting question this exists to answer honestly
+ *
+ * The legacy descent left two different numbers, and collapsing them either way
+ * would be a lie:
+ *
+ *   **1,614** eligible edges are persisted and resumable. Real, addressable,
+ *   individually named on disk.
+ *
+ *   **3,900** edges the final pass queued — 1,986 NJ, 1,143 AZ, 771 NH — of
+ *   which `descent.json` recorded only `finalPassNewLinks`. **The number was
+ *   persisted. The edges were not.**
+ *
+ * Adding them gives 5,514 "outstanding edges", which claims 3,900 addresses the
+ * repository does not have. Reporting only 1,614 silently discards work a
+ * previous session did and the project still owes. Neither is acceptable, so
+ * the two populations are kept APART, both counted, and the second is carried
+ * as an obligation with a named discharge path.
+ *
+ * **It is never resumable and never complete.** It keeps the workstream OPEN
+ * until a recovery walk re-materializes it into real edges, at which point it
+ * is discharged with the count that discharged it.
+ */
+export interface UnmaterializedObligation {
+  id: string;
+  /** How many items the historical record says existed. */
+  count: number;
+  /** Where that number came from, exactly. */
+  source: string;
+  /** Why the identities are gone — stated, never implied. */
+  why: string;
+  /** What would re-materialize them. An obligation with no path is a wish. */
+  discharge: string;
+  recordedOn: string;
+  /** Set when a later run actually recovered them. */
+  dischargedOn?: string;
+  /** How many real edges the discharge produced. May differ from `count`. */
+  dischargedCount?: number;
+}
+
+/**
+ * The aggregate tail — the total obligation a repository is carrying.
+ *
+ * **This is the number that must never quietly shrink.** A per-state count can
+ * legitimately move as one state is recovered; the aggregate moving without a
+ * discharge record is work disappearing, which is the failure mode the whole
+ * migration was built to prevent.
+ */
+export interface AggregateTail {
+  outstandingCount: number;
+  dischargedCount: number;
+  byId: Array<{ id: string; count: number; discharged: boolean }>;
+}
+
+export function aggregateTail(
+  obligations: readonly UnmaterializedObligation[],
+): AggregateTail {
+  let outstanding = 0;
+  let discharged = 0;
+  const byId: AggregateTail["byId"] = [];
+  for (const o of obligations) {
+    const done = Boolean(o.dischargedOn);
+    if (done) discharged += o.count;
+    else outstanding += o.count;
+    byId.push({ id: o.id, count: o.count, discharged: done });
+  }
+  return { outstandingCount: outstanding, dischargedCount: discharged, byId };
+}
+
 /** ------------------------------------------------------------ convergence */
 
 /**

@@ -278,6 +278,9 @@ async function main(): Promise<void> {
     permissions: [],
     cursor: null,
     convergence: null,
+    // A brand-new workstream carries no historical obligation: it has not lost
+    // anything yet, because from its first pass every edge is persisted.
+    unmaterialized: [],
     routesInherited: [],
     routesLearned: [],
     methodVersion: 0,

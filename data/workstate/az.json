@@ -16782,8 +16782,18 @@
     }
   ],
   "permissions": [],
-  "cursor": "az / 780 edge(s) persisted / 700 eligible edge(s) outstanding / by tier: state=131, statewide and multi-county districts=130, county=202, local and special districts=16, city=3, everything else the state names=218 / next: edge-d4b9d6cbc678 https://az.gov/administration-department / eligibility ee-v1-2026-08-26 / 1143 final-pass edges NOT persisted by the legacy format",
+  "cursor": "az / 780 edge(s) persisted / 700 eligible edge(s) outstanding / by tier: state=131, statewide and multi-county districts=130, county=202, local and special districts=16, city=3, everything else the state names=218 / next: edge-d4b9d6cbc678 https://az.gov/administration-department / eligibility ee-v1-2026-08-26 / unmaterialized obligation 1143 (legacy final pass, identities never persisted)",
   "convergence": null,
+  "unmaterialized": [
+    {
+      "id": "az:final-pass-tail",
+      "count": 1143,
+      "source": "states/az/descent.json finalPassNewLinks",
+      "why": "the legacy descent persisted per-level COUNTS and no edges; the identities of these links existed only in the run's memory and were lost when the process exited",
+      "discharge": "re-walk az from the persisted frontier; every edge found from now on is persisted as it is discovered, so this obligation can be discharged once and never re-incurred",
+      "recordedOn": "2026-08-26"
+    }
+  ],
   "routesInherited": [],
   "routesLearned": [],
   "methodVersion": 0

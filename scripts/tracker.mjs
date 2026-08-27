@@ -709,8 +709,27 @@ function modeMove(working, resolved, sections) {
    * RULING 79, applied before anything is planned: mark the rows a recorded
    * ruling closes, refusing any whose ruling is not actually in the file.
    */
-  const RULINGS_MD = join(ROOT, "docs", "rulings.md");
-  const rulingsText = existsSync(RULINGS_MD) ? readFileSync(RULINGS_MD, "utf8") : "";
+  /*
+   * Resolved against the CANONICAL LEDGER, not by parsing a markdown heading.
+   *
+   * This used to test `^### RULING n` against `docs/rulings.md`. That file is
+   * GENERATED now and emits `## RULING n`, so the old pattern matched NOTHING
+   * and every ruling-backed closure would have been refused — a guard that
+   * looks strict while having stopped reading its subject.
+   *
+   * The ledger is the record a ruling actually exists in, and asking it means
+   * this check keeps working however the human-readable view is formatted.
+   */
+  const LEDGER = join(ROOT, "docs", "governance", "ledger.jsonl");
+  const ledgerIds = new Set();
+  if (existsSync(LEDGER)) {
+    for (const line of readFileSync(LEDGER, "utf8").split("\n")) {
+      if (!line.trim()) continue;
+      const rec = JSON.parse(line);
+      const n = /^R-0*(\d+)$/.exec(rec.id);
+      if (n) ledgerIds.add(n[1]);
+    }
+  }
   const rulingCloses = [];
   for (const [id, ruling] of Object.entries(RULING_CLOSURES)) {
     const row = working.find((r) => (r.ID ?? "").trim() === id);
@@ -722,9 +741,9 @@ function modeMove(working, resolved, sections) {
       refusals.push(`RULING 79 — ${id}=${ruling} does not name a ruling NUMBER.`);
       continue;
     }
-    if (!new RegExp(`^###\\s*RULING ${ruling}\\b`, "m").test(rulingsText)) {
+    if (!ledgerIds.has(String(Number(ruling)))) {
       refusals.push(
-        `RULING 79 — RULING ${ruling} is not recorded in docs/rulings.md, so it cannot ` +
+        `RULING 79 — RULING ${ruling} is not in docs/governance/ledger.jsonl, so it cannot ` +
           `close ${id}. A close whose authority does not exist is worse than an open row.`,
       );
       continue;

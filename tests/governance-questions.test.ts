@@ -191,7 +191,11 @@ test("Q: Can the next session resume the exact descent frontier without recrawli
     assert.ok(w.edges.length > 0, `${s}: edges are persisted individually`);
     assert.ok(w.cursor, `${s}: an exact cursor is persisted`);
     // And the part that cannot be resumed is NAMED rather than implied.
-    assert.match(w.cursor, /NOT persisted by the legacy format/);
+    // The cursor states BOTH numbers: what is resumable, and the historical
+    // obligation whose identities the legacy format never wrote down. Summing
+    // them would claim addresses this repository does not have.
+    assert.match(w.cursor, /\d+ eligible edge\(s\) outstanding/);
+    assert.match(w.cursor, /unmaterialized obligation \d+/);
   }
 });
 

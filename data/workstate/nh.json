@@ -6107,8 +6107,18 @@
     }
   ],
   "permissions": [],
-  "cursor": "nh / 283 edge(s) persisted / 250 eligible edge(s) outstanding / by tier: state=53, statewide and multi-county districts=125, county=10, local and special districts=58, town, township, borough, village, plantation, unincorporated place=4 / next: edge-c7bc1fef450f https://www.banking.nh.gov/ / eligibility ee-v1-2026-08-26 / 771 final-pass edges NOT persisted by the legacy format",
+  "cursor": "nh / 283 edge(s) persisted / 250 eligible edge(s) outstanding / by tier: state=53, statewide and multi-county districts=125, county=10, local and special districts=58, town, township, borough, village, plantation, unincorporated place=4 / next: edge-c7bc1fef450f https://www.banking.nh.gov/ / eligibility ee-v1-2026-08-26 / unmaterialized obligation 771 (legacy final pass, identities never persisted)",
   "convergence": null,
+  "unmaterialized": [
+    {
+      "id": "nh:final-pass-tail",
+      "count": 771,
+      "source": "states/nh/descent.json finalPassNewLinks",
+      "why": "the legacy descent persisted per-level COUNTS and no edges; the identities of these links existed only in the run's memory and were lost when the process exited",
+      "discharge": "re-walk nh from the persisted frontier; every edge found from now on is persisted as it is discovered, so this obligation can be discharged once and never re-incurred",
+      "recordedOn": "2026-08-26"
+    }
+  ],
   "routesInherited": [],
   "routesLearned": [],
   "methodVersion": 0

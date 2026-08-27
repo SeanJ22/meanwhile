@@ -201,6 +201,71 @@ const C: Criterion[] = [
     },
   },
   {
+    key: "compatibility-view validity",
+    check: () => {
+      // CONTENT, not freshness. The old criterion asked only whether the view
+      // was generated and registered, and it passed while 24 headings rendered
+      // as "RULING undefined" on live main.
+      const text = readFileSync(join(ROOT, "docs/rulings.md"), "utf8");
+      const undef = (text.match(/RULING undefined/g) ?? []).length;
+      const headings = [...text.matchAll(/^## RULING (.+?) —/gm)].map((m) => m[1].trim());
+      const numericIds = new Set(
+        records.filter((r) => /^R-0*\d+$/.test(r.id)).map((r) => String(Number(/^R-0*(\d+)$/.exec(r.id)?.[1]))),
+      );
+      const malformed = headings.filter((h) => !/^\d+$/.test(h));
+      const orphan = headings.filter((h) => /^\d+$/.test(h) && !numericIds.has(String(Number(h))));
+      const seen = new Set(headings.map((h) => String(Number(h))));
+      const omitted = [...numericIds].filter((id) => !seen.has(id));
+      const unnumberedDropped = records
+        .filter((r) => !/^R-0*\d+$/.test(r.id))
+        .filter((r) => !text.includes("`" + r.id + "`"));
+      return {
+        pass:
+          undef === 0 &&
+          malformed.length === 0 &&
+          orphan.length === 0 &&
+          omitted.length === 0 &&
+          unnumberedDropped.length === 0,
+        detail:
+          `RULING undefined ${undef} · malformed ${malformed.length} · orphan ${orphan.length} · ` +
+          `omitted ${omitted.length} · un-numbered dropped ${unnumberedDropped.length} · ` +
+          `${headings.length} numbered rulings represented`,
+      };
+    },
+  },
+  {
+    key: "one amendment procedure",
+    check: () => {
+      const holders = current.filter((r) =>
+        r.claims.some((c) => c.key === "governance.amendment_procedure"),
+      );
+      const retired = current.filter((r) =>
+        r.claims.some((c) => c.value === "dual-write-claude-and-rulings"),
+      );
+      return {
+        pass: holders.length === 1 && retired.length === 0,
+        detail:
+          `${holders.length} current amendment procedure (${holders[0]?.claims.find((c) => c.key === "governance.amendment_procedure")?.value ?? "none"}), ` +
+          `${retired.length} ACTIVE record(s) still commanding the retired dual write`,
+      };
+    },
+  },
+  {
+    key: "method learning is operational",
+    check: () => {
+      const src = readFileSync(join(ROOT, "scripts/descent.mts"), "utf8");
+      const writes = src.includes("recordRouteOutcome(") && src.includes("applyEarnedPortability(");
+      const lib = readFileSync(join(ROOT, "lib/method/knowledge.ts"), "utf8");
+      const earns = lib.includes("export function earnedPortability");
+      return {
+        pass: writes && earns,
+        detail: writes
+          ? "descent records route outcomes and applies earned portability through the canonical store"
+          : "no operational path writes route outcomes",
+      };
+    },
+  },
+  {
     key: "task-aware governance:open",
     check: () => {
       const src = readFileSync(join(ROOT, "scripts/governance-open.mts"), "utf8")

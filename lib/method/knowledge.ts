@@ -31,6 +31,7 @@ import {
   appliesTo,
   overGeneralized,
   unknownApplicability,
+  type PortabilityClass,
 } from "./portability.ts";
 
 /** What a route yielded in one jurisdiction on one date. */
@@ -146,6 +147,176 @@ export function learnRoute(
     version,
     duplicate: null,
   };
+}
+
+/**
+ * Record what a route actually did, in one jurisdiction, on one date.
+ *
+ * ## Why this exists
+ *
+ * The migration set all 61 inherited routes to `UNKNOWN` portability, which was
+ * the honest call — `expectedToTravel` is an EXPECTATION and the manifest held
+ * no outcome records. But nothing wrote outcomes either, so every route could
+ * have stayed `UNKNOWN` forever and "speculative" would have become permanent
+ * noise rather than a temporary state evidence resolves.
+ *
+ * **Idempotent by (jurisdiction, date, outcome).** A session that re-processes
+ * the same walk must not deepen the evidence for it — that would let a route
+ * earn `NATIONWIDE` by being re-read three times in one state.
+ */
+export function recordRouteOutcome(
+  k: MethodKnowledge,
+  routeId: string,
+  outcome: RouteOutcome,
+): { knowledge: MethodKnowledge; recorded: boolean; reason: string } {
+  const route = k.routes.find((r) => r.id === routeId);
+  if (!route) {
+    return { knowledge: k, recorded: false, reason: `no route ${routeId} in project knowledge` };
+  }
+  const duplicate = route.outcomes.some(
+    (o) =>
+      o.jurisdiction === outcome.jurisdiction &&
+      o.walkedOn === outcome.walkedOn &&
+      o.outcome === outcome.outcome,
+  );
+  if (duplicate) {
+    return {
+      knowledge: k,
+      recorded: false,
+      reason: `already recorded: ${routeId} ${outcome.outcome} in ${outcome.jurisdiction} on ${outcome.walkedOn}`,
+    };
+  }
+  return {
+    knowledge: {
+      ...k,
+      routes: k.routes.map((r) =>
+        r.id === routeId ? { ...r, outcomes: [...r.outcomes, outcome] } : r,
+      ),
+    },
+    recorded: true,
+    reason: `recorded ${outcome.outcome} for ${routeId} in ${outcome.jurisdiction}`,
+  };
+}
+
+/**
+ * A jurisdictional failure — evidence that a route cannot work HERE, as opposed
+ * to evidence that this attempt did not work.
+ *
+ * **The distinction is the whole of RULING 182 applied to method knowledge.** A
+ * timeout, a TLS refusal, a CAPTCHA and a missing adapter are all facts about
+ * the attempt. Narrowing a route's applicability on any of them would convert a
+ * transport failure into a claim about a government — the same collapse that
+ * silently removed two states from this project on 2026-08-26.
+ *
+ * So narrowing requires the caller to SAY the failure was jurisdictional, and
+ * to say why. That is a sentence somebody has to write, on purpose.
+ */
+export interface JurisdictionalFailure {
+  jurisdiction: string;
+  why: string;
+}
+
+export interface EarnedPortability {
+  portability: PortabilityClass;
+  states: string[];
+  /** Why this class, from the evidence. Always stated. */
+  because: string;
+  changed: boolean;
+}
+
+/**
+ * Derive the portability a route has EARNED from its recorded outcomes.
+ *
+ * Deliberately conservative, and asymmetric on purpose:
+ *
+ * - **One success does NOT narrow to `STATE_SPECIFIC`.** A route that worked in
+ *   New Hampshire is not thereby proven to fail in Arizona, and narrowing it
+ *   would stop it being offered there — the opposite of *inherit everything*.
+ *   It stays `UNKNOWN`, which still inherits everywhere, marked speculative.
+ * - **Widening needs breadth**: three distinct states for `NATIONWIDE`, two for
+ *   `STATE_FAMILY`. Those are the same bars `overGeneralized` refuses below, so
+ *   what is earned here can never be what is refused there.
+ * - **`ZERO`, `FAILED` and `BLOCKED` never narrow.** A zero-yield walk is
+ *   knowledge (RULING 88) and a blocked one is a fact about a wall.
+ * - **`UNKNOWN` is a permanent-valid resting state.** The goal is not to drive
+ *   it to zero; it is to make learning possible when evidence is earned.
+ */
+export function earnedPortability(
+  route: MethodRoute,
+  jurisdictionalFailures: readonly JurisdictionalFailure[] = [],
+): EarnedPortability {
+  const current = route.applicability.portability;
+  const proven = [
+    ...new Set(route.outcomes.filter((o) => o.outcome === "YIELDED").map((o) => o.jurisdiction)),
+  ].sort();
+
+  if (proven.length >= 3) {
+    return {
+      portability: "NATIONWIDE",
+      states: proven,
+      because: `YIELDED in ${proven.length} distinct jurisdictions: ${proven.join(", ")}`,
+      changed: current !== "NATIONWIDE",
+    };
+  }
+  if (proven.length === 2) {
+    return {
+      portability: "STATE_FAMILY",
+      states: proven,
+      because: `YIELDED in 2 distinct jurisdictions: ${proven.join(", ")}`,
+      changed: current !== "STATE_FAMILY",
+    };
+  }
+
+  // Narrowing happens ONLY on declared jurisdictional failure, never on a
+  // transport, permission or tooling failure.
+  const failedHere = jurisdictionalFailures.map((f) => f.jurisdiction);
+  if (proven.length === 1 && failedHere.length > 0) {
+    return {
+      portability: "STATE_SPECIFIC",
+      states: proven,
+      because:
+        `YIELDED in ${proven[0]} and declared jurisdictionally inapplicable in ` +
+        `${failedHere.join(", ")}: ${jurisdictionalFailures.map((f) => f.why).join("; ")}`,
+      changed: current !== "STATE_SPECIFIC",
+    };
+  }
+
+  return {
+    portability: "UNKNOWN",
+    states: proven,
+    because:
+      proven.length === 1
+        ? `YIELDED in ${proven[0]} only — one success does not prove it fails elsewhere, so it keeps inheriting`
+        : `${route.outcomes.length} outcome(s) recorded, none establishing reach`,
+    changed: false,
+  };
+}
+
+/** Apply earned portability to the whole store. Returns what actually moved. */
+export function applyEarnedPortability(
+  k: MethodKnowledge,
+  failures: Record<string, JurisdictionalFailure[]> = {},
+): { knowledge: MethodKnowledge; moved: Array<{ id: string; from: PortabilityClass; to: PortabilityClass; because: string }> } {
+  const moved: Array<{ id: string; from: PortabilityClass; to: PortabilityClass; because: string }> = [];
+  const routes = k.routes.map((r) => {
+    const earned = earnedPortability(r, failures[r.id] ?? []);
+    if (!earned.changed) return r;
+    moved.push({
+      id: r.id,
+      from: r.applicability.portability,
+      to: earned.portability,
+      because: earned.because,
+    });
+    return {
+      ...r,
+      applicability: {
+        ...r.applicability,
+        portability: earned.portability,
+        states: earned.states,
+      },
+    };
+  });
+  return { knowledge: { ...k, routes }, moved };
 }
 
 /**

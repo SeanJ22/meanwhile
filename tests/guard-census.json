@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 269,
-    "named": 2655,
+    "files": 270,
+    "named": 2672,
     "dynamic": 6
   },
   "files": {
@@ -1697,6 +1697,28 @@
       "names": [
         "the gate runs the command Netlify runs, and has no way to be skipped",
         "the ship path runs a build gate before it pushes anything"
+      ],
+      "dynamic": 0
+    },
+    "tests/hotfix-audit.test.ts": {
+      "names": [
+        "FINDING 1 — every RULING n heading names a real numeric record, and none is omitted",
+        "FINDING 1 — the compatibility view contains no RULING undefined",
+        "FINDING 1 — un-numbered records keep their namespace and are not dropped",
+        "FINDING 2 — RULING 99's dual-write clause is no longer current, and R99 is preserved",
+        "FINDING 2 — there is exactly ONE current amendment procedure",
+        "FINDING 3 — seeds still initialize a jurisdiction with no canonical state, and nothing refuses silently",
+        "FINDING 3 — the EXECUTION path resumes canonical work with the seed initializer unavailable",
+        "FINDING 3 — the command no longer gates the run on the seed list",
+        "FINDING 4 — a FAILED or BLOCKED attempt never narrows jurisdictional applicability",
+        "FINDING 4 — a ZERO outcome is recorded as knowledge",
+        "FINDING 4 — a newly learned route still reopens a prior conclusion",
+        "FINDING 4 — breadth earns a transition, deterministically",
+        "FINDING 4 — one success records the outcome and does NOT become NATIONWIDE",
+        "FINDING 4 — recording is idempotent across sessions",
+        "FINDING 4 — the OPERATIONAL descent path writes outcomes through the canonical store",
+        "FINDING 4 — the real store round-trips a recorded outcome",
+        "the hotfix did not advance the descent"
       ],
       "dynamic": 0
     },

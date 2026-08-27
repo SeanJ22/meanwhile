@@ -181,6 +181,114 @@ export function deriveCursor(w: Workstream, state: string): string {
   return parts.join(" / ");
 }
 
+/**
+ * The start plan — WHAT a descent run is about to do, before it does any of it.
+ *
+ * ## Why this is a separate, callable function
+ *
+ * The resume proof used to exercise `resumeFrom` and conclude that the descent
+ * resumes without seeds. That proved the HELPER. The actual command still ran
+ * `seedsFor(state)` first and THREW when the list was empty, so recovering
+ * 1,614 already-persisted edges depended on the seed initializer being present
+ * — a dependency the proof could not see because it never called that path.
+ *
+ * So the decision moves here, where the command and the proof both call it.
+ *
+ * ## The distinction it keeps
+ *
+ * **Seeds INITIALIZE a workstream that does not exist.** Without canonical
+ * state and without seeds there is nothing to descend, and that still refuses.
+ *
+ * **Seeds are ALSO tier roots**, deliberately re-read on a cadence because a
+ * moved directory is only noticed by going back (RULING 93). That is real work
+ * and it is not deleted here — it is reported as its own line, so a run that
+ * skips it says so instead of quietly folding it into recovery.
+ *
+ * **Neither of those is a prerequisite for recovering persisted work.** That is
+ * the whole of RULING 181.
+ */
+export interface DescentStartPlan {
+  state: string;
+  /** RESUME when canonical outstanding work exists; INITIALIZE otherwise. */
+  mode: "RESUME" | "INITIALIZE" | "REFUSED";
+  /** Outstanding eligible edges read from canonical state. */
+  outstanding: number;
+  edgesPersisted: number;
+  /** The first edge a resume will process. Derived, never narrated. */
+  firstEdge: QueuedEdge | null;
+  cursor: string | null;
+  /** Tier roots available to re-read as fresh discovery input. */
+  seedsAvailable: number;
+  /**
+   * Whether a top-of-tier recheck can run this pass. SEPARATE from recovery:
+   * false here means fresh root expansion is unavailable, never that persisted
+   * work cannot be resumed.
+   */
+  rootRecheckAvailable: boolean;
+  /** Why this mode, in words. A refusal that does not say why is unauditable. */
+  reason: string;
+}
+
+export function planDescentStart(
+  root: string,
+  state: string,
+  seedCount: number,
+): DescentStartPlan {
+  const r = resumeFrom(root, state);
+  const outstanding = r?.totalQueued ?? 0;
+  const firstEdge = r ? ([...r.queuedByTier.values()].flat()[0] ?? null) : null;
+
+  if (r && outstanding > 0) {
+    return {
+      state,
+      mode: "RESUME",
+      outstanding,
+      edgesPersisted: r.workstream.edges.length,
+      firstEdge,
+      cursor: r.workstream.cursor,
+      seedsAvailable: seedCount,
+      rootRecheckAvailable: seedCount > 0,
+      reason:
+        `${outstanding} eligible edge(s) are persisted and outstanding; they resume from canonical state. ` +
+        (seedCount > 0
+          ? "Tier roots are also available and may be re-read as separate fresh-discovery work."
+          : "No tier roots are available this run, so top-of-tier recheck is SKIPPED — recovery is unaffected."),
+    };
+  }
+
+  if (seedCount > 0) {
+    return {
+      state,
+      mode: "INITIALIZE",
+      outstanding,
+      edgesPersisted: r?.workstream.edges.length ?? 0,
+      firstEdge: null,
+      cursor: r?.workstream.cursor ?? null,
+      seedsAvailable: seedCount,
+      rootRecheckAvailable: true,
+      reason:
+        r
+          ? "canonical state exists but holds no outstanding eligible work; the tier roots are walked as fresh discovery"
+          : "no canonical state for this jurisdiction yet; the tier roots initialize it",
+    };
+  }
+
+  return {
+    state,
+    mode: "REFUSED",
+    outstanding: 0,
+    edgesPersisted: r?.workstream.edges.length ?? 0,
+    firstEdge: null,
+    cursor: r?.workstream.cursor ?? null,
+    seedsAvailable: 0,
+    rootRecheckAvailable: false,
+    reason:
+      `DESCENT REFUSED — "${state}" has neither outstanding canonical work nor tier roots. RULING 93: before ` +
+      "hunting any tier, walk the directory the tier above publishes about it. Add that state's seeds to " +
+      "lib/hunt/descent-seeds.ts first.",
+  };
+}
+
 /** Everything a Stage 1 resume proof needs to assert, in one shape. */
 export interface ResumeProof {
   state: string;

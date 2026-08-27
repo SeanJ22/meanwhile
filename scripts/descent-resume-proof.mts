@@ -24,7 +24,8 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { proveResume } from "../lib/workstate/frontier.ts";
+import { planDescentStart, proveResume } from "../lib/workstate/frontier.ts";
+import { loadWorkstreamFor } from "../lib/workstate/load.ts";
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -40,12 +41,17 @@ const STATES = ["nj", "az", "nh"] as const;
 const frontierSrc = readFileSync(join(ROOT, "lib/workstate/frontier.ts"), "utf8")
   .replace(/\/\*[\s\S]*?\*\//g, "")
   .replace(/\/\/[^\n]*/g, "");
-const touchesSeeds = /descent-seeds/.test(frontierSrc);
+// The property is that the resume path cannot READ the seed list — no import,
+// no accessor call. NAMING the file in a refusal message is allowed and is how
+// a user is told where to add seeds for a jurisdiction that has none; testing
+// for the filename would fire on the error text rather than the dependency.
+const touchesSeeds =
+  /\bimport\b[^\n]*descent-seeds/.test(frontierSrc) || /\bseedsFor\s*\(/.test(frontierSrc);
 const touchesNetwork = /\bfetch\(|node:https?|axios/.test(frontierSrc);
 
 console.log("DESCENT RESUME PROOF");
 console.log("");
-console.log(`resume path imports descent-seeds : ${touchesSeeds ? "YES — DEFECT" : "no"}`);
+console.log(`resume path reads the seed list  : ${touchesSeeds ? "YES — DEFECT" : "no"}`);
 console.log(`resume path makes network calls   : ${touchesNetwork ? "YES — DEFECT" : "no"}`);
 console.log("");
 
@@ -78,6 +84,40 @@ for (const state of STATES) {
 
 // RULING 159 — the floor before the verdict. Zero states resumed is a broken
 // read, never a clean board.
+/*
+ * THE LOAD-BEARING CASE: the EXECUTION path, with seeds unavailable.
+ *
+ * The first version of this proof exercised `resumeFrom` and concluded the
+ * descent resumes without seeds. It proved the helper. `scripts/descent.mts`
+ * still called `seedsFor(state)` and THREW on an empty list, so recovery of
+ * already-persisted work depended on the seed initializer — and the proof could
+ * not see it, because it never called that path.
+ *
+ * `planDescentStart` is now the decision, and the command calls this same
+ * function. Passing 0 seeds is the test seam: it is exactly what the command
+ * sees when the seed list is unavailable, empty, or removed.
+ */
+console.log("EXECUTION PATH — planDescentStart with ZERO seeds available");
+console.log("");
+for (const state of STATES) {
+  const plan = planDescentStart(ROOT, state, 0);
+  const canonical = proveResume(ROOT, state);
+  const agrees =
+    canonical !== null &&
+    plan.outstanding === canonical.outstandingEligible &&
+    plan.cursor === (loadWorkstreamFor(ROOT, state)?.cursor ?? null);
+
+  console.log(`${state.toUpperCase()}`);
+  console.log(`  mode with 0 seeds           : ${plan.mode}`);
+  console.log(`  outstanding recovered       : ${plan.outstanding}`);
+  console.log(`  first canonical edge        : ${plan.firstEdge ? plan.firstEdge.id + " " + plan.firstEdge.url : "(none)"}`);
+  console.log(`  cursor agrees with workstate: ${agrees}`);
+  console.log(`  root recheck available      : ${plan.rootRecheckAvailable}  <- separate work, not recovery`);
+  console.log("");
+
+  if (plan.mode !== "RESUME" || plan.outstanding === 0 || !agrees) ok = false;
+}
+
 console.log(
   floorLine(floored("resume proof states", "nj, az, nh", STATES.length, STATES.length)),
 );

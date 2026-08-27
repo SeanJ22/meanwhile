@@ -6,8 +6,8 @@
     "joinedOn": "FIPS state+place, or state+county for counties — never a name string"
   },
   "counts": {
-    "swept": 1258,
-    "verified": 731,
+    "swept": 1256,
+    "verified": 729,
     "mismatched": 0,
     "adjudicated": 1,
     "noSource": 526
@@ -6100,7 +6100,7 @@
     },
     {
       "bodyId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
-      "label": "No unified school district here",
+      "label": "School District Not Defined",
       "state": "NH",
       "stamped": null,
       "rosterName": null,
@@ -10669,6 +10669,56 @@
       "why": "TIGER lsad=25 (city) and the roster's \"CITY OF TUCSON\" both say city"
     },
     {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+      "label": "Pima",
+      "state": "AZ",
+      "stamped": "county",
+      "rosterName": "COUNTY OF PIMA",
+      "rosterForm": "county",
+      "verdict": "VERIFIED",
+      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
+    },
+    {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
       "label": "Rockaway township",
       "state": "NJ",
@@ -11839,16 +11889,6 @@
       "why": "TIGER lsad=43 (town) and the roster's \"TOWN OF NEWBURY\" both say town"
     },
     {
-      "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#lake-todd-village-district",
-      "label": "Bradford town",
-      "state": "NH",
-      "stamped": "town",
-      "rosterName": "TOWN OF BRADFORD",
-      "rosterForm": "town",
-      "verdict": "VERIFIED",
-      "why": "TIGER lsad=43 (town) and the roster's \"TOWN OF BRADFORD\" both say town"
-    },
-    {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack#conservation-district",
       "label": "Merrimack",
       "state": "NH",
@@ -11867,16 +11907,6 @@
       "rosterForm": "town",
       "verdict": "VERIFIED",
       "why": "TIGER lsad=43 (town) and the roster's \"TOWN OF NEW LONDON\" both say town"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#water-system-precinct",
-      "label": "Springfield town",
-      "state": "NH",
-      "stamped": "town",
-      "rosterName": "TOWN OF SPRINGFIELD",
-      "rosterForm": "town",
-      "verdict": "VERIFIED",
-      "why": "TIGER lsad=43 (town) and the roster's \"TOWN OF SPRINGFIELD\" both say town"
     },
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town#highland-haven",
@@ -12547,56 +12577,6 @@
       "rosterForm": null,
       "verdict": "NO-SOURCE",
       "why": "the MUNICIPAL roster does not classify a school_district; this stamp rests on the Census school-dependency classification, a different Census source, and is NOT unsourced"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
-      "label": "Pima",
-      "state": "AZ",
-      "stamped": "county",
-      "rosterName": "COUNTY OF PIMA",
-      "rosterForm": "county",
-      "verdict": "VERIFIED",
-      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
-      "label": "Pima",
-      "state": "AZ",
-      "stamped": "county",
-      "rosterName": "COUNTY OF PIMA",
-      "rosterForm": "county",
-      "verdict": "VERIFIED",
-      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
-      "label": "Pima",
-      "state": "AZ",
-      "stamped": "county",
-      "rosterName": "COUNTY OF PIMA",
-      "rosterForm": "county",
-      "verdict": "VERIFIED",
-      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
-      "label": "Pima",
-      "state": "AZ",
-      "stamped": "county",
-      "rosterName": "COUNTY OF PIMA",
-      "rosterForm": "county",
-      "verdict": "VERIFIED",
-      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
-      "label": "Pima",
-      "state": "AZ",
-      "stamped": "county",
-      "rosterName": "COUNTY OF PIMA",
-      "rosterForm": "county",
-      "verdict": "VERIFIED",
-      "why": "TIGER divisionType=county and the roster's \"COUNTY OF PIMA\" both say county"
     }
   ]
 }

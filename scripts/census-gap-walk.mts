@@ -57,9 +57,10 @@
  *   pnpm bodies:census-gap --budget 200
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { appendPromotedBodies, loadPromotedBodies } from "../lib/registry/promoted-bodies.ts";
 import { decodeEntities, politeGetText } from "../lib/sources/http.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { today } from "./doc-dates.mjs";
@@ -324,9 +325,21 @@ async function main(): Promise<void> {
     bodies: RegistryBody[];
   };
 
-  /* Every spelling the registry already answers to. */
+  /*
+   * Every spelling the registry already answers to — and every spelling the
+   * PROMOTED INPUT STORE holds (NH232). The two sets are the same only after a
+   * `pnpm registry:build`; between a promotion and the next rebuild the store
+   * is ahead, and reading the generated file alone would re-promote a body this
+   * repository already has. Union, so a duplicate is caught before the fetch
+   * rather than by `appendPromotedBodies` after it.
+   */
+  const promotedStore = loadPromotedBodies();
+  const knownBodies: RegistryBody[] = [
+    ...registry.bodies,
+    ...(promotedStore.bodies as unknown as RegistryBody[]),
+  ];
   const held = new Map<string, string>();
-  for (const b of registry.bodies) {
+  for (const b of knownBodies) {
     if (b.name) for (const a of aliases(b.name)) held.set(a, b.id);
     const tail = b.ocdId?.split("/").pop();
     if (tail) {
@@ -334,7 +347,7 @@ async function main(): Promise<void> {
     }
     if (b.censusId) held.set(`census:${b.censusId}`, b.id);
   }
-  const heldIds = new Set(registry.bodies.map((b) => b.id));
+  const heldIds = new Set(knownBodies.map((b) => b.id));
 
   const counties = Object.keys(gus).filter((c) => !only || c === only);
   const added: RegistryBody[] = [];
@@ -462,10 +475,20 @@ async function main(): Promise<void> {
     }
   }
 
+  /*
+   * **NH232.** Promotions land in the canonical INPUT store, never in the
+   * generated registry. See `lib/registry/promoted-bodies.ts` for why: this
+   * script and the lead adjudicator were both appending to a file whose
+   * generator rewrites it whole, so `pnpm registry:build` deleted every row
+   * either of them had ever written and nothing went red.
+   */
   if (!dry && added.length > 0) {
-    registry.bodies.push(...added);
-    registry.generatedAt = new Date(`${stamp}T00:00:00.000Z`).toISOString();
-    writeFileSync(REGISTRY, `${JSON.stringify(registry, null, 1)}\n`, "utf8");
+    const appended = appendPromotedBodies(added as never);
+    console.log(
+      `\nwrote ${appended.added} row(s) to lib/registry/promoted-bodies.json  (the canonical INPUT)` +
+        (appended.skipped.length > 0 ? `\n  ${appended.skipped.length} already held by the store` : "") +
+        `\n  run \`pnpm registry:build\` to merge them into lib/registry/registry.json`,
+    );
   }
 
   console.log(report.join("\n"));

@@ -1980,9 +1980,22 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     noticeUrl: "https://warnernh.gov/calendar/",
     verifiedAt: "2026-08-21",
   },
-  // Lake Todd Village District, served on the newbury division. ONE body with
-  // two rows: its territory is Bradford AND Newbury by its own words and by
-  // the NH village-district register, and a body id here is <division>#<slot>.
+  // Lake Todd Village District, served on the newbury division. ONE body, ONE
+  // row. Its territory is Bradford AND Newbury by its own words and by the NH
+  // village-district register; RULING 121 gave the body `alsoServesOcdIds` so a
+  // Bradford reader reaches it from the Newbury-keyed row — `bodiesAt` in
+  // lib/registry/resolve.ts matches on either division.
+  //
+  // A SECOND, IDENTICAL ROW keyed on `bradford_town#lake-todd-village-district`
+  // stood here until 2026-08-27. It was the pre-RULING-121 two-row shape and it
+  // survived the ruling because `registry.json` was never regenerated after it:
+  // the stale artifact still carried the retired duplicate body, so the wiring
+  // row still resolved and nothing went red. Registering the registry as a
+  // generated artifact (NH232) rebuilt it, the duplicate body went, and this
+  // row became a pointer to a body that does not exist — which is what
+  // `tests/source-adapters.test.ts` caught. It ingested the same feed, with the
+  // same titleMatch, under a dead id.
+  //
   // Its own site is HTTP 404 at every rung; the Town of Bradford's public
   // calendar files its sittings, three of them on 2026-08-21.
   {
@@ -1994,31 +2007,6 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     timeZone: "America/New_York",
     config: {
       slug: "lake-todd-village-district-newbury",
-      feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
-      titleMatch: "Lake Todd",
-      bodyName: "Lake Todd Village District",
-    },
-    // Read 2026-08-21: the district's own page is HTTP 404 at every rung and
-    // the town's news item for its meeting is HTTP 404 too. The town's
-    // calendar page is the live notice, and it is the page its sittings
-    // come from.
-    noticeUrl: "https://bradfordnh.gov/pages/calendar",
-    verifiedAt: "2026-08-21",
-  },
-  // Lake Todd Village District, served on the bradford division. ONE body with
-  // two rows: its territory is Bradford AND Newbury by its own words and by
-  // the NH village-district register, and a body id here is <division>#<slot>.
-  // Its own site is HTTP 404 at every rung; the Town of Bradford's public
-  // calendar files its sittings, three of them on 2026-08-21.
-  {
-    bodyId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#lake-todd-village-district",
-    ocdId: "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town" as OcdId,
-    agendaSourceType: "ICAL",
-    jurisdiction: "Lake Todd Village District, NH",
-    publishingOrg: "Town of Bradford",
-    timeZone: "America/New_York",
-    config: {
-      slug: "lake-todd-village-district-bradford",
       feedUrl: "https://calendar.google.com/calendar/ical/bradfordnewhampshire%40gmail.com/public/basic.ics",
       titleMatch: "Lake Todd",
       bodyName: "Lake Todd Village District",

@@ -161,6 +161,12 @@
     "entry": "scripts/migrate-congress-directory.mts",
     "regeneratedOn": "2026-08-27"
   },
+  "lib/registry/registry.json": {
+    "digest": "1e8afa1e90a3dc71e1279c89afb670d513a4761c34bafc69c52b784472153ec7",
+    "files": 13,
+    "entry": "scripts/build-registry.ts",
+    "regeneratedOn": "2026-08-27"
+  },
   "lib/registry/rosters-nj-morris.ts": {
     "digest": "32e7ff1dc214263d975b8b3a082a760a1ce82cb43cacdba80c96fcdff23a8d0c",
     "files": 11,

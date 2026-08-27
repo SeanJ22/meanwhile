@@ -293,7 +293,8 @@
     "cfd:territory": "tsx scripts/cfd-territory.mts",
     "ballot:az-pima-update": "tsx scripts/ballot-az-pima-2026-update.mts",
     "az:levy": "tsx scripts/az-county-levy.mts",
-    "verify:composition": "tsx scripts/verify-composition-0827.mts"
+    "verify:composition": "tsx scripts/verify-composition-0827.mts",
+    "coverage": "tsx scripts/coverage-four-layer.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

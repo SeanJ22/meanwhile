@@ -28,6 +28,7 @@ import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import {
   classifyOrchestration,
   type OrchestrationPlan,
@@ -63,6 +64,15 @@ for (const p of planPaths) {
   const rel = p.replace(ROOT, "").replace(/^[\\/]/, "").replace(/\\/g, "/");
 
   console.log(`\n${"=".repeat(72)}`);
+  // RULING 159 — a plan that parses to ZERO workstreams is a FAILED read, not a
+  // session that ran no work. Without this floor the report would print
+  // "0 workstream(s)" and PASS, which is the exact shape of a guard agreeing
+  // with a broken instrument.
+  console.log(
+    floorLine(
+      floored("orchestration:check workstreams", rel, v.counts.workstreams, v.counts.executable),
+    ),
+  );
   console.log(`PLAN                  ${rel}`);
   console.log(`session               ${plan.session}`);
   console.log(`integration owner     ${plan.integrationOwner}`);

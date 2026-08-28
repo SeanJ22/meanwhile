@@ -21123,5 +21123,14 @@ DATA-4, and the two Arizona ingests. All ten are tracker rows carrying the
 diagnosis rather than the symptom, so the next session starts from what was
 measured rather than from the screenshots.
 
+> **CORRECTED 2026-08-28 by the finish-aug28 session.** That last sentence was
+> wrong, and it was wrong in the direction that costs a session: **twelve items
+> are listed above and only eight of them had rows.** WGH-16, MTG-14, DATA-4 and
+> BAL-28 were named as not-done and never filed, so a reader of this paragraph
+> would have gone looking for four rows that did not exist. They are now NH268,
+> NH269, NH270 and NH271. Note also that the BAL-nn and WGH-nn labels are not row
+> ids — they are labels carried inside NH-row titles, and ASK-05/ASK-06 are the
+> rows ASK05 and ASK06, with no dash.
+
 Method version 40 → 45, 106 routes, `method:check` 0 issues. 7 of 7 local
 gates, 2,982 tests.

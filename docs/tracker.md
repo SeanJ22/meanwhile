@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **324 open**, 442 resolved.
+- **323 open**, 443 resolved.
 - **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -25,7 +25,7 @@ and when. Nothing is ever deleted.
   - Data infrastructure — **3**
   - Product / UI — **1**
   - Constitution & rules — **1**
-  - Repo & ops — **3**
+  - Repo & ops — **2**
 
 No section is over the five-P1 cap.
 
@@ -850,15 +850,13 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**23 open · 82 resolved.**
+**22 open · 83 resolved.**
 
 ### P1
 
 **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
 
 **NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
-
-**NH254** — Run today, `pnpm method:ingest` takes data/method/knowledge.json from 88 routes at method version 27 down to 62 routes at version 0, and prints 'routes ingested 62 / method version 0 / method:check PASSED'. It rebuilds the store from lib/hunt/branch-manifest.ts, which holds the 62 legacy manifest routes and nothing the project has LEARNED since — so every route added by method:learn-descent, method:learn-85641 and the rest is deleted, along with every recorded outcome and every earned portability class. Nothing warns. This is D68's class exactly: a script rewrote a verified data file with less of it and reported success. It matters more than an ordinary data loss because the method version is what convergence records are stamped with — RULING 179 says a completion earned under v27 stops being exhaustion the moment v28 contains an applicable route that was never walked, and resetting the version to 0 silently re-validates every prior convergence claim. Caught on 2026-08-27 while adding one route: the store was restored from git before anything was committed, and the route was added additively through a learn script instead. THE SPEC: ingest is a one-time bootstrap and should say so — refuse to run against a store whose version is above 0 or whose route count exceeds the manifest's, unless an explicit flag names the reset; and the header of scripts/method-ingest.mts, which already promises it will not reset anything the store has learned, should be true.
 
 ### P2
 

@@ -38,12 +38,13 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ## ask-grounded-0827 · 2026-08-27
 
-**What it started.** 4 row(s) opened, 4 still open.
+**What it started.** 5 row(s) opened, 5 still open.
 
 - **ASK01** — Ask used a model for one thing only — picking one of sixteen curated topic ids, with no civic context supplied at all. It could not read a tense, could not expand an alias, and never saw a record. This row is the rebuild: Claude interprets the question against a real entity inventory and today's date, deterministic code reconciles that hypothesis against the registry and retrieves only records belonging to the resolved ids, Claude explains those records, and structural validation rejects an answer that reaches past them. *(open)*
 - **ASK02** — bodyAgendaAnswer selected `upcoming[0] ?? past[0]` for every question that named a body and asked what it was discussing. So 'What did Vail discuss at its LAST meeting?' was answered with the agenda of a meeting that has not happened yet. The government, the attribution, the source link and the retrieval timestamp were all correct — it was a wrong answer wearing a complete provenance record. *(open)*
 - **ASK03** — Today an answered ask stores only a topic id; only a refusal keeps the question text. That discards the richest civic-interest signal the product has — what a constituent actually asked, what it resolved to, and what answer they received. The capture path for that is built and it is NOT ACTIVE. It cannot activate until Sean approves reader-facing disclosure copy, because the data-privacy policy requires honest disclosure at the box before free text a reader typed may enter a store whose aggregates may be shared with campaigns, organizations and researchers. *(open)*
 - **AZ03** — The corpus holds Katie Hobbs as an officeholder — name, office, party, contact, each sourced — and holds nothing about what she has DONE in office. There is no store of vetoes, bill signings, executive orders or line-item actions for any governor. lib/votes/ is congressional only: H.R. numbers and CRS summaries for members of Congress. So a reader asking what their governor did in the last twelve months gets an honest and very thin answer. *(open)*
+- **ASK04** — Ask was absent from the ballot entirely: AskBox mounts only inside PillCluster, which is constructed only in map-entry.tsx. A reader looking at their ballot — the surface where they have just been asked for the most and have the most questions — had no way to ask one. components/ask/ballot-ask.tsx posts to the same /api/ask/grounded engine and contributes the ballot's own context: the contests and candidates actually rendered, which is what lets a referent resolve and what makes it refuse when more than one person is on screen. *(open)*
 
 **Needs Sean.** ASK03
 

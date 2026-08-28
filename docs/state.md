@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-27 — **The word the reader typed to say WHICH government they meant was inert, and the ZIP decided.** The ask-entity session; its record is the LAST section of this file.
+Last updated: 2026-08-27 — **Claude was in this product, and it was picking one label out of sixteen.** The grounded-Ask session; its record is the LAST section of this file.
+
+Previous: 2026-08-27 — **The word the reader typed to say WHICH government they meant was inert, and the ZIP decided.** The ask-entity session.
 
 Previous: 2026-08-27 — **Every defect this session repaired was invisible to a count.** The coverage-truth session.
 
@@ -20574,3 +20576,180 @@ have Vail", and "choose one".
 to read the actual output — a rendered sentence, a canvass page, a document's
 text — and ask whether it was true. A green suite is evidence that the things
 somebody thought to check are holding, and it is not evidence of anything else.
+
+---
+
+# The grounded-Ask session — 2026-08-27
+
+**Claude was in this product, and it was picking one label out of sixteen.**
+
+The whole model surface was `lib/routing/classifier.ts`: a system prompt
+containing the topic list and nothing else, answering with one topic id or
+`NONE`. It had never been told what governments exist, where the reader is, or
+what today's date is.
+
+That matters because it was mis-diagnosed once. When *"What's on the Vail
+school district agenda?"* returned Sunnyside, the paid model did not receive
+the wrong context and choose wrongly. **It received essentially no civic
+context and correctly answered the only question it was asked.** The
+substitution happened downstream, in deterministic routing that asked for
+boards in the reader's own coverage.
+
+## The pipeline that replaced it
+
+```
+question
+   ↓  Claude, given the entity inventory and today's date
+INTERPRETATION      intent · entity mentions · tense · referent   A HYPOTHESIS
+   ↓  the registry's own binder, unchanged
+RESOLUTION          BOUND · AMBIGUOUS · UNRESOLVED · NONE
+   ↓  deterministic, scoped to the resolved id AND the resolved tense
+RETRIEVAL           only records belonging to that exact subject
+   ↓
+EVIDENCE PACK       records + per-record provenance + NAMED GAPS + denominators
+   ↓  Claude, given the pack and nothing else
+SYNTHESIS
+   ↓
+VALIDATION          invented URL · substituted subject · advice · tense
+   ↓
+READER
+```
+
+`lib/ask/` and `app/api/ask/grounded`. The synthesis rung has no corpus, no
+tools and no network: its inability to look anything up is structural rather
+than instructed.
+
+**The one rule that carries the most weight** is in `lib/ask/resolve.ts`: a
+government the reader NAMED that matches nothing resolves `UNRESOLVED`, never
+`NONE`. `NONE` means "no government was named", which licenses the reader's own
+ZIP to decide — and that is exactly how Vail became Sunnyside. Returning it
+here would have restored the defect with a model's endorsement on top.
+
+## A tensed question was answered with the wrong meeting
+
+`bodyAgendaAnswer` read `upcoming[0] ?? past[0]` for every question. So *"What
+did Vail discuss at its LAST meeting?"* was answered with the agenda of a
+meeting that has not happened yet. The government was right, the attribution
+was right, the source link was right, the retrieval timestamp was right.
+
+**It was a wrong answer wearing a complete provenance record**, which is the
+most expensive kind this product can produce: nothing on the surface of it
+looks like a defect.
+
+Now the tense is a retrieval instruction, and a tensed question does not fall
+back to the other tense — a `LAST` question against a body with only future
+sittings returns `NO_PAST_MEETING_HELD`, because answering it with the next
+agenda would state that a discussion has already happened when it has not.
+
+The selection lives in `lib/ask/select.ts` because the first version of its
+guard RE-IMPLEMENTED the rule and would have passed forever whatever the routes
+did. Proven by mutation: restoring the old expression fails two tests.
+
+## What the reader actually sees, read rather than asserted
+
+Against a real production build, with real model calls:
+
+| question | resolved | selected | mode |
+| --- | --- | --- | --- |
+| What's on the Vail school district agenda? | Vail Unified District | 2026-09-09 | GROUNDED_CLAUDE | <!-- expected-future: Vail Unified District Governing Board sitting, read off the committed meetings snapshot (apptegy:vail:60703698) on 2026-08-27; it is the NEXT-meeting control this session verified -->
+| What did Vail discuss at its last meeting? | Vail Unified District | 2026-08-26 | GROUNDED_CLAUDE |
+| When does Vail meet next? | Vail Unified District | 2026-09-09 | GROUNDED_CLAUDE | <!-- expected-future: Vail Unified District Governing Board sitting, read off the committed meetings snapshot (apptegy:vail:60703698) on 2026-08-27; it is the NEXT-meeting control this session verified -->
+| What did Katie Hobbs do in the last 12 months? | Katie Hobbs, Governor | — | GROUNDED_CLAUDE |
+| What is the Nonexistent Fake District discussing? | — | — | UNRESOLVED |
+
+Two different, correctly ordered sittings for the two tenses. The generated
+prose converted `2026-09-09T02:00Z` to "September 8, 2026, 7:00 p.m. Arizona <!-- expected-future: Vail Unified District Governing Board sitting, read off the committed meetings snapshot (apptegy:vail:60703698) on 2026-08-27; it is the NEXT-meeting control this session verified -->
+time" and called it a Tuesday; both were checked by hand and both are right.
+
+The Hobbs answer is thin and honestly so: the corpus holds **who an
+officeholder is** and nothing about **what they have done**. There is no store
+of vetoes, executive orders or bill actions for any governor — `lib/votes/` is
+congressional only. That gap is **AZ03**, and it was found by asking, not by
+reading a manifest.
+
+## Ask reaches the ballot, on the same engine
+
+It was absent entirely: `AskBox` mounts only inside `PillCluster`, constructed
+only in `map-entry.tsx`. `components/ask/ballot-ask.tsx` posts to the same
+`/api/ask/grounded`. It is not a second `AskBox` — that component reads
+`useShellData()` and `useUi()`, provided only inside the map shell, so mounting
+it would mean standing the whole map up behind a page with no map. One widget
+forced is not one engine.
+
+**Three defects, all found by reading the rendered sentence rather than the
+DOM**, and every check in place at the time passed:
+
+1. A `NO_EVIDENCE` reply rendered **nothing** — the reader got the empty form
+   back. Panel present, mode attribute correct, request and reply both fine.
+   Only the sentence was missing.
+2. A sitting governor came back `UNRESOLVED` on the ballot. `personEntities`
+   pre-filtered divisions to the bare state id before calling
+   `statewideExecutivesFor`, discarding every county, place and district id.
+   Invisible on the map, where the reader's list happens to include the bare
+   state. `statewideExecutivesFor` already derives the state by PREFIX, exactly
+   as `senatorsFor` does — re-deriving it more strictly was a second answer to
+   a question that already had one.
+3. The unresolved sentence said "a government" for a **person**.
+
+**And the instrument was false first too.** The capture script asserted
+visibility BEFORE scrolling and reported the desktop panel invisible. It was
+not: the ballot page is ~20,000px tall at 1280, and the pre-existing
+`[data-collection-note]` measured 0×0 in exactly the same way — which is what
+proved the check wrong rather than the product.
+
+## The Vail agenda hunt, which the product itself opened
+
+All nine of Vail's agenda documents in the snapshot are the **same
+1,652-character portal landing page**, shared across nine sittings. That is why
+the honest answer above says the agenda is not held — and that honest answer
+was the lead.
+
+- **Highbond is DISALLOWED.** `robots.txt` read twice, two client classes, both
+  HTTP 200: 486 agent blocks, exactly one `User-agent: *` carrying
+  `Disallow: /`, zero `Allow:` directives. A read RULE, not a transport
+  failure — RULING 182's `CANNOT_TELL` does not apply. **NH229 proposed
+  building an adapter for this host; it may not be crawled at all.**
+- **A second disallowed portal, found in the link TEXT.** The district's own
+  event HTML reads `href="…highbond.com/Portal/"` with the visible words
+  `https://go.boarddocs.com/az/vail/Board.nsf/Public`. Different vendors,
+  different tenants — and an href-harvesting crawler sees only one of them.
+  BoardDocs also disallows. The **detection** is the portable part.
+- **The district's own site is permitted and does not hold the agendas.**
+  `Allow: /`, `Disallow: /api/`, sitemap 194 URLs. It publishes the MEETING and
+  links the AGENDA out. An argued ZERO for that source — never a claim that
+  Vail publishes no agenda, because it demonstrably does.
+- **NovusAGENDA is the one permitted route left, and is not yet readable.**
+  `robots.txt` 404, so no restriction is published. A bare viewstate POST
+  returned 200 with zero rows and the date window **reset to the portal's own
+  defaults** rather than the one sent — so the search never ran. **RULING 100:
+  a FAILED extraction, not an empty portal.**
+
+Four routes persisted; method version 30 → 34, 91 → 95 routes.
+
+## Two guards that were green because they never looked
+
+- `method:check` never validated `effort`'s three closed sets. This session
+  wrote `PER_SOURCE`, `AUTOMATED` and `KNOWN_METHOD`; all four routes landed in
+  the canonical store while `method:check` reported PASSED, and `tsc` caught it
+  minutes later for an unrelated reason. Store repaired, whole store swept
+  clean, `validateKnowledge` now checks all three — proven by planting the
+  exact values back.
+- `tests/db-schema.test.ts` compared column NAMES, while RULING 132 says the
+  n-stores rule is proven over **value spaces**. It now compares declared enum
+  values, and still refuses a single-value overlap.
+
+## What is NOT running
+
+`ripcord.askSignalCapture` **ships PULLED**. The Ask interaction store — one
+row carrying the scrubbed question, the answer, the resolved civic subject and
+the zip cohort — is built, classified in `lib/db/identity-domains.ts`, and
+writes nothing. The data-privacy policy requires **honest disclosure at the
+box** before a reader's typed question may enter a store whose aggregates may
+reach campaigns, and that copy is **NH246's and unapproved**. Nothing
+reader-visible was changed: no component or page outside `app/api` was touched.
+
+Location is two axes, not one enum — what the place IS to the reader, and how
+well it is EVIDENCED. `zipCohortOnly()` is the mechanical gate between
+"readers who identified 85641 as their home ZIP" and "address-validated
+residents of Vail Unified District". 85641 crosses school, fire and legislative
+lines, so the second needs evidence the first is not.

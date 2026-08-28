@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **328 open**, 443 resolved.
+- **329 open**, 443 resolved.
 - **55 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -744,7 +744,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**39 open · 141 resolved.**
+**40 open · 141 resolved.**
 
 ### P1
 
@@ -757,6 +757,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
   Waiting on candidate info (D05).
 
 ### P2
+
+**ASK04** — Ask was absent from the ballot entirely: AskBox mounts only inside PillCluster, which is constructed only in map-entry.tsx. A reader looking at their ballot — the surface where they have just been asked for the most and have the most questions — had no way to ask one. components/ask/ballot-ask.tsx posts to the same /api/ask/grounded engine and contributes the ballot's own context: the contests and candidates actually rendered, which is what lets a referent resolve and what makes it refuse when more than one person is on screen.
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
 

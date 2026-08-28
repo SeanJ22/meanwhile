@@ -50,6 +50,15 @@ import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { loadBallotForDivisions, readerRepresentatives } from "@/lib/ask/server-sources";
+import {
+  askAnswer,
+  clarifyAnswer,
+  offAnswer,
+  unresolvedAnswer,
+  type AskAnswerPayload,
+} from "@/lib/ask/answer";
+import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
+import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
 
 /**
  * **POST /api/ask/grounded — the grounded civic answer (ASK01, 2026-08-27;
@@ -295,7 +304,17 @@ export async function POST(request: Request) {
   const trace: AskTrace = emptyTrace();
 
   if (ripcordPulled("ripcord.askGrounded")) {
-    return Response.json({ mode: "OFF", why: "ripcord" }, { status: 200 });
+    /*
+     * **A SWITCHED-OFF ENGINE IS A SENTENCE, NOT AN EMPTY PANEL.** (ASK-05.)
+     *
+     * This used to answer `{ mode: "OFF", why: "ripcord" }` and nothing else.
+     * `"OFF"` was not a member of `AnswerMode`, both clients typed `mode` as a
+     * bare `string`, and the reply matched no render branch on either surface —
+     * so a reader who typed a question got their own empty form back. The mode
+     * is now real, the payload is the same shape as every other, and the gap
+     * says what happened.
+     */
+    return Response.json(offAnswer("ripcord"), { status: 200 });
   }
 
   const raw = await request.text();
@@ -534,22 +553,19 @@ export async function POST(request: Request) {
       [],
       [],
     );
-    return Response.json({
-      mode: "CLARIFY" as AnswerMode,
-      mention: resolution.binding.mention,
-      candidates: resolution.binding.candidates.map((c) => titleCaseName(c.name)),
-      trace,
-    });
+    return Response.json(
+      clarifyAnswer(
+        resolution.binding.mention,
+        resolution.binding.candidates.map((c) => titleCaseName(c.name)),
+        trace,
+      ),
+    );
   }
   if (resolution.binding.kind === "UNRESOLVED") {
     trace.answerMode = "UNRESOLVED";
     trace.totalMs = Date.now() - started;
     await capture("UNRESOLVED", [], null, null, null, [], []);
-    return Response.json({
-      mode: "UNRESOLVED" as AnswerMode,
-      mention: resolution.binding.mention,
-      trace,
-    });
+    return Response.json(unresolvedAnswer(resolution.binding.mention, trace));
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
@@ -684,6 +700,32 @@ export async function POST(request: Request) {
         whose: "OURS",
         statement: `We have not recorded any sourced statement of ${ballotRecord.name}'s positions.`,
       });
+    }
+
+    /*
+     * ── ASK-06 ── **HOW THEY HAVE ACTUALLY VOTED.** (2026-08-28.)
+     *
+     * A candidate's positions are what they SAID. A roll call is what they
+     * DID, and this product held 12,234 recorded positions that the grounded
+     * engine could not reach.
+     *
+     * Reached through EXACT identity and nothing looser: person → seat by
+     * exact normalized full name, unique within the reader's own states; seat
+     * → votes by the publisher's own stable officeholder id. Where the name
+     * form differs across the join — *Sally Ann Gonzales* on a House ballot
+     * line against *Sally Gonzales* the sitting SENATOR — it fails closed to a
+     * named gap rather than attaching one chamber's votes to another
+     * chamber's candidacy. `lib/ask/votes.ts` holds the whole rule and the
+     * measured cost of it.
+     *
+     * The office on every record is the one they HOLD, never the one they are
+     * running for.
+     */
+    if (ballotRecord.kind === "PERSON") {
+      const votes = voteEvidenceFor(ballotRecord.name, { withinStates: statesOf(ocdIds) });
+      records.push(...votes.records);
+      gaps.push(...votes.gaps);
+      Object.assign(denominators, votes.denominators);
     }
   } else if (subject?.kind === "BODY") {
     const forBody = meetings.filter((m) => m.ocdId === subject.id);
@@ -869,6 +911,14 @@ export async function POST(request: Request) {
       });
       denominators.actionRecordsHeld = 0;
     }
+
+    /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
+       sitting legislator asked about by name reaches their own roll calls; a
+       governor reaches the honest gap, because a governor casts none. */
+    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds) });
+    records.push(...votes.records);
+    gaps.push(...votes.gaps);
+    Object.assign(denominators, votes.denominators);
   }
 
   /*
@@ -960,6 +1010,54 @@ export async function POST(request: Request) {
     }
   }
 
+  /*
+   * ── ASK-05 ── **THE TOPIC SWEEP, DEMOTED FROM A SECOND ANSWER TO EVIDENCE.**
+   * (2026-08-28.)
+   *
+   * *"Is there a data centre coming?"* used to be answered by a SECOND network
+   * call the map component fired through `Promise.all` beside this one, and
+   * rendered as a whole second civic answer — its own eyebrow, its own
+   * four-way denominator sentence, its own corpus caveat, its own hit list.
+   * Both could paint on one screen. Two competing authorities, no precedence,
+   * and the reader chose which to believe.
+   *
+   * The capability is kept and its standing is not. It runs here, its records
+   * enter the ONE pack as `AGENDA_MENTION`, its denominators are numbers in
+   * `pack.denominators`, and every sentence it used to build is a named gap
+   * with a `whose` on it. Any prose the synthesis rung writes over it is
+   * validated against the same allow-list as everything else — which the
+   * second answer never was.
+   *
+   * **The scope narrows to the bound subject where there is one.** A reader
+   * who named Vail and asked about a rezoning is asking about Vail's agendas;
+   * sweeping their whole area would put a neighbouring district's line under
+   * an answer about Vail, which is the substitution defect wearing a quote.
+   */
+  const sweepScope =
+    subject?.kind === "BODY"
+      ? { meetings: meetings.filter((m) => m.ocdId === subject.id), label: subject.name }
+      : ocdIds.length > 0
+        ? {
+            meetings: meetings.filter((m) => m.ocdId !== null && ocdIds.includes(m.ocdId)),
+            label: "your area",
+          }
+        : { meetings, label: "the areas we cover" };
+  const sweptIds = new Set(sweepScope.meetings.map((m) => m.id));
+  const sweep = agendaTopicEvidence({
+    question,
+    documents: documents.filter((d) => sweptIds.has(d.meetingId)),
+    meetings: sweepScope.meetings,
+    scopeLabel: sweepScope.label,
+  });
+  if (sweep.topic) {
+    records.push(...sweep.records);
+    gaps.push(...sweep.gaps);
+    Object.assign(denominators, sweep.denominators);
+    /* The intent vocabulary now names this question, so the trace can say the
+       sweep ran rather than leaving an operator to infer it from a count. */
+    if (interpretation.intent === "UNKNOWN") interpretation.intent = "AGENDA_TOPIC";
+  }
+
   const pack: EvidencePack = {
     question,
     intent: interpretation.intent,
@@ -1028,21 +1126,31 @@ export async function POST(request: Request) {
    */
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, records, gaps);
 
-  return Response.json({
+  /*
+   * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)
+   *
+   * This was an untyped inline object literal, and so were the other four
+   * shapes this route and `/api/ask/agenda` returned between them. The
+   * contract lived only as hand-copied interfaces inside two components, which
+   * is how `mode: "OFF"` came to be on the wire and renderable by neither, and
+   * how `AskContact.basis` and `AskContact.retrievedAt` came to be
+   * unrenderable by declaration.
+   *
+   * `askAnswer` takes the PACK rather than loose arrays, so the records the
+   * reader sees are by construction the ones synthesis was given and the
+   * validator checked against. The records travel whatever the mode: a
+   * rejected or unavailable synthesis still ships everything needed to render
+   * the true structured answer, and discarding a useful reply because one
+   * optional field is null is the exact class PR #211 found repeatedly.
+   */
+  const payload: AskAnswerPayload = askAnswer({
     mode,
-    subject,
+    pack,
     answer,
-    /* The records travel WHATEVER the mode, so a client that receives a
-       rejected or unavailable synthesis still has everything it needs to
-       render the true structured answer. Discarding a useful server reply
-       because one optional field is null is the exact class PR #211 found
-       repeatedly, and it is not reintroduced here. */
-    records,
-    gaps,
     contacts: contacts.slice(0, MAX_ASK_CONTACTS),
-    denominators,
     trace,
   });
+  return Response.json(payload);
 }
 
 /**

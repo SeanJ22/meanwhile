@@ -530,3 +530,191 @@ test("SIGNAL: a real reader Ask through the real route writes no interaction row
   const body = await ask("What's on the Vail school district agenda?");
   assert.ok(body.subject, "the reader still gets their answer while nothing is stored");
 });
+
+/* ══════════════════════════════════════════════════════════════════════
+   ASK-05 · ONE READER ANSWER SHAPE, THROUGH THE REAL HANDLER
+   ══════════════════════════════════════════════════════════════════════ */
+
+test("ASK-05: every mode returns the WHOLE contract, not two or three keys", async () => {
+  /*
+   * `CLARIFY` and `UNRESOLVED` used to answer with `{ mode, mention, trace }`
+   * and nothing else, which is what made a client's `?? []` the load-bearing
+   * part of the render — and why every field in the hand-copied client types
+   * was optional, and why a missing one was invisible.
+   */
+  for (const [label, question] of [
+    ["UNRESOLVED", "What is on the Nowheresville Township agenda?"],
+    ["BOUND", "What's on the Vail school district agenda?"],
+  ] as const) {
+    const body = (await ask(question)) as unknown as Record<string, unknown>;
+    for (const field of [
+      "mode",
+      "subject",
+      "answer",
+      "records",
+      "gaps",
+      "contacts",
+      "denominators",
+      "trace",
+    ]) {
+      assert.ok(field in body, `${label}: the reply dropped ${field}`);
+    }
+    assert.ok(Array.isArray(body.records), `${label}: records`);
+    assert.ok(Array.isArray(body.gaps), `${label}: gaps`);
+    assert.ok(Array.isArray(body.contacts), `${label}: contacts`);
+  }
+});
+
+test("ASK-05: the topic sweep is EVIDENCE under the one answer, never a second answer", async () => {
+  /*
+   * *"Is there a rezoning coming?"* used to be answered by a second network
+   * call the map fired through `Promise.all` beside the grounded one, rendered
+   * as a whole second civic answer with its own eyebrow and its own
+   * denominator sentence. Both could paint on one screen.
+   *
+   * The capability had to survive the demotion, and this is what proves it:
+   * the sweep's hits arrive in the ONE pack as `AGENDA_MENTION`, its
+   * denominator is a number in the one vocabulary, and its corpus limit is a
+   * named gap.
+   */
+  const body = await ask("Is there a rezoning coming?");
+  assert.equal(
+    typeof body.denominators?.agendasSweptForTopic,
+    "number",
+    "the sweep must state what it looked at, in the one denominator vocabulary",
+  );
+
+  const said = (body.gaps ?? []).map((g) => g.statement).join(" ");
+  assert.match(
+    said,
+    /not the permit or zoning-application record/,
+    "the corpus limit rides on every outcome — a filing exists long before a docket does",
+  );
+
+  /* Every mention that came back is a quoted clerk line with its own source.
+     Nothing here is summarised: a summary of a zoning agenda is a claim about
+     what a government is about to do, made by us. */
+  for (const mention of body.records?.filter((r) => r.kind === "AGENDA_MENTION") ?? []) {
+    assert.match(mention.text, /"/, "the record is the clerk's own line, quoted");
+    assert.ok(mention.sourceUrl, "and it points at the agenda it was read from");
+  }
+});
+
+test("ASK-05: a bound body NARROWS the sweep to its own agendas", async () => {
+  /*
+   * Every scope this sweep ever had was about WHERE THE READER IS. That is the
+   * right default for "is there a data centre coming" and the wrong one the
+   * moment a question names a government: a hit from a NEIGHBOURING district,
+   * rendered under an answer about Vail, is the substitution defect wearing a
+   * quote.
+   */
+  const named = await ask("Is there a rezoning on the Vail school district agenda?");
+  assert.equal(named.subject?.id, VAIL, "the reader named a government");
+
+  const wide = await ask("Is there a rezoning coming?");
+  assert.ok(
+    (named.denominators?.agendasSweptForTopic ?? 0) <
+      (wide.denominators?.agendasSweptForTopic ?? 0),
+    "a bound body must sweep FEWER agendas than the reader's whole area",
+  );
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+   ASK-06 · VOTES REACH THE READER
+   ══════════════════════════════════════════════════════════════════════ */
+
+const CD6 = "ocd-division/country:us/state:az/cd:6";
+const SLDL20 = "ocd-division/country:us/state:az/sldl:20";
+
+test("ASK-06 (a): a reader asking about their sitting representative gets his roll calls", async () => {
+  const body = await ask("What has Juan Ciscomani done?", {
+    ocdIds: [AZ, PIMA, CD6],
+  });
+
+  assert.equal(body.subject?.kind, "PERSON");
+  assert.equal(body.subject?.name, "Juan Ciscomani");
+
+  const votes = body.records?.filter((r) => r.kind === "ROLL_CALL_VOTE") ?? [];
+  assert.ok(votes.length > 0, "twenty recorded federal votes reached nothing before ASK-06");
+  assert.equal(body.denominators?.rollCallVotesRecorded, 20);
+
+  for (const vote of votes) {
+    /* The constitution, verbatim: every vote rendered to a reader carries a
+       source record pointing at a specific roll call. */
+    assert.match(vote.sourceUrl ?? "", /clerk\.house\.gov\/Votes\//);
+    /* Person AND office, and the office is the one he HOLDS. */
+    assert.match(vote.text, /Juan Ciscomani, U\.S\. Representative: voted /);
+  }
+});
+
+test("ASK-06 (b): a candidate with no held voting record gets a NAMED gap, never silence", async () => {
+  /*
+   * Warren Petersen is the Attorney General candidate, he IS on the roster as
+   * a State Senator, and the store holds ZERO positions for him. The person
+   * resolves, the office resolves, and the store is empty — which is a fact
+   * about US and has to read as one.
+   */
+  const body = await ask("How has Warren Petersen voted?", { ocdIds: [AZ, PIMA] });
+
+  assert.equal(body.subject?.name, "Warren Petersen");
+  assert.equal(
+    (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE").length,
+    0,
+  );
+
+  const gap = (body.gaps ?? []).find((g) => /roll call/i.test(g.statement));
+  assert.ok(gap, "an empty vote store must produce a sentence, not silence");
+  assert.equal(gap.whose, "OURS", "the legislature published; we have not recorded");
+  assert.match(gap.statement, /We hold Warren Petersen as State Senator\./);
+  assert.match(gap.statement, /None of the \d+ roll calls we have recorded/);
+  assert.doesNotMatch(gap.statement, /did not vote|has not voted|no votes cast/i);
+});
+
+test("ASK-06 (c): THE ADVERSARIAL CASE — Sally Ann Gonzales gets no senator's votes", async () => {
+  /*
+   * The ballot's District 20 State REPRESENTATIVE line carries *Sally Ann
+   * Gonzales*. The roster carries *Sally Gonzales*, a State SENATOR, holding
+   * twelve recorded roll calls. Joining them attaches votes cast in one
+   * chamber to a candidacy in another — a false claim about a named person's
+   * record. Refusing loses twelve real public votes — an honest gap.
+   *
+   * It fails closed, through the real handler, against the real ballot.
+   */
+  const body = await ask("How has Sally Ann Gonzales voted?", {
+    ocdIds: [AZ, PIMA, SLDL20],
+  });
+
+  assert.equal(body.subject?.name, "Sally Ann Gonzales", "the person still resolves");
+  assert.deepEqual(
+    (body.records ?? []).filter((r) => r.kind === "ROLL_CALL_VOTE"),
+    [],
+    "NOT ONE roll call may be attached across a name-form gap",
+  );
+
+  const gap = (body.gaps ?? []).find((g) => /voting record/i.test(g.statement));
+  assert.ok(gap, "the refusal must be SAID");
+  assert.equal(gap.whose, "OURS");
+  assert.match(gap.statement, /could not confirm .* it is the same person/);
+  /* And it does not name the near miss, count her votes, or imply either
+     answer — every one of those would be the claim we cannot source. */
+  assert.doesNotMatch(gap.statement, /Senator|12|twelve/);
+
+  /*
+   * **CONTROL: the record it refused really exists.** Without this the test
+   * above proves only that we hold nothing for anybody called Gonzales, which
+   * is a much weaker and much less interesting claim than the one being made.
+   *
+   * It is taken at the module rather than through the handler on purpose: the
+   * senator is not on this reader's ballot — the District 20 House line is
+   * where the name appears — so she is correctly not an entity the binder can
+   * resolve here. The store is what has to be shown to be non-empty.
+   */
+  const { voteEvidenceFor } = await import("../lib/ask/votes.ts");
+  const senator = voteEvidenceFor("Sally Gonzales", { withinStates: ["AZ"] });
+  assert.equal(senator.identity.kind, "JOINED");
+  assert.equal(
+    senator.denominators.rollCallVotesRecorded,
+    12,
+    "the senator's twelve votes are genuinely held — the refusal above cost something real",
+  );
+});

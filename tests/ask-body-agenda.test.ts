@@ -149,24 +149,57 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
     "NO_PAST_MEETING_HELD",
   ];
   /*
-   * TWO FILES, because the empty-state decision MOVED and this guard is a text
-   * sweep. `emptySelectionState` now lives in `lib/ask/select.ts` so the
-   * deterministic agenda route and the grounded route cannot disagree about
-   * which meeting a tensed question meant. Reading only the route would have
-   * made this guard fail for a reason that was not a defect — and the wrong fix
-   * would have been to loosen it.
+   * **THE SELECTION STATES ARE STILL AN ENUM. THE DOCUMENT STATES ARE NOW
+   * SENTENCES.** (Updated by ASK-05, 2026-08-28.)
+   *
+   * `emptySelectionState` in `lib/ask/select.ts` still names the three ways a
+   * tensed question can find no sitting, and that is unchanged — it is a
+   * decision two callers had to agree on.
+   *
+   * The four DOCUMENT states used to be an enum too, in the body-agenda branch
+   * of `/api/ask/agenda`, which sent a state string for a client to turn into a
+   * sentence. That branch is gone: the grounded engine is the one answer to
+   * "what is on this body's agenda", and it emits the distinction directly as
+   * four different NAMED GAPS. So this guard reads them where they now live,
+   * and it asserts what actually matters — that a reader is told four
+   * different things, not that four constants exist.
+   *
+   * Loosening it to three would be the wrong fix and always was: RULING 100
+   * says an operation that can return nothing is asked WHAT it returned.
    */
-  const sources = [
-    readFileSync(join(process.cwd(), "app/api/ask/agenda/route.ts"), "utf8"),
-    readFileSync(join(process.cwd(), "lib/ask/select.ts"), "utf8"),
-  ].join("\n");
-  for (const state of STATES) {
+  const selection = readFileSync(join(process.cwd(), "lib/ask/select.ts"), "utf8");
+  for (const state of STATES.filter((s) => s.includes("MEETING_HELD"))) {
     assert.ok(
-      sources.includes(`"${state}"`),
-      `the agenda answer no longer distinguishes ${state} — an empty lost its reason`,
+      selection.includes(`"${state}"`),
+      `the selection answer no longer distinguishes ${state} — an empty lost its reason`,
     );
   }
   assert.equal(new Set(STATES).size, STATES.length, "the states must be distinct");
+
+  /*
+   * The four document facts, as the four sentences a reader now gets. Each one
+   * is about a DIFFERENT thing, and exactly one of them is THEIRS: a district
+   * that has not published an agenda yet is a fact about that district, and
+   * saying it the way we say our own extraction failure would be the render
+   * defect the constitution names.
+   */
+  const grounded = readFileSync(
+    join(process.cwd(), "app/api/ask/grounded/route.ts"),
+    "utf8",
+  );
+  const DOCUMENT_SENTENCES = [
+    /whose: "THEIRS",\s*\n\s*statement: `No agenda has been published/,
+    /We hold an agenda document for that meeting but could not read its text/,
+    /is \$\{subject\.name\}'s agenda portal rather than the agenda itself/,
+    /We hold the agenda document for that meeting but could not extract its items/,
+  ];
+  for (const re of DOCUMENT_SENTENCES) {
+    assert.match(
+      grounded,
+      re,
+      "a document state lost its own sentence and collapsed into another",
+    );
+  }
 });
 
 test("a document belonging to TWO governments is never handed to either as its agenda", () => {
@@ -311,39 +344,64 @@ test("the ingest refuses a landing page, and the rule is drawn where the evidenc
   assert.match(ingest, /landing page\(s\) refused/, "the refusal is no longer counted in the report");
 });
 
-test("the agenda reply is kept whenever it carries something usable, not only a topic", () => {
+test("no server reply is discarded on the way to the reader", () => {
   /*
-   * **THIS DISCARD HAS NOW BITTEN THREE TIMES.**
+   * **THIS DISCARD BIT THREE TIMES, AND THE FOURTH IS NOW UNREACHABLE.**
+   * (Rewritten by ASK-05, 2026-08-28.)
    *
    * The client's agenda handler read `body.topic ? body : null`, so the WHOLE
-   * reply was thrown away whenever the agenda rung had no topic — which is
-   * exactly the case for a question that names a government and carries no
-   * agenda keyword.
+   * reply was thrown away whenever that rung had no topic — which is exactly
+   * the case for a question that names a government and carries no agenda
+   * keyword. It swallowed the body-agenda answer first, and then the
+   * server-resolved `namedEntity`, so a reader was told we had not matched a
+   * government the server had already resolved. Both were invisible to every
+   * automated check, because a discarded reply fails nothing.
    *
-   * It swallowed the body-agenda answer first: the route answered the tester's
-   * question correctly and the reader saw nothing. Then it swallowed the
-   * server-resolved `namedEntity`: the route had bound Vail against the whole
-   * corpus, and the client — which can only see the reader's area — went on
-   * telling them we had not matched it.
-   *
-   * Both were invisible to every automated check, because a discarded reply
-   * fails nothing. Pinned on the source so the condition cannot narrow back.
+   * That handler is gone with the second engine. What replaces this test is
+   * the structural reason the class cannot recur: there is ONE reply, it is
+   * READ through the declared contract rather than filtered by a predicate,
+   * every field travels on every mode, and the parse falls back to a stated
+   * transport failure rather than to null.
    */
   const box = readFileSync(join(process.cwd(), "components/ask/ask-box.tsx"), "utf8");
+
+  /* No conditional discard survives anywhere on the reply path. */
   assert.ok(
-    !/return "topic" in body && body\.topic \? body : null;/.test(box),
-    "the reply is discarded again whenever the agenda rung has no topic",
+    !/return "topic" in body/.test(box),
+    "a reply is being filtered by a predicate again instead of read whole",
   );
   assert.match(
     box,
-    /body\.topic \|\| body\.namedEntity/,
-    "the reply must be kept when it carries a server-resolved entity, not only a topic",
+    /readAskAnswer\(await response\.json\(\)\) \?\? transportFailure\(\)/,
+    "the reply must be read through the contract, and a refusal must be a STATED state",
   );
-  /* And the route must actually send one, or the client's keeping it is moot. */
-  const route = readFileSync(join(process.cwd(), "app/api/ask/agenda/route.ts"), "utf8");
-  assert.match(
-    route,
-    /mode: "topic",\s*\n\s*topic: null,\s*\n\s*hits: \[\],\s*\n\s*namedEntity:/,
-    "the no-topic reply no longer carries the server's binding, so there is nothing to keep",
+  /*
+   * A failed ANSWER request must produce a sentence, never a silent null. The
+   * scope is the grounded rung only, and deliberately: `classify` returns null
+   * on failure and that is correct — it selects a curated DESTINATION, and its
+   * absence leaves the reader with the honest refusal they would have had
+   * anyway. It makes no claim about a government to withhold.
+   */
+  const groundedFetch = box.slice(
+    box.indexOf('const askGrounded = async'),
+    box.indexOf('const ask = () => {'),
   );
+  assert.ok(groundedFetch.length > 0, "the grounded rung must be findable");
+  assert.ok(
+    !/return null;/.test(groundedFetch),
+    "a failed answer request must produce a sentence, never a silent null",
+  );
+  assert.match(groundedFetch, /if \(!response\.ok\) return transportFailure\(\);/);
+
+  /*
+   * And the server must actually send the whole shape, or the client's
+   * refusing to discard it is moot. `askAnswer` builds from the PACK, so the
+   * records a reader sees are by construction the ones validation checked.
+   */
+  const route = readFileSync(
+    join(process.cwd(), "app/api/ask/grounded/route.ts"),
+    "utf8",
+  );
+  assert.match(route, /const payload: AskAnswerPayload = askAnswer\(\{/);
+  assert.match(route, /pack,/, "the reply is built from the evidence pack itself");
 });

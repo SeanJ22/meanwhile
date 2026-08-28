@@ -1,37 +1,42 @@
-import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
-import {
-  emptySelectionState,
-  selectSitting,
-  type AgendaSelection,
-} from "@/lib/ask/select";
 import { readSnapshot } from "@/lib/meetings/snapshot";
-import {
-  agendaItems,
-  agendaTopicFor,
-  meetingsWithin,
-  searchAgendas,
-  type AgendaDocumentLike,
-} from "@/lib/routing/agenda-search";
-import { asksForBodyAgenda, bindNamedEntity, type BindableEntity } from "@/lib/routing/named-entity";
+import { agendaItems, type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 /**
- * POST /api/ask/agenda — A03 and A05, the two ask-box questions that need
- * the agenda corpus.
+ * POST /api/ask/agenda — **A05, and nothing else.** (Narrowed by ASK-05,
+ * 2026-08-28.)
  *
- *   A03  "Is there a data center coming?"   → mode "topic"
- *   A05  "What's on the docket for this?"   → mode "meeting"
+ *   A05  "What's on the docket for THIS meeting?"   → one meeting's item list
+ *
+ * ## What left, and why the route is better for it
+ *
+ * It answered A03 as well — a topic sweep across every readable agenda in a
+ * scope — plus a named body's own docket, and it emitted FIVE distinct
+ * response shapes out of one handler to do it. Two of those shapes were
+ * reader-facing civic answers about what a government has scheduled, and
+ * `/api/ask/grounded` answers the same question from a canonical binding, with
+ * the reader's tense read as a retrieval instruction, inside one validated
+ * evidence pack. A product with two answers to one question has two
+ * definitions of Ask truth, and the reader meets whichever their surface
+ * happens to call.
+ *
+ * The topic sweep is not lost. It is `lib/ask/agenda-topic.ts`, it emits
+ * `AGENDA_MENTION` records into the grounded engine's pack, and every
+ * denominator sentence it used to build survives as a NAMED GAP.
+ *
+ * What is left here is a LOOKUP: give it a meeting id, get that meeting's own
+ * items. It binds nothing, resolves nothing, and makes no claim about which
+ * government a question is about — which is why it can coexist with the one
+ * Ask engine rather than competing with it.
  *
  * ## Why this is a route and not part of the client pipeline
  *
- * `answerQuestion` is pure and client-safe, which is the whole reason the
- * golden tests can run it against the real registry. The agenda corpus is
- * about 850 KB of extracted document text across 140 documents, and shipping
- * it to a browser to answer one question would be a straight trade of the
- * reader's bandwidth for our architectural convenience. So the corpus stays
- * on the server and the client asks it a question.
+ * The agenda corpus is about 850 KB of extracted document text across 140
+ * documents, and shipping it to a browser to answer one question would be a
+ * straight trade of the reader's bandwidth for our architectural convenience.
+ * So the corpus stays on the server and the client asks it a question.
  *
  * ## It stores nothing, and it generates nothing
  *
@@ -40,28 +45,47 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
  * n-stores rule is not in play.
  *
  * And every string it returns is READ OFF a document a government published.
- * The quote is the clerk's line, verbatim. The item list is the clerk's
- * items, verbatim. Nothing is summarised, because a summary of a zoning
- * agenda is a claim about what a government is about to do, made by us.
+ * The item list is the clerk's items, verbatim. Nothing is summarised, because
+ * a summary of a zoning agenda is a claim about what a government is about to
+ * do, made by us.
  *
- * ## Every answer states its denominator
+ * ## The answer states its denominator
  *
- * `searched` and `unreadable` ride on every response. A search over 122
- * readable documents that found nothing is a different sentence from a
- * search over 0, and an agenda whose text extraction failed is not an
- * agenda with nothing on it. The client renders the number it was given.
+ * `documentsHeld` and `readable` ride on the response. Zero documents held and
+ * zero items extracted are DIFFERENT FACTS, and the client says which — an
+ * agenda whose text extraction failed is not an agenda with nothing on it.
  */
 
 export const runtime = "nodejs";
 
+/**
+ * **THE DECLARED SHAPE OF THE ONE ANSWER THIS ROUTE STILL GIVES.** (ASK-05.)
+ *
+ * It had none. Every reply was an inline object literal, and the contract
+ * existed only as hand-copied interfaces inside client components — which is
+ * how one of the deleted shapes came to re-spell `NamedEntityBinding`'s
+ * discriminant from `kind` to `state` and drop its `NONE` member in transit
+ * without anything failing.
+ */
+export interface AgendaMeetingReply {
+  mode: "meeting";
+  meetingId: string;
+  title: string;
+  bodyName: string;
+  startsAt: string;
+  /** Stated so a client never has to infer it from an empty item list. */
+  documentSharedAcrossGovernments: boolean;
+  agendaUrl: string | null;
+  documentUrl: string | null;
+  sourceOrg: string | null;
+  retrievedAt: string | null;
+  /** The clerk's own items, verbatim. Empty is a state, never "no items". */
+  items: string[];
+  documentsHeld: number;
+  readable: number;
+}
 
 const MAX_BODY_BYTES = 2048;
-const MAX_QUESTION_CHARS = 200;
-/** The radius ladder the map already uses, in miles. */
-const DEFAULT_RADIUS_MILES = 25;
-const MAX_RADIUS_MILES = 100;
-/** Enough to answer, few enough to read. Stated in the response. */
-const MAX_HITS = 12;
 
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
@@ -78,15 +102,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "payload too large" }, { status: 413 });
   }
 
-  let body: {
-    question?: unknown;
-    meetingId?: unknown;
-    lat?: unknown;
-    lng?: unknown;
-    radiusMiles?: unknown;
-    ocdIds?: unknown;
-    scope?: unknown;
-  };
+  let body: { meetingId?: unknown };
   try {
     body = JSON.parse(raw);
   } catch {
@@ -164,7 +180,7 @@ export async function POST(request: Request) {
     const sharedAcrossGovernments = otherGovernments.size > 1;
 
     const items = newest && !sharedAcrossGovernments ? agendaItems(newest.text) : [];
-    return Response.json({
+    const reply: AgendaMeetingReply = {
       mode: "meeting",
       meetingId,
       title: meeting.title,
@@ -187,401 +203,43 @@ export async function POST(request: Request) {
       // things and the client says which.
       documentsHeld: forMeeting.length,
       readable: newest?.text ? 1 : 0,
-    });
+    };
+    return Response.json(reply);
   }
-
-  // ── A03: a topic, within a radius ─────────────────────────────────────
-  if (typeof body.question !== "string" || body.question.trim().length === 0) {
-    return Response.json({ error: "question is required" }, { status: 400 });
-  }
-  const question = body.question.slice(0, MAX_QUESTION_CHARS);
 
   /*
-   * **A NAMED BODY'S OWN DOCKET — the question this whole session started on.**
-   * (2026-08-27.)
+   * **THE TOPIC SWEEP AND THE NAMED-BODY DOCKET BOTH LEFT THIS ROUTE.**
+   * (ASK-05, 2026-08-28.)
    *
-   * *"What's on the Vail school district agenda?"* reached nothing. This route
-   * answered a TOPIC within a scope, `agendaTopicFor` returns null for a
-   * question that names a body and asks what is on ITS agenda, and the question
-   * fell through to topic routing — which names bodies rather than agenda
-   * items — while the corpus held eleven Vail meetings and nine readable
-   * agendas.
+   * This handler used to answer FIVE distinct shapes out of one POST: a
+   * meeting's item list, a body's own docket, a topic sweep, a no-topic reply
+   * that still carried a binding, and a refusal that carried a DIFFERENT
+   * binding — one of which re-spelled `NamedEntityBinding`'s discriminant from
+   * `kind` to `state` and dropped its `NONE` member in transit. Two of the
+   * five were reader-facing civic answers competing with `/api/ask/grounded`,
+   * and the map component rendered one of them BESIDE the grounded reply on
+   * the same screen.
    *
-   * So this rung runs FIRST and only where both halves are true: the reader
-   * named a government we resolved, AND they asked what it has scheduled to
-   * discuss. It answers from THAT body's own newest agenda and nothing else.
+   * Both are the grounded engine's now, and it answers them strictly better:
+   * one canonical binder over a superset inventory, the reader's TENSE read as
+   * a retrieval instruction, one evidence pack, one validation rung, one
+   * denominator vocabulary. The sweep survives as `AGENDA_MENTION` records —
+   * see `lib/ask/agenda-topic.ts`, which kept every one of its sentences.
    *
-   * Every honest empty is a different sentence, and none of them is a generic
-   * civics explainer: no meeting held, a meeting with no agenda document, and a
-   * document whose text could not be extracted are three different facts about
-   * us and are returned as three different states.
+   * **The ownership boundary is no longer a scope flag a client declares.**
+   * `scope: "TOPIC_ONLY"` was a promise enforced by a conditional; the branch
+   * it guarded does not exist any more, which is a stronger guarantee than any
+   * flag — there is nothing left here to reach.
+   *
+   * What remains is A05 and only A05: ONE named meeting's own item list, keyed
+   * on a meeting id. It is a lookup, not an answer about a government, and it
+   * has no second definition anywhere. A call without one is told so rather
+   * than answered with something else, because answering a question nobody
+   * asked is how this route grew five shapes in the first place.
    */
-  const namedBody = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
-  /*
-   * **THE OWNERSHIP BOUNDARY, ENFORCED BY THE SERVER RATHER THAN PROMISED BY
-   * A CLIENT.** (PR #212 follow-up, 2026-08-28.)
-   *
-   * `/api/ask/grounded` is now the one Ask engine, and its body path
-   * SUPERSEDES this one: it binds the same way, reads the reader's tense, picks
-   * NEXT versus LAST rather than `upcoming[0] ?? past[0]`, prints the sitting
-   * in the body's own zone, and validates any generated prose. Two live answers
-   * to "what is on this body's agenda" is two definitions of Ask truth, and the
-   * reader would meet whichever one their surface happened to call.
-   *
-   * What this route still owns and grounded does not is the TOPIC search — *"is
-   * there a data centre coming?"* — a keyword sweep across every readable
-   * agenda in the reader's area, which is a different question with a different
-   * denominator and is not superseded by anything.
-   *
-   * So a caller declares its scope. `TOPIC_ONLY` is what the map Ask box now
-   * sends, and under it this branch cannot fire at all — the boundary is a
-   * refusal in the server rather than a discipline in a component, which is the
-   * difference between a rule and a hope.
-   */
-  const topicOnly = body.scope === "TOPIC_ONLY";
-  if (!topicOnly && namedBody.kind === "BOUND" && asksForBodyAgenda(question)) {
-    return bodyAgendaAnswer(snapshot, documents, namedBody.entity.id, namedBody.entity.name);
-  }
-
-  const topic = agendaTopicFor(question);
-  if (!topic) {
-    // No topic is not a refusal to answer the reader — it means this rung
-    // has nothing to say and the caller's other rungs continue. Stated as
-    // such rather than as an empty result set.
-    //
-    /*
-     * **THE SERVER'S BINDING TRAVELS EVEN WHEN THIS RUNG HAS NOTHING TO SAY.**
-     * (2026-08-27.)
-     *
-     * The client binds against the search index and the reader's own covered
-     * bodies, both scoped to their area. This route binds against the WHOLE
-     * corpus. So at a Tucson zip the client concluded `UNRESOLVED` for Vail and
-     * rendered *"We don't have a government recorded under 'vail'"* — while
-     * this route, three lines earlier, had already resolved Vail and then threw
-     * the verdict away because the question carried no agenda topic.
-     *
-     * That sentence is a claim about OUR OWN HOLDINGS and it was false. Saying
-     * "we don't have it" about something we hold is the same class as saying
-     * "nothing is scheduled" about a meeting we never looked for, pointed
-     * inward. So the verdict rides on the reply the caller was already making.
-     */
-    return Response.json({
-      mode: "topic",
-      topic: null,
-      hits: [],
-      namedEntity:
-        namedBody.kind === "BOUND"
-          ? { state: "BOUND", ocdId: namedBody.entity.id, name: titleCaseName(namedBody.entity.name) }
-          : namedBody.kind === "AMBIGUOUS"
-            ? { state: "AMBIGUOUS", candidates: namedBody.candidates.map((c) => titleCaseName(c.name)) }
-            : namedBody.kind === "UNRESOLVED"
-              ? { state: "UNRESOLVED", mention: namedBody.mention }
-              : null,
-    });
-  }
-
-  const lat = typeof body.lat === "number" ? body.lat : null;
-  const lng = typeof body.lng === "number" ? body.lng : null;
-  const radiusMiles = Math.min(
-    MAX_RADIUS_MILES,
-    typeof body.radiusMiles === "number" && body.radiusMiles > 0
-      ? body.radiusMiles
-      : DEFAULT_RADIUS_MILES,
+  return Response.json(
+    { error: "this route answers one meeting's agenda; pass meetingId" },
+    { status: 400 },
   );
-
-  /*
-   * TWO WAYS TO SCOPE, and the DIVISION one is what actually ships.
-   *
-   * A03's wording is "within a radius", and a radius is what the map's own
-   * layer uses — so `meetingsWithin` exists and this route takes a point.
-   * But distance is the wrong instrument for this question: a rezoning in
-   * YOUR town is your business whether the town hall is two miles away or
-   * thirty, and a county board thirty miles off decides more of your street
-   * than a neighbouring city's council does at five. The divisions the
-   * reader is standing in are the honest scope, and they are already
-   * resolved — the same approximate-location basis the search log uses.
-   *
-   * So: divisions when given, radius when a caller has a point and no
-   * divisions, and the whole corpus when neither. The response says which,
-   * because "we found nothing" means different things in each.
-   */
-  const ocdIds = Array.isArray(body.ocdIds)
-    ? body.ocdIds.filter((v): v is string => typeof v === "string").slice(0, 40)
-    : [];
-
-  let eligibleIds: Set<string> | null = null;
-  let placeless = 0;
-  let outside = 0;
-  let scope: "divisions" | "radius" | "everything" | "named-body" = "everything";
-
-  /*
-   * **THE NAMED BODY IS A HARD RETRIEVAL CONSTRAINT (2026-08-27).**
-   *
-   * Every scope below this is about WHERE THE READER IS — their divisions,
-   * or a radius around them. That is the right default for "is there a data
-   * centre coming", and it is the wrong one the moment a question names a
-   * government: a search scoped to the reader's divisions will happily return
-   * a hit from a DIFFERENT body and the answer renders that body's name, which
-   * is the substitution defect this session was opened on.
-   *
-   * So the named body is resolved first and, when it resolves, it REPLACES the
-   * geographic scope rather than narrowing it. A reader asking about Vail gets
-   * Vail's agendas or an honest nothing — never a neighbouring district's.
-   */
-  const binding = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
-  if (binding.kind === "AMBIGUOUS" || binding.kind === "UNRESOLVED") {
-    /* A government was named that we cannot pin down. The rung says so and
-     * returns no hits — it does NOT fall through to the reader's divisions,
-     * because that is precisely how a different body came to answer. */
-    return Response.json({
-      mode: "topic",
-      topic: { id: topic.id, label: topic.label },
-      scope: "named-body",
-      namedEntity:
-        binding.kind === "AMBIGUOUS"
-          ? { state: "AMBIGUOUS", candidates: binding.candidates.map((c) => c.name) }
-          : { state: "UNRESOLVED", mention: binding.mention },
-      hits: [],
-      hitsFound: 0,
-      searched: 0,
-      unreadable: 0,
-      placeless: 0,
-      outside: 0,
-      divisionsAsked: ocdIds.length,
-      radiusMiles: null,
-    });
-  }
-
-  if (binding.kind === "BOUND") {
-    scope = "named-body";
-    eligibleIds = new Set(
-      snapshot.meetings
-        .filter((m) => m.ocdId === binding.entity.id)
-        .map((m) => m.id),
-    );
-    outside = snapshot.meetings.length - eligibleIds.size;
-  } else if (ocdIds.length > 0) {
-    scope = "divisions";
-    const wanted = new Set(ocdIds);
-    eligibleIds = new Set(
-      snapshot.meetings
-        .filter((m) => m.ocdId !== null && wanted.has(m.ocdId))
-        .map((m) => m.id),
-    );
-    outside = snapshot.meetings.length - eligibleIds.size;
-  } else if (lat !== null && lng !== null && Number.isFinite(lat) && Number.isFinite(lng)) {
-    scope = "radius";
-    const scoped = meetingsWithin(snapshot.meetings, { lat, lng }, radiusMiles);
-    eligibleIds = new Set(scoped.within.map((m) => m.id));
-    placeless = scoped.placeless.length;
-    outside = scoped.outside;
-  }
-
-  const scopedDocs = eligibleIds
-    ? documents.filter((d) => eligibleIds.has(d.meetingId))
-    : documents;
-  const { hits, searched, unreadable } = searchAgendas(scopedDocs, topic);
-
-  const byMeeting = new Map<string, (typeof snapshot.meetings)[number]>();
-  for (const meeting of snapshot.meetings) byMeeting.set(meeting.id, meeting);
-
-  return Response.json({
-    mode: "topic",
-    topic: { id: topic.id, label: topic.label },
-    scope,
-    /* Which government this answer is ABOUT, when the reader named one. The
-     * client states it, so a bound answer can never read as a general one. */
-    namedEntity:
-      binding.kind === "BOUND"
-        ? { state: "BOUND", ocdId: binding.entity.id, name: binding.entity.name }
-        : null,
-    radiusMiles: scope === "radius" ? radiusMiles : null,
-    divisionsAsked: ocdIds.length,
-    hits: hits.slice(0, MAX_HITS).map((hit) => {
-      const meeting = byMeeting.get(hit.meetingId);
-      return {
-        ...hit,
-        bodyName: meeting?.bodyName ?? null,
-        /* ASK-4 (2026-08-24): the exact division key, so an agenda hit's body
-           name opens that body's battlecard rather than sitting inert. Never
-           a name match — two governments can share a name. */
-        ocdId: meeting?.ocdId ?? null,
-        title: meeting?.title ?? null,
-        startsAt: meeting?.startsAt ?? null,
-        agendaUrl: meeting?.agendaUrl ?? null,
-        locationName: meeting?.location?.name ?? null,
-      };
-    }),
-    // Stated N equals rendered rows: `hits` is what is returned, `hitsFound`
-    // is what existed, and a clip must not read as a small result.
-    hitsFound: hits.length,
-    searched,
-    unreadable,
-    placeless,
-    outside,
-  });
-}
-
-/**
- * A named body's own docket: its next sitting, and that sitting's own items.
- *
- * **WHICH MEETING.** The NEXT one, because a reader asking what a government is
- * discussing is asking about what is coming. Where nothing is scheduled the
- * most recent past sitting is answered instead and is LABELLED as past — "they
- * last discussed" is a true answer to "what are they discussing" and pretending
- * a concluded meeting is upcoming would not be.
- *
- * **AND EVERY EMPTY IS ITS OWN SENTENCE.** A body with no meeting, a meeting
- * with no agenda document, and a document whose text would not extract are
- * three different facts, all of them about US, and collapsing them into "no
- * agenda" would assert an absence about a government (RULING 100). The client
- * gets the state and the denominators and says which.
- */
-function bodyAgendaAnswer(
-  snapshot: { meetings: MeetingLike[] },
-  documents: readonly AgendaDocumentLike[],
-  ocdId: string,
-  name: string,
-  /*
-   * **THE READER'S TENSE IS A RETRIEVAL INSTRUCTION, NOT A TURN OF PHRASE.**
-   * (2026-08-27.)
-   *
-   * This selection did not exist. The line below read
-   *
-   *     const meeting = upcoming[0] ?? past[0] ?? null;
-   *
-   * and it ran for every question that named a body and asked what it was
-   * discussing — including *"What did Vail discuss at its LAST meeting?"*,
-   * which was answered with the agenda of a meeting that has not happened yet.
-   *
-   * Everything else about that answer was right. The government was right, the
-   * attribution was right, the source link was right, the retrieval timestamp
-   * was right. It was a wrong answer wearing a complete provenance record,
-   * which is the most expensive kind this product can produce: nothing on the
-   * surface of it looks like a defect.
-   */
-  selection: AgendaSelection = "ANY",
-): Response {
-  const forBody = snapshot.meetings.filter((m) => m.ocdId === ocdId);
-  const now = Date.now();
-  const meeting = selectSitting(selection, forBody, now);
-
-  const base = {
-    mode: "body-agenda" as const,
-    /*
-     * The name a READER sees, title-cased off the same canonical slug the
-     * matcher binds on. Matching stays on the normalized form; only the
-     * display changes, because "vail unified district" in a sentence about a
-     * government reads as a typo rather than as a name, and a reader surface
-     * speaks plain language.
-     */
-    namedEntity: { state: "BOUND" as const, ocdId, name: titleCaseName(name) },
-    meetingsHeld: forBody.length,
-  };
-
-  if (!meeting) {
-    /* Three different empties, said as three different sentences. */
-    const state = emptySelectionState(selection, forBody.length);
-    return Response.json({
-      ...base,
-      state,
-      selection,
-      meeting: null,
-      items: [],
-      documentsHeld: 0,
-      readable: 0,
-    });
-  }
-
-  const forMeeting = documents.filter((d) => d.meetingId === meeting.id);
-  /* Newest retrieval wins — an agenda is revised, and the revision is the one
-     the reader is going to. Same rule as the single-meeting mode above. */
-  const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
-  const items = newest ? agendaItems(newest.text) : [];
-
-  /*
-   * **A CALENDAR PAGE ATTACHED TO TWENTY MEETINGS IS NOT TWENTY AGENDAS.**
-   * (2026-08-27, found by asking Vail its own question.)
-   *
-   * Vail's next sitting has an "agenda document" whose text is 1,652 characters
-   * of the district's Highbond PORTAL LANDING PAGE — navigation, a welcome
-   * line, and the year's meeting schedule. `agendaItems` correctly extracts
-   * nothing from it, and reporting *"we hold an agenda for this meeting and it
-   * has no items"* would be a claim about the government made out of a fact
-   * about our retrieval.
-   *
-   * It is mechanically detectable and it is not rare: **56 of the corpus's 198
-   * agenda documents share a URL with another meeting** — 27 on one New
-   * Hampshire town calendar, 14 on another, 9 on Vail's portal root, 6 on
-   * Tucson Unified's board page. A document the SAME body reuses across
-   * sittings is a landing page by construction, because one page cannot be the
-   * agenda of two different meetings.
-   *
-   * So it gets its own state and its own sentence. The link still travels —
-   * a portal root is where a reader goes to find the agenda themselves, which
-   * is genuinely useful — it simply is not called an agenda.
-   */
-  const sharedWith = newest
-    ? new Set(
-        documents.filter((d) => d.documentUrl === newest.documentUrl).map((d) => d.meetingId),
-      ).size
-    : 0;
-
-  const state =
-    forMeeting.length === 0
-      ? "MEETING_KNOWN_NO_AGENDA_DOCUMENT"
-      : !newest?.text
-        ? "AGENDA_DOCUMENT_NOT_READABLE"
-        : sharedWith > 1 && items.length === 0
-          ? "AGENDA_LINK_IS_A_LANDING_PAGE"
-          : items.length === 0
-            ? "AGENDA_READ_NO_ITEMS_EXTRACTED"
-            : "ITEMS";
-
-  return Response.json({
-    ...base,
-    state,
-    /* Which sitting was asked for, so the client can say "at its last meeting"
-       rather than a tense the reader did not use. */
-    selection,
-    meeting: {
-      id: meeting.id,
-      title: meeting.title,
-      startsAt: meeting.startsAt,
-      /* The body's OWN zone. formatMeetingDate needs it, and letting the
-         client default to the reader's zone would print an Arizona board
-         meeting in the reader's local time — a wrong fact in a small font. */
-      timeZone: meeting.timeZone,
-      /*
-       * Whether this is what they WILL discuss or what they LAST discussed.
-       *
-       * Read off the meeting that was actually SELECTED, not off whether any
-       * upcoming meeting exists. Those came apart the moment selection did:
-       * a `LAST` answer for a body that also has a future sitting would have
-       * been labelled UPCOMING, and the client renders this word.
-       */
-      when: Date.parse(meeting.startsAt) >= now ? "UPCOMING" : "PAST",
-      agendaUrl: meeting.agendaUrl ?? null,
-    },
-    items,
-    documentUrl: newest?.documentUrl ?? null,
-    sourceOrg: newest?.sourceOrg ?? null,
-    retrievedAt: newest?.retrievedAt ?? null,
-    documentsHeld: forMeeting.length,
-    readable: newest?.text ? 1 : 0,
-    /* How many of this body sittings point at the same document. >1 means a
-       landing page rather than this meeting own agenda. */
-    documentSharedWithMeetings: sharedWith,
-  });
-}
-
-/** Only what this rung reads off a meeting — the snapshot's own shape. */
-interface MeetingLike {
-  id: string;
-  ocdId: string | null;
-  title: string;
-  startsAt: string;
-  timeZone: string;
-  agendaUrl?: string | null;
 }
 

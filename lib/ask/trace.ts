@@ -110,7 +110,37 @@ export type AnswerMode =
   /** The subject resolved and we hold nothing that answers the question. */
   | "NO_EVIDENCE"
   /** Generated prose was produced and REJECTED by validation. */
-  | "REJECTED_FELL_BACK";
+  | "REJECTED_FELL_BACK"
+  /**
+   * **THE ENGINE IS SWITCHED OFF BY RIPCORD.** (ASK-05, 2026-08-28.)
+   *
+   * This member exists because the value was already on the wire and was not
+   * in this union. `app/api/ask/grounded/route.ts` answered `{ mode: "OFF" }`
+   * when `ripcord.askGrounded` was pulled; both clients typed `mode` as a bare
+   * `string`, so it typechecked, matched no render branch, and painted an
+   * EMPTY PANEL back at a reader who had just typed a question.
+   *
+   * That is the silence rule broken by a type hole. A switched-off capability
+   * is a fact about US and it gets said, so the mode is real, the payload is
+   * the same shape as every other, and the clients carry a branch for it.
+   */
+  | "OFF"
+  /**
+   * **THE REQUEST NEVER REACHED US.** (ASK-05, 2026-08-28.)
+   *
+   * Set by a CLIENT, never by the server — a server that can answer is by
+   * definition not in this state. It is in this union rather than in a private
+   * boolean because the ballot surface had it (`data-ask-state="TRANSPORT_FAILED"`)
+   * and the map surface did not: `askGrounded` caught, returned null, and the
+   * panel rendered nothing at all. One surface said "that didn't reach us" and
+   * the other silently degraded, from the same failure, on the same engine.
+   *
+   * "That didn't reach us" is a fact about us. It is deliberately not "we
+   * found nothing", which would be a claim about a government made out of a
+   * failed fetch. `transportFailure()` in `lib/ask/answer.ts` is the one
+   * constructor.
+   */
+  | "TRANSPORT_FAILED";
 
 export function emptyTrace(): AskTrace {
   return {

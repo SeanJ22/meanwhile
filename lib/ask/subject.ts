@@ -95,6 +95,42 @@ export const SUBJECT_KINDS: AskSubjectKind[] = [
 ];
 
 /**
+ * An `EvidenceSubject`'s kind, as a surface reference's kind.
+ *
+ * **This exists because a surface was writing `PERSON` for everything.**
+ * (ASK-05, 2026-08-28.) `components/ask/ask-box.tsx` pushed
+ * `kind: "PERSON" as const` into the follow-up context for EVERY subject the
+ * engine resolved — a school district, a ballot measure, a contest, all of
+ * them recorded as people in the very list a later pronoun resolves against.
+ *
+ * It did not usually produce a wrong answer, because `resolveSubjectRef` tries
+ * the id first and the ids were right. It produced a wrong REASON, which is
+ * the more dangerous of the two: the moment a reference arrived without an id
+ * — which `readSubjectRefs` explicitly accepts, because the map surface has
+ * names and no ids for some of what it shows — the kind would have been the
+ * discriminant, and it was a constant.
+ *
+ * The two vocabularies are separate on purpose and the mapping is total:
+ * `EvidenceSubject.kind` is what RETRIEVAL resolved, `AskSubjectKind` is what
+ * a SURFACE can say is on screen. They agree member for member today, and the
+ * table below is `Record`-typed on BOTH so the day either grows a member the
+ * compiler names it, rather than a cast quietly picking a default.
+ */
+type EvidenceSubjectKind = "BODY" | "PERSON" | "MEASURE" | "CONTEST" | "OFFICE";
+
+const SUBJECT_KIND_OF: Readonly<Record<EvidenceSubjectKind, AskSubjectKind>> = {
+  BODY: "BODY",
+  PERSON: "PERSON",
+  MEASURE: "MEASURE",
+  CONTEST: "CONTEST",
+  OFFICE: "OFFICE",
+};
+
+export function subjectKindOf(kind: EvidenceSubjectKind): AskSubjectKind {
+  return SUBJECT_KIND_OF[kind];
+}
+
+/**
  * Resolve one surface reference against the inventory this request can answer
  * from.
  *

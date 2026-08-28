@@ -32,6 +32,12 @@ const UA =
 const FILES = [
   "data/photos/door2-incumbents-2026-08-25.json",
   "data/photos/door2-tusd-board-2026-08-25.json",
+  // 2026-08-28 — the statewide-executive door-2 walk. Its own hunt decodes
+  // every row as it writes it, so a re-run here changes nothing today; it is
+  // listed because this list is "every artifact the queue reads" and a list
+  // that is only mostly that is the same silence `STAGING_FILES` guards.
+  "data/photos/door2-statewide-executives-2026-08-28.json",
+  "data/photos/door3-ballot-cohort-2026-08-28.json",
 ];
 
 interface Row {

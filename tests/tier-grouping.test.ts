@@ -58,7 +58,22 @@ test("every zip's who-governs coverage includes its state's governor", async () 
 });
 
 test("statewide executives are sourced from the state's own domain, never a third party", () => {
-  assert.equal(STATEWIDE_EXECUTIVES.length, 3, "AZ, NJ, NH");
+  /*
+   * A FLOOR, NOT A HEAD-COUNT (2026-08-28). This read `=== 3, "AZ, NJ, NH"`,
+   * which asserted the size of the store rather than the rule the test is
+   * named for. The rule is the loop: every row traces to a government domain.
+   * Pinning the count made ACQUIRING an officeholder fail a test about
+   * sourcing, and the three states are still covered — asserted by state,
+   * which is what "AZ, NJ, NH" was trying to say.
+   */
+  assert.ok(STATEWIDE_EXECUTIVES.length >= 3, `only ${STATEWIDE_EXECUTIVES.length} rows`);
+  const states = new Set(STATEWIDE_EXECUTIVES.map((e) => e.stateOcdId));
+  for (const state of ["az", "nj", "nh"]) {
+    assert.ok(
+      states.has(`ocd-division/country:us/state:${state}`),
+      `${state}: no statewide executive at all`,
+    );
+  }
   for (const executive of STATEWIDE_EXECUTIVES) {
     const host = new URL(executive.sourceUrl).hostname;
     assert.ok(
@@ -81,6 +96,17 @@ test("tier membership is correct by office type at every zip, closest-first", as
     "State Representative",
     "Assemblymember",
     "Governor",
+    // The statewide executives acquired 2026-08-28. The GROUPING was already
+    // right — `groupOfficials` reads the office level, not this list — and
+    // this set is the test's own allow-list of what may legitimately appear
+    // under STATE. It had to grow with the corpus or the corpus could not.
+    "Lieutenant Governor",
+    "Secretary of State",
+    "Attorney General",
+    "State Treasurer",
+    "Superintendent of Public Instruction",
+    "State Mine Inspector",
+    "Corporation Commissioner",
   ]);
   for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
     const coverage = await coverageAt(lat, lng, 1);

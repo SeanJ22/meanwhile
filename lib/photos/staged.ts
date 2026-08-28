@@ -57,6 +57,12 @@ import { reviewFor } from "./review.ts";
  * only from a recorded APPROVED decision. This is a way IN to the review, never
  * a way around it.
  */
+/**
+ * The widest a staged image may be relative to its height and still be
+ * offered as a portrait. See the refusal in `stagedPortraits`.
+ */
+export const MAX_PORTRAIT_ASPECT = 1.5;
+
 export interface StagedPortrait {
   personKey: string;
   name: string;
@@ -91,6 +97,40 @@ const STAGING_FILES: readonly { path: string; door: string }[] = [
     // district's own domain is his ruling. Staging is the ask, not the answer.
     path: "data/photos/door2-tusd-board-2026-08-25.json",
     door: "door 2 — the portrait a government body publishes of its own member",
+  },
+  {
+    /*
+     * 2026-08-28, the statewide-executive acquisition. Written by
+     * `scripts/hunt-statewide-portraits-0828.mts` over the eleven officeholders
+     * added to `lib/officials/statewide-executives.ts` that day — Arizona's
+     * Secretary of State, Attorney General, Treasurer, Superintendent, Mine
+     * Inspector and five Corporation Commissioners, plus New Jersey's
+     * Lieutenant Governor.
+     *
+     * **Registering it here is not paperwork.** The list above is DECLARED
+     * rather than globbed, on purpose, which means an artifact nobody adds to
+     * it is an artifact the author never sees — a hunt that ran, found faces,
+     * wrote them down, and reached nobody. Eight portraits would have sat in
+     * that state.
+     */
+    path: "data/photos/door2-statewide-executives-2026-08-28.json",
+    door: "door 2 — the portrait a government body publishes of its own member",
+  },
+  {
+    /*
+     * 2026-08-28. Door 3 over every filed candidate this repository holds no
+     * portrait bytes for and records a link on the candidate's OWN domain —
+     * 28 sites walked out of a 377-candidate cohort, which is the honest
+     * reach of that door and not a shortfall of effort: 268 of the cohort
+     * have no candidate link recorded at all, and 18 more are linked only to
+     * a party committee's page, which is not the campaign's own site.
+     *
+     * Most of what it found is a DONATE BAR, which is what the banner-shape
+     * refusal above exists to catch. That is the route working: it looked,
+     * it named what it found, and it refused it on a measurement.
+     */
+    path: "data/photos/door3-ballot-cohort-2026-08-28.json",
+    door: "door 3 — the portrait the campaign publishes of its own candidate, from its own site",
   },
 ];
 
@@ -168,6 +208,46 @@ export function stagedPortraits(): StagedPortrait[] {
           reason: row.decode
             ? `${row.decode.reason ?? "REFUSED"} — ${row.decode.detail ?? "no detail recorded"}`
             : "NOT DECODED — no decode record on the staged row, so nothing has confirmed these bytes are an image",
+          source: file.path,
+        });
+        continue;
+      }
+      /*
+       * **A BANNER IS A SHAPE, AND THE SHAPE IS MEASURABLE.** (2026-08-28.)
+       *
+       * The decode above proves the bytes are an image and at least 96px on
+       * an edge. It cannot tell a face from a donate bar, and the first door-3
+       * walk over the ballot cohort put three donate bars in the queue:
+       *
+       * ```
+       * ChipInToday-1074.png              1074 x 311   3.45 : 1
+       * a campaign hero on Squarespace    2400 x 1350  1.78 : 1
+       * a campaign hero on imgix          2048 x 1166  1.76 : 1
+       * ```
+       *
+       * Every genuine portrait this repository has staged is TALLER THAN WIDE
+       * — measured across all four staging artifacts on 2026-08-28, fourteen
+       * rows, aspect 0.67 to 1.00, not one above 1.0. A head-and-shoulders
+       * photograph is portrait-shaped or square; nothing else is one.
+       *
+       * The gate is 1.5 rather than 1.0 so a genuinely landscape headshot —
+       * they exist — still reaches the author, while a banner cannot. And it
+       * lives HERE, at the one door into the review that no staging artifact
+       * can bypass, for the same reason the decode does (RULING 103).
+       *
+       * It is still not a judgement about whether the face is the right one.
+       * Only the author decides that.
+       */
+      const w = row.decode.width ?? 0;
+      const h = row.decode.height ?? 0;
+      if (w > 0 && h > 0 && w / h > MAX_PORTRAIT_ASPECT) {
+        refusals.push({
+          name: row.subject,
+          url: row.portrait.src,
+          reason:
+            `BANNER SHAPE — ${w}x${h} is ${(w / h).toFixed(2)}:1, and a head-and-shoulders ` +
+            `portrait is not wider than ${MAX_PORTRAIT_ASPECT}:1. This is a measurement of the ` +
+            "image, not a judgement about the person in it.",
           source: file.path,
         });
         continue;

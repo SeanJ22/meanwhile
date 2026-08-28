@@ -35,7 +35,7 @@
  * the same reason a check that could not RUN is reported apart from one that
  * FAILED (RULING 24).
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { officialPhotoForPerson } from "../lib/photos/person.ts";
@@ -72,15 +72,71 @@ const cards = JSON.parse(
   readFileSync(join(ROOT, "data", "ballot", "candidate-cards-2026.json"), "utf8"),
 ) as { cards: Record<string, { photoUrl: string | null }> };
 
-for (const [key, card] of Object.entries(cards.cards)) {
-  const tail = key.split(":").pop() ?? "";
-  const name =
-    (key.includes("|") ? key.split("|").pop() : tail.split("-").reverse().join(" ")) ?? "";
-  const official = officialPhotoForPerson(name);
-  const url = official?.url ?? card.photoUrl;
-  if (!url) continue;
-  if (reviewFor(personKey(name), url).state !== "PENDING") continue;
-  pending.push({ index: pending.length + 1, name, url, where: "candidate card" });
+/**
+ * **THE QUEUE'S UNIVERSE IS THE BALLOT, NOT THE CARD FILE.** (2026-08-28.)
+ *
+ * This walked `candidate-cards-2026.json` and asked which of THOSE portraits
+ * were unapproved. Measured on `a44559e`, that queued **3 of the 7 portraits
+ * this repository already holds bytes for and has never had approved** — and
+ * the four it missed were missed for two separate reasons, both of them the
+ * same shape: the walk asked the wrong population, and then asked about it
+ * under the wrong name.
+ *
+ * 1. **A candidate with no CARD row was invisible.** Thomas H. Kean, Jr. and
+ *    Kevin Volk have no entry in the card file at all; their portraits come
+ *    from the officeholder manifest, resolved by name. Both files sat on disk,
+ *    downloaded, licensed, EXIF-stripped, rendering initials — and there was
+ *    no route by which either could be put in front of the author. Walking the
+ *    ballot instead makes the population the one the product actually renders.
+ *
+ * 2. **The name was reconstructed from the card KEY, and it is lossy.**
+ *    `...:sununu-john-e-` reverses to `" e john sununu"` and
+ *    `...:us-senate:booker` to `"booker"` — measured, the reconstruction
+ *    disagrees with the filed name for **132 of 377 candidacies**. Each
+ *    disagreement is a different `personKey`, so the review lookup asks about
+ *    somebody who does not exist and gets the default back.
+ *
+ * **The key this queues under is the key the RENDER PATH uses, deliberately.**
+ * `lib/ballot/candidate-cards.ts` gates rendering on
+ * `photoMayRender(personKey(nameFromCandidacyId(id)), url)`, and an approval
+ * recorded against any other spelling would be an approval the reader never
+ * sees. So the reconstruction is reproduced here rather than corrected here —
+ * correcting it is a change to what RENDERS and would orphan the decisions
+ * already recorded under the reconstructed keys. The DISPLAY name is the filed
+ * one, because the author is being asked whether a picture is that person.
+ */
+const nameFromCandidacyId = (id: string): string =>
+  (id.split(":").pop() ?? "").split("-").reverse().join(" ");
+
+const BALLOTS = readdirSync(join(ROOT, "data", "ballot")).filter(
+  (f) =>
+    f.endsWith(".json") &&
+    /^(nh|nj|az)-/.test(f) &&
+    !f.includes("analyses") &&
+    !f.includes("lineup"),
+);
+
+for (const file of BALLOTS) {
+  const parsed = JSON.parse(readFileSync(join(ROOT, "data", "ballot", file), "utf8")) as {
+    candidacies?: { id: string; contestId: string; givenName: string; familyName: string }[];
+  };
+  for (const candidacy of parsed.candidacies ?? []) {
+    const filedName = `${candidacy.givenName} ${candidacy.familyName}`.trim();
+    const cardById = cards.cards[candidacy.id];
+    // The two doors the render path has, and the name each one keys on.
+    const keyName = cardById ? nameFromCandidacyId(candidacy.id) : filedName;
+    const card = cardById ?? cards.cards[`${candidacy.contestId}|${filedName}`];
+    const url = officialPhotoForPerson(keyName)?.url ?? card?.photoUrl;
+    if (!url) continue;
+    if (pending.some((x) => x.url === url)) continue;
+    if (reviewFor(personKey(keyName), url).state !== "PENDING") continue;
+    pending.push({
+      index: pending.length + 1,
+      name: filedName,
+      url,
+      where: card ? "candidate card" : "officeholder portrait manifest",
+    });
+  }
 }
 
 /*

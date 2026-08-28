@@ -92,6 +92,129 @@ export interface PickedPortrait {
 }
 
 /**
+ * **PAGE FURNITURE THAT SAYS SO, AND THEREFORE MAY NOT BE A FACE.**
+ * (2026-08-28, the statewide-executive portrait walk.)
+ *
+ * The name match is the right rule and it has one hole, which was measured
+ * the first time this ran on a new cohort: **the Arizona Secretary of State's
+ * masthead is `fontes_banner01_small-white.png`, alt `Logo for Arizona
+ * Secretary of State`.** The surname is in the filename, the extension is
+ * `.png`, and the surname-plus-extension clause below is exactly what an
+ * office banner named after the officeholder satisfies. It queued a
+ * NAME-AND-OFFICE BANNER as a man's face — which is, verbatim, the third of
+ * the three false portraits RULING 55 was adopted over.
+ *
+ * So a candidate is refused when the page's OWN WORDS call it furniture. This
+ * is not a similarity judgement and not a heuristic about pixels: `logo`,
+ * `banner`, `seal`, `masthead`, `wordmark`, `letterhead` and `favicon` are
+ * what the publisher wrote in the alt text or the filename, and a publisher
+ * saying "logo" is the strongest evidence available that it is not a
+ * portrait.
+ *
+ * **It can only ever REMOVE a candidate, never add one.** The failure mode it
+ * introduces is losing a real portrait of someone whose filename happens to
+ * contain one of these words, and that costs initials — which this product
+ * treats as a success. The failure mode it removes is a graphic rendering as
+ * a named person's face.
+ */
+const FURNITURE =
+  /\b(logos?|banners?|seals?|mastheads?|wordmarks?|letterheads?|favicons?|placeholders?|icons?|slides?|sliders?|heros?|headers?|footers?|sprites?|backgrounds?)\b/;
+
+/**
+ * The words in a filename, with every separator a filename actually uses
+ * treated as a separator.
+ *
+ * `\b` is not enough and the first door-3 run proved it twice in one batch:
+ * **`AidenSwallow_LOGOS.ai.png`** and **`RebeccaBennett-Logo_white-1.webp`**
+ * both slipped the check, because `_` is a WORD character to a regex, so there
+ * is no word boundary between `Swallow` and `LOGOS` or between `Logo` and
+ * `white`. Two campaign logos were queued as two women's faces.
+ */
+function words(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]+/g, " ");
+}
+
+/** Does the page's own alt text or filename call this furniture? */
+export function looksLikeFurniture(img: PageImage): boolean {
+  let src = img.src;
+  try {
+    src = decodeURIComponent(img.src);
+  } catch {
+    /* A malformed escape is not a reason to skip the check — test the raw. */
+  }
+  // Only the FILE's own name, not the directory path: a portrait living under
+  // /sites/default/files/logos/ is still a portrait, and a site that files its
+  // people under a folder called `seal` would otherwise lose all of them.
+  const file = src.split(/[?#]/)[0].split("/").pop() ?? "";
+  return FURNITURE.test(words(img.alt)) || FURNITURE.test(words(file));
+}
+
+/**
+ * **THE NAME MUST BE ON THE IMAGE, NOT ON THE SITE.**
+ * (2026-08-28, the first door-3 run over the ballot cohort.)
+ *
+ * The haystack used to be the alt text plus the WHOLE URL. On a government
+ * page that is harmless — the site is a town, the file is a person. **On a
+ * campaign site it makes the rule vacuous**, because a campaign's domain is
+ * the candidate's name by construction:
+ *
+ * ```
+ * nortonforaz.com/...710724279_1016778710694891_....jpg     "matched on norton"
+ * weir4liberty/.../475458150_610758021665136_....jpg         "matched on weir"
+ * butierezforcongress.com/.../butierez-slide-1.png           "matched on butierez"
+ * ```
+ *
+ * Every image on those sites matched, because the HOST matched — so the first
+ * image in the document won, which on a campaign site is the hero banner. The
+ * check that exists to stop a banner shipping as a face was reading the
+ * banner's ADDRESS and finding the candidate's name in it.
+ *
+ * So the haystack is the alt text and the FILENAME. That is what "the image
+ * carries the person's own name" meant all along, and on a government roster
+ * page — `jen_rowland.jpg`, `thumb.Mabey 400.jpg`, an alt of `Kyle Russell` —
+ * it changes nothing.
+ */
+function imageHaystack(img: PageImage): string {
+  let src = img.src;
+  try {
+    src = decodeURIComponent(img.src);
+  } catch {
+    /* keep the raw */
+  }
+  const file = src.split(/[?#]/)[0].split("/").pop() ?? "";
+  return `${img.alt} ${file}`.toLowerCase();
+}
+
+/**
+ * EVERY name-matching image on the page, in page order.
+ *
+ * `pickPortrait` returns the first of these and that is the right default. This
+ * exists because a page routinely publishes SEVERAL renditions of the same
+ * person and the first one is not always usable: the Arizona Treasurer's page
+ * carries her official photo three times — at 85×120, at 326×468 and inside a
+ * wider composition — and `MIN_PORTRAIT_EDGE` is 96. A caller that decodes can
+ * walk this list until one clears the floor, which is a LADDER inside the door
+ * rather than a new door.
+ */
+export function pickPortraits(name: string, all: readonly PageImage[]): PickedPortrait[] {
+  const want = nameTokens(name);
+  const surname = want[want.length - 1];
+  const out: PickedPortrait[] = [];
+  const seen = new Set<string>();
+  for (const img of all) {
+    if (looksLikeFurniture(img)) continue;
+    const haystack = imageHaystack(img);
+    const hits = want.filter((t) => haystack.includes(t));
+    if (hits.length >= 2 || (surname && haystack.includes(surname) && /\.(jpe?g|png|webp)/i.test(img.src))) {
+      if (seen.has(img.src)) continue;
+      seen.add(img.src);
+      out.push({ src: img.src, alt: img.alt, why: `name matched on ${hits.join(", ") || surname}` });
+    }
+  }
+  return out;
+}
+
+/**
  * Pick the portrait. Name-matched, or nothing.
  *
  * Two tokens matched, or the surname matched on something that is plainly an
@@ -100,16 +223,7 @@ export interface PickedPortrait {
  * extension is what stops it matching a surname inside an unrelated URL path.
  */
 export function pickPortrait(name: string, all: readonly PageImage[]): PickedPortrait | null {
-  const want = nameTokens(name);
-  const surname = want[want.length - 1];
-  for (const img of all) {
-    const haystack = `${img.alt} ${decodeURIComponent(img.src)}`.toLowerCase();
-    const hits = want.filter((t) => haystack.includes(t));
-    if (hits.length >= 2 || (surname && haystack.includes(surname) && /\.(jpe?g|png|webp)/i.test(img.src))) {
-      return { src: img.src, alt: img.alt, why: `name matched on ${hits.join(", ") || surname}` };
-    }
-  }
-  return null;
+  return pickPortraits(name, all)[0] ?? null;
 }
 
 /**

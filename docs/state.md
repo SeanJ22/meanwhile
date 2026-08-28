@@ -21134,3 +21134,105 @@ measured rather than from the screenshots.
 
 Method version 40 → 45, 106 routes, `method:check` 0 issues. 7 of 7 local
 gates, 2,982 tests.
+
+---
+
+## 2026-08-28 — finish-aug28: the engineering-team law, and MTG-13 corrected
+
+**The session ran as nine workstreams, eight of them in parallel git worktrees
+with delegated engineers, and that is now project law rather than a preference.**
+
+**RULING 190** (meta-governance) makes safe parallel execution the DEFAULT when
+two or more authorized executable workstreams are materially independent, and
+makes serializing them a process defect that must name the dependency it was
+avoiding. **RULING 191** (shipping-ci) is where the work returns: one
+integration owner for the shared stores, a branch changes canonical INPUTS while
+the owner regenerates OUTPUT once, and branch-local green is never sufficient.
+Both carry `author_explicit` provenance from the session brief.
+
+The guard is `classifyOrchestration` / `pnpm orchestration:check` over
+`data/workstate/orchestration/`. **It measures the SEMANTIC, never a branch
+count** — a count rewards fragmentation, and three branches rewriting one module
+is worse than one branch. A dependency is PROVEN only by an owned-domain overlap
+or a produces/consumes handoff; an edge backed by prose alone is reported
+UNPROVEN rather than accepted or overruled. PR size, branch simplicity, conflict
+avoidance, convenience, unspecified caution, P0 and the absence of subagents are
+refused BY NAME. Wall-clock concurrency is not observable in this repository and
+the law says so rather than pretending otherwise.
+
+### MTG-13 — the conclusion was false, and the mechanism is proven
+
+PR #214 recorded that Pima publishes no individual September sittings and that
+the 9/8 and 9/22 meetings exist only as a recurrence rule. The measurement it
+rested on reproduces; the inference was wrong.
+
+**`webapi /events` returns only sittings whose InSite meeting-detail page is
+PUBLICLY VIEWABLE.** Not an agenda-status filter and not missing data: the
+unreturned event ids 404 on the item endpoint, the two routes use disjoint id
+spaces, and Mesa settles it — 15 grid rows, 12 flagged `meeting_NotViewable`,
+and the API returns exactly the other three. Phoenix: 8 of 8 missing. **This is
+a CLASS behaviour of Legistar**, and every wired tenant was silently losing its
+unpublished future meetings.
+
+`lib/sources/legistar-insite/` drives the Calendar.aspx postback the public UI
+itself uses. Identity is `(bodyId, localDate, localTime)`, never the vendor id,
+because the routes do not share one. Measured on the integrated head, the three
+sittings reach the reader API: `legistar-insite:pima:1381575` 09-08 13:00 Study
+Session, `:1381576` 09-08 17:00, `:1381577` 09-22 17:00 — with no duplicate
+against the August `/events` rows.
+
+Three corrections to the plan came from live measurement: the range control is a
+Telerik combo whose `_ClientState` must also carry the selection or the postback
+is a silent 200 no-op; the `Feed.ashx` ID/GUID pair is minted per tenant AND per
+range; and the grid pages at 100 while publishing its true total, so a row count
+would have reported 100 and a clean 200.
+
+**The false method is superseded, not edited.** A dated sub-branch withdraws one
+word from the old conclusion: the seven events confirmed the snapshot
+UNTRUNCATED, never "complete for the window". Reconciling proves nothing was
+DROPPED; it never proves enough was ASKED FOR.
+
+`pima.granicus.com` is `Disallow: /` and was not fetched. It is recorded as a
+permission wall with `claimAboutContent: null`, and a test asserts that null.
+
+### What else the session found by looking
+
+**DATA-4 was ten times its diagnosis.** Not five Pima bodies but 248 attached
+rather than derived, 100 of them LIVE and reader-reachable — the four Pima
+districts, 28 City of Tucson boards and commissions, four New England town
+boards — every one rendering its parent government's powers as its own, cited to
+a statute that does not govern it, with `unreadNote` null so nothing hedged it.
+The form layer was doing it too: 860 to 631.
+
+**A neutrality defect, found in passing and fixed.** The State Mine Inspector
+contest rendered one candidate while claiming, in its own scope note, to list
+everyone who filed. The Secretary of State's certified 2026 Pima primary canvass
+carries the Republican nominee and the March 30 filing PDF does not.
+
+**A shipping accessibility failure the audit had never measured.** The meeting
+status tokens were in none of the contrast audit's sets; adding them found
+`--concluded` at 3.81:1 against the AA bar. Fixed rather than exempted.
+
+**No veto was inferred.** 264 Arizona session-law chapters indexed with zero
+missing, 29 read with real approval dates. The 151 governor's letters are
+mixed-raster scans and `tesseract` needs an elevation this session could not
+give itself, so they carry `BILL_LETTER_UNREAD`. Letter-minus-chapter is exactly
+the inference the constitution forbids, and the zero intersection does not
+license it. Two prior claims were also corrected: the chapter PDFs DO publish a
+signing date (the grep that found none ran over compressed PDF bytes), and a
+chapter proves ENACTMENT rather than signature, so the stamp wording is parsed.
+
+**The scheduled refresh was misread on all three counts.** The 637-minute case
+was GitHub dispatch delay, not queueing — `startedAt == createdAt` on all 22
+scheduled runs, and `QUEUED` has zero occurrences in the whole history. The
+"absent" 2026-08-28 slot fired DURING this session, 698 minutes late, and landed
+data — which is why the detector may never claim a cron did not fire, and why
+its envelope is a floor that grows. The two failures were different things
+wearing one `Commit` label, and separating them found a second, previously
+undiagnosed push rejection. The repair is `catchUpSlots`: one missed Monday no
+longer costs `fec` and `legiscan` a fortnight.
+
+### Numbers
+
+Method version 45 to 55, 116 routes, `method:check` 0 issues. 7 of 7 local
+gates. 3,239 tests, 0 failures, 0 skipped.

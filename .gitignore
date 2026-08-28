@@ -88,6 +88,9 @@ next-env.d.ts
 # captures are evidence a session READ, and the reading is what the report
 # carries — the pixels are not the repo's to keep.
 /.prompte/
+/* ASK04 (2026-08-27): the ballot Ask reader-output captures. Same reason as
+   the directories above — the reading is what the report carries. */
+/.askshots/
 /.f22tmp/
 /.nh3tmp/
 /.nh5tmp/

@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import test from "node:test";
 
 import type { EvidencePack } from "../lib/ask/evidence.ts";
@@ -9,6 +11,7 @@ import { resolveInterpretation } from "../lib/ask/resolve.ts";
 import { emptySelectionState, selectSitting } from "../lib/ask/select.ts";
 import { synthesizeAnswer, synthesisPrompt } from "../lib/ask/synthesize.ts";
 import { validateAnswer } from "../lib/ask/validate.ts";
+import { statewideExecutivesFor } from "../lib/officials/statewide-executives.ts";
 import type { BindableEntity } from "../lib/routing/named-entity.ts";
 
 /**
@@ -400,4 +403,109 @@ test("ASK01: a named gap always says WHOSE gap it is", () => {
     assert.ok(gap.whose === "OURS" || gap.whose === "THEIRS");
     assert.ok(gap.statement.length > 0);
   }
+});
+
+// ── The ballot surface renders something true in every branch ───────────
+
+test("ASK04: no reply mode may render silence on the ballot", () => {
+  /*
+   * **A REAL DEFECT, FOUND BY READING THE READER OUTPUT.** (2026-08-27.)
+   *
+   * The first version of `components/ask/ballot-ask.tsx` had no branch for a
+   * reply carrying no answer, no records and no gaps. A reader asked "What
+   * does this office control?", the server correctly answered NO_EVIDENCE, and
+   * the panel rendered NOTHING — the empty form, back at them.
+   *
+   * Every check in place at the time passed. The panel was present, the mode
+   * attribute was right, the request and reply were both fine. Only the
+   * SENTENCE was missing, and only reading it found that.
+   *
+   * This guard is a source sweep rather than a render test because the
+   * component needs a browser and this suite has none. It asserts the branch
+   * EXISTS and is reachable for the mode that produced the defect.
+   */
+  const source = readFileSync(
+    join(process.cwd(), "components/ask/ballot-ask.tsx"),
+    "utf8",
+  );
+  assert.match(source, /data-ask-state="NOTHING_HELD"/, "the empty branch is gone");
+  /* And it must be guarded on all three emptinesses, or it would swallow a
+     reply that DID have records. */
+  for (const guard of [
+    "!reply.answer",
+    "records.length === 0",
+    "gaps.length === 0",
+  ]) {
+    assert.ok(source.includes(guard), `the empty branch lost its ${guard} guard`);
+  }
+  /* CLARIFY and UNRESOLVED have their own sentences and must not be
+     overwritten by the generic one. */
+  assert.match(source, /reply\.mode !== "CLARIFY"/);
+  assert.match(source, /reply\.mode !== "UNRESOLVED"/);
+});
+
+test("ASK04: the ballot surface renders records even when synthesis produced none", () => {
+  /*
+   * The degradation ladder, as a property of the CLIENT: grounded → structured
+   * → honest gap. PR #211 found the opposite repeatedly — a client discarding a
+   * useful server reply because one optional field was null.
+   */
+  const source = readFileSync(
+    join(process.cwd(), "components/ask/ballot-ask.tsx"),
+    "utf8",
+  );
+  assert.match(
+    source,
+    /\{!reply\.answer && records\.length > 0 && \(/,
+    "records must render when prose did not",
+  );
+});
+
+test("ASK04: the ballot surface posts to the ONE engine, with its own surface", () => {
+  const source = readFileSync(
+    join(process.cwd(), "components/ask/ballot-ask.tsx"),
+    "utf8",
+  );
+  assert.match(source, /"\/api\/ask\/grounded"/, "the ballot must not fork a second engine");
+  assert.match(source, /surface: "BALLOT"/);
+  assert.match(source, /activeSubjects/, "the ballot's own context must travel");
+});
+
+test("ASK04: a COUNTY division alone must resolve the state's governor", () => {
+  /*
+   * **THE INVARIANT I BROKE.** (2026-08-27.)
+   *
+   * `personEntities` in the grounded route first filtered the reader's
+   * divisions to those matching the BARE state id, then called
+   * `statewideExecutivesFor` with what survived. On the map that was invisible,
+   * because a map reader's division list happens to include the bare state. On
+   * the ballot it emptied the person inventory completely — the ballot's
+   * divisions are counties, places and districts — so "What has Katie Hobbs
+   * done as governor?" came back UNRESOLVED on the surface most likely to ask
+   * it, and told the reader we hold no such thing while we did.
+   *
+   * The contract was already right and already used this way by `senatorsFor`
+   * and the who-governs card: the state is derived by PREFIX. This pins it, so
+   * a future caller re-deriving it more strictly fails here instead of in
+   * production.
+   */
+  const fromCounty = statewideExecutivesFor([
+    "ocd-division/country:us/state:az/county:pima",
+  ]);
+  assert.ok(
+    fromCounty.some((s) => s.name === "Katie Hobbs"),
+    "a county id alone must reach the governor — the state is a PREFIX, not an exact match",
+  );
+
+  const fromDistrict = statewideExecutivesFor([
+    "ocd-division/country:us/state:az/school_district:vail_unified_district",
+  ]);
+  assert.ok(fromDistrict.some((s) => s.name === "Katie Hobbs"));
+
+  /* FALSE-FIRST: the filter that shipped, asserted to produce nothing. */
+  const brokenFilter = ["ocd-division/country:us/state:az/county:pima"].filter((id) =>
+    /^ocd-division\/country:us\/state:[a-z]{2}$/.test(id),
+  );
+  assert.deepEqual(brokenFilter, [], "the old filter kept nothing, which is why it emptied");
+  assert.equal(statewideExecutivesFor(brokenFilter).length, 0);
 });

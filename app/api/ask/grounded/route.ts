@@ -104,12 +104,23 @@ interface MeetingLike {
 /** Officeholders the reader can name — statewide executives, today. */
 function personEntities(ocdIds: readonly string[]): BindableEntity[] {
   const out: BindableEntity[] = [];
-  const states = new Set<string>();
-  for (const id of ocdIds) {
-    const m = id.match(/^ocd-division\/country:us\/state:[a-z]{2}$/);
-    if (m) states.add(id);
-  }
-  for (const seat of statewideExecutivesFor([...states])) {
+  /*
+   * **PASS THE DIVISIONS STRAIGHT THROUGH.** (Corrected 2026-08-27, found by
+   * asking the ballot about Katie Hobbs and being told we hold no such thing.)
+   *
+   * The first version filtered to divisions matching the BARE state id before
+   * calling this, which threw away every county, place and district id. On the
+   * map that was invisible — the reader's division list happens to include the
+   * bare state — and on the ballot it emptied the person inventory completely,
+   * so a sitting governor came back UNRESOLVED on the one surface most likely
+   * to be asked about her.
+   *
+   * `statewideExecutivesFor` already derives the state itself, by PREFIX, via
+   * `stateOcdIdFrom` — which is exactly how `senatorsFor` and the who-governs
+   * card do it. Re-deriving it here, differently and more strictly, was a
+   * second answer to a question that already had one.
+   */
+  for (const seat of statewideExecutivesFor([...new Set(ocdIds)])) {
     if (!seat.name) continue;
     out.push({
       id: `person:${seat.name.toLowerCase().replace(/\s+/g, "_")}`,

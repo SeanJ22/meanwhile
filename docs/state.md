@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-27 — **Claude was in this product, and it was picking one label out of sixteen.** The grounded-Ask session; its record is the LAST section of this file.
+Last updated: 2026-08-28 — **The engine existed and the product did not use it.** The grounded-Ask INTEGRATION session; its record is the LAST section of this file.
+
+Previous: 2026-08-27 — **Claude was in this product, and it was picking one label out of sixteen.** The grounded-Ask session.
 
 Previous: 2026-08-27 — **The word the reader typed to say WHICH government they meant was inert, and the ZIP decided.** The ask-entity session.
 
@@ -20753,3 +20755,172 @@ well it is EVIDENCED. `zipCohortOnly()` is the mechanical gate between
 "readers who identified 85641 as their home ZIP" and "address-validated
 residents of Vail Unified District". 85641 crosses school, fire and legislative
 lines, so the second needs evidence the first is not.
+
+---
+
+# The grounded-Ask INTEGRATION session (2026-08-28)
+
+**The engine existed and the product did not use it.**
+
+PR #212 built a grounded Ask pipeline — interpret, canonical resolve, retrieve,
+evidence pack, synthesise, validate — and shipped it beside a map Ask box that
+went on calling `/api/ask/classify` and `/api/ask/agenda`. The new engine was
+tested, answered the Vail question correctly through a harness, and the
+product's primary Ask surface routed around it. The repository held **two
+definitions of what an Ask answer is**, and which one a reader met depended on
+which page they were standing on: the ballot got the grounded pipeline, the map
+got the classifier. A defect fixed in one was not fixed for the reader.
+
+That is worse than not building it, and it is the shape this session was for.
+
+## The four blockers, and what each one actually was
+
+**1 — The map Ask box now posts to `/api/ask/grounded`,** awaited on every
+submission that is not an exact-name navigation. The search half of the unified
+input is untouched: an exact name still navigates, still lands in the search log
+and still writes no question row. The topic-agenda sweep is retained, because
+*"is there a data centre coming?"* is a different question with a different
+denominator — and it is called with `scope: "TOPIC_ONLY"`, under which the route
+**refuses** to answer a named body's docket. The ownership boundary is enforced
+in the server rather than promised in a component.
+
+**2 — Identity precedence was inverted, and no binder correctness could fix
+it.** `resolveInterpretation` tried `MODEL_EXPANSION` first and returned the
+first `BOUND`. If a reader names Katie Hobbs and the model normalises it to
+Adrian Fontes, **both bind** — the binder is not wrong about either, and the
+ORDER decided it. It is now explicit reader wording, then model normalisation,
+then soft page context. An expansion may NARROW an ambiguity only from inside
+the set the reader's own words fit; an explicit `UNRESOLVED` stands rather than
+being repaired into a different government.
+
+**3 — `referent` was generated and read by nobody.** `interpretQuestion` had
+returned it since the pipeline shipped, a comment claimed *"what has she done?"*
+resolved through page context, and a repository search found the word only in
+the intent layer. A comment stronger than its code reads as covered and is not.
+It is consumed now, canonical-bound, refused when uncorroborated by what the
+surface said is on screen, and it CLARIFIES where two people fit.
+
+**4 — The ballot's own records were not entities.** The canonical inventory was
+meeting bodies plus statewide executives. Katie Hobbs answered on the ballot by
+coincidence — she is a sitting executive — and **Andy Biggs, on the same
+governor line, did not exist to this product at all**, nor did any contest or
+any of the fifteen propositions the same page renders. `lib/ask/ballot-inventory.ts`
+builds them from the committed ballot set the page itself renders from, keyed
+exactly as the page keys them.
+
+## What proving the above found
+
+- **Every Vail sitting printed its UTC date, one day after the meeting.** The
+  corpus stores 02:00Z; Arizona is UTC-7, so that is 7:00 p.m. the previous
+  evening — which is when Vail's board actually sits, on the second and fourth
+  Tuesday. The record read `starting 2026-09-09T02:00:00.000Z`, an identifier on <!-- expected-future: 2026-09-09 is the UTC INSTANT the corpus stores for a meeting held on the 8th in Arizona, quoted here as the defect itself -->
+  a reader surface printing a Wednesday for a Tuesday meeting.
+- **The deterministic tense fallback returned `NONE` for "what's on the
+  agenda"**, so the degraded path still ran `upcoming[0] ?? past[0]` — the ASK02
+  defect, alive on the branch that runs whenever a model is unreachable.
+- **One human arrived as two entities, twice.** A sitting officeholder who is
+  also a candidate; a filing row and a general-lineup row for the same person.
+  Both produced a FALSE `CLARIFY` on the product's flagship question — the
+  product telling a reader their question was unclear over a distinction that
+  exists only in our storage.
+- **Reading the panel found two dilution defects no API assertion could.** Every
+  answer carried the reader's state senator whatever was asked, including one
+  about a Vail budget override whose decision-makers are Vail's own board; and
+  the school-board cancellation absence was cited under a question about the
+  Governor. A contact with no relationship to the subject dilutes the ones that
+  have one.
+
+## The Vail red control, through the reader's own input
+
+Local production build, the real map Ask box, desktop and phone:
+
+> **Vail Unified District** — The next Vail Unified District Governing Board
+> meeting we have on record is Tuesday, September 8, 2026 at 7:00 PM. We can't
+> tell you the items on it: the link we hold for that meeting is the district's
+> agenda portal rather than the agenda itself…
+
+with Allison Pratt (president), Callie Tippett (clerk), Jen Anderson, Ed Buster,
+Chris King and Superintendent John Carruth, each read off a sourced roster row.
+The same question in the past tense selects **Tuesday, August 25, 2026** — a
+different, correct sitting.
+
+## 85641 — the Novus branch is walked, and the portal is understood
+
+The date text boxes on `MeetingsResponsive.aspx` carry `disabled`, and
+`hfFromDate`/`hfToDate` are OUTPUTS of a `ddlDateRange` select rather than
+inputs to the search. That is why last session's hand-built POST always got the
+server's default window back: it set a value the server recomputes. A browser
+finds it in one step because it refuses to click a disabled element and says so.
+
+Driven through the real control, all eight preset windows echoed their dates
+exactly, and **Custom Date Range** over 2010–2027 returns **30 meetings and 30
+agenda items, newest 2017-02-28**. The 2024–2026 window returns *"No records to
+display"* — a MEASURED zero, echoed window, minutes after the same selectors
+read thirty rows.
+
+So `vailschools.novusagenda.com` is a **historical archive with a measured
+boundary**. NH229's pre-2017 claim moves from UNVERIFIED to VERIFIED. It does
+not hold the current agenda, which stays walled behind Highbond's published
+disallow — unchanged, and not circumvented. Five candidate control tenants
+proved NOTHING and are recorded as proving nothing.
+
+## CAWCD — the inference is struck
+
+NH244 read *"terms expiring 12-31-2026, so they are on the 2026 general
+ballot"*. A term ending is a fact about a seat; a ballot is a fact about a
+filing. Pima County's November general still publishes two documents and no
+candidate list. The July primary's four published lists were parsed and contain
+zero water-conservation matches — which is **not evidence either way**, because
+that list is the partisan primary and CAWCD is nonpartisan, the same shape the
+school-board races have. `RECHECK_DUE`.
+
+## The signal taxonomy, written down
+
+`lib/signal/taxonomy.ts` classifies every live collection point across all four
+stores by what the reader's ACT means, with
+
+```
+ATTENTION  !=  SENTIMENT
+```
+
+as a function rather than a convention. Opening a person's card and reacting to
+them can never be counted in one number. What the product does **not** collect —
+contact clicks, source opens, meeting joins — is named, because an omission
+reads as coverage.
+
+## Two more guards that were green because they never looked
+
+`outcome.outcome` had the identical hole `effort` was repaired for: three routes
+carrying `WORKED` landed in the canonical method store while `method:check`
+reported PASSED. Both closed sets are validated now and both have a planted
+test — and the `effort` one was proved live by disabling the validator and
+watching the test fail.
+
+The handoff's mirror guard scanned the last sixty revisions **of main**. A
+session writes the mirror on its BRANCH and the branch is squash-merged, so the
+version the mirror holds is committed on a ref that is not an ancestor of main
+and `git rev-list HEAD` cannot see it. It asked a question whose answer is
+always no. `--all`, no cap, and a refusal that NAMES the divergent lines.
+
+## What is NOT running
+
+`ripcord.askSignalCapture` **ships PULLED**, and it now gates something real:
+`captureAskInteraction` had **no production caller** until this session, so
+raising the flag would have changed nothing. `app/api/ask/grounded/route.ts`
+calls it after the delivered answer is known, on every outcome including
+CLARIFY and UNRESOLVED.
+
+**The gating basis is corrected.** The previous text cited the data-privacy
+policy as requiring it, quoting *"honest disclosure at the box"*. That clause is
+RULING 141's and RULING 141 governs the Speak Your Mind store. The real basis is
+an **operator decision** — the author has instructed that new Ask/privacy copy
+does not ship and that NH246 stays P2 / NEEDS SEAN — which is precedence 1 and
+needs no invented law.
+
+**Activation is three things, not one:** the disclosure copy, the flag, and
+minting the Ask continuity key. The surfaces deliberately READ that key and
+never mint one while capture is off, so no identifier is placed on a device for
+a switched-off capability; and `captureAskInteraction` REFUSES a row with no
+continuity key rather than digesting the empty string, which would give every
+reader the same hash and report one distinct reader forever. Doing two of the
+three writes nothing.

@@ -358,6 +358,7 @@ test("RECORDS: no ISO date reaches a reader, because these render verbatim", asy
     );
   }
   const contest = body.records?.find((r) => r.kind === "CONTEST");
+  assert.ok(contest, "a contest question retrieves the contest");
   assert.match(contest.text, /November 3rd, 2026/, "spelled out, the way every other date is");
 });
 

@@ -82,6 +82,64 @@ export interface MethodRoute {
   /** A route is never removed. One that stops working carries a dated note. */
   retiredOn?: string;
   retiredReason?: string;
+  /**
+   * **WHAT THIS ROUTE COST, IN KINDS RATHER THAN IN MINUTES** (2026-08-27).
+   *
+   * A scale forecast — what does the next thousand ZIPs take? — needs to know
+   * which work is paid for ONCE and which is paid for per state, per county,
+   * per vendor or per ZIP. The previous session could not produce that forecast
+   * because the inputs were never captured, and the wrong repair would be to
+   * reconstruct them afterwards from commit timestamps: a commit time measures
+   * when someone typed, not what the work was, and a plausible number here
+   * would be a fabrication with a decimal point on it.
+   *
+   * So nothing is estimated retrospectively. This is CAPTURED AT THE MOMENT A
+   * ROUTE IS LEARNED, it is optional, and an absent `effort` means exactly what
+   * it says: nobody recorded it, which is different from zero.
+   *
+   * `applicability.portability` already answers "would this route work
+   * elsewhere". This answers the question portability cannot: **what did
+   * getting it cost, and can a machine do it again without a person.**
+   */
+  effort?: RouteEffort;
+}
+
+/**
+ * The cost dimensions a scale forecast actually needs, each a CLASS rather than
+ * a duration, because a class can be recorded truthfully from memory and a
+ * duration cannot.
+ */
+export interface RouteEffort {
+  /**
+   * What has to be redone, and how often, for the next jurisdiction.
+   *
+   * - `ONCE` — generic work, reused everywhere. An adapter, a parser, a rule.
+   * - `PER_STATE` — a state's own law, portal or vocabulary.
+   * - `PER_COUNTY` — a county's own systems.
+   * - `PER_VENDOR` — a platform (Legistar, CivicClerk, Apptegy, Granicus).
+   * - `PER_ZIP` — genuinely unique to one place. The expensive class, and the
+   *   one a forecast most needs an honest count of.
+   */
+  repeats: "ONCE" | "PER_STATE" | "PER_COUNTY" | "PER_VENDOR" | "PER_ZIP";
+  /**
+   * Can a machine walk this unattended from here?
+   *
+   * `HUMAN_ONLY` is the one that does not scale and must not be hidden inside
+   * an average — a records request, a phone call, a CAPTCHA, a page that only
+   * renders to a person. A route can be `MACHINE` now and have been
+   * `HUMAN_ONLY` to discover, which is what `discovery` records separately.
+   */
+  execution: "MACHINE" | "HUMAN_ONLY" | "MACHINE_AFTER_HUMAN_SETUP";
+  /** Whether finding this route was new invention or reuse of a known shape. */
+  discovery: "NEW_METHOD" | "REAPPLIED_KNOWN_METHOD";
+  /**
+   * True when this route exists because a reader was being told something
+   * false, rather than because a fact was missing. Integrity repair is not
+   * collection work and averaging the two together describes neither.
+   */
+  readerIntegrityRepair?: boolean;
+  /** What was actually observed, in the recorder's own words. Never a guess. */
+  note?: string;
 }
 
 export interface MethodKnowledge {

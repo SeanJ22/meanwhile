@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 02:51:40 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-27 -->
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 02:59:12 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-27 -->
 Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1002,10 +1002,10 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-28 02:51:40 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-27 -->
+generated: 2026-08-28 02:59:12 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-27 -->
 branch: claude/ask-grounded-0827
-head sha: e8403d8960e4007680c787462476d0e5efcbff11
-head subject: CAWCD: the deciding document does not exist yet, and Pima County says so on its own page
+head sha: 28cd91a06e6a47bf2ffada73fd67561652ab9a93
+head subject: Close-out: the generated files handoff wrote on its way here (context.md)
 origin/main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85
 origin/main subject: Session handoff: 12 commit(s) from claude/coverage-truth-0827 (#211)
 local main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85

@@ -234,6 +234,9 @@ test("A-001 · run_id is the one handle shared across reader stores, and it name
   assert.deepEqual(
     runIds.sort(),
     [
+      // ASK03 (2026-08-27): the Ask interaction store. Same rule, same reason -
+      // it names a synthetic WALK and is null on every organic row.
+      "ask_interactions.run_id",
       "feedback.run_id",
       "reactions.run_id",
       "search_log.run_id",
@@ -300,6 +303,9 @@ test("A-001 · every digest column is in a different digest space from every oth
   assert.deepEqual(
     digests,
     [
+      // ASK03 (2026-08-27): its own prefix, "ask-interaction:", so a browser that
+      // reacts AND asks produces two digests that cannot be equality-joined.
+      "ask_interactions.ask_key_hash",
       "intake_limiter.digest",
       "questionnaire_tokens.token_digest",
       "reactions.reaction_key_hash",

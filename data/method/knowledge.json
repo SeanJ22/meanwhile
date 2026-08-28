@@ -2415,9 +2415,9 @@
       "origin": "conceived 2026-08-27 by the grounded Ask pipeline answering 'What's on the Vail school district agenda?' against the real corpus. All 9 of Vail Unified's agenda documents in the meetings snapshot are the SAME 1,652-character Highbond portal landing page, shared across 9 sittings — which is what made the question answerable only as a named gap. NH229 proposed adapters for Highbond and NovusAGENDA on the reasoning that 'Highbond is Diligent, and lib/sources/diligent already exists'. That reasoning is about REACHABILITY and the blocker turns out to be PERMISSION, which is why the permission document is read before an adapter is designed and not after.",
       "learnedOn": "2026-08-27",
       "effort": {
-        "repeats": "PER_SOURCE",
-        "execution": "AUTOMATED",
-        "discovery": "KNOWN_METHOD",
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "Cheap to establish and cheap to re-check: one robots.txt fetch per vendor host. The expensive mistake is skipping it and building an adapter first."
       },
       "learnedAtVersion": 31
@@ -2451,9 +2451,9 @@
       "origin": "conceived 2026-08-27 while looking for a permitted alternative to the disallowed Highbond portal. The meetings already in the corpus carry ids of the form apptegy:vail:60703698, so the district's own Apptegy site was already the source of the MEETINGS; the open question was whether it was also a source of AGENDAS. It is not.",
       "learnedOn": "2026-08-27",
       "effort": {
-        "repeats": "PER_SOURCE",
-        "execution": "AUTOMATED",
-        "discovery": "KNOWN_METHOD",
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "robots.txt, then sitemap.xml, then the board page's own embedded state. Three fetches."
       },
       "learnedAtVersion": 32
@@ -2488,8 +2488,8 @@
       "origin": "conceived 2026-08-27 while reading the raw embedded state of the Vail board documents page looking for a hosted agenda file. The mismatch was visible only because the whole anchor was read rather than a href regex being run over the page.",
       "learnedOn": "2026-08-27",
       "effort": {
-        "repeats": "PER_SOURCE",
-        "execution": "AUTOMATED",
+        "repeats": "ONCE",
+        "execution": "MACHINE",
         "discovery": "NEW_METHOD",
         "note": "Free once known — it is a change to what the extractor keeps, not an extra fetch. Expensive to discover, because it is invisible to href-harvesting."
       },
@@ -2524,8 +2524,8 @@
       "origin": "conceived 2026-08-27 as the one remaining machine route after both vendor portals named by the district turned out to be robots-disallowed. It is the only Vail agenda source known to this project that publishes no restriction against reading it.",
       "learnedOn": "2026-08-27",
       "effort": {
-        "repeats": "PER_SOURCE",
-        "execution": "AUTOMATED",
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
         "discovery": "NEW_METHOD",
         "note": "Four fetches to establish permission and shape. The adapter itself is unbuilt and is the open work: an ASP.NET postback grid needs either the vendor's own callback protocol or a browser at rung 6."
       },

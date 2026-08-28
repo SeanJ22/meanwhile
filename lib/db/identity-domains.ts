@@ -439,6 +439,101 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
       },
     },
   },
+  /**
+   * **ASK03 (2026-08-27) — classified the day the table is DECLARED, not the
+   * day it is switched on.**
+   *
+   * `ripcord.askSignalCapture` ships PULLED, so no row exists yet. Classifying
+   * it now is the whole difference between a store born under this boundary
+   * and one retrofitted to it — which is how A-001 happened in the first place.
+   */
+  ask_interactions: {
+    storeClass: "READER_COLLECTION",
+    columns: {
+      ...nonIdentifying(
+        "id",
+        "occurred_at",
+        "division_vintage",
+        "run_class",
+        "coverage_tier",
+        "coverage_tier_distribution",
+        // WHAT THE PIPELINE UNDERSTOOD, not who asked: a closed enum of
+        // question kinds and one of four tenses.
+        "intent",
+        "temporal_kind",
+        "resolution_state",
+        "answer_mode",
+        "validation_passed",
+        // Denominators. Small integers about how much evidence stood behind an
+        // answer — a property of our corpus, never of a reader.
+        "evidence_record_count",
+        "evidence_source_count",
+        "named_gap_count",
+        // WHICH PAGE asked. Three values, shared by every reader on that page.
+        "surface",
+        // The two location AXES. Neither is a location: they say what kind of
+        // claim the location is and how well it is evidenced. See
+        // lib/ask/residency.ts for why one enum could not carry both.
+        "residency_relation",
+        "location_confidence",
+        // Which model wrote the answer, for audit. A fact about us.
+        "answer_model",
+        // An enum list of WHICH KINDS of self-identifying content were found
+        // and removed — never the content, for the same reason as Speak Your
+        // Mind: storing what was redacted beside the redaction defeats it.
+        "self_disclosure",
+      ),
+      approximate_location: {
+        space: "NON_IDENTIFYING",
+        why:
+          "A zip the reader typed, stored as orientation exactly as the search log's is. The " +
+          "author's rule of 2026-08-27 reads it as a SELF-DECLARED HOME zip, which is real " +
+          "signal and is not an address: 85641 crosses school, legislative, fire and special-" +
+          "district lines, so it establishes a zip COHORT and frequently not an exact " +
+          "governing unit. `zipCohortOnly` is the mechanical gate between those two sentences.",
+      },
+      ocd_ids: {
+        space: "CIVIC_IDENTIFIER",
+        why: "The reader's zip-resolved divisions. Districts, not a person and not an address.",
+      },
+      subject_ids: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "The PUBLIC governments, officeholders or measures the question resolved to — a " +
+          "school district, a governor. Facts about a government, never about the reader.",
+      },
+      question_scrubbed: {
+        space: "PROSE",
+        why:
+          "The reader's own words, passed through the BC-11 self-disclosure redaction FIRST " +
+          "(which strips self-naming and FLAGS what it found) and then the T09 scrub. The " +
+          "order is load-bearing: the scrub replaces the very tokens detection needs, so " +
+          "detecting afterwards reports nothing on every row. One write path, no second door.",
+      },
+      answer_text: {
+        space: "PROSE",
+        why:
+          "The answer the reader actually received, so an aggregate can say what was " +
+          "communicated rather than only what was asked. Generated from an evidence pack of " +
+          "records we hold, so it contains no reader-supplied text at all.",
+      },
+      ask_key_hash: {
+        space: "DIGEST",
+        digestSpace: "ask-interaction:",
+        why:
+          "sha256('ask-interaction:' + a RANDOM browser-minted key). It counts DISTINCT " +
+          "READERS for an aggregate and is never exported as a buyer-visible identifier. The " +
+          "prefix is the boundary: reactions hash the same kind of key as sha256(key), speak " +
+          "as sha256('speak-your-mind:' + key) and the limiter as sha256('intake-limiter:' + " +
+          "key), so without a fourth distinct prefix these stores would be equality-joinable " +
+          "on a value nobody would have to look up.",
+      },
+      run_id: {
+        space: "OPAQUE_HANDLE",
+        why: "Names a synthetic RUN, hashed in its own space. Null on every organic row.",
+      },
+    },
+  },
 };
 
 /**

@@ -45,7 +45,9 @@ const ROUTES: LearnedRoute[] = [
       "conceived 2026-08-27 for NH244. The Central Arizona Water Conservation District's four Pima seats carry terms expiring 2026-12-31, read off the district's own member pages, and the ballot corpus holds no CAWCD contest. Two documents were read in full and neither settles whether the contest is on the November 3 2026 general ballot — the Secretary of State's 2026 partisan filing (no CAWCD contest, which is expected for a nonpartisan office and proves nothing) and Pima County's Official Candidate List for the July 21 primary (no CAWCD contest either, though it does carry nonpartisan municipal offices). Neither a contest nor an absence may be written into the ballot corpus until a deciding document is read.",
     outcome: {
       jurisdiction: "az",
-      walkedOn: "2026-08-27",
+      /* `walkedOn` is stamped by `runLearnBatch` from `today()` — it is not a
+       * field of the offered route, and passing one is a type error the
+       * Netlify build catches even though it type-checks clean elsewhere. */
       rows: 0,
       outcome: "BLOCKED",
       note:

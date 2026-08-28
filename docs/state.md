@@ -20526,3 +20526,51 @@ a fact about the world, after the Newbury coverage false positive and the doctor
 PATH report. The pattern is worth naming: **the false-positive direction of a
 guard is the one nobody measures**, and a guard that cries wolf gets tolerated,
 worked around, and eventually switched off.
+
+### Nine defects, and not one was visible to a passing test
+
+The last thread of this session was an audit of the copy the session itself had
+written, and it found three sentences that were not true. Recorded together
+because the pattern is the finding.
+
+**"We don't have a government recorded under 'vail'."** Written this morning as
+part of the entity-binding repair, rendered at a Tucson zip, and false: the
+product holds Vail Unified District with eleven meetings and nine documents.
+What the binder actually did was search the reader's OWN AREA — the search index
+for what is in view, plus their covered bodies — and it never looks further,
+because from the client it cannot. A local lookup had produced a statement about
+the whole corpus. The sentence is now scoped to what was searched: *"We haven't
+matched 'vail' to a government near you."* The server had resolved Vail three
+lines before returning `{topic: null}` and discarding the verdict; it now travels
+on the reply the route was already making.
+
+**"Choose one and we'll answer for it."** The ambiguous verdict listed the
+candidate governments and told the reader to choose. They render as prose — no
+buttons, no links, nothing clickable. A reader following that instruction finds
+nothing to follow. That is a claim about the PRODUCT rather than about a
+government, and false the same way. It now asks for what the binder actually
+does — the class of government, read out of the reader's own words — and the
+test ties the instruction to the behaviour, so copy and binder cannot drift into
+promising different things.
+
+**And the check written for exactly this passed while the defect was on screen.**
+`verify:ask-entity` asserted the DOM attribute and reported 5 of 5 green. The
+attribute was RIGHT: it reports the client's binding, and `UNRESOLVED` was the
+correct value for a client that only searches the reader's area. The prose beside
+it was wrong. Asserting on the attribute alone could never have caught it, and
+the rendered TEXT is asserted now — at the routing layer too, because the browser
+check needs a production build and nobody walks it on every change.
+
+**The tally, because it is the point.** Across this session: three instruments
+fired wrongly — the Newbury coverage false positive, the doctor PATH report, and
+the g8 source-id guard that had been red on `main` since PR #210 while the
+product was correct. Two passed wrongly — `verify:composition`, which asserted
+only absences and would have gone on reporting "clean" through the entire period
+CAWCD rendered nobody, and this session's own `verify:ask-entity`. And three
+sentences claimed more than was true — Sunnyside standing in for Vail, "we don't
+have Vail", and "choose one".
+
+**Not one of the nine was visible to a passing test.** Every one needed somebody
+to read the actual output — a rendered sentence, a canvass page, a document's
+text — and ask whether it was true. A green suite is evidence that the things
+somebody thought to check are holding, and it is not evidence of anything else.

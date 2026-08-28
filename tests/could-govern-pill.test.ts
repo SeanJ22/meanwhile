@@ -10,6 +10,7 @@ import {
   COULD_GOVERN_TEXT,
 } from "../lib/ballot/could-govern.ts";
 import { needsPill, zipCertainty } from "../lib/geo/zip-certainty.ts";
+import { codeOf } from "./read-code.ts";
 
 /**
  * **RULING 71 — a zip cannot answer "who governs you"; a street address can.**
@@ -40,12 +41,12 @@ const ROOT = join(HERE, "..");
  * strips comments for the same reason: a rule about what the code DOES must be
  * measured against the code, never against the prose beside it.
  */
-function codeOf(...parts: string[]): string {
-  const source = readFileSync(join(ROOT, ...parts), "utf8");
-  const blockComments = new RegExp("/\\*[\\s\\S]*?\\*/", "g");
-  const lineComments = new RegExp("(^|[^:])//[^\\n]*", "gm");
-  return source.replace(blockComments, " ").replace(lineComments, "$1 ");
-}
+/*
+ * CONSOLIDATED 2026-08-28, RULING 103. The body moved to `tests/read-code.ts`
+ * unchanged; WGH-15's wiring guards needed the same instrument, and a second
+ * byte-identical copy is the class that ruling sweeps for. Two copies of "what
+ * counts as code" are two places for the stripping rule to drift.
+ */
 
 /* ========================================================================== */
 /* 1. Certainty is MEASURED, and it lands where RULING 71 says it should      */

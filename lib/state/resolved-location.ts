@@ -76,6 +76,45 @@
  * This module never MUTATES any of them. It reads a location and a coverage
  * answer and returns what may be said — nothing here writes state, and a
  * display filter cannot reach it.
+ *
+ * ---
+ *
+ * ## WGH-15 (2026-08-28) — HOME LOCATION IS NOT BROWSING LOCATION
+ *
+ * The third state above was **declared and never constructed.** `zipOnly` emits
+ * `SELF_DECLARED_ZIP`, `use-resolved-location` emits that or `ADDRESS_RESOLVED`,
+ * and the only assignment of `BROWSING` anywhere in the repository was in this
+ * module's own test. The union member modelling *I am exploring elsewhere* had
+ * no producer, so no surface could be in it, so no surface could say so.
+ *
+ * The two stores were already disjoint — selecting a district on the map does
+ * not, and never did, write the reader's home. `tests/one-at-a-time.test.ts`
+ * has locked that since it shipped. **Nothing needed untangling. The
+ * DISTINCTION needed surfacing.**
+ *
+ * Because what a reader sees is two panels at once:
+ *
+ * ```
+ * WHO GOVERNS HERE (subject: their zip)      State House District 17
+ * DISTRICT                (subject: a click) State House District 19
+ * ```
+ *
+ * Neither panel is wrong and neither says which question it is answering, so
+ * the reader reads a contradiction. A reader may live in House 17 and inspect
+ * House 21 all afternoon; **the panels must never appear to contradict, and
+ * the only way to do that is for each to name its own subject.**
+ *
+ * So the surface state is explicit — {@link SurfaceSubject} — and it carries
+ * two facts that are not the same fact: WHICH QUESTION this surface answers,
+ * and WHERE THE READER'S HOME STANDS relative to the thing on it. The second
+ * is computed against the HOME location, using the strongest evidence there is,
+ * before the location is downgraded to `BROWSING` for the surface's own use.
+ *
+ * **A `BROWSING` location settles nothing, by construction.** `standingOf`
+ * short-circuits on any certainty that is not `ADDRESS_RESOLVED`, so a browse
+ * surface cannot retire a hedge, cannot claim a body governs the reader, and
+ * cannot write back — the browse path is READ-ONLY over the home location and
+ * every function below returns a new object.
  */
 
 import { ocdSegments } from "../ocd/tiers.ts";
@@ -228,4 +267,100 @@ export function applyResolvedLocation<T extends BodyLike>(
     standing: standingOf(body, location),
     couldGovern: keepsCouldGovernPill(body, location) ? true : undefined,
   }));
+}
+
+/* ══════════════════════════ WGH-15: the two questions ════════════════════ */
+
+/**
+ * **WHICH QUESTION A SURFACE IS ANSWERING.** Two, and they are not the same.
+ *
+ * `HOME`     — *who governs the place the reader told us about?* The subject is
+ *              their zip, or the address they resolved inside it. This is the
+ *              who-governs card.
+ * `BROWSING` — *what is this thing I just clicked?* The subject is a division
+ *              on the map, chosen by a tap, and it is not a claim about the
+ *              reader at all.
+ */
+export type LocationQuestion = "HOME" | "BROWSING";
+
+/**
+ * A surface's whole location state: the question, the location to reason with,
+ * and — for a browse surface — how the reader's home stands relative to the
+ * subject on screen.
+ */
+export interface SurfaceSubject {
+  question: LocationQuestion;
+  /**
+   * The location this surface may reason from. Under `BROWSING` its certainty
+   * is `BROWSING`, which settles nothing, so no hedge can retire here.
+   */
+  location: ResolvedLocation;
+  /** The division this surface is about. Null on the home surface. */
+  subjectOcdId: string | null;
+  /**
+   * Where the reader's HOME stands relative to `subjectOcdId`, computed against
+   * the home location with the strongest evidence available.
+   *
+   * `CONFIRMED`         — they are looking at their own district.
+   * `ELSEWHERE_IN_ZIP`  — their address settled this level and named another.
+   * `UNSETTLED`         — we have not been told enough to say, and we say that.
+   *
+   * On a `HOME` surface it is always `UNSETTLED`: there is no clicked subject
+   * for the home to stand relative to, and manufacturing one would be this
+   * module inventing a comparison nobody made.
+   */
+  standing: BodyStanding;
+}
+
+/**
+ * The home surface — the who-governs card, the ballot, the meeting pill.
+ *
+ * The location passes through UNCHANGED and by identity, because the strongest
+ * evidence about where the reader lives is exactly what this surface is for.
+ */
+export function homeSubject(home: ResolvedLocation): SurfaceSubject {
+  return {
+    question: "HOME",
+    location: home,
+    subjectOcdId: null,
+    standing: "UNSETTLED",
+  };
+}
+
+/**
+ * **THE BROWSE SURFACE — a district popup, an entity modal, an Ask about a
+ * clicked district.** The producer of `BROWSING` that never existed.
+ *
+ * The order of the two steps is the whole design and it is not interchangeable:
+ *
+ * 1. **Standing is computed against HOME first.** That is the only place the
+ *    confirmed divisions mean anything, and it is what lets the browse surface
+ *    say *"your address is in District 17"* while showing District 19.
+ * 2. **Only then is the location downgraded.** The surface reasons from a
+ *    `BROWSING` location, which settles nothing, so nothing on it can retire a
+ *    hedge or assert that the subject governs the reader.
+ *
+ * **A reader inspecting their OWN district is not browsing elsewhere**, so the
+ * home location stands unchanged in that one case — the same
+ * use-the-strongest-evidence rule this module is built on, applied here rather
+ * than dropped here.
+ *
+ * `home` is never mutated. Every return is a fresh object over it, and the
+ * confirmed divisions are carried by reference into a frozen-by-convention
+ * `readonly` field that nothing downstream writes.
+ */
+export function browsingSubject(
+  home: ResolvedLocation,
+  subjectOcdId: string | null,
+): SurfaceSubject {
+  const standing =
+    subjectOcdId === null ? "UNSETTLED" : standingOf({ ocdId: subjectOcdId }, home);
+
+  return {
+    question: "BROWSING",
+    // Looking at the district the address confirmed is looking at home.
+    location: standing === "CONFIRMED" ? home : { ...home, certainty: "BROWSING" },
+    subjectOcdId,
+    standing,
+  };
 }

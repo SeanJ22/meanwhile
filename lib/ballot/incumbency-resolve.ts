@@ -149,9 +149,32 @@ export async function contestIncumbency(
    * Governor of Arizona was challenging for her own seat.
    */
   const registryHolders = officeIsElected ? await holdersForSeat(contest.ocdId, contest.title) : [];
+  /*
+   * **THE HOLDER'S OWN IDENTIFIER, CARRIED RATHER THAN DISCARDED.**
+   * (2026-08-28, the statewide-executive acquisition.)
+   *
+   * `personKey: null` was written here as a literal, and `resolveContestIncumbency`
+   * prefers a key over every name comparison — so hard-coding `null` meant
+   * **100% of the matches this repository makes go through name comparison**,
+   * including the one Arizona statewide match that existed. That is not a
+   * missing feature; it is a working mechanism switched off at the wire.
+   *
+   * `SeatHolder.id` IS the stable identifier the doc block asks for — a
+   * bioguide (`congress:A000370`), a Plural person id, or this project's own
+   * curated key. Passing it costs nothing today, because **no ballot candidacy
+   * in this repository records one**, so `matchesFor` finds no candidate by key
+   * and falls through to the name comparison exactly as before. The value is
+   * that the day a ballot corpus records an identifier, the key join is already
+   * wired and the name comparison stops being the only door — instead of this
+   * line still saying `null` and the join silently continuing to guess.
+   *
+   * `?? null` rather than the bare id: a holder with an empty id must reach
+   * `matchesFor` as "no key", never as the empty-string key that every other
+   * keyless record would also carry.
+   */
   let holders: SeatHolderRef[] = registryHolders.map((h) => ({
     ...splitDisplayName(h.name),
-    personKey: null,
+    personKey: h.id?.trim() || null,
     source: `the officeholder registry for ${h.officeTitle} on ${contest.ocdId}`,
   }));
 
@@ -175,9 +198,12 @@ export async function contestIncumbency(
     );
     holders = resolved
       .filter((r): r is { display: string; holder: SeatHolder } => r !== null)
-      .map(({ display }) => ({
+      .map(({ display, holder }) => ({
         ...splitDisplayName(display),
-        personKey: null,
+        // The congressional roster id — a bioguide — is the strongest key this
+        // repository holds for a person. Same reasoning as the registry branch
+        // above: carried, not discarded.
+        personKey: holder.id?.trim() || null,
         source: "the FEC candidate/committee join against the congressional roster",
       }));
   }

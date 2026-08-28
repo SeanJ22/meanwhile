@@ -27,6 +27,7 @@ import {
   resolveMeetingBodies,
 } from "../lib/meetings/attribution.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
+import { agendaItems } from "../lib/routing/agenda-search.ts";
 import {
   EXIT_NOTHING_WRITTEN,
   EXIT_WRITTEN_WITH_JOB_FAILURES,
@@ -144,6 +145,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   const capped = prioritized.slice(0, AGENDA_RETRIEVAL_CAP);
   let stored = 0;
   let revised = 0;
+  /* Documents refused as landing pages — stated, never silently dropped. */
+  let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
 
@@ -160,6 +163,39 @@ async function retrieveAgendas(meetings: Meeting[]) {
           `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
         );
       }
+      /*
+       * **A LANDING PAGE IS NOT AN AGENDA, AND THE CORPUS PROVES IT 56 TIMES
+       * OUT OF 56.** (2026-08-27.)
+       *
+       * Measured across the committed snapshot: of 198 agenda documents, 56
+       * share a URL with another meeting, and NOT ONE of those 56 yields a
+       * single agenda item. Of the 142 documents on a URL of their own, 67
+       * (47%) do. The shared class has never once given a reader an agenda —
+       * it inflates `documentsHeld`, and it is what put the Town of
+       * Bradford's calendar on fourteen Newbury meetings.
+       *
+       * The producers are two: an adapter setting `agendaUrl` to a portal
+       * ROOT (Vail's Highbond, Tucson Unified's board page), and the
+       * division-wide notice-URL fallback in `documentUrlFor` (Bradford's and
+       * Warner's town calendars). Both end at the same place — the body's own
+       * meetings page, stored as though it were one sitting's agenda.
+       *
+       * So the rule is drawn where the evidence is, and no wider: a document
+       * is refused when it BOTH extracts no agenda item AND is already stored
+       * against a different meeting. A genuine shared agenda — two bodies
+       * meeting jointly under one document — yields items and is kept. The
+       * meeting keeps its own `agendaUrl` either way, so the reader can still
+       * follow the link; we simply stop calling it an agenda we hold.
+       */
+      const alreadyOnAnotherMeeting = agendaDocumentStore.isUrlOnAnotherMeeting(
+        doc.documentUrl,
+        doc.meetingId,
+      );
+      if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
+        landingPages++;
+        continue;
+      }
+
       const result = agendaDocumentStore.append(doc);
       if (!result.stored) unchanged++;
       else {
@@ -175,7 +211,7 @@ async function retrieveAgendas(meetings: Meeting[]) {
   console.log(
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
-      `${unchanged} unchanged, ${failed} failed`,
+      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed`,
   );
 }
 

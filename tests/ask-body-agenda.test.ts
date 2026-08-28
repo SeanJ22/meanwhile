@@ -240,3 +240,55 @@ test("the ingest refuses to carry forward a document belonging to two government
     "the unconditional carry-forward is back — a wiring error would become permanent again",
   );
 });
+
+test("the ingest refuses a landing page, and the rule is drawn where the evidence is", () => {
+  /*
+   * **56 OF 56 SHARED DOCUMENTS YIELD ZERO AGENDA ITEMS; 47% OF SOLO ONES
+   * YIELD SOME.** That is the whole argument for the rule, and it is measured
+   * here rather than asserted in prose, so the day the corpus changes the
+   * number changes with it.
+   */
+  const byUrl = new Map<string, AgendaDocumentLike[]>();
+  for (const d of snapshot.agendaDocuments) {
+    const a = byUrl.get(d.documentUrl) ?? [];
+    a.push(d);
+    byUrl.set(d.documentUrl, a);
+  }
+
+  let sharedDocs = 0;
+  let sharedYieldingItems = 0;
+  let soloDocs = 0;
+  let soloYieldingItems = 0;
+  for (const arr of byUrl.values()) {
+    const items = agendaItems(arr[0].text).length;
+    if (arr.length > 1) {
+      sharedDocs += arr.length;
+      if (items > 0) sharedYieldingItems += arr.length;
+    } else {
+      soloDocs++;
+      if (items > 0) soloYieldingItems++;
+    }
+  }
+
+  assert.ok(sharedDocs > 0, "no shared documents at all — this control would be vacuous");
+  assert.equal(
+    sharedYieldingItems,
+    0,
+    `${sharedYieldingItems} shared document(s) DO yield agenda items — the rule's premise has ` +
+      "changed and refusing them would now discard something true. Re-measure before trusting it.",
+  );
+  assert.ok(
+    soloYieldingItems > 0,
+    "no solo document yields an item either — then the extractor is broken, not the sharing",
+  );
+
+  /* And the rule is BOTH conditions, never sharing alone: a genuine joint
+     agenda under one document yields items and must be kept. */
+  const ingest = readFileSync(join(process.cwd(), "scripts/ingest.ts"), "utf8");
+  assert.match(
+    ingest,
+    /alreadyOnAnotherMeeting && agendaItems\(doc\.text\)\.length === 0/,
+    "the landing-page refusal is no longer conditioned on yielding NO items — a joint agenda would be discarded",
+  );
+  assert.match(ingest, /landing page\(s\) refused/, "the refusal is no longer counted in the report");
+});

@@ -90,6 +90,26 @@ export class AgendaDocumentStore {
     return this.latestFor(meetingId)?.contentHash ?? null;
   }
 
+  /**
+   * Is this URL already stored against a DIFFERENT meeting? (2026-08-27.)
+   *
+   * The landing-page signal. A body's calendar or portal root gets retrieved
+   * once per sitting and stored as though it were each one's agenda — and
+   * measured across the committed snapshot, 56 of 198 documents share a URL
+   * this way and **not one of them yields a single agenda item**, while 47% of
+   * the documents on a URL of their own do.
+   *
+   * Exposed as a question rather than as `all()`, so the rule lives with the
+   * store instead of being re-expressed by every caller that wants it.
+   */
+  isUrlOnAnotherMeeting(documentUrl: string, meetingId: string): boolean {
+    for (const [id, versions] of this.byMeeting) {
+      if (id === meetingId) continue;
+      if (versions.some((v) => v.documentUrl === documentUrl)) return true;
+    }
+    return false;
+  }
+
   get documentCount(): number {
     let n = 0;
     for (const versions of this.byMeeting.values()) n += versions.length;

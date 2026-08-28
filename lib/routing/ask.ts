@@ -5,6 +5,7 @@ import { matchDigest, type DigestMatch } from "./digest.ts";
 import { everydayContactsFor, type EverydayContact } from "./everyday.ts";
 import {
   matchExactName,
+  normalizeName,
   type ExactNameMatch,
   type NameableEntity,
 } from "./exact-name.ts";
@@ -153,7 +154,29 @@ export function answerQuestion(
   // No match resolves the unmapped-topic id — resolveRouting returns the
   // refusal for anything it doesn't know, which is exactly the contract.
   const answer = resolveRouting(match?.topicId ?? "", coverage, binding);
-  const contacts = match ? everydayContactsFor(match.topicId, zip) : [];
+  /*
+   * **THE CONTACTS ARE KEYED ON THE READER'S ZIP, SO THEY ARE THE SAME DEFECT
+   * BY A DIFFERENT DOOR** (2026-08-27).
+   *
+   * `everydayContactsFor(topicId, zip)` reads a curated direct line for the
+   * topic AT THE ZIP IN VIEW — it has never seen a question and cannot know one
+   * named a government. Suppressing the wrong BODY while still printing the
+   * reader's own city service number under a question about a district thirty
+   * miles away would answer the question wrongly in a smaller font.
+   *
+   * So the same rule applies: a named government the reader's own context
+   * cannot satisfy silences the contacts too. `BOUND` keeps them only when the
+   * government named IS one of the reader's own — then the zip's contacts are
+   * genuinely that government's.
+   */
+  const bindingAllowsLocalContacts =
+    binding.kind === "NONE" ||
+    (binding.kind === "BOUND" &&
+      coverage.bodies.some(
+        (b) => b.bodyId === binding.entity.id || b.ocdId === binding.entity.id,
+      ));
+  const contacts =
+    match && bindingAllowsLocalContacts ? everydayContactsFor(match.topicId, zip) : [];
   /*
    * G05 rule 4d: an in-app destination, matched independently of the topic.
    *
@@ -192,18 +215,49 @@ function bindableEntities(
   coverage: CoverageSummary,
   entities: readonly NameableEntity[],
 ): BindableEntity[] {
-  const out: BindableEntity[] = entities.map((e) => ({ ...e }));
+  /*
+   * **THE TWO SOURCES USE DIFFERENT ID SPACES FOR THE SAME GOVERNMENT, AND
+   * MERGING THEM NAIVELY ASKS THE READER TO CHOOSE BETWEEN A THING AND
+   * ITSELF.**
+   *
+   * The search index mints `body:<venue key>` and labels a body with
+   * `meeting.bodyName`; coverage carries the registry's own `bodyId`. So one
+   * government arrives twice under two ids, `bindNamedEntity` sees two DISTINCT
+   * candidates — distinct ids are the tie test, and correctly so, because two
+   * real governments can share a name — and *"what is Sunnyside discussing"*
+   * returned AMBIGUOUS between "Sunnyside Unified District" and "Sunnyside
+   * Unified District".
+   *
+   * A question carrying a class phrase hid this: the class tie-break picked the
+   * coverage row and the answer was right. Only a question with no class phrase
+   * exposed it, which is exactly the shape a reader types.
+   *
+   * Deduplication is by NORMALIZED NAME and only ACROSS the two sources, never
+   * within coverage: if two genuinely different governments in this reader's
+   * area share a name, both are coverage rows, both survive, and AMBIGUOUS is
+   * the correct and intended answer for them. What is dropped is the weaker
+   * duplicate — the index row, which has no `divisionType` and whose id is not
+   * the registry's.
+   */
+  const fromCoverage: BindableEntity[] = [];
+  const coveredNames = new Set<string>();
   for (const body of coverage.bodies) {
     const label = body.name ?? body.divisionLabel;
     if (!label) continue;
-    out.push({
+    coveredNames.add(normalizeName(label));
+    fromCoverage.push({
       id: body.bodyId,
       name: label,
       nameClass: "body",
       divisionType: body.divisionType,
     });
   }
-  return out;
+
+  const fromIndex = entities
+    .filter((e) => !coveredNames.has(normalizeName(e.name)))
+    .map((e) => ({ ...e }));
+
+  return [...fromCoverage, ...fromIndex];
 }
 
 /**

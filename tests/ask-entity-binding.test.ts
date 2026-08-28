@@ -311,3 +311,119 @@ test("an unresolved or ambiguous name silences the default in routing too", asyn
     );
   }
 });
+
+test("PLANTED: one government arriving under TWO id spaces is not a tie", async () => {
+  /*
+   * **THE SEARCH INDEX AND COVERAGE DISAGREE ABOUT A GOVERNMENT'S ID, AND THE
+   * FIRST MERGE ASKED THE READER TO CHOOSE BETWEEN A THING AND ITSELF.**
+   *
+   * `lib/search/index.ts` mints `body:<venue key>` and labels a body with
+   * `meeting.bodyName`; coverage carries the registry's own `bodyId`. So one
+   * government reached `bindNamedEntity` twice under two ids, and distinct ids
+   * are the tie test — correctly so, because two REAL governments can share a
+   * name. The result was AMBIGUOUS between "Sunnyside Unified District" and
+   * "Sunnyside Unified District".
+   *
+   * A question carrying a class phrase hid it: the class tie-break picked the
+   * coverage row and the answer came out right. Only a question with NO class
+   * phrase exposed it — which is the shape a reader actually types.
+   */
+  const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
+  const local = coverage.bodies.find((b) => b.divisionType === "school_district");
+  assert.ok(local, "precondition: this point must have a school district");
+  if (!local) return;
+  const label = local.name ?? local.divisionLabel ?? "";
+
+  /* The search index's own row for the SAME government, as ask-box builds it. */
+  const entities = [{ id: "body:some-venue-key", name: label, nameClass: "body" as const }];
+
+  for (const question of [
+    `what is ${label.split(" ")[0]} discussing`,
+    `tell me about ${label}`,
+  ]) {
+    const asked = answerQuestion(question, coverage, "85706", { entities });
+    assert.notEqual(
+      asked.binding.kind,
+      "AMBIGUOUS",
+      `${question} asked the reader to choose between two rows for one government`,
+    );
+    if (asked.binding.kind === "BOUND") {
+      assert.equal(
+        asked.binding.entity.id,
+        local.bodyId,
+        "the canonical registry id must win over the search index's own key",
+      );
+    }
+  }
+});
+
+test("a named government the reader's context cannot satisfy silences the CONTACTS too", async () => {
+  /*
+   * `everydayContactsFor(topicId, zip)` reads a curated direct line for the
+   * topic AT THE ZIP IN VIEW. It has never seen the question and cannot know
+   * one named a government, so suppressing the wrong BODY while still printing
+   * the reader's own city service number under a question about a district
+   * thirty miles away would answer it wrongly in a smaller font. Same defect,
+   * different door.
+   */
+  const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
+
+  const named = answerQuestion(
+    "What's on the Vail school district agenda?",
+    coverage,
+    "85706",
+    { entities: [] },
+  );
+  assert.notEqual(named.binding.kind, "NONE");
+  assert.deepEqual(
+    named.contacts.map((c) => c.body),
+    [],
+    "a government we could not resolve must not carry the reader's own local contacts",
+  );
+
+  /* And the reader's OWN questions keep theirs — the rule is about the name,
+   * not a blanket suppression. */
+  const local = answerQuestion(
+    "who do I call about a pothole",
+    coverage,
+    "85706",
+    { entities: [] },
+  );
+  assert.equal(local.binding.kind, "NONE", "this question names no government");
+});
+
+test("dedupe does NOT collapse two genuinely distinct governments that share a name", () => {
+  /*
+   * The other half of the dedupe rule, and the half that makes it safe.
+   * Deduplication runs ACROSS the two inventories (search index vs coverage)
+   * and never WITHIN coverage — because two real governments can share a
+   * normalized name, and for them AMBIGUOUS is the correct answer rather than a
+   * bug. Collapsing them would put the substitution back with a tidier
+   * implementation.
+   */
+  const twoRealOnes: BindableEntity[] = [
+    {
+      id: "ocd-division/country:us/state:az/school_district:springfield_a#board",
+      name: "Springfield School District",
+      nameClass: "body",
+      divisionType: "school_district",
+    },
+    {
+      id: "ocd-division/country:us/state:nj/school_district:springfield_b#board",
+      name: "Springfield School District",
+      nameClass: "body",
+      divisionType: "school_district",
+    },
+  ];
+
+  const bound = bindNamedEntity(
+    "what is on the Springfield school district agenda",
+    twoRealOnes,
+  );
+  assert.equal(
+    bound.kind,
+    "AMBIGUOUS",
+    "two distinct governments sharing a name must be asked about, not collapsed",
+  );
+  if (bound.kind === "AMBIGUOUS") assert.equal(bound.candidates.length, 2);
+});

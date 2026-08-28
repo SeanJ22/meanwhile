@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **334 open**, 443 resolved.
+- **344 open**, 443 resolved.
 - **55 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -25,7 +25,7 @@ and when. Nothing is ever deleted.
   - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
-  - Repo & ops — **2**
+  - Repo & ops — **3**
 
 No section is over the five-P1 cap.
 
@@ -424,7 +424,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**30 open · 1 resolved.**
+**32 open · 1 resolved.**
 
 ### P1
 
@@ -459,6 +459,10 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH236** — Every City of Tucson board, committee and commission now resolves to UNKNOWN_COMPOSITION, because each was previously inheriting the Mayor and Council through the division fallback. The City Clerk publishes each board's actual membership.
 
 **NH244** — The Central Arizona Water Conservation District board is popularly elected and serves every reader in 85641 and 85701. All four Pima County seats carry terms expiring 12-31-2026, so they are on the 2026 general ballot. The ballot corpus contains no CAWCD contest at all.
+
+**NH265** — The signed-bill and veto half of the gubernatorial record, which the corpus currently names as a gap.
+
+**NH266** — The corpus holds 12 executive orders read out of 37 indexed, and the index was not walked to its end.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -496,7 +500,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**13 open · 40 resolved.**
+**17 open · 40 resolved.**
 
 ### P1
 
@@ -519,6 +523,14 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 **NH188** — From the 8/25 Part 2 walkthrough. MAP-2: clicking a shaded area renders it off-centre — visible in capture 17-25-38, where the Vail Unified district sits in the bottom-right corner of the viewport. The map should move so whatever was clicked becomes front and centre, for every clickable area type: school district, state house district, congressional district, anything else. VOT-1: capture 17-23-22 shows an address entered in Vail and the top polling result at Ambassador Event Center, 3455 S Wilmot Road, Tucson — many miles away. Returning everywhere in the county is CORRECT and stays; the defect is the ordering. Draw a roughly 10-mile radius on the map around the entered address and surface the closest locations first, keeping the full county list available. Across the board, not scoped to the example. Not reached by part2-0825.
 
 **NH189** — From the 8/25 Part 2 walkthrough. BC-26 (capture 17-28-02): John Carruth's large battlecard renders an Incumbent pill beside Local, and superintendents are not elected in the Vail School District — branch on whether the role is elected before rendering the label, and audit every non-elected role in the product for the same mislabel with a count. BC-27 (SPEC capture 17-28-27, red outline): What would you say if John Carruth were standing in front of you? sits flush against the bottom edge of the navy pill with no gap at all; padding and line treatment inside the pill change and THE LIGHT-MODE NAVY AND WHITE STAYS. BC-29 (capture 17-51-51): on the Kearsarge large battlecard the Speak Your Mind pill sits in a small scroll region of its own — it becomes a floating pill fixed at the bottom, only the board member list scrolls, and it is never covered by anything. Applies to every large battlecard with a scrolling list. Not reached by part2-0825.
+
+**NH258** — State propositions get a plain-language summary and a part-by-part breakdown. The four local measures on the Pima ballot - the school-district budget overrides and the Permanent Base Adjustment - carry their sources and nothing else, so a reader meets a title and a Yes/No and no help at all with the one question actually about their own district.
+
+**NH259** — Adrian Fontes and Kris Mayes render 'We haven't sourced who holds this seat yet' on their battlecards. Both are sitting Arizona statewide officers.
+
+**NH260** — After an exact address, the who-governs card retires the invitation on bodies the address CONFIRMED but keeps it on bodies the address EXCLUDED - so the City of Tucson still asks a reader in Vail to add the address they already gave.
+
+**NH261** — Clicking State House District 21 shows District 21's representatives in the popup while the panel beside it still shows the reader's own District 19. Two surfaces on one screen, two answers.
 
 **VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim.
 
@@ -750,7 +762,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**42 open · 141 resolved.**
+**45 open · 141 resolved.**
 
 ### P1
 
@@ -775,6 +787,10 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH249** — The tester's words: jurisdiction types may rely too much on colour. If the only thing distinguishing a county boundary from a school district is hue, the distinction is unavailable to a reader with a colour vision deficiency and weak on a low-quality screen in sunlight. P2 rather than P3 because this is an accessibility question rather than a taste one, and because a reader who misreads which government a boundary belongs to has been told something false about who governs them. Recorded as stated; the actual encoding has not been audited.
 
 **NH251** — Found while repairing the Vail-to-Sunnyside substitution on 2026-08-27. The question that started it — what is on the Vail school district agenda — never reaches the agenda corpus at all. /api/ask/agenda answers a TOPIC within a scope (data-center, warehouse, rezoning, cell-tower) and agendaTopicFor returns null for a question that names a body and asks what is on its agenda, so the agenda rung says nothing and the question falls to topic routing, which names bodies rather than agenda items. Meanwhile the corpus DOES hold what the reader asked for: Vail Unified has 11 meetings and 9 readable agenda documents in data/meetings-snapshot.json. The entity binding now stops the wrong body answering, and /api/ask/agenda binds retrieval to a named body when one resolves, but nothing routes this SHAPE of question into that path. THE SPEC: a body-agenda intent — what is on X's agenda, what are they discussing, what is happening at their next meeting — resolves the named body, takes that body's next or most recent meeting, and answers from that meeting's own agenda items, saying the true thing when the meeting is known and the agenda is not published, not fetched, or not extractable. Never a generic civics explainer when exact body agenda data exists.
+
+**NH262** — At 2000px the ballot renders in a narrow centred column with large empty margins either side. The mobile layout itself is fine; the desktop one simply does not use the space it has.
+
+**NH263** — Sean could not find the Ask feature in his own product. It sits below every contest, below the footnotes.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -817,6 +833,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH250** — The tester's words: the left-side information is dense, and filters or progressive disclosure may help. Recorded as the tester framed it, including that the remedy is a suggestion rather than a finding. Note that reader friction is a defect with only three checkable exceptions, so any progressive-disclosure work has to be argued as reducing friction rather than adding a click.
 
 **NH252** — The named-entity binding rung reconciles the government a reader names against an inventory built from the search index and the reader's own covered bodies. Both are scoped to the reader's area, so at 85706 the question about Vail resolves to UNRESOLVED — we do not have a government recorded under that name — even though the product holds Vail Unified with meetings and agendas. That is HONEST and is a large improvement on answering about Sunnyside, and it is weaker than it needs to be: BOUND is available if the inventory reaches every body the product holds rather than every body near the reader. The trade is index size on the client, which is why it was not simply widened.
+
+**NH267** — The map's filter line reads '60 meetings · 1 venue' at 85641. The served set for that view holds 147 meetings across 15 distinct venues, 61 of them placeless.
 
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
@@ -872,13 +890,15 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**23 open · 83 resolved.**
+**24 open · 83 resolved.**
 
 ### P1
 
 **JOB03** — The scheduled job refresh-meetings-snapshot.yml failed on two CONSECUTIVE runs (32372995194 and 32342602616), both at: Validate before committing, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 40 completed runs it has failed 17 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. [job-watch:refresh-meetings-snapshot.yml]
 
 **NH170** — Three separate defects, all reproduced before they were touched, all fixed in final-pass-0825 — this row exists so the FOURTH is not lost. (1) legistar's composite wrapper re-branded the adapter's result through a second accountedNormalize call without countedButProduced, so every online meeting was counted once as produced and once as dropped; against the recorded Pima fixture the adapter reports CONSERVED 18 of 18 and the wrapper threw '4 more dispositions than records'. (2) nj-filing ran nj:filing:check BEFORE nj:ballot --write, and the check exits non-zero on STALE — so the staleness gate stopped the only command that could clear the staleness, and curatedAt froze on 2026-08-23. (3) The orchestrator's own header states a three-valued exit vocabulary and calls exit 2 'commit the survivors, THEN go red', and runCommand asked status === 0 — so the ingest's 'PARTIAL PROGRESS IS ON DISK AND MUST BE COMMITTED: 451 rows from 10 of 11 sources' was read exactly like a total failure and the workflow printed 'nothing usable was written'. WHAT IS STILL OWED: the daily refresh has not been verified end-to-end since the fixes. It runs at 09:11 UTC. Read the next run and confirm all three paths behave — and if legistar conserves and nj-filing rebuilds and a partial commits, close this.
+
+**NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron.
 
 ### P2
 

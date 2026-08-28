@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **153 sessions.**
+Newest first. **154 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -34,6 +34,23 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **ASK07** — Both Ask surfaces hold the last four turns in memory so 'and what did they decide?' has a referent, and neither persists it - closing the panel or leaving the page ends it, which is the correct privacy posture and is stated as deliberate rather than accidental. The consequence a reader can feel: on the map the panel is behind a pill, so dismissing it and reopening it loses the thread mid-conversation. Worth deciding whether the context should survive a panel dismissal within one visit. It must never survive the visit. *(open)*
 - **AZ04** — vailschools.novusagenda.com is live, publishes no robots restriction, and - driven through its ddlDateRange control rather than by setting the hidden date fields - returns 30 meetings and 30 agenda ITEMS with Online Agenda, Agenda PDF and Minutes links, newest 2017-02-28. That is a real, permitted, machine-readable archive of a district's board agendas that this product does not hold. The walk is scripts/hunt-vail-novus.mts; turning it into an adapter under lib/sources/ is ordinary work now that the form is understood, including pagination past the first 30 rows. It does NOT reach the current agenda, which is on Highbond and disallowed. *(open)*
 - **NH257** — lib/signal/taxonomy.ts inventories every live collection point and names three the product does not have: a reader who emails their board president, follows a citation to an agenda or opens an online-meeting link does so through an ordinary anchor and no row is written anywhere. They are recorded as gaps rather than omitted, because an omission from a taxonomy reads as coverage. Whether to collect any of them is a privacy decision before it is a product one - each would be a new class of behavioural record about a reader, and the Ask store's own capture is gated pending exactly that kind of approval. *(open)*
+
+**Needs Sean.** Nothing.
+
+## 2026-08-28 Aug 28 visual sweep
+
+**What it started.** 10 row(s) opened, 10 still open.
+
+- **NH258** — State propositions get a plain-language summary and a part-by-part breakdown. The four local measures on the Pima ballot - the school-district budget overrides and the Permanent Base Adjustment - carry their sources and nothing else, so a reader meets a title and a Yes/No and no help at all with the one question actually about their own district. *(open)*
+- **NH259** — Adrian Fontes and Kris Mayes render 'We haven't sourced who holds this seat yet' on their battlecards. Both are sitting Arizona statewide officers. *(open)*
+- **NH260** — After an exact address, the who-governs card retires the invitation on bodies the address CONFIRMED but keeps it on bodies the address EXCLUDED - so the City of Tucson still asks a reader in Vail to add the address they already gave. *(open)*
+- **NH261** — Clicking State House District 21 shows District 21's representatives in the popup while the panel beside it still shows the reader's own District 19. Two surfaces on one screen, two answers. *(open)*
+- **NH262** — At 2000px the ballot renders in a narrow centred column with large empty margins either side. The mobile layout itself is fine; the desktop one simply does not use the space it has. *(open)*
+- **NH263** — Sean could not find the Ask feature in his own product. It sits below every contest, below the footnotes. *(open)*
+- **NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron. *(open)*
+- **NH265** — The signed-bill and veto half of the gubernatorial record, which the corpus currently names as a gap. *(open)*
+- **NH266** — The corpus holds 12 executive orders read out of 37 indexed, and the index was not walked to its end. *(open)*
+- **NH267** — The map's filter line reads '60 meetings · 1 venue' at 85641. The served set for that view holds 147 meetings across 15 distinct venues, 61 of them placeless. *(open)*
 
 **Needs Sean.** Nothing.
 

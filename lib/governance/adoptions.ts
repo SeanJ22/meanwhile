@@ -659,6 +659,156 @@ recheck-due children.
 **If answering a current-rule question still requires reading 80,000 words of
 chronology, this rule is not being met.**`,
   },
+  {
+    n: 190,
+    title: "RULING 190 — a session is an engineering organization, not one serial developer",
+    adopted: "2026-08-28",
+    domain: "meta-governance",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    claims: [{ key: "session.orchestration_model", value: "independent-work-parallel-by-default" }],
+    body: `**WHEN TWO OR MORE AUTHORIZED EXECUTABLE WORKSTREAMS ARE MATERIALLY
+INDEPENDENT, SAFE PARALLEL EXECUTION IS THE DEFAULT. Serializing independent
+work is a process defect that must name the dependency it was avoiding.**
+
+The author states desired product outcomes. The session diagnoses, decomposes,
+delegates, executes, integrates and ships. That division is the whole rule: a
+session that receives twelve outcomes and runs them single-file has converted an
+engineering organization into a ticket queue, and the conversion is invisible in
+the report because a serial log reads exactly like a parallel one that finished.
+
+**Before broad implementation, every session:**
+
+    1  loads current governance for the task;
+    2  identifies the authorized executable work universe;
+    3  constructs a dependency and conflict graph;
+    4  identifies the independent workstreams;
+    5  fans them out using the strongest supported parallel mechanism;
+    6  designates one integration and release owner;
+    7  keeps independent streams progressing while another waits or blocks.
+
+The decomposition is PROPORTIONAL. Two five-line edits to one file are one
+workstream, and inventing branches for them is the same defect wearing the
+opposite costume.
+
+**The invariants.**
+
+    INDEPENDENT WORK              -> PARALLEL BY DEFAULT
+    TRUE DEPENDENCY               -> SERIALIZE AND NAME WHY
+    ONE WORKSTREAM BLOCKED        -> THE OTHERS CONTINUE
+    ONE WORKSTREAM DONE           -> READY_FOR_INTEGRATION, NOT SESSION DONE
+    TRACKER ROW CREATED           -> NOT WORK COMPLETION
+    LARGE PR / MANY FILES         -> NOT A STOP REASON
+    P0                            -> START AND PRIORITIZE IMMEDIATELY,
+                                     NEVER FREEZE INDEPENDENT ENGINEERS
+
+**A tracker row is a record of work, never a substitute for it.** A session that
+opens a row for work it could execute now has not delegated the work; it has
+deferred it, and RULING 189 already says what a voluntary stop with owed work is
+called.
+
+**The law is environment-portable and names no vendor.** The obligation is to
+use the STRONGEST PARALLEL MECHANISM THE ENVIRONMENT ACTUALLY SUPPORTS —
+subagents or parallel agents where they exist, otherwise worktrees, branches,
+concurrent shells and processes, parallel public-source retrieval and parallel
+test or research jobs. Where only one execution thread genuinely exists, the
+obligation survives as interleaving: advance another stream on every wait rather
+than finishing whole domains in the order they were listed. "I cannot spawn
+another engineer" is not a dependency, and neither is any other statement about
+tooling.
+
+**A subagent's report of "done" is not inspection.** The lead owns truth,
+coordination, conflict resolution and full-product validation regardless of what
+a delegated branch claims.
+
+**CORRECTNESS STILL OUTRANKS SPEED, and this rule extends rather than touches
+"correct first, fast second, nothing third."** The goal is MAXIMUM SAFE PARALLEL
+THROUGHPUT, never the maximum number of branches. Two branches independently
+rewriting one canonical store, or independently regenerating one generated
+output, are refused by this rule rather than permitted by it: that is not
+concurrency, it is data loss with two authors.
+
+**The instrument is \`pnpm orchestration:check\`**, over the session plan in
+\`data/workstate/orchestration/\`, and it derives the verdict rather than
+accepting one. Each workstream records its id, its dependency ids and the reason
+for each, the conflict domain it owns as paths and data, the artifacts it
+produces and consumes, whether it is executable, and its disposition. **A
+declared dependency is PROVEN only by a mechanical fact** — an owned-domain
+overlap, or an artifact one workstream produces and another consumes. An edge
+backed by prose alone is reported UNPROVEN and never silently accepted.
+Independent, executable and serialized with nothing checkable behind it is a
+FAILURE, named pair by pair.
+
+**The refused justifications, because each has already been used here:** PR or
+diff size, branch simplicity, conflict avoidance, convenience, tidiness,
+unspecified caution, priority mistaken for a lock, and the absence of subagents.
+None of them is a dependency.
+
+**What this instrument cannot do is stated rather than hidden.** Wall-clock
+concurrency is not observable from this repository — nothing records when a
+branch's work actually ran, and a session cannot stamp a reliable clock. So the
+guard checks the SHAPE OF THE PLAN and the JUSTIFICATION OF EVERY SERIALIZATION,
+which are the two things written down. Recorded concurrency evidence —
+worktrees, branches, agent ids — is corroboration, reported and never scored.`,
+  },
+  {
+    n: 191,
+    title: "RULING 191 — one integration owner, one combined head, one merge at the end",
+    adopted: "2026-08-28",
+    domain: "shipping-ci",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    claims: [{ key: "shipping.integration_model", value: "one-owner-combined-head" }],
+    relations: [
+      {
+        kind: "extends",
+        target: "R-0190",
+      },
+    ],
+    body: `**A COMPLETED BRANCH IS NOT A COMPLETED SESSION.** RULING 190 fans the work
+out; this is what the work comes back to.
+
+**ONE INTEGRATION OWNER.** Exactly one branch owns canonical truth, the shared
+governance artifacts, integration, combined verification and the final ship.
+Parallel workstreams own their code, their tests and their own source data —
+they do NOT each edit the shared stores. Canonical work state, the tracker
+stores and workbook, the session state and log, the method store, and any
+generated governance or canonical output are reconciled ONCE, by the integration
+owner, in sequence.
+
+**A branch changes canonical INPUTS. The integration owner regenerates the
+OUTPUT once.** Letting each branch regenerate and commit a competing full-file
+version of one generated artifact manufactures a conflict out of nothing and
+violates RULING 92 on the way past.
+
+**Shared load-bearing application files are decided BEFORE the fan-out, not
+discovered after it.** Where two streams both need one such file, the session
+picks deliberately: they are really one workstream; or one exposes an interface
+the other depends on; or they modify separate regions and the ownership is
+recorded. Discovering the dependency only after both branches contain broad
+rewrites is the failure this clause exists to prevent.
+
+**A workstream finishing means READY_FOR_INTEGRATION.** It does not merge to
+\`main\`. Sub-workstream branches are implementation vehicles; the default
+shipping topology is one final integrated PR from the integration branch.
+
+**Branch-local green is necessary and not sufficient. Only the integrated head
+is the product that ships.** After every integration, the focused overlap tests
+for the stream just integrated run again; after all of them, the full local gate
+set, the production build, the reader-visible controls, the source-denominator
+checks and the generated-output checks run on the combined head — including the
+interactions BETWEEN workstreams, which is the only place a combined head can
+fail that no branch could.
+
+**Where two branches conflict, neither "ours" nor "theirs" is an answer.** Both
+branches were preserving an invariant. The integration owner re-reads both and
+produces the combined behaviour.
+
+This changes nothing about WHEN a merge happens. RULING 1 stands: verify
+locally, accumulate, ship once at the real end, and the merge waits until the
+session is ready to end rather than the session ending because the merge
+happened.`,
+  },
 ];
 
 /**

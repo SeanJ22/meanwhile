@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **344 open**, 443 resolved.
+- **348 open**, 443 resolved.
 - **55 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **3**
+  - Data infrastructure — **4**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **3**
@@ -500,7 +500,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**17 open · 40 resolved.**
+**19 open · 40 resolved.**
 
 ### P1
 
@@ -532,6 +532,10 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 **NH261** — Clicking State House District 21 shows District 21's representatives in the popup while the panel beside it still shows the reader's own District 19. Two surfaces on one screen, two answers.
 
+**NH268** — A school, congressional or local district is an area, and an area can lie across several legislative districts. Only a single point resolves to one. Vail Unified sits across Arizona Legislative District 19 AND District 17, measured over 44 probed points and 20 walked map layers, and so does the Corona de Tucson Fire District. The shipping registry already models this correctly, so nothing wrong reaches a reader today.
+
+**NH271** — Most candidates on a rendered ballot show initials rather than a face. The gap is overwhelmingly New Jersey down-ballot: 117 Board of Education candidacies, 47 Borough Council, 27 Township Committee.
+
 **VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim.
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
@@ -546,13 +550,15 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**91 open · 109 resolved.**
+**92 open · 109 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
+
+**NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -762,7 +768,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**45 open · 141 resolved.**
+**46 open · 141 resolved.**
 
 ### P1
 
@@ -791,6 +797,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH262** — At 2000px the ballot renders in a narrow centred column with large empty margins either side. The mobile layout itself is fine; the desktop one simply does not use the space it has.
 
 **NH263** — Sean could not find the Ask feature in his own product. It sits below every contest, below the footnotes.
+
+**NH269** — A reader deciding whether they can attend should learn that a meeting has no room to walk into before they open it. The main meeting list already says Online. The door overlay next-meeting line and the Ask autocomplete do not.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 

@@ -1,0 +1,282 @@
+{
+  "session": "2026-08-28 finish-aug28 — MTG-13 correction, the Aug 28 reader scope, and the engineering-team law",
+  "integrationOwner": "claude/finish-aug28-integration",
+  "workstreams": [
+    {
+      "id": "governance-orchestration",
+      "title": "P0 — the engineering-team law (RULING 190, 191), its guard, the tracker, and the shared load-bearing files",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/governance",
+          "lib/workstate/orchestration.ts",
+          "scripts/orchestration-check.mts",
+          "scripts/wt.sh",
+          "tests/orchestration.test.ts",
+          "CLAUDE.md",
+          "docs/governance",
+          "docs/rulings.md",
+          "package.json",
+          "data/workstate/orchestration",
+          "components/map/map-entry.tsx",
+          "components/ask/ask-box.tsx",
+          "docs/sources.md"
+        ],
+        "data": [
+          "docs/governance/ledger.jsonl",
+          "docs/tracker-working.csv",
+          "docs/tracker-resolved.csv",
+          "docs/state.md",
+          "docs/log.md",
+          "data/method/knowledge.json"
+        ]
+      },
+      "produces": [
+        "orchestration-law",
+        "package-json-script-registration",
+        "shared-file-hunk-application"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "ran on the integration branch while five recon engineers and the refresh engineer executed concurrently"
+      ]
+    },
+    {
+      "id": "scheduled-refresh",
+      "title": "P1 — schedule reliability: the six-mode detector and the catch-up union",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/ops/schedule-audit.ts",
+          "lib/ops/refresh-cadence.ts",
+          "scripts/schedule-audit.mts",
+          "scripts/watch-workflows.mts",
+          "scripts/refresh-daily.mts",
+          "tests/schedule-audit.test.ts",
+          "tests/fixtures/schedule-audit"
+        ],
+        "data": []
+      },
+      "produces": [
+        "schedule-audit-script-name"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/refresh on ws/scheduled-refresh, node_modules junction"
+      ]
+    },
+    {
+      "id": "mtg13-legistar",
+      "title": "P0 — Legistar route enumeration, future-meeting composition, and the false-method correction",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/sources/legistar",
+          "lib/sources/legistar-insite",
+          "lib/sources/composite",
+          "lib/sources/event-identity.ts",
+          "tests/fixtures/legistar",
+          "scripts/learn-legistar-insite.mts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "canonical-future-meeting-instances"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/mtg13 on ws/mtg13, node_modules junction"
+      ]
+    },
+    {
+      "id": "ballot-aug28",
+      "title": "BAL-30 + BAL-25 + BAL-26 — one workstream: all three collide in app/ballot/page.tsx",
+      "dependsOn": [
+        "ask-shape-votes"
+      ],
+      "dependencyReasons": {
+        "ask-shape-votes": "BAL-26 mounts the ballot Ask entry on the SAME grounded engine whose reader response contract ASK-05 unifies; the ballot rebases onto that contract at integration rather than shipping a second engine"
+      },
+      "owns": {
+        "paths": [
+          "app/ballot",
+          "components/ballot",
+          "components/ask/ballot-ask.tsx",
+          "app/globals.css",
+          "docs/DESIGN.md",
+          "docs/globals-css-notes.md",
+          "lib/ballot/measure-summaries.ts",
+          "lib/ballot/measure-provisions.ts",
+          "lib/ballot/analyses.ts",
+          "scripts/fetch-measure-analyses.mts"
+        ],
+        "data": []
+      },
+      "produces": [],
+      "consumes": [
+        "grounded-ask-response-contract"
+      ],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/ballot on ws/ballot, node_modules junction"
+      ]
+    },
+    {
+      "id": "location-overlap",
+      "title": "WGH-15/16 — home location is not browsing location; a polygon overlaps many districts",
+      "dependsOn": [
+        "governance-orchestration"
+      ],
+      "dependencyReasons": {
+        "governance-orchestration": "its map-entry.tsx and ask-box.tsx seams are applied by the integration owner, who holds those shared load-bearing files"
+      },
+      "owns": {
+        "paths": [
+          "lib/state",
+          "hooks",
+          "lib/geo",
+          "lib/registry",
+          "lib/hunt/wikipedia.ts",
+          "components/map/coverage-notice.tsx",
+          "components/map/popup/district-popup.tsx",
+          "components/map/popup/entity-modal.tsx",
+          "states/az/85641.md"
+        ],
+        "data": []
+      },
+      "produces": [],
+      "consumes": [
+        "shared-file-hunk-application"
+      ],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/geo on ws/geo, node_modules junction"
+      ]
+    },
+    {
+      "id": "ask-shape-votes",
+      "title": "ASK-05/06 — one reader answer contract, and candidate votes by exact person/office identity",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "app/api/ask",
+          "lib/ask",
+          "components/ask/ask-box.tsx",
+          "lib/routing/ask.ts",
+          "lib/routing/named-entity.ts",
+          "lib/votes"
+        ],
+        "data": []
+      },
+      "produces": [
+        "grounded-ask-response-contract"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/ask on ws/ask, node_modules junction"
+      ]
+    },
+    {
+      "id": "az-governor-actions",
+      "title": "Arizona governor letters, signed/vetoed bills and session-law chapters — ingestion, not a tracker row",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/officials/executive-actions.ts",
+          "data/officials",
+          "scripts/hunt-azleg-governor-letters.mts",
+          "scripts/method",
+          "tests/fixtures/azleg"
+        ],
+        "data": []
+      },
+      "produces": [
+        "governor-action-records"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/azleg on ws/azleg, node_modules junction"
+      ]
+    },
+    {
+      "id": "meeting-ui-and-definitions",
+      "title": "MTG-14 + DATA-4 — the online marker on every discovery surface, and body definitions keyed on the BODY not the division",
+      "dependsOn": [
+        "governance-orchestration"
+      ],
+      "dependencyReasons": {
+        "governance-orchestration": "its map-entry.tsx and globals.css seams are applied by the integration owner, who holds those shared load-bearing files"
+      },
+      "owns": {
+        "paths": [
+          "lib/officials/body-definitions.ts",
+          "lib/officials/body-blurbs.ts",
+          "lib/officials/form-definitions.ts",
+          "lib/officials/body-form.ts",
+          "lib/officials/office-blurbs.ts",
+          "components/map/list-overlay.tsx",
+          "components/map/door-overlay.tsx",
+          "components/map/popup/meeting-popup.tsx",
+          "lib/meetings/venues.ts",
+          "scripts/contrast-audit.mts"
+        ],
+        "data": []
+      },
+      "produces": [],
+      "consumes": [
+        "shared-file-hunk-application"
+      ],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/defs on ws/defs, node_modules junction"
+      ]
+    },
+    {
+      "id": "incumbency-portraits",
+      "title": "BAL-27 + BAL-28 — statewide officeholder acquisition and portrait completeness over the cohort",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/officials/statewide-executives.ts",
+          "lib/officials/office-identity.ts",
+          "lib/registry/officeholders-04.json",
+          "lib/ballot/incumbency-resolve.ts",
+          "lib/ballot/incumbency.ts",
+          "lib/photos",
+          "data/photos",
+          "data/ballot/candidate-cards-2026.json",
+          "lib/registry/official-photos.json",
+          "public/officials",
+          "public/candidates"
+        ],
+        "data": []
+      },
+      "produces": [],
+      "consumes": [],
+      "executable": true,
+      "disposition": "PARALLEL",
+      "concurrencyEvidence": [
+        "git worktree C:/Users/seanj/dev/wtp-wt/acq on ws/acq, node_modules junction"
+      ]
+    }
+  ]
+}

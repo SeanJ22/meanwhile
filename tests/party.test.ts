@@ -232,18 +232,15 @@ const FORBIDDEN_PARTY_SOURCES = [
  */
 const PARTISANSHIP_STILL_OPEN: readonly string[] = [
   /*
-   * CAWCD, wired 2026-08-27. Fifteen directly elected directors, read from the
-   * district's own board pages, which state role and county for every member
-   * and party for none. That settles the PAGES and not the SEATS: whether a
-   * CAWCD director's office is contested on party lines has to come from an
-   * election authority's own record, and that record has not been read yet.
+   * EMPTY, and that is the goal state rather than a missing list.
    *
-   * Wiring it anyway is the point. Membership was verified and partisanship is
-   * unknown; those are independent facts, and CLAUDE.md's "show everything we
-   * find" forbids holding fifteen sourced people back from a reader because an
-   * orthogonal field is open. Tracked as its own work item.
+   * CAWCD was added here on 2026-08-27 and removed the same day: A.R.S.
+   * 48-3709(B) requires its candidates on the county general ballot "without
+   * party designation", which settles the SEATS by law — M62's own first rung.
+   * The mechanism did its job in both directions: it let fifteen verified people
+   * reach a reader while the orthogonal fact was open, and it cost one line in a
+   * diff to close.
    */
-  "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
 ];
 
 test("M62: every roster is settled, or is a DECLARED open partisanship item", () => {

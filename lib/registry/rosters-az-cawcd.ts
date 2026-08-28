@@ -76,22 +76,31 @@ export const AZ_CAWCD_ROSTERS: BodyRoster[] = [
     sourceOrg: SOURCE_ORG,
     collectedAt: COLLECTED,
     /*
-     * **UNDETERMINED, and deliberately so.**
+     * **NONPARTISAN, BY STATUTE — closed the same day it was opened, from the
+     * strongest instrument there is.**
      *
-     * Rung 1 is walked and answered: the district's own pages state role and
-     * county for every member and state no party for any of them. That is a
-     * finding about the PAGES and settles nothing about the SEATS — CAWCD
-     * director is a state-law office and the question of whether it is
-     * contested on party lines has to come from an election authority's own
-     * record (the certified partisan primary canvass, or the county's
-     * nomination paperwork), exactly as M62 established for the twelve rosters
-     * before this one.
+     * This roster shipped `UNDETERMINED` a few hours earlier, because the
+     * district's own pages state role and county for every member and party for
+     * none — which is a finding about the PAGES and settles nothing about the
+     * SEATS. The record that settles seats was then found where M62's own rule
+     * says to look FIRST: *"a local office is partisan or nonpartisan by law or
+     * charter FIRST, and only a partisan office gets a party."*
      *
-     * That record has not been read yet, so this stays UNDETERMINED, cites
-     * nothing, and renders no party for anybody. It is an open work item, not
-     * a reason to withhold fifteen sourced people from a reader.
+     * **A.R.S. § 48-3709(B)**, read verbatim from the Legislature on
+     * 2026-08-27: *"The names of candidates for election to the board of
+     * directors of a district shall be included on the general election ballot
+     * of the county in which the candidate resides, WITHOUT PARTY DESIGNATION,
+     * and the candidates receiving the highest number of votes for the number
+     * of directors to be elected from such county shall be declared elected."*
+     *
+     * That is law rather than an inference from a silent page, and it is a
+     * stronger source than the certified canvasses M62 used for the twelve
+     * rosters before this one — those established partisanship from what the
+     * election authority PRINTED; this establishes it from what the statute
+     * REQUIRES. Nothing renders a party here, and now nothing should.
      */
-    partisanship: "UNDETERMINED",
+    partisanship: "NONPARTISAN",
+    partisanshipSourceUrl: "https://www.azleg.gov/ars/48/03709.htm",
     members: [
       {
         id: "roster:cawcd#goddard",

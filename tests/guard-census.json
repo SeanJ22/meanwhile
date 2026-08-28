@@ -1,8 +1,8 @@
 {
   "note": "RULING 62. Every test file and every guard NAME inside it. A guard that leaves must leave HERE too, in the same commit, so the removal is a diff a reader sees rather than a silence. Written by corepack pnpm guard:census --write; never by hand.",
   "totals": {
-    "files": 281,
-    "named": 2778,
+    "files": 285,
+    "named": 2800,
     "dynamic": 6
   },
   "files": {
@@ -98,6 +98,15 @@
       ],
       "dynamic": 0
     },
+    "tests/ask-body-agenda.test.ts": {
+      "names": [
+        "a landing page reused across sittings is not that meeting's agenda",
+        "every honest empty is a DIFFERENT state, never one flat absence",
+        "the shape of the asking is recognised, and a topic question is not",
+        "the tester's question reaches VAIL's own meetings and nobody else's"
+      ],
+      "dynamic": 0
+    },
     "tests/ask-box.test.ts": {
       "names": [
         "QUESTION_ASKED is a registered identifier-free event type",
@@ -146,14 +155,17 @@
     "tests/ask-entity-binding.test.ts": {
       "names": [
         "PLANTED: a body named for a common question word cannot capture the question",
+        "PLANTED: one government arriving under TWO id spaces is not a tie",
         "PLANTED: punctuation and interrogatives never become a government's name",
         "THE DEFECT: a question naming Vail never answers about Sunnyside",
         "THE PROOF: deleting the name is what changes the answer, and it still defaults",
         "a government we do not hold is reported unresolved, never substituted",
         "a name that fits two governments is ASKED about, never chosen between",
+        "a named government the reader's context cannot satisfy silences the CONTACTS too",
         "a reader standing in Vail still gets Vail, bound rather than defaulted",
         "an unresolved or ambiguous name silences the default in routing too",
         "binding constrains retrieval by IDENTITY, never by label",
+        "dedupe does NOT collapse two genuinely distinct governments that share a name",
         "questions that name NO government leave the context default alone",
         "the class the reader names separates a district from a town of that name",
         "the phrasings a reader actually types all reach the same government"
@@ -697,11 +709,12 @@
     "tests/cawcd-roster.test.ts": {
       "names": [
         "every director carries the body's own page as its record",
-        "membership is wired while partisanship stays honestly unknown",
         "no Pima County Supervisor is rendered as a CAWCD director",
         "the board renders its own fifteen directors",
         "the county split matches the board's statutory composition",
-        "the four Pima seats are identified, because their terms end together"
+        "the four Pima seats are identified, because their terms end together",
+        "the seats are NONPARTISAN by statute, and no party is invented",
+        "the statute's own composition rule matches the roster we read"
       ],
       "dynamic": 0
     },
@@ -1339,6 +1352,7 @@
     },
     "tests/doctor-secrets.test.ts": {
       "names": [
+        "PLANTED: doctor asks the RUNNER for pnpm rather than spawning it",
         "SENTINEL: a check driven down a FAILING path still leaks nothing",
         "SENTINEL: doctor leaks nothing through stdout, stderr or its JSON report",
         "SENTINEL: doctor leaks nothing when it READS a credential file full of secrets",
@@ -1348,7 +1362,8 @@
         "redact removes a secret VALUE wherever it appears",
         "redact removes a serialized object carrying a secret",
         "redact removes an Authorization header and an api-key query parameter",
-        "redact turns an ERROR into a class and a clean message, not a raw throw"
+        "redact turns an ERROR into a class and a clean message, not a raw throw",
+        "the documented invocation is `pnpm run doctor`, and the script exists under that name"
       ],
       "dynamic": 0
     },
@@ -1963,6 +1978,17 @@
       ],
       "dynamic": 0
     },
+    "tests/integrity-claim.test.ts": {
+      "names": [
+        "PLANTED: the compressed claim is caught",
+        "a claim that STATES its denominator is not flagged",
+        "an unmeasured surface makes the global question OPEN, whatever the count is",
+        "no document in this repository states a global zero-defect claim",
+        "the coverage instrument prints the verdict it is required to print",
+        "the printed line always carries its denominator"
+      ],
+      "dynamic": 0
+    },
     "tests/interim-office-holder.test.ts": {
       "names": [
         "OFF-7: Vail — OFF-4's reference card — is unchanged",
@@ -2361,6 +2387,14 @@
         "MTG-4: a created event carries the venue in its location field",
         "MTG-4: a source publishing the ADDRESS as the venue name does not double it",
         "MTG-4: an online meeting's event still carries no invented address"
+      ],
+      "dynamic": 0
+    },
+    "tests/method-effort.test.ts": {
+      "names": [
+        "an unrecorded effort is a STATED unknown, never counted as cheap",
+        "every recorded effort uses the closed vocabulary",
+        "reader-integrity repair is not collection work and is flagged as such"
       ],
       "dynamic": 0
     },
@@ -3449,6 +3483,14 @@
         "the contact pills stack in one column, primary channels only",
         "the party pill stays — it is banned from the list, not from the card",
         "the small popup renders identity only — no role line, no chips, no in-seat"
+      ],
+      "dynamic": 0
+    },
+    "tests/snapshot-body-identity.test.ts": {
+      "names": [
+        "PLANTED: a snapshot missing bodyId is REFUSED, not served",
+        "PLANTED: even ONE meeting without body identity is refused",
+        "the committed snapshot carries body identity on every meeting"
       ],
       "dynamic": 0
     },

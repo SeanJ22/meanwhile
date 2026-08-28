@@ -101,28 +101,62 @@ test("the four Pima seats are identified, because their terms end together", () 
   );
 });
 
-test("membership is wired while partisanship stays honestly unknown", () => {
+test("the seats are NONPARTISAN by statute, and no party is invented", () => {
   /*
-   * The whole point of the change. Two independent facts, and the unknown one
-   * may not strand the known one.
+   * **AMENDED THE SAME DAY IT WAS WRITTEN.** This asserted `UNDETERMINED` — the
+   * honest state while only the district's own pages had been read, which say
+   * role and county for every member and party for none. That is a finding
+   * about the PAGES and settles nothing about the SEATS.
+   *
+   * The record that settles seats was then found where M62's own rule says to
+   * look FIRST — *"partisan or nonpartisan by law or charter FIRST"* — and it is
+   * **A.R.S. § 48-3709(B)**: candidates are on "the general election ballot of
+   * the county in which the candidate resides, WITHOUT PARTY DESIGNATION".
+   *
+   * That is law rather than an inference from a silent page, so the open item
+   * closed properly rather than by being downgraded. The separation still did
+   * its job: fifteen verified people reached a reader while the orthogonal fact
+   * was open, and closing it cost one line.
    */
   const roster = BODY_ROSTERS.find((r) => r.bodyId === CAWCD);
   assert.ok(roster, "the roster is not wired into BODY_ROSTERS at all");
   if (!roster) return;
 
-  assert.equal(roster.partisanship, "UNDETERMINED");
-  assert.equal(
-    roster.partisanshipSourceUrl,
-    undefined,
-    "UNDETERMINED cites nothing by definition — a source here would be a claim we cannot make",
+  assert.equal(roster.partisanship, "NONPARTISAN");
+  assert.match(
+    roster.partisanshipSourceUrl ?? "",
+    /azleg\.gov\/ars\/48\/03709/,
+    "a settled partisanship must cite the record that settled it — here, the statute",
   );
 
-  // And no party is invented for anybody, which is the failure mode that
-  // would make wiring-before-sourcing wrong.
+  // And no party is invented for anybody. On a NONPARTISAN body there is none
+  // to render, which is a different silence from an unsourced one.
   for (const member of roster.members) {
     assert.ok(
       !member.partyLabel,
-      `${member.name} carries a party on a board whose partisanship is unsourced`,
+      `${member.name} carries a party on a board the statute says has no party designation`,
     );
   }
+});
+
+test("the statute's own composition rule matches the roster we read", () => {
+  /*
+   * A.R.S. § 48-3708(A) sizes each county's delegation by population: fewer
+   * than 600,000 elects one director, 600,000 to 2,100,000 elects four, more
+   * than 2,100,000 elects ten. Pinal, Pima and Maricopa respectively — 1, 4 and
+   * 10, which is exactly the split the fifteen member pages produced.
+   *
+   * Two independent sources, one answer: the statute says what the board must
+   * be, the district's pages say who is on it, and they agree. Neither was
+   * derived from the other.
+   */
+  const roster = BODY_ROSTERS.find((r) => r.bodyId === CAWCD);
+  assert.ok(roster);
+  if (!roster) return;
+  const count = (county: string) =>
+    roster.members.filter((m) => (m.termNote ?? "").includes(`${county} County`)).length;
+
+  assert.equal(count("Maricopa"), 10, "A.R.S. 48-3708(A)(3): the largest county elects ten");
+  assert.equal(count("Pima"), 4, "A.R.S. 48-3708(A)(2): a county in the middle band elects four");
+  assert.equal(count("Pinal"), 1, "A.R.S. 48-3708(A)(1): the smallest county elects one");
 });

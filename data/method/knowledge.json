@@ -1,5 +1,5 @@
 {
-  "version": 28,
+  "version": 29,
   "updatedOn": "2026-08-27",
   "routes": [
     {
@@ -2303,6 +2303,38 @@
       "origin": "conceived 2026-08-27 for NH244. The Central Arizona Water Conservation District's four Pima seats carry terms expiring 2026-12-31, read off the district's own member pages, and the ballot corpus holds no CAWCD contest. Two documents were read in full and neither settles whether the contest is on the November 3 2026 general ballot — the Secretary of State's 2026 partisan filing (no CAWCD contest, which is expected for a nonpartisan office and proves nothing) and Pima County's Official Candidate List for the July 21 primary (no CAWCD contest either, though it does carry nonpartisan municipal offices). Neither a contest nor an absence may be written into the ballot corpus until a deciding document is read.",
       "learnedOn": "2026-08-27",
       "learnedAtVersion": 28
+    },
+    {
+      "id": "state-statute-for-office-character",
+      "title": "the STATUTE that creates an office — for whether it is partisan, how its seats are apportioned, what its term is, and which ballot it appears on",
+      "tier": "A0",
+      "fields": [
+        "partisanship",
+        "body",
+        "contest",
+        "incumbency"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The SHAPE is as portable as anything this project holds: every elected office in the United States is created by a statute or a charter, and that instrument — not a canvass — is what says whether the office carries a party. It is also cheap, stable and citable: a canvass answers for ONE election and has to be re-read every cycle, while the statute answers for the office until the legislature changes it. Proved on A.R.S. 48-3708 and 48-3709 for the Central Arizona Water Conservation District, where four election-authority documents had failed to settle the same question. The limits are real and worth stating: a statute says what MUST happen and never what DID, so it can establish partisanship, apportionment and term but can never establish that a particular contest appeared on a particular ballot or who filed for it."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-27",
+          "rows": 2,
+          "outcome": "YIELDED",
+          "note": "A.R.S. 48-3709(B) — candidates appear on the county general election ballot 'without party designation', which settled CAWCD as NONPARTISAN from law. A.R.S. 48-3708(A) — delegation size by county population, reproducing the Maricopa 10 / Pima 4 / Pinal 1 split read independently off fifteen member pages, and 48-3708(D) confirming that a vacancy is filled by gubernatorial appointment, which is how Justin Manuel holds a Pima seat. azleg.gov permits /ars/ and asks for a 120-second crawl delay."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 after four documents failed. The AZ SOS 2026 partisan filing, the Pima 2026 primary candidate list, the Pima 2020 general official canvass read in full at 1,852 pages, and the Pima 2020 general sample ballot all contain no CAWCD contest, and the deciding SOS portal is behind bot protection at three client classes. M62's own rule had said to read the law FIRST and the project had been reading canvasses instead, because canvass-reading was the skill it had built.",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 29
     }
   ]
 }

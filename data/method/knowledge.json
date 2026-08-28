@@ -1,5 +1,5 @@
 {
-  "version": 40,
+  "version": 45,
   "updatedOn": "2026-08-28",
   "routes": [
     {
@@ -2746,6 +2746,190 @@
         "note": "One robots.txt fetch per legislature host. Cheap to establish and the expensive mistake is skipping it and building an adapter first."
       },
       "learnedAtVersion": 40
+    },
+    {
+      "id": "body-publishes-its-schedule-separately-from-its-agendas",
+      "title": "a body whose vendor holds only the next fortnight while its own site publishes the recurring rule months ahead",
+      "tier": "A0",
+      "fields": [
+        "meeting"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE SHAPE, AND IT IS A PUBLISHING PRACTICE RATHER THAN A DEFECT. Pima County's Legistar tenant answered a 2026-08-01 to 2026-11-01 query with seven events, newest 2026-08-25 and none in September, from an adapter whose forward horizon is 60 days and whose denominators reconcile exactly (fetched 16, normalized 16, three placeless drops accounted). The September sittings are real and are published on the county's own site as a RULE — 'Meetings Beginning at 5 p.m. 2nd and 4th Tuesdays of the month', with the room and street address — at www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule. THE DIAGNOSTIC: when a tenant's calendar stops a fortnight out, ask the body's OWN site for a meeting-schedule page before concluding anything about the body; the two records have different publication clocks and a vendor calendar running dry is not a body that has stopped meeting. THE CONTROL that makes this practice rather than code: Vail Unified, same snapshot and same pipeline on the same day, DOES publish individual future sittings and its September 8 and September 22 render. WHAT IT DOES NOT LICENSE: computing meetings from the rule. Cancellations, holidays and special sessions override a recurring schedule, and rendering a computed date as a published sitting is a render default manufacturing a claim. The rule is a different RECORD, honestly describable as one."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 1,
+          "outcome": "YIELDED",
+          "note": "Pima County's own published meeting rule read from www.pima.gov on 2026-08-28: 2nd and 4th Tuesdays, 5 p.m., Administration Building, 130 W. Congress St. Legistar over the same window holds seven events, newest 2026-08-25."
+        }
+      ],
+      "subBranches": [],
+      "origin": "found 2026-08-28 investigating a reader report that the Pima County Board of Supervisors was missing its upcoming meetings. The report named September 8 and September 22 and was right about both; the suspicion that rows were being dropped was wrong, and the denominators said so before the primary source confirmed it.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_COUNTY",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One sitemap read and one page fetch per body. The schedule page is nearly always in the sitemap under a name containing 'Schedule' or 'Calendar'."
+      },
+      "learnedAtVersion": 41
+    },
+    {
+      "id": "reconcile-the-adapter-before-suspecting-it",
+      "title": "the denominator read that decides whether a 'missing rows' report is about the pipeline or about the publisher",
+      "tier": "A1",
+      "fields": [
+        "meeting",
+        "agenda",
+        "roster"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "A READER SAYING 'THE MEETINGS ARE MISSING' IS A CLAIM ABOUT A SURFACE, AND IT HAS TWO COMPLETELY DIFFERENT CAUSES THAT LOOK IDENTICAL. Either rows are being lost between the source and the screen, or the source never had them. THE CHEAP DISCRIMINATOR RUNS FIRST AND IS ALREADY WRITTEN DOWN: the snapshot records fetched, normalized and drops-by-reason per source. If fetched equals normalized and the drops are accounted, no row was lost and the pipeline is not the suspect — which is a strictly stronger statement than 'the code looks right'. THEN ASK THE PRIMARY SOURCE THE SAME QUESTION THE ADAPTER ASKED, by hand, over the same window: if the API returns what the snapshot holds, the adapter is exonerated by observation rather than by inspection. Only then is the question about the publisher, and only then is it worth hunting other routes. Doing this in the other order costs a session: it is possible to read an adapter for an hour and learn nothing that one query would have settled. NOTE THE TRAP IN THE OTHER DIRECTION TOO — a reconciled denominator that is missing required source records is still a wrong result (RULING 100). Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 7,
+          "outcome": "YIELDED",
+          "note": "webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01 returned 7 events, newest 2026-08-25, confirming the snapshot's 16-fetched-16-normalized as complete for the window rather than truncated."
+        }
+      ],
+      "subBranches": [],
+      "origin": "generalised 2026-08-28 from the Pima investigation, where the session brief carried a specific suspicion of downstream row loss and the snapshot's own counters refuted it in one read, before a single line of the adapter was opened.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "Two reads: the snapshot's per-source counters, then one hand query against the primary API over the adapter's own window."
+      },
+      "learnedAtVersion": 42
+    },
+    {
+      "id": "sibling-host-is-a-different-permission-decision",
+      "title": "the blocked application and the permitted publisher are two hosts, and only one of them was ever asked",
+      "tier": "A0",
+      "fields": [
+        "vote",
+        "document",
+        "permission"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MISTAKE THIS PREVENTS IS RECORDING A HOST'S DISALLOW AS A FACT ABOUT A GOVERNMENT. apps.azleg.gov publishes User-agent: * / Disallow: / and is correctly not walked. www.azleg.gov is a DIFFERENT HOST with a DIFFERENT ANSWER: a specific disallow list (/DocumentsForBill.asp, /FormatDocument.asp, /search/, /xml/, /aspWebCalendar/, /ExecutiveNominationsByNominee.asp, /Wordpress/, /azlegwp/, /aspnet_client/), Crawl-delay: 120, and a sitemap it advertises. The legislature's own publications are not forbidden anywhere in it. THE PROCEDURE: when a vendor or application subdomain disallows, resolve the PUBLISHER's own hostname and read ITS robots.txt before writing down anything about the record. A body very often runs a locked-down interactive app beside an open publication site, and the second one is where the primary documents actually live. FOUND ON THE PERMITTED HOST for Arizona: www.azleg.gov/sessionlaws/ (every bill enacted, by chapter) and www.azleg.gov/governors-letters/ (the Governor's transmittal letters to the legislature, which is where signing statements and VETOES are published). Neither is under a disallowed path."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 2,
+          "outcome": "YIELDED",
+          "note": "Two permitted primary-source routes identified for the signed-bill and veto class that the corpus previously recorded as unreachable: /sessionlaws/ and /governors-letters/. Ingestion is not yet built; the permission question is settled."
+        }
+      ],
+      "subBranches": [],
+      "origin": "walked 2026-08-28 after the session brief pointed out that #213's own report recorded www.azleg.gov as permitted and unwalked while the reader-facing gap sentence read as though the bill and veto class were unreachable. One robots.txt read settled it.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_STATE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One robots.txt per candidate hostname. The crawl-delay is the real cost here — 120 seconds between requests on this host, so a walk is paced in minutes rather than seconds and must be planned that way."
+      },
+      "learnedAtVersion": 43
+    },
+    {
+      "id": "read-the-navigation-off-the-404-page",
+      "title": "a stale sitemap on a live site, and the error page that carries the current map",
+      "tier": "A1",
+      "fields": [
+        "meeting",
+        "agenda",
+        "document",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "A 404 FROM A PUBLISHED SITEMAP IS A LEAD AND NOT A WALL. www.azleg.gov advertises robotsitemap.xml; it lists 28 .asp URLs written against a scheme the site has since left, and SessionLaws.asp returns HTTP 404. Most walks stop there and record the route as dead. THE PAGE ITSELF IS THE ANSWER: a modern CMS serves a FULL page on 404 — this one is 78 KB and carries the site's live navigation, a session picker listing every legislature back to 2018, and 82 distinct links. Reading the hrefs off the error page produced the two routes the walk was looking for, both at new addresses. THE RULE: when a URL from a sitemap, an old bookmark or a search result 404s on a host that is otherwise up, EXTRACT THE LINKS FROM THE ERROR RESPONSE before concluding anything. Check the status AND the body — a 404 with 78 KB of navigation is a redirect nobody wrote, and the site is telling you where everything went on the page that says the old address is gone. The same shape appears wherever a body migrates CMS, which they all eventually do."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 82,
+          "outcome": "YIELDED",
+          "note": "82 distinct links recovered from a 404 body, including the two live routes for the signed-bill and veto class that the stale sitemap could not name."
+        }
+      ],
+      "subBranches": [],
+      "origin": "found 2026-08-28 when the permitted azleg route walked from its own advertised sitemap returned 404, and the 404 body turned out to contain the live route list including /sessionlaws/ and /governors-letters/.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "No extra request at all — the response is already in hand. It costs one link extraction over bytes that were downloaded anyway."
+      },
+      "learnedAtVersion": 44
+    },
+    {
+      "id": "governor-transmittal-letters-published-by-the-receiving-chamber",
+      "title": "signed and vetoed bills read from the letters the governor sends the legislature, rather than from the walled bill-status app",
+      "tier": "A0",
+      "fields": [
+        "document",
+        "vote",
+        "officeholder"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "MEASURED 2026-08-28 ON www.azleg.gov/governors-letters/, WHICH IS PERMITTED. The page describes itself: 'Governor's Letters include the official letters that are sent from the Governor to the Legislature on a specific bill and usually include a brief explanation as to why the Governor has vetoed or signed the bill.' It links 151 letters for the 57th Legislature 2nd Regular Session — 83 HB and 68 SB — each a separate born-digital PDF at https://www.azleg.gov/govlettr/<leg>/<session>/<billno>.pdf, e.g. /govlettr/57leg/2r/hb2003.pdf. No search, no form, no session token, and /govlettr/ appears nowhere in the host's disallow list. THE GENERAL SHAPE, WHICH IS THE PORTABLE PART: a signed or vetoed bill produces a TRANSMITTAL DOCUMENT, and a transmittal document must be published somewhere the other branch can read it. So when an executive's own site is thin or the bill-status application is walled, ASK THE RECEIVING BODY FOR THE SAME ACT — a legislature that receives the governor's letters publishes them. The same reasoning reaches session laws, journals and enrolled-bill lists, all of which are records of one act held by more than one government. WHAT THIS CORRECTS: the corpus recorded this entire fact class as unreachable on the strength of one host's disallow, and the record was never in that host."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 151,
+          "outcome": "YIELDED",
+          "note": "151 Governor's Letter PDFs enumerated for 57leg/2r with a predictable per-bill URL scheme. The letters themselves are not yet ingested; what is measured is that they exist, are permitted, are individually addressable and state whether the bill was signed or vetoed."
+        }
+      ],
+      "subBranches": [],
+      "origin": "walked 2026-08-28, honouring the host's Crawl-delay of 120 seconds, after sibling-host-is-a-different-permission-decision identified the route and read-the-navigation-off-the-404-page found its current address.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_STATE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One index read per session, then one PDF per bill. The crawl-delay dominates: 151 letters at 120 seconds apart is about five hours for a full session, so an ingest has to be paced and resumable rather than run in one pass."
+      },
+      "learnedAtVersion": 45
     }
   ]
 }

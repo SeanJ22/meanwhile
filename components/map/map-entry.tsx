@@ -1016,14 +1016,40 @@ function MapEntryInner() {
    * Comes off the same coverage summary the notice reads, so the popup and the
    * notice cannot disagree about who governs a point or what we hold for them.
    */
-  const bodyFor = useCallback(
-    (ocdId: string | null): CoveredBody | null =>
-      // Guarded against null on both sides: a division-less meeting must not
-      // accidentally match a division-less coverage body — they are different
-      // bodies that merely share the absence of a division.
-      ocdId
-        ? (current?.coverage?.bodies.find((b) => b.ocdId === ocdId) ?? null)
-        : null,
+  /**
+   * The body that held this sitting — matched on the body it NAMES.
+   * (DATA-3, 2026-08-28.)
+   *
+   * This used to match on the meeting's DIVISION, and the only thing the
+   * result is ever used for is `membersOfBody(body.bodyId)` — so a division
+   * match was a membership claim derived from shared geography, which is the
+   * one inference `lib/registry/body-composition.ts` exists to forbid.
+   *
+   * Six coverage bodies sit on `county:pima`. The division match returned the
+   * FIRST, which is `county:pima#governing`, so every Central Arizona Water
+   * Conservation District sitting rendered the five Pima County Supervisors
+   * under its Representation tab — Rex Scott, Matt Heinz, Jennifer Allen,
+   * Steve Christy, Andrés Cano — for a board of fifteen directly elected
+   * directors presided over by Terry Goddard. The composition module was
+   * already correct and was being asked about the wrong body.
+   *
+   * Measured before changing, over the 462-meeting snapshot at the 85641
+   * coverage set: every meeting carries a `bodyId`, 14 rendered a different
+   * body's members, and NOTHING loses an honest roster by matching on
+   * identity instead. The division fallback is not a safety net; it was the
+   * defect.
+   *
+   * A meeting whose named body is not in the coverage set resolves to null,
+   * and null renders the named gap the subject already carries. An unknown
+   * body is not the same fact as a body with no members, and neither is the
+   * county board.
+   */
+  const bodyForMeeting = useCallback(
+    (meeting: Meeting): CoveredBody | null => {
+      const bodies = current?.coverage?.bodies;
+      if (!bodies || !meeting.bodyId) return null;
+      return bodies.find((b) => b.bodyId === meeting.bodyId) ?? null;
+    },
     [current],
   );
 
@@ -1136,7 +1162,7 @@ function MapEntryInner() {
         if (meeting) {
           openLarge({
             kind: "entity",
-            subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+            subject: meetingSubject(meeting, bodyForMeeting(meeting)),
           });
         }
       } else if (item.kind === "body") {
@@ -1195,7 +1221,7 @@ function MapEntryInner() {
     // Picking a result means the reader wants the map, not the drawer that
     // may be covering it at phone width.
     dismissSidebar();
-  }, [dispatch, dismissSidebar, current, openLarge, bodyFor]);
+  }, [dispatch, dismissSidebar, current, openLarge, bodyForMeeting]);
 
   const onPickMeeting = useCallback(
     (meeting: Meeting) => {
@@ -1227,11 +1253,11 @@ function MapEntryInner() {
       } else {
         openLarge({
           kind: "entity",
-          subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+          subject: meetingSubject(meeting, bodyForMeeting(meeting)),
         });
       }
     },
-    [venues, dispatch, openLarge, bodyFor],
+    [venues, dispatch, openLarge, bodyForMeeting],
   );
 
   /*
@@ -1286,8 +1312,11 @@ function MapEntryInner() {
         showDistricts,
         districtsFailed,
         ui.filters.districtTypes as DistrictType[],
+        // MAP-5: the SAME Local/State/Federal selection the meeting list
+        // filters on. One state, two consumers, no synchronising callback.
+        ui.tiers,
       ),
-    [showDistricts, districtsFailed, ui.filters.districtTypes],
+    [showDistricts, districtsFailed, ui.filters.districtTypes, ui.tiers],
   );
 
   const selectedDistrict = useMemo(
@@ -2209,7 +2238,7 @@ function MapEntryInner() {
           {popupMeeting && !large && (
             <MeetingPopup
               meeting={popupMeeting}
-              body={bodyFor(popupMeeting.ocdId)}
+              body={bodyForMeeting(popupMeeting)}
               // Tier-3 (5a): who sits on this body, curated with citations.
               //
               // The division fallback that used to sit here was removed on
@@ -2223,7 +2252,7 @@ function MapEntryInner() {
               // by body id, and a body id does not care which point was
               // searched) without the claim.
               representation={
-                membersOfBody(bodyFor(popupMeeting.ocdId)?.bodyId ?? null).members
+                membersOfBody(bodyForMeeting(popupMeeting)?.bodyId ?? null).members
               }
               onClose={() => setPopupMeeting(null)}
               onExpand={() =>
@@ -2231,7 +2260,7 @@ function MapEntryInner() {
                   kind: "entity",
                   subject: meetingSubject(
                     popupMeeting,
-                    bodyFor(popupMeeting.ocdId),
+                    bodyForMeeting(popupMeeting),
                   ),
                 })
               }
@@ -2342,7 +2371,7 @@ function MapEntryInner() {
             onOpenMeeting={(meeting) =>
               openLarge({
                 kind: "entity",
-                subject: meetingSubject(meeting, bodyFor(meeting.ocdId)),
+                subject: meetingSubject(meeting, bodyForMeeting(meeting)),
               })
             }
             // g4 item 9: the same card the who-governs list opens, built by
@@ -2453,7 +2482,23 @@ function meetingSubject(
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
     title: meetingEntryTitle(meeting, { bodyShown: true }),
-    subtitle: meeting.jurisdiction,
+    /*
+     * DATA-2 (2026-08-28): THE IDENTITY LINE COMES FROM THE REGISTRY.
+     *
+     * The title is the SITTING, worded as the source words it — and a source
+     * words it however it likes. CivicClerk files all seven of CAWCD's
+     * meeting kinds under one body: "Board Meeting" and "Public Policy
+     * Committee", but also "Briefings and Roundtables" and "CAP University",
+     * which are event series rather than governments. A reader met a card
+     * headed "CAP University" and had nothing on it to say which government
+     * they were looking at.
+     *
+     * So the line beneath the sitting names the BODY, from the canonical
+     * registry record, and falls back to the jurisdiction when the registry
+     * holds no name for it. A source's page title, brand or event label is
+     * provenance; it is never the name of a government.
+     */
+    subtitle: body?.name ?? meeting.jurisdiction,
     tier: tierForMeeting(meeting) ?? "local",
     badges:
       meeting.status === "SCHEDULED"

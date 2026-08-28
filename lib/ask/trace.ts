@@ -66,6 +66,16 @@ export interface AskTrace {
     gapCount: number;
     denominators: Record<string, number>;
   };
+  /**
+   * ASK-14: the office-definition lookup, when a CIVICS question named an
+   * office rather than an entity and nothing canonical was bound.
+   *
+   * The PHRASE the reader used is recorded because the vocabulary is the thing
+   * that will need extending — an operator reading a run where a reader asked
+   * about an office the product could not name needs to see what they called
+   * it. It is a public job title, not a fact about the reader.
+   */
+  officeLookup?: { phrase: string; office: string };
   /** Did the model write the answer, and did the answer survive checking? */
   synthesis: RungTrace;
   validation: {

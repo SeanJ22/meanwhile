@@ -305,7 +305,10 @@
     "zip:governing": "tsx scripts/zip-governing-universe.mts",
     "zip:intersect": "tsx scripts/zip-district-intersect.mts",
     "zip:universe": "tsx scripts/zip-universe.mts",
-    "zipgov:build": "tsx scripts/build-zip-governments.mts"
+    "zipgov:build": "tsx scripts/build-zip-governments.mts",
+    "method:learn-schedule-vs-events": "tsx scripts/learn-schedule-vs-events.mts",
+    "method:learn-azleg-permitted": "tsx scripts/learn-azleg-permitted.mts",
+    "method:learn-governor-letters": "tsx scripts/learn-governor-letters.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

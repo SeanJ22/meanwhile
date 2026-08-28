@@ -8,6 +8,7 @@
  */
 import { createHash } from "node:crypto";
 
+import { readableContent } from "../extract/html-content.ts";
 import type { Meeting, OcdId } from "../sources/types.ts";
 import { sourceUserAgent } from "../sources/http.ts";
 import { repairMojibake } from "../text/mojibake.ts";
@@ -139,13 +140,18 @@ export function contentHashOf(bytes: Uint8Array): string {
  * every stored row and every later consumer holding the broken text.
  */
 export function extractHtmlText(html: string): string {
-  // Prefer the page's own <main> region when it declares one — a notice
-  // page's navigation chrome is not the notice (4c).
-  const main = html.match(/<main[\s>][\s\S]*?<\/main>/i);
-  const text = (main ? main[0] : html)
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
+  /*
+   * DATA-1 (2026-08-28): this used to be `<main>` or ELSE THE WHOLE DOCUMENT.
+   *
+   * The fallback is what put 9,007 characters of the CAP website's menu tree
+   * into a reader's "what this meeting is about" — because that page declares
+   * no `<main>`, no `<nav>`, no `<header>` and no ARIA roles at all. The
+   * region choice, the chrome removal and the link-density backstop now live
+   * in `lib/extract/html-content.ts`, which `scripts/fetch-corpus.mts` also
+   * calls: one extractor, so the two can no longer disagree.
+   */
+  const text = readableContent(html)
+    .html.replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")

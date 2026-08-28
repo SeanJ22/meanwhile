@@ -23,6 +23,7 @@ import {
 } from "@/lib/ask/evidence";
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
+import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
@@ -914,6 +915,49 @@ export async function POST(request: Request) {
     records.push(...absencesForDivisions([ballotRecord.ocdId], ballot.absences));
   } else if (surface === "BALLOT" && !subject) {
     records.push(...absencesForDivisions(ocdIds, ballot.absences));
+  }
+
+  /*
+   * ── ASK-14 ── WHAT AN OFFICE DOES, FROM THE DEFINITION WE ALREADY HOLD.
+   * (2026-08-28.)
+   *
+   * A reader asked *"What does the governor do"* and got the honest-gap
+   * sentence, so the question was whether the office-function corpus was
+   * missing or merely unreachable. Measured: `lib/officials/office-blurbs.ts`
+   * holds twenty-six sourced office definitions, `governor` among them, and
+   * every battlecard has rendered them under "What this office does" since
+   * BC-6. The corpus was never the problem.
+   *
+   * The trace said where it stopped. The intent classifier returned CIVICS
+   * correctly; `resolution.state` was NONE, because `lib/ask/resolve.ts` binds
+   * ENTITY MENTIONS and "the governor" names an OFFICE rather than an entity.
+   * No binding meant no subject, no subject meant no retrieval, and the answer
+   * sat one lookup away. *"What does a county supervisor do?"* failed
+   * identically, so it was never about the governor.
+   *
+   * This runs only when nothing canonical was bound: a question that DID name
+   * a body or a person is answered about that body or that person, and a
+   * generic office definition must never displace it. `asksWhatAnOfficeDoes`
+   * is the second half of the gate — *"who is the governor"* names an office
+   * and asks for a person, and answering it with a job description would be
+   * the product not listening.
+   *
+   * It emits a stored, sourced record or nothing at all. There is no path here
+   * that writes civics from model memory.
+   */
+  if (records.length === 0 && !subject && interpretation.intent === "CIVICS") {
+    const match = asksWhatAnOfficeDoes(question) ? officeInQuestion(question) : null;
+    if (match) {
+      records.push({
+        kind: "OFFICE",
+        id: `office:${match.office}`,
+        text: match.blurb.text,
+        sourceUrl: match.blurb.basisUrl,
+        sourceOrg: match.blurb.basis,
+      });
+      denominators.officeDefinitions = 1;
+      trace.officeLookup = { phrase: match.phrase, office: match.office };
+    }
   }
 
   const pack: EvidencePack = {

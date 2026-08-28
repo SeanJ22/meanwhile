@@ -9,6 +9,7 @@ import { useRef, type ReactNode } from "react";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useNarrowing } from "@/hooks/use-narrowing";
+import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { formatMiles } from "@/lib/map/format";
 
 
@@ -16,6 +17,7 @@ import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
+import { applyResolvedLocation } from "@/lib/state/resolved-location";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
@@ -376,6 +378,24 @@ function CoverageBody({
   const selected = new Set(narrowing.divisions);
 
   /*
+   * **WGH-12/13/14 (2026-08-28): THE ADDRESS THE READER ALREADY GAVE.**
+   *
+   * `lib/geo/session-address.ts` has stored the confirmed divisions since
+   * 2026-08-22 and, until now, NOTHING read it back — the component that
+   * writes it was its only consumer, and `onNarrowApplied` in the map shell
+   * discards the same divisions a second time. So this card went on answering
+   * from the zip centroid while the prompt three lines above it displayed the
+   * address's own answer: "Set to ... State House District 17" over a STATE
+   * section reading District 19.
+   *
+   * This is that store's first real consumer. It stays on the DEVICE — see the
+   * module note in `lib/state/resolved-location.ts` for why the repair is
+   * client-side and that is deliberate rather than expedient.
+   */
+  const resolvedLocation = useResolvedLocation(zip);
+  const bodiesHere = applyResolvedLocation(bodies, resolvedLocation);
+
+  /*
    * ITEM 1a (2026-08-17, the author's ruling): ONE DENOMINATOR.
    *
    * Production at 85701 read "4 bodies govern the area around 85701" above a
@@ -406,7 +426,7 @@ function CoverageBody({
    * screen in plain language: the governments in the list, the boards and
    * committees in their own sentence below it.
    */
-  const derived = deriveWhoGoverns(bodies, selected);
+  const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
   /*
    * The governing list is NOT cut. A cut would put the prose count and the row

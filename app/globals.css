@@ -5268,3 +5268,23 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
 .person-under-heading {
   padding-left: 10px;
 }
+
+/* MAP-4 (2026-08-28) — A VERTICAL SCROLLER MUST NOT GROW A HORIZONTAL ONE — docs/globals-css-notes.md#map-4-a-vertical-scroller-must-not-grow-a-horizontal-one */
+.sidebar-scroll,
+.search-autocomplete,
+.filter-chips-scroll,
+.al-overlay-body,
+.district-picker,
+.welcome-card,
+.voting-panel,
+.popup-card-body,
+.coverage-notice-body,
+.picks-phone,
+.account-modal-body,
+.account-modal-foot,
+.phone-modal-body,
+.map-bottom-stack > .panel,
+.rail-floaters > .panel {
+  overflow-x: clip;
+  overflow-wrap: break-word;
+}

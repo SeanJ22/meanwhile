@@ -5469,6 +5469,389 @@ for (const zip of ["07866", "85701"]) {
   }
 }
 
+
+/*
+ * ══════════════════════════════════════════════════════════════════════════
+ * BAL-25, BAL-26 and BAL-30 (2026-08-28) — THE BALLOT AT DESKTOP WIDTH, THE
+ * ASK AFFORDANCE, AND THE MEASURE TEXT.
+ *
+ * **TWO GAPS IN THIS SUITE, AND THEY ARE THE SAME GAP.**
+ *
+ * The ballot block above runs at `PHONE` and only at `PHONE`. That was right
+ * when it was written — the tester's own passes were on a phone — but it meant
+ * the suite had NEVER LOOKED at this page above 390px, and what BAL-25 found
+ * is only visible above 390px: `app/ballot/page.tsx` carried a `max-w-2xl`
+ * container and not one responsive utility anywhere on the surface, so a
+ * 2,000px desktop rendered 672px of ballot and 1,328px of background. A
+ * regression net that never opens the window cannot report the view.
+ *
+ * The same block never touched `[data-ballot-ask]` either. Ask reached this
+ * page on 2026-08-27 and was mounted dead last, below every contest, footnote,
+ * measure, note and absence block — roughly 20,000px down at 1280 and 25,000px
+ * at 390. Nothing here would have noticed, because nothing here knew the panel
+ * existed.
+ *
+ * **APPENDED, NEVER REWRITTEN.** Every check above is untouched: this block
+ * adds identities and removes none, so `docs/walk-checks.txt` gains lines and
+ * the set difference above stays readable.
+ *
+ * R58: the block's checks are NAMED UP FRONT and every early exit declares all
+ * of them, so a check that could not run says so rather than printing nothing.
+ * ══════════════════════════════════════════════════════════════════════════
+ */
+section("BAL-25/26/30 — the ballot at desktop width, and Ask where a reader can find it");
+
+/**
+ * The four local Pima measures BAL-30 renders text for. Named rather than
+ * derived, so a check about the Vail override cannot quietly become a check
+ * about whatever the page happened to render.
+ */
+const BAL30_LOCAL_MEASURES = [
+  "ballot-az-pima:prop-423",
+  "ballot-az-pima:prop-425",
+  "ballot-az-pima:prop-428",
+  "ballot-az-pima:prop-429",
+];
+
+interface BallotSurfaceRead {
+  overflow: number;
+  mainWidth: number;
+  proseWidth: number;
+  contestLefts: number[];
+  contestCount: number;
+  firstContestTop: number;
+  pillTop: number;
+  statewideIds: string[];
+  localIds: string[];
+  questions: number;
+  questionChars: number;
+  statementPresent: number;
+  statementGap: number;
+  gapText: string;
+  presentText: string;
+}
+
+/* One read, both widths. Document coordinates for the vertical claims, so a
+   scrolled page cannot make "above the contests" true by accident. */
+const READ_BALLOT_SURFACE = `(() => {
+  const round = (n) => Math.round(n);
+  const main = document.querySelector('main');
+  const prose = document.querySelector('main p.text-voice') || document.querySelector('main p');
+  const contests = Array.from(document.querySelectorAll('[data-contest-id]'));
+  const pill = document.querySelector('[data-ballot-ask-pill]');
+  const scoped = (scope) => Array.from(
+    document.querySelectorAll('[data-measure-scope="' + scope + '"] [data-contest-id]'),
+  ).map((el) => el.getAttribute('data-contest-id'));
+  const gap = document.querySelector('[data-measure-statement="GAP_OURS"]');
+  const present = document.querySelector('[data-measure-statement="PRESENT"]');
+  const questions = Array.from(document.querySelectorAll('[data-measure-question]'));
+  return {
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    mainWidth: main ? round(main.getBoundingClientRect().width) : 0,
+    proseWidth: prose ? round(prose.getBoundingClientRect().width) : 0,
+    contestLefts: contests.map((c) => round(c.getBoundingClientRect().left)),
+    contestCount: contests.length,
+    firstContestTop: contests.length
+      ? round(contests[0].getBoundingClientRect().top + window.scrollY)
+      : -1,
+    pillTop: pill ? round(pill.getBoundingClientRect().top + window.scrollY) : -1,
+    statewideIds: scoped('STATEWIDE'),
+    localIds: scoped('LOCAL'),
+    questions: questions.length,
+    questionChars: questions.reduce((n, q) => n + (q.textContent || '').trim().length, 0),
+    statementPresent: document.querySelectorAll('[data-measure-statement="PRESENT"]').length,
+    statementGap: document.querySelectorAll('[data-measure-statement="GAP_OURS"]').length,
+    gapText: gap ? (gap.textContent || '').trim() : '',
+    presentText: present ? (present.textContent || '').trim() : '',
+  };
+})()`;
+
+/*
+ * **85629 IS THE CONTROL ZIP, AND THE CHOICE IS THE CHECK.**
+ *
+ * 85641 (Vail) was the obvious pick and it is the wrong one: it renders
+ * Propositions 423 and 425, both of which HAVE an official statement, so a
+ * check run there could never see the branch that matters. 85629 (Sahuarita)
+ * renders 423 and 425 with their statements AND Proposition 428 without one —
+ * the same class of question, from the same publisher, whose district Notice
+ * of Election has not been read. Both branches on one page is the only way to
+ * assert that they do not render as the same sentence.
+ *
+ * 07866 (Morris County, NJ) carries no measures at all, which exercises the
+ * declaration path: three checks that COULD NOT RUN and say so.
+ */
+for (const zip of ["85629", "07866"]) {
+  const WIDE_CHECKS: [string, string][] = [
+    ["BAL25", `${zip}: the ballot fills the desktop width rather than a 672px column`],
+    ["BAL25", `${zip}: the contest grid really is two columns at 1280`],
+    ["BAL25", `${zip}: the ballot does not scroll sideways at 1280`],
+    ["BAL25", `${zip}: prose keeps a readable measure while the container widens`],
+    ["BAL26", `${zip}: the Ask affordance sits ABOVE the contests at 1280`],
+    ["BAL26", `${zip}: the Ask panel opens from the pill at 1280, input and submit inside it`],
+    ["BAL30", `${zip}: every measure with recorded question text renders it`],
+    ["BAL30", `${zip}: a measure with no recorded statement names the gap as OURS`],
+    ["BAL30", `${zip}: no local measure renders under the statewide heading`],
+  ];
+
+  const wide = await openWideAt(browser, zip);
+  try {
+    await wide.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    const ready = await untilInteractive(wide, "[data-contest-id]", 20_000);
+    if (!ready) {
+      for (const [s, n] of WIDE_CHECKS) {
+        cannotRun(s, n, `no [data-contest-id] rendered at 1280x900 for ${zip}`);
+      }
+    } else {
+      const read = (await wide.evaluate(READ_BALLOT_SURFACE)) as BallotSurfaceRead;
+
+      /*
+       * ITEM 1 — the container. 672px WAS the defect, so the check is a claim
+       * about the number rather than about "responsiveness": at 1280 with
+       * `lg:px-8` the main element measures ~1088px, and anything near 672 is
+       * the old column back.
+       */
+      check(
+        "BAL25",
+        `${zip}: the ballot fills the desktop width rather than a 672px column`,
+        read.mainWidth > 900,
+        `main measures ${read.mainWidth}px at a 1280px viewport (it was 672)`,
+      );
+
+      /*
+       * ITEM 2 — and it spends the width on a SECOND COLUMN OF CARDS rather
+       * than on longer lines. Two distinct left edges among the contest cards
+       * is the mechanical read of that; one edge means the grid did not apply.
+       */
+      const lefts = [...new Set(read.contestLefts)];
+      if (read.contestCount < 2) {
+        cannotRun(
+          "BAL25",
+          `${zip}: the contest grid really is two columns at 1280`,
+          `${read.contestCount} contest(s) on the page — a second column needs a second card, and this is a failure to reach the subject rather than a zero result`,
+        );
+      } else {
+        check(
+          "BAL25",
+          `${zip}: the contest grid really is two columns at 1280`,
+          lefts.length >= 2,
+          `${read.contestCount} cards across ${lefts.length} column position(s): ${lefts.join(", ")}`,
+        );
+      }
+
+      check(
+        "BAL25",
+        `${zip}: the ballot does not scroll sideways at 1280`,
+        read.overflow <= 0,
+        `${read.overflow}px of horizontal overflow`,
+      );
+
+      /*
+       * ITEM 3 — the rule the widening had to obey. Widening the container
+       * while letting the prose run with it is not a desktop composition, it
+       * is the phone page with the guard rails off. 42rem is 672px; the
+       * allowance is for the border box.
+       */
+      check(
+        "BAL25",
+        `${zip}: prose keeps a readable measure while the container widens`,
+        read.proseWidth > 0 &&
+          read.proseWidth <= 700 &&
+          read.mainWidth > read.proseWidth + 200,
+        `prose ${read.proseWidth}px inside a ${read.mainWidth}px container`,
+      );
+
+      /*
+       * BAL-26 — the affordance is ABOVE the reading, which is the whole of
+       * the defect it fixes.
+       */
+      if (read.pillTop < 0) {
+        cannotRun(
+          "BAL26",
+          `${zip}: the Ask affordance sits ABOVE the contests at 1280`,
+          "no [data-ballot-ask-pill] on the page",
+        );
+        cannotRun(
+          "BAL26",
+          `${zip}: the Ask panel opens from the pill at 1280, input and submit inside it`,
+          "no [data-ballot-ask-pill] to open",
+        );
+      } else {
+        check(
+          "BAL26",
+          `${zip}: the Ask affordance sits ABOVE the contests at 1280`,
+          read.firstContestTop < 0 || read.pillTop < read.firstContestTop,
+          `pill at y=${read.pillTop}, first contest at y=${read.firstContestTop} — it used to sit below every one of them`,
+        );
+
+        await wide.locator("[data-ballot-ask-pill]").first().click();
+        const opened = await untilInteractive(
+          wide,
+          "[data-ballot-ask] [data-ask-input]",
+          8_000,
+        );
+        const contract = (await wide.evaluate(
+          `(() => {
+             const s = document.querySelector('[data-ballot-ask]');
+             const p = document.querySelector('[data-ballot-ask-pill]');
+             return {
+               section: s ? 1 : 0,
+               input: s ? s.querySelectorAll('[data-ask-input]').length : 0,
+               submit: s ? s.querySelectorAll('[data-ask-submit]').length : 0,
+               expanded: p ? p.getAttribute('aria-expanded') : null,
+               overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+             };
+           })()`,
+        )) as {
+          section: number;
+          input: number;
+          submit: number;
+          expanded: string | null;
+          overflow: number;
+        };
+        check(
+          "BAL26",
+          `${zip}: the Ask panel opens from the pill at 1280, input and submit inside it`,
+          opened &&
+            contract.section === 1 &&
+            contract.input === 1 &&
+            contract.submit === 1 &&
+            contract.expanded === "true" &&
+            contract.overflow <= 0,
+          `section ${contract.section}, input ${contract.input}, submit ${contract.submit}, aria-expanded ${contract.expanded}, overflow ${contract.overflow}px`,
+        );
+      }
+
+      /*
+       * BAL-30 — the measure text. `data/ballot/az-pima-2026.json` has carried
+       * the official question for four local measures since 2026-08-27 and the
+       * page rendered none of it, which is the rule in `lib/ballot/analyses.ts`
+       * broken by the surface the rule was written for.
+       *
+       * A ballot with no measures DECLARES rather than passes. 07866 has none.
+       */
+      const rendered = [...read.statewideIds, ...read.localIds];
+      if (read.questions === 0 && rendered.length === 0) {
+        cannotRun("BAL30", `${zip}: every measure with recorded question text renders it`, "no measures on this ballot");
+        cannotRun("BAL30", `${zip}: a measure with no recorded statement names the gap as OURS`, "no measures on this ballot");
+        cannotRun("BAL30", `${zip}: no local measure renders under the statewide heading`, "no measures on this ballot");
+      } else {
+        check(
+          "BAL30",
+          `${zip}: every measure with recorded question text renders it`,
+          read.localIds.length > 0 && read.questions >= read.localIds.length && read.questionChars > 500,
+          `${read.questions} question block(s), ${read.questionChars} characters of official wording on screen`,
+        );
+
+        /*
+         * **THE CONTROL, and it is the reason this is two checks and not one.**
+         * Propositions 428 (Sahuarita) and 429 (Tanque Verde) are the same
+         * class of question from the same publisher as 423 (Vail), and their
+         * statement is null because the district's own Notice of Election has
+         * not been read. Rendering them like 423 would manufacture a claim;
+         * rendering them as the SAME SENTENCE as 423 would hide one. Both must
+         * be on screen and they must not read alike.
+         */
+        check(
+          "BAL30",
+          `${zip}: a measure with no recorded statement names the gap as OURS`,
+          read.statementPresent >= 1 &&
+            read.statementGap >= 1 &&
+            read.gapText.length > 0 &&
+            read.gapText !== read.presentText &&
+            /we have not recorded/i.test(read.gapText),
+          `${read.statementPresent} statement(s) rendered, ${read.statementGap} named gap(s); the gap reads "${read.gapText.slice(0, 90)}"`,
+        );
+
+        const misfiled = read.statewideIds.filter((id) =>
+          BAL30_LOCAL_MEASURES.includes(id),
+        );
+        check(
+          "BAL30",
+          `${zip}: no local measure renders under the statewide heading`,
+          misfiled.length === 0,
+          misfiled.length === 0
+            ? `${read.statewideIds.length} statewide, ${read.localIds.length} local`
+            : `filed as statewide: ${misfiled.join(", ")}`,
+        );
+      }
+    }
+  } finally {
+    await wide.context().close();
+  }
+
+  /*
+   * AND THE SAME AFFORDANCE AT PHONE WIDTH, which is the width that matters
+   * most: this page is ~25,000px at 390, so a feature at the bottom of it is
+   * further from a phone reader than from anyone else.
+   */
+  const phoneContext = await browser.context({
+    extraHTTPHeaders: RUN_HEADERS,
+    viewport: PHONE,
+    reducedMotion: "reduce",
+  });
+  const phone = await phoneContext.newPage();
+  phone.on("response", (r) => countProbe(r.url()));
+  try {
+    await phone.goto(`${BASE}/ballot?zip=${zip}`, {
+      waitUntil: "domcontentloaded",
+      timeout: 90_000,
+    });
+    const ready = await untilInteractive(phone, "[data-ballot-ask-pill]", 20_000);
+    if (!ready) {
+      cannotRun("BAL26", `${zip}: the Ask affordance sits ABOVE the contests at 390`, "no [data-ballot-ask-pill] at 390x844");
+      cannotRun("BAL26", `${zip}: the Ask panel opens at 390 without pushing the page sideways`, "no [data-ballot-ask-pill] at 390x844");
+      cannotRun("BAL25", `${zip}: the ballot does not scroll sideways at 390`, "the ballot never rendered at 390x844");
+    } else {
+      const read = (await phone.evaluate(READ_BALLOT_SURFACE)) as BallotSurfaceRead;
+      /*
+       * **THE DEFECT THIS CHECK WAS WRITTEN FOR WAS FOUND BY MEASURING, NOT
+       * BY LOOKING.** 07866 pushed the phone page 75px sideways: the dates
+       * list put a nowrap label and a shrink-0 value in competition for 318px
+       * and New Jersey.s early-voting WINDOW took the ground from the
+       * viewport. Every screenshot of it looked fine.
+       */
+      check(
+        "BAL25",
+        `${zip}: the ballot does not scroll sideways at 390`,
+        read.overflow <= 0,
+        `${read.overflow}px of horizontal overflow at 390x844`,
+      );
+      check(
+        "BAL26",
+        `${zip}: the Ask affordance sits ABOVE the contests at 390`,
+        read.pillTop >= 0 &&
+          (read.firstContestTop < 0 || read.pillTop < read.firstContestTop),
+        `pill at y=${read.pillTop}, first contest at y=${read.firstContestTop}`,
+      );
+
+      await phone.locator("[data-ballot-ask-pill]").first().click();
+      const opened = await untilInteractive(
+        phone,
+        "[data-ballot-ask] [data-ask-input]",
+        8_000,
+      );
+      const after = (await phone.evaluate(
+        `(() => ({
+           overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+           input: document.querySelectorAll('[data-ballot-ask] [data-ask-input]').length,
+           submit: document.querySelectorAll('[data-ballot-ask] [data-ask-submit]').length,
+         }))()`,
+      )) as { overflow: number; input: number; submit: number };
+      check(
+        "BAL26",
+        `${zip}: the Ask panel opens at 390 without pushing the page sideways`,
+        opened && after.input === 1 && after.submit === 1 && after.overflow <= 0,
+        `input ${after.input}, submit ${after.submit}, ${after.overflow}px of horizontal overflow`,
+      );
+    }
+  } finally {
+    await phoneContext.close();
+  }
+}
+
 await browser.close();
 
 const EXCLUDED = [

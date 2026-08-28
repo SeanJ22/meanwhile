@@ -336,6 +336,51 @@ about to do the same to the who-governs seat rows. Where a label can be
 arbitrarily long — an office title, a body name — **stack it**. Do not tune
 the width.
 
+### It happened a third time, on the ballot, and it was measured rather than seen (2026-08-28, BAL-25)
+
+The ballot's "Dates that decide whether you can vote" list was
+`flex justify-between` with a `shrink-0` value. On 07866 at 390px that value is
+New Jersey's in-person early-voting WINDOW — "October 24th, 2026 – November
+1st, 2026" plus its add-to-calendar control, 374px of content in 318px of
+row — so it could not give ground and took 75px from the VIEWPORT instead: the
+page scrolled sideways. The fix is the rule as written, `flex-wrap` and a value
+that may shrink; nothing is truncated and no width is tuned.
+
+**It was found by reading `document.documentElement.scrollWidth`, not by
+looking at a screenshot.** Every capture of that page looked correct, because
+the overflow is off the right edge of the frame. `pnpm walk:all` asserts the
+number at 390 now.
+
+## The ballot's desktop composition (2026-08-28, BAL-25)
+
+The ballot page had **no responsive breakpoint at all** — not one `sm:`, `md:`,
+`lg:` or `xl:` utility in the page or in any of the thirteen
+`components/ballot/*` files. The container was `max-w-2xl`, so a 2,000px
+desktop rendered 672px of ballot and 1,328px of background.
+
+**The width buys a second column of CARDS. It does not buy longer lines.**
+Prose stays capped at the phone's 42rem measure (`lg:max-w-2xl`) at every
+width; the container goes to 68rem at `lg` and 76rem at `xl`. Measured at
+1280: `main` 1216px, prose 672px. Measured at 2000: identical, centred.
+
+The columns divide CARDS and never FIELDS, which is the two-column trap above
+answered rather than repeated: each contest and each measure spans its whole
+grid cell and stacks internally exactly as it does at 390px. One class,
+`.ballot-card-grid`, single-column below 1024px so the phone render is
+unchanged by construction.
+
+**Row-major, not multi-column.** CSS `columns` would balance the ragged bottom
+edge but flows column-major, and on a page this tall that means scrolling the
+whole left column and then scrolling back up. The measured effect of the grid:
+85641 goes from 26,436px at 390 to 12,652px at 1280, and 07866 from 13,554 to
+7,096.
+
+`app/ballot/loading.tsx` carries the identical container. It used to be
+`max-w-3xl px-5 py-10 sm:py-14` against the page's `max-w-2xl px-4 py-8`, so
+the heading jumped narrower, sideways and upward the moment the ballot
+arrived — a layout shift on the one screen whose whole job is to say "this is
+working".
+
 ## The who-governs list is the one surface with no pills (2026-08-16, the author's ruling)
 
 The previous pass gave this list the battlecards' full element grammar — a
@@ -689,6 +734,27 @@ nothing renders. Recorded there today:
 Where a width forbids the full string the rule is the shortest form that STILL
 NAMES A CONCRETE EXAMPLE. A label that degrades to "Ask" has lost the point,
 and the guard in `tests/pill-cluster.test.ts` refuses one.
+
+### The ballot's Ask pill, and why its label is not in that file (2026-08-28, BAL-26)
+
+There is a fourth Ask affordance now — a pill in `.ballot-top-pills`, the row
+under the ballot page's `<h1>` — and its label lives in
+`components/ballot/ballot-ask-pill.tsx` rather than beside the other three.
+
+That is deliberate and it is not an exemption. `AskPillPlacement` in
+`lib/map/cluster-placement.ts` is documented as TOTAL over exactly `map`,
+`sidebar` and `wgh`, and `tests/pill-cluster.test.ts` asserts that the label
+file's placement set is those three **"and no others"** — the ballot is not a
+map cluster placement and pretending it is would weaken a total function to
+buy a shared constant. So the label sits beside the only thing that renders it
+and `tests/ballot-ask-pill.test.ts` holds it to the identical G07 rule.
+
+- **ballot** — the pill row under the heading, which wraps freely: the pill is
+  never in competition for a fixed width, so the full example string is used.
+  Rendered "Ask: what does this office do?" and measured at **231 × 40px at
+  both 1280 and 390** — at 390 the row's `flex-wrap` puts it on a line of its
+  own beneath the two pills that precede it, at x=16, rather than squeezing
+  it, which is why no shortest form was needed.
 
 ## The rail is a card over the map, and it ends where its content ends (2026-08-17, G05 rule 4f)
 

@@ -2301,8 +2301,11 @@ label:has(> input[type="checkbox"]) {
   vertical-align: middle;
 }
 
+/* BAL-26 (2026-08-28): this read `var(--muted)`, which is defined NOWHERE in
+   this repository, so the declaration resolved to nothing and the text kept
+   its inherited colour. The token is `--text-muted`. */
 .could-govern-action {
-  color: var(--muted);
+  color: var(--text-muted);
 }
 
 /* The pill is per BODY, so on a narrow viewport it wraps under the title — docs/globals-css-notes.md#the-pill-is-per-body-so-on-a-narrow-viewport-it-wraps-under-the-title-56 */
@@ -5241,6 +5244,57 @@ main[data-sidebar="closed"] .rail-floaters > .coverage-notice {
   padding: 0;
   border: 0;
   background: none;
+}
+
+/* BAL-25 (2026-08-28) — the ballot's desktop second column — docs/globals-css-notes.md#bal-25-2026-08-28-the-ballot-s-desktop-second-column */
+.ballot-card-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 1024px) {
+  .ballot-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 22px;
+    align-items: start;
+  }
+}
+
+/* BAL-26 (2026-08-28) — Ask, in the pill row under the heading — docs/globals-css-notes.md#bal-26-2026-08-28-ask-in-the-pill-row-under-the-heading */
+.ballot-ask-pill {
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--panel-border));
+  background: color-mix(in srgb, var(--signal) 8%, var(--panel-bg));
+}
+
+.ballot-ask-pill:hover,
+.ballot-ask-pill:focus-visible {
+  border-color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 14%, var(--panel-bg));
+}
+
+.ballot-ask-caret {
+  display: inline-block;
+  margin-right: 7px;
+  color: var(--signal);
+  transition: transform 0.15s;
+}
+
+.ballot-ask-pill[aria-expanded="true"] .ballot-ask-caret {
+  transform: rotate(90deg);
+}
+
+/* The expansion hangs under the pill row at the row's full width, exactly as
+   the map's .ask-expansion does under its cluster. */
+.ballot-ask-expansion {
+  flex: 1 0 100%;
+  width: 100%;
+  margin-top: 0;
+}
+
+@media (min-width: 640px) {
+  .ballot-ask-expansion {
+    max-width: 34rem;
+  }
 }
 
 /* BAL-10 (2026-08-25): the ballot route's loading indicator. A quiet pulse — docs/globals-css-notes.md#bal-10-2026-08-25-the-ballot-route-s-loading-indicator-a-quiet-pulse-125 */

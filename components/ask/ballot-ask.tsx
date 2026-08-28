@@ -215,9 +215,9 @@ export function BallotAsk({
   const sources = records.filter((r) => r.sourceUrl);
 
   return (
-    <section className="mt-8 rounded-lg border border-[var(--line)] p-4" data-ballot-ask>
+    <section className="mt-2 rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-4" data-ballot-ask>
       <h2 className="text-base font-semibold">Ask about this ballot</h2>
-      <p className="mt-1 text-sm text-[var(--muted)]">
+      <p className="mt-1 text-sm text-[var(--text-muted)]">
         Questions are answered from records this site holds, with the source shown.
       </p>
 
@@ -228,18 +228,50 @@ export function BallotAsk({
         <input
           id="ballot-ask-input"
           data-ask-input
-          className="min-w-0 flex-1 rounded border border-[var(--line)] bg-transparent px-3 py-2 text-sm"
+          className="min-w-0 flex-1 rounded-[10px] border border-[var(--panel-border)] bg-transparent px-3 py-2 text-sm"
           placeholder="What does this office control?"
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") ask();
+            if (e.key === "Enter") {
+              ask();
+              return;
+            }
+            /*
+             * **ESCAPE, WHICH THIS HANDLED NOWHERE** (BAL-26, 2026-08-28).
+             *
+             * Only Enter was handled. On the old placement — a permanently
+             * open panel at the foot of the page — nothing was listening for
+             * Escape and nothing needed to be. In the pill row it does: the
+             * panel is dismissable now, and the map's Ask panel has handled
+             * Escape since it shipped.
+             *
+             * The nested form, deliberately. A half-typed question is what
+             * the reader most likely wants Escape to take back, so the first
+             * press clears the field and STOPS — `stopPropagation` keeps it
+             * from reaching the document listener in
+             * `components/ballot/ballot-ask-pill.tsx`, so the panel stays
+             * open and the cursor stays where it was. With the field already
+             * empty the press falls through and the panel closes.
+             *
+             * It also aborts a request in flight, for the same reason the new
+             * question does: an answer arriving for a question the reader has
+             * just abandoned is the substitution defect made out of latency.
+             */
+            if (e.key === "Escape" && text.length > 0) {
+              e.stopPropagation();
+              inFlight.current?.abort();
+              setText("");
+              setReply(null);
+              setAnswered("");
+              setWorking(false);
+            }
           }}
         />
         <button
           type="button"
           data-ask-submit
-          className="rounded border border-[var(--line)] px-3 py-2 text-sm disabled:opacity-50"
+          className="rounded-[10px] border border-[var(--panel-border)] px-3 py-2 text-sm disabled:opacity-50"
           onClick={ask}
           disabled={working || text.trim().length === 0}
         >
@@ -288,7 +320,7 @@ export function BallotAsk({
             <p className="font-medium">
               {reply.subject.name}
               {reply.subject.office ? (
-                <span className="font-normal text-[var(--muted)]">
+                <span className="font-normal text-[var(--text-muted)]">
                   {" "}
                   · {reply.subject.office}
                 </span>
@@ -322,7 +354,7 @@ export function BallotAsk({
 
           {/* Named gaps, each one saying whose gap it is. */}
           {gaps.map((g) => (
-            <p key={g.statement} className="mt-2 text-[var(--muted)]" data-gap={g.whose}>
+            <p key={g.statement} className="mt-2 text-[var(--text-muted)]" data-gap={g.whose}>
               {g.statement}
             </p>
           ))}
@@ -365,7 +397,7 @@ export function BallotAsk({
           */}
           {(reply.contacts?.length ?? 0) > 0 && (
             <div className="mt-3" data-ask-contacts={reply.contacts?.length}>
-              <p className="text-xs uppercase tracking-wide text-[var(--muted)]">
+              <p className="text-xs uppercase tracking-wide text-[var(--text-muted)]">
                 Who this is
               </p>
               <ul className="mt-1 space-y-0.5">
@@ -387,7 +419,7 @@ export function BallotAsk({
           )}
 
           {sources.length > 0 && (
-            <p className="mt-3 text-xs text-[var(--muted)]">
+            <p className="mt-3 text-xs text-[var(--text-muted)]">
               {/* One line per PUBLISHER, not one per document — see
                   `sourceLinks`. Six documents from one office are one source. */}
               Source

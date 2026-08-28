@@ -21236,3 +21236,62 @@ longer costs `fec` and `legiscan` a fortnight.
 
 Method version 45 to 55, 116 routes, `method:check` 0 issues. 7 of 7 local
 gates. 3,239 tests, 0 failures, 0 skipped.
+
+### The P0 that arrived mid-session, and was not allowed to freeze the team
+
+Intake tripwire run 33211710028 confirmed production schema drift while nine
+workstreams were already integrated. **It was fanned out as a TENTH workstream
+rather than serialising the session** — which is RULING 190 doing its job on the
+day it was adopted: a priority starts work immediately and never freezes
+independent engineers.
+
+**Production was two migrations behind merged code**, missing `0021` and `0022`,
+both Ask-interaction migrations. The precondition was verified rather than
+assumed: `0021` creates `ask_interactions` and three indexes, `0022` adds five
+defaulted columns to that same brand-new table, and between them there is no
+DROP, TRUNCATE, DELETE, rename or type change, and no pre-existing table is
+touched at all. Dry-run first, write target confirmed to be the same production
+host the read-only check reads, then applied — 9 statements, both journalled.
+
+**And the drift was wider than the report.** `walk:all` kept failing after
+production was repaired, and reading the failure rather than assuming it stale
+showed it named a DIFFERENT database: the DEVELOPMENT branch
+(`ep-weathered-cherry`) was also two behind. Both are now IN SYNC at
+`0022_adorable_hemingway`, 23 of 23.
+
+**How it happened, measured rather than guessed.** `git log -S` over the whole
+history finds ZERO commits ever adding `db:apply`, `drizzle-kit migrate` or
+`apply-migrations` to `.github/` or `netlify.toml`. **Nothing in this repository
+has ever applied a migration automatically.** It has always been a person at a
+terminal, and nothing reminded them. The two migrations landed in squash merges
+gated by `build-check`, which runs test, lint, tsc and two builds and asks
+nothing about the schema.
+
+**Detection was never the gap.** `walk:all` already carried the check and it
+caught this, as a named regression. What was missing was a gate where it can
+BLOCK, so the repair reuses `compareSchemaState` — the identical function behind
+`db:check`, the schema route and that walk check — rather than adding a second
+detector.
+
+The gate is separate from `db:check` for a specific reason: **`db:check` fails on
+any missing migration, which is right for a daily sweep and wrong for a merge
+gate**, because a CONTRACT migration is supposed to be missing until its code is
+live. Phase is derived from each migration's own SQL, not asserted beside it,
+and a test fails when the two disagree.
+
+**The shape that made it invisible, and it is the reason this is a class:** every
+insert naming a column those migrations add failed, the route CAUGHT it, and the
+page was still served. A reader saw a working site while Ask interactions were
+dropped. A repair that only makes the failure louder after deployment does not
+touch that — the ordering is the defect.
+
+Restoring `actions: read` to the seven workflows that ran `diagnose` without it
+then exposed a second defect underneath: the primary path SUCCEEDS and returns a
+ZIP, which was being read as UTF-8 and diagnosed as mojibake. Invisible only
+because the 403 meant the fallback always ran. Both fixed, and
+`schema-out-of-sync` is now a named failure class.
+
+The daily schema tripwire is untouched. It failed closed and found this.
+
+**Reader-visible proof on the repaired head:** `walk:all` 390 checks ran, **0
+FAIL, 0 silent**, 14 declared COULD NOT RUN with reasons, no named regressions.

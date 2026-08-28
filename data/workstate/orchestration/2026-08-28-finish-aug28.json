@@ -285,6 +285,34 @@
         "git worktree C:/Users/seanj/dev/wtp-wt/acq on ws/acq, node_modules junction",
         "integrated; method:learn-statewide-execs run once by the owner (48->52, 113 routes); seven source rows added; the missing certified Mine Inspector nominee it found was added to the ballot corpus by the owner"
       ]
+    },
+    {
+      "id": "ops-migration-drift",
+      "title": "P0 LIVE INCIDENT — production schema drift: repair truth, gate the class, restore diagnosis",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          ".github/workflows",
+          "lib/db/shipping-invariant.ts",
+          "lib/db/applied-migrations.ts",
+          "lib/db/migration-phases.ts",
+          "scripts/db-shipping-gate.mts",
+          "scripts/diagnose-failure.mts",
+          "scripts/check-schema-state.mts",
+          "scripts/gates.mjs"
+        ],
+        "data": []
+      },
+      "produces": [],
+      "consumes": [],
+      "executable": true,
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "arrived mid-session as a P0 and was fanned out as a TENTH workstream rather than freezing the other nine — RULING 190: a priority starts work, it never freezes independent engineers",
+        "git worktree C:/Users/seanj/dev/wtp-wt/ops on ws/ops-migration-drift, node_modules junction",
+        "the production migration apply was kept by the integration owner because it mutates canonical production state; the engineer was explicitly barred from touching production"
+      ]
     }
   ]
 }

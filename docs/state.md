@@ -20460,3 +20460,69 @@ cron file carries 460 meetings with **zero** `bodyId`, because main does not yet
 have this branch's attribution code, and run through this branch's own guard it
 is REFUSED while the branch's is ACCEPTED. The invariant chose the file. That is
 the guard written one commit earlier doing exactly the job it was written for.
+
+### One portal page, three layers, and the guard that had been red for a session
+
+Following the landing-page finding to its source turned up the same defect at
+three depths, and only the first was visible from where it was found.
+
+**The reader was being handed another government's document under their own
+government's name.** Of the 56 shared documents, ONE spans two DIFFERENT
+governments: `bradfordnh.gov/pages/calendar`, on 27 meetings — 14 Newbury's and
+13 Bradford's. Read in full it is unmistakably Bradford's: Bradford Town Hall,
+`bradfordnh.org` addresses, Bradford's own board schedules, and the word Newbury
+nowhere in it. Some of those rows carry `sourceOrg: "Town of Newbury"`. That is
+the class that put 364 meetings on bodies which did not hold them, surviving in
+the agenda layer — and a *harder* fact than a same-body landing page, because
+one page cannot be two governments' agenda under any circumstances.
+
+**The wiring was already correct, and the data still said otherwise.** Newbury's
+fifteen wiring rows carry no notice URL at all, so nothing would fetch Bradford's
+calendar for them again. The document survived because the store is seeded from
+the previous snapshot — which is what makes append-only semantics hold across
+refreshes, and also meant a document attached under a wiring error was
+re-appended by every later run, unexamined, forever. **Correcting the wiring
+could not correct the data, and nothing said so.**
+
+**And the adapter kept producing the class.** The measurement settles it: of 198
+agenda documents, 56 share a URL with another meeting and **not one yields a
+single agenda item**, while 67 of the 142 on their own URL — 47% — do. Two
+producers, one destination: an adapter setting `agendaUrl` to a portal ROOT, and
+the division-wide notice-URL fallback in `documentUrlFor`.
+
+All three are closed. The serving path no longer attributes such a document or
+returns its items; the carry-forward refuses one attached to more than one
+government; and the ingest refuses to store one that BOTH yields no item AND is
+already stored elsewhere — sharing alone is not enough, because two bodies
+meeting jointly under one real agenda yield items and must be kept.
+
+**Every control asserts the MEASUREMENT rather than the conclusion.** Exactly one
+cross-government URL today; zero shared documents yielding items today. If either
+number moves the control fails and says so, instead of passing quietly at a new
+value. A guard that would accept a changed world without mentioning it is the
+failure mode this whole session kept finding.
+
+### The standing net had been red on `main` since PR #210, and the product was right
+
+`walk:all`'s g8 check asserts no internal adapter id reaches a reader surface. It
+greps the raw response, so `\bcivicplus\b` matched inside
+`content.civicplus.com` and `\blegistar\b` inside a `pima.legistar.com` link —
+both CITATIONS, carried because the ballot corpus's absences must cite the record
+that settled them. Strip URLs and not one adapter id remains on any surface at
+any zip. **The guard was reporting the transparency rules working.**
+
+Attributed before it was touched, because the instinct on a red walk is to
+assume you broke it: `git log -S` puts the citation in `9e75bea`, PR #210's
+merged handoff, and `merge-base` confirms that commit predates this session's
+start SHA. This branch made no commit touching the Pima ballot corpus.
+
+Repaired by stripping URLs before scanning, with a `PLANTED` control that runs on
+every walk and asserts BOTH halves — an id in reader TEXT still caught, the same
+id in a source URL not — and says THE GUARD IS BLIND if the first half ever stops
+firing. **369 passed, 0 regressions, 11 could not run.**
+
+That is the third instrument this session caught reporting a fact about itself as
+a fact about the world, after the Newbury coverage false positive and the doctor
+PATH report. The pattern is worth naming: **the false-positive direction of a
+guard is the one nobody measures**, and a guard that cries wolf gets tolerated,
+worked around, and eventually switched off.

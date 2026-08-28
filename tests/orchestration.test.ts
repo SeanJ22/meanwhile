@@ -306,6 +306,49 @@ test("this session's own plan is on disk and passes its own rule", () => {
   }
 });
 
+test("THE NEGATIVE CONTROL: a serial queue dressed in declared edges does not escape the rule", () => {
+  /*
+   * The realistic evasion, and the shape of the session RULING 190 was written
+   * against. Three independent domains — a meetings adapter, the ballot, an
+   * Arizona ingest — run one after another, and the chain is made to LOOK like
+   * a dependency graph by declaring an edge between each pair.
+   *
+   * Declaring the edges suppresses `independent-work-serialized`, because a
+   * declared ancestor genuinely means the pair is not independent. That is why
+   * the reasons are filtered too: the edges are only as good as what backs
+   * them, and neither of these is a dependency.
+   */
+  const v = classifyOrchestration(
+    plan([
+      ws({ id: "mtg13", owns: { paths: ["lib/sources/legistar"], data: [] }, disposition: "SERIALIZED" }),
+      ws({
+        id: "ballot",
+        owns: { paths: ["app/ballot"], data: [] },
+        dependsOn: ["mtg13"],
+        dependencyReasons: { mtg13: "MTG-13 is P0 so the ballot work waits until it is finished" },
+        disposition: "SERIALIZED",
+      }),
+      ws({
+        id: "azleg",
+        owns: { paths: ["lib/sources/azleg"], data: [] },
+        dependsOn: ["ballot"],
+        dependencyReasons: { ballot: "the PR is already large and this would add too many files changed" },
+        disposition: "SERIALIZED",
+      }),
+    ]),
+  );
+
+  assert.equal(v.status, "UNJUSTIFIED_SERIALIZATION");
+  assert.equal(v.findings.length, 3);
+  // The head of the chain is caught for waiting on nothing at all...
+  assert.ok(v.findings.some((f) => f.rule === "serialized-without-dependency" && f.workstreams[0] === "mtg13"));
+  // ...and both invented edges are caught by the justification they appealed to.
+  const nonReasons = v.findings.filter((f) => f.rule === "non-reason-dependency");
+  assert.equal(nonReasons.length, 2);
+  assert.match(nonReasons[0].detail, /priority mistaken for a lock/);
+  assert.match(nonReasons[1].detail, /PR size/);
+});
+
 test("the non-reason list is not empty and every entry carries its why", () => {
   assert.ok(SERIALIZATION_NON_REASONS.length >= 6);
   for (const n of SERIALIZATION_NON_REASONS) {

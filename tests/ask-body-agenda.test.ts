@@ -202,3 +202,41 @@ test("a document belonging to TWO governments is never handed to either as its a
     "the meeting mode is attributing a document to a government it does not come from",
   );
 });
+
+test("the ingest refuses to carry forward a document belonging to two governments", () => {
+  /*
+   * **A WIRING ERROR MUST NOT BECOME PERMANENT DATA.**
+   *
+   * The document store is seeded from the previous snapshot so append-only
+   * semantics hold across refreshes — and that also meant a document attached
+   * under a wiring error survived every later run. The wiring gets corrected,
+   * the ingest never looks again, and the wrong document is carried forever.
+   *
+   * That is how fourteen Newbury meetings still hold Bradford's town calendar,
+   * retrieved 2026-08-21, when Newbury's wiring rows carry no notice URL at all
+   * today. The error is already fixed at the source and the data still says
+   * otherwise.
+   *
+   * Pinned on the source because the check runs inside a network ingest that a
+   * test may not perform. What is asserted is that the re-check EXISTS and that
+   * it drops rather than keeps — an append-only store re-appends anything kept.
+   */
+  const ingest = readFileSync(join(process.cwd(), "scripts/ingest.ts"), "utf8");
+  assert.match(
+    ingest,
+    /agenda documents carried forward/,
+    "the carry-forward no longer states its denominator",
+  );
+  assert.match(
+    ingest,
+    /more than one government/,
+    "the ingest no longer re-checks a carried-forward document's government",
+  );
+  /* The seeding must NOT be an unconditional loop again. */
+  assert.ok(
+    !/for \(const doc of previous\.agendaDocuments\) agendaDocumentStore\.append\(doc\);/.test(
+      ingest,
+    ),
+    "the unconditional carry-forward is back — a wiring error would become permanent again",
+  );
+});

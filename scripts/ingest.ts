@@ -245,7 +245,64 @@ async function main() {
     // version rather than replacing it.
     const previous = readPreviousSnapshot();
     if (previous) {
-      for (const doc of previous.agendaDocuments) agendaDocumentStore.append(doc);
+      /*
+       * **A CARRIED-FORWARD DOCUMENT IS RE-CHECKED, BECAUSE A WIRING ERROR
+       * OTHERWISE BECOMES PERMANENT.** (2026-08-27.)
+       *
+       * Seeding the store from the previous snapshot is what makes append-only
+       * semantics hold across refreshes, and it also means a document attached
+       * under a wiring error survives every later run — the wiring is corrected,
+       * the ingest never looks again, and the wrong document is carried forever.
+       *
+       * That is not hypothetical. On 2026-08-21 fourteen NEWBURY meetings were
+       * given `bradfordnh.gov/pages/calendar` — the Town of BRADFORD's own
+       * calendar, which names Bradford Town Hall and Bradford's boards and does
+       * not mention Newbury anywhere — some carrying `sourceOrg: "Newbury
+       * Conservation Commission"`. Newbury's wiring rows carry no notice URL at
+       * all today, so the error is already fixed at the source and the data
+       * still says otherwise.
+       *
+       * The test applied here is the one that cannot be wrong: **a document
+       * attached to meetings of MORE THAN ONE GOVERNMENT is nobody's agenda.**
+       * One page cannot be two governments' agenda under any circumstances, so
+       * dropping it loses nothing true. A page shared across sittings of ONE
+       * body is a landing page and is a separate question (NH255) — it is left
+       * alone here, because it is at least that body's own page.
+       *
+       * Dropped rather than kept-and-flagged: the store is append-only, so a
+       * row that stays gets re-appended by every later run.
+       */
+      const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
+      const govsByUrl = new Map<string, Set<string>>();
+      for (const doc of previous.agendaDocuments) {
+        const gov = govOf.get(doc.meetingId);
+        if (!gov) continue;
+        const set = govsByUrl.get(doc.documentUrl) ?? new Set<string>();
+        set.add(gov);
+        govsByUrl.set(doc.documentUrl, set);
+      }
+
+      let carried = 0;
+      let refused = 0;
+      const refusedUrls = new Set<string>();
+      for (const doc of previous.agendaDocuments) {
+        if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
+          refused++;
+          refusedUrls.add(doc.documentUrl);
+          continue;
+        }
+        agendaDocumentStore.append(doc);
+        carried++;
+      }
+      console.log(
+        `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
+      );
+      if (refused > 0) {
+        console.warn(
+          `  ${refused} REFUSED — attached to meetings of more than one government, ` +
+            `so they are nobody's agenda: ${[...refusedUrls].join(", ")}`,
+        );
+      }
     }
 
     await retrieveAgendas(meetings);

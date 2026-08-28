@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-27 — **Every defect this session repaired was invisible to a count.** The coverage-truth session; its record is the LAST section of this file.
+Last updated: 2026-08-27 — **The word the reader typed to say WHICH government they meant was inert, and the ZIP decided.** The ask-entity session; its record is the LAST section of this file.
+
+Previous: 2026-08-27 — **Every defect this session repaired was invisible to a count.** The coverage-truth session.
 
 Previous: 2026-08-27 — **Every government this session added was found
 somewhere the government does not choose to publish. Not one of the seven came
@@ -20138,3 +20140,221 @@ list on every run. The largest two: **the CAWCD board's four Pima seats are on
 the 2026 ballot and the ballot corpus holds no CAWCD contest at all**, and
 **58 Tucson commissions now correctly show no members**, whose real rosters the
 City Clerk publishes on a tenant this repository already fetches meetings from.
+
+---
+
+# The ask-entity session — 2026-08-27
+
+**A tester asked what was on the Vail school district agenda and was told about
+Sunnyside Unified.** A different government, about thirty miles away, named
+nowhere in the question, with no statement that Vail had not been found and
+none that a default was in use. The reader had no way to know the answer was
+about somewhere else.
+
+The one-line proof of the mechanism, now an assertion in
+`tests/ask-entity-binding.test.ts`: **with the word "Vail" deleted, the question
+produced a byte-identical answer.** The name contributed nothing.
+
+## Where the named entity was lost — four places, none of them a bug
+
+Nothing in the pipeline ever read the name, and each layer had a defensible
+reason:
+
+- `matchTopic` matched `schools-policy` off the words "school district".
+- `resolveRouting` asked `bodiesFor` for the school boards in the READER'S
+  coverage, which at a Tucson zip is Sunnyside.
+- `matchExactName` compares the WHOLE input against a WHOLE name **by design**
+  — its own header argues that a name inside a sentence belongs to the
+  destination and topic layers — so a name inside a sentence never matched.
+- The Level 1 Claude classifier is asked for one topic id out of a closed enum
+  and nothing else, and is told not to answer the question. The entity never
+  survived that call either, and for the tester's question the classifier was
+  never consulted at all: it runs only when the keyword matcher REFUSES, and
+  the keyword matcher routed this one confidently.
+
+**How the paid Claude API was being used, and what it was not doing.** It is a
+topic labeller over a closed list, with a JSON-schema-constrained enum and a
+second check against the same list on return. Its input is the scrubbed
+question text alone; it receives no entity, no coverage, no candidate list, and
+returns no entity. So the answer to "was wrong context injected before the
+model" is that **no context reached the model at all, and no model output
+reached retrieval** — the substitution was entirely in the deterministic layer
+underneath. Retrieval was unconstrained across entities because nothing had ever
+told it which entity to constrain to.
+
+## The repair — a named government binds before the reader's ZIP
+
+`lib/routing/named-entity.ts` resolves the government a reader named against
+what this product holds and returns one of four verdicts: `NONE`, `BOUND`,
+`AMBIGUOUS`, `UNRESOLVED`. It never picks a government; where the evidence does
+not decide it says so, and the caller renders that instead of an answer.
+
+Matching is on the tokens of a name that IDENTIFY rather than CLASSIFY. Strip
+the civic vocabulary every district in the country shares and *Vail Unified
+District* reduces to `vail`, which is why *Vail school district*, *Vail
+Unified*, *Vail Unified School District* and *the Vail school board* all reach
+the same government. The generic tokens are then used for exactly one thing —
+breaking ties the distinctive tokens could not, using the reader's own class
+phrase and the registry's own division type, which is why *the Vail school
+board* resolves to the district rather than to the place called Vail. Where
+that evidence does not separate them the answer is `AMBIGUOUS` and the reader
+is asked.
+
+`resolveRouting` takes the binding and constrains retrieval **by identity, never
+by label** — two governments can share a name, and a label match is how the
+substitution would come back through a different door. `/api/ask/agenda` binds
+the same way, and a named body REPLACES the geographic scope rather than
+narrowing it.
+
+**Both directions are pinned, because pinning one is how this comes back.** A
+question that names NO government still gets the reader's own district. A repair
+that simply stopped answering would have passed half the file and broken the
+product.
+
+### The rung's own two failure modes, kept as controls
+
+A matcher able to override the default is able to override it wrongly, and both
+of these shipped in the first implementation:
+
+- A body genuinely called **"Agenda Committee"** has `agenda` as its whole
+  identifying vocabulary, so it captured every question containing the word —
+  including the one this module was written for. A government whose entire
+  identifying vocabulary is ordinary question vocabulary can no longer be bound
+  at all.
+- `normalizeName` turns "what's" into "what s", which put a government called
+  **"s"** directly in front of "school district" in the commonest phrasing
+  there is; and walking back past "my"/"on"/"is" in *"who is on my school
+  board"* reached **"who"**.
+
+## Verified on the reader path, not only in a function
+
+`pnpm verify:ask-entity` drives the real Ask box in a real browser against a
+local production build at 85706 — the tester's own context. Vail is
+`UNRESOLVED` and Sunnyside is not named; a question naming nobody is `NONE` and
+still gets Sunnyside. The panel now carries `data-ask-entity` on every path,
+because the substitution was invisible partly because nothing on the page said
+which entity had been resolved.
+
+## Zero defects on a partial subset is not zero defects
+
+`pnpm coverage` reported, truthfully, `INTEGRITY DEFECTS 0` beside `SURFACES NOT
+MEASURABLE 16`, and said in prose on every run that the zero describes the
+surfaces it measures and nothing else. The previous session's report compressed
+that to "0 integrity defects". Within a day a tester found a reader-visible
+defect on Ask — one of the sixteen.
+
+`lib/ops/integrity-claim.ts` derives the verdict instead: unmeasured surfaces
+decide FIRST, so a clean run with one blind spot is `NOT_ESTABLISHED` rather
+than "clean with a caveat". A standing sweep runs the guard over every document
+that would be committed. Two of its own false starts are recorded in it: the
+word "integrity" is required in the pattern, because without it the sweep
+matched *the 0,0 defect* — the NAME of a bug — and the sweep reads
+`filesThatWouldBeCommitted` rather than tracked files only, because a session
+record written but not yet staged is exactly the document most likely to carry
+a fresh compressed claim.
+
+**Ask is now a measured surface**, probed at all four pilots through the same
+function the reader's surface calls. Measured surfaces went 20 → 24.
+
+### The probe was vacuous first, and that is recorded too
+
+Its first version asked *"What's on the Vail Unified District agenda?"*, which
+carries no topic keyword — so nothing routed, no body was ever named, and it
+scored itself green. **Disabling the repair did not make it fire.** It now
+carries the words that route; a probe that fails to route is reported as a
+substitution rather than counted as a pass; and a standing control re-runs the
+pre-repair path on every run and requires it to still name the reader's own
+district.
+
+## CAWCD: fifteen sourced people, released from an unrelated unknown
+
+The board that taxes every parcel in Pima County rendered **nobody**. First the
+five Pima County Supervisors, by a geographic fallback; then, once that was
+removed, an honest emptiness — and then it stayed empty because the board's
+PARTISANSHIP had not been sourced.
+
+Those are independent facts, and `CLAUDE.md` is explicit that collection state
+never governs display. Membership is wired with its provenance; partisanship
+stays `UNDETERMINED`, renders nothing, and remains open. The county split the
+district's own pages give is **Maricopa 10, Pima 4, Pinal 1** — exactly the
+board's statutory composition, an independent check that fifteen pages were read
+correctly. That corrects a note recording only three confirmed Pima members; the
+fourth is **Justin Manuel**.
+
+**The guard that blocked it was a completion measurement frozen into a
+permanent bar.** `tests/party.test.ts` asserted no roster is ever `UNDETERMINED`
+— true of the twelve M62 walked, and a rule that no roster whose partisanship is
+still open may ever be added. What it was really protecting is preserved and
+sharpened: an open roster must be DECLARED, so it costs a line in a diff. Two
+composition controls were amended the same way; both asserted CAWCD renders
+NOTHING, which was true of the interim state and is not the invariant, and the
+fallback control now compares by DISJOINTNESS rather than by a count that loses
+its meaning once the board has its own members.
+
+## NH244: what is established about the 2026 election, and what is blocked
+
+Four Pima seats DO fall vacant on 2026-12-31 <!-- expected-future: the end of the CAWCD Pima directors' six-year terms, read off the district's own member pages -->, read off the district's own member
+pages. Two documents were read in full and **neither settles the ballot
+question**: the Secretary of State's 2026 PARTISAN filing carries no CAWCD
+contest, which is expected if the office is nonpartisan and proves nothing; and
+Pima County's Official Candidate List for the July 21 PRIMARY carries none
+either, though it does carry nonpartisan municipal offices — and CAWCD directors
+appear on the GENERAL ballot, not the primary.
+
+The deciding source, the Secretary of State's candidate listing portal for the
+November 3 general, is **`BLOCKED_CURRENTLY`**: HTTP 403 to curl, to a bare
+node fetch with a browser user agent, and to a real Playwright browser. Its
+`robots.txt` is 403 too, so permission is `CANNOT_TELL` and is **not** a
+disallow. Bypassing bot detection is prohibited, so this needs another route.
+
+**Nothing was written into the ballot corpus in either direction.** Not a
+contest on the strength of the expiring terms, and not an absence — the corpus
+is silent on CAWCD because nobody has read the deciding document, which is a
+fact about us and not about the election.
+
+## An old snapshot can no longer restore the misattribution class
+
+`Meeting.bodyId` is what stopped 364 of 460 meetings rendering on bodies that did
+not hold them. The snapshot is regenerated by a scheduled job and committed, so
+an older one arrives by entirely ordinary routes — a merge, a rebase, a revert,
+a cron run from an older ref — and it parses, validates, has meetings in it, and
+silently attributes them to the wrong governments. A session resolved exactly
+that conflict by hand yesterday. **A safety property that depends on a future
+merge being judged correctly is not a safety property**, so `validateSnapshot`
+now refuses it, at the boundary both the reader and the writer run through, on
+the SHAPE rather than on a version number or a commit id.
+
+## The remote gate that was red, and why it was red locally-green
+
+`tests/doctor-secrets.test.ts` asserted doctor still reports credentials by
+count — which only holds when `.env.local` exists. CI has none, so the branch
+never ran and the assertion was unreachable. It now drives the sentinel through
+a **constructed** `.env.local`, which is the credential-reading path no run was
+ever exercising: a developer's real file has values no test knows, and CI has no
+file at all. Both were blind.
+
+## What is owed
+
+Eight new rows carry it, including the tester's UX findings preserved as the
+tester stated them and a **P2 / NEEDS SEAN** privacy row. Inspecting the product
+changed what that row says: the information is not missing — `/transparency` is
+470 lines across nine sections, linked from five surfaces. The defect is
+DISCOVERABILITY, and on the entry screen that link is the smallest text on the
+page. The row carries a seven-line draft summary, every line checked against
+`lib/db/schema.ts` and the geocode route rather than against what a privacy page
+usually says, plus placement notes and three open questions. **No privacy copy
+is reader-visible and no live page was created.**
+
+Ask still cannot answer *what is on a NAMED body's agenda* — the agenda rung has
+no vocabulary for that shape, so the question that started this never reaches
+the corpus, which holds 11 Vail meetings and 9 readable agendas. The binding
+inventory is area-scoped, so a government we hold but that is far away reports
+`UNRESOLVED` where `BOUND` is available. Both are rows.
+
+`MethodRoute.effort` now captures what a scale forecast needs — what repeats and
+how often, whether a machine can walk it unattended, whether the route was new
+invention or reuse, and whether it was reader-integrity repair rather than
+collection. As CLASSES, not durations, because a class can be recorded
+truthfully and a duration reconstructed from commit timestamps cannot. **An
+absent effort is a stated unknown and never a zero**, or the project would
+report itself cheaper the less it had measured.

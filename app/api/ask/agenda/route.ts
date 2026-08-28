@@ -395,7 +395,14 @@ function bodyAgendaAnswer(
 
   const base = {
     mode: "body-agenda" as const,
-    namedEntity: { state: "BOUND" as const, ocdId, name },
+    /*
+     * The name a READER sees, title-cased off the same canonical slug the
+     * matcher binds on. Matching stays on the normalized form; only the
+     * display changes, because "vail unified district" in a sentence about a
+     * government reads as a typo rather than as a name, and a reader surface
+     * speaks plain language.
+     */
+    namedEntity: { state: "BOUND" as const, ocdId, name: titleCase(name) },
     meetingsHeld: forBody.length,
   };
 
@@ -462,6 +469,10 @@ function bodyAgendaAnswer(
       id: meeting.id,
       title: meeting.title,
       startsAt: meeting.startsAt,
+      /* The body's OWN zone. formatMeetingDate needs it, and letting the
+         client default to the reader's zone would print an Arizona board
+         meeting in the reader's local time — a wrong fact in a small font. */
+      timeZone: meeting.timeZone,
       /* Whether this is what they WILL discuss or what they LAST discussed. */
       when: upcoming[0] ? "UPCOMING" : "PAST",
       agendaUrl: meeting.agendaUrl ?? null,
@@ -484,5 +495,23 @@ interface MeetingLike {
   ocdId: string | null;
   title: string;
   startsAt: string;
+  timeZone: string;
   agendaUrl?: string | null;
+}
+
+/**
+ * A slugged division name, as a reader should see it.
+ *
+ * Mechanical and deliberately dumb: capitalise each word. It is not a claim
+ * about what a government calls itself — the canonical id is still the identity
+ * and the matcher still binds on the normalized form — it is only the
+ * difference between "vail unified district" and "Vail Unified District" in a
+ * sentence a person reads.
+ */
+function titleCase(slugWords: string): string {
+  return slugWords
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }

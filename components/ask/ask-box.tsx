@@ -117,6 +117,43 @@ interface AgendaAnswer {
   unreadable: number;
 }
 
+/**
+ * What `/api/ask/agenda` returns when the reader NAMED a government and asked
+ * what is on its docket (2026-08-27) — a different shape from the topic search
+ * above, and the shape the tester's own question produces.
+ *
+ * `state` is the honest empty, and there are four of them because they are four
+ * different facts about US: no meeting held, a meeting with no document, a
+ * document that would not extract, and a landing page reused across sittings.
+ * Collapsing them would assert an absence about a government.
+ */
+interface BodyAgendaAnswer {
+  mode: "body-agenda";
+  namedEntity: { state: "BOUND"; ocdId: string; name: string };
+  state:
+    | "NO_MEETING_HELD"
+    | "MEETING_KNOWN_NO_AGENDA_DOCUMENT"
+    | "AGENDA_DOCUMENT_NOT_READABLE"
+    | "AGENDA_LINK_IS_A_LANDING_PAGE"
+    | "AGENDA_READ_NO_ITEMS_EXTRACTED"
+    | "ITEMS";
+  meeting: {
+    id: string;
+    title: string;
+    startsAt: string;
+    timeZone: string;
+    when: "UPCOMING" | "PAST";
+    agendaUrl: string | null;
+  } | null;
+  items: string[];
+  documentUrl: string | null;
+  sourceOrg: string | null;
+  meetingsHeld: number;
+  documentsHeld: number;
+  readable: number;
+  documentSharedWithMeetings?: number;
+}
+
 export function AskBox({
   coverage,
   zip,
@@ -168,6 +205,9 @@ export function AskBox({
   // A03's answer, kept beside the routed answer rather than inside it:
   // an agenda hit is evidence from a document, not a step in a route.
   const [agenda, setAgenda] = useState<AgendaAnswer | null>(null);
+  /* The named-government docket answer (2026-08-27). Separate state because it
+     REPLACES the topic answer rather than riding beside it. */
+  const [bodyAgenda, setBodyAgenda] = useState<BodyAgendaAnswer | null>(null);
   // Drawn per ask, in the browser, at click time — never during server
   // render, which would freeze one line into the HTML or mismatch on
   // hydration. Seeded with the first entry so the type is never null.
@@ -325,7 +365,9 @@ export function AskBox({
    * summarised or generated, and a failure of any kind returns null and
    * leaves the rest of the pipeline exactly as it was.
    */
-  const askAgenda = async (question: string): Promise<AgendaAnswer | null> => {
+  const askAgenda = async (
+    question: string,
+  ): Promise<AgendaAnswer | BodyAgendaAnswer | null> => {
     try {
       const response = await fetch("/api/ask/agenda", {
         method: "POST",
@@ -336,8 +378,15 @@ export function AskBox({
         body: JSON.stringify({ question, ocdIds }),
       });
       if (!response.ok) return null;
-      const body = (await response.json()) as AgendaAnswer;
-      return body.topic ? body : null;
+      const body = (await response.json()) as AgendaAnswer | BodyAgendaAnswer;
+      /*
+       * TWO SHAPES NOW, and the discriminator is read BEFORE the topic test.
+       * The body-agenda answer carries no `topic`, so the original
+       * `body.topic ? body : null` discarded it silently — the route answered
+       * the tester's question correctly and the reader saw nothing at all.
+       */
+      if ("mode" in body && body.mode === "body-agenda") return body;
+      return "topic" in body && body.topic ? body : null;
     } catch {
       return null;
     }
@@ -354,6 +403,7 @@ export function AskBox({
     setAsked(null);
     setDigest(null);
     setAgenda(null);
+    setBodyAgenda(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ASK releases the map filter and closes the autocomplete.
@@ -420,7 +470,17 @@ export function AskBox({
        * renders nothing: that means this rung had no opinion, not that it
        * looked and came back empty.
        */
-      if (agendaAnswer && agendaAnswer.topic) setAgenda(agendaAnswer);
+      if (agendaAnswer && "mode" in agendaAnswer && agendaAnswer.mode === "body-agenda") {
+        /*
+         * The reader NAMED a government and asked what is on its docket. This
+         * is the tester's own question, and it is not additive — it IS the
+         * answer, so the topic-search block stays empty rather than rendering
+         * a second, vaguer reply beneath it.
+         */
+        setBodyAgenda(agendaAnswer);
+      } else if (agendaAnswer && "topic" in agendaAnswer && agendaAnswer.topic) {
+        setAgenda(agendaAnswer);
+      }
 
       // Keyword-first, structurally: the classifier is consulted only after
       // the deterministic matcher has already refused. The author's ruling
@@ -454,7 +514,17 @@ export function AskBox({
       // as a refusal. Same defect G05 rule 4d found with destinations, and
       // the fix is the same: the shared definition learns about the new
       // rung, rather than the component growing a second opinion.
-      if (askWasAnswered(result, { agendaHits: agendaAnswer?.hits.length ?? 0 })) {
+      /* The two shapes again. A body-agenda answer counts as ONE answered rung —
+         it named a government and answered from that government. */
+      const topicAgenda =
+        agendaAnswer && "topic" in agendaAnswer ? agendaAnswer : null;
+      const namedAgenda =
+        agendaAnswer && "mode" in agendaAnswer ? agendaAnswer : null;
+      /* One number, computed above, so the call stays a single readable line —
+         tests/ask-matcher.test.ts pins that the log branch READS the shared
+         definition rather than re-deciding, and the pin is on the call. */
+      const answeredHits = (topicAgenda?.hits.length ?? 0) + (namedAgenda ? 1 : 0);
+      if (askWasAnswered(result, { agendaHits: answeredHits })) {
         logEvent("QUESTION_ASKED", ocdIds, {
           topic:
             result.match?.topicId ??
@@ -462,7 +532,9 @@ export function AskBox({
               ? "DIGEST"
               : result.destination
                 ? "DESTINATION_ONLY"
-                : `AGENDA_${agendaAnswer?.topic?.id ?? "TOPIC"}`),
+                : namedAgenda
+                  ? "AGENDA_NAMED_BODY"
+                  : `AGENDA_${topicAgenda?.topic?.id ?? "TOPIC"}`),
           routed: true,
           ...(result.match?.via ? { via: result.match.via } : {}),
           ...(result.destination
@@ -782,7 +854,7 @@ export function AskBox({
         Two contradictory sentences on one screen is worse than either.
       */}
       {asked &&
-        !askWasAnswered(asked, { agendaHits: agenda?.hits.length ?? 0 }) && (
+        !askWasAnswered(asked, { agendaHits: (agenda?.hits.length ?? 0) + (bodyAgenda ? 1 : 0) }) && (
           <div data-ask-refusal className="mt-2.5">
           {/*
             **THE GOVERNMENT THEY NAMED, WHEN WE COULD NOT PIN IT DOWN**
@@ -834,6 +906,114 @@ export function AskBox({
           </p>
         </div>
       )}
+
+        {bodyAgenda && (
+          /*
+            **THE NAMED GOVERNMENT'S OWN DOCKET** (2026-08-27) — the tester's
+            question, answered from that body's own agenda and nothing else.
+
+            Every branch below names the government first, because the entire
+            defect this closes was an answer about a different one. The four
+            empties are four different sentences: RULING 100 asks an operation
+            that can return nothing WHAT it returned, and a body with no
+            meeting, a meeting with no document, a document that would not
+            extract and a portal page reused across sittings are four separate
+            facts about US. None of them is a claim about the government, and
+            none is a generic civics explainer.
+          */
+          <div
+            data-ask-body-agenda={bodyAgenda.state}
+            className="mt-2.5 rounded-[8px] border border-[var(--panel-border)] p-3"
+          >
+            <p className="text-[0.8125rem] font-semibold leading-snug text-paper">
+              {bodyAgenda.namedEntity.name}
+            </p>
+
+            {bodyAgenda.meeting && (
+              <p className="mt-0.5 text-[0.6875rem] text-muted">
+                {bodyAgenda.meeting.when === "UPCOMING" ? "Next meeting" : "Last meeting"}
+                {" · "}
+                {formatMeetingDate(bodyAgenda.meeting)}
+              </p>
+            )}
+
+            {bodyAgenda.state === "ITEMS" && (
+              <>
+                <ul className="mt-2 space-y-1">
+                  {bodyAgenda.items.map((item) => (
+                    /* The clerk's own line, verbatim. Nothing is summarised —
+                       a summary of an agenda is a claim about what a
+                       government is about to do, made by us. */
+                    <li
+                      key={item.slice(0, 80)}
+                      className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-1.5 text-[0.6875rem] text-muted">
+                  {bodyAgenda.items.length} item(s), read off the agenda
+                  {bodyAgenda.sourceOrg ? ` published by ${bodyAgenda.sourceOrg}` : ""}.
+                </p>
+              </>
+            )}
+
+            {bodyAgenda.state === "NO_MEETING_HELD" && (
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                We don&apos;t have a meeting recorded for this body yet.
+              </p>
+            )}
+
+            {bodyAgenda.state === "MEETING_KNOWN_NO_AGENDA_DOCUMENT" && (
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                We have the meeting; we haven&apos;t retrieved an agenda for it.
+              </p>
+            )}
+
+            {bodyAgenda.state === "AGENDA_DOCUMENT_NOT_READABLE" && (
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                We retrieved an agenda for this meeting and couldn&apos;t read its
+                text.
+              </p>
+            )}
+
+            {bodyAgenda.state === "AGENDA_LINK_IS_A_LANDING_PAGE" && (
+              /* NOT "the agenda has no items". What we hold is the body's
+                 portal or calendar page, which it reuses across sittings — so
+                 it cannot be this meeting's agenda, and saying otherwise would
+                 turn a fact about our retrieval into a claim about them. */
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                What we hold for this meeting is the body&apos;s own meetings
+                page rather than this sitting&apos;s agenda. The link below is
+                where they publish it.
+              </p>
+            )}
+
+            {bodyAgenda.state === "AGENDA_READ_NO_ITEMS_EXTRACTED" && (
+              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
+                We read the agenda for this meeting and couldn&apos;t pull out
+                its item list.
+              </p>
+            )}
+
+            {/* The link travels on EVERY branch, because it is where the
+                reader goes to read it themselves — which is useful precisely
+                where we could not. */}
+            {(bodyAgenda.meeting?.agendaUrl ?? bodyAgenda.documentUrl) && (
+              <p className="mt-1.5 text-[0.6875rem]">
+                <a
+                  href={bodyAgenda.meeting?.agendaUrl ?? bodyAgenda.documentUrl ?? "#"}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline decoration-dotted underline-offset-2 text-muted hover:text-signal"
+                >
+                  Open what the body publishes
+                </a>
+              </p>
+            )}
+          </div>
+        )}
 
         {agenda && agenda.topic && (
           /*

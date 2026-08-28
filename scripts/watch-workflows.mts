@@ -67,7 +67,7 @@
  *   pnpm watch:workflows --asof=<iso> # as the watcher would have seen it then
  */
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -80,6 +80,16 @@ import {
   type WorkflowRun,
 } from "../lib/ops/job-watch.ts";
 import { failureTail } from "../lib/ops/job-watch-log.ts";
+import {
+  auditWorkflow,
+  cronsInWorkflowYaml,
+  deriveEnvelope,
+  expectedSlots,
+  observedDispatchDelays,
+  type AuditEnvelope,
+  type RunObservation,
+  type SlotVerdict,
+} from "../lib/ops/schedule-audit.ts";
 import { loadSecrets, redactSecrets } from "../lib/ops/secret-redaction.ts";
 
 /** The scheduled workflows that push `main`, plus the tripwire. */
@@ -115,6 +125,28 @@ if (AS_OF && Number.isNaN(AS_OF.getTime())) {
   console.error(`watch:workflows: --asof is not a date: ${asofArg}`);
   process.exit(2);
 }
+
+/**
+ * **THE INSTANT THIS WATCHER AUDITED, AND IT IS NEVER THE WORD "NOW".**
+ *
+ * `job-watch.yml` is ITSELF one of the three delayed workflows. On 2026-08-27
+ * it was created 534 minutes after its 15:40Z slot — so the report it produced
+ * described a board eight hours and fifty-four minutes old while reading, to
+ * anyone who found it, as a report about the present.
+ *
+ * Every schedule finding below therefore carries the SLOT IT AUDITED and this
+ * stamp. A row saying "no run has appeared for the 09:11Z slot" is only true
+ * relative to when somebody looked, and a row that does not say when somebody
+ * looked is a row that will be wrong without ever changing.
+ */
+const AUDIT_AS_OF = AS_OF ?? new Date();
+const AUDIT_AS_OF_ISO = AUDIT_AS_OF.toISOString();
+
+/** How far back the schedule audit looks. Three daily slots per workflow. */
+const AUDIT_WINDOW_DAYS = 3;
+const AUDIT_FROM_ISO = new Date(
+  AUDIT_AS_OF.getTime() - AUDIT_WINDOW_DAYS * 24 * 60 * 60 * 1000,
+).toISOString();
 
 type Run = WorkflowRun;
 
@@ -180,6 +212,16 @@ function failureTailOf(runId: number): string {
   return redactSecrets(rendered, SECRETS);
 }
 
+/**
+ * Every run the API reported for a workflow, BEFORE the completed-only filter.
+ *
+ * The consecutive-failure rule reasons over completed runs only, and correctly
+ * so. The SCHEDULE audit cannot: a run that is still in flight is exactly what
+ * separates a slot that is pending from one that produced nothing, and dropping
+ * it would turn a running job into an absence.
+ */
+const runsAsRead = new Map<string, RunObservation[]>();
+
 function recentRuns(workflow: string, limit = 40): Run[] {
   const raw = gh([
     "run",
@@ -190,9 +232,17 @@ function recentRuns(workflow: string, limit = 40): Run[] {
     "--json",
     // `event` is the trigger, and it is what separates a DRILL from a failure
     // on this job's own cadence. See `runsOnOwnCadence`.
-    "databaseId,conclusion,status,createdAt,event",
+    //
+    // `startedAt`/`updatedAt` are here for the SCHEDULE audit, and `startedAt`
+    // is the whole of the dispatch-versus-queue discrimination: every scheduled
+    // run read on 2026-08-28 had `startedAt === createdAt`, so the famous
+    // 637-minute wait was GitHub taking that long to CREATE the run, not a
+    // runner shortage. No instrument in this repository had ever asked for it.
+    "databaseId,conclusion,status,createdAt,event,startedAt,updatedAt",
   ]);
-  return completedRuns(JSON.parse(raw) as Run[], AS_OF);
+  const parsed = JSON.parse(raw) as RunObservation[];
+  runsAsRead.set(workflow, parsed);
+  return completedRuns(parsed as unknown as Run[], AS_OF);
 }
 
 function openRowsMentioning(marker: string): boolean {
@@ -309,13 +359,162 @@ if (unreadable.length > 0) {
   console.log("");
 }
 
-if (findings.length === 0) {
-  console.log("  no workflow has failed twice consecutively, at the head or anywhere in the window read.");
+/* ========================================================================== */
+/* THE TWO FINDING CLASSES THE CONSECUTIVE-FAILURE RULE CANNOT SEE            */
+/* ========================================================================== */
+
+/**
+ * **A WORKFLOW THAT PRODUCES NO RUNS HAS NO FAILURES.**
+ *
+ * Everything above this line reasons over a LIST OF RUNS. So does
+ * `scripts/jobs-status.mts`, and so does `scripts/read-alarms.mts`. On
+ * 2026-08-28 none of the three crons had produced a run at all, and every one
+ * of those instruments reported a clean board — not a wrong judgement, an
+ * absence of one. And on 2026-08-27 all three fired 534 to 638 minutes late and
+ * succeeded, so delay read as health too.
+ *
+ * These two classes start from the CRON instead: `lib/ops/schedule-audit.ts`
+ * expands each schedule into the UTC slots it was due at and asks what each
+ * slot produced.
+ *
+ * **THE EXISTING TWO-CONSECUTIVE RULE IS UNTOUCHED.** It works, it has caught
+ * real failures, and nothing here narrows it. These sit beside it.
+ *
+ * **AND NEITHER CLASS EVER CLAIMS GITHUB DID NOT FIRE A CRON.** GitHub records
+ * nothing for a schedule it has not dispatched, so a slot still in flight and a
+ * slot that will never arrive are the same observation — the 638-minute run is
+ * the proof, because at ten hours past its slot it looked exactly like an
+ * absence and was not one. A finding here is a statement about what THIS
+ * WATCHER OBSERVED against a STATED envelope, and it is worded that way in the
+ * console and in the row.
+ */
+interface ScheduleFinding {
+  workflow: string;
+  cron: string;
+  verdict: SlotVerdict;
+  envelope: AuditEnvelope;
+  marker: string;
+}
+
+const WORKFLOW_DIR = join(process.cwd(), ".github", "workflows");
+
+/** Every workflow file carrying a cron, read from disk. Never typed here. */
+function scheduledWorkflowFiles(): { file: string; cron: string }[] {
+  const found: { file: string; cron: string }[] = [];
+  if (!existsSync(WORKFLOW_DIR)) return found;
+  for (const file of readdirSync(WORKFLOW_DIR)) {
+    if (!file.endsWith(".yml")) continue;
+    for (const cron of cronsInWorkflowYaml(readFileSync(join(WORKFLOW_DIR, file), "utf8"))) {
+      found.push({ file, cron });
+    }
+  }
+  return found.sort((a, b) => a.file.localeCompare(b.file));
+}
+
+const scheduleFindings: ScheduleFinding[] = [];
+const scheduled = scheduledWorkflowFiles();
+
+if (scheduled.length === 0) {
+  // A zero-row read is a FAILED read, not a repository with no crons.
+  unreadable.push(
+    ".github/workflows: NO CRON FOUND in any workflow file — that is a failed read, not a schedule-free repo",
+  );
+} else {
+  const loaded: { workflow: string; cron: string; runs: RunObservation[]; slots: string[] }[] = [];
+  for (const { file, cron } of scheduled) {
+    let runs = runsAsRead.get(file);
+    if (!runs) {
+      try {
+        recentRuns(file);
+        runs = runsAsRead.get(file);
+      } catch (error) {
+        unreadable.push(`${file} (schedule audit): ${(error as Error).message.split("\n")[0]}`);
+        continue;
+      }
+    }
+    if (!runs || runs.length === 0) {
+      unreadable.push(`${file} (schedule audit): gh returned ZERO runs — a failed read, not a healthy schedule`);
+      continue;
+    }
+    // `--asof` must hide the future from the audit exactly as it does from the
+    // consecutive test, or a replay would read a slot as filled by a run the
+    // watcher could not have seen.
+    const visible = runs.filter((r) => new Date(r.createdAt) <= AUDIT_AS_OF);
+    let slots: string[];
+    try {
+      slots = expectedSlots(cron, AUDIT_FROM_ISO, AUDIT_AS_OF_ISO);
+    } catch (error) {
+      unreadable.push(`${file} (schedule audit): ${(error as Error).message.split("\n")[0]}`);
+      continue;
+    }
+    loaded.push({ workflow: file, cron, runs: visible, slots });
+  }
+
+  /*
+   * ONE ENVELOPE ACROSS ALL THREE, because dispatch delay is a property of
+   * GitHub's scheduler rather than of any one workflow — on 2026-08-27 it hit
+   * all three within the same hours.
+   */
+  const envelope = deriveEnvelope(loaded.flatMap((l) => observedDispatchDelays(l.slots, l.runs)));
+
+  console.log(`  SCHEDULE AUDIT · slots from ${AUDIT_FROM_ISO} to ${AUDIT_AS_OF_ISO}`);
+  console.log(`    ${envelope.derivation}`);
+
+  for (const { workflow, cron, runs, slots } of loaded) {
+    const audit = auditWorkflow(workflow, cron, runs, AUDIT_FROM_ISO, AUDIT_AS_OF_ISO, envelope);
+    /*
+     * A SLOT FROM BEFORE THE WORKFLOW'S FIRST EVER RUN IS NOT A MISSED RUN.
+     *
+     * Found by running the audit over seven days on 2026-08-28: refresh-daily
+     * reported silent slots on the 22nd, 23rd and 24th, and RULING 124 created
+     * that workflow ON the 24th. Those slots are printed, because nothing is
+     * dropped silently, and they do NOT open a row — three P1 rows about a
+     * workflow that did not exist yet is how a queue stops being read.
+     */
+    const preHistory = audit.verdicts.filter(
+      (v) => v.kind === "NO_RUN_BEYOND_ENVELOPE" && v.precedesFirstObservedRun,
+    );
+    const gaps = audit.verdicts.filter(
+      (v) => v.kind === "NO_RUN_BEYOND_ENVELOPE" && !v.precedesFirstObservedRun,
+    );
+    const late = audit.verdicts.filter((v) => v.kind === "DISPATCH_DELAYED" || v.kind === "QUEUED");
+    console.log(
+      `    ${workflow.padEnd(30)} ${slots.length} slot(s): ${gaps.length} past the envelope, ${late.length} late, ` +
+        `${preHistory.length} before this workflow's first ever run, ` +
+        `${audit.verdicts.length - gaps.length - late.length - preHistory.length} otherwise accounted for`,
+    );
+    for (const v of preHistory) {
+      console.log(
+        `      ${v.slot} is earlier than the oldest run this workflow has produced — printed, not raised as a row.`,
+      );
+    }
+    for (const v of [...gaps, ...late]) {
+      console.log(`      ${v.kind}  ${v.slot}`);
+      console.log(`        ${v.note}`);
+      scheduleFindings.push({
+        workflow,
+        cron,
+        verdict: v,
+        envelope,
+        marker:
+          v.kind === "NO_RUN_BEYOND_ENVELOPE"
+            ? `[job-watch:slot-gap:${workflow}@${v.slot}]`
+            : `[job-watch:dispatch-delay:${workflow}@${v.slot}]`,
+      });
+    }
+  }
+  console.log("");
+}
+
+if (findings.length === 0 && scheduleFindings.length === 0) {
+  console.log("  no workflow has failed twice consecutively, at the head or anywhere in the window read,");
+  console.log("  and every audited slot is accounted for within the stated observation envelope.");
   process.exit(unreadable.length > 0 ? 2 : 0);
 }
 
-console.log(`  ${findings.length} workflow(s) failed TWICE CONSECUTIVELY:\n`);
 const rows: Record<string, string>[] = [];
+
+if (findings.length > 0) console.log(`  ${findings.length} workflow(s) failed TWICE CONSECUTIVELY:\n`);
 
 for (const f of findings) {
   const marker = MARKER(f.workflow);
@@ -363,6 +562,66 @@ for (const f of findings) {
     prefix: "JOB",
   });
   console.log("      -> Needs Sean row queued.\n");
+}
+
+/* -------------------------------------------------------------------------- */
+/* THE SCHEDULE ROWS                                                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * The marker is keyed on WORKFLOW AND SLOT, not on workflow alone.
+ *
+ * The consecutive-failure marker is per workflow so a job failing for a week is
+ * one row rather than seven identical ones — right, because each of those seven
+ * says the same thing. A slot does not: "no run for the 09:11Z slot on the
+ * 28th" and "no run for the 09:11Z slot on the 31st" are different facts about
+ * different days' data, and collapsing them would let a second outage hide
+ * behind the row opened for the first. The window is three days, so the count
+ * is bounded by construction.
+ */
+for (const f of scheduleFindings) {
+  const v = f.verdict;
+  const gap = v.kind === "NO_RUN_BEYOND_ENVELOPE";
+
+  if (openRowsMentioning(f.marker)) {
+    console.log(`    a row is already open for ${f.workflow} at ${v.slot} — not opening a second.`);
+    continue;
+  }
+
+  rows.push({
+    Section: "needs-sean",
+    Title: gap
+      ? `${f.workflow}: no run observed for the ${v.slot} slot`
+      : `${f.workflow}: the ${v.slot} slot ran ${v.dispatchDelayMinutes} min late`,
+    "What this is":
+      (gap
+        ? `AUDITED SLOT: ${v.slot} (cron "${f.cron}"). AS OF: ${v.asOf}. ` +
+          `No run had been observed for that slot ${v.minutesSinceSlot} minute(s) after it, which is longer ` +
+          `than the ${v.envelopeMinutes}-minute observation envelope this audit used. ` +
+          `\n\nTHIS IS A STATEMENT ABOUT WHAT THIS WATCHER SAW, NOT ABOUT WHAT GITHUB DID. GitHub creates no ` +
+          `artifact for a schedule it has not dispatched, so a slot still in flight and a slot that will never ` +
+          `arrive are the same observation from outside. Run 33110252070 appeared 637 minutes after its slot on ` +
+          `2026-08-27, which is why "late" cannot be ruled out by waiting. What is owed here is a LOOK: the ` +
+          `Actions tab for this workflow, and whether it was disabled for repository inactivity. `
+        : `AUDITED SLOT: ${v.slot} (cron "${f.cron}"). AS OF: ${v.asOf}. ` +
+          `Run ${v.runId} was created ${v.dispatchDelayMinutes} minute(s) after that slot and waited ` +
+          `${v.queueMinutes} minute(s) to start, against a ${f.envelope.dispatchToleranceMinutes}-minute ` +
+          `tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay ` +
+          `and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. ` +
+          `\n\nWHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a ` +
+          `refresh whose data is a day old on arrival, and every failure-counting instrument in this repository ` +
+          `reports it as healthy. ${v.outcome ? `What the run then did: ${v.outcome.kind} — ${v.outcome.why} ` : ""}`) +
+      `\n\nENVELOPE USED: ${f.envelope.derivation}` +
+      // job-watch is itself one of the delayed workflows; its own report can be
+      // hours stale, so the row is stamped rather than implied to be current.
+      `\n\nTHE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ` +
+      `ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every ` +
+      `sentence above as true AS OF ${v.asOf}, not as of when you are reading it.` +
+      `\n\n${f.marker}`,
+    Priority: gap ? "P1" : "P2",
+    prefix: "JOB",
+  });
+  console.log(`    -> Needs Sean row queued for ${f.workflow} at ${v.slot}.`);
 }
 
 if (rows.length === 0) {

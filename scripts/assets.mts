@@ -52,6 +52,7 @@
  */
 
 import { createHash } from "node:crypto";
+import { STAYS_IN_REPO } from "../lib/ops/asset-scope.ts";
 import {
   copyFileSync,
   existsSync,
@@ -96,22 +97,6 @@ const BINARY = /\.(jpg|jpeg|png|webp|gif|pdf)$/i;
  * captures are an INPUT a session must reach, not a corpus. Mirrored in
  * `tests/asset-store.test.ts`, which carries the full reasoning.
  */
-const STAYS_IN_REPO = [
-  /^public\/favicon/i,
-  /^public\/icons?\//i,
-  /^app\//,
-  /^components\//,
-  /^docs\/feedback\//,
-  // Joined 2026-08-24: the portrait review sheet — one regenerated file with a
-  // stable name that overwrites itself. Mirrors `STAYS_IN_REPO` in
-  // `tests/asset-store.test.ts`, which carries the reasoning.
-  /^docs\/photo-review\//,
-  // Joined 2026-08-28 (AZ04): recorded PDF fixtures. A binary under tests/ is
-  // an INPUT TO A TEST, not collected corpus — `CLAUDE.md` requires recorded
-  // fixtures and forbids live calls. Mirrors `STAYS_IN_REPO` in
-  // `tests/asset-store.test.ts`, which carries the reasoning.
-  /^tests\/fixtures\//,
-];
 
 interface ManifestRow {
   path: string;

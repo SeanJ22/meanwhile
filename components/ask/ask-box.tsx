@@ -42,6 +42,9 @@ import {
 import { formatMeetingDate } from "@/lib/map/format";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
+import { isOnlineOnly } from "@/lib/meetings/online";
+import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
+import { useResolvedLocation } from "@/hooks/use-resolved-location";
 import { tierVars } from "@/components/shell/tier-style";
 
 /**
@@ -213,6 +216,8 @@ export function AskBox({
 }) {
   const { venues, meetings, allMeetings } = useShellData();
   const ui = useUi();
+  /* WGH-15: the reader's HOME, so an Ask subject is not browse-scoped only. */
+  const home = useResolvedLocation(zip);
   const dispatch = useUiDispatch();
 
   const [text, setText] = useState("");
@@ -307,12 +312,23 @@ export function AskBox({
    * before it arrived would never be invalidated by it turning up.
    */
   const index = useMemo(() => {
-    const online = meetings.filter((m) => m.location === null);
+    const online = meetings.filter((m) => isOnlineOnly(m));
     const token = `${venues.map((v) => v.key).join(",")}|online:${online
       .map((m) => m.id)
       .join(",")}`;
     return getSearchIndex(token, () => buildSearchIndex(venues, [], online));
   }, [venues, meetings]);
+
+  /*
+   * MTG-14 (2026-08-28): the autocomplete is a DISCOVERY surface and it never
+   * marked an online sitting — a reader who found a meeting here saw a body and
+   * a date, and no way to learn there is no room to attend before opening it.
+   * Ids match the search index's own `meeting:${id}` shape.
+   */
+  const onlineItemIds = useMemo(
+    () => new Set(meetings.filter(isOnlineOnly).map((m) => `meeting:${m.id}`)),
+    [meetings],
+  );
 
   const groups = useMemo(
     () => (onSearchPick ? groupResults(searchItems(index, text)) : []),
@@ -431,6 +447,15 @@ export function AskBox({
            merely present on a map. */
         focused: true,
       });
+    }
+    /* WGH-15: the tapped district is `focused`; where the reader LIVES is
+       present but NOT focused. Without this, "my district" binds to whatever
+       they last tapped. `focused` still marks the clicked referent, so the
+       existing binder semantics are unchanged. */
+    for (const id of home.confirmedDivisionIds) {
+      if (id !== ui.selectedDistrictOcdId) {
+        active.push({ id, name: id, kind: "BODY", focused: false });
+      }
     }
     try {
       const response = await fetch("/api/ask/grounded", {
@@ -870,6 +895,9 @@ export function AskBox({
                           <b>{hit}</b>
                           {after}
                         </span>
+                        {onlineItemIds.has(item.id) && (
+                          <MeetingStatusPill status="online" />
+                        )}
                         {item.meta && (
                           <span className="search-ac-meta">{item.meta}</span>
                         )}

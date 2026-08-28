@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+
+import { STAYS_IN_REPO } from "../lib/ops/asset-scope.ts";
 import { execFileSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
@@ -60,70 +62,6 @@ const BINARY = /\.(jpg|jpeg|png|webp|gif|pdf)$/i;
  * This is a fixed set of one afternoon's screenshots, 4 MB, that will never be
  * re-fetched because the walkthrough happened once.
  */
-const STAYS_IN_REPO = [
-  /^public\/favicon/i,
-  /^public\/icons?\//i,
-  /^app\//,
-  /^components\//,
-  /^docs\/feedback\//,
-  /*
-   * **Joined 2026-08-24: the portrait review sheet.** ONE regenerated file with
-   * a STABLE name, which overwrites itself rather than accumulating.
-   *
-   * Sean approves photographs by looking at it and replying with numbers, and a
-   * session reads it to know what is pending — RULING 108 says an input a
-   * session must reach lives in the repo, and a guard that pushed this out to
-   * the asset store would put it somewhere neither of them can open.
-   *
-   * It is not the class RULING 20 governs. That rule is about an INGEST-VOLUME
-   * corpus — every agenda PDF for every body, re-fetched forever. This is a
-   * single file that replaces itself.
-   */
-  /^docs\/photo-review\//,
-  /*
-   * **Joined 2026-08-28 (AZ04): recorded PDF fixtures for the test suite.**
-   *
-   * `tests/` is the one place in this repo where a binary is an INPUT TO A
-   * TEST rather than a piece of collected corpus. `CLAUDE.md` requires that
-   * `tests/fixtures/` hold recorded responses and that no test make a live
-   * call, and two of the facts the Arizona ingestion rests on are properties
-   * of specific PDFs that only real bytes can demonstrate:
-   *
-   *   - `azleg-legtext-0001.pdf` (34 KB) is born-digital and ends with
-   *     "APPROVED BY THE GOVERNOR FEBRUARY 6, 2026" — the evidence that
-   *     correcting a prior "no published signing date" finding was right.
-   *   - `azleg-govlettr-hb2003.pdf` (40 KB) is a mixed-raster SCAN whose text
-   *     layer returns ZERO_ROWS — the evidence correcting the method store's
-   *     "born-digital PDF with a readable text layer".
-   *
-   * Replacing them with transcriptions would leave the tests asserting what a
-   * previous session typed rather than what the state published, which is the
-   * failure both fixtures exist to prevent.
-   *
-   * They are not the class RULING 20 governs. That rule is about an
-   * INGEST-VOLUME corpus — every agenda PDF for every body, re-fetched
-   * forever. This is 75 KB, fixed, and re-fetched only if the parser's
-   * contract with the publisher changes, at which point the fixture SHOULD be
-   * re-recorded deliberately.
-   */
-  /^tests\/fixtures\//,
-  /*
-   * **Joined 2026-08-26: a session's PROPOSAL captures.** `DARK-1` is the
-   * first — Sean asked for options with side-by-side captures to react to,
-   * and `/screenshots/` is gitignored, so writing them there would leave the
-   * whole deliverable on one machine.
-   *
-   * This is the same reason `docs/feedback/` is on this list, pointed the
-   * other way: that directory is an input a SESSION must reach, and this is
-   * an output SEAN must reach. RULING 108 covers both — anything that has to
-   * be read lives in the repo.
-   *
-   * Not RULING 20's class either. A proposal batch is a fixed set captured
-   * once for one decision, at 1x rather than 2x to keep it proportionate; it
-   * is never re-fetched, and once he rules on it it stops mattering.
-   */
-  /^docs\/proposals\//,
-];
 
 interface Manifest {
   rows: { path: string; sha256: string; bytes: number }[];

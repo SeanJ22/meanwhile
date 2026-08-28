@@ -64,9 +64,9 @@ const ROUTES: LearnedRoute[] = [
     origin:
       "measured 2026-08-28 while building the azleg ingestion, when the letters phase of scripts/hunt-azleg-actions.mts returned ZERO_ROWS on a document the method store promised had a readable text layer.",
     effort: {
-      repeats: "PER_SOURCE",
+      repeats: "PER_VENDOR",
       execution: "MACHINE",
-      discovery: "KNOWN_METHOD",
+      discovery: "REAPPLIED_KNOWN_METHOD",
       note:
         "One extraction attempt per document class, over bytes that were being fetched anyway. The expensive half is the crawl delay: www.azleg.gov asks 120 seconds between requests, so classifying a document class costs two minutes, and reading all 151 letters costs about five hours.",
     },
@@ -88,9 +88,9 @@ const ROUTES: LearnedRoute[] = [
     origin:
       "generalised 2026-08-28 from the azleg correction, where a prior session's unmeasured 'born-digital PDF' description of a scanned document class was inherited as fact by the ingestion that followed it.",
     effort: {
-      repeats: "PER_SOURCE",
+      repeats: "PER_VENDOR",
       execution: "MACHINE",
-      discovery: "KNOWN_METHOD",
+      discovery: "REAPPLIED_KNOWN_METHOD",
       note: "One extraction over one document already in hand. Effectively free next to the fetch that produced it.",
     },
     outcome: {

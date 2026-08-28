@@ -152,7 +152,12 @@
   --party-independent: #6b3fa0;
   --party-none: #6a7079;
 
-  --concluded: #4a8481;
+  /* MTG-14 (2026-08-28): #4a8481 measured 3.81:1 against --bg, BELOW the AA
+     bar, and it was shipping — the meeting status tokens had never been in the
+     contrast audit at all. #3a6a67 is 5.45:1, in line with --canceled (4.85)
+     and --online (5.06). Fixed rather than exempted: an exemption written to
+     make a failing pair pass is how a bar stops meaning anything. */
+  --concluded: #3a6a67;
   --canceled: #c0392b;
   /* Darkened for the light theme like its two siblings: the pill paints its
      text in --bg, so the token itself carries the contrast. */

@@ -2200,6 +2200,10 @@ function MapEntryInner() {
               }
               representation={districtRepresentation.holders}
               representationNoteState={noteStateFor(districtRepresentation.status)}
+              /* WGH-15: the reader own area, so this card can say how their home
+                 stands relative to the district they tapped. READ-ONLY -- everything
+                 downstream runs through a BROWSING location, which settles nothing. */
+              homeZip={clusterZip}
               upcomingMeetings={
                 // A failed fetch may not stand behind "Upcoming: 0" — the
                 // popup renders couldn't-check instead (2a).
@@ -2290,6 +2294,11 @@ function MapEntryInner() {
                 : large.subject
             }
             onClose={closeLarge}
+            /* WGH-15: the large card is the district popup expansion and inherits
+               the same question. The subject division is read off
+               subject.divisionOcdId, which is already null for a person or a
+               meeting card -- the line then does not render. */
+            homeZip={clusterZip}
             /* F01 2.4: a roster name opens the person's full card ON TOP of this
                one, so closing theirs returns here rather than to the map. This
                is the author's Dr. Ravi Shah case exactly. */

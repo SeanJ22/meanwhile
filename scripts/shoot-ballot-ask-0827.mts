@@ -41,6 +41,10 @@ for (const size of WIDTHS) {
   const page = await guarded.page({ viewport: { width: size.width, height: size.height } });
   await page.goto(`${BASE}/ballot?zip=85641`, { waitUntil: "domcontentloaded" });
 
+  // BAL-26 (2026-08-28): the panel unmounts while the pill is collapsed.
+  await page.click("[data-ballot-ask-pill]");
+  await page.waitForSelector("[data-ballot-ask]", { timeout: 15_000 });
+
   const panel = page.locator("[data-ballot-ask]");
   const present = await panel.count();
   console.log(`\n=== ${size.name} (${size.width}x${size.height}) ===`);

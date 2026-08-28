@@ -268,9 +268,44 @@ test("(c) three more name forms fail closed, and the cost of each is recorded", 
    * Alma / Consuelo / Lydia Hernandez — six distinct sitting legislators,
    * three of them holding twelve recorded votes each.
    */
+  /*
+   * **ONE OF THESE WAS UNLOCKED WHILE THIS TEST WAS BEING WRITTEN, AND THIS IS
+   * THE TEST DOING ITS JOB.** (2026-08-28, at integration.)
+   *
+   * `Rachel "Jones" Keshel` vs `Rachel Keshel` now JOINS, and the twelve votes
+   * are shown. The unlock is not a looser matcher and not a stable identifier
+   * — it is that a QUOTED ALIAS IS PUBLISHED, IN QUOTATION MARKS, BY THE
+   * RECORD ITSELF, so removing it is reading the record rather than making a
+   * judgement about it. `nameParts` extracts it as an alternative given name;
+   * the given name and the surname still have to match EXACTLY, and
+   * `resolveIdentity` still refuses unless exactly one roster row matches.
+   *
+   * The distinction that keeps this honest is the one immediately below: an
+   * UNQUOTED middle name or initial is not an alias, and `Sally Ann Gonzales`,
+   * `Adelita S. Grijalva` and `Alex Kolodin` are all still refused. The
+   * companion test proves the six Diaz and Hernandez legislators stay distinct.
+   */
+  const UNLOCKED_BY_A_PUBLISHED_ALIAS: [string, string, number][] = [
+    ['Rachel "Jones" Keshel', "Rachel Keshel", 12],
+  ];
+  for (const [asFiled, asRostered, cost] of UNLOCKED_BY_A_PUBLISHED_ALIAS) {
+    const filed = voteEvidenceFor(asFiled, { withinStates: ["AZ"] });
+    assert.equal(filed.identity.kind, "JOINED", asFiled);
+    assert.equal(filed.denominators.rollCallVotesRecorded, cost, asFiled);
+    // It reaches the SAME seat as the rostered form — not merely some seat.
+    const rostered = voteEvidenceFor(asRostered, { withinStates: ["AZ"] });
+    assert.equal(rostered.identity.kind, "JOINED", asRostered);
+    assert.deepEqual(
+      filed.identity.kind === "JOINED" && rostered.identity.kind === "JOINED"
+        ? filed.identity.seat.officeholderId === rostered.identity.seat.officeholderId
+        : false,
+      true,
+      `${asFiled} and ${asRostered} must resolve to one officeholder, not two`,
+    );
+  }
+
   const BLOCKED: [string, string, number][] = [
     ["Adelita Grijalva", "Adelita S. Grijalva", 20],
-    ['Rachel "Jones" Keshel', "Rachel Keshel", 12],
     ["Alexander Kolodin", "Alex Kolodin", 0],
   ];
 
@@ -420,8 +455,20 @@ test("the identity key drops only what is never identity", () => {
 
   assert.notEqual(identityKey("Sally Ann Gonzales"), identityKey("Sally Gonzales"));
   assert.notEqual(identityKey("Adelita Grijalva"), identityKey("Adelita S. Grijalva"));
-  assert.notEqual(identityKey('Rachel "Jones" Keshel'), identityKey("Rachel Keshel"));
   assert.notEqual(identityKey("Alexander Kolodin"), identityKey("Alex Kolodin"));
+
+  /*
+   * A QUOTED alias is the one thing here that is not a judgement: the record
+   * prints it in quotation marks as an annotation on the name, so dropping it
+   * reads the record rather than deciding something about it. The given name
+   * and the surname still have to match exactly, and one key still has to
+   * match exactly one roster row.
+   *
+   * The line above it is the proof this is not a loose matcher: `Sally Ann
+   * Gonzales` carries an UNQUOTED middle name and stays separate.
+   */
+  assert.equal(identityKey('Rachel "Jones" Keshel'), identityKey("Rachel Keshel"));
+  assert.notEqual(identityKey('Rachel "Jones" Keshel'), identityKey("Rachel Jones"));
 });
 
 test("the roster scope is read from the reader's own divisions, never from a state list", () => {

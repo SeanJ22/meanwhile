@@ -39,7 +39,7 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
         "ran on the integration branch while five recon engineers and the refresh engineer executed concurrently"
       ]
@@ -128,9 +128,10 @@
         "grounded-ask-response-contract"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/ballot on ws/ballot, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/ballot on ws/ballot, node_modules junction",
+        "integrated into claude/finish-aug28-integration; shared-file hunks applied by the owner"
       ]
     },
     {
@@ -161,9 +162,10 @@
         "shared-file-hunk-application"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/geo on ws/geo, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/geo on ws/geo, node_modules junction",
+        "integrated into claude/finish-aug28-integration; shared-file hunks applied by the owner"
       ]
     },
     {
@@ -187,9 +189,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/ask on ws/ask, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/ask on ws/ask, node_modules junction",
+        "integrated into claude/finish-aug28-integration; shared-file hunks applied by the owner"
       ]
     },
     {
@@ -212,9 +215,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/azleg on ws/azleg, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/azleg on ws/azleg, node_modules junction",
+        "integrated; method:learn-azleg-scanned run once by the owner (52->55, 116 routes); the OCR rung for the 151 letters is operator-bound and named"
       ]
     },
     {

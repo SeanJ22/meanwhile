@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-28 — **The engine existed and the product did not use it.** The grounded-Ask INTEGRATION session; its record is the LAST section of this file.
+Last updated: 2026-08-28 — **Most of what the walkthrough reported was not the defect it looked like.** The Aug 28 reader sweep; its record is the LAST section of this file.
+
+Previous: 2026-08-28 — **The engine existed and the product did not use it.** The grounded-Ask INTEGRATION session.
 
 Previous: 2026-08-27 — **Claude was in this product, and it was picking one label out of sixteen.** The grounded-Ask session.
 
@@ -20924,3 +20926,202 @@ a switched-off capability; and `captureAskInteraction` REFUSES a row with no
 continuity key rather than digesting the empty string, which would give every
 reader the same hash and report one distinct reader forever. Doing two of the
 three writes nothing.
+
+---
+
+# 2026-08-28 — Most of what the walkthrough reported was not the defect it looked like
+
+The Aug 28 reader sweep. Branch `claude/aug28-class-sweep-0828`, PR #214, on
+top of #213 (merged as `dcdaac41`).
+
+**The baseline was verified before anything was touched.** #213 is merged, head
+`5fe2792a` as the brief stated, all three required checks green on that exact
+main SHA. The screenshots are timestamped 08:58–09:23 local and #213 merged at
+10:59 local, so several of them predate it. Every control below was re-measured
+against current code rather than inherited from the brief, from #213's report,
+or from the images.
+
+## The pattern, stated once because it governs the whole session
+
+Four of the reported defects were not defects, and three more were the opposite
+of what they looked like. The cheap discriminator — read the denominators, then
+ask the primary source the same question the adapter asks — settled several of
+them before a line of code was opened, and it is now a recorded route
+(`reconcile-the-adapter-before-suspecting-it`).
+
+## What was actually wrong, and what the class was
+
+**DATA-1.** A CAWCD meeting's "what this meeting is about" held 9,007
+characters of the CAP website's menu tree. Two naive extractors existed, months
+apart, neither aware of the other: `extractHtmlText` preferred `<main>` and
+fell back to THE ENTIRE DOCUMENT, and `scripts/fetch-corpus.mts` had no region
+preference at all — which is why `data/corpus/statements.json` holds a
+candidate "statement" opening *"Juan Ciscomani for Congress DONATE DONATE 635ms
+0vh 0 Skip to Content…"*. That corpus feeds candidate positions.
+
+Measured before designing: `www.cap-az.com` declares zero `<main>`, zero
+`<nav>`, zero `<header>`, zero ARIA roles. A landmark-only repair would have
+passed its own test and changed nothing for the reader who reported it. So
+`lib/extract/html-content.ts` layers three mechanisms, weakest assumption last
+— landmarks and roles, a named platform chrome vocabulary, and link density,
+which is vendor-neutral and the reason it generalises. Both callers share it.
+39,524 characters to 937.
+
+Two guards were learned by getting it wrong first: the first draft cut the
+document to ZERO because it matched the whole attribute blob (a `<link>` named
+`widget-nav-menu-css`, a `title="Skip to content"`) and because it let the
+vocabulary reach `<body>`, which on that page classes itself
+`elementor_header_footer`. The link-density pass also cuts only the INNERMOST
+qualifying block, because a menu makes every ancestor containing it measure
+dense too.
+
+**MAP-5.** Local/State/Federal filtered meetings and left every civic boundary
+drawn. The overlay-to-level mapping already existed as a `tier` field on
+`DISTRICT_LAYERS` — inside the MapLibre layer builder, which nothing outside
+the map can import cheaply, so nothing outside the map ever asked it. It moved
+to `lib/ocd/district-tiers.ts` and both consumers read it.
+
+Putting the predicate in `deriveActiveDistrictTypes` rather than beside the map
+is what makes it a class repair: `map-canvas` reads that one list for the
+layers it draws, the app-owned labels on them, and `districtsAt` HIT-TESTING.
+A hidden level is therefore unclickable by construction rather than by a second
+predicate, and no synchronising callback exists to fall out of step.
+
+**DATA-3.** `lib/registry/body-composition.ts` was correct and was being asked
+about the wrong body. `bodyFor(meeting.ocdId)` matched a coverage body by
+DIVISION, and the only thing that result is ever used for is
+`membersOfBody(...)` — so a division match was a membership claim derived from
+shared ground. Six coverage bodies sit on `county:pima`; the match returned the
+first, `#governing`, so every CAWCD sitting rendered the five Pima County
+Supervisors under Representation.
+
+Measured before changing, over the 462-meeting snapshot: every meeting carries
+a `bodyId`, 14 rendered another body's members, and NOTHING loses an honest
+roster by matching on identity. The division fallback was not a safety net; it
+was the defect.
+
+The unnamed control turned out stronger than expected. The Board of Adjustment
+District 4 sits on the SAME `county:pima` division and publishes its own
+roster, so three bodies share one division and there are three different right
+answers — a direct roster, a statutory alias, and a different direct roster.
+
+**WGH-12/13/14.** `lib/geo/session-address.ts` has stored the reader's
+confirmed divisions since RULING 74 landed on 2026-08-22 and was READ BY
+NOTHING; the component that writes it was its only consumer. `onResolved`
+reaches the map shell as `onNarrowApplied`, which ignores its argument
+entirely. And only `onPoint` moves anything, while the resolve route withholds
+the point whenever the street is ambiguous.
+
+The server was never wrong: asked at the address's own point, `/api/meetings`
+returns `sldl:17`. The ZIP-area widening is what adds `place:tucson` to a point
+whose own divisions are `place:tucson_ccd` and `place:vail` — and Tucson CCD is
+a Census county division, a statistical shape with no government.
+
+The repair is client-side ON PURPOSE. Sending confirmed divisions to the server
+would put them in access logs, which `session-address.ts` explicitly forbids.
+The client already holds both halves, so `lib/state/resolved-location.ts` is a
+pure function over them.
+
+**A regression caught in the act, and it is why only CONFIRMED retires the
+mark.** Clearing it from `ELSEWHERE_IN_ZIP` too was the tempting rule — but an
+unmarked row on that card reads as *this governs you*, so it would have
+upgraded the City of Tucson from a hedged claim to a confident wrong one. A
+weaker hedge is worth keeping until there is stronger COPY to replace it with,
+not merely stronger evidence.
+
+**ASK-14.** The office-function corpus was never missing. `office-blurbs.ts`
+holds twenty-six sourced definitions including `governor`. The trace said where
+it stopped: intent CIVICS correct, `resolution.state` NONE, because
+`lib/ask/resolve.ts` binds ENTITY mentions and "the governor" names an OFFICE.
+No binding, no subject, no retrieval, and the answer one lookup away.
+
+**BAL-29 and MAP-4.** Measures had no ordering rule at all. A string sort would
+have been the wrong repair and it is worth saying so — `"Proposition 100" <
+"Proposition 20"` — so the number is parsed as a number, and a published
+`ballotOrder` beats it. MAP-4 is one CSS rule met once: an element setting only
+`overflow-y` has its `overflow-x` computed from `visible` to AUTO. Sixteen
+rules in `globals.css` did that, two of them on surfaces in the reader's own
+screenshots.
+
+## The four things that were reported and were not defects
+
+- **MTG-12.** The modal says 60 and groups them 1 + 48 + 8 + 3, which is
+  exactly 60. Nothing is miscounted. What is open is one number — the venue
+  counter — filed P3 with its denominator measured (147 served, 61 placeless,
+  15 distinct venues).
+- **MTG-13.** Nothing is dropped. `fetched 16 → normalized 16`, and the
+  Legistar public API over 2026-08-01 to 2026-11-01 returns seven events, <!-- expected-future: 2026-11-01, the end of the query window this session asked Legistar for -->
+  newest 2026-08-25, none in September, inside a 60-day forward horizon. The
+  September 8 and 22 sittings are real and are published by the county as a
+  RULE — *"2nd and 4th Tuesdays"* — not as events. They are NOT synthesised: a
+  recurring schedule is a different record from an agenda, and cancellations
+  override it. Vail is the control that makes this publishing practice rather
+  than code.
+- **OPS-1.** The five "stale" refresh workflows are `workflow_dispatch` only by
+  RULING 124, which folded their schedules into `refresh-daily`. Their
+  timestamps in the Actions list are hand dispatches, not missed runs.
+- **OPS-2.** Already satisfied. `09:11 UTC` is `02:11` America/Phoenix, inside
+  the requested 2–3am window. Moving it would take it out.
+
+**BAL-27 is a third of this kind.** The incumbency join is sound — exact
+candidacy → office → officeholder, INCUMBENT / CHALLENGER / UNKNOWN, fails
+closed. It returned UNKNOWN because `statewide-executives.ts` holds THREE
+officeholders in total, the three governors, so Arizona holds 1 of its 9
+statewide elected offices. The sentence the reader saw is correct and the work
+is acquisition.
+
+## The detective result, and the doctrine it demonstrates
+
+The corpus recorded Arizona's signed-bill and veto class as unreachable because
+`apps.azleg.gov` publishes `Disallow: /`. **`www.azleg.gov` is a different host
+and it is permitted** — a specific path list, `Crawl-delay: 120`, and a sitemap
+it advertises.
+
+The sitemap is STALE and `SessionLaws.asp` returns 404, which is where a walk
+normally stops. But the 404 is served by the live site and is 78 KB of current
+navigation: 82 links, including the two that are the fact class. Both were
+walked at the published crawl-delay:
+
+```
+/governors-letters/   151 letters, 57leg/2r, 83 HB + 68 SB
+                      /govlettr/57leg/2r/hb2003.pdf
+/sessionlaws/         264 chapters, 1–264
+                      /legtext/57Leg/2R/laws/0001.pdf
+```
+
+The page describes itself in the legislature's own words: *"…a brief
+explanation as to why the Governor has vetoed or signed the bill."* Neither
+`/govlettr/` nor `/legtext/` is disallowed. No search, no form, no session
+token, born-digital PDFs.
+
+**A signed or vetoed bill produces a transmittal document, and a transmittal
+document has to be published somewhere the other branch can read it.** When an
+executive's site is thin or the bill-status app is walled, ask the RECEIVING
+body for the same act.
+
+NOT INGESTED. 151 letters at 120 seconds apart is about five hours for one
+session, so the adapter must be paced and resumable. What is settled is the
+permission question and the addresses. When it lands, Ask's gap sentence about
+vetoes must be rewritten — it currently reads as though the class were
+unreachable.
+
+## What ASK-15 actually is now
+
+The Aug 28 screenshot showing *"we have not recorded this official's actions"*
+is obsolete. Verified on current main: a question about Katie Hobbs returns 17
+records including 12 `OFFICIAL_ACTION` executive orders, denominators
+`actionRecordsHeld 12 / executiveOrdersIndexedAtCollection 37 /
+executiveOrdersReadAtCollection 12`, and two honest OURS gaps. The red control
+is closed; what remains is COVERAGE, and it is a tracker row.
+
+## What this session did not do
+
+BAL-25 (desktop composition), BAL-26 (Ask discoverability), BAL-27's
+acquisition, BAL-28 (photos), BAL-30 (local measure explainers), WGH-15's
+product semantics, WGH-16, MTG-14, ASK-05's second answer shape, ASK-06,
+DATA-4, and the two Arizona ingests. All ten are tracker rows carrying the
+diagnosis rather than the symptom, so the next session starts from what was
+measured rather than from the screenshots.
+
+Method version 40 → 45, 106 routes, `method:check` 0 issues. 7 of 7 local
+gates, 2,982 tests.

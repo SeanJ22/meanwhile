@@ -1,5 +1,5 @@
 {
-  "version": 40,
+  "version": 42,
   "updatedOn": "2026-08-28",
   "routes": [
     {
@@ -2746,6 +2746,78 @@
         "note": "One robots.txt fetch per legislature host. Cheap to establish and the expensive mistake is skipping it and building an adapter first."
       },
       "learnedAtVersion": 40
+    },
+    {
+      "id": "body-publishes-its-schedule-separately-from-its-agendas",
+      "title": "a body whose vendor holds only the next fortnight while its own site publishes the recurring rule months ahead",
+      "tier": "A0",
+      "fields": [
+        "meeting"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE SHAPE, AND IT IS A PUBLISHING PRACTICE RATHER THAN A DEFECT. Pima County's Legistar tenant answered a 2026-08-01 to 2026-11-01 query with seven events, newest 2026-08-25 and none in September, from an adapter whose forward horizon is 60 days and whose denominators reconcile exactly (fetched 16, normalized 16, three placeless drops accounted). The September sittings are real and are published on the county's own site as a RULE — 'Meetings Beginning at 5 p.m. 2nd and 4th Tuesdays of the month', with the room and street address — at www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule. THE DIAGNOSTIC: when a tenant's calendar stops a fortnight out, ask the body's OWN site for a meeting-schedule page before concluding anything about the body; the two records have different publication clocks and a vendor calendar running dry is not a body that has stopped meeting. THE CONTROL that makes this practice rather than code: Vail Unified, same snapshot and same pipeline on the same day, DOES publish individual future sittings and its September 8 and September 22 render. WHAT IT DOES NOT LICENSE: computing meetings from the rule. Cancellations, holidays and special sessions override a recurring schedule, and rendering a computed date as a published sitting is a render default manufacturing a claim. The rule is a different RECORD, honestly describable as one."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 1,
+          "outcome": "YIELDED",
+          "note": "Pima County's own published meeting rule read from www.pima.gov on 2026-08-28: 2nd and 4th Tuesdays, 5 p.m., Administration Building, 130 W. Congress St. Legistar over the same window holds seven events, newest 2026-08-25."
+        }
+      ],
+      "subBranches": [],
+      "origin": "found 2026-08-28 investigating a reader report that the Pima County Board of Supervisors was missing its upcoming meetings. The report named September 8 and September 22 and was right about both; the suspicion that rows were being dropped was wrong, and the denominators said so before the primary source confirmed it.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_COUNTY",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One sitemap read and one page fetch per body. The schedule page is nearly always in the sitemap under a name containing 'Schedule' or 'Calendar'."
+      },
+      "learnedAtVersion": 41
+    },
+    {
+      "id": "reconcile-the-adapter-before-suspecting-it",
+      "title": "the denominator read that decides whether a 'missing rows' report is about the pipeline or about the publisher",
+      "tier": "A1",
+      "fields": [
+        "meeting",
+        "agenda",
+        "roster"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "A READER SAYING 'THE MEETINGS ARE MISSING' IS A CLAIM ABOUT A SURFACE, AND IT HAS TWO COMPLETELY DIFFERENT CAUSES THAT LOOK IDENTICAL. Either rows are being lost between the source and the screen, or the source never had them. THE CHEAP DISCRIMINATOR RUNS FIRST AND IS ALREADY WRITTEN DOWN: the snapshot records fetched, normalized and drops-by-reason per source. If fetched equals normalized and the drops are accounted, no row was lost and the pipeline is not the suspect — which is a strictly stronger statement than 'the code looks right'. THEN ASK THE PRIMARY SOURCE THE SAME QUESTION THE ADAPTER ASKED, by hand, over the same window: if the API returns what the snapshot holds, the adapter is exonerated by observation rather than by inspection. Only then is the question about the publisher, and only then is it worth hunting other routes. Doing this in the other order costs a session: it is possible to read an adapter for an hour and learn nothing that one query would have settled. NOTE THE TRAP IN THE OTHER DIRECTION TOO — a reconciled denominator that is missing required source records is still a wrong result (RULING 100). Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 7,
+          "outcome": "YIELDED",
+          "note": "webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01 returned 7 events, newest 2026-08-25, confirming the snapshot's 16-fetched-16-normalized as complete for the window rather than truncated."
+        }
+      ],
+      "subBranches": [],
+      "origin": "generalised 2026-08-28 from the Pima investigation, where the session brief carried a specific suspicion of downstream row loss and the snapshot's own counters refuted it in one read, before a single line of the adapter was opened.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "Two reads: the snapshot's per-source counters, then one hand query against the primary API over the adapter's own window."
+      },
+      "learnedAtVersion": 42
     }
   ]
 }

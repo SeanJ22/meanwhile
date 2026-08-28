@@ -1,6 +1,12 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
 import { agendaItems, type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
+import {
+  actionsFor,
+  actionText,
+  executiveActionStore,
+  monthsBefore,
+} from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
 import { ripcordPulled } from "@/lib/ripcords";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
@@ -157,6 +163,99 @@ function divisionNameOf(ocdId: string): string {
   const last = ocdId.split("/").pop() ?? "";
   const slug = last.split(":")[1] ?? "";
   return slug ? titleCaseName(slug.replace(/_/g, " ")) : ocdId;
+}
+
+/**
+ * **WHAT AN OFFICEHOLDER HAS DONE, retrieved and BOUNDED.** (AZ03, 2026-08-28.)
+ *
+ * The corpus now holds Arizona gubernatorial executive orders, read from the
+ * office's own index and detail pages with a date and a signed PDF on every
+ * row. That closes the half of AZ03 a permitted route exists for.
+ *
+ * Two things travel with the records and both are load-bearing:
+ *
+ * 1. **The WINDOW the reader asked for.** "In the last 12 months" is a
+ *    computable range once `temporal.trailingMonths` is read, and an answer
+ *    built from an unwindowed list would silently answer a different question.
+ * 2. **The DENOMINATOR, and the gap for what is still not held.** Signed bills
+ *    and vetoes live behind `apps.azleg.gov`, which disallows every automated
+ *    client, so they are a NAMED GAP rather than silence — an answer that
+ *    listed six executive orders without saying vetoes are absent would read as
+ *    a complete account of a governor's year.
+ */
+function officeholderActionEvidence(
+  seatId: string,
+  personName: string,
+  today: string,
+  trailingMonths: number | undefined,
+  records: EvidenceRecord[],
+  gaps: EvidenceGap[],
+  denominators: Record<string, number>,
+): void {
+  const store = executiveActionStore();
+  if (!store) {
+    /* No store is a STATE and is reported as one, never as "they did nothing". */
+    gaps.push({
+      whose: "OURS",
+      statement: `We have not recorded any actions in office for ${personName}.`,
+    });
+    denominators.actionRecordsHeld = 0;
+    return;
+  }
+
+  const from = trailingMonths ? monthsBefore(today, trailingMonths) : null;
+  const windowed = actionsFor(seatId, { from, to: today });
+  const held = actionsFor(seatId);
+
+  denominators.actionRecordsHeld = held.length;
+  denominators.actionRecordsInAskedWindow = windowed.length;
+  denominators.executiveOrdersIndexedAtCollection = store.denominator.indexedAcrossPagesWalked;
+  denominators.executiveOrdersReadAtCollection = store.denominator.detailPagesRead;
+
+  for (const action of windowed.slice(0, 25)) {
+    records.push({
+      kind: "OFFICIAL_ACTION",
+      id: action.id,
+      /* The office's own designation, title and date. Never a summary: a
+         summary of an executive order is a claim about what a government did,
+         made by us. */
+      text: actionText(action),
+      occurredAt: action.occurredAt,
+      sourceUrl: action.documentUrl ?? action.sourceUrl,
+      sourceOrg: action.sourceOrg,
+      retrievedAt: action.collectedAt,
+    });
+  }
+
+  if (windowed.length === 0) {
+    gaps.push({
+      whose: "OURS",
+      statement:
+        held.length === 0
+          ? `We have not recorded any actions in office for ${personName}.`
+          : `We hold ${held.length} recorded action(s) for ${personName}, none of them inside the period you asked about.`,
+    });
+  }
+
+  /*
+   * **THE HALF THAT IS STILL NOT HELD, NAMED.** Executive orders are one kind
+   * of gubernatorial action. Bills signed and vetoed are published through the
+   * legislature's application at `apps.azleg.gov`, which disallows every
+   * automated client by published rule — a permission wall, not a retrieval
+   * failure, and not something more effort resolves.
+   */
+  gaps.push({
+    whose: "OURS",
+    statement:
+      "These are executive orders only. We have not recorded bills signed or vetoed — the legislature's bill-status system does not permit automated reading, so that half of the record is not ours to show yet.",
+  });
+
+  if (!store.denominator.reachedEndOfIndex) {
+    gaps.push({
+      whose: "OURS",
+      statement: `We read ${store.denominator.detailPagesRead} of the ${store.denominator.indexedAcrossPagesWalked} executive orders we indexed, and the index continues past what we walked.`,
+    });
+  }
 }
 
 /** Officeholders the reader can name — statewide executives, today. */
@@ -538,12 +637,15 @@ export async function POST(request: Request) {
            is, and the one an answer about the Governor was missing while it
            listed the reader's state senator. */
         contacts.push(contactForOfficeholder(seat));
-        gaps.push({
-          whose: "OURS",
-          statement:
-            "We have not recorded this official's actions in office — vetoes, bills signed or executive orders. We hold who they are, not yet what they have done.",
-        });
-        denominators.actionRecordsHeld = 0;
+        officeholderActionEvidence(
+          seat.id,
+          seat.name,
+          today,
+          interpretation.temporal.trailingMonths,
+          records,
+          gaps,
+          denominators,
+        );
       }
     }
     /*
@@ -749,12 +851,23 @@ export async function POST(request: Request) {
      * sentence. "Here is what she did" is not one this corpus can earn, and
      * the difference between them is a number the pack has to carry.
      */
-    gaps.push({
-      whose: "OURS",
-      statement:
-        "We have not recorded this official's actions in office — vetoes, bills signed or executive orders. We hold who they are, not yet what they have done.",
-    });
-    denominators.actionRecordsHeld = 0;
+    if (seat) {
+      officeholderActionEvidence(
+        seat.id,
+        seat.name,
+        today,
+        interpretation.temporal.trailingMonths,
+        records,
+        gaps,
+        denominators,
+      );
+    } else {
+      gaps.push({
+        whose: "OURS",
+        statement: `We have not recorded any actions in office for ${subject.name}.`,
+      });
+      denominators.actionRecordsHeld = 0;
+    }
   }
 
   /*

@@ -137,6 +137,7 @@ const nextConfig: NextConfig = {
     "/api/ask/grounded": [
       "./data/*.json",
       "./data/ballot/*.json",
+      "./data/officials/*.json",
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
       "./lib/registry/*.json",

@@ -19,7 +19,7 @@ import { logEvent } from "@/lib/log/client";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
-import { hostOf } from "@/lib/ask/host";
+import { sourceLinks } from "@/lib/ask/host";
 import {
   KIND_LABEL,
   buildSearchIndex,
@@ -1227,22 +1227,24 @@ export function AskBox({
               rather than as a phrase like "the record" — a mechanical read of
               a URL already on screen, never a claim about who published it. */}
           {(() => {
-            const sourced = (grounded.records ?? []).filter((r) => r.sourceUrl);
-            if (sourced.length === 0) return null;
-            const unique = [...new Map(sourced.map((r) => [r.sourceUrl, r])).values()];
+            /* One line per PUBLISHER. Six executive orders from one office are
+               six links and one source, and listing the office seven times is
+               an attribution nobody can read. */
+            const links = sourceLinks(grounded.records ?? []);
+            if (links.length === 0) return null;
             return (
               <p className="mt-2 text-[0.6875rem] text-muted">
-                Source{unique.length > 1 ? "s" : ""}:{" "}
-                {unique.map((r, i) => (
-                  <span key={r.sourceUrl}>
+                Source{links.length > 1 ? "s" : ""}:{" "}
+                {links.map((l, i) => (
+                  <span key={l.label}>
                     {i > 0 ? ", " : ""}
                     <a
-                      href={r.sourceUrl ?? undefined}
+                      href={l.url}
                       target="_blank"
                       rel="noreferrer noopener"
                       className="underline decoration-dotted underline-offset-2 hover:text-link"
                     >
-                      {r.sourceOrg ?? hostOf(r.sourceUrl)}
+                      {l.label}
                     </a>
                   </span>
                 ))}

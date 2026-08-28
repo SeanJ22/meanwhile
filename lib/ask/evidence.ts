@@ -30,6 +30,11 @@ export interface EvidenceRecord {
     | "AGENDA_ITEM"
     | "AGENDA_DOCUMENT"
     | "OFFICEHOLDER"
+    /* A governmental ACTION with a date and a signed primary document behind
+       it - an executive order, a bill signed, a veto. AZ03: the class the
+       corpus held nothing of, which is why a question about a governor s year
+       could only ever be answered as a gap. */
+    | "OFFICIAL_ACTION"
     | "OFFICE"
     | "BODY"
     /* The ballot's own record classes (PR #212 follow-up, 2026-08-28). Each

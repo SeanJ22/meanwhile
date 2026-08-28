@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 
-import { hostOf } from "@/lib/ask/host";
+import { sourceLinks } from "@/lib/ask/host";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
 import type { AskSubjectRef } from "@/lib/ask/subject";
@@ -388,14 +388,16 @@ export function BallotAsk({
 
           {sources.length > 0 && (
             <p className="mt-3 text-xs text-[var(--muted)]">
+              {/* One line per PUBLISHER, not one per document — see
+                  `sourceLinks`. Six documents from one office are one source. */}
               Source
-              {sources.length > 1 ? "s" : ""}:{" "}
-              {[...new Map(sources.map((r) => [r.sourceUrl, r])).values()].map((r, i) => (
-                <span key={r.sourceUrl}>
+              {sourceLinks(sources).length > 1 ? "s" : ""}:{" "}
+              {sourceLinks(sources).map((l, i) => (
+                <span key={l.label}>
                   {i > 0 ? ", " : ""}
                   <a
                     className="underline"
-                    href={r.sourceUrl ?? undefined}
+                    href={l.url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -409,7 +411,7 @@ export function BallotAsk({
                       about where the link goes, never a claim about who
                       published what is there.
                     */}
-                    {r.sourceOrg ?? hostOf(r.sourceUrl)}
+                    {l.label}
                   </a>
                 </span>
               ))}

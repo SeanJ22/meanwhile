@@ -38,7 +38,13 @@ interface GroundedBody {
   mode: string;
   subject?: { kind: string; id: string; name: string; office?: string | null } | null;
   answer?: string | null;
-  records?: { kind: string; id: string; text: string; sourceUrl?: string | null }[];
+  records?: {
+    kind: string;
+    id: string;
+    text: string;
+    occurredAt?: string | null;
+    sourceUrl?: string | null;
+  }[];
   gaps?: { whose: string; statement: string }[];
   contacts?: { id: string; name: string; relationship: string; sourceUrl: string | null }[];
   denominators?: Record<string, number>;
@@ -214,25 +220,62 @@ test("RED CONTROL: Hobbs resolves to the exact person AND office, and the record
   assert.ok(officeholder!.sourceUrl, "every rendered fact about a person carries its source");
 });
 
-test("RED CONTROL: the corpus holds ZERO gubernatorial ACTION records, and says so with a denominator", async () => {
+test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed and bounded", async () => {
   /*
-   * **THE HONEST ANSWER IS THE POINT, AND IT IS NOT THE TARGET PRODUCT.**
+   * **AZ03, HALF-CLOSED, AND THE HALF THAT IS NOT IS NAMED.**
    *
-   * `lib/votes/` is congressional only. There is no store of vetoes, bills
-   * signed or executive orders for any governor, so this question resolves the
-   * person and the office correctly and then finds nothing about what she has
-   * DONE. Filling that from what a model remembers is the single most damaging
-   * thing this route could do.
+   * This test used to assert `actionRecordsHeld === 0` — the honest answer when
+   * the corpus held nothing about what any governor had DONE. The reader's
+   * question was the lead, the hunt followed it, and the answer changed:
+   * `data/officials/az-governor-actions.json` holds Arizona executive orders
+   * read from the office's own index and detail pages, each with a date and a
+   * signed PDF.
    *
-   * The denominator is what lets an answer bound its own scope: "the actions in
-   * the records we currently hold" is true; "everything she did" is not.
+   * What the test asserts now is harder than what it asserted before, because
+   * holding records makes over-claiming possible for the first time:
+   *
+   *  - the reader's WINDOW is applied, not ignored;
+   *  - every record carries the office's own words and a source;
+   *  - the half that is still missing — bills signed and vetoed, behind a host
+   *    that disallows every automated client — is a NAMED GAP.
    */
   const body = await ask("What did Katie Hobbs do for the state of Arizona in the last 12 months?");
 
-  assert.equal(body.denominators?.actionRecordsHeld, 0);
-  const gap = body.gaps?.find((g) => /not recorded this official's actions in office/.test(g.statement));
-  assert.ok(gap, "the gap is NAMED rather than left as silence");
-  assert.equal(gap!.whose, "OURS");
+  assert.ok(
+    (body.denominators?.actionRecordsHeld ?? 0) > 0,
+    "the corpus holds gubernatorial action records now",
+  );
+
+  const actions = body.records?.filter((r) => r.kind === "OFFICIAL_ACTION") ?? [];
+  assert.ok(actions.length > 0, "and they reach the evidence pack");
+  for (const action of actions) {
+    assert.match(action.text, /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/);
+    assert.ok(action.sourceUrl, `${action.id} carries the document it was read from`);
+  }
+
+  /*
+   * **THE WINDOW IS APPLIED.** "In the last 12 months" is a range, and an
+   * answer built from an unwindowed list answers a different question. Every
+   * record returned must fall inside it, and the windowed count must be smaller
+   * than everything held — otherwise the filter is a no-op that happens to pass.
+   */
+  for (const action of actions) {
+    assert.ok(
+      (action.occurredAt ?? "") >= "2025-08-28",
+      `${action.id} at ${action.occurredAt} is outside the 12 months that were asked for`,
+    );
+  }
+  assert.ok(
+    (body.denominators?.actionRecordsInAskedWindow ?? 0) <
+      (body.denominators?.actionRecordsHeld ?? 0),
+    "the window actually narrows — a filter that matched everything would prove nothing",
+  );
+
+  /* And the half that is not held is NAMED, so six orders cannot read as a
+     complete account of a governor's year. */
+  const vetoGap = body.gaps?.find((g) => /bills signed or vetoed/.test(g.statement));
+  assert.ok(vetoGap, "the missing half is a named gap, never silence");
+  assert.equal(vetoGap!.whose, "OURS");
 });
 
 test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not hold", async () => {

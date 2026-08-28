@@ -81,6 +81,33 @@ const STAYS_IN_REPO = [
    */
   /^docs\/photo-review\//,
   /*
+   * **Joined 2026-08-28 (AZ04): recorded PDF fixtures for the test suite.**
+   *
+   * `tests/` is the one place in this repo where a binary is an INPUT TO A
+   * TEST rather than a piece of collected corpus. `CLAUDE.md` requires that
+   * `tests/fixtures/` hold recorded responses and that no test make a live
+   * call, and two of the facts the Arizona ingestion rests on are properties
+   * of specific PDFs that only real bytes can demonstrate:
+   *
+   *   - `azleg-legtext-0001.pdf` (34 KB) is born-digital and ends with
+   *     "APPROVED BY THE GOVERNOR FEBRUARY 6, 2026" — the evidence that
+   *     correcting a prior "no published signing date" finding was right.
+   *   - `azleg-govlettr-hb2003.pdf` (40 KB) is a mixed-raster SCAN whose text
+   *     layer returns ZERO_ROWS — the evidence correcting the method store's
+   *     "born-digital PDF with a readable text layer".
+   *
+   * Replacing them with transcriptions would leave the tests asserting what a
+   * previous session typed rather than what the state published, which is the
+   * failure both fixtures exist to prevent.
+   *
+   * They are not the class RULING 20 governs. That rule is about an
+   * INGEST-VOLUME corpus — every agenda PDF for every body, re-fetched
+   * forever. This is 75 KB, fixed, and re-fetched only if the parser's
+   * contract with the publisher changes, at which point the fixture SHOULD be
+   * re-recorded deliberately.
+   */
+  /^tests\/fixtures\//,
+  /*
    * **Joined 2026-08-26: a session's PROPOSAL captures.** `DARK-1` is the
    * first — Sean asked for options with side-by-side captures to react to,
    * and `/screenshots/` is gitignored, so writing them there would leave the

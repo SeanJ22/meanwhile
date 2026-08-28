@@ -6,6 +6,7 @@ import {
   actionText,
   executiveActionStore,
   monthsBefore,
+  undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
 import { ripcordPulled } from "@/lib/ripcords";
@@ -178,11 +179,19 @@ function divisionNameOf(ocdId: string): string {
  * 1. **The WINDOW the reader asked for.** "In the last 12 months" is a
  *    computable range once `temporal.trailingMonths` is read, and an answer
  *    built from an unwindowed list would silently answer a different question.
- * 2. **The DENOMINATOR, and the gap for what is still not held.** Signed bills
- *    and vetoes live behind `apps.azleg.gov`, which disallows every automated
- *    client, so they are a NAMED GAP rather than silence — an answer that
- *    listed six executive orders without saying vetoes are absent would read as
- *    a complete account of a governor's year.
+ * 2. **The DENOMINATOR, and the gap for what is still not held.** An answer
+ *    that listed six executive orders without saying what else exists would
+ *    read as a complete account of a governor's year.
+ *
+ * The second point used to name `apps.azleg.gov`'s `Disallow: /` as the reason
+ * signed bills and vetoes were absent. **That was a blocked ROUTE recorded as a
+ * blocked FACT** (AZ04, 2026-08-28): `www.azleg.gov` is a different host, it is
+ * allowed, and it publishes both halves as static indexes. The store now holds
+ * chapters of session law with the approval date read off each act's own stamp,
+ * and it holds the Governor's transmittal letters as documents we have not yet
+ * read. Which of those is a gap, and how big, is DERIVED from the store below
+ * rather than written into a sentence that cannot notice when it stops being
+ * true.
  */
 function officeholderActionEvidence(
   seatId: string,
@@ -239,17 +248,83 @@ function officeholderActionEvidence(
   }
 
   /*
-   * **THE HALF THAT IS STILL NOT HELD, NAMED.** Executive orders are one kind
-   * of gubernatorial action. Bills signed and vetoed are published through the
-   * legislature's application at `apps.azleg.gov`, which disallows every
-   * automated client by published rule — a permission wall, not a retrieval
-   * failure, and not something more effort resolves.
+   * **THE SENTENCE THAT USED TO SIT HERE WAS FALSE, AND IT REACHED READERS.**
+   * (Corrected by AZ04, 2026-08-28.)
+   *
+   * It said: *"We have not recorded bills signed or vetoed — the legislature's
+   * bill-status system does not permit automated reading, so that half of the
+   * record is not ours to show yet."*
+   *
+   * Every clause after the dash was wrong, and wrong in the most dangerous
+   * direction: it was a claim about a GOVERNMENT, asserting that Arizona's
+   * legislature withholds its own record from automated readers. What was
+   * actually true is that `apps.azleg.gov` — one host, running the modern
+   * bill-status application — publishes `Disallow: /`. `www.azleg.gov` is a
+   * different host, it is ALLOWED with a 120-second crawl delay, and it
+   * publishes the same facts as static indexes at `/sessionlaws/` and
+   * `/governors-letters/`.
+   *
+   * **A blocked route had been written down as a blocked fact** (RULING 184),
+   * and then rendered to readers as the legislature's doing. The gaps below
+   * are derived from what the store actually holds, so this sentence cannot go
+   * stale again while the collection moves underneath it.
    */
-  gaps.push({
-    whose: "OURS",
-    statement:
-      "These are executive orders only. We have not recorded bills signed or vetoed — the legislature's bill-status system does not permit automated reading, so that half of the record is not ours to show yet.",
-  });
+  const legislative = store.legislative;
+
+  if (!legislative) {
+    gaps.push({
+      whose: "OURS",
+      statement:
+        "These are executive orders only. We have not yet recorded what she did with the legislature's bills.",
+    });
+  } else {
+    denominators.chaptersReadAtCollection = legislative.chaptersRead;
+    denominators.chaptersIndexedAtCollection = legislative.chaptersIndexed;
+    denominators.governorLettersIndexedAtCollection = legislative.lettersIndexed;
+    denominators.governorLettersReadAtCollection = legislative.lettersRead;
+
+    /* OURS: a walk that has not finished is a fact about our collection, and
+       it is stated as a shortfall against the publisher's own count. */
+    if (legislative.chaptersRead < legislative.chaptersIndexed) {
+      gaps.push({
+        whose: "OURS",
+        statement: `Arizona's legislature lists ${legislative.chaptersIndexed} bills that became law in the ${legislative.sessionId} session. We have read ${legislative.chaptersRead} of them so far, so anything here about bills she signed is a partial account and not the whole session.`,
+      });
+    }
+
+    /*
+     * OURS, and the wording is the point. The letters are SCANS, we have no
+     * text-recognition step, and so we cannot say what any of them decided.
+     *
+     * What this must never say — and what the disjointness of the two indexes
+     * makes tempting — is that these are vetoes. Not one lettered bill appears
+     * among the chaptered ones, which is CONSISTENT with every letter being a
+     * veto and is not evidence of it. Two letters have been read directly and
+     * both were vetoes; two of a hundred and fifty-one is a floor, not a
+     * verdict, and the product does not publish verdicts it did not read.
+     */
+    const unreadLetters = legislative.lettersRetrieved - legislative.lettersRead;
+    if (unreadLetters > 0) {
+      gaps.push({
+        whose: "OURS",
+        statement: `She also sent the legislature ${legislative.lettersIndexed} letters about individual bills. We have retrieved ${legislative.lettersRetrieved} of those letters and have not been able to read ${unreadLetters} of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.`,
+      });
+    }
+  }
+
+  /*
+   * Rows we hold that no date-shaped question can reach. Surfaced rather than
+   * quietly filtered out by the window, because "we have this and cannot place
+   * it in time" is a different answer from not having it.
+   */
+  const undated = undatedFor(seatId);
+  denominators.actionRecordsWithNoDate = undated.length;
+  if (trailingMonths && undated.length > 0) {
+    gaps.push({
+      whose: "OURS",
+      statement: `We hold ${undated.length} more record(s) for ${personName} that carry no date we could read, so they could not be placed inside or outside the period you asked about.`,
+    });
+  }
 
   if (!store.denominator.reachedEndOfIndex) {
     gaps.push({

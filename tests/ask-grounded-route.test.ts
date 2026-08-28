@@ -248,9 +248,60 @@ test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed a
 
   const actions = body.records?.filter((r) => r.kind === "OFFICIAL_ACTION") ?? [];
   assert.ok(actions.length > 0, "and they reach the evidence pack");
+
+  /*
+   * **THIS ASSERTION WAS WIDENED DELIBERATELY, AND IT GOT STRICTER DOING IT.**
+   * (AZ04, 2026-08-28.)
+   *
+   * It used to be a single shape:
+   *
+   *     /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/
+   *
+   * which was correct while executive orders were the only rows that existed,
+   * and which would have FAILED on the first veto — not because the veto was
+   * wrong, but because `actionText` hardcoded the word "signed" and would have
+   * rendered *`HB2003, "…", signed 2026-06-19.`* about a bill she refused.
+   * Loosening this to `.+` would have made the test pass and left the false
+   * sentence in production, so the pattern is per-KIND instead: each kind gets
+   * the one shape it is allowed to have.
+   *
+   * The prohibition below is the part that matters more than the shapes: no
+   * record that is not a signing may contain the word "signed".
+   */
+  const SHAPES: RegExp[] = [
+    /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/,
+    /^[HS][BCMJR]\d{3,4}, ".+", signed by the Governor on \d{4}-\d{2}-\d{2} and chaptered as Chapter \d+ of the \S+ session\.$/,
+    /^[HS][BCMJR]\d{3,4}(, ".+",)? signed by the Governor on \d{4}-\d{2}-\d{2}, per her transmittal letter\.$/,
+    /^[HS][BCMJR]\d{3,4}(, ".+",)? vetoed by the Governor on \d{4}-\d{2}-\d{2}, per her veto letter\.$/,
+    /^[HS][BCMJR]\d{3,4}, ".+", became Arizona session law as Chapter \d+ .+\.$/,
+    /^[HS][BCMJR]\d{3,4} — the Governor sent the legislature a letter about this bill\. We have the letter but have not read it yet, so we cannot say what it decided\./,
+  ];
   for (const action of actions) {
-    assert.match(action.text, /^Executive Order \d{4}-\d+, ".+", signed \d{4}-\d{2}-\d{2}\.$/);
+    assert.ok(
+      SHAPES.some((shape) => shape.test(action.text)),
+      `${action.id} rendered a sentence no kind is allowed to produce: ${action.text}`,
+    );
     assert.ok(action.sourceUrl, `${action.id} carries the document it was read from`);
+  }
+
+  /*
+   * **THE WORD "SIGNED" IS EARNED, NEVER DEFAULTED.** A record may say she
+   * signed something only when it is a signing. This is the assertion that
+   * would have caught the original defect, and it does not care what the
+   * sentence looks like.
+   */
+  for (const action of actions) {
+    if (/\bsigned\b/i.test(action.text)) {
+      assert.match(
+        action.id,
+        /^az-(eo|chapter|govletter)-/,
+        `${action.id} claims a signing: ${action.text}`,
+      );
+      assert.ok(
+        !/vetoed|have not read it yet/i.test(action.text),
+        `${action.id} says both signed and not-signed: ${action.text}`,
+      );
+    }
   }
 
   /*
@@ -271,11 +322,53 @@ test("RED CONTROL: the corpus now HOLDS gubernatorial action records, windowed a
     "the window actually narrows — a filter that matched everything would prove nothing",
   );
 
-  /* And the half that is not held is NAMED, so six orders cannot read as a
-     complete account of a governor's year. */
-  const vetoGap = body.gaps?.find((g) => /bills signed or vetoed/.test(g.statement));
-  assert.ok(vetoGap, "the missing half is a named gap, never silence");
-  assert.equal(vetoGap!.whose, "OURS");
+  /*
+   * **THE GAP THIS USED TO MATCH WAS ITSELF A FALSE CLAIM.** (AZ04, 2026-08-28.)
+   *
+   * The old matcher was `/bills signed or vetoed/`, and the sentence it
+   * accepted read: *"the legislature's bill-status system does not permit
+   * automated reading, so that half of the record is not ours to show yet."*
+   * That was a statement about a GOVERNMENT — that Arizona's legislature
+   * withholds its record — and it was false. `apps.azleg.gov` disallows
+   * automated clients; `www.azleg.gov` is a different host, is allowed, and
+   * publishes the whole thing. A blocked ROUTE had been recorded, rendered,
+   * and then TESTED FOR, as a blocked FACT.
+   *
+   * So the test now asserts the two things that must be true of the
+   * replacement rather than pinning one sentence: the remaining gaps are
+   * attributed to US, and none of them blames the publisher.
+   */
+  const ourGaps = (body.gaps ?? []).filter((g) => g.whose === "OURS");
+  assert.ok(ourGaps.length > 0, "what is still missing is named, never silence");
+
+  const letterGap = ourGaps.find((g) => /letters about individual bills/.test(g.statement));
+  assert.ok(letterGap, "the unread transmittal letters are a named gap");
+  assert.match(
+    letterGap!.statement,
+    /we will not say what any of them decided until we have read it/,
+    "and the gap refuses the inference rather than hinting at it",
+  );
+
+  for (const gap of body.gaps ?? []) {
+    /* No gap may attribute our shortfall to the publisher. */
+    assert.ok(
+      !/does not permit automated reading|not ours to show/.test(gap.statement),
+      `a gap still blames the publisher for our own shortfall: ${gap.statement}`,
+    );
+    if (gap.whose === "OURS") {
+      assert.ok(
+        !/\bthey (do not|don't|have not|haven't)\b/i.test(gap.statement),
+        `an OURS gap is phrased as a fact about THEM: ${gap.statement}`,
+      );
+    }
+  }
+
+  /* And no gap anywhere may call the unread letters vetoes. */
+  for (const gap of body.gaps ?? []) {
+    if (/letters about individual bills/.test(gap.statement)) {
+      assert.ok(!/\bveto/i.test(gap.statement), `an unread letter was called a veto: ${gap.statement}`);
+    }
+  }
 });
 
 test("RED CONTROL: nothing in the Hobbs reply is an action the corpus does not hold", async () => {

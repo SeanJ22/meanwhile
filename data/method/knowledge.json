@@ -1,5 +1,5 @@
 {
-  "version": 44,
+  "version": 45,
   "updatedOn": "2026-08-28",
   "routes": [
     {
@@ -2893,6 +2893,43 @@
         "note": "No extra request at all — the response is already in hand. It costs one link extraction over bytes that were downloaded anyway."
       },
       "learnedAtVersion": 44
+    },
+    {
+      "id": "governor-transmittal-letters-published-by-the-receiving-chamber",
+      "title": "signed and vetoed bills read from the letters the governor sends the legislature, rather than from the walled bill-status app",
+      "tier": "A0",
+      "fields": [
+        "document",
+        "vote",
+        "officeholder"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "MEASURED 2026-08-28 ON www.azleg.gov/governors-letters/, WHICH IS PERMITTED. The page describes itself: 'Governor's Letters include the official letters that are sent from the Governor to the Legislature on a specific bill and usually include a brief explanation as to why the Governor has vetoed or signed the bill.' It links 151 letters for the 57th Legislature 2nd Regular Session — 83 HB and 68 SB — each a separate born-digital PDF at https://www.azleg.gov/govlettr/<leg>/<session>/<billno>.pdf, e.g. /govlettr/57leg/2r/hb2003.pdf. No search, no form, no session token, and /govlettr/ appears nowhere in the host's disallow list. THE GENERAL SHAPE, WHICH IS THE PORTABLE PART: a signed or vetoed bill produces a TRANSMITTAL DOCUMENT, and a transmittal document must be published somewhere the other branch can read it. So when an executive's own site is thin or the bill-status application is walled, ASK THE RECEIVING BODY FOR THE SAME ACT — a legislature that receives the governor's letters publishes them. The same reasoning reaches session laws, journals and enrolled-bill lists, all of which are records of one act held by more than one government. WHAT THIS CORRECTS: the corpus recorded this entire fact class as unreachable on the strength of one host's disallow, and the record was never in that host."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 151,
+          "outcome": "YIELDED",
+          "note": "151 Governor's Letter PDFs enumerated for 57leg/2r with a predictable per-bill URL scheme. The letters themselves are not yet ingested; what is measured is that they exist, are permitted, are individually addressable and state whether the bill was signed or vetoed."
+        }
+      ],
+      "subBranches": [],
+      "origin": "walked 2026-08-28, honouring the host's Crawl-delay of 120 seconds, after sibling-host-is-a-different-permission-decision identified the route and read-the-navigation-off-the-404-page found its current address.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_STATE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One index read per session, then one PDF per bill. The crawl-delay dominates: 151 letters at 120 seconds apart is about five hours for a full session, so an ingest has to be paced and resumable rather than run in one pass."
+      },
+      "learnedAtVersion": 45
     }
   ]
 }

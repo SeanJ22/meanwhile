@@ -75,7 +75,7 @@ import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
-import { globalIntegrityLine } from "../lib/ops/integrity-claim.ts";
+import { globalIntegrityLine, globalIntegrityStatus } from "../lib/ops/integrity-claim.ts";
 import { answerQuestion } from "../lib/routing/ask.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
 import { coverageAt } from "../lib/registry/server.ts";
@@ -845,7 +845,28 @@ console.log(
 }
 
 if (out) {
-  writeFileSync(out, `${JSON.stringify({ generatedAt: snapshot.generatedAt, results }, null, 1)}\n`, "utf8");
+  /*
+   * **THE VERDICT TRAVELS WITH THE DATA** (2026-08-27).
+   *
+   * The printed summary carries `GLOBAL_INTEGRITY_STATUS`; without it here, a
+   * machine reading this file — a report generator, a later session — would
+   * see per-surface rows and a defect count and have to re-derive the one
+   * thing that stops a measured zero becoming a product-wide zero. That
+   * re-derivation is exactly the step that was skipped the first time.
+   */
+  writeFileSync(
+    out,
+    `${JSON.stringify(
+      {
+        generatedAt: snapshot.generatedAt,
+        integrity: { ...tally, status: globalIntegrityStatus(tally) },
+        results,
+      },
+      null,
+      1,
+    )}\n`,
+    "utf8",
+  );
   console.log(`\nwrote ${out}`);
 }
 

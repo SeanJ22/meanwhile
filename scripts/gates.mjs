@@ -81,6 +81,28 @@ const GATES = [
     why: "the suite, which is every other protection in this repo",
   },
   {
+    /*
+     * THE SHIPPING INVARIANT (2026-08-28, the P0 schema drift).
+     *
+     * It sits AFTER the suite and BEFORE the builds, deliberately. The suite
+     * already fails when a committed migration declares no phase, which is the
+     * cheap half and needs no credential; this is the half that asks
+     * production, and there is no point spending ten minutes on two builds for
+     * a head whose schema has not been applied.
+     *
+     * It exits 0 without contacting anything when the change does not touch
+     * `lib/db/migrations/` or `lib/db/schema.ts`, so it costs a docs-only
+     * session nothing. When it IS applicable and there is no
+     * `WTP_PRODUCTION_DATABASE_URL_READONLY` in the environment it exits 2 —
+     * COULD NOT TELL, which is a failing gate, because a session changing the
+     * schema with no way to ask production genuinely does not know.
+     */
+    id: "db:gate",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm exec tsx scripts/db-shipping-gate.mts",
+    why: "a deploy may not cross its own migrations — 0021 and 0022 shipped ahead of the schema",
+  },
+  {
     id: "build",
     ciJob: "build (default)",
     command: "pnpm run build",

@@ -27,8 +27,8 @@
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
-import { neon } from "@neondatabase/serverless";
 
+import { readAppliedMigrationWhen } from "../lib/db/applied-migrations.ts";
 import {
   compareSchemaState,
   describeSchemaState,
@@ -54,22 +54,20 @@ if (!connection) {
 
 const journal = readJournal();
 
-let appliedWhen: number[];
-try {
-  const sql = neon(connection);
-  const rows = (await sql`
-    SELECT created_at FROM drizzle.__drizzle_migrations
-  `) as { created_at: string | number }[];
-  appliedWhen = rows.map((r) => Number(r.created_at));
-} catch (error) {
-  console.error(
-    `db:check: COULD NOT READ drizzle.__drizzle_migrations — ${(error as Error).message}`,
-  );
+/*
+ * ONE READER (2026-08-28). The `neon(...)` and the SELECT used to live here and
+ * again in `scripts/db-shipping-gate.mts`. They are `lib/db/applied-migrations.ts`
+ * now — same query, same distinction between an unreadable table and an empty
+ * one, and no way for the two callers to learn different things about a failure.
+ */
+const read = await readAppliedMigrationWhen(connection);
+if (!read.ok) {
+  console.error(`db:check: COULD NOT READ drizzle.__drizzle_migrations — ${read.why}`);
   console.error("  This is not 'zero applied'. Nothing is concluded about the schema.");
   process.exit(2);
 }
 
-const state = compareSchemaState(journal, appliedWhen);
+const state = compareSchemaState(journal, read.appliedWhen);
 
 console.log(`  committed: ${state.codeCount} migration(s), head ${state.codeHead}`);
 console.log(`  applied:   ${state.appliedCount} migration(s)`);

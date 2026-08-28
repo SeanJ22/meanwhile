@@ -57,6 +57,16 @@ on:
 
 permissions:
   contents: write
+  # ACTIONS READ — the diagnoser reads THIS run (2026-08-28, run 33211710028).
+  #
+  # Declaring `permissions:` at all switches the token from the repository
+  # default to exactly what is listed, so every scope not named here is
+  # `none`. With `contents: write` alone, the `Name the cause` step below hit
+  # `gh: Resource not accessible by integration (HTTP 403)` on
+  # `GET /actions/runs/{id}` and printed `diagnose: CANNOT RUN` — correctly,
+  # and uselessly. `actions: read` is the minimum that endpoint needs; nothing
+  # else is widened. job-watch.yml already carried it for the same reason.
+  actions: read
 
 concurrency:
   group: refresh-meetings-snapshot

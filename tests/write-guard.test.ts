@@ -310,11 +310,27 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
       refresh-fec-snapshot.yml       no DB write; commits a JSON file.
       refresh-dotgov-snapshot.yml    no DB write; commits a JSON file.
       refresh-legiscan-snapshot.yml  no DB write; commits a JSON file.
-      build-check.yml                no DB write, and no commit either — it
-                                     builds and reads the build's own output
-                                     (R51, 2026-08-18). It is also the one
-                                     workflow here that is not scheduled: it
-                                     runs on push.
+      build-check.yml                READS, and no DB write — it builds and
+                                     reads the build's own output (R51,
+                                     2026-08-18). It is also the one workflow
+                                     here that is not scheduled: it runs on
+                                     push and on pull requests.
+
+                                     ONE STEP GAINED DATABASE ACCESS ON
+                                     2026-08-28, and this is the "say so where
+                                     it is set" this guard asks for. The schema
+                                     shipping gate reads production's applied
+                                     migrations before a merge, because 0021
+                                     and 0022 shipped ahead of the schema and
+                                     the daily tripwire found it the morning
+                                     after. It resolves
+                                     WTP_PRODUCTION_DATABASE_URL_READONLY — the
+                                     read-only role, by name, one SELECT — and
+                                     it carries NO sanction, because it must
+                                     never be able to write. That is asserted
+                                     below rather than described: this workflow
+                                     may name the READONLY variable and nothing
+                                     else, and may not carry WTP_SANCTIONED_WRITE.
 
       job-watch.yml                  no DB write; reads the Actions API and
                                      commits a tracker row (RULING 56, NH Hunt
@@ -344,13 +360,39 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   }
   assert.deepEqual(
     withDatabase,
-    ["intake-tripwire.yml"],
-    "a scheduled workflow gained database access — if it writes, it needs its own " +
+    ["build-check.yml", "intake-tripwire.yml"],
+    "a workflow gained database access — if it writes, it needs its own " +
       "named sanction; if it only reads, say so where it is set",
   );
   assert.match(
     readFileSync(`${dir}/intake-tripwire.yml`, "utf8"),
     /WTP_SANCTIONED_WRITE:/,
     "the one writing workflow lost its sanction",
+  );
+
+  /*
+   * THE READER IS HELD TO READING (2026-08-28).
+   *
+   * `build-check.yml` runs on every pull request, so a credential in it is
+   * reachable by any change. Its ONE database step must resolve the read-only
+   * variable by name and nothing else: no bare `DATABASE_URL`, no
+   * `WTP_PRODUCTION_DATABASE_URL_WRITE`, and no sanction — `lib/db/write-handle.ts`
+   * refuses the READONLY string for writing, and `scripts/apply-migrations.mts`
+   * refuses to run without a sanctioned write variable, so both halves have to
+   * stay absent for that refusal to mean anything here.
+   */
+  const buildCheck = readFileSync(`${dir}/build-check.yml`, "utf8");
+  const databaseNames = [...buildCheck.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
+  assert.ok(databaseNames.length > 0, "the reader found no database variable to check at all");
+  assert.deepEqual(
+    [...new Set(databaseNames)],
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY"],
+    "build-check.yml runs on every pull request and may name only the READ-ONLY production " +
+      "variable. A write-capable string here is reachable from any change.",
+  );
+  assert.doesNotMatch(
+    buildCheck,
+    /WTP_SANCTIONED_WRITE/,
+    "build-check.yml must carry no write sanction — its database step exists to ask a question",
   );
 });

@@ -320,7 +320,26 @@ function gapForBinding(binding: NamedEntityBinding): string | null {
   }
   if (binding.kind === "AMBIGUOUS") {
     const names = binding.candidates.map((c) => c.name);
-    return `More than one government here goes by that name — ${names.join(" and ")}. Choose one and we'll answer for it.`;
+    /*
+     * **THIS USED TO PROMISE AN INTERACTION THAT DOES NOT EXIST.**
+     * (2026-08-27.)
+     *
+     * It read *"Choose one and we'll answer for it"* — and nothing on the
+     * surface is choosable. The candidates render as prose: no buttons, no
+     * links, nothing to click. A reader following that instruction finds
+     * nothing to follow.
+     *
+     * What DOES work is the thing the reader is already looking at: the ask box
+     * reads the class of government out of their own words, so adding "school
+     * district" or "town" resolves the tie. That is not a guess about the UI —
+     * it is `CLASS_PHRASE_DIVISIONS` in `named-entity.ts`, and
+     * `tests/ask-entity-binding.test.ts` proves "the Vail school board" reaches
+     * the district rather than the place.
+     *
+     * So the sentence tells them what actually works. A product that asks a
+     * reader to do something it has not built is making a claim about itself.
+     */
+    return `More than one government here goes by that name — ${names.join(" and ")}. Say which kind you mean — "school district", "town" — and we'll answer for that one.`;
   }
   if (binding.kind === "BOUND") {
     return `We hold ${binding.entity.name}, and we haven't sourced this topic for it yet.`;

@@ -462,3 +462,44 @@ test("the unresolved sentence claims only what was SEARCHED, never what we hold"
    * licence to stop telling them which word failed to match. */
   assert.match(gaps, /vail/i, "the reader is not told which name went unmatched");
 });
+
+test("the ambiguous sentence asks for something the product actually does", async () => {
+  /*
+   * **IT USED TO PROMISE AN INTERACTION THAT DOES NOT EXIST.**
+   *
+   * The sentence read *"Choose one and we'll answer for it"* — and nothing on
+   * the surface is choosable. The candidates render as prose: no buttons, no
+   * links, nothing to click. A reader following that instruction finds nothing
+   * to follow, which is a claim about the product rather than about a
+   * government, and false in the same way.
+   *
+   * What the product DOES do is read the class of government out of the
+   * reader's own words. So the sentence now asks for that — and this test ties
+   * the instruction to the behaviour, so the copy cannot promise one thing
+   * while the binder does another.
+   */
+  const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
+  const answer = resolveRouting("schools-policy", coverage, {
+    kind: "AMBIGUOUS",
+    mention: "Vail",
+    candidates: INVENTORY.filter((e) => e.id.startsWith("vail-")),
+  });
+  const gaps = answer.steps.map((s) => s.gap).filter(Boolean).join(" ");
+
+  assert.ok(
+    !/choose one/i.test(gaps),
+    `the sentence asks the reader to choose, and nothing is choosable: ${gaps}`,
+  );
+
+  /* And the instruction it DOES give must work. "school district" is exactly
+     what the sentence suggests, and it must resolve the tie it was offered for. */
+  const ambiguous = bindNamedEntity("what is Vail discussing", INVENTORY);
+  assert.equal(ambiguous.kind, "AMBIGUOUS", "precondition: this really is a tie");
+  const disambiguated = bindNamedEntity("what is the Vail school district discussing", INVENTORY);
+  assert.equal(
+    disambiguated.kind,
+    "BOUND",
+    "the sentence tells the reader to say which kind, and saying it must resolve the tie",
+  );
+  if (disambiguated.kind === "BOUND") assert.equal(disambiguated.entity.id, "vail-sd");
+});

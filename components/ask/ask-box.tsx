@@ -923,9 +923,14 @@ export function AskBox({
               data-ask-entity-state="AMBIGUOUS"
               className="text-[0.8125rem] leading-relaxed text-voice"
             >
+              {/* NOT "choose one" — nothing here is choosable, and asking a
+                  reader to do something the product has not built is a claim
+                  about the product. Saying which KIND does work: the binder
+                  reads the class of government out of the reader's own words. */}
               More than one government goes by that name —{" "}
-              {asked.binding.candidates.map((c) => c.name).join(" and ")}. Choose
-              one and we&apos;ll answer for it.
+              {asked.binding.candidates.map((c) => c.name).join(" and ")}. Say
+              which kind you mean — &ldquo;school district&rdquo;,
+              &ldquo;town&rdquo; — and we&apos;ll answer for that one.
             </p>
           )}
           <p className="text-[0.8125rem] leading-relaxed text-voice">

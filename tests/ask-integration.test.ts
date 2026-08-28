@@ -794,6 +794,73 @@ test("ASK SIGNAL: enabling the flag without minting a key writes NOTHING, loudly
   assert.equal(written.length, 0);
 });
 
+test("ASK SIGNAL: with the flag LIVE, one Ask writes exactly one row — and one only", async () => {
+  /*
+   * **THE CONTROLLED ACTIVATION TEST.** The gated test above proves nothing
+   * is written; on its own that is also what a broken write path looks like.
+   * This flips the flag through the env var the ripcord already reads,
+   * exercises the REAL `captureAskInteraction`, and puts it back — so the
+   * shipped state is unchanged and the path is proved to work when it is
+   * switched on.
+   *
+   * `live` rather than deleting the variable: `ripcordPulled` falls back to
+   * the declared default when the env is unset, and the declared default is
+   * PULLED. A test that unset it would be re-testing the gate.
+   */
+  const before = process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE;
+  process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE = "live";
+  try {
+    const written: AskInteractionRow[] = [];
+    const outcome = await captureAskInteraction(captureInput(), async (row) => {
+      written.push(row);
+    });
+
+    assert.equal(outcome.kind, "WROTE");
+    assert.equal(written.length, 1, "one Ask, one row — never two, never none");
+
+    const row = written[0];
+    /* The commercial unit, whole: question, interpretation, subject, answer,
+       mode, evidence provenance, surface, cohort and confidence. */
+    assert.ok(row.questionScrubbed.length > 0, "the scrubbed question");
+    assert.equal(row.intent, "UPCOMING_AGENDA");
+    assert.equal(row.temporalKind, "NEXT");
+    assert.deepEqual(row.subjectIds, [VAIL]);
+    assert.equal(row.resolutionState, "BOUND");
+    assert.equal(row.answerMode, "GROUNDED_CLAUDE");
+    assert.ok(row.answerText && row.answerText.length > 0, "the delivered answer");
+    assert.equal(row.validationPassed, true);
+    assert.ok(row.evidenceRecordRefs.length > 0, "WHICH records, not merely how many");
+    assert.ok(row.evidenceSourceUrls.length > 0);
+    assert.equal(row.surface, "MAP");
+    assert.equal(row.residencyRelation, "CURRENT_HOME");
+    assert.equal(row.locationConfidence, "SELF_DECLARED_ZIP");
+    assert.equal(row.askKeyHash, askKeyHash("browser-minted-abc123"));
+    assert.equal(row.runClass, "SYNTHETIC", "a test run is never counted as reader signal");
+
+    /* The coverage stamp is DERIVED at the write path — no route names a
+       field the reader's tree is forbidden to hold. */
+    assert.ok(row.coverageTier.length > 0);
+    assert.ok(row.coverageTierDistribution.length > 0);
+
+    /* And the raw continuity value never reaches the row. */
+    assert.ok(
+      !JSON.stringify(row).includes("browser-minted-abc123"),
+      "the browser-minted key is digested, never stored",
+    );
+  } finally {
+    if (before === undefined) delete process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE;
+    else process.env.WTP_RIPCORD_ASK_SIGNAL_CAPTURE = before;
+  }
+
+  /* PUT BACK: the shipped state is gated, and this test may not leave it live
+     for whatever runs next in this process. */
+  const after: AskInteractionRow[] = [];
+  assert.equal(
+    (await captureAskInteraction(captureInput(), async (r) => { after.push(r); })).kind,
+    "GATED",
+  );
+  assert.equal(after.length, 0);
+});
 test("ASK SIGNAL: the surfaces READ a continuity key and never mint one while capture is off", () => {
   for (const [name, source] of [["ask-box", ASK_BOX], ["ballot-ask", BALLOT_ASK]] as const) {
     assert.match(code(source), /readBrowserKey\("wtp\.ask_key"\)/, `${name} must read`);

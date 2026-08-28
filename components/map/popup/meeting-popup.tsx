@@ -16,6 +16,7 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { linksForMeeting, type OutboundLink } from "@/lib/registry/links";
 import { relativeAge } from "@/lib/meetings/freshness";
+import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
 import { minutesSummaryForMeeting } from "@/lib/meetings/minutes-summaries";
 import { officePhoneForBody } from "@/lib/meetings/office-phone";
 import { JurisdictionPill } from "@/components/address/jurisdiction-pill";
@@ -85,6 +86,13 @@ export function MeetingPopup({
 }: MeetingPopupProps) {
   const tier = tierForMeeting(meeting) ?? "local";
   const badge = STATUS_BADGE[meeting.status];
+  /*
+   * MTG-14: asked once, through the one helper. It returns null both for a
+   * physical sitting and for an online-only one whose `online` half is missing
+   * — the pair broken — and either way the "How to join" row does not render a
+   * label with nothing behind it.
+   */
+  const onlineAccess = onlineAccessFor(meeting);
   /*
    * M81 — does this body govern the reader, or is it just close?
    *
@@ -171,20 +179,23 @@ export function MeetingPopup({
          * may still turn up at city hall.
          */
         <PopupRow label="Where">
-          Online only — there is no room to attend in person.
+          {/* MTG-14: the sentence lives in lib/meetings/online.ts now. It was
+              written out here and again in map-entry.tsx, which is two places
+              for one claim about a government's meeting. */}
+          {ONLINE_ONLY_LINE}
         </PopupRow>
       )}
 
-      {meeting.online && (
+      {onlineAccess && (
         <PopupRow label="How to join">
-          {meeting.online.joinUrl ? (
+          {onlineAccess.joinUrl ? (
             <a
-              href={meeting.online.joinUrl}
+              href={onlineAccess.joinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
-              {meeting.online.label}
+              {onlineAccess.label}
             </a>
           ) : (
             /*
@@ -194,9 +205,7 @@ export function MeetingPopup({
              * — the body's homepage, the portal, the agenda — would look like
              * a way in and not be one.
              */
-            <span className="text-muted">
-              {meeting.online.label} — the body hasn&apos;t published a join link
-            </span>
+            <span className="text-muted">{joinLine(onlineAccess)}</span>
           )}
         </PopupRow>
       )}

@@ -1,182 +1,182 @@
 {
   "data/derived/body-forms.json": {
-    "digest": "100a80f45ed0b44631b4ce47f2a151689523820c12329d5b28361a6a3c0522f8",
+    "digest": "8102e74286ecf36d52c3904959ba6639f4d08e0904ddaeab606b1c1115200d5a",
     "files": 7,
     "entry": "scripts/stamp-body-forms.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/derived/class-stamp-sweep.json": {
     "digest": "539a8ddba7b5398f067e31ea313fc85477c8c327030507703e43819ab99a5aa4",
     "files": 1,
     "entry": "scripts/class-stamp-sweep.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/derived/school-district-dependency.json": {
     "digest": "10b0dbd405d9f689e23d3071b88b2a5bc388a41cc498edec7269152f9947a828",
     "files": 4,
     "entry": "scripts/classify-school-districts.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/muni-sites-nj-morris.json": {
     "digest": "2fa8a4c9e92de5d75de9c5f79d70660cdea36a6b9dbfe805c2103e5d7da77ef1",
     "files": 3,
     "entry": "scripts/muni-site-index.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/nj-morris-certified-winners.json": {
     "digest": "1896bd51ef11f04c8950c115db2205ab79b5708cd36ae7885ed45bcc923e4cfe",
     "files": 5,
     "entry": "scripts/nj-certified-winners.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/nj-morris-municipal-sites.json": {
     "digest": "f46e62be44e936350803ec37a41d5a856c5172a666a44be13deb2f49e6d2aa46",
     "files": 4,
     "entry": "scripts/nj-hunt4-rosters.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/roster-pages-muni-sites-nj-morris.json": {
     "digest": "63898d032fb194e30ee820fd019f53f3fbaa9e3ab2690333303ab521fbd34cfd",
     "files": 3,
     "entry": "scripts/roster-hunt.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/tier-directories.json": {
     "digest": "e0a210dbd594762c9eebf0eac80613b78c2f57d2ef83894df5f28c0ac5effc62",
     "files": 3,
     "entry": "scripts/tier-directory.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/hunt/wikipedia-nj-morris.json": {
     "digest": "a0b3cabc08da6b55b46a82734281709f455112d1217b3ffe8f4a260b02a2dfd5",
     "files": 5,
     "entry": "scripts/wiki-municipality.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "data/questionnaire/invitations-nj-morris-2026.json": {
     "digest": "6eda47f82d79330d35379f7210ae1cd5e88f73362c25bdce8d19a8af1c5dd854",
     "files": 4,
     "entry": "scripts/questionnaire-invitations.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/branch-manifest.md": {
     "digest": "3888b2f8cc2012a58df126feb0b07c80357ef63da756df3f9b3af0650375c92c",
     "files": 3,
     "entry": "scripts/branch-manifest-doc.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/candidate-questionnaire.md": {
     "digest": "4ca1316c5aa9e99245282b70b5d28f60e0da64a0e99a94e01db7f3b778586bba",
     "files": 2,
     "entry": "scripts/questionnaire-doc.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
     "digest": "0f14b35ff8d971acdc9e8332eee6b1d012b841b3bed19874ac53efa09720f37e",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/current-decisions.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/history.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/index.json": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/business.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/data-privacy.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/discovery.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/meta-governance.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/rendering-neutrality.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/shipping-ci.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/sources-licensing.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/tracker-workflow.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/governance/policies/visual-feedback.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "docs/rulings.md": {
     "digest": "716580a67cb2f44e27460e3c2df1187f04f71c21a33d89c98d8a9cc2c9695b46",
     "files": 5,
     "entry": "scripts/governance-compile.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "lib/officials/directory-source.ts": {
     "digest": "a37c4ecb873c9e6042fcfafa2a698ab7fd1743aff8afea92fb94faed2c92dd5e",
     "files": 2,
     "entry": "scripts/migrate-congress-directory.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "lib/registry/registry.json": {
     "digest": "e4999af25c3ec848964928d3a5bdf67ff25fa60079d56504b75878ce47586dc3",
     "files": 13,
     "entry": "scripts/build-registry.ts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "lib/registry/rosters-nj-morris.ts": {
     "digest": "0f14b35ff8d971acdc9e8332eee6b1d012b841b3bed19874ac53efa09720f37e",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   },
   "public/geo/body-territories.geojson": {
     "digest": "83cfc752aa606c41a8d4bd6e75f5e30fed6176089b68f039ce22c74d797b2db7",
     "files": 1,
     "entry": "scripts/cfd-territory.mts",
-    "regeneratedOn": "2026-08-27"
+    "regeneratedOn": "2026-08-28"
   }
 }

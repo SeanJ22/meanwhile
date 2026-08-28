@@ -246,9 +246,10 @@
         "shared-file-hunk-application"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/defs on ws/defs, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/defs on ws/defs, node_modules junction",
+        "integrated; map-entry.tsx hunk A applied by the integration owner, tsc 0 errors; globals.css and ask-box.tsx hunks HELD until the ballot and ask workstreams merge, to avoid a self-inflicted conflict"
       ]
     },
     {

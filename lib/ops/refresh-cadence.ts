@@ -187,10 +187,152 @@ export function dueSources(runDate: Date): RefreshSource[] {
   return REFRESH_SOURCES.filter((s) => isDue(s, runDate));
 }
 
+/* -------------------------------------------------------------------------- */
+/* CATCH-UP — THE ONE THING A CALENDAR-DRIVEN CADENCE CANNOT DO ON ITS OWN     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * **A LATE RUN COMPUTES THE RIGHT CADENCE. A SKIPPED DAY IS GONE FOREVER.**
+ * (2026-08-28.)
+ *
+ * The header above is right that a calendar-driven cadence is robust: `isDue`
+ * is a pure function of the run's own date, so the run that fired 638 minutes
+ * behind its 2026-08-27 slot still asked the correct question for 2026-08-27
+ * and got the correct answer. Lateness costs nothing here.
+ *
+ * **Absence costs everything.** `fec` and `legiscan` are MONDAY-ONLY. If the
+ * Monday slot produces no run — or produces one that fails before those sources
+ * execute — Tuesday's run asks "is it Monday?", answers no, and skips them.
+ * Nothing anywhere retries. **One missed Monday is a fourteen-day data gap in
+ * federal committee filings and state roll-call votes**, and no instrument in
+ * this repository would report it as anything but a normal Tuesday.
+ *
+ * The fix is not a second cron. `tests/refresh-cadence.test.ts` asserts exactly
+ * one cron per workflow on purpose — more than one schedule on one workflow is
+ * the duplicate-run shape RULING 78 removed — so a second offset schedule needs
+ * a later-dated ruling before it can exist. The union below recovers the same
+ * days lawfully, inside the run that is already happening, with no governance
+ * change and no extra build: the workflow still commits at most once, and still
+ * commits nothing when nothing moved.
+ *
+ * It is safe against overlap by construction: `refresh-daily.yml` declares
+ * `concurrency: { group: refresh-daily, cancel-in-progress: false }`, so a
+ * catch-up run that takes longer cannot race the next one.
+ */
+
+/**
+ * How many calendar days back a catch-up may reach.
+ *
+ * **A CAP IS REQUIRED, AND THE REASON IS NOT PERFORMANCE.** The signal a caller
+ * has for "when did a refresh last land" is the run report committed beside the
+ * data (`docs/refresh-run.md`), which is committed ONLY when an artifact moved.
+ * So from `main`, a genuinely quiet day and a skipped day are indistinguishable
+ * — both leave no trace. Unbounded, a fortnight of legitimately quiet days
+ * would saturate the union and put every weekly source on a daily cadence,
+ * which is precisely the build-and-API burn RULING 124 removed.
+ *
+ * Eight days recovers a missed Monday with a week to spare, and recovers a
+ * missed 1st-of-month for the eight days somebody has to notice it. It does NOT
+ * recover a monthly slot missed and unnoticed for longer, and that limit is
+ * stated here rather than papered over: `dotgov` skipped on the 1st and
+ * unnoticed until the 12th is not repaired by this mechanism.
+ */
+export const CATCH_UP_MAX_DAYS = 8;
+
+/** `YYYY-MM-DD` for a UTC calendar day — the cadence's own unit. */
+export function utcDay(d: Date): string {
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(d.getUTCDate()).padStart(2, "0")}`;
+}
+
+/**
+ * Every calendar day whose cadence this run must answer for: the run's own day,
+ * plus each day after the last landed refresh that no landed run has covered.
+ *
+ * Oldest first, and `runDate`'s own day is ALWAYS the last entry — a catch-up
+ * that could drop today would be a repair that broke the thing it repaired.
+ *
+ * `lastLanded` absent, unparseable, or not before `runDate` yields today alone.
+ * **No state is not permission to invent state**: with nothing to say a day was
+ * missed, nothing is claimed to have been.
+ */
+export function catchUpSlots(
+  lastLandedRunDate: Date | null | undefined,
+  runDate: Date,
+  maxDays: number = CATCH_UP_MAX_DAYS,
+): Date[] {
+  const today = Date.UTC(runDate.getUTCFullYear(), runDate.getUTCMonth(), runDate.getUTCDate());
+  const days: Date[] = [];
+
+  const valid =
+    lastLandedRunDate instanceof Date && !Number.isNaN(lastLandedRunDate.getTime()) ? lastLandedRunDate : null;
+  if (!valid) return [new Date(today)];
+
+  const last = Date.UTC(valid.getUTCFullYear(), valid.getUTCMonth(), valid.getUTCDate());
+  if (last >= today) return [new Date(today)];
+
+  const DAY = 24 * 60 * 60 * 1000;
+  const cap = Math.max(1, Math.floor(maxDays));
+  const earliest = Math.max(last + DAY, today - (cap - 1) * DAY);
+  for (let t = earliest; t <= today; t += DAY) days.push(new Date(t));
+  return days;
+}
+
+/** One source's standing across a catch-up window. */
+export interface DueDecision {
+  readonly source: RefreshSource;
+  /** Due on at least one day in the window — this is what the runner obeys. */
+  readonly due: boolean;
+  /** Due on the run's own calendar day, by the ordinary cadence. */
+  readonly dueToday: boolean;
+  /**
+   * The EARLIER days that made it due, `YYYY-MM-DD`, oldest first. Empty when
+   * only today's cadence called for it. Named so the report says which day is
+   * being recovered rather than reporting a source as mysteriously due.
+   */
+  readonly recoveredFrom: readonly string[];
+}
+
+/** The UNION of what every day in the window asks for, in table order. */
+export function dueSourcesAcross(days: readonly Date[]): RefreshSource[] {
+  return REFRESH_SOURCES.filter((s) => days.some((d) => isDue(s, d)));
+}
+
+/**
+ * The whole decision for one run: every source, whether it is due, and which
+ * skipped day is being recovered if it is due for that reason.
+ *
+ * Returns an entry for EVERY source, never only the due ones — a report that
+ * lists only what it decided to run cannot be checked against what it decided
+ * to skip.
+ */
+export function dueDecisions(
+  lastLandedRunDate: Date | null | undefined,
+  runDate: Date,
+  maxDays: number = CATCH_UP_MAX_DAYS,
+): DueDecision[] {
+  const days = catchUpSlots(lastLandedRunDate, runDate, maxDays);
+  const todayKey = utcDay(runDate);
+  return REFRESH_SOURCES.map((source) => {
+    const dueDays = days.filter((d) => isDue(source, d)).map(utcDay);
+    const dueToday = dueDays.includes(todayKey);
+    return {
+      source,
+      due: dueDays.length > 0,
+      dueToday,
+      recoveredFrom: dueDays.filter((d) => d !== todayKey),
+    };
+  });
+}
+
 /**
  * Builds per month, if every scheduled run found a change — the ceiling, not
  * the expectation. Stated as a number so a cadence edit that raises it is
  * visible in a diff rather than argued about.
+ *
+ * **CATCH-UP DOES NOT MOVE THIS NUMBER**, and that is the point of doing the
+ * recovery inside the existing run rather than with a second cron. A catch-up
+ * run makes more SOURCE calls; it does not make more runs, and the workflow
+ * still commits at most once however many sources moved.
  */
 export function maxScheduledBuildsPerMonth(): number {
   // One run a day, and the run commits at most once however many sources moved.

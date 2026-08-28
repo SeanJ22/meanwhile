@@ -39,15 +39,17 @@
  */
 
 import { spawnSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
+  CATCH_UP_MAX_DAYS,
   REFRESH_SOURCES,
   cadenceOn,
-  dueSources,
-  isDue,
+  catchUpSlots,
+  dueDecisions,
+  utcDay,
   type RefreshSource,
 } from "../lib/ops/refresh-cadence.ts";
 import { today } from "./doc-dates.mjs";
@@ -71,10 +73,75 @@ if (Number.isNaN(runDate.getTime())) {
   process.exit(1);
 }
 
+/* -------------------------------------------------------------------------- */
+/* CATCH-UP: THE DAYS NO LANDED REFRESH HAS COVERED                            */
+/* -------------------------------------------------------------------------- */
+
+const noCatchUp = argv.includes("--no-catch-up");
+const lastLandedArg = argv
+  .find((a) => a.startsWith("--last-landed="))
+  ?.slice("--last-landed=".length);
+
+/**
+ * When a refresh last LANDED, read from the run report already on disk.
+ *
+ * **THE STAMP IS READ BEFORE THIS RUN OVERWRITES IT.** `docs/refresh-run.md` is
+ * rewritten at the bottom of this file on every run, so a read taken later
+ * would find today's date and conclude nothing was ever missed — a state file
+ * that reports the state of the process reading it.
+ *
+ * **IT IS FILE CONTENT, NEVER `git log`.** Per-file history is exactly what
+ * this module's header refuses: in a shallow clone `git log -1 -- <path>`
+ * returns the tip date for every file, with no error, and a weekly source would
+ * read as refreshed-today forever. The workflow commits this report only
+ * alongside data that moved, so the date inside the committed file IS the last
+ * landed refresh, and it is available in any clone at any depth.
+ *
+ * **WHAT IT CANNOT TELL, SAID PLAINLY.** A day whose run happened and found
+ * nothing commits nothing, so from `main` it is indistinguishable from a day
+ * with no run at all. This treats both as uncovered. That is the safe
+ * direction — re-reading a source that already had nothing to say costs one API
+ * call and lands nothing, while skipping a day that was genuinely missed costs
+ * up to fourteen days of federal filings — and `CATCH_UP_MAX_DAYS` is the cap
+ * that stops the safe direction becoming a daily cadence for weekly sources.
+ */
+function lastLandedFromReport(): { date: Date | null; where: string } {
+  if (lastLandedArg) {
+    const d = new Date(`${lastLandedArg}T00:00:00Z`);
+    if (Number.isNaN(d.getTime())) {
+      console.error(`refresh-daily · --last-landed=${lastLandedArg} is not a date`);
+      process.exit(1);
+    }
+    return { date: d, where: `--last-landed=${lastLandedArg}` };
+  }
+  if (!existsSync(REPORT)) {
+    return { date: null, where: "docs/refresh-run.md does not exist yet — no catch-up is claimed" };
+  }
+  const text = readFileSync(REPORT, "utf8");
+  const m = text.match(/^Run date:\s*\*\*(\d{4}-\d{2}-\d{2})\*\*/m);
+  if (!m) {
+    // RULING 24: could not read is not the same claim as nothing to read.
+    return {
+      date: null,
+      where: "docs/refresh-run.md carries no parseable `Run date:` line — no catch-up is claimed from it",
+    };
+  }
+  return { date: new Date(`${m[1]}T00:00:00Z`), where: `docs/refresh-run.md, run date ${m[1]}` };
+}
+
+const lastLanded = noCatchUp || forceAll ? { date: null, where: "catch-up off" } : lastLandedFromReport();
+const catchUpDays = catchUpSlots(lastLanded.date, runDate);
+const decisions = dueDecisions(noCatchUp || forceAll ? null : lastLanded.date, runDate);
+
 interface Outcome {
   source: RefreshSource;
   ran: boolean;
   ok: boolean;
+  /**
+   * The earlier calendar day(s) this source is being recovered for, when it is
+   * running for a reason other than today's own cadence.
+   */
+  recoveredFrom?: readonly string[];
   /**
    * The child said it wrote usable output and then failed — exit 2.
    *
@@ -126,7 +193,7 @@ function runCommand(command: string): { ok: boolean; code: number; partial: bool
   return { ok: code === 0, code, partial: code === PARTIAL_PROGRESS_CODE };
 }
 
-const due = forceAll ? [...REFRESH_SOURCES] : dueSources(runDate);
+const due = forceAll ? [...REFRESH_SOURCES] : decisions.filter((d) => d.due).map((d) => d.source);
 /*
  * TWO DIFFERENT DAYS, and they are deliberately computed differently.
  *
@@ -142,25 +209,50 @@ const due = forceAll ? [...REFRESH_SOURCES] : dueSources(runDate);
 const dayName = dateArg ?? today();
 
 console.log(`refresh-daily · ${dayName} (UTC ${["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][runDate.getUTCDay()]})`);
-console.log(`  ${due.length} of ${REFRESH_SOURCES.length} source(s) due${forceAll ? " (--all: cadence overridden)" : ""}\n`);
+console.log(`  ${due.length} of ${REFRESH_SOURCES.length} source(s) due${forceAll ? " (--all: cadence overridden)" : ""}`);
+if (forceAll || noCatchUp) {
+  console.log(`  catch-up: OFF (${forceAll ? "--all overrides the cadence entirely" : "--no-catch-up"})\n`);
+} else {
+  console.log(`  last landed refresh: ${lastLanded.where}`);
+  console.log(
+    `  catch-up window: ${catchUpDays.length} calendar day(s) — ${catchUpDays.map(utcDay).join(", ")} (cap ${CATCH_UP_MAX_DAYS})\n`,
+  );
+}
+
+const recoveredById = new Map(decisions.map((d) => [d.source.id, d.recoveredFrom]));
 
 const outcomes: Outcome[] = [];
 
 for (const source of REFRESH_SOURCES) {
-  const dueToday = forceAll || isDue(source, runDate);
+  const decision = decisions.find((d) => d.source.id === source.id)!;
+  const dueToday = forceAll || decision.due;
   const cadence = cadenceOn(source, runDate);
+  const recoveredFrom = forceAll ? [] : (recoveredById.get(source.id) ?? []);
   if (!dueToday) {
     console.log(`  SKIP  ${source.id.padEnd(12)} ${cadence} — not due today`);
     outcomes.push({
       source,
       ran: false,
       ok: true,
-      skippedWhy: `${cadence}, not due on ${dayName}`,
+      skippedWhy: `${cadence}, not due on ${dayName} or on any uncovered day since the last landed refresh`,
     });
     continue;
   }
 
-  console.log(`  RUN   ${source.id.padEnd(12)} ${cadence}`);
+  /*
+   * A CATCH-UP IS ANNOUNCED, NEVER SILENT. A weekly source running on a
+   * Wednesday looks like a cadence bug unless the line says which Monday it is
+   * recovering — and an unexplained extra run is how a later session "fixes"
+   * the mechanism by deleting it.
+   */
+  console.log(
+    `  RUN   ${source.id.padEnd(12)} ${cadence}` +
+      (!decision.dueToday && recoveredFrom.length > 0
+        ? `  CATCH-UP for ${recoveredFrom.join(", ")} — no landed refresh covers that day`
+        : recoveredFrom.length > 0
+          ? `  (also covers ${recoveredFrom.join(", ")})`
+          : ""),
+  );
   let ok = true;
   let partial = false;
   let failedCommand: string | undefined;
@@ -180,7 +272,7 @@ for (const source of REFRESH_SOURCES) {
       break;
     }
   }
-  outcomes.push({ source, ran: true, ok, partial, failedCommand, exitCode });
+  outcomes.push({ source, ran: true, ok, partial, failedCommand, exitCode, recoveredFrom });
 }
 
 const ranSources = outcomes.filter((o) => o.ran);
@@ -217,7 +309,11 @@ const partials = ranSources.filter((o) => !o.ok && o.partial);
  * would go stale the day the cadence table names a different election, and it
  * would go stale SILENTLY — as a red run at 09:11 UTC that nobody is awake for.
  */
-function declareFutureDates(line: string, asOfDay: string): string {
+function declareFutureDates(
+  line: string,
+  asOfDay: string,
+  why = "an election date carried in a cadence reason, not a stamp",
+): string {
   /*
    * **THE THRESHOLD IS `dayName`, NEVER A UTC SLICE**, and the first version of
    * this used one — caught by `tests/generated-doc-dates.test.ts` before it
@@ -231,7 +327,7 @@ function declareFutureDates(line: string, asOfDay: string): string {
   const dates = line.match(/\d{4}-\d{2}-\d{2}/g) ?? [];
   const future = [...new Set(dates.filter((d) => d > asOfDay))];
   if (future.length === 0) return line;
-  return `${line} <!-- expected-future: ${future.join(", ")} — an election date carried in a cadence reason, not a stamp -->`;
+  return `${line} <!-- expected-future: ${future.join(", ")} — ${why} -->`;
 }
 
 const lines: string[] = [];
@@ -247,10 +343,17 @@ lines.push(
 lines.push("");
 lines.push(`## ${succeeded.length} ran clean · ${failed.length} failed · ${outcomes.length - ranSources.length} not due`);
 lines.push("");
-lines.push("| Source | Cadence today | Ran | Result | Governs |");
-lines.push("|---|---|:---:|---|---|");
+lines.push("| Source | Cadence today | Ran | Why | Result | Governs |");
+lines.push("|---|---|:---:|---|---|---|");
 for (const o of outcomes) {
   const cad = cadenceOn(o.source, runDate);
+  const why = !o.ran
+    ? "—"
+    : forceAll
+      ? "`--all`"
+      : (o.recoveredFrom?.length ?? 0) > 0
+        ? `CATCH-UP for ${o.recoveredFrom!.join(", ")}`
+        : "today's cadence";
   const result = !o.ran
     ? `not due — ${o.skippedWhy}`
     : o.ok
@@ -259,9 +362,36 @@ for (const o of outcomes) {
         ? `**FAILED, output kept** at \`pnpm ${o.failedCommand}\` (exit ${o.exitCode} — usable rows were on disk and are committed)`
       : `**FAILED** at \`pnpm ${o.failedCommand}\` (exit ${o.exitCode})`;
   lines.push(
-    `| \`${o.source.id}\` | ${cad} | ${o.ran ? "yes" : "no"} | ${result} | ${o.source.governs.map((g) => `\`${g}\``).join(", ")} |`,
+    declareFutureDates(
+      `| \`${o.source.id}\` | ${cad} | ${o.ran ? "yes" : "no"} | ${why} | ${result} | ${o.source.governs.map((g) => `\`${g}\``).join(", ")} |`,
+      dayName,
+      "a UTC calendar day in the catch-up window, one ahead of the America/Phoenix document day",
+    ),
   );
 }
+lines.push("");
+lines.push("## Which days this run answered for");
+lines.push("");
+lines.push(
+  declareFutureDates(
+    forceAll || noCatchUp
+      ? `Catch-up is OFF (${forceAll ? "`--all`" : "`--no-catch-up`"}); this run answered for ${dayName} alone.`
+      : `Last landed refresh: ${lastLanded.where}. This run answered for ${catchUpDays.length} calendar day(s) — ` +
+        `${catchUpDays.map(utcDay).join(", ")} — capped at ${CATCH_UP_MAX_DAYS} days.`,
+    dayName,
+    "a UTC calendar day in the catch-up window, one ahead of the America/Phoenix document day",
+  ),
+);
+lines.push("");
+lines.push(
+  "A late run computes the right cadence on its own, because the cadence is a pure function of the run's calendar date. " +
+    "What it cannot do is recover a day that produced NO run at all: `fec` and `legiscan` are Monday-only, so a missed " +
+    "Monday would otherwise be a fourteen-day data gap. So this run unions what every uncovered day since the last " +
+    "landed refresh asks for. A quiet day commits nothing and is therefore indistinguishable from a missed one from " +
+    "`main`, which is why both are treated as uncovered and why the window is capped — an uncapped union would put " +
+    "every weekly source on a daily cadence during a quiet fortnight. It adds no runs, no commits and no builds: " +
+    "`refresh-daily.yml` still commits at most once, and nothing when nothing moved.",
+);
 lines.push("");
 lines.push("## Why each source sits on the cadence it does");
 lines.push("");

@@ -299,7 +299,24 @@ const UNSOURCED_HERE_GAP =
  */
 function gapForBinding(binding: NamedEntityBinding): string | null {
   if (binding.kind === "UNRESOLVED") {
-    return `We don't have a government recorded under "${binding.mention}". Searching for it by name will show what we do hold.`;
+    /*
+     * **THIS SENTENCE USED TO OVERCLAIM, AND THE OVERCLAIM WAS ABOUT US.**
+     * (2026-08-27.)
+     *
+     * It read *"We don't have a government recorded under 'vail'"* — and at a
+     * Tucson zip that is FALSE. The product holds Vail Unified District, with
+     * eleven meetings and nine documents. What the binder actually did was
+     * search the reader's OWN AREA: the search index for what is in view, plus
+     * their covered bodies. It never looked further, and never could from the
+     * client.
+     *
+     * So the claim is scoped to what was actually searched. "We haven't matched
+     * that to a government near you" is true whatever the rest of the corpus
+     * holds; "we don't have it" was a statement about our whole holdings made
+     * from a local lookup. Same discipline as a failed fetch never becoming a
+     * recorded absence — pointed inward, at a claim about ourselves.
+     */
+    return `We haven't matched "${binding.mention}" to a government near you. Searching for it by name will show what we hold.`;
   }
   if (binding.kind === "AMBIGUOUS") {
     const names = binding.candidates.map((c) => c.name);

@@ -98,6 +98,17 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
  */
 interface AgendaAnswer {
   topic: { id: string; label: string } | null;
+  /**
+   * The government the SERVER resolved (2026-08-27). It binds against the
+   * whole corpus; this component binds against the search index and the
+   * reader own covered bodies, both scoped to their area. So the server can
+   * hold a government this component cannot see, and its verdict wins.
+   */
+  namedEntity?:
+    | { state: "BOUND"; ocdId: string; name: string }
+    | { state: "AMBIGUOUS"; candidates: string[] }
+    | { state: "UNRESOLVED"; mention: string }
+    | null;
   radiusMiles: number | null;
   hits: {
     quote: string;
@@ -208,6 +219,14 @@ export function AskBox({
   /* The named-government docket answer (2026-08-27). Separate state because it
      REPLACES the topic answer rather than riding beside it. */
   const [bodyAgenda, setBodyAgenda] = useState<BodyAgendaAnswer | null>(null);
+  /*
+   * The SERVER own verdict on the government the reader named, when it has
+   * one. It sees the whole corpus and this component sees the reader area, so
+   * where the two disagree the server is right — and the disagreement was
+   * reader-visible: this component said "we do not have a government recorded
+   * under vail" about a government the server had already resolved.
+   */
+  const [serverEntity, setServerEntity] = useState<AgendaAnswer["namedEntity"]>(null);
   // Drawn per ask, in the browser, at click time — never during server
   // render, which would freeze one line into the HTML or mismatch on
   // hydration. Seeded with the first entry so the type is never null.
@@ -404,6 +423,7 @@ export function AskBox({
     setDigest(null);
     setAgenda(null);
     setBodyAgenda(null);
+    setServerEntity(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ASK releases the map filter and closes the autocomplete.
@@ -478,8 +498,9 @@ export function AskBox({
          * a second, vaguer reply beneath it.
          */
         setBodyAgenda(agendaAnswer);
-      } else if (agendaAnswer && "topic" in agendaAnswer && agendaAnswer.topic) {
-        setAgenda(agendaAnswer);
+      } else if (agendaAnswer && "topic" in agendaAnswer) {
+        if (agendaAnswer.namedEntity) setServerEntity(agendaAnswer.namedEntity);
+        if (agendaAnswer.topic) setAgenda(agendaAnswer);
       }
 
       // Keyword-first, structurally: the classifier is consulted only after
@@ -865,13 +886,36 @@ export function AskBox({
             It sits ABOVE the refusal because it is the more specific fact, and
             it is the one that tells them what to try next.
           */}
-          {asked.binding.kind === "UNRESOLVED" && (
+          {/*
+            **THE SERVER'S VERDICT WINS, BECAUSE IT SEES MORE.** (2026-08-27.)
+
+            This component binds against the search index and the reader's own
+            covered bodies, both scoped to their area. The route binds against
+            the whole corpus. So at a Tucson zip this said *"we don't have a
+            government recorded under 'vail'"* — a claim about OUR OWN HOLDINGS,
+            and a false one, about a government the server had already resolved.
+
+            Saying "we don't have it" about something we hold is the same class
+            as saying "nothing is scheduled" about a meeting we never looked
+            for, pointed inward. So where the server resolved the name, that is
+            what the reader is told.
+          */}
+          {serverEntity?.state === "BOUND" && (
+            <p
+              data-ask-entity-state="BOUND"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              We do hold {serverEntity.name}. We haven&apos;t got an answer to
+              this particular question about it yet.
+            </p>
+          )}
+          {asked.binding.kind === "UNRESOLVED" && serverEntity?.state !== "BOUND" && (
             <p
               data-ask-entity-state="UNRESOLVED"
               className="text-[0.8125rem] leading-relaxed text-voice"
             >
-              We don&apos;t have a government recorded under &ldquo;
-              {asked.binding.mention}&rdquo;.
+              We haven&apos;t matched &ldquo;{asked.binding.mention}&rdquo; to a
+              government near you.
             </p>
           )}
           {asked.binding.kind === "AMBIGUOUS" && (

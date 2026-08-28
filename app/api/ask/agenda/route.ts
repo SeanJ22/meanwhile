@@ -256,7 +256,36 @@ export async function POST(request: Request) {
     // No topic is not a refusal to answer the reader — it means this rung
     // has nothing to say and the caller's other rungs continue. Stated as
     // such rather than as an empty result set.
-    return Response.json({ mode: "topic", topic: null, hits: [] });
+    //
+    /*
+     * **THE SERVER'S BINDING TRAVELS EVEN WHEN THIS RUNG HAS NOTHING TO SAY.**
+     * (2026-08-27.)
+     *
+     * The client binds against the search index and the reader's own covered
+     * bodies, both scoped to their area. This route binds against the WHOLE
+     * corpus. So at a Tucson zip the client concluded `UNRESOLVED` for Vail and
+     * rendered *"We don't have a government recorded under 'vail'"* — while
+     * this route, three lines earlier, had already resolved Vail and then threw
+     * the verdict away because the question carried no agenda topic.
+     *
+     * That sentence is a claim about OUR OWN HOLDINGS and it was false. Saying
+     * "we don't have it" about something we hold is the same class as saying
+     * "nothing is scheduled" about a meeting we never looked for, pointed
+     * inward. So the verdict rides on the reply the caller was already making.
+     */
+    return Response.json({
+      mode: "topic",
+      topic: null,
+      hits: [],
+      namedEntity:
+        namedBody.kind === "BOUND"
+          ? { state: "BOUND", ocdId: namedBody.entity.id, name: titleCase(namedBody.entity.name) }
+          : namedBody.kind === "AMBIGUOUS"
+            ? { state: "AMBIGUOUS", candidates: namedBody.candidates.map((c) => titleCase(c.name)) }
+            : namedBody.kind === "UNRESOLVED"
+              ? { state: "UNRESOLVED", mention: namedBody.mention }
+              : null,
+    });
   }
 
   const lat = typeof body.lat === "number" ? body.lat : null;

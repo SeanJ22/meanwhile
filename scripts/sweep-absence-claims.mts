@@ -13,7 +13,8 @@ import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 
 import { floored } from "../lib/ops/denominator-floor.ts";
-import { CLAIM_SHAPES, KNOWN_GOOD, claimsInText } from "../lib/text/absence-claims.ts";
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
+import { CLAIM_SHAPES, KNOWN_GOOD, claimsInText, isCorrectionNote } from "../lib/text/absence-claims.ts";
 
 /**
  * `data/` IS EXCLUDED AND THE CLIP IS STATED. It holds retrieved content — the
@@ -110,13 +111,78 @@ function isComment(fileWithLine: string): boolean {
   return commentCache.get(file)!.has(line);
 }
 
-const hits = absences
-  .filter((s) => !isComment(s.file))
-  .flatMap((s) => claimsInText(s.text).map((h) => ({ ...h, file: s.file })));
+/**
+ * **THE PROSE SWEEP** (2026-08-27, the coverage-truth session).
+ *
+ * This sweep read quoted strings in `app/`, `components/` and `lib/` — shipped
+ * copy, which is the right place to look for a claim a READER sees. It read
+ * nothing else, and on 2026-08-27 it reported a clean `0` while four documents
+ * in this repository carried
+ *
+ *   "It will never have a website. It has no staff to build one."
+ *
+ * about a real school district. `states/az/85641.md`, `states/az/NOTES.md`,
+ * `docs/state.md` and `data/method/knowledge.json` are not shipped copy — they
+ * are the DURABLE RECORD, and a false permanent absence there is worse than one
+ * in a component, because every later session inherits it as settled and stops
+ * looking. `data/method/knowledge.json` in particular is designed to be
+ * reapplied to the next jurisdiction.
+ *
+ * So the same shapes now run over the prose too. Measured before shipping:
+ * 90,721 sentences, and after the two narrowings this leaves ZERO hits — so
+ * this is not a guard that starts life with a backlog.
+ */
+const PROSE_GLOBS = ["*.md", "data/method/knowledge.json"];
+
+function proseSentences(): { file: string; text: string }[] {
+  /*
+   * `filesThatWouldBeCommitted`, not `git ls-files`. A tracked-only listing
+   * cannot see a document that has not been staged yet, so the session that
+   * WRITES a permanent-absence claim into a new state note would get a green
+   * sweep and CI would get a red one. `tests/gate-ordering.test.ts` enforces
+   * this across every gate — and caught this function on its first run, which
+   * is the guard doing precisely its job.
+   */
+  const files = filesThatWouldBeCommitted({ cwd: process.cwd(), paths: PROSE_GLOBS });
+
+  const rows: { file: string; text: string }[] = [];
+  for (const raw of files) {
+    const file = raw.replace(/\\/g, "/");
+    if (SPECIMEN_FILES.includes(file)) continue;
+    let text: string;
+    try {
+      text = readFileSync(file, "utf8");
+    } catch {
+      continue;
+    }
+    const lines = text.split(/\r?\n/);
+    for (let i = 0; i < lines.length; i += 1) {
+      for (const piece of lines[i].split(/(?<=[.!?])\s+/)) {
+        const s = piece.trim();
+        if (s.length < 18) continue;
+        rows.push({ file: `${file}:${i + 1}`, text: s });
+      }
+    }
+  }
+  return rows;
+}
+
+const prose = proseSentences();
+
+/*
+ * A sentence that QUOTES a claim in order to correct it is not the claim. A
+ * repository that records what it fixed keeps the wrong wording on the page,
+ * beside the right one, and a sweep with no notion of that either flags every
+ * correction forever or gets loosened until it stops working.
+ */
+const hits = [
+  ...absences.filter((s) => !isComment(s.file)),
+  ...prose.filter((s) => !isCorrectionNote(s.text)),
+].flatMap((s) => claimsInText(s.text).map((h) => ({ ...h, file: s.file })));
 
 // RULING 159 — the floor is asserted BEFORE the count is reported. A sweep
 // that found no sentences to judge has not found a clean surface.
-const floor = floored("sweep:absence-claims", "quoted sentences in app/, components/ and lib/", all.length, hits.length);
+const floor = floored("sweep:absence-claims", "quoted sentences in app/, components/, lib/ plus prose in *.md and the method store", all.length + prose.length, hits.length);
 void floor;
 
 console.log(`sweep:absence-claims · ${CLAIM_SHAPES.length} shape(s) searched`);
@@ -124,7 +190,8 @@ for (const s of CLAIM_SHAPES) console.log(`    [${s.id}] ${s.re}`);
 console.log("");
 console.log(`  quoted sentences swept        ${all.length}`);
 console.log(`  in the absence family         ${absences.length}`);
-console.log(`  asserting a fact about a person  ${hits.length}`);
+console.log(`  prose sentences swept         ${prose.length}   (*.md and the method store)`);
+console.log(`  asserting an unearned absence ${hits.length}`);
 
 if (hits.length > 0) {
   console.log("");
@@ -136,8 +203,16 @@ if (hits.length > 0) {
 }
 
 // The instrument is shown catching the real thing, on every run.
-const planted = "People who have not held this office don't have a voting record to show.";
-if (claimsInText(planted).length === 0) {
+const PLANTED = [
+  /* The line this sweep was written for (2026-08-26). */
+  "People who have not held this office don't have a voting record to show.",
+  /* The line it could not see (2026-08-27): the same defect about a GOVERNMENT,
+   * in prose rather than in shipped copy. Both are exercised on every run, so
+   * neither shape can rot into a regex that matches nothing. */
+  "It will never have a website. It has no staff to build one.",
+];
+const planted = PLANTED.find((p) => claimsInText(p).length === 0) ?? "";
+if (planted !== "") {
   console.error(
     "sweep:absence-claims: the shapes did not catch the line this sweep was written for. A sweep " +
       "that cannot find its own defect is a sweep reporting green about nothing (RULING 110).",
@@ -154,5 +229,5 @@ if (falsePositives.length > 0) {
 }
 
 console.log("");
-console.log(`  the planted defect is caught, and ${KNOWN_GOOD.length} honest lines are not`);
+console.log(`  both planted defects are caught, and ${KNOWN_GOOD.length} honest lines are not`);
 process.exit(hits.length > 0 ? 1 : 0);

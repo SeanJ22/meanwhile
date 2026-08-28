@@ -272,6 +272,9 @@ export function normalizeWithDrops(
     if (items !== null) {
       agendasRead++;
       const segments = segmentAgenda(toAgendaItems(items), {
+        /* `bodyId: null` here is the AGENDA SEGMENTER's own parameter and
+         * deliberately null — it asks which sub-body a segment belongs to, a
+         * different question from which body held the sitting. */
         bodyId: null,
         ocdId: client.ocdId,
         name: event.EventBodyName,
@@ -282,6 +285,7 @@ export function normalizeWithDrops(
     meetings.push({
       id,
       ocdId: client.ocdId,
+      bodyId: client.bodyId,
       bodyName: event.EventBodyName,
       // The comment is what distinguishes one sitting from another — "Study
       // Session" against a regular meeting. Where there is none, the body name

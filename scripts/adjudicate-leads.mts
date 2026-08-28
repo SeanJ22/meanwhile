@@ -58,8 +58,11 @@
  *   pnpm leads:adjudicate-descent --state nj --budget 200 --pilot
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { join } from "node:path";
+
+import { appendPromotedBodies } from "../lib/registry/promoted-bodies.ts";
+import type { Body } from "../lib/registry/types.ts";
 
 import { loadWorkstream, saveWorkstream, deriveCursor } from "../lib/workstate/frontier.ts";
 import {
@@ -289,28 +292,19 @@ function namesEntity(name: string, doc: { title: string; headings: string[] }): 
 
 /** ------------------------------------------------------------------ registry */
 
-interface RegistryBody {
-  id: string;
-  /* Nullable, because a promoted body's division is genuinely not established
-   * by the descent — see the note where the row is built. */
-  ocdId: string | null;
-  name: string | null;
-  bodyClass: string;
-  bodyOrigin: string;
-  coverageStatus: string;
-  agendaSourceType: string;
-  agendaSourceRef: string | null;
-  meetingCadence: string | null;
-  homepageUrl: string | null;
-  demandCount: number;
-  sourceDataset: string;
-  provenance: {
-    sourceUrl: string | null;
-    sourceOrg: string | null;
-    collectedAt: string;
-    verifiedAt: string | null;
-  };
-}
+/*
+ * **THE CANONICAL `Body` TYPE, NOT A LOCAL COPY OF IT** (2026-08-27, NH232).
+ *
+ * A local `RegistryBody` interface stood here, structurally identical to
+ * `lib/registry/types.ts`'s `Body` except that it typed `bodyClass`,
+ * `bodyOrigin`, `coverageStatus`, `agendaSourceType` and `sourceDataset` as
+ * bare `string`. The compiler therefore never compared a promoted row against
+ * what the registry declares, and BOTH `PROMOTED_FROM_DESCENT_CANDIDATE` and
+ * `DESCENT` lived in 674 committed rows without ever being members of
+ * `BodyOrigin` or `SourceDataset`. A duplicate type is how two records of the
+ * same thing come to disagree; this file reads the real one now, and the two
+ * missing union members were added where they belong.
+ */
 
 function normName(s: string): string {
   return s
@@ -349,7 +343,7 @@ async function main(): Promise<void> {
   const registry = JSON.parse(readFileSync(registryPath, "utf8")) as {
     generatedAt: string;
     divisions: unknown[];
-    bodies: RegistryBody[];
+    bodies: Body[];
   };
 
   /* Every name the registry already holds, for this state, normalised once. */
@@ -457,7 +451,7 @@ async function main(): Promise<void> {
   }
 
   /* ---- gate 3: the network, and the only gate that promotes -------------- */
-  const promotedRows: RegistryBody[] = [];
+  const promotedRows: Body[] = [];
   const log: string[] = [];
 
   for (const lead of openable) {
@@ -623,7 +617,7 @@ async function main(): Promise<void> {
     if (!dry) verifyCandidate(w, lead.id, evidence);
     counts.verified += 1;
 
-    const row: RegistryBody = {
+    const row: Body = {
       id,
       /*
        * NULL, AND THE NULL IS THE HONEST ANSWER.
@@ -673,13 +667,22 @@ async function main(): Promise<void> {
   }
 
   /* ---- write ------------------------------------------------------------- */
+  /*
+   * **NH232.** This used to push straight into `registry.json` and rewrite it.
+   * That made a GENERATED artifact this script's canonical store, and the
+   * consequence was that `pnpm registry:build` — doing exactly what it says it
+   * does — deleted every row this script had ever written. 731 verified bodies,
+   * no failing check, a diff that read as a normal regeneration.
+   *
+   * The promotion now lands in `lib/registry/promoted-bodies.json`, which is an
+   * INPUT the generator reads. Nothing here touches the generated file, and the
+   * complete registry is one `pnpm registry:build` away — which is why that
+   * command is printed below rather than left for the next session to infer: a
+   * store nobody rebuilds from is a store that silently stops reaching readers.
+   */
+  let appended: { added: number; skipped: string[] } = { added: 0, skipped: [] };
   if (!dry) {
-    registry.bodies.push(...promotedRows);
-    registry.generatedAt = new Date(`${stamp}T00:00:00.000Z`).toISOString();
-    /* ONE space, which is what `registry.json` is already written with. Two
-     * spaces re-indents all 1,263 existing rows and turns a 650-row addition
-     * into a 160,000-line diff nobody can review. */
-    writeFileSync(registryPath, `${JSON.stringify(registry, null, 1)}\n`, "utf8");
+    appended = appendPromotedBodies(promotedRows);
     w.cursor = `${deriveCursor(w, state)} / adjudicated ${counts.fetched} lead(s) on ${stamp}`;
     saveWorkstream(ROOT, w);
   }
@@ -702,6 +705,16 @@ async function main(): Promise<void> {
   console.log(`  already in the registry      ${counts.duplicate}`);
   console.log(`  PROMOTED (coverage delta)    ${counts.promoted}`);
   console.log(`\nleads left unopened            ${Math.max(0, counts.toFetch - counts.fetched - counts.duplicate)}  <- still owed`);
+
+  /* NH232: say where the rows went and what has to run for a reader to see
+   * them. The promotion is persisted; it is not yet in the registry. */
+  if (!dry) {
+    console.log(`\nwrote ${appended.added} row(s) to lib/registry/promoted-bodies.json  (the canonical INPUT)`);
+    if (appended.skipped.length > 0) {
+      console.log(`  ${appended.skipped.length} already held by the store, not re-added`);
+    }
+    console.log(`  run \`pnpm registry:build\` to merge them into lib/registry/registry.json`);
+  }
 
   /*
    * THE SAME NUMBERS AGAIN, EACH AGAINST ITS OWN DENOMINATOR (RULING 159).

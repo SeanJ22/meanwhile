@@ -27,6 +27,7 @@ import {
   resolveMeetingBodies,
 } from "../lib/meetings/attribution.ts";
 import { carryForward } from "../lib/meetings/carry-forward.ts";
+import { agendaItems } from "../lib/routing/agenda-search.ts";
 import {
   EXIT_NOTHING_WRITTEN,
   EXIT_WRITTEN_WITH_JOB_FAILURES,
@@ -144,6 +145,8 @@ async function retrieveAgendas(meetings: Meeting[]) {
   const capped = prioritized.slice(0, AGENDA_RETRIEVAL_CAP);
   let stored = 0;
   let revised = 0;
+  /* Documents refused as landing pages — stated, never silently dropped. */
+  let landingPages = 0;
   let unchanged = 0;
   let failed = 0;
 
@@ -160,6 +163,39 @@ async function retrieveAgendas(meetings: Meeting[]) {
           `  agenda extraction failed for ${meeting.id}: ${doc.extractionNote}`,
         );
       }
+      /*
+       * **A LANDING PAGE IS NOT AN AGENDA, AND THE CORPUS PROVES IT 56 TIMES
+       * OUT OF 56.** (2026-08-27.)
+       *
+       * Measured across the committed snapshot: of 198 agenda documents, 56
+       * share a URL with another meeting, and NOT ONE of those 56 yields a
+       * single agenda item. Of the 142 documents on a URL of their own, 67
+       * (47%) do. The shared class has never once given a reader an agenda —
+       * it inflates `documentsHeld`, and it is what put the Town of
+       * Bradford's calendar on fourteen Newbury meetings.
+       *
+       * The producers are two: an adapter setting `agendaUrl` to a portal
+       * ROOT (Vail's Highbond, Tucson Unified's board page), and the
+       * division-wide notice-URL fallback in `documentUrlFor` (Bradford's and
+       * Warner's town calendars). Both end at the same place — the body's own
+       * meetings page, stored as though it were one sitting's agenda.
+       *
+       * So the rule is drawn where the evidence is, and no wider: a document
+       * is refused when it BOTH extracts no agenda item AND is already stored
+       * against a different meeting. A genuine shared agenda — two bodies
+       * meeting jointly under one document — yields items and is kept. The
+       * meeting keeps its own `agendaUrl` either way, so the reader can still
+       * follow the link; we simply stop calling it an agenda we hold.
+       */
+      const alreadyOnAnotherMeeting = agendaDocumentStore.isUrlOnAnotherMeeting(
+        doc.documentUrl,
+        doc.meetingId,
+      );
+      if (alreadyOnAnotherMeeting && agendaItems(doc.text).length === 0) {
+        landingPages++;
+        continue;
+      }
+
       const result = agendaDocumentStore.append(doc);
       if (!result.stored) unchanged++;
       else {
@@ -175,7 +211,7 @@ async function retrieveAgendas(meetings: Meeting[]) {
   console.log(
     `agenda documents: ${withAgenda.length} linked, ${capped.length} fetched ` +
       `(cap ${AGENDA_RETRIEVAL_CAP}), ${stored} stored, ${revised} revisions, ` +
-      `${unchanged} unchanged, ${failed} failed`,
+      `${unchanged} unchanged, ${landingPages} landing page(s) refused, ${failed} failed`,
   );
 }
 
@@ -245,7 +281,64 @@ async function main() {
     // version rather than replacing it.
     const previous = readPreviousSnapshot();
     if (previous) {
-      for (const doc of previous.agendaDocuments) agendaDocumentStore.append(doc);
+      /*
+       * **A CARRIED-FORWARD DOCUMENT IS RE-CHECKED, BECAUSE A WIRING ERROR
+       * OTHERWISE BECOMES PERMANENT.** (2026-08-27.)
+       *
+       * Seeding the store from the previous snapshot is what makes append-only
+       * semantics hold across refreshes, and it also means a document attached
+       * under a wiring error survives every later run — the wiring is corrected,
+       * the ingest never looks again, and the wrong document is carried forever.
+       *
+       * That is not hypothetical. On 2026-08-21 fourteen NEWBURY meetings were
+       * given `bradfordnh.gov/pages/calendar` — the Town of BRADFORD's own
+       * calendar, which names Bradford Town Hall and Bradford's boards and does
+       * not mention Newbury anywhere — some carrying `sourceOrg: "Newbury
+       * Conservation Commission"`. Newbury's wiring rows carry no notice URL at
+       * all today, so the error is already fixed at the source and the data
+       * still says otherwise.
+       *
+       * The test applied here is the one that cannot be wrong: **a document
+       * attached to meetings of MORE THAN ONE GOVERNMENT is nobody's agenda.**
+       * One page cannot be two governments' agenda under any circumstances, so
+       * dropping it loses nothing true. A page shared across sittings of ONE
+       * body is a landing page and is a separate question (NH255) — it is left
+       * alone here, because it is at least that body's own page.
+       *
+       * Dropped rather than kept-and-flagged: the store is append-only, so a
+       * row that stays gets re-appended by every later run.
+       */
+      const govOf = new Map(previous.meetings.map((m) => [m.id, m.ocdId ?? null]));
+      const govsByUrl = new Map<string, Set<string>>();
+      for (const doc of previous.agendaDocuments) {
+        const gov = govOf.get(doc.meetingId);
+        if (!gov) continue;
+        const set = govsByUrl.get(doc.documentUrl) ?? new Set<string>();
+        set.add(gov);
+        govsByUrl.set(doc.documentUrl, set);
+      }
+
+      let carried = 0;
+      let refused = 0;
+      const refusedUrls = new Set<string>();
+      for (const doc of previous.agendaDocuments) {
+        if ((govsByUrl.get(doc.documentUrl)?.size ?? 0) > 1) {
+          refused++;
+          refusedUrls.add(doc.documentUrl);
+          continue;
+        }
+        agendaDocumentStore.append(doc);
+        carried++;
+      }
+      console.log(
+        `  agenda documents carried forward: ${carried} of ${previous.agendaDocuments.length}`,
+      );
+      if (refused > 0) {
+        console.warn(
+          `  ${refused} REFUSED — attached to meetings of more than one government, ` +
+            `so they are nobody's agenda: ${[...refusedUrls].join(", ")}`,
+        );
+      }
     }
 
     await retrieveAgendas(meetings);

@@ -39,6 +39,10 @@ function meetingOf(id: string, startsAt: string, status: Meeting["status"]): Mee
   return {
     id,
     ocdId: "ocd-division/country:us/state:az/county:pima",
+    /* Body identity is REQUIRED of every meeting (2026-08-27). A fixture
+     * without it is a pre-`bodyId` snapshot, which `validateSnapshot` now
+     * refuses — see tests/snapshot-body-identity.test.ts for why. */
+    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
     bodyName: "Stub Board",
     title: "Stub Meeting",
     startsAt,

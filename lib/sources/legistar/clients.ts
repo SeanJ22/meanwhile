@@ -51,8 +51,18 @@ export interface LegistarVenue {
 export interface LegistarClient {
   /** The `{client}` path segment at webapi.legistar.com. */
   slug: string;
-  /** The division whose government this is. The join key. */
+  /** The division whose government this is. WHERE, not WHO. */
   ocdId: OcdId;
+  /**
+   * The registry body whose sittings this client serves.
+   *
+   * Legistar predates `SOURCE_WIRING` and carries its own client registry, so
+   * it states the body id here rather than reading it off a wiring row. Same
+   * reason as every other adapter: `ocdId` answers WHERE, and six bodies share
+   * `county:pima` — so a card filtering on it put the Board of Supervisors'
+   * agenda on the Central Arizona Water Conservation District and back again.
+   */
+  bodyId: string;
   /** Display only — never joined on. */
   jurisdiction: string;
   /**
@@ -79,6 +89,7 @@ export const LEGISTAR_CLIENTS: LegistarClient[] = [
   {
     slug: "pima",
     ocdId: "ocd-division/country:us/state:az/county:pima",
+    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
     jurisdiction: "Pima County, AZ",
     publishingOrg: "Pima County Clerk of the Board",
     timeZone: "America/Phoenix",

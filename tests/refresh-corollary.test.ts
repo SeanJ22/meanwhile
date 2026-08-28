@@ -65,6 +65,7 @@ function kearsargeSitting(date: string): Meeting {
   return {
     id: `schedulepage:kearsarge:${date}`,
     ocdId: KEARSARGE_OCD,
+    bodyId: KEARSARGE_OCD,
     bodyName: "School Board",
     title: "School Board",
     startsAt: `${date}T22:30:00.000Z`,
@@ -321,6 +322,7 @@ test("a snapshot must state its carry-forward, and may not carry without a refus
   const meeting: Meeting = {
     id: "schedulepage:kearsarge:2026-09-10",
     ocdId: "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district",
+    bodyId: "ocd-division/country:us/state:nh/school_district:kearsarge_regional_school_district#governing",
     bodyName: "School Board",
     title: "School Board",
     startsAt: "2026-09-10T22:30:00.000Z",
@@ -535,6 +537,7 @@ function merrimackSitting(date: string): Meeting {
   return {
     id: `revize:merrimack:${date}`,
     ocdId: "ocd-division/country:us/state:nh/county:merrimack",
+    bodyId: "ocd-division/country:us/state:nh/county:merrimack#governing",
     bodyName: "Merrimack County Board of Commissioners",
     title: "Merrimack County Board of Commissioners",
     startsAt: `${date}T00:00:00-04:00`,
@@ -977,6 +980,7 @@ function icalSitting(date: string, when: "past" | "future"): Meeting {
   return {
     id: `ical:wilmot:${date}`,
     ocdId: TOWN,
+    bodyId: TOWN,
     bodyName: "Wilmot Selectboard",
     title: "Selectboard",
     startsAt: `${date}T22:00:00.000Z`,

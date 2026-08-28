@@ -853,6 +853,8 @@ export function makeSchedulePageSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${sitting.date}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: sittingTitle(sitting.note, bodyName),
           startsAt,

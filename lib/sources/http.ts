@@ -670,6 +670,74 @@ export async function politeGetJson<T>(
 }
 
 /**
+ * One polite GET returning BYTES — a PDF, an image, a spreadsheet.
+ * (2026-08-27, the coverage-truth session.)
+ *
+ * **Why this is here and not private to `pnpm pdf:read`.** Every other
+ * retrieval in this repository is identified, spaced and laddered by this
+ * module, and a binary fetched by a script's own `fetch` call is a second
+ * client with its own failure modes and its own idea of who we are. The CAWCD
+ * board publishes its 2026 meeting schedule as a PDF and links it from its own
+ * meetings page; reading that link is a retrieval like any other.
+ *
+ * **It walks rung 2 and rung 3 and stops there, and that is stated rather than
+ * hidden.** `politeGetText` escalates to rung 4 (`curl`, a different TLS stack)
+ * by re-issuing the request through a text client, which cannot carry bytes
+ * back intact. A host that refuses both rungs here is a WALL on rung 3 — the
+ * error says so, with the rung — and the next session escalates from there.
+ * That is the ladder's own bargain: **a wall names the rung it stopped at, so
+ * it never costs a second session the same climb** (RULING 184 — a blocked
+ * route is never a blocked fact).
+ */
+export async function politeGetBytes(
+  url: string,
+  options: HttpOptions = {},
+): Promise<{ status: number; contentType: string; bytes: Uint8Array; rung: number }> {
+  const impl = options.fetchImpl ?? fetch;
+  let lastStatus = 0;
+
+  for (const [rung, headers] of [
+    [2, { "User-Agent": sourceUserAgent(), Accept: options.accept ?? "*/*" }],
+    [3, { ...browserProfileHeaders(), ...(options.accept ? { Accept: options.accept } : {}) }],
+  ] as const) {
+    const response = await impl(url, { headers, signal: options.signal });
+    lastStatus = response.status;
+    if (!response.ok) continue;
+    const bytes = new Uint8Array(await response.arrayBuffer());
+    /*
+     * A ZERO-BYTE 200 IS A FAILED RETRIEVAL, NOT AN EMPTY DOCUMENT.
+     * The same rule `readValidatedResponse` applies to text, and the same
+     * reason: an operation that can return nothing must be asked what it
+     * returned, and a caller handed an empty buffer will report that the
+     * document says nothing.
+     */
+    if (bytes.length === 0) {
+      throw new SourceHttpError(
+        `${url} answered HTTP ${response.status} with ZERO bytes. That is a failed ` +
+          "retrieval, never an empty document.",
+        response.status,
+        url,
+        rung,
+      );
+    }
+    return {
+      status: response.status,
+      contentType: response.headers.get("content-type") ?? "",
+      bytes,
+      rung,
+    };
+  }
+
+  throw new SourceHttpError(
+    `HTTP ${lastStatus} for ${url} on rungs 2 and 3. This is a WALL on rung 3, not an ` +
+      "absent document — rungs 4 and above are unwalked by this client.",
+    lastStatus,
+    url,
+    3,
+  );
+}
+
+/**
  * Decode the handful of HTML entities that occur in these feeds. Numeric
  * references cover both decimal and hex forms — `&#x27;` reached readers
  * literally in a body name (caught by screenshot, 2026-08-15) because only

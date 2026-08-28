@@ -41,6 +41,7 @@
  * ```
  * pnpm cfd:territory --zip 85641
  * pnpm cfd:territory --zip 85641 --json out.json
+ * pnpm cfd:territory --geojson public/geo/body-territories.geojson
  * ```
  */
 import { writeFileSync } from "node:fs";
@@ -57,6 +58,14 @@ const UA = "WeThePeopleBot/1.0 (+https://wethepeople.vote)";
  */
 interface CfdSubject {
   key: string;
+  /**
+   * The REGISTRY BODY this territory belongs to.
+   *
+   * Emitting geometry with no body id would produce a polygon nothing can be
+   * joined to — the same shape as a meeting with no bodyId. The territory is
+   * only useful because it says WHOSE it is.
+   */
+  bodyId: string;
   name: string;
   /** The county's own subdivision-layer query for the plats the resolution names. */
   platWhere: string;
@@ -71,6 +80,7 @@ interface CfdSubject {
 const SUBJECTS: CfdSubject[] = [
   {
     key: "pima-rocking-k-south-cfd",
+    bodyId: "curated:az/pima-rocking-k-south-cfd#governing",
     name: "Rocking K South Community Facilities District",
     platWhere: "UPPER(SUB_NAME) LIKE 'ROCKING K SOUTH%'",
     legalDescription:
@@ -84,6 +94,7 @@ const SUBJECTS: CfdSubject[] = [
   },
   {
     key: "pima-wildflower-cfd",
+    bodyId: "wtp-body/country:us/state:az/wildflower_community_facilities_district#governing",
     name: "Wildflower Community Facilities District",
     platWhere: "SEQ_NUM = '20172440197' OR UPPER(SUB_NAME) LIKE 'WILDFLOWER BLOCKS%'",
     legalDescription:
@@ -109,6 +120,8 @@ interface PlatPoint {
   lat: number;
   lon: number;
   zcta: string;
+  /** The plat POLYGON, kept so the territory can be emitted (NH233). */
+  rings: number[][][];
 }
 
 async function getJson(url: string, what: string): Promise<Record<string, unknown>> {
@@ -193,6 +206,7 @@ async function resolve(subject: CfdSubject): Promise<{
       lon: c[0],
       lat: c[1],
       zcta: await zctaAt(c[0], c[1]),
+      rings: f.geometry?.rings ?? [],
     });
     await new Promise((r) => setTimeout(r, 120));
   }
@@ -210,6 +224,7 @@ function arg(name: string): string | undefined {
 async function main(): Promise<void> {
   const zip = arg("zip");
   const out = arg("json");
+  const geojson = arg("geojson");
   const results = [];
 
   for (const s of SUBJECTS) {
@@ -254,6 +269,93 @@ async function main(): Promise<void> {
       "utf8",
     );
     console.log(`\nwrote ${out}`);
+  }
+
+  /*
+   * ------------------------------------------------- the territory itself
+   *
+   * **NH233 — A VERIFIED GOVERNMENT THAT COULD REACH NO READER.**
+   *
+   * The Rocking K South Community Facilities District is a real political
+   * taxing subdivision of 85641 with its own board and its own resolution
+   * series, and it rendered to nobody. `bodiesAt` matches a body to a reader
+   * on `ocdId`, and the smallest division containing this district is
+   * `county:pima` — 9,200 square miles against the district's 2,047 acres.
+   * Attaching it there would have shown a district that taxes 2,047 acres to
+   * every reader in Pima County: a false claim about their government, in the
+   * direction that looks like coverage. So `ocdId` was left null, which is the
+   * honest choice and left the body stranded.
+   *
+   * The missing thing was never the division. It was the GEOMETRY, and this
+   * script has been fetching it all along — `returnGeometry: "true"`, rings and
+   * all — and throwing everything but a centroid away.
+   *
+   * So the rings are emitted, and `lib/registry/body-territory.ts` point-tests
+   * them with the same even-odd implementation that decides every other
+   * government. That gives an EXACT answer rather than a hedge: a reader inside
+   * a Rocking K plat is governed by it, a reader elsewhere in 85641 is not, and
+   * neither is told something we cannot support.
+   *
+   * **This is the reusable shape, not a special case for one district.** Any
+   * government whose authoritative territory is finer than, or differently
+   * shaped from, the Census division model — community facilities districts,
+   * special taxing districts, districts crossing a county line — binds the same
+   * way: name the body, cite the document that recites the land, emit the
+   * polygons the authoritative publisher holds.
+   */
+  if (geojson) {
+    const features = results.flatMap((r) =>
+      r.points
+        .filter((p) => p.rings.length > 0)
+        .map((p) => ({
+          type: "Feature" as const,
+          properties: {
+            bodyId: r.subject.bodyId,
+            bodyName: r.subject.name,
+            plat: p.plat,
+            sequence: p.sequence,
+            zcta: p.zcta,
+            /* The document that makes this polygon this body's territory. */
+            formationInstrument: r.subject.formationInstrument,
+            formationSource: r.subject.formationSource,
+            platSource: SUBDIVISIONS,
+            platSourceOrg: "Pima County GIS, Land Records — Subdivisions layer",
+          },
+          geometry: { type: "Polygon" as const, coordinates: p.rings },
+        })),
+    );
+
+    /*
+     * RULING 100 — an operation that can return nothing is asked what it
+     * returned. A territory file with no features would silently un-govern
+     * every body it covers on the next build, which is the NH232 shape again.
+     */
+    if (features.length === 0) {
+      throw new Error(
+        "refusing to write a territory file with ZERO polygons. Every subject's plats returned " +
+          "geometry a moment ago; an empty emission is a failed run, not a district with no land.",
+      );
+    }
+
+    writeFileSync(
+      geojson,
+      `${JSON.stringify(
+        {
+          note:
+            "BODY TERRITORIES — polygons for governments whose authoritative territory is finer " +
+            "than any Census division. Each feature names the body it belongs to and the formation " +
+            "document that recites the land. Generated by `pnpm cfd:territory --geojson`; read by " +
+            "lib/registry/body-territory.ts. NH233.",
+          generatedAt: process.env.WTP_TODAY ?? null,
+          type: "FeatureCollection",
+          features,
+        },
+        null,
+        1,
+      )}\n`,
+      "utf8",
+    );
+    console.log(`\nwrote ${geojson} — ${features.length} polygon(s) across ${results.length} district(s)`);
   }
 }
 

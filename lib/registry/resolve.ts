@@ -1,4 +1,5 @@
 import type { Body, Division } from "./types.ts";
+import { bodyIdsAtPoint, type BodyTerritoryFile } from "./body-territory.ts";
 import { polygonContains } from "../geo/polygon.ts";
 
 /**
@@ -186,6 +187,8 @@ export function bodiesAt(
   divisions: Map<string, Division>,
   bodies: Body[],
   resolved?: Division[],
+  /** The committed body-territory polygons (NH233). Null when not loaded. */
+  territory?: BodyTerritoryFile | null,
 ): { divisions: Division[]; bodies: Body[] } {
   const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));
@@ -196,8 +199,25 @@ export function bodiesAt(
    * the primary id would hide Lake Todd from readers in Bradford, who are
    * governed by it exactly as much as readers in Newbury.
    */
+  /*
+   * **AND A BODY WHOSE OWN TERRITORY CONTAINS THE POINT.** (NH233, 2026-08-27.)
+   *
+   * Some governments are smaller than any Census division. The Rocking K South
+   * Community Facilities District taxes 2,047 acres inside a 9,200-square-mile
+   * county, so it can have no `ocdId` without over-claiming — and with none it
+   * reached no reader at all, while its card said "Boundary not published"
+   * about a boundary the county recorder publishes.
+   *
+   * `bodyIdsAtPoint` tests the district's own recorded plats with the same
+   * even-odd implementation used a few lines above, so this is not a looser
+   * kind of membership: it is the same geometric question asked of a polygon
+   * the Census does not hold. See `lib/registry/body-territory.ts`.
+   */
+  const territoryHits = bodyIdsAtPoint(point, territory ?? null);
+
   const serves = (b: Body): boolean =>
     (b.ocdId !== null && ids.has(b.ocdId)) ||
-    (b.alsoServesOcdIds ?? []).some((id) => ids.has(id));
+    (b.alsoServesOcdIds ?? []).some((id) => ids.has(id)) ||
+    territoryHits.has(b.id);
   return { divisions: hit, bodies: bodies.filter(serves) };
 }

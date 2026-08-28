@@ -8,15 +8,30 @@
  * nothing. This is a command-line front door for it, so a hunt can read a
  * document the moment it finds one.
  *
+ * **A URL IS ALSO AN ARGUMENT** (2026-08-27, the coverage-truth session).
+ *
+ * This took a local path only, and the shape of a hunt is that you find the
+ * document as a LINK: the CAWCD board's own meetings page links its 2026
+ * schedule, and reading it meant downloading by hand, inventing a filename,
+ * and remembering where it went. That is a manual maneuver repeated once per
+ * document found, which is the definition of something that should be an
+ * instrument. A URL is now fetched through the PROJECT'S ladder —
+ * `politeGetText`'s sibling, so the rung, the identified agent and the
+ * escalation behaviour are the ones every other retrieval in this repository
+ * uses, rather than a private client with its own failure modes.
+ *
  * Usage:
  *   pnpm pdf:read data/hunt/x.pdf
+ *   pnpm pdf:read https://example.gov/schedule.pdf --grep "September|October"
  *   pnpm pdf:read data/hunt/x.pdf --pages 1-3 --grep "override|levy"
+ *   pnpm pdf:read <url> --save data/hunt/schedule.pdf   (keep the bytes)
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
+import { politeGetBytes } from "../lib/sources/http.ts";
 
 function arg(name: string): string | undefined {
   const i = process.argv.indexOf(`--${name}`);
@@ -25,11 +40,36 @@ function arg(name: string): string | undefined {
 
 const path = process.argv[2];
 if (!path || path.startsWith("--")) {
-  console.error("usage: pnpm pdf:read <file.pdf> [--pages 1-3] [--grep <regex>]");
+  console.error(
+    "usage: pnpm pdf:read <file.pdf|url> [--pages 1-3] [--grep <regex>] [--save <file.pdf>]",
+  );
   process.exit(2);
 }
 
-const bytes = new Uint8Array(readFileSync(path));
+const isUrl = /^https?:\/\//i.test(path);
+let bytes: Uint8Array;
+if (isUrl) {
+  const got = await politeGetBytes(path, { accept: "application/pdf,*/*" });
+  console.log(`fetched ${path}`);
+  console.log(`  rung ${got.rung} · HTTP ${got.status} · ${got.contentType} · ${got.bytes.length} bytes`);
+  /*
+   * The content type is REPORTED and does not gate the extraction. A
+   * government file server that serves a PDF as `application/octet-stream` is
+   * ordinary, and refusing to read it on the strength of a header would
+   * manufacture a wall in front of a document that is right there. The
+   * extractor's own verdict is the one that decides, and it can tell a scan
+   * from a text layer, which a header cannot.
+   */
+  bytes = got.bytes;
+  const save = arg("save");
+  if (save) {
+    writeFileSync(save, bytes);
+    console.log(`  saved to ${save}`);
+  }
+  console.log("");
+} else {
+  bytes = new Uint8Array(readFileSync(path));
+}
 // The size is read BEFORE extraction. pdfjs takes ownership of the buffer and
 // detaches it, so `bytes.length` afterwards is 0 — and a report that printed
 // "0 bytes" beside a successful extraction would be describing the extractor

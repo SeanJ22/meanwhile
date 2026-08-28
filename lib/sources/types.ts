@@ -168,6 +168,36 @@ export interface Meeting {
    * `lib/state/derive.ts`.
    */
   ocdId: OcdId | null;
+  /**
+   * **WHICH BODY IS MEETING — the registry id, not the geography.**
+   * (2026-08-27, the coverage-truth session. Red Control 4's second half.)
+   *
+   * `ocdId` above used to be documented as "the join key on every Meeting",
+   * and a body card filtered `allMeetings` on it. That is only a join where a
+   * division holds one body. Measured on the 2026-08-27 snapshot: **10 of the
+   * 18 divisions carrying meetings hold more than one body, and 364 of 460
+   * meetings would render on a body that did not hold them** — all 80 Tucson
+   * sittings on each of 58 appointed commissions, all 29 Newbury sittings on
+   * each of 18 town committees, the Pima County Board of Supervisors' agenda
+   * on the Central Arizona Water Conservation District's card and back again.
+   *
+   * The relationship was never missing, only unrecorded: every adapter builds
+   * its meetings inside a loop over `SOURCE_WIRING` rows and already writes
+   * `ocdId: wiring.ocdId`. The row it is standing in IS the statement "this
+   * source serves this body", so the body id travels with the meeting from the
+   * same place the division does.
+   *
+   * **Optional, and a guard names every omission.** Making it required would
+   * break every recorded fixture at once; instead
+   * `tests/meeting-body-attribution.test.ts` requires every meeting in the
+   * committed snapshot to carry one that resolves to a registry body, so a new
+   * adapter cannot quietly inherit the old behaviour — it fails, by name.
+   *
+   * A meeting with no `bodyId` is shown on the map and in the meeting list,
+   * which are division-scoped and correct there. It is shown on NO body card,
+   * because a card that shows it would be claiming this body met.
+   */
+  bodyId?: string;
   /** The body itself: "Mayor and Council", "Planning Commission". */
   bodyName: string;
   /** What this particular sitting is called: "Regular Session", "Budget Hearing". */

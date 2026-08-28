@@ -277,6 +277,8 @@ export function makeRevizeSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.slug}:${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName: wiring.config.bodyName ?? item.title,
           title: item.title,
           startsAt,
@@ -347,6 +349,8 @@ export function makeRevizeSource(
         meetings.push({
           id,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName: wiring.config.bodyName ?? wiring.publishingOrg,
           title: wiring.config.bodyName ?? wiring.publishingOrg,
           startsAt,

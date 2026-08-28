@@ -201,6 +201,48 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    /*
+     * **NH232, 2026-08-27.** This file was generated for its whole life and was
+     * never registered here, and the two facts are the same fact: nothing
+     * checked that its generator owned it, so three other scripts appended to
+     * it in place. `pnpm registry:build` then deleted 731 verified bodies —
+     * every lead-promoted and census-gap-promoted row, which IS the coverage
+     * numerator the governance snapshot reports — and no check went red.
+     *
+     * Registering it closes the second half of that hole. `pnpm regen` now
+     * notices when the generator moves and the artifact does not; the first
+     * time it ran after this repair it found the registry already stale against
+     * RULING 121, still carrying two duplicate rows for bodies that had been
+     * collapsed into `alsoServesOcdIds` a week earlier.
+     *
+     * The ownership half lives in `tests/registry-ownership.test.ts`, which is
+     * the guard that fails if any path other than the generator writes it.
+     */
+    /*
+     * **NH233, registered the same day it was created.** The whole lesson of
+     * NH232 one row above is that a generated artifact nobody registered is an
+     * artifact three scripts can write; this one is registered before anything
+     * else can reach it.
+     */
+    path: "public/geo/body-territories.geojson",
+    command: "corepack pnpm cfd:territory --geojson public/geo/body-territories.geojson",
+    pure: false,
+    impurity:
+      "reads Pima County's ArcGIS Subdivisions layer for the recorded plat polygons and the Census " +
+      "Bureau's TIGERweb ZCTA service to point-test them. Both are live services, and the county " +
+      "re-recording a plat is a real change this artifact should pick up.",
+  },
+  {
+    path: "lib/registry/registry.json",
+    command: "corepack pnpm registry:build",
+    pure: false,
+    impurity:
+      "fetches the canonical OCD division-id list over the network to reconcile identifiers. " +
+      "Everything else it reads is committed, and the run IS byte-idempotent against unchanged " +
+      "inputs — collectedAt stamps are carried forward per row rather than restamped, so a " +
+      "rebuild that changes nothing produces no diff.",
+  },
+  {
     path: "data/hunt/nj-morris-municipal-sites.json",
     command: "corepack pnpm nj:rosters --index",
     pure: false,

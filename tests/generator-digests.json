@@ -30,7 +30,7 @@
     "regeneratedOn": "2026-08-27"
   },
   "data/hunt/nj-morris-municipal-sites.json": {
-    "digest": "acd517c0ed117a99486d35500c0b4682724806b48b4992f85bbdc724bc65fa69",
+    "digest": "f46e62be44e936350803ec37a41d5a856c5172a666a44be13deb2f49e6d2aa46",
     "files": 4,
     "entry": "scripts/nj-hunt4-rosters.mts",
     "regeneratedOn": "2026-08-27"
@@ -72,7 +72,7 @@
     "regeneratedOn": "2026-08-27"
   },
   "docs/evidence/njhunt6-morris-rosters.jsonl": {
-    "digest": "32e7ff1dc214263d975b8b3a082a760a1ce82cb43cacdba80c96fcdff23a8d0c",
+    "digest": "0f14b35ff8d971acdc9e8332eee6b1d012b841b3bed19874ac53efa09720f37e",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
     "regeneratedOn": "2026-08-27"
@@ -161,10 +161,22 @@
     "entry": "scripts/migrate-congress-directory.mts",
     "regeneratedOn": "2026-08-27"
   },
+  "lib/registry/registry.json": {
+    "digest": "e4999af25c3ec848964928d3a5bdf67ff25fa60079d56504b75878ce47586dc3",
+    "files": 13,
+    "entry": "scripts/build-registry.ts",
+    "regeneratedOn": "2026-08-27"
+  },
   "lib/registry/rosters-nj-morris.ts": {
-    "digest": "32e7ff1dc214263d975b8b3a082a760a1ce82cb43cacdba80c96fcdff23a8d0c",
+    "digest": "0f14b35ff8d971acdc9e8332eee6b1d012b841b3bed19874ac53efa09720f37e",
     "files": 11,
     "entry": "scripts/build-nj-rosters.mts",
+    "regeneratedOn": "2026-08-27"
+  },
+  "public/geo/body-territories.geojson": {
+    "digest": "83cfc752aa606c41a8d4bd6e75f5e30fed6176089b68f039ce22c74d797b2db7",
+    "files": 1,
+    "entry": "scripts/cfd-territory.mts",
     "regeneratedOn": "2026-08-27"
   }
 }

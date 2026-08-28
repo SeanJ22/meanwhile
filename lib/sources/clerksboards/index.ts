@@ -611,6 +611,8 @@ export function makeClerksBoardsSource(
         meetings.push({
           id: `${SOURCE_NAME}:${wiring.config.boardId}:${inst.y}-${String(inst.mo).padStart(2, "0")}-${String(inst.d).padStart(2, "0")}`,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName,
           title: bodyName,
           startsAt,

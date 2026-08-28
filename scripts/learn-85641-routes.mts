@@ -54,7 +54,7 @@ const ROUTES: LearnedRoute[] = [
     note:
       "proved on Arizona, where A.R.S. 15-905(C) requires the notice and budgetsystem.azed.gov posts it as a filed workbook. The STATUTE is Arizona's; the SHAPE is that every state which reviews district budgets receives a hearing notice with it, so the route travels further than the URL does. Recorded UNKNOWN because one state is not a measurement.",
     origin:
-      "conceived 2026-08-27 for Empire Elementary School District No. 37, which two independent official enumerations (Pima County GIS and the NCES CCD LEA directory) record with a BLANK website field. The district turned out to operate no schools and employ no staff, so it will never have a website — the meeting had to be found somewhere it is compelled to file rather than somewhere it chooses to publish.",
+      "conceived 2026-08-27 for Empire Elementary School District No. 37, which two independent official enumerations (Pima County GIS and the NCES CCD LEA directory) record with a BLANK website field. The district operates no schools and employs no staff, which helps explain the blank — but a blank field is a dated measurement, not a permanent absence, and no source consulted says this district cannot publish one. (Corrected 2026-08-27: this route's origin previously read 'so it will never have a website', which converted a plausible cause into a verified permanent fact.) The route stands on its own either way: the meeting was found somewhere the district is COMPELLED to file rather than somewhere it chooses to publish, which is the stronger source regardless of whether a website ever appears.",
     outcome: {
       jurisdiction: "az",
       rows: 17,

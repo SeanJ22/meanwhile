@@ -3077,7 +3077,28 @@ section("K. Reader surfaces speak plain language (g8)");
         cannotRun("g8", `${zip}: no internal source id on ${surface}`, `HTTP ${res.status}`);
         continue;
       }
-      const found = ids.filter((id) => new RegExp(`\\b${id}\\b`).test(res.text));
+      /*
+       * **A SOURCE URL IS NOT A LEAKED ADAPTER ID** (2026-08-27).
+       *
+       * This scanned the raw response, so `\bcivicplus\b` matched inside
+       * `https://content.civicplus.com/...` and `\blegistar\b` inside
+       * `https://pima.legistar.com/LegislationDetail.aspx?ID=21690`. Both are
+       * CITATIONS — Pima County's own document CDN and its legislative portal,
+       * carried because the ballot corpus's absences must cite the record that
+       * settled them. The guard was reporting the transparency rules working.
+       *
+       * It had been red on `main` since PR #210 added those citations, and it
+       * is a FALSE POSITIVE rather than a defect: with URLs removed, not one
+       * adapter id remains anywhere in the served HTML at any of the four zips.
+       *
+       * So URLs are stripped before scanning and nothing else changes. The
+       * thing this guard exists to catch — an adapter id interpolated into
+       * text a reader reads, which `/api/meetings` ships to the client in
+       * three places — is caught exactly as before, and `PLANTED` below proves
+       * it on every run rather than promising it.
+       */
+      const readerText = res.text.replace(/https?:\/\/[^\s"'<>)]+/g, " ");
+      const found = ids.filter((id) => new RegExp(`\\b${id}\\b`).test(readerText));
       check(
         "g8",
         `${zip}: no internal source id on ${surface}`,
@@ -3100,6 +3121,30 @@ section("K. Reader surfaces speak plain language (g8)");
       );
     }
   }
+
+  /*
+   * **PLANTED: the URL strip did not blind the guard.**
+   *
+   * Narrowing a check is exactly where a check quietly stops checking, so the
+   * narrowing is exercised on every run. A page carrying an adapter id in
+   * READER TEXT must still be caught, and the same id inside a source URL must
+   * still be ignored — the two halves together are the whole rule.
+   */
+  const strip = (t: string) => t.replace(/https?:\/\/[^\s"'<>)]+/g, " ");
+  const leak = strip('<p>Sourced from legistar</p>');
+  const citation = strip(
+    '<a href="https://pima.legistar.com/LegislationDetail.aspx?ID=21690">Pima County</a>',
+  );
+  check(
+    "g8",
+    "PLANTED: an adapter id in reader text is still caught, a source URL is not",
+    /\blegistar\b/.test(leak) && !/\blegistar\b/.test(citation),
+    /\blegistar\b/.test(leak)
+      ? /\blegistar\b/.test(citation)
+        ? "a source URL still trips the guard — the false positive is back"
+        : "reader text caught, source URL ignored"
+      : "THE GUARD IS BLIND — an adapter id in reader text no longer trips it",
+  );
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

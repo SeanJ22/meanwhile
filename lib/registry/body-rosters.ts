@@ -19,6 +19,7 @@
 import type { Provenance } from "../sources/types.ts";
 
 import ROSTER_PHOTOS from "./roster-photos.json" with { type: "json" };
+import { AZ_CAWCD_ROSTERS } from "./rosters-az-cawcd.ts";
 import { NJ_MORRIS_ROSTERS } from "./rosters-nj-morris.ts";
 
 export interface RosterMember {
@@ -2319,6 +2320,14 @@ export const BODY_ROSTERS: BodyRoster[] = [
    * with the reason, and they are hunted again on their RULING 53 clock.
    */
   ...NJ_MORRIS_ROSTERS,
+
+  /**
+   * **THE CENTRAL ARIZONA WATER CONSERVATION DISTRICT BOARD** — fifteen
+   * directly elected directors for the body that taxes every parcel in Pima
+   * County, and which rendered nobody until 2026-08-27. Membership and
+   * partisanship are separated there: see rosters-az-cawcd.ts.
+   */
+  ...AZ_CAWCD_ROSTERS,
 
   /**
    * **PIMA COUNTY BOARD OF ADJUSTMENT, DISTRICT 4** — the board that rules on

@@ -6,6 +6,7 @@ import {
   searchAgendas,
   type AgendaDocumentLike,
 } from "@/lib/routing/agenda-search";
+import { asksForBodyAgenda, bindNamedEntity, type BindableEntity } from "@/lib/routing/named-entity";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
@@ -46,6 +47,44 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
  */
 
 export const runtime = "nodejs";
+
+/**
+ * The governments this corpus can answer ABOUT, named the way a reader names
+ * them — derived from the canonical division id and nothing else.
+ *
+ * The snapshot's own `bodyName` cannot be used for this. For Vail Unified it
+ * reads **"Governing Board Meeting"** — the meeting's title, carried onto the
+ * body — so an inventory built from it contains no government called "Vail"
+ * and the reader's word could never have matched. The division id does carry
+ * it, canonically and unambiguously:
+ *
+ *   ocd-division/country:us/state:az/school_district:vail_unified_district
+ *                                    ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^
+ *                                    divisionType    the name, slugged
+ *
+ * Un-slugging that is a mechanical read of an identifier this product mints
+ * itself, not a guess about what a government is called — and it is the same
+ * string the registry's own `divisionLabel` is built from.
+ */
+function snapshotEntities(
+  meetings: readonly { ocdId: string | null }[],
+): BindableEntity[] {
+  const seen = new Map<string, BindableEntity>();
+  for (const meeting of meetings) {
+    const ocdId = meeting.ocdId;
+    if (!ocdId || seen.has(ocdId)) continue;
+    const last = ocdId.split("/").pop() ?? "";
+    const [divisionType, slug] = last.split(":");
+    if (!divisionType || !slug) continue;
+    seen.set(ocdId, {
+      id: ocdId,
+      name: slug.replace(/_/g, " "),
+      nameClass: "body",
+      divisionType,
+    });
+  }
+  return [...seen.values()];
+}
 
 const MAX_BODY_BYTES = 2048;
 const MAX_QUESTION_CHARS = 200;
@@ -121,18 +160,57 @@ export async function POST(request: Request) {
     const newest = [...forMeeting].sort((a, b) =>
       a.retrievedAt < b.retrievedAt ? 1 : -1,
     )[0];
-    const items = newest ? agendaItems(newest.text) : [];
+
+    /*
+     * **A DOCUMENT SHARED WITH ANOTHER GOVERNMENT IS NOT THIS ONE'S AGENDA.**
+     * (2026-08-27.)
+     *
+     * One URL in the corpus is attached to 27 meetings across TWO towns:
+     * `bradfordnh.gov/pages/calendar`, on 14 Newbury sittings and 13 Bradford
+     * ones. It is Bradford's own calendar — Bradford Town Hall,
+     * `bradfordnh.org` addresses, Bradford's board schedules — and it does not
+     * mention Newbury anywhere. Some of those rows nonetheless carry
+     * `sourceOrg: "Town of Newbury"`.
+     *
+     * So a reader opening a Newbury Selectboard meeting was handed another
+     * town's calendar, attributed to their own town. That is the misattribution
+     * class this repository has been closing all session, in the one place it
+     * was still open, and it is worse than the same-body landing page: one page
+     * cannot be two GOVERNMENTS' agenda under any circumstances.
+     *
+     * The items are not returned and the attribution is not made. The LINK
+     * still travels — a reader may want to see what we actually hold — but it
+     * is reported for what it is rather than as this meeting's agenda. The
+     * underlying attachment is an ingest defect and is NH255.
+     */
+    const otherGovernments = newest
+      ? new Set(
+          documents
+            .filter((d) => d.documentUrl === newest.documentUrl)
+            .map((d) => snapshot.meetings.find((m) => m.id === d.meetingId)?.ocdId ?? null)
+            .filter((id): id is string => id !== null),
+        )
+      : new Set<string>();
+    const sharedAcrossGovernments = otherGovernments.size > 1;
+
+    const items = newest && !sharedAcrossGovernments ? agendaItems(newest.text) : [];
     return Response.json({
       mode: "meeting",
       meetingId,
       title: meeting.title,
       bodyName: meeting.bodyName,
       startsAt: meeting.startsAt,
+      /* Stated so the client can say the true thing rather than infer from an
+         empty item list, which would read as "nothing is on the agenda". */
+      documentSharedAcrossGovernments: sharedAcrossGovernments,
       // The raw link, ALWAYS, whether or not items were extracted. A05's
       // own rule: this sits alongside the agenda link and never replaces it.
       agendaUrl: meeting.agendaUrl ?? null,
       documentUrl: newest?.documentUrl ?? null,
-      sourceOrg: newest?.sourceOrg ?? null,
+      /* NOT attributed when the document belongs to more than one government:
+         the stored sourceOrg says "Town of Newbury" for a Bradford page, and
+         repeating it would be the falsehood rather than a record of it. */
+      sourceOrg: sharedAcrossGovernments ? null : (newest?.sourceOrg ?? null),
       retrievedAt: newest?.retrievedAt ?? null,
       items,
       // The denominators. `documentsHeld` 0 and `items` 0 mean different
@@ -147,12 +225,67 @@ export async function POST(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
+
+  /*
+   * **A NAMED BODY'S OWN DOCKET — the question this whole session started on.**
+   * (2026-08-27.)
+   *
+   * *"What's on the Vail school district agenda?"* reached nothing. This route
+   * answered a TOPIC within a scope, `agendaTopicFor` returns null for a
+   * question that names a body and asks what is on ITS agenda, and the question
+   * fell through to topic routing — which names bodies rather than agenda
+   * items — while the corpus held eleven Vail meetings and nine readable
+   * agendas.
+   *
+   * So this rung runs FIRST and only where both halves are true: the reader
+   * named a government we resolved, AND they asked what it has scheduled to
+   * discuss. It answers from THAT body's own newest agenda and nothing else.
+   *
+   * Every honest empty is a different sentence, and none of them is a generic
+   * civics explainer: no meeting held, a meeting with no agenda document, and a
+   * document whose text could not be extracted are three different facts about
+   * us and are returned as three different states.
+   */
+  const namedBody = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
+  if (namedBody.kind === "BOUND" && asksForBodyAgenda(question)) {
+    return bodyAgendaAnswer(snapshot, documents, namedBody.entity.id, namedBody.entity.name);
+  }
+
   const topic = agendaTopicFor(question);
   if (!topic) {
     // No topic is not a refusal to answer the reader — it means this rung
     // has nothing to say and the caller's other rungs continue. Stated as
     // such rather than as an empty result set.
-    return Response.json({ mode: "topic", topic: null, hits: [] });
+    //
+    /*
+     * **THE SERVER'S BINDING TRAVELS EVEN WHEN THIS RUNG HAS NOTHING TO SAY.**
+     * (2026-08-27.)
+     *
+     * The client binds against the search index and the reader's own covered
+     * bodies, both scoped to their area. This route binds against the WHOLE
+     * corpus. So at a Tucson zip the client concluded `UNRESOLVED` for Vail and
+     * rendered *"We don't have a government recorded under 'vail'"* — while
+     * this route, three lines earlier, had already resolved Vail and then threw
+     * the verdict away because the question carried no agenda topic.
+     *
+     * That sentence is a claim about OUR OWN HOLDINGS and it was false. Saying
+     * "we don't have it" about something we hold is the same class as saying
+     * "nothing is scheduled" about a meeting we never looked for, pointed
+     * inward. So the verdict rides on the reply the caller was already making.
+     */
+    return Response.json({
+      mode: "topic",
+      topic: null,
+      hits: [],
+      namedEntity:
+        namedBody.kind === "BOUND"
+          ? { state: "BOUND", ocdId: namedBody.entity.id, name: titleCase(namedBody.entity.name) }
+          : namedBody.kind === "AMBIGUOUS"
+            ? { state: "AMBIGUOUS", candidates: namedBody.candidates.map((c) => titleCase(c.name)) }
+            : namedBody.kind === "UNRESOLVED"
+              ? { state: "UNRESOLVED", mention: namedBody.mention }
+              : null,
+    });
   }
 
   const lat = typeof body.lat === "number" ? body.lat : null;
@@ -187,9 +320,55 @@ export async function POST(request: Request) {
   let eligibleIds: Set<string> | null = null;
   let placeless = 0;
   let outside = 0;
-  let scope: "divisions" | "radius" | "everything" = "everything";
+  let scope: "divisions" | "radius" | "everything" | "named-body" = "everything";
 
-  if (ocdIds.length > 0) {
+  /*
+   * **THE NAMED BODY IS A HARD RETRIEVAL CONSTRAINT (2026-08-27).**
+   *
+   * Every scope below this is about WHERE THE READER IS — their divisions,
+   * or a radius around them. That is the right default for "is there a data
+   * centre coming", and it is the wrong one the moment a question names a
+   * government: a search scoped to the reader's divisions will happily return
+   * a hit from a DIFFERENT body and the answer renders that body's name, which
+   * is the substitution defect this session was opened on.
+   *
+   * So the named body is resolved first and, when it resolves, it REPLACES the
+   * geographic scope rather than narrowing it. A reader asking about Vail gets
+   * Vail's agendas or an honest nothing — never a neighbouring district's.
+   */
+  const binding = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
+  if (binding.kind === "AMBIGUOUS" || binding.kind === "UNRESOLVED") {
+    /* A government was named that we cannot pin down. The rung says so and
+     * returns no hits — it does NOT fall through to the reader's divisions,
+     * because that is precisely how a different body came to answer. */
+    return Response.json({
+      mode: "topic",
+      topic: { id: topic.id, label: topic.label },
+      scope: "named-body",
+      namedEntity:
+        binding.kind === "AMBIGUOUS"
+          ? { state: "AMBIGUOUS", candidates: binding.candidates.map((c) => c.name) }
+          : { state: "UNRESOLVED", mention: binding.mention },
+      hits: [],
+      hitsFound: 0,
+      searched: 0,
+      unreadable: 0,
+      placeless: 0,
+      outside: 0,
+      divisionsAsked: ocdIds.length,
+      radiusMiles: null,
+    });
+  }
+
+  if (binding.kind === "BOUND") {
+    scope = "named-body";
+    eligibleIds = new Set(
+      snapshot.meetings
+        .filter((m) => m.ocdId === binding.entity.id)
+        .map((m) => m.id),
+    );
+    outside = snapshot.meetings.length - eligibleIds.size;
+  } else if (ocdIds.length > 0) {
     scope = "divisions";
     const wanted = new Set(ocdIds);
     eligibleIds = new Set(
@@ -218,6 +397,12 @@ export async function POST(request: Request) {
     mode: "topic",
     topic: { id: topic.id, label: topic.label },
     scope,
+    /* Which government this answer is ABOUT, when the reader named one. The
+     * client states it, so a bound answer can never read as a general one. */
+    namedEntity:
+      binding.kind === "BOUND"
+        ? { state: "BOUND", ocdId: binding.entity.id, name: binding.entity.name }
+        : null,
     radiusMiles: scope === "radius" ? radiusMiles : null,
     divisionsAsked: ocdIds.length,
     hits: hits.slice(0, MAX_HITS).map((hit) => {
@@ -243,4 +428,158 @@ export async function POST(request: Request) {
     placeless,
     outside,
   });
+}
+
+/**
+ * A named body's own docket: its next sitting, and that sitting's own items.
+ *
+ * **WHICH MEETING.** The NEXT one, because a reader asking what a government is
+ * discussing is asking about what is coming. Where nothing is scheduled the
+ * most recent past sitting is answered instead and is LABELLED as past — "they
+ * last discussed" is a true answer to "what are they discussing" and pretending
+ * a concluded meeting is upcoming would not be.
+ *
+ * **AND EVERY EMPTY IS ITS OWN SENTENCE.** A body with no meeting, a meeting
+ * with no agenda document, and a document whose text would not extract are
+ * three different facts, all of them about US, and collapsing them into "no
+ * agenda" would assert an absence about a government (RULING 100). The client
+ * gets the state and the denominators and says which.
+ */
+function bodyAgendaAnswer(
+  snapshot: { meetings: MeetingLike[] },
+  documents: readonly AgendaDocumentLike[],
+  ocdId: string,
+  name: string,
+): Response {
+  const forBody = snapshot.meetings.filter((m) => m.ocdId === ocdId);
+  const now = Date.now();
+  const upcoming = forBody
+    .filter((m) => Date.parse(m.startsAt) >= now)
+    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
+  const past = forBody
+    .filter((m) => Date.parse(m.startsAt) < now)
+    .sort((a, b) => (a.startsAt < b.startsAt ? 1 : -1));
+  const meeting = upcoming[0] ?? past[0] ?? null;
+
+  const base = {
+    mode: "body-agenda" as const,
+    /*
+     * The name a READER sees, title-cased off the same canonical slug the
+     * matcher binds on. Matching stays on the normalized form; only the
+     * display changes, because "vail unified district" in a sentence about a
+     * government reads as a typo rather than as a name, and a reader surface
+     * speaks plain language.
+     */
+    namedEntity: { state: "BOUND" as const, ocdId, name: titleCase(name) },
+    meetingsHeld: forBody.length,
+  };
+
+  if (!meeting) {
+    return Response.json({
+      ...base,
+      state: "NO_MEETING_HELD",
+      meeting: null,
+      items: [],
+      documentsHeld: 0,
+      readable: 0,
+    });
+  }
+
+  const forMeeting = documents.filter((d) => d.meetingId === meeting.id);
+  /* Newest retrieval wins — an agenda is revised, and the revision is the one
+     the reader is going to. Same rule as the single-meeting mode above. */
+  const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
+  const items = newest ? agendaItems(newest.text) : [];
+
+  /*
+   * **A CALENDAR PAGE ATTACHED TO TWENTY MEETINGS IS NOT TWENTY AGENDAS.**
+   * (2026-08-27, found by asking Vail its own question.)
+   *
+   * Vail's next sitting has an "agenda document" whose text is 1,652 characters
+   * of the district's Highbond PORTAL LANDING PAGE — navigation, a welcome
+   * line, and the year's meeting schedule. `agendaItems` correctly extracts
+   * nothing from it, and reporting *"we hold an agenda for this meeting and it
+   * has no items"* would be a claim about the government made out of a fact
+   * about our retrieval.
+   *
+   * It is mechanically detectable and it is not rare: **56 of the corpus's 198
+   * agenda documents share a URL with another meeting** — 27 on one New
+   * Hampshire town calendar, 14 on another, 9 on Vail's portal root, 6 on
+   * Tucson Unified's board page. A document the SAME body reuses across
+   * sittings is a landing page by construction, because one page cannot be the
+   * agenda of two different meetings.
+   *
+   * So it gets its own state and its own sentence. The link still travels —
+   * a portal root is where a reader goes to find the agenda themselves, which
+   * is genuinely useful — it simply is not called an agenda.
+   */
+  const sharedWith = newest
+    ? new Set(
+        documents.filter((d) => d.documentUrl === newest.documentUrl).map((d) => d.meetingId),
+      ).size
+    : 0;
+
+  const state =
+    forMeeting.length === 0
+      ? "MEETING_KNOWN_NO_AGENDA_DOCUMENT"
+      : !newest?.text
+        ? "AGENDA_DOCUMENT_NOT_READABLE"
+        : sharedWith > 1 && items.length === 0
+          ? "AGENDA_LINK_IS_A_LANDING_PAGE"
+          : items.length === 0
+            ? "AGENDA_READ_NO_ITEMS_EXTRACTED"
+            : "ITEMS";
+
+  return Response.json({
+    ...base,
+    state,
+    meeting: {
+      id: meeting.id,
+      title: meeting.title,
+      startsAt: meeting.startsAt,
+      /* The body's OWN zone. formatMeetingDate needs it, and letting the
+         client default to the reader's zone would print an Arizona board
+         meeting in the reader's local time — a wrong fact in a small font. */
+      timeZone: meeting.timeZone,
+      /* Whether this is what they WILL discuss or what they LAST discussed. */
+      when: upcoming[0] ? "UPCOMING" : "PAST",
+      agendaUrl: meeting.agendaUrl ?? null,
+    },
+    items,
+    documentUrl: newest?.documentUrl ?? null,
+    sourceOrg: newest?.sourceOrg ?? null,
+    retrievedAt: newest?.retrievedAt ?? null,
+    documentsHeld: forMeeting.length,
+    readable: newest?.text ? 1 : 0,
+    /* How many of this body sittings point at the same document. >1 means a
+       landing page rather than this meeting own agenda. */
+    documentSharedWithMeetings: sharedWith,
+  });
+}
+
+/** Only what this rung reads off a meeting — the snapshot's own shape. */
+interface MeetingLike {
+  id: string;
+  ocdId: string | null;
+  title: string;
+  startsAt: string;
+  timeZone: string;
+  agendaUrl?: string | null;
+}
+
+/**
+ * A slugged division name, as a reader should see it.
+ *
+ * Mechanical and deliberately dumb: capitalise each word. It is not a claim
+ * about what a government calls itself — the canonical id is still the identity
+ * and the matcher still binds on the normalized form — it is only the
+ * difference between "vail unified district" and "Vail Unified District" in a
+ * sentence a person reads.
+ */
+function titleCase(slugWords: string): string {
+  return slugWords
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
 }

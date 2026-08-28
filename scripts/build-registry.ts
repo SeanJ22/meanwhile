@@ -12,9 +12,12 @@
  * every generated row is labelled as structural rather than sourced.
  */
 
+import { readFileSync } from "node:fs";
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { today } from "./doc-dates.mjs";
 
 import { TIER_SEGMENTS, type Tier } from "../lib/ocd/tiers.ts";
 import { indexAudits } from "../lib/registry/audit.ts";
@@ -22,6 +25,10 @@ import { COVERAGE_AUDIT_FILE } from "../lib/registry/coverage-audit.ts";
 import { CURATED_BODIES } from "../lib/registry/curated-bodies.ts";
 import { CURATED_DIVISIONS } from "../lib/registry/curated-divisions.ts";
 import { bodiesFor, slotsFor, type SkipReason } from "../lib/registry/derive.ts";
+import {
+  loadPromotedBodies,
+  validatePromotedBodies,
+} from "../lib/registry/promoted-bodies.ts";
 import type {
   Body,
   CanonicalGap,
@@ -515,8 +522,65 @@ function applyAudits(bodies: Body[]): void {
   );
 }
 
+/**
+ * **The stamp a rebuild must NOT move** (NH232 follow-on, 2026-08-27).
+ *
+ * `collectedAt` on a derived row and on a TIGER division used to be
+ * `new Date().toISOString()` — the millisecond the deriver ran. Two
+ * consequences, and the second is worse than the first:
+ *
+ * 1. **The generator was not idempotent.** Two rebuilds against byte-identical
+ *    inputs differed on 1,008 bodies and all 2,267 divisions, so "did anything
+ *    actually change?" could not be answered from the diff, and the 731-row
+ *    deletion this session repaired was invisible inside exactly that noise.
+ *
+ * 2. **It was a false provenance claim.** `collectedAt` says when the SOURCE
+ *    was collected. The source is a committed boundary file fetched on some
+ *    earlier day; the deriver running today collected nothing. Restamping every
+ *    row on every build asserted a retrieval that did not happen.
+ *
+ * So the prior stamp is carried forward per row, and only a row the registry
+ * has never held is stamped today. **The true retrieval date of the boundary
+ * files is still not recorded anywhere in this repository** — that gap is real,
+ * it is owed to the corpus/provenance contract, and carrying the existing value
+ * forward keeps the already-committed claim rather than minting a fresh false
+ * one every run. It does not invent the missing fact.
+ */
+function priorStamps(): Map<string, string> {
+  const stamps = new Map<string, string>();
+  try {
+    const prior = JSON.parse(readFileSync(OUT, "utf8")) as Registry;
+    for (const d of prior.divisions) {
+      if (d.provenance?.collectedAt) stamps.set(`division:${d.ocdId}`, d.provenance.collectedAt);
+    }
+    for (const b of prior.bodies) {
+      if (b.provenance?.collectedAt) stamps.set(`body:${b.id}`, b.provenance.collectedAt);
+    }
+  } catch {
+    /* No prior registry — every row is new, and every row gets today. */
+  }
+  return stamps;
+}
+
+function applyPriorStamps(registry: Registry, prior: Map<string, string>): void {
+  for (const d of registry.divisions) {
+    const was = prior.get(`division:${d.ocdId}`);
+    if (was) d.provenance.collectedAt = was;
+  }
+  for (const b of registry.bodies) {
+    const was = prior.get(`body:${b.id}`);
+    if (was) b.provenance.collectedAt = was;
+  }
+}
+
 async function main() {
-  const now = new Date().toISOString();
+  /*
+   * Day precision, not milliseconds. A row that IS new gets the day it entered
+   * the registry; a sub-second stamp on a derivation over committed files is
+   * precision the fact does not have.
+   */
+  const now = `${today()}T00:00:00.000Z`;
+  const prior = priorStamps();
 
   console.log("divisions");
   const divisions = await loadDivisions(now);
@@ -593,6 +657,40 @@ async function main() {
   }
   bodies.push(...CURATED_BODIES);
 
+  /*
+   * ------------------------------------------------------- promoted overlay
+   *
+   * **NH232.** These rows used to be appended to `registry.json` directly by
+   * `pnpm leads:adjudicate-descent` and `pnpm bodies:census-gap`, which made a
+   * generated artifact somebody else's canonical store and meant that running
+   * THIS script deleted 731 verified bodies without a single check going red.
+   * They now live in `lib/registry/promoted-bodies.json`, which is an INPUT,
+   * and the generator merges them the way it merges the curated overlay.
+   *
+   * The derivation structurally cannot produce them: a promoted body exists
+   * because a session fetched a page and the page named it, and no polygon
+   * implies that. So merging them is not optional decoration — without it the
+   * generator's output is not the canonical body set.
+   */
+  const promotedStore = loadPromotedBodies();
+  const heldIds = new Set(bodies.map((b) => b.id));
+  const promotedProblems = validatePromotedBodies(promotedStore.bodies, {
+    heldIds,
+    divisionIds,
+  });
+  if (promotedProblems.length > 0) {
+    throw new Error(
+      `lib/registry/promoted-bodies.json is not sound:\n  ${promotedProblems.join("\n  ")}`,
+    );
+  }
+  bodies.push(...promotedStore.bodies);
+
+  console.log(
+    `  promoted overlay: ${promotedStore.bodies.length} bodies (` +
+      `${promotedStore.bodies.filter((b) => b.bodyOrigin === "PROMOTED_FROM_DESCENT_CANDIDATE").length} descent, ` +
+      `${promotedStore.bodies.filter((b) => b.bodyOrigin === "PROMOTED_FROM_CENSUS_OF_GOVERNMENTS").length} census gap)`,
+  );
+
   // Audits run AFTER the overlay (moved 2026-08-15, the truth session): a
   // curated body has hunts too, and Newbury's three land-use boards are the
   // first with a full ladder recorded. Running this before the merge made a
@@ -654,6 +752,7 @@ async function main() {
   }
 
   const registry: Registry = { generatedAt: now, divisions, bodies };
+  applyPriorStamps(registry, prior);
   await writeFile(OUT, JSON.stringify(registry, null, 1) + "\n", "utf8");
   console.log(`\nwrote ${OUT}`);
   console.log(`  ${divisions.length} divisions, ${bodies.length} bodies`);

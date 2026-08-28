@@ -290,9 +290,16 @@
     "arcgis:catalog": "tsx scripts/arcgis-catalog.mts",
     "pdf:read": "tsx scripts/read-pdf.mts",
     "method:learn-85641": "tsx scripts/learn-85641-routes.mts",
+    "method:learn-ask-entity": "tsx scripts/learn-ask-entity-routes.mts",
+    "method:learn-statute": "tsx scripts/learn-statute-routes.mts",
     "cfd:territory": "tsx scripts/cfd-territory.mts",
     "ballot:az-pima-update": "tsx scripts/ballot-az-pima-2026-update.mts",
-    "az:levy": "tsx scripts/az-county-levy.mts"
+    "az:levy": "tsx scripts/az-county-levy.mts",
+    "verify:composition": "tsx scripts/verify-composition-0827.mts",
+    "verify:ask-entity": "tsx scripts/verify-ask-entity.mts",
+    "coverage": "tsx scripts/coverage-four-layer.mts",
+    "doctor": "tsx scripts/doctor.mts",
+    "corpus:check": "tsx scripts/corpus-check.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

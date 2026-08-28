@@ -225,6 +225,8 @@ export function makeApptegySource(
         meetings.push({
           id,
           ocdId: wiring.ocdId,
+          /* NH-RC4: the body, from the wiring row that produced this meeting. */
+          bodyId: wiring.bodyId,
           bodyName: title,
           title,
           startsAt: new Date(event.start_at).toISOString(),

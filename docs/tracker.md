@@ -14,15 +14,15 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **309 open**, 436 resolved.
-- **53 waiting on Sean** — the first section below.
+- **324 open**, 443 resolved.
+- **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **4**
+  - Data infrastructure — **3**
   - Product / UI — **1**
   - Constitution & rules — **1**
   - Repo & ops — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**53 open · 52 resolved.**
+**54 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -111,6 +111,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH212** — The guard asserted fallenOutOfServing === 0. The serving window looks back 90 days, so a row falls out when its start sits between generatedAt-90d and now-90d - a band exactly as wide as the snapshot's own age. 447 rows over 90 days is about five a day, so one day of age is worth roughly five crossings. On 2026-08-26 it went red at 1 of 447 with the snapshot 0.07 days old, one hour and forty minutes after refresh-daily run 33005902616 landed GREEN. Nothing had stopped landing; a meeting had concluded and aged past ninety days. That is RULING 116's shape - a guard pinning the size of a gap time creates - and RULING 115's cost, an alarm firing on the normal operating state. I moved the assertion to the snapshot's AGE (two days: the daily cadence plus one missed run), which is what FROZEN means and what this row was about, and kept the crossing count reported beside it plus a second assertion that the shedding is explicable by that age. The detector is untouched and the constructed-crossing test still proves it catches one. QUESTION: keep the age-based assertion, or do you want the stricter zero-crossing reading back with the daily refresh cadence tightened to match it?
 
 **NH225** — Arizona's Department of Revenue website tells eight named AI crawlers to stay out, and ClaudeBot is one of them. It allows every other visitor. This product's reader identifies itself by its own name and a contact address, so the rule that applies to it is the allow-everyone rule. That is what the robots standard says, and it is also a judgement call, so it is yours rather than a session's.
+
+**NH246** — A tester reported that privacy and what-the-site-collects information was not easy to find. Inspecting the product: the information is NOT missing. /transparency is a 470-line page with nine sections — What is collected, What is not collected, Reactions to votes and candidates, Campaign money, Photographs of officials, Speak Your Mind, What happens to the data, What this site will never do, Feedback — and it is linked from the entry screen. The defect is DISCOVERABILITY, not content: on the entry screen the link sits in components/map/site-footnote.tsx at 0.625rem (10px) in muted colour, alongside Feedback, and is the smallest text on the page. It is also linked from /ballot, /feedback, /about-area, the welcome overlay and the reaction control, all at similar weight. So the proposal is a short plain-language summary at the TOP of a long page, plus a heavier entry point — NOT a rewrite of the disclosure, which is thorough and accurate. NOTHING BELOW IS SHIPPED AND NO USER-FACING PRIVACY UI HAS BEEN CHANGED. Needs Sean's review, edit and approval before any of it becomes reader-visible. PROPOSED SUMMARY BLOCK, to sit directly under the existing h1 'What this site collects, and what it doesn't' — every line checked against the code, and nothing promised that the code does not already do: (1) 'You never need an account to read anything here. If you make one, it is an email address and a magic link — there is no password and no social login.' [Auth.js, email magic link only, per CLAUDE.md Stack.] (2) 'We ask for a zip or an address to work out which districts you are in. An address you type is sent to the Census Bureau's geocoder to turn it into a point, and we do not keep it. Your zip is kept in your browser for the session, not on our servers as yours.' [app/api/geocode is a stateless Census proxy and is POST specifically so an address never lands in a URL or an access log; wtp.approximate_location is sessionStorage.] (3) 'Using the map writes an anonymous row: what kind of thing happened, roughly where — the zip you entered and the districts it touched — and the date. No name, no account, no IP address, no cookie that follows you.' [search_log columns: occurredAt, eventType, approximateLocation, ocdIds, divisionVintage, detail. There is no IP column.] (4) 'When you react to a vote, a candidate or part of a ballot measure, we store the reaction and a random key your browser invented so you can change your mind later. The key is stored only as a hash, it links your own reactions to each other and to nothing else, and clearing your browser storage just means older reactions can no longer be edited.' [reactions.reactionKeyHash, wtp.reaction_key in localStorage, disclosed in these terms already.] (5) 'Reactions are never shown back to anyone — not to you, not to other readers, not as a total on a page.' [CLAUDE.md: no user-to-user surface; write-only from the reader's perspective.] (6) 'Anonymous totals are sold to political organisations. That is how the site is free. Individual rows are not sold and the stores are built so they cannot be joined back to a person.' [The n-stores rule; tests/db-schema.test.ts proves no shared value space.] (7) 'Feedback you send is read by a person, is scrubbed of anything that looks like a phone number, an email or an address before it is stored, carries no key at all, and enters no total we sell. It is one-way — we cannot write back.' [feedback table: no continuity key, no zip, no IP, no email; scrubbed via lib/log/scrub.ts at the single write path.] PROPOSED PLACEMENT AND DISCOVERABILITY, for Sean to accept or reject: (a) put the seven lines above at the top of /transparency under the existing heading, so a reader gets the whole answer in fifteen seconds and the detail stays below it; (b) raise the entry-screen link out of 10px muted — same words, 'What this site collects', at body size, since reader friction is a defect but this is one of the three named exceptions and consent-adjacent text is allowed to be prominent; (c) consider a persistent footer entry on the ballot and body surfaces, which are where a reader has just been asked for the most. OPEN QUESTIONS FOR SEAN: whether 'sold' is the word he wants in a summary line, whether the summary should name the buyer class at all, and whether retention should be stated — the code today auto-deletes nothing except intake_limiter rows after 48 hours, and saying 'we keep it indefinitely' is true but is a bigger statement than the page currently makes.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -418,7 +420,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**25 open · 0 resolved.**
+**28 open · 1 resolved.**
 
 ### P1
 
@@ -444,7 +446,11 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 **NH230** — We know two measures will be on the 85641 ballot this November, and we have the school district's own legal notice for one of them. We have not yet read the county's official ballot, which is the document that actually decides what a voter sees.
 
-**NH233** — The Rocking K South Community Facilities District is a verified government of ZIP 85641 - a separate political taxing subdivision with its own District Board and its own resolution series - and it renders to nobody, because the registry has no division as small as its territory.
+**NH235** — The Central Arizona Water Conservation District's own board page names all 15 popularly elected members, their counties and their officers. The registry body now resolves to UNKNOWN_COMPOSITION - which is honest and is not the roster the reader is owed.
+
+**NH236** — Every City of Tucson board, committee and commission now resolves to UNKNOWN_COMPOSITION, because each was previously inheriting the Mayor and Council through the division fallback. The City Clerk publishes each board's actual membership.
+
+**NH244** — The Central Arizona Water Conservation District board is popularly elected and serves every reader in 85641 and 85701. All four Pima County seats carry terms expiring 12-31-2026, so they are on the 2026 general ballot. The ballot corpus contains no CAWCD contest at all.
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -473,6 +479,10 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **HD29** — Two people are running for Arizona Superintendent of Public Instruction and two things about them have never been looked for.
 
 **HD30** — One person is running for Arizona's 20th state senate district and one thing about them has never been looked for.
+
+### P3
+
+**NH245** — Wiring the verified CAWCD roster into BODY_ROSTERS needs a partisanship value, and every roster in that store cites the record that settled it. Neither the board's own page nor any statute reached on 2026-08-27 states whether these seats carry a party.
 
 ## Visual feedback
 
@@ -516,15 +526,13 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**87 open · 105 resolved.**
+**89 open · 109 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
-
-**NH232** — lib/registry/registry.json is written by two different things. pnpm registry:build regenerates it whole from the Census derivation plus the curated rows; scripts/adjudicate-leads.mts APPENDS a row to it every time a discovery lead is promoted to a body. So running the generator deletes every promotion, and the deletion looks like a normal regeneration.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -569,6 +577,10 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH229** — Every Vail school board agenda and minute sits on two meeting platforms this product cannot read yet.
 
 **NH231** — Our count of the governments covering a ZIP is built from each county's own roll. Districts formed in a neighbouring county but taxing land here are missing from it, and the shortfall looks like completeness.
+
+**NH237** — The same government has a curated row and a descent-promoted row. The promotion's duplicate check compares names, and the two spellings differ by one word, so it did not match.
+
+**NH255** — Measured 2026-08-27 while building the body-agenda rung. data/meetings-snapshot.json reports 198 agendaDocuments, but only 146 distinct documentUrls: 56 documents share a URL with another meeting. The four largest: bradfordnh.gov/pages/calendar on 27 meetings, warnernh.gov/calendar/ on 14, vailschooldistrict.community.highbond.com/Portal/ on 9, and govboard.tusd1.org/ on 6. ONE PAGE CANNOT BE THE AGENDA OF TWO DIFFERENT MEETINGS, so a document the same body reuses across sittings is a landing page by construction. Vail's is 1,652 characters of Highbond portal navigation plus the year's meeting schedule, and agendaItems correctly extracts zero items from it. THE READER CONSEQUENCE is now handled rather than hidden: the body-agenda rung returns AGENDA_LINK_IS_A_LANDING_PAGE for this shape instead of saying we hold an agenda with no items, which would be a claim about the government made out of a fact about our retrieval. THE COLLECTION DEFECT IS NOT FIXED. The adapters are attaching a calendar or portal ROOT to every meeting they discover there rather than fetching each sitting's own agenda. For the Highbond and CivicPlus calendar shapes that means navigating to the meeting inside the portal. Until that is done the corpus's own agendaDocuments count overstates how many real agendas it holds by up to 56, and any denominator built on it inherits the overstatement.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
@@ -654,6 +666,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH219** — pnpm tenancy separates bodies on a platform we already read from bodies on a platform we merely recognise, because those need completely different responses. The second column across NJ, AZ and NH holds 17 hosts on eCode360, Granicus ViewPublisher, PrimeGov, CivicClerk, eSCRIBE and NovusAgenda. That is scoped work — we know the vendor — as distinct from the 87 hosts where nothing machine-readable was detected at all, which is a hunt.
 
+**NH239** — CAWCD's own 2026 schedule lists board meetings on 3 September, 1 October, 5 November and 3 December. The snapshot carries September and stops.
+
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 
 **NH40** — cfs.sos.nh.gov holds first-party contact details for every New Hampshire candidate who registered a committee, and it refuses rungs 2, 3, 4 and 6 with an Akamai 403 - headless Chromium, a real Chrome channel and a masked user agent alike. A visible browser on the same machine and the same IP gets HTTP 200. It was harvested by hand this session through the app's own XHR at rung 7, which is a procedure and not a script, so nothing in CI can repeat it.
@@ -724,7 +738,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**30 open · 141 resolved.**
+**37 open · 141 resolved.**
 
 ### P1
 
@@ -737,6 +751,10 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
 
 **NH193** — Sean RULED on this in the part2-0825 brief and it is no longer a question: build it, try it while it's in testing. Capture 17-49-29 is the current behaviour — why is it raining returns We don't have a sourced answer for who owns this topic yet. The constraint is not optional and is the whole reason it is allowed: a sourced civic answer and an unsourced general answer must NEVER be visually or structurally confusable. Unsourced answers are explicitly and visibly marked as unsourced in plain language a fifteen-year-old reads correctly, not a footnote and not an asterisk; they carry NO Sources section and never borrow the sourced answer's chrome; the routing sits behind a named flag that is ON in testing so it can be turned off in one place without a code change; and if a question can be answered from sources it IS — the fallback is last, never first, proved by showing a civic question still answering from sources after the change. ANTHROPIC_API_KEY is present and was PROVEN live by pnpm credentials on 2026-08-25. Not reached by part2-0825.
+
+**NH249** — The tester's words: jurisdiction types may rely too much on colour. If the only thing distinguishing a county boundary from a school district is hue, the distinction is unavailable to a reader with a colour vision deficiency and weak on a low-quality screen in sunlight. P2 rather than P3 because this is an accessibility question rather than a taste one, and because a reader who misreads which government a boundary belongs to has been told something false about who governs them. Recorded as stated; the actual encoding has not been audited.
+
+**NH251** — Found while repairing the Vail-to-Sunnyside substitution on 2026-08-27. The question that started it — what is on the Vail school district agenda — never reaches the agenda corpus at all. /api/ask/agenda answers a TOPIC within a scope (data-center, warehouse, rezoning, cell-tower) and agendaTopicFor returns null for a question that names a body and asks what is on its agenda, so the agenda rung says nothing and the question falls to topic routing, which names bodies rather than agenda items. Meanwhile the corpus DOES hold what the reader asked for: Vail Unified has 11 meetings and 9 readable agenda documents in data/meetings-snapshot.json. The entity binding now stops the wrong body answering, and /api/ask/agenda binds retrieval to a named body when one resolves, but nothing routes this SHAPE of question into that path. THE SPEC: a body-agenda intent — what is on X's agenda, what are they discussing, what is happening at their next meeting — resolves the named body, takes that body's next or most recent meeting, and answers from that meeting's own agenda items, saying the true thing when the meeting is known and the agenda is not published, not fetched, or not extractable. Never a generic civics explainer when exact body agenda data exists.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -767,6 +785,16 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH168** — MTG-6 titles a venue card with the body and MTG-7 puts the sitting's own name on the entry beneath. Where a source publishes a DIFFERENT bodyName per sitting - Tucson Unified does, with names like GOVERNING BOARD AGENDA SPECIAL MEETING - the entry carries something distinct and it reads well. Where a source publishes ONE name for every sitting, as Tucson Parks and Recreation does, the entry repeats the card title. Sean's own reference capture 12-01-44 shows the same repetition and he marked only the jurisdiction prefix, so nothing was changed here. Worth a look on a real card: the honest options are to drop the entry title where it equals the card title, or to leave it as the anchor for the date and the agenda link.
 
 **NH199** — Two props the map passes down the who-governs card reach the bottom of the chain and are never called. Found while clearing lint warnings, which is the only reason anybody noticed.
+
+**NH238** — The body is listed in the sidebar's Bodies door and opens its card from there, and typing its name into the ask box offers no Body row at either Pima ZIP.
+
+**NH247** — The tester's words: the landing page undersells the functionality behind the hook. A reader arriving at the entry screen does not learn that the product will show them their ballot with sourced positions, translate measures into plain language, name the bodies that govern their address and list nearby meetings — they get the hook and a zip prompt. Recorded as the tester stated it; the product path has not been inspected and no redesign is prescribed here.
+
+**NH248** — The tester's words: map boundary density is hard to parse. With several overlapping jurisdiction layers drawn at once a reader cannot easily tell which boundary belongs to which government. Recorded as stated; no redesign prescribed before the product path is inspected.
+
+**NH250** — The tester's words: the left-side information is dense, and filters or progressive disclosure may help. Recorded as the tester framed it, including that the remedy is a suggestion rather than a finding. Note that reader friction is a defect with only three checkable exceptions, so any progressive-disclosure work has to be argued as reducing friction rather than adding a click.
+
+**NH252** — The named-entity binding rung reconciles the government a reader names against an inventory built from the search index and the reader's own covered bodies. Both are scoped to the reader's area, so at 85706 the question about Vail resolves to UNRESOLVED — we do not have a government recorded under that name — even though the product holds Vail Unified with meetings and agendas. That is HONEST and is a large improvement on answering about Sunnyside, and it is weaker than it needs to be: BOUND is available if the inventory reaches every body the product holds rather than every body near the reader. The trade is index size on the client, which is why it was not simply widened.
 
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
@@ -822,7 +850,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**21 open · 81 resolved.**
+**23 open · 83 resolved.**
 
 ### P1
 
@@ -841,6 +869,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH181** — Found 2026-08-25 by part2-0825 while closing NS16. The 8/25 Part 2 document is now at docs/feedback/we-the-people-feedback-2026-08-25-part2.md and is the FIRST one that has ever been there. The captures for every batch are committed and reachable; the DOCUMENTS are not. Missing: the 8/22 walkthrough (captures at docs/feedback/2026-08-22/, 21 files), the 8/24 walkthrough (docs/feedback/8.24/, 16 files) and the 8/25 morning walkthrough (docs/feedback/8.25/, 19 files). Each has been cited as authoritative by at least one session brief, and RULING 108 says anything a session must read at session start lives in the repo. docs/feedback/README.md is the index and names all three as missing. Only the author can supply the text — a session cannot reconstruct a dictation it never had.
 
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
+
+**NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 
@@ -861,6 +891,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH178** — Reproduced 2026-08-25. deploy:live reads Netlify correctly and prints the full verdict — site, main tip, last deployable, live deploy id and state, live commit, and CURRENT — and then dies with 'Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src/win/async.c, line 94' and ELIFECYCLE exit code 3221226505. That is a libuv teardown crash on Windows, after the work is done. It matters because RULING 125 makes this the ONE production question a close-out asks, and any caller that gates on its exit code reads a successful read as a failure — the exact shape of the defect NJ25 is about. The verdict itself is trustworthy; the exit code is not.
 
 **NH223** — scripts/adjudicate-leads.mts implements its own rung 2/3/4 ladder and its own decodeEntities, both of which lib/sources/http.ts already exports. RULING 63: duplication is worse than a gap. The private ladder works — it sends a raw browser User-Agent, which is what passes the *.nh.gov family — but it lacks rung 3b, it does not pace itself, and it will drift from the shared one. scripts/census-gap-walk.mts was converted to politeGetText in the same session and is the model.
+
+**NH253** — tests/tracker-transaction.test.ts writes a synthetic tracker row, backs the tracker files up in memory and restores them in a finally block. If a run is killed before that finally executes, the synthetic row NH246 survives in docs/tracker-working.csv — and every later run then fails, because the row is already open and tracker.mjs add correctly refuses a duplicate. Worse, the next run's backup is taken WITH the row present, so its own restore puts it back: the failure is self-perpetuating and only a manual removal clears it. Observed on 2026-08-27, where it turned a green suite red until the residue was written forward out of the four tracker files and the log. THE SPEC: the test should either use an id it can guarantee is unique per run, or detect and clear its own residue before writing, so an interrupted run cannot poison every subsequent one.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

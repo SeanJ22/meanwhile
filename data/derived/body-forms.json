@@ -3,8 +3,8 @@
   "generatedBy": "scripts/stamp-body-forms.mts",
   "note": "The FORM of each body's government, stamped from committed data alone — TIGER's legal type code for the municipal layer, the Census independent/dependent classification for school districts, the division type for counties. It is NOT a form-specific definition: it names which form a body is, so the charter or statute read that writes those definitions is done once per distinct form rather than once per body. Every unstampable body is named with the input that was missing.",
   "counts": {
-    "bodiesWithADivision": 1258,
-    "alreadyCarryingAFormDefinition": 862,
+    "bodiesWithADivision": 1256,
+    "alreadyCarryingAFormDefinition": 860,
     "owedAFormDefinition": 396,
     "stamped": 393,
     "unstampable": 3,
@@ -32,7 +32,7 @@
       "bodyId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined#board",
       "bodyName": null,
       "ocdId": "ocd-division/country:us/state:nh/school_district:school_district_not_defined",
-      "divisionLabel": "No unified school district here",
+      "divisionLabel": "School District Not Defined",
       "reason": "the Census does not classify this district as independent or dependent, and the two are different governments",
       "basisDetail": "schoolDependency=UNCLASSIFIED"
     },
@@ -8567,6 +8567,46 @@
       "basisDetail": "lsad=25 (city)"
     },
     {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
+      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "hasFormDefinition": true,
+      "formKey": "az:county",
+      "basis": "division-type",
+      "basisDetail": "divisionType=county"
+    },
+    {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
       "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
       "hasFormDefinition": true,
@@ -9503,14 +9543,6 @@
       "basisDetail": "lsad=43 (town)"
     },
     {
-      "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#lake-todd-village-district",
-      "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
-      "formKey": "nh:town",
-      "basis": "tiger-lsad",
-      "basisDetail": "lsad=43 (town)"
-    },
-    {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack#conservation-district",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack",
       "hasFormDefinition": false,
@@ -9521,14 +9553,6 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#water-system-precinct",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
-      "formKey": "nh:town",
-      "basis": "tiger-lsad",
-      "basisDetail": "lsad=43 (town)"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#water-system-precinct",
-      "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
       "hasFormDefinition": true,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
@@ -10069,46 +10093,6 @@
       "formKey": "nh:school_district_dependent",
       "basis": "census-school-dependency",
       "basisDetail": "schoolDependency=DEPENDENT"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
-      "ocdId": "ocd-division/country:us/state:az/county:pima",
-      "hasFormDefinition": true,
-      "formKey": "az:county",
-      "basis": "division-type",
-      "basisDetail": "divisionType=county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#free-library-district",
-      "ocdId": "ocd-division/country:us/state:az/county:pima",
-      "hasFormDefinition": true,
-      "formKey": "az:county",
-      "basis": "division-type",
-      "basisDetail": "divisionType=county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#stadium-district",
-      "ocdId": "ocd-division/country:us/state:az/county:pima",
-      "hasFormDefinition": true,
-      "formKey": "az:county",
-      "basis": "division-type",
-      "basisDetail": "divisionType=county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
-      "ocdId": "ocd-division/country:us/state:az/county:pima",
-      "hasFormDefinition": true,
-      "formKey": "az:county",
-      "basis": "division-type",
-      "basisDetail": "divisionType=county"
-    },
-    {
-      "bodyId": "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
-      "ocdId": "ocd-division/country:us/state:az/county:pima",
-      "hasFormDefinition": true,
-      "formKey": "az:county",
-      "basis": "division-type",
-      "basisDetail": "divisionType=county"
     }
   ]
 }

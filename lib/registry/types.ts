@@ -96,7 +96,21 @@ export type BodyOrigin =
   | "DERIVED_FROM_DIVISION_TYPE"
   | "SOURCED"
   | "USER_REPORTED"
-  | "CURATED";
+  | "CURATED"
+  /*
+   * **THE TWO PROMOTION ORIGINS, ADDED 2026-08-27 (NH232).**
+   *
+   * 731 rows in the committed registry already carried these values, and the
+   * type did not have them. Both promotion scripts typed their own local
+   * `RegistryBody` with `bodyOrigin: string`, so the compiler never compared
+   * what they wrote against what the registry declares — which is a small part
+   * of why nothing noticed when `pnpm registry:build` deleted every one of
+   * those rows. The store that now owns them is
+   * `lib/registry/promoted-bodies.json`, and it is validated against THIS
+   * union rather than against a private copy of it.
+   */
+  | "PROMOTED_FROM_DESCENT_CANDIDATE"
+  | "PROMOTED_FROM_CENSUS_OF_GOVERNMENTS";
 
 /**
  * Which adapter can read this body's agendas. Open-ended by design.
@@ -173,6 +187,17 @@ export type SourceDataset =
   /** A government's own published directory of its bodies — e.g. the Tucson
    *  City Clerk's Boards, Committees & Commissions listing. */
   | "GOV_DIRECTORY"
+  /*
+   * **THE TWO PROMOTION DATASETS, ADDED 2026-08-27 (NH232).**
+   *
+   * `DESCENT` is a body a link descent reached and whose own page named it;
+   * `GUS_2022` is a government the 2022 Census of Governments enumerates and
+   * whose reported website answered. 731 committed rows carried these values
+   * while the union did not, because both promotion scripts typed their rows
+   * against a local copy of `Body` with `sourceDataset: string`.
+   */
+  | "DESCENT"
+  | "GUS_2022"
   | "USER_REPORTED";
 
 /**
@@ -347,6 +372,19 @@ export interface Body {
    */
   name: string | null;
   bodyClass: BodyClass;
+  /**
+   * **The Census's own id for this government, where the row came from an
+   * official enumeration.** (Declared on the type 2026-08-27; 57 committed
+   * rows have carried it since 2026-08-26.)
+   *
+   * RULING 9: the Census counts GOVERNMENTS and this product renders BODIES,
+   * and they are not the same unit. Carrying the census id ON the row is what
+   * keeps that disagreement inspectable rather than resolved by whichever
+   * number was loaded last — so it belongs in the type, not only in the data.
+   */
+  censusId?: string;
+  /** The Census's own unit type for it, verbatim. */
+  censusUnitType?: string;
   bodyOrigin: BodyOrigin;
   coverageStatus: CoverageStatus;
   agendaSourceType: AgendaSourceType;

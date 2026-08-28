@@ -112,6 +112,76 @@ const routes: MethodRoute[] = raw.map((r) => {
 
 const knowledge: MethodKnowledge = { version: 0, updatedOn: TODAY, routes };
 
+/*
+ * **THIS COMMAND IS A ONE-TIME BOOTSTRAP AND IT USED TO SAY OTHERWISE.**
+ * (NH254, repaired 2026-08-27.)
+ *
+ * The header above promises it brings the manifest in "without resetting
+ * anything it has learned". That promise was false. It builds a store at
+ * version 0 out of the 62 legacy manifest routes and writes it over whatever is
+ * there — so on 2026-08-27 a single run took the store from **88 routes at
+ * method version 27 down to 62 at version 0**, deleting every route learned
+ * since along with its recorded outcomes and earned portability, and printed
+ * `routes ingested 62` and `method:check PASSED` while doing it. There was even
+ * a `void readFileSync;` at the foot of the file: reading the existing store was
+ * intended and never written.
+ *
+ * It matters more than an ordinary overwrite because **the method version is
+ * what convergence records are stamped with** (RULING 179). A completion earned
+ * under v27 stops being exhaustion the moment v28 holds an applicable route
+ * that was never walked — so resetting the version to 0 silently re-validates
+ * every prior `CONVERGED_AS_OF` claim in the repository.
+ *
+ * So the write now REFUSES when it would lose learned knowledge, and names
+ * exactly what it would have destroyed. `--reset-to-manifest` is the deliberate
+ * escape hatch, because a genuine re-bootstrap is a real thing to want and
+ * should cost a typed flag rather than a surprise.
+ *
+ * The additive path is `runLearnBatch` in `lib/method/learn-batch.ts`, driven
+ * by a `method:learn-*` script — idempotent, refuses a duplicate id, and leaves
+ * every other route alone.
+ */
+const existing: MethodKnowledge | null = (() => {
+  try {
+    return JSON.parse(readFileSync(STORE, "utf8")) as MethodKnowledge;
+  } catch {
+    return null;
+  }
+})();
+
+const RESET = process.argv.includes("--reset-to-manifest");
+if (existing && !RESET) {
+  const ingestedIds = new Set(routes.map((r) => r.id));
+  const lost = existing.routes.filter((r) => !ingestedIds.has(r.id));
+  const outcomes = existing.routes.reduce((n, r) => n + (r.outcomes?.length ?? 0), 0);
+  if (lost.length > 0 || existing.version > knowledge.version) {
+    console.error(
+      `\nmethod:ingest REFUSED — this would destroy learned knowledge (NH254).\n\n` +
+        `  store now        ${existing.routes.length} route(s) at method version ${existing.version}\n` +
+        `  this would write ${routes.length} route(s) at method version ${knowledge.version}\n` +
+        `  routes lost      ${lost.length}\n` +
+        `  outcomes at risk ${outcomes} recorded outcome(s) across the store\n\n` +
+        (lost.length > 0
+          ? `  first lost:      ${lost.slice(0, 5).map((r) => r.id).join(", ")}` +
+            `${lost.length > 5 ? `, and ${lost.length - 5} more` : ""}\n\n`
+          : "") +
+        `This command is a ONE-TIME BOOTSTRAP from lib/hunt/branch-manifest.ts, which holds\n` +
+        `only the legacy manifest routes. To ADD a route, write a scripts/learn-*.mts using\n` +
+        `runLearnBatch — it is additive and idempotent. See scripts/learn-statute-routes.mts.\n\n` +
+        `The method version is what convergence records are stamped with (RULING 179), so\n` +
+        `resetting it to 0 would silently re-validate every prior CONVERGED_AS_OF claim.\n\n` +
+        `If a genuine re-bootstrap is what you want, say so: --reset-to-manifest\n`,
+    );
+    process.exit(1);
+  }
+}
+if (existing && RESET) {
+  console.log(
+    `\n--reset-to-manifest: deliberately replacing ${existing.routes.length} route(s) at ` +
+      `version ${existing.version} with the manifest's ${routes.length} at version ${knowledge.version}.\n`,
+  );
+}
+
 mkdirSync(dirname(STORE), { recursive: true });
 writeFileSync(STORE, JSON.stringify(knowledge, null, 2) + "\n", "utf8");
 
@@ -134,4 +204,3 @@ console.log(`by tier                   ${JSON.stringify(byTier)}`);
 console.log(`sub-branches preserved    ${routes.reduce((n, r) => n + r.subBranches.length, 0)}`);
 console.log(`method version            ${knowledge.version}`);
 console.log(`\nNO ROUTE CAP EXISTS. ${routes.length} is what the project knows now, never what exists.`);
-void readFileSync;

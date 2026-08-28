@@ -48,7 +48,21 @@ const SUBJECTS = [
       "15 popularly elected members (10 Maricopa, 4 Pima, 1 Pinal), president Terry Goddard — " +
       "https://www.cap-az.com/board/board-members/ read 2026-08-27",
     mustNotShow: ["Rex Scott", "Matt Heinz", "Jennifer Allen", "Steve Christy", "Andrés Cano"],
-    mustShow: [] as string[],
+    /*
+     * **THE POSITIVE HALF, ADDED 2026-08-27 WHEN THE ROSTER WAS WIRED.**
+     *
+     * This was empty, and correctly so: the repair had removed five wrong
+     * people and the right fifteen were not yet collected, so there was
+     * nothing true to require. A check that only ever asserts an ABSENCE
+     * passes just as happily when a body renders nobody at all — which is
+     * exactly the state CAWCD was in, and exactly the state it must not
+     * silently return to.
+     *
+     * The three officers are named because their roles are published on the
+     * district's own pages and are the part most likely to drift: a board
+     * re-elects its officers annually.
+     */
+    mustShow: ["Terry Goddard", "Alexandra Arboleda", "Karen Cesare"] as string[],
     wasShowing: "the five Pima County Supervisors, with 'Jennifer Allen — Presides'",
   },
   {
@@ -233,7 +247,23 @@ for (const subject of SUBJECTS) {
     console.log(`  RENDERED   ${wrongly.join(", ")}  <- INTEGRITY DEFECT, still present`);
     results.push({ subject: subject.name, outcome: "DEFECT", detail: wrongly.join(", ") });
   } else {
-    console.log(`  rendered   none of the inherited names`);
+    /*
+     * **SAY WHAT WAS FOUND, NOT ONLY WHAT WAS ABSENT** (2026-08-27).
+     *
+     * This printed "none of the inherited names" and stopped, which describes
+     * only the negative half — and a body rendering NOBODY passes that
+     * sentence exactly as well as a body rendering the right people. CAWCD was
+     * in precisely that state for part of today, so the distinction is not
+     * hypothetical. Where a subject names people it must show, the count is
+     * stated; where it names none, the line says so rather than implying a
+     * positive that was never checked.
+     */
+    const required = subject.mustShow ?? [];
+    console.log(
+      required.length > 0
+        ? `  rendered   none of the inherited names, and all ${required.length} required name(s) present: ${required.join(", ")}`
+        : `  rendered   none of the inherited names (no required names are declared for this subject, so nothing positive was checked)`,
+    );
     results.push({ subject: subject.name, outcome: "CLEAN", detail: "" });
   }
   console.log("");

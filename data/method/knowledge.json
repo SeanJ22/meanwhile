@@ -1,5 +1,5 @@
 {
-  "version": 27,
+  "version": 28,
   "updatedOn": "2026-08-27",
   "routes": [
     {
@@ -2272,6 +2272,37 @@
       "origin": "conceived 2026-08-27 because the Central Arizona Water Conservation District governs 85641 and its own meetings page served 222,565 bytes with no dated meeting link and no iCalendar feed. The meetings were not missing from the page; the page was a client for a system whose name was in its own markup.",
       "learnedOn": "2026-08-27",
       "learnedAtVersion": 27
+    },
+    {
+      "id": "sos-general-election-candidate-listing",
+      "title": "the state election authority's own candidate listing for a GENERAL election — the record that answers which NONPARTISAN and special-district contests are actually on a ballot",
+      "tier": "A1",
+      "fields": [
+        "contest",
+        "candidacy",
+        "incumbency"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "The SHAPE is general: a partisan primary filing cannot show a nonpartisan district office, and a PRIMARY candidate list cannot either, because a district office with no primary is not on a primary ballot. So the general-election listing is the right document and it is a different document from both. THE ARIZONA HOST IS WALLED: on 2026-08-27 apps.arizona.vote answered HTTP 403 to curl, to a bare node fetch carrying a browser user agent, and to a real Playwright browser at rung 6 alike — Cloudflare bot protection, not a rule. Its own robots.txt is 403 too, so permission is CANNOT_TELL and is NOT a disallow (RULING 182). Bypassing bot detection is prohibited, so this is BLOCKED_CURRENTLY rather than exhausted (RULING 184). Do not re-walk it with a fourth HTTP client and expect a different answer: vary the SOURCE, not the client. The untried branches are the COUNTY election authority's own general-election candidate list or sample ballot, the printed sample ballot when published, and a public-records request."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-27",
+          "rows": 0,
+          "outcome": "BLOCKED",
+          "note": "apps.arizona.vote/electioninfo/Election/69 — HTTP 403 at rungs 2, 3 and 6. robots.txt also 403, so permission is CANNOT_TELL. The fact remains owed and is tracked as NH244."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 for NH244. The Central Arizona Water Conservation District's four Pima seats carry terms expiring 2026-12-31, read off the district's own member pages, and the ballot corpus holds no CAWCD contest. Two documents were read in full and neither settles whether the contest is on the November 3 2026 general ballot — the Secretary of State's 2026 partisan filing (no CAWCD contest, which is expected for a nonpartisan office and proves nothing) and Pima County's Official Candidate List for the July 21 primary (no CAWCD contest either, though it does carry nonpartisan municipal offices). Neither a contest nor an absence may be written into the ballot corpus until a deciding document is read.",
+      "learnedOn": "2026-08-27",
+      "learnedAtVersion": 28
     }
   ]
 }

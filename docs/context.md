@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 02:59:12 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-27 -->
-Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 13:04:15 EDT.
+Session day 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1156 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1165 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -963,7 +963,7 @@ position; each flag can be flipped without a deploy via its environment variable
 **`ripcord.askSignalCapture`** — **PULLED** · env `WTP_RIPCORD_ASK_SIGNAL_CAPTURE` · rows ASK03, NH246
 
 - Open question: Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?
-- Closer: The author — UNANSWERED as of 2026-08-27. Ships PULLED so the capture path cannot run before the disclosure it requires exists. Draft copy is on NH246.
+- Closer: The author — UNANSWERED as of 2026-08-28. An OPERATOR DECISION pending privacy approval, not a clause of current law: no current rule names Ask specifically, and RULING 141 governs Speak Your Mind. Draft copy is on NH246. Activation is the copy, this flag AND minting the continuity key.
 
 **`ripcord.reactionFreeText`** — **live** · env `WTP_RIPCORD_REACTION_FREE_TEXT` · rows P03, T05
 
@@ -1002,19 +1002,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-28 02:59:12 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-27 -->
-branch: claude/ask-grounded-0827
-head sha: 28cd91a06e6a47bf2ffada73fd67561652ab9a93
-head subject: Close-out: the generated files handoff wrote on its way here (context.md)
-origin/main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85
-origin/main subject: Session handoff: 12 commit(s) from claude/coverage-truth-0827 (#211)
-local main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85
+generated: 2026-08-28 13:04:15 EDT
+branch: claude/grounded-ask-integration-0828
+head sha: a46b7a53afeb19094398a432bf89cfb71da981d8
+head subject: Prove by network observation which endpoint the map Ask input calls
+origin/main sha: e937958d3c9fcd97f778f6ef26a47dedf04fcc68
+origin/main subject: Session handoff: 8 commit(s) from claude/ask-grounded-0827
+local main sha: e937958d3c9fcd97f778f6ef26a47dedf04fcc68
 local main matches origin/main: yes
 working tree: clean
 open prs: 1
-open pr: #212 Ask becomes a grounded Claude pipeline, reaches the ballot, and the Vail agenda hunt it opened
+open pr: #213 Finish the grounded Ask integration: the map surface, identity precedence, referents, and the ballot's own entities
 last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19255
+last recorded status from: docs/state.md:19257
 ```

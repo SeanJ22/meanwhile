@@ -41,6 +41,7 @@
     "dark1": "tsx scripts/dark1-proposal.mts",
     "db:apply": "tsx scripts/apply-migrations.mts",
     "db:check": "tsx scripts/check-schema-state.mts",
+    "db:gate": "tsx scripts/db-shipping-gate.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:surfaces": "tsx scripts/assert-serving-tables.mts",

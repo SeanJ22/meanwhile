@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **324 open**, 443 resolved.
-- **54 waiting on Sean** — the first section below.
+- **329 open**, 443 resolved.
+- **55 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
@@ -23,7 +23,7 @@ and when. Nothing is ever deleted.
   - Arizona hunt — **2**
   - Visual feedback — **2**
   - Data infrastructure — **3**
-  - Product / UI — **1**
+  - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **2**
 
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**54 open · 52 resolved.**
+**55 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -127,6 +127,10 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NS16** — The brief for 2026-08-25 names docs/feedback/we-the-people-feedback-2026-08-25.md as AUTHORITATIVE and says its carryover table is law. That file is not in the repo, not in the Drive mirror root, and not in the Drive screenshots folder — searched all three at session start. The 17 captures ARE committed and were read; only the document is missing. The same is true of the 8/24 document: the LAY, BC, WGH and ASK ids exist in briefs and commit messages and in no committed file, so a session cannot check an id against anything. RULING 108 is exactly this: anything a session must read at session start lives in the repo, because a session has a shell and a clone. This session worked from the brief's prose plus the captures and says so rather than pretending it had the document. THE QUESTION: would you rather (a) paste the feedback doc into docs/feedback/<date>/ as part of each walkthrough, so a session can diff its ids against something, or (b) keep it in chat and accept that ids are only ever as good as the brief that quotes them? If (a), it is one paste and nothing else changes.
 
 **T01** — The page that says, in plain words, what the product collects, how it is used, and that anonymous totals may be sold. Written before any marketing page, because the marketing has to be true.
+
+**ASK03** — Today an answered ask stores only a topic id; only a refusal keeps the question text. That discards the richest civic-interest signal the product has — what a constituent actually asked, what it resolved to, and what answer they received. The capture path for that is built and it is NOT ACTIVE. It cannot activate until Sean approves reader-facing disclosure copy, because the data-privacy policy requires honest disclosure at the box before free text a reader typed may enter a store whose aggregates may be shared with campaigns, organizations and researchers.
+
+  Waiting on needs sean — the disclosure exists and a tester could not find it; draft summary copy inside (NH246).
 
 **B03** — What legal entity this becomes. An LLC now and a public benefit corporation after the buyer calls, rather than a plain C-corp.
 
@@ -420,7 +424,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**28 open · 1 resolved.**
+**29 open · 1 resolved.**
 
 ### P1
 
@@ -433,6 +437,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **AZ01** — NOT STARTED this session. AZ-1: "Know the basics" needs more topics — hunting and fishing ("Am I allowed to hunt or fish?", a common question when somebody moves states) and state abortion law. Both contentious, which is exactly why a clear factual account of where the state stands is owed: state what the law is, cite it, take no position. AZ-2: the state comparison holds one comparison at a time, which is right, but Back returns to Arizona alone when the expected destination is the map — either a reset pill or state pills in the title bar, with deselecting a state dropping it from the comparison, and the same pill pattern on the ballot. AZ-3 (applies across the board, Arizona is only the example): the voting section is five separate items — next election, add to calendar, check registration, where can I vote, search the Secretary of State's tool — and should read as next election, 2026, early voting, with the rest of the noise cut. AZ-4 and AZ-5 (ruled together): three links to the same registration destination inside about ten lines deduplicate to ONE prominent pill, "Check whether you're registered to vote", pointing at the reader's Secretary of State; same pattern for polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-6 is positive: the federal-representative pill system works and stays.
 
 **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions.
+
+**AZ03** — The corpus holds Katie Hobbs as an officeholder — name, office, party, contact, each sourced — and holds nothing about what she has DONE in office. There is no store of vetoes, bill signings, executive orders or line-item actions for any governor. lib/votes/ is congressional only: H.R. numbers and CRS summaries for members of Congress. So a reader asking what their governor did in the last twelve months gets an honest and very thin answer.
 
 **NH192** — From the 8/25 Part 2 walkthrough, capture 17-28-02, which shows John Carruth's large battlecard rendering JC initials. Third session in which a missing official photo has been reported. THE STANDING RULE Sean states with it, which outlives the instance: superintendent photos are almost always on the district site under a link that simply says superintendent, and they are captured everywhere. He allows that 85641 may not have been through the Arizona hunt yet, so this instance may resolve on its own; the standing rule applies regardless. The deliverable is how many districts across all four pilot zips lack a superintendent photo, then the hunt. Not reached by part2-0825.
 
@@ -738,15 +744,21 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**37 open · 141 resolved.**
+**40 open · 141 resolved.**
 
 ### P1
+
+**ASK01** — Ask used a model for one thing only — picking one of sixteen curated topic ids, with no civic context supplied at all. It could not read a tense, could not expand an alias, and never saw a record. This row is the rebuild: Claude interprets the question against a real entity inventory and today's date, deterministic code reconciles that hypothesis against the registry and retrieves only records belonging to the resolved ids, Claude explains those records, and structural validation rejects an answer that reaches past them.
+
+**ASK02** — bodyAgendaAnswer selected `upcoming[0] ?? past[0]` for every question that named a body and asked what it was discussing. So 'What did Vail discuss at its LAST meeting?' was answered with the agenda of a meeting that has not happened yet. The government, the attribution, the source link and the retrieval timestamp were all correct — it was a wrong answer wearing a complete provenance record.
 
 **P02** — Mapping candidates' stated positions onto the issues on a reader's ballot, every one carrying its source. Never a score, never a ranking — the positions side by side and the reader deciding.
 
   Waiting on candidate info (D05).
 
 ### P2
+
+**ASK04** — Ask was absent from the ballot entirely: AskBox mounts only inside PillCluster, which is constructed only in map-entry.tsx. A reader looking at their ballot — the surface where they have just been asked for the most and have the most questions — had no way to ask one. components/ask/ballot-ask.tsx posts to the same /api/ask/grounded engine and contributes the ballot's own context: the contests and candidates actually rendered, which is what lets a referent resolve and what makes it refuse when more than one person is on screen.
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
 

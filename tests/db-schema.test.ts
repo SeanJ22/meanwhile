@@ -145,7 +145,19 @@ test("the search log carries no identifier of any kind and no foreign keys", () 
  * identifying key, no foreign keys across them, and the reaction continuity
  * key exists on the reactions table only.
  */
-const COLLECTION_STORES = ["searchLog", "reactions", "feedback"] as const;
+const COLLECTION_STORES = [
+  "searchLog",
+  "reactions",
+  "feedback",
+  /*
+   * ASK03 (2026-08-27): the Ask interaction store joins the rule the day it is
+   * declared rather than the day it is switched on. `ripcord.askSignalCapture`
+   * ships PULLED so nothing is written yet — which is exactly why adding it
+   * here now is cheap and adding it later would be a retrofit. This store was
+   * born UNDER the boundary, like `speak_your_mind` before it.
+   */
+  "askInteractions",
+] as const;
 
 /**
  * THE ONE DELIBERATE EXCEPTION, NAMED PER STORE AND PER COLUMN (R41,
@@ -199,11 +211,30 @@ test("every collection store is identifier-free and joins nothing", () => {
 
 test("the collection stores share no joinable column", () => {
   const columnsOf = (table: unknown) =>
-    new Set(
+    new Map(
       getTableConfig(table as Parameters<typeof getTableConfig>[0]).columns.map(
-        (c) => c.name,
+        (c) => [c.name, (c as { enumValues?: string[] }).enumValues ?? null] as const,
       ),
     );
+
+  /*
+   * **RULING 132 SAYS THE RULE IS PROVEN OVER VALUE SPACES, NEVER COLUMN
+   * NAMES — and until 2026-08-27 this guard only ever compared names.**
+   *
+   * Two enum columns that share a name but whose value sets do not intersect
+   * cannot join: the join yields the empty set by construction, for every row
+   * that will ever exist. The case that surfaced it is real — `feedback.surface`
+   * is SIDEBAR/TRANSPARENCY/COVERAGE and `ask_interactions.surface` is
+   * MAP/BALLOT/UNKNOWN, so no value of either is ever a value of the other.
+   *
+   * This is a STRENGTHENING, not a loosening, and the difference is the whole
+   * point. The easy alternative was to add "surface" to the allow-list by NAME,
+   * which would then have permitted some future third column called `surface`
+   * whose values DID overlap. Disjointness is checked against the actually
+   * declared values, so it stops being true the moment someone makes it untrue.
+   */
+  const disjointEnums = (a: string[] | null, b: string[] | null) =>
+    a !== null && b !== null && !a.some((v) => b.includes(v));
 
   /*
    * Context columns that carry no per-person value and cannot join rows:
@@ -261,6 +292,30 @@ test("the collection stores share no joinable column", () => {
      *   publicly.
      */
     "coverage_tier_distribution",
+    /*
+     * - `approximate_location` (ASK03, 2026-08-27) — the zip a reader typed.
+     *
+     *   IT WAS NEVER ADJUDICATED BEFORE TODAY, because only one collection
+     *   store carried it and a column on one store cannot collide. The Ask
+     *   interaction store is the second, so the question arrives for the first
+     *   time and is answered here rather than by widening the loop.
+     *
+     *   THE DECIDING FACT: both stores already carry `ocd_ids`, which is
+     *   ALREADY on this list and is FINER geography than a zip — a zip crosses
+     *   municipal, school, legislative and county lines, and the division list
+     *   names those exactly. A geographic join between these two stores is
+     *   therefore already possible on a column adjudicated years of sessions
+     *   ago, and the zip adds no join surface that is not there. Refusing it
+     *   would protect nothing while removing the cohort the author's own
+     *   product rule is stated in: "readers who identified 85641 as their home
+     *   zip".
+     *
+     *   And it is the `coverage_tier` argument unchanged: a value identical for
+     *   every reader in a place, shared by thousands, cannot single anyone out
+     *   and cannot relate two readers' rows. Joining on it yields a cross
+     *   product, not a person.
+     */
+    "approximate_location",
   ]);
 
   /*
@@ -284,8 +339,10 @@ test("the collection stores share no joinable column", () => {
       const [a, b] = [COLLECTION_STORES[i], COLLECTION_STORES[j]];
       const aCols = columnsOf((schema as Record<string, unknown>)[a]);
       const bCols = columnsOf((schema as Record<string, unknown>)[b]);
-      for (const name of aCols) {
+      for (const [name, aEnum] of aCols) {
         if (!bCols.has(name)) continue;
+        /* Disjoint value spaces cannot join. RULING 132's own test. */
+        if (disjointEnums(aEnum, bCols.get(name) ?? null)) continue;
         assert.ok(
           allowedShared.has(name),
           `${a} and ${b} share column "${name}" — the stores must not be joinable`,

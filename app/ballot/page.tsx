@@ -26,6 +26,7 @@ import {
   cardForNominee,
   type CandidateCardData,
 } from "@/lib/ballot/candidate-cards";
+import { BallotAsk } from "@/components/ask/ballot-ask";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
@@ -589,6 +590,10 @@ export default async function BallotPage({
   } | null = null;
   let coverageNotes: string[] = [];
   let attempted = false;
+  /* ASK04: the reader's resolved divisions, hoisted so the Ask surface at the
+     foot of the page receives the SAME division list the contests were matched
+     against. Rebuilding it there would be a second answer to one question. */
+  let askOcdIds: string[] = [];
   /*
    * RULING 71 (NJ Hunt 3 item 3). Which of the divisions this zip reaches
    * COVER THE WHOLE ZIP, and which cover only part of it. A division covering
@@ -610,6 +615,7 @@ export default async function BallotPage({
      * does not claim.
      */
     const ocdIds = await divisionIdsForZipArea(zip, divisions.map((d) => d.ocdId));
+    askOcdIds = ocdIds;
     for (const { source } of BALLOT_SOURCES) {
       const candidate = source.normalize(await source.fetch());
       const hit = contestsForDivisions(candidate, ocdIds);
@@ -631,6 +637,29 @@ export default async function BallotPage({
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
   const measureContests =
     matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
+
+  /*
+   * ASK04: what is ON SCREEN, for referent resolution only.
+   *
+   * The interpretation rung is handed these so a question like "what has she
+   * done?" can resolve WHEN exactly one person is on the page and must ask
+   * WHEN more than one is. It is contest titles and candidate names — public
+   * facts about an election, already rendered on this page — and nothing about
+   * the reader.
+   */
+  const askSubjects = [
+    ...candidacyContests.map((c) => c.title),
+    ...measureContests.map((c) => c.title),
+    /* Read through the page's OWN helper, so the names offered as referents
+       are exactly the names rendered on the cards above. */
+    ...(set
+      ? candidacyContests.flatMap((c) =>
+          candidatesOf(set, c).map((k) =>
+            [k.givenName, k.familyName].filter(Boolean).join(" "),
+          ),
+        )
+      : []),
+  ].filter((v) => v.length > 0);
 
   /*
    * F01-continued item 8 — THE TALLY'S DENOMINATOR, and it is the rendered
@@ -2164,6 +2193,25 @@ export default async function BallotPage({
           buttons keep their own disclosure at the point of capture — the
           one-time acknowledged notice `CLAUDE.md` requires, which is the
           load-bearing consent surface and is untouched by this. */}
+
+      {/*
+        ASK04 (2026-08-27): Ask reaches the ballot.
+
+        The SAME engine the map's panel uses — `/api/ask/grounded`, which holds
+        interpretation, canonical resolution, retrieval, synthesis and
+        validation. Only the surface differs, and the ballot's context is
+        genuinely its own: the contests and candidates actually on this page are
+        what let the pipeline resolve a referent, and refuse one where more than
+        one person is on screen.
+
+        It sits below the contests because it is a follow-up to what the reader
+        has just read, not a substitute for it.
+      */}
+      <BallotAsk
+        zip={zip}
+        ocdIds={askOcdIds}
+        activeSubjects={askSubjects}
+      />
 
       <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem]">
         <Link

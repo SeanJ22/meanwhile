@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-27 18:02:30 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 02:59:12 EDT. <!-- expected-future: an Eastern run stamp (R18) past midnight while the Phoenix session day is still 2026-08-27 -->
 Session day 2026-08-27 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1121 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1156 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -929,7 +929,7 @@ Source: `docs/tracker.csv`, every row with Priority `P0`. Notes clipped to 130 c
 | PB14 | RULING 7's equal-depth gate withholds most contests, and it b… | Done | 2026-08-20 (Prompt C item 2) CLOSED BY RULING 18. The author ruled: the gate is re-aimed at HUNT COMPLETION rather than field pre… |
 | D73 | LIVE DATA LOSS: both sold stores stopped recording for 4h18m,… | Done | 2026-08-20 (Prompt C). FIXED UNDER THE BRIEF'S LIVE-DATA-LOSS EXCEPTION and named here rather than absorbed. WHAT WAS APPLIED, in… |
 
-## Ripcords — 7
+## Ripcords — 9
 
 Source: `lib/ripcords.ts`, the state of record. State below is the **committed**
 position; each flag can be flipped without a deploy via its environment variable
@@ -954,6 +954,16 @@ position; each flag can be flipped without a deploy via its environment variable
 
 - Open question: Product, not legal: is a model choosing WHICH curated topic a question belongs to compatible with the no-generation rule, given that it writes none of the answer and its whole output is one identifier from a closed list?
 - Closer: The author — RULED 2026-08-15: acceptable as built, stays live. Retained as a one-flip pull if the doctrine ever moves.
+
+**`ripcord.askGrounded`** — **live** · env `WTP_RIPCORD_ASK_GROUNDED` · rows ASK01, ASK02
+
+- Open question: Doctrine: may a model write the reader-facing sentence at all, given that it is shown only records the app retrieved, is given no corpus, tools or network, and has every source URL in its answer checked against the evidence pack it was handed?
+- Closer: The author — the directive of 2026-08-27 asked for grounded synthesis by name. Retained as a one-flip pull: pulled, Ask degrades to the structured sourced answer it already produced.
+
+**`ripcord.askSignalCapture`** — **PULLED** · env `WTP_RIPCORD_ASK_SIGNAL_CAPTURE` · rows ASK03, NH246
+
+- Open question: Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?
+- Closer: The author — UNANSWERED as of 2026-08-27. Ships PULLED so the capture path cannot run before the disclosure it requires exists. Draft copy is on NH246.
 
 **`ripcord.reactionFreeText`** — **live** · env `WTP_RIPCORD_REACTION_FREE_TEXT` · rows P03, T05
 
@@ -992,18 +1002,19 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-27 18:02:30 EDT
-branch: claude/coverage-truth-0827
-head sha: 51b401120a171d858eec4fa824a8c38d5e727fef
-head subject: Session record: the coverage-truth session
-origin/main sha: 9c0af0172bc04581020095d67b1909abf288a19c
-origin/main subject: Intake tripwire report: 2026-08-27T20:43Z
-local main sha: 9e75beadaf83693bd21f1162d19a6799d2e42d11
-local main matches origin/main: no — 2 commit(s) behind
+generated: 2026-08-28 02:59:12 EDT   <!-- expected-future: Eastern run stamp (R18) past midnight; Phoenix session day is 2026-08-27 -->
+branch: claude/ask-grounded-0827
+head sha: 28cd91a06e6a47bf2ffada73fd67561652ab9a93
+head subject: Close-out: the generated files handoff wrote on its way here (context.md)
+origin/main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85
+origin/main subject: Session handoff: 12 commit(s) from claude/coverage-truth-0827 (#211)
+local main sha: c5cd4a21c010fd3a596f7931dc0912397a718a85
+local main matches origin/main: yes
 working tree: clean
-open prs: none
+open prs: 1
+open pr: #212 Ask becomes a grounded Claude pipeline, reaches the ballot, and the Vail agenda hunt it opened
 last recorded tests: 463 (fail)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19251
+last recorded status from: docs/state.md:19255
 ```

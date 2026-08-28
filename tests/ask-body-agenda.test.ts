@@ -137,15 +137,33 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
     "AGENDA_LINK_IS_A_LANDING_PAGE",
     "AGENDA_READ_NO_ITEMS_EXTRACTED",
     "ITEMS",
+    /*
+     * ASK02 (2026-08-27) SPLIT THE FIRST OF THESE IN THREE, because the reader's
+     * tense became a retrieval instruction. "We hold no meetings at all for this
+     * body" is a fact about our collection; "we hold meetings but none in the
+     * future", and "none in the past", are facts about the calendar. One flat
+     * NO_MEETING_HELD for all three would let a reader read a scheduling gap as
+     * a coverage gap.
+     */
+    "NO_UPCOMING_MEETING_HELD",
+    "NO_PAST_MEETING_HELD",
   ];
-  const route = readFileSync(
-    join(process.cwd(), "app/api/ask/agenda/route.ts"),
-    "utf8",
-  );
+  /*
+   * TWO FILES, because the empty-state decision MOVED and this guard is a text
+   * sweep. `emptySelectionState` now lives in `lib/ask/select.ts` so the
+   * deterministic agenda route and the grounded route cannot disagree about
+   * which meeting a tensed question meant. Reading only the route would have
+   * made this guard fail for a reason that was not a defect — and the wrong fix
+   * would have been to loosen it.
+   */
+  const sources = [
+    readFileSync(join(process.cwd(), "app/api/ask/agenda/route.ts"), "utf8"),
+    readFileSync(join(process.cwd(), "lib/ask/select.ts"), "utf8"),
+  ].join("\n");
   for (const state of STATES) {
     assert.ok(
-      route.includes(`"${state}"`),
-      `the route no longer distinguishes ${state} — an empty lost its reason`,
+      sources.includes(`"${state}"`),
+      `the agenda answer no longer distinguishes ${state} — an empty lost its reason`,
     );
   }
   assert.equal(new Set(STATES).size, STATES.length, "the states must be distinct");

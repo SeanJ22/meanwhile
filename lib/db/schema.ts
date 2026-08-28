@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   check,
   doublePrecision,
   index,
@@ -1102,5 +1103,128 @@ export const speakYourMind = pgTable(
     index("speak_your_mind_subject_idx").on(table.subjectType, table.subjectId),
     index("speak_your_mind_review_idx").on(table.reviewState),
     index("speak_your_mind_occurred_idx").on(table.occurredAt),
+  ],
+);
+
+/**
+ * **THE ASK INTERACTION STORE — one question, one answer, one row.**
+ * (ASK03, 2026-08-27.)
+ *
+ * ## Why this store exists
+ *
+ * Until now an ANSWERED ask stored only its topic id, and only a REFUSED ask
+ * kept the question text. The product was therefore keeping its failures and
+ * discarding its successes — and the successes are the signal: what a
+ * constituent actually asked, which government it turned out to be about, and
+ * what answer they were given.
+ *
+ * ## Born under the identity boundary, not retrofitted to it
+ *
+ * - **The question and the answer are ONE ROW.** Not a question row joined to
+ *   an answer row by a durable session key: that shape is an organic
+ *   behavioural graph of one person's political curiosity, and there is no
+ *   version of this product that needs one.
+ * - **`askKeyHash` is digested under its OWN PREFIX**, `"ask-interaction:"`,
+ *   exactly as the reaction, speak and limiter keys are. Without distinct
+ *   prefixes the stores would be equality-joinable on a value nobody would
+ *   have to look up, which is the n-stores rule failing silently.
+ * - **No email, no account reference, no address, no phone, no IP.** The
+ *   subjects are PUBLIC civic ids — a school district, an officeholder — which
+ *   are facts about a government rather than about a reader.
+ * - **`questionScrubbed` is the scrubbed text and nothing else.** The scrub
+ *   runs at the single write path, before the row exists.
+ *
+ * ## It is not writable yet, and that is deliberate
+ *
+ * `ripcord.askSignalCapture` ships PULLED. The data-privacy policy requires
+ * honest disclosure at the box before free text a reader typed may enter a
+ * store whose aggregates may reach campaigns, organizations and researchers.
+ * That copy is NH246's and it is not approved. The table and its write path
+ * exist so approval is a one-flip activation rather than a build.
+ */
+export const askInteractions = pgTable(
+  "ask_interactions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
+    /** The reader's words AFTER the scrub. Never the raw text. */
+    questionScrubbed: text("question_scrubbed").notNull(),
+    /** Anything the scrub blanked, as KINDS — never the values themselves. */
+    selfDisclosure: jsonb("self_disclosure").$type<string[]>().notNull(),
+    /** What the pipeline understood the reader to be asking for. */
+    intent: text("intent").notNull(),
+    temporalKind: text("temporal_kind").notNull(),
+    /** The PUBLIC civic subjects it resolved to. Facts about governments. */
+    subjectIds: jsonb("subject_ids").$type<string[]>().notNull(),
+    resolutionState: text("resolution_state", {
+      enum: ["BOUND", "AMBIGUOUS", "UNRESOLVED", "NONE"],
+    }).notNull(),
+    /**
+     * **HOW the answer was produced, and it is never inferred.** Saying a
+     * grounded model answered when only the deterministic path ran would make
+     * every later measurement of this feature a fiction.
+     */
+    answerMode: text("answer_mode", {
+      enum: [
+        "GROUNDED_CLAUDE",
+        "STRUCTURED_GROUNDED",
+        "CLARIFY",
+        "UNRESOLVED",
+        "NO_EVIDENCE",
+        "REJECTED_FELL_BACK",
+      ],
+    }).notNull(),
+    /** What the reader actually read. Null where no prose was produced. */
+    answerText: text("answer_text"),
+    /** Which model wrote it, for audit. Null where none did. */
+    answerModel: text("answer_model"),
+    /** Did structural validation pass? Null where it did not run. */
+    validationPassed: boolean("validation_passed"),
+    /** How much evidence stood behind it — a denominator, not a score. */
+    evidenceRecordCount: integer("evidence_record_count").notNull().default(0),
+    evidenceSourceCount: integer("evidence_source_count").notNull().default(0),
+    namedGapCount: integer("named_gap_count").notNull().default(0),
+    /** Which surface asked. Ballot and map questions differ in kind. */
+    surface: text("surface", { enum: ["MAP", "BALLOT", "UNKNOWN"] }).notNull(),
+    /** Orientation only, exactly as the search log's is. Never a person. */
+    approximateLocation: text("approximate_location"),
+    ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
+    divisionVintage: text("division_vintage").notNull(),
+    /**
+     * The two orthogonal location axes. See `lib/ask/residency.ts` for why one
+     * enum could not carry both without implying one from the other.
+     */
+    residencyRelation: text("residency_relation", {
+      enum: ["CURRENT_HOME", "PROSPECTIVE_HOME", "BROWSING", "UNKNOWN"],
+    }).notNull(),
+    locationConfidence: text("location_confidence", {
+      enum: [
+        "UNVERIFIED",
+        "SELF_DECLARED_ZIP",
+        "ADDRESS_RESOLVED",
+        "ADDRESS_VALIDATED",
+        "UNKNOWN",
+      ],
+    }).notNull(),
+    coverageTier: text("coverage_tier", {
+      enum: ["TIER_0", "TIER_1", "TIER_2", "TIER_3", "UNKNOWN"],
+    }).notNull(),
+    coverageTierDistribution: text("coverage_tier_distribution").notNull(),
+    /**
+     * `sha256("ask-interaction:" + key)` — its OWN digest space. It counts
+     * DISTINCT READERS for an aggregate and it is never exported as a
+     * buyer-visible identifier.
+     */
+    askKeyHash: text("ask_key_hash").notNull(),
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+      .notNull()
+      .default("UNKNOWN"),
+    /** `sha256("ask-run:" + runId)` — namespaced, like every other run id. */
+    runId: text("run_id"),
+  },
+  (table) => [
+    index("ask_interactions_occurred_idx").on(table.occurredAt),
+    index("ask_interactions_mode_idx").on(table.answerMode),
+    index("ask_interactions_surface_idx").on(table.surface),
   ],
 );

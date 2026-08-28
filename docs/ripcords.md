@@ -99,6 +99,60 @@ If the worry is what is already stored, that is moderation
 **Prefer nothing over pulling** — there is no threshold to tune here. It is
 on or off.
 
+## Turn off the grounded Ask answer (a generated sentence is wrong)
+
+**Flag:** `ripcord.askGrounded` · **Env var:** `WTP_RIPCORD_ASK_GROUNDED`
+
+Added 2026-08-27 (ASK01/ASK02). Ships **live**. Same procedure as above with
+value `pulled`; restore with `live`.
+
+This is a DIFFERENT flag from `ripcord.askClassifier`, and the difference is
+the whole reason it exists. The classifier picks one topic id out of a fixed
+list and writes none of the answer. This rung **writes the sentence a reader
+reads**, from records the app retrieved and handed it.
+
+**What a pull does, exactly:**
+
+* Both model rungs stop — the interpretation call and the synthesis call.
+  `/api/ask/grounded` returns `{ mode: "OFF" }` and answers nothing itself.
+* **The reader still gets an answer.** The map panel falls back to the
+  deterministic keyword-and-corpus product it already was, and the ballot
+  surface renders the structured records and named gaps it was already given.
+  Degradation runs grounded → structured → honest gap, and never grounded →
+  plausible.
+* **Nothing stored changes**, because this rung stores nothing at all.
+
+**Pull it if** a generated sentence is found to state something the records do
+not support. `lib/ask/validate.ts` is meant to make that impossible — it
+rejects an invented source URL, a substituted subject, voting advice, a verdict
+on ourselves, internal vocabulary, and an answer whose records all sit on the
+wrong side of the tense that was asked for — and a rejected answer is DISCARDED
+rather than repaired. This flag is what to reach for when that turns out not to
+have been enough.
+
+## Ask signal capture — ALREADY PULLED, and raising it is the author's call
+
+**Flag:** `ripcord.askSignalCapture` · **Env var:** `WTP_RIPCORD_ASK_SIGNAL_CAPTURE`
+
+Added 2026-08-27 (ASK03). **Ships PULLED.** This is the one entry on this page
+that is not a procedure for an emergency: nothing is running, and the question
+is whether to START it.
+
+It gates every write of the Ask interaction record — the scrubbed question, the
+answer the reader received, the civic subject it resolved to, and the zip
+cohort. Down, Ask logs exactly what it logged before: the topic id, and the
+capped question on a refusal.
+
+**Why it is down.** The data-privacy policy requires **honest disclosure at the
+box** — one line, plain language, before the reader types — for any store whose
+aggregates may be shared with campaigns, organizations and researchers. A
+reader typing a question into such a store is exactly that case. The disclosure
+copy is drafted on **NH246** and has not been approved.
+
+**Do not raise this flag until that copy is live.** Raising it first would start
+collecting the very thing the disclosure exists to disclose, which is the
+coupling rule failing in the one direction it cannot survive.
+
 ## The FEC pair
 
 Documented for completeness; the procedure is identical (env var, value

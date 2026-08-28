@@ -493,6 +493,40 @@ export function validateKnowledge(
       bad(r.id, "version-ahead", `learnedAtVersion ${r.learnedAtVersion} exceeds store version ${k.version}`);
     }
 
+    /*
+     * **A DECLARED TYPE IS NOT A WRITE PATH.** (2026-08-27.)
+     *
+     * `effort` has had a closed set of values on all three of its fields since
+     * it was declared, and nothing ever checked them. This session wrote four
+     * routes carrying `PER_SOURCE`, `AUTOMATED` and `KNOWN_METHOD` — none of
+     * which is a member of any of the three sets — and every one of them landed
+     * in the canonical store while `method:check` reported PASSED. It was `tsc`
+     * that caught it, minutes later and for an unrelated reason.
+     *
+     * That is the shape of defect this repository keeps finding: a guard that
+     * is green because it never looked. A `repeats` value outside the set is
+     * not cosmetic — the effort forecast buckets on it, so an unrecognised
+     * value silently drops a route out of whichever bucket a reader is
+     * counting, and the forecast reports the project as cheaper than it is.
+     */
+    if (r.effort) {
+      const sets = {
+        repeats: ["ONCE", "PER_STATE", "PER_COUNTY", "PER_VENDOR", "PER_ZIP"],
+        execution: ["MACHINE", "HUMAN_ONLY", "MACHINE_AFTER_HUMAN_SETUP"],
+        discovery: ["NEW_METHOD", "REAPPLIED_KNOWN_METHOD"],
+      } as const;
+      for (const [field, allowed] of Object.entries(sets)) {
+        const value = (r.effort as unknown as Record<string, unknown>)[field];
+        if (typeof value !== "string" || !(allowed as readonly string[]).includes(value)) {
+          bad(
+            r.id,
+            "effort-value-off-the-closed-set",
+            `effort.${field} is ${JSON.stringify(value)}, which is none of ${allowed.join(", ")}`,
+          );
+        }
+      }
+    }
+
     // A route that stopped working is RETAINED with jurisdiction and date. A
     // deleted route is one a later session rediscovers as new (RULING 63).
     if (r.retiredOn && !r.retiredReason) {

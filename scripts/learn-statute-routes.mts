@@ -54,6 +54,24 @@ const ROUTES: LearnedRoute[] = [
         "A.R.S. 48-3709(B) — candidates appear on the county general election ballot 'without party designation', which settled CAWCD as NONPARTISAN from law. A.R.S. 48-3708(A) — delegation size by county population, reproducing the Maricopa 10 / Pima 4 / Pinal 1 split read independently off fifteen member pages, and 48-3708(D) confirming that a vacancy is filled by gubernatorial appointment, which is how Justin Manuel holds a Pima seat. azleg.gov permits /ars/ and asks for a 120-second crawl delay.",
     },
   },
+  {
+    id: "cancelled-uncontested-district-election",
+    title:
+      "an expiring term is a POSITION TO BE FILLED and never a ballot contest — check the county board's cancellation resolution before recording either a contest or an absence",
+    tier: "A0",
+    fields: ["contest", "candidacy", "incumbency"],
+    note:
+      "A.R.S. 16-410 lets a county board of supervisors cancel any Title 15 or Title 48 district election where the people who filed are fewer than or equal to the positions, appoint them 'fully vested ... as if elected', and forbids the cancelled election from appearing on ANY ballot. So a seat can turn over on schedule while its contest exists in no ballot, no sample ballot and no canvass. THE SHAPE TRAVELS EVEN WHERE THE SECTION NUMBER DOES NOT: uncontested-election cancellation is common across states for school and special districts, and it is the standing explanation for the puzzle 'a term expires this year and we can find no contest'. Do not read that silence as our own retrieval failing, and do not read it as the government failing to hold an election. Read the county's own cancellation resolution. THE COROLLARY THAT BITES: an ABSENCE may not be recorded either, because a true absence now requires knowing an election was cancelled rather than merely not finding one.",
+    origin:
+      "conceived 2026-08-27 to reconcile what looked like two authoritative sources contradicting each other. CAWCD's own member pages say three Pima directors were elected or re-elected on 2020-11-03; Pima County's certified canvass of that election, which certifies itself complete for all valid ballots cast, contains no CAWCD contest across 1,852 pages under seven name variants and none of their surnames. 16-410 explains both at once. The ballot corpus already held three unnamed instances of the same mechanism for 2026 — Vail Unified cancelled and appointed, Empire Elementary cancelled with three vacancies recorded, Sahuarita not cancelled because contested — all citing Pima Board of Supervisors matter 21690.",
+    outcome: {
+      jurisdiction: "az",
+      rows: 3,
+      outcome: "YIELDED",
+      note:
+        "Reconciled the CAWCD 2020 disagreement and DISPROVED the standing inference on NH244 that four expiring Pima seats are therefore four 2026 ballot contests. Pima matter 21690 covers Title 15 school districts only; a Legistar Web API sweep of Pima's whole record for 'Water Conservation' and 'Central Arizona' returns no 2026 CAWCD election or cancellation, so the multi-county question moves to Maricopa and Pinal.",
+    },
+  },
 ];
 
 runLearnBatch(STORE, ROUTES, today());

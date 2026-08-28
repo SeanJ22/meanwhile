@@ -292,3 +292,40 @@ test("the ingest refuses a landing page, and the rule is drawn where the evidenc
   );
   assert.match(ingest, /landing page\(s\) refused/, "the refusal is no longer counted in the report");
 });
+
+test("the agenda reply is kept whenever it carries something usable, not only a topic", () => {
+  /*
+   * **THIS DISCARD HAS NOW BITTEN THREE TIMES.**
+   *
+   * The client's agenda handler read `body.topic ? body : null`, so the WHOLE
+   * reply was thrown away whenever the agenda rung had no topic — which is
+   * exactly the case for a question that names a government and carries no
+   * agenda keyword.
+   *
+   * It swallowed the body-agenda answer first: the route answered the tester's
+   * question correctly and the reader saw nothing. Then it swallowed the
+   * server-resolved `namedEntity`: the route had bound Vail against the whole
+   * corpus, and the client — which can only see the reader's area — went on
+   * telling them we had not matched it.
+   *
+   * Both were invisible to every automated check, because a discarded reply
+   * fails nothing. Pinned on the source so the condition cannot narrow back.
+   */
+  const box = readFileSync(join(process.cwd(), "components/ask/ask-box.tsx"), "utf8");
+  assert.ok(
+    !/return "topic" in body && body\.topic \? body : null;/.test(box),
+    "the reply is discarded again whenever the agenda rung has no topic",
+  );
+  assert.match(
+    box,
+    /body\.topic \|\| body\.namedEntity/,
+    "the reply must be kept when it carries a server-resolved entity, not only a topic",
+  );
+  /* And the route must actually send one, or the client's keeping it is moot. */
+  const route = readFileSync(join(process.cwd(), "app/api/ask/agenda/route.ts"), "utf8");
+  assert.match(
+    route,
+    /mode: "topic",\s*\n\s*topic: null,\s*\n\s*hits: \[\],\s*\n\s*namedEntity:/,
+    "the no-topic reply no longer carries the server's binding, so there is nothing to keep",
+  );
+});

@@ -405,7 +405,19 @@ export function AskBox({
        * the tester's question correctly and the reader saw nothing at all.
        */
       if ("mode" in body && body.mode === "body-agenda") return body;
-      return "topic" in body && body.topic ? body : null;
+      /*
+       * **THE TOPIC IS NOT THE ONLY THING WORTH KEEPING, AND THIS DISCARD HAS
+       * NOW BITTEN THREE TIMES.**
+       *
+       * The original `body.topic ? body : null` threw away the whole reply
+       * whenever the agenda rung had no topic — first the body-agenda answer,
+       * and then the server-resolved namedEntity, which is precisely the case
+       * where the topic IS null: a question naming a government that carries no
+       * agenda keyword. The server had resolved Vail and this line dropped it.
+       *
+       * So the reply is kept when it carries anything the caller can use.
+       */
+      return "topic" in body && (body.topic || body.namedEntity) ? body : null;
     } catch {
       return null;
     }
@@ -868,6 +880,31 @@ export function AskBox({
       )}
 
       {/*
+        **THE SERVER'S VERDICT RENDERS ON EVERY PATH, NOT ONLY ON REFUSAL.**
+        (2026-08-27.)
+
+        It was inside the refusal block, which meant a question that ROUTED
+        never showed it — and "when does the Vail school board meet" routes to
+        schools-policy. So at a Tucson zip the reader was told *"We haven't
+        matched 'vail' to a government near you"* by the step gap, while this
+        component was holding the server's answer that we DO hold Vail and
+        rendering it nowhere.
+
+        That sentence is true — the client really did only search nearby — but
+        stopping there when the better answer is already in hand is a different
+        failure from the false one it replaced: honest, and needlessly unhelpful.
+      */}
+      {asked && serverEntity?.state === "BOUND" && (
+        <p
+          data-ask-server-entity="BOUND"
+          data-ask-server-entity-id={serverEntity.ocdId}
+          className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice"
+        >
+          We do hold {serverEntity.name} — search for it by name to open it.
+        </p>
+      )}
+
+      {/*
         A03 (2026-08-18): the refusal reads the SHARED definition of
         answered, with the agenda rung's evidence passed in — otherwise a
         reader who got a real answer off a real agenda would be told
@@ -900,16 +937,7 @@ export function AskBox({
             for, pointed inward. So where the server resolved the name, that is
             what the reader is told.
           */}
-          {serverEntity?.state === "BOUND" && (
-            <p
-              data-ask-entity-state="BOUND"
-              className="text-[0.8125rem] leading-relaxed text-voice"
-            >
-              We do hold {serverEntity.name}. We haven&apos;t got an answer to
-              this particular question about it yet.
-            </p>
-          )}
-          {asked.binding.kind === "UNRESOLVED" && serverEntity?.state !== "BOUND" && (
+                    {asked.binding.kind === "UNRESOLVED" && serverEntity?.state !== "BOUND" && (
             <p
               data-ask-entity-state="UNRESOLVED"
               className="text-[0.8125rem] leading-relaxed text-voice"

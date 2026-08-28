@@ -932,9 +932,37 @@ if (!existsSync(MIRROR)) {
         }
         /* Every row is one this repo knows. Safe to overwrite. */
       } else {
-        const revs = (
-          tryRun("git", ["rev-list", "--max-count=60", "HEAD", "--", repoPath]) ?? ""
-        )
+        /*
+         * ── IT LOOKED AT MAIN. THE MIRROR IS WRITTEN FROM A BRANCH ───────────
+         * (Diagnosed 2026-08-28, and the cause is not the one it looked like.)
+         *
+         * `pnpm handoff` failed on state.md, tracker.md and log.md with
+         * "matches no version in this file's history", and the obvious reading
+         * — a hand edit worth protecting — was wrong. Line-diffing all three
+         * found the only content this repository had never held was ONE stale
+         * stamp line and SIX generated counts. No hand edit existed.
+         *
+         * The mechanism is the ship shape. **A session writes the mirror on its
+         * BRANCH, and the branch is SQUASH-merged.** So the exact version the
+         * mirror holds is committed — 51b4011 for state.md, 2a252e4c for the
+         * other two — on `claude/coverage-truth-0827`, and NONE of those commits
+         * is an ancestor of main. `git rev-list HEAD` cannot see them by
+         * construction, so the guard was asking a question whose answer is
+         * always no for any mirror written since the last squash.
+         *
+         * `--all` sees them: they are real commits this repository produced,
+         * and content it produced is content it is safe to refresh over. The
+         * revision cap goes with it — sixty revisions of a file rewritten
+         * several times per session is a handful of sessions, and it was a
+         * second window waiting to close on the same ordinary case. Scanning is
+         * newest-first with an early exit; the three matched at positions 8, 13
+         * and 13.
+         *
+         * A protection that fires on the ordinary case is not a protection: it
+         * teaches everybody to skip the gate, which is how the hand edit it
+         * exists for eventually gets copied over.
+         */
+        const revs = (tryRun("git", ["rev-list", "--all", "--", repoPath]) ?? "")
           .split("\n")
           .filter(Boolean);
 
@@ -948,8 +976,30 @@ if (!existsSync(MIRROR)) {
         });
 
         if (!known) {
+          /*
+           * **A REFUSAL NAMES WHAT IS AT RISK.** "Diff it by hand" told an
+           * operator nothing and made the cheapest possible decision expensive.
+           * The lines the mirror holds that this repository has NEVER held —
+           * across every version, not one — are what a hand edit looks like,
+           * and printing them turns a blocker into a two-second read.
+           */
+          const seen = new Set();
+          for (const rev of revs) {
+            const past = tryRun("git", ["show", `${rev}:${repoPath}`]);
+            if (past === null) continue;
+            for (const line of normalize(past).split("\n")) seen.add(line);
+          }
+          const unique = String(target)
+            .split("\n")
+            .filter((line) => line.trim() && !seen.has(line));
+
           problems.push(
-            `${mirrorName} matches no version in this file's history — not overwritten, diff it by hand`,
+            `${mirrorName} matches no version in this file's history — not overwritten. ` +
+              (unique.length === 0
+                ? "Every LINE it holds is one this repo has held, so it is stale rather than hand-edited; " +
+                  "refresh it deliberately if that is what you want."
+                : `${unique.length} line(s) appear in NO version — ` +
+                  unique.slice(0, 3).map((l) => JSON.stringify(l.slice(0, 120))).join("; ")),
           );
           continue;
         }

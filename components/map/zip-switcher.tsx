@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { recordLocationOrigin } from "@/lib/state/location-origin";
+import type { LocationOrigin } from "@/lib/ask/residency";
 
 import { useDismissOnOutside } from "@/hooks/use-dismiss-on-outside";
 import { useRecentZips } from "@/hooks/use-recent-zips";
@@ -55,7 +57,7 @@ export function ZipSwitcher({
     warmZctaTable();
   }, []);
 
-  const take = async (zip: string) => {
+  const take = async (zip: string, origin: LocationOrigin = "TYPED_ZIP") => {
     const found = await lookupZctaAsync(zip);
     if (!found) {
       // The honest failure, in the reader's terms: we do not hold a centroid
@@ -63,6 +65,11 @@ export function ZipSwitcher({
       setError(`We don't have a location on file for ${zip}.`);
       return;
     }
+    /* The ACT, never the conclusion it licenses — `stampResidency` on the
+       server decides what a typed zip is worth. The default is TYPED_ZIP
+       because `submit` is the typing path; the recents list below passes
+       UNKNOWN, for the reason the welcome card's recents do. */
+    recordLocationOrigin(found.zip, origin);
     onPick(found.zip, found.lat, found.lng);
     onClose();
   };
@@ -113,7 +120,8 @@ export function ZipSwitcher({
           <p className="zip-switcher-label">Recent on this device</p>
           <div className="zip-switcher-recents">
             {others.map((zip) => (
-              <button key={zip} type="button" onClick={() => void take(zip)}>
+              /* Recents mix origins and nothing recorded which. UNKNOWN. */
+              <button key={zip} type="button" onClick={() => void take(zip, "UNKNOWN")}>
                 {zip}
               </button>
             ))}

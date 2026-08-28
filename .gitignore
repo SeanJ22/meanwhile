@@ -114,3 +114,7 @@ next-env.d.ts
 /data/hunt/*.html
 /data/hunt/*.xml
 /data/hunt/vail-nuxt-payload.txt
+# RULING 20: screenshots are EVIDENCE and are not repository content. git keeps
+# every version of every binary forever, so a walk that captures the reader's
+# own screen writes its images here and commits only the text beside them.
+/data/hunt/**/*.png

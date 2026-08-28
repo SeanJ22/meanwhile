@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-27 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **329 open**, 443 resolved.
+- **334 open**, 443 resolved.
 - **55 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -424,7 +424,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**29 open · 1 resolved.**
+**30 open · 1 resolved.**
 
 ### P1
 
@@ -439,6 +439,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **AZ02** — POST https://seethemoney.az.gov/Reporting/GetNEWTableData answers HTTP 200. Posted with a guessed body it returns a two-byte empty payload, which is a statement about our request rather than about Arizona's records. The sibling name GetDetailedTableData is a 404, so the endpoint name is exact. robots.txt is 404 and there is no terms-of-use page at the guessed path — both recorded as measurements rather than as permissions.
 
 **AZ03** — The corpus holds Katie Hobbs as an officeholder — name, office, party, contact, each sourced — and holds nothing about what she has DONE in office. There is no store of vetoes, bill signings, executive orders or line-item actions for any governor. lib/votes/ is congressional only: H.R. numbers and CRS summaries for members of Congress. So a reader asking what their governor did in the last twelve months gets an honest and very thin answer.
+
+**AZ04** — vailschools.novusagenda.com is live, publishes no robots restriction, and - driven through its ddlDateRange control rather than by setting the hidden date fields - returns 30 meetings and 30 agenda ITEMS with Online Agenda, Agenda PDF and Minutes links, newest 2017-02-28. That is a real, permitted, machine-readable archive of a district's board agendas that this product does not hold. The walk is scripts/hunt-vail-novus.mts; turning it into an adapter under lib/sources/ is ordinary work now that the form is understood, including pagination past the first 30 rows. It does NOT reach the current agenda, which is on Highbond and disallowed.
 
 **NH192** — From the 8/25 Part 2 walkthrough, capture 17-28-02, which shows John Carruth's large battlecard rendering JC initials. Third session in which a missing official photo has been reported. THE STANDING RULE Sean states with it, which outlives the instance: superintendent photos are almost always on the district site under a link that simply says superintendent, and they are captured everywhere. He allows that 85641 may not have been through the Arizona hunt yet, so this instance may resolve on its own; the standing rule applies regardless. The deliverable is how many districts across all four pilot zips lack a superintendent photo, then the hunt. Not reached by part2-0825.
 
@@ -532,7 +534,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**89 open · 109 resolved.**
+**91 open · 109 resolved.**
 
 ### P1
 
@@ -543,6 +545,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
 ### P2
+
+**ASK06** — lib/ask/ballot-inventory.ts retrieves sourced POSITION passages for a candidate - the candidate corpus's own quotes, with document URL and retrieval date - and nothing else about what they have done. lib/votes/ is congressional only, so a state legislator on the ballot who has cast hundreds of recorded votes contributes no vote record to an Ask answer, and an incumbent's answer is therefore thinner than the corpus can actually support. The evidence record class exists; the retrieval does not.
 
 **D05** — Everything the product can say about a candidate from their own site, their own filings and their own voting record. Never an endorsement list — that is somebody else's judgement about them.
 
@@ -674,6 +678,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH239** — CAWCD's own 2026 schedule lists board meetings on 3 September, 1 October, 5 November and 3 December. The snapshot carries September and stops.
 
+**NH257** — lib/signal/taxonomy.ts inventories every live collection point and names three the product does not have: a reader who emails their board president, follows a citation to an agenda or opens an online-meeting link does so through an ordinary anchor and no row is written anywhere. They are recorded as gaps rather than omitted, because an omission from a taxonomy reads as coverage. Whether to collect any of them is a privacy decision before it is a product one - each would be a new class of behavioural record about a reader, and the Ask store's own capture is gated pending exactly that kind of approval.
+
 **NH39** — James Gallagher, a U.S. Representative sworn in on 2026-06-10, has no websiteUrl at all - the congress-legislators dataset this registry reads has not yet published his House page. Kate Murray is the one New Hampshire officeholder pnpm nh:fix-pages could not repair, because she is not on the General Court's current roster; a former member's page is the archive's hunt.
 
 **NH40** — cfs.sos.nh.gov holds first-party contact details for every New Hampshire candidate who registered a committee, and it refuses rungs 2, 3, 4 and 6 with an Akamai 403 - headless Chromium, a real Chrome channel and a masked user agent alike. A visible browser on the same machine and the same IP gets HTTP 200. It was harvested by hand this session through the app's own XHR at rung 7, which is a procedure and not a script, so nothing in CI can repeat it.
@@ -744,7 +750,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**40 open · 141 resolved.**
+**42 open · 141 resolved.**
 
 ### P1
 
@@ -759,6 +765,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 ### P2
 
 **ASK04** — Ask was absent from the ballot entirely: AskBox mounts only inside PillCluster, which is constructed only in map-entry.tsx. A reader looking at their ballot — the surface where they have just been asked for the most and have the most questions — had no way to ask one. components/ask/ballot-ask.tsx posts to the same /api/ask/grounded engine and contributes the ballot's own context: the contests and candidates actually rendered, which is what lets a referent resolve and what makes it refuse when more than one person is on screen.
+
+**ASK05** — The map Ask box now posts every ask to /api/ask/grounded, and the agenda route is retained ONLY for the topic sweep - 'is there a data centre coming?' - a keyword search across every readable agenda in the reader's area. It is called with scope: TOPIC_ONLY and the route refuses to answer a named body's docket under that scope, so the boundary is enforced in the server. The remaining question is whether the topic sweep should become an INTENT of the grounded engine rather than a second call beside it: it answers a real question the grounded path cannot, but it renders its own block with its own denominator sentence, which is a second shape of answer on one screen. Not a defect today; a design decision worth making deliberately rather than by accretion.
 
 **NH104** — Opened 2026-08-23 by the session that built the instrument. WHAT EXISTS: the versioned five-question instrument (lib/questionnaire/instrument.ts, docs/candidate-questionnaire.md), the office-class classifier, the response record with versioning and withdrawal, the single-use token auth, the three Positions empty states wired into the battlecard, the Drizzle schema and migration 0016, and 272 of 272 generated invitations. WHAT DOES NOT EXIST: (a) the reader-facing page a candidate opens their link on and types into, with the word-limit check shown as they type; (b) the send path - and per RULING 107 it must stamp invitedOn AS IT SENDS, never from the plan, because the Positions empty state reads exactly that field to decide whether to tell a reader we asked; (c) the reminder job on the two planned dates; (d) the read path joining a stored response onto the battlecard Positions section. NOTHING may be sent until the Needs Sean row approving the message is answered.
 
@@ -783,6 +791,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **P03** — The one-tap yes or no, with an optional free-text answer, asked after the explanation and attached to a specific provision or a specific sourced position. This is the revenue path.
 
 ### P3
+
+**ASK07** — Both Ask surfaces hold the last four turns in memory so 'and what did they decide?' has a referent, and neither persists it - closing the panel or leaving the page ends it, which is the correct privacy posture and is stated as deliberate rather than accidental. The consequence a reader can feel: on the map the panel is behind a pill, so dismissing it and reopening it loses the thread mid-conversation. Worth deciding whether the context should survive a panel dismissal within one visit. It must never survive the visit.
 
 **AUD09** — The animation that flies the map to a state has no agreed speed budget, so nothing can tell whether a change made it slower.
 

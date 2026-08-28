@@ -1184,6 +1184,26 @@ export const askInteractions = pgTable(
     evidenceRecordCount: integer("evidence_record_count").notNull().default(0),
     evidenceSourceCount: integer("evidence_source_count").notNull().default(0),
     namedGapCount: integer("named_gap_count").notNull().default(0),
+    /**
+     * **WHICH evidence, not merely how much** (PR #212 follow-up, 2026-08-28).
+     *
+     * Three counts describe ten thousand different answers. The question this
+     * store exists to be audited against — *what evidence supported the answer
+     * readers actually saw?* — cannot be answered from a number, and by the
+     * time anybody asks it the corpus has moved on.
+     *
+     * These are REFERENCES and never documents. A public agenda is already
+     * public; copying it in here would make a behavioural store a document
+     * archive by accident. `lib/ask/evidence.ts` bounds both the count and the
+     * length of each. Nothing in these columns is about a reader — every value
+     * is a fact about a public record.
+     */
+    evidenceRecordRefs: jsonb("evidence_record_refs").$type<string[]>().notNull().default([]),
+    evidenceSourceUrls: jsonb("evidence_source_urls").$type<string[]>().notNull().default([]),
+    evidenceSourceOrgs: jsonb("evidence_source_orgs").$type<string[]>().notNull().default([]),
+    /** The oldest and newest retrieval stamps behind the answer, for staleness. */
+    evidenceRetrievedFrom: text("evidence_retrieved_from"),
+    evidenceRetrievedTo: text("evidence_retrieved_to"),
     /** Which surface asked. Ballot and map questions differ in kind. */
     surface: text("surface", { enum: ["MAP", "BALLOT", "UNKNOWN"] }).notNull(),
     /** Orientation only, exactly as the search log's is. Never a person. */

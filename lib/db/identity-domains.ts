@@ -532,6 +532,43 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
         space: "OPAQUE_HANDLE",
         why: "Names a synthetic RUN, hashed in its own space. Null on every organic row.",
       },
+      /*
+       * **THE EVIDENCE PROVENANCE** (PR #212 follow-up, 2026-08-28). Four of
+       * the five are CIVIC_IDENTIFIER and one is NON_IDENTIFYING, and the
+       * distinction matters: an id of a public record is a fact about a
+       * government, and a retrieval timestamp is a fact about our own machine.
+       * None of the five is a fact about a reader, and none of them can be
+       * joined to a person — the value space of a URL a county published is the
+       * county's publication, not anybody's identity.
+       */
+      evidence_record_refs: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "`<kind>:<id>` for each PUBLIC record the answer was built from — a meeting id, a " +
+          "contest id, an agenda document URL. Counts alone could never answer 'what evidence " +
+          "supported the answer readers actually saw?', which is the only question this store " +
+          "exists to be audited against. References, never the documents: a public agenda is " +
+          "already public and copying it here would make a behavioural store a document archive.",
+      },
+      evidence_source_urls: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "The URLs of the public documents behind the delivered answer. A government's own " +
+          "publication address, shared by every reader who was shown it.",
+      },
+      evidence_source_orgs: {
+        space: "CIVIC_IDENTIFIER",
+        why:
+          "The publishers named on those records — 'Vail School District Governing Board'. An " +
+          "organisation that published a public document, never a person.",
+      },
+      ...nonIdentifying(
+        // The oldest and newest retrieval stamps behind the answer. Facts about
+        // when OUR collection ran, for staleness audit — not about a reader and
+        // not about when anybody asked anything.
+        "evidence_retrieved_from",
+        "evidence_retrieved_to",
+      ),
     },
   },
 };

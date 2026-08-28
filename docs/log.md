@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-08-27 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **152 sessions.**
+Newest first. **153 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,18 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## 2026-08-28 · grounded-Ask integration session
+
+**What it started.** 5 row(s) opened, 5 still open.
+
+- **ASK05** — The map Ask box now posts every ask to /api/ask/grounded, and the agenda route is retained ONLY for the topic sweep - 'is there a data centre coming?' - a keyword search across every readable agenda in the reader's area. It is called with scope: TOPIC_ONLY and the route refuses to answer a named body's docket under that scope, so the boundary is enforced in the server. The remaining question is whether the topic sweep should become an INTENT of the grounded engine rather than a second call beside it: it answers a real question the grounded path cannot, but it renders its own block with its own denominator sentence, which is a second shape of answer on one screen. Not a defect today; a design decision worth making deliberately rather than by accretion. *(open)*
+- **ASK06** — lib/ask/ballot-inventory.ts retrieves sourced POSITION passages for a candidate - the candidate corpus's own quotes, with document URL and retrieval date - and nothing else about what they have done. lib/votes/ is congressional only, so a state legislator on the ballot who has cast hundreds of recorded votes contributes no vote record to an Ask answer, and an incumbent's answer is therefore thinner than the corpus can actually support. The evidence record class exists; the retrieval does not. *(open)*
+- **ASK07** — Both Ask surfaces hold the last four turns in memory so 'and what did they decide?' has a referent, and neither persists it - closing the panel or leaving the page ends it, which is the correct privacy posture and is stated as deliberate rather than accidental. The consequence a reader can feel: on the map the panel is behind a pill, so dismissing it and reopening it loses the thread mid-conversation. Worth deciding whether the context should survive a panel dismissal within one visit. It must never survive the visit. *(open)*
+- **AZ04** — vailschools.novusagenda.com is live, publishes no robots restriction, and - driven through its ddlDateRange control rather than by setting the hidden date fields - returns 30 meetings and 30 agenda ITEMS with Online Agenda, Agenda PDF and Minutes links, newest 2017-02-28. That is a real, permitted, machine-readable archive of a district's board agendas that this product does not hold. The walk is scripts/hunt-vail-novus.mts; turning it into an adapter under lib/sources/ is ordinary work now that the form is understood, including pagination past the first 30 rows. It does NOT reach the current agenda, which is on Highbond and disallowed. *(open)*
+- **NH257** — lib/signal/taxonomy.ts inventories every live collection point and names three the product does not have: a reader who emails their board president, follows a citation to an agenda or opens an online-meeting link does so through an ordinary anchor and no row is written anywhere. They are recorded as gaps rather than omitted, because an omission from a taxonomy reads as coverage. Whether to collect any of them is a privacy decision before it is a product one - each would be a new class of behavioural record about a reader, and the Ask store's own capture is gated pending exactly that kind of approval. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## descent-resume-0826 · 2026-08-27
 

@@ -120,6 +120,29 @@ const nextConfig: NextConfig = {
      * failure than a silent pass and still not one anybody should ship.
      */
     "/api/schema": ["./lib/db/migrations/meta/_journal.json"],
+    /*
+     * **THE ONE ASK ENGINE READS FOUR COMMITTED STORES THROUGH `process.cwd()`**
+     * (PR #212 follow-up, 2026-08-28).
+     *
+     * The meetings snapshot, the ballot sets, the derived ZIP tables and the
+     * officeholder rosters. None of those paths is statically visible to the
+     * tracer, and an untraced read on a serverless host does not error in a way
+     * anybody notices — the catch returns null and Ask reports that we hold no
+     * such body, no such contest, and nobody to contact. That is
+     * INDISTINGUISHABLE FROM HONEST MISSING DATA, which is the exact reason
+     * this list exists at all.
+     *
+     * Named per route that reaches them, as every other entry here is.
+     */
+    "/api/ask/grounded": [
+      "./data/*.json",
+      "./data/ballot/*.json",
+      "./data/officials/*.json",
+      "./data/derived/zip-coverage-tiers-runtime.json",
+      "./data/derived/zip-division-ids.json",
+      "./lib/registry/*.json",
+    ],
+    "/api/ask/agenda": ["./data/*.json"],
   },
   // The demo is unlisted. Platform-level visibility is the access control;
   // this keeps every route out of search indexes regardless of what a crawler

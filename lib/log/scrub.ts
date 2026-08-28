@@ -36,6 +36,53 @@ const STREET_ADDRESS_SHAPED = /\b\d{1,6}(?:\s+[A-Z][A-Za-z]+){1,4}\b/g;
 
 export const SCRUB_MARK = "[#]";
 
+/**
+ * **THE CONTACT SHAPES ONLY — email and digit runs, NOT the address
+ * heuristic.** (PR #212 follow-up, 2026-08-28.)
+ *
+ * `scrubFreeText` is the right pass for text a READER typed, and its
+ * bluntness is correct there: eating a bill number to be sure of eating a
+ * phone number is a trade the refusal log should make every time.
+ *
+ * It is the wrong pass for text WE generated. `STREET_ADDRESS_SHAPED` is
+ * "a number followed by capitalised words", and this product deliberately
+ * spells its dates out — so *"the board meets on 8 September 2026"* is an
+ * address to that regex. Running it over a stored Ask answer would replace the
+ * meeting date with `[#]` and flag the row as containing a street address,
+ * which is a redaction that destroys the field's whole value and files a false
+ * fact about the row while doing it.
+ *
+ * So the answer path takes the two shapes that are unambiguous — nothing a
+ * civic answer legitimately contains is email-shaped, and a seven-digit run in
+ * our own prose is a phone number or an account number — and gets the reader's
+ * self-disclosed VALUES struck by exact match instead. See
+ * `scrubStoredAnswer` in `lib/db/ask-signal.ts`.
+ */
+export function scrubContactShapes(text: string): string {
+  return text
+    .replace(EMAIL_SHAPED, SCRUB_MARK)
+    .replace(LONG_DIGIT_RUN, SCRUB_MARK)
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
+ * Did either contact shape appear?
+ *
+ * Fresh regexes rather than `.test()` on the module-level ones: those carry
+ * the `g` flag, and `RegExp.prototype.test` on a global regex ADVANCES
+ * `lastIndex` — so the same pattern asked twice about two different strings
+ * answers the second one from the wrong offset. A stateful detector that
+ * reports "no" on every other call is a pass that half-passes, which is worse
+ * than one that never runs.
+ */
+export function contactShapesIn(text: string): { email: boolean; digits: boolean } {
+  return {
+    email: new RegExp(EMAIL_SHAPED.source).test(text),
+    digits: new RegExp(LONG_DIGIT_RUN.source).test(text),
+  };
+}
+
 export function scrubFreeText(text: string): string {
   return text
     .replace(EMAIL_SHAPED, SCRUB_MARK)

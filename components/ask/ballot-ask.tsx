@@ -2,6 +2,11 @@
 
 import { useRef, useState } from "react";
 
+import { sourceLinks } from "@/lib/ask/host";
+import { readBrowserKey } from "@/lib/state/browser-key";
+import { readLocationOriginFor } from "@/lib/state/location-origin";
+import type { AskSubjectRef } from "@/lib/ask/subject";
+
 /**
  * **ASK ON THE BALLOT — the same engine, a different surface.**
  * (ASK04, 2026-08-27.)
@@ -29,11 +34,17 @@ import { useRef, useState } from "react";
  *
  * ## What this surface contributes
  *
- * The reader's divisions, their zip, and the contests and candidates actually
- * on the page. That last one is what makes *"what has she done?"* answerable
- * here and correctly REFUSED where more than one person is on screen: the
- * interpretation rung is handed the active subjects and reports a referent
- * only when one is unambiguous.
+ * The reader's divisions, their zip, and the contests, candidates and measures
+ * actually on the page — **as canonical references, with ids** (PR #212
+ * follow-up, 2026-08-28). They used to travel as display strings, which meant
+ * they reached the interpretation model as prose and the BINDER never saw them:
+ * nothing on this page was an entity Ask could resolve, and retrieval had no id
+ * to select on.
+ *
+ * That is what makes *"what has she done?"* answerable here and correctly
+ * REFUSED where more than one person could be meant. The referent is not
+ * decided by the model — Claude may propose one, and `lib/ask/resolve.ts`
+ * binds it against these references or asks. Where two people fit, it asks.
  *
  * ## What it will not do
  *
@@ -58,30 +69,27 @@ interface GroundedGap {
   statement: string;
 }
 
+interface GroundedContact {
+  id: string;
+  name: string;
+  officeTitle: string;
+  relationship: string;
+  email: string | null;
+  phone: string | null;
+  websiteUrl: string | null;
+  sourceUrl: string | null;
+  sourceOrg: string | null;
+}
+
 interface GroundedReply {
   mode: string;
-  subject?: { kind: string; id: string; name: string } | null;
+  subject?: { kind: string; id: string; name: string; office?: string | null } | null;
   answer?: string | null;
   records?: GroundedRecord[];
   gaps?: GroundedGap[];
+  contacts?: GroundedContact[];
   mention?: string;
   candidates?: string[];
-}
-
-/**
- * The host a link goes to, for a record whose publisher we never recorded.
- *
- * Mechanical: it reads the URL that is already on screen and says where it
- * points. It makes no claim about who published the page, which is precisely
- * the claim a phrase like "the record" would have made for free.
- */
-function hostOf(url: string | null | undefined): string {
-  if (!url) return "";
-  try {
-    return new URL(url).host;
-  } catch {
-    return "";
-  }
 }
 
 export function BallotAsk({
@@ -91,8 +99,11 @@ export function BallotAsk({
 }: {
   zip: string | null;
   ocdIds: string[];
-  /** The contests and candidates on this page, for referent resolution. */
-  activeSubjects: string[];
+  /**
+   * The contests, candidates and measures on this page, with CANONICAL IDS,
+   * for referent resolution and for retrieval. See `lib/ask/subject.ts`.
+   */
+  activeSubjects: AskSubjectRef[];
 }) {
   const [text, setText] = useState("");
   const [reply, setReply] = useState<GroundedReply | null>(null);
@@ -101,6 +112,17 @@ export function BallotAsk({
   /* The question that produced the reply on screen, so the heading cannot
      drift out of step with the answer under it while a new one is in flight. */
   const [answered, setAnswered] = useState("");
+  /*
+   * **THE BOUNDED FOLLOW-UP, and bounded is the operative word.** What makes
+   * a follow-up answerable is knowing what the previous turn resolved to. What
+   * would make it a privacy problem is keeping a person's political
+   * conversation. This holds the last few turns, in memory, for this mount
+   * only — it does not persist and leaving the page ends it.
+   */
+  const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
+  const [priorTurns, setPriorTurns] = useState<
+    { question: string; resolvedSubject: string | null }[]
+  >([]);
   const inFlight = useRef<AbortController | null>(null);
 
   async function ask() {
@@ -111,6 +133,23 @@ export function BallotAsk({
     inFlight.current = controller;
     setWorking(true);
     setFailed(false);
+    /*
+     * **THE PREVIOUS ANSWER GOES WHEN A NEW QUESTION STARTS.**
+     * (Found 2026-08-28 by reading the panel rather than the DOM.)
+     *
+     * This component already kept `answered` so the heading could not drift
+     * out of step with the answer under it — and the answer itself stayed on
+     * screen anyway. A reader who asked about Proposition 423 and then asked
+     * who is running for Governor sat looking at the Proposition 423 answer
+     * with a "Looking…" button beside it, which reads as the product answering
+     * the new question with the old subject. That is the substitution defect
+     * made out of latency instead of out of routing.
+     *
+     * Clearing is not discarding a useful reply: it is declining to show an
+     * answer to a question the reader has moved on from.
+     */
+    setReply(null);
+    setAnswered("");
     try {
       const res = await fetch("/api/ask/grounded", {
         method: "POST",
@@ -121,6 +160,17 @@ export function BallotAsk({
           approximateLocation: zip,
           surface: "BALLOT",
           activeSubjects,
+          priorSubjects,
+          priorTurns,
+          /* WHAT THE READER DID, never what it proves — `stampResidency` on
+             the server decides that, so no client can assert a confidence. */
+          locationOrigin: readLocationOriginFor(zip),
+          /* READ, never minted — the capture path is gated, and putting a new
+             identifier on a device for a switched-off capability is storage
+             nobody consented to. Its OWN slot for the day it is switched on:
+             sharing one with reactions or Speak Your Mind would make one browser
+             produce one value across stores that share no key. */
+          continuityKey: readBrowserKey("wtp.ask_key") ?? "",
         }),
         signal: controller.signal,
       });
@@ -129,8 +179,23 @@ export function BallotAsk({
         setReply(null);
         return;
       }
-      setReply((await res.json()) as GroundedReply);
+      const body = (await res.json()) as GroundedReply;
+      setReply(body);
       setAnswered(question);
+      /* The conversation advances only on a CANONICAL resolution: a turn that
+         resolved nothing offers no referent, and recording it would let a later
+         pronoun point at a question rather than at a person. */
+      if (body.subject) {
+        const resolved = body.subject;
+        setPriorSubjects((prior) =>
+          [...prior, { id: resolved.id, name: resolved.name }].slice(-4),
+        );
+        setPriorTurns((prior) =>
+          [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
+        );
+      } else {
+        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
+      }
     } catch (error) {
       if ((error as Error)?.name === "AbortError") return;
       setFailed(true);
@@ -219,7 +284,17 @@ export function BallotAsk({
             <p>We don&rsquo;t have anything recorded under &ldquo;{reply.mention}&rdquo;.</p>
           )}
 
-          {reply.subject && <p className="font-medium">{reply.subject.name}</p>}
+          {reply.subject && (
+            <p className="font-medium">
+              {reply.subject.name}
+              {reply.subject.office ? (
+                <span className="font-normal text-[var(--muted)]">
+                  {" "}
+                  · {reply.subject.office}
+                </span>
+              ) : null}
+            </p>
+          )}
 
           {/* The grounded sentence, when there is one that passed validation. */}
           {reply.answer && <p className="mt-2">{reply.answer}</p>}
@@ -233,9 +308,15 @@ export function BallotAsk({
           */}
           {!reply.answer && records.length > 0 && (
             <ul className="mt-2 list-disc pl-5">
-              {records.slice(0, 8).map((r) => (
-                <li key={r.id}>{r.text}</li>
-              ))}
+              {records
+                /* Contacts render in their own block below with the
+                   relationship spelled out; listing them here as well would
+                   print every board member twice. */
+                .filter((r) => r.kind !== "CONTACT")
+                .slice(0, 8)
+                .map((r) => (
+                  <li key={r.id}>{r.text}</li>
+                ))}
             </ul>
           )}
 
@@ -275,16 +356,48 @@ export function BallotAsk({
               </p>
             )}
 
+          {/*
+            **THE CONTACTS, AND WHY EACH ONE IS HERE.**
+
+            Not a ranking and not "who to call" — this product may not order
+            people by influence. Each line states the sourced RELATIONSHIP
+            between that person and what the reader asked about, and stops.
+          */}
+          {(reply.contacts?.length ?? 0) > 0 && (
+            <div className="mt-3" data-ask-contacts={reply.contacts?.length}>
+              <p className="text-xs uppercase tracking-wide text-[var(--muted)]">
+                Who this is
+              </p>
+              <ul className="mt-1 space-y-0.5">
+                {(reply.contacts ?? []).map((c) => (
+                  <li key={c.id}>
+                    <span className="font-medium">{c.name}</span> — {c.relationship}
+                    {c.email ? (
+                      <>
+                        {" · "}
+                        <a className="underline" href={`mailto:${c.email}`}>
+                          {c.email}
+                        </a>
+                      </>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {sources.length > 0 && (
             <p className="mt-3 text-xs text-[var(--muted)]">
+              {/* One line per PUBLISHER, not one per document — see
+                  `sourceLinks`. Six documents from one office are one source. */}
               Source
-              {sources.length > 1 ? "s" : ""}:{" "}
-              {[...new Map(sources.map((r) => [r.sourceUrl, r])).values()].map((r, i) => (
-                <span key={r.sourceUrl}>
+              {sourceLinks(sources).length > 1 ? "s" : ""}:{" "}
+              {sourceLinks(sources).map((l, i) => (
+                <span key={l.label}>
                   {i > 0 ? ", " : ""}
                   <a
                     className="underline"
-                    href={r.sourceUrl ?? undefined}
+                    href={l.url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -298,7 +411,7 @@ export function BallotAsk({
                       about where the link goes, never a claim about who
                       published what is there.
                     */}
-                    {r.sourceOrg ?? hostOf(r.sourceUrl)}
+                    {l.label}
                   </a>
                 </span>
               ))}

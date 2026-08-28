@@ -62,6 +62,25 @@ export interface SelfDisclosureResult {
    * never that it did not run. `exportsVerbatim` reads this.
    */
   flags: SelfDisclosureFlag[];
+  /**
+   * **The exact values that were removed — held in memory, NEVER stored.**
+   * (PR #212 follow-up, 2026-08-28.)
+   *
+   * Added because Ask stores two texts rather than one. A reader can write
+   * *"My name is Alma Hernandez, when does the board meet?"*, and a synthesis
+   * model can perfectly reasonably begin its reply *"Alma, the board meets
+   * …"*. Scrubbing the question and truncating the answer would then persist,
+   * in the answer column, exactly the name the question column correctly
+   * removed — the store defeating its own redaction one field over.
+   *
+   * A shape-based pass cannot find that echo: "Alma" in the answer is not a
+   * disclosure shape, it is a word. What CAN find it is knowing which value was
+   * removed from the question and striking that same value from the answer,
+   * which is what `lib/db/ask-signal.ts` does with this field.
+   *
+   * It is a return value and never a column. Nothing may write it anywhere.
+   */
+  redactedValues: string[];
 }
 
 const EMAIL_SHAPED = /\S+@\S+\.\S+/;
@@ -115,16 +134,38 @@ const SELF_NAMING: RegExp[] = [
  */
 export function redactSelfDisclosure(raw: string): SelfDisclosureResult {
   const flags = new Set<SelfDisclosureFlag>();
+  /* What was taken out, so a second field carrying the same text can have it
+     taken out there too. Never stored — see `redactedValues`. */
+  const redactedValues: string[] = [];
+  const remember = (value: string | null | undefined) => {
+    const trimmed = value?.trim();
+    if (trimmed && trimmed.length > 1 && !redactedValues.includes(trimmed)) {
+      redactedValues.push(trimmed);
+    }
+  };
 
-  if (EMAIL_SHAPED.test(raw)) flags.add("EMAIL");
-  if (LONG_DIGIT_RUN.test(raw)) flags.add("PHONE_OR_NUMBER");
-  if (STREET_ADDRESS_SHAPED.test(raw)) flags.add("STREET_ADDRESS");
+  const email = EMAIL_SHAPED.exec(raw);
+  if (email) {
+    flags.add("EMAIL");
+    remember(email[0]);
+  }
+  const digits = LONG_DIGIT_RUN.exec(raw);
+  if (digits) {
+    flags.add("PHONE_OR_NUMBER");
+    remember(digits[0]);
+  }
+  const street = STREET_ADDRESS_SHAPED.exec(raw);
+  if (street) {
+    flags.add("STREET_ADDRESS");
+    remember(street[0]);
+  }
 
   // Self-naming is removed here, because T09 does not know about it.
   let text = raw;
   for (const pattern of SELF_NAMING) {
     text = text.replace(pattern, (whole, name: string) => {
       flags.add("SELF_NAMED");
+      remember(name);
       return whole.replace(name, SCRUB_MARK);
     });
   }
@@ -138,7 +179,7 @@ export function redactSelfDisclosure(raw: string): SelfDisclosureResult {
     "STREET_ADDRESS",
     "SELF_NAMED",
   ];
-  return { text, flags: order.filter((flag) => flags.has(flag)) };
+  return { text, flags: order.filter((flag) => flags.has(flag)), redactedValues };
 }
 
 /**

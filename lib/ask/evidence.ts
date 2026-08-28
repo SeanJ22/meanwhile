@@ -30,8 +30,29 @@ export interface EvidenceRecord {
     | "AGENDA_ITEM"
     | "AGENDA_DOCUMENT"
     | "OFFICEHOLDER"
+    /* A governmental ACTION with a date and a signed primary document behind
+       it - an executive order, a bill signed, a veto. AZ03: the class the
+       corpus held nothing of, which is why a question about a governor s year
+       could only ever be answered as a gap. */
+    | "OFFICIAL_ACTION"
     | "OFFICE"
-    | "BODY";
+    | "BODY"
+    /* The ballot's own record classes (PR #212 follow-up, 2026-08-28). Each
+       one is a thing the reader can see on `/ballot` and could therefore ask
+       about; before these existed the surface rendered them and Ask could not
+       resolve a single one. */
+    | "CONTEST"
+    | "CANDIDACY"
+    | "POSITION"
+    | "MEASURE_QUESTION"
+    | "MEASURE_STATEMENT"
+    | "MEASURE_SUMMARY"
+    | "MEASURE_PROVISION"
+    | "BALLOT_ABSENCE"
+    /* A verified civic relationship a reader can act on. `lib/ask/contacts.ts`
+       is the only thing that mints these, and it mints none that is not read
+       off a sourced roster row. */
+    | "CONTACT";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
@@ -60,7 +81,7 @@ export interface EvidenceGap {
 
 /** What the question resolved to. Null means nothing canonical was bound. */
 export interface EvidenceSubject {
-  kind: "BODY" | "PERSON" | "MEASURE";
+  kind: "BODY" | "PERSON" | "MEASURE" | "CONTEST" | "OFFICE";
   id: string;
   name: string;
   /** The office, for a person. Identity is person AND office, never either. */
@@ -103,4 +124,69 @@ export function packSourceUrls(pack: EvidencePack): Set<string> {
  */
 export function packHasEvidence(pack: EvidencePack): boolean {
   return pack.records.length > 0;
+}
+
+/**
+ * **THE PROVENANCE OF WHAT ACTUALLY SUPPORTED THE ANSWER.**
+ * (PR #212 follow-up, 2026-08-28.)
+ *
+ * The signal row stored three counts — records, sources, gaps — and nothing
+ * that could answer the question the store exists to answer:
+ *
+ * > What evidence supported the answer readers actually saw?
+ *
+ * A count cannot answer it. Three records and two sources describes ten
+ * thousand different answers, and an audit of a delivered claim months later
+ * has nothing to open. So the row carries the IDENTIFIERS: which records, from
+ * which publishers, at which URLs, read when.
+ *
+ * **It carries references, never the documents.** A public agenda is already
+ * public and duplicating it into a behavioural store would make that store a
+ * document archive by accident, with all the retention and size consequences
+ * that follow. What is kept is the pointer, bounded, so the evidence set can be
+ * reconstructed from the corpus rather than re-read out of the signal row.
+ *
+ * Nothing here is about a reader. Every field is a fact about a public record.
+ */
+export interface EvidenceProvenance {
+  /** `<kind>:<id>` for each record the answer was built from. */
+  recordRefs: string[];
+  /** Distinct source URLs, in first-seen order. */
+  sourceUrls: string[];
+  /** Distinct publishers named on those records. */
+  sourceOrgs: string[];
+  /** The oldest and newest retrieval stamps present, for staleness audit. */
+  retrievedFrom: string | null;
+  retrievedTo: string | null;
+}
+
+/** How many references one row may carry. An audit trail, not an archive. */
+export const MAX_PROVENANCE_REFS = 40;
+export const MAX_PROVENANCE_REF_CHARS = 240;
+
+export function evidenceProvenance(records: readonly EvidenceRecord[]): EvidenceProvenance {
+  const recordRefs: string[] = [];
+  const sourceUrls: string[] = [];
+  const sourceOrgs: string[] = [];
+  const stamps: string[] = [];
+
+  for (const record of records.slice(0, MAX_PROVENANCE_REFS)) {
+    recordRefs.push(`${record.kind}:${record.id}`.slice(0, MAX_PROVENANCE_REF_CHARS));
+    if (record.sourceUrl && !sourceUrls.includes(record.sourceUrl)) {
+      sourceUrls.push(record.sourceUrl.slice(0, MAX_PROVENANCE_REF_CHARS));
+    }
+    if (record.sourceOrg && !sourceOrgs.includes(record.sourceOrg)) {
+      sourceOrgs.push(record.sourceOrg.slice(0, MAX_PROVENANCE_REF_CHARS));
+    }
+    if (record.retrievedAt) stamps.push(record.retrievedAt);
+  }
+
+  stamps.sort();
+  return {
+    recordRefs,
+    sourceUrls,
+    sourceOrgs,
+    retrievedFrom: stamps[0] ?? null,
+    retrievedTo: stamps[stamps.length - 1] ?? null,
+  };
 }

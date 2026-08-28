@@ -647,19 +647,59 @@ export default async function BallotPage({
    * facts about an election, already rendered on this page — and nothing about
    * the reader.
    */
-  const askSubjects = [
-    ...candidacyContests.map((c) => c.title),
-    ...measureContests.map((c) => c.title),
-    /* Read through the page's OWN helper, so the names offered as referents
-       are exactly the names rendered on the cards above. */
+  /*
+   * **CANONICAL REFERENCES, NOT DISPLAY STRINGS** (PR #212 follow-up,
+   * 2026-08-28).
+   *
+   * This used to be a list of contest titles and candidate names. They reached
+   * the interpretation rung as prose and stopped there — the binder never saw
+   * them, so nothing on this page was an entity Ask could RESOLVE, and
+   * retrieval had nothing to select on. Katie Hobbs answered here by
+   * coincidence, because she is a sitting statewide executive; the challenger
+   * beside her on the same governor line did not exist to Ask at all.
+   *
+   * So every reference carries its canonical id — the same `candidacy.id`,
+   * `contest.id` and general-lineup target key the cards above are rendered
+   * and keyed with. Ballot truth is not duplicated into Ask: the id is the
+   * pointer, and `lib/ask/ballot-inventory.ts` retrieves through it.
+   */
+  const askSubjects: {
+    id: string;
+    name: string;
+    kind: "CONTEST" | "MEASURE" | "PERSON";
+  }[] = [
+    ...candidacyContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "CONTEST" as const,
+    })),
+    ...measureContests.map((c) => ({
+      id: c.id,
+      name: c.title,
+      kind: "MEASURE" as const,
+    })),
+    /* Read through the page's OWN helper, so the people offered as referents
+       are exactly the people rendered on the cards above. */
     ...(set
       ? candidacyContests.flatMap((c) =>
-          candidatesOf(set, c).map((k) =>
-            [k.givenName, k.familyName].filter(Boolean).join(" "),
-          ),
+          candidatesOf(set, c).map((k) => ({
+            id: k.id,
+            name: [k.givenName, k.familyName].filter(Boolean).join(" "),
+            kind: "PERSON" as const,
+          })),
         )
       : []),
-  ].filter((v) => v.length > 0);
+    /* And the general-election nominees, keyed EXACTLY as the cards key them
+       (`contestId|name`) — a differently derived key would resolve to a person
+       and retrieve nothing. */
+    ...candidacyContests.flatMap((c) =>
+      (lineupForContest(c.id)?.nominees ?? []).map((n) => ({
+        id: `${c.id}|${n.name}`,
+        name: n.name,
+        kind: "PERSON" as const,
+      })),
+    ),
+  ].filter((v) => v.name.length > 0);
 
   /*
    * F01-continued item 8 — THE TALLY'S DENOMINATOR, and it is the rendered

@@ -16,6 +16,10 @@ import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-poo
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
+import { readBrowserKey } from "@/lib/state/browser-key";
+import { readLocationOriginFor } from "@/lib/state/location-origin";
+import type { AskSubjectRef } from "@/lib/ask/subject";
+import { sourceLinks } from "@/lib/ask/host";
 import {
   KIND_LABEL,
   buildSearchIndex,
@@ -33,15 +37,55 @@ import { useUi, useUiDispatch } from "@/lib/state/provider";
 import { tierVars } from "@/components/shell/tier-style";
 
 /**
- * THE ASK PANEL — one input, and the whole brain behind it.
+ * THE ASK PANEL — one input, two jobs, and ONE Ask engine behind the second.
  *
- * ## What this is
+ * ## What changed, and why it had to (PR #212 follow-up, 2026-08-28)
  *
- * It began (session brief 5, 2026-08-19) as routing without generation: free
- * text through keyword matching into the curated routing map, naming real
- * bodies and sourced people with the denominator stated, or refusing honestly
- * (A07). That contract is unchanged and load-bearing: **every sentence a
- * reader sees here is curated copy or registry data.**
+ * PR #212 built a grounded Ask engine — Claude reads the question, the app
+ * canonical-binds the entity, the app retrieves only that entity's records, the
+ * app builds an evidence pack, Claude explains the pack, and structural
+ * validation runs before a word reaches a reader — and **this component did not
+ * use it.** It went on calling `/api/ask/classify` and `/api/ask/agenda`. The
+ * new engine shipped, was tested, answered correctly through a harness, and the
+ * product's primary Ask surface routed around it.
+ *
+ * That is worse than not having built it. It means the repository held TWO
+ * definitions of what an Ask answer is, and which one a reader met depended on
+ * which page they were standing on: the ballot got the grounded pipeline, the
+ * map got the older classifier-and-topic path. A defect fixed in one is not
+ * fixed for the reader.
+ *
+ * So the submission path is now:
+ *
+ * ```
+ *   an exact name, or an autocomplete pick   ->  SEARCH. Navigates. Unchanged.
+ *   anything else                            ->  /api/ask/grounded
+ * ```
+ *
+ * ## What still runs beside it, and the boundary that keeps it honest
+ *
+ * Two older rungs are retained because the grounded engine does not supersede
+ * them, and each is confined to something that is NOT a claim about a
+ * government's records:
+ *
+ * * **The curated destination router** (`answerQuestion`) offers the four
+ *   in-app surfaces. That is NAVIGATION. It is consulted after the grounded
+ *   reply, never instead of it.
+ * * **The topic agenda search** (`/api/ask/agenda`, called with
+ *   `scope: "TOPIC_ONLY"`) sweeps every readable agenda in the reader's area
+ *   for a topic — *"is there a data centre coming?"* — which is a different
+ *   question with a different denominator. Under that scope the route REFUSES
+ *   to answer a named body's docket at all, so the boundary is enforced in the
+ *   server rather than promised by this file.
+ *
+ * Nothing here can silently bypass the grounded pipeline: it is called on every
+ * ask, first, and its verdict is what the panel leads with.
+ *
+ * ## What is unchanged and load-bearing
+ *
+ * **Every sentence a reader sees here is curated copy, registry data, or prose
+ * the grounded pipeline generated from an evidence pack and then validated.**
+ * The panel never writes a civic fact of its own.
  *
  * M119 (2026-08-17) merges the sidebar's two inputs into this one. The
  * author's ruling was one input, keyword-first: text matching a known meeting,
@@ -93,6 +137,46 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
 };
 
 /**
+ * What `/api/ask/grounded` returns — THE Ask answer.
+ *
+ * Every optional field is optional because the pipeline degrades rather than
+ * fails: grounded prose -> structured records -> a named gap. This component
+ * renders whatever arrived and **never discards a useful reply because one
+ * field is null**, which is the defect class PR #211 found repeatedly in this
+ * file's own handling of the agenda reply.
+ */
+interface GroundedRecord {
+  kind: string;
+  id: string;
+  text: string;
+  sourceUrl?: string | null;
+  sourceOrg?: string | null;
+}
+
+interface GroundedContact {
+  id: string;
+  name: string;
+  officeTitle: string;
+  relationship: string;
+  email: string | null;
+  phone: string | null;
+  websiteUrl: string | null;
+  sourceUrl: string | null;
+  sourceOrg: string | null;
+}
+
+interface GroundedReply {
+  mode: string;
+  subject?: { kind: string; id: string; name: string; office?: string | null } | null;
+  answer?: string | null;
+  records?: GroundedRecord[];
+  gaps?: { whose: "OURS" | "THEIRS"; statement: string }[];
+  contacts?: GroundedContact[];
+  mention?: string;
+  candidates?: string[];
+}
+
+/**
  * What `/api/ask/agenda` returns for A03. Every string in it is read off a
  * document a government published — the quote is the clerk's own line.
  */
@@ -128,42 +212,6 @@ interface AgendaAnswer {
   unreadable: number;
 }
 
-/**
- * What `/api/ask/agenda` returns when the reader NAMED a government and asked
- * what is on its docket (2026-08-27) — a different shape from the topic search
- * above, and the shape the tester's own question produces.
- *
- * `state` is the honest empty, and there are four of them because they are four
- * different facts about US: no meeting held, a meeting with no document, a
- * document that would not extract, and a landing page reused across sittings.
- * Collapsing them would assert an absence about a government.
- */
-interface BodyAgendaAnswer {
-  mode: "body-agenda";
-  namedEntity: { state: "BOUND"; ocdId: string; name: string };
-  state:
-    | "NO_MEETING_HELD"
-    | "MEETING_KNOWN_NO_AGENDA_DOCUMENT"
-    | "AGENDA_DOCUMENT_NOT_READABLE"
-    | "AGENDA_LINK_IS_A_LANDING_PAGE"
-    | "AGENDA_READ_NO_ITEMS_EXTRACTED"
-    | "ITEMS";
-  meeting: {
-    id: string;
-    title: string;
-    startsAt: string;
-    timeZone: string;
-    when: "UPCOMING" | "PAST";
-    agendaUrl: string | null;
-  } | null;
-  items: string[];
-  documentUrl: string | null;
-  sourceOrg: string | null;
-  meetingsHeld: number;
-  documentsHeld: number;
-  readable: number;
-  documentSharedWithMeetings?: number;
-}
 
 export function AskBox({
   coverage,
@@ -216,9 +264,26 @@ export function AskBox({
   // A03's answer, kept beside the routed answer rather than inside it:
   // an agenda hit is evidence from a document, not a step in a route.
   const [agenda, setAgenda] = useState<AgendaAnswer | null>(null);
-  /* The named-government docket answer (2026-08-27). Separate state because it
-     REPLACES the topic answer rather than riding beside it. */
-  const [bodyAgenda, setBodyAgenda] = useState<BodyAgendaAnswer | null>(null);
+  /*
+   * THE GROUNDED ANSWER. It leads the panel, because it is the one that
+   * resolves a canonical government and retrieves that government's own
+   * records; everything else below it is navigation or a topic sweep.
+   */
+  const [grounded, setGrounded] = useState<GroundedReply | null>(null);
+  /*
+   * **THE BOUNDED FOLLOW-UP CONTEXT — and the emphasis is on bounded.**
+   *
+   * What makes *"and what did they decide?"* answerable is knowing what the
+   * previous question resolved to. What would make it a privacy problem is
+   * keeping a person's political conversation. So this holds the last few
+   * turns, in memory, for this mount only: it does not persist, it does not
+   * leave the browser except as the subject reference the next request needs,
+   * and closing the panel ends it.
+   */
+  const [priorSubjects, setPriorSubjects] = useState<AskSubjectRef[]>([]);
+  const [priorTurns, setPriorTurns] = useState<
+    { question: string; resolvedSubject: string | null }[]
+  >([]);
   /*
    * The SERVER own verdict on the government the reader named, when it has
    * one. It sees the whole corpus and this component sees the reader area, so
@@ -371,6 +436,79 @@ export function AskBox({
   };
 
   /**
+   * **THE ASK ENGINE.** (PR #212 follow-up, 2026-08-28.)
+   *
+   * One call, and it is the one that decides what this panel says. The server
+   * holds interpretation, canonical resolution, retrieval, the evidence pack,
+   * synthesis and validation; this function holds a fetch and a shape.
+   *
+   * What the client contributes is CONTEXT it can honestly supply and the
+   * server cannot infer:
+   *
+   * * `ocdIds` — the divisions in view, the same basis the log row uses.
+   * * `activeSubjects` — what the reader has OPEN, as canonical references
+   *   rather than display strings, so a pronoun has something the binder can
+   *   verify. A district the reader clicked is `focused`; that is the whole
+   *   difference between a defensible referent and a guess.
+   * * `priorSubjects` / `priorTurns` — the bounded conversation, in memory.
+   * * `locationOrigin` — WHAT THE READER DID to give us this zip, never what
+   *   that act proves. `stampResidency` on the server decides that, so no
+   *   client can assert a location confidence it did not earn.
+   *
+   * A failure of any kind returns null and the panel degrades to the rungs
+   * below rather than to a wrong answer.
+   */
+  const askGrounded = async (question: string): Promise<GroundedReply | null> => {
+    const active: AskSubjectRef[] = [];
+    if (ui.selectedDistrictOcdId) {
+      active.push({
+        id: ui.selectedDistrictOcdId,
+        name: ui.selectedDistrictOcdId,
+        kind: "BODY",
+        /* The reader clicked this district open. That is the fact that makes
+           it a defensible referent for "they" rather than one of many things
+           merely present on a map. */
+        focused: true,
+      });
+    }
+    try {
+      const response = await fetch("/api/ask/grounded", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          question,
+          ocdIds,
+          approximateLocation: zip,
+          surface: "MAP",
+          activeSubjects: active,
+          priorSubjects,
+          priorTurns,
+          locationOrigin: readLocationOriginFor(zip),
+          /*
+           * **READ, NEVER MINTED.** The Ask store's continuity value counts
+           * distinct readers in a store that is not being written, so this
+           * panel does not put a new identifier on anybody's device for a
+           * capability that is switched off — this box keeps nothing on the
+           * reader's machine, which is what the transparency page tells them.
+           * Absent, the request carries none and the capture path refuses the
+           * row rather than digesting an empty string, which would report one
+           * distinct reader forever. Minting is part of ACTIVATION.
+           *
+           * Its OWN slot, whenever that day comes: sharing one with reactions
+           * or Speak Your Mind would make one browser produce one value across
+           * stores the constitution says share no key.
+           */
+          continuityKey: readBrowserKey("wtp.ask_key") ?? "",
+        }),
+      });
+      if (!response.ok) return null;
+      return (await response.json()) as GroundedReply;
+    } catch {
+      return null;
+    }
+  };
+
+  /**
    * A03 (2026-08-18): the agenda rung.
    *
    * Asked BEFORE the classifier and independently of the topic router,
@@ -386,7 +524,7 @@ export function AskBox({
    */
   const askAgenda = async (
     question: string,
-  ): Promise<AgendaAnswer | BodyAgendaAnswer | null> => {
+  ): Promise<AgendaAnswer | null> => {
     try {
       const response = await fetch("/api/ask/agenda", {
         method: "POST",
@@ -394,17 +532,20 @@ export function AskBox({
         // The divisions the reader is standing in — the same approximate
         // basis the log row uses, and a better scope than distance: a
         // rezoning in your own town is your business at any distance.
-        body: JSON.stringify({ question, ocdIds }),
+        //
+        // `TOPIC_ONLY` is the ownership boundary, declared. Under it the route
+        // refuses to answer a named body's docket at all — that question now
+        // belongs to `/api/ask/grounded` and to nothing else, and the refusal
+        // lives in the server so this file cannot drift back into owning it.
+        body: JSON.stringify({ question, ocdIds, scope: "TOPIC_ONLY" }),
       });
       if (!response.ok) return null;
-      const body = (await response.json()) as AgendaAnswer | BodyAgendaAnswer;
+      const body = (await response.json()) as AgendaAnswer;
       /*
-       * TWO SHAPES NOW, and the discriminator is read BEFORE the topic test.
-       * The body-agenda answer carries no `topic`, so the original
-       * `body.topic ? body : null` discarded it silently — the route answered
-       * the tester's question correctly and the reader saw nothing at all.
+       * ONE SHAPE on this surface. The route is called with `scope:
+       * "TOPIC_ONLY"` and refuses the named-body docket, which the grounded
+       * engine owns — so there is no second discriminator to read here.
        */
-      if ("mode" in body && body.mode === "body-agenda") return body;
       /*
        * **THE TOPIC IS NOT THE ONLY THING WORTH KEEPING, AND THIS DISCARD HAS
        * NOW BITTEN THREE TIMES.**
@@ -434,7 +575,10 @@ export function AskBox({
     setAsked(null);
     setDigest(null);
     setAgenda(null);
-    setBodyAgenda(null);
+    /* The standing grounded answer goes with the question it answered — a
+       previous subject left on screen under a new question reads as this
+       product having answered the new one about the old government. */
+    setGrounded(null);
     setServerEntity(null);
     setBeat(drawAskBeat());
     setWorking(true);
@@ -470,21 +614,42 @@ export function AskBox({
       }
 
       /*
-       * A03 (2026-08-18): the agenda rung runs FIRST and independently.
+       * **THE GROUNDED ENGINE RUNS FIRST, AND IT RUNS ON EVERY ASK.**
+       * (PR #212 follow-up, 2026-08-28.)
        *
-       * "Is there a data center coming?" is not a question about who owns a
-       * topic — it is a question about what a government has put on an
-       * agenda, and the topic router has no answer to it however well it
-       * routes. So this is asked before the classifier, and its result rides
-       * BESIDE the routed answer rather than replacing it: a reader asking
-       * about a rezoning is well served by both the agenda line and the body
-       * that owns rezonings.
+       * This is the line that closes the defect: before it, this component
+       * answered from the classifier and the topic-agenda rung while the
+       * grounded pipeline sat unused one directory away. Nothing below can
+       * bypass it — it is awaited here, unconditionally, for every submission
+       * that is not an exact-name navigation.
        *
-       * It is additive by construction, exactly like the destination rung
-       * (G05 rule 4d): nothing it returns changes what the router already
-       * decided.
+       * The topic sweep runs beside it, scoped, because it answers a different
+       * question. Both are awaited together rather than in sequence: they are
+       * independent, and serialising two network calls would put the slower
+       * one's latency on top of the faster one's for no reason.
        */
-      const agendaAnswer = await askAgenda(question);
+      const [groundedAnswer, agendaAnswer] = await Promise.all([
+        askGrounded(question),
+        askAgenda(question),
+      ]);
+      if (groundedAnswer) setGrounded(groundedAnswer);
+      /*
+       * The bounded conversation advances only when something CANONICAL was
+       * resolved. A turn that resolved nothing contributes no referent, and
+       * recording it would let a later pronoun point at a question rather than
+       * at a government.
+       */
+      if (groundedAnswer?.subject) {
+        const resolved = groundedAnswer.subject;
+        setPriorSubjects((prior) =>
+          [...prior, { id: resolved.id, name: resolved.name, kind: "PERSON" as const }].slice(-4),
+        );
+        setPriorTurns((prior) =>
+          [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
+        );
+      } else {
+        setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
+      }
       /*
        * A03's remainder, closed 2026-08-19 (g20): a ZERO-HIT search is a
        * result and it renders.
@@ -502,24 +667,37 @@ export function AskBox({
        * renders nothing: that means this rung had no opinion, not that it
        * looked and came back empty.
        */
-      if (agendaAnswer && "mode" in agendaAnswer && agendaAnswer.mode === "body-agenda") {
-        /*
-         * The reader NAMED a government and asked what is on its docket. This
-         * is the tester's own question, and it is not additive — it IS the
-         * answer, so the topic-search block stays empty rather than rendering
-         * a second, vaguer reply beneath it.
-         */
-        setBodyAgenda(agendaAnswer);
-      } else if (agendaAnswer && "topic" in agendaAnswer) {
+      /*
+       * **THE BODY-AGENDA BRANCH IS GONE FROM THIS SURFACE.**
+       *
+       * A named government's own docket is the grounded engine's question now,
+       * and it answers it better: it reads the reader's TENSE (next versus
+       * last, rather than `upcoming[0] ?? past[0]`), it prints the sitting in
+       * the body's own time zone, and any prose it produces is validated
+       * against the evidence pack it was built from. Keeping a second answer
+       * to the same question here would put two governments' worth of truth on
+       * one screen and let the reader pick.
+       *
+       * The route refuses that mode under `scope: "TOPIC_ONLY"`, so this is
+       * enforced rather than merely intended.
+       */
+      if (agendaAnswer && "topic" in agendaAnswer) {
         if (agendaAnswer.namedEntity) setServerEntity(agendaAnswer.namedEntity);
         if (agendaAnswer.topic) setAgenda(agendaAnswer);
       }
 
-      // Keyword-first, structurally: the classifier is consulted only after
-      // the deterministic matcher has already refused. The author's ruling
-      // makes this rung carry more than it used to — a single-keyword hit is
-      // now weak and lands here instead of routing on one word.
-      if (result.answer.kind !== "ROUTED") {
+      /*
+       * Keyword-first, structurally: the classifier is consulted only after the
+       * deterministic matcher has already refused.
+       *
+       * **AND ONLY WHERE THE GROUNDED ENGINE BOUND NOTHING** (2026-08-28). It
+       * selects a curated DESTINATION — one of four in-app surfaces — and never
+       * a fact about a government, so it is navigation rather than an answer.
+       * Running it beneath a grounded answer about a resolved government would
+       * put a vaguer second reply under a specific first one, which is the
+       * two-answers-on-one-screen problem this follow-up exists to end.
+       */
+      if (result.answer.kind !== "ROUTED" && !groundedAnswer?.subject) {
         const topic = await classify(question);
         if (topic) {
           result = answerQuestion(question, coverage, zip, {
@@ -551,13 +729,26 @@ export function AskBox({
          it named a government and answered from that government. */
       const topicAgenda =
         agendaAnswer && "topic" in agendaAnswer ? agendaAnswer : null;
-      const namedAgenda =
-        agendaAnswer && "mode" in agendaAnswer ? agendaAnswer : null;
-      /* One number, computed above, so the call stays a single readable line —
-         tests/ask-matcher.test.ts pins that the log branch READS the shared
-         definition rather than re-deciding, and the pin is on the call. */
-      const answeredHits = (topicAgenda?.hits.length ?? 0) + (namedAgenda ? 1 : 0);
-      if (askWasAnswered(result, { agendaHits: answeredHits })) {
+      /* Only the TOPIC shape survives on this surface: the named-body docket
+         is the grounded engine's question and the route refuses to answer it
+         under the scope this component declares. */
+      const answeredHits = topicAgenda?.hits.length ?? 0;
+      /*
+       * The grounded engine's own evidence counts as answered. Without this a
+       * question it answered from real sourced records would be logged
+       * `NO_ROUTE` with its text and filed into A06's roadmap of things this
+       * product CANNOT do — building the roadmap out of the successes. That is
+       * the g11 defect exactly, one rung later, and the fix is the same one:
+       * the shared definition learns the new rung rather than this component
+       * growing a second opinion. The evidence is assembled here so the call
+       * below stays the one readable line `tests/ask-matcher.test.ts` pins.
+       */
+      const answeredEvidence = {
+        agendaHits: answeredHits,
+        groundedRecords: groundedAnswer?.records?.length ?? 0,
+        groundedAnswer: Boolean(groundedAnswer?.answer),
+      };
+      if (askWasAnswered(result, answeredEvidence)) {
         logEvent("QUESTION_ASKED", ocdIds, {
           topic:
             result.match?.topicId ??
@@ -565,8 +756,8 @@ export function AskBox({
               ? "DIGEST"
               : result.destination
                 ? "DESTINATION_ONLY"
-                : namedAgenda
-                  ? "AGENDA_NAMED_BODY"
+                : groundedAnswer?.subject
+                  ? "GROUNDED"
                   : `AGENDA_${topicAgenda?.topic?.id ?? "TOPIC"}`),
           routed: true,
           ...(result.match?.via ? { via: result.match.via } : {}),
@@ -880,6 +1071,190 @@ export function AskBox({
       )}
 
       {/*
+        **THE GROUNDED ANSWER — and it LEADS, because it is the one that
+        resolved a canonical government and read that government's own records.**
+        (PR #212 follow-up, 2026-08-28.)
+
+        Every branch renders something TRUE and no branch renders silence. The
+        degradation ladder is visible in the order: validated prose first, the
+        structured records where prose was rejected or unavailable, then the
+        named gaps — each saying WHOSE gap it is — then the verified contacts,
+        then the sources. A reply whose `answer` is null still carries
+        everything needed to answer honestly, and throwing it away because one
+        optional field is null is the exact class PR #211 found repeatedly in
+        this file.
+      */}
+      {grounded && (
+        <div
+          data-ask-grounded
+          data-ask-grounded-mode={grounded.mode}
+          data-ask-grounded-subject={grounded.subject?.id ?? undefined}
+          className="mt-2.5 rounded-[8px] border border-[var(--panel-border)] p-3"
+        >
+          {grounded.subject && (
+            <p className="text-[0.8125rem] font-semibold leading-snug text-paper">
+              {grounded.subject.name}
+              {grounded.subject.office ? (
+                <span className="font-normal text-muted"> · {grounded.subject.office}</span>
+              ) : null}
+            </p>
+          )}
+
+          {/* Named, and more than one thing fits. ASKED — never chosen. */}
+          {grounded.mode === "CLARIFY" && (
+            <p
+              data-ask-grounded-state="CLARIFY"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              More than one goes by &ldquo;{grounded.mention}&rdquo;
+              {grounded.candidates?.length ? `: ${grounded.candidates.join(", ")}` : ""}.
+              Which did you mean?
+            </p>
+          )}
+
+          {/*
+            Named, and we hold no such thing. SAID — never quietly swapped for
+            whatever is nearest, which is the whole defect this pipeline exists
+            to close. The word is "anything" rather than "a government": the
+            binder resolves bodies, people, contests and measures alike, and
+            naming one of the four would be wrong about the other three.
+          */}
+          {grounded.mode === "UNRESOLVED" && (
+            <p
+              data-ask-grounded-state="UNRESOLVED"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              We don&rsquo;t have anything recorded under &ldquo;{grounded.mention}&rdquo;.
+            </p>
+          )}
+
+          {/* The validated sentence, where one survived checking. */}
+          {grounded.answer && (
+            <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
+              {grounded.answer}
+            </p>
+          )}
+
+          {/* The structured half of the ladder: real records, no prose. */}
+          {!grounded.answer && (grounded.records?.length ?? 0) > 0 && (
+            <ul className="mt-1.5 space-y-1">
+              {(grounded.records ?? [])
+                .filter((r) => r.kind !== "CONTACT")
+                .slice(0, 8)
+                .map((r) => (
+                  <li
+                    key={r.id}
+                    className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim"
+                  >
+                    {r.text}
+                  </li>
+                ))}
+            </ul>
+          )}
+
+          {/* Each gap says whose it is. "We haven't recorded this" is a fact
+              about us; "they haven't published it" is a fact about them, and
+              rendering them as one sentence is the defect the constitution
+              names. */}
+          {grounded.gaps?.map((g) => (
+            <p
+              key={g.statement}
+              data-ask-gap={g.whose}
+              className="mt-1.5 text-[0.75rem] leading-relaxed text-muted"
+            >
+              {g.statement}
+            </p>
+          ))}
+
+          {/*
+            **THE CONTACTS, AND WHY EACH ONE IS HERE.**
+
+            Not "who to call" and not a ranking — the product may not order
+            people by influence. Each line states the sourced RELATIONSHIP
+            between that person and the thing the reader asked about, which is
+            a fact, and stops.
+          */}
+          {(grounded.contacts?.length ?? 0) > 0 && (
+            <div className="mt-2" data-ask-contacts={grounded.contacts?.length}>
+              <p className="t-eyebrow text-muted">Who this is</p>
+              <ul className="mt-0.5 space-y-0.5">
+                {(grounded.contacts ?? []).map((c) => (
+                  <li key={c.id} className="text-[0.75rem] leading-relaxed text-paper-dim">
+                    <span className="text-paper">{c.name}</span> — {c.relationship}
+                    {c.email ? (
+                      <>
+                        {" · "}
+                        <a
+                          href={`mailto:${c.email}`}
+                          className="underline decoration-dotted underline-offset-2 hover:text-link"
+                        >
+                          {c.email}
+                        </a>
+                      </>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/*
+            **NO BRANCH MAY RENDER SILENCE.** A reply with no subject, no
+            records and no gaps rendered an empty panel back at a reader who had
+            just typed a question — found on the ballot surface by reading the
+            sentence rather than the DOM, and prevented here by construction.
+
+            The wording is the constitution's shape: the ATTRIBUTION is required
+            and the verdict on ourselves is struck (RULING 139). Then it offers
+            the narrowing and stops.
+          */}
+          {!grounded.answer &&
+            (grounded.records?.length ?? 0) === 0 &&
+            (grounded.gaps?.length ?? 0) === 0 &&
+            grounded.mode !== "CLARIFY" &&
+            grounded.mode !== "UNRESOLVED" && (
+              <p
+                data-ask-grounded-state="NOTHING_HELD"
+                className="text-[0.8125rem] leading-relaxed text-voice"
+              >
+                {grounded.subject
+                  ? `We hold ${grounded.subject.name}, but nothing recorded that answers that.`
+                  : "We haven't recorded anything that answers that yet. Naming a government — a school district, a county board, someone on your ballot — is what this can answer from."}
+              </p>
+            )}
+
+          {/* The sources, always, and a null publisher renders as the HOST
+              rather than as a phrase like "the record" — a mechanical read of
+              a URL already on screen, never a claim about who published it. */}
+          {(() => {
+            /* One line per PUBLISHER. Six executive orders from one office are
+               six links and one source, and listing the office seven times is
+               an attribution nobody can read. */
+            const links = sourceLinks(grounded.records ?? []);
+            if (links.length === 0) return null;
+            return (
+              <p className="mt-2 text-[0.6875rem] text-muted">
+                Source{links.length > 1 ? "s" : ""}:{" "}
+                {links.map((l, i) => (
+                  <span key={l.label}>
+                    {i > 0 ? ", " : ""}
+                    <a
+                      href={l.url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="underline decoration-dotted underline-offset-2 hover:text-link"
+                    >
+                      {l.label}
+                    </a>
+                  </span>
+                ))}
+              </p>
+            );
+          })()}
+        </div>
+      )}
+
+      {/*
         **THE SERVER'S VERDICT RENDERS ON EVERY PATH, NOT ONLY ON REFUSAL.**
         (2026-08-27.)
 
@@ -912,7 +1287,7 @@ export function AskBox({
         Two contradictory sentences on one screen is worse than either.
       */}
       {asked &&
-        !askWasAnswered(asked, { agendaHits: (agenda?.hits.length ?? 0) + (bodyAgenda ? 1 : 0) }) && (
+        !askWasAnswered(asked, { agendaHits: agenda?.hits.length ?? 0, groundedRecords: grounded?.records?.length ?? 0, groundedAnswer: Boolean(grounded?.answer) }) && (
           <div data-ask-refusal className="mt-2.5">
           {/*
             **THE GOVERNMENT THEY NAMED, WHEN WE COULD NOT PIN IT DOWN**
@@ -984,113 +1359,23 @@ export function AskBox({
         </div>
       )}
 
-        {bodyAgenda && (
-          /*
-            **THE NAMED GOVERNMENT'S OWN DOCKET** (2026-08-27) — the tester's
-            question, answered from that body's own agenda and nothing else.
+        {/*
+          **THE NAMED GOVERNMENT'S OWN DOCKET MOVED, IT DID NOT DISAPPEAR.**
+          (PR #212 follow-up, 2026-08-28.)
 
-            Every branch below names the government first, because the entire
-            defect this closes was an answer about a different one. The four
-            empties are four different sentences: RULING 100 asks an operation
-            that can return nothing WHAT it returned, and a body with no
-            meeting, a meeting with no document, a document that would not
-            extract and a portal page reused across sittings are four separate
-            facts about US. None of them is a claim about the government, and
-            none is a generic civics explainer.
-          */
-          <div
-            data-ask-body-agenda={bodyAgenda.state}
-            className="mt-2.5 rounded-[8px] border border-[var(--panel-border)] p-3"
-          >
-            <p className="text-[0.8125rem] font-semibold leading-snug text-paper">
-              {bodyAgenda.namedEntity.name}
-            </p>
+          This block rendered `/api/ask/agenda`'s body-agenda answer. That
+          question — what has this named government scheduled to discuss —
+          belongs to the grounded engine now, which answers it strictly
+          better: it reads the reader's TENSE rather than taking
+          `upcoming[0] ?? past[0]`, it prints the sitting in the body's own
+          time zone rather than as a UTC instant a day off, and any prose it
+          produces is validated against the pack it was built from.
 
-            {bodyAgenda.meeting && (
-              <p className="mt-0.5 text-[0.6875rem] text-muted">
-                {bodyAgenda.meeting.when === "UPCOMING" ? "Next meeting" : "Last meeting"}
-                {" · "}
-                {formatMeetingDate(bodyAgenda.meeting)}
-              </p>
-            )}
-
-            {bodyAgenda.state === "ITEMS" && (
-              <>
-                <ul className="mt-2 space-y-1">
-                  {bodyAgenda.items.map((item) => (
-                    /* The clerk's own line, verbatim. Nothing is summarised —
-                       a summary of an agenda is a claim about what a
-                       government is about to do, made by us. */
-                    <li
-                      key={item.slice(0, 80)}
-                      className="border-l-2 border-[var(--panel-border)] pl-3 text-[0.75rem] leading-relaxed text-paper-dim"
-                    >
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-1.5 text-[0.6875rem] text-muted">
-                  {bodyAgenda.items.length} item(s), read off the agenda
-                  {bodyAgenda.sourceOrg ? ` published by ${bodyAgenda.sourceOrg}` : ""}.
-                </p>
-              </>
-            )}
-
-            {bodyAgenda.state === "NO_MEETING_HELD" && (
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-                We don&apos;t have a meeting recorded for this body yet.
-              </p>
-            )}
-
-            {bodyAgenda.state === "MEETING_KNOWN_NO_AGENDA_DOCUMENT" && (
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-                We have the meeting; we haven&apos;t retrieved an agenda for it.
-              </p>
-            )}
-
-            {bodyAgenda.state === "AGENDA_DOCUMENT_NOT_READABLE" && (
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-                We retrieved an agenda for this meeting and couldn&apos;t read its
-                text.
-              </p>
-            )}
-
-            {bodyAgenda.state === "AGENDA_LINK_IS_A_LANDING_PAGE" && (
-              /* NOT "the agenda has no items". What we hold is the body's
-                 portal or calendar page, which it reuses across sittings — so
-                 it cannot be this meeting's agenda, and saying otherwise would
-                 turn a fact about our retrieval into a claim about them. */
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-                What we hold for this meeting is the body&apos;s own meetings
-                page rather than this sitting&apos;s agenda. The link below is
-                where they publish it.
-              </p>
-            )}
-
-            {bodyAgenda.state === "AGENDA_READ_NO_ITEMS_EXTRACTED" && (
-              <p className="mt-1 text-[0.75rem] leading-relaxed text-paper-dim">
-                We read the agenda for this meeting and couldn&apos;t pull out
-                its item list.
-              </p>
-            )}
-
-            {/* The link travels on EVERY branch, because it is where the
-                reader goes to read it themselves — which is useful precisely
-                where we could not. */}
-            {(bodyAgenda.meeting?.agendaUrl ?? bodyAgenda.documentUrl) && (
-              <p className="mt-1.5 text-[0.6875rem]">
-                <a
-                  href={bodyAgenda.meeting?.agendaUrl ?? bodyAgenda.documentUrl ?? "#"}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline decoration-dotted underline-offset-2 text-muted hover:text-signal"
-                >
-                  Open what the body publishes
-                </a>
-              </p>
-            )}
-          </div>
-        )}
+          Two answers to one question on one screen is two definitions of Ask
+          truth with the reader left to pick. The route refuses that mode
+          under `scope: "TOPIC_ONLY"`, so this is enforced rather than
+          merely intended, and the grounded block above is where it renders.
+        */}
 
         {agenda && agenda.topic && (
           /*

@@ -1,4 +1,5 @@
 import { scrubFreeText } from "../log/scrub.ts";
+import { asksForBodyAgenda } from "../routing/named-entity.ts";
 
 import {
   readInterpretation,
@@ -298,5 +299,22 @@ export function interpretWithoutModel(question: string): AskInterpretation {
   if (pastWords && !nextWords) return { ...base, temporal: { kind: "LAST" } };
   if (nextWords && !pastWords) return { ...base, temporal: { kind: "NEXT" } };
   if (pastWords && nextWords) return { ...base, temporal: { kind: "LAST" } };
+
+  /*
+   * **"WHAT'S ON THE AGENDA" IS A QUESTION ABOUT THE NEXT SITTING.**
+   * (Found by the route-level red control, 2026-08-28.)
+   *
+   * The model rung is told this in as many words — *"'What's on the agenda'
+   * with no other time words is NEXT"* — and this fallback did not know it. It
+   * carried no time words, so it returned `NONE`, the route resolved `ANY`,
+   * and `ANY` is `upcoming[0] ?? past[0]`: the exact ASK02 defect, still live
+   * on the degraded path, waiting for a day with no key or a hit ceiling.
+   *
+   * The two rungs now read the same rule. `asksForBodyAgenda` is the detector
+   * the deterministic route already used for this question shape, so this is
+   * the product's existing answer rather than a second one written here.
+   */
+  if (asksForBodyAgenda(question)) return { ...base, temporal: { kind: "NEXT" } };
+
   return base;
 }

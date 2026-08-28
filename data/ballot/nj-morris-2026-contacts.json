@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-27",
+  "generatedAt": "2026-08-28",
   "route": "filing-county",
   "note": "Filed contact for Morris County candidates, from the county clerk's own filed-candidate PDFs. A filed STREET ADDRESS is a home address in most of these rows and is held for hunt use, never rendered.",
   "contacts": [
@@ -12,7 +12,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-senate:booker",
@@ -23,7 +23,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-senate:fernandez",
@@ -34,7 +34,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-senate:kuniansky",
@@ -45,7 +45,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:kean-jr-thomas-h",
@@ -56,7 +56,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:bennett-rebecca",
@@ -67,7 +67,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:legu-a-lana",
@@ -78,7 +78,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:7th-congressional-member-of-the-house-of-representatives-cd-7:o-toole-seamus-patrick",
@@ -89,7 +89,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-house-11:hathaway",
@@ -100,7 +100,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-house-11:mejia",
@@ -111,7 +111,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:us-house-11:bond",
@@ -122,7 +122,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:county-commissioner:selen",
@@ -133,7 +133,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:county-commissioner:russo",
@@ -144,7 +144,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:wrobel-mark-f",
@@ -155,7 +155,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-1-place-boonton:di-salvo-melissa",
@@ -166,7 +166,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:ezzi-robert",
@@ -177,7 +177,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-2-place-boonton:de-venezia-marie",
@@ -188,7 +188,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:murray-robert-j",
@@ -199,7 +199,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-3-place-boonton:nanda-rajat",
@@ -210,7 +210,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:flaherty-seamus-g",
@@ -221,7 +221,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-town-council-ward-4-place-boonton:weisman-benjamin",
@@ -232,7 +232,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:honan-brian",
@@ -243,7 +243,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:haggart-brian",
@@ -254,7 +254,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:menard-raymond",
@@ -265,7 +265,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-township-committee-place-boonton-township:moran-john",
@@ -276,7 +276,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-mayor-place-butler:martinez-ryan",
@@ -287,7 +287,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:verdonik-raymond",
@@ -298,7 +298,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-borough-council-place-butler:piccirillo-marc",
@@ -309,7 +309,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:barrette-joseph",
@@ -320,7 +320,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:hull-arianna-sophia",
@@ -331,7 +331,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-borough-council-place-chatham:eck-nicholas-c",
@@ -342,7 +342,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rubino-ronald",
@@ -353,7 +353,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:rowland-jennifer",
@@ -364,7 +364,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-township-committee-place-chatham-township:hugh-martin-mc",
@@ -375,7 +375,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-mayor-place-chester:goodwin-russell",
@@ -386,7 +386,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:marshuetz-gary",
@@ -397,7 +397,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:dominianni-michael",
@@ -408,7 +408,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:uhlik-allison",
@@ -419,7 +419,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-member-of-the-borough-council-place-chester:saracena-vanessa",
@@ -430,7 +430,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:di-paolo-joseph",
@@ -441,7 +441,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-place-chester-township:schellhorn-tara",
@@ -452,7 +452,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:judd-andrew-b",
@@ -463,7 +463,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-township-council-unexpired-term-place-chester-township:fitting-adam-e",
@@ -474,7 +474,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-1-place-dover:wittner-sandra",
@@ -485,7 +485,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-2-place-dover:seanor-krista",
@@ -496,7 +496,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-3-place-dover:plastoris-alice",
@@ -507,7 +507,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-town-council-ward-4-place-dover:tapia-elizabeth",
@@ -518,7 +518,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:maio-jr-frank-a-de",
@@ -529,7 +529,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-township-council-place-east-hanover-township:martorelli-michael",
@@ -540,7 +540,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:ritrivi-nicholas",
@@ -551,7 +551,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:boer-marc-de",
@@ -562,7 +562,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:havens-ellsworth",
@@ -573,7 +573,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-borough-council-place-florham-park:upton-john-william",
@@ -584,7 +584,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:cahill-brian",
@@ -595,7 +595,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:mihalko-michael",
@@ -606,7 +606,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-township-committee-place-hanover-township:saleh-ahmad",
@@ -617,7 +617,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:chipperson-rita-c",
@@ -628,7 +628,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:yates-christopher-m",
@@ -639,7 +639,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-township-committee-place-harding-township:gray-ashley",
@@ -650,7 +650,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-mayor-place-jefferson-township:wilsusen-eric-f",
@@ -661,7 +661,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:senatore-melissa",
@@ -672,7 +672,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-place-jefferson-township:galfo-thomas-g",
@@ -683,7 +683,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:ioffredo-yvonne",
@@ -694,7 +694,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:peters-christopher-a",
@@ -705,7 +705,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-township-council-unexpired-term-place-jefferson-township:torres-alejandro",
@@ -716,7 +716,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-mayor-place-kinnelon:freda-james-j",
@@ -727,7 +727,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:mabey-sean",
@@ -738,7 +738,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-borough-council-place-kinnelon:frank-cynthia",
@@ -749,7 +749,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-mayor-place-lincoln-park:runfeldt-david",
@@ -760,7 +760,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:foreman-kenneth-r",
@@ -771,7 +771,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:dubowsky-bruce",
@@ -782,7 +782,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:cassidy-william-t",
@@ -793,7 +793,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:gibbons-john-c",
@@ -804,7 +804,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:walker-lisa",
@@ -815,7 +815,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-borough-council-at-large-place-lincoln-park:ottah-priscilla",
@@ -826,7 +826,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:liberato-frank",
@@ -837,7 +837,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:dorsi-matthew",
@@ -848,7 +848,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:patel-mansi",
@@ -859,7 +859,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-place-long-hill-township:hands-david",
@@ -870,7 +870,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township:fettes-theresa",
@@ -881,7 +881,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-township-committee-unexpired-term-place-long-hill-township:foley-jason",
@@ -892,7 +892,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:landrigan-robert-e",
@@ -903,7 +903,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-borough-council-place-madison:forte-john-j",
@@ -914,7 +914,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-mayor-place-mendham:kelly-james-r",
@@ -925,7 +925,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:althoff-marilyn",
@@ -936,7 +936,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:murphy-joseph-m",
@@ -947,7 +947,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:schreibman-dan",
@@ -958,7 +958,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-borough-council-place-mendham:van-den-hende-mark",
@@ -969,7 +969,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:kapner-gary",
@@ -980,7 +980,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-township-committee-place-mendham-township:duarte-amalia",
@@ -991,7 +991,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:kayne-matthew-s",
@@ -1002,7 +1002,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:witty-june-b",
@@ -1013,7 +1013,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:ryzuk-emily-k",
@@ -1024,7 +1024,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-township-committee-place-montville-township:seffer-shari",
@@ -1035,7 +1035,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:verga-nancy",
@@ -1046,7 +1046,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-mayor-place-morris-plains:karr-jason-c",
@@ -1057,7 +1057,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:bruhn-jr-arthur-j-art",
@@ -1068,7 +1068,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:nichol-sheryl-mc",
@@ -1079,7 +1079,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:connor-lee-lusardi",
@@ -1090,7 +1090,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-borough-council-place-morris-plains:denova-rosaria",
@@ -1101,7 +1101,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:talarico-george",
@@ -1112,7 +1112,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:grizzetti-joscelin",
@@ -1123,7 +1123,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:lyon-stephanie",
@@ -1134,7 +1134,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-place-morris-township:godwin-jeremy-b",
@@ -1145,7 +1145,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:biehl-john",
@@ -1156,7 +1156,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-township-committee-unexpired-term-place-morris-township:rothman-samantha-g",
@@ -1167,7 +1167,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-mayor-place-mount-arlington:stanzilis-michael",
@@ -1178,7 +1178,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:fostle-melissa",
@@ -1189,7 +1189,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:delaney-john-jack",
@@ -1200,7 +1200,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:price-jessica",
@@ -1211,7 +1211,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-borough-council-place-mount-arlington:decker-jay",
@@ -1222,7 +1222,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stelling-lucas-a",
@@ -1233,7 +1233,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:stuart-mark-a",
@@ -1244,7 +1244,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:hilton-andrew",
@@ -1255,7 +1255,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:menard-thomas",
@@ -1266,7 +1266,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-borough-council-place-mountain-lakes:muilenburg-melissa",
@@ -1277,7 +1277,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:sylvester-jr-john",
@@ -1288,7 +1288,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:nametko-joseph-a",
@@ -1299,7 +1299,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-borough-council-place-netcong:franchi-ruocco-michele-a",
@@ -1310,7 +1310,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:quigley-kimberley-r",
@@ -1321,7 +1321,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:russell-kyle",
@@ -1332,7 +1332,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:florance-lynch-melissa",
@@ -1343,7 +1343,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:mancuso-michael",
@@ -1354,7 +1354,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-township-council-place-pequannock-township:anderson-vincent",
@@ -1365,7 +1365,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:forstenhausler-mark-h",
@@ -1376,7 +1376,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:nisivoccia-lou",
@@ -1387,7 +1387,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:thornton-denise",
@@ -1398,7 +1398,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:ruffo-travis",
@@ -1409,7 +1409,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:beecher-jr-stephen-w",
@@ -1420,7 +1420,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:rietzke-amy-l",
@@ -1431,7 +1431,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:sisco-howard",
@@ -1442,7 +1442,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-township-council-place-randolph-township:lynch-meghan",
@@ -1453,7 +1453,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:kheyfets-michael",
@@ -1464,7 +1464,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-borough-council-place-riverdale:pellegrini-vincent",
@@ -1475,7 +1475,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:burnside-melissa",
@@ -1486,7 +1486,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:mcdonald-patrick",
@@ -1497,7 +1497,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:dawkins-jr-clifford-d",
@@ -1508,7 +1508,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-borough-council-place-rockaway:natale-angelo",
@@ -1519,7 +1519,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:janone-james-m",
@@ -1530,7 +1530,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:hale-stuart",
@@ -1541,7 +1541,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:victory-gardens-borough-member-of-the-borough-council-place-victory-gardens:lorenzo-ismael",
@@ -1552,7 +1552,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-township-committee-place-washington-township:drake-joshua-a",
@@ -1563,7 +1563,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-mayor-place-wharton:binkoski-vincent",
@@ -1574,7 +1574,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-mayor-place-wharton:ghebreal-robin",
@@ -1585,7 +1585,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:jones-ana",
@@ -1596,7 +1596,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:digennaro-mark",
@@ -1607,7 +1607,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:rogers-william-b",
@@ -1618,7 +1618,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-borough-council-place-wharton:murphy-morris-jayne",
@@ -1629,7 +1629,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/9/elections/past-results/2026-general-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:o-halloran-brianna",
@@ -1640,7 +1640,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-town-member-of-the-board-of-education-school-district-boonton-town-school-district:darling-jennifer",
@@ -1651,7 +1651,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:cabana-christine",
@@ -1662,7 +1662,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:mills-benjamin",
@@ -1673,7 +1673,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:boonton-township-member-of-the-board-of-education-school-district-boonton-township-school-district:feldmann-jessica",
@@ -1684,7 +1684,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:gogel-michael",
@@ -1695,7 +1695,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:karpowich-jason",
@@ -1706,7 +1706,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:tadros-jane",
@@ -1717,7 +1717,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:butler-borough-member-of-the-board-of-education-school-district-butler-borough-school-district:meo-roberto-di",
@@ -1728,7 +1728,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:ryan-michael",
@@ -1739,7 +1739,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-borough-member-of-the-board-of-education-place-chatham:weber-jill",
@@ -1750,7 +1750,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chatham-township-member-of-the-board-of-education-place-chatham-township:smith-bradley",
@@ -1761,7 +1761,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:arostegui-erick",
@@ -1772,7 +1772,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:ramamurthy-srividya",
@@ -1783,7 +1783,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:byszewski-carolyn-cici",
@@ -1794,7 +1794,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:dundon-suzanne",
@@ -1805,7 +1805,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:chester-borough-township-member-of-the-board-of-education-school-district-chester-township-school-district:fantin-angela",
@@ -1816,7 +1816,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:maher-william",
@@ -1827,7 +1827,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:cappello-dino-f",
@@ -1838,7 +1838,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:andersen-michael-w",
@@ -1849,7 +1849,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:morissette-cameron",
@@ -1860,7 +1860,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:denville-township-member-of-the-board-of-education-school-district-denville-township-school-district:kim-won-james",
@@ -1871,7 +1871,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:frisk-jamie",
@@ -1882,7 +1882,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:bermudez-joshua",
@@ -1893,7 +1893,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:dover-town-member-of-the-board-of-education-school-district-dover-town-school-district:lazo-yonatan",
@@ -1904,7 +1904,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district:lomio-michael",
@@ -1915,7 +1915,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:soto-brittany",
@@ -1926,7 +1926,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:muscillo-cara",
@@ -1937,7 +1937,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:ucci-jr-vincent-a",
@@ -1948,7 +1948,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:mitchell-stephanie-a",
@@ -1959,7 +1959,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:east-hanover-township-member-of-the-board-of-education-school-district-east-hanover-township-school-district:gilmore-meghan",
@@ -1970,7 +1970,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:ratz-allen",
@@ -1981,7 +1981,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:florham-park-borough-member-of-the-board-of-education-school-district-florham-park-borough-school-district:morgese-erin",
@@ -1992,7 +1992,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-regional-board-of-education-school-district-hanover-park-regional-school-district:pombo-michael-c",
@@ -2003,7 +2003,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:cabe-william-mc",
@@ -2014,7 +2014,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:mattessich-christopher",
@@ -2025,7 +2025,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:hanover-township-member-of-the-board-of-education-school-district-hanover-township-school-district:kowalski-joseph",
@@ -2036,7 +2036,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:anastasiou-alexander-h",
@@ -2047,7 +2047,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:harding-township-member-of-the-board-of-education-school-district-harding-township-school-district:singh-abhinov",
@@ -2058,7 +2058,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:phalon-patrick-a",
@@ -2069,7 +2069,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:poulas-stacey",
@@ -2080,7 +2080,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:jefferson-township-member-of-the-board-of-education-school-district-jefferson-township-school-district:grater-jaime",
@@ -2091,7 +2091,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:brino-matthew-d-di",
@@ -2102,7 +2102,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:donaldson-jean-t",
@@ -2113,7 +2113,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:schwartz-daniel",
@@ -2124,7 +2124,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:kinnelon-borough-member-of-the-board-of-education-school-district-kinnelon-borough-school-district:hodas-david",
@@ -2135,7 +2135,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:aiello-jennifer",
@@ -2146,7 +2146,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:lincoln-park-borough-member-of-the-board-of-education-school-district-lincoln-park-borough-school-district:vandervalk-elizabeth",
@@ -2157,7 +2157,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:melapioni-christina",
@@ -2168,7 +2168,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:case-kim",
@@ -2179,7 +2179,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:paschke-tanya",
@@ -2190,7 +2190,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:long-hill-township-member-of-the-board-of-education-school-district-long-hill-township-school-district:calabrese-eric",
@@ -2201,7 +2201,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:duran-david",
@@ -2212,7 +2212,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:ellis-lisa",
@@ -2223,7 +2223,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:madison-borough-member-of-the-board-of-education-school-district-madison-borough-school-district:fontes-eric",
@@ -2234,7 +2234,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:mullany-ryan",
@@ -2245,7 +2245,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:nichol-michael",
@@ -2256,7 +2256,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-borough-member-of-the-board-of-education-school-district-mendham-borough-school-district:laud-stephen-mc",
@@ -2267,7 +2267,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:strobel-robert",
@@ -2278,7 +2278,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:gondek-richard",
@@ -2289,7 +2289,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mendham-township-member-of-the-board-of-education-school-district-mendham-township-school-district:kallianpurkar-namita",
@@ -2300,7 +2300,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:daughtry-joseph",
@@ -2311,7 +2311,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:pisano-ryan",
@@ -2322,7 +2322,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:palma-michael-j",
@@ -2333,7 +2333,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:shenkman-jennifer",
@@ -2344,7 +2344,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:trivedi-ronak",
@@ -2355,7 +2355,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:montville-township-member-of-the-board-of-education-school-district-montville-township-school-district:lieberman-susan",
@@ -2366,7 +2366,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:longo-shawna",
@@ -2377,7 +2377,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:piccirillo-anoli",
@@ -2388,7 +2388,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:rawding-denise",
@@ -2399,7 +2399,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:persak-steven",
@@ -2410,7 +2410,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-plains-borough-member-of-the-board-of-education-school-district-morris-plains-borough-school-district:goscinski-steve",
@@ -2421,7 +2421,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-township-member-of-the-board-of-education-school-district-morris-township-school-district:rowan-charles",
@@ -2432,7 +2432,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:wall-elisabeth-l",
@@ -2443,7 +2443,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morristown-town-member-of-the-board-of-education-place-morristown:hernandez-jennifer",
@@ -2454,7 +2454,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:svenningsen-karl",
@@ -2465,7 +2465,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:eckert-melissa",
@@ -2476,7 +2476,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-arlington-borough-member-of-the-board-of-education-school-district-mount-arlington-borough-school-district:byrne-rachel",
@@ -2487,7 +2487,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:oneill-jeannie",
@@ -2498,7 +2498,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:wetzel-alyssa",
@@ -2509,7 +2509,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mount-olive-township-member-of-the-board-of-education-school-district-mount-olive-township-school-district:orzillo-marc",
@@ -2520,7 +2520,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:bollenbach-jessica",
@@ -2531,7 +2531,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:levin-erez",
@@ -2542,7 +2542,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:forman-sara",
@@ -2553,7 +2553,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:armani-megan",
@@ -2564,7 +2564,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:parker-jennifer",
@@ -2575,7 +2575,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:mountain-lakes-borough-member-of-the-board-of-education-school-district-mountain-lakes-borough-school-district:veigh-julia-mc",
@@ -2586,7 +2586,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:koster-jr-edward-j",
@@ -2597,7 +2597,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:netcong-borough-member-of-the-board-of-education-school-district-netcong-borough-school-district:albensi-kimberly",
@@ -2608,7 +2608,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:trivedi-jaya",
@@ -2619,7 +2619,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:reddy-trivikrama",
@@ -2630,7 +2630,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:pujara-akshay",
@@ -2641,7 +2641,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:berrios-timothy",
@@ -2652,7 +2652,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:raia-jack",
@@ -2663,7 +2663,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:dellafave-nicole",
@@ -2674,7 +2674,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:parsippany-troy-hills-township-member-of-the-board-of-education-school-district-parsippany-troy-hills-township-school-district:wright-wendy",
@@ -2685,7 +2685,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:wiswesser-christina",
@@ -2696,7 +2696,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:trombetta-amanda",
@@ -2707,7 +2707,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:pequannock-township-member-of-the-board-of-education-school-district-pequannock-township-school-district:gitin-timothy",
@@ -2718,7 +2718,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:lifshey-christina-nina",
@@ -2729,7 +2729,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:adams-amanda",
@@ -2740,7 +2740,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:bhatia-rachel",
@@ -2751,7 +2751,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:weiner-joshua",
@@ -2762,7 +2762,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:epstein-sheldon",
@@ -2773,7 +2773,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:randolph-township-member-of-the-board-of-education-school-district-randolph-township-school-district:vo-lam",
@@ -2784,7 +2784,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:riverdale-borough-member-of-the-board-of-education-school-district-riverdale-borough-school-district:thomas-marybeth",
@@ -2795,7 +2795,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:graf-edward",
@@ -2806,7 +2806,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-borough-member-of-the-board-of-education-school-district-rockaway-borough-school-district:long-jaclyn-d",
@@ -2817,7 +2817,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:serafin",
@@ -2828,7 +2828,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:morris-hills-regional-boe-rockaway-twp:roach",
@@ -2839,7 +2839,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:mezik",
@@ -2850,7 +2850,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:nydegger",
@@ -2861,7 +2861,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe:mamoun",
@@ -2872,7 +2872,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:rockaway-twp-boe-unexpired:borno",
@@ -2883,7 +2883,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:colucci-anne-thereze",
@@ -2894,7 +2894,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:bonilla-camilo",
@@ -2905,7 +2905,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:roxbury-township-member-of-the-board-of-education-school-district-roxbury-township-school-district:galdieri-valerie",
@@ -2916,7 +2916,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-regional-board-of-education-school-district-west-morris-regional-school-district:bliesath-suzanne",
@@ -2927,7 +2927,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:moliterno-elizabeth-liz",
@@ -2938,7 +2938,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:spadaccini-camillia",
@@ -2949,7 +2949,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:bravo-laurie",
@@ -2960,7 +2960,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:hare-padraig-sean",
@@ -2971,7 +2971,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:dressler-peter",
@@ -2982,7 +2982,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:washington-township-member-of-the-board-of-education-place-washington-township:whitney-nicholas-j",
@@ -2993,7 +2993,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:rice-cristina",
@@ -3004,7 +3004,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:astrologo-anthony",
@@ -3015,7 +3015,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-school-district-wharton-borough-school-district:gonzalez-gabriel",
@@ -3026,7 +3026,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     },
     {
       "candidacyId": "ballot-nj-morris:wharton-borough-member-of-the-board-of-education-unexpired-term-school-district-wharton-borough-school-district:pascale-colleen-f",
@@ -3037,7 +3037,7 @@
       "route": "filing-county",
       "sourceUrl": "https://www.morriscountyclerk.org/files/sharedassets/clerk/v/14/elections/past-results/2026-general-school-candidates-082126.pdf",
       "sourceOrg": "Morris County Clerk",
-      "collectedAt": "2026-08-27"
+      "collectedAt": "2026-08-28"
     }
   ]
 }

@@ -2,7 +2,7 @@
 
 **GENERATED — `pnpm refresh:daily` (`scripts/refresh-daily.mts`). Never hand-edited (RULING 92).**
 
-Run date: **2026-08-27** (UTC).
+Run date: **2026-08-28** (UTC).
 
 One scheduled run a day, one commit at most, and nothing committed when nothing moved — RULING 124. Cadence per source and the reason for each is `lib/ops/refresh-cadence.ts`.
 
@@ -12,9 +12,9 @@ One scheduled run a day, one commit at most, and nothing committed when nothing 
 |---|---|:---:|---|---|
 | `meetings` | daily | yes | clean | `data/meetings-snapshot.json` |
 | `nj-filing` | daily | yes | clean | `data/ballot/`, `data/questionnaire/` |
-| `fec` | weekly | no | not due — weekly, not due on 2026-08-27 | `data/fec/fec-2026.json` |
-| `legiscan` | weekly | no | not due — weekly, not due on 2026-08-27 | `data/votes/state-votes-snapshot.json` |
-| `dotgov` | monthly | no | not due — monthly, not due on 2026-08-27 | `data/dotgov/snapshot.json` |
+| `fec` | weekly | no | not due — weekly, not due on 2026-08-28 | `data/fec/fec-2026.json` |
+| `legiscan` | weekly | no | not due — weekly, not due on 2026-08-28 | `data/votes/state-votes-snapshot.json` |
+| `dotgov` | monthly | no | not due — monthly, not due on 2026-08-28 | `data/dotgov/snapshot.json` |
 
 ## Why each source sits on the cadence it does
 

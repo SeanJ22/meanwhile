@@ -1,3 +1,9 @@
+import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
+import {
+  emptySelectionState,
+  selectSitting,
+  type AgendaSelection,
+} from "@/lib/ask/select";
 import { readSnapshot } from "@/lib/meetings/snapshot";
 import {
   agendaItems,
@@ -48,43 +54,6 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 export const runtime = "nodejs";
 
-/**
- * The governments this corpus can answer ABOUT, named the way a reader names
- * them — derived from the canonical division id and nothing else.
- *
- * The snapshot's own `bodyName` cannot be used for this. For Vail Unified it
- * reads **"Governing Board Meeting"** — the meeting's title, carried onto the
- * body — so an inventory built from it contains no government called "Vail"
- * and the reader's word could never have matched. The division id does carry
- * it, canonically and unambiguously:
- *
- *   ocd-division/country:us/state:az/school_district:vail_unified_district
- *                                    ^^^^^^^^^^^^^^^ ^^^^^^^^^^^^^^^^^^^^^
- *                                    divisionType    the name, slugged
- *
- * Un-slugging that is a mechanical read of an identifier this product mints
- * itself, not a guess about what a government is called — and it is the same
- * string the registry's own `divisionLabel` is built from.
- */
-function snapshotEntities(
-  meetings: readonly { ocdId: string | null }[],
-): BindableEntity[] {
-  const seen = new Map<string, BindableEntity>();
-  for (const meeting of meetings) {
-    const ocdId = meeting.ocdId;
-    if (!ocdId || seen.has(ocdId)) continue;
-    const last = ocdId.split("/").pop() ?? "";
-    const [divisionType, slug] = last.split(":");
-    if (!divisionType || !slug) continue;
-    seen.set(ocdId, {
-      id: ocdId,
-      name: slug.replace(/_/g, " "),
-      nameClass: "body",
-      divisionType,
-    });
-  }
-  return [...seen.values()];
-}
 
 const MAX_BODY_BYTES = 2048;
 const MAX_QUESTION_CHARS = 200;
@@ -279,9 +248,9 @@ export async function POST(request: Request) {
       hits: [],
       namedEntity:
         namedBody.kind === "BOUND"
-          ? { state: "BOUND", ocdId: namedBody.entity.id, name: titleCase(namedBody.entity.name) }
+          ? { state: "BOUND", ocdId: namedBody.entity.id, name: titleCaseName(namedBody.entity.name) }
           : namedBody.kind === "AMBIGUOUS"
-            ? { state: "AMBIGUOUS", candidates: namedBody.candidates.map((c) => titleCase(c.name)) }
+            ? { state: "AMBIGUOUS", candidates: namedBody.candidates.map((c) => titleCaseName(c.name)) }
             : namedBody.kind === "UNRESOLVED"
               ? { state: "UNRESOLVED", mention: namedBody.mention }
               : null,
@@ -450,16 +419,29 @@ function bodyAgendaAnswer(
   documents: readonly AgendaDocumentLike[],
   ocdId: string,
   name: string,
+  /*
+   * **THE READER'S TENSE IS A RETRIEVAL INSTRUCTION, NOT A TURN OF PHRASE.**
+   * (2026-08-27.)
+   *
+   * This selection did not exist. The line below read
+   *
+   *     const meeting = upcoming[0] ?? past[0] ?? null;
+   *
+   * and it ran for every question that named a body and asked what it was
+   * discussing — including *"What did Vail discuss at its LAST meeting?"*,
+   * which was answered with the agenda of a meeting that has not happened yet.
+   *
+   * Everything else about that answer was right. The government was right, the
+   * attribution was right, the source link was right, the retrieval timestamp
+   * was right. It was a wrong answer wearing a complete provenance record,
+   * which is the most expensive kind this product can produce: nothing on the
+   * surface of it looks like a defect.
+   */
+  selection: AgendaSelection = "ANY",
 ): Response {
   const forBody = snapshot.meetings.filter((m) => m.ocdId === ocdId);
   const now = Date.now();
-  const upcoming = forBody
-    .filter((m) => Date.parse(m.startsAt) >= now)
-    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
-  const past = forBody
-    .filter((m) => Date.parse(m.startsAt) < now)
-    .sort((a, b) => (a.startsAt < b.startsAt ? 1 : -1));
-  const meeting = upcoming[0] ?? past[0] ?? null;
+  const meeting = selectSitting(selection, forBody, now);
 
   const base = {
     mode: "body-agenda" as const,
@@ -470,14 +452,17 @@ function bodyAgendaAnswer(
      * government reads as a typo rather than as a name, and a reader surface
      * speaks plain language.
      */
-    namedEntity: { state: "BOUND" as const, ocdId, name: titleCase(name) },
+    namedEntity: { state: "BOUND" as const, ocdId, name: titleCaseName(name) },
     meetingsHeld: forBody.length,
   };
 
   if (!meeting) {
+    /* Three different empties, said as three different sentences. */
+    const state = emptySelectionState(selection, forBody.length);
     return Response.json({
       ...base,
-      state: "NO_MEETING_HELD",
+      state,
+      selection,
       meeting: null,
       items: [],
       documentsHeld: 0,
@@ -533,6 +518,9 @@ function bodyAgendaAnswer(
   return Response.json({
     ...base,
     state,
+    /* Which sitting was asked for, so the client can say "at its last meeting"
+       rather than a tense the reader did not use. */
+    selection,
     meeting: {
       id: meeting.id,
       title: meeting.title,
@@ -541,8 +529,15 @@ function bodyAgendaAnswer(
          client default to the reader's zone would print an Arizona board
          meeting in the reader's local time — a wrong fact in a small font. */
       timeZone: meeting.timeZone,
-      /* Whether this is what they WILL discuss or what they LAST discussed. */
-      when: upcoming[0] ? "UPCOMING" : "PAST",
+      /*
+       * Whether this is what they WILL discuss or what they LAST discussed.
+       *
+       * Read off the meeting that was actually SELECTED, not off whether any
+       * upcoming meeting exists. Those came apart the moment selection did:
+       * a `LAST` answer for a body that also has a future sitting would have
+       * been labelled UPCOMING, and the client renders this word.
+       */
+      when: Date.parse(meeting.startsAt) >= now ? "UPCOMING" : "PAST",
       agendaUrl: meeting.agendaUrl ?? null,
     },
     items,
@@ -567,19 +562,3 @@ interface MeetingLike {
   agendaUrl?: string | null;
 }
 
-/**
- * A slugged division name, as a reader should see it.
- *
- * Mechanical and deliberately dumb: capitalise each word. It is not a claim
- * about what a government calls itself — the canonical id is still the identity
- * and the matcher still binds on the normalized form — it is only the
- * difference between "vail unified district" and "Vail Unified District" in a
- * sentence a person reads.
- */
-function titleCase(slugWords: string): string {
-  return slugWords
-    .split(" ")
-    .filter(Boolean)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
-}

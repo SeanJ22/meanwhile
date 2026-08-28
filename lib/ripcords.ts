@@ -137,6 +137,59 @@ export const RIPCORDS = {
       "The classifier call itself: the ask box falls back to keyword-only matching and the honest refusal",
   },
   /**
+   * **The grounded Ask pipeline** (ASK01, 2026-08-27). The rung above picks a
+   * topic id and writes nothing; this one WRITES THE SENTENCE A READER READS,
+   * from records it was handed. That is a materially different question and it
+   * gets its own flag rather than riding on the classifier's answered one.
+   */
+  "ripcord.askGrounded": {
+    pulled: false,
+    envVar: "WTP_RIPCORD_ASK_GROUNDED",
+    question:
+      "Doctrine: may a model write the reader-facing sentence at all, given that it is shown only records the app retrieved, is given no corpus, tools or network, and has every source URL in its answer checked against the evidence pack it was handed?",
+    /**
+     * **The reconciliation, because this rung needed one.**
+     *
+     * `app/api/ask/agenda/route.ts` carries an earlier session's note that
+     * nothing is summarised. Under RULING 185 that is an implementation
+     * comment at precedence 7. The root constitution at precedence 2 says a
+     * summary "paraphrases a cited source, never fills a gap" — which
+     * contemplates LLM summaries and states their condition — and the author's
+     * current directive at precedence 1 asks for this rung by name.
+     *
+     * So it ships live, and the condition the older note was protecting is
+     * enforced by `lib/ask/validate.ts` rather than by not building the thing.
+     * The flag exists because "enforced mechanically" is a claim that should
+     * be one env var away from being withdrawn.
+     */
+    closer:
+      "The author — the directive of 2026-08-27 asked for grounded synthesis by name. Retained as a one-flip pull: pulled, Ask degrades to the structured sourced answer it already produced.",
+    trackerRows: "ASK01, ASK02",
+    filters:
+      "Both model rungs of the grounded pipeline: Ask falls back to deterministic interpretation and the structured evidence answer, with no generated prose",
+  },
+  /**
+   * **Ask signal capture** (ASK03, 2026-08-27). **SHIPS PULLED.**
+   *
+   * The path is built, tested and INACTIVE. It stays inactive until the author
+   * approves reader-facing disclosure copy, because the data-privacy policy
+   * requires honest disclosure at the box before free text a reader typed may
+   * enter a store whose aggregates may reach campaigns, organizations and
+   * researchers. Building it now and leaving the flag down means approval is a
+   * one-flip activation rather than a build; it does not mean it is running.
+   */
+  "ripcord.askSignalCapture": {
+    pulled: true,
+    envVar: "WTP_RIPCORD_ASK_SIGNAL_CAPTURE",
+    question:
+      "Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?",
+    closer:
+      "The author — UNANSWERED as of 2026-08-27. Ships PULLED so the capture path cannot run before the disclosure it requires exists. Draft copy is on NH246.",
+    trackerRows: "ASK03, NH246",
+    filters:
+      "Every write of the Ask interaction record: Ask logs exactly what it logged before, the topic id and the capped refusal question",
+  },
+  /**
    * The master ripcord (T08): closes reaction and search/ask intake
    * ENTIRELY — the server refuses every write with a 503 while the app
    * renders normally and a tapping reader sees the honest not-counted line

@@ -202,6 +202,14 @@ test("every ripcord is registered with question, closer, and tracker rows", () =
   // new one through the checks below.
   assert.deepEqual(RIPCORD_NAMES.sort(), [
     "ripcord.askClassifier",
+    // ASK01/ASK02 (2026-08-27): the grounded pipeline's two model rungs. A
+    // separate flag from the classifier's because the question is different —
+    // that rung picks an id, this one writes the sentence a reader reads.
+    "ripcord.askGrounded",
+    // ASK03 (2026-08-27): Ask signal capture. SHIPS PULLED — the store may not
+    // take a reader's typed question before the disclosure the data-privacy
+    // policy requires at the box exists, and that copy is NH246's, unapproved.
+    "ripcord.askSignalCapture",
     "ripcord.fecContributorDisplay",
     "ripcord.fundingReactionsInAggregates",
     "ripcord.rateLimits",

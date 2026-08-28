@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **322 open**, 442 resolved.
-- **53 waiting on Sean** — the first section below.
+- **323 open**, 442 resolved.
+- **54 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **3**
+  - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**53 open · 52 resolved.**
+**54 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -67,6 +67,26 @@ The last 14 of 3208 line(s) the run printed:
   | ##[error]Process completed with exit code 1.
 
 [job-watch:refresh-daily.yml]
+
+**JOB06** — The scheduled job intake-tripwire.yml failed on two CONSECUTIVE runs (32961466707 and 32840268606), both at: Commit the report if changed, and has since gone green on its own. It is not broken right now. Nobody found out why it broke, so the next occurrence starts from the same nothing — which is why this is a row rather than a shrug. This watcher runs once a day and used to read only the two most recent runs, so a double failure that healed in between was invisible to it (NJ Hunt 3 item 1c). Over its last 16 completed runs it has failed 4 time(s). Two consecutive failures is evidence the cause is ours rather than a host refusing on a schedule — a wall would not usually repeat exactly. RULING 56 opens this automatically so a degrading data path is not a page nobody watches. 
+
+WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the run printed:
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | push-main: rebased onto origin/main, retrying
+  | push-main: FAILED — push to main still rejected after 5 attempts
+  | push-main: attempt 5 of 5 rejected — remote: error: GH006: Protected branch update failed for refs/heads/main.
+  | push-main: the commit made by this run has NOT landed on main. This run is red on purpose; it did not exit zero having lost its work.
+  | remote:
+  | remote: - Changes must be made through a pull request.
+  | remote:
+  | remote: - 3 of 3 required status checks are expected.
+  | To https://github.com/SeanJ22/We-The-People
+  |  ! [remote rejected] HEAD -> main (protected branch hook declined)
+  | error: failed to push some refs to 'https://github.com/SeanJ22/We-The-People'
+  | ##[error]Process completed with exit code 1.
+
+[job-watch:intake-tripwire.yml]
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 

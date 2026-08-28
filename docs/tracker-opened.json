@@ -1951,5 +1951,12 @@
     "ids": [
       "NH254"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-08-27",
+    "ids": [
+      "JOB06"
+    ]
   }
 ]

@@ -427,3 +427,38 @@ test("dedupe does NOT collapse two genuinely distinct governments that share a n
   );
   if (bound.kind === "AMBIGUOUS") assert.equal(bound.candidates.length, 2);
 });
+
+test("the unresolved sentence claims only what was SEARCHED, never what we hold", async () => {
+  /*
+   * **THE SENTENCE I WROTE WAS FALSE, AND IT WAS A CLAIM ABOUT US.**
+   *
+   * It read *"We don't have a government recorded under 'vail'"*. At a Tucson
+   * zip that is false: the product holds Vail Unified District with eleven
+   * meetings and nine documents. What the binder actually did was search the
+   * reader's OWN AREA — the search index for what is in view, plus their
+   * covered bodies — and it never looks further, because from the client it
+   * cannot.
+   *
+   * So a local lookup produced a statement about the WHOLE corpus. Same class
+   * as a failed fetch becoming a recorded absence, pointed inward.
+   *
+   * `scripts/verify-ask-entity.mts` asserts the rendered text too, but it needs
+   * a browser and a production build. This guards the copy at the layer the
+   * defect lived in, so it cannot come back through a refactor nobody walks.
+   */
+  const coverage = await coverageAt(...SUNNYSIDE_ZIP_POINT, 1);
+  const answer = resolveRouting("schools-policy", coverage, {
+    kind: "UNRESOLVED",
+    mention: "vail",
+  });
+  const gaps = answer.steps.map((s) => s.gap).filter(Boolean).join(" ");
+
+  assert.ok(gaps.length > 0, "an unresolved name must still say something to the reader");
+  assert.ok(
+    !/do(n't| not) have a government/i.test(gaps),
+    `the sentence claims the corpus holds no such government from a LOCAL lookup: ${gaps}`,
+  );
+  /* And it must still name what the reader typed — scoping the claim is not a
+   * licence to stop telling them which word failed to match. */
+  assert.match(gaps, /vail/i, "the reader is not told which name went unmatched");
+});

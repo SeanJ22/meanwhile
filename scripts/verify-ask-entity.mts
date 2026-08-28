@@ -185,6 +185,28 @@ try {
           (docket ? `\n    docket: ${docket}` : ""),
       );
 
+      /*
+       * **THE READER MAY NOT BE TOLD WE LACK A GOVERNMENT WE HOLD.**
+       * (2026-08-27, added because this script passed while that was on screen.)
+       *
+       * The DOM attribute reported the CLIENT'S binding, which was correctly
+       * UNRESOLVED — the client only searches the reader's area. The sentence
+       * beside it said "We don't have a government recorded under 'vail'",
+       * which is a claim about our WHOLE holdings and was false. The attribute
+       * was right and the prose was wrong, and asserting on the attribute alone
+       * could never have caught it.
+       *
+       * So the RENDERED TEXT is asserted directly. A claim of the form "we do
+       * not have X" is a statement about the corpus, and this client is never
+       * in a position to make one.
+       */
+      if (/don'?t have a government recorded/i.test(text)) {
+        failures.push(
+          `${context.zip} ${JSON.stringify(probe.question)} told the reader we hold no such ` +
+            "government — a claim about the whole corpus made from a local lookup",
+        );
+      }
+
       for (const banned of probe.forbidden) {
         if (text.includes(banned)) {
           failures.push(

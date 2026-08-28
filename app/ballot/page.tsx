@@ -27,7 +27,7 @@ import {
   cardForNominee,
   type CandidateCardData,
 } from "@/lib/ballot/candidate-cards";
-import { BallotAsk } from "@/components/ask/ballot-ask";
+import { BallotAskPill } from "@/components/ballot/ballot-ask-pill";
 import { BallotNarrowing } from "@/components/ballot/ballot-narrowing";
 import { JurisdictionMark, JurisdictionNote } from "@/components/ballot/jurisdiction-note";
 import { jurisdictionNameFromOcdId } from "@/lib/ballot/could-govern";
@@ -91,6 +91,7 @@ import type {
   BallotSet,
   Candidacy,
   Contest,
+  Measure,
 } from "@/lib/ballot/types";
 import { CandidateContact, TAGLINE_SOURCE_NOTE } from "@/components/ballot/candidate-contact";
 import { groupAbsences } from "@/lib/ballot/absence-grouping";
@@ -648,6 +649,52 @@ export default async function BallotPage({
   );
 
   /*
+   * **BAL-30 (2026-08-28) — THE MEASURE TEXT WAS ALREADY IN THE REPOSITORY
+   * AND THE PAGE RENDERED IT AS MISSING.**
+   *
+   * `data/ballot/az-pima-2026.json` has carried a `measures[]` array since
+   * 2026-08-27 holding four LOCAL measures with the official question verbatim
+   * and, for two of them, the official interpretive statement verbatim. This
+   * page referenced none of it: no `set.measures`, no `questionText`, no
+   * `officialStatement`. Its only consumer was `lib/ask/ballot-inventory.ts`,
+   * so a reader could get the words by ASKING for them and not by reading the
+   * card they belong to.
+   *
+   * `lib/ballot/analyses.ts` states the rule this violated in its own header:
+   * data in hand may never be displayed as missing. It is rendered now.
+   *
+   * The lookup is by `contestId` because that is the key the card is already
+   * rendered under, and it returns null rather than throwing — a measure with
+   * no record renders no block at all, which is what the eleven statewide
+   * propositions (whose official words arrive as the Legislative Council
+   * analysis below instead) legitimately are.
+   */
+  const measureFor = (contestId: string): Measure | null =>
+    set?.measures.find((m) => m.contestId === contestId) ?? null;
+
+  /*
+   * **AND THE HEADING WAS WRONG ABOUT WHOSE BALLOT THIS IS.**
+   *
+   * One `<h2>Statewide measures</h2>` sat over a list that contains a Vail
+   * Unified School District budget override — a question only the voters of
+   * one district see. A reader at 85641 was told a school-district override
+   * was a statewide proposition, which is a false claim about a government
+   * made by a heading.
+   *
+   * The split is read off the DIVISION the contest already carries, never
+   * asserted from the title: a bare `state:xx` identifier is the whole state,
+   * and anything deeper — a county, a school district — is not.
+   */
+  const isStatewideDivision = (ocdId: string): boolean =>
+    /^ocd-division\/country:us\/state:[a-z]{2}$/.test(ocdId);
+  const statewideMeasures = measureContests.filter((c) =>
+    isStatewideDivision(c.ocdId),
+  );
+  const localMeasures = measureContests.filter(
+    (c) => !isStatewideDivision(c.ocdId),
+  );
+
+  /*
    * ASK04: what is ON SCREEN, for referent resolution only.
    *
    * The interpretation rung is handed these so a question like "what has she
@@ -843,7 +890,30 @@ export default async function BallotPage({
   };
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-8 text-paper">
+    /*
+      **BAL-25 (2026-08-28) — THE BALLOT'S FIRST BREAKPOINT.**
+
+      This element read `mx-auto max-w-2xl px-4 py-8` and there was not one
+      `sm:`/`md:`/`lg:`/`xl:` utility anywhere on this surface — not in this
+      2,282-line page and not in any of the thirteen `components/ballot/*`
+      files. A 2,000px desktop rendered a 672px column and 1,328px of nothing.
+
+      **WHAT THE WIDTH IS SPENT ON, and what it is deliberately not.** The
+      reading measure does not move: prose stays capped at `lg:max-w-2xl`, the
+      same 42rem a phone reader gets, because a 1,600px paragraph is not a
+      desktop composition — it is the mobile page with the guard rails taken
+      off. The width buys a SECOND COLUMN OF CARDS instead, so a desktop
+      reader sees roughly twice as much of their ballot per screen at exactly
+      the same line length.
+
+      **AND IT IS A GRID OF WHOLE CARDS, NEVER OF LABEL/VALUE ROWS**
+      (`docs/DESIGN.md` — "The two-column trap"). A contest heading is an
+      arbitrarily long office title and a body name; put one in a fixed
+      column beside a value and the value starves. Every card here spans its
+      whole grid cell and stacks internally exactly as it does on a phone, so
+      the trap has nothing to bite: the columns divide CARDS, not FIELDS.
+    */
+    <main className="mx-auto max-w-2xl px-4 py-8 text-paper lg:max-w-[68rem] lg:px-8 lg:py-10 xl:max-w-[76rem]">
       {/*
         **DARK-3 (2026-08-25) — THE TOGGLE IS ON THIS PAGE TOO.**
 
@@ -884,7 +954,7 @@ export default async function BallotPage({
 
       {/* The app's voice (design pass): guidance renders in the voice
           register, distinct from the filed record below. */}
-      <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice">
+      <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
         A zip code is orientation, not your exact ballot — zip areas cross
         town and district lines. Everything below is presented as filed with
         election authorities, with the filing linked on every item.{" "}
@@ -947,6 +1017,28 @@ export default async function BallotPage({
                 section; it left the teaser. */}
             Moving here? Know the basics →
           </Link>
+          {/*
+            **BAL-26 (2026-08-28) — ASK JOINS THE PILL ROW.**
+
+            It was mounted dead last on this page, below every contest, every
+            footnote, the measures, the scope notes, the absence blocks and
+            the collection note — roughly 20,000px down at 1280 and 25,000px
+            at 390. The engine was correct and reachable by nobody.
+
+            The row directly under the h1 is where the page's other two
+            doors already are, so Ask becomes the third rather than a fourth
+            pattern. The panel itself is unchanged: same component, same
+            engine, same props, same DOM contract.
+
+            Third and last, so the two pills a reader arrived for keep their
+            position. See `components/ballot/ballot-ask-pill.tsx` for what was
+            borrowed from the map's cluster and what could not be.
+          */}
+          <BallotAskPill
+            zip={zip}
+            ocdIds={askOcdIds}
+            activeSubjects={askSubjects}
+          />
         </div>
       )}
 
@@ -967,7 +1059,7 @@ export default async function BallotPage({
             /early voting/i.test(s.label),
           );
           return (
-            <section className="mt-6 rounded-[10px] border border-[var(--signal)]/60 bg-[var(--signal)]/5 p-5 shadow-[var(--shadow-panel)]">
+            <section className="mt-6 rounded-[10px] border border-[var(--signal)]/60 bg-[var(--signal)]/5 p-5 shadow-[var(--shadow-panel)] lg:max-w-3xl">
               <h2 className="t-structure text-signal">The next election</h2>
               <p className="mt-2.5 flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="font-mono text-[1.375rem] font-semibold tracking-tight">
@@ -1238,7 +1330,7 @@ export default async function BallotPage({
           propositions sentence renders only where propositions actually share
           the ballot. */}
       {set && matched && (
-        <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice">
+        <p className="mt-3 text-[0.8125rem] leading-relaxed text-voice lg:max-w-2xl">
           Everyone below is on this ballot.
           {measureContests.length > 0 &&
             " Propositions are voted on at the same time."}
@@ -1250,7 +1342,7 @@ export default async function BallotPage({
           back. Nothing was deleted; the route is unchanged. */}
 
       {!zip && (
-        <p className="mt-6 text-[0.8125rem] text-muted">
+        <p className="mt-6 text-[0.8125rem] text-muted lg:max-w-2xl">
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">
             /ballot?zip=07866
@@ -1260,7 +1352,7 @@ export default async function BallotPage({
       )}
 
       {zip && !centroid && (
-        <p className="mt-6 text-[0.8125rem] text-muted">
+        <p className="mt-6 text-[0.8125rem] text-muted lg:max-w-2xl">
           We couldn&apos;t place that zip. Try another, or return to{" "}
           <Link href="/" className="underline decoration-dotted">
             the map
@@ -1270,7 +1362,7 @@ export default async function BallotPage({
       )}
 
       {attempted && !matched && (
-        <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted">
+        <p className="mt-6 text-[0.8125rem] leading-relaxed text-muted lg:max-w-2xl">
           We haven&apos;t built the ballot for this area yet. Ballot coverage
           currently reaches Pima County AZ, Morris County NJ, and Merrimack
           County NH. This is not a statement that nothing is on your ballot.
@@ -1303,15 +1395,41 @@ export default async function BallotPage({
       />
 
       {dates && (
-        <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5">
+        <section className="mt-6 rounded-[10px] border border-[var(--panel-border)] p-5 lg:max-w-2xl">
           <h2 className="t-structure text-paper-dim">
             Dates that decide whether you can vote
           </h2>
           <ul className="mt-2.5 space-y-1.5">
             {calendarableSteps(dates.steps).map(({ step, window, upcoming }) => (
-              <li key={step.label} className="flex items-baseline justify-between gap-3">
+              /*
+                **BAL-25 (2026-08-28) — THIS ROW PUSHED THE PHONE PAGE 75px
+                SIDEWAYS, AND IT IS THE TWO-COLUMN TRAP EXACTLY.**
+
+                Found by measuring `document.documentElement.scrollWidth` at
+                390x844 on 07866 rather than by looking at a screenshot: the
+                page scrolled horizontally and nothing about it looked wrong.
+
+                `docs/DESIGN.md`, "The two-column trap": a row that puts a
+                label and a value in competition for a fixed width will
+                eventually starve the value, and the answer where either side
+                can be arbitrarily long is to STACK rather than to tune the
+                width. This row was `flex justify-between` with a `shrink-0`
+                value — so the value could not give ground, and New Jersey's
+                in-person early voting WINDOW ("October 24th, 2026 – November
+                1st, 2026" plus its Add-to-calendar control, 374px of it) took
+                the ground from the viewport instead.
+
+                `flex-wrap` and a value that may shrink: the value drops to
+                its own line when it does not fit beside the label, and its
+                own contents wrap within that line. Nothing is truncated,
+                nothing is abbreviated, and no width is tuned.
+              */
+              <li
+                key={step.label}
+                className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1"
+              >
                 <span className="text-[0.8125rem]">{step.label}</span>
-                <span className="shrink-0 text-right" data-dated-event>
+                <span className="ml-auto min-w-0 text-right" data-dated-event>
                   <span className="font-mono text-[0.75rem] text-signal">
                     {formatDateMDY(step.date)}
                   </span>
@@ -1416,9 +1534,13 @@ export default async function BallotPage({
         />
       )}
 
-      {set &&
-        matched &&
-        candidacyContests.map((contest) => {
+      {/* BAL-25: the desktop's second column. One class, defined once in
+          `app/globals.css`, shared with the measure groups below — it is a
+          single column everywhere until there is room for two, so the phone
+          render is byte-identical to what it was. */}
+      {set && matched && (
+      <div className="ballot-card-grid">
+      {candidacyContests.map((contest) => {
           const lineup = lineupForContest(contest.id);
           const canvass = lineup ? getGeneralLineup()?.canvass : null;
           // Item 5 (design pass): a source line identical across contests
@@ -1823,11 +1945,13 @@ export default async function BallotPage({
             </section>
           );
         })}
+      </div>
+      )}
 
       {/* Item 5: the collapsed source lines, cited once. Each marker above
           lands here; provenance stays one glance away. */}
       {sharedSources.length > 0 && (
-        <section className="mt-5 border-t border-[var(--panel-border)] pt-3">
+        <section className="mt-5 border-t border-[var(--panel-border)] pt-3 lg:max-w-2xl">
           {sharedSources.map((s, i) => (
             <p
               key={s.key}
@@ -1870,21 +1994,44 @@ export default async function BallotPage({
       {set &&
         matched &&
         candidacyContests.some((c) => lineupForContest(c.id)) && (
-          <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted">
+          <p className="mt-3 text-[0.6875rem] leading-relaxed text-muted lg:max-w-2xl">
             {getGeneralLineup()?.note}
           </p>
         )}
 
-      {/* Statewide measures (2b): the official short title, the plain-
+      {/* Measures (2b): the official short title, the official question and
+          statement VERBATIM where the authority published them, the plain-
           language summary labeled as such, and the Legislative Council's
           analysis VERBATIM — the official explainer, rendered rather than
-          merely linked. Data in hand is never displayed as missing. */}
-      {measureContests.length > 0 && (
-        <section className="mt-7">
-          <h2 className="t-structure text-paper-dim">Statewide measures</h2>
-          {measureContests.map((contest) => {
+          merely linked. Data in hand is never displayed as missing.
+
+          BAL-30 (2026-08-28): TWO HEADINGS, because one of them was a false
+          claim. See `isStatewideDivision` above — a school-district override
+          filed under "Statewide measures" tells a reader the whole state
+          votes on it. The groups render in this order and an empty group
+          renders no heading at all. */}
+      {(
+        [
+          { scope: "STATEWIDE", heading: "Statewide measures", list: statewideMeasures },
+          { scope: "LOCAL", heading: "Local measures", list: localMeasures },
+        ] as const
+      )
+        .filter((group) => group.list.length > 0)
+        .map((group) => (
+        <section className="mt-7" key={group.scope} data-measure-scope={group.scope}>
+          <h2 className="t-structure text-paper-dim">{group.heading}</h2>
+          <div className="ballot-card-grid">
+          {group.list.map((contest) => {
             const analysis = analysisForContest(contest.id);
             const summary = summaryForContest(contest.id);
+            /*
+             * BAL-30: the official words this repository already holds for
+             * this contest. Null for the eleven statewide propositions, whose
+             * official words arrive as the Legislative Council analysis
+             * further down — a null renders NOTHING here rather than a gap
+             * sentence about a document that was never the source.
+             */
+            const measure = measureFor(contest.id);
             return (
               <div
                 key={contest.id}
@@ -1894,6 +2041,29 @@ export default async function BallotPage({
                 <h3 className="text-[0.9375rem] font-semibold tracking-tight">
                   {contest.title}
                 </h3>
+
+                {/*
+                  **THE QUESTION, VERBATIM, FIRST** (BAL-30, 2026-08-28).
+
+                  It is the thing the reader will actually see on the paper,
+                  in the authority's own words, and it was in the repository
+                  unrendered. It sits above the plain-language summary on
+                  purpose: the summary's own label says "read the official
+                  text below", and until now the only official text below was
+                  the Legislative Council analysis, which the four local
+                  measures do not have and never will — their authority is a
+                  county board and three school boards.
+                */}
+                {measure && (
+                  <div className="mt-2.5" data-measure-question={measure.id}>
+                    <p className="t-eyebrow text-muted">
+                      The question on the ballot, word for word
+                    </p>
+                    <p className="mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
+                      {measure.questionText}
+                    </p>
+                  </div>
+                )}
 
                 {summary && analysis?.text && (
                   <div className="mt-2.5 rounded-md bg-[var(--surface,rgba(255,255,255,0.04))] p-3">
@@ -2010,6 +2180,74 @@ export default async function BallotPage({
                   </details>
                 )}
 
+                {/*
+                  **THE OFFICIAL STATEMENT, AND THE CONTROL THAT PROVES THIS
+                  IS NOT ONE SENTENCE FOR TWO DIFFERENT FACTS** (BAL-30).
+
+                  Propositions 423 and 425 carry an official interpretive
+                  statement — the district's Notice of Election and the
+                  county's ballot-language document — and they render it
+                  verbatim. Propositions 428 and 429 are the same class of
+                  question from the same publisher and their statement is
+                  null, because the Pima County School Superintendent's list
+                  is the only document read for them and it titles the
+                  question without stating the fiscal terms.
+
+                  Those two states may never render as the same sentence, and
+                  the null one has to say WHOSE gap it is. It is ours: the
+                  district publishes a Notice of Election and we have not read
+                  it. The scope note directly below names the document, so
+                  this points at it rather than repeating it — and only where
+                  there is a note to point at.
+                */}
+                {measure &&
+                  (measure.officialStatement ? (
+                    <div className="mt-3" data-measure-statement="PRESENT">
+                      <p className="t-eyebrow text-muted">
+                        What the authority published with it
+                      </p>
+                      <p className="mt-1.5 whitespace-pre-line text-[0.8125rem] leading-relaxed text-paper-dim">
+                        {measure.officialStatement}
+                      </p>
+                    </div>
+                  ) : (
+                    <p
+                      className="mt-3 text-[0.75rem] leading-relaxed text-muted"
+                      data-measure-statement="GAP_OURS"
+                    >
+                      We have not recorded an official statement for this
+                      question
+                      {contest.scopeNote
+                        ? " — the note below names the document we have not read."
+                        : "."}
+                    </p>
+                  ))}
+
+                {/*
+                  The measure text's OWN citation, and only when the card's
+                  foot does not already carry it. Every current row cites the
+                  same document the contest does, so nothing renders here
+                  today; a future row whose question came from a different
+                  document gets its own line rather than borrowing the foot's.
+                */}
+                {measure &&
+                  measure.provenance.sourceUrl !==
+                    (analysis?.analysisUrl ?? contest.provenance.sourceUrl) && (
+                    <p className="mt-2 text-[0.6875rem]">
+                      <a
+                        href={measure.provenance.sourceUrl ?? undefined}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="underline decoration-dotted"
+                      >
+                        {measure.provenance.sourceOrg}
+                      </a>{" "}
+                      <span className="text-muted">
+                        · read {formatDateMDY(measure.provenance.collectedAt)}
+                      </span>
+                    </p>
+                  )}
+
                 {analysis?.text ? (
                   // 3f (2026-08-19): the official analysis collapses by
                   // default — the control names it and its source, expands
@@ -2084,8 +2322,9 @@ export default async function BallotPage({
               </div>
             );
           })}
+          </div>
         </section>
-      )}
+      ))}
 
       {/*
         RULING 59 (2026-08-21) — THE HEADING WAS "NOT HERE YET", AND IT WAS THE
@@ -2120,7 +2359,7 @@ export default async function BallotPage({
         now names what the block is instead of what the product lacks.
       */}
       {matched && coverageNotes.length > 0 && (
-        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4">
+        <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl">
           <h2 className="t-structure text-paper-dim">Notes on this ballot</h2>
           {coverageNotes.map((note) => (
             <p
@@ -2155,7 +2394,7 @@ export default async function BallotPage({
           {groupAbsences(matched.absences).map((absence) => (
             <section
               key={absence.key}
-              className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4"
+              className="mt-5 rounded-[10px] border border-[var(--panel-border)] p-4 lg:max-w-2xl"
               data-absence-count={absence.members.length}
             >
               <p className="text-[0.8125rem] leading-relaxed text-paper-dim">
@@ -2180,7 +2419,7 @@ export default async function BallotPage({
           {scopeNotes.notes.length > 0 && (
             <div
               id="scope-notes"
-              className="mt-6 border-t border-[var(--panel-border)] pt-4"
+              className="mt-6 border-t border-[var(--panel-border)] pt-4 lg:max-w-2xl"
             >
               {scopeNotes.notes.map((note) => (
                 <p
@@ -2199,7 +2438,7 @@ export default async function BallotPage({
             </div>
           )}
 
-          <p className="mt-6 text-[0.75rem] leading-relaxed text-voice">
+          <p className="mt-6 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl">
             {NEUTRAL_NOTE}
           </p>
 
@@ -2209,7 +2448,7 @@ export default async function BallotPage({
               cards would be a claim about nothing. */}
           <p
             data-collection-note
-            className="mt-3 text-[0.75rem] leading-relaxed text-voice"
+            className="mt-3 text-[0.75rem] leading-relaxed text-voice lg:max-w-2xl"
           >
             {COLLECTION_NOTE}
           </p>
@@ -2253,16 +2492,25 @@ export default async function BallotPage({
         what let the pipeline resolve a referent, and refuse one where more than
         one person is on screen.
 
-        It sits below the contests because it is a follow-up to what the reader
-        has just read, not a substitute for it.
-      */}
-      <BallotAsk
-        zip={zip}
-        ocdIds={askOcdIds}
-        activeSubjects={askSubjects}
-      />
+        **BAL-26 (2026-08-28) — IT NO LONGER SITS HERE, AND THE PARAGRAPH THAT
+        PUT IT HERE IS WORTH KEEPING RATHER THAN DELETING.**
 
-      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem]">
+        What it said: *"It sits below the contests because it is a follow-up to
+        what the reader has just read, not a substitute for it."* The reasoning
+        is right and the placement it produced was not, because it assumed a
+        reader who reaches the bottom. This page is ~20,000px at 1280 and
+        ~25,000px at 390: below the contests and below the absence blocks are
+        the same place, and that place is off the end of the reading.
+
+        A COLLAPSED pill under the heading keeps the whole of that reasoning —
+        it is closed, so it substitutes for nothing, and a reader has to have
+        decided to ask before anything happens — and drops only the assumption
+        that turned it into a feature nobody found. There is no mount here now;
+        `BallotAskPill` in the pill row above owns it, and it is still exactly
+        one `<BallotAsk>` on the page.
+      */}
+
+      <p className="mt-8 border-t border-[var(--panel-border)] pt-4 text-[0.75rem] lg:max-w-2xl">
         <Link
           href="/"
           className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"

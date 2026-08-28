@@ -18,6 +18,7 @@ import {
   normalizeWithDrops as legistarNormalizeWithDrops,
   type LegistarEventWithClient,
 } from "../legistar/index.ts";
+import { makeLegistarInSiteSource } from "../legistar-insite/index.ts";
 import { makeOnBaseSource } from "../onbase/index.ts";
 import type { ReportingMeetingSource } from "../types.ts";
 
@@ -101,6 +102,33 @@ export const CAPABILITIES: Array<{
     name: "legistar",
     types: ["LEGISTAR"],
     make: () => legistarReporting as ReportingMeetingSource<unknown>,
+  },
+  {
+    /**
+     * **THE SAME BODIES, THE OTHER ROUTE.** (2026-08-28.)
+     *
+     * `legistar` above reads `webapi.legistar.com`, which returns only the
+     * sittings whose InSite meeting-detail page is publicly viewable. This
+     * child reads the tenant's own `Calendar.aspx` grid, which returns all of
+     * them. Measured the same day on one "Next Month" filter: Mesa 15 rows / 12
+     * not viewable / exactly the 3 viewable from the API, Phoenix 8 / 8 / 0,
+     * Pima 3 / 3 / 0.
+     *
+     * It is registered on the SAME `LEGISTAR` type on purpose — it serves the
+     * same wired bodies, so a failure here attributes to the same bodies a
+     * `legistar` failure does, and `wiringForSourceName` resolves both.
+     *
+     * **Registration order is load-bearing.** `collapseDuplicateSittings`
+     * breaks a tie in informativeness by keeping the row it saw first, and
+     * first is source-registration order. `legistar` sits above this entry so
+     * that when the same sitting reaches both routes — which it does the moment
+     * the clerk publishes the agenda — the WebAPI record wins even before it
+     * has an agenda file to win on. The portal supplies the rows `/events` does
+     * not have; it does not supersede the ones it does.
+     */
+    name: "legistar-insite",
+    types: ["LEGISTAR"],
+    make: () => makeLegistarInSiteSource() as ReportingMeetingSource<unknown>,
   },
   {
     name: "civicplus",

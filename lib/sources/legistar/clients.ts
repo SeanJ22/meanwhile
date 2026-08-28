@@ -73,6 +73,48 @@ export interface LegistarClient {
   /** IANA zone the body meets in. Legistar sends wall-clock times with no zone. */
   timeZone: string;
   venues: LegistarVenue[];
+  /**
+   * The tenant's own InSite portal host — `pima.legistar.com` (2026-08-28).
+   *
+   * **The WebAPI and the portal are two different records with two different
+   * publication clocks, and this field is what lets a second route reach the
+   * one the API cannot.** `webapi.legistar.com/v1/{slug}/events` returns only
+   * the sittings whose InSite meeting-detail page is publicly viewable; the
+   * portal's own `Calendar.aspx` grid returns all of them and marks the
+   * difference with `class="meeting_NotViewable"`. Measured the same day on
+   * three tenants: Pima 3 rows / 3 not viewable / 0 from the API, Phoenix 8 /
+   * 8 / 0, Mesa 15 / 12 / exactly the 3 viewable.
+   *
+   * Optional because a client may be wired for the API alone; `lib/sources/
+   * legistar-insite/` reads only the clients that state one, so the absence is
+   * a configuration fact rather than an assumption about the tenant.
+   */
+  insiteHost?: string;
+  /**
+   * The calendar RSS pair observed on this tenant's portal, and the range it
+   * was observed for.
+   *
+   * **`Feed.ashx` is keyed per tenant AND per date range.** Pima's "Next
+   * Month" feed is `ID=43473383&GUID=88b7d677-…`; the pair recorded against a
+   * different range is a different number, so a pair written here is only ever
+   * true of the range it names. The adapter therefore reads the link off the
+   * page it has just fetched and uses this as the RECORD of what was seen,
+   * never as a URL to construct one from.
+   *
+   * It earns its place because of `pubDate`, which the grid does not carry:
+   * the feed states when InSite first published each sitting. Pima's 2026-09-22
+   * sitting carries `Mon, 15 Jun 2026 21:25:03 GMT` — **74 days of notice** —
+   * against a WebAPI lead time over 32 Pima 2026 events of max 5 days, median
+   * 0, min -2.
+   */
+  insiteFeed?: {
+    id: string;
+    guid: string;
+    /** The dropdown selection this pair was read under. */
+    range: string;
+    /** When it was read. `pnpm stamp`, never a plausible date. */
+    observedAt: string;
+  };
 }
 
 /**
@@ -93,6 +135,13 @@ export const LEGISTAR_CLIENTS: LegistarClient[] = [
     jurisdiction: "Pima County, AZ",
     publishingOrg: "Pima County Clerk of the Board",
     timeZone: "America/Phoenix",
+    insiteHost: "pima.legistar.com",
+    insiteFeed: {
+      id: "43473383",
+      guid: "88b7d677-6602-4f79-b987-4677f7f035e6",
+      range: "Next Month",
+      observedAt: "2026-08-28",
+    },
     venues: [
       {
         match: "Board of Supervisors Hearing Room",

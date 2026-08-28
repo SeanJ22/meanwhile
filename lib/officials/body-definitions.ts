@@ -545,6 +545,273 @@ export function classKeyFor(input: {
   }
 }
 
+/* ========================================================================== *
+ * DATA-4 — A BODY IS DESCRIBED BY WHAT IT IS, NEVER BY WHAT SHARES ITS GROUND.
+ * (2026-08-28. The definition half of the identity repair DATA-3 made on the
+ * ROSTER half in PR #214.)
+ *
+ * ## The defect, exactly
+ *
+ * `definitionsForBody` was keyed on the DIVISION. Six bodies sit on
+ * `ocd-division/country:us/state:az/county:pima`, and only one of them is Pima
+ * County. The other five — the Central Arizona Water Conservation District, the
+ * Regional Flood Control District, the Free Library District, the Stadium
+ * District and Board of Adjustment District 4 — each resolved to `classKey:
+ * "county"` and rendered **the county's powers as their own**: county roads,
+ * the jail, the county hospital, zoning in the unincorporated areas, the county
+ * budget and the property tax rate, cited to **A.R.S. § 11-251**, a statute
+ * that does not govern any of them. `unreadNote` was null, so nothing hedged
+ * it.
+ *
+ * It is #214's finding one layer over. That one said a body may never acquire
+ * MEMBERS because it shares an `ocdId` with a government that has some. This
+ * one says the same about POWERS, and it was live on **100 bodies with a
+ * LIVE calendar** — the four Pima districts, 28 City of Tucson boards and
+ * commissions, and Newbury, Wilmot, New London and Rockaway Township's boards
+ * and committees — plus 148 more that are verified but not yet covered.
+ *
+ * ## The rule, and why it is mechanical rather than a judgement per body
+ *
+ * The registry already records why each body exists. `bodyOrigin ===
+ * "DERIVED_FROM_DIVISION_TYPE"` means *this body exists BECAUSE this division
+ * does* — it is the division's own government, by construction, and the
+ * division's class is its class. Every other origin means somebody FOUND this
+ * body and attached it to a division; nothing about that establishes it is that
+ * division's government, and CAWCD is the proof that it often is not.
+ *
+ * `CoveredBody` does not carry `bodyOrigin`, so the test is written on the id
+ * grammar the registry builds those ids under, and
+ * `tests/body-definition-identity.test.ts` asserts the two agree on **all 1,998
+ * bodies, with zero mismatches**. The day the registry derives a body under a
+ * different suffix, that test names it rather than a reader finding out.
+ *
+ * ## What a body that is NOT its division's government gets instead
+ *
+ * Its own SOURCED definition where one has been written (below), and otherwise
+ * the honest absence — `entity-modal.tsx` renders `NO_BODY_BLURB_LINE`, which
+ * is a fact about US. A gap is never wrong. A neighbour's powers always are.
+ * ========================================================================== */
+
+/**
+ * A kind of body that is NOT a division's own government, described once and
+ * reused wherever that kind occurs.
+ *
+ * This is the class doctrine at the top of this file applied one level down: a
+ * sourced claim about a CLASS of special district is checkable in the same way
+ * *"in New Jersey a township is a municipal type"* is checkable, and it is what
+ * keeps this from becoming a hand-written paragraph per body. Arizona declares
+ * each of these districts in statute, so the read happens ONCE and serves every
+ * county in the state — the same economics as `FORM_DEFINITIONS`.
+ *
+ * State-scoped for the reason the class layer is: a stadium district is an
+ * Arizona statutory creature, and nothing here may be assumed to travel.
+ */
+export type BodyKindKey =
+  | "az_county_flood_control_district"
+  | "az_county_free_library_district"
+  | "az_county_stadium_district"
+  | "az_multi_county_water_conservation_district"
+  | "az_community_facilities_district"
+  | "az_county_board_of_adjustment"
+  | "az_community_college_district";
+
+interface BodyKindRow {
+  /** Two-letter state, lowercased. No row here is national. */
+  state: string;
+  kind: BodyKindKey;
+  definition: Definition;
+}
+
+/**
+ * Every row read from the statute itself on the date it carries, and every
+ * `basisUrl` fetched and control-checked by `pnpm definitions:verify`.
+ */
+export const BODY_KIND_DEFINITIONS: ReadonlyArray<BodyKindRow> = [
+  {
+    state: "az",
+    kind: "az_county_flood_control_district",
+    definition: {
+      text:
+        "This is a county flood control district — a separate taxing government that handles flooding, not the county itself. Its board can buy or condemn land for flood control works and storm drains, build them, run them and maintain them, regulate what may be built in a floodplain, allow a variance where a strict reading would work an unnecessary hardship, and appoint its own chief engineer, treasurer and attorney. It can join with the state, the federal government or a neighbouring district to do that work. It is not the county, and nothing else the county decides is its business.",
+      basis:
+        "Arizona Revised Statutes § 48-3603 (Powers, duties and immunities of district and board)",
+      basisUrl: "https://www.azleg.gov/ars/48/03603.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_county_free_library_district",
+    definition: {
+      text:
+        "This is a county free library district — a separate taxing government that runs the county's public libraries, not the county itself. Its board of directors may make information, technology and resources available to every library patron, provide a place for studying, researching, reading and learning, and run educational, informational and literacy programmes for all ages, from early literacy and school readiness to adult literacy, digital literacy and workforce training. The county can also agree with a neighbouring county to let its residents use the library. The district decides nothing outside the library service.",
+      basis:
+        "Arizona Revised Statutes § 48-3902 (Powers and duties; contracts between counties for use of library)",
+      basisUrl: "https://www.azleg.gov/ars/48/03902.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_county_stadium_district",
+    definition: {
+      text:
+        "This is a county stadium district — a separate government formed to build, own and run a stadium or a similar facility, not the county itself. Its board can make contracts and intergovernmental agreements, adopt the rules the district and its property run under, employ an executive director and staff or contract for management, acquire and dispose of property, hold property in trust for the district, and hire legal counsel and consultants. It appoints its own chairperson, secretary and treasurer. Its powers stop at the district's own business.",
+      basis:
+        "Arizona Revised Statutes § 48-4203 (Powers and duties of board of directors; reporting requirements; conflict of interest)",
+      basisUrl: "https://www.azleg.gov/ars/48/04203.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_multi_county_water_conservation_district",
+    definition: {
+      text:
+        "This is a multi-county water conservation district — a public improvement district covering several counties at once, and not a county government. It exists to levy a small property tax across those counties and to contract with the United States for the delivery of Central Arizona Project water and for repaying what that project cost. Its directors are elected directly by the voters of each member county: one director from a county of under 600,000 people, four from a county between 600,000 and 2.1 million, and ten from a county larger than that, each serving six years and each casting a vote weighted by the population behind it. The board manages the district's affairs and business, makes its contracts, sets its own bylaws and rules, runs its bond programme, and employs its own engineers, lawyers and staff. It has no say over anything a county decides.",
+      basis:
+        "Arizona Revised Statutes §§ 48-3702, 48-3703, 48-3708 and 48-3712 (multi-county water conservation districts: status, purposes, elected board and the board's powers)",
+      basisUrl: "https://www.azleg.gov/ars/48/03708.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_community_facilities_district",
+    definition: {
+      text:
+        "This is a community facilities district — a small separate taxing district drawn over one defined piece of land to pay for and look after the public infrastructure on it. Its board can contract and spend for that infrastructure, agree with the city or county that will plan, own or maintain it, operate and repair it, charge fees for using it, employ staff and consultants, take grants, borrow and repay for it, and assess the cost of the works on the land that benefits from them. Its business is that land and those works, and nothing else.",
+      basis: "Arizona Revised Statutes § 48-709 (Powers of a community facilities district)",
+      basisUrl: "https://www.azleg.gov/ars/48/00709.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_county_board_of_adjustment",
+    definition: {
+      text:
+        "This is a county board of adjustment. It hears zoning appeals from the parts of the county outside any city or town. It can say what a disputed word, phrase or section of the zoning ordinance means and where a district boundary lies, and it can allow a variance where unusual conditions about a property would make a strict reading an unnecessary hardship, provided the ordinance's general intent is preserved. Its members are appointed for staggered four-year terms. It does not write the zoning rules — the board of supervisors does — and anyone unhappy with its decision has thirty days to appeal to the superior court.",
+      basis: "Arizona Revised Statutes § 11-816 (Boards of adjustment; powers; appeals)",
+      basisUrl: "https://www.azleg.gov/ars/11/00816.htm",
+      readOn: "2026-08-28",
+    },
+  },
+  {
+    state: "az",
+    kind: "az_community_college_district",
+    definition: {
+      text:
+        "This is a community college district's governing board. It keeps each of its community colleges open for at least eight months a year, adopts in a public forum the policies for what the colleges offer, enforces the courses of study it sets, examines how each college is managed, appoints the chancellor or president and the staff below them and sets their pay, awards the degrees, certificates and diplomas, and decides where in the district a college sits and what property it buys, leases, holds or sells. It is not a school district and it does not run the K-12 schools.",
+      basis:
+        "Arizona Revised Statutes § 15-1444 (General powers and duties of district boards)",
+      basisUrl: "https://www.azleg.gov/ars/15/01444.htm",
+      readOn: "2026-08-28",
+    },
+  },
+];
+
+/**
+ * **WHICH BODY IS OF WHICH KIND — KEYED ON THE BODY ID, NEVER ON A DIVISION.**
+ *
+ * Absence from this table is not a defect. It means the body gets the honest
+ * absence line, which is the correct answer for a body nobody has yet read the
+ * law for. Adding a row is a CLAIM, and the claim it makes is *this body is one
+ * of these*, so every row is a body somebody identified from a source rather
+ * than from its name.
+ */
+export const BODY_KINDS: ReadonlyArray<{ bodyId: string; kind: BodyKindKey }> = [
+  {
+    bodyId: "ocd-division/country:us/state:az/county:pima#regional-flood-control-district",
+    kind: "az_county_flood_control_district",
+  },
+  {
+    bodyId: "ocd-division/country:us/state:az/county:pima#free-library-district",
+    kind: "az_county_free_library_district",
+  },
+  {
+    bodyId: "ocd-division/country:us/state:az/county:pima#stadium-district",
+    kind: "az_county_stadium_district",
+  },
+  {
+    bodyId:
+      "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+    kind: "az_multi_county_water_conservation_district",
+  },
+  {
+    bodyId: "ocd-division/country:us/state:az/county:pima#board-of-adjustment-district-4",
+    kind: "az_county_board_of_adjustment",
+  },
+  /*
+   * The two bodies with NO DIVISION AT ALL that are LIVE and reader-reachable
+   * today. They are the reason the body-specific layer is looked up BEFORE the
+   * null-`ocdId` guard rather than after it: that guard exists to stop a
+   * PLACEHOLDER `divisionType` becoming a class claim, and a definition keyed
+   * on the body needs no division to be true.
+   */
+  { bodyId: "curated:az/pima-community-college#governing", kind: "az_community_college_district" },
+  {
+    bodyId: "curated:az/pima-rocking-k-south-cfd#governing",
+    kind: "az_community_facilities_district",
+  },
+  {
+    bodyId: "wtp-body/country:us/state:az/wildflower_community_facilities_district#governing",
+    kind: "az_community_facilities_district",
+  },
+];
+
+const BODY_KIND_BY_ID = new Map(BODY_KINDS.map((r) => [r.bodyId, r.kind]));
+
+/** The state a body id names, from an OCD-ID or from a curated key. */
+function stateOfBody(bodyId: string, ocdId: string | null): string | null {
+  return (
+    ocdId?.match(/\/state:([a-z]{2})\b/)?.[1] ??
+    bodyId.match(/\/state:([a-z]{2})\b/)?.[1] ??
+    bodyId.match(/^curated:([a-z]{2})\//)?.[1] ??
+    null
+  );
+}
+
+/** The sourced definition for THIS body, or null. Needs no division. */
+export function bodyKindDefinitionFor(bodyId: string, ocdId: string | null): Definition | null {
+  const kind = BODY_KIND_BY_ID.get(bodyId);
+  if (kind === undefined) return null;
+  const state = stateOfBody(bodyId, ocdId);
+  return BODY_KIND_DEFINITIONS.find((r) => r.kind === kind && r.state === state)?.definition ?? null;
+}
+
+/**
+ * **The suffix the registry gives a body it DERIVED from a division.**
+ *
+ * Not a naming convention this module invented — it is read off
+ * `registry.json`, and the equivalence with `bodyOrigin ===
+ * "DERIVED_FROM_DIVISION_TYPE"` is asserted over every body in the suite. A
+ * division type absent from this table has no derived body, so nothing on it
+ * can be a division's own government.
+ */
+const DERIVED_BODY_SUFFIX: Partial<Record<BodyDivisionType, string>> = {
+  place: "governing",
+  county: "governing",
+  school_district: "board",
+};
+
+/**
+ * Whether this body IS the government of the division it sits on.
+ *
+ * Everything division-derived — the class definition, the form stamp, the
+ * by-division blurb — is gated on this and may never be reached without it.
+ */
+export function isDivisionsOwnGovernment(
+  bodyId: string,
+  ocdId: string | null,
+  divisionType: BodyDivisionType,
+): boolean {
+  if (ocdId === null) return false;
+  const suffix = DERIVED_BODY_SUFFIX[divisionType];
+  if (suffix === undefined) return false;
+  return bodyId === `${ocdId}#${suffix}`;
+}
+
 export interface BodyDefinitions {
   /** Always present where a class row exists for this state and class. */
   classDefinition: Definition | null;
@@ -576,11 +843,55 @@ export const CHARTER_UNREAD_LINE =
  * instead of a refusal.
  */
 export function definitionsForBody(input: {
+  /**
+   * **REQUIRED, AND REQUIRED ON PURPOSE** (DATA-4, 2026-08-28). It is
+   * `CoveredBody.bodyId` / `RegistryBody.id`.
+   *
+   * It is not optional and it does not default. An optional identity is an
+   * identity a call site can forget to pass, and the thing it would silently
+   * fall back to is the DIVISION — which is the defect. A compiler error at the
+   * one call site is the cheapest possible way to be told.
+   */
+  bodyId: string;
   ocdId: string | null;
   divisionType: BodyDivisionType;
   lsad?: string | null;
   schoolDependency?: "INDEPENDENT" | "DEPENDENT" | "UNCLASSIFIED";
 }): BodyDefinitions {
+  /*
+   * **LAYER TWO-AND-A-HALF FIRST: THE DEFINITION KEYED ON THIS BODY.**
+   *
+   * Ahead of every guard below, because it depends on nothing else. A body with
+   * no division, no LSAD and no Census classification still has an identity,
+   * and where somebody has read the statute that creates that kind of body,
+   * that reading is true of it. This is what reaches the two LIVE bodies with a
+   * null `ocdId` — Pima Community College's Governing Board and the Rocking K
+   * South Community Facilities District Board — which rendered nothing at all
+   * before today.
+   */
+  const bodyDefinition = bodyKindDefinitionFor(input.bodyId, input.ocdId);
+
+  /*
+   * **THE DIVISION-DERIVED LAYERS ARE GATED ON IDENTITY.** (DATA-4.)
+   *
+   * All three of them: the class definition, `blurbForBody`'s by-division
+   * entries, and the form stamp. Every one is keyed on the DIVISION, so every
+   * one describes the division's government — and rendering any of them on a
+   * body that merely shares the ground is the false claim this exists to end.
+   * CAWCD is the named case; there were 248 of them.
+   */
+  if (!isDivisionsOwnGovernment(input.bodyId, input.ocdId, input.divisionType)) {
+    return {
+      classDefinition: null,
+      formDefinition: bodyDefinition,
+      classKey: null,
+      // No class line above it, so no note about an unread charter beneath it.
+      // A body with neither layer renders the honest absence line, which is a
+      // fact about US.
+      unreadNote: null,
+    };
+  }
+
   /*
    * **A BODY WITH NO DIVISION GETS NO CLASS DEFINITION** (2026-08-23, item 3).
    *
@@ -597,9 +908,17 @@ export function definitionsForBody(input: {
    * for a type's convenience became a claim about a real government. The
    * upstream fix is `divisionType` becoming nullable on `CoveredBody`, which
    * is 39 call sites and is `DI06`.
+   *
+   * **KEPT, AND NOW SUBSUMED** (DATA-4, 2026-08-28). The identity gate above is
+   * strictly tighter — a null `ocdId` cannot be a division's own government —
+   * so control never reaches this line any more. It stays because it is the
+   * FLOOR, and a floor is worth keeping precisely when something above it is
+   * doing the work: the day somebody relaxes the gate, this is what stops a
+   * placeholder `divisionType` becoming a claim again. It is asserted directly
+   * in `tests/body-definition-identity.test.ts`, so it is not untested code.
    */
   if (input.ocdId === null) {
-    return { classDefinition: null, formDefinition: null, classKey: null, unreadNote: null };
+    return { classDefinition: null, formDefinition: bodyDefinition, classKey: null, unreadNote: null };
   }
 
   const classKey = classKeyFor(input);
@@ -664,7 +983,12 @@ export function definitionsForBody(input: {
     schoolDependency: input.schoolDependency,
   });
   const formDefinition =
-    blurbForBody(input.ocdId, input.divisionType) ?? formDefinitionFor(stamp.formKey);
+    // A definition written about THIS BODY outranks both, for the reason the
+    // division override outranks the state row: it is the most specific thing
+    // anybody has actually read about it.
+    bodyDefinition ??
+    blurbForBody(input.ocdId, input.divisionType) ??
+    formDefinitionFor(stamp.formKey);
 
   return {
     classDefinition,

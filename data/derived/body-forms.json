@@ -4,19 +4,22 @@
   "note": "The FORM of each body's government, stamped from committed data alone — TIGER's legal type code for the municipal layer, the Census independent/dependent classification for school districts, the division type for counties. It is NOT a form-specific definition: it names which form a body is, so the charter or statute read that writes those definitions is done once per distinct form rather than once per body. Every unstampable body is named with the input that was missing.",
   "counts": {
     "bodiesWithADivision": 1256,
-    "alreadyCarryingAFormDefinition": 860,
-    "owedAFormDefinition": 396,
-    "stamped": 393,
+    "alreadyCarryingAFormDefinition": 631,
+    "owedAFormDefinition": 625,
+    "stamped": 622,
     "unstampable": 3,
-    "distinctForms": 7
+    "distinctForms": 10
   },
   "distinctForms": {
     "nj:school_district_independent": 209,
+    "nh:town": 168,
     "nh:school_district_independent": 147,
+    "az:city": 57,
     "nh:county": 12,
     "nh:school_district_dependent": 9,
     "nj:county": 8,
     "nj:school_district_dependent": 7,
+    "nj:township": 4,
     "nj:village": 1
   },
   "unstampable": [
@@ -8113,7 +8116,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#public-housing-authority",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8121,7 +8124,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#1st-avenue-citizens-corridor-planning-task-force",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8129,7 +8132,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#2017-public-safety-tax-oversight-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8137,7 +8140,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#2018-parks-connections-bond-oversight-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8145,7 +8148,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#agenda-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8153,7 +8156,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#armory-park-historic-zone-advisory-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8161,7 +8164,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#barrio-historico-historic-zone-advisory-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8169,7 +8172,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#board-of-adjustment",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8177,7 +8180,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#citizen-s-commission-on-public-service-and-compensation",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8185,7 +8188,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#citizens-water-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8193,7 +8196,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#city-magistrates-merit-selection-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8201,7 +8204,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#city-of-tucson-deferred-compensation-plan-management-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8209,7 +8212,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#civil-service-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8217,7 +8220,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-climate-energy-and-sustainability",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8225,7 +8228,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8233,7 +8236,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-equitable-housing-and-development",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8241,7 +8244,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-food-security-heritage-and-economy",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8249,7 +8252,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#community-police-advisory-review-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8257,7 +8260,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#complete-streets-coordinating-council",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8265,7 +8268,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#design-review-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8273,7 +8276,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#economic-and-workforce-development-selection-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8281,7 +8284,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#el-presidio-historic-zone-advisory-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8289,7 +8292,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#el-pueblo-housing-development",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8297,7 +8300,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#environmental-services-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8305,7 +8308,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#fire-code-review-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8313,7 +8316,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#fort-lowell-historic-zone-advisory-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8321,7 +8324,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#human-relations-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8329,7 +8332,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#independent-audit-and-performance-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8337,7 +8340,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#independent-oversight-and-accountability-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8345,7 +8348,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#industrial-development-authority",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8353,7 +8356,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#landscape-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8361,7 +8364,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#outdoor-lighting-code-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8369,7 +8372,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#park-tucson-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8377,7 +8380,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#pars-115-trust-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8385,7 +8388,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#pima-county-tucson-women-s-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8393,7 +8396,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#planning-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8401,7 +8404,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#public-art-and-community-design-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8409,7 +8412,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#redistricting-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8417,7 +8420,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#self-insured-health-benefits-trust",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8425,7 +8428,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#self-insured-risk-trust-fund",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8433,7 +8436,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#small-minority-and-women-owned-business-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8441,7 +8444,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#southern-arizona-education-council",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8449,7 +8452,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-commission-on-lesbian-gay-bisexual-transgender-and-queer-issues",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8457,7 +8460,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-convention-center-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8465,7 +8468,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-fire-public-safety-personnel-retirement-system-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8473,7 +8476,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-greens-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8481,7 +8484,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-parks-and-recreation-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8489,7 +8492,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-police-public-safety-personnel-retirement-system-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8497,7 +8500,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-supplemental-retirement-system-board-of-trustees",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8505,7 +8508,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-transit-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8513,7 +8516,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-pima-county-bicycle-advisory-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8521,7 +8524,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-pima-county-historical-commission",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8529,7 +8532,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#tucson-pima-county-joint-consolidated-code-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8537,7 +8540,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#veterans-affairs-committee",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8545,7 +8548,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#water-service-area-review-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8553,7 +8556,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#west-university-historic-zone-advisory-board",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8561,7 +8564,7 @@
     {
       "bodyId": "ocd-division/country:us/state:az/place:tucson#zoning-examiner-hearings",
       "ocdId": "ocd-division/country:us/state:az/place:tucson",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "az:city",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=25 (city)"
@@ -8609,7 +8612,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#planning-board",
       "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nj:township",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=44 (township)"
@@ -8617,7 +8620,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-adjustment",
       "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nj:township",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=44 (township)"
@@ -8625,7 +8628,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#environmental-commission",
       "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nj:township",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=44 (township)"
@@ -8633,7 +8636,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township#board-of-assessment-commissioners",
       "ocdId": "ocd-division/country:us/state:nj/county:morris/place:rockaway_township",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nj:township",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=44 (township)"
@@ -8649,7 +8652,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8657,7 +8660,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8665,7 +8668,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#zoning-board-of-adjustment",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8673,7 +8676,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#advisory-budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8681,7 +8684,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#blodgett-sewer-user-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8689,7 +8692,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8697,7 +8700,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-loss-management-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8705,7 +8708,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#septic-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8713,7 +8716,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8721,7 +8724,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#energy-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8729,7 +8732,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#beautification-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8737,7 +8740,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#joint-assessing-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8745,7 +8748,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#library-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8753,7 +8756,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8761,7 +8764,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#parks-recreation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8769,7 +8772,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#housing-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8777,7 +8780,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#selectboard",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8785,7 +8788,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8793,7 +8796,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8801,7 +8804,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8809,7 +8812,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#master-plan-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8817,7 +8820,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#safety-services-facility-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8825,7 +8828,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#transfer-station-advisory-group",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8833,7 +8836,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8841,7 +8844,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8849,7 +8852,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8857,7 +8860,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#parks-and-recreation",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8865,7 +8868,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town#waste-reduction-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:wilmot_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8873,7 +8876,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#board-of-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8881,7 +8884,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8889,7 +8892,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8897,7 +8900,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8905,7 +8908,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8913,7 +8916,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#energy-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8921,7 +8924,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#housing-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8929,7 +8932,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#recreation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8937,7 +8940,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#board-of-firewards",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8945,7 +8948,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#archives-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8953,7 +8956,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#bicycle-pedestrian-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8961,7 +8964,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#citizens-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8969,7 +8972,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8977,7 +8980,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#tri-town-assessing-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8985,7 +8988,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -8993,7 +8996,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#capital-improvement-program",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9001,7 +9004,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#select-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9009,7 +9012,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9017,7 +9020,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9025,7 +9028,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9033,7 +9036,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#library-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9041,7 +9044,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9049,7 +9052,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9057,7 +9060,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town#website-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:springfield_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9065,7 +9068,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#select-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9073,7 +9076,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9081,7 +9084,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9089,7 +9092,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#community-power-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9097,7 +9100,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9105,7 +9108,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#economic-development-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9113,7 +9116,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#energy-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9121,7 +9124,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#parks-and-recreation",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9129,7 +9132,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9137,7 +9140,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9145,7 +9148,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#cip-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9153,7 +9156,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#hazard-mitigation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9161,7 +9164,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#facilities-use-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9169,7 +9172,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#independence-day-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9177,7 +9180,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:bradford_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9185,7 +9188,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#select-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9193,7 +9196,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9201,7 +9204,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9209,7 +9212,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9217,7 +9220,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#cemetery-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9225,7 +9228,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9233,7 +9236,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9241,7 +9244,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9249,7 +9252,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#warner-river-local-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9257,7 +9260,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#hazard-mitigation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9265,7 +9268,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#website-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9273,7 +9276,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#library-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9281,7 +9284,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-waste-reduction-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9289,7 +9292,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-grist-mill-bridge-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9297,7 +9300,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-fire-safety-municipal-building-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9305,7 +9308,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-sutton-connects-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9313,7 +9316,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#ad-hoc-speed-sign-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9321,7 +9324,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town#grist-mill-street-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:sutton_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9329,7 +9332,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#select-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9337,7 +9340,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#agricultural-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9345,7 +9348,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#auditor-search-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9353,7 +9356,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9361,7 +9364,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9369,7 +9372,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#chandler-reservation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9377,7 +9380,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#community-power-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9385,7 +9388,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9393,7 +9396,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#corridor-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9401,7 +9404,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#economic-development-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9409,7 +9412,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#energy-solar-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9417,7 +9420,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#groundwater-protection-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9425,7 +9428,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#highway-safety-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9433,7 +9436,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#housing-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9441,7 +9444,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#housing-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9449,7 +9452,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#joint-loss-management-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9457,7 +9460,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#mink-hills-recreation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9465,7 +9468,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#parks-and-recreation",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9473,7 +9476,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9481,7 +9484,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#record-preservation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9489,7 +9492,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#road-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9497,7 +9500,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9505,7 +9508,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9513,7 +9516,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-river-local-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9521,7 +9524,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#warner-village-water-district",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9529,7 +9532,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:warner_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9537,7 +9540,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town#lake-todd-village-district",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:newbury_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9553,7 +9556,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town#water-system-precinct",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:new_london_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9561,7 +9564,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town#highland-haven",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9569,7 +9572,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town#ashuelot-pond-dam-precinct",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:washington_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9577,7 +9580,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:hillsborough_town#emerald-lake-village-district",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:hillsborough_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9585,7 +9588,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town#andover-village-district",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9593,7 +9596,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town#andover-fire-district",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9601,7 +9604,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town#east-andover-fire-precinct",
       "ocdId": "ocd-division/country:us/state:nh/county:merrimack/place:andover_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9609,7 +9612,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#board-of-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9617,7 +9620,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#budget-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9625,7 +9628,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9633,7 +9636,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9641,7 +9644,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#library-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9649,7 +9652,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9657,7 +9660,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#trustees-of-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9665,7 +9668,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:acworth_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9673,7 +9676,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#select-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9681,7 +9684,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9689,7 +9692,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#zoning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9697,7 +9700,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#conservation-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9705,7 +9708,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#record-retention-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9713,7 +9716,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town#trustees-of-the-trust-fund-and-cemeteries",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:croydon_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9721,7 +9724,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#board-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9729,7 +9732,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#budget-advisory-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9737,7 +9740,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9745,7 +9748,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#heritage-and-monuments-memorials-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9753,7 +9756,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#nri-action-plan-subcommittee-conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9761,7 +9764,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#parlin-field-airport-advisory-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9769,7 +9772,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9777,7 +9780,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town#zoning-board-adjustment",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:newport_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9785,7 +9788,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town#board-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9793,7 +9796,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9801,7 +9804,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town#supervisors-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9809,7 +9812,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town#zoning-board-adjustments",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9817,7 +9820,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town#welfare",
       "ocdId": "ocd-division/country:us/state:nh/county:hillsborough/place:windsor_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9825,7 +9828,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#board-of-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9833,7 +9836,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9841,7 +9844,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9849,7 +9852,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9857,7 +9860,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#trustees-of-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9865,7 +9868,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town#library-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:lempster_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9873,7 +9876,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#board-of-selectmen",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9881,7 +9884,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#capital-improvement",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9889,7 +9892,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#cemetery-trustees",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9897,7 +9900,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#conservation-commission",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9905,7 +9908,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#energy-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9913,7 +9916,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#technology-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9921,7 +9924,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#building-needs-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9929,7 +9932,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#master-plan-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9937,7 +9940,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#planning-board",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9945,7 +9948,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#supervisors-of-the-checklist",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9953,7 +9956,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#trustees-of-the-trust-funds",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9961,7 +9964,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#zoning-board-of-adjustment",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9969,7 +9972,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#recreation-park-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9977,7 +9980,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#transfer-station-rolloff-truck-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -9985,7 +9988,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#open-space-committee",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"
@@ -10017,7 +10020,7 @@
     {
       "bodyId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town#eastman-village-district",
       "ocdId": "ocd-division/country:us/state:nh/county:sullivan/place:grantham_town",
-      "hasFormDefinition": true,
+      "hasFormDefinition": false,
       "formKey": "nh:town",
       "basis": "tiger-lsad",
       "basisDetail": "lsad=43 (town)"

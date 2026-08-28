@@ -1,5 +1,7 @@
 import type { Meeting } from "@/lib/sources/types";
 
+import { hasPhysicalLocation } from "./online.ts";
+
 /**
  * A place that hosts meetings.
  *
@@ -30,8 +32,13 @@ export function groupByVenue(meetings: Meeting[]): Venue[] {
      * keeps such a meeting so the reader can see it, and giving it a
      * coordinate here — the body's home, the map centre, anything — would put
      * a marker on a building nobody is going to.
+     *
+     * MTG-14 (2026-08-28) routes it through the one predicate and changes
+     * nothing about it. **The gate is CORRECT and stays** — a helper that made
+     * it easy to give an online sitting a coordinate would be a worse module
+     * than none.
      */
-    if (meeting.location === null) continue;
+    if (!hasPhysicalLocation(meeting)) continue;
 
     const { lat, lng, name, address } = meeting.location;
     const key = `${lat.toFixed(COORD_PRECISION)},${lng.toFixed(COORD_PRECISION)}`;

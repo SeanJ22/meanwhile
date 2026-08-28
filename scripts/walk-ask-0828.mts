@@ -134,7 +134,7 @@ async function walkMap(viewport: { width: number; height: number }, label: strin
     await input.press("Enter");
     /* The panel holds a drawn 2.4-3.1s presentation beat before it renders, so
        this waits past the ceiling rather than racing it. */
-    await page.waitForTimeout(14000);
+    await page.waitForTimeout(25000);
 
     const read = (await page.evaluate(
       `(function () {
@@ -195,7 +195,12 @@ async function walkBallot(viewport: { width: number; height: number }, label: st
     await input.click();
     await input.fill(question);
     await page.click("[data-ballot-ask] [data-ask-submit]");
-    await page.waitForTimeout(12000);
+    /* The pack grew when the corpus did: a Hobbs answer now synthesises six
+       executive orders and takes longer than the twelve seconds this waited.
+       A capture that races the model records a "-" that reads exactly like a
+       surface rendering nothing, which is the one thing a reader-visible walk
+       must not get wrong about itself. */
+    await page.waitForTimeout(25000);
 
     const read = (await page.evaluate(
       `(function () {

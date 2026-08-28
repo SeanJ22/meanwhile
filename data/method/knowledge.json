@@ -1,5 +1,5 @@
 {
-  "version": 34,
+  "version": 35,
   "updatedOn": "2026-08-27",
   "routes": [
     {
@@ -2530,6 +2530,43 @@
         "note": "Four fetches to establish permission and shape. The adapter itself is unbuilt and is the open work: an ASP.NET postback grid needs either the vendor's own callback protocol or a browser at rung 6."
       },
       "learnedAtVersion": 34
+    },
+    {
+      "id": "county-upcoming-elections-page-as-a-document-inventory",
+      "title": "the county election authority's upcoming-elections page, read as an INVENTORY of which election's documents exist yet — the cheap answer to whether a contest can be known at all",
+      "tier": "A1",
+      "fields": [
+        "contest",
+        "candidacy",
+        "election"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE SHAPE IS GENERAL AND IT ANSWERS A DIFFERENT QUESTION FROM THE ONE IT LOOKS LIKE. An election authority's upcoming-elections page is usually read for DATES. Read instead as an inventory of WHICH DOCUMENTS IT HAS PUBLISHED PER ELECTION, it answers whether a contest question is answerable at all today — before any adapter, request or fetch of a document is designed. Pima County on 2026-08-27 is the worked example: for the July 21 primary it publishes nine documents including the Official Candidate List, the Write-In List and the Proposition Text; for the November 3 GENERAL it publishes exactly ONE, the vote-center locations spreadsheet, beside its own sentence 'Additional information will be added as it is available'. So a question about a general-election contest has no available source, and that is a fact about the CALENDAR rather than about our retrieval. WHY IT MATTERS MORE THAN IT SOUNDS: the alternative route on the tracker row was a public-records request, which would have been answered 'not yet available' at real cost in time and in a person's attention. A one-page read replaced a human blocker with a dated recheck against a named publisher and a named expected document. THE ANTI-PATTERN THIS FORBIDS: the absence of a contest from a PRIMARY candidate list is not evidence about a GENERAL ballot, because an office with no primary is not on a primary ballot at all. Check that the primary list carries nonpartisan candidates at all before reading anything into a nonpartisan office's absence from it — Pima's does, four separate runs of them, which is the control that makes its silence interpretable."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-27",
+          "rows": 0,
+          "outcome": "ZERO",
+          "note": "ZERO and argued, never an absence claim: the route was walked successfully and established that the general-election candidate list does not exist yet. RECHECK_DUE against www.pima.gov/810/Upcoming-Elections-and-Events. Two primary PDFs were read in full (2 pages/1,528 chars and 9 pages/7,991 chars) with zero water-district hits, which is the EXPECTED result for a general-election-only office and settles nothing on its own."
+        }
+      ],
+      "subBranches": [],
+      "origin": "conceived 2026-08-27 while working NH244, which asks whether a Central Arizona Water Conservation District contest is on the 2026 Pima County general ballot. The prior session had established that the four expiring Pima terms do NOT imply four contests (A.R.S. 16-410 permits cancelling uncontested Title 48 elections) and had named a records request as the remaining route. The county's own page shows the deciding document is simply not published yet.",
+      "learnedOn": "2026-08-27",
+      "effort": {
+        "repeats": "PER_COUNTY",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One robots read, one sitemap read, one page read. Repeats per county because each election authority publishes its own inventory; the READING is generic."
+      },
+      "learnedAtVersion": 35
     }
   ]
 }

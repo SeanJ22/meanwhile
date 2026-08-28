@@ -276,9 +276,10 @@
       "produces": [],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/acq on ws/acq, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/acq on ws/acq, node_modules junction",
+        "integrated; method:learn-statewide-execs run once by the owner (48->52, 113 routes); seven source rows added; the missing certified Mine Inspector nominee it found was added to the ballot corpus by the owner"
       ]
     }
   ]

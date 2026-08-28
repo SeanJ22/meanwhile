@@ -46,6 +46,9 @@ import { CAPABILITIES } from "../sources/composite/wiring.ts";
  */
 export const CALENDAR_LABELS: Readonly<Record<string, string>> = {
   legistar: "their online agenda portal",
+  // The same portal a reader would open, read through its own calendar page
+  // rather than through the vendor's API. One place to a reader, so one phrase.
+  "legistar-insite": "their online agenda portal",
   civicplus: "their town website's agenda page",
   onbase: "their records portal",
   apptegy: "their district website's events calendar",

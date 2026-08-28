@@ -43,6 +43,15 @@ const ROUTES: LearnedRoute[] = [
       "The SHAPE is general: a partisan primary filing cannot show a nonpartisan district office, and a PRIMARY candidate list cannot either, because a district office with no primary is not on a primary ballot. So the general-election listing is the right document and it is a different document from both. THE ARIZONA HOST IS WALLED: on 2026-08-27 apps.arizona.vote answered HTTP 403 to curl, to a bare node fetch carrying a browser user agent, and to a real Playwright browser at rung 6 alike — Cloudflare bot protection, not a rule. Its own robots.txt is 403 too, so permission is CANNOT_TELL and is NOT a disallow (RULING 182). Bypassing bot detection is prohibited, so this is BLOCKED_CURRENTLY rather than exhausted (RULING 184). Do not re-walk it with a fourth HTTP client and expect a different answer: vary the SOURCE, not the client. The untried branches are the COUNTY election authority's own general-election candidate list or sample ballot, the printed sample ballot when published, and a public-records request.",
     origin:
       "conceived 2026-08-27 for NH244. The Central Arizona Water Conservation District's four Pima seats carry terms expiring 2026-12-31, read off the district's own member pages, and the ballot corpus holds no CAWCD contest. Two documents were read in full and neither settles whether the contest is on the November 3 2026 general ballot — the Secretary of State's 2026 partisan filing (no CAWCD contest, which is expected for a nonpartisan office and proves nothing) and Pima County's Official Candidate List for the July 21 primary (no CAWCD contest either, though it does carry nonpartisan municipal offices). Neither a contest nor an absence may be written into the ballot corpus until a deciding document is read.",
+    effort: {
+      repeats: "PER_STATE",
+      /* The blocking is the point: three client classes refused, and bypassing
+         bot detection is prohibited. A person has to ask. */
+      execution: "HUMAN_ONLY",
+      discovery: "NEW_METHOD",
+      note:
+        "HTTP 403 to curl, to a bare node fetch with a browser user agent, and to a real Playwright browser. robots.txt is 403 too, so permission is CANNOT_TELL rather than a disallow. The remaining step is a public-records request.",
+    },
     outcome: {
       jurisdiction: "az",
       /* `walkedOn` is stamped by `runLearnBatch` from `today()` — it is not a

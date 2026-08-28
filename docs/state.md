@@ -20358,3 +20358,105 @@ collection. As CLASSES, not durations, because a class can be recorded
 truthfully and a duration reconstructed from commit timestamps cannot. **An
 absent effort is a stated unknown and never a zero**, or the project would
 report itself cheaper the less it had measured.
+
+## The ask-entity session, continued — after the first close-out
+
+Everything above was written before the branch was merged with `main` and
+before four further defects were found. The later work is recorded here rather
+than by editing the account above it.
+
+### The binder was asking the reader to choose between a thing and itself
+
+The search index mints `body:<venue key>` and labels a body with
+`meeting.bodyName`; coverage carries the registry's own `bodyId`. Merging both
+put one government into the inventory twice under two ids — and distinct ids
+are the tie test, correctly so, because two real governments can share a name.
+So *"what is Sunnyside discussing"* returned `AMBIGUOUS` between **Sunnyside
+Unified District** and **Sunnyside Unified District**.
+
+A question carrying a class phrase hid it, because the class tie-break picked
+the coverage row and the answer came out right. Only a question with NO class
+phrase exposed it, which is the shape a reader actually types. Dedupe now runs
+ACROSS the two inventories and never WITHIN coverage — two genuinely distinct
+governments sharing a name still return `AMBIGUOUS`, and both halves are pinned.
+
+**And a second path in the same class, found by counting it rather than by a
+report.** `everydayContactsFor` is keyed on the reader's ZIP alone. Suppressing
+the wrong BODY while still printing the reader's own city service number under
+a question about a district thirty miles away answers it wrongly in a smaller
+font.
+
+### The route answered and the client threw it away
+
+`/api/ask/agenda` now answers a named government's own docket — the question
+this session opened on, which had never reached the agenda corpus at all. The
+reader still saw nothing: the client's handler read `body.topic ? body : null`,
+and a body-agenda answer carries no topic. **Building a rung and shipping a rung
+are two different things, and only the browser shows which one happened.**
+
+### A calendar page attached to twenty meetings is not twenty agendas
+
+Asking Vail its own question found the next defect. Its next sitting's "agenda
+document" is 1,652 characters of Highbond portal navigation. **56 of the
+corpus's 198 agenda documents share a URL with another meeting** — 27 on one New
+Hampshire town calendar, 14 on another, 9 on Vail's portal root, 6 on Tucson
+Unified's board page. One page cannot be the agenda of two different meetings,
+so it is now its own state with its own sentence. The collection defect behind
+it is NH255 and is not fixed.
+
+### CAWCD, closed by law — and the law then reopened the ballot question
+
+M62's own rule says partisanship is settled BY LAW FIRST, and the project had
+been reading canvasses because canvass-reading was the skill it had built.
+**A.R.S. § 48-3709(B)** requires CAWCD candidates on the county general ballot
+*"without party designation"* — NONPARTISAN, from statute, cited, and the
+declared-open list is empty again. **§ 48-3708(A)** sizes each county's
+delegation by population and independently reproduces the Maricopa 10 / Pima 4 /
+Pinal 1 split read off fifteen member pages.
+
+Then **§ 16-410** reconciled the disagreement between CAWCD's own pages and
+Pima's certified 2020 canvass: a county board may cancel an uncontested Title 15
+or 48 election, appoint the filers *"as if elected"*, and *"canceled elections
+shall not appear on any ballot"*. Both sources were telling the truth.
+
+**It also disproved NH244's own opening claim.** An expiring term implies a
+POSITION TO BE FILLED and never a BALLOT CONTEST — and the corollary bites the
+other way too, because an absence now requires knowing an election was
+cancelled rather than merely not finding one. Nothing was written into the
+ballot corpus in either direction.
+
+Every machine route to the 2026 answer is now closed and named on NH244: the
+state portal behind bot protection at three client classes, Maricopa's and
+Pima's archives behind a robots-Disallowed `/api/`, the 2020 state canvass
+scanned with no local OCR binary. What remains is a public-records request,
+recorded as `HUMAN_ONLY` rather than pretended to be automatable.
+
+### No successful command may silently erase learned knowledge
+
+`pnpm method:ingest` rebuilt the method store from the legacy manifest and wrote
+it over whatever was there — 88 routes at version 27 down to 62 at version 0,
+printing `routes ingested 62` and `method:check PASSED` while doing it. Its own
+header promised the opposite, and a dead `void readFileSync` marked where
+reading the store had been intended and never written. Worse than an ordinary
+overwrite, because the method version is what convergence records are stamped
+with: resetting it to 0 silently re-validates every prior `CONVERGED_AS_OF`
+claim. **NH254, closed** — it now refuses and names exactly what would go.
+
+### The scale measurement had a type and no write path
+
+`MethodRoute.effort` was declared and nothing could write it, so it could only
+ever have attached to routes learned in the future — and the ones worth
+measuring are the ones already walked. `learnBatch` now carries it and FILLS an
+absent value on a route it already knows, while never overwriting a recorded
+one. **3 of 91 routes measured, 88 honestly unmeasured**, which is the number a
+forecast has to state rather than round away.
+
+### What the merge decided, and what decided it
+
+`main` advanced by one job-watch commit touching only the tracker files; all
+four conflicts were resolved as UNIONS, and the generated views regenerated
+rather than hand-merged. The meetings snapshot was decided MECHANICALLY: main's
+cron file carries 460 meetings with **zero** `bodyId`, because main does not yet
+have this branch's attribution code, and run through this branch's own guard it
+is REFUSED while the branch's is ACCEPTED. The invariant chose the file. That is
+the guard written one commit earlier doing exactly the job it was written for.

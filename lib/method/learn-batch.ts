@@ -24,7 +24,12 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { floored, floorLine } from "../ops/denominator-floor.ts";
-import { learnRoute, recordRouteOutcome, type MethodKnowledge } from "./knowledge.ts";
+import {
+  learnRoute,
+  recordRouteOutcome,
+  type MethodKnowledge,
+  type MethodRoute,
+} from "./knowledge.ts";
 import { unknownApplicability } from "./portability.ts";
 
 /**
@@ -49,6 +54,18 @@ export interface LearnedRoute {
     outcome: "YIELDED" | "ZERO" | "FAILED" | "BLOCKED";
     note: string;
   };
+  /**
+   * What this route COST, in kinds rather than in minutes (2026-08-27).
+   *
+   * Optional, and an absent value means nobody recorded it — which is a
+   * different thing from zero, and is what stops a forecast reporting the
+   * project as cheaper the less it has measured. See `MethodRoute.effort`.
+   *
+   * It is carried HERE because the schema had the field and nothing wrote it:
+   * a type is not a write path, and declaring one without the other is how a
+   * measurement stays permanently unrecorded.
+   */
+  effort?: MethodRoute["effort"];
 }
 
 export interface LearnBatchResult {
@@ -95,12 +112,32 @@ export function learnBatch(
         subBranches: [],
         origin: r.origin,
         learnedOn: stamp,
+        ...(r.effort ? { effort: r.effort } : {}),
       },
       stamp,
     );
     if (res.duplicate) {
       already += 1;
       log.push(`  already known   ${r.id}`);
+      /*
+       * **AN ABSENT EFFORT IS FILLED IN; A RECORDED ONE IS NEVER OVERWRITTEN.**
+       *
+       * The cost fields arrived after 91 routes already existed, so without
+       * this the measurement could only ever attach to routes learned in the
+       * future — and the ones worth measuring are the ones already walked.
+       * Filling an absent value is additive. Replacing a recorded one would be
+       * a silent mutation of somebody else's observation, so it does not
+       * happen and the run says nothing changed.
+       */
+      if (r.effort) {
+        const idx = k.routes.findIndex((x) => x.id === r.id);
+        if (idx >= 0 && !k.routes[idx].effort) {
+          const routes = [...k.routes];
+          routes[idx] = { ...routes[idx], effort: r.effort };
+          k = { ...k, routes };
+          log.push(`                  effort recorded for ${r.id} (was unmeasured)`);
+        }
+      }
     } else {
       k = res.knowledge;
       learned += 1;

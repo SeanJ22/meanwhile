@@ -46,6 +46,15 @@ const ROUTES: LearnedRoute[] = [
       "The SHAPE is as portable as anything this project holds: every elected office in the United States is created by a statute or a charter, and that instrument — not a canvass — is what says whether the office carries a party. It is also cheap, stable and citable: a canvass answers for ONE election and has to be re-read every cycle, while the statute answers for the office until the legislature changes it. Proved on A.R.S. 48-3708 and 48-3709 for the Central Arizona Water Conservation District, where four election-authority documents had failed to settle the same question. The limits are real and worth stating: a statute says what MUST happen and never what DID, so it can establish partisanship, apportionment and term but can never establish that a particular contest appeared on a particular ballot or who filed for it.",
     origin:
       "conceived 2026-08-27 after four documents failed. The AZ SOS 2026 partisan filing, the Pima 2026 primary candidate list, the Pima 2020 general official canvass read in full at 1,852 pages, and the Pima 2020 general sample ballot all contain no CAWCD contest, and the deciding SOS portal is behind bot protection at three client classes. M62's own rule had said to read the law FIRST and the project had been reading canvasses instead, because canvass-reading was the skill it had built.",
+    effort: {
+      /* The statute is written once per STATE and then answers for every office
+         that state creates — the cheapest class of knowledge this project buys. */
+      repeats: "PER_STATE",
+      execution: "MACHINE",
+      discovery: "NEW_METHOD",
+      note:
+        "Two plain fetches of azleg.gov/ars/ answered what four election-authority documents could not. The expensive part was realising the law was the instrument, not reading it.",
+    },
     outcome: {
       jurisdiction: "az",
       rows: 2,
@@ -64,6 +73,16 @@ const ROUTES: LearnedRoute[] = [
       "A.R.S. 16-410 lets a county board of supervisors cancel any Title 15 or Title 48 district election where the people who filed are fewer than or equal to the positions, appoint them 'fully vested ... as if elected', and forbids the cancelled election from appearing on ANY ballot. So a seat can turn over on schedule while its contest exists in no ballot, no sample ballot and no canvass. THE SHAPE TRAVELS EVEN WHERE THE SECTION NUMBER DOES NOT: uncontested-election cancellation is common across states for school and special districts, and it is the standing explanation for the puzzle 'a term expires this year and we can find no contest'. Do not read that silence as our own retrieval failing, and do not read it as the government failing to hold an election. Read the county's own cancellation resolution. THE COROLLARY THAT BITES: an ABSENCE may not be recorded either, because a true absence now requires knowing an election was cancelled rather than merely not finding one.",
     origin:
       "conceived 2026-08-27 to reconcile what looked like two authoritative sources contradicting each other. CAWCD's own member pages say three Pima directors were elected or re-elected on 2020-11-03; Pima County's certified canvass of that election, which certifies itself complete for all valid ballots cast, contains no CAWCD contest across 1,852 pages under seven name variants and none of their surnames. 16-410 explains both at once. The ballot corpus already held three unnamed instances of the same mechanism for 2026 — Vail Unified cancelled and appointed, Empire Elementary cancelled with three vacancies recorded, Sahuarita not cancelled because contested — all citing Pima Board of Supervisors matter 21690.",
+    effort: {
+      /* The 16-410 SHAPE is national; the section number and the cancelling
+         authority are per-state, and the resolution itself is per-county. */
+      repeats: "PER_COUNTY",
+      execution: "MACHINE_AFTER_HUMAN_SETUP",
+      discovery: "NEW_METHOD",
+      readerIntegrityRepair: true,
+      note:
+        "Reading a county cancellation resolution is machine work once the county publishes one somewhere reachable — Pima does, through the Legistar Web API. Maricopa does not: its archive is JavaScript off a robots-Disallowed /api/, so that county needs a records request first. Flagged as integrity repair because it disproved a standing claim rather than adding a fact.",
+    },
     outcome: {
       jurisdiction: "az",
       rows: 3,

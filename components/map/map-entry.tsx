@@ -1286,8 +1286,11 @@ function MapEntryInner() {
         showDistricts,
         districtsFailed,
         ui.filters.districtTypes as DistrictType[],
+        // MAP-5: the SAME Local/State/Federal selection the meeting list
+        // filters on. One state, two consumers, no synchronising callback.
+        ui.tiers,
       ),
-    [showDistricts, districtsFailed, ui.filters.districtTypes],
+    [showDistricts, districtsFailed, ui.filters.districtTypes, ui.tiers],
   );
 
   const selectedDistrict = useMemo(

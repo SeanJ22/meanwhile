@@ -4,6 +4,7 @@ import type { Map as MapLibreMap, MapGeoJSONFeature } from "maplibre-gl";
 // because node --test cannot resolve the `@/` alias and this module is now
 // exercised by tests/municipal-layer.test.ts (the §4.2 lesson again).
 import { FIPS_BY_USPS, geoFilesFor } from "../coverage/states.ts";
+import { DISTRICT_TYPE_TIER } from "../ocd/district-tiers.ts";
 import { TIER_ACCENT_VAR, type Tier } from "../ocd/tiers.ts";
 import type { DistrictType } from "../state/types.ts";
 import { stateFilter } from "./state-focus.ts";
@@ -66,7 +67,6 @@ interface LayerSpec {
    * (every other layer) always pass.
    */
   governingOnly?: boolean;
-  tier: Tier;
   label: string;
   /**
    * Dash pattern, in multiples of the line width.
@@ -112,7 +112,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     // 1.59 MB — larger than every other overlay put together — and a reader
     // in Tucson has no use for Ohio's boundaries. Arizona's share is 23 KB.
     files: geoFilesFor("cd119"),
-    tier: "national",
     label: "Congressional",
     dash: [8, 3],
     weight: 1.3,
@@ -120,7 +119,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   "state-senate": {
     files: geoFilesFor("sldu"),
-    tier: "state",
     label: "State Senate",
     dash: [5, 2],
     weight: 1.1,
@@ -128,7 +126,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   "state-house": {
     files: geoFilesFor("sldl"),
-    tier: "state",
     label: "State House",
     dash: [2, 2],
     weight: 0.9,
@@ -136,7 +133,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   county: {
     files: ["county-us.geojson"],
-    tier: "local",
     label: "County",
     // The widest thing the Local tier draws, so it gets the longest dash and
     // the heaviest stroke.
@@ -151,7 +147,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
     // all. FUNCSTAT (governingOnly) is what stops the merge double-drawing
     // Concord and friends and keeps Arizona's statistical CCDs off the map.
     files: geoFilesFor("place", "cousub"),
-    tier: "local",
     label: "Municipal",
     dash: [3, 2],
     weight: 1.0,
@@ -180,7 +175,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
    */
   "school-unified": {
     files: geoFilesFor("unsd"),
-    tier: "local",
     label: "School (unified)",
     dash: [2, 2],
     weight: 0.9,
@@ -188,7 +182,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   "school-elementary": {
     files: geoFilesFor("elsd"),
-    tier: "local",
     label: "School (elementary)",
     dash: [1, 2],
     weight: 0.75,
@@ -196,7 +189,6 @@ export const DISTRICT_LAYERS: Readonly<Record<DistrictType, LayerSpec>> = {
   },
   "school-secondary": {
     files: geoFilesFor("scsd"),
-    tier: "local",
     label: "School (secondary)",
     dash: [6, 2, 1, 2],
     weight: 0.75,
@@ -408,7 +400,7 @@ export function addDistrictLayer(
 
   // Colour by tier, not by type. The dash pattern is the shared signature of
   // "this is a district"; hue says which tier it belongs to.
-  const accent = token(TIER_ACCENT_VAR[spec.tier], "#5f7a8a");
+  const accent = token(TIER_ACCENT_VAR[DISTRICT_TYPE_TIER[type]], "#5f7a8a");
   const halo = token("--bg", "#0f1117");
 
   if (!map.getSource(source)) {
@@ -659,7 +651,7 @@ export function drawnDistrictsOn(
     seen.add(ocdId);
     drawn.push({
       type,
-      tier: DISTRICT_LAYERS[type].tier,
+      tier: DISTRICT_TYPE_TIER[type],
       typeLabel: DISTRICT_LAYERS[type].label,
       ocdId,
       label: String(feature.properties?.label ?? ocdId),
@@ -710,7 +702,7 @@ export function districtsAt(
 
     hits.push({
       type,
-      tier: DISTRICT_LAYERS[type].tier,
+      tier: DISTRICT_TYPE_TIER[type],
       typeLabel: DISTRICT_LAYERS[type].label,
       ocdId,
       label: String(feature.properties?.label ?? ocdId),

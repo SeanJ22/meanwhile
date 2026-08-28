@@ -23,6 +23,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { readableContent } from "../lib/extract/html-content.ts";
 import { CAMPAIGN_SITES } from "../lib/officials/campaign-sites.ts";
 import type {
   SourceSnapshot,
@@ -41,11 +42,19 @@ const ZIPS: [number, number][] = [
 ];
 
 /** Strip tags and collapse whitespace — a text snapshot, not a DOM. */
+/**
+ * DATA-1 (2026-08-28): this had NO content-region preference whatever, so it
+ * ingested whole campaign sites as candidate statements — one snapshot in
+ * `data/corpus/statements.json` opens "Juan Ciscomani for Congress DONATE
+ * DONATE 635ms 0vh 0 Skip to Content Meet Juan News Media Kit ...", and
+ * another is a menu tree. This corpus feeds candidate positions, so chrome in
+ * it is chrome in a claim about a person.
+ *
+ * It now shares `lib/extract/html-content.ts` with the meetings extractor.
+ */
 function extractText(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
+  return readableContent(html)
+    .html.replace(/<[^>]+>/g, " ")
     .replace(/&nbsp;/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&#\d+;|&[a-z]+;/gi, " ")

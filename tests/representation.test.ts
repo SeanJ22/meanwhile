@@ -14,6 +14,7 @@ import {
   shouldRenderNotice,
 } from "../lib/registry/representation.ts";
 import { DISTRICT_LAYERS, DISTRICT_TYPES } from "../lib/map/districts.ts";
+import { TIERS } from "../lib/ocd/tiers.ts";
 import {
   deriveActiveDistrictTypes,
   interactionTurnsOverlayOn,
@@ -238,7 +239,7 @@ test("a populated selection with the overlay on may never derive to nothing", ()
     ["congressional", "state-house", "county"],
     [...DISTRICT_TYPES],
   ] as const) {
-    const drawn = deriveActiveDistrictTypes(true, false, [...selected]);
+    const drawn = deriveActiveDistrictTypes(true, false, [...selected], TIERS);
     assert.deepEqual(
       drawn,
       [...selected],
@@ -247,8 +248,8 @@ test("a populated selection with the overlay on may never derive to nothing", ()
   }
 
   // The gates that legitimately empty the derivation, stated as such.
-  assert.deepEqual(deriveActiveDistrictTypes(false, false, ["county"]), []);
-  assert.deepEqual(deriveActiveDistrictTypes(true, true, ["county"]), []);
+  assert.deepEqual(deriveActiveDistrictTypes(false, false, ["county"], TIERS), []);
+  assert.deepEqual(deriveActiveDistrictTypes(true, true, ["county"], TIERS), []);
 });
 
 test("touching the district-type group turns the overlay on — except clear", () => {

@@ -1,0 +1,152 @@
+import assert from "node:assert/strict";
+import { test } from "node:test";
+
+import { readableContent } from "../lib/extract/html-content.ts";
+import { extractHtmlText } from "../lib/meetings/agenda-documents.ts";
+
+/**
+ * DATA-1 — navigation chrome must never masquerade as civic content.
+ *
+ * The reported example is CAWCD, whose page has NO semantic landmarks at all.
+ * The unnamed controls are a landmark page and a role-annotated page, so the
+ * rule is shown to be about the CLASS of HTML documents rather than about the
+ * one vendor that produced the screenshot.
+ *
+ * The negative controls matter as much as the positive ones: the repair must
+ * not be keyword deletion. Legitimate civic prose containing the very words
+ * that appear in the chrome ("News", "Board", "Facebook") has to survive.
+ */
+
+const text = (html: string) =>
+  extractHtmlText(html).replace(/\s+/g, " ").trim();
+
+/* ------------------------------------------------ the reported example --- */
+
+test("DATA-1: a div-soup page with no landmarks drops its menu and keeps its notice", () => {
+  // The shape of www.cap-az.com: no <main>, no <nav>, no roles. Elementor
+  // names its regions in class attributes and nowhere else.
+  const html = `
+    <html><body class="page-template-elementor_header_footer">
+      <a class="screen-reader-text skip-link" href="#content" title="Skip to content">Skip to content</a>
+      <div class="elementor elementor-location-header">
+        <ul class="elementor-nav-menu">
+          <li class="menu-item"><a href="/water">Know Your Water</a></li>
+          <li class="menu-item"><a href="/news">News</a></li>
+          <li class="menu-item"><a href="/es">En Espanol</a></li>
+        </ul>
+      </div>
+      <div id="content">
+        <p>CAWCD meeting notices are posted at CAP Headquarters, 23636 N. 7th
+        Street, Phoenix in the Building 1 reception area.</p>
+      </div>
+      <div class="elementor-location-footer">
+        <a href="#">Facebook-f</a> <a href="#">X-twitter</a>
+      </div>
+    </body></html>`;
+
+  const out = text(html);
+  assert.match(out, /CAWCD meeting notices are posted at CAP Headquarters/);
+  assert.doesNotMatch(out, /Skip to content/i);
+  assert.doesNotMatch(out, /Know Your Water/i);
+  assert.doesNotMatch(out, /En Espanol/i);
+  assert.doesNotMatch(out, /Facebook-f/i);
+});
+
+/* ---------------------------------------- unnamed controls: other shapes --- */
+
+test("DATA-1 control: a landmark page uses <main> and drops nav/header/footer", () => {
+  const html = `
+    <html><body>
+      <header><a href="/">Home</a> <a href="/news">News</a></header>
+      <nav><a href="/board">Board</a> <a href="/jobs">Careers</a></nav>
+      <main><p>The Board will consider the fiscal year budget override.</p></main>
+      <footer><a href="/privacy">Privacy Policy</a></footer>
+    </body></html>`;
+
+  const r = readableContent(html);
+  assert.equal(r.region, "main");
+  const out = text(html);
+  assert.match(out, /fiscal year budget override/);
+  assert.doesNotMatch(out, /Privacy Policy/i);
+  assert.doesNotMatch(out, /Careers/i);
+});
+
+test("DATA-1 control: ARIA roles are honoured when tags are generic divs", () => {
+  const html = `
+    <html><body>
+      <div role="banner"><span>Sahuarita Unified District</span></div>
+      <div role="navigation"><a href="/a">Agendas</a> <a href="/b">Minutes</a></div>
+      <div role="main"><p>Call to order at 6:00 p.m. in the district office.</p></div>
+      <div role="contentinfo"><span>All rights reserved</span></div>
+    </body></html>`;
+
+  const r = readableContent(html);
+  assert.equal(r.region, "role-main");
+  const out = text(html);
+  assert.match(out, /Call to order at 6:00 p\.m\./);
+  assert.doesNotMatch(out, /All rights reserved/i);
+});
+
+test("DATA-1 control: a link-dense list is dropped even with no chrome class", () => {
+  // Vendor-neutral backstop: this menu names itself nothing at all.
+  const links = Array.from(
+    { length: 14 },
+    (_, i) => `<li><a href="/p${i}">Department Page Number ${i}</a></li>`,
+  ).join("");
+  const html = `
+    <html><body><div id="content">
+      <ul>${links}</ul>
+      <p>The governing board meets on the second Tuesday of each month.</p>
+    </div></body></html>`;
+
+  const out = text(html);
+  assert.match(out, /second Tuesday of each month/);
+  assert.doesNotMatch(out, /Department Page Number 7/);
+});
+
+/* --------------------------------------------------- negative controls --- */
+
+test("DATA-1 negative control: civic prose is not keyword-deleted", () => {
+  // Every one of these sentences contains a word that also appears in the
+  // chrome the CAWCD page shipped. A repair that stripped strings would
+  // destroy them; a repair that reads structure keeps every one.
+  const html = `
+    <html><body><main>
+      <p>The Board will receive the News and Public Information Officer's
+      quarterly report.</p>
+      <p>Staff will present the district's Facebook and social media policy for
+      adoption.</p>
+      <p>Item 7: Careers in Water Supply — an update on the internship menu
+      offered to secondary students.</p>
+    </main></body></html>`;
+
+  const out = text(html);
+  assert.match(out, /News and Public Information Officer/);
+  assert.match(out, /Facebook and social media policy/);
+  assert.match(out, /Careers in Water Supply/);
+  assert.match(out, /internship menu/);
+});
+
+test("DATA-1 negative control: a short link line beside prose survives", () => {
+  // Below LINK_DENSITY_MIN_CHARS. Cutting it would lose a real agenda link.
+  const html = `
+    <html><body><main>
+      <div><a href="/packet.pdf">Board packet</a></div>
+      <p>Public comment will be taken on each action item before the vote is
+      called by the presiding officer.</p>
+    </main></body></html>`;
+
+  const out = text(html);
+  assert.match(out, /Board packet/);
+  assert.match(out, /Public comment will be taken/);
+});
+
+test("DATA-1: an empty page extracts as empty, never as invented content", () => {
+  assert.equal(text("<html><body><nav><a href='/'>Home</a></nav></body></html>"), "");
+});
+
+test("DATA-1: entity decoding and mojibake repair still run after the region pass", () => {
+  const html = `<html><body><main><p>Rates &amp; Fees &#8212; 9:00 a.m.</p></main></body></html>`;
+  const out = text(html);
+  assert.match(out, /Rates & Fees/);
+});

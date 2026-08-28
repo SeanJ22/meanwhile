@@ -150,3 +150,55 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
   }
   assert.equal(new Set(STATES).size, STATES.length, "the states must be distinct");
 });
+
+test("a document belonging to TWO governments is never handed to either as its agenda", () => {
+  /*
+   * **THE MISATTRIBUTION CLASS, IN THE LAST PLACE IT WAS STILL OPEN.**
+   *
+   * One URL in the corpus is attached to 27 meetings across two towns:
+   * `bradfordnh.gov/pages/calendar`, on 14 Newbury sittings and 13 Bradford
+   * ones. It is Bradford's own calendar — Bradford Town Hall, `bradfordnh.org`
+   * addresses, Bradford's board schedules — and it does not mention Newbury
+   * anywhere. Some of those rows carry `sourceOrg: "Town of Newbury"`.
+   *
+   * So a reader opening a Newbury Selectboard meeting was handed another
+   * town's calendar attributed to their own town. One page cannot be two
+   * GOVERNMENTS' agenda under any circumstances, which makes this a harder
+   * fact than the same-body landing page and the easier one to detect.
+   *
+   * The measurement is asserted rather than described, so the day the ingest
+   * defect (NH255) is repaired this test fails and says the number moved.
+   */
+  const byMeeting = new Map(snapshot.meetings.map((m) => [m.id, m]));
+  const byUrl = new Map<string, Set<string>>();
+  for (const d of snapshot.agendaDocuments) {
+    const ocdId = byMeeting.get(d.meetingId)?.ocdId;
+    if (!ocdId) continue;
+    const set = byUrl.get(d.documentUrl) ?? new Set<string>();
+    set.add(ocdId);
+    byUrl.set(d.documentUrl, set);
+  }
+  const crossGovernment = [...byUrl.entries()].filter(([, govs]) => govs.size > 1);
+
+  assert.equal(
+    crossGovernment.length,
+    1,
+    `${crossGovernment.length} document URL(s) span more than one government — the measurement moved, ` +
+      "which is either the NH255 repair landing or a new instance. Re-measure and re-point this control: " +
+      crossGovernment.map(([u, g]) => `${u} across ${g.size}`).join("; "),
+  );
+
+  /* And the serving path must refuse to attribute it. Pinned on the source
+     because the route reads a snapshot and a network fixture would prove less. */
+  const route = readFileSync(join(process.cwd(), "app/api/ask/agenda/route.ts"), "utf8");
+  assert.match(
+    route,
+    /documentSharedAcrossGovernments/,
+    "the meeting mode no longer reports when a document belongs to another government",
+  );
+  assert.match(
+    route,
+    /sharedAcrossGovernments \? null : \(newest\?\.sourceOrg \?\? null\)/,
+    "the meeting mode is attributing a document to a government it does not come from",
+  );
+});

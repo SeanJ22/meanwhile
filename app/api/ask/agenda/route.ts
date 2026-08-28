@@ -160,18 +160,57 @@ export async function POST(request: Request) {
     const newest = [...forMeeting].sort((a, b) =>
       a.retrievedAt < b.retrievedAt ? 1 : -1,
     )[0];
-    const items = newest ? agendaItems(newest.text) : [];
+
+    /*
+     * **A DOCUMENT SHARED WITH ANOTHER GOVERNMENT IS NOT THIS ONE'S AGENDA.**
+     * (2026-08-27.)
+     *
+     * One URL in the corpus is attached to 27 meetings across TWO towns:
+     * `bradfordnh.gov/pages/calendar`, on 14 Newbury sittings and 13 Bradford
+     * ones. It is Bradford's own calendar — Bradford Town Hall,
+     * `bradfordnh.org` addresses, Bradford's board schedules — and it does not
+     * mention Newbury anywhere. Some of those rows nonetheless carry
+     * `sourceOrg: "Town of Newbury"`.
+     *
+     * So a reader opening a Newbury Selectboard meeting was handed another
+     * town's calendar, attributed to their own town. That is the misattribution
+     * class this repository has been closing all session, in the one place it
+     * was still open, and it is worse than the same-body landing page: one page
+     * cannot be two GOVERNMENTS' agenda under any circumstances.
+     *
+     * The items are not returned and the attribution is not made. The LINK
+     * still travels — a reader may want to see what we actually hold — but it
+     * is reported for what it is rather than as this meeting's agenda. The
+     * underlying attachment is an ingest defect and is NH255.
+     */
+    const otherGovernments = newest
+      ? new Set(
+          documents
+            .filter((d) => d.documentUrl === newest.documentUrl)
+            .map((d) => snapshot.meetings.find((m) => m.id === d.meetingId)?.ocdId ?? null)
+            .filter((id): id is string => id !== null),
+        )
+      : new Set<string>();
+    const sharedAcrossGovernments = otherGovernments.size > 1;
+
+    const items = newest && !sharedAcrossGovernments ? agendaItems(newest.text) : [];
     return Response.json({
       mode: "meeting",
       meetingId,
       title: meeting.title,
       bodyName: meeting.bodyName,
       startsAt: meeting.startsAt,
+      /* Stated so the client can say the true thing rather than infer from an
+         empty item list, which would read as "nothing is on the agenda". */
+      documentSharedAcrossGovernments: sharedAcrossGovernments,
       // The raw link, ALWAYS, whether or not items were extracted. A05's
       // own rule: this sits alongside the agenda link and never replaces it.
       agendaUrl: meeting.agendaUrl ?? null,
       documentUrl: newest?.documentUrl ?? null,
-      sourceOrg: newest?.sourceOrg ?? null,
+      /* NOT attributed when the document belongs to more than one government:
+         the stored sourceOrg says "Town of Newbury" for a Bradford page, and
+         repeating it would be the falsehood rather than a record of it. */
+      sourceOrg: sharedAcrossGovernments ? null : (newest?.sourceOrg ?? null),
       retrievedAt: newest?.retrievedAt ?? null,
       items,
       // The denominators. `documentsHeld` 0 and `items` 0 mean different

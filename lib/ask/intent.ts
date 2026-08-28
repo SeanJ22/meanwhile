@@ -31,6 +31,24 @@ export type AskIntent =
   | "MEASURE"
   /** "who should I contact about this" */
   | "CONTACT"
+  /**
+   * **"is there a data centre coming?" — A TOPIC, SWEPT ACROSS EVERY READABLE
+   * AGENDA IN SCOPE.** (ASK-05, 2026-08-28.)
+   *
+   * Distinct from `UPCOMING_AGENDA`, and the distinction is the retrieval
+   * rule. `UPCOMING_AGENDA` names a body and asks what IT has scheduled; this
+   * names a SUBJECT and asks which governments have it on any docket. One
+   * selects a sitting, the other sweeps a corpus and states a denominator.
+   *
+   * It is on this list because before ASK-05 the sweep ran OUTSIDE the intent
+   * vocabulary entirely — a second `fetch` from the map component, racing the
+   * grounded engine through `Promise.all`, painting a second civic answer with
+   * its own eyebrow and its own denominator sentence beside the first. Two
+   * competing authorities on one screen, and the reader picked. Now it is an
+   * intent like any other, its records enter the ONE evidence pack as
+   * `AGENDA_MENTION`, and its denominator is a number in `pack.denominators`.
+   */
+  | "AGENDA_TOPIC"
   /** "what does a school board actually do" — no records needed */
   | "CIVICS"
   /** The rung could not decide. Never a licence to guess a default. */
@@ -44,6 +62,7 @@ export const ASK_INTENTS: AskIntent[] = [
   "TOPIC_OWNER",
   "MEASURE",
   "CONTACT",
+  "AGENDA_TOPIC",
   "CIVICS",
   "UNKNOWN",
 ];

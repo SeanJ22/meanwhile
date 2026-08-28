@@ -1,3 +1,4 @@
+import { answerSaysSomething, type AskAnswerPayload } from "../ask/answer.ts";
 import type { CoverageSummary } from "../registry/coverage.ts";
 
 import { matchDestination, type DestinationMatch } from "./destinations.ts";
@@ -279,35 +280,36 @@ function bindableEntities(
 export function askWasAnswered(
   result: AskAnswer,
   /**
-   * A03 (2026-08-18): the agenda rung's result, which the CLIENT holds
-   * because the corpus is server-side and this function is pure.
+   * **THE ONE ASK ENGINE'S REPLY, WHOLE.** (ASK-05, 2026-08-28.)
    *
-   * It is a parameter rather than a second check at the call site for the
-   * reason g11 wrote this function in the first place: a private copy of
-   * "answered" in the component knew about topics and destinations and
-   * would have had to learn the digest and exact names separately. The
-   * agenda rung is the fourth thing that would have had to be learned
-   * twice. One definition, one place to extend.
+   * This was a bag of loose numbers — `{ agendaHits, groundedRecords,
+   * groundedAnswer }` — assembled at the call site from two concurrent
+   * network replies. Two of those three came from a second engine that no
+   * longer exists, and the third was a count taken off an untyped object.
+   *
+   * It takes the declared payload now, and asks `answerSaysSomething` rather
+   * than counting fields itself, for exactly the reason this function exists:
+   * a private definition of "answered" in a component learns about topics and
+   * destinations, then has to learn about the digest, then exact names, then
+   * records, then gaps — and the render and the log disagree the first time
+   * one of them is extended. One definition, one place to extend, and the
+   * grounded half of it lives with the grounded contract.
+   *
+   * **A NAMED GAP COUNTS AS ANSWERED**, which the loose-number version could
+   * not express. *"We hold Warren Petersen as State Senator; none of the 24
+   * roll calls we have recorded carries a vote by him"* is the honest answer
+   * to the question that was asked. Logging it `NO_ROUTE` would file a
+   * question this product answered correctly into A06's roadmap of things it
+   * cannot do — the g11 defect, one rung later.
    */
-  extra: { agendaHits?: number; groundedRecords?: number; groundedAnswer?: boolean } = {},
+  grounded: AskAnswerPayload | null = null,
 ): boolean {
   return Boolean(
     (result.answer.kind === "ROUTED" && result.match) ||
       result.destination ||
       result.digest ||
       result.exactName ||
-      (extra.agendaHits ?? 0) > 0 ||
-      /*
-       * **THE GROUNDED ENGINE IS THE FIFTH THING THAT COUNTS AS ANSWERED**
-       * (PR #212 follow-up, 2026-08-28), and it is learned HERE for exactly
-       * the reason the function exists: the map surface now answers from
-       * `/api/ask/grounded`, so a question it answered with real sourced
-       * records would otherwise have been logged `NO_ROUTE` and filed into
-       * the roadmap of things this product cannot do. That is the g11 defect,
-       * one rung later.
-       */
-      (extra.groundedRecords ?? 0) > 0 ||
-      extra.groundedAnswer === true,
+      answerSaysSomething(grounded),
   );
 }
 

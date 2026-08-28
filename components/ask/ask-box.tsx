@@ -18,7 +18,15 @@ import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { readBrowserKey } from "@/lib/state/browser-key";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
-import type { AskSubjectRef } from "@/lib/ask/subject";
+import { subjectKindOf, type AskSubjectRef } from "@/lib/ask/subject";
+import {
+  answerSaysSomething,
+  readAskAnswer,
+  transportFailure,
+  type AskAnswerPayload,
+  type AskClassifyReply,
+} from "@/lib/ask/answer";
+import { contactReadLine } from "@/lib/ask/contacts";
 import { sourceLinks } from "@/lib/ask/host";
 import {
   KIND_LABEL,
@@ -62,24 +70,36 @@ import { tierVars } from "@/components/shell/tier-style";
  *   anything else                            ->  /api/ask/grounded
  * ```
  *
- * ## What still runs beside it, and the boundary that keeps it honest
+ * ## ONE ANSWER, AND THE SECOND ONE IS GONE (ASK-05, 2026-08-28)
  *
- * Two older rungs are retained because the grounded engine does not supersede
- * them, and each is confined to something that is NOT a claim about a
- * government's records:
+ * The follow-up above left a second engine running beside the first. This file
+ * posted to `/api/ask/agenda` with `scope: "TOPIC_ONLY"` and awaited it through
+ * the SAME `Promise.all` as the grounded engine, then rendered its reply as a
+ * whole second civic answer — its own eyebrow, its own four-way denominator
+ * sentence, its own corpus caveat, its own list of quoted clerk lines. Both
+ * could paint on one screen from one submission. **Two competing civic
+ * authorities, no precedence between them, reader picks.**
+ *
+ * The sweep was never the problem and it is not deleted. It runs inside the one
+ * engine now (`lib/ask/agenda-topic.ts`), its hits arrive as `AGENDA_MENTION`
+ * records in the one evidence pack, and every sentence it used to build arrives
+ * as a NAMED GAP with a `whose` on it. What it lost is its standing as a rival
+ * answer.
+ *
+ * So there is one network call for an answer, one contract
+ * (`lib/ask/answer.ts`, imported rather than hand-copied), and one rung beside
+ * it:
  *
  * * **The curated destination router** (`answerQuestion`) offers the four
- *   in-app surfaces. That is NAVIGATION. It is consulted after the grounded
- *   reply, never instead of it.
- * * **The topic agenda search** (`/api/ask/agenda`, called with
- *   `scope: "TOPIC_ONLY"`) sweeps every readable agenda in the reader's area
- *   for a topic — *"is there a data centre coming?"* — which is a different
- *   question with a different denominator. Under that scope the route REFUSES
- *   to answer a named body's docket at all, so the boundary is enforced in the
- *   server rather than promised by this file.
+ *   in-app surfaces. That is NAVIGATION, never a claim about a government's
+ *   records, which is why it may coexist. It is consulted after the grounded
+ *   reply, never instead of it, and its own binder sentences are suppressed
+ *   wherever the engine bound a subject — the engine binds against a superset
+ *   of this file's inventory, so two binder verdicts on one screen would be
+ *   the same defect in miniature.
  *
- * Nothing here can silently bypass the grounded pipeline: it is called on every
- * ask, first, and its verdict is what the panel leads with.
+ * Nothing here can silently bypass the grounded pipeline: it is awaited on
+ * every ask, unconditionally, and its verdict is what the panel leads with.
  *
  * ## What is unchanged and load-bearing
  *
@@ -136,81 +156,27 @@ const NAME_CLASS: Readonly<Record<SearchKind, NameableEntity["nameClass"]>> = {
   officeholder: "person",
 };
 
-/**
- * What `/api/ask/grounded` returns — THE Ask answer.
+/*
+ * **THE HAND-COPIED CONTRACT IS GONE.** (ASK-05, 2026-08-28.)
  *
- * Every optional field is optional because the pipeline degrades rather than
- * fails: grounded prose -> structured records -> a named gap. This component
- * renders whatever arrived and **never discards a useful reply because one
- * field is null**, which is the defect class PR #211 found repeatedly in this
- * file's own handling of the agenda reply.
+ * This file used to declare its own `GroundedRecord`, `GroundedContact`,
+ * `GroundedReply` and `AgendaAnswer` — four interfaces describing shapes the
+ * server produced and neither side owned. They had already drifted:
+ *
+ * * `mode` was typed `string`, so the server's `mode: "OFF"` typechecked here,
+ *   matched no render branch, and painted an EMPTY PANEL at a reader.
+ * * `EvidenceRecord.kind` is a 16-member union; the copy flattened it to
+ *   `string`, so a branch on a kind the server cannot send would have compiled.
+ * * `AskContact.basis` and `AskContact.retrievedAt` were simply absent, which
+ *   made the provenance of a sourced civic relationship **unrenderable by
+ *   declaration** — on the wire, and unreachable from any render.
+ * * `AskTrace` rides on every reply and appeared nowhere.
+ * * `AgendaAnswer` was a SECOND reader-facing civic answer, fetched
+ *   concurrently and rendered beside the first.
+ *
+ * The contract is now `lib/ask/answer.ts`, imported by the routes that produce
+ * it and by both surfaces that render it.
  */
-interface GroundedRecord {
-  kind: string;
-  id: string;
-  text: string;
-  sourceUrl?: string | null;
-  sourceOrg?: string | null;
-}
-
-interface GroundedContact {
-  id: string;
-  name: string;
-  officeTitle: string;
-  relationship: string;
-  email: string | null;
-  phone: string | null;
-  websiteUrl: string | null;
-  sourceUrl: string | null;
-  sourceOrg: string | null;
-}
-
-interface GroundedReply {
-  mode: string;
-  subject?: { kind: string; id: string; name: string; office?: string | null } | null;
-  answer?: string | null;
-  records?: GroundedRecord[];
-  gaps?: { whose: "OURS" | "THEIRS"; statement: string }[];
-  contacts?: GroundedContact[];
-  mention?: string;
-  candidates?: string[];
-}
-
-/**
- * What `/api/ask/agenda` returns for A03. Every string in it is read off a
- * document a government published — the quote is the clerk's own line.
- */
-interface AgendaAnswer {
-  topic: { id: string; label: string } | null;
-  /**
-   * The government the SERVER resolved (2026-08-27). It binds against the
-   * whole corpus; this component binds against the search index and the
-   * reader own covered bodies, both scoped to their area. So the server can
-   * hold a government this component cannot see, and its verdict wins.
-   */
-  namedEntity?:
-    | { state: "BOUND"; ocdId: string; name: string }
-    | { state: "AMBIGUOUS"; candidates: string[] }
-    | { state: "UNRESOLVED"; mention: string }
-    | null;
-  radiusMiles: number | null;
-  hits: {
-    quote: string;
-    matchedPhrase: string;
-    documentUrl: string;
-    sourceOrg: string;
-    bodyName: string | null;
-    /** ASK-4: the exact division key behind this hit, or null. */
-    ocdId: string | null;
-    title: string | null;
-    startsAt: string | null;
-    agendaUrl: string | null;
-  }[];
-  /** The denominators — stated N equals rendered rows. */
-  hitsFound: number;
-  searched: number;
-  unreadable: number;
-}
 
 
 export function AskBox({
@@ -261,15 +227,12 @@ export function AskBox({
   // reader sees here is generated, and a deliberation word would claim
   // otherwise. The prohibited list lives with the pool.
   const [working, setWorking] = useState(false);
-  // A03's answer, kept beside the routed answer rather than inside it:
-  // an agenda hit is evidence from a document, not a step in a route.
-  const [agenda, setAgenda] = useState<AgendaAnswer | null>(null);
   /*
    * THE GROUNDED ANSWER. It leads the panel, because it is the one that
    * resolves a canonical government and retrieves that government's own
    * records; everything else below it is navigation or a topic sweep.
    */
-  const [grounded, setGrounded] = useState<GroundedReply | null>(null);
+  const [grounded, setGrounded] = useState<AskAnswerPayload | null>(null);
   /*
    * **THE BOUNDED FOLLOW-UP CONTEXT — and the emphasis is on bounded.**
    *
@@ -284,14 +247,6 @@ export function AskBox({
   const [priorTurns, setPriorTurns] = useState<
     { question: string; resolvedSubject: string | null }[]
   >([]);
-  /*
-   * The SERVER own verdict on the government the reader named, when it has
-   * one. It sees the whole corpus and this component sees the reader area, so
-   * where the two disagree the server is right — and the disagreement was
-   * reader-visible: this component said "we do not have a government recorded
-   * under vail" about a government the server had already resolved.
-   */
-  const [serverEntity, setServerEntity] = useState<AgendaAnswer["namedEntity"]>(null);
   // Drawn per ask, in the browser, at click time — never during server
   // render, which would freeze one line into the HTML or mismatch on
   // hydration. Seeded with the first entry so the type is never null.
@@ -428,7 +383,9 @@ export function AskBox({
         body: JSON.stringify({ question }),
       });
       if (!response.ok) return null;
-      const body = (await response.json()) as { topic?: string | null };
+      /* Read through the DECLARED shape, not an inline restatement of it —
+         one more hand-copied contract retired (ASK-05). */
+      const body = (await response.json()) as AskClassifyReply;
       return typeof body.topic === "string" ? body.topic : null;
     } catch {
       return null;
@@ -455,10 +412,14 @@ export function AskBox({
    *   that act proves. `stampResidency` on the server decides that, so no
    *   client can assert a location confidence it did not earn.
    *
-   * A failure of any kind returns null and the panel degrades to the rungs
-   * below rather than to a wrong answer.
+   * **A FAILURE IS A STATE AND IT IS SAID.** (ASK-05, 2026-08-28.) This used
+   * to return null on a bad status or a thrown fetch, and the panel rendered
+   * NOTHING — while the ballot surface, on the identical engine, said *"That
+   * didn't reach us."* One engine may not degrade two ways, and silence is the
+   * worse of the two: it is indistinguishable from a working product with
+   * nothing to say. `transportFailure()` is the shared constructor.
    */
-  const askGrounded = async (question: string): Promise<GroundedReply | null> => {
+  const askGrounded = async (question: string): Promise<AskAnswerPayload> => {
     const active: AskSubjectRef[] = [];
     if (ui.selectedDistrictOcdId) {
       active.push({
@@ -501,69 +462,36 @@ export function AskBox({
           continuityKey: readBrowserKey("wtp.ask_key") ?? "",
         }),
       });
-      if (!response.ok) return null;
-      return (await response.json()) as GroundedReply;
+      if (!response.ok) return transportFailure();
+      /* Parsed THROUGH the contract, not cast to it. A cast is what let
+         `mode: "OFF"` reach the render and match nothing; a reply whose mode
+         is not a member is refused here and reported as a transport failure
+         rather than rendered as an empty panel. */
+      return readAskAnswer(await response.json()) ?? transportFailure();
     } catch {
-      return null;
+      return transportFailure();
     }
   };
 
-  /**
-   * A03 (2026-08-18): the agenda rung.
+  /*
+   * **THE SECOND NETWORK CALL IS GONE, AND SO IS THE SECOND ANSWER.**
+   * (ASK-05, 2026-08-28.)
    *
-   * Asked BEFORE the classifier and independently of the topic router,
-   * because "is there a data center coming?" is not a question about who
-   * owns a topic — it is a question about what is on an agenda, and the two
-   * are different answers to different questions. The corpus lives on the
-   * server (about 850 KB of extracted document text), so the client asks it
-   * rather than carrying it.
+   * `askAgenda` posted to `/api/ask/agenda` with `scope: "TOPIC_ONLY"`,
+   * concurrently with the grounded engine, and its reply rendered as a WHOLE
+   * SECOND CIVIC ANSWER further down this file: its own eyebrow, its own
+   * four-way denominator sentence, its own corpus caveat, its own hit list.
+   * Both could paint on one screen from one submission. Two competing civic
+   * authorities, no precedence between them, and the reader deciding which
+   * to believe.
    *
-   * Everything it returns is a line a clerk typed, quoted. Nothing here is
-   * summarised or generated, and a failure of any kind returns null and
-   * leaves the rest of the pipeline exactly as it was.
+   * The topic sweep still runs and still answers *"is there a data centre
+   * coming?"*. It runs INSIDE the one engine now (`lib/ask/agenda-topic.ts`),
+   * its hits arrive as `AGENDA_MENTION` records in the one evidence pack, and
+   * its four denominator sentences arrive as named gaps with a `whose` on
+   * each. Nothing this component used to say about it was lost; what was lost
+   * is its standing as a rival answer.
    */
-  const askAgenda = async (
-    question: string,
-  ): Promise<AgendaAnswer | null> => {
-    try {
-      const response = await fetch("/api/ask/agenda", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        // The divisions the reader is standing in — the same approximate
-        // basis the log row uses, and a better scope than distance: a
-        // rezoning in your own town is your business at any distance.
-        //
-        // `TOPIC_ONLY` is the ownership boundary, declared. Under it the route
-        // refuses to answer a named body's docket at all — that question now
-        // belongs to `/api/ask/grounded` and to nothing else, and the refusal
-        // lives in the server so this file cannot drift back into owning it.
-        body: JSON.stringify({ question, ocdIds, scope: "TOPIC_ONLY" }),
-      });
-      if (!response.ok) return null;
-      const body = (await response.json()) as AgendaAnswer;
-      /*
-       * ONE SHAPE on this surface. The route is called with `scope:
-       * "TOPIC_ONLY"` and refuses the named-body docket, which the grounded
-       * engine owns — so there is no second discriminator to read here.
-       */
-      /*
-       * **THE TOPIC IS NOT THE ONLY THING WORTH KEEPING, AND THIS DISCARD HAS
-       * NOW BITTEN THREE TIMES.**
-       *
-       * The original `body.topic ? body : null` threw away the whole reply
-       * whenever the agenda rung had no topic — first the body-agenda answer,
-       * and then the server-resolved namedEntity, which is precisely the case
-       * where the topic IS null: a question naming a government that carries no
-       * agenda keyword. The server had resolved Vail and this line dropped it.
-       *
-       * So the reply is kept when it carries anything the caller can use.
-       */
-      return "topic" in body && (body.topic || body.namedEntity) ? body : null;
-    } catch {
-      return null;
-    }
-  };
-
   const ask = () => {
     const question = text.trim();
     if (!question) return;
@@ -574,12 +502,10 @@ export function AskBox({
     if (beatTimer.current) clearTimeout(beatTimer.current);
     setAsked(null);
     setDigest(null);
-    setAgenda(null);
     /* The standing grounded answer goes with the question it answered — a
        previous subject left on screen under a new question reads as this
        product having answered the new one about the old government. */
     setGrounded(null);
-    setServerEntity(null);
     setBeat(drawAskBeat());
     setWorking(true);
     // Submitting an ASK releases the map filter and closes the autocomplete.
@@ -614,25 +540,17 @@ export function AskBox({
       }
 
       /*
-       * **THE GROUNDED ENGINE RUNS FIRST, AND IT RUNS ON EVERY ASK.**
-       * (PR #212 follow-up, 2026-08-28.)
+       * **ONE ENGINE, ONE AWAIT, ONE ANSWER.** The `Promise.all` that used to
+       * stand here raced the topic sweep against the grounded engine so that
+       * both could render. The sweep is inside the engine now, so there is one
+       * call and there is nothing left to race.
        *
-       * This is the line that closes the defect: before it, this component
-       * answered from the classifier and the topic-agenda rung while the
-       * grounded pipeline sat unused one directory away. Nothing below can
-       * bypass it — it is awaited here, unconditionally, for every submission
-       * that is not an exact-name navigation.
-       *
-       * The topic sweep runs beside it, scoped, because it answers a different
-       * question. Both are awaited together rather than in sequence: they are
-       * independent, and serialising two network calls would put the slower
-       * one's latency on top of the faster one's for no reason.
+       * It is still awaited unconditionally on every submission that is not an
+       * exact-name navigation — that is the line that closed the PR #212
+       * defect and nothing below may bypass it.
        */
-      const [groundedAnswer, agendaAnswer] = await Promise.all([
-        askGrounded(question),
-        askAgenda(question),
-      ]);
-      if (groundedAnswer) setGrounded(groundedAnswer);
+      const groundedAnswer = await askGrounded(question);
+      setGrounded(groundedAnswer);
       /*
        * The bounded conversation advances only when something CANONICAL was
        * resolved. A turn that resolved nothing contributes no referent, and
@@ -641,51 +559,48 @@ export function AskBox({
        */
       if (groundedAnswer?.subject) {
         const resolved = groundedAnswer.subject;
+        /*
+         * **THE KIND IS THE SUBJECT'S OWN KIND.** (ASK-05, 2026-08-28.)
+         *
+         * This pushed `kind: "PERSON"` for EVERY resolved subject — a school
+         * district, a ballot measure, a contest, all of them recorded as
+         * people in the follow-up context that a later pronoun resolves
+         * against. `resolveSubjectRef` matches on the id first, so it did not
+         * usually produce a wrong answer; it produced a wrong REASON, and the
+         * moment a reference without an id needed the kind to disambiguate,
+         * it would have.
+         */
         setPriorSubjects((prior) =>
-          [...prior, { id: resolved.id, name: resolved.name, kind: "PERSON" as const }].slice(-4),
-        );
-        setPriorTurns((prior) =>
+          [
+            ...prior,
+            { id: resolved.id, name: resolved.name, kind: subjectKindOf(resolved.kind) },
+          ].slice(-4),
+        );        setPriorTurns((prior) =>
           [...prior, { question, resolvedSubject: resolved.name }].slice(-4),
         );
       } else {
         setPriorTurns((prior) => [...prior, { question, resolvedSubject: null }].slice(-4));
       }
       /*
-       * A03's remainder, closed 2026-08-19 (g20): a ZERO-HIT search is a
-       * result and it renders.
+       * **EVERY SENTENCE THIS BLOCK USED TO SET UP NOW TRAVELS AS A GAP.**
+       * (ASK-05, 2026-08-28.)
        *
-       * Until now this block rendered only when there was a hit, so a
-       * reader who asked "is there a data center coming?" and got nothing
-       * saw no trace that anything had been searched. Silence there reads
-       * as "no", and "no" is precisely the claim we are not entitled to
-       * make — the standing rule is that absence is never asserted, and a
-       * search that ran and found nothing is not the same fact as a search
-       * that never ran.
+       * It set `agenda` and `serverEntity` from the second reply. What it was
+       * protecting is preserved and moved, not dropped — g20's rule that a
+       * ZERO-HIT search is a RESULT and must render, because silence reads as
+       * "no" and "no" is the claim we are not entitled to make. That is now a
+       * named gap emitted by `lib/ask/agenda-topic.ts` whenever the sweep ran,
+       * alongside the three other distinctions the old four-way ternary drew:
+       * nothing searched, nothing found, and a clipped list.
        *
-       * So the rung reports whenever it RECOGNISED the topic, and the
-       * sentence carries what it actually looked at. A null topic still
-       * renders nothing: that means this rung had no opinion, not that it
-       * looked and came back empty.
+       * `serverEntity` is gone for the same reason. It existed because this
+       * component binds against the reader's area while the server binds
+       * against the whole corpus, so the server could hold a government this
+       * file could not see. The grounded engine binds against a SUPERSET of
+       * both and its verdict is already on screen as `grounded.subject`, so a
+       * second server verdict rendered separately would be the two-authorities
+       * problem in miniature.
        */
-      /*
-       * **THE BODY-AGENDA BRANCH IS GONE FROM THIS SURFACE.**
-       *
-       * A named government's own docket is the grounded engine's question now,
-       * and it answers it better: it reads the reader's TENSE (next versus
-       * last, rather than `upcoming[0] ?? past[0]`), it prints the sitting in
-       * the body's own time zone, and any prose it produces is validated
-       * against the evidence pack it was built from. Keeping a second answer
-       * to the same question here would put two governments' worth of truth on
-       * one screen and let the reader pick.
-       *
-       * The route refuses that mode under `scope: "TOPIC_ONLY"`, so this is
-       * enforced rather than merely intended.
-       */
-      if (agendaAnswer && "topic" in agendaAnswer) {
-        if (agendaAnswer.namedEntity) setServerEntity(agendaAnswer.namedEntity);
-        if (agendaAnswer.topic) setAgenda(agendaAnswer);
-      }
-
       /*
        * Keyword-first, structurally: the classifier is consulted only after the
        * deterministic matcher has already refused.
@@ -720,35 +635,31 @@ export function AskBox({
        * destinations, or the digest — and carries no more about a reader than
        * a topic id always has.
        */
-      // An agenda hit is an ANSWER, and the roadmap contains only what we
-      // could not do — so a question this rung answered must not be logged
-      // as a refusal. Same defect G05 rule 4d found with destinations, and
-      // the fix is the same: the shared definition learns about the new
-      // rung, rather than the component growing a second opinion.
-      /* The two shapes again. A body-agenda answer counts as ONE answered rung —
-         it named a government and answered from that government. */
-      const topicAgenda =
-        agendaAnswer && "topic" in agendaAnswer ? agendaAnswer : null;
-      /* Only the TOPIC shape survives on this surface: the named-body docket
-         is the grounded engine's question and the route refuses to answer it
-         under the scope this component declares. */
-      const answeredHits = topicAgenda?.hits.length ?? 0;
       /*
-       * The grounded engine's own evidence counts as answered. Without this a
-       * question it answered from real sourced records would be logged
-       * `NO_ROUTE` with its text and filed into A06's roadmap of things this
-       * product CANNOT do — building the roadmap out of the successes. That is
-       * the g11 defect exactly, one rung later, and the fix is the same one:
-       * the shared definition learns the new rung rather than this component
-       * growing a second opinion. The evidence is assembled here so the call
-       * below stays the one readable line `tests/ask-matcher.test.ts` pins.
+       * **THE ONE REPLY, HANDED TO THE ONE DEFINITION.** (ASK-05.)
+       *
+       * Three loose numbers used to be assembled here from two concurrent
+       * replies, two of them from an engine that no longer exists. The
+       * shared definition takes the declared payload now, so a question the
+       * engine answered — with prose, with records, or with a NAMED GAP —
+       * can never be logged as one this product could not do. That is G05
+       * rule 4d and g11's defect, and the fix is the same both times: the
+       * shared definition learns the rung, rather than this component
+       * growing a second opinion about what 'answered' means.
        */
-      const answeredEvidence = {
-        agendaHits: answeredHits,
-        groundedRecords: groundedAnswer?.records?.length ?? 0,
-        groundedAnswer: Boolean(groundedAnswer?.answer),
-      };
-      if (askWasAnswered(result, answeredEvidence)) {
+      /*
+       * **A TRANSPORT FAILURE LOGS NEITHER.** (ASK-05, 2026-08-28.)
+       *
+       * The engine was never reached, so nothing was asked of the records and
+       * nothing may be concluded about them. Logging it ANSWERED would credit
+       * a reply that never arrived; logging it NO_ROUTE would file a question
+       * this product may well answer perfectly into A06's roadmap of things it
+       * CANNOT do — and the roadmap is built on that row. So the row is not
+       * written, and the reader is told the request did not reach us.
+       */
+      if (groundedAnswer.mode === "TRANSPORT_FAILED") {
+        /* nothing is recorded about a question we never got to ask */
+      } else if (askWasAnswered(result, groundedAnswer)) {
         logEvent("QUESTION_ASKED", ocdIds, {
           topic:
             result.match?.topicId ??
@@ -756,9 +667,7 @@ export function AskBox({
               ? "DIGEST"
               : result.destination
                 ? "DESTINATION_ONLY"
-                : groundedAnswer?.subject
-                  ? "GROUNDED"
-                  : `AGENDA_${topicAgenda?.topic?.id ?? "TOPIC"}`),
+                : "GROUNDED"),
           routed: true,
           ...(result.match?.via ? { via: result.match.via } : {}),
           ...(result.destination
@@ -1128,6 +1037,49 @@ export function AskBox({
             </p>
           )}
 
+          {/*
+            **THE ENGINE IS SWITCHED OFF, SAID OUT LOUD.** (ASK-05, 2026-08-28.)
+
+            The server has answered `mode: "OFF"` under `ripcord.askGrounded`
+            since the route shipped, and `"OFF"` was not a member of
+            `AnswerMode`. Both clients typed `mode` as a bare string, so it
+            typechecked, matched NO branch, and rendered an empty panel back at
+            a reader who had just typed a question. A switched-off capability
+            looked identical to a working one with nothing to say.
+
+            A fact about us, attributed, with no verdict on ourselves in it.
+          */}
+          {grounded.mode === "OFF" && (
+            <p
+              data-ask-grounded-state="OFF"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              Answering from our records is switched off right now, so we have
+              nothing to show for that question yet.
+            </p>
+          )}
+
+          {/*
+            **THE REQUEST NEVER REACHED US.** (ASK-05, 2026-08-28.)
+
+            The ballot surface has had this state since it shipped
+            (`data-ask-state="TRANSPORT_FAILED"`) and this one did not: the
+            fetch caught, returned null, and the panel rendered NOTHING. One
+            engine, two surfaces, and only one of them told the reader the
+            truth about the same failure.
+
+            It is deliberately not "we found nothing", which would be a claim
+            about a government made out of a failed request.
+          */}
+          {grounded.mode === "TRANSPORT_FAILED" && (
+            <p
+              data-ask-state="TRANSPORT_FAILED"
+              className="text-[0.8125rem] leading-relaxed text-voice"
+            >
+              That didn&rsquo;t reach us. Try again in a moment.
+            </p>
+          )}
+
           {/* The validated sentence, where one survived checking. */}
           {grounded.answer && (
             <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-paper-dim">
@@ -1179,7 +1131,15 @@ export function AskBox({
               <p className="t-eyebrow text-muted">Who this is</p>
               <ul className="mt-0.5 space-y-0.5">
                 {(grounded.contacts ?? []).map((c) => (
-                  <li key={c.id} className="text-[0.75rem] leading-relaxed text-paper-dim">
+                  <li
+                    key={c.id}
+                    /* The BASIS stays machine-readable and off the reader's
+                       page: `BODY_MEMBER` is an enum value and no enum value
+                       reaches a reader. Its plain-language form is already the
+                       relationship sentence beside it. */
+                    data-ask-contact-basis={c.basis}
+                    className="text-[0.75rem] leading-relaxed text-paper-dim"
+                  >
                     <span className="text-paper">{c.name}</span> — {c.relationship}
                     {c.email ? (
                       <>
@@ -1191,6 +1151,20 @@ export function AskBox({
                           {c.email}
                         </a>
                       </>
+                    ) : null}
+                    {/*
+                      **WHO SAID SO, AND WHEN WE READ IT.** (ASK-05.)
+
+                      `AskContact` has always carried `sourceOrg` and
+                      `retrievedAt`, and both hand-copied client contact types
+                      DROPPED them — so the provenance of a claim about a named
+                      person's role travelled on the wire and was unrenderable
+                      by declaration. A relationship sentence with no source
+                      behind it is exactly what `lib/ask/contacts.ts` says a
+                      contact may never be.
+                    */}
+                    {contactReadLine(c) ? (
+                      <span className="text-muted"> · {contactReadLine(c)}</span>
                     ) : null}
                   </li>
                 ))}
@@ -1212,7 +1186,13 @@ export function AskBox({
             (grounded.records?.length ?? 0) === 0 &&
             (grounded.gaps?.length ?? 0) === 0 &&
             grounded.mode !== "CLARIFY" &&
-            grounded.mode !== "UNRESOLVED" && (
+            grounded.mode !== "UNRESOLVED" &&
+            /* Both of these render their own sentence above. Without them here
+               a switched-off engine or an unreachable one would print the
+               "we hold nothing" line as well, which claims something about our
+               records that neither state got far enough to check. */
+            grounded.mode !== "OFF" &&
+            grounded.mode !== "TRANSPORT_FAILED" && (
               <p
                 data-ask-grounded-state="NOTHING_HELD"
                 className="text-[0.8125rem] leading-relaxed text-voice"
@@ -1255,39 +1235,35 @@ export function AskBox({
       )}
 
       {/*
-        **THE SERVER'S VERDICT RENDERS ON EVERY PATH, NOT ONLY ON REFUSAL.**
-        (2026-08-27.)
+        **THE SERVER'S VERDICT IS THE GROUNDED SUBJECT NOW.** (ASK-05.)
 
-        It was inside the refusal block, which meant a question that ROUTED
-        never showed it — and "when does the Vail school board meet" routes to
-        schools-policy. So at a Tucson zip the reader was told *"We haven't
-        matched 'vail' to a government near you"* by the step gap, while this
-        component was holding the server's answer that we DO hold Vail and
-        rendering it nowhere.
+        A separate paragraph stood here — *"We do hold Vail — search for it by
+        name to open it"* — built from a binding the topic route returned
+        alongside its sweep. It existed because this component binds against
+        the reader's own area while a server binds against the whole corpus,
+        so the server could hold a government this file could not see.
 
-        That sentence is true — the client really did only search nearby — but
-        stopping there when the better answer is already in hand is a different
-        failure from the false one it replaced: honest, and needlessly unhelpful.
+        That is still true and it is answered better: the grounded engine
+        binds against a SUPERSET of both inventories and its verdict already
+        renders above, as the subject line of the answer itself. A second
+        server verdict in its own paragraph would be a second authority on the
+        same screen, which is the whole defect ASK-05 exists to close.
       */}
-      {asked && serverEntity?.state === "BOUND" && (
-        <p
-          data-ask-server-entity="BOUND"
-          data-ask-server-entity-id={serverEntity.ocdId}
-          className="mt-2.5 text-[0.8125rem] leading-relaxed text-voice"
-        >
-          We do hold {serverEntity.name} — search for it by name to open it.
-        </p>
-      )}
-
       {/*
-        A03 (2026-08-18): the refusal reads the SHARED definition of
-        answered, with the agenda rung's evidence passed in — otherwise a
-        reader who got a real answer off a real agenda would be told
-        underneath it that we have no sourced answer for their question.
-        Two contradictory sentences on one screen is worse than either.
+        The refusal reads the SHARED definition of answered, handed the ONE
+        engine's reply — otherwise a reader who got a real answer off real
+        records would be told underneath it that we have no sourced answer for
+        their question. Two contradictory sentences on one screen is worse than
+        either of them alone.
+
+        **AND IT IS SILENT ON A TRANSPORT FAILURE.** (ASK-05, 2026-08-28.)
+        *"We haven't got a sourced answer for that"* is a claim about our own
+        records, and it may not be made when the request never reached them.
+        The grounded block above says what actually happened.
       */}
       {asked &&
-        !askWasAnswered(asked, { agendaHits: agenda?.hits.length ?? 0, groundedRecords: grounded?.records?.length ?? 0, groundedAnswer: Boolean(grounded?.answer) }) && (
+        grounded?.mode !== "TRANSPORT_FAILED" &&
+        !askWasAnswered(asked, grounded) && (
           <div data-ask-refusal className="mt-2.5">
           {/*
             **THE GOVERNMENT THEY NAMED, WHEN WE COULD NOT PIN IT DOWN**
@@ -1312,7 +1288,7 @@ export function AskBox({
             for, pointed inward. So where the server resolved the name, that is
             what the reader is told.
           */}
-                    {asked.binding.kind === "UNRESOLVED" && serverEntity?.state !== "BOUND" && (
+          {asked.binding.kind === "UNRESOLVED" && !grounded?.subject && (
             <p
               data-ask-entity-state="UNRESOLVED"
               className="text-[0.8125rem] leading-relaxed text-voice"
@@ -1321,7 +1297,7 @@ export function AskBox({
               government near you.
             </p>
           )}
-          {asked.binding.kind === "AMBIGUOUS" && (
+          {asked.binding.kind === "AMBIGUOUS" && !grounded?.subject && (
             <p
               data-ask-entity-state="AMBIGUOUS"
               className="text-[0.8125rem] leading-relaxed text-voice"
@@ -1359,119 +1335,32 @@ export function AskBox({
         </div>
       )}
 
-        {/*
-          **THE NAMED GOVERNMENT'S OWN DOCKET MOVED, IT DID NOT DISAPPEAR.**
-          (PR #212 follow-up, 2026-08-28.)
+      {/*
+        **THE SECOND CIVIC ANSWER IS GONE, AND ITS EVIDENCE IS UPSTAIRS.**
+        (ASK-05, 2026-08-28.)
 
-          This block rendered `/api/ask/agenda`'s body-agenda answer. That
-          question — what has this named government scheduled to discuss —
-          belongs to the grounded engine now, which answers it strictly
-          better: it reads the reader's TENSE rather than taking
-          `upcoming[0] ?? past[0]`, it prints the sitting in the body's own
-          time zone rather than as a UTC instant a day off, and any prose it
-          produces is validated against the pack it was built from.
+        A whole second answer rendered here, ninety-odd lines of it: the topic
+        sweep's own eyebrow ("On an agenda near you" / "What we searched"), its
+        own four-way denominator sentence with an `unreadable` suffix, its own
+        corpus caveat, and its own list of quoted clerk lines with body-name
+        doors. It was fetched CONCURRENTLY with the grounded engine through one
+        `Promise.all`, so a single question could paint both — two competing
+        civic authorities on one screen, with no precedence between them and the
+        reader left to decide which was the answer.
 
-          Two answers to one question on one screen is two definitions of Ask
-          truth with the reader left to pick. The route refuses that mode
-          under `scope: "TOPIC_ONLY"`, so this is enforced rather than
-          merely intended, and the grounded block above is where it renders.
-        */}
+        **Nothing it said was wrong and nothing it said is lost.** The sweep runs
+        inside the one engine now (`lib/ask/agenda-topic.ts`). Its hits arrive as
+        `AGENDA_MENTION` records and render in the structured list above, with
+        the clerk's line quoted and the agenda linked in the source line. Its
+        four denominator states — nothing searched, nothing found, a clipped
+        list, documents held but unreadable — arrive as NAMED GAPS, each saying
+        whose gap it is, and render in the gap list above. The corpus caveat
+        (agendas are not the permit record) rides on every outcome, hit or empty,
+        exactly as it did here.
 
-        {agenda && agenda.topic && (
-          /*
-            A03 (2026-08-18). Placed ABOVE the routed steps on purpose: the
-            reader asked whether a thing is coming, and a line a clerk put
-            on an agenda answers that question, where the body that owns
-            the topic answers a different one. Both render; the direct
-            answer leads.
-
-            LEVEL register — this is a claim surface about what a
-            government has scheduled. Every line inside is the document's
-            own words, quoted, with the document linked beside it. Nothing
-            here is summarised: a summary of a zoning agenda is a claim
-            about what a government is about to do, made by us.
-
-            The denominator is in the sentence, not in a tooltip. "3 of 3"
-            and "3 of 40" are different answers and a reader who sees only
-            the three cannot tell which they got.
-          */
-          <div className="mt-2">
-            <p className="t-eyebrow text-muted">
-              {agenda.hitsFound > 0
-                ? "On an agenda near you"
-                : "What we searched"}
-            </p>
-            <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
-              {agenda.searched === 0
-                ? // Nothing searched is NOT nothing found. The two read the
-                  // same to a reader unless we say which one happened.
-                  `We don't hold any readable agendas for your area yet, so nothing was searched for ${agenda.topic?.label ?? "this"}. That is a gap in what we have, not a statement that nothing is planned.`
-                : agenda.hitsFound === 0
-                  ? `No mention of ${agenda.topic?.label ?? "this"} in the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
-                  : agenda.hits.length === agenda.hitsFound
-                    ? `${agenda.hitsFound} mention${agenda.hitsFound === 1 ? "" : "s"} of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agenda${agenda.searched === 1 ? "" : "s"} we hold for your area.`
-                    : `${agenda.hitsFound} mentions of ${agenda.topic?.label ?? "this"} across the ${agenda.searched} agendas we hold for your area — the first ${agenda.hits.length} are below.`}
-              {agenda.unreadable > 0 &&
-                ` ${agenda.unreadable} more agenda${agenda.unreadable === 1 ? "" : "s"} we hold but could not read, so ${agenda.unreadable === 1 ? "it is" : "they are"} not included.`}
-            </p>
-            {/*
-              A03's remainder, stated where the reader is (2026-08-19, g20).
-              This rung searches AGENDAS. A permit application, a rezoning
-              filing and a site-plan submission all exist in a jurisdiction's
-              permitting system BEFORE they reach an agenda, and often
-              without ever reaching one. Letting "no mention on an agenda"
-              stand unqualified would let a reader take it for "nothing has
-              been filed" — a much bigger claim, about records we have not
-              wired. So the limit of the corpus rides with the answer, in
-              the hit case as well as the empty one: a reader who found one
-              mention also needs to know there may be filings behind it.
-            */}
-            <p className="mt-1 text-[0.6875rem] leading-relaxed text-muted">
-              This searches meeting agendas — what bodies have scheduled to
-              discuss. It is not the permit or zoning-application record:
-              something can be filed with a planning department long before
-              it reaches an agenda, and we haven&apos;t wired those systems
-              yet.
-            </p>
-            <ul className="mt-1.5 space-y-2">
-              {agenda.hits.map((hit) => (
-                <li
-                  key={`${hit.documentUrl}-${hit.quote.slice(0, 40)}`}
-                  className="border-l-2 border-[var(--panel-border)] pl-3"
-                >
-                  {hit.bodyName && (
-                    <p className="text-[0.75rem] font-medium text-paper">
-                      {/* ASK-4: the body name is a door here too. */}
-                      <BodyName
-                        label={hit.bodyName}
-                        ocdId={hit.ocdId}
-                        coverage={coverage}
-                        onOpenBody={onOpenBody}
-                      />
-                    </p>
-                  )}
-                  {/* The clerk's own line. Never rewritten, never trimmed
-                      of meaning — only of length, and then it says so. */}
-                  <p className="mt-0.5 text-[0.75rem] leading-relaxed text-paper-dim">
-                    &ldquo;{hit.quote}&rdquo;
-                  </p>
-                  <p className="mt-0.5 text-[0.6875rem] text-muted">
-                    {hit.sourceOrg}
-                    {" · "}
-                    <a
-                      href={hit.agendaUrl ?? hit.documentUrl}
-                      target="_blank"
-                      rel="noreferrer noopener"
-                      className="underline decoration-dotted underline-offset-2 hover:text-link"
-                    >
-                      the agenda
-                    </a>
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        What changed is standing: it is evidence under one answer instead of
+        being a second one.
+      */}
 
       {asked && asked.answer.kind === "ROUTED" && asked.answer.topic && (
         <div className="mt-3">

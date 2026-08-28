@@ -37,6 +37,7 @@ import type { EvidenceRecord } from "./evidence.ts";
  * source order would leak collection sequence.
  */
 
+import { formatDateLong } from "../text/format-date.ts";
 import { rosterForBody } from "../registry/body-rosters.ts";
 import { representationForDivision } from "../registry/representation.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
@@ -238,3 +239,32 @@ export function contactRecord(contact: AskContact): EvidenceRecord {
 
 /** How many contacts one answer may carry. A directory is not an answer. */
 export const MAX_ASK_CONTACTS = 8;
+
+/**
+ * **THE PROVENANCE OF A SOURCED RELATIONSHIP, AS A READER-SAFE LINE.**
+ * (ASK-05, 2026-08-28.)
+ *
+ * `AskContact` has always carried `sourceOrg` and `retrievedAt`, and **both
+ * client copies of the contact type dropped them** — so the publisher and the
+ * read date of a claim about a named person's role travelled on the wire and
+ * were unrenderable by declaration. A relationship sentence with no source
+ * behind it is exactly what this module's own doc block says a contact must
+ * never be.
+ *
+ * What it returns is the publisher and the day we read them, spelled out.
+ * **`basis` is deliberately NOT in it**: `BODY_MEMBER` and
+ * `READER_REPRESENTATIVE` are enum values, no enum value reaches a reader, and
+ * the plain-language version of that fact is already the `relationship`
+ * string. The basis stays on the wire as the audit discriminant it is.
+ *
+ * Null where nothing is held — never "source unknown", which reads as an
+ * attribution and is not one.
+ */
+export function contactReadLine(contact: AskContact): string | null {
+  const org = contact.sourceOrg?.trim() || null;
+  const on = formatDateLong(contact.retrievedAt);
+  if (org && on) return `${org}, read ${on}`;
+  if (org) return org;
+  if (on) return `read ${on}`;
+  return null;
+}

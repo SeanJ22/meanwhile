@@ -141,6 +141,18 @@ const nextConfig: NextConfig = {
       "./data/derived/zip-coverage-tiers-runtime.json",
       "./data/derived/zip-division-ids.json",
       "./lib/registry/*.json",
+      /*
+       * **THE ROLL-CALL SNAPSHOTS (ASK-06, 2026-08-28).**
+       *
+       * `lib/ask/votes.ts` reads both through `process.cwd()`, so the tracer
+       * has no static reference to follow. Untraced, the reads throw, the
+       * catches return null, and every question about how a sitting member
+       * voted answers *"we could not read our roll-call records just now"* —
+       * on a store holding 12,234 correctly recorded positions. That failure
+       * is indistinguishable from honest missing data, which is the exact
+       * reason this list exists.
+       */
+      "./data/votes/*.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

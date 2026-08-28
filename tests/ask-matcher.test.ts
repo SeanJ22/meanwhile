@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
 
+import { transportFailure } from "../lib/ask/answer.ts";
 import { answerQuestion, askWasAnswered } from "../lib/routing/ask.ts";
 import { matchDestination } from "../lib/routing/destinations.ts";
 import { matchDigest } from "../lib/routing/digest.ts";
@@ -237,10 +238,62 @@ test("askWasAnswered is the single definition, and the surface reads it rather t
   const refused = answerQuestion("qwertyuiop asdfgh", coverage, "85701");
   assert.equal(askWasAnswered(refused), false);
 
-  // A03: an agenda hit is an answer even when nothing else matched, and no
-  // hits leaves the refusal a refusal.
-  assert.equal(askWasAnswered(refused, { agendaHits: 0 }), false);
-  assert.equal(askWasAnswered(refused, { agendaHits: 3 }), true);
+  /*
+   * **THE GROUNDED REPLY, WHOLE, RATHER THAN A COUNT OF AGENDA HITS.**
+   * (ASK-05, 2026-08-28.)
+   *
+   * This read `{ agendaHits: 0 }` / `{ agendaHits: 3 }` — the topic sweep's
+   * hit count, taken from a SECOND engine that ran concurrently with the
+   * grounded one and rendered its own competing answer. That engine is gone;
+   * the sweep runs inside the one pipeline and its hits arrive as
+   * `AGENDA_MENTION` records, so the count to ask about is the payload's.
+   *
+   * The assertions are the same three facts, restated on the contract: an
+   * empty reply leaves a refusal a refusal, and evidence makes it an answer.
+   */
+  const empty = transportFailure();
+  empty.gaps = [];
+  assert.equal(askWasAnswered(refused, empty), false);
+  assert.equal(
+    askWasAnswered(refused, {
+      ...empty,
+      mode: "STRUCTURED_GROUNDED",
+      records: [
+        {
+          kind: "AGENDA_MENTION",
+          id: "doc#1",
+          text: '"Rezoning request for parcel 12"',
+          sourceUrl: "https://example.gov/agenda.pdf",
+        },
+      ],
+    }),
+    true,
+  );
+
+  /*
+   * **AND A NAMED GAP IS AN ANSWER.** This could not be expressed at all
+   * before: "we hold this person and none of the 24 roll calls we have
+   * recorded carries a vote by them" is the honest answer to the question that
+   * was asked, and logging it `NO_ROUTE` would file a question this product
+   * answered correctly into the roadmap of things it cannot do.
+   */
+  assert.equal(
+    askWasAnswered(refused, {
+      ...empty,
+      mode: "NO_EVIDENCE",
+      gaps: [{ whose: "OURS", statement: "We have not recorded a voting record for them." }],
+    }),
+    true,
+  );
+
+  /*
+   * **A TRANSPORT FAILURE IS NEITHER.** Its gap is about us reaching our own
+   * server; nothing was asked of the records, so nothing may be concluded
+   * about them. It reads as unanswered here, and the component skips the log
+   * row entirely rather than filing a question we never asked into A06's
+   * roadmap of things this product cannot do.
+   */
+  assert.equal(askWasAnswered(refused, transportFailure()), false);
 
   /*
    * The component must not carry a SECOND definition of answered. g11's defect

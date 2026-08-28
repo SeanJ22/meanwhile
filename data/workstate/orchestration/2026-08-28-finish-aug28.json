@@ -66,9 +66,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/refresh on ws/scheduled-refresh, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/refresh on ws/scheduled-refresh, node_modules junction",
+        "integrated into claude/finish-aug28-integration; 43 tests gained, 0 lost; focused overlap suite 84/84"
       ]
     },
     {

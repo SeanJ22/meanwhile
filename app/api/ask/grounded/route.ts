@@ -22,6 +22,7 @@ import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { readableSitting } from "@/lib/ask/meeting-time";
 import {
+  contactForOfficeholder,
   contactRecord,
   contactsForBody,
   contactsForRepresentatives,
@@ -519,6 +520,10 @@ export async function POST(request: Request) {
           retrievedAt: seat.provenance?.collectedAt ?? null,
         });
         denominators.officeholderRecords = 1;
+        /* The office the question is ABOUT — the most relevant contact there
+           is, and the one an answer about the Governor was missing while it
+           listed the reader's state senator. */
+        contacts.push(contactForOfficeholder(seat));
         gaps.push({
           whose: "OURS",
           statement:
@@ -527,6 +532,17 @@ export async function POST(request: Request) {
         denominators.actionRecordsHeld = 0;
       }
     }
+    /*
+     * **THE CONTACTS FOR A BALLOT SUBJECT ARE THAT SUBJECT'S OWN DIVISION.**
+     *
+     * Proposition 423 is a Vail Unified budget override, so the people with a
+     * factual relationship to it are Vail's governing board — not the reader's
+     * state senator, who was being listed under every answer regardless of what
+     * was asked. A contact whose relationship to the subject is "none" dilutes
+     * the ones whose relationship is real.
+     */
+    contacts.push(...contactsForBody(ballotRecord.ocdId, ballotRecord.contestTitle));
+
     /*
      * A candidate with no published positions is a NAMED GAP, never silence.
      * Silence there reads as "they have said nothing", which is a claim about
@@ -696,6 +712,7 @@ export async function POST(request: Request) {
       });
       denominators.officeholderRecords = 1;
       subject.office = seat.officeTitle;
+      contacts.push(contactForOfficeholder(seat));
     }
     /*
      * **THE DENOMINATOR IS STATED, so the answer can bound its own scope.**
@@ -713,11 +730,20 @@ export async function POST(request: Request) {
   }
 
   /*
-   * The reader's own legislators, for any question that resolved. A relationship
-   * the geometry established: their divisions reach this district. It is not an
-   * address-verified constituency and the wording does not claim one.
+   * **THE READER'S OWN LEGISLATORS — A FALLBACK, NOT AN ADDITION TO EVERY
+   * ANSWER.** (Scoped 2026-08-28, after reading the panel.)
+   *
+   * Their relationship is real and it is to the READER rather than to the
+   * subject: the geometry placed the reader's divisions inside these districts.
+   * That makes them the right answer when nothing closer exists, and the wrong
+   * thing to stack under an answer that already names the board that governs
+   * the thing asked about — every extra contact with no relationship to the
+   * subject weakens the ones that have one.
+   *
+   * It is not an address-verified constituency and the wording does not claim
+   * one; `lib/ask/residency.ts` holds the same distinction for the signal row.
    */
-  if (subject) {
+  if (subject && contacts.length === 0) {
     contacts.push(...contactsForRepresentatives(readerRepresentatives(ocdIds)));
   }
   for (const contact of contacts.slice(0, MAX_ASK_CONTACTS)) {
@@ -726,11 +752,26 @@ export async function POST(request: Request) {
   denominators.verifiedContacts = Math.min(contacts.length, MAX_ASK_CONTACTS);
 
   /*
-   * The authority's own statements of absence for the reader's divisions — "no
-   * Vail governing board race is on this ballot", in Pima County's words. These
-   * are evidence, not error handling.
+   * **THE AUTHORITY'S OWN STATEMENTS OF ABSENCE — for the SUBJECT's division.**
+   *
+   * "There is no Vail Unified governing board race on this ballot", in Pima
+   * County's words, is evidence of the same standing as a contest. It is
+   * evidence about VAIL, though, and attaching every one of the reader's
+   * divisions' absences to every answer put the school-board cancellation into
+   * the source line of an answer about the Governor. A source list that carries
+   * documents the answer did not rest on is a weaker attribution, not a
+   * fuller one.
+   *
+   * With no bound subject on the ballot surface the reader is asking about
+   * their ballot as a whole, and every absence on it is theirs to see.
    */
-  if (surface === "BALLOT" || ballotRecord) {
+  if (ballotRecord && ballotRecord.kind !== "PERSON") {
+    /* A CONTEST or a MEASURE is a question about what is on the ballot, and an
+       authority saying a race is not on it answers exactly that. A question
+       about a PERSON is not a question about the ballot lineup, so an absence
+       under it is a document the answer did not rest on. */
+    records.push(...absencesForDivisions([ballotRecord.ocdId], ballot.absences));
+  } else if (surface === "BALLOT" && !subject) {
     records.push(...absencesForDivisions(ocdIds, ballot.absences));
   }
 

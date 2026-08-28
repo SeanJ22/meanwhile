@@ -31,6 +31,8 @@ const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route"
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const AZ = "ocd-division/country:us/state:az";
+const SLDU = "ocd-division/country:us/state:az/sldu:19";
+const SLDL = "ocd-division/country:us/state:az/sldl:19";
 
 interface GroundedBody {
   mode: string;
@@ -66,7 +68,11 @@ async function ask(
     },
     body: JSON.stringify({
       question,
-      ocdIds: [AZ, PIMA, VAIL],
+      /* The divisions a reader at 85641 actually resolves to, including the
+         state legislative districts — without those the reader has no
+         legislators and the fallback has nothing to offer, which would make a
+         passing test measure the fixture rather than the product. */
+      ocdIds: [AZ, PIMA, VAIL, SLDU, SLDL],
       /* Pinned so a passing test today cannot start failing on a Tuesday. The
          handler accepts a supplied date precisely so nothing has to guess one. */
       today: "2026-08-28",
@@ -327,6 +333,86 @@ test("BALLOT: an explicit name beats the card the reader has open", async () => 
     ],
   });
   assert.match(body.subject?.name ?? "", /Katie Hobbs/);
+});
+
+/* ══════════════════════════════════════════════════════════════════════
+   CONTACTS AND SOURCES ARE SCOPED TO THE SUBJECT
+   ══════════════════════════════════════════════════════════════════════ */
+
+test("CONTACTS: a measure's contacts are its OWN district's board, not the reader's legislators", async () => {
+  /*
+   * **FOUND BY READING THE PANEL** (2026-08-28). Every answer carried the
+   * reader's state senator and two state representatives, whatever was asked —
+   * including an answer about a Vail Unified budget override, whose actual
+   * decision-makers are Vail's governing board and are sitting in the corpus.
+   *
+   * A contact whose relationship to the subject is "none" does not add
+   * helpfulness; it dilutes the ones whose relationship is real, and it is one
+   * step from the influence ranking this product may never build.
+   */
+  const body = await ask("What does Prop 423 do?", { surface: "BALLOT" });
+
+  const names = (body.contacts ?? []).map((c) => c.name);
+  assert.ok(names.includes("Allison Pratt"), `expected Vail's board, got ${names.join(", ")}`);
+  assert.ok(
+    !names.includes("David Gowan"),
+    "a state senator has no factual relationship to a school district's budget override",
+  );
+  for (const contact of body.contacts ?? []) {
+    assert.match(
+      contact.relationship,
+      /Vail Unified School District budget override continuation/,
+      "every relationship names the thing that was actually asked about",
+    );
+  }
+});
+
+test("CONTACTS: the reader's own legislators are the FALLBACK, and they still appear", async () => {
+  /*
+   * The other direction. Scoping must not delete them: their relationship is
+   * real and it is to the READER — the geometry placed the reader's divisions
+   * inside these districts — which makes them the right answer when nothing
+   * closer exists.
+   */
+  const body = await ask("What do we know about Andy Biggs?", { surface: "BALLOT" });
+  const names = (body.contacts ?? []).map((c) => c.name);
+  assert.ok(
+    names.includes("David Gowan"),
+    `a statewide contest has no roster of its own, so the reader's legislators stand: got ${names.join(", ")}`,
+  );
+  for (const contact of body.contacts ?? []) {
+    assert.match(contact.relationship, /^Your /, "and they are described as the READER's, never the subject's");
+  }
+});
+
+test("CONTACTS: an officeholder question carries that OFFICE's own published contact", async () => {
+  const body = await ask("What has Katie Hobbs done?", { surface: "BALLOT" });
+  const office = body.contacts?.find((c) => /the office this question is about/.test(c.relationship));
+  assert.ok(office, "the Governor's own office is the most relevant contact for a question about the Governor");
+  assert.equal(office!.name, "Katie Hobbs");
+  assert.ok(office!.sourceUrl, "and it is read off a sourced record like every other");
+});
+
+test("SOURCES: an answer does not carry documents it did not rest on", async () => {
+  /*
+   * The school-board cancellation absence — a real, cited, useful record about
+   * VAIL — was being attached to every answer, so a reader asking about the
+   * Governor saw it in the source line. A source list carrying documents the
+   * answer did not rest on is a weaker attribution, not a fuller one.
+   */
+  const body = await ask("What has Katie Hobbs done?", { surface: "BALLOT" });
+  const absences = body.records?.filter((r) => r.kind === "BALLOT_ABSENCE") ?? [];
+  assert.equal(
+    absences.length,
+    0,
+    "an absence about a school district is not evidence in an answer about the Governor",
+  );
+
+  /* CONTROL: it is still evidence where it belongs. */
+  const vail = await ask("What does Prop 423 do?", { surface: "BALLOT" });
+  const vailAbsences = vail.records?.filter((r) => r.kind === "BALLOT_ABSENCE") ?? [];
+  assert.equal(vailAbsences.length, 1, "Vail's own absence rides with a Vail subject");
+  assert.match(vailAbsences[0].text, /no Vail Unified School District governing board race/i);
 });
 
 /* ══════════════════════════════════════════════════════════════════════

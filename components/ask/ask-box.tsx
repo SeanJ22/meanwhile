@@ -575,6 +575,9 @@ export function AskBox({
     setAsked(null);
     setDigest(null);
     setAgenda(null);
+    /* The standing grounded answer goes with the question it answered — a
+       previous subject left on screen under a new question reads as this
+       product having answered the new one about the old government. */
     setGrounded(null);
     setServerEntity(null);
     setBeat(drawAskBeat());

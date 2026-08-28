@@ -169,14 +169,39 @@ export const RIPCORDS = {
       "Both model rungs of the grounded pipeline: Ask falls back to deterministic interpretation and the structured evidence answer, with no generated prose",
   },
   /**
-   * **Ask signal capture** (ASK03, 2026-08-27). **SHIPS PULLED.**
+   * **Ask signal capture** (ASK03, 2026-08-27; the basis corrected 2026-08-28).
+   * **SHIPS PULLED.**
    *
-   * The path is built, tested and INACTIVE. It stays inactive until the author
-   * approves reader-facing disclosure copy, because the data-privacy policy
-   * requires honest disclosure at the box before free text a reader typed may
-   * enter a store whose aggregates may reach campaigns, organizations and
-   * researchers. Building it now and leaving the flag down means approval is a
-   * one-flip activation rather than a build; it does not mean it is running.
+   * ## The gating basis, stated honestly
+   *
+   * This header used to say the DATA-PRIVACY POLICY required the gate. **That
+   * citation was wrong and is withdrawn.** "Honest disclosure at the box" is
+   * RULING 141's clause and RULING 141 governs the Speak Your Mind store's four
+   * rules; the root constitution's friction exceptions name the transparency
+   * disclosure at REACTION capture and consent to collection, neither of which
+   * is an Ask-specific rule. Reading a rule about one store as binding law over
+   * another is how a policy grows clauses nobody adopted.
+   *
+   * The real basis needs no invented law and is higher precedence anyway:
+   * **an operator decision.** The author has instructed that new Ask/privacy
+   * copy does not ship and that NH246 stays P2 / NEEDS SEAN.
+   *
+   * ## What "built" now means, and what it did not
+   *
+   * Until 2026-08-28 `captureAskInteraction` had NO PRODUCTION CALLER — only
+   * its own module and its tests — so raising this flag would have changed
+   * nothing at all. `app/api/ask/grounded/route.ts` now calls it, after the
+   * delivered answer is known, on every outcome including CLARIFY and
+   * UNRESOLVED.
+   *
+   * ## Activation is three things, not one
+   *
+   * The disclosure copy, this flag, AND minting the Ask continuity key — which
+   * the surfaces deliberately READ and never mint while capture is off, so no
+   * identifier is placed on a reader's device for a switched-off capability.
+   * `captureAskInteraction` REFUSES a row with no continuity key rather than
+   * digesting the empty string, which would give every reader the same hash and
+   * report one distinct reader forever. Doing two of the three writes nothing.
    */
   "ripcord.askSignalCapture": {
     pulled: true,
@@ -184,7 +209,7 @@ export const RIPCORDS = {
     question:
       "Consent, not product: may the scrubbed question and the answer a reader received be kept as sellable civic-interest signal, and what exact line must a reader see before they type for that to be honest?",
     closer:
-      "The author — UNANSWERED as of 2026-08-27. Ships PULLED so the capture path cannot run before the disclosure it requires exists. Draft copy is on NH246.",
+      "The author — UNANSWERED as of 2026-08-28. An OPERATOR DECISION pending privacy approval, not a clause of current law: no current rule names Ask specifically, and RULING 141 governs Speak Your Mind. Draft copy is on NH246. Activation is the copy, this flag AND minting the continuity key.",
     trackerRows: "ASK03, NH246",
     filters:
       "Every write of the Ask interaction record: Ask logs exactly what it logged before, the topic id and the capped refusal question",

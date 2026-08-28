@@ -48,7 +48,9 @@ export type ContactBasis =
   /** Hired by that body — a superintendent, a manager, a clerk. */
   | "BODY_STAFF"
   /** Represents the reader's own division in a legislature. */
-  | "READER_REPRESENTATIVE";
+  | "READER_REPRESENTATIVE"
+  /** The officeholder the question is ABOUT, and their own published office. */
+  | "SUBJECT_OFFICE";
 
 export interface AskContact {
   id: string;
@@ -173,6 +175,41 @@ export function contactsForRepresentatives(
       }),
     )
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * **THE OFFICE THE QUESTION IS ABOUT, as its own contact.**
+ *
+ * For a question about a sitting officeholder this is the most relevant
+ * contact there is, and it was the one missing: an answer about the Governor
+ * listed the reader's state senator and not the Governor's own published
+ * office. The relationship is the plainest one in the file — this is the office
+ * you asked about — and the channels are the ones that office publishes.
+ */
+export function contactForOfficeholder(seat: {
+  id: string;
+  name: string;
+  officeTitle: string;
+  email: string | null;
+  phone: string | null;
+  websiteUrl: string | null;
+  contactFormUrl?: string | null;
+  sourceUrl: string | null;
+  provenance?: { sourceOrg?: string | null; collectedAt?: string | null } | null;
+}): AskContact {
+  return {
+    id: `office:${seat.id}`,
+    name: seat.name,
+    officeTitle: seat.officeTitle,
+    relationship: `${seat.officeTitle} — the office this question is about`,
+    basis: "SUBJECT_OFFICE",
+    email: seat.email,
+    phone: seat.phone,
+    websiteUrl: seat.contactFormUrl ?? seat.websiteUrl,
+    sourceUrl: seat.sourceUrl,
+    sourceOrg: seat.provenance?.sourceOrg ?? null,
+    retrievedAt: seat.provenance?.collectedAt ?? null,
+  };
 }
 
 /**

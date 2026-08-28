@@ -494,6 +494,39 @@ export function validateKnowledge(
     }
 
     /*
+     * **THE SAME HOLE, ONE FIELD OVER.** (2026-08-28.)
+     *
+     * The `effort` repair below closed a closed-set that nothing checked, and
+     * `outcome.outcome` had exactly the same hole. This session wrote three
+     * routes carrying `WORKED` — which is not a member of the set — every one
+     * of them landed in the canonical store, and `method:check` reported
+     * PASSED. `tsc` caught it afterwards, for an unrelated reason, which is
+     * the identical sequence the `effort` note records.
+     *
+     * It is not cosmetic. `YIELDED` is the value `provenStates` filters on
+     * three lines above and the value `overGeneralized` reasons from, so an
+     * unrecognised outcome silently removes a route's evidence from the
+     * over-generalisation check — the guard that stops a route claiming a
+     * portability it has not earned.
+     *
+     * Fixing one instance of a class and leaving the class open is how the
+     * same defect gets found twice.
+     */
+    const OUTCOMES = ["YIELDED", "ZERO", "FAILED", "BLOCKED"];
+    for (const o of r.outcomes) {
+      if (!OUTCOMES.includes(o.outcome as string)) {
+        bad(
+          r.id,
+          "outcome-value-off-the-closed-set",
+          `outcome is ${JSON.stringify(o.outcome)}, which is none of ${OUTCOMES.join(", ")}`,
+        );
+      }
+      if (!o.jurisdiction || !o.walkedOn) {
+        bad(r.id, "outcome-undated", "every outcome records the jurisdiction it was walked in AND the date");
+      }
+    }
+
+    /*
      * **A DECLARED TYPE IS NOT A WRITE PATH.** (2026-08-27.)
      *
      * `effort` has had a closed set of values on all three of its fields since

@@ -133,6 +133,23 @@ export function BallotAsk({
     inFlight.current = controller;
     setWorking(true);
     setFailed(false);
+    /*
+     * **THE PREVIOUS ANSWER GOES WHEN A NEW QUESTION STARTS.**
+     * (Found 2026-08-28 by reading the panel rather than the DOM.)
+     *
+     * This component already kept `answered` so the heading could not drift
+     * out of step with the answer under it — and the answer itself stayed on
+     * screen anyway. A reader who asked about Proposition 423 and then asked
+     * who is running for Governor sat looking at the Proposition 423 answer
+     * with a "Looking…" button beside it, which reads as the product answering
+     * the new question with the old subject. That is the substitution defect
+     * made out of latency instead of out of routing.
+     *
+     * Clearing is not discarding a useful reply: it is declining to show an
+     * answer to a question the reader has moved on from.
+     */
+    setReply(null);
+    setAnswered("");
     try {
       const res = await fetch("/api/ask/grounded", {
         method: "POST",

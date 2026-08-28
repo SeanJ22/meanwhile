@@ -145,6 +145,20 @@ interface MeetingLike {
   agendaUrl?: string | null;
 }
 
+/**
+ * A division id, as the name of the government it identifies.
+ *
+ * `ocd-division/country:us/state:az/school_district:vail_unified_district`
+ * reads as *Vail Unified District*. A mechanical un-slugging of an identifier
+ * this product mints itself, exactly as `lib/ask/inventory.ts` does it — never
+ * a guess about what a government calls itself.
+ */
+function divisionNameOf(ocdId: string): string {
+  const last = ocdId.split("/").pop() ?? "";
+  const slug = last.split(":")[1] ?? "";
+  return slug ? titleCaseName(slug.replace(/_/g, " ")) : ocdId;
+}
+
 /** Officeholders the reader can name — statewide executives, today. */
 function personEntities(ocdIds: readonly string[]): BindableEntity[] {
   const out: BindableEntity[] = [];
@@ -541,7 +555,21 @@ export async function POST(request: Request) {
      * was asked. A contact whose relationship to the subject is "none" dilutes
      * the ones whose relationship is real.
      */
-    contacts.push(...contactsForBody(ballotRecord.ocdId, ballotRecord.contestTitle));
+    /*
+     * **THE BODY NAME IS THE DIVISION, NEVER THE CONTEST TITLE.** (Found by
+     * reading the panel, 2026-08-28.)
+     *
+     * Passing the contest title produced "Allison Pratt — Governing Board
+     * President on Proposition 423: Vail Unified School District budget
+     * override continuation". She is president of a school district's governing
+     * board, not of a ballot question. The relationship sentence is the whole
+     * value of a contact record, and a relationship that names the wrong thing
+     * is a wrong fact about a named person.
+     *
+     * Unslugged from the canonical division id, which is the same mechanical
+     * read `lib/ask/inventory.ts` does for the meetings inventory.
+     */
+    contacts.push(...contactsForBody(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
 
     /*
      * A candidate with no published positions is a NAMED GAP, never silence.

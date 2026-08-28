@@ -7,6 +7,7 @@ import type {
 } from "../ballot/types.ts";
 import type { BindableEntity } from "../routing/named-entity.ts";
 import { COMMON_QUESTION_NOUNS } from "../routing/named-entity.ts";
+import { formatDateLong } from "../text/format-date.ts";
 
 import type { EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 
@@ -314,9 +315,14 @@ export function ballotRecordsFor(
     records.push({
       kind: "CONTEST",
       id: contest.id,
+      /* The date SPELLS OUT. This record renders verbatim to a reader whenever
+         synthesis is unavailable or rejected, and `2026-11-03` is an
+         identifier rather than something a person says — the product-wide
+         convention `formatDateLong` carries. */
       text:
         `${contest.title} appears on this ballot for ${deps.set.election.name}` +
-        ` on ${deps.set.election.date}. Voters choose ${contest.voteFor}` +
+        ` on ${formatDateLong(deps.set.election.date) ?? deps.set.election.date}.` +
+        ` Voters choose ${contest.voteFor}` +
         `${contest.termYears ? `, for a term of ${contest.termYears} years` : ""}.` +
         (contest.scopeNote ? ` ${contest.scopeNote}` : ""),
       occurredAt: deps.set.election.date,
@@ -396,15 +402,26 @@ export function ballotRecordsFor(
   for (const [index, position] of positions.entries()) {
     records.push({
       /*
-       * **A POSITION IS A QUOTE, NEVER A CHARACTERISATION.** The text is the
-       * candidate's own words with the issue named beside them, because the
-       * constitution's rule is that a position carries a source record pointing
-       * at a specific statement. A paraphrase here would be this product
-       * generating a position, which is the one thing it may never do.
+       * **A POSITION IS A QUOTE, NEVER A CHARACTERISATION — and the sentence
+       * around it states the MECHANISM rather than a stance.**
+       *
+       * This read *"On water, Katie Hobbs published: …"*, which asserts that she
+       * published something about water. What the corpus actually holds is a
+       * passage found by SEARCHING her published material for that issue's
+       * phrases, and the window around a match is often navigation furniture —
+       * the Hobbs passage a reader saw was a run of site headings. The quote is
+       * honest; the frame around it was not, and a frame is a claim.
+       *
+       * So the record says what was done and what came back. A paraphrase would
+       * be this product generating a position, which is the one thing it may
+       * never do; asserting a topic the passage does not discuss is the same
+       * thing one step quieter.
        */
       kind: "POSITION",
       id: `${record.id}#position-${index}`,
-      text: `On ${position.issueLabel}, ${record.name} published: "${position.quote}"`,
+      text:
+        `Searching ${record.name}'s published material for ${position.issueLabel} ` +
+        `found this passage: "${position.quote}"`,
       sourceUrl: position.documentUrl,
       retrievedAt: position.retrievedAt,
     });

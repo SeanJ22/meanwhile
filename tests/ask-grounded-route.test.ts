@@ -336,6 +336,51 @@ test("BALLOT: an explicit name beats the card the reader has open", async () => 
 });
 
 /* ══════════════════════════════════════════════════════════════════════
+   THE STRUCTURED RECORDS ARE WHAT A READER SEES WHEN PROSE IS REJECTED
+   ══════════════════════════════════════════════════════════════════════ */
+
+test("RECORDS: no ISO date reaches a reader, because these render verbatim", async () => {
+  /*
+   * **FOUND IN A REJECTED_FELL_BACK CAPTURE** (2026-08-28). The degradation
+   * ladder worked — validation refused a generated answer and the records
+   * rendered instead — and the records themselves read "appears on this ballot
+   * for 2026 General Election on 2026-11-03". An identifier on a reader
+   * surface, in the one branch nobody looks at because it is the fallback.
+   *
+   * The records are not internal diagnostics. They ARE the answer whenever
+   * synthesis is unavailable, over its ceiling, or rejected.
+   */
+  const body = await ask("Who is running for Governor?", { surface: "BALLOT" });
+  for (const record of body.records ?? []) {
+    assert.ok(
+      !/\d{4}-\d{2}-\d{2}/.test(record.text),
+      `an ISO date reached a reader surface: ${record.kind} — ${record.text.slice(0, 160)}`,
+    );
+  }
+  const contest = body.records?.find((r) => r.kind === "CONTEST");
+  assert.match(contest.text, /November 3rd, 2026/, "spelled out, the way every other date is");
+});
+
+test("RECORDS: a position record states the SEARCH, never a stance", async () => {
+  /*
+   * The same capture read "On water, Katie Hobbs published: …" over a passage
+   * that was a run of site headings. The quote was honest; the frame asserted
+   * she published something about water, and a frame is a claim.
+   *
+   * What the corpus holds is a passage found by SEARCHING published material
+   * for an issue's phrases. Saying that is both true and more useful.
+   */
+  const body = await ask("What has Katie Hobbs done?", { surface: "BALLOT" });
+  for (const record of (body.records ?? []).filter((r) => r.kind === "POSITION")) {
+    assert.match(record.text, /^Searching .+ published material for /);
+    assert.ok(
+      !/^On .+ published:/.test(record.text),
+      "a matched passage is not a statement ON the issue that matched it",
+    );
+    assert.ok(record.sourceUrl, "and it carries the document it was read from");
+  }
+});
+/* ══════════════════════════════════════════════════════════════════════
    CONTACTS AND SOURCES ARE SCOPED TO THE SUBJECT
    ══════════════════════════════════════════════════════════════════════ */
 
@@ -359,10 +404,20 @@ test("CONTACTS: a measure's contacts are its OWN district's board, not the reade
     "a state senator has no factual relationship to a school district's budget override",
   );
   for (const contact of body.contacts ?? []) {
-    assert.match(
-      contact.relationship,
-      /Vail Unified School District budget override continuation/,
-      "every relationship names the thing that was actually asked about",
+    /*
+     * **THE RELATIONSHIP NAMES THE GOVERNMENT, NOT THE BALLOT QUESTION.**
+     *
+     * Passing the contest title through produced "Governing Board President
+     * on Proposition 423: Vail Unified School District budget override
+     * continuation". She is president of a school district's governing board,
+     * not of a ballot question — and a relationship that names the wrong thing
+     * is a wrong fact about a named person, which is the one failure this
+     * product cannot survive.
+     */
+    assert.match(contact.relationship, /Vail Unified District$/);
+    assert.ok(
+      !/Proposition/.test(contact.relationship),
+      `a person does not hold office on a ballot question: ${contact.relationship}`,
     );
   }
 });

@@ -416,3 +416,67 @@ export function bindNamedEntity(
 export function namedAnEntity(binding: NamedEntityBinding): boolean {
   return binding.kind !== "NONE";
 }
+
+/**
+ * **IS THIS READER ASKING WHAT A NAMED GOVERNMENT IS ABOUT TO DISCUSS?**
+ * (2026-08-27.)
+ *
+ * The question that opened this whole session — *"What's on the Vail school
+ * district agenda?"* — has never reached the agenda corpus at all, and the
+ * entity binding did not change that. `/api/ask/agenda` answers a TOPIC within
+ * a scope ("is there a data centre coming"), and `agendaTopicFor` returns null
+ * for a question that names a body and asks what is on ITS agenda. So the
+ * question fell through to topic routing, which names bodies rather than
+ * agenda items — while the corpus held eleven Vail meetings and nine readable
+ * agendas.
+ *
+ * Two independent things were wrong and only one of them was the substitution.
+ * This is the other: **the product could not tell that the reader was asking
+ * about a specific government's docket.**
+ *
+ * The detector is deliberately about the SHAPE of the asking rather than about
+ * any subject. It carries no topic vocabulary, because the reader is not asking
+ * about a topic — they are asking what this body has scheduled to talk about,
+ * and the answer is the body's own item list rather than a keyword search.
+ */
+export const BODY_AGENDA_PHRASES: readonly string[] = [
+  "on the agenda",
+  "on their agenda",
+  "on its agenda",
+  "agenda for",
+  "what is on the agenda",
+  "whats on the agenda",
+  "what are they discussing",
+  "what is being discussed",
+  "what will they discuss",
+  "what did they discuss",
+  "what are they talking about",
+  "what is happening at the next meeting",
+  "what happens at the next meeting",
+  "next meeting about",
+  "what is on the docket",
+  "whats on the docket",
+];
+
+/**
+ * True when the question asks what a body has scheduled to discuss.
+ *
+ * `agenda` and `docket` as bare nouns are enough on their own — a reader who
+ * types either about a named government is asking this and nothing else — and
+ * the phrase list carries the shapes that do not use either word.
+ */
+export function asksForBodyAgenda(text: string): boolean {
+  const normalized = normalizeName(text);
+  if (/\b(agenda|agendas|docket)\b/.test(normalized)) return true;
+  /*
+   * The bare verbs, which is what *"what is Vail discussing"* is made of.
+   *
+   * They can be generous because this detector is never consulted alone: the
+   * body-agenda path runs only where a government is already BOUND, so a false
+   * positive with no bound entity does nothing at all. The cost of missing a
+   * phrasing is a reader who gets no agenda; the cost of an extra phrasing is
+   * nothing.
+   */
+  if (/\b(discussing|discuss|discussed)\b/.test(normalized)) return true;
+  return BODY_AGENDA_PHRASES.some((p) => normalized.includes(p));
+}

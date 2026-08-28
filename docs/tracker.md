@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **323 open**, 442 resolved.
+- **324 open**, 442 resolved.
 - **54 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
@@ -526,7 +526,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**88 open · 109 resolved.**
+**89 open · 109 resolved.**
 
 ### P1
 
@@ -579,6 +579,8 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH231** — Our count of the governments covering a ZIP is built from each county's own roll. Districts formed in a neighbouring county but taxing land here are missing from it, and the shortfall looks like completeness.
 
 **NH237** — The same government has a curated row and a descent-promoted row. The promotion's duplicate check compares names, and the two spellings differ by one word, so it did not match.
+
+**NH255** — Measured 2026-08-27 while building the body-agenda rung. data/meetings-snapshot.json reports 198 agendaDocuments, but only 146 distinct documentUrls: 56 documents share a URL with another meeting. The four largest: bradfordnh.gov/pages/calendar on 27 meetings, warnernh.gov/calendar/ on 14, vailschooldistrict.community.highbond.com/Portal/ on 9, and govboard.tusd1.org/ on 6. ONE PAGE CANNOT BE THE AGENDA OF TWO DIFFERENT MEETINGS, so a document the same body reuses across sittings is a landing page by construction. Vail's is 1,652 characters of Highbond portal navigation plus the year's meeting schedule, and agendaItems correctly extracts zero items from it. THE READER CONSEQUENCE is now handled rather than hidden: the body-agenda rung returns AGENDA_LINK_IS_A_LANDING_PAGE for this shape instead of saying we hold an agenda with no items, which would be a claim about the government made out of a fact about our retrieval. THE COLLECTION DEFECT IS NOT FIXED. The adapters are attaching a calendar or portal ROOT to every meeting they discover there rather than fetching each sitting's own agenda. For the Highbond and CivicPlus calendar shapes that means navigating to the meeting inside the portal. Until that is done the corpus's own agendaDocuments count overstates how many real agendas it holds by up to 56, and any denominator built on it inherits the overstatement.
 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 

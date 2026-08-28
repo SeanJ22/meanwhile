@@ -6,7 +6,7 @@ import {
   searchAgendas,
   type AgendaDocumentLike,
 } from "@/lib/routing/agenda-search";
-import { bindNamedEntity, type BindableEntity } from "@/lib/routing/named-entity";
+import { asksForBodyAgenda, bindNamedEntity, type BindableEntity } from "@/lib/routing/named-entity";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { ripcordPulled } from "@/lib/ripcords";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
@@ -186,6 +186,32 @@ export async function POST(request: Request) {
     return Response.json({ error: "question is required" }, { status: 400 });
   }
   const question = body.question.slice(0, MAX_QUESTION_CHARS);
+
+  /*
+   * **A NAMED BODY'S OWN DOCKET — the question this whole session started on.**
+   * (2026-08-27.)
+   *
+   * *"What's on the Vail school district agenda?"* reached nothing. This route
+   * answered a TOPIC within a scope, `agendaTopicFor` returns null for a
+   * question that names a body and asks what is on ITS agenda, and the question
+   * fell through to topic routing — which names bodies rather than agenda
+   * items — while the corpus held eleven Vail meetings and nine readable
+   * agendas.
+   *
+   * So this rung runs FIRST and only where both halves are true: the reader
+   * named a government we resolved, AND they asked what it has scheduled to
+   * discuss. It answers from THAT body's own newest agenda and nothing else.
+   *
+   * Every honest empty is a different sentence, and none of them is a generic
+   * civics explainer: no meeting held, a meeting with no agenda document, and a
+   * document whose text could not be extracted are three different facts about
+   * us and are returned as three different states.
+   */
+  const namedBody = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
+  if (namedBody.kind === "BOUND" && asksForBodyAgenda(question)) {
+    return bodyAgendaAnswer(snapshot, documents, namedBody.entity.id, namedBody.entity.name);
+  }
+
   const topic = agendaTopicFor(question);
   if (!topic) {
     // No topic is not a refusal to answer the reader — it means this rung
@@ -334,4 +360,129 @@ export async function POST(request: Request) {
     placeless,
     outside,
   });
+}
+
+/**
+ * A named body's own docket: its next sitting, and that sitting's own items.
+ *
+ * **WHICH MEETING.** The NEXT one, because a reader asking what a government is
+ * discussing is asking about what is coming. Where nothing is scheduled the
+ * most recent past sitting is answered instead and is LABELLED as past — "they
+ * last discussed" is a true answer to "what are they discussing" and pretending
+ * a concluded meeting is upcoming would not be.
+ *
+ * **AND EVERY EMPTY IS ITS OWN SENTENCE.** A body with no meeting, a meeting
+ * with no agenda document, and a document whose text would not extract are
+ * three different facts, all of them about US, and collapsing them into "no
+ * agenda" would assert an absence about a government (RULING 100). The client
+ * gets the state and the denominators and says which.
+ */
+function bodyAgendaAnswer(
+  snapshot: { meetings: MeetingLike[] },
+  documents: readonly AgendaDocumentLike[],
+  ocdId: string,
+  name: string,
+): Response {
+  const forBody = snapshot.meetings.filter((m) => m.ocdId === ocdId);
+  const now = Date.now();
+  const upcoming = forBody
+    .filter((m) => Date.parse(m.startsAt) >= now)
+    .sort((a, b) => (a.startsAt < b.startsAt ? -1 : 1));
+  const past = forBody
+    .filter((m) => Date.parse(m.startsAt) < now)
+    .sort((a, b) => (a.startsAt < b.startsAt ? 1 : -1));
+  const meeting = upcoming[0] ?? past[0] ?? null;
+
+  const base = {
+    mode: "body-agenda" as const,
+    namedEntity: { state: "BOUND" as const, ocdId, name },
+    meetingsHeld: forBody.length,
+  };
+
+  if (!meeting) {
+    return Response.json({
+      ...base,
+      state: "NO_MEETING_HELD",
+      meeting: null,
+      items: [],
+      documentsHeld: 0,
+      readable: 0,
+    });
+  }
+
+  const forMeeting = documents.filter((d) => d.meetingId === meeting.id);
+  /* Newest retrieval wins — an agenda is revised, and the revision is the one
+     the reader is going to. Same rule as the single-meeting mode above. */
+  const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
+  const items = newest ? agendaItems(newest.text) : [];
+
+  /*
+   * **A CALENDAR PAGE ATTACHED TO TWENTY MEETINGS IS NOT TWENTY AGENDAS.**
+   * (2026-08-27, found by asking Vail its own question.)
+   *
+   * Vail's next sitting has an "agenda document" whose text is 1,652 characters
+   * of the district's Highbond PORTAL LANDING PAGE — navigation, a welcome
+   * line, and the year's meeting schedule. `agendaItems` correctly extracts
+   * nothing from it, and reporting *"we hold an agenda for this meeting and it
+   * has no items"* would be a claim about the government made out of a fact
+   * about our retrieval.
+   *
+   * It is mechanically detectable and it is not rare: **56 of the corpus's 198
+   * agenda documents share a URL with another meeting** — 27 on one New
+   * Hampshire town calendar, 14 on another, 9 on Vail's portal root, 6 on
+   * Tucson Unified's board page. A document the SAME body reuses across
+   * sittings is a landing page by construction, because one page cannot be the
+   * agenda of two different meetings.
+   *
+   * So it gets its own state and its own sentence. The link still travels —
+   * a portal root is where a reader goes to find the agenda themselves, which
+   * is genuinely useful — it simply is not called an agenda.
+   */
+  const sharedWith = newest
+    ? new Set(
+        documents.filter((d) => d.documentUrl === newest.documentUrl).map((d) => d.meetingId),
+      ).size
+    : 0;
+
+  const state =
+    forMeeting.length === 0
+      ? "MEETING_KNOWN_NO_AGENDA_DOCUMENT"
+      : !newest?.text
+        ? "AGENDA_DOCUMENT_NOT_READABLE"
+        : sharedWith > 1 && items.length === 0
+          ? "AGENDA_LINK_IS_A_LANDING_PAGE"
+          : items.length === 0
+            ? "AGENDA_READ_NO_ITEMS_EXTRACTED"
+            : "ITEMS";
+
+  return Response.json({
+    ...base,
+    state,
+    meeting: {
+      id: meeting.id,
+      title: meeting.title,
+      startsAt: meeting.startsAt,
+      /* Whether this is what they WILL discuss or what they LAST discussed. */
+      when: upcoming[0] ? "UPCOMING" : "PAST",
+      agendaUrl: meeting.agendaUrl ?? null,
+    },
+    items,
+    documentUrl: newest?.documentUrl ?? null,
+    sourceOrg: newest?.sourceOrg ?? null,
+    retrievedAt: newest?.retrievedAt ?? null,
+    documentsHeld: forMeeting.length,
+    readable: newest?.text ? 1 : 0,
+    /* How many of this body sittings point at the same document. >1 means a
+       landing page rather than this meeting own agenda. */
+    documentSharedWithMeetings: sharedWith,
+  });
+}
+
+/** Only what this rung reads off a meeting — the snapshot's own shape. */
+interface MeetingLike {
+  id: string;
+  ocdId: string | null;
+  title: string;
+  startsAt: string;
+  agendaUrl?: string | null;
 }

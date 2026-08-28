@@ -67,6 +67,89 @@ export type LocationConfidence =
   | "ADDRESS_VALIDATED"
   | "UNKNOWN";
 
+/**
+ * **HOW THE LOCATION GOT THERE — a fact about what the reader DID.**
+ * (PR #212 follow-up, 2026-08-28.)
+ *
+ * The two enums above are CONCLUSIONS, and a conclusion arriving in a request
+ * body is a conclusion the client asserted. A surface that sent
+ * `ADDRESS_VALIDATED` would be believed, and every aggregate built on that
+ * column would then be describing a validation that never happened.
+ *
+ * So the wire carries the ORIGIN — the observable act — and the conclusions are
+ * derived here, on the server, by `stampResidency`. The client says *"they
+ * typed this ZIP"*; it does not get to say what that proves.
+ */
+export type LocationOrigin =
+  /** They typed a ZIP into the location entry. The author's rule case. */
+  | "TYPED_ZIP"
+  /** They tapped one of the four demonstration ZIPs on the welcome card. */
+  | "DEMO_ZIP"
+  /** The browser's own geolocation resolved to a nearby ZIP. */
+  | "DEVICE_LOCATION"
+  /** They came through an entry that says they are considering moving here. */
+  | "PROSPECTIVE_ENTRY"
+  /** An address was resolved to a point, so exact divisions are known. */
+  | "ADDRESS_RESOLVED"
+  | "UNKNOWN";
+
+export const LOCATION_ORIGINS: LocationOrigin[] = [
+  "TYPED_ZIP",
+  "DEMO_ZIP",
+  "DEVICE_LOCATION",
+  "PROSPECTIVE_ENTRY",
+  "ADDRESS_RESOLVED",
+  "UNKNOWN",
+];
+
+/** Read an origin off a request body, refusing anything not on the list. */
+export function readLocationOrigin(raw: unknown): LocationOrigin {
+  return LOCATION_ORIGINS.includes(raw as LocationOrigin)
+    ? (raw as LocationOrigin)
+    : "UNKNOWN";
+}
+
+/**
+ * **THE ONLY PLACE A ROW'S TWO LOCATION AXES ARE DECIDED.**
+ *
+ * Each mapping is defended by what the act actually proves, and two of them are
+ * deliberately weaker than they could be:
+ *
+ * - **`DEMO_ZIP` is BROWSING, not home.** The welcome card offers four ZIPs so
+ *   nobody has to know one to see the product work. A reader who taps *Vail,
+ *   AZ* has told us they wanted to look at Vail. They have not told us they
+ *   live there, and a resident cohort built from chip taps would be a
+ *   constituency claim made out of a demo affordance. `countsAsResident` is
+ *   false for it, which is the conservative direction.
+ * - **`DEVICE_LOCATION` proves PRESENCE, never RESIDENCE.** A geolocation fix
+ *   says where a device is right now. It does not say whose home that is, and
+ *   it is not a ZIP the reader declared. So the relation is `UNKNOWN` and the
+ *   confidence is `UNVERIFIED` — we hold a place and no claim about it.
+ *
+ * `TYPED_ZIP` is the author's rule, applied exactly as he stated it: a
+ * voluntarily entered ZIP is a self-declared home ZIP unless the reader later
+ * gives us reason to classify it otherwise.
+ */
+export function stampResidency(origin: LocationOrigin): {
+  relation: ResidencyRelation;
+  confidence: LocationConfidence;
+} {
+  switch (origin) {
+    case "TYPED_ZIP":
+      return { relation: "CURRENT_HOME", confidence: "SELF_DECLARED_ZIP" };
+    case "PROSPECTIVE_ENTRY":
+      return { relation: "PROSPECTIVE_HOME", confidence: "SELF_DECLARED_ZIP" };
+    case "DEMO_ZIP":
+      return { relation: "BROWSING", confidence: "SELF_DECLARED_ZIP" };
+    case "ADDRESS_RESOLVED":
+      return { relation: "CURRENT_HOME", confidence: "ADDRESS_RESOLVED" };
+    case "DEVICE_LOCATION":
+      return { relation: "UNKNOWN", confidence: "UNVERIFIED" };
+    default:
+      return { relation: "UNKNOWN", confidence: "UNKNOWN" };
+  }
+}
+
 export const RESIDENCY_RELATIONS: ResidencyRelation[] = [
   "CURRENT_HOME",
   "PROSPECTIVE_HOME",

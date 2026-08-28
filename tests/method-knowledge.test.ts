@@ -187,6 +187,72 @@ test("a conclusion with no method version is refused — it could never be reope
   assert.ok(validateKnowledge(k, bad).some((i) => i.rule === "conclusion-without-version"));
 });
 
+test("PLANTED: an effort value off the closed set FAILS the validator", () => {
+  /*
+   * **THE GUARD THAT WAS GREEN BECAUSE IT NEVER LOOKED.**
+   * (Repaired in PR #212; given a test 2026-08-28.)
+   *
+   * `effort` has had a closed set of values on all three of its fields since it
+   * was declared, and for a while nothing checked them. A session wrote four
+   * routes carrying `PER_SOURCE`, `AUTOMATED` and `KNOWN_METHOD` — none of
+   * which is a member of any of the three sets — and every one of them landed
+   * in the canonical store while `method:check` reported PASSED. `tsc` caught
+   * it, minutes later and for an unrelated reason.
+   *
+   * The repair shipped without a test, which is the same shape one rung up: a
+   * validator nobody proves is a validator that can quietly stop validating.
+   * This asserts the failure DIRECTLY, on a value that is invalid in each of
+   * the three fields, one field at a time — so a set that loses a member is
+   * caught, and so is a check that stops running.
+   *
+   * The forecast is what depends on it: it buckets on `repeats`, and an
+   * unrecognised value drops a route out of whichever bucket a reader is
+   * counting, reporting the project as cheaper than it is.
+   */
+  const base = storeOf(1);
+
+  for (const field of ["repeats", "execution", "discovery"] as const) {
+    const valid: MethodRoute["effort"] = {
+      repeats: "PER_COUNTY",
+      execution: "MACHINE",
+      discovery: "NEW_METHOD",
+      note: "test",
+    };
+    /* One field at a time, so a passing run cannot be one set doing all the
+       work while another has quietly stopped being checked. */
+    const broken = { ...valid, [field]: "NOT_A_REAL_VALUE" } as MethodRoute["effort"];
+    const withBad = learnRoute(
+      base,
+      route(`bad-${field}`, { effort: broken }),
+      "2026-08-28",
+    ).knowledge;
+
+    const issues = validateKnowledge(withBad, []);
+    const hit = issues.find((i) => i.rule === "effort-value-off-the-closed-set");
+    assert.ok(hit, `effort.${field} = NOT_A_REAL_VALUE must be refused by the validator`);
+    assert.match(hit!.detail, new RegExp(`effort\\.${field}`));
+  }
+
+  /* CONTROL: the same route with every value ON the set passes, so the test
+     above is measuring the enum rather than the presence of `effort` at all. */
+  const good = learnRoute(
+    base,
+    route("good-effort", {
+      effort: {
+        repeats: "PER_COUNTY",
+        execution: "MACHINE",
+        discovery: "NEW_METHOD",
+        note: "test",
+      },
+    }),
+    "2026-08-28",
+  ).knowledge;
+  assert.equal(
+    validateKnowledge(good, []).filter((i) => i.rule === "effort-value-off-the-closed-set").length,
+    0,
+  );
+});
+
 test("knowledge that has outgrown a still-closed conclusion is a validation failure", () => {
   let k = storeOf(2);
   const conclusions: PriorConclusion[] = [

@@ -289,14 +289,25 @@ export function askWasAnswered(
    * agenda rung is the fourth thing that would have had to be learned
    * twice. One definition, one place to extend.
    */
-  extra: { agendaHits?: number } = {},
+  extra: { agendaHits?: number; groundedRecords?: number; groundedAnswer?: boolean } = {},
 ): boolean {
   return Boolean(
     (result.answer.kind === "ROUTED" && result.match) ||
       result.destination ||
       result.digest ||
       result.exactName ||
-      (extra.agendaHits ?? 0) > 0,
+      (extra.agendaHits ?? 0) > 0 ||
+      /*
+       * **THE GROUNDED ENGINE IS THE FIFTH THING THAT COUNTS AS ANSWERED**
+       * (PR #212 follow-up, 2026-08-28), and it is learned HERE for exactly
+       * the reason the function exists: the map surface now answers from
+       * `/api/ask/grounded`, so a question it answered with real sourced
+       * records would otherwise have been logged `NO_ROUTE` and filed into
+       * the roadmap of things this product cannot do. That is the g11 defect,
+       * one rung later.
+       */
+      (extra.groundedRecords ?? 0) > 0 ||
+      extra.groundedAnswer === true,
   );
 }
 

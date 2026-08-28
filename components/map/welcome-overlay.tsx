@@ -10,6 +10,8 @@ import {
 } from "@/lib/geo/zcta-table";
 
 import { useRecentZips } from "@/hooks/use-recent-zips";
+import { recordLocationOrigin } from "@/lib/state/location-origin";
+import type { LocationOrigin } from "@/lib/ask/residency";
 import { ZipComb } from "./zip-comb";
 import { PRODUCT_NAME } from "@/lib/brand";
 
@@ -75,7 +77,21 @@ export function WelcomeOverlay({
     warmZctaTable();
   }, []);
 
-  async function submit(value: string = zip) {
+  /*
+   * **THE ORIGIN IS RECORDED WHERE IT HAPPENS, BECAUSE NOWHERE ELSE CAN.**
+   * (PR #212 follow-up, 2026-08-28.)
+   *
+   * A stored zip looks identical whether it was typed, tapped off the
+   * demonstration list, or resolved from the browser's own geolocation — and
+   * those are three different things about the reader. `lib/ask/residency.ts`
+   * turns the act into what it proves; this card is the only place in the
+   * product that knows which act it was.
+   *
+   * What is recorded is a FACT about what happened, never a conclusion:
+   * `stampResidency` on the server decides what a typed zip is worth, so no
+   * client can assert a confidence it did not earn.
+   */
+  async function submit(value: string = zip, origin: LocationOrigin = "TYPED_ZIP") {
     const result = await resolveZipAsync(value);
 
     if (!result.ok) {
@@ -85,6 +101,7 @@ export function WelcomeOverlay({
 
     setError(null);
     setZip("");
+    recordLocationOrigin(result.centroid.zip, origin);
     onResolved(result.centroid.zip, result.centroid.lat, result.centroid.lng);
   }
 
@@ -108,6 +125,9 @@ export function WelcomeOverlay({
           setError("Couldn't match that location to a zip code.");
           return;
         }
+        /* A device fix proves PRESENCE and never RESIDENCE — `stampResidency`
+           maps it to UNKNOWN rather than to a home for exactly that reason. */
+        recordLocationOrigin(near.zip, "DEVICE_LOCATION");
         onResolved(near.zip, near.lat, near.lng);
       },
       (err) => {
@@ -263,7 +283,12 @@ export function WelcomeOverlay({
                   key={zip}
                   type="button"
                   className="welcome-team-btn"
-                  onClick={() => void submit(zip)}
+                  /* A recents tap mixes origins: this list carries places that
+                     were typed and places that were tapped off the showcase
+                     below, and nothing ever recorded which. UNKNOWN is the
+                     honest floor — claiming a home from it would be the demo-chip
+                     over-claim arriving one visit later. */
+                  onClick={() => void submit(zip, "UNKNOWN")}
                 >
                   {zip}
                 </button>
@@ -283,7 +308,9 @@ export function WelcomeOverlay({
               key={quick.zip}
               type="button"
               className="welcome-team-btn"
-              onClick={() => void submit(quick.zip)}
+              /* The showcase chips: the reader wanted to LOOK at this place.
+                 They have not said they live there, so this is BROWSING. */
+              onClick={() => void submit(quick.zip, "DEMO_ZIP")}
             >
               {quick.label}
             </button>

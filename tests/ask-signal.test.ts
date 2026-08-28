@@ -42,6 +42,13 @@ function input(over: Partial<AskInteractionInput> = {}): AskInteractionInput {
     evidenceRecordCount: 2,
     evidenceSourceCount: 1,
     namedGapCount: 1,
+    evidenceProvenance: {
+      recordRefs: ["MEETING:apptegy:vail:60703698", "AGENDA_DOCUMENT:https://example.gov/portal"],
+      sourceUrls: ["https://example.gov/portal"],
+      sourceOrgs: ["Vail School District Governing Board"],
+      retrievedFrom: "2026-08-13T21:01:25.791Z",
+      retrievedTo: "2026-08-13T21:01:25.791Z",
+    },
     surface: "MAP",
     approximateLocation: "85641",
     ocdIds: ["ocd-division/country:us/state:az/county:pima"],
@@ -62,10 +69,16 @@ function input(over: Partial<AskInteractionInput> = {}): AskInteractionInput {
 
 test("ASK03: the capture path is GATED and writes nothing", async () => {
   /*
-   * The governing rule is the data-privacy policy's HONEST DISCLOSURE AT THE
-   * BOX: one line, plain language, before the reader types, for any store whose
-   * aggregates may reach campaigns, organizations and researchers. That copy is
-   * NH246's and it is not approved, so the flag is down.
+   * **THE GATING BASIS, CORRECTED 2026-08-28.**
+   *
+   * This block used to cite the data-privacy policy's HONEST DISCLOSURE AT THE
+   * BOX as the governing rule. That clause is RULING 141's and RULING 141
+   * governs the Speak Your Mind store — it is not an Ask-specific rule, and
+   * reading it as one would be this repository growing a clause nobody adopted.
+   *
+   * The real basis is an OPERATOR DECISION at precedence 1: the author has
+   * instructed that new Ask/privacy copy does not ship and that NH246 stays
+   * P2 / NEEDS SEAN. That is binding without needing to be dressed as law.
    */
   assert.equal(RIPCORDS["ripcord.askSignalCapture"].pulled, true);
 

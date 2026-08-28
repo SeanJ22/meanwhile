@@ -38,6 +38,14 @@ export interface AskTrace {
     temporal?: AskTemporal;
     /** COUNTS, never the mentions themselves — those are the reader's words. */
     mentionCount?: number;
+    /**
+     * Whether the rung proposed a referent for a pronoun — a BOOLEAN, never the
+     * referent, which is a civic subject the reader may not have typed and
+     * which belongs in `resolution.subjectName` once it has been VERIFIED.
+     * An operator reading this can tell a follow-up was attempted; they cannot
+     * read a subject out of it that no binder confirmed.
+     */
+    referentProposed?: boolean;
     /** Whether the deterministic reading stood in for the model's. */
     fellBackToDeterministic?: boolean;
   };

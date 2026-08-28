@@ -85,6 +85,7 @@ export async function POST(request: Request) {
     lng?: unknown;
     radiusMiles?: unknown;
     ocdIds?: unknown;
+    scope?: unknown;
   };
   try {
     body = JSON.parse(raw);
@@ -216,7 +217,29 @@ export async function POST(request: Request) {
    * us and are returned as three different states.
    */
   const namedBody = bindNamedEntity(question, snapshotEntities(snapshot.meetings));
-  if (namedBody.kind === "BOUND" && asksForBodyAgenda(question)) {
+  /*
+   * **THE OWNERSHIP BOUNDARY, ENFORCED BY THE SERVER RATHER THAN PROMISED BY
+   * A CLIENT.** (PR #212 follow-up, 2026-08-28.)
+   *
+   * `/api/ask/grounded` is now the one Ask engine, and its body path
+   * SUPERSEDES this one: it binds the same way, reads the reader's tense, picks
+   * NEXT versus LAST rather than `upcoming[0] ?? past[0]`, prints the sitting
+   * in the body's own zone, and validates any generated prose. Two live answers
+   * to "what is on this body's agenda" is two definitions of Ask truth, and the
+   * reader would meet whichever one their surface happened to call.
+   *
+   * What this route still owns and grounded does not is the TOPIC search — *"is
+   * there a data centre coming?"* — a keyword sweep across every readable
+   * agenda in the reader's area, which is a different question with a different
+   * denominator and is not superseded by anything.
+   *
+   * So a caller declares its scope. `TOPIC_ONLY` is what the map Ask box now
+   * sends, and under it this branch cannot fire at all — the boundary is a
+   * refusal in the server rather than a discipline in a component, which is the
+   * difference between a rule and a hope.
+   */
+  const topicOnly = body.scope === "TOPIC_ONLY";
+  if (!topicOnly && namedBody.kind === "BOUND" && asksForBodyAgenda(question)) {
     return bodyAgendaAnswer(snapshot, documents, namedBody.entity.id, namedBody.entity.name);
   }
 

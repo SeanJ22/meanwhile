@@ -17,7 +17,12 @@ import type { StreetPoint } from "@/lib/geo/census-geocoder";
 import type { CoverageTier } from "@/lib/meetings/query";
 import type { CoverageSummary, CoveredBody, Seat } from "@/lib/registry/coverage";
 import { deriveWhoGoverns } from "@/lib/registry/who-governs";
-import { applyResolvedLocation } from "@/lib/state/resolved-location";
+import {
+  applyResolvedLocation,
+  homeSubject,
+  type BodyStanding,
+  type LocationCertainty,
+} from "@/lib/state/resolved-location";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { rosterHoldersForBody } from "@/lib/registry/body-rosters";
 import {
@@ -179,6 +184,77 @@ const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
  * map legend and tier toggles that share its token family.
  */
 const TYPE_LABEL_CLASS = "text-label";
+
+/**
+ * **WGH-15 (2026-08-28) — THIS CARD SAYS WHOSE QUESTION IT IS ANSWERING.**
+ *
+ * The reported screen had two panels open at once, one reading *State House
+ * District 17* and one reading *State House District 19*, and neither said what
+ * it was about. A reader may live in House 17 and inspect House 21 for an hour
+ * — that is the product working — but two unlabelled panels reading different
+ * district numbers is a product contradicting itself.
+ *
+ * This card's subject is the ZIP THE READER TYPED, refined by the address they
+ * gave if they gave one. The district popup's subject is whatever they last
+ * tapped. Saying so, on both, is the entire repair: the facts were already
+ * right and already disjoint.
+ *
+ * It is not a fourth reader-friction exception. It is not a prompt, it asks for
+ * nothing, and it is one line of attribution on an answer — the same class of
+ * thing as the coverage label above it.
+ */
+function SubjectLine({
+  zip,
+  standing,
+}: {
+  zip: string;
+  /** `ADDRESS_RESOLVED` on this card means the reader settled it themselves. */
+  standing: LocationCertainty;
+}) {
+  return (
+    <p
+      data-home-subject={zip}
+      className="mt-1 text-[0.6875rem] leading-relaxed text-muted"
+    >
+      {standing === "ADDRESS_RESOLVED" ? (
+        <>Your area — {zip}, narrowed by the address you gave.</>
+      ) : (
+        <>Your area — {zip}, the area you asked about.</>
+      )}
+    </p>
+  );
+}
+
+/**
+ * A row the reader's own address EXCLUDES.
+ *
+ * **It marks, it never removes** (RULING 26, RULING 27). We hold this
+ * government in full and it governs real people in this zip; what the address
+ * settled is that it is not the reader's. The old surface said nothing at all
+ * here, which is what let District 19's members sit under a prompt reading
+ * District 17 and read as the reader's own.
+ *
+ * The sentence names no district number it cannot source. `session-address`
+ * stores the confirmed division IDS and not their labels, and a reader surface
+ * may not print an OCD-ID — so the honest claim is the one the evidence
+ * actually supports: *this covers another part of your zip*, which is a fact
+ * about the boundary and not a guess about the reader.
+ */
+function ElsewhereMark({ zip }: { zip: string }) {
+  return (
+    <span
+      data-standing="ELSEWHERE_IN_ZIP"
+      className="ml-1.5 shrink-0 text-[0.625rem] leading-none text-muted"
+    >
+      not yours — covers another part of {zip}
+    </span>
+  );
+}
+
+/** Only an EXCLUSION is marked. Confirmed and unsettled rows read as before. */
+function marksElsewhere(standing: BodyStanding | undefined): boolean {
+  return standing === "ELSEWHERE_IN_ZIP";
+}
 
 function seatPhrase(seats: Seat[]): string | null {
   if (seats.length === 0) return null;
@@ -358,15 +434,67 @@ function CoverageBody({
     statewideExecutives,
   } = coverage;
 
+  /*
+   * **WGH-12/13/14 (2026-08-28): THE ADDRESS THE READER ALREADY GAVE.**
+   *
+   * `lib/geo/session-address.ts` has stored the confirmed divisions since
+   * 2026-08-22 and, until that sweep, NOTHING read it back — the component that
+   * writes it was its only consumer, and `onNarrowApplied` in the map shell
+   * discards the same divisions a second time. So this card went on answering
+   * from the zip centroid while the prompt three lines above it displayed the
+   * address's own answer: "Set to ... State House District 17" over a STATE
+   * section reading District 19.
+   *
+   * It stays on the DEVICE — see the module note in
+   * `lib/state/resolved-location.ts` for why the repair is client-side and that
+   * is deliberate rather than expedient.
+   *
+   * **WGH-15 (2026-08-28): and it is now an EXPLICIT SUBJECT.** This card
+   * answers *who governs the place the reader told us about*. The district
+   * popup answers *what is this thing I tapped*. Both were true and neither
+   * said so, which is the whole of the reported contradiction. Declared here,
+   * once, so every list below reasons from one named subject rather than three
+   * of them reaching for the zip independently.
+   */
+  const resolvedLocation = useResolvedLocation(zip);
+  const subject = homeSubject(resolvedLocation);
+
+  /*
+   * **WGH-15 (2026-08-28) — THE STATE SECTION IS THE SURFACE IN THE BUG REPORT,
+   * AND IT NEVER WENT THROUGH `applyResolvedLocation` AT ALL.**
+   *
+   * `bodies` was annotated on 2026-08-28. `seats` was not, and the STATE
+   * section renders `seats` — so the exact rows the reader photographed, *State
+   * House District 19 · Gail Griffin, Lupe Diaz* sitting under a prompt reading
+   * *District 17*, were the one list on this card that never asked.
+   *
+   * `standingOf` would have returned `ELSEWHERE_IN_ZIP` for `sldl:19` against
+   * an `sldl:17` address from the day it shipped —
+   * `tests/resolved-location.test.ts` asserts exactly that pair. **No seat row
+   * ever asked it.** Same class as WGH-12/13/14 (*correct, and had zero
+   * consumers*), one level down, which is why the seats are routed here rather
+   * than the sldl case being special-cased.
+   *
+   * `Seat` satisfies `BodyLike` structurally — an `ocdId` and nothing else is
+   * required — so this is the SAME function over the SAME location, not a
+   * second implementation of the standing rule for a second row type.
+   *
+   * **The row is annotated and never dropped.** A reader whose zip crosses a
+   * legislative line is still shown the whole zip's representation; what
+   * changes is that the card no longer presents another district's members as
+   * theirs by saying nothing.
+   */
+  const seatsHere = applyResolvedLocation(seats, subject.location);
+
   // Item 2c (2026-08-14 second session): officials group under three
   // headers, closest-first — Local, State, Federal. The state seats and
   // the federal seat split by division type (structure, never a label
   // match); the governor (2b) rides under STATE after the legislators —
   // order of scope, district before statewide.
-  const stateSeats = seats.filter(
+  const stateSeats = seatsHere.filter(
     (s) => s.divisionType === "sldl" || s.divisionType === "sldu",
   );
-  const federalSeats = seats.filter((s) => s.divisionType === "cd");
+  const federalSeats = seatsHere.filter((s) => s.divisionType === "cd");
 
   /*
    * The reader's device-local narrowing (M26): where they picked their
@@ -377,23 +505,9 @@ function CoverageBody({
   const narrowing = useNarrowing(zip);
   const selected = new Set(narrowing.divisions);
 
-  /*
-   * **WGH-12/13/14 (2026-08-28): THE ADDRESS THE READER ALREADY GAVE.**
-   *
-   * `lib/geo/session-address.ts` has stored the confirmed divisions since
-   * 2026-08-22 and, until now, NOTHING read it back — the component that
-   * writes it was its only consumer, and `onNarrowApplied` in the map shell
-   * discards the same divisions a second time. So this card went on answering
-   * from the zip centroid while the prompt three lines above it displayed the
-   * address's own answer: "Set to ... State House District 17" over a STATE
-   * section reading District 19.
-   *
-   * This is that store's first real consumer. It stays on the DEVICE — see the
-   * module note in `lib/state/resolved-location.ts` for why the repair is
-   * client-side and that is deliberate rather than expedient.
-   */
-  const resolvedLocation = useResolvedLocation(zip);
-  const bodiesHere = applyResolvedLocation(bodies, resolvedLocation);
+  // The same subject the seats above were annotated against. One location, one
+  // question, every list on this card.
+  const bodiesHere = applyResolvedLocation(bodies, subject.location);
 
   /*
    * ITEM 1a (2026-08-17, the author's ruling): ONE DENOMINATOR.
@@ -554,6 +668,33 @@ function CoverageBody({
         {lead}
       </p>
 
+      {/* WGH-15: which question this card answers, said once, at the top. */}
+      <SubjectLine zip={zip} standing={subject.location.certainty} />
+
+      {/*
+        WGH-15: and how many of the rows below their own address excludes.
+        Stated rather than left to be spotted — a reader who gave an address
+        and then sees a neighbouring district's board in the list needs to be
+        told which is which, not left to compare it against a prompt.
+
+        It is a SENTENCE, never a filter. Every row is still rendered and every
+        row is still openable (RULING 26, RULING 27).
+      */}
+      {derived.elsewhere > 0 && (
+        <p
+          data-elsewhere-count={derived.elsewhere}
+          className="mt-1 text-[0.75rem] leading-relaxed text-voice"
+        >
+          {derived.elsewhere === 1
+            ? "One of these governs a different part of "
+            : `${derived.elsewhere} of these govern a different part of `}
+          {zip} than your address, and{" "}
+          {derived.elsewhere === 1 ? "it is marked" : "they are marked"} below.
+          We hold {derived.elsewhere === 1 ? "it" : "them"} in full — nothing is
+          hidden from you.
+        </p>
+      )}
+
       {othersLine && (
         <p className="mt-1 text-[0.75rem] leading-relaxed text-voice">
           {othersLine}
@@ -689,6 +830,15 @@ function CoverageBody({
                 {body.couldGovern && (
                   <CouldGovernMark jurisdiction={body.name ?? body.divisionLabel} />
                 )}
+                {/*
+                  WGH-15: the reader's own address settled this level and named
+                  a DIFFERENT division, so this government is not theirs. It
+                  keeps its `CouldGovernMark` too, deliberately —
+                  `keepsCouldGovernPill` explains why an unmarked row would read
+                  as "this governs you", and this sentence is the stronger copy
+                  that comment says the mark is waiting for.
+                */}
+                {marksElsewhere(body.standing) && <ElsewhereMark zip={zip} />}
               </span>
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
@@ -949,9 +1099,17 @@ function CoverageBody({
                 {stateSeats.map((seat) => (
                   <li
                     key={seat.ocdId}
+                    /* WGH-15: the walk reads the standing off the row rather
+                       than inferring it from a Tailwind class, so the next
+                       design pass cannot silently disarm the guard. */
+                    data-seat-standing={seat.standing}
                     className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
+                    {/* THE REPORTED ROW. District 19's members under a prompt
+                        reading District 17 — both facts true, one of them not
+                        the reader's, and nothing on screen saying which. */}
+                    {marksElsewhere(seat.standing) && <ElsewhereMark zip={zip} />}
                     <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList
@@ -1015,9 +1173,13 @@ function CoverageBody({
                 {federalSeats.map((seat) => (
                   <li
                     key={seat.ocdId}
+                    data-seat-standing={seat.standing}
                     className="text-[0.75rem] leading-snug"
                   >
                     <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
+                    {/* Same rule at the federal level. A zip that crosses a
+                        congressional line is rarer, not different. */}
+                    {marksElsewhere(seat.standing) && <ElsewhereMark zip={zip} />}
                     <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList

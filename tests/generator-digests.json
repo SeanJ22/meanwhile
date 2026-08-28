@@ -48,7 +48,7 @@
     "regeneratedOn": "2026-08-28"
   },
   "data/hunt/wikipedia-nj-morris.json": {
-    "digest": "a0b3cabc08da6b55b46a82734281709f455112d1217b3ffe8f4a260b02a2dfd5",
+    "digest": "9831d0bccd460afe17dd0a82e802682e762748aaa4b364a3efc19848684fa6be",
     "files": 5,
     "entry": "scripts/wiki-municipality.mts",
     "regeneratedOn": "2026-08-28"

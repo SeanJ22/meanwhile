@@ -162,6 +162,68 @@ test("MAP-3: an area click still leaves Who Governs Here open", () => {
   }
 });
 
+/* -------------------------------------------------------------------------- */
+/* WGH-15 — HOME LOCATION IS NOT BROWSING LOCATION                            */
+/* -------------------------------------------------------------------------- */
+
+test("WGH-15: selecting a district writes SELECTION and never the reader's home", () => {
+  /*
+   * The reported screen showed *State House District 17* on the who-governs
+   * card and *District 19* on the district popup at the same moment, and the
+   * natural suspicion is that browsing had overwritten home. **It had not**,
+   * and this is the reducer half of proving it stays that way.
+   *
+   * The MAP-3 sweep above guards the PANEL's open state. This guards the
+   * READER'S LOCATION, which is a different thing living in a different store:
+   * `sessionStorage["wtp.session_address_scope"]`, whose only writer is
+   * `components/address/address-prompt.tsx`. A field appearing on the ui state
+   * that looks like a home location is how the two would start to leak.
+   */
+  const before = uiReducer(INITIAL_STATE, {
+    type: "select/district",
+    ocdId: "ocd-division/country:us/state:az/sldl:17",
+    districtType: "state-house",
+  });
+  const after = uiReducer(before, {
+    type: "select/district",
+    ocdId: "ocd-division/country:us/state:az/sldl:19",
+    districtType: "state-house",
+  });
+
+  // Browsing to a second district changes ONLY the selection.
+  assert.equal(after.selectedDistrictOcdId, "ocd-division/country:us/state:az/sldl:19");
+  const moved = Object.keys(after).filter(
+    (k) => after[k as keyof typeof after] !== before[k as keyof typeof before],
+  );
+  assert.deepEqual(
+    moved.sort(),
+    ["selectedDistrictOcdId"],
+    `selecting a district moved ${moved.join(", ")} — only the selection may move`,
+  );
+
+  // And no field on this state may look like where the reader LIVES.
+  for (const key of Object.keys(after)) {
+    assert.ok(
+      !/home|address|residen|confirmedDivision|splitLevel/i.test(key),
+      `the ui state has grown \`${key}\`, which looks like the reader's HOME location. ` +
+        `WGH-15: home lives in sessionStorage with exactly one writer, and the map's ` +
+        `selection reducer is not it. A district click may never rewrite where a reader lives.`,
+    );
+  }
+});
+
+test("WGH-15: the map shell reads the home store, and never writes it", () => {
+  /*
+   * `writeSessionAddress` and `clearSessionAddress` are the only two writers of
+   * the reader's home. The map shell renders BOTH surfaces — the who-governs
+   * card and the district popup — so it is the one file where a browse action
+   * could reach the home store, and it must not.
+   */
+  const source = entry();
+  assert.doesNotMatch(source, /writeSessionAddress/, "the map shell writes the home store");
+  assert.doesNotMatch(source, /clearSessionAddress/, "the map shell clears the home store");
+});
+
 test("MAP-3: takeForeground does not run on an area click", () => {
   /*
    * The other half. Three call sites, all named, none of them a map click. If

@@ -1,3 +1,5 @@
+import type { BodyStanding } from "../state/resolved-location.ts";
+
 import { WIRED_STATUSES, type CoveredBody } from "./coverage.ts";
 
 /**
@@ -46,10 +48,33 @@ import { WIRED_STATUSES, type CoveredBody } from "./coverage.ts";
  * Both definitions are real and both are needed — fifty Tucson advisory
  * committees must never read as fifty governments (D29) — so both are said on
  * screen in plain language rather than one number standing for two ideas.
+ *
+ * ## WGH-15 (2026-08-28): this function READS `standing`
+ *
+ * `coverage-notice.tsx` has piped `applyResolvedLocation(bodies, location)`
+ * into here since the 8/28 sweep. The annotation arrived, travelled through
+ * unread — the parameter was typed `readonly CoveredBody[]`, so `standing` was
+ * invisible to the compiler and to every line below — and came out the far side
+ * still unread. Only `couldGovern` survived into the render, and that survived
+ * because the SPREAD carried it, not because anything here looked at it.
+ *
+ * That is the WGH-12/13/14 defect — *correct, and had zero consumers* — one
+ * level further down. So two things change and neither is a filter:
+ *
+ * - the input is **generic**, so the annotation survives into `rows` with its
+ *   type intact and a surface can render it;
+ * - `elsewhere` counts the rows the reader's own address EXCLUDES.
+ *
+ * **Nothing is dropped, and `governingCount === rows.length` still holds by
+ * construction.** RULING 26 and RULING 27: collection state never governs
+ * display, and an address is evidence, not a display filter. A body that
+ * governs somewhere else in the zip is a body we hold in full and the reader
+ * can still see — the card ANNOTATES it, and `elsewhere` is what lets the card
+ * say so in its own words instead of leaving the reader to spot it.
  */
-export interface WhoGoverns {
+export interface WhoGoverns<T extends CoveredBody = CoveredBody> {
   /** The rows the card renders, in the order coverage returned them. */
-  rows: CoveredBody[];
+  rows: T[];
   /**
    * The number the lead prose states. Identical to `rows.length` by
    * construction; named separately only because the prose reads better with a
@@ -62,6 +87,20 @@ export interface WhoGoverns {
   others: number;
   /** How many of `others` have a calendar actually wired. */
   othersWithSource: number;
+  /**
+   * **WGH-15.** How many of `rows` the reader's own address EXCLUDES —
+   * `ELSEWHERE_IN_ZIP`, a body that governs somewhere else in the zip they
+   * typed.
+   *
+   * Zero whenever no address has been resolved, and that zero is *"we have not
+   * been told"*, never *"none of these are excluded"*. `standingOf` returns
+   * `UNSETTLED` for every body under `SELF_DECLARED_ZIP` and under `BROWSING`,
+   * so this can only be non-zero on evidence the reader themselves supplied.
+   *
+   * It is a count for the CARD TO SAY, not a threshold for it to filter on.
+   * Nothing here or downstream may remove a row because of it.
+   */
+  elsewhere: number;
 }
 
 /**
@@ -70,10 +109,10 @@ export interface WhoGoverns {
  *        empty when they have not narrowed, which is the default and must
  *        stay the effortless one
  */
-export function deriveWhoGoverns(
-  bodies: readonly CoveredBody[],
+export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStanding }>(
+  bodies: readonly T[],
   selectedOcdIds: ReadonlySet<string>,
-): WhoGoverns {
+): WhoGoverns<T> {
   /*
    * The narrowing, unchanged in meaning: where the reader picked a
    * municipality or school district, bodies of that TYPE narrow to the
@@ -102,5 +141,14 @@ export function deriveWhoGoverns(
     governingWithSource: wired(rows),
     others: narrowed.length - rows.length,
     othersWithSource: wired(narrowed) - wired(rows),
+    /*
+     * WGH-15. Counted off `rows` — the SAME array the card renders and the same
+     * one `governingCount` is the length of — for the reason the whole file
+     * exists: a second traversal of a second array is how one surface came to
+     * state three numbers for one list. A row with no annotation is not
+     * excluded; only an explicit `ELSEWHERE_IN_ZIP` is, and only the reader's
+     * own address can produce one.
+     */
+    elsewhere: rows.filter((b) => b.standing === "ELSEWHERE_IN_ZIP").length,
   };
 }

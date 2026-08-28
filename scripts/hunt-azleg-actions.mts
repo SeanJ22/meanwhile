@@ -328,7 +328,7 @@ async function walkSessionLawIndex(state: HuntState): Promise<void> {
       bytes: 0,
       fetchedAt: null,
       extract: null,
-      approvalDateLine: null,
+      stamp: null,
     };
   }
   if (WRITE_FIXTURES && status === 200) {

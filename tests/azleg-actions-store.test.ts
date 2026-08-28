@@ -242,7 +242,9 @@ test("DENOMINATOR: the legislative half states what it did NOT reach", () => {
 
 test("PERMISSION: apps.azleg.gov is named as disallowed and appears in no fetched URL", () => {
   const leg = store.legislative!;
-  assert.match(leg.permission, /apps\.azleg\.gov.*Disallow/s);
+  // `[\s\S]` rather than the dotAll flag: `s` needs an es2018 target and this
+  // tsconfig is below it, so the flag is a build error rather than a nicety.
+  assert.match(leg.permission, /apps\.azleg\.gov[\s\S]*Disallow/);
   assert.match(leg.permission, /Crawl-delay: 120/);
   for (const action of ALL) {
     for (const url of [action.sourceUrl, action.documentUrl ?? ""]) {

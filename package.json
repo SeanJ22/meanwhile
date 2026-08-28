@@ -128,6 +128,7 @@
     "method:check": "tsx scripts/method-check.mts",
     "orchestration:check": "tsx scripts/orchestration-check.mts",
     "schedule:audit": "tsx scripts/schedule-audit.mts",
+    "method:learn-legistar-insite": "tsx scripts/learn-legistar-insite.mts",
     "method:ingest": "tsx scripts/method-ingest.mts",
     "method:learn-85641": "tsx scripts/learn-85641-routes.mts",
     "method:learn-ask-entity": "tsx scripts/learn-ask-entity-routes.mts",

@@ -93,9 +93,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "git worktree C:/Users/seanj/dev/wtp-wt/mtg13 on ws/mtg13, node_modules junction"
+        "git worktree C:/Users/seanj/dev/wtp-wt/mtg13 on ws/mtg13, node_modules junction",
+        "integrated; snapshot regenerated ONCE by the integration owner (471 meetings, 13/13 sources, 0 walled); the three September sittings reach the reader layer with no duplicate against the August /events rows"
       ]
     },
     {

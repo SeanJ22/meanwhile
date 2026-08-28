@@ -5,6 +5,7 @@ import { BALLOT_SOURCES } from "@/lib/ballot/registry";
 import { divisionIdsForZipArea } from "@/lib/ballot/zip-divisions";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
+import { orderMeasures } from "@/lib/ballot/measure-order";
 import { summaryForContest } from "@/lib/ballot/measure-summaries";
 import {
   PROVISION_KIND_LABEL,
@@ -635,8 +636,16 @@ export default async function BallotPage({
 
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const measureContests =
-    matched?.contests.filter((c) => c.type === "MEASURE") ?? [];
+  /*
+   * BAL-29 (2026-08-28): measures carried NO ordering rule, so they rendered
+   * in whatever order the curated file listed them — which is how Proposition
+   * 425 came to sit above Proposition 423. The authority's own ballot order
+   * wins where one is published; otherwise the proposition number, compared
+   * as a NUMBER so 100 never sorts before 20. See lib/ballot/measure-order.ts.
+   */
+  const measureContests = orderMeasures(
+    matched?.contests.filter((c) => c.type === "MEASURE") ?? [],
+  );
 
   /*
    * ASK04: what is ON SCREEN, for referent resolution only.

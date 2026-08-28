@@ -1,0 +1,143 @@
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import test from "node:test";
+
+import { measureNumber, orderMeasures } from "../lib/ballot/measure-order.ts";
+import type { Contest } from "../lib/ballot/types.ts";
+
+/**
+ * BAL-29 — measures are presented in a neutral, stated order.
+ *
+ * The reported example is Proposition 425 above Proposition 423 at 85641. The
+ * controls that matter are the ones the reported example does NOT exercise:
+ * the three-digit-versus-two-digit case a string sort gets wrong, and an
+ * authority-published order, which must beat the number.
+ */
+
+const contest = (id: string, title: string, ballotOrder?: number): Contest & { ballotOrder?: number } =>
+  ({
+    id,
+    title,
+    type: "MEASURE",
+    electionId: "e",
+    ocdId: "ocd-division/country:us/state:az",
+    divisionVintage: "2020",
+    voteFor: 1,
+    termYears: null,
+    // Only present when the authority published one, so the absence is the
+    // real absence and not a zero.
+    ...(ballotOrder === undefined ? {} : { ballotOrder }),
+  }) as Contest & { ballotOrder?: number };
+
+/* --------------------------------------------------- the named example --- */
+
+test("BAL-29: Proposition 423 precedes 425, the reported regression", () => {
+  const ordered = orderMeasures([
+    contest("ballot-az-pima:prop-425", "Proposition 425: Permanent Base Adjustment"),
+    contest("ballot-az-pima:prop-423", "Proposition 423: Vail Unified School District budget override continuation"),
+  ]);
+  assert.deepEqual(
+    ordered.map((m) => measureNumber(m)),
+    [423, 425],
+  );
+});
+
+test("BAL-29: the real Pima measure set comes out ascending", () => {
+  const set = JSON.parse(
+    readFileSync(new URL("../data/ballot/az-pima-2026.json", import.meta.url), "utf8"),
+  ) as { contests: (Contest & { ballotOrder?: number })[] };
+
+  const measures = set.contests.filter((c) => c.type === "MEASURE");
+  assert.ok(measures.length >= 15, "the curated set must still hold the measures");
+
+  const numbers = orderMeasures(measures).map((m) => measureNumber(m));
+  assert.deepEqual(
+    numbers,
+    [...numbers].sort((a, b) => (a ?? 0) - (b ?? 0)),
+    "measures must come out in ascending proposition order",
+  );
+
+  // And the file itself is still out of order, so this test is measuring the
+  // repair rather than a property the data happened to already have.
+  const asFiled = measures.map((m) => measureNumber(m));
+  assert.notDeepEqual(asFiled, numbers, "the curated file order is not sorted");
+});
+
+/* ------------------------------------------------ the unnamed controls --- */
+
+test("BAL-29 control: three digits never sort before two", () => {
+  // The failure a lexicographic sort would introduce, and the reason the
+  // number is parsed rather than the title compared.
+  const ordered = orderMeasures([
+    contest("x:prop-100", "Proposition 100: Something"),
+    contest("x:prop-20", "Proposition 20: Something else"),
+    contest("x:prop-9", "Proposition 9: A third thing"),
+  ]);
+  assert.deepEqual(ordered.map(measureNumber), [9, 20, 100]);
+
+  // Stated explicitly: this is what the naive repair would have produced.
+  const lexicographic = [...ordered]
+    .map((m) => m.title)
+    .sort();
+  assert.equal(lexicographic[0], "Proposition 100: Something");
+});
+
+test("BAL-29 control: a published ballot order beats the number", () => {
+  const ordered = orderMeasures([
+    contest("x:prop-423", "Proposition 423: later on the ballot", 2),
+    contest("x:prop-425", "Proposition 425: first on the ballot", 1),
+  ]);
+  assert.deepEqual(ordered.map(measureNumber), [425, 423]);
+});
+
+test("BAL-29 control: authority-placed measures stay ahead of unplaced ones", () => {
+  // A partial official order is still official for the part it covers, and
+  // guessing where an unplaced measure belongs inside it would be inventing a
+  // ballot.
+  const ordered = orderMeasures([
+    contest("x:prop-500", "Proposition 500: unplaced"),
+    contest("x:prop-9", "Proposition 9: placed second", 2),
+    contest("x:prop-8", "Proposition 8: placed first", 1),
+  ]);
+  assert.deepEqual(ordered.map(measureNumber), [8, 9, 500]);
+});
+
+test("BAL-29 control: an unnumbered question keeps a stable place, never a random one", () => {
+  const ordered = orderMeasures([
+    contest("x:q-b", "Bond authorization for the regional library"),
+    contest("x:prop-12", "Proposition 12: numbered"),
+    contest("x:q-a", "Athletic facilities question"),
+  ]);
+  assert.equal(measureNumber(ordered[0]), 12, "numbered measures come first");
+  assert.deepEqual(
+    ordered.slice(1).map((m) => m.title),
+    [
+      "Athletic facilities question",
+      "Bond authorization for the regional library",
+    ],
+  );
+});
+
+/* -------------------------------------------------------- completeness --- */
+
+test("BAL-29: ordering never drops or duplicates a measure", () => {
+  const input = [
+    contest("x:prop-425", "Proposition 425: a"),
+    contest("x:prop-423", "Proposition 423: b"),
+    contest("x:q-none", "An unnumbered question"),
+    contest("x:prop-1", "Proposition 1: c", 3),
+  ];
+  const ordered = orderMeasures(input);
+  assert.equal(ordered.length, input.length);
+  assert.deepEqual(
+    ordered.map((m) => m.id).sort(),
+    input.map((m) => m.id).sort(),
+  );
+});
+
+test("BAL-29: the number is read from the title, and the id is only a fallback", () => {
+  assert.equal(measureNumber({ title: "Proposition 425: X", id: "junk" }), 425);
+  assert.equal(measureNumber({ title: "Prop. No. 7 — Y", id: "junk" }), 7);
+  assert.equal(measureNumber({ title: "Untitled", id: "ballot-az-pima:prop-318" }), 318);
+  assert.equal(measureNumber({ title: "A bond question", id: "x:q-bond" }), null);
+});

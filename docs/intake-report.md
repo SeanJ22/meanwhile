@@ -1,6 +1,6 @@
 # Intake tripwire report
 
-Generated 2026-08-27T20:43:51.974Z by `scripts/intake-tripwire.mts` (T08 1f).
+Generated 2026-08-28T21:15:21.403Z by `scripts/intake-tripwire.mts` (T08 1f).
 Everything in this file is a date, a count, or a threshold — never an
 identifier. Flags are flagged, never auto-acted-on: the author decides.
 
@@ -28,7 +28,8 @@ Thresholds: a day flags on volume at max(30, 4× the trailing
 
 | Day (UTC) | Rows |
 |---|---|
-| 2026-08-27 | 32 |
+| 2026-08-28 | 97 |
+| 2026-08-27 | 48 |
 | 2026-08-26 | 193 |
 | 2026-08-25 | 57 |
 | 2026-08-24 | 32 |
@@ -40,6 +41,6 @@ Thresholds: a day flags on volume at max(30, 4× the trailing
 
 ## Limiter housekeeping
 
-Expired limiter rows purged this run: 0. Rows
-remaining: 1. (Transient state only — the
+Expired limiter rows purged this run: 1. Rows
+remaining: 0. (Transient state only — the
 limiter table holds counters against an unjoinable digest, nothing else.)

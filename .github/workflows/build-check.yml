@@ -53,7 +53,44 @@ on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch: {}
+  # THE SMOKE INPUT — a credential proof that invents no schema change.
+  # (2026-08-28, the audit of the schema gate written the same day.)
+  #
+  # The schema shipping gate below is SCOPED: it opens no connection unless the
+  # change touches lib/db/migrations/ or lib/db/schema.ts. That is correct, and
+  # it means the credential is exercised only when a schema change happens to
+  # come along — so a wrong, expired or absent secret would be discovered by the
+  # very pull request that most needs the gate working.
+  #
+  # This input forces the gate to contact production on a commit that changed
+  # nothing. It issues the SAME single read-only SELECT and nothing else, prints
+  # the role, host and row count, and applies nothing.
+  #
+  # THE ROUTE REJECTED, so it is not re-litigated: passing the gate a fake
+  # `--paths=` naming a migration would also reach the database, and it would
+  # put a false statement about what the change touched into a log somebody
+  # reads later. The flag overrides the EXIT, never the finding — the run still
+  # prints its honest NOT APPLICABLE first.
+  workflow_dispatch:
+    inputs:
+      schema_smoke:
+        description: "Force the schema gate to READ production on this unchanged commit (one SELECT, read-only, nothing applied)."
+        type: boolean
+        default: false
+      # THE SECOND READING. A pre-merge answer is true about the moment it was
+      # taken and does not stay true — a merge is not a deploy here, and the
+      # applier has always been a person at a terminal. `post-deploy` is the
+      # moment where BOTH phases are owed, so it is the one that fails on a
+      # CONTRACT migration that pre-deploy deliberately allows.
+      #
+      # It is dispatched by hand against the commit that actually shipped.
+      # Nothing runs it automatically yet, and that gap is stated rather than
+      # papered over: see the header of scripts/db-shipping-gate.mts.
+      schema_moment:
+        description: "Which side of the deploy to ask from."
+        type: choice
+        options: [pre-deploy, post-deploy]
+        default: pre-deploy
 
 permissions:
   contents: read
@@ -419,6 +456,30 @@ jobs:
       - name: Schema shipping gate (only when the schema contract moved)
         if: always()
         timeout-minutes: 5
+      #
+      # AN ESTABLISHED MIGRATION IS IMMUTABLE, and that half runs with NO
+      # CREDENTIAL AT ALL (2026-08-28, the audit). Before the gate asks
+      # production anything it compares this head against the MERGE BASE and
+      # refuses a modification, deletion or rename of any migration that
+      # already exists there — correction is a new migration. It also holds the
+      # journal to append-only and requires the journal and the .sql files on
+      # disk to correspond exactly. None of that needs a secret, so it runs on a
+      # fork pull request and on a laptop with no .env.local.
+      #
+      # THE MERGE BASE ON A SHALLOW CLONE: `actions/checkout` clones at depth 1
+      # and this repository's pack is 311 MiB, so `fetch-depth: 0` here would
+      # cost every run of every gate a full history fetch. The gate takes the
+      # base from the platform instead — `pull_request.base.sha`, fetched BY SHA
+      # with a deepening `git fetch --depth=` when it is absent, and for a push
+      # the event's own added/modified/removed lists, which need no history at
+      # all. Nothing is built on commit dates: a per-file `git log` returns the
+      # tip date for every file on a shallow clone, with no error.
+      #
+      # WTP_SCHEMA_GATE_SMOKE is empty on every push and every pull request —
+      # the `inputs` context is empty outside workflow_dispatch — so the gate's
+      # scope is unchanged unless a person deliberately dispatches the proof.
         env:
           WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+          WTP_SCHEMA_GATE_SMOKE: ${{ inputs.schema_smoke }}
+          WTP_SCHEMA_GATE_MOMENT: ${{ inputs.schema_moment }}
         run: corepack pnpm exec tsx scripts/db-shipping-gate.mts

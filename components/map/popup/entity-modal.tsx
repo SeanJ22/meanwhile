@@ -37,6 +37,7 @@ import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { HowToBeHeard, MeetingSourceCredit } from "../meeting-panel";
 import { venueLink } from "@/lib/registry/links";
 
+import { BrowsingSubjectLine } from "./district-popup";
 import { CalendarLinks } from "./calendar-links";
 import { AgendaSection } from "./agenda-section";
 import { NoValue, PopupRow, PopupSectionLabel } from "./popup-card";
@@ -315,6 +316,30 @@ interface EntityModalProps {
   onOpenPlaceBody?: (key: string) => void;
   /** Overridden in tests and screenshots so a tab can be captured directly. */
   initialTab?: ModalTab;
+  /**
+   * **WGH-15 (2026-08-28) — WHOSE QUESTION THIS MODAL IS ANSWERING.**
+   *
+   * The large card is the district popup's expansion, so it inherits the exact
+   * defect the popup had: a reader who lives in House 17 opens the House 19
+   * card and reads a full page of *another district's* representation with
+   * nothing on it saying so.
+   *
+   * **The subject division is NOT a new prop.** `ModalSubject.divisionOcdId`
+   * already means exactly *the division this card is about* and is already
+   * null for a person's card and a meeting's card — which is precisely the
+   * condition under which the line must not render, because *"you're looking at
+   * a district"* would be false there. Adding a second field for the same fact
+   * is how two fields come to disagree about one card.
+   *
+   * So this adds ONE prop, it is optional, and it is read-only: `homeZip`, the
+   * zip the reader told us about, so their home standing can be computed.
+   * Absent, the card names its own subject and claims nothing about the reader
+   * — the right answer for someone who panned the map without naming a place.
+   *
+   * **It cannot change where the reader lives.** Everything downstream runs
+   * through a `BROWSING` location, which settles nothing by construction.
+   */
+  homeZip?: string | null;
 }
 
 /**
@@ -614,6 +639,7 @@ export function EntityModal({
   onOpenHolder,
   onOpenPlaceBody,
   initialTab = "overview",
+  homeZip = null,
 }: EntityModalProps) {
   const [tab, setTab] = useState<ModalTab>(initialTab);
   const sourceCount = sourceCountLabel(subject.sources);
@@ -664,6 +690,19 @@ export function EntityModal({
             </p>
             <h2 className="account-modal-title">{subject.title}</h2>
             <p className="account-modal-subtitle">{subject.subtitle}</p>
+            {/*
+              WGH-15: only when this modal is about a DIVISION. A person's card
+              and a meeting's card have no district subject to be about, and
+              rendering the line there would be the modal claiming something
+              nobody asked it.
+            */}
+            {subject.divisionOcdId != null && (
+              <BrowsingSubjectLine
+                label={subject.title}
+                homeZip={homeZip}
+                ocdId={subject.divisionOcdId}
+              />
+            )}
           </div>
 
           <button

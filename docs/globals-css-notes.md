@@ -2768,3 +2768,59 @@ indents once as a group rather than five times as five rows.
 
 Paired with the seat-label collapse in `lib/officials/seat-grouping.ts`: one
 heading per body, however many seats it holds.
+
+## BAL-25 (2026-08-28) — the ballot's desktop second column
+
+<a id="bal-25-2026-08-28-the-ballot-s-desktop-second-column"></a>
+
+`app/ballot/page.tsx` had **no responsive breakpoint at all** — not one `sm:`,
+`md:`, `lg:` or `xl:` utility in 2,282 lines of page or in any of the thirteen
+`components/ballot/*.tsx` files. The container was `max-w-2xl`, so a 2,000px
+desktop rendered a 672px column of ballot and 1,328px of background.
+
+**The width is spent on a second column of CARDS, never on longer lines.**
+Prose stays capped at `lg:max-w-2xl` — the same 42rem measure a phone reader
+gets — because a 1,600px paragraph is the mobile page with the guard rails
+taken off, not a desktop composition. What the extra width buys is roughly
+twice as much ballot per screen at exactly the same line length.
+
+**Why a grid of whole cards and not a two-column row.** `docs/DESIGN.md`, "The
+two-column trap": a row that puts a `nowrap` label and a value in competition
+for a fixed width will eventually starve the value, and where the label can be
+arbitrarily long — an office title, a body name — the answer is to stack, not
+to tune the width. Contest headings here are exactly that kind of label. So the
+columns divide CARDS and never FIELDS: each card spans its whole grid cell and
+stacks internally exactly as it does at 390px, and the trap has nothing to bite.
+
+**Row-major, not multi-column.** CSS `columns` would balance the ragged bottom
+edge, but it flows column-major: a reader would scroll the whole left column of
+a 20,000px ballot and then scroll back up for the right. Grid keeps ballot
+order reading left-to-right and down. The ragged bottom is the price and it is
+the cheaper one.
+
+The class is a single column at every width below `1024px`, so the phone render
+is unchanged by construction rather than by inspection.
+
+## BAL-26 (2026-08-28) — Ask, in the pill row under the heading
+
+<a id="bal-26-2026-08-28-ask-in-the-pill-row-under-the-heading"></a>
+
+`<BallotAsk>` was mounted dead last on the ballot page — below every contest,
+every footnote, the measures, the notes block and the absence blocks. On this
+page that is roughly 20,000px at 1280 and 25,000px at 390, which is a feature
+no reader finds. The engine was never the problem: it posts to
+`/api/ask/grounded` with `surface: "BALLOT"`, the same pipeline the map panel
+uses. This is placement.
+
+It moves into `.ballot-top-pills`, the flex row directly under the `<h1>` that
+already carries the narrowing pill and the movers link. The affordance is
+borrowed from the map's `.ask-pill` — a pill with `aria-expanded`, an expansion
+that hangs under the row at the row's full width, a one-frame focus into the
+input on open, Escape and an outside press to dismiss — but not the COMPONENT:
+`components/shell/pill-cluster.tsx` mounts `AskBox`, which reads
+`useShellData()` and `useUi()`, providers that exist only inside
+`map-entry.tsx`. Reusing it would mean standing the map shell up behind a page
+that has no map.
+
+`.ballot-ask-pill` is a `signal`-tinted variant of `.ballot-top-pill` rather
+than a second pill grammar, so the three pills in that row read as peers.

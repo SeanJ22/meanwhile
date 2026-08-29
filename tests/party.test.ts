@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { BODY_ROSTERS } from "../lib/registry/body-rosters.ts";
+import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { STATEWIDE_EXECUTIVES } from "../lib/officials/statewide-executives.ts";
 import { allOfficialRows } from "../lib/officials/tier-grouping.ts";
 import { coverageAt } from "../lib/registry/server.ts";
@@ -42,15 +43,49 @@ const ZIPS: Record<string, [number, number]> = {
   "03255": [43.31403, -72.02455],
 };
 
-test("M61: every governor carries a party, and the record it came from", () => {
-  assert.equal(STATEWIDE_EXECUTIVES.length, 3, "the denominator: three governors");
+/**
+ * **THE HEAD-COUNT IS GONE; THE RULE IS NOT** (2026-08-28).
+ *
+ * This asserted `STATEWIDE_EXECUTIVES.length === 3`, "the denominator: three
+ * governors". That number was never the invariant — it was the size of the
+ * store on the day M61 was written, and pinning it made GROWING the store look
+ * like breaking the rule. The rule M61 actually adopted is two sentences, and
+ * both survive verbatim below:
+ *
+ *   1. a party never ships without the record it was read from, and that
+ *      record is never the office's own page, which does not publish one;
+ *   2. a party the ballot also holds must AGREE with the ballot and cite the
+ *      same filing.
+ *
+ * What replaces the head-count is the harder half: **a null party must NAME
+ * ITS OWN GAP.** Silence was the reported defect — Kelly Ayotte rendering bare
+ * beside a ballot that said Republican — and silence is what a bare null still
+ * is. `partyAbsence` is where the session says what it looked at and what the
+ * record did not say, so a later session inherits the wall instead of
+ * rediscovering it.
+ */
+test("M61: no statewide executive carries a party without its record, and no null is silent", () => {
+  assert.ok(
+    STATEWIDE_EXECUTIVES.length >= 3,
+    `the store holds ${STATEWIDE_EXECUTIVES.length} statewide executives — a shrunken store is a lost corpus`,
+  );
 
+  let withParty = 0;
   for (const exec of STATEWIDE_EXECUTIVES) {
     const { partyLabel } = exec.holder;
-    assert.ok(
-      partyLabel,
-      `${exec.holder.name}: no party — the who-governs card would render nothing beside a ballot that says otherwise`,
-    );
+    if (!partyLabel) {
+      assert.ok(
+        exec.partyAbsence && exec.partyAbsence.length > 40,
+        `${exec.holder.name}: no party and no stated reason — a bare null is the M61 defect, ` +
+          "which was a card rendering nothing while a record existed somewhere",
+      );
+      assert.ok(
+        !exec.partySourceUrl,
+        `${exec.holder.name}: cites a party record while carrying no party`,
+      );
+      continue;
+    }
+    withParty += 1;
     assert.ok(
       exec.partySourceUrl && /^https:\/\//.test(exec.partySourceUrl),
       `${exec.holder.name}: party "${partyLabel}" with no source record`,
@@ -65,6 +100,36 @@ test("M61: every governor carries a party, and the record it came from", () => {
       exec.partySourceUrl,
       exec.sourceUrl,
       `${exec.holder.name}: cites the office page for party, which does not publish it`,
+    );
+  }
+
+  // The floor, so a store that quietly stopped holding parties at all cannot
+  // pass this by holding nothing (RULING 159).
+  assert.ok(withParty >= 3, `only ${withParty} statewide executives carry a party`);
+});
+
+/**
+ * **EVERY GOVERNOR STILL CARRIES ONE, AND THIS GUARD KEEPS ITS NAME.**
+ *
+ * The original M61 guard was one test over the whole store. It is now two —
+ * the generalised rule above, and this, which holds the three rows the author
+ * actually reported so the generalisation cannot pass by losing them. The NAME
+ * stays exactly what it was: RULING 62 says a guard that leaves must leave the
+ * census in the same commit, and this guard did not leave. It narrowed.
+ */
+test("M61: every governor carries a party, and the record it came from", () => {
+  const governors = STATEWIDE_EXECUTIVES.filter((e) => e.holder.officeTitle === "Governor");
+  assert.equal(governors.length, 3, "AZ, NJ, NH");
+  for (const governor of governors) {
+    assert.ok(governor.holder.partyLabel, `${governor.holder.name}: governor with no party`);
+    assert.ok(
+      governor.partySourceUrl && /^https:\/\//.test(governor.partySourceUrl),
+      `${governor.holder.name}: party with no source record`,
+    );
+    assert.notEqual(
+      governor.partySourceUrl,
+      governor.sourceUrl,
+      `${governor.holder.name}: cites the office page for party, which does not publish it`,
     );
   }
 });
@@ -83,21 +148,43 @@ test("M61: the ballot and the officeholder row agree about party", () => {
     contestId: string;
     provenance: { sourceUrl: string };
   }> = [];
+  /*
+   * The office each contest is FOR, so the cross-check is (office, surname)
+   * rather than (surname, /governor/) — 2026-08-28.
+   *
+   * The contest-id regex was right for a store of three governors and cannot
+   * see a Secretary of State, an Attorney General or a Corporation
+   * Commissioner. Widened to the office key the incumbency join itself uses,
+   * so every statewide executive this repository holds who is ALSO on a ballot
+   * it holds is compared — which is eleven more rows than the old shape could
+   * reach, and the point of the invariant is that it reaches all of them.
+   */
+  const officeOfContest = new Map<string, string>();
   for (const f of files) {
     const parsed = JSON.parse(
       readFileSync(join(ROOT, "data", "ballot", f), "utf8"),
-    ) as { candidacies?: typeof candidacies };
+    ) as {
+      candidacies?: typeof candidacies;
+      contests?: { id: string; title: string }[];
+    };
     candidacies.push(...(parsed.candidacies ?? []));
+    for (const contest of parsed.contests ?? []) {
+      const key = officeIdentity(contest.title);
+      if (key) officeOfContest.set(contest.id, key);
+    }
   }
   assert.ok(candidacies.length > 20, `only ${candidacies.length} candidacies loaded`);
 
   let compared = 0;
   for (const exec of STATEWIDE_EXECUTIVES) {
     const family = exec.holder.name.split(" ").pop()!;
+    const office = officeIdentity(exec.holder.officeTitle);
     const match = candidacies.find(
-      (c) => c.familyName === family && /governor/i.test(c.contestId),
+      (c) => c.familyName === family && office !== null && officeOfContest.get(c.contestId) === office,
     );
-    if (!match) continue; // no governor's race on this state's 2026 ballot
+    // No contest for this office on this state's 2026 ballot, or the holder is
+    // not standing in it — an open seat is not a disagreement.
+    if (!match) continue;
     compared++;
     assert.equal(
       exec.holder.partyLabel,
@@ -114,7 +201,7 @@ test("M61: the ballot and the officeholder row agree about party", () => {
   }
   assert.ok(
     compared >= 2,
-    `only ${compared} governors could be cross-checked against a ballot filing — the join broke`,
+    `only ${compared} statewide executives could be cross-checked against a ballot filing — the join broke`,
   );
 });
 

@@ -111,6 +111,28 @@ export const FAILURE_CLASSES: readonly FailureClass[] = [
       "one states what it expected and what it saw. Nothing here is a flake to re-run past.",
     shapes: [/✖ failing tests:/, /ELIFECYCLE\s+Test failed/],
   },
+  {
+    /*
+     * Added 2026-08-28, the day this class was diagnosed as UNKNOWN while the
+     * log said exactly what was wrong. Production was two migrations behind the
+     * merged code, and the shape that makes it dangerous is that NOTHING LOOKED
+     * BROKEN: every insert naming a column those migrations add failed, the
+     * route caught it, and the page was still served. A reader saw a working
+     * site while the writes went nowhere.
+     *
+     * The remedy names BOTH orderings on purpose. Migrate-always-first is wrong
+     * for a contract migration, whose whole point is that it must not precede
+     * the code that stops needing what it removes.
+     */
+    id: "schema-out-of-sync",
+    remedy:
+      "Production is missing a committed migration, named above by tag. If it is EXPAND, apply it " +
+      "BEFORE the code deploys: `corepack pnpm db:apply --target=production`. If it is CONTRACT, the " +
+      "deploy goes first and the migration follows — `lib/db/migration-phases.ts` carries the phase, " +
+      "derived from the migration's own SQL. Nothing here is a flake: the page will keep rendering " +
+      "while the writes fail, so a green-looking site is not evidence against it.",
+    shapes: [/OUT OF SYNC/, /NOT APPLIED\s+\d{4}_/, /committed migration\(s\) NOT APPLIED/i],
+  },
 ];
 
 export type DiagnosisVerdict = "KNOWN" | "UNKNOWN";

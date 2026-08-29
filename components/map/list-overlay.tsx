@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { haversineKm } from "@/lib/geo/distance";
 import { hasConcluded, orderByUpcomingFirst } from "@/lib/meetings/ordering";
 import { concludedGapNote } from "@/lib/meetings/history-gaps";
+import { isOnlineOnly } from "@/lib/meetings/online";
+import { MeetingStatusPill } from "@/components/map/meeting-status-pill";
 import {
   formatMeetingDate,
   formatMiles,
@@ -418,27 +420,28 @@ export function ListOverlay({
                           history and which were called off.
                         */}
                         {meeting.status === "CANCELED" ? (
-                          <span className="meeting-status-pill" data-status="canceled">
-                            Cancelled
-                          </span>
+                          <MeetingStatusPill status="canceled" />
                         ) : hasConcluded(meeting, now) ? (
-                          <span className="meeting-status-pill" data-status="concluded">
-                            Concluded
-                          </span>
+                          <MeetingStatusPill status="concluded" />
                         ) : null}
                         {/*
                           D18: a meeting held online has no pin, so the LIST is
                           the only place a reader can find it — and it has to
-                          say why it is not on the map. An outline pill rather
-                          than a filled one: the two above are claims about
-                          what happened to the sitting, and this is a claim
-                          about where it is.
+                          say why it is not on the map.
+
+                          **MTG-14 (2026-08-28) CORRECTS THIS COMMENT.** It used
+                          to claim "an outline pill rather than a filled one",
+                          and the stylesheet has always rendered
+                          `[data-status="online"]` FILLED. The code and its
+                          comment disagreed, and the CSS is what ships, so the
+                          CSS wins — an outline `--online` measures 5.73:1 dark
+                          and 5.06:1 light as TEXT, under the 7:1 sun bar. The
+                          difference in KIND — these two are claims about what
+                          happened to the sitting, this is a claim about where
+                          it is — is carried by the mark and the word instead.
+                          See components/map/meeting-status-pill.tsx.
                         */}
-                        {meeting.location === null && (
-                          <span className="meeting-status-pill" data-status="online">
-                            Online
-                          </span>
-                        )}
+                        {isOnlineOnly(meeting) && <MeetingStatusPill status="online" />}
                         {/*
                           M81. Impact is jurisdiction MEMBERSHIP, not distance
                           — a meeting forty miles away at the county seat

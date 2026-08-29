@@ -305,6 +305,74 @@ what work exists.
 
 ---
 
+## A session is an engineering organization
+
+**RULING 190 and RULING 191.** The author states desired product outcomes. The
+session diagnoses, decomposes, delegates, executes, integrates and ships.
+
+**WHEN TWO OR MORE AUTHORIZED EXECUTABLE WORKSTREAMS ARE MATERIALLY
+INDEPENDENT, SAFE PARALLEL EXECUTION IS THE DEFAULT.** Serializing independent
+work is a process defect, and the session names the dependency rather than
+silently serializing the queue.
+
+Before broad implementation, every session loads current governance for the
+task, identifies the authorized executable work universe, builds a
+dependency/conflict graph, identifies the independent workstreams, fans them out
+using the **strongest parallel mechanism the environment actually supports**,
+designates one integration owner, and keeps independent streams progressing
+while another waits or blocks. The decomposition is PROPORTIONAL — two five-line
+edits to one file are one workstream.
+
+```
+INDEPENDENT WORK          -> PARALLEL BY DEFAULT
+TRUE DEPENDENCY           -> SERIALIZE AND NAME WHY
+ONE WORKSTREAM BLOCKED    -> THE OTHERS CONTINUE
+ONE WORKSTREAM DONE       -> READY_FOR_INTEGRATION, NOT SESSION DONE
+TRACKER ROW CREATED       -> NOT WORK COMPLETION
+LARGE PR / MANY FILES     -> NOT A STOP REASON
+P0                        -> START IMMEDIATELY, NEVER FREEZE THE OTHERS
+```
+
+**A tracker row is a record of work, never a substitute for it.** If an item is
+executable now, execute it now.
+
+**The law names no vendor.** Subagents or parallel agents where they exist,
+otherwise worktrees, branches, concurrent shells and processes, parallel
+retrieval and parallel test jobs. Where only one thread genuinely exists the
+obligation survives as interleaving. *"I cannot spawn another engineer"* is not
+a dependency.
+
+**Correctness still outranks speed.** The goal is MAXIMUM SAFE PARALLEL
+THROUGHPUT, never the maximum number of branches. Two branches independently
+rewriting one canonical store, or independently regenerating one generated
+output, are refused by this rule rather than permitted by it.
+
+**One integration owner, one combined head, one merge at the end.** Workstreams
+own their code, tests and source data; the integration owner alone reconciles
+the shared stores — canonical work state, the tracker, state and log, the method
+store — and regenerates every generated artifact ONCE. A branch changes
+canonical INPUTS. Branch-local green is necessary and never sufficient: only the
+integrated head ships, and the cross-workstream interactions are tested there
+because that is the only place they can fail.
+
+**The verdict is derived, not claimed** (`classifyOrchestration` in
+`lib/workstate/orchestration.ts`, run by `pnpm orchestration:check` over
+`data/workstate/orchestration/`). Each workstream records its id, dependency ids
+and the reason for each, the paths and data it owns, what it produces and
+consumes, whether it is executable, and its disposition. **A dependency is
+PROVEN only by an owned-domain overlap or a produces/consumes handoff** — an
+edge backed by prose alone is reported UNPROVEN. Independent, executable, and
+serialized with nothing checkable behind it is a FAILURE. PR size, branch
+simplicity, conflict avoidance, convenience, unspecified caution, P0, and the
+absence of subagents are refused as justifications by name.
+
+**What it cannot do is stated, not hidden:** wall-clock concurrency is not
+observable here, so the guard checks the plan's shape and every serialization's
+justification. Recorded evidence — worktrees, branches, agent ids — is
+corroboration, never proof.
+
+---
+
 ## Stack
 
 **This section names DECISIONS, never versions.** A framework version written

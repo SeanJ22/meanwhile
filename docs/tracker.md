@@ -14,15 +14,15 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **344 open**, 443 resolved.
-- **55 waiting on Sean** — the first section below.
+- **351 open**, 443 resolved.
+- **57 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **4**
+  - Needs Sean — **5**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **3**
+  - Data infrastructure — **4**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **3**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**55 open · 52 resolved.**
+**57 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -90,6 +90,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 
 **NH108** — The questionnaire instrument is built and 272 invitations are generated, every one with invitedOn null, so nothing has been sent to anybody. The page a candidate types into is buildable and is NH104. SENDING is not a build, it is four decisions, and they are all yours: (1) the sending DOMAIN this goes out from, because a civic questionnaire arriving from a generic address is the one a campaign deletes; (2) an email PROVIDER CREDENTIAL, which this project does not hold and cannot obtain on your behalf; (3) DELIVERABILITY WARM-UP, because 272 near-simultaneous messages from a cold domain is the textbook shape of a spam classification, and being classified once is close to unrecoverable; and (4) WHETHER THE INVITATION GOES OUT BEFORE OR AFTER 3 NOVEMBER 2026, which is a judgement about the election and not a technical question at all. Raised as ONE row on purpose so you can rule once rather than in four pieces, and so a session cannot start building a send path on the strength of having answered one of them.
 
+**NH272** — The new migration shipping gate asks production whether it already holds the migrations a pull request is about to ship. To ask, the CI job needs a read-only production database URL. It is not currently a repository secret, and only the author can add one.
+
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
   Waiting on reaction capture (P03).
@@ -113,6 +115,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH225** — Arizona's Department of Revenue website tells eight named AI crawlers to stay out, and ClaudeBot is one of them. It allows every other visitor. This product's reader identifies itself by its own name and a contact address, so the rule that applies to it is the allow-everyone rule. That is what the robots standard says, and it is also a judgement call, so it is yours rather than a session's.
 
 **NH246** — A tester reported that privacy and what-the-site-collects information was not easy to find. Inspecting the product: the information is NOT missing. /transparency is a 470-line page with nine sections — What is collected, What is not collected, Reactions to votes and candidates, Campaign money, Photographs of officials, Speak Your Mind, What happens to the data, What this site will never do, Feedback — and it is linked from the entry screen. The defect is DISCOVERABILITY, not content: on the entry screen the link sits in components/map/site-footnote.tsx at 0.625rem (10px) in muted colour, alongside Feedback, and is the smallest text on the page. It is also linked from /ballot, /feedback, /about-area, the welcome overlay and the reaction control, all at similar weight. So the proposal is a short plain-language summary at the TOP of a long page, plus a heavier entry point — NOT a rewrite of the disclosure, which is thorough and accurate. NOTHING BELOW IS SHIPPED AND NO USER-FACING PRIVACY UI HAS BEEN CHANGED. Needs Sean's review, edit and approval before any of it becomes reader-visible. PROPOSED SUMMARY BLOCK, to sit directly under the existing h1 'What this site collects, and what it doesn't' — every line checked against the code, and nothing promised that the code does not already do: (1) 'You never need an account to read anything here. If you make one, it is an email address and a magic link — there is no password and no social login.' [Auth.js, email magic link only, per CLAUDE.md Stack.] (2) 'We ask for a zip or an address to work out which districts you are in. An address you type is sent to the Census Bureau's geocoder to turn it into a point, and we do not keep it. Your zip is kept in your browser for the session, not on our servers as yours.' [app/api/geocode is a stateless Census proxy and is POST specifically so an address never lands in a URL or an access log; wtp.approximate_location is sessionStorage.] (3) 'Using the map writes an anonymous row: what kind of thing happened, roughly where — the zip you entered and the districts it touched — and the date. No name, no account, no IP address, no cookie that follows you.' [search_log columns: occurredAt, eventType, approximateLocation, ocdIds, divisionVintage, detail. There is no IP column.] (4) 'When you react to a vote, a candidate or part of a ballot measure, we store the reaction and a random key your browser invented so you can change your mind later. The key is stored only as a hash, it links your own reactions to each other and to nothing else, and clearing your browser storage just means older reactions can no longer be edited.' [reactions.reactionKeyHash, wtp.reaction_key in localStorage, disclosed in these terms already.] (5) 'Reactions are never shown back to anyone — not to you, not to other readers, not as a total on a page.' [CLAUDE.md: no user-to-user surface; write-only from the reader's perspective.] (6) 'Anonymous totals are sold to political organisations. That is how the site is free. Individual rows are not sold and the stores are built so they cannot be joined back to a person.' [The n-stores rule; tests/db-schema.test.ts proves no shared value space.] (7) 'Feedback you send is read by a person, is scrubbed of anything that looks like a phone number, an email or an address before it is stored, carries no key at all, and enters no total we sell. It is one-way — we cannot write back.' [feedback table: no continuity key, no zip, no IP, no email; scrubbed via lib/log/scrub.ts at the single write path.] PROPOSED PLACEMENT AND DISCOVERABILITY, for Sean to accept or reject: (a) put the seven lines above at the top of /transparency under the existing heading, so a reader gets the whole answer in fifteen seconds and the detail stays below it; (b) raise the entry-screen link out of 10px muted — same words, 'What this site collects', at body size, since reader friction is a defect but this is one of the three named exceptions and consent-adjacent text is allowed to be prominent; (c) consider a persistent footer entry on the ballot and body surfaces, which are where a reader has just been asked for the most. OPEN QUESTIONS FOR SEAN: whether 'sold' is the word he wants in a summary line, whether the summary should name the buyer class at all, and whether retention should be stated — the code today auto-deletes nothing except intake_limiter rows after 48 hours, and saying 'we keep it indefinitely' is true but is a bigger statement than the page currently makes.
+
+**NH274** — Arizona publishes 151 Governor's letters explaining why bills were signed or vetoed. They are scanned images rather than text, so reading them needs OCR, and the OCR tool cannot install itself without an elevation prompt.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -500,7 +504,7 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**17 open · 40 resolved.**
+**19 open · 40 resolved.**
 
 ### P1
 
@@ -532,6 +536,10 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 **NH261** — Clicking State House District 21 shows District 21's representatives in the popup while the panel beside it still shows the reader's own District 19. Two surfaces on one screen, two answers.
 
+**NH268** — A school, congressional or local district is an area, and an area can lie across several legislative districts. Only a single point resolves to one. Vail Unified sits across Arizona Legislative District 19 AND District 17, measured over 44 probed points and 20 walked map layers, and so does the Corona de Tucson Fire District. The shipping registry already models this correctly, so nothing wrong reaches a reader today.
+
+**NH271** — Most candidates on a rendered ballot show initials rather than a face. The gap is overwhelmingly New Jersey down-ballot: 117 Board of Education candidacies, 47 Borough Council, 27 Township Committee.
+
 **VF05** — Five issues, NOT STARTED this session. MTG-1: the "Governs your area" pill overlaps the next meeting date in the meetings box. MTG-2: Meetings, then Rockaway Township Municipal / Township Council, opens MULTIPLE pop-ups at once — it should open the large battlecard for that specific meeting, one surface. MTG-3: the large meeting battlecard's location is not clickable and has no Add to Calendar; Add to Calendar exists under Meetings but Meetings has no directions. Directions and Add to Calendar must both be available from Overview and from Meetings. MTG-4 (ruled): assume the venue is missing from created calendar events and build it so the event carries the venue in the location field alongside date and time — a no-op if it already works. MTG-5: "Make Your Voice Heard" renders fully expanded and the reader scrolls past all of it to reach the next meeting; it becomes a collapsed drop-down with the content kept verbatim.
 
 **M92** — Bodies and districts on the map still click straight out to a website. Sean and the tester both wanted a card that tells you about the thing first, with the website as one of the things on it.
@@ -546,13 +554,15 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**91 open · 109 resolved.**
+**92 open · 109 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
 
 **NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
+
+**NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
 
 **NH45** — data/ballot/candidate-hunt-state.json holds 136 candidate keys in TWO formats for the same people: a slug form, ballot-az-pima:governor:hobbs-katie, and a pipe-and-display-name form, ballot-az-pima:governor|Katie Hobbs. Thirty of the 136 are the pipe form and every one names somebody the slug form already names. candidate-cards-2026.json carries 20 of the same duplicates.
 
@@ -762,7 +772,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**45 open · 141 resolved.**
+**46 open · 141 resolved.**
 
 ### P1
 
@@ -791,6 +801,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH262** — At 2000px the ballot renders in a narrow centred column with large empty margins either side. The mobile layout itself is fine; the desktop one simply does not use the space it has.
 
 **NH263** — Sean could not find the Ask feature in his own product. It sits below every contest, below the footnotes.
+
+**NH269** — A reader deciding whether they can attend should learn that a meeting has no room to walk into before they open it. The main meeting list already says Online. The door overlay next-meeting line and the Ask autocomplete do not.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -890,7 +902,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**24 open · 83 resolved.**
+**25 open · 83 resolved.**
 
 ### P1
 
@@ -913,6 +925,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
 
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
+
+**NH273** — The gate now blocks a merge whose migrations production does not hold. The deploy half is unbuilt: Netlify could refuse to build a deploy whose expand-phase migrations are unapplied, which would close the window between merging and deploying.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

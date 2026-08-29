@@ -1,3 +1,4 @@
+import type { AskClassifyReply } from "@/lib/ask/answer";
 import { classifyQuestion } from "@/lib/routing/classifier";
 import { ripcordPulled } from "@/lib/ripcords";
 import { intakeLimits, isSameOriginSubmission } from "@/lib/signal/intake-limits";
@@ -45,7 +46,8 @@ export async function POST(request: Request) {
   // The rung's own switch. Pulled, the ask box is keyword-only — which is
   // the whole product it shipped as.
   if (ripcordPulled("ripcord.askClassifier")) {
-    return Response.json({ topic: null, why: "off" }, { status: 200 });
+    const off: AskClassifyReply = { topic: null, why: "off" };
+    return Response.json(off, { status: 200 });
   }
 
   if (!ripcordPulled("ripcord.rateLimits")) {
@@ -83,10 +85,9 @@ export async function POST(request: Request) {
 
   // Every not-a-topic answer is the same to the reader: the honest keyword
   // refusal the box would have shown anyway. `why` is for the operator.
-  return Response.json(
+  const reply: AskClassifyReply =
     outcome.kind === "TOPIC"
       ? { topic: outcome.topicId }
-      : { topic: null, why: outcome.kind === "UNAVAILABLE" ? outcome.why : "none" },
-    { status: 200 },
-  );
+      : { topic: null, why: outcome.kind === "UNAVAILABLE" ? outcome.why : "none" };
+  return Response.json(reply, { status: 200 });
 }

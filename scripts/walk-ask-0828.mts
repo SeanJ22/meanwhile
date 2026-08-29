@@ -177,6 +177,15 @@ async function walkBallot(viewport: { width: number; height: number }, label: st
   await page.goto(`${BASE}/ballot?zip=${ZIP}`, { waitUntil: "domcontentloaded", timeout: 90_000 });
   await page.waitForTimeout(2500);
 
+  /*
+   * BAL-26 (2026-08-28): ballot Ask is now behind an entry pill, and the panel
+   * UNMOUNTS while collapsed. Without this click the selector below finds
+   * nothing and the script takes its graceful branch, reporting BALLOT ASK
+   * INPUT NOT FOUND -- a false instrument reading a real feature as absent.
+   */
+  await page.click("[data-ballot-ask-pill]");
+  await page.waitForSelector("[data-ballot-ask] [data-ask-input]", { timeout: 15_000 });
+
   for (const [index, question] of BALLOT_QUESTIONS.entries()) {
     const input = await page.$("[data-ballot-ask] [data-ask-input]");
     if (!input) {

@@ -52,7 +52,38 @@ export interface EvidenceRecord {
     /* A verified civic relationship a reader can act on. `lib/ask/contacts.ts`
        is the only thing that mints these, and it mints none that is not read
        off a sourced roster row. */
-    | "CONTACT";
+    | "CONTACT"
+    /*
+     * **A LINE A CLERK PUT ON AN AGENDA, FOUND BY TOPIC SWEEP.** (ASK-05,
+     * 2026-08-28.)
+     *
+     * `AGENDA_ITEM` is *this meeting's* docket, retrieved because the reader
+     * named the body that sits. An `AGENDA_MENTION` is the other question —
+     * *"is there a data centre coming?"* — a keyword sweep across every
+     * readable agenda in scope, which finds a line in a government the reader
+     * did not name.
+     *
+     * They are separate kinds because the DENOMINATOR is different and a
+     * reader has to be able to tell them apart: one is "these are the items on
+     * that sitting", the other is "this is what we found in the N agendas we
+     * hold". Collapsing them would let a sweep hit read as a body's docket.
+     * `lib/ask/agenda-topic.ts` is the only thing that mints these.
+     */
+    | "AGENDA_MENTION"
+    /*
+     * **HOW A NAMED PERSON VOTED ON ONE NAMED ROLL CALL.** (ASK-06,
+     * 2026-08-28.)
+     *
+     * The chamber's own recorded position, on the chamber's own question, with
+     * the chamber's own roll-call page as the source. Never a tally we
+     * computed, never a characterisation, never a rate, and never a position
+     * inferred from party, district or anything else: the record exists
+     * because `data/votes/*.json` holds a row keyed on a STABLE officeholder
+     * identifier, or it does not exist at all. `lib/ask/votes.ts` is the only
+     * thing that mints these, and the identity rule that gates it is the whole
+     * of that module's doc block.
+     */
+    | "ROLL_CALL_VOTE";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
   /** The record's own words, or a mechanical read of its fields. Never a summary. */

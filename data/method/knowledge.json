@@ -1,5 +1,5 @@
 {
-  "version": 45,
+  "version": 55,
   "updatedOn": "2026-08-28",
   "routes": [
     {
@@ -2771,7 +2771,14 @@
           "note": "Pima County's own published meeting rule read from www.pima.gov on 2026-08-28: 2nd and 4th Tuesdays, 5 p.m., Administration Building, 130 W. Congress St. Legistar over the same window holds seven events, newest 2026-08-25."
         }
       ],
-      "subBranches": [],
+      "subBranches": [
+        {
+          "jurisdiction": "az",
+          "reason": "SUPERSEDED IN PART, and the surviving half is the larger one. The publishing-practice observation stands: a body's schedule and its agendas really are different records on different clocks, and Vail remains the control. What is withdrawn is the conclusion drawn about Pima — that its September sittings existed ONLY as the recurring rule at www.pima.gov/2599. They did not. All three were individually published on the county's own Legistar InSite portal at the time that route was recorded, with a date, a room and a meeting kind, and the 2026-09-08 1:00 PM Study Session among them could not have been derived from the rule text, which gives study sessions no time at all. The route's diagnostic — ask the body's own site — was too narrow: the vendor's own web UI is a third record again, and it is the one that held these.",
+          "replacedBy": "vendor-api-and-vendor-web-ui-are-different-records",
+          "failedOn": "2026-08-28"
+        }
+      ],
       "origin": "found 2026-08-28 investigating a reader report that the Pima County Board of Supervisors was missing its upcoming meetings. The report named September 8 and September 22 and was right about both; the suspicion that rows were being dropped was wrong, and the denominators said so before the primary source confirmed it.",
       "learnedOn": "2026-08-28",
       "effort": {
@@ -2780,7 +2787,55 @@
         "discovery": "NEW_METHOD",
         "note": "One sitemap read and one page fetch per body. The schedule page is nearly always in the sitemap under a name containing 'Schedule' or 'Calendar'."
       },
-      "learnedAtVersion": 41
+      "learnedAtVersion": 41,
+      "claims": [
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "When a vendor calendar runs dry a fortnight out, the body's OWN site is a separate record on a different publication clock, and a meeting-schedule page is usually in its sitemap under a name containing 'Schedule' or 'Calendar'.",
+          "restsOn": []
+        },
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#pima-recurring-rule-published",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28: www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule publishes the Board's recurring rule — 2nd and 4th Tuesdays, 5 p.m., Administration Building, 130 W. Congress St.",
+          "restsOn": [
+            "body-publishes-its-schedule-separately-from-its-agendas"
+          ]
+        },
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#pima-september-only-as-rule",
+          "class": "DERIVED_CONCLUSION",
+          "statement": "Pima County's September 2026 sittings exist only as that recurring rule and are not individually published anywhere.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it#pima-window-complete",
+            "body-publishes-its-schedule-separately-from-its-agendas#pima-recurring-rule-published"
+          ],
+          "provenance": {
+            "artifact": "https://www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule, read beside the /events window that returned no September sitting",
+            "observedVia": "body-publishes-its-schedule-separately-from-its-agendas",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "CONTRADICTED",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "note": "Three individually published September sittings were recovered from the county's own Legistar InSite portal on the same day."
+          },
+          "retraction": {
+            "kind": "CORRECTED",
+            "on": "2026-08-28",
+            "why": "False. All three September sittings were individually published on Pima County's own Legistar InSite portal at the time this was recorded, with a date, a time, a room and a meeting kind, and the 2026-09-08 1:00 PM Study Session could not have been derived from the rule text, which gives study sessions no time at all. This was a claim about what a government publishes, made from one route's silence.",
+            "supersededBy": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "survives": "THE ROUTE, AND THE PUBLISHING-PRACTICE OBSERVATION UNDER IT. A body's schedule and its agendas really are different records on different publication clocks, Vail Unified remains the control that makes it practice rather than a defect, and asking the body's own site is still worth doing. What is withdrawn is the conclusion that the body's own site was the ONLY place those sittings existed — the diagnostic was too narrow, because the vendor's own web UI is a third record again."
+          }
+        }
+      ]
     },
     {
       "id": "reconcile-the-adapter-before-suspecting-it",
@@ -2808,7 +2863,14 @@
           "note": "webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01 returned 7 events, newest 2026-08-25, confirming the snapshot's 16-fetched-16-normalized as complete for the window rather than truncated."
         }
       ],
-      "subBranches": [],
+      "subBranches": [
+        {
+          "jurisdiction": "az",
+          "reason": "SUPERSEDED IN ITS CONCLUSION, NOT IN ITS METHOD. Reading the per-source denominators before opening the adapter is still the right first move and still exonerated the pipeline by observation. What is withdrawn is one word in its recorded outcome: the seven events over 2026-08-01 to 2026-11-01 confirmed the snapshot as UNTRUNCATED, never as 'complete for the window'. Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR. Twenty-six future sittings were sitting behind that reconciliation on three tenants, and the route as recorded would have stopped a session before it looked.",
+          "replacedBy": "reconciled-is-not-complete",
+          "failedOn": "2026-08-28"
+        }
+      ],
       "origin": "generalised 2026-08-28 from the Pima investigation, where the session brief carried a specific suspicion of downstream row loss and the snapshot's own counters refuted it in one read, before a single line of the adapter was opened.",
       "learnedOn": "2026-08-28",
       "effort": {
@@ -2817,7 +2879,56 @@
         "discovery": "NEW_METHOD",
         "note": "Two reads: the snapshot's per-source counters, then one hand query against the primary API over the adapter's own window."
       },
-      "learnedAtVersion": 42
+      "learnedAtVersion": 42,
+      "claims": [
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "Reading a source's own fetched / normalized / dropped-by-reason counters before opening the adapter, then re-asking the primary source the same query by hand over the same window, is an available route for deciding whether a 'missing rows' report is about the pipeline or about the publisher.",
+          "restsOn": []
+        },
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#pima-denominators-reconciled",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28: the snapshot recorded fetched 16, normalized 16, three placeless drops accounted, and webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01 returned seven events, newest 2026-08-25 — so nothing was lost between that source and the screen.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it"
+          ]
+        },
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#pima-window-complete",
+          "class": "COVERAGE_CLAIM",
+          "statement": "That reconciliation established the Pima County meeting record as COMPLETE for 2026-08-01 to 2026-11-01.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it#pima-denominators-reconciled"
+          ],
+          "provenance": {
+            "artifact": "https://webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01, read beside the ingestion snapshot's per-source counters for the same run",
+            "observedVia": "reconcile-the-adapter-before-suspecting-it",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "CONTRADICTED",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records",
+            "note": "Contradicted the same day by driving the tenant's own Calendar.aspx date-range filter, which returned three individually published sittings inside the same window."
+          },
+          "retraction": {
+            "kind": "SUPERSEDED",
+            "on": "2026-08-28",
+            "why": "The reconciliation was real and the measurement was right; the word 'complete' was not licensed by either. Reconciling proves nothing was DROPPED between a source and the screen. It never proves enough was ASKED FOR, and three published Pima sittings were inside the same window and outside that route's reach.",
+            "supersededBy": "reconciled-is-not-complete#reconciliation-answers-loss-not-sufficiency",
+            "survives": "THE ROUTE AND ITS OUTCOME, BOTH INTACT AND BOTH STILL USABLE. Reading the per-source denominators before opening the adapter is still the right first move and still exonerated the pipeline by observation rather than by inspection, and the seven events over the window are still exactly what that endpoint returned. What is withdrawn is one word about what that answer established."
+          }
+        }
+      ]
     },
     {
       "id": "sibling-host-is-a-different-permission-decision",
@@ -2930,6 +3041,476 @@
         "note": "One index read per session, then one PDF per bill. The crawl-delay dominates: 151 letters at 120 seconds apart is about five hours for a full session, so an ingest has to be paced and resumable rather than run in one pass."
       },
       "learnedAtVersion": 45
+    },
+    {
+      "id": "vendor-api-and-vendor-web-ui-are-different-records",
+      "title": "a vendor's public API and its own public web UI publish the same meetings on different clocks — ask the UI before concluding",
+      "tier": "A0",
+      "fields": [
+        "meeting",
+        "agenda"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE CLASS, AND IT IS THE VENDOR'S BEHAVIOUR RATHER THAN ANY ONE TENANT'S CONFIGURATION. webapi.legistar.com/v1/{client}/events returns ONLY the sittings whose InSite meeting-detail page is publicly viewable. It is not an agenda-status filter and it is not missing data: the omitted events have no WebAPI record at all (40 of 40 probed ids 404 on the item endpoint), and the two routes number their meetings in DISJOINT ID SPACES — EventInSiteURL points at MeetingDetail.aspx?LEGID=<apiEventId> while the portal grid's own links carry ID=1381575. MEASURED 2026-08-28 ON ONE 'Next Month' FILTER, THREE TENANTS: Mesa 15 grid rows, 12 carrying class=\"meeting_NotViewable\", and /events returned EXACTLY the other 3 (3 of 3 matched, 12 of 12 missed); Phoenix 8 rows, 8 not viewable, 0 returned; Pima 3 rows, 3 not viewable, 0 returned. THE CLOCKS, MEASURED THE SAME DAY: the InSite calendar RSS carries pubDate, and Pima's 22 September sitting was published 2026-06-15 — 74 days of notice — while the WebAPI's lead time across 32 Pima 2026 events (EventDate against EventAgendaLastPublishedUTC/EventLastModifiedUtc) is max 5 days, median 0, min -2. An adapter with a 60-day forward window is therefore asking that route for about ten times more than it can ever return. THE DIAGNOSTIC: when a vendor API's forward horizon runs dry, drive the vendor's OWN UI calendar filter before concluding anything about the body OR about the vendor — and expect the UI to hold rows the API cannot see, not merely the same rows sooner."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 26,
+          "outcome": "YIELDED",
+          "note": "26 future sittings visible in the vendor's UI and invisible to its API on one 'Next Month' filter, 2026-08-28: Pima 3 of 3, Mesa 12 of 15, Phoenix 8 of 8. Pima's three are 2026-09-08 1:00 PM Study Session, 2026-09-08 5:00 PM and 2026-09-22 5:00 PM, all in the Board of Supervisors' Hearing Room, agenda status 'Not Available' on all three."
+        }
+      ],
+      "subBranches": [],
+      "origin": "found 2026-08-28 re-walking a conclusion recorded the same day. The prior session measured /events correctly, reconciled the adapter's denominators correctly, and inferred from the pair that Pima's September sittings existed only as a recurring rule. Driving the tenant's own Calendar.aspx date-range postback returned all three as individually published records, and running the same filter against two tenants nobody had named turned the finding from an instance into a class.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "readerIntegrityRepair": true,
+        "note": "One adapter per vendor UI, then free per tenant. The comparison that proves the gap is two requests: the API over a window, and the UI's own filter over the same window."
+      },
+      "learnedAtVersion": 46,
+      "claims": [
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "A vendor's public API and the vendor's own public web UI are two different records of the same body's calendar; driving the UI's date-range filter is an available route when the API's forward horizon runs dry.",
+          "restsOn": []
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28 across three Legistar tenants on one 'Next Month' filter: Mesa 15 grid rows with 12 marked meeting_NotViewable and /events returning exactly the other 3; Phoenix 8 rows, 8 not viewable, 0 returned; Pima 3 rows, 3 not viewable, 0 returned — 26 future sittings visible in the UI and invisible to the API.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records"
+          ]
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#legistar-events-omits-non-viewable",
+          "class": "COVERAGE_CLAIM",
+          "statement": "webapi.legistar.com/v1/{client}/events is an INCOMPLETE view of a tenant's calendar: it returns only sittings whose InSite meeting-detail page is publicly viewable, the omitted events have no WebAPI record at all (40 of 40 probed ids 404 on the item endpoint), and the two routes number their meetings in disjoint id spaces.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api"
+          ],
+          "provenance": {
+            "artifact": "https://pima.legistar.com/Calendar.aspx (and the Mesa and Phoenix tenants) 'Next Month' filter, compared row by row against webapi.legistar.com/v1/{client}/events over the same window, plus 40 item-endpoint probes",
+            "observedVia": "vendor-api-and-vendor-web-ui-are-different-records",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "VALIDATED",
+            "on": "2026-08-28",
+            "by": "three independent tenants measured on one filter, with the id-space disjunction and the 404 probes as the mechanism",
+            "note": "An incompleteness claim, which is the safe direction: it says this route returns less than the calendar holds, never that any calendar is complete."
+          }
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+          "class": "DERIVED_CONCLUSION",
+          "statement": "Pima County individually published all three of its September 2026 sittings — 2026-09-08 1:00 PM Study Session, 2026-09-08 5:00 PM and 2026-09-22 5:00 PM, all in the Board of Supervisors' Hearing Room — on its own Legistar InSite portal, with the 22 September sitting published on 2026-06-15, 74 days ahead.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api",
+            "vendor-api-and-vendor-web-ui-are-different-records#legistar-events-omits-non-viewable"
+          ],
+          "provenance": {
+            "artifact": "https://pima.legistar.com/Calendar.aspx date-range postback over September 2026, with the InSite calendar RSS pubDate giving the 74-day lead time on the 22 September sitting",
+            "observedVia": "vendor-api-and-vendor-web-ui-are-different-records",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "VALIDATED",
+            "on": "2026-08-28",
+            "by": "the portal's own rows, each carrying a date, a time, a room and a meeting kind",
+            "note": "The 1:00 PM Study Session is the control: the recurrence rule gives study sessions no time at all, so this row cannot have been synthesised from the rule and can only have been read off a published record."
+          }
+        }
+      ]
+    },
+    {
+      "id": "legistar-insite-calendar-postback-enumeration",
+      "title": "driving Legistar InSite's own Calendar.aspx date-range postback — the only complete enumeration of a tenant's sittings",
+      "tier": "A1",
+      "fields": [
+        "meeting",
+        "agenda"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MECHANICS, WRITTEN DOWN SO THE WALL NEVER COSTS A SECOND SESSION. (1) GET https://{tenant}.legistar.com/Calendar.aspx and keep EVERY form field it rendered. (2) POST back with __EVENTTARGET=ctl00$ContentPlaceHolder1$lstYears and the range in BOTH ctl00$ContentPlaceHolder1$lstYears and the Telerik hidden ctl00_ContentPlaceHolder1_lstYears_ClientState — the control is a RadComboBox, not a <select>, and posting only the visible text input is a SILENT NO-OP that answers HTTP 200 with 231 KB of correct markup and the previous range still selected. Read the rendered selection back out of ctl00_ContentPlaceHolder1_lstYears_Input to prove the filter took. The dropdown's own vocabulary is This/Next Week, Month, Year, All Years and every year back to 2013. (3) Parse rows on class=\"rgRow\"/\"rgAltRow\" and key cells on their ASP.NET control-id suffixes (hypBody, lblTime, hypiCal, hypMeetingDetail, hypAgenda, hypAccessibleAgendaHTML, hypMinutes, hypAccessibleMinutesHTML) rather than on column position, which a tenant can reorder. The meeting KIND is the <em> under the location. THE DISCRIMINATOR for what the API cannot see is class=\"meeting_NotViewable\" with title=\"Not viewable by the public\" and NO href. TWO SUPPORTING ROUTES, both weaker alone: Feed.ashx?M=Calendar&ID=..&GUID=.. is RSS carrying pubDate (the publication clock) but no location and no kind, and its ID/GUID pair is minted PER TENANT AND PER RANGE so it must be read off the page rather than stored; View.ashx?M=IC&ID=..&GUID=.. is one VEVENT per meeting whose DTSTART is FLOATING (20260908T130000, no Z, no TZID) and must be combined with the body's own zone — and the GUID is MANDATORY, because ID alone answers 200 with a 19 KB HTML confirmation page rather than an error. PERMISSION: legistar.com's apex robots.txt publishes Crawl-delay: 2 and disallows only *?wtime, *?wmediaid and *?wchannelid; the tenant hosts return 404 for robots.txt, which publishes no rules and is not licence to go faster than the vendor asked on its own name."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 25,
+          "outcome": "YIELDED",
+          "note": "25 rows enumerated across three tenants on one 'Next Month' filter, 2026-08-28 — Pima 3, Mesa 15, Phoenix 8 (counted; Pima and Mesa recorded as fixtures) — each with body, date, local time, room, meeting kind, the four document statuses, the View.ashx ID+GUID pair and the viewability flag."
+        }
+      ],
+      "subBranches": [],
+      "origin": "built 2026-08-28 to recover the Pima County sittings the WebAPI does not return. The RSS and the per-meeting iCalendar export were tried first and are both insufficient on their own — the feed has no location or kind, and the .ics needs an ID and GUID pair that only the grid publishes — which is what makes the grid the enumeration rather than a convenience.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One adapter, then two requests per tenant per range at the vendor's stated two-second spacing. No credential, no session beyond the one the page issues itself."
+      },
+      "learnedAtVersion": 47
+    },
+    {
+      "id": "reconciled-is-not-complete",
+      "title": "a reconciled denominator answers whether rows were LOST; it says nothing about whether enough was ASKED FOR",
+      "tier": "A1",
+      "fields": [
+        "meeting",
+        "agenda",
+        "roster",
+        "candidate"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE CORRECTION, AND IT IS AN ACCOUNTING LESSON RATHER THAN A RETRIEVAL ONE. 'fetched 16, normalized 16, drops accounted' is a strong, true statement about ONE ROUTE'S ANSWER: nothing between that source and the screen was dropped. It is not a statement about the body's calendar, and the two get confused because the reconciliation feels like a proof and there is nothing else in view to compare it against. THE FAILURE MODE, OBSERVED: a session read a per-source denominator that reconciled exactly, queried the primary API by hand over the same window, got the same answer, and recorded the snapshot as 'complete for the window' — then inferred from the API's silence a fact about the government (that it publishes September only as a recurring rule). Every measurement in that chain was correct; the inference was false, and the portal published all three sittings individually. THE DISCRIMINATOR THAT IS MISSING FROM A RECONCILED DENOMINATOR IS A SECOND ROUTE. Until a second independent route has been asked the same question, a reconciled count has a denominator of ONE ROUTE'S OPINION, and the honest sentence is 'this route returned N and nothing was lost', never 'there are N'. THE CHEAP SECOND ROUTE for a vendor-backed body is the vendor's own web UI (see vendor-api-and-vendor-web-ui-are-different-records); for a body's own site it is the sitemap. RULING 100 already says a partial that reconciles is still a wrong answer — this is that ruling meeting a real reconciliation and losing."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 3,
+          "outcome": "YIELDED",
+          "note": "Three published Pima County sittings recovered from behind a denominator that reconciled perfectly: 2026-09-08 1:00 PM Study Session, 2026-09-08 5:00 PM, 2026-09-22 5:00 PM. The 1:00 PM study session is the one that could not have been synthesised from the recurrence rule, which gives study sessions no time at all."
+        }
+      ],
+      "subBranches": [],
+      "origin": "generalised 2026-08-28 from correcting a conclusion recorded earlier the same day by a session that had quoted RULING 100 in the very route where it then called one route's answer complete. That is the evidence that the written rule is not enough on its own and the discriminator has to be a habit: ask a second route before writing the word.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
+        "readerIntegrityRepair": true,
+        "note": "No new retrieval. It is a rule about which sentence a reconciled count licenses, and it costs one extra route before the word 'complete' may be written."
+      },
+      "learnedAtVersion": 48,
+      "claims": [
+        {
+          "id": "reconciled-is-not-complete#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "Asking a second independent route the same question, before the word 'complete' may be written about the first route's answer, is an available and cheap step — the vendor's own web UI for a vendor-backed body, the sitemap for a body's own site.",
+          "restsOn": []
+        },
+        {
+          "id": "reconciled-is-not-complete#reconciliation-answers-loss-not-sufficiency",
+          "class": "COVERAGE_CLAIM",
+          "statement": "A reconciled denominator establishes only that nothing was LOST between one source and the screen. It never establishes that enough was ASKED FOR, so a reconciled count licenses 'this route returned N and nothing was lost' and never 'there are N'.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "reconcile-the-adapter-before-suspecting-it#pima-window-complete"
+          ],
+          "provenance": {
+            "artifact": "the Pima correction of 2026-08-28: a snapshot recording fetched 16 / normalized 16 / three drops accounted, set beside three sittings the same window held and that route could not return",
+            "observedVia": "reconciled-is-not-complete",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "REVALIDATED_AFTER_UPSTREAM_RETRACTION",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "note": "This claim RESTS ON a withdrawn claim as its evidence, which is the opposite of depending on it being true: the lesson exists because that claim was false, and it is stronger, not weaker, for the withdrawal. Recorded explicitly so the dependency flag is dispositioned on the record rather than by nobody asking."
+          }
+        }
+      ]
+    },
+    {
+      "id": "each-statewide-executive-office-publishes-its-own-officeholder",
+      "title": "the officeholder of a statewide executive office, read off THAT OFFICE's own site — one host per office, never one host per state",
+      "tier": "A1",
+      "fields": [
+        "officeholder"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE SEAT-HOLDER GAP IS A CORPUS GAP AND THIS IS THE ROUTE THAT FILLS IT. A ballot names an office; the incumbency join needs a person on the other side of (division, office); and the primary publisher of who holds a statewide executive office is THAT OFFICE, not the Secretary of State and not an aggregator. WHAT WORKS: each office runs its own host and publishes a page titled for the person — azsos.gov/about/about-secretary (Adrian Fontes), azag.gov/kris-mayes (Kris Mayes), aztreasury.gov/treasurer-kimberly-yee (Kimberly Yee), azed.gov/adeinfo/about-state-superintendent (Tom Horne), asmi.az.gov/about/team (Les Presmyk), azcc.gov/<slug>/biography (five Corporation Commissioners), nj.gov/governor/admin/ltgovernor (Dale G. Caldwell). Ten officeholders across seven hosts and two states, 2026-08-28. THE HOST IS NOT GUESSABLE AND MUST NOT BE GUESSED: the obvious `azmineinspector.gov` DOES NOT EXIST — ENODATA from 1.1.1.1 and 8.8.8.8, ERR_NAME_NOT_RESOLVED in a real browser — while the office publishes at `asmi.az.gov`, found by walking the state's own az.gov namespace. A non-resolving host is a DNS fact, never a permission verdict and never evidence that the office publishes nothing. AND A MULTI-MEMBER STATEWIDE BODY IS THE SAME ROUTE: the Arizona Corporation Commission elects five people to ONE office, and five holder rows on one office key join a single ballot contest exactly as a multi-member legislative district does — no special case, because the office key never carried the seat."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 11,
+          "outcome": "YIELDED",
+          "note": "Eleven officeholders added to lib/officials/statewide-executives.ts. The seat join went 17/126 contests to 23/126 and the three-way split from 15/57/305 to 20/73/284."
+        }
+      ],
+      "subBranches": [],
+      "origin": "opened 2026-08-28 by pnpm incumbency:census, which reported 305 of 377 candidates UNKNOWN and 17 of 126 contests with any holder at all. The gap was measured before it was hunted.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_STATE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "One robots read plus one page read per OFFICE, and the office count is small (5-10 per state). The cost is locating the host, which is one walk of the state's own agency namespace, not a search."
+      },
+      "learnedAtVersion": 49
+    },
+    {
+      "id": "a-certified-candidate-listing-is-the-party-record-an-office-page-lacks",
+      "title": "party for a sitting officeholder — from the election authority's certified candidate listing or primary canvass, never from the office's own page",
+      "tier": "A1",
+      "fields": [
+        "officeholder",
+        "party"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "AN OFFICE PAGE DOES NOT PRINT A PARTY, AND INVENTING ONE IS THE INFERENCE THIS PRODUCT FORBIDS. The record that does print it is the election authority's own: a statewide candidate listing (apps.azsos.gov/election/<year>/ge_cand/<year>_General_Candidates_Web.pdf — 5 pages, TEXT LAYER, 'Walden, Rachel | Corporation Commissioner | 3 | REP') or a county primary canvass, where the PARTY IS THE SECTION HEADING because a primary is by party ('REP State Mine Inspector — PRESMYK, WALTER \"LES\"'). PREFER THE FILING THE BALLOT SURFACE ALREADY CITES where the officeholder is also a current candidate: one record read by two surfaces cannot drift, whereas two records that agree today are two chances to disagree tomorrow. THE TRAP THAT COSTS A SESSION: the STATE-level signed canvass is a SCAN — apps.azsos.gov/election/2024/ge/canvass/20241105_GeneralCanvass_Signed.pdf is 19 pages, 0 with a text layer — while the per-county canvasses and the candidate listings extract cleanly. Reach for the listing first. AND THE COUNTY GENERAL canvass is precinct-level and carries NO party at all; only the PRIMARY canvass and the candidate listing do."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 10,
+          "outcome": "YIELDED",
+          "note": "Ten of eleven acquired officeholders carry a party with a certified election-authority record. The eleventh (New Jersey's Lieutenant Governor) carries none and says why: NJ elects that office on the gubernatorial TICKET, so the certified list for the office names only the Governor."
+        }
+      ],
+      "subBranches": [],
+      "origin": "learned 2026-08-28 while giving eleven newly acquired statewide executives a sourced party. tests/party.test.ts refuses a party without a record and refuses the office page as that record.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_STATE",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
+        "note": "One PDF per election year per state, read with pnpm pdf:read. Cheap once the right document class is known, and the wrong document class is a scan that reads as an empty file."
+      },
+      "learnedAtVersion": 50
+    },
+    {
+      "id": "a-quoted-nickname-in-a-filing-is-an-alias-the-record-itself-publishes",
+      "title": "reconciling a filed name to a serving name — the certified filing prints BOTH, in quotation marks",
+      "tier": "A1",
+      "fields": [
+        "officeholder",
+        "candidate"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "A BODY PUBLISHES ITS MEMBER AS THEY ARE KNOWN AND A FILING PUBLISHES THEM AS THEY FILED, AND THE FILING RECONCILES THE TWO ITSELF. Arizona's canvasses print 'MYERS, NICHOLAS \"NICK\"', 'PRESMYK, WALTER \"LES\"', 'SHOPE JR., THOMAS \"T.J.\"', 'ROSENBLUM, LEONARD \"LEN\"' — the quoted token is not a guess about similarity, it is the alias the election authority printed. WHY IT MATTERS MORE THAN IT LOOKS: a strict first-name test fails (nicholas != nick), a prefix test fails too (nicholas does not start with nick), and a correct fail-closed matcher then takes the WHOLE CONTEST to UNKNOWN on the surname collision — so one unreconciled nickname cost the true incumbency of every other person in that race. Read the quoted token as an alternative first name; keep the surname exact; do NOT treat an apostrophe as a quote delimiter, because it is part of O'Brien."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 2,
+          "outcome": "YIELDED",
+          "note": "Two sitting Corporation Commissioners resolve as INCUMBENT where the contest previously read UNKNOWN for all four candidates."
+        }
+      ],
+      "subBranches": [],
+      "origin": "measured 2026-08-28: the Arizona Corporation Commissioner contest resolved to UNKNOWN for all four candidates because Nick Myers files as Nicholas \"Nick\" Myers, losing Kevin Thompson's true incumbency with his.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "A change to the shared name comparison, not a per-jurisdiction cost."
+      },
+      "learnedAtVersion": 51
+    },
+    {
+      "id": "a-name-match-on-the-URL-is-vacuous-on-a-campaign-domain",
+      "title": "picking a portrait — match the person's name against the image's ALT and FILENAME, never against the host or path",
+      "tier": "A1",
+      "fields": [
+        "photo"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MECHANICAL JOIN THAT STOPS A WRONG FACE HAS TWO HOLES AND BOTH WERE MEASURED IN ONE RUN. (1) MATCHING ON THE WHOLE URL IS VACUOUS ON A CAMPAIGN SITE, because a campaign's domain IS the candidate's name: nortonforaz.com, weir4liberty, butierezforcongress.com, strobelforschoolboard.com all matched EVERY image on the site, so the first image in the document won — which on a campaign site is the hero banner. Match on the alt text and the FILENAME. On a government roster page (jen_rowland.jpg, an alt of 'Kyle Russell') that changes nothing. (2) AN OFFICE'S OWN MASTHEAD IS NAMED AFTER THE OFFICEHOLDER: azsos.gov serves fontes_banner01_small-white.png with alt 'Logo for Arizona Secretary of State', which satisfies surname-plus-extension exactly. Refuse an image the page's own words call furniture — logo, banner, seal, masthead, wordmark, letterhead, favicon, icon, slide, hero, header — and split the filename on EVERY separator first, because `_` is a word character and \\b does not fire inside AidenSwallow_LOGOS.ai.png or RebeccaBennett-Logo_white-1.webp. AND A BANNER IS A SHAPE: every genuine portrait staged in this repository is taller than wide (14 rows, 0.67 to 1.00), while the campaign hero images measured 1.76, 1.78 and 3.45 to 1. Refuse above 1.5:1 — it is a measurement of the image, not a judgement about the person."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 6,
+          "outcome": "YIELDED",
+          "note": "Six wrong images refused before reaching the author, each with a named, measured reason; nine correct portraits queued from the same walks."
+        }
+      ],
+      "subBranches": [],
+      "origin": "measured 2026-08-28 on the first door-2 walk of a new cohort and the first door-3 walk of the ballot cohort: three logos and three donate bars were queued as six people's faces before these three refusals were added.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "Changes to lib/hunt/portrait-pick.ts and lib/photos/staged.ts — the shared picker and the one door into the review, so no later hunt can be missing them (RULING 103)."
+      },
+      "learnedAtVersion": 52
+    },
+    {
+      "id": "azleg-governor-letters-are-scans-correcting-the-born-digital-claim",
+      "title": "the Arizona governor's transmittal letters are mixed-raster SCANS, and the store said born-digital",
+      "tier": "A0",
+      "fields": [
+        "document",
+        "officeholder",
+        "extraction"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "CORRECTS THE ENTRY `governor-transmittal-letters-published-by-the-receiving-chamber`, WHICH RECORDS THE /govlettr/ PDFs AS 'each a separate born-digital PDF'. THAT IS FALSE AND WAS NEVER MEASURED. Measured 2026-08-28 with this repo's own instrument on https://www.azleg.gov/govlettr/57leg/2r/hb2003.pdf (40,860 bytes): lib/extract/text-layer.ts returns TEXT_LAYER ZERO_ROWS rows=0 pages=1 pagesWithText=0. The PDF internals say why: /Font 0, /Image 40, /CCITTFaxDecode 18, /DCTDecode 1 — a mixed-raster scan, a JPEG background carrying CCITT G4 bilevel text masks. The typed text is clean and roughly 200 DPI, which is near-ideal OCR input, but there is NO TEXT LAYER and no amount of retrying the text layer will produce one. THE ROUTE IS THEREFORE REQUIRES_NEW_ADAPTER AND NOT BLOCKED: OCR is the named rung (lib/extract/ocr.ts, which returns CANNOT_RUN with the install line when tesseract is absent from PATH). WHAT THE WRONG ENTRY WOULD HAVE COST: a session inheriting 'born-digital' runs the text layer, receives zero rows, and is one careless step from recording that the Governor's letter says nothing — a ZERO_ROWS extraction reported as an empty document, about a public official's own signed correspondence. CONTRAST, ON THE SAME HOST: the chaptered versions at /legtext/<Leg>Leg/<Sess>/laws/<NNNN>.pdf ARE born-digital and extract cleanly (TEXT_LAYER EXTRACTED rows=7 pages=7 on 0001.pdf). Two publication pipelines on one host, and the class of a PDF is a property of the pipeline that made it, never of the host or of the sibling directory next to it."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 151,
+          "outcome": "BLOCKED",
+          "note": "151 letters indexed and their URLs held; the documents are NOT READ pending an OCR engine. BLOCKED is the route's state and is not a statement about the letters' contents — nothing about any bill's disposition may be inferred from the letters being unread, and in particular the measured fact that the 151 lettered bills and the 264 chaptered bills are DISJOINT is consistent with every letter being a veto and is not evidence of it."
+        }
+      ],
+      "subBranches": [],
+      "origin": "measured 2026-08-28 while building the azleg ingestion, when the letters phase of scripts/hunt-azleg-actions.mts returned ZERO_ROWS on a document the method store promised had a readable text layer.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
+        "note": "One extraction attempt per document class, over bytes that were being fetched anyway. The expensive half is the crawl delay: www.azleg.gov asks 120 seconds between requests, so classifying a document class costs two minutes, and reading all 151 letters costs about five hours."
+      },
+      "learnedAtVersion": 53
+    },
+    {
+      "id": "verify-a-pdfs-class-before-recording-it-as-born-digital",
+      "title": "'born-digital' is a measurement, and an unverified one costs a later session a false absence",
+      "tier": "A1",
+      "fields": [
+        "document",
+        "extraction",
+        "source"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE PORTABLE RULE. A PDF's class — born-digital with a text layer, versus a raster scan needing OCR — is the single fact that decides which extraction rung applies, and it is cheap to measure and expensive to assume. RECORD IT ONLY FROM AN ACTUAL EXTRACTION, and record the numbers: rows, pages, pagesWithText. A publisher very often runs TWO pipelines side by side, so the class travels with the DOCUMENT CLASS and never with the host: on www.azleg.gov the chaptered bill texts under /legtext/ are born-digital and the Governor's transmittal letters under /govlettr/ are scans, and they are two directories on the same server. WHY IT MATTERS MORE THAN IT LOOKS: an unverified 'born-digital' is inherited by every later jurisdiction as a reason to trust a text layer, and when the text layer returns nothing the next session is being asked to choose between 'the parser failed' and 'the document is empty' with a stale note nudging it toward the second. That is the ZERO_ROWS-as-empty-document defect arriving pre-argued. THE CHEAP CHECK: run the text layer on ONE document of the class and look at pagesWithText; if it is zero, look at the PDF's internals (/Font count, /Image count, filter names) and write down what you saw, not what you expected."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 2,
+          "outcome": "YIELDED",
+          "note": "Two document classes on one permitted host correctly classified — /legtext/ born-digital and EXTRACTED, /govlettr/ scanned and ZERO_ROWS — replacing one unmeasured claim that covered both."
+        }
+      ],
+      "subBranches": [],
+      "origin": "generalised 2026-08-28 from the azleg correction, where a prior session's unmeasured 'born-digital PDF' description of a scanned document class was inherited as fact by the ingestion that followed it.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "PER_VENDOR",
+        "execution": "MACHINE",
+        "discovery": "REAPPLIED_KNOWN_METHOD",
+        "note": "One extraction over one document already in hand. Effectively free next to the fetch that produced it."
+      },
+      "learnedAtVersion": 54
+    },
+    {
+      "id": "grep-the-extracted-text-never-the-pdf-bytes",
+      "title": "a byte grep over a born-digital PDF finds nothing on a document that says it plainly, and the nothing becomes a false absence",
+      "tier": "A0",
+      "fields": [
+        "document",
+        "extraction",
+        "vote",
+        "officeholder"
+      ],
+      "applicability": {
+        "portability": "UNKNOWN",
+        "states": [],
+        "governmentTypes": [],
+        "platforms": [],
+        "publishers": [],
+        "note": "THE MISTAKE THIS PREVENTS IS MANUFACTURING A NAMED GAP OUT OF A BROKEN INSTRUMENT. A prior walk recorded that an enacted Arizona bill has NO PUBLISHED SIGNING DATE, on the evidence that grepping a chaptered version for approved|governor|filed returned nothing. The grep was run over the PDF's BYTES. A born-digital PDF stores its text inside FlateDecode content streams, so a byte grep cannot match ordinary words in it and returns nothing regardless of what the document says — the measurement was guaranteed to produce that answer before it was run. MEASURED CORRECTLY 2026-08-28: extract the text layer first, and every chaptered version at https://www.azleg.gov/legtext/57Leg/2R/laws/<NNNN>.pdf ends with its own enactment stamp — 'APPROVED BY THE GOVERNOR FEBRUARY 6, 2026. FILED IN THE OFFICE OF THE SECRETARY OF STATE FEBRUARY 6, 2026.' That is a signing date, published by the state, in the primary document, for every enacted bill. THE GENERAL RULE: NEVER grep, regex or string-search a PDF, a DOCX or any compressed container directly. Run the extraction layer and search ITS OUTPUT, and if the extraction returns nothing, that is a finding about the extraction. WHY THIS ONE IS DANGEROUS RATHER THAN MERELY WRONG: it does not fail loudly. It produces a confident, specific, plausible-sounding absence — 'the state does not publish signing dates' — which is a false claim about a government, and it then hardens into a NAMED GAP that later sessions inherit and cite. A SECOND LESSON FROM THE SAME DOCUMENT: read the stamp's WORDING, not just its date. A bill reaches a chapter three ways — approved by the governor, becoming law without signature, or passage over a veto — so 'chaptered' proves ENACTMENT and never proves a SIGNATURE, and filing every chapter as 'signed' is its own false claim about a governmental act."
+      },
+      "outcomes": [
+        {
+          "jurisdiction": "az",
+          "walkedOn": "2026-08-28",
+          "rows": 264,
+          "outcome": "YIELDED",
+          "note": "The signing date for all 264 chaptered bills of 57leg/2r moved from 'no permitted machine-readable source' to a field read off each act's own stamp, together with the enactment ROUTE that says whether a signature happened at all."
+        }
+      ],
+      "subBranches": [],
+      "origin": "found 2026-08-28 while building the azleg ingestion: the session brief carried the prior walk's conclusion that chapter PDFs 'carry no approval date (grep for approved|governor|filed returns nothing)', and the first extracted chapter ended with the approval date in capital letters.",
+      "learnedOn": "2026-08-28",
+      "effort": {
+        "repeats": "ONCE",
+        "execution": "MACHINE",
+        "discovery": "NEW_METHOD",
+        "note": "No additional request. The correction costs one text-layer extraction over a document already downloaded, and it converted a permanent named gap into a populated field on every enacted-bill row."
+      },
+      "learnedAtVersion": 55
     }
   ]
 }

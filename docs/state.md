@@ -21123,5 +21123,253 @@ DATA-4, and the two Arizona ingests. All ten are tracker rows carrying the
 diagnosis rather than the symptom, so the next session starts from what was
 measured rather than from the screenshots.
 
+> **CORRECTED 2026-08-28 by the finish-aug28 session.** That last sentence was
+> wrong, and it was wrong in the direction that costs a session: **twelve items
+> are listed above and only eight of them had rows.** WGH-16, MTG-14, DATA-4 and
+> BAL-28 were named as not-done and never filed, so a reader of this paragraph
+> would have gone looking for four rows that did not exist. They are now NH268,
+> NH269, NH270 and NH271. Note also that the BAL-nn and WGH-nn labels are not row
+> ids — they are labels carried inside NH-row titles, and ASK-05/ASK-06 are the
+> rows ASK05 and ASK06, with no dash.
+
 Method version 40 → 45, 106 routes, `method:check` 0 issues. 7 of 7 local
 gates, 2,982 tests.
+
+---
+
+## 2026-08-28 — finish-aug28: the engineering-team law, and MTG-13 corrected
+
+**The session ran as nine workstreams, eight of them in parallel git worktrees
+with delegated engineers, and that is now project law rather than a preference.**
+
+**RULING 190** (meta-governance) makes safe parallel execution the DEFAULT when
+two or more authorized executable workstreams are materially independent, and
+makes serializing them a process defect that must name the dependency it was
+avoiding. **RULING 191** (shipping-ci) is where the work returns: one
+integration owner for the shared stores, a branch changes canonical INPUTS while
+the owner regenerates OUTPUT once, and branch-local green is never sufficient.
+Both carry `author_explicit` provenance from the session brief.
+
+The guard is `classifyOrchestration` / `pnpm orchestration:check` over
+`data/workstate/orchestration/`. **It measures the SEMANTIC, never a branch
+count** — a count rewards fragmentation, and three branches rewriting one module
+is worse than one branch. A dependency is PROVEN only by an owned-domain overlap
+or a produces/consumes handoff; an edge backed by prose alone is reported
+UNPROVEN rather than accepted or overruled. PR size, branch simplicity, conflict
+avoidance, convenience, unspecified caution, P0 and the absence of subagents are
+refused BY NAME. Wall-clock concurrency is not observable in this repository and
+the law says so rather than pretending otherwise.
+
+### MTG-13 — the conclusion was false, and the mechanism is proven
+
+PR #214 recorded that Pima publishes no individual September sittings and that
+the 9/8 and 9/22 meetings exist only as a recurrence rule. The measurement it
+rested on reproduces; the inference was wrong.
+
+**`webapi /events` returns only sittings whose InSite meeting-detail page is
+PUBLICLY VIEWABLE.** Not an agenda-status filter and not missing data: the
+unreturned event ids 404 on the item endpoint, the two routes use disjoint id
+spaces, and Mesa settles it — 15 grid rows, 12 flagged `meeting_NotViewable`,
+and the API returns exactly the other three. Phoenix: 8 of 8 missing. **This is
+a CLASS behaviour of Legistar**, and every wired tenant was silently losing its
+unpublished future meetings.
+
+`lib/sources/legistar-insite/` drives the Calendar.aspx postback the public UI
+itself uses. Identity is `(bodyId, localDate, localTime)`, never the vendor id,
+because the routes do not share one. Measured on the integrated head, the three
+sittings reach the reader API: `legistar-insite:pima:1381575` 09-08 13:00 Study
+Session, `:1381576` 09-08 17:00, `:1381577` 09-22 17:00 — with no duplicate
+against the August `/events` rows.
+
+Three corrections to the plan came from live measurement: the range control is a
+Telerik combo whose `_ClientState` must also carry the selection or the postback
+is a silent 200 no-op; the `Feed.ashx` ID/GUID pair is minted per tenant AND per
+range; and the grid pages at 100 while publishing its true total, so a row count
+would have reported 100 and a clean 200.
+
+**The false method is superseded, not edited.** A dated sub-branch withdraws one
+word from the old conclusion: the seven events confirmed the snapshot
+UNTRUNCATED, never "complete for the window". Reconciling proves nothing was
+DROPPED; it never proves enough was ASKED FOR.
+
+`pima.granicus.com` is `Disallow: /` and was not fetched. It is recorded as a
+permission wall with `claimAboutContent: null`, and a test asserts that null.
+
+### What else the session found by looking
+
+**DATA-4 was ten times its diagnosis.** Not five Pima bodies but 248 attached
+rather than derived, 100 of them LIVE and reader-reachable — the four Pima
+districts, 28 City of Tucson boards and commissions, four New England town
+boards — every one rendering its parent government's powers as its own, cited to
+a statute that does not govern it, with `unreadNote` null so nothing hedged it.
+The form layer was doing it too: 860 to 631.
+
+**A neutrality defect, found in passing and fixed.** The State Mine Inspector
+contest rendered one candidate while claiming, in its own scope note, to list
+everyone who filed. The Secretary of State's certified 2026 Pima primary canvass
+carries the Republican nominee and the March 30 filing PDF does not.
+
+**A shipping accessibility failure the audit had never measured.** The meeting
+status tokens were in none of the contrast audit's sets; adding them found
+`--concluded` at 3.81:1 against the AA bar. Fixed rather than exempted.
+
+**No veto was inferred.** 264 Arizona session-law chapters indexed with zero
+missing, 29 read with real approval dates. The 151 governor's letters are
+mixed-raster scans and `tesseract` needs an elevation this session could not
+give itself, so they carry `BILL_LETTER_UNREAD`. Letter-minus-chapter is exactly
+the inference the constitution forbids, and the zero intersection does not
+license it. Two prior claims were also corrected: the chapter PDFs DO publish a
+signing date (the grep that found none ran over compressed PDF bytes), and a
+chapter proves ENACTMENT rather than signature, so the stamp wording is parsed.
+
+**The scheduled refresh was misread on all three counts.** The 637-minute case
+was GitHub dispatch delay, not queueing — `startedAt == createdAt` on all 22
+scheduled runs, and `QUEUED` has zero occurrences in the whole history. The
+"absent" 2026-08-28 slot fired DURING this session, 698 minutes late, and landed
+data — which is why the detector may never claim a cron did not fire, and why
+its envelope is a floor that grows. The two failures were different things
+wearing one `Commit` label, and separating them found a second, previously
+undiagnosed push rejection. The repair is `catchUpSlots`: one missed Monday no
+longer costs `fec` and `legiscan` a fortnight.
+
+### Numbers
+
+Method version 45 to 55, 116 routes, `method:check` 0 issues. 7 of 7 local
+gates. 3,239 tests, 0 failures, 0 skipped.
+
+### The P0 that arrived mid-session, and was not allowed to freeze the team
+
+Intake tripwire run 33211710028 confirmed production schema drift while nine
+workstreams were already integrated. **It was fanned out as a TENTH workstream
+rather than serialising the session** — which is RULING 190 doing its job on the
+day it was adopted: a priority starts work immediately and never freezes
+independent engineers.
+
+**Production was two migrations behind merged code**, missing `0021` and `0022`,
+both Ask-interaction migrations. The precondition was verified rather than
+assumed: `0021` creates `ask_interactions` and three indexes, `0022` adds five
+defaulted columns to that same brand-new table, and between them there is no
+DROP, TRUNCATE, DELETE, rename or type change, and no pre-existing table is
+touched at all. Dry-run first, write target confirmed to be the same production
+host the read-only check reads, then applied — 9 statements, both journalled.
+
+**And the drift was wider than the report.** `walk:all` kept failing after
+production was repaired, and reading the failure rather than assuming it stale
+showed it named a DIFFERENT database: the DEVELOPMENT branch
+(`ep-weathered-cherry`) was also two behind. Both are now IN SYNC at
+`0022_adorable_hemingway`, 23 of 23.
+
+**How it happened, measured rather than guessed.** `git log -S` over the whole
+history finds ZERO commits ever adding `db:apply`, `drizzle-kit migrate` or
+`apply-migrations` to `.github/` or `netlify.toml`. **Nothing in this repository
+has ever applied a migration automatically.** It has always been a person at a
+terminal, and nothing reminded them. The two migrations landed in squash merges
+gated by `build-check`, which runs test, lint, tsc and two builds and asks
+nothing about the schema.
+
+**Detection was never the gap.** `walk:all` already carried the check and it
+caught this, as a named regression. What was missing was a gate where it can
+BLOCK, so the repair reuses `compareSchemaState` — the identical function behind
+`db:check`, the schema route and that walk check — rather than adding a second
+detector.
+
+The gate is separate from `db:check` for a specific reason: **`db:check` fails on
+any missing migration, which is right for a daily sweep and wrong for a merge
+gate**, because a CONTRACT migration is supposed to be missing until its code is
+live. Phase is derived from each migration's own SQL, not asserted beside it,
+and a test fails when the two disagree.
+
+**The shape that made it invisible, and it is the reason this is a class:** every
+insert naming a column those migrations add failed, the route CAUGHT it, and the
+page was still served. A reader saw a working site while Ask interactions were
+dropped. A repair that only makes the failure louder after deployment does not
+touch that — the ordering is the defect.
+
+Restoring `actions: read` to the seven workflows that ran `diagnose` without it
+then exposed a second defect underneath: the primary path SUCCEEDS and returns a
+ZIP, which was being read as UTF-8 and diagnosed as mojibake. Invisible only
+because the 403 meant the fallback always ran. Both fixed, and
+`schema-out-of-sync` is now a named failure class.
+
+The daily schema tripwire is untouched. It failed closed and found this.
+
+**Reader-visible proof on the repaired head:** `walk:all` 390 checks ran, **0
+FAIL, 0 silent**, 14 declared COULD NOT RUN with reasons, no named regressions.
+
+### The addendum, absorbed at a control point rather than by stopping
+
+Four further requirements arrived mid-session. **Nothing running was cancelled
+or reserialized**; they were taken at the next safe control point and fanned out
+as three more workstreams, bringing the session to twelve.
+
+**Durability.** Work that exists only in a local worktree is not durable session
+state. All twelve workstream branches and the integration head are pushed, and
+containment is PROVEN rather than asserted — every workstream tip is an ancestor
+of the integration head, so none is orphaned. Pushing is a durability operation
+and is not shipping: no workstream has a PR, none is merged, and the single door
+to `main` remains the one integrated PR.
+
+**MTG-13 acceptance became the UNION, and the union is fourteen.** The three
+September sittings are regression floors, not the target. Measured per route:
+`/Events` 0 future (403 rows all-time, latest 2026-08-25), `EventDates/138`
+0 future, `Calendar.aspx` "This Year" **14**, out to 2026-12-15. <!-- expected-future: 2026-12-15 is the last sitting Pima PUBLISHES, read off three first-party routes, not a stamp -->
+**INTERSECTION OF THE TWO WIRED ROUTES: 0.** Intersection semantics would have
+shipped fourteen fewer sittings, so `intersectionOfRoutes()` exists in code as a
+NAMED FORBIDDEN COUNTERFACTUAL rather than a mistake to remember not to make.
+
+A third materially distinct route was found and it is the body's own: the Clerk
+of the Board publishes an instance table at `www.pima.gov/2559/...`, reached
+through `sitemap.xml`, carrying end times and amendments the vendor does not.
+The reader-facing county calendar pages publish only a prose recurrence rule —
+which is exactly how a session concludes a county publishes no instances.
+All fourteen are carried by three independent first-party routes agreeing on
+body, date and wall clock.
+
+`pima.granicus.com` was NOT FETCHED AT ANY RUNG (`Disallow: /`), recorded with a
+null claim about its contents. The December horizon proved fully reachable
+through permitted routes, so nothing was lost to that wall.
+
+**Two prior claims fell to measurement.** `meeting_NotViewable` is about the
+LINK and not reachability — the 15 December detail page answers 200 with 84KB,
+so a code comment calling it "a door that does not open" was false. And a
+GUESSED pager index silently returns the WRONG page with a clean 200 and 100
+well-formed rows.
+
+**The last gap was ours and it was one constant.** `UPCOMING_HORIZON_DAYS` was
+60, so the product COLLECTED fourteen and SERVED SIX. Raised to 120. The blast
+radius was real and every consequence was a sitting a body had already
+published: Kearsarge 15 to 19, a Tucson commission 5 to 7, a Newbury commission
+4 to 7 — including an October 15 sitting whose own test comment recorded it as
+ONE DAY past the window.
+
+Mesa is why the rule is the union rather than a preference: its WebAPI carries
+20 future sittings its portal does not, while Pima's carries zero. Preferring
+either route loses a tenant.
+
+**RULING 192 — method knowledge is typed by claim class.** The false Pima entry
+was not a bad route; it was a VALID route whose existence and outcome were both
+correct, carrying a false conclusion in the same paragraph at the same
+authority. With one blob per route the only moves are rewrite the paragraph or
+delete the route — and a deleted route is one a later session rediscovers as
+new. So each assertion carries its own record and its own retraction, structured
+provenance is REQUIRED for coverage claims and derived conclusions, dependence
+is DECLARED BY ID rather than inferred from text, and a withdrawn assertion
+whose dependents still teach is a validator failure. Applied to the canonical
+store: version 55 to 55 and routes 116 to 116, because an amendment adds no
+avenue.
+
+**BAL-27 became a contest-level eligibility decision, and it REMOVED labels this
+session had just added.** Officeholder acquisition finds incumbents before it
+proves anyone else, and that asymmetry was reaching readers: a lone `Incumbent`
+in a contest where nobody else's status is proven IS the sentence "these others
+are challengers", written by layout instead of by words.
+
+    Incumbent  20 -> 2      Challenger  59 -> 4      quiet  284 -> 357
+
+Twenty-one contests lost a label. Every one of the 55 withdrawn `Challenger`
+claims was the defect — the person was called a challenger for being absent from
+a store whose own doc block says WHAT WE HAVE ACQUIRED SO FAR. `NOT_INCUMBENT`
+is now producible only against a complete officeholder universe, and
+completeness is READ OFF the holder source's own id namespace rather than
+assumed: a congressional roster enumerates its seat; a person-by-person
+collection does not. Only two contests are label-eligible.

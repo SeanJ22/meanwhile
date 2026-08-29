@@ -67,6 +67,11 @@ function main(): void {
   for (const body of bodies) {
     const division = byId.get(body.ocdId as string) as Division;
     const definitions = definitionsForBody({
+      // DATA-4 (2026-08-28): the definition is keyed on the BODY, so this
+      // stamp's `hasFormDefinition` column now means what it says — whether a
+      // definition has been read for THIS body, not for whatever government
+      // shares its division.
+      bodyId: body.id,
       ocdId: body.ocdId,
       divisionType: division.divisionType as BodyDivisionType,
       lsad: division.lsad,

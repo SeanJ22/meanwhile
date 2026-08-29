@@ -25,7 +25,11 @@
  */
 import { execFileSync } from "node:child_process";
 
-import { CLASS_DEFINITIONS, DEPENDENT_SCHOOL_DEFINITION } from "../lib/officials/body-definitions.ts";
+import {
+  BODY_KIND_DEFINITIONS,
+  CLASS_DEFINITIONS,
+  DEPENDENT_SCHOOL_DEFINITION,
+} from "../lib/officials/body-definitions.ts";
 import { BODY_BLURBS, DIVISION_BODY_BLURBS } from "../lib/officials/body-blurbs.ts";
 import { FORM_DEFINITIONS } from "../lib/officials/form-definitions.ts";
 
@@ -122,6 +126,20 @@ const CONTROLS: Record<string, string[]> = {
   "https://www.gencourt.state.nh.us/rsa/html/III/47/47-17.htm": ["47:17"],
   "https://www.azleg.gov/ars/9/00101.htm": ["9-101"],
   "https://www.azleg.gov/ars/9/00240.htm": ["9-240"],
+  /*
+   * DATA-4's body-kind layer (2026-08-28). Each control is a phrase from the
+   * section's OWN text rather than its number, for the reason recorded above:
+   * azleg.gov answers a bad section path with a styled 200. A phrase that only
+   * appears in the section being cited cannot pass on an index or on an error
+   * page that merely mentions the title.
+   */
+  "https://www.azleg.gov/ars/48/03603.htm": ["county flood control district"],
+  "https://www.azleg.gov/ars/48/03902.htm": ["county free library district"],
+  "https://www.azleg.gov/ars/48/04203.htm": ["Powers and duties of board of directors"],
+  "https://www.azleg.gov/ars/48/03708.htm": ["weighted vote"],
+  "https://www.azleg.gov/ars/48/00709.htm": ["community facilities district"],
+  "https://www.azleg.gov/ars/11/00816.htm": ["board of adjustment"],
+  "https://www.azleg.gov/ars/15/01444.htm": ["district board"],
 };
 
 /**
@@ -197,6 +215,15 @@ const targets: { what: string; url: string | null }[] = [
   // Item 6's form layer. Every one of these is a statute read once per FORM
   // rather than once per body — see lib/officials/form-definitions.ts.
   ...FORM_DEFINITIONS.map((r) => ({ what: `form · ${r.formKey}`, url: r.definition.basisUrl })),
+  /*
+   * DATA-4's body-kind layer (2026-08-28). Read once per KIND of district and
+   * reused by every body of that kind — the same economics as the form layer,
+   * and the reason the CAWCD repair is not a CAWCD-shaped patch.
+   */
+  ...BODY_KIND_DEFINITIONS.map((r) => ({
+    what: `body kind · ${r.state} · ${r.kind}`,
+    url: r.definition.basisUrl,
+  })),
 ];
 
 const rows: Row[] = [];

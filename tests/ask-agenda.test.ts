@@ -13,6 +13,7 @@ import {
   searchAgendas,
   type AgendaDocumentLike,
 } from "../lib/routing/agenda-search.ts";
+import { agendaTopicEvidence } from "../lib/ask/agenda-topic.ts";
 
 /**
  * A03 ("Is there a data center coming?") and A05 ("What's on the docket for
@@ -236,61 +237,143 @@ test("A03/A05: nothing in this module generates a sentence", () => {
 
 /* ══ g20, 2026-08-19: A03 and A05's named remainders ══════════════════════ */
 
+/*
+ * **THESE TWO MOVED WITH THE SWEEP, AND THEY ARE STRONGER FOR IT.**
+ * (ASK-05, 2026-08-28.)
+ *
+ * Both used to read `components/ask/ask-box.tsx` as TEXT and regex the
+ * four-way denominator ternary inside `{agenda && agenda.topic && (`. That
+ * block was a SECOND reader-facing civic answer rendered beside the grounded
+ * one, and it is gone: the sweep is `lib/ask/agenda-topic.ts` and its
+ * sentences are named gaps in the one evidence pack.
+ *
+ * Every distinction the old tests protected is asserted below, and they are
+ * now BEHAVIOURAL rather than textual. A regex over a component could only
+ * prove a string was present in a file; calling the module with real inputs
+ * and reading the sentences it produces proves a reader gets them.
+ */
 test("A03: a search that ran and found nothing renders, and says so", () => {
-  const source = readFileSync(
-    join(import.meta.dirname, "..", "components/ask/ask-box.tsx"),
-    "utf8",
+  const rezoning = AGENDA_TOPICS.find((t) => t.id === "rezoning")!;
+
+  // Nothing searched is NOT nothing found. The rung used to render only on a
+  // hit, so a reader who asked and got nothing saw no trace that anything had
+  // been searched — and silence there reads as "no", which is exactly the
+  // claim we are not entitled to make.
+  const nothingHeld = agendaTopicEvidence({
+    question: `is there a ${rezoning.phrases[0]} coming`,
+    documents: [],
+    meetings: [],
+    scopeLabel: "your area",
+  });
+  assert.ok(nothingHeld.topic, "the topic was recognised");
+  assert.equal(nothingHeld.denominators.agendasSweptForTopic, 0);
+  const empty = nothingHeld.gaps.map((g) => g.statement).join(" ");
+  assert.match(empty, /don't hold any readable agendas for your area yet/i);
+  assert.match(empty, /not a statement that nothing is planned/i);
+
+  // A search that RAN over a real corpus and found nothing is a different
+  // fact, and it carries the number it actually looked at.
+  const meeting = {
+    id: "m1",
+    ocdId: "ocd-division/country:us/state:az/place:x",
+    bodyName: "Town Council",
+    title: "Regular Meeting",
+    startsAt: "2026-09-01T02:00:00.000Z",
+  };
+  const searchedNothingFound = agendaTopicEvidence({
+    question: "is there a data center coming",
+    documents: [
+      {
+        meetingId: "m1",
+        documentUrl: "https://example.gov/a.pdf",
+        sourceUrl: "https://example.gov/a.pdf",
+        sourceOrg: "Town",
+        retrievedAt: "2026-08-01T00:00:00.000Z",
+        text: "1. Approval of minutes. 2. Sidewalk repair on Elm Street.",
+        extraction: "text",
+      },
+    ],
+    meetings: [meeting],
+    scopeLabel: "your area",
+  });
+  assert.equal(searchedNothingFound.denominators.agendasSweptForTopic, 1);
+  assert.equal(searchedNothingFound.records.length, 0);
+  assert.match(
+    searchedNothingFound.gaps.map((g) => g.statement).join(" "),
+    /No mention of .* in the 1 agenda we hold for your area\./,
+    "a search that ran states what it looked at, and never asserts an absence",
   );
 
-  // The rung used to render ONLY on a hit, so a reader who asked "is there
-  // a data center coming?" and got nothing saw no trace that anything had
-  // been searched. Silence there reads as "no", and "no" is the claim we
-  // are not entitled to make. Absence is never asserted; a search that ran
-  // and found nothing is a different fact from a search that never ran, and
-  // both are different from a rung that had no opinion at all.
-  assert.match(
-    source,
-    /\{agenda && agenda\.topic && \(/,
-    "the agenda block still gates on hits rather than on a recognised topic",
-  );
-  assert.match(source, /No mention of \$\{agenda\.topic\?\.label/);
-
-  // Nothing searched is not nothing found.
-  assert.match(source, /agenda\.searched === 0/);
-  assert.match(
-    source,
-    /don't hold any readable agendas for your area yet/,
-    "a zero-corpus search must say the corpus was empty, not that nothing was found",
-  );
-  assert.match(source, /not a statement that nothing is planned/);
+  // Every one of these is OURS. "We hold no readable agendas" is a fact about
+  // this product, and rendering it as a fact about a government is the render
+  // defect the constitution names.
+  for (const gap of [...nothingHeld.gaps, ...searchedNothingFound.gaps]) {
+    assert.equal(gap.whose, "OURS", gap.statement);
+  }
 });
 
 test("A03: the corpus limit rides with the answer — agendas are not the permit record", () => {
-  const source = readFileSync(
-    join(import.meta.dirname, "..", "components/ask/ask-box.tsx"),
-    "utf8",
-  );
-
   // A03's own recorded remainder: this searches AGENDAS, which is where
   // zoning and permit items surface but is not the permit record itself. A
   // permit application exists in a planning department's system before it
   // reaches an agenda, and often never reaches one — so an unqualified "no
-  // mention on an agenda" lets a reader take it for "nothing has been
-  // filed", a much larger claim about records we have not wired.
-  assert.match(source, /not the permit or zoning-application record/i);
-  assert.match(source, /filed with a planning department long before/i);
-  assert.match(source, /haven&apos;t wired those systems/i);
+  // mention on an agenda" lets a reader take it for "nothing has been filed",
+  // a much larger claim about a record of an entirely different kind.
+  const doc = {
+    meetingId: "m1",
+    documentUrl: "https://example.gov/a.pdf",
+    sourceUrl: "https://example.gov/a.pdf",
+    sourceOrg: "Town",
+    retrievedAt: "2026-08-01T00:00:00.000Z",
+    text: "1. Public hearing on a rezoning of parcel 44. 2. Adjourn.",
+    extraction: "text",
+  };
+  const meeting = {
+    id: "m1",
+    ocdId: "ocd-division/country:us/state:az/place:x",
+    bodyName: "Planning Commission",
+    title: "Regular Meeting",
+    startsAt: "2026-09-01T02:00:00.000Z",
+  };
 
-  // And it rides on the HIT case too, not only the empty one: a reader who
-  // found one mention still needs to know there may be filings behind it.
-  const block = source.slice(source.indexOf("{agenda && agenda.topic && ("));
-  const limitAt = block.indexOf("not the permit or zoning-application record");
-  const listAt = block.indexOf("{agenda.hits.map(");
-  assert.ok(limitAt > 0 && listAt > 0);
-  assert.ok(
-    limitAt < listAt,
-    "the corpus limit renders only after the hits — it must apply to both cases",
-  );
+  const hit = agendaTopicEvidence({
+    question: "is there a rezoning coming",
+    documents: [doc],
+    meetings: [meeting],
+    scopeLabel: "your area",
+  });
+  const miss = agendaTopicEvidence({
+    question: "is there a rezoning coming",
+    documents: [{ ...doc, text: "1. Approval of minutes. 2. Adjourn." }],
+    meetings: [meeting],
+    scopeLabel: "your area",
+  });
+
+  assert.ok(hit.records.length > 0, "the hit case must actually find something");
+  assert.equal(miss.records.length, 0);
+
+  // It rides on the HIT case as well as the empty one: a reader who found one
+  // mention still needs to know there may be filings behind it. The old test
+  // proved that by comparing JSX character offsets; this proves the same
+  // sentence reaches BOTH outcomes, which is what the offsets stood in for.
+  for (const outcome of [hit, miss]) {
+    const said = outcome.gaps.map((g) => g.statement).join(" ");
+    assert.match(said, /not the permit or zoning-application record/i);
+    assert.match(said, /filed with a planning department long before/i);
+  }
+
+  /*
+   * **AND IT NO LONGER ANNOUNCES OUR OWN ROADMAP.** The sentence used to end
+   * "and we haven't wired those systems yet" — a progress claim about our own
+   * pipeline, which RULING 59 strikes from every reader surface and RULING 139
+   * strikes again as a verdict on ourselves. It survived for months only
+   * because it lived in JSX with an HTML entity in the contraction, which the
+   * RULING 59 sweep's regex could not see through.
+   */
+  for (const outcome of [hit, miss]) {
+    const said = outcome.gaps.map((g) => g.statement).join(" ");
+    assert.doesNotMatch(said, /have ?n[o']t (wired|curated|worked)/i);
+  }
 });
 
 test("A05: the meeting card renders the clerk's items, using the one extractor", () => {

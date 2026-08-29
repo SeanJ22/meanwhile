@@ -22,9 +22,17 @@
 # whether the build passed or failed — a refused build is exactly when its
 # numbers are wanted.
 #
-# This does not deploy anything and holds no secrets. `pnpm build` needs none:
-# every data file it reads is committed, and the database is not touched at
-# build time.
+# This does not deploy anything. `pnpm build` needs no secret: every data file
+# it reads is committed, and the database is not touched at build time.
+#
+# ONE STEP IN THE `gates` JOB NOW HOLDS ONE, and the exception is stated here
+# rather than discovered in a diff (2026-08-28, the schema-drift incident).
+# `Schema shipping gate` reads production's applied-migration list through
+# `WTP_PRODUCTION_DATABASE_URL_READONLY` — a READ-ONLY role, one SELECT, and
+# only when the change touches `lib/db/migrations/` or `lib/db/schema.ts`. It
+# cannot apply anything: applying resolves a different variable through
+# `lib/db/write-handle.ts`, which refuses this one by name. Every other step in
+# this file still runs with no secret at all.
 
 name: Build check
 
@@ -371,3 +379,46 @@ jobs:
         if: always()
         timeout-minutes: 10
         run: corepack pnpm exec tsc --noEmit
+
+      # THE SHIPPING INVARIANT — ASKED BEFORE THE MERGE, NOT THE MORNING AFTER.
+      # (2026-08-28, the P0 schema drift. Intake tripwire run 33211710028.)
+      #
+      # `0021_mixed_red_ghost` and `0022_adorable_hemingway` merged and deployed
+      # while production's schema stood at 20. `ask_interactions` did not exist,
+      # every insert naming it failed, the route caught the error and served the
+      # page — and the only thing that asked was the DAILY tripwire, the next
+      # morning. Nothing in this repository has ever applied a migration
+      # automatically: `git log -S` over `.github/` and `netlify.toml` returns no
+      # commit that ever ran `db:apply`, `drizzle-kit migrate` or
+      # `apply-migrations` anywhere in CI or in the deploy.
+      #
+      # This job is where the answer can still change what happens. It runs on
+      # every pull request and on every push to `main`, so the question is asked
+      # of the EXACT head that is about to ship.
+      #
+      # SCOPED, so a docs-only pull request is not gated on a database round
+      # trip: the gate reads the changed paths first and exits NOT APPLICABLE
+      # without opening a connection unless `lib/db/migrations/` or
+      # `lib/db/schema.ts` moved.
+      #
+      # PHASE-AWARE, because migrate-always-first is wrong half the time. An
+      # EXPAND migration must be applied BEFORE its code deploys; a CONTRACT
+      # migration must NOT be — `lib/db/migrations/0013` and `0014` are that
+      # pair, split on purpose, and a gate that demanded everything be applied
+      # would have refused them. `lib/db/migration-phases.ts`.
+      #
+      # READ-ONLY, by variable name. A gate that could apply what it finds would
+      # run unreviewed SQL from a pull request against production.
+      #
+      # `if: always()` for the same reason as lint and types above: a session
+      # gets every answer from one run rather than one merge at a time.
+      #
+      # Exit 2 is COULD NOT TELL — no credential, or an unreadable migrations
+      # table — and it fails the step. An unreadable answer must never print
+      # like a passing one (RULING 24).
+      - name: Schema shipping gate (only when the schema contract moved)
+        if: always()
+        timeout-minutes: 5
+        env:
+          WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+        run: corepack pnpm exec tsx scripts/db-shipping-gate.mts

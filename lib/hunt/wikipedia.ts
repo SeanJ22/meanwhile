@@ -1052,27 +1052,97 @@ export function parseMayor(localGovernment: string): WikiOfficial | null {
 
 /* ─────────────────── Representation, links, citation hosts ───────────────── */
 
+/**
+ * **WGH-16 (2026-08-28) — PLURAL, BECAUSE A MUNICIPALITY IS A POLYGON.**
+ *
+ * ## What this was, and why it could not be right
+ *
+ * ```ts
+ * congressionalDistrict: string | null;   // ONE
+ * legislativeDistrict:   string | null;   // ONE
+ * ```
+ *
+ * hung off `MunicipalityParse`. **A municipality is a polygon**, and a polygon
+ * crosses whatever it crosses: legislative districts are drawn to equal
+ * population and municipal lines are drawn to history, so the two agree only by
+ * coincidence. Measured on this repository's own instrument
+ * (`data/hunt/85641-district-territory.json`, 44 probed points against 20
+ * walked ArcGIS layers), **five of the seven territories at ZIP 85641 span two
+ * legislative districts**, including Vail Unified and the Corona de Tucson Fire
+ * District.
+ *
+ * The parser could not have caught it either, and that is the second half of
+ * the defect: `.exec()` returns the FIRST match and nothing more, so a section
+ * naming two districts produced one district and no signal that it had dropped
+ * the other. **A single-capture parser and a singular field agree with each
+ * other perfectly while both being wrong.**
+ *
+ * ## Why this is repaired rather than papered over
+ *
+ * Nothing reads these fields today. `lib/ops/generated-register.ts`,
+ * `scripts/build-nj-rosters.mts`, `scripts/muni-site-index.mts` and
+ * `scripts/nj-hunt5-ledger.mts` all consume `externalLinks`, `council` and
+ * `mayor` — verified by grep across the repository, not assumed. So this is a
+ * **latent trap, not a rendered wrong answer**, and it was reachable the moment
+ * anyone wired `representation.legislativeDistrict` to a reader.
+ *
+ * A guard on the consumer side would have left the trap armed. The type is what
+ * lies, so the type is what changes: `string[]` cannot express "the one
+ * district" and therefore cannot be quietly used as though it did.
+ *
+ * ## What plural does NOT mean
+ *
+ * It does not mean the parser now claims completeness. A Wikipedia section that
+ * names one district still yields one, and that is the honest reading of the
+ * source — `["11"]` is *what the page said*, never *the only district this
+ * municipality touches*. The authoritative answer to overlap is a boundary
+ * walk, which is what the ArcGIS instrument is; this is a citation-bearing
+ * secondary source, and it is labelled as one.
+ *
+ * An empty array is *the section named none*. It is not an assertion that the
+ * municipality has no congressional district, and no consumer may read it as
+ * one.
+ */
 export interface Representation {
-  congressionalDistrict: string | null;
-  legislativeDistrict: string | null;
+  /**
+   * Every congressional district the section names, in the order it names them,
+   * deduplicated. Empty means the SECTION named none.
+   */
+  congressionalDistricts: string[];
+  /** Every state legislative district the section names. Same reading. */
+  legislativeDistricts: string[];
   /** The officeholder templates the section transcludes, by name. */
   officeholderTemplates: string[];
   citationUrls: string[];
 }
 
+/** All matches of `re` at capture group 1, deduplicated, in first-seen order. */
+function allCaptures(text: string, patterns: RegExp[]): string[] {
+  const out = new Set<string>();
+  for (const pattern of patterns) {
+    // A fresh RegExp per call: a `g` flag carries `lastIndex` across calls, and
+    // a shared module-level literal would make the SECOND municipality parsed
+    // return different results from the first.
+    for (const m of text.matchAll(new RegExp(pattern.source, `${pattern.flags}g`))) {
+      if (m[1] !== undefined) out.add(m[1]);
+    }
+  }
+  return [...out];
+}
+
 /**
- * The Federal/state/county representation section: two district numbers and,
+ * The Federal/state/county representation section: the district numbers and,
  * more valuably, the names of the templates that carry the actual officeholders.
  * `{{NJ Legislative 25}}` and `{{NJ Morris County Commissioners}}` are where the
  * senator, the two assembly members and the seven commissioners live, and they
  * are fetched as their own pages.
+ *
+ * **Multi-capture** since WGH-16 — see the note on {@link Representation} for
+ * why a first-match-only read of a polygon's districts is a wrong answer that
+ * looks like a right one.
  */
 export function parseRepresentation(sectionText: string): Representation {
   const text = plain(sectionText);
-  const cd = /(\d+)(?:st|nd|rd|th)\s+Congressional District/i.exec(text);
-  const ld =
-    /(\d+)(?:st|nd|rd|th)\s+state\s+legislative\s+district/i.exec(text) ??
-    /state\s+legislative\s+district\s+(\d+)/i.exec(text);
 
   const templates = transclusions(sectionText).filter((t) =>
     /^(NJ|AZ|NH|US)\s|Congress|Senate|Legislative|Commissioner|Freeholder/i.test(t),
@@ -1080,8 +1150,17 @@ export function parseRepresentation(sectionText: string): Representation {
   const spanRefs = resolveRefNames(sectionText, refs(sectionText));
 
   return {
-    congressionalDistrict: cd === null ? null : cd[1],
-    legislativeDistrict: ld === null ? null : ld[1],
+    congressionalDistricts: allCaptures(text, [
+      /(\d+)(?:st|nd|rd|th)\s+Congressional District/i,
+    ]),
+    // Both spellings, both scanned in full. The `??` this replaced stopped at
+    // the first pattern that matched at all, so a section using both forms —
+    // which is how a municipality split across two districts tends to read —
+    // lost every district named in the other one.
+    legislativeDistricts: allCaptures(text, [
+      /(\d+)(?:st|nd|rd|th)\s+state\s+legislative\s+district/i,
+      /state\s+legislative\s+district\s+(\d+)/i,
+    ]),
     officeholderTemplates: templates,
     citationUrls: [...new Set(spanRefs.flatMap((r) => r.urls))],
   };

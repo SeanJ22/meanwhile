@@ -108,6 +108,21 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "Is a failure to retrieve a permission document a permission verdict?",
     values: ["collapses-to-disallowed", "orthogonal-cannot-tell"],
   },
+  {
+    key: "session.orchestration_model",
+    question: "How does a session run two or more independent authorized workstreams?",
+    values: ["serial-single-developer", "independent-work-parallel-by-default"],
+  },
+  {
+    key: "shipping.integration_model",
+    question: "Where does parallel work come back together, and what ships?",
+    values: ["per-workstream-merge-to-main", "one-owner-combined-head"],
+  },
+  {
+    key: "method.claim_integrity",
+    question: "What happens to a route when a conclusion drawn from it turns out to be false?",
+    values: ["untyped-prose-rewritten-in-place", "typed-classes-with-required-provenance"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

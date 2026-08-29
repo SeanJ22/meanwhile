@@ -38,6 +38,7 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, type Venue } from "@/lib/meetings/venues";
+import { joinLine, onlineAccessFor, ONLINE_ONLY_LINE } from "@/lib/meetings/online";
 import type { Meeting } from "@/lib/sources/types";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import {
@@ -2199,6 +2200,10 @@ function MapEntryInner() {
               }
               representation={districtRepresentation.holders}
               representationNoteState={noteStateFor(districtRepresentation.status)}
+              /* WGH-15: the reader own area, so this card can say how their home
+                 stands relative to the district they tapped. READ-ONLY -- everything
+                 downstream runs through a BROWSING location, which settles nothing. */
+              homeZip={clusterZip}
               upcomingMeetings={
                 // A failed fetch may not stand behind "Upcoming: 0" — the
                 // popup renders couldn't-check instead (2a).
@@ -2289,6 +2294,11 @@ function MapEntryInner() {
                 : large.subject
             }
             onClose={closeLarge}
+            /* WGH-15: the large card is the district popup expansion and inherits
+               the same question. The subject division is read off
+               subject.divisionOcdId, which is already null for a person or a
+               meeting card -- the line then does not render. */
+            homeZip={clusterZip}
             /* F01 2.4: a roster name opens the person's full card ON TOP of this
                one, so closing theirs returns here rather than to the map. This
                is the author's Dr. Ravi Shah case exactly. */
@@ -2513,22 +2523,18 @@ function meetingSubject(
             value: locationWithDirections(meeting.location),
           }
         : {
-            // D18. The same two rows the popup shows, in the compact card's
-            // own vocabulary: what it is, then how to get in — and the gap
-            // named as the body's when they published no way in.
+            // D18. MTG-14 (2026-08-28): the sentence is no longer written out
+            // here — it stood in two places, this and meeting-popup.tsx, for
+            // one claim about a government's meeting.
             label: "Where",
-            value: "Online only — there is no room to attend in person.",
+            value: ONLINE_ONLY_LINE,
           },
-      ...(meeting.online
-        ? [
-            {
-              label: "How to join",
-              value:
-                meeting.online.joinUrl ??
-                `${meeting.online.label} — the body hasn't published a join link`,
-            },
-          ]
-        : []),
+      ...(() => {
+        const access = onlineAccessFor(meeting);
+        return access
+          ? [{ label: "How to join", value: access.joinUrl ?? joinLine(access) }]
+          : [];
+      })(),
       { label: "Status", value: STATUS_LABEL[meeting.status] },
     ],
     agenda: { meetingId: meeting.id, agendaUrl: meeting.agendaUrl },
@@ -2672,6 +2678,11 @@ function bodySubject(
         body.divisionType === null
           ? { classDefinition: null, formDefinition: null, classKey: null, unreadNote: null }
           : definitionsForBody({
+              // DATA-4 (2026-08-28): the definition is keyed on the BODY. Five of
+              // the six bodies on county:pima were handed the county's powers
+              // because they share its division -- and it was 248 bodies
+              // repo-wide, 100 of them live and reader-reachable.
+              bodyId: body.bodyId,
               ocdId: body.ocdId,
               divisionType: body.divisionType,
               lsad: body.lsad,

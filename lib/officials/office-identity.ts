@@ -139,7 +139,11 @@ const RULES: OfficeRule[] = [
     pattern: /^superintendent of public instruction$/i,
     note: "ELECTED statewide in Arizona. Checked before any generic superintendent rule; see elected-role.ts, where the plain title is on the APPOINTED list.",
   },
-  { key: "state_mine_inspector", pattern: /^state mine inspector$/i },
+  {
+    key: "state_mine_inspector",
+    pattern: /^(?:arizona )?(?:state )?mine inspector$/i,
+    note: "The BALLOT writes 'State Mine Inspector' and the OFFICE writes both 'Arizona State Mine Inspector' (asmi.az.gov masthead) and, on its own team page, the bare role. `State` was required here until 2026-08-28, so a holder recorded under the office's own shorter spelling classified as null and silently failed to join its own seat — the failure mode this vocabulary exists to make loud.",
+  },
   { key: "corporation_commissioner", pattern: /^corporation commissioner$/i },
   { key: "state_auditor", pattern: /^state auditor$/i },
   { key: "state_comptroller", pattern: /^(?:state )?comptroller$/i },

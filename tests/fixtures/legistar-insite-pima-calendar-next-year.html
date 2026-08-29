@@ -1,0 +1,2169 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head id="ctl00_Head1"><title>
+	Pima County - Board of Supervisors meeting
+</title><link href="CalendarControl.css" rel="stylesheet" type="text/css" /><link href="Skins/Tacoma/TabStrip.Tacoma.css" rel="Stylesheet" type="text/css" /><link href="Skins/Tacoma/AccessibilityCommons.css" rel="Stylesheet" type="text/css" />
+    <script type="text/JavaScript" src="AccessibilityFocusManagement.js"></script>
+
+
+    <style>
+        .skip-to-content {
+            position: absolute;
+            left: -9999px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            z-index: 100;
+            color: #0443B0;
+            padding: 10px;
+            text-decoration: none;
+            font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        .skip-to-content:focus {
+            position: fixed;
+            left: 4px;
+            top: 4px;
+            width: auto;
+            height: auto;
+            overflow: visible;
+            outline: 2px solid #0443B0;
+        }
+    </style>
+
+    <script>
+        function focusMainContent() {
+            var mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.setAttribute('tabindex', '-1');
+                mainContent.focus();
+            }
+        }
+    </script>
+
+    <script type="text/javascript" src="./Scripts/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript" src="CalendarControl.js" language="javascript"></script>
+    <script type="text/javascript">
+        var addthis_config = {
+            ui_cobrand: "powered by Legistar",
+            ui_header_color: "#660000",
+            ui_header_background: "#f7eecd",
+            ui_508_compliant: true,
+            data_track_clickback: true
+        }
+    </script>
+    <script type="text/javascript" src="https://s7.addthis.com/js/300/addthis_widget.js#username=legistarinsite" async="async"></script>
+    <script type="text/javascript">
+        window.name = "MasterWindow";
+        var first = true;
+        var first2 = true;
+        function OpenTelerikWindow(url) {
+            var w = radopen(url, 'RadWindow1');
+            w.add_pageLoad(function () {
+                focusRadWindow(w);
+            });
+
+            if (first) {
+                //w.togglePin(); 
+                first = false;
+            }
+        }
+        function OpenTelerikWindow2(url) {
+            var w = radopen(url, 'RadWindow2')
+            if (first2) {
+                //w.togglePin(); 
+                first2 = false;
+            }
+        }
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TTMGN2RHVZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-TTMGN2RHVZ');
+    </script>
+    <meta name="author" content="Granicus, Inc." />
+     
+    <link href="Skins/Tacoma/Scheduler.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/General.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/TabStrip.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/Grid.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/Calendar.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/Menu.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <link href="Skins/Tacoma/ComboBox.Tacoma.css" rel="Stylesheet" type="text/css" />
+    <script type="text/JavaScript" src="GridFilter.js"></script> 
+
+    <script type="text/javascript">
+        function pageLoad() {
+            var combo1 = $find("ctl00_ContentPlaceHolder1_lstYears");
+            if (combo1 != null) {
+                if (combo1.get_selectedItem()) {
+                    combo1.set_text(combo1.get_selectedItem().get_text());
+                }
+            }
+        }
+        
+    </script>
+           <script type ="text/javascript">
+               function press(e) {
+                   var code = (e.keyCode ? e.keyCode : e.which);
+                   if (code == 13) { //Enter keycode
+                       e.suppressKey = true;
+                       var ajaxManager = $find("ctl00_ContentPlaceHolder1_RadAjaxManager1");
+                    ajaxManager.ajaxRequestWithTarget('ctl00$ContentPlaceHolder1$btnSearch', '');
+                    return false;
+                }
+            }
+        </script>
+
+        <script type="text/javascript">
+            function RadDatePicker1_PopupOpening(sender, args) {
+                setTimeout(function() {
+                    var calendarElement = sender.get_calendar().get_element();
+                    if (calendarElement) {
+                        // Find the first focusable element inside the calendar
+                        var focusableElements = calendarElement.querySelectorAll('a, button, input');
+                        if (focusableElements.length > 0) {
+                            // Set focus to the first focusable element
+                            focusableElements[0].focus();
+                        }
+                    }
+                }, 0);
+            }
+        </script>
+
+    <style type="text/css">
+        #facebox #eCommentFrame {
+            display: block;
+        }
+
+         #facebox #eCommentFrame > iframe
+        {
+            height: 700px;
+            width: 800px;
+        }
+
+    </style>
+<meta name="format-detection" content="telephone=no" /><link href="Feed.ashx?M=Calendar&amp;ID=43476910&amp;GUID=cf828edb-b40e-4448-94d0-d2b1d4996259&amp;Mode=Next Year&amp;Title=Pima+County+-+Calendar+(Next+Year)" rel="alternate" type="application/rss+xml" title="Pima County - Calendar (Next Year)" /><link href="/WebResource.axd?d=HkmiNSkKJcp9zYO7iQ4LQenL3JpSZe2UGKB_Pk4r5YQRuZzPsLMsZzwrSvy9lruIl5GkgwLvHWu67vwJMwKSFxUTlVdL05GtcnLDPfablFs-ZjDTV4SRhTyPSYW1NSg5lG_yG93x297US-_TNEi91A2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=urCACUaUZeT6oPoIZXShbnlgytxq3wMs7tMUnmP4aoFvw0sx5OWFviaAe2ZbWlhhQMX8Mi0FTDYCb8Y-WNvbuSFn44BI8cOyIzL5cbvgqlL7S5R5XTCNn8Q3MetXqXHM0&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=QKX1AO1vX8ebWKfbb4eOTKZ7XgDBItWqLqM672Ig3qQ3HhlG_I-hz_SrjdyOSSXr635e3yq9ulHFcK2kM9nd4YaoR3EZIdjDueENN-Tv2S715C9DxrcbNBHvWPj-Uh8x0&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=VTwVlk6LPBUQNnEgvORazChEHtncoK7FwkRZQJcbGr2BVqdGj-iMW8n84CsnH6sQIOMorYFprF7_7AGvMwNv4z3tzIzceC4LR6sIHT6HRi6eIJjhdKwZEvy_5yWg5u7LkNe9t3Ja19e1HCM9RMXxDcgFCvouxputivbLJtwdIiw1&amp;t=639229568079049458" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=lsHxUYuoKn-ifTgGVgyNZf3eZVw2bqdnrrfBJ8SSWF0J6XTAyGsj2XcoukzmozU2bdmLMxJ7YwvzKl3RXRh794KwnXvNcPwTMFgJz1q2H-NkU9XddzMi2rc7GFYRGxglrSKxgkmfnuvKqK1tihnG7Q2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=b8adWYak0tImLef4A3fc9fmZpq88PWWZcxwLVtrWZKp2BO7PP9PF_59p0745Rby3QtLF_LicLMTj4G7AR48I0PL0ONUCX01bwmm8zOnnppqZvCf-34W6NP0TcnWe_y7_0EM9tl77R6bZd9QOth0LRA2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=vsKpXOsoEwDUfVug9KOqSmMo0ZYmPmZq9pNuuInW9K8LhCVDiGx-4gStdZMuqyTrdQnKi2y2KGw-JDYkasLPmGPVTN_zZ42kaVpGhkB2gwWbSGRzM94ksIhHXxPA1yg_0&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=Nhf6TpUj19KZ9rhEj2xtdQWB1AE9x3dfjERCbojyAxXP6CcFUcpIuRIjIS_IzCgwDtzHlcE6eqDW_UkCZmMuD4x586LEbaG9IrmDoMtO4sXgHE8h6D9e_UqLYjifNbvG0&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=bZQu9IErOfGRZdP9C3BB5fBjbPu7qVbwSQ847mZ4IAlXpFZs_YGRivXlabIU4ZQKviuLMgRpc5wNPAUevMbftB0oZkwUUnWmogtx8PmeVDgXSQUuP4T3vSz4I_uqLDio0&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=EkHr37SACCjvnXcRDMYA5c24DCGZ5D9sa4hrU9ZxX4caWnSfRrL8wqZz_Wvr-P6mLeGQYOU99KN8XqMvXitTg5gisJbgusV_q1sXe7UnWQjTho6AI-W7mLheOX8fV3N4wE8B_B42UIXX58JqardpUQ2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=AvBWCtbpLXYjyyNienFv2EqA-YN4nSg7RcmS3W8NokCnYPpEhgt-AVVB_FtcoNZKEG72OX_1rPFmjMltKURgkHyCqapEUPjkUapred14kOvhhKPvt3b0wRPHXe1bfk_WCOcJw0kg-uIe66bWU4VrOw2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=QioIuMiTvakjAw8Q44fnHururXJRm3qup9_KYUQLddsC0z3f5WyZREBEE9Y5afzpXhti7yke6-5wXczIagW_lu4z_ArgdW9B0LTBmyI7uMg0TGigwLy80HIu7xjApf8901m3EtgUv8CiIns3PGaB-9IAoDcvRWOTe649Zeh-joA1&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=VdPoLqp1pEU6N0-IfFplZHO5AXD5VnHbeoct88qKjFdWFR8wC4GxAhJSIUt9msf4soilMg_IhMr90_-eubb9inM7EKy5s2cR6pgm75ch4K70JssLUoL14ZwvsQm2mo-UPYJU7UzV4gXxW9EL1lKziw2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /><link href="/WebResource.axd?d=lus4_ZNhcoj0zqoekf2w57MsuDWrz0i8H3gkTW3XLtcYiNU9kk4KTKLkii8Jtid3grjox4_3JocQyHVE10j2XHDY8u-o8v5hptmLN0jZY9buM0uwGgJp3OTAkCuBJaDA0QzugOeI49v_T1puqElWVA2&amp;t=639229568075513237" type="text/css" rel="stylesheet" class="Telerik_stylesheet" /></head>
+<body id="ctl00_body1" style="margin: 0px; border: 0px;" class="tacoma_">
+    <div id="globalTooltip" class="custom-tooltip"></div>
+    <a href="#mainContent" class="skip-to-content" onclick="focusMainContent()">Skip to main content</a>
+    <form name="aspnetForm" method="post" action="./Calendar.aspx" id="aspnetForm" style="direction:ltr;">
+<input type="hidden" name="ctl00_RadScriptManager1_TSM" id="ctl00_RadScriptManager1_TSM" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+
+
+<script src="/Telerik.Web.UI.WebResource.axd?_TSM_HiddenField_=ctl00_RadScriptManager1_TSM&amp;compress=1&amp;_TSM_CombinedScripts_=%3b%3bSystem.Web.Extensions%2c+Version%3d4.0.0.0%2c+Culture%3dneutral%2c+PublicKeyToken%3d31bf3856ad364e35%3aen-US%3a64455737-15dd-482f-b336-7074c5c53f91%3aea597d4b%3bTelerik.Web.UI%2c+Version%3d2020.1.114.45%2c+Culture%3dneutral%2c+PublicKeyToken%3d121fae78165ba3d4%3aen-US%3a40a36146-6362-49db-b4b5-57ab81f34dac%3ae330518b%3a16e4e7cd%3af7645509%3a24ee1bba%3a33715776%3a88144a7a%3a1e771326%3a8e6f0d33%3a1f3a7489%3aed16cbdc%3af46195d3%3ab2e06756%3a92fe8ea0%3afa31b949%3a4877f69a%3ac128760b%3a19620875%3a874f8ea2%3a490a9d4e%3abd8f85e4%3a6a6d718d%3a2003d0b8%3aaa288e2d%3a258f1c72%3ac8618e41%3a1a73651d%3a333f8d94%3a58366029%3a8674cba1%3a7c926187%3ab7778d6c%3ac08e9f8a%3a59462f1%3aa51ee93e%3a4c8be21a%3a650fdad%3aef9d9f4a%3a26c790aa%3a44e9d927%3a29e4ab07" type="text/javascript"></script>
+<input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="B66867E1" />
+<input type="hidden" name="__PREVIOUSPAGE" id="__PREVIOUSPAGE" value="SuEtfmImh9-EHE-HD0ZX1knYEWejqxphAJaSEveBm-NM1owOQ5XaVNg0S2WB7QwXWnH1tGA_wyf_gIWEYeVlWg2" />
+<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="Cpg/Jgt8Rpp7INugFW4IPoMAtCCweCtTXEhZqfaseG2uEzkzIeqT1OH/FBieA48l6HrRzfhAuW6+ytyRwkocGkBREaj7pj9Ixdd/qevrLx5YJuJWRZsgwtaMLN3xyW+ci6qjDy+yUEKF6J3DF4ggdyuwtm6orxbh46XyhXJY/vMZM8EWDVKee9KUPjeUP49ZA0EolWaHGbivy8rYegbyEnJlQyo2MOrvO/HbCx5dN6vZjfqMBpOrujOnvp9mi8lGf9D4K8KJKAB+dmFVWo2qGxOazoVGpmq7JImZ7wcGLDMbQcHlMLHIbCeJ07S0jwEX1gkEtZ0qmzf1obTFRcXb7XtD60UPsaOUYs97ENTGaIFM6rFknX1cLHeUWmAYX6uFeVOSgjjFYg54gF1DwC5L6+oFNwZ+VLADRNGYT9U3stkdakaZeNulp7KDPBk/t6QlcONh/Ei/dQbTRYhCKkUwJ4iAZLUeuL/CCyPbjxXGYMN11L3HIi9tJeZ4nNynvoLktYnzaFSAcRZux0fP8iNzVWiTD97hC10mlaJRC5XbNG7cj768mC6Eo6r+O2z/+eqL6KY7yv4PU1TfA3LBt9g9Gp76st9fy/r6/tktFe7R2Qj2OhuB69IAdpnopUCJKLRQfd2khawVafbIYhQUAo6uyEM4ecwVue7q2la0HtqIMoFgVdb469HxV9vTiMCX+LjHObkjnjgMoT3nWKOGohKoa9prsT3fXDa6ZjNJ3dRaiOKkk5KT6U9PSWqsBycrAOaW" />
+        
+        <div id="ctl00_divBody">
+            <div id="ctl00_divMyAccountOut" style="position:absolute;right:5px;top:5px;background-color:#334460;">
+                <a id="ctl00_hypSignIn" href="SignIn.aspx?ReturnUrl=TXlBY2NvdW50LmFzcHg%3d"><font face="Tahoma" color="White" size="2">Sign In</font></a>
+            </div>
+            
+            <div id="ctl00_divTop"><div style="background-image: url('https://pima.legistar.com/Images/PIMA/pima-header-image-repeatable.png'); width: 100%; height: 149px;">
+  <img alt="Pima County" src="https://pima.legistar.com/Images/PIMA/pima-logo.png" style="margin-top: 70px; margin-left: 25px;" />
+  <div style="text-align:right; width: 100%;  position: relative;">
+    <div style="position: absolute; bottom: 5px; right: 5px; font-family: Tahoma, sans-serif;"><a style="color: white !important;" href="http://granicus.force.com/citizen/articles/Standard_Article/Video-Streaming-Minimum-System-Requirements" target="_blank">Supported Browser Information</a></div>
+  </div>
+</div></div>
+            
+            <div id="ctl00_divTabs">
+                <div id="ctl00_tabTop" class="RadTabStrip RadTabStrip_Tacoma RadTabStripTop_Tacoma RadTabStripTop"><font face="Tahoma" size="2">
+	<!-- 2020.1.114.45 --><div class="rtsLevel rtsLevel1">
+		<ul class="rtsUL"><li class="rtsLI rtsFirst"><a class="rtsLink" href="http://www.pima.gov"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Pima.gov</span></span></span></a></li><li class="rtsLI"><a class="rtsLink rtsBefore" href="Legislation.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">File List</span></span></span></a></li><li class="rtsLI"><a class="rtsLink rtsSelected" href="Calendar.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Board of Supervisors meeting</span></span></span></a></li><li class="rtsLI"><a class="rtsLink rtsAfter" href="Departments.aspx"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Board of Supervisors Agenda/Addendum</span></span></span></a></li><li class="rtsLI"><a class="rtsLink" href="http://webcms.pima.gov/cms/one.aspx?portalId=169&amp;pageId=137299"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Board of Supervisors Approved Minutes</span></span></span></a></li><li class="rtsLI rtsLast"><a class="rtsLink" href="http://pima.granicus.com/ViewPublisher.php?view_id=3"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Live Proceedings</span></span></span></a></li></ul>
+	</div><input id="ctl00_tabTop_ClientState" name="ctl00_tabTop_ClientState" type="hidden" />
+</font></div>
+            </div>
+            <div id="ctl00_divLeft">
+            </div>
+            <div id="ctl00_divHeader" style="width: 100%; height: 28px">
+                <div id="divHeaderLeft">
+                    
+                </div>
+                <div id="divHeaderRight" style="float: right; height: 16px">
+                    <input type="image" name="ctl00$ButtonRSS" id="ctl00_ButtonRSS" title="Pima County - Calendar (Next Year)" data-tooltip="Pima County - Calendar (Next Year)" src="Images/RSS.gif" alt="Pima County - Calendar (Next Year)" onclick="window.open(&#39;https://pima.legistar.com/Feed.ashx?M=Calendar&amp;ID=43476910&amp;GUID=cf828edb-b40e-4448-94d0-d2b1d4996259&amp;Mode=Next Year&amp;Title=Pima+County+-+Calendar+(Next+Year)&#39;); return false;" border="0" />
+                    <input type="image" name="ctl00$ButtonAlerts" id="ctl00_ButtonAlerts" title="Pima County - Calendar" data-tooltip="Pima County - Calendar" src="Images/Alerts.gif" alt="Pima County - Calendar" onclick="javascript:WebForm_DoPostBackWithOptions(new WebForm_PostBackOptions(&quot;ctl00$ButtonAlerts&quot;, &quot;&quot;, false, &quot;&quot;, &quot;Alerts.aspx?M=CA&amp;ID=43476910&amp;GUID=cf828edb-b40e-4448-94d0-d2b1d4996259&amp;Title=Pima+County+-+Calendar&quot;, false, false))" border="0" />
+                </div>
+            </div>
+            <div id="ctl00_Div1" class="page">
+                <div id="ctl00_Div2" class="content grid_20">
+                    <main id="mainContent" role="main" tabindex="-1">
+                    <div id="ctl00_divMiddle">
+                        
+
+   <div id="globalTooltip" class="custom-tooltip"></div>
+    <div id="ctl00_ContentPlaceHolder1_RadAjaxManager1SU">
+	<span id="ctl00_ContentPlaceHolder1_RadAjaxManager1" style="display:none;"></span>
+</div>
+    <div id="ctl00_ContentPlaceHolder1_RadAjaxLoadingPanel1" style="display:none;height:75px;width:75px;">
+	
+        <img alt="Loading..." src='/WebResource.axd?d=GlPPRoa3q1QmM_XFN5If4CxfN3S-cgQzypn6SHyBpvWh8wyZ5Cm_qsz7Vq9HLR86gm168gofzhhVQd4idaTUzMIuCpSQXhldpsbKcc80H-BmChfdAao3Pq3facHVJk-jMrBOnhhYV9yZqT-SvW4bfQ2&amp;t=639229568075513237'
+            style="border: 0px;" />
+    
+</div>
+    <div id="ctl00_ContentPlaceHolder1_RadWindowManager1" style="display:none;z-index:100000;"><font face="Tahoma" size="2">
+	<div id="ctl00_ContentPlaceHolder1_RadWindowManager1_alerttemplate" style="display:none;">
+		<div class="rwDialogPopup radalert">			
+			<div class="rwDialogText">
+			{1}				
+			</div>
+			
+			<div>
+				<a  onclick="$find('{0}').close(true);"
+				class="rwPopupButton" href="javascript:void(0);">
+					<span class="rwOuterSpan">
+						<span class="rwInnerSpan">##LOC[OK]##</span>
+					</span>
+				</a>				
+			</div>
+		</div>
+		</div><div id="ctl00_ContentPlaceHolder1_RadWindowManager1_prompttemplate" style="display:none;">
+		 <div class="rwDialogPopup radprompt">			
+			    <div class="rwDialogText">
+			    {1}				
+			    </div>		
+			    <div>
+				    <script type="text/javascript">
+				    function RadWindowprompt_detectenter(id, ev, input)
+				    {							
+					    if (!ev) ev = window.event;                
+					    if (ev.keyCode == 13)
+					    {															        
+					        var but = input.parentNode.parentNode.getElementsByTagName("A")[0];					        
+					        if (but)
+						    {							
+							    if (but.click) but.click();
+							    else if (but.onclick)
+							    {
+							        but.focus(); var click = but.onclick; but.onclick = null; if (click) click.call(but);							 
+							    }
+						    }
+					       return false;
+					    } 
+					    else return true;
+				    }	 
+				    </script>
+				    <input title="Enter Value" onkeydown="return RadWindowprompt_detectenter('{0}', event, this);" type="text"  class="rwDialogInput" value="{2}" />
+			    </div>
+			    <div>
+				    <a onclick="$find('{0}').close(this.parentNode.parentNode.getElementsByTagName('input')[0].value);"				
+					    class="rwPopupButton" href="javascript:void(0);" ><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[OK]##</span></span></a>
+				    <a onclick="$find('{0}').close(null);" class="rwPopupButton"  href="javascript:void(0);"><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[Cancel]##</span></span></a>
+			    </div>
+		    </div>				       
+		</div><div id="ctl00_ContentPlaceHolder1_RadWindowManager1_confirmtemplate" style="display:none;">
+		<div class="rwDialogPopup radconfirm">			
+			<div class="rwDialogText">
+			{1}				
+			</div>						
+			<div>
+				<a onclick="$find('{0}').close(true);"  class="rwPopupButton" href="javascript:void(0);" ><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[OK]##</span></span></a>
+				<a onclick="$find('{0}').close(false);" class="rwPopupButton"  href="javascript:void(0);"><span class="rwOuterSpan"><span class="rwInnerSpan">##LOC[Cancel]##</span></span></a>
+			</div>
+		</div>		
+		</div><input id="ctl00_ContentPlaceHolder1_RadWindowManager1_ClientState" name="ctl00_ContentPlaceHolder1_RadWindowManager1_ClientState" type="hidden" />
+</font></div>
+    
+    <!-- govDelivery Signup Form -->    
+    <h1 class="sr-only">Meeting Calendar</h1>
+    <div id="mainContent">
+                 
+    </div>         
+
+    <!-- Upcoming Meetings -->
+    
+   <!-- Upcoming Meetings -->
+
+     <div id="ctl00_ContentPlaceHolder1_tabCalendar" class="RadTabStrip RadTabStrip_Tacoma RadTabStripTop_Tacoma RadTabStripTop"><font face="Tahoma" size="2">
+	<div class="rtsLevel rtsLevel1">
+		<ul class="rtsUL"><li class="rtsLI rtsFirst"><a class="rtsLink rtsSelected" href="#"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">List View</span></span></span></a></li><li class="rtsLI rtsLast"><a class="rtsLink rtsAfter" href="#"><span class="rtsOut"><span class="rtsIn"><span class="rtsTxt">Calendar View</span></span></span></a></li></ul>
+	</div><input id="ctl00_ContentPlaceHolder1_tabCalendar_ClientState" name="ctl00_ContentPlaceHolder1_tabCalendar_ClientState" type="hidden" />
+</font></div>
+
+    <div id="ctl00_ContentPlaceHolder1_MultiPageCalendar" class="RadMultiPage RadMultiPage_Default">
+	<div id="ctl00_ContentPlaceHolder1_pageGrid" class="rmpView">
+		
+            <div id="ctl00_ContentPlaceHolder1_panMain">
+			
+                <table id="ctl00_ContentPlaceHolder1_Calendar1" width="100%" cellpadding="2" cellspacing="2" border="0" style="margin-top: 10px;">
+				<tr align="left">
+					<td style="width: 50px;">
+                            <span id="ctl00_ContentPlaceHolder1_lblSearch"><font face="Tahoma" color="Navy" size="2">Search:</font></span>
+                        </td>
+					<td id="ctl00_ContentPlaceHolder1_tdSearch" style="width: 175px;" width="175">
+                            <input name="ctl00$ContentPlaceHolder1$txtSearch" type="text" maxlength="1000" id="ctl00_ContentPlaceHolder1_txtSearch" title="Search Text Box" data-tooltip="Search Text Box" alt="Search" onkeypress="return press(event)" />
+                        </td>
+					<td id="ctl00_ContentPlaceHolder1_tdYears" style="width: 175px;" width="175">
+                            <div id="ctl00_ContentPlaceHolder1_lstYears" class="RadComboBox RadComboBox_Tacoma" data-tooltip="Date Range Dropdown List" alt="Years"><font face="Tahoma" size="2">
+						<table summary="combobox" border="0" style="border-width:0;border-collapse:collapse;width:100%">
+							<tr class="rcbReadOnly">
+								<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$lstYears" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_lstYears_Input" value="Next Year" readonly="readonly" title="Date Range Dropdown List" style="font-family:Tahoma;font-size:10pt;" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_lstYears_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+							</tr>
+						</table><div class="rcbSlide" style="z-index:10000;display:none;"><div id="ctl00_ContentPlaceHolder1_lstYears_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Tacoma "><div class="rcbScroll rcbWidth"><ul class="rcbList"><li class="rcbItem">All Years</li><li class="rcbItem">2026</li><li class="rcbItem">2025</li><li class="rcbItem">2024</li><li class="rcbItem">2023</li><li class="rcbItem">2022</li><li class="rcbItem">2021</li><li class="rcbItem">2020</li><li class="rcbItem">2019</li><li class="rcbItem">2018</li><li class="rcbItem">2017</li><li class="rcbItem">2016</li><li class="rcbItem">2015</li><li class="rcbItem">2014</li><li class="rcbItem">2013</li><li class="rcbItem">Last Year</li><li class="rcbItem">Last Month</li><li class="rcbItem">Last Week</li><li class="rcbItem">This Year</li><li class="rcbItem">This Month</li><li class="rcbItem">This Week</li><li class="rcbItem">Today</li><li class="rcbItem">Next Week</li><li class="rcbItem">Next Month</li><li class="rcbItem">Next Year</li></ul></div></div></div><input id="ctl00_ContentPlaceHolder1_lstYears_ClientState" name="ctl00_ContentPlaceHolder1_lstYears_ClientState" type="hidden" />
+					</font></div>
+                        </td>
+					<td id="ctl00_ContentPlaceHolder1_tdBodies" style="width: 305px;" width="305">
+                            <div id="ctl00_ContentPlaceHolder1_lstBodies" class="RadComboBox RadComboBox_Tacoma" data-tooltip="Departments Dropdown List"><font face="Tahoma" size="2">
+						<table summary="combobox" border="0" style="border-width:0;border-collapse:collapse;width:100%">
+							<tr class="rcbReadOnly">
+								<td class="rcbInputCell rcbInputCellLeft" style="width:100%;"><input name="ctl00$ContentPlaceHolder1$lstBodies" type="text" class="rcbInput radPreventDecorate" id="ctl00_ContentPlaceHolder1_lstBodies_Input" value="All Board of Supervisors Agenda/Addendum" readonly="readonly" title="Departments Dropdown List" style="font-family:Tahoma;font-size:10pt;" /></td><td class="rcbArrowCell rcbArrowCellRight"><a id="ctl00_ContentPlaceHolder1_lstBodies_Arrow" style="overflow: hidden;display: block;position: relative;outline: none;">select</a></td>
+							</tr>
+						</table><div class="rcbSlide" style="z-index:10000;display:none;"><div id="ctl00_ContentPlaceHolder1_lstBodies_DropDown" class="RadComboBoxDropDown RadComboBoxDropDown_Tacoma "><div class="rcbScroll rcbWidth"><ul class="rcbList"><li class="rcbItem">All Board of Supervisors Agenda/Addendum</li><li class="rcbItem">Board of Supervisors</li><li class="rcbItem">Board of Supervisors Addendum</li></ul></div></div></div><input id="ctl00_ContentPlaceHolder1_lstBodies_ClientState" name="ctl00_ContentPlaceHolder1_lstBodies_ClientState" type="hidden" />
+					</font></div>
+                        </td>
+					<td id="ctl00_ContentPlaceHolder1_tdOptions" style="width: 245px;">
+                            <span id="ctl00_ContentPlaceHolder1_chkOptions" title="basic info=name, date, time, location, comments; notes=agenda notes, minutes (action) notes; captions=closed caption for videos based on year; searching captions for ALL Years is not allowed." data-tooltip="basic info=name, date, time, location, comments; notes=agenda notes, minutes (action) notes; captions=closed caption for videos based on year; searching captions for ALL Years is not allowed." style="display:inline-block;"><font face="Tahoma" color="#626262" size="1"><input id="ctl00_ContentPlaceHolder1_chkOptions_0" type="checkbox" name="ctl00$ContentPlaceHolder1$chkOptions$0" /><label for="ctl00_ContentPlaceHolder1_chkOptions_0">notes</label><input id="ctl00_ContentPlaceHolder1_chkOptions_1" type="checkbox" name="ctl00$ContentPlaceHolder1$chkOptions$1" /><label for="ctl00_ContentPlaceHolder1_chkOptions_1">closed captions</label></font></span>
+                        </td>
+					<td>&nbsp;
+                        </td>
+				</tr>
+				<tr>
+					<td colspan="6">
+                            
+                        </td>
+				</tr>
+			</table>
+			
+                <table id="ctl00_ContentPlaceHolder1_Calendar2" border="0" cellpadding="4" cellspacing="4" width="100%">
+				<tr>
+					<td>
+                            <input type="submit" name="ctl00$ContentPlaceHolder1$btnSearch" value="Search Board of Supervisors meeting" id="ctl00_ContentPlaceHolder1_btnSearch" />
+                            <a id="ctl00_ContentPlaceHolder1_hypHelp" title="Help Link" data-tooltip="Help Link" href="Help.aspx?M=C" target="_blank"><font face="Tahoma" color="#626262" size="2">Help</font></a>
+                        </td>
+				</tr>
+			</table>
+			
+                
+                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <td>
+                            <div tabindex="0" id="ctl00_ContentPlaceHolder1_menuCalendar" class="RadMenu RadMenu_Tacoma" role="menubar" style="z-index:3500;"><font face="Tahoma" size="2">
+				<ul class="rmRootGroup rmHorizontal">
+					<li class="rmItem rmFirst rmLast"><a class="rmLink rmRootLink rmDisabled" href="#"><font color="Black"><span class="rmText">0 records</span></font></a></li>
+				</ul><input id="ctl00_ContentPlaceHolder1_menuCalendar_ClientState" name="ctl00_ContentPlaceHolder1_menuCalendar_ClientState" type="hidden" />
+			</font></div>
+                        </td>
+                    </tr>
+                </table>
+                <!--PAGEWATCH CODE=""-->
+                <div id="ctl00_ContentPlaceHolder1_divGrid" style="width: 100%;">
+                    <div class="RadAjaxPanel" id="ctl00_ContentPlaceHolder1_ctl00_ContentPlaceHolder1_gridCalendarPanel">
+				<div id="ctl00_ContentPlaceHolder1_gridCalendar" class="RadGrid RadGrid_Tacoma" style="font-family:Tahoma;font-size:10pt;width:99.5%;">
+
+				<table class="rgMasterTable" border="0" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00" frame="void" width="100%" style="table-layout:auto;empty-cells:show;">
+					<colgroup>
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+		<col  />
+	</colgroup>
+<thead>
+						<tr>
+							<th scope="col" class="rgHeader" valign="middle" abbr="200px" nowrap="nowrap" style="text-align:left;vertical-align:middle;"><a onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;BodyName&#39;); return false;" title="Click here to sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl04&#39;,&#39;&#39;)">Name</a><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl05" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;BodyName&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl05&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__BodyName__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl06" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;BodyName&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl06&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__BodyName__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader rgSorted" valign="middle" abbr="65px" nowrap="nowrap" style="text-align:left;vertical-align:middle;"><a onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingStartDate&#39;); return false;" title="Click here to sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl07&#39;,&#39;&#39;)">Meeting Date</a>&nbsp;<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl08" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingStartDate&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl08&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl09" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingStartDate&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl09&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingDate__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl10" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingStartDate&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl10&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingDate__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;"><img title="Export to Calendar" src="Images/ical.gif" alt="Export to Calendar" border="0" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl12" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl12&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__ExportToCalendar__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl13" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl13&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__ExportToCalendar__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="85px" nowrap="nowrap" style="text-align:left;vertical-align:middle;"><a onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingTime2&#39;); return false;" title="Click here to sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl24&#39;,&#39;&#39;)">Meeting Time</a><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl25" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingTime2&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl25&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingTime__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl26" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingTime2&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl26&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingTime__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" nowrap="nowrap" style="text-align:left;vertical-align:middle;"><a onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingLocation&#39;); return false;" title="Click here to sort" href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl27&#39;,&#39;&#39;)">Meeting Location</a><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl28" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingLocation&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl28&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingLocation__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl29" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;MeetingLocation&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl29&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingLocation__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;">Meeting Details<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl39" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl39&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingDetails__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl40" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl40&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__MeetingDetails__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;">Agenda<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl43" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl43&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__Agenda__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl44" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl44&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__Agenda__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;">Accessible Agenda<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl45" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl45&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__AccessibleAgendaHTML__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl46" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl46&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__AccessibleAgendaHTML__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;">Summaries<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl49" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl49&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__Minutes__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl50" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl50&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__Minutes__SortDesc" style="display:none;" /></th><th scope="col" class="rgHeader" valign="middle" abbr="0px" nowrap="nowrap" style="text-align:left;vertical-align:middle;">Accessible Summaries<input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl51" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl51&#39;,&#39;&#39;)" title="Sorted asc" class="rgSortAsc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__AccessibleMinutesHTML__SortAsc" style="display:none;" /><input type="button" name="ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl52" value=" " onclick="Telerik.Web.UI.Grid.Sort($find(&#39;ctl00_ContentPlaceHolder1_gridCalendar_ctl00&#39;), &#39;&#39;); return false;__doPostBack(&#39;ctl00$ContentPlaceHolder1$gridCalendar$ctl00$ctl02$ctl01$ctl52&#39;,&#39;&#39;)" title="Sorted desc" class="rgSortDesc" id="ctl00_ContentPlaceHolder1_gridCalendar_ctl00__AccessibleMinutesHTML__SortDesc" style="display:none;" /></th>
+						</tr>
+					</thead><tbody>
+					<tr class="rgNoRecords">
+						<td colspan="10" style="text-align:left;"><div>No records were found.</div></td>
+					</tr>
+					</tbody>
+
+				</table><div id="ctl00_ContentPlaceHolder1_gridCalendar_SharedCalendarContainer" style="display:none;">
+
+				</div><input id="ctl00_ContentPlaceHolder1_gridCalendar_ClientState" name="ctl00_ContentPlaceHolder1_gridCalendar_ClientState" type="hidden" />	</div>
+
+			</div>
+                </div>
+                <!--/PAGEWATCH CODE=""-->
+            
+		</div>
+        
+	</div><div id="ctl00_ContentPlaceHolder1_pageScheduler" class="rmpView rmpHidden">
+		
+            <style type="text/css">
+                .RadScheduler .rsMonthView .rsWrap, .RadScheduler .rsMonthView .rsApt, .RadScheduler .rsMonthView .rsAptOut, .RadScheduler .rsMonthView .rsAptIn, .RadScheduler .rsMonthView .rsAptMid, .RadScheduler .rsMonthView .rsAptContent {
+                    position: static !important;
+                    height: auto !important;
+                }
+
+                .RadScheduler .rsMonthView .rsWrap {
+                    overflow: hidden;
+                    font-size: 13px;
+                    line-height: 0;
+                }
+                
+                .RadScheduler .rsHeader .rsToday {
+                    font-style: italic;
+                    text-decoration: underline;
+                }
+
+                .RadScheduler .rsMonthView .rsLastWrap {
+                    height: 16px !important;
+                }
+
+                .RadScheduler .rsMonthView .rsAptContent {
+                    position: relative !important;
+                    border-top: 0;
+                    border-bottom: 0;
+                    left: 0;
+                    top: 0;
+                }
+
+                * html .RadScheduler .rsMonthView .rsAptIn {
+                    border-width: 0 1px;
+                    top: 0;
+                    margin-left: -1px;
+                    margin-right: -1px;
+                }
+
+                * html .RadScheduler .rsMonthView .rsAptMid {
+                    top: 0;
+                    left: 1px;
+                    margin: 0 1px;
+                    border-width: 1px 0;
+                }
+            </style>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </table>
+            <div id="ctl00_ContentPlaceHolder1_txtDateFilter_wrapper" class="RadPicker RadPicker_Default" style="display:inline-block;width:160px;">
+			<input style="visibility:hidden;display:block;float:right;margin:0 0 -1px -1px;width:1px;height:1px;overflow:hidden;border:0;padding:0;" id="ctl00_ContentPlaceHolder1_txtDateFilter" name="ctl00$ContentPlaceHolder1$txtDateFilter" type="text" class="rdfd_ radPreventDecorate" value="" title="Visually hidden input created for functionality purposes." /><table cellspacing="0" class="rcTable rcSingle" summary="Table holding date picker control for selection of dates." style="width:100%;">
+				<caption style="display:none;">
+					RadDatePicker
+				</caption><thead style="display:none;">
+					<tr>
+						<th scope="col">RadDatePicker</th>
+					</tr>
+				</thead><tbody>
+					<tr>
+						<td class="rcInputCell" style="width:100%;"><span id="ctl00_ContentPlaceHolder1_txtDateFilter_dateInput_wrapper" title="Filter by Date" class="riSingle RadInput RadInput_Default" style="display:block;width:100%;"><input id="ctl00_ContentPlaceHolder1_txtDateFilter_dateInput" name="ctl00$ContentPlaceHolder1$txtDateFilter$dateInput" class="riTextBox riEmpty" title="Filter by Date" value="MM/DD/YYYY" type="text" /><input id="ctl00_ContentPlaceHolder1_txtDateFilter_dateInput_ClientState" name="ctl00_ContentPlaceHolder1_txtDateFilter_dateInput_ClientState" type="hidden" /></span></td><td><a title="Open the calendar popup." href="#" id="ctl00_ContentPlaceHolder1_txtDateFilter_popupButton" class="rcCalPopup" EnableAriaSupport="true">Open the calendar popup.</a><div id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_wrapper" style="display:none;">
+							<table id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar" cellspacing="0" class="RadCalendar RadCalendar_Default" border="0">
+								<caption>
+									<span style='display:none;'>Calendar</span>
+								</caption><thead>
+									<tr>
+										<td class="rcTitlebar"><table cellspacing="0" border="0">
+											<caption>
+												<span style='display:none;'>Title and navigation</span>
+											</caption><thead>
+												<tr style="display:none;">
+													<th scope="col">Title and navigation</th>
+												</tr>
+											</thead><tbody>
+	<tr>
+		<td><a id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_FNP" class="t-button rcFastPrev" title="&lt;&lt;" href="#">&lt;&lt;</a></td><td><a id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_NP" class="t-button rcPrev" title="&lt;" href="#">&lt;</a></td><td id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Title" class="rcTitle">August 2026</td><td><a id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_NN" class="t-button rcNext" title=">" href="#">&gt;</a></td><td><a id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_FNN" class="t-button rcFastNext" title=">>" href="#">&lt;&lt;</a></td>
+	</tr>
+</tbody>
+										</table></td>
+									</tr>
+								</thead><tbody>
+	<tr>
+		<td class="rcMain"><table id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top" class="rcMainTable" cellspacing="0" border="0">
+	<caption>
+		<span style='display:none;'>August 2026</span>
+	</caption><thead>
+		<tr class="rcWeek">
+			<th class="rcViewSel" scope="col">&nbsp;</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_1" title="Sunday" scope="col">S</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_2" title="Monday" scope="col">M</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_3" title="Tuesday" scope="col">T</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_4" title="Wednesday" scope="col">W</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_5" title="Thursday" scope="col">T</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_6" title="Friday" scope="col">F</th><th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_cs_7" title="Saturday" scope="col">S</th>
+		</tr>
+	</thead><tbody>
+		<tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_1" scope="row">31</th><td class="rcOtherMonth" title="Sunday, July 26, 2026"><a href="#">26</a></td><td class="rcOtherMonth" title="Monday, July 27, 2026"><a href="#">27</a></td><td class="rcOtherMonth" title="Tuesday, July 28, 2026"><a href="#">28</a></td><td class="rcOtherMonth" title="Wednesday, July 29, 2026"><a href="#">29</a></td><td class="rcOtherMonth" title="Thursday, July 30, 2026"><a href="#">30</a></td><td class="rcOtherMonth" title="Friday, July 31, 2026"><a href="#">31</a></td><td class="rcWeekend" title="Saturday, August 01, 2026"><a href="#">1</a></td>
+		</tr><tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_2" scope="row">32</th><td class="rcWeekend" title="Sunday, August 02, 2026"><a href="#">2</a></td><td title="Monday, August 03, 2026"><a href="#">3</a></td><td title="Tuesday, August 04, 2026"><a href="#">4</a></td><td title="Wednesday, August 05, 2026"><a href="#">5</a></td><td title="Thursday, August 06, 2026"><a href="#">6</a></td><td title="Friday, August 07, 2026"><a href="#">7</a></td><td class="rcWeekend" title="Saturday, August 08, 2026"><a href="#">8</a></td>
+		</tr><tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_3" scope="row">33</th><td class="rcWeekend" title="Sunday, August 09, 2026"><a href="#">9</a></td><td title="Monday, August 10, 2026"><a href="#">10</a></td><td title="Tuesday, August 11, 2026"><a href="#">11</a></td><td title="Wednesday, August 12, 2026"><a href="#">12</a></td><td title="Thursday, August 13, 2026"><a href="#">13</a></td><td title="Friday, August 14, 2026"><a href="#">14</a></td><td class="rcWeekend" title="Saturday, August 15, 2026"><a href="#">15</a></td>
+		</tr><tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_4" scope="row">34</th><td class="rcWeekend" title="Sunday, August 16, 2026"><a href="#">16</a></td><td title="Monday, August 17, 2026"><a href="#">17</a></td><td title="Tuesday, August 18, 2026"><a href="#">18</a></td><td title="Wednesday, August 19, 2026"><a href="#">19</a></td><td title="Thursday, August 20, 2026"><a href="#">20</a></td><td title="Friday, August 21, 2026"><a href="#">21</a></td><td class="rcWeekend" title="Saturday, August 22, 2026"><a href="#">22</a></td>
+		</tr><tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_5" scope="row">35</th><td class="rcWeekend" title="Sunday, August 23, 2026"><a href="#">23</a></td><td title="Monday, August 24, 2026"><a href="#">24</a></td><td title="Tuesday, August 25, 2026"><a href="#">25</a></td><td title="Wednesday, August 26, 2026"><a href="#">26</a></td><td title="Thursday, August 27, 2026"><a href="#">27</a></td><td title="Friday, August 28, 2026"><a href="#">28</a></td><td class="rcWeekend" title="Saturday, August 29, 2026"><a href="#">29</a></td>
+		</tr><tr class="rcRow">
+			<th id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top_rs_6" scope="row">36</th><td class="rcWeekend" title="Sunday, August 30, 2026"><a href="#">30</a></td><td title="Monday, August 31, 2026"><a href="#">31</a></td><td class="rcOtherMonth" title="Tuesday, September 01, 2026"><a href="#">1</a></td><td class="rcOtherMonth" title="Wednesday, September 02, 2026"><a href="#">2</a></td><td class="rcOtherMonth" title="Thursday, September 03, 2026"><a href="#">3</a></td><td class="rcOtherMonth" title="Friday, September 04, 2026"><a href="#">4</a></td><td class="rcOtherMonth" title="Saturday, September 05, 2026"><a href="#">5</a></td>
+		</tr>
+	</tbody>
+</table></td>
+	</tr>
+</tbody>
+							</table><input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_SD" id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_SD" value="[]" /><input type="hidden" name="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_AD" id="ctl00_ContentPlaceHolder1_txtDateFilter_calendar_AD" value="[[1980,1,1],[2099,12,30],[2026,8,28]]" />
+						</div></td>
+					</tr>
+				</tbody>
+			</table><input id="ctl00_ContentPlaceHolder1_txtDateFilter_ClientState" name="ctl00_ContentPlaceHolder1_txtDateFilter_ClientState" type="hidden" />
+		</div>
+            <div class="RadAjaxPanel" id="ctl00_ContentPlaceHolder1_ctl00_ContentPlaceHolder1_RadScheduler1Panel">
+			<div id="ctl00_ContentPlaceHolder1_RadScheduler1" class="RadScheduler RadScheduler_Tacoma" style="overflow-y:visible;"><font face="Tahoma" size="2">
+				<div class="rsTopWrap rsOverflowExpand">
+					<div class="rsHeader">
+						<p><a class="rsPrevDay" href="#">previous day</a><a class="rsNextDay" href="#">next day</a><em><a class="rsToday" href="#">today</a></em></p><ul>
+							<li class=" rsFirst"><a href="#" class="rsHeaderDay"><span>Day</span></a></li><li><a href="#" class="rsHeaderWeek"><span>Week</span></a></li><li class="rsSelected"><em class="rsHeaderMonth">Month</em></li><li class=" rsLast"><a href="#" class="rsHeaderTimeline"><span>Timeline</span></a></li>
+						</ul><h2>
+							Aug, 2026
+						</h2>
+					</div><div class="rsContent rsMonthView">
+						<table width="100%">
+							<tr>
+								<td class="rsHorizontalHeaderWrapper"><div>
+									<div class="rsInnerFix" style="overflow:hidden;">
+										<table class="rsHorizontalHeaderTable" style="height:25px;width:100%;">
+											<tr>
+												<th><div>
+													Mon
+												</div></th><th><div>
+													Tue
+												</div></th><th><div>
+													Wed
+												</div></th><th><div>
+													Thu
+												</div></th><th><div>
+													Fri
+												</div></th>
+											</tr>
+										</table>
+									</div>
+								</div></td>
+							</tr><tr>
+								<td class="rsContentWrapper"><div class="rsContentScrollArea">
+									<table class="rsContentTable" style="table-layout:fixed;width:100%;">
+										<tr class="rsRow rsFirstRow rsFirstRow rsFirstRow rsFirstRow rsFirstRow">
+											<td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-07-27" title="7/27/2026" class="rsDateHeader">27</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-07-28" title="7/28/2026" class="rsDateHeader">28</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-07-29" title="7/29/2026" class="rsDateHeader">29</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-07-30" title="7/30/2026" class="rsDateHeader">30</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-07-31" title="7/31/2026" class="rsDateHeader">31</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr><tr class="rsRow">
+											<td><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-03" title="8/3/2026" class="rsDateHeader">3</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-04" title="8/4/2026" class="rsDateHeader">4</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-05" title="8/5/2026" class="rsDateHeader">5</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-06" title="8/6/2026" class="rsDateHeader">6</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-07" title="8/7/2026" class="rsDateHeader">7</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr><tr class="rsRow">
+											<td><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-10" title="8/10/2026" class="rsDateHeader">10</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-11" title="8/11/2026" class="rsDateHeader">11</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-12" title="8/12/2026" class="rsDateHeader">12</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-13" title="8/13/2026" class="rsDateHeader">13</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-14" title="8/14/2026" class="rsDateHeader">14</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr><tr class="rsRow">
+											<td><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-17" title="8/17/2026" class="rsDateHeader">17</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-18" title="8/18/2026" class="rsDateHeader">18</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-19" title="8/19/2026" class="rsDateHeader">19</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-20" title="8/20/2026" class="rsDateHeader">20</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-21" title="8/21/2026" class="rsDateHeader">21</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr><tr class="rsRow">
+											<td><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-24" title="8/24/2026" class="rsDateHeader">24</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-25" title="8/25/2026" class="rsDateHeader">25</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-26" title="8/26/2026" class="rsDateHeader">26</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-27" title="8/27/2026" class="rsDateHeader">27</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell rsTodayCell"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-28" title="8/28/2026" class="rsDateHeader">28</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr><tr class="rsRow rsLastRow rsLastRow rsLastRow rsLastRow rsLastRow">
+											<td><div class="rsWrap rsDateWrap" style="z-index:5;height:25px;">
+												<div class="rsDateBox"><a href="#2026-08-31" title="8/31/2026" class="rsDateHeader">31</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:4;height:25px;">
+												<div class="rsDateBox"><a href="#2026-09-01" title="9/1/2026" class="rsDateHeader">1 Sep</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:3;height:25px;">
+												<div class="rsDateBox"><a href="#2026-09-02" title="9/2/2026" class="rsDateHeader">2</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:2;height:25px;">
+												<div class="rsDateBox"><a href="#2026-09-03" title="9/3/2026" class="rsDateHeader">3</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td><td class="rsLastCell rsOtherMonth"><div class="rsWrap rsDateWrap" style="z-index:1;height:25px;">
+												<div class="rsDateBox"><a href="#2026-09-04" title="9/4/2026" class="rsDateHeader">4</a></div>
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap" style="z-index:1;height:25px;">
+
+											</div><div class="rsWrap rsLastWrap" style="z-index:1;height:25px;">
+
+											</div></td>
+										</tr>
+									</table>
+								</div></td>
+							</tr>
+						</table>
+					</div>
+				</div><script type="text/javascript">
+					Telerik.Web.UI.RadScheduler._preInitialize("ctl00_ContentPlaceHolder1_RadScheduler1",0,0,2,false,1);
+				</script><input id="ctl00_ContentPlaceHolder1_RadScheduler1_ClientState" name="ctl00_ContentPlaceHolder1_RadScheduler1_ClientState" type="hidden" />
+			</font></div>
+		</div>
+            <script type="text/javascript">
+                Sys.Application.add_load(function () {
+                var $ = $telerik.$;
+                                
+                var headers = $('.rsVerticalHeaderTable th', scheduler);
+                                            
+                var scheduler = $get('');
+                $('.rsAllDayTable tr td:first-child', scheduler).each(function(index) {
+                    headers.eq(index).css('height', $(this).innerHeight() + 'px');
+                    });
+                });
+            </script>
+        
+	</div><input id="ctl00_ContentPlaceHolder1_MultiPageCalendar_ClientState" name="ctl00_ContentPlaceHolder1_MultiPageCalendar_ClientState" type="hidden" />
+</div>
+    
+    
+        <script type="text/javascript">
+            $.ajax("//pima.granicus.com/running_events.php", {
+                dataType: "jsonp",
+                success: function (data, textStatus, jqxhr) {
+                    for (var i = 0; i < data.length; i++) {
+                        var running_text = $(".videolink[data-event-id=" + data[i] + "]").attr('data-running-text');
+                        $(".videolink[data-event-id=" + data[i] + "]")
+                            .attr('href', 'https://' + 'pima.granicus.com' + '/mediaplayer.php?event_id=' + data[i])
+                        .attr('onclick', '').attr('target', '_blank')
+                        .html(running_text)
+                        .css('color', 'blue')
+                        .attr('style', 'videolink')
+                        .removeClass('videoFileNotAvailableLink');
+                }
+            }
+        });
+        </script>
+    
+
+                        <br />
+                        <br />
+                        <br />
+                    </div>
+                    </main>
+                </div>
+            </div>
+            <div id="ctl00_divRight">
+            </div>
+            <div id="ctl00_divBottom">
+                
+            </div>
+        </div>
+        
+        
+    
+
+<script type="text/javascript">
+//<![CDATA[
+window.__TsmHiddenField = $get('ctl00_RadScriptManager1_TSM');Telerik.Web.UI.RadScheduler._preInitialize("ctl00_ContentPlaceHolder1_RadScheduler1",0,0,2,false,1);Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadTabStrip, {"_selectedIndex":2,"_skin":"Tacoma","causesValidation":false,"clickSelectedTab":true,"clientStateFieldID":"ctl00_tabTop_ClientState","selectedIndexes":["2"],"tabData":[{"value":"Home"},{"value":"Legislation"},{"value":"Calendar"},{"value":"Departments"},{"value":"End"},{"value":"End2"}]}, null, null, $get("ctl00_tabTop"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxManager, {"_updatePanels":"","ajaxSettings":[{InitControlID : "ctl00_ContentPlaceHolder1_gridCalendar",UpdatedControls : [{ControlID:"ctl00_ContentPlaceHolder1_gridCalendar",PanelID:"ctl00_ContentPlaceHolder1_RadAjaxLoadingPanel1"}]},{InitControlID : "ctl00_ContentPlaceHolder1_RadScheduler1",UpdatedControls : [{ControlID:"ctl00_ContentPlaceHolder1_RadScheduler1",PanelID:"ctl00_ContentPlaceHolder1_RadAjaxLoadingPanel1"}]}],"clientEvents":{OnRequestStart:"",OnResponseEnd:""},"defaultLoadingPanelID":"","enableAJAX":true,"enableHistory":false,"links":[],"styles":[],"uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxManager1","updatePanelsRenderMode":0}, null, null, $get("ctl00_ContentPlaceHolder1_RadAjaxManager1"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadAjaxLoadingPanel, {"initialDelayTime":0,"isSticky":false,"minDisplayTime":0,"skin":"","uniqueID":"ctl00$ContentPlaceHolder1$RadAjaxLoadingPanel1","zIndex":90000}, null, null, $get("ctl00_ContentPlaceHolder1_RadAjaxLoadingPanel1"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadWindowManager, {"behaviors":44,"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadWindowManager1_ClientState","destroyOnClose":true,"enableAriaSupport":true,"formID":"aspnetForm","height":"600px","iconUrl":"","initialBehaviors":8,"minimizeIconUrl":"","name":"RadWindowManager1","shortcuts":"[[\u0027close\u0027,\u0027Esc\u0027]]","skin":"WebBlue","visibleStatusbar":false,"width":"800px","windowControls":"[]"}, null, null, $get("ctl00_ContentPlaceHolder1_RadWindowManager1"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadTabStrip, {"_autoPostBack":true,"_postBackOnClick":true,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$tabCalendar\u0027,\u0027arguments\u0027)","_selectedIndex":0,"_skin":"Tacoma","clientStateFieldID":"ctl00_ContentPlaceHolder1_tabCalendar_ClientState","multiPageID":"ctl00_ContentPlaceHolder1_MultiPageCalendar","selectedIndexes":["0"],"tabData":[{"value":"ListView","pageViewID":"ctl00_ContentPlaceHolder1_pageGrid"},{"value":"CalendarView","pageViewID":"ctl00_ContentPlaceHolder1_pageScheduler"}]}, null, null, $get("ctl00_ContentPlaceHolder1_tabCalendar"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":0,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$lstYears\u0027,\u0027arguments\u0027)","_skin":"Tacoma","_text":"Next Year","_uniqueId":"ctl00$ContentPlaceHolder1$lstYears","_value":"Next Year","attributes":{"data-tooltip":"Date Range Dropdown List","alt":"Years"},"clientStateFieldID":"ctl00_ContentPlaceHolder1_lstYears_ClientState","collapseAnimation":"{\"type\":12,\"duration\":100}","expandAnimation":"{\"duration\":100}","itemData":[{"value":"All"},{"value":"2026"},{"value":"2025"},{"value":"2024"},{"value":"2023"},{"value":"2022"},{"value":"2021"},{"value":"2020"},{"value":"2019"},{"value":"2018"},{"value":"2017"},{"value":"2016"},{"value":"2015"},{"value":"2014"},{"value":"2013"},{"value":"Last Year"},{"value":"Last Month"},{"value":"Last Week"},{"value":"This Year"},{"value":"This Month"},{"value":"This Week"},{"value":"Today"},{"value":"Next Week"},{"value":"Next Month"},{"value":"Next Year","selected":true}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","selectedIndex":24}, {"keyPressing":onKeyPressing}, null, $get("ctl00_ContentPlaceHolder1_lstYears"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadComboBox, {"_dropDownWidth":0,"_height":0,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$lstBodies\u0027,\u0027arguments\u0027)","_skin":"Tacoma","_text":"All Board of Supervisors Agenda/Addendum","_uniqueId":"ctl00$ContentPlaceHolder1$lstBodies","_value":"All","attributes":{"data-tooltip":"Departments Dropdown List"},"clientStateFieldID":"ctl00_ContentPlaceHolder1_lstBodies_ClientState","collapseAnimation":"{\"type\":12,\"duration\":100}","expandAnimation":"{\"duration\":100}","itemData":[{"value":"All","selected":true},{"value":"18461"},{"value":"19708"}],"localization":"{\"AllItemsCheckedString\":\"All items checked\",\"ItemsCheckedString\":\"items checked\",\"CheckAllString\":\"Check All\"}","selectedIndex":0}, {"keyPressing":onKeyPressing}, null, $get("ctl00_ContentPlaceHolder1_lstBodies"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadMenu, {"_childListElementCssClass":null,"_postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$menuCalendar\u0027,\u0027arguments\u0027)","_skin":"Tacoma","attributes":{"role":"menubar"},"clientStateFieldID":"ctl00_ContentPlaceHolder1_menuCalendar_ClientState","collapseAnimation":"{\"type\":12,\"duration\":200}","collapseDelay":50,"defaultGroupSettings":"{\"flow\":0,\"expandDirection\":0}","enableAriaSupport":true,"expandAnimation":"{\"duration\":450}","expandDelay":50,"itemData":[{"groupSettings":{"flow":0,"expandDirection":0},"attributes":{"role":"menuitem","aria-label":"0 records"},"postBack":0,"value":"Results","enabled":false}]}, null, null, $get("ctl00_ContentPlaceHolder1_menuCalendar"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadGrid, {"ClientID":"ctl00_ContentPlaceHolder1_gridCalendar","ClientSettings":{"AllowAutoScrollOnDragDrop":true,"AllowDragToGroup":true,"AllowKeyboardNavigation":true,"ShouldCreateRows":true,"ReorderColumnsOnClient":true,"DataBinding":{},"Selecting":{"CellSelectionMode":0,"AllowRowSelect":true,"EnableDragToSelectRows":true,"UseClientSelectColumnOnly":true},"Scrolling":{},"Resizing":{"AllowColumnResize":true},"ClientMessages":{"DragToGroupOrReorder":""},"KeyboardNavigationSettings":{"AllowActiveRowCycle":true,"EnableKeyboardShortcuts":true,"FocusKey":89,"InitInsertKey":73,"RebindKey":82,"ExitEditInsertModeKey":27,"UpdateInsertItemKey":13,"DeleteActiveRow":127,"ExpandDetailTableKey":39,"CollapseDetailTableKey":37,"MoveDownKey":40,"MoveUpKey":38,"SaveChangesKey":85,"CancelChangesKey":81},"Animation":{},"Virtualization":{}},"Skin":"Tacoma","SortingSettings":{"SortToolTip":"Click here to sort","SortedAscToolTip":"Sorted asc","SortedDescToolTip":"Sorted desc","SortedBackColor":{"R":0,"G":0,"B":0,"A":0,"IsKnownColor":false,"IsEmpty":true,"IsNamedColor":false,"IsSystemColor":false,"Name":"0"},"EnableSkinSortStyles":true,"ViewState":{}},"UniqueID":"ctl00$ContentPlaceHolder1$gridCalendar","ValidationSettings":{"EnableValidation":true,"ValidationGroup":"","CommandsToValidate":["PerformInsert","Update"]},"_activeRowIndex":"","_controlToFocus":"","_currentPageIndex":0,"_defaultDateTimeFormat":"M/d/yyyy h:mm:ss tt","_editIndexes":"[]","_embeddedSkin":false,"_freezeText":"Freeze","_gridTableViewsData":"[{\"ClientID\":\"ctl00_ContentPlaceHolder1_gridCalendar_ctl00\",\"UniqueID\":\"ctl00$ContentPlaceHolder1$gridCalendar$ctl00\",\"PageSize\":100,\"PageCount\":1,\"EditMode\":\"EditForms\",\"AllowPaging\":true,\"CurrentPageIndex\":0,\"VirtualItemCount\":0,\"AllowMultiColumnSorting\":false,\"AllowNaturalSort\":false,\"AllowFilteringByColumn\":false,\"PageButtonCount\":10,\"HasDetailTables\":false,\"HasMultiHeaders\":false,\"CheckListWebServicePath\":\"\",\"GroupLoadMode\":\"Server\",\"PagerAlwaysVisible\":false,\"IsItemInserted\":false,\"clientDataKeyNames\":[],\"hasDetailItemTemplate\":false,\"_dataBindTemplates\":false,\"_selectedItemStyle\":\"\",\"_selectedItemStyleClass\":\"rgSelectedRow\",\"_renderActiveItemStyle\":\"\",\"_renderActiveItemStyleClass\":\"rgActiveRow\",\"_columnsData\":[{\"UniqueName\":\"BodyName\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"SortExpression\":\"BodyName\",\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"MeetingDate\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"SortExpression\":\"MeetingStartDate\",\"DataTypeName\":\"System.DateTime\",\"DataField\":\"MeetingDate\",\"DataFormatString\":\"{0:M/d/yyyy}\",\"Display\":true},{\"UniqueName\":\"ExportToCalendar\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"MeetingTime\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"SortExpression\":\"MeetingTime2\",\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"MeetingLocation\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":true,\"ColumnType\":\"GridBoundColumn\",\"ColumnGroupName\":\"\",\"Editable\":true,\"SortExpression\":\"MeetingLocation\",\"DataTypeName\":\"System.String\",\"DataField\":\"MeetingLocation\",\"Display\":true},{\"UniqueName\":\"MeetingDetails\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"Agenda\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"AccessibleAgendaHTML\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"Minutes\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true},{\"UniqueName\":\"AccessibleMinutesHTML\",\"Resizable\":true,\"Reorderable\":true,\"Selectable\":true,\"Groupable\":false,\"ColumnType\":\"GridTemplateColumn\",\"ColumnGroupName\":\"\",\"Editable\":false,\"DataTypeName\":\"System.String\",\"DataField\":\"\",\"Display\":true}]}]","_masterClientID":"ctl00_ContentPlaceHolder1_gridCalendar_ctl00","_shouldFocusOnPage":false,"_unfreezeText":"Unfreeze","allowMultiRowSelection":true,"clientStateFieldID":"ctl00_ContentPlaceHolder1_gridCalendar_ClientState","renderMode":1}, {"command":RadGrid1_OnCommand,"filterMenuShowing":gridFilterMenuShowing,"gridCreated":RadGrid1_OnGridCreated}, null, $get("ctl00_ContentPlaceHolder1_gridCalendar"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadDateInput, {"_displayText":"MM/DD/YYYY","_focused":false,"_initialValueAsText":"","_postBackEventReferenceScript":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$txtDateFilter\u0027,\u0027\u0027)","_skin":"Default","_validationText":"","autoPostBack":true,"clientStateFieldID":"ctl00_ContentPlaceHolder1_txtDateFilter_dateInput_ClientState","dateFormat":"M/d/yyyy","dateFormatInfo":{"DayNames":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"MonthNames":["January","February","March","April","May","June","July","August","September","October","November","December",""],"AbbreviatedDayNames":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"AbbreviatedMonthNames":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""],"AMDesignator":"AM","PMDesignator":"PM","DateSeparator":"/","TimeSeparator":":","FirstDayOfWeek":0,"DateSlots":{"Day":1,"Year":2,"Month":0},"ShortYearCenturyEnd":2029,"TimeInputOnly":false,"MonthYearOnly":false},"displayDateFormat":"M/d/yyyy","emptyMessage":"MM/DD/YYYY","enabled":true,"incrementSettings":{InterceptArrowKeys:true,InterceptMouseWheel:true,Step:1},"styles":{HoveredStyle: ["width:100%;", "riTextBox riHover"],InvalidStyle: ["width:100%;", "riTextBox riError"],DisabledStyle: ["width:100%;", "riTextBox riDisabled"],FocusedStyle: ["width:100%;", "riTextBox riFocused"],EmptyMessageStyle: ["width:100%;", "riTextBox riEmpty"],ReadOnlyStyle: ["width:100%;", "riTextBox riRead"],EnabledStyle: ["width:100%;", "riTextBox riEnabled"]}}, null, null, $get("ctl00_ContentPlaceHolder1_txtDateFilter_dateInput"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadCalendar, {"_DayRenderChangedDays":{},"_FormatInfoArray":[["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],["January","February","March","April","May","June","July","August","September","October","November","December",""],["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec",""],"dddd, MMMM d, yyyy h:mm:ss tt","dddd, MMMM d, yyyy","h:mm:ss tt","MMMM d","ddd, dd MMM yyyy HH\u0027:\u0027mm\u0027:\u0027ss \u0027GMT\u0027","M/d/yyyy","h:mm tt","yyyy\u0027-\u0027MM\u0027-\u0027dd\u0027T\u0027HH\u0027:\u0027mm\u0027:\u0027ss","yyyy\u0027-\u0027MM\u0027-\u0027dd HH\u0027:\u0027mm\u0027:\u0027ss\u0027Z\u0027","MMMM yyyy","AM","PM","/",":",0],"_ViewRepeatableDays":{},"_ViewsHash":{"ctl00_ContentPlaceHolder1_txtDateFilter_calendar_Top" : [[2026,8,1], 1]},"_calendarWeekRule":0,"_culture":"en-US","_enableKeyboardNavigation":false,"_enableViewSelector":false,"_firstDayOfWeek":7,"_postBackCall":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$txtDateFilter$calendar\u0027,\u0027@@\u0027)","_rangeSelectionMode":0,"clientStateFieldID":"ctl00_ContentPlaceHolder1_txtDateFilter_calendar_ClientState","enableMultiSelect":false,"enabled":true,"monthYearNavigationSettings":["Today","OK","Cancel","Date is out of range.","False","True","300","1","300","1","False"],"skin":"Default","specialDaysArray":[],"stylesHash":{"DayStyle": ["", ""],"CalendarTableStyle": ["", "rcMainTable"],"OtherMonthDayStyle": ["", "rcOtherMonth"],"TitleStyle": ["", ""],"SelectedDayStyle": ["", "rcSelected"],"SelectorStyle": ["", ""],"DisabledDayStyle": ["", "rcDisabled"],"OutOfRangeDayStyle": ["", "rcOutOfRange"],"WeekendDayStyle": ["", "rcWeekend"],"DayOverStyle": ["", "rcHover"],"FastNavigationStyle": ["", "RadCalendarMonthView RadCalendarMonthView_Default"],"ViewSelectorStyle": ["", "rcViewSel"]},"useColumnHeadersAsSelectors":false,"useRowHeadersAsSelectors":false}, null, null, $get("ctl00_ContentPlaceHolder1_txtDateFilter_calendar"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadDatePicker, {"_PopupButtonSettings":{ ResolvedImageUrl : "", ResolvedHoverImageUrl : ""},"_animationSettings":{ShowAnimationDuration:300,ShowAnimationType:1,HideAnimationDuration:0,HideAnimationType:1},"_enableKeyboardNavigation":false,"_popupControlID":"ctl00_ContentPlaceHolder1_txtDateFilter_popupButton","clientStateFieldID":"ctl00_ContentPlaceHolder1_txtDateFilter_ClientState","focusedDate":"2026-08-28-00-00-00"}, {"popupOpening":RadDatePicker1_PopupOpening}, {"calendar":"ctl00_ContentPlaceHolder1_txtDateFilter_calendar","dateInput":"ctl00_ContentPlaceHolder1_txtDateFilter_dateInput"}, $get("ctl00_ContentPlaceHolder1_txtDateFilter"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadScheduler, {"_enableDescriptionField":true,"_timeZoneId":"UTC","_uniqueId":"ctl00$ContentPlaceHolder1$RadScheduler1","agendaViewSettings":"{\"resourceMarkerType\":0}","appointments":"[]","attributes":{},"clientStateFieldID":"ctl00_ContentPlaceHolder1_RadScheduler1_ClientState","customAttributeNames":["MeetingID","MeetingGUID","BodyName2","MeetingAgendaStatusID","BodyLegacyID","MeetingAgendaStatus","MeetingMinutesStatus","MeetingComment","MeetingLocation","BodyName"],"dayViewSettings":"{\"dayStartTime\":25200000,\"dayEndTime\":75600000,\"workDayStartTime\":25200000,\"workDayEndTime\":75600000,\"enableExactTimeRendering\":true}","firstDayOfWeek":1,"firstDayStart":"2026/07/27 00:00","lastDayOfWeek":5,"localization":"{\"AllDay\":\"all day\",\"Show24Hours\":\"Show 24 hours...\",\"ShowBusinessHours\":\"Show business hours...\",\"Save\":\"Save\",\"Cancel\":\"Cancel\",\"Delete\":\"Delete\",\"ShowAdvancedForm\":\"Options\",\"ShowMore\":\"more...\",\"AdvancedReset\":\"reset exceptions\",\"AdvancedWorking\":\"Working...\",\"AdvancedDone\":\"Done\",\"AdvancedNewAppointment\":\"New Appointment\",\"AdvancedEditAppointment\":\"Edit Appointment\",\"AdvancedClose\":\"Close\",\"Reminder\":\"Reminder\",\"Reminders\":\"Reminders\",\"ConfirmRecurrenceEditTitle\":\"Editing a recurring appointment\",\"ConfirmRecurrenceEditOccurrence\":\"Edit only this occurrence.\",\"ConfirmRecurrenceEditSeries\":\"Edit the series.\",\"ConfirmRecurrenceResizeTitle\":\"Resizing a recurring appointment\",\"ConfirmRecurrenceResizeOccurrence\":\"Resize only this occurrence.\",\"ConfirmRecurrenceResizeSeries\":\"Resize the series.\",\"ConfirmRecurrenceDeleteTitle\":\"Deleting a recurring appointment\",\"ConfirmRecurrenceDeleteOccurrence\":\"Delete only this occurrence.\",\"ConfirmRecurrenceDeleteSeries\":\"Delete the series.\",\"ConfirmDeleteTitle\":\"Confirm delete\",\"ConfirmDeleteText\":\"Are you sure you want to delete this appointment?\",\"ConfirmRecurrenceMoveTitle\":\"Moving a recurring appointment\",\"ConfirmRecurrenceMoveOccurrence\":\"Move only this occurrence.\",\"ConfirmRecurrenceMoveSeries\":\"Move the series.\",\"ConfirmOK\":\"OK\",\"ConfirmCancel\":\"Cancel\",\"ConfirmResetExceptionsTitle\":\"Confirm reset exceptions\",\"ConfirmResetExceptionsText\":\"Do you want to delete all existing recurrence exceptions?\",\"ContextMenuEdit\":\"Edit\",\"ContextMenuDelete\":\"Delete\",\"ContextMenuAddAppointment\":\"New Appointment\",\"ContextMenuAddRecurringAppointment\":\"New Recurring Appointment\",\"ContextMenuGoToToday\":\"Go to today\"}","monthViewSettings":"{\"visibleAppointmentsPerDay\":10}","multiDayViewSettings":"{\"dayStartTime\":25200000,\"dayEndTime\":75600000,\"workDayStartTime\":25200000,\"workDayEndTime\":75600000,\"enableExactTimeRendering\":true}","overflowBehavior":2,"postBackReference":"__doPostBack(\u0027ctl00$ContentPlaceHolder1$RadScheduler1\u0027,\u0027arguments\u0027)","readOnly":true,"selectedDate":"2026/08/28 00:00","selectedView":2,"shouldPostbackOnClick":false,"shouldUseClientInlineEditForm":false,"timelineViewSettings":"{\"enableExactTimeRendering\":true}","weekViewSettings":"{\"dayStartTime\":25200000,\"dayEndTime\":75600000,\"workDayStartTime\":25200000,\"workDayEndTime\":75600000,\"enableExactTimeRendering\":true}"}, null, null, $get("ctl00_ContentPlaceHolder1_RadScheduler1"));
+});
+Sys.Application.add_init(function() {
+    $create(Telerik.Web.UI.RadMultiPage, {"clientStateFieldID":"ctl00_ContentPlaceHolder1_MultiPageCalendar_ClientState","pageViewData":[{"id":"ctl00_ContentPlaceHolder1_pageGrid"},{"id":"ctl00_ContentPlaceHolder1_pageScheduler"}],"selectedIndex":0}, null, null, $get("ctl00_ContentPlaceHolder1_MultiPageCalendar"));
+});
+//]]>
+</script>
+</form>
+</body>
+</html>

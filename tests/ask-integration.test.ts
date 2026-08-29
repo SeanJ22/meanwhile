@@ -97,11 +97,19 @@ test("BLOCKER 1: the grounded call is AWAITED on every ask, so nothing can bypas
    * Present-in-the-file is not enough: a call inside a branch nothing reaches
    * would satisfy a grep and answer no reader. The pin is on the unconditional
    * await that every non-navigation submission passes through.
+   *
+   * **UPDATED BY ASK-05 (2026-08-28).** This used to pin
+   * `await Promise.all([ askGrounded(question)` — and that `Promise.all` was
+   * itself the ASK-05 defect: the second entry in it was a SECOND engine whose
+   * reply rendered as a competing civic answer on the same screen. The
+   * property being asserted has not changed at all; the expression carrying it
+   * has, and the single await is the stronger form because there is no longer
+   * a second call to race.
    */
   const source = code(ASK_BOX);
   assert.match(
     source,
-    /await Promise\.all\(\[\s*askGrounded\(question\)/,
+    /const groundedAnswer = await askGrounded\(question\);/,
     "the grounded engine must be awaited on the main submission path",
   );
   /* And it must not be behind a condition that could skip it. */
@@ -109,37 +117,94 @@ test("BLOCKER 1: the grounded call is AWAITED on every ask, so nothing can bypas
     !/if \([^)]*\)\s*\{?\s*(?:const \w+ = )?await askGrounded/.test(source),
     "the grounded call must not sit behind a condition",
   );
+  /* Nor may a second engine come back beside it. */
+  assert.ok(
+    !/Promise\.all/.test(source),
+    "the map surface must not race a second answer against the grounded engine",
+  );
 });
 
-test("BLOCKER 1: the named-body docket is no longer answered by the old route on this surface", () => {
+test("ASK-05: the map surface calls exactly ONE engine for an answer", () => {
+  /*
+   * **THE BOUNDARY IS NO LONGER A FLAG A CLIENT DECLARES.**
+   *
+   * This test used to assert that the component sent `scope: "TOPIC_ONLY"` and
+   * that the server refused the named-body docket under it. That was a promise
+   * enforced by a conditional, and the conditional was the only thing standing
+   * between the reader and two answers.
+   *
+   * The component does not call `/api/ask/agenda` at all now, and the route
+   * has no topic or body-agenda branch left to gate. Both halves of the old
+   * assertion are replaced by their stronger forms: there is nothing to
+   * declare, and nothing to reach.
+   */
   const source = code(ASK_BOX);
-  /* The client declares the boundary... */
-  assert.match(
-    source,
-    /scope: "TOPIC_ONLY"/,
-    "the agenda rung must declare that it is topic-scoped",
+  assert.ok(
+    !/fetch\("\/api\/ask\/agenda"/.test(source),
+    "the map surface must not fetch a second civic answer",
   );
-  /* ...and the client no longer reads the superseded shape at all. */
+  assert.ok(
+    !/scope: "TOPIC_ONLY"/.test(source),
+    "a scope flag means the second answer is still reachable and merely declined",
+  );
   assert.ok(
     !/body-agenda/.test(source),
     "the map surface must not read the old body-agenda answer",
   );
 });
 
-test("BLOCKER 1: the SERVER enforces the boundary, so it is a rule and not a habit", () => {
+test("ASK-05: the SERVER holds no second civic answer, so the boundary is structural", () => {
   /*
-   * A discipline held only in a component drifts back the first time somebody
-   * edits the component. Under `scope: "TOPIC_ONLY"` the route REFUSES to
-   * answer a named body's docket, whatever any client sends.
+   * A discipline held in a conditional drifts back the first time somebody
+   * edits the conditional. The topic sweep and the named-body docket are not
+   * declined here — they are ABSENT, and what remains is a lookup by meeting
+   * id that binds nothing and makes no claim about which government a question
+   * is about.
    */
   const route = code(
     readFileSync(join(ROOT, "app", "api", "ask", "agenda", "route.ts"), "utf8"),
   );
-  assert.match(route, /const topicOnly = body\.scope === "TOPIC_ONLY"/);
+  for (const gone of [
+    "TOPIC_ONLY",
+    "bodyAgendaAnswer",
+    "bindNamedEntity",
+    "asksForBodyAgenda",
+    "searchAgendas",
+    "agendaTopicFor",
+    "namedEntity",
+  ]) {
+    assert.ok(
+      !route.includes(gone),
+      `${gone} is still reachable in /api/ask/agenda — the second answer has not actually left`,
+    );
+  }
+  /* And the one thing it still does is declared rather than inline. */
+  assert.match(route, /export interface AgendaMeetingReply/);
+  assert.match(route, /const reply: AgendaMeetingReply = \{/);
+});
+
+test("ASK-05: the topic sweep survived the move, with its scope and its denominators", () => {
+  /*
+   * **DELETING THE SECOND ANSWER MUST NOT DELETE THE CAPABILITY.** *"Is there
+   * a data centre coming?"* is a real question with a real denominator, and
+   * the risk in this refactor was always that removing the surface removed the
+   * answer with it. The sweep now lives in one module, emits into the one
+   * pack, and narrows to a bound body rather than sweeping the reader's whole
+   * area under an answer about one government.
+   */
+  const sweep = code(
+    readFileSync(join(ROOT, "lib", "ask", "agenda-topic.ts"), "utf8"),
+  );
+  assert.match(sweep, /kind: "AGENDA_MENTION"/, "hits enter the ONE evidence pack");
+  assert.match(sweep, /agendasSweptForTopic/, "the denominator survives as a number");
+  assert.match(sweep, /agendasHeldButUnreadable/, "unreadable is still its own fact");
+
+  const route = code(GROUNDED_ROUTE);
+  assert.match(route, /agendaTopicEvidence\(\{/, "the one engine runs the sweep");
   assert.match(
     route,
-    /if \(!topicOnly && namedBody\.kind === "BOUND" && asksForBodyAgenda\(question\)\)/,
-    "the body-agenda branch must be gated on the declared scope",
+    /subject\?\.kind === "BODY"\s*\?\s*\{ meetings: meetings\.filter/,
+    "a bound body must NARROW the sweep, not merely coexist with it",
   );
 });
 

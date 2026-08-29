@@ -1,6 +1,8 @@
 "use client";
 
 import { TIER_LABEL } from "@/lib/ocd/tiers";
+import { useResolvedLocation } from "@/hooks/use-resolved-location";
+import { browsingSubject } from "@/lib/state/resolved-location";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { TOP_OFFICES_GAP, runsSomething, topOfficesFor,
@@ -25,6 +27,78 @@ import {
  * a division. A county or school district shows the honest absence instead,
  * because that is tier 3 and it has not been built.
  */
+
+/**
+ * **WGH-15 (2026-08-28) — THIS CARD SAYS WHAT IT IS ABOUT, AND IT IS NOT THE
+ * READER.**
+ *
+ * The reported screen: *"Set to ... State House District 17"* on the
+ * who-governs card, and *State House District 19* on this one, at the same
+ * moment. **Both were correct.** The two stores have always been disjoint —
+ * tapping a district dispatches `select/district` and `district/pick` and
+ * nothing else, and the who-governs card reads only the zip and the session
+ * address. Selecting a district has never written where the reader lives and
+ * still does not.
+ *
+ * So there was nothing to untangle. What there was, was **two panels showing
+ * two district numbers with nothing on either saying which question it was
+ * answering**, which a reader reads as one product contradicting itself.
+ *
+ * A reader may live in House 17 and inspect House 21 for an hour. That is the
+ * map working. This line is what makes it legible: the card names its subject,
+ * and — where the reader's own address can settle it — says how their home
+ * stands relative to it.
+ *
+ * **Three sentences, because there are three states and they are not the same
+ * fact:**
+ *
+ * - `CONFIRMED`        their address is inside this district. Say so.
+ * - `ELSEWHERE_IN_ZIP` their address settled this level and named another
+ *                      district. This is a fact about THEIR STREET, not a gap
+ *                      in what we hold — we hold this district in full.
+ * - `UNSETTLED`        we have not been told enough. Says so about US, and
+ *                      never "this is not your district", which would be an
+ *                      absence asserted as a fact.
+ *
+ * It reads from a `BROWSING` location, which settles nothing by construction,
+ * so this card cannot retire a hedge and cannot write back to the home store.
+ */
+export function BrowsingSubjectLine({
+  label,
+  homeZip,
+  ocdId,
+}: {
+  /** The district on screen, in the reader's words. Never an OCD-ID. */
+  label: string;
+  /** The zip the reader told us about, if any. Their home question. */
+  homeZip: string | null;
+  /** The subject division, for the standing comparison. */
+  ocdId: string | null;
+}) {
+  const home = useResolvedLocation(homeZip);
+  const subject = browsingSubject(home, ocdId);
+
+  return (
+    <p
+      data-browsing-standing={subject.standing}
+      className="mt-1 text-[0.6875rem] leading-relaxed text-muted"
+    >
+      {subject.standing === "CONFIRMED" ? (
+        <>You&apos;re looking at {label} — the one your address is in.</>
+      ) : subject.standing === "ELSEWHERE_IN_ZIP" ? (
+        <>
+          You&apos;re looking at {label}. Your address is in a different one —
+          this is here because you tapped it, not because it governs you.
+        </>
+      ) : (
+        // NEVER "this is not your district". Nothing has settled that, and
+        // asserting it would be an absence stated as a fact about the reader.
+        // What IS true is what this card is about, which is all it claims.
+        <>You&apos;re looking at {label}. This card is about that district.</>
+      )}
+    </p>
+  );
+}
 
 interface DistrictPopupProps {
   district: DistrictHit;
@@ -74,6 +148,18 @@ interface DistrictPopupProps {
    * would answer failed — "couldn't check" and 0 are different facts (2a).
    */
   upcomingMeetings: number | null;
+  /**
+   * **WGH-15.** The zip the reader told us about — their HOME question — so
+   * this card can say how their home stands relative to the district they
+   * tapped.
+   *
+   * OPTIONAL and read-only. Absent, the card still names its own subject and
+   * claims nothing about the reader, which is the correct answer for a reader
+   * who has panned the map without ever naming a place. **Passing it can never
+   * change the home store**: everything downstream of it runs through a
+   * `BROWSING` location, which settles nothing.
+   */
+  homeZip?: string | null;
   /** Opens the rep popup (3c) for a clicked name. */
   onOpenOfficial?: (holder: SeatHolder) => void;
   /**
@@ -91,6 +177,7 @@ export function DistrictPopup({
   representation = [],
   representationNoteState = "gap",
   upcomingMeetings,
+  homeZip = null,
   onOpenOfficial,
   onShowMeetings,
   onExpand,
@@ -120,6 +207,16 @@ export function DistrictPopup({
       expandLabel={`More about ${district.label}`}
       onClose={onClose}
     >
+      {/*
+        WGH-15: the subject line comes FIRST, above the facts, because it is
+        what tells the reader how to read every fact underneath it.
+      */}
+      <BrowsingSubjectLine
+        label={district.label}
+        homeZip={homeZip}
+        ocdId={district.ocdId}
+      />
+
       {/* No OCD-ID row: internal identifiers never render to readers (4a).
           The identifier still keys everything behind this card. */}
       <PopupRow label="Type">{district.typeLabel}</PopupRow>

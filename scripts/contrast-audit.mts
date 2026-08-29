@@ -146,6 +146,25 @@ const FILLED: { text: string; on: string; note: string }[] = [
     on: "--tier-fill-national",
     note: "selected Federal toggle",
   },
+  /*
+   * **MTG-14 (2026-08-28): THE MEETING STATUS PILLS, WHICH NOBODY HAD EVER
+   * MEASURED.**
+   *
+   * `--online` appeared in none of PAIRS, FILLED or EXEMPT, so the pill a
+   * reader is shown to explain why a sitting is not on the map had entirely
+   * unmeasured contrast — and so did its two siblings, which have shipped
+   * longer. That is the tier-fill finding again, in the comment three entries
+   * up: *a fill nobody measures is a fill nobody notices.* Three tokens, one
+   * `.meeting-status-pill` rule, and `color: var(--bg)` on all of them.
+   *
+   * **`--concluded` on light FAILS, at 3.81:1.** It is a real defect and it is
+   * shipping; the fix is a darker light-theme value for the token, and it is
+   * reported rather than exempted. An exemption written to make a failing pair
+   * pass is how a bar stops meaning anything.
+   */
+  { text: "--bg", on: "--concluded", note: "Concluded pill" },
+  { text: "--bg", on: "--canceled", note: "Cancelled pill" },
+  { text: "--bg", on: "--online", note: "Online only pill" },
 ];
 
 /**

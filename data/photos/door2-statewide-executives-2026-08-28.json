@@ -1,0 +1,520 @@
+{
+  "note": "Door 2 walked for every statewide executive in lib/officials/statewide-executives.ts, on the office's own page — the same page the officeholder row cites, so no new permission question arises. Portraits are QUEUED for the author's review and NONE SHIPS FROM HERE (RULING 55). Written by scripts/hunt-statewide-portraits-0828.mts.",
+  "walkedAt": "2026-08-28",
+  "door": "door 2 — the portrait a government body publishes of its own member",
+  "shipped": 0,
+  "totals": {
+    "statewideExecutives": 14,
+    "pagesWalked": 11,
+    "alreadyHeld": 3,
+    "pageRefused": 0,
+    "noNamedImageOnPage": 1,
+    "portraitsQueued": 9,
+    "refusedAtDecode": 1
+  },
+  "accounting": {
+    "logicalInput": 14,
+    "produced": 14,
+    "outcome": "CONSERVED"
+  },
+  "rows": [
+    {
+      "subject": "Katie Hobbs",
+      "officeTitle": "Governor",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://azgovernor.gov/",
+      "status": null,
+      "bytes": 0,
+      "imagesOnPage": 0,
+      "photoAlreadyHeld": true,
+      "portrait": null,
+      "imageRefusal": null,
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "a portrait for this person already ships — not re-queued"
+    },
+    {
+      "subject": "Mikie Sherrill",
+      "officeTitle": "Governor",
+      "stateOcdId": "ocd-division/country:us/state:nj",
+      "page": "https://www.nj.gov/governor/",
+      "status": null,
+      "bytes": 0,
+      "imagesOnPage": 0,
+      "photoAlreadyHeld": true,
+      "portrait": null,
+      "imageRefusal": null,
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "a portrait for this person already ships — not re-queued"
+    },
+    {
+      "subject": "Kelly Ayotte",
+      "officeTitle": "Governor",
+      "stateOcdId": "ocd-division/country:us/state:nh",
+      "page": "https://www.governor.nh.gov/",
+      "status": null,
+      "bytes": 0,
+      "imagesOnPage": 0,
+      "photoAlreadyHeld": true,
+      "portrait": null,
+      "imageRefusal": null,
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "a portrait for this person already ships — not re-queued"
+    },
+    {
+      "subject": "Adrian Fontes",
+      "officeTitle": "Secretary of State",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://azsos.gov/about/about-secretary",
+      "status": 200,
+      "bytes": 223089,
+      "imagesOnPage": 6,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 320,
+            "height": 400,
+            "bytes": 45611,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://azsos.gov/sites/default/files/photo/AZ-SOS-Adrian-Fontes-Official-Photo-2025-sml.jpg",
+        "alt": "Photo of Secretary",
+        "why": "name matched on adrian, fontes"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 320,
+        "height": 400,
+        "bytes": 45611,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Kris Mayes",
+      "officeTitle": "Attorney General",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azag.gov/kris-mayes",
+      "status": 200,
+      "bytes": 61619,
+      "imagesOnPage": 3,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+          "decode": {
+            "ok": true,
+            "format": "png",
+            "width": 442,
+            "height": 553,
+            "bytes": 399636,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azag.gov/sites/default/files/2024-10/KrisMayesHeadshot.png",
+        "alt": "Headshot of Kris Mayes wearing a grey suit.",
+        "why": "name matched on kris, mayes"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "png",
+        "width": 442,
+        "height": 553,
+        "bytes": 399636,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Kimberly Yee",
+      "officeTitle": "State Treasurer",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.aztreasury.gov/treasurer-kimberly-yee",
+      "status": 200,
+      "bytes": 781590,
+      "imagesOnPage": 22,
+      "nameMatchingImages": 7,
+      "attempts": [
+        {
+          "src": "https://static.wixstatic.com/media/8bb536_547136cc69684d53a3fc59f9f3f17f89~mv2.jpg/v1/fill/w_85,h_120,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/2020%20Kimberly%20Yee%20Official%20Photo.jpg",
+          "decode": {
+            "ok": false,
+            "reason": "TOO_SMALL",
+            "detail": "85x120 — smaller than 96px on an edge, so it is an icon rather than a portrait",
+            "bytes": 4730,
+            "decodedAt": "2026-08-28"
+          }
+        },
+        {
+          "src": "https://static.wixstatic.com/media/8bb536_547136cc69684d53a3fc59f9f3f17f89~mv2.jpg/v1/fill/w_85",
+          "decode": {
+            "ok": false,
+            "reason": "NOT_AN_IMAGE",
+            "detail": "no image signature — it begins \"Forbidden\"",
+            "bytes": 9,
+            "decodedAt": "2026-08-28"
+          }
+        },
+        {
+          "src": "https://static.wixstatic.com/media/8bb536_eb36f5e549484773976955bfc40c92a7~mv2.png/v1/crop/x_212",
+          "decode": {
+            "ok": false,
+            "reason": "NOT_AN_IMAGE",
+            "detail": "no image signature — it begins \"Forbidden\"",
+            "bytes": 9,
+            "decodedAt": "2026-08-28"
+          }
+        },
+        {
+          "src": "https://static.wixstatic.com/media/8bb536_52985fafdda3411d8ce7ed2daabd13ef~mv2.jpg/v1/fill/w_326,h_468,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/KimberlyYee_2024_official.jpg",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 326,
+            "height": 468,
+            "bytes": 36019,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://static.wixstatic.com/media/8bb536_52985fafdda3411d8ce7ed2daabd13ef~mv2.jpg/v1/fill/w_326,h_468,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/KimberlyYee_2024_official.jpg",
+        "alt": "KimberlyYee_2024_official.jpg",
+        "why": "name matched on kimberly, yee"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 326,
+        "height": 468,
+        "bytes": 36019,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Tom Horne",
+      "officeTitle": "Superintendent of Public Instruction",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azed.gov/adeinfo/about-state-superintendent",
+      "status": 200,
+      "bytes": 65306,
+      "imagesOnPage": 3,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azed.gov/sites/default/files/media/Tom%20Headshot%2060px_0.jpg",
+          "decode": {
+            "ok": false,
+            "reason": "NOT_AN_IMAGE",
+            "detail": "no image signature — it begins \"<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment\"",
+            "bytes": 5796,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azed.gov/sites/default/files/media/Tom%20Headshot%2060px_0.jpg",
+        "alt": "Superintendent Tom Horne",
+        "why": "name matched on tom, horne"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": false,
+        "reason": "NOT_AN_IMAGE",
+        "detail": "no image signature — it begins \"<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment\"",
+        "bytes": 5796,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "every name-matching image on this page was REFUSED at the decode; the last said NOT_AN_IMAGE — no image signature — it begins \"<!DOCTYPE html><html lang=\"en-US\"><head><title>Just a moment\""
+    },
+    {
+      "subject": "Les Presmyk",
+      "officeTitle": "State Mine Inspector",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://asmi.az.gov/about/team",
+      "status": 200,
+      "bytes": 55926,
+      "imagesOnPage": 19,
+      "photoAlreadyHeld": false,
+      "portrait": null,
+      "imageRefusal": null,
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "19 image(s) on the page and none carries this person's name in its alt text or its filename — reported as no candidate image rather than as the best of a bad set"
+    },
+    {
+      "subject": "Nick Myers",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/nick-myers/biography",
+      "status": 200,
+      "bytes": 37785,
+      "imagesOnPage": 9,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=7963c1fe_1",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 133,
+            "height": 200,
+            "bytes": 9815,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/2025-nick-myers.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=7963c1fe_1",
+        "alt": "nick-headshot-commissioner",
+        "why": "name matched on nick, myers"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 133,
+        "height": 200,
+        "bytes": 9815,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Rachel Walden",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/Rachel-Walden/biography",
+      "status": 200,
+      "bytes": 36729,
+      "imagesOnPage": 9,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=fbe9096a_1",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 133,
+            "height": 200,
+            "bytes": 13954,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/2025-rachel-walden.tmb-thumb200.jpg?Culture=en&amp;sfvrsn=fbe9096a_1",
+        "alt": "Rachel-Walden-Commissioner",
+        "why": "name matched on rachel, walden"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 133,
+        "height": 200,
+        "bytes": 13954,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Kevin Thompson",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/kevin-thompson/biography",
+      "status": 200,
+      "bytes": 38480,
+      "imagesOnPage": 9,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azcc.gov/images/default-source/commissioners/2025-kevin-thompson.tmb-medium.jpg?Culture=en&amp;sfvrsn=ee0ef0f6_1",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 200,
+            "height": 300,
+            "bytes": 23921,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/2025-kevin-thompson.tmb-medium.jpg?Culture=en&amp;sfvrsn=ee0ef0f6_1",
+        "alt": "kevin-thompson-commissioner",
+        "why": "name matched on kevin, thompson"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 200,
+        "height": 300,
+        "bytes": 23921,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Lea Márquez Peterson",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/lmarquezpeterson/biography",
+      "status": 200,
+      "bytes": 39251,
+      "imagesOnPage": 10,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9&amp;Width=165&amp;Height=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=CropCropArguments&amp;Signature=3D4E77F443288A7D98FE48BA4D274C9FC2BC4102",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 165,
+            "height": 206,
+            "bytes": 12452,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/peterson-photo.jpg?sfvrsn=99511a81_9&amp;Width=165&amp;Height=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=CropCropArguments&amp;Signature=3D4E77F443288A7D98FE48BA4D274C9FC2BC4102",
+        "alt": "Lea M&#225;rquez Peterson",
+        "why": "name matched on lea, rquez, peterson"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 165,
+        "height": 206,
+        "bytes": 12452,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "René Lopez",
+      "officeTitle": "Corporation Commissioner",
+      "stateOcdId": "ocd-division/country:us/state:az",
+      "page": "https://www.azcc.gov/Rene-Lopez/biography",
+      "status": 200,
+      "bytes": 37060,
+      "imagesOnPage": 9,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2&amp;MaxWidth=165&amp;MaxHeight=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=ResizeFitToAreaArguments&amp;Signature=0304E346B891B66CEF734D6539E29F3A07C59BAB",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 137,
+            "height": 206,
+            "bytes": 8483,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.azcc.gov/images/default-source/commissioners/lopez-headshota40372b9-eb5d-4c79-83b5-a3f7800dbe90.jpg?sfvrsn=a6346954_2&amp;MaxWidth=165&amp;MaxHeight=206&amp;ScaleUp=false&amp;Quality=High&amp;Method=ResizeFitToAreaArguments&amp;Signature=0304E346B891B66CEF734D6539E29F3A07C59BAB",
+        "alt": "jim-o-connor-commissioner",
+        "why": "name matched on lopez"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 137,
+        "height": 206,
+        "bytes": 8483,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    },
+    {
+      "subject": "Dale G. Caldwell",
+      "officeTitle": "Lieutenant Governor",
+      "stateOcdId": "ocd-division/country:us/state:nj",
+      "page": "https://www.nj.gov/governor/admin/ltgovernor/",
+      "status": 200,
+      "bytes": 48478,
+      "imagesOnPage": 7,
+      "nameMatchingImages": 1,
+      "attempts": [
+        {
+          "src": "https://www.nj.gov/governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg",
+          "decode": {
+            "ok": true,
+            "format": "jpeg",
+            "width": 1000,
+            "height": 1250,
+            "bytes": 205421,
+            "decodedAt": "2026-08-28"
+          }
+        }
+      ],
+      "photoAlreadyHeld": false,
+      "portrait": {
+        "src": "https://www.nj.gov/governor/library/secondary/ltgov_LGDaleCaldwell_new.jpg",
+        "alt": "Caldwell Dr. Dale Official Headshot",
+        "why": "name matched on dale, caldwell"
+      },
+      "imageRefusal": null,
+      "decode": {
+        "ok": true,
+        "format": "jpeg",
+        "width": 1000,
+        "height": 1250,
+        "bytes": 205421,
+        "decodedAt": "2026-08-28"
+      },
+      "door": "door 2 — the portrait a government body publishes of its own member",
+      "attemptedAt": "2026-08-28",
+      "note": "name-matched on the office's own page and decoded as a real image — QUEUED for the author, shipped by nobody"
+    }
+  ]
+}

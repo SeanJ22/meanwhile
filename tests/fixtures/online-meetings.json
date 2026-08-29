@@ -1,0 +1,152 @@
+{
+  "note": "Recorded from data/meetings-snapshot.json on 2026-08-28 for MTG-14. Two ONLINE-ONLY sittings from different adapters, different governments and different label vocabularies, plus two physical controls. Recorded rather than read live: the snapshot is rewritten by a scheduled refresh and a government reschedules things, so a test reading it asserts a fact about a moving file rather than about our code.",
+  "recordedAt": "2026-08-28",
+  "source": "data/meetings-snapshot.json",
+  "online": [
+    {
+      "id": "diligent:pcc:698",
+      "ocdId": null,
+      "bodyId": "curated:az/pima-community-college#governing",
+      "bodyName": "Finance and Audit Committee Meeting",
+      "title": "Finance and Audit Committee Meeting  - Aug 28 2026",
+      "startsAt": "2026-08-28T09:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "location": null,
+      "online": {
+        "label": "VIRTUAL MEETING",
+        "joinUrl": null
+      },
+      "agendaUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+      "jurisdiction": "Pima Community College District, AZ",
+      "status": "SCHEDULED",
+      "provenance": {
+        "sourceUrl": "https://pima.community.highbond.com/Portal/MeetingInformation.aspx?Org=Cal&Id=698",
+        "sourceOrg": "Pima Community College Governing Board",
+        "collectedAt": "2026-08-27T22:06:26.662Z",
+        "verifiedAt": null
+      }
+    },
+    {
+      "id": "clerksboards:3:2026-09-16",
+      "ocdId": "ocd-division/country:us/state:az/place:tucson",
+      "bodyId": "ocd-division/country:us/state:az/place:tucson#commission-on-disability-issues",
+      "bodyName": "Commission on Disability Issues",
+      "title": "Commission on Disability Issues",
+      "startsAt": "2026-09-16T15:30:00-07:00",
+      "timeZone": "America/Phoenix",
+      "location": null,
+      "online": {
+        "label": "Microsoft Teams (Virtual)",
+        "joinUrl": null
+      },
+      "agendaUrl": null,
+      "jurisdiction": "Tucson, AZ",
+      "status": "SCHEDULED",
+      "provenance": {
+        "sourceUrl": "https://clerksboards.tucsonaz.gov/boards/?board=3",
+        "sourceOrg": "City of Tucson Clerk",
+        "collectedAt": "2026-08-27T22:06:24.755Z",
+        "verifiedAt": null
+      }
+    }
+  ],
+  "physical": [
+    {
+      "id": "legistar:pima:1803",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "bodyName": "Board of Supervisors",
+      "title": "Study Session",
+      "startsAt": "2026-06-09T13:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "location": {
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+        "lat": 32.221618,
+        "lng": -110.974036
+      },
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/6/1803_A_Board_of_Supervisors_26-06-09_Online_Agenda.pdf",
+      "jurisdiction": "Pima County, AZ",
+      "status": "CONCLUDED",
+      "provenance": {
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1803&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "sourceOrg": "Pima County Clerk of the Board",
+        "collectedAt": "2026-08-27T22:06:25.069Z",
+        "verifiedAt": null
+      },
+      "actingBodies": [
+        {
+          "meetingId": "legistar:pima:1803",
+          "bodyId": null,
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "role": "HOST",
+          "attribution": "HOST_BODY",
+          "evidence": "Board of Supervisors",
+          "itemCount": 11
+        }
+      ]
+    },
+    {
+      "id": "legistar:pima:1804",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "bodyName": "Board of Supervisors",
+      "title": "Board of Supervisors",
+      "startsAt": "2026-06-09T17:00:00-07:00",
+      "timeZone": "America/Phoenix",
+      "location": {
+        "name": "Pima County Administration Building, Board of Supervisors Hearing Room",
+        "address": "130 W. Congress St. 1st Floor, Tucson, AZ 85701",
+        "lat": 32.221618,
+        "lng": -110.974036
+      },
+      "agendaUrl": "https://legistar.granicus.com/pima/meetings/2026/6/1804_A_Board_of_Supervisors_26-06-09_Online_Agenda.pdf",
+      "jurisdiction": "Pima County, AZ",
+      "status": "CONCLUDED",
+      "provenance": {
+        "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1804&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "sourceOrg": "Pima County Clerk of the Board",
+        "collectedAt": "2026-08-27T22:06:25.069Z",
+        "verifiedAt": null
+      },
+      "actingBodies": [
+        {
+          "meetingId": "legistar:pima:1804",
+          "bodyId": null,
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "role": "HOST",
+          "attribution": "HOST_BODY",
+          "evidence": "Board of Supervisors",
+          "itemCount": 2
+        },
+        {
+          "meetingId": "legistar:pima:1804",
+          "bodyId": null,
+          "ocdId": null,
+          "role": "SITTING_AS",
+          "attribution": "UNRESOLVED",
+          "evidence": "FLOOD CONTROL DISTRICT BOARD",
+          "itemCount": 1
+        },
+        {
+          "meetingId": "legistar:pima:1804",
+          "bodyId": null,
+          "ocdId": null,
+          "role": "SITTING_AS",
+          "attribution": "UNRESOLVED",
+          "evidence": "LIBRARY DISTRICT BOARD",
+          "itemCount": 1
+        },
+        {
+          "meetingId": "legistar:pima:1804",
+          "bodyId": null,
+          "ocdId": "ocd-division/country:us/state:az/county:pima",
+          "role": "HOST",
+          "attribution": "HOST_BODY",
+          "evidence": "SITTING AS THE BOARD OF SUPERVISORS",
+          "itemCount": 60
+        }
+      ]
+    }
+  ]
+}

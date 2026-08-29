@@ -98,8 +98,14 @@ const AS_OF = declaredSourceStamp({
    * Governments — so the newest of these four inputs is now that file. The
    * artifact is regenerated in this same commit, which is the half of
    * RULING 102 that a stamp bump on its own would skip.
+   *
+   * Moved to 2026-08-28 by the finish-aug28 session, and the input that moved is
+   * `data/hunt/wikipedia-nj-morris.json`: WGH-16 made the parser multi-capture
+   * (one municipality may lie across several legislative districts), so the walk
+   * artifact was regenerated from the live sources that day. The rosters are
+   * regenerated in this same commit for the same reason the line above gives.
    */
-  readOn: "2026-08-26",
+  readOn: "2026-08-28",
   sources: SOURCE_FILES,
 });
 const DRY = process.argv.includes("--dry");

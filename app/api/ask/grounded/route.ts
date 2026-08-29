@@ -6,6 +6,7 @@ import {
   actionText,
   executiveActionStore,
   monthsBefore,
+  undatedFor,
 } from "@/lib/officials/executive-actions";
 import type { BindableEntity } from "@/lib/routing/named-entity";
 import { ripcordPulled } from "@/lib/ripcords";
@@ -50,6 +51,15 @@ import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { loadBallotForDivisions, readerRepresentatives } from "@/lib/ask/server-sources";
+import {
+  askAnswer,
+  clarifyAnswer,
+  offAnswer,
+  unresolvedAnswer,
+  type AskAnswerPayload,
+} from "@/lib/ask/answer";
+import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
+import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
 
 /**
  * **POST /api/ask/grounded — the grounded civic answer (ASK01, 2026-08-27;
@@ -178,11 +188,19 @@ function divisionNameOf(ocdId: string): string {
  * 1. **The WINDOW the reader asked for.** "In the last 12 months" is a
  *    computable range once `temporal.trailingMonths` is read, and an answer
  *    built from an unwindowed list would silently answer a different question.
- * 2. **The DENOMINATOR, and the gap for what is still not held.** Signed bills
- *    and vetoes live behind `apps.azleg.gov`, which disallows every automated
- *    client, so they are a NAMED GAP rather than silence — an answer that
- *    listed six executive orders without saying vetoes are absent would read as
- *    a complete account of a governor's year.
+ * 2. **The DENOMINATOR, and the gap for what is still not held.** An answer
+ *    that listed six executive orders without saying what else exists would
+ *    read as a complete account of a governor's year.
+ *
+ * The second point used to name `apps.azleg.gov`'s `Disallow: /` as the reason
+ * signed bills and vetoes were absent. **That was a blocked ROUTE recorded as a
+ * blocked FACT** (AZ04, 2026-08-28): `www.azleg.gov` is a different host, it is
+ * allowed, and it publishes both halves as static indexes. The store now holds
+ * chapters of session law with the approval date read off each act's own stamp,
+ * and it holds the Governor's transmittal letters as documents we have not yet
+ * read. Which of those is a gap, and how big, is DERIVED from the store below
+ * rather than written into a sentence that cannot notice when it stops being
+ * true.
  */
 function officeholderActionEvidence(
   seatId: string,
@@ -239,17 +257,83 @@ function officeholderActionEvidence(
   }
 
   /*
-   * **THE HALF THAT IS STILL NOT HELD, NAMED.** Executive orders are one kind
-   * of gubernatorial action. Bills signed and vetoed are published through the
-   * legislature's application at `apps.azleg.gov`, which disallows every
-   * automated client by published rule — a permission wall, not a retrieval
-   * failure, and not something more effort resolves.
+   * **THE SENTENCE THAT USED TO SIT HERE WAS FALSE, AND IT REACHED READERS.**
+   * (Corrected by AZ04, 2026-08-28.)
+   *
+   * It said: *"We have not recorded bills signed or vetoed — the legislature's
+   * bill-status system does not permit automated reading, so that half of the
+   * record is not ours to show yet."*
+   *
+   * Every clause after the dash was wrong, and wrong in the most dangerous
+   * direction: it was a claim about a GOVERNMENT, asserting that Arizona's
+   * legislature withholds its own record from automated readers. What was
+   * actually true is that `apps.azleg.gov` — one host, running the modern
+   * bill-status application — publishes `Disallow: /`. `www.azleg.gov` is a
+   * different host, it is ALLOWED with a 120-second crawl delay, and it
+   * publishes the same facts as static indexes at `/sessionlaws/` and
+   * `/governors-letters/`.
+   *
+   * **A blocked route had been written down as a blocked fact** (RULING 184),
+   * and then rendered to readers as the legislature's doing. The gaps below
+   * are derived from what the store actually holds, so this sentence cannot go
+   * stale again while the collection moves underneath it.
    */
-  gaps.push({
-    whose: "OURS",
-    statement:
-      "These are executive orders only. We have not recorded bills signed or vetoed — the legislature's bill-status system does not permit automated reading, so that half of the record is not ours to show yet.",
-  });
+  const legislative = store.legislative;
+
+  if (!legislative) {
+    gaps.push({
+      whose: "OURS",
+      statement:
+        "These are executive orders only. We have not yet recorded what she did with the legislature's bills.",
+    });
+  } else {
+    denominators.chaptersReadAtCollection = legislative.chaptersRead;
+    denominators.chaptersIndexedAtCollection = legislative.chaptersIndexed;
+    denominators.governorLettersIndexedAtCollection = legislative.lettersIndexed;
+    denominators.governorLettersReadAtCollection = legislative.lettersRead;
+
+    /* OURS: a walk that has not finished is a fact about our collection, and
+       it is stated as a shortfall against the publisher's own count. */
+    if (legislative.chaptersRead < legislative.chaptersIndexed) {
+      gaps.push({
+        whose: "OURS",
+        statement: `Arizona's legislature lists ${legislative.chaptersIndexed} bills that became law in the ${legislative.sessionId} session. We have read ${legislative.chaptersRead} of them so far, so anything here about bills she signed is a partial account and not the whole session.`,
+      });
+    }
+
+    /*
+     * OURS, and the wording is the point. The letters are SCANS, we have no
+     * text-recognition step, and so we cannot say what any of them decided.
+     *
+     * What this must never say — and what the disjointness of the two indexes
+     * makes tempting — is that these are vetoes. Not one lettered bill appears
+     * among the chaptered ones, which is CONSISTENT with every letter being a
+     * veto and is not evidence of it. Two letters have been read directly and
+     * both were vetoes; two of a hundred and fifty-one is a floor, not a
+     * verdict, and the product does not publish verdicts it did not read.
+     */
+    const unreadLetters = legislative.lettersRetrieved - legislative.lettersRead;
+    if (unreadLetters > 0) {
+      gaps.push({
+        whose: "OURS",
+        statement: `She also sent the legislature ${legislative.lettersIndexed} letters about individual bills. We have retrieved ${legislative.lettersRetrieved} of those letters and have not been able to read ${unreadLetters} of them — they are scanned images and we do not yet have text recognition for them. We hold the documents and can link you to them, but we will not say what any of them decided until we have read it.`,
+      });
+    }
+  }
+
+  /*
+   * Rows we hold that no date-shaped question can reach. Surfaced rather than
+   * quietly filtered out by the window, because "we have this and cannot place
+   * it in time" is a different answer from not having it.
+   */
+  const undated = undatedFor(seatId);
+  denominators.actionRecordsWithNoDate = undated.length;
+  if (trailingMonths && undated.length > 0) {
+    gaps.push({
+      whose: "OURS",
+      statement: `We hold ${undated.length} more record(s) for ${personName} that carry no date we could read, so they could not be placed inside or outside the period you asked about.`,
+    });
+  }
 
   if (!store.denominator.reachedEndOfIndex) {
     gaps.push({
@@ -295,7 +379,17 @@ export async function POST(request: Request) {
   const trace: AskTrace = emptyTrace();
 
   if (ripcordPulled("ripcord.askGrounded")) {
-    return Response.json({ mode: "OFF", why: "ripcord" }, { status: 200 });
+    /*
+     * **A SWITCHED-OFF ENGINE IS A SENTENCE, NOT AN EMPTY PANEL.** (ASK-05.)
+     *
+     * This used to answer `{ mode: "OFF", why: "ripcord" }` and nothing else.
+     * `"OFF"` was not a member of `AnswerMode`, both clients typed `mode` as a
+     * bare `string`, and the reply matched no render branch on either surface —
+     * so a reader who typed a question got their own empty form back. The mode
+     * is now real, the payload is the same shape as every other, and the gap
+     * says what happened.
+     */
+    return Response.json(offAnswer("ripcord"), { status: 200 });
   }
 
   const raw = await request.text();
@@ -534,22 +628,19 @@ export async function POST(request: Request) {
       [],
       [],
     );
-    return Response.json({
-      mode: "CLARIFY" as AnswerMode,
-      mention: resolution.binding.mention,
-      candidates: resolution.binding.candidates.map((c) => titleCaseName(c.name)),
-      trace,
-    });
+    return Response.json(
+      clarifyAnswer(
+        resolution.binding.mention,
+        resolution.binding.candidates.map((c) => titleCaseName(c.name)),
+        trace,
+      ),
+    );
   }
   if (resolution.binding.kind === "UNRESOLVED") {
     trace.answerMode = "UNRESOLVED";
     trace.totalMs = Date.now() - started;
     await capture("UNRESOLVED", [], null, null, null, [], []);
-    return Response.json({
-      mode: "UNRESOLVED" as AnswerMode,
-      mention: resolution.binding.mention,
-      trace,
-    });
+    return Response.json(unresolvedAnswer(resolution.binding.mention, trace));
   }
 
   // ── 3. DETERMINISTIC RETRIEVAL ───────────────────────────────────────
@@ -684,6 +775,32 @@ export async function POST(request: Request) {
         whose: "OURS",
         statement: `We have not recorded any sourced statement of ${ballotRecord.name}'s positions.`,
       });
+    }
+
+    /*
+     * ── ASK-06 ── **HOW THEY HAVE ACTUALLY VOTED.** (2026-08-28.)
+     *
+     * A candidate's positions are what they SAID. A roll call is what they
+     * DID, and this product held 12,234 recorded positions that the grounded
+     * engine could not reach.
+     *
+     * Reached through EXACT identity and nothing looser: person → seat by
+     * exact normalized full name, unique within the reader's own states; seat
+     * → votes by the publisher's own stable officeholder id. Where the name
+     * form differs across the join — *Sally Ann Gonzales* on a House ballot
+     * line against *Sally Gonzales* the sitting SENATOR — it fails closed to a
+     * named gap rather than attaching one chamber's votes to another
+     * chamber's candidacy. `lib/ask/votes.ts` holds the whole rule and the
+     * measured cost of it.
+     *
+     * The office on every record is the one they HOLD, never the one they are
+     * running for.
+     */
+    if (ballotRecord.kind === "PERSON") {
+      const votes = voteEvidenceFor(ballotRecord.name, { withinStates: statesOf(ocdIds) });
+      records.push(...votes.records);
+      gaps.push(...votes.gaps);
+      Object.assign(denominators, votes.denominators);
     }
   } else if (subject?.kind === "BODY") {
     const forBody = meetings.filter((m) => m.ocdId === subject.id);
@@ -869,6 +986,14 @@ export async function POST(request: Request) {
       });
       denominators.actionRecordsHeld = 0;
     }
+
+    /* ── ASK-06 ── the same exact identity chain on the officeholder path. A
+       sitting legislator asked about by name reaches their own roll calls; a
+       governor reaches the honest gap, because a governor casts none. */
+    const votes = voteEvidenceFor(subject.name, { withinStates: statesOf(ocdIds) });
+    records.push(...votes.records);
+    gaps.push(...votes.gaps);
+    Object.assign(denominators, votes.denominators);
   }
 
   /*
@@ -960,6 +1085,54 @@ export async function POST(request: Request) {
     }
   }
 
+  /*
+   * ── ASK-05 ── **THE TOPIC SWEEP, DEMOTED FROM A SECOND ANSWER TO EVIDENCE.**
+   * (2026-08-28.)
+   *
+   * *"Is there a data centre coming?"* used to be answered by a SECOND network
+   * call the map component fired through `Promise.all` beside this one, and
+   * rendered as a whole second civic answer — its own eyebrow, its own
+   * four-way denominator sentence, its own corpus caveat, its own hit list.
+   * Both could paint on one screen. Two competing authorities, no precedence,
+   * and the reader chose which to believe.
+   *
+   * The capability is kept and its standing is not. It runs here, its records
+   * enter the ONE pack as `AGENDA_MENTION`, its denominators are numbers in
+   * `pack.denominators`, and every sentence it used to build is a named gap
+   * with a `whose` on it. Any prose the synthesis rung writes over it is
+   * validated against the same allow-list as everything else — which the
+   * second answer never was.
+   *
+   * **The scope narrows to the bound subject where there is one.** A reader
+   * who named Vail and asked about a rezoning is asking about Vail's agendas;
+   * sweeping their whole area would put a neighbouring district's line under
+   * an answer about Vail, which is the substitution defect wearing a quote.
+   */
+  const sweepScope =
+    subject?.kind === "BODY"
+      ? { meetings: meetings.filter((m) => m.ocdId === subject.id), label: subject.name }
+      : ocdIds.length > 0
+        ? {
+            meetings: meetings.filter((m) => m.ocdId !== null && ocdIds.includes(m.ocdId)),
+            label: "your area",
+          }
+        : { meetings, label: "the areas we cover" };
+  const sweptIds = new Set(sweepScope.meetings.map((m) => m.id));
+  const sweep = agendaTopicEvidence({
+    question,
+    documents: documents.filter((d) => sweptIds.has(d.meetingId)),
+    meetings: sweepScope.meetings,
+    scopeLabel: sweepScope.label,
+  });
+  if (sweep.topic) {
+    records.push(...sweep.records);
+    gaps.push(...sweep.gaps);
+    Object.assign(denominators, sweep.denominators);
+    /* The intent vocabulary now names this question, so the trace can say the
+       sweep ran rather than leaving an operator to infer it from a count. */
+    if (interpretation.intent === "UNKNOWN") interpretation.intent = "AGENDA_TOPIC";
+  }
+
   const pack: EvidencePack = {
     question,
     intent: interpretation.intent,
@@ -1028,21 +1201,31 @@ export async function POST(request: Request) {
    */
   await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, records, gaps);
 
-  return Response.json({
+  /*
+   * **ONE DECLARED SHAPE, BUILT FROM THE PACK THAT PRODUCED IT.** (ASK-05.)
+   *
+   * This was an untyped inline object literal, and so were the other four
+   * shapes this route and `/api/ask/agenda` returned between them. The
+   * contract lived only as hand-copied interfaces inside two components, which
+   * is how `mode: "OFF"` came to be on the wire and renderable by neither, and
+   * how `AskContact.basis` and `AskContact.retrievedAt` came to be
+   * unrenderable by declaration.
+   *
+   * `askAnswer` takes the PACK rather than loose arrays, so the records the
+   * reader sees are by construction the ones synthesis was given and the
+   * validator checked against. The records travel whatever the mode: a
+   * rejected or unavailable synthesis still ships everything needed to render
+   * the true structured answer, and discarding a useful reply because one
+   * optional field is null is the exact class PR #211 found repeatedly.
+   */
+  const payload: AskAnswerPayload = askAnswer({
     mode,
-    subject,
+    pack,
     answer,
-    /* The records travel WHATEVER the mode, so a client that receives a
-       rejected or unavailable synthesis still has everything it needs to
-       render the true structured answer. Discarding a useful server reply
-       because one optional field is null is the exact class PR #211 found
-       repeatedly, and it is not reintroduced here. */
-    records,
-    gaps,
     contacts: contacts.slice(0, MAX_ASK_CONTACTS),
-    denominators,
     trace,
   });
+  return Response.json(payload);
 }
 
 /**

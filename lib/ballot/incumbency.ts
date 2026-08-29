@@ -74,6 +74,12 @@ export interface IncumbencyDecision {
   readonly basis: string;
   /** What was read. A stable identifier where one exists, else the roster. */
   readonly source: string | null;
+  /**
+   * For UNKNOWN only: WHICH gap it is, so the reader-facing sentence is the
+   * true one. Absent means the original and commonest cause — we hold no record
+   * of who sits here. See `IncumbencyGap`.
+   */
+  readonly gap?: IncumbencyGap;
 }
 
 /** A candidate as this decision needs to see them. */
@@ -104,6 +110,16 @@ export interface SeatHolderRef {
 
 const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
 
+/** The shape both name comparisons take. `aliases` is optional for callers
+ * that build one by hand; `nameParts` always fills it. */
+export interface ComparableName {
+  first: string;
+  middles: string[];
+  last: string;
+  /** Names the record itself PUBLISHES as alternatives. See `nameParts`. */
+  aliases?: string[];
+}
+
 /**
  * Reduce a name to the parts two records could plausibly agree on.
  *
@@ -112,8 +128,37 @@ const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
  * *Karen Elizabeth Ebel* and *Karen E. Ebel* agreeing is a judgement and
  * silently making it inside a normaliser is how a wrong match gets made
  * invisibly.
+ *
+ * ## THE QUOTED NAME IS AN ALIAS THE RECORD ITSELF PUBLISHES
+ * (2026-08-28, the statewide-executive acquisition.)
+ *
+ * A certified filing writes the name the candidate filed under, and where that
+ * differs from the name they are known by, **the filing prints both**:
+ *
+ * ```
+ * Nicholas "Nick" Myers      Arizona Corporation Commissioner, 2026 filing
+ * Leonard "Len" Rosenblum    Arizona legislative candidate, 2024 canvass
+ * Thomas "T.J." Shope Jr.    Arizona State Senator, 2024 canvass
+ * Jennifer "Jen" Allen       Pima County Supervisor, 2024 canvass
+ * ```
+ *
+ * The Corporation Commission publishes its sitting Chair as **Nick Myers**.
+ * Before this, `nicholas` was the first name and `nick` was swallowed as a
+ * middle name, so the strict test failed, the loose test failed (`nicholas`
+ * is not a prefix of `nick`, nor the reverse), and the surname-collision
+ * guard then took the WHOLE Corporation Commissioner contest to UNKNOWN —
+ * losing Kevin Thompson's true incumbency alongside Myers's.
+ *
+ * **This is not a guess and not a fuzzy match.** The alias is not inferred
+ * from similarity; it is printed, in quotation marks, by the record being
+ * read. Reading it is reading the source. Only DOUBLE quotes and parentheses
+ * delimit one — an apostrophe is part of *O'Brien*, and treating it as a
+ * delimiter would shred real surnames.
+ *
+ * The surname must still agree exactly, and the caller still fails the contest
+ * closed when one sitting member matches two candidates.
  */
-export function nameParts(given: string, family: string): { first: string; middles: string[]; last: string } {
+export function nameParts(given: string, family: string): Required<ComparableName> {
   const clean = (s: string) =>
     s
       .toLowerCase()
@@ -121,7 +166,18 @@ export function nameParts(given: string, family: string): { first: string; middl
       .replace(/\s+/g, " ")
       .trim();
 
-  const givenTokens = clean(given).split(" ").filter(Boolean);
+  const aliases: string[] = [];
+  const givenWithoutAliases = String(given ?? "")
+    .replace(/[“"]([^”"]+)[”"]/g, (_match, inner: string) => {
+      aliases.push(inner);
+      return " ";
+    })
+    .replace(/\(([^)]+)\)/g, (_match, inner: string) => {
+      aliases.push(inner);
+      return " ";
+    });
+
+  const givenTokens = clean(givenWithoutAliases).split(" ").filter(Boolean);
   const familyTokens = clean(family)
     .split(" ")
     .filter((t) => t.length > 0 && !SUFFIXES.has(t));
@@ -130,7 +186,14 @@ export function nameParts(given: string, family: string): { first: string; middl
     first: givenTokens[0] ?? "",
     middles: givenTokens.slice(1),
     last: familyTokens.join(" "),
+    aliases: aliases.map(clean).filter(Boolean),
   };
+}
+
+/** Every name this record offers as the person's FIRST name — the parsed
+ * first name, plus any alias the record printed alongside it. */
+function firstNames(n: ComparableName): string[] {
+  return [n.first, ...(n.aliases ?? [])].filter((s) => s.length > 0);
 }
 
 /**
@@ -147,11 +210,15 @@ export function nameParts(given: string, family: string): { first: string; middl
  * reads as *not yet determined*, which is true, where a mismatched one reads as
  * a false claim about two people at once.
  */
-export function namesAgree(a: { first: string; middles: string[]; last: string }, b: { first: string; middles: string[]; last: string }): boolean {
+export function namesAgree(a: ComparableName, b: ComparableName): boolean {
   if (a.last.length === 0 || b.last.length === 0) return false;
   if (a.last !== b.last) return false;
-  if (a.first.length === 0 || b.first.length === 0) return false;
-  if (a.first !== b.first) return false;
+  const firstsA = firstNames(a);
+  const firstsB = firstNames(b);
+  if (firstsA.length === 0 || firstsB.length === 0) return false;
+  // The published alias counts as a first name on the side that published it.
+  const agreedFirst = firstsA.some((x) => firstsB.includes(x));
+  if (!agreedFirst) return false;
 
   if (a.middles.length === 0 || b.middles.length === 0) return true;
   const initials = (m: string[]) => m.map((x) => x[0]).join("");
@@ -187,15 +254,15 @@ export function namesAgree(a: { first: string; middles: string[]; last: string }
  * a nickname, and treating it as one would match any first name starting with
  * that letter.
  */
-export function namesAgreeLoosely(
-  a: { first: string; middles: string[]; last: string },
-  b: { first: string; middles: string[]; last: string },
-): boolean {
+export function namesAgreeLoosely(a: ComparableName, b: ComparableName): boolean {
   if (a.last.length === 0 || a.last !== b.last) return false;
-  const x = a.first;
-  const y = b.first;
-  if (x.length < 3 || y.length < 3) return false;
-  return x.startsWith(y) || y.startsWith(x);
+  for (const x of firstNames(a)) {
+    for (const y of firstNames(b)) {
+      if (x.length < 3 || y.length < 3) continue;
+      if (x.startsWith(y) || y.startsWith(x)) return true;
+    }
+  }
+  return false;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -367,14 +434,42 @@ export function resolveContestIncumbency(input: ContestIncumbencyInput): Map<str
   return out;
 }
 
-/** The reader-facing word for each state. The third is deliberately about us. */
-export function incumbencyLabel(standing: Incumbency): string | null {
+/**
+ * WHICH GAP the third state is, because there is more than one and they are
+ * not the same fact about us. (2026-08-28, the contest-universe session.)
+ *
+ * Until the contest-level eligibility gate existed, UNKNOWN had exactly one
+ * cause — no holder record — and one sentence said it. The gate adds a second
+ * cause: **we know who holds the seat and still cannot label anybody**, because
+ * the contest's candidate universe or its officeholder universe is not shown
+ * complete, and labelling only the person we matched is the acquisition
+ * asymmetry reaching a reader.
+ *
+ * Saying *we haven't sourced who holds this seat* in that second case would be
+ * a FALSE statement about us — we have sourced it. Both sentences are about US
+ * either way, which is the rule; this is about them also being true.
+ */
+export type IncumbencyGap = "HOLDER_NOT_SOURCED" | "CONTEST_NOT_ESTABLISHED";
+
+/**
+ * The reader-facing word for each state. The third is deliberately about us.
+ *
+ * Plain language, no internal vocabulary, and — for the third state — the same
+ * sentence on EVERY card in the contest, so it can never read as a remark about
+ * whichever candidate we happen to know less about (RULING 42).
+ */
+export function incumbencyLabel(
+  standing: Incumbency,
+  gap: IncumbencyGap = "HOLDER_NOT_SOURCED",
+): string | null {
   switch (standing) {
     case "INCUMBENT":
       return "Incumbent";
     case "CHALLENGER":
       return "Challenger";
     case "UNKNOWN":
-      return "We haven't sourced who holds this seat yet";
+      return gap === "CONTEST_NOT_ESTABLISHED"
+        ? "We haven't confirmed this for everyone in this contest"
+        : "We haven't sourced who holds this seat yet";
   }
 }

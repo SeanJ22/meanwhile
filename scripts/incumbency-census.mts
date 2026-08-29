@@ -28,7 +28,7 @@ import { seatHoldersForDivision } from "../lib/registry/server.ts";
 const ROOT = process.cwd();
 
 interface BallotFile {
-  contests: { id: string; title: string; ocdId: string; type: string }[];
+  contests: { id: string; title: string; ocdId: string; type: string; voteFor: number }[];
   candidacies: { id: string; contestId: string; familyName: string; givenName: string }[];
 }
 
@@ -64,6 +64,9 @@ for (const file of FILES) {
         title: contest.title,
         ocdId: contest.ocdId,
         federal: FEDERAL.test(contest.title),
+        // The seats this contest fills, which the contest-level eligibility
+        // gate reconciles the holder count against (2026-08-28).
+        voteFor: contest.voteFor,
         candidates: cands.map((c) => ({
           key: c.id,
           display: `${c.givenName} ${c.familyName}`,
@@ -73,10 +76,13 @@ for (const file of FILES) {
       incumbentHolderFor,
     );
 
+    // `decisions` is the READER-FACING answer and is gated by
+    // `contestLabelEligibility`; `resolved` is what the matching layer alone
+    // said. The split below reports what a reader actually meets.
     for (const [key, d] of result.decisions) {
       standing[d.standing] += 1;
       if (/not filled by election/.test(d.basis)) notElected += 1;
-      if (d.standing === "INCUMBENT") {
+      if (result.resolved.get(key)?.standing === "INCUMBENT") {
         const c = cands.find((x) => x.id === key);
         incumbentsFound.push(`${c?.givenName} ${c?.familyName} — ${contest.title}`);
       }
@@ -103,7 +109,7 @@ if (process.argv.includes("--json")) {
 } else {
   console.log(`incumbency:census · ${FILES.length} ballot file(s) · ${contests} contest(s) · ${candidates} candidate(s)`);
   console.log("");
-  console.log("  THE THREE-WAY SPLIT (RULING 105):");
+  console.log("  THE THREE-WAY SPLIT A READER MEETS, after the contest-level gate (RULING 105):");
   console.log(`    INCUMBENT   ${standing.INCUMBENT}`);
   console.log(`    CHALLENGER  ${standing.CHALLENGER}`);
   console.log(`    UNKNOWN     ${standing.UNKNOWN}   of which ${notElected} are offices not filled by election`);
@@ -116,6 +122,6 @@ if (process.argv.includes("--json")) {
   console.log(`    COULD_NOT_ANCHOR  ${anchors.COULD_NOT_ANCHOR}   (not an NH legislative seat, or the title did not parse)`);
   for (const d of disagreements) console.log(`      ! ${d}`);
   console.log("");
-  console.log(`  INCUMBENTS NAMED (${incumbentsFound.length}):`);
+  console.log(`  SITTING MEMBERS THE MATCHER NAMED, before the contest-level gate (${incumbentsFound.length}):`);
   for (const i of incumbentsFound) console.log(`    ${i}`);
 }

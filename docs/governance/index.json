@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "ec996408ba1ffab7",
+  "snapshot": "5ebf6921b5116732",
   "counts": {
-    "records": 226,
-    "current": 205,
-    "law": 178,
+    "records": 229,
+    "current": 208,
+    "law": 181,
     "decisions": 27,
     "historical": 21
   },
@@ -3782,6 +3782,83 @@
           "survives": "RULING 180's separation of session, workstream and graph status; that the repository generates the handoff and the model may not invent it; that item completion is derived from child state; and that lost or unrepresented remainder is failure"
         }
       ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0190",
+      "aliases": [
+        "RULING 190",
+        "R190",
+        "R-190"
+      ],
+      "title": "RULING 190 — a session is an engineering organization, not one serial developer",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "session.orchestration_model",
+          "value": "independent-work-parallel-by-default"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0191",
+      "aliases": [
+        "RULING 191",
+        "R191",
+        "R-191"
+      ],
+      "title": "RULING 191 — one integration owner, one combined head, one merge at the end",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "shipping.integration_model",
+          "value": "one-owner-combined-head"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0192",
+      "aliases": [
+        "RULING 192",
+        "R192",
+        "R-192"
+      ],
+      "title": "RULING 192 — method knowledge is typed by claim class, and a false conclusion never deletes a valid route",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "method.claim_integrity",
+          "value": "typed-classes-with-required-provenance"
+        }
+      ],
+      "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

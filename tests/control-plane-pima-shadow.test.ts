@@ -42,6 +42,17 @@ const TTL = 10 * 60 * 1000;
 
 function floorFor() {
   const knowledge = loadMethodStore(ROOT);
+  // A missing store is a FAILED read, never an empty one. Without this the
+  // floor would be computed from nothing and every assertion below would pass
+  // against a vacuum — the exact shape of a guard that reports clean without
+  // having looked (RULING 159).
+  if (knowledge === null) {
+    throw new Error(
+      `The committed method store could not be read from ${ROOT}. This suite proves the ` +
+        "inherited floor is computed from real project knowledge; with no store there is nothing " +
+        "to prove and a pass would be vacuous.",
+    );
+  }
   return {
     knowledge,
     floor: computeRouteFloor({

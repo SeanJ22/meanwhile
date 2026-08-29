@@ -2053,5 +2053,12 @@
     "ids": [
       "NH280"
     ]
+  },
+  {
+    "session": "2026-08-28 overnight control-plane build",
+    "opened": "2026-08-28",
+    "ids": [
+      "NH281"
+    ]
   }
 ]

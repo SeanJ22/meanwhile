@@ -97,6 +97,10 @@ export const NON_SHIPPING_PREFIXES: readonly { prefix: string; why: string }[] =
     prefix: ".gitignore",
     why: "Which untracked files git hides. Every file the build reads is tracked, so this cannot change the deploy contents.",
   },
+  {
+    prefix: "data/ops/",
+    why: "Operational records the deploy never reads — the production-integrity reading (NH273) and anything joining it. No route traces this directory, which tests/deploy-paths.test.ts checks against the real trace manifests rather than trusting this sentence. Without the entry, every integrity reading would cost a production build to publish a file no reader can see.",
+  },
 ] as const;
 
 export type DeployVerdict = "build" | "cancel" | "cannot-tell";

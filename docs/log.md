@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **157 sessions.**
+Newest first. **158 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -57,16 +57,23 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 **Needs Sean.** Nothing.
 
+## 2026-08-28 overnight control-plane build
+
+**What it finished.** 1 row(s).
+
+- **NH273** — The gate now blocks a merge whose migrations production does not hold. The deploy half is unbuilt: Netlify could refuse to build a deploy whose expand-phase migrations are unapplied, which would close the window between merging and deploying.
+
+**Needs Sean.** Nothing.
+
 ## 2026-08-28 finish-aug28
 
-**What it started.** 7 row(s) opened, 7 still open.
+**What it started.** 7 row(s) opened, 6 still open.
 
 - **NH268** — A school, congressional or local district is an area, and an area can lie across several legislative districts. Only a single point resolves to one. Vail Unified sits across Arizona Legislative District 19 AND District 17, measured over 44 probed points and 20 walked map layers, and so does the Corona de Tucson Fire District. The shipping registry already models this correctly, so nothing wrong reaches a reader today. *(open)*
 - **NH269** — A reader deciding whether they can attend should learn that a meeting has no room to walk into before they open it. The main meeting list already says Online. The door overlay next-meeting line and the Ask autocomplete do not. *(open)*
 - **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition. *(open)*
 - **NH271** — Most candidates on a rendered ballot show initials rather than a face. The gap is overwhelmingly New Jersey down-ballot: 117 Board of Education candidacies, 47 Borough Council, 27 Township Committee. *(open)*
 - **NH272** — The new migration shipping gate asks production whether it already holds the migrations a pull request is about to ship. To ask, the CI job needs a read-only production database URL. It is not currently a repository secret, and only the author can add one. *(open)*
-- **NH273** — The gate now blocks a merge whose migrations production does not hold. The deploy half is unbuilt: Netlify could refuse to build a deploy whose expand-phase migrations are unapplied, which would close the window between merging and deploying. *(open)*
 - **NH274** — Arizona publishes 151 Governor's letters explaining why bills were signed or vetoed. They are scanned images rather than text, so reading them needs OCR, and the OCR tool cannot install itself without an elevation prompt. *(open)*
 
 **Needs Sean.** NH272, NH274

@@ -483,3 +483,34 @@ jobs:
           WTP_SCHEMA_GATE_SMOKE: ${{ inputs.schema_smoke }}
           WTP_SCHEMA_GATE_MOMENT: ${{ inputs.schema_moment }}
         run: corepack pnpm exec tsx scripts/db-shipping-gate.mts
+
+      # THE RELEASE FREEZE — GITHUB GREEN IS NOT PRODUCTION TRUTH (NH273).
+      #
+      # The step above asks whether production holds the migrations THIS change
+      # ships. This one asks whether the last post-deploy reading of production
+      # came back red, and refuses a production-changing release while it did.
+      # The author's decision, 2026-08-28: a red reading does NOT roll production
+      # back — the database may already have advanced, and rolling code back
+      # underneath an advanced schema manufactures a second incompatibility. It
+      # marks state DEGRADED, alerts, and blocks the next release until a
+      # re-check passes.
+      #
+      # NO CREDENTIAL, NO DATABASE. It reads `data/ops/production-integrity.json`,
+      # a committed record, so it runs on a fork pull request and on a laptop
+      # with no .env.local. That is also why an absent NH272 secret cannot make
+      # it green: the record itself carries CREDENTIAL_ABSENT and the gate reads
+      # that as unproven rather than as passing.
+      #
+      # SCOPED BY `classifyDeploy` — the same predicate scripts/netlify-ignore.mjs
+      # gives Netlify — so a docs-only close-out is not treated as a production
+      # release and follows ordinary shipping law.
+      #
+      # WHY HERE AND NOT IN A WORKFLOW OF ITS OWN, measured rather than assumed:
+      # `gh api repos/:owner/:repo/deployments` returns 0 for this repository.
+      # Netlify creates no GitHub Deployment, so no `deployment_status` event has
+      # ever fired here and a workflow listening for one would never run. A gate
+      # that never executes reports nothing and reads as covered.
+      - name: Release freeze (refuses a release on a DEGRADED production reading)
+        if: always()
+        timeout-minutes: 5
+        run: corepack pnpm exec tsx scripts/release-freeze-gate.mts

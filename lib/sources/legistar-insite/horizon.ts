@@ -64,23 +64,36 @@ import { sittingKeyFromLocal } from "../event-identity.ts";
  * under "This Year" is ONE route asked twice. `Calendar.aspx` and the Clerk's
  * own table on `www.pima.gov` are two publishers.
  */
-export type FirstPartyRoute =
+/**
+ * The routes, as a VALUE.
+ *
+ * This was a bare type union until the control plane needed to compute an
+ * inherited route floor from it. A union that exists only in the type system
+ * cannot be enumerated at runtime, so every consumer wanting "all of them" had
+ * to retype the list — and a retyped floor is exactly the forgot-the-API defect
+ * wearing a different hat. The array is now the declaration and the type is
+ * derived from it, so the two cannot drift apart.
+ */
+export const FIRST_PARTY_ROUTES = [
   /** `webapi.legistar.com/v1/{client}/events` — the vendor's JSON API. */
-  | "LEGISTAR_WEBAPI_EVENTS"
+  "LEGISTAR_WEBAPI_EVENTS",
   /** `webapi.legistar.com/v1/{client}/EventDates/{bodyId}` — dates only. */
-  | "LEGISTAR_WEBAPI_EVENTDATES"
+  "LEGISTAR_WEBAPI_EVENTDATES",
   /** `{tenant}.legistar.com/Calendar.aspx` — the portal's own grid. */
-  | "INSITE_CALENDAR_GRID"
+  "INSITE_CALENDAR_GRID",
   /** `{tenant}.legistar.com/Feed.ashx?M=Calendar` — the grid's RSS. */
-  | "INSITE_CALENDAR_RSS"
+  "INSITE_CALENDAR_RSS",
   /** `{tenant}.legistar.com/View.ashx?M=IC` — the per-meeting iCalendar. */
-  | "INSITE_ICAL_EXPORT"
+  "INSITE_ICAL_EXPORT",
   /** `{tenant}.legistar.com/MeetingDetail.aspx` — the per-meeting page. */
-  | "INSITE_MEETING_DETAIL"
+  "INSITE_MEETING_DETAIL",
   /** The body's OWN site: the Clerk of the Board's schedule table. */
-  | "CLERK_SCHEDULE_PAGE"
+  "CLERK_SCHEDULE_PAGE",
   /** `{tenant}.granicus.com/ViewPublisher.php` — see `GRANICUS_LIVE_PROCEEDINGS_WALL`. */
-  | "GRANICUS_VIEW_PUBLISHER";
+  "GRANICUS_VIEW_PUBLISHER",
+] as const;
+
+export type FirstPartyRoute = (typeof FIRST_PARTY_ROUTES)[number];
 
 /**
  * What a route's enumeration actually achieved — never inferred from a 200.

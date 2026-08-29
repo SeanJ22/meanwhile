@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-28 — **The deploy that failed had nothing wrong with it.** The fixture credential hotfix; its record is the LAST section of this file.
+Last updated: 2026-08-28 — **The repository already had most of the architecture's semantics and almost none of its runtime.** The overnight control-plane build; its record is the LAST section of this file.
+
+Previous: 2026-08-28 — **The deploy that failed had nothing wrong with it.** The fixture credential hotfix.
 
 Previous: 2026-08-28 — **Four subsystems were resting a verdict on an input they had not checked.** The pre-control-plane cleanroom.
 
@@ -21750,3 +21752,242 @@ it was reading the shallowest layer of the problem: the credential it named was
 not the live one, the file it named was not the only file, the second file it
 never flagged at all across five green deploys, and the write that put them all
 there was still in the tree.
+
+## 2026-08-28 — the overnight control-plane build
+
+**The repository already had most of the architecture's semantics and almost
+none of its runtime.** That sentence is the whole finding of Stage 0, and it
+changed what this session built. The hardened game plan asks for a work graph, a
+method registry, atomic route dispositions, permission/transport separation,
+coverage denominators and a political-neutrality invariant — and every one of
+those already exists here, tested, and governed by a numbered ruling. What did
+not exist was the layer underneath them: a durable unit of route work that
+outlives the worker walking it, a lease, an attempt record, an evidence vault, a
+shared host budget, a cost ledger.
+
+So the control plane was built to **supply that layer and call the existing
+semantics unchanged**, not to restate them. The clearest case is the disposition
+vocabulary. The plan names five dispositions; `lib/workstate/types.ts` already
+carries eleven under RULING 184, and the eleven are strictly better because
+three of them — `BLOCKED_CURRENTLY`, `REQUIRES_NEW_ADAPTER`,
+`RECORDS_REQUEST_PENDING` — are open states wearing a finished face. The plan's
+five are now recorded as a *reading* of the governed eleven, in
+`DESIGN_DOC_DISPOSITION_READING`, so a later session cannot reconcile the two by
+minting a second enum. `FAILED` deliberately gets no mapping at all: it is three
+different facts (a transport failure, which belongs to the Attempt and is not a
+disposition; a capability gap; a wall), and collapsing them into one word is how
+a wall became an emptiness.
+
+### The three prerequisites
+
+**`claude/g17-aud03-measure` is retired.** The prior audit finding was re-proven
+before deletion rather than trusted: one measurement-only commit, one file
+changed, 463 commits behind `main`, and all eight of its `dynamic()` boundaries
+already present in current `main` at lines 98–126 of `components/map/map-entry.tsx`
+under the same names, with `docs/aud-03-prereg.md` and both AUD-03 decision
+commits on `main` too. Its SHA was recorded before the ref was removed. `main`
+is now the only remote branch.
+
+**NH272 is still yours, and the value was never the blocker.** The read-only
+production URL exists in the local authorized environment and is proven — role
+`readonly` on `neondb`, credential-ledger row 33. What this session declined to
+do is copy a production credential into GitHub Actions, which widens what a
+compromised workflow can reach. The consequence is smaller than it looks,
+because the reading itself was taken **locally, against production, this
+session, and it is green**: 23 of 23 committed migrations applied, head
+`0022_adorable_hemingway`, all 23 content checksums matching the SQL committed
+here, one `SELECT`, nothing applied. The mechanism is proven. What the secret
+buys is CI taking that same reading unattended.
+
+**NH273 shipped, and it does not roll anything back.** The author's decision was
+explicit: a red post-deploy integrity reading marks production DEGRADED in
+durable machine-readable state and mechanically blocks the next
+production-changing release, rather than reverting the deploy — because the
+database may already have advanced, and rolling code back underneath an advanced
+schema manufactures a second incompatibility on top of the first.
+
+The design turned on one measurement. The plan recommends a `deployment_status`
+workflow; `gh api repos/:owner/:repo/deployments` returns **0**. Netlify creates
+no GitHub Deployment for this repository, so that event has never fired here and
+a workflow listening for it would never run — a gate that never executes reports
+nothing and reads as covered. The freeze therefore went into the **existing
+`gates` job**, which is the required context and the repository's existing
+shipping truth. A tenth workflow would have been a second verdict and would have
+broken two count assertions; the workflow count and the action-pin count are
+untouched.
+
+Five states, and the two that earn their keep are the two that are not green.
+`CREDENTIAL_MISSING` exists so an absent secret cannot print like a pass.
+`STALE_HEALTHY` exists so a green answer about an earlier commit cannot be read
+as an answer about this one — the record carries the SHA it was taken against,
+and without that field a green record is green forever. Both live controls were
+run against a planted DEGRADED record: a production-changing change is refused
+with exit 1 and a named remedy, and a non-shipping change is permitted **while
+the state still reads DEGRADED**, because paperwork is not a production release
+and merging it thaws nothing.
+
+### What the control plane refuses
+
+One deterministic evaluator answers whether an obligation may end. It is pure,
+total, and refuses by default: an input it was not given is a reason to refuse,
+never a reason to proceed. Thirteen named refusal codes, and the first is the
+one the whole architecture exists for.
+
+**The inherited route floor is computed, never typed.** Preflight asks two
+authorities and unions the answers — the method store through `projectMethodFor`
+(RULING 195 makes the typed projection the only inheritance interface) and the
+source adapter's own declared first-party surfaces. Neither is a superset of the
+other. A floor built from one of them is how fourteen Pima sittings became
+three.
+
+To make that mechanical, `horizon.ts` gained a value-level `FIRST_PARTY_ROUTES`
+and now derives `FirstPartyRoute` from it. It had been a bare type union, which
+cannot be enumerated at runtime, so any consumer wanting all of them had to
+retype the list — and a retyped floor is the forgot-the-API defect wearing a
+different hat.
+
+### Pima, attached in shadow
+
+MTG-13 is attached as a real obligation reading the committed method store off
+disk, bound to the registered body id, and changing no reader truth: the InSite
+adapter and `tests/legistar-insite-union.test.ts` remain the acceptance
+authority for the fourteen.
+
+The proof walks seven of the eight first-party routes and quietly omits
+`/EventDates`. Completion is refused, and **the refusal names that route** rather
+than reporting a count. The omitted route is precisely the one measured at zero
+future sittings, which is exactly why forgetting it felt safe.
+
+Two more that would be easy to get backwards. The Granicus `Disallow: /` keeps
+the obligation **open** rather than counting as walked-and-empty — we are not
+allowed to look, and that says nothing whatever about what is there. And a
+denominator that was never established refuses the close, because completeness
+measured against our own output is not completeness.
+
+### The evidence plane
+
+There is no evidence vault today, and Stage 0 found why that was easy to miss:
+acquired bytes are hashed, extracted, accounted, attributed and rung-stamped —
+and then discarded. The only durable copies of publisher bytes in this project
+are 73 sanitized test fixtures, an external content-addressed asset store, and
+untracked local scratch.
+
+Three artifact tiers, and the middle one is the point. A public page can itself
+emit a live third-party credential — PR #216 was stopped by exactly that — and
+that does not make the public record disposable, nor the credential safe to
+propagate. The exact bytes become a `RESTRICTED_RAW` artifact; parsers and
+ordinary workers get a provenance-linked `SANITIZED_DERIVED` one carrying both
+hashes, the sanitizer version and the redaction counts, and never a value. The
+shipped PR #217 scanner does the work; no second sanitizer exists.
+
+`ParserInput` is branded with a module-private symbol, and its sole constructor
+verifies the bytes hash to the artifact's recorded `contentHash`. The brand
+alone would still have allowed a worker to fetch a page live and attach the
+metadata; the hash check closes that.
+
+One correction to the plan, found by building it: `writeCapturedFixture` is the
+single acquisition boundary for fixtures, but it sanitizes **and discards the
+raw** in one step, returning only the sanitized hash. It cannot be reused as-is
+for a vault that needs both hashes and the exact raw bytes.
+
+### Capabilities, budgets, cost
+
+Least privilege where the **absences** are the content. A parser holds no
+network capability at all and cannot read restricted raw. Production write,
+external communication and records requests are granted to no role. The
+adversarial auditor *does* get public network read, because an auditor that
+cannot independently acquire first-party evidence is a stamp rather than an
+auditor. `authorize()` denies by default, and neutrality is an invariant with no
+disable path.
+
+Budgets are shared, and the test proves the thing that actually matters: twelve
+workers against one publisher with `maxConcurrent: 3` get three grants, while
+twelve **private** ledgers would grant twelve. Per-worker politeness multiplies;
+that is the whole reason the budget cannot live in the worker.
+
+Cost never touches truth. An unmeasured value is `null`, never zero — a rollup
+of `[null, 5]` reports total 5, measured 1, unmeasured 1 — and `withinBudget`
+separates *within* from *enforceable*, so an unmeasured spend neither halts the
+system nor silently counts as free. A source sweep asserts that no exported
+function in the cost module is shaped like a claim about correctness, with a
+positive control proving the detector fires.
+
+### The guards caught four things, and every one was real
+
+The full suite found six failures on this session's own code, and not one of
+them wanted the guard loosened.
+
+RULING 103 caught the git reader written out identically in both NH273 scripts —
+two places for the null handling to drift, in a mechanism that turns entirely on
+the difference between *the answer is no* and *there was no answer*. RULING 159
+caught a bare changed-path count with no denominator floor; flooring it improved
+the output, which now reports how many changed paths are production-bearing
+rather than printing a naked total. RULING 107 caught a clock-stamped freshness
+date with no declaration that the stamp sits in the reading path — it does, and
+now it says so, along with what would make the declaration false. RULING 14
+caught a backslash repo path in a test where the backslashes were the *subject*
+of the test, and was still right: such a literal can only ever match on Windows.
+
+The remaining two were one mistake twice: NH273 was marked resolved and left in
+the working store, so the section census counted 356 against a store of 357.
+
+### Campaign finance follows the filing authority
+
+The discovery question is not *which API covers this level*. It is **who is the
+filing authority for this contest, committee and period** — and the authority's
+level need not match the office's. Arizona answers it by statute: A.R.S. § 16-928,
+read from the state's own site on 2026-08-26 and quoted here rather than
+paraphrased, sends statewide and legislative filings to the Secretary of State,
+county **and school-district** and community-college and special-taxing-district
+filings to the county officer in charge of elections, and city and town filings
+to the clerk. A school-board contest routing to a county officer is the test
+that proves the levels come apart.
+
+`resolveFilingAuthority` has no fall-through to the state. An unwalked county
+returns OPEN with a null authority and names the route, because guessing the
+custodian is the same error as guessing the filing. The federal authority's
+`statutoryBasis` is **null on purpose**: this repository has read Arizona's
+statute and can quote it, and has never read whichever federal provision names
+the FEC as filing officer. A plausible citation in the one field whose job is
+being checkable would be a fabrication, so it carries a named open question.
+
+RULING 126 constrains the whole domain and the constraint is honoured — no
+Drizzle table, no migration, types and committed-JSON semantics only — and the
+firewall's own wall-1 sweep is re-run over the new modules and still finds
+nothing.
+
+Two obligations, both **open**. The federal one is AZ-06, reading per-candidate
+coverage out of the committed FEC snapshot rather than transcribing it, so a
+refresh cannot leave a stale number behind; Schedule E is `BLOCKED_CURRENTLY`
+behind counsel review and the reporting calendar is `UNWALKED`. The local one is
+the Vail Unified School District budget override, resolved by the statute to the
+Pima County officer in charge of elections, with all seven routes open —
+including the `seethemoney` SPA wall, the live-browser rung 6 still recorded as
+NOT YET WALKED, and the EasyVote tenant-list question unanswered since
+2026-08-26.
+
+An independent expenditure is not money received. The types are structurally
+distinct, and that guard was verified **by breaking it**: adding a
+receiving-committee field produces three compile errors, one of them inside the
+library.
+
+### What this session did not do
+
+It did not add the `WTP_PRODUCTION_DATABASE_URL_READONLY` secret, and NH272 is
+still open for that reason alone.
+
+It did not promote anything to reader truth. Every attachment is SHADOW; the
+InSite adapter and its union test remain the acceptance authority for Pima's
+fourteen sittings, and no reader surface changed.
+
+It did not choose a durable workflow provider or an object-storage provider.
+Both are owner decisions with billing attached, both are isolated behind
+interfaces, and the in-memory evidence store says in its own type that it is not
+production durability.
+
+It did not build the Control Center. The plan puts it at Stage H and the plan is
+right: a dashboard built before canonical state exists produces numbers with no
+denominators.
+
+The aircraft is not finished. What exists is a foundation with its invariants
+proven against real obligations — which is what the plan asks Stage B to mean.

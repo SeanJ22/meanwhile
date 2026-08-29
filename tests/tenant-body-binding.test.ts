@@ -12,7 +12,7 @@ import {
   servingTenants,
   type RegistryView,
   type ServingTenant,
-} from "../lib/registry/tenant-body-binding.ts";
+} from "../lib/ops/tenant-body-binding.ts";
 
 /**
  * **THE BINDING RULE, OVER EVERY ADAPTER RATHER THAN OVER ONE TABLE.**
@@ -26,7 +26,7 @@ import {
  *
  * So the rule needed a bigger denominator, and the denominator needs a guard
  * of its own — which is what the sweep below is. See
- * `lib/registry/tenant-body-binding.ts` for the rule itself.
+ * `lib/ops/tenant-body-binding.ts` for the rule itself.
  */
 
 const REGISTRY: RegistryView = registryFile;
@@ -116,7 +116,7 @@ test("no adapter carries a body id outside the serving-tenant denominator", () =
     `\n  ${offenders.length} adapter file(s) declare a body id that no serving-tenant table\n` +
       `  exports, so nothing checks them against the registry:\n    ${offenders.join(
         "\n    ",
-      )}\n  Add the table to servingTenants() in lib/registry/tenant-body-binding.ts.\n`,
+      )}\n  Add the table to servingTenants() in lib/ops/tenant-body-binding.ts.\n`,
   );
 });
 

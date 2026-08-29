@@ -127,7 +127,7 @@ export const INSITE_TENANTS: InSiteTenant[] = [
      * tenant added here is a body added to the product.** Both halves now
      * exist: `lib/registry/coverage-audit.ts` carries the walked rungs and
      * `lib/registry/source-wiring.ts` carries the row, and
-     * `lib/registry/tenant-body-binding.ts` is the guard that fails the build
+     * `lib/ops/tenant-body-binding.ts` is the guard that fails the build
      * if a serving tenant ever again names a body the registry does not have.
      */
     slug: "mesa",

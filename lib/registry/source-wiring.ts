@@ -106,7 +106,7 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
    * failure attribution (`wiringForSourceName`), the coverage audit and the
    * reader-facing gap notes all read.
    *
-   * `lib/registry/tenant-body-binding.ts` is the guard that stops the next one
+   * `lib/ops/tenant-body-binding.ts` is the guard that stops the next one
    * arriving unannounced: it walks every adapter-owned tenant table and
    * requires a wired body id to resolve to exactly one registry body of the
    * matching division.

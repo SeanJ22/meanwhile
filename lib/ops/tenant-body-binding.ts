@@ -1,6 +1,34 @@
+/**
+ * **WHY THIS LIVES IN `lib/ops/` AND NOT IN `lib/registry/`.**
+ * (Moved 2026-08-28 at integration. RULING 197's guard; the placement is
+ * RULING 191's job, because only the combined head could see the problem.)
+ *
+ * It was written in `lib/registry/`, which is where it belongs by subject.
+ * The integrated build refused: `/api/meetings` traces **every `.ts` file in
+ * `lib/registry/`** into its serving bundle, so a guard imported by nothing but
+ * `tests/tenant-body-binding.test.ts` began shipping to production — and took
+ * the route's trace cardinality from 220 to 221, one past the committed
+ * ceiling.
+ *
+ * **The ceiling was right and the file was wrong.** `scripts/bundle-budget.json`
+ * permits re-measuring a baseline when a growth is understood, and that would
+ * have made the build green while leaving test-only code in the deploy. The
+ * postbuild check already asserts `tests/ traced 0` — the rule that test code
+ * does not ship exists here; this file was simply outside the directory the
+ * rule could see. Fixing at the source is what the refusal asks for first.
+ *
+ * `lib/ops/` traces ZERO files into that route, and `lib/ops/branch-retirement.ts`
+ * — a pure classifier over git refs, written in this same session — is the
+ * precedent. The pattern is: **a pure classifier whose only consumer is a guard
+ * belongs in `lib/ops/`, whatever it is about.**
+ *
+ * Nothing about the rule changed in the move. The imports below still reach the
+ * three serving tenant tables; only this module's own address did.
+ */
+
 import { LEGISTAR_CLIENTS } from "../sources/legistar/clients.ts";
 import { INSITE_TENANTS } from "../sources/legistar-insite/tenants.ts";
-import { SOURCE_WIRING } from "./source-wiring.ts";
+import { SOURCE_WIRING } from "../registry/source-wiring.ts";
 
 /**
  * **EVERY PRODUCTION-SERVING TENANT NAMES A BODY THE REGISTRY ACTUALLY HAS.**

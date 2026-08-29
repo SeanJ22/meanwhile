@@ -226,6 +226,24 @@ test("the three not-yet-sourced labels are distinct, and the third is about us",
   assert.notEqual(incumbencyLabel("UNKNOWN"), incumbencyLabel("CHALLENGER"));
 });
 
+test("the two gaps are two DIFFERENT true sentences, and both are about us", () => {
+  /*
+   * 2026-08-28. The contest-level eligibility gate can refuse a contest whose
+   * sitting member we DO hold — the candidate universe is a filing list, or the
+   * officeholder universe is not shown complete. Saying *we haven't sourced who
+   * holds this seat* there is a false statement about our own records, so there
+   * is a second sentence, and it is still ours rather than theirs.
+   */
+  const unsourced = incumbencyLabel("UNKNOWN", "HOLDER_NOT_SOURCED") ?? "";
+  const unestablished = incumbencyLabel("UNKNOWN", "CONTEST_NOT_ESTABLISHED") ?? "";
+  assert.notEqual(unsourced, unestablished);
+  for (const line of [unsourced, unestablished]) {
+    assert.match(line, /^We haven't/, `"${line}" must name whose gap it is`);
+    assert.deepEqual(claimsInText(line), [], `"${line}" asserts something about a person`);
+  }
+  assert.equal(incumbencyLabel("INCUMBENT", "CONTEST_NOT_ESTABLISHED"), "Incumbent", "the gap only colours UNKNOWN");
+});
+
 /* -------------------------------------------------------------------------- */
 /* 5. THE BODY'S OWN ROSTER, AND WHAT ITS FIELD ACTUALLY MEANS                 */
 /* -------------------------------------------------------------------------- */
@@ -279,7 +297,17 @@ test("the ballot card no longer turns a falsy incumbency flag into 'Challenger'"
     !/incumbent\s*\?\s*["']Incumbent["']\s*:\s*["']Challenger["']/.test(src),
     "the ternary that produced the defect is gone",
   );
-  assert.ok(src.includes("incumbencyLabel(incumbency)"), "and the label comes from the one decision");
+  /*
+   * The call grew a second argument on 2026-08-28 and this assertion moved with
+   * it deliberately. There is more than one gap the third state can be — no
+   * holder record, or a holder record the contest-level gate still refuses —
+   * and one sentence cannot be true of both. What is being pinned is unchanged:
+   * the label comes from the one decision, never from a ternary.
+   */
+  assert.ok(
+    src.includes("incumbencyLabel(incumbency, incumbencyGap ?? undefined)"),
+    "and the label comes from the one decision",
+  );
 });
 
 test("the ballot page reads incumbency from the contest resolution, not from the FEC join", () => {

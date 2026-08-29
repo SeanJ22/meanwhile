@@ -11,7 +11,7 @@ import {
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
 import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
-import { incumbencyLabel, type Incumbency } from "@/lib/ballot/incumbency";
+import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
@@ -75,6 +75,7 @@ export function CandidateBattlecard({
   partyLabel = null,
   photoUrl = null,
   incumbency = "UNKNOWN",
+  incumbencyGap = null,
   speakContext = null,
   subjectId,
   sections,
@@ -128,6 +129,18 @@ export function CandidateBattlecard({
    * a race and not the other.
    */
   incumbency?: Incumbency;
+  /**
+   * WHICH gap the third state is, so the sentence on the chip is the true one
+   * (2026-08-28). A contest can be refused a label while we DO hold the
+   * sitting member — the candidate universe is not certified, or the
+   * officeholder universe is not shown complete — and the original sentence
+   * would then be a false statement about our own sourcing. Null keeps the
+   * original and commonest one.
+   *
+   * Every card in a contest receives the SAME value, so this can never read as
+   * a remark about one candidate (RULING 42).
+   */
+  incumbencyGap?: IncumbencyGap | null;
   /** Where the reader is, for the Speak Your Mind row. Never who they are. */
   speakContext?: { lat?: number | null; lng?: number | null } | null;
   /** Already-formatted party text. Display only — nothing here ranks. */
@@ -315,7 +328,7 @@ export function CandidateBattlecard({
                     <IdentityChip
                       className={incumbency === "UNKNOWN" ? "id-chip-unsourced" : undefined}
                     >
-                      {incumbencyLabel(incumbency)}
+                      {incumbencyLabel(incumbency, incumbencyGap ?? undefined)}
                     </IdentityChip>
                   </div>
                 </div>

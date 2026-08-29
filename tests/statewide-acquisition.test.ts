@@ -133,12 +133,27 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
       title: "Secretary of State",
       ocdId: "ocd-division/country:us/state:az",
       federal: false,
+      voteFor: 1,
       candidates: [{ key: "k", display: "Adrian Fontes", targetKey: "k" }],
     },
     async () => null,
     async () => [holder],
   );
-  assert.equal(result.decisions.get("k")?.standing, "INCUMBENT");
+  /*
+   * `resolved` rather than `decisions`, and the distinction is the subject of
+   * this test rather than an inconvenience to it (2026-08-28). What is being
+   * asserted here is that the holder's own identifier reaches the MATCHING
+   * layer — which it does. Whether a label may then RENDER is a separate
+   * question answered by `contestLabelEligibility`, and for this contest the
+   * answer is no: the curated statewide store is assembled person by person, so
+   * nothing here shows we hold everyone who could sit in this office.
+   */
+  assert.equal(result.resolved.get("k")?.standing, "INCUMBENT");
+  assert.equal(
+    result.decisions.get("k")?.standing,
+    "UNKNOWN",
+    "and the reader-facing answer stays quiet until the officeholder universe is shown complete",
+  );
   // The holder came back out of `holderFor`, which is only populated for an
   // INCUMBENT, and it is the SAME record — id included.
   assert.equal(result.holderFor.get("k")?.id, "statewide:az/secretary-of-state");

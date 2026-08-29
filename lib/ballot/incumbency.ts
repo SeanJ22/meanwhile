@@ -74,6 +74,12 @@ export interface IncumbencyDecision {
   readonly basis: string;
   /** What was read. A stable identifier where one exists, else the roster. */
   readonly source: string | null;
+  /**
+   * For UNKNOWN only: WHICH gap it is, so the reader-facing sentence is the
+   * true one. Absent means the original and commonest cause — we hold no record
+   * of who sits here. See `IncumbencyGap`.
+   */
+  readonly gap?: IncumbencyGap;
 }
 
 /** A candidate as this decision needs to see them. */
@@ -428,14 +434,42 @@ export function resolveContestIncumbency(input: ContestIncumbencyInput): Map<str
   return out;
 }
 
-/** The reader-facing word for each state. The third is deliberately about us. */
-export function incumbencyLabel(standing: Incumbency): string | null {
+/**
+ * WHICH GAP the third state is, because there is more than one and they are
+ * not the same fact about us. (2026-08-28, the contest-universe session.)
+ *
+ * Until the contest-level eligibility gate existed, UNKNOWN had exactly one
+ * cause — no holder record — and one sentence said it. The gate adds a second
+ * cause: **we know who holds the seat and still cannot label anybody**, because
+ * the contest's candidate universe or its officeholder universe is not shown
+ * complete, and labelling only the person we matched is the acquisition
+ * asymmetry reaching a reader.
+ *
+ * Saying *we haven't sourced who holds this seat* in that second case would be
+ * a FALSE statement about us — we have sourced it. Both sentences are about US
+ * either way, which is the rule; this is about them also being true.
+ */
+export type IncumbencyGap = "HOLDER_NOT_SOURCED" | "CONTEST_NOT_ESTABLISHED";
+
+/**
+ * The reader-facing word for each state. The third is deliberately about us.
+ *
+ * Plain language, no internal vocabulary, and — for the third state — the same
+ * sentence on EVERY card in the contest, so it can never read as a remark about
+ * whichever candidate we happen to know less about (RULING 42).
+ */
+export function incumbencyLabel(
+  standing: Incumbency,
+  gap: IncumbencyGap = "HOLDER_NOT_SOURCED",
+): string | null {
   switch (standing) {
     case "INCUMBENT":
       return "Incumbent";
     case "CHALLENGER":
       return "Challenger";
     case "UNKNOWN":
-      return "We haven't sourced who holds this seat yet";
+      return gap === "CONTEST_NOT_ESTABLISHED"
+        ? "We haven't confirmed this for everyone in this contest"
+        : "We haven't sourced who holds this seat yet";
   }
 }

@@ -368,6 +368,7 @@ async function BallotBattlecard({
   federal,
   contestCandidates,
   contestId,
+  contestVoteFor,
   context,
 }: {
   name: string;
@@ -407,6 +408,11 @@ async function BallotBattlecard({
    */
   contestCandidates: readonly { key: string; display: string; targetKey: string }[];
   contestId: string;
+  /*
+   * How many seats this contest fills. The contest-level eligibility gate
+   * reconciles the holders a source returns against it (2026-08-28).
+   */
+  contestVoteFor: number;
   context: { zip: string; lat: number; lng: number } | null;
 }) {
   /*
@@ -431,7 +437,14 @@ async function BallotBattlecard({
    * three states. A miss is UNKNOWN, never `Challenger`.
    */
   const incumbency = await contestIncumbency(
-    { id: contestId, title: contestTitle, ocdId: contestOcdId, candidates: contestCandidates, federal },
+    {
+      id: contestId,
+      title: contestTitle,
+      ocdId: contestOcdId,
+      candidates: contestCandidates,
+      federal,
+      voteFor: contestVoteFor,
+    },
     incumbentHolderFor,
   );
   const standing = incumbency.decisions.get(targetKey) ?? {
@@ -474,6 +487,13 @@ async function BallotBattlecard({
        * resolved per contest, and the third is visibly about our sourcing.
        */
       incumbency={standing.standing}
+      /*
+       * WHICH gap the third state is (2026-08-28). The contest-level
+       * eligibility gate can refuse a contest whose sitting member we DO hold,
+       * and the original sentence would be false about US there. Both
+       * sentences are about us; this picks the one that is also true.
+       */
+      incumbencyGap={standing.gap ?? null}
       speakContext={context ? { lat: context.lat, lng: context.lng } : null}
       subjectId={targetKey}
       /*
@@ -1737,6 +1757,7 @@ export default async function BallotPage({
                             contestOcdId={contest.ocdId}
                             federal={isFederalContest(contest)}
                             contestId={contest.id}
+                            contestVoteFor={contest.voteFor}
                             contestCandidates={lineup.nominees.map((n) => ({
                               key: `${contest.id}|${n.name}`,
                               display: n.name,
@@ -1894,6 +1915,7 @@ export default async function BallotPage({
                               contestOcdId={contest.ocdId}
                               federal={isFederalContest(contest)}
                               contestId={contest.id}
+                              contestVoteFor={contest.voteFor}
                               contestCandidates={candidatesOf(set, contest).map((x) => ({
                                 key: x.id,
                                 display: `${x.givenName} ${surnameDisplayCase(x.familyName)}`,

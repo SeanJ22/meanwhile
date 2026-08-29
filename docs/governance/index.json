@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "5ebf6921b5116732",
+  "snapshot": "bbabe4e99d52ad78",
   "counts": {
-    "records": 229,
-    "current": 208,
-    "law": 181,
+    "records": 234,
+    "current": 213,
+    "law": 186,
     "decisions": 27,
     "historical": 21
   },
@@ -3859,6 +3859,141 @@
         }
       ],
       "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0193",
+      "aliases": [
+        "RULING 193",
+        "R193",
+        "R-193"
+      ],
+      "title": "RULING 193 — a guard proves what it claims to prove, or it is not a guard",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "guard.evidence_standard",
+          "value": "checked-evidence-only"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0194",
+      "aliases": [
+        "RULING 194",
+        "R194",
+        "R-194"
+      ],
+      "title": "RULING 194 — the workstream plan is append-safe, and a branch is never the denominator",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "orchestration.denominator",
+          "value": "declared-logical-workstreams-reconciled"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0195",
+      "aliases": [
+        "RULING 195",
+        "R195",
+        "R-195"
+      ],
+      "title": "RULING 195 — one typed projection is what a session inherits, and no consumer reads raw route prose",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "method.inheritance_interface",
+          "value": "typed-current-claim-projection"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0192"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0196",
+      "aliases": [
+        "RULING 196",
+        "R196",
+        "R-196"
+      ],
+      "title": "RULING 196 — an established migration is immutable, and correction is a new migration",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "schema.migration_mutability",
+          "value": "immutable-append-only"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0197",
+      "aliases": [
+        "RULING 197",
+        "R197",
+        "R-197"
+      ],
+      "title": "RULING 197 — a serving source tenant names a registered body; an adapter never mints one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "sources.tenant_identity",
+          "value": "registry-is-the-authority"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0183"
+        }
+      ],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

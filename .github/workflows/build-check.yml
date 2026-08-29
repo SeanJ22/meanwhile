@@ -417,6 +417,50 @@ jobs:
         timeout-minutes: 10
         run: corepack pnpm exec tsc --noEmit
 
+      # THE THREE CANONICAL AUTHORITIES, RUN RATHER THAN IMPLIED (2026-08-29).
+      #
+      # `governance:check`, `orchestration:check` and `method:check` were
+      # enforced only INDIRECTLY here, by tests that assert things about their
+      # subject matter. That is not the same as running them, and the gap is the
+      # RO04 shape precisely: a session runs every gate it knows about, reports
+      # all of them green truthfully, and merges a ledger whose generated views
+      # are stale.
+      #
+      # EACH WAS CLASSIFIED BY READING THE SCRIPT. All three are PURE CHECKERS —
+      # they read canonical state, write nothing under the repository, and exit
+      # non-zero on a violation. `governance:check` regenerates every view into a
+      # `mkdtemp` COPY of the tree rather than into the tree, for the reason its
+      # own comment gives: a validator that repairs what it measures cannot
+      # report a failure.
+      #
+      # THE MUTATING NEIGHBOURS ARE EXCLUDED BY NAME, so a later reader does not
+      # take the omission for an oversight: `governance:compile` is the
+      # GENERATOR (running it here would repair the staleness this catches and
+      # go green having destroyed the evidence — RULING 102); `method:ingest`
+      # rebuilds the method store from the legacy manifest and once shrank it
+      # from 88 routes to 62 while reporting success; `orchestration:closeout` is
+      # this same script with `--closeout`, and it reconciles against artifacts
+      # only the running session can observe — fed CI's empty list it would
+      # manufacture findings about a session that is not running.
+      #
+      # `if: always()` on all three, so one red gate does not hide the others.
+      # `scripts/gates.mjs` carries the same three, and
+      # `tests/gate-parity.test.ts` fails if this file and that one ever drift.
+      - name: Governance ledger and its generated views
+        if: always()
+        timeout-minutes: 10
+        run: corepack pnpm governance:check
+
+      - name: Orchestration plans (RULING 190)
+        if: always()
+        timeout-minutes: 5
+        run: corepack pnpm orchestration:check
+
+      - name: Method knowledge store
+        if: always()
+        timeout-minutes: 5
+        run: corepack pnpm method:check
+
       # THE SHIPPING INVARIANT — ASKED BEFORE THE MERGE, NOT THE MORNING AFTER.
       # (2026-08-28, the P0 schema drift. Intake tripwire run 33211710028.)
       #
@@ -500,6 +544,17 @@ jobs:
       # with no .env.local. That is also why an absent NH272 secret cannot make
       # it green: the record itself carries CREDENTIAL_ABSENT and the gate reads
       # that as unproven rather than as passing.
+      #
+      # IT DOES MAKE ONE NETWORK CALL, AND IT NEEDS NO CREDENTIAL EITHER
+      # (2026-08-29). Rule 4 — a healthy reading must still cover the production
+      # it is about — turns on WHAT PRODUCTION SERVES RIGHT NOW, so the gate asks
+      # `GET https://sparkwtp.netlify.app/api/build`, which returns the deployed
+      # commit from a build-time constant. That route writes nothing: no database
+      # handle, no search-log row, so a gate that runs on every pull request
+      # cannot contaminate the store this product sells. The synthetic-run header
+      # travels with the request regardless. Three bounded attempts separate a
+      # dropped connection from a wall; a wall is PRODUCTION_UNOBSERVABLE, which
+      # FREEZES a production-changing release rather than passing (RULING 24).
       #
       # SCOPED BY `classifyDeploy` — the same predicate scripts/netlify-ignore.mjs
       # gives Netlify — so a docs-only close-out is not treated as a production

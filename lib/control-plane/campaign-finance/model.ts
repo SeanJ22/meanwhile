@@ -196,6 +196,31 @@ export interface FilingRoutingRule {
   readonly quote: string;
 }
 
+/**
+ * THE THREE ROUTING STATES, and the third one is why this vocabulary exists.
+ *
+ *   - `RESOLVED` — the custodian is known, by rule, with provenance.
+ *   - `OPEN` — the RULE is known and the office holding it is not. Arizona's
+ *     Yavapai County is here: A.R.S. § 16-928 names *the county officer in
+ *     charge of elections*, and this repository has walked that officer for Pima
+ *     only.
+ *   - `NO_REGIME_ON_RECORD` — **we do not yet know which authority governs this
+ *     contest at all.** A claim about THIS REPOSITORY, never about a government.
+ *
+ * It lives in the model rather than in `authority.ts` because
+ * `CampaignFinanceCoverage` carries it and `authority.ts` already imports this
+ * file: defining it there and importing it here would be a cycle, and defining
+ * it in both places would be two vocabularies free to disagree (RULING 103).
+ *
+ * **An unresolved state is never a reason to close a contest.** It is a reason
+ * to keep hunting, enforced in `coverage.ts` — a coverage record whose regime is
+ * not `RESOLVED` cannot reach `COMPLETE_AS_OF` and cannot make a candidate-level
+ * finance feature eligible — and in `authority.ts`'s
+ * `unresolvedAuthorityKeepsCoverageOpen`, which has no input that yields closure.
+ */
+export const AUTHORITY_RESOLUTION_STATUSES = ["RESOLVED", "OPEN", "NO_REGIME_ON_RECORD"] as const;
+export type AuthorityResolutionStatus = (typeof AUTHORITY_RESOLUTION_STATUSES)[number];
+
 /* ── Committees ───────────────────────────────────────────────────────────── */
 
 export const COMMITTEE_TYPES = [
@@ -719,6 +744,19 @@ export interface CampaignFinanceCoverage {
   /** OCD-ID of the division voting on it. */
   readonly jurisdictionOcdId: string;
   readonly officeLevel: OfficeLevel;
+  /**
+   * WHETHER WE KNOW WHICH AUTHORITY GOVERNS THIS CONTEST AT ALL.
+   *
+   * **Required, and deliberately not defaulted.** A field defaulting to
+   * `RESOLVED` when a caller forgets it is exactly the silent default this
+   * domain refuses: it would let a contest in a jurisdiction whose statute has
+   * never been read look identically routed to one whose statute we have quoted.
+   * The caller states what it knows, and `coverage.ts` refuses completeness on
+   * anything but `RESOLVED`.
+   */
+  readonly filingRegimeState: AuthorityResolutionStatus;
+  /** The routing rule selected, when one was. Null under `NO_REGIME_ON_RECORD`. */
+  readonly filingRegimeId: string | null;
   /** Every candidacy on the ballot for this contest. The denominator. */
   readonly candidateUniverse: readonly string[];
   /** Where the denominator came from. A count with no source is not a denominator. */

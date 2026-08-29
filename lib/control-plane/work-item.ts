@@ -107,7 +107,46 @@ export interface CompletionContract {
    * output is the coverage attack mode.
    */
   readonly requiresCompleteDenominator: boolean;
-  /** Dispositions that would satisfy this obligation, if narrower than the default. */
+  /**
+   * The dispositions permitted to satisfy this obligation, if narrower than the
+   * governed default. `null` means "the governed default", which is the
+   * `OPEN_DISPOSITIONS` / `TERMINAL_DISPOSITIONS` split in
+   * `lib/workstate/types.ts` and nothing else.
+   *
+   * ## What it is applied TO, and why that is the narrow reading
+   *
+   * When non-null, this list narrows the clause it is written next to: the
+   * INHERITED ROUTE FLOOR. `evaluateCompletion` therefore applies it to route
+   * tasks with `inherited === true` that carry a disposition, and refuses
+   * `DISPOSITION_OUTSIDE_CONTRACT` when one of them landed outside the set.
+   *
+   * Two wider readings were considered and rejected:
+   *
+   *   1. **Every RouteTask, inherited or not.** Rejected because it would let a
+   *      contract written about the floor silently govern routes the contract
+   *      never contemplated. Discovery is a tree (RULING 52) and a route found
+   *      mid-walk is, by construction, not part of the floor computed at
+   *      preflight. Under this reading a scout that discovered a bonus endpoint
+   *      and honestly recorded `POINTER_ONLY` on it would BLOCK an obligation
+   *      whose whole floor was walked clean — punishing extra hunting, which is
+   *      exactly backwards for this product.
+   *   2. **Only route tasks whose `routeId` appears literally in
+   *      `inheritedRouteFloor`.** Rejected as too narrow in the unsafe
+   *      direction: `inheritedRouteFloor` holds route ids while a RouteTask is
+   *      keyed on (route id, target), so a floor route walked against a second
+   *      target — the same Legistar route against a second host — would escape
+   *      the filter entirely. `inherited` is the flag the preflight actually
+   *      sets when it materialises the floor, so it is the honest join.
+   *
+   * The chosen reading is strictly narrower than (1) and strictly safer than
+   * (2). It also fails CLOSED in the only direction that matters: a route the
+   * contract cares about that landed on a disposition the contract does not
+   * accept refuses completion rather than being averaged away.
+   *
+   * This list never WIDENS anything. An `OPEN_DISPOSITION` named here does not
+   * become terminal; clause 2 of the evaluator still refuses it as outstanding.
+   * A contract may only ever tighten what closes an obligation.
+   */
   readonly acceptableDispositions: readonly Disposition[] | null;
 }
 
@@ -131,7 +170,62 @@ export interface Escalation {
   /** Response target in hours. Visible ageing, never silent ageing. */
   readonly responseTargetHours: number;
   readonly resolvedAt: string | null;
+  /**
+   * When the owner asked to stop being shown this in the queue. A NOTIFICATION
+   * decision and nothing else: see `blocksCompletion` below, and
+   * `openEscalations` for the surface it governs.
+   */
   readonly snoozedUntil: string | null;
+  /**
+   * Whether this escalation still stands between the obligation and a terminal
+   * state, independent of whether anyone wants to look at it today.
+   *
+   * The two questions are separate and were previously conflated. Snoozing is a
+   * statement about the Needs Sean queue — "not this week" — and a snooze that
+   * could retire an obligation would mean an owner dismissing a notification
+   * had, without ever deciding anything, converted an unanswered question into
+   * a settled fact about a government. That is the same class of error as a
+   * timeout becoming an emptiness.
+   *
+   * So `completionBlockingEscalations` reads THIS field and ignores the snooze
+   * entirely, and it is `true` by default everywhere an Escalation is built in
+   * this module. A field nobody set must never be the reason an obligation
+   * closed. `false` is an affirmative decision that this escalation is about
+   * US — a vendor account, a spend approval, a naming choice — and therefore
+   * cannot make a public record any less true.
+   */
+  readonly blocksCompletion: boolean;
+}
+
+/**
+ * Build an Escalation with the safe defaults already in place.
+ *
+ * `blocksCompletion` defaults to `true` and `resolvedAt`/`snoozedUntil` to
+ * `null`, so the value a caller gets for free is the value that refuses. A
+ * caller that genuinely knows the question is about us rather than about a
+ * publisher has to say so, in writing, at the call site.
+ */
+export function createEscalation(input: {
+  id: string;
+  reason: string;
+  requestedAction: string;
+  alreadyTried?: readonly string[];
+  openedAt: string;
+  responseTargetHours: number;
+  /** Pass `false` ONLY for a question whose answer cannot change a public fact. */
+  blocksCompletion?: boolean;
+}): Escalation {
+  return {
+    id: input.id,
+    reason: input.reason,
+    requestedAction: input.requestedAction,
+    alreadyTried: input.alreadyTried ?? [],
+    openedAt: input.openedAt,
+    responseTargetHours: input.responseTargetHours,
+    resolvedAt: null,
+    snoozedUntil: null,
+    blocksCompletion: input.blocksCompletion ?? true,
+  };
 }
 
 export interface WorkItem {
@@ -194,12 +288,41 @@ export function withRouteTasks(item: WorkItem, taskIds: readonly string[]): Work
   return { ...item, routeTaskIds: [...merged] };
 }
 
+/**
+ * THE QUEUE VIEW. What the Needs Sean queue shows at `now`, and nothing else.
+ *
+ * Unresolved, and either never snoozed or snoozed to a moment that has passed.
+ * That is a rendering question — which rows an owner should be looking at
+ * today — and it is answered against a caller-supplied clock because rendering
+ * is the one place a clock genuinely belongs.
+ *
+ * **This function must never be used as a completion input.** It was, and the
+ * consequence was mechanical: snoozing an escalation past `now` removed it from
+ * this list, clause 7 of the evaluator read this list, and the obligation
+ * completed. An owner pressing "not this week" is not an owner answering the
+ * question, and a notification preference cannot be allowed to decide whether a
+ * public record is settled. Completion asks
+ * `completionBlockingEscalations(item)`, which takes no clock at all.
+ */
 export function openEscalations(item: WorkItem, now: string): readonly Escalation[] {
   return item.escalations.filter(
     (e) =>
       e.resolvedAt === null &&
       (e.snoozedUntil === null || Date.parse(e.snoozedUntil) <= Date.parse(now)),
   );
+}
+
+/**
+ * THE COMPLETION VIEW. Escalations that still stand between this obligation and
+ * a terminal state.
+ *
+ * Unresolved AND `blocksCompletion`. The snooze is not consulted, and there is
+ * deliberately no `now` parameter — a function that cannot see the clock cannot
+ * be talked out of a refusal by moving it. The only thing that clears a
+ * blocking escalation is `resolvedAt`: somebody actually answered.
+ */
+export function completionBlockingEscalations(item: WorkItem): readonly Escalation[] {
+  return item.escalations.filter((e) => e.resolvedAt === null && e.blocksCompletion);
 }
 
 /** How long an escalation has waited, in hours. For the Needs You queue. */

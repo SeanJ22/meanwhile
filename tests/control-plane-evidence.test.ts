@@ -23,13 +23,17 @@ import {
 import {
   EvidenceStoreRefusal,
   MemoryEvidenceStore,
+  artifactMeta,
   assertDurable,
   buildManifest,
+  objectClassOf,
+  objectIncompatibility,
   objectKey,
   putArtifact,
   putManifest,
   readArtifact,
   readForParser,
+  workItemPrefix,
 } from "../lib/control-plane/evidence/store.ts";
 import { credentials, scanText } from "../lib/ops/fixture-credentials.ts";
 
@@ -492,4 +496,349 @@ test("a read of an artifact the store does not hold is a FAILED read, never an e
   const store = new MemoryEvidenceStore();
   const { artifact } = recordAcquisition({ ...ACQUISITION, contentType: "text/plain" }, "unstored");
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceStoreRefusal);
+});
+
+/* ================================== IMMUTABILITY, ENFORCED RATHER THAN DESCRIBED */
+
+/**
+ * A page the same LENGTH as the seeded page and not the same bytes.
+ *
+ * The length is the positive control for the whole test below it: `putArtifact`
+ * already refused a length disagreement, so a tampered body of a DIFFERENT length
+ * would be caught by the old check and would prove nothing about the new one.
+ * Swapping one character in place is the case a length check cannot see, and it
+ * is the ordinary case — an edited page, a truncated read that happened to refill,
+ * the wrong artifact's bytes handed to the right artifact's record.
+ */
+const TAMPERED_PAGE = SEEDED_PAGE.replace("Regular Session", "Special Session");
+
+test("POSITIVE CONTROL: the tampered page is byte-length-identical and hash-different", () => {
+  // Without this, the refusal below could be the LENGTH guard firing and the hash
+  // recomputation could be absent entirely while the suite stayed green.
+  assert.equal(
+    Buffer.byteLength(TAMPERED_PAGE, "utf8"),
+    Buffer.byteLength(SEEDED_PAGE, "utf8"),
+    "the tampered control must defeat the length check, or it tests the wrong guard",
+  );
+  assert.notEqual(TAMPERED_PAGE, SEEDED_PAGE);
+});
+
+test("IMMUTABILITY: bytes that do not hash to the artifact's contentHash are refused at the store boundary", async () => {
+  const store = new MemoryEvidenceStore();
+  const { artifact } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+
+  /*
+   * The seeded failure: an offered body that passes every check the store used to
+   * make. Same length, right artifact record, wrong bytes. Stored, it would sit at
+   * the address of a hash it does not have, and every citation of that key would
+   * repeat a false claim the STORE ITSELF created.
+   */
+  const err = await putArtifact(store, PROJECT, artifact, utf8(TAMPERED_PAGE)).then(
+    () => null,
+    (e: unknown) => e as EvidenceStoreRefusal,
+  );
+  assert.ok(err instanceof EvidenceStoreRefusal);
+  assert.equal(err.name, "EvidenceStoreRefusal");
+  assert.match(err.message, /hash to sha256-[0-9a-f]{64}/);
+  assert.match(err.message, /The key IS the hash/);
+  assert.equal(store.size, 0, "bytes that do not hash to their address reached the store");
+
+  // The positive control for the check itself: the CORRECT bytes still store.
+  const ok = await putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE));
+  assert.equal(ok.written, true);
+  assert.equal(store.size, 1);
+});
+
+test("IMMUTABILITY: an occupied key must hold the SAME object, and the refusal names the field", async () => {
+  /*
+   * The seeded failure: `putArtifact` used to read `if (existing) return { written:
+   * false }` with no comparison at all, so "idempotent" meant "whatever got there
+   * first" and a DIFFERENT artifact offered at an occupied key reported success
+   * while storing nothing.
+   *
+   * The natural instance is not contrived. `objectKey` is
+   * `.../<workItemId>/<contentHash>.<ext>` — the TIER is in the artifact id and
+   * NOT in the key. So a RAW artifact and the sanitized derivative of it that
+   * redacted nothing (an ordinary civic page has nothing to redact) are two
+   * artifacts, with two ids, two readerships, and ONE key.
+   */
+  const store = new MemoryEvidenceStore();
+  const page =
+    '<div data-container="6dcb7f01-38a4-4f5e-9c21-0b7ae4d13c88">' +
+    "<p>Regular Session — Wednesday, January 14, 2026 at 9:00 a.m.</p></div>";
+
+  const { artifact: raw } = recordAcquisition(ACQUISITION, page);
+  const { artifact: derived, text } = deriveSanitized(raw, page, T_DERIVED);
+  assert.equal(raw.tier, "RAW");
+  assert.equal(derived.tier, "SANITIZED_DERIVED");
+  assert.equal(derived.contentHash, raw.contentHash, "nothing was redacted, so the bytes are equal");
+  assert.equal(objectKey(PROJECT, derived), objectKey(PROJECT, raw), "one key, two tiers");
+
+  await putArtifact(store, PROJECT, raw, utf8(page));
+
+  const err = await putArtifact(store, PROJECT, derived, utf8(text)).then(
+    () => null,
+    (e: unknown) => e as EvidenceStoreRefusal,
+  );
+  assert.ok(err instanceof EvidenceStoreRefusal);
+  assert.match(err.message, /custom\.tier/);
+  assert.match(err.message, /"RAW"/);
+  assert.match(err.message, /"SANITIZED_DERIVED"/);
+  assert.match(err.message, /decides who may read/);
+  assert.equal(store.size, 1, "the second write neither stored nor relabelled");
+
+  // And the stored object is untouched: still RAW, still the first writer's record.
+  assert.equal((await store.head(objectKey(PROJECT, raw)))?.custom?.tier, "RAW");
+});
+
+test("IMMUTABILITY: the identity split is exactly the four fields, and attempt-scoped facts may differ", async () => {
+  const store = new MemoryEvidenceStore();
+  const { artifact } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+  await putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE));
+
+  /*
+   * A SECOND ATTEMPT that brought back the same bytes. Different attempt, different
+   * route, a later moment on the same UTC day — the ladder working. Refusing this
+   * would turn a successful re-retrieval into an error.
+   */
+  const second: Artifact = {
+    ...artifact,
+    attemptId: "at-0000000000000000000099ff",
+    methodRouteId: "CLERK_SCHEDULE_PRINT_VIEW",
+    retrievedAt: "2026-08-28T21:44:00.000Z",
+    httpStatus: 203,
+    transport: "REACHABLE",
+  };
+  const again = await putArtifact(store, PROJECT, second, utf8(SEEDED_PAGE));
+  assert.equal(again.written, false, "a second attempt bringing back identical bytes is idempotent");
+  assert.equal(store.size, 1);
+
+  // First writer wins for the attempt-scoped facts; the authoritative per-attempt
+  // record is the Artifact in the manifest, never this metadata summary.
+  const meta = (await store.head(again.key))!;
+  assert.equal(meta.custom?.attemptId, ACQUISITION.attemptId);
+
+  // Each identity field, seeded one at a time, and each named in its own refusal.
+  for (const [field, value] of [
+    ["tier", "SANITIZED_DERIVED"],
+    ["sourceId", "some-other-publisher"],
+    ["workItemId", "wi-0000000000000000000000ff"],
+    ["retentionPolicy", "DIAGNOSTIC"],
+  ] as const) {
+    const conflict = objectIncompatibility(meta, {
+      ...meta,
+      custom: { ...meta.custom, [field]: value },
+    });
+    assert.equal(conflict?.field, `custom.${field}`, `${field} is not being compared`);
+    assert.equal(conflict?.offered, value);
+  }
+
+  // The negative control: an attempt-scoped field is NOT a conflict.
+  for (const field of ["attemptId", "methodRouteId", "retrievedAt", "httpStatus", "transport"]) {
+    assert.equal(
+      objectIncompatibility(meta, { ...meta, custom: { ...meta.custom, [field]: "changed" } }),
+      null,
+      `${field} is attempt-scoped and must not refuse a re-retrieval`,
+    );
+  }
+
+  // A charset parameter is not a disagreement about what was stored.
+  assert.equal(
+    objectIncompatibility(meta, { ...meta, contentType: "text/html; charset=utf-8" }),
+    null,
+  );
+  assert.equal(objectIncompatibility(meta, { ...meta, contentType: "application/pdf" })?.field, "contentType");
+});
+
+test("IDEMPOTENCY: two concurrent putArtifact calls for the same artifact leave ONE object and no error", async () => {
+  const store = new MemoryEvidenceStore();
+  const { artifact } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+
+  /*
+   * Two workers racing the same retrieval. Both read `head` before either writes —
+   * that interleaving is the whole point, and it is why the double must be strict:
+   * a `Map.set` double would have "passed" this while silently overwriting, which
+   * is exactly the case a real object store makes visible.
+   */
+  const [a, b] = await Promise.all([
+    putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE)),
+    putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE)),
+  ]);
+
+  assert.equal(a.key, b.key);
+  assert.equal(store.size, 1, "a race produced two objects");
+  const stored = await store.get(a.key);
+  assert.equal(new TextDecoder().decode(stored!.bytes), SEEDED_PAGE);
+
+  // A third, sequential put now reports the no-op rather than racing.
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE))).written, false);
+});
+
+test("IDEMPOTENCY: the same key offered incompatible bytes or metadata is refused at the PROVIDER, not only the helper", async () => {
+  /*
+   * A rule enforced only in `putArtifact` is bypassed by the first caller holding
+   * a store reference — and a store reference is what every provider hands out.
+   * The in-memory double was a bare `Map.set`, so it was LOOSER than the contract
+   * it existed to prove, and a double that permits what production must refuse
+   * cannot witness the refusal.
+   */
+  const store = new MemoryEvidenceStore();
+  const { artifact } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+  const key = objectKey(PROJECT, artifact);
+  const meta = artifactMeta(artifact);
+
+  await store.put(key, utf8(SEEDED_PAGE), meta);
+
+  // Identical bytes, identical metadata: a proven no-op, not an error.
+  await store.put(key, utf8(SEEDED_PAGE), meta);
+  assert.equal(store.size, 1);
+
+  // Different bytes behind identical metadata — the case a hash comparison of the
+  // METADATA alone cannot reach, because the metadata is the thing that lied.
+  const err = await store
+    .put(key, utf8(TAMPERED_PAGE), meta)
+    .then(() => null, (e: unknown) => e as EvidenceStoreRefusal);
+  assert.ok(err instanceof EvidenceStoreRefusal);
+  assert.match(err.message, /The metadata is not the evidence; the bytes are/);
+
+  // Incompatible metadata behind identical bytes.
+  await assert.rejects(
+    () => store.put(key, utf8(SEEDED_PAGE), { ...meta, custom: { ...meta.custom, tier: "RAW" } }),
+    EvidenceStoreRefusal,
+  );
+
+  // The stored object is still the first writer's, byte for byte.
+  assert.equal(new TextDecoder().decode((await store.get(key))!.bytes), SEEDED_PAGE);
+});
+
+/* ============ THE MANIFEST IS A MUTABLE INDEX, AND THE EXEMPTION IS DECLARED */
+
+test("THE MANIFEST: a rebuilt index overwrites in place, and the exemption is declared rather than inferred from the hash format", async () => {
+  const store = new MemoryEvidenceStore();
+  const { artifact: raw } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+  const { artifact: derived, text } = deriveSanitized(raw, SEEDED_PAGE, T_DERIVED);
+
+  await putArtifact(store, PROJECT, raw, utf8(SEEDED_PAGE));
+  const first = buildManifest(PROJECT, ACQUISITION.workItemId, [raw], T_DERIVED);
+  const key = await putManifest(store, PROJECT, raw, first);
+
+  // The exemption is a DECLARED field, so a reader does not have to infer it from
+  // `contentHash` not looking like a sha256 value.
+  const meta = (await store.head(key))!;
+  assert.equal(objectClassOf(meta), "MUTABLE_INDEX");
+  assert.equal(meta.contentHash, `manifest:${ACQUISITION.workItemId}`);
+
+  // The rebuild, after the work item gained its derivative. An immutability rule
+  // applied here would make the SECOND artifact of every obligation unstorable.
+  await putArtifact(store, PROJECT, derived, utf8(text));
+  const second = buildManifest(PROJECT, ACQUISITION.workItemId, [raw, derived], T_DERIVED);
+  assert.equal(await putManifest(store, PROJECT, raw, second), key);
+
+  const rebuilt = JSON.parse(new TextDecoder().decode((await store.get(key))!.bytes)) as {
+    artifacts: readonly { id: string }[];
+  };
+  assert.equal(rebuilt.artifacts.length, 2, "the rebuilt index did not replace the first one");
+  assert.equal(store.size, 3, "the rebuild created a second index object");
+
+  /* An evidence BODY may not claim the index's exemption, and vice versa. */
+  const bodyKey = objectKey(PROJECT, raw);
+  await assert.rejects(
+    () =>
+      store.put(bodyKey, utf8(SEEDED_PAGE), {
+        ...artifactMeta(raw),
+        objectClass: "MUTABLE_INDEX",
+      }),
+    (e: unknown) => {
+      assert.ok(e instanceof EvidenceStoreRefusal);
+      assert.match(e.message, /objectClass/);
+      return true;
+    },
+  );
+
+  /* One obligation's index may not overwrite another's: the manifest's hash names
+     the work item, and it is still COMPARED even though it is not a content address. */
+  await assert.rejects(
+    () =>
+      store.put(key, utf8("{}"), {
+        contentType: "application/json",
+        contentHash: "manifest:wi-000000000000000000000099",
+        byteLength: 2,
+        objectClass: "MUTABLE_INDEX",
+      }),
+    (e: unknown) => {
+      assert.ok(e instanceof EvidenceStoreRefusal);
+      assert.match(e.message, /contentHash/);
+      return true;
+    },
+  );
+
+  /* Silence fails CLOSED: metadata with no declared class is an immutable body. */
+  assert.equal(objectClassOf({ contentType: "text/html", contentHash: "x", byteLength: 1 }), "IMMUTABLE_BODY");
+});
+
+/* ==================== THE TRUE KEY SEMANTICS, PINNED BY ASSERTION */
+
+test("KEY SEMANTICS: identical bytes under two work items are two DISTINCT keys, and each key is individually immutable", async () => {
+  /*
+   * The header used to claim "the same bytes always land on the same key, so a
+   * re-run overwrites nothing and duplicates nothing". Five of the seven key
+   * segments are SCOPE, not content, so the second half of that sentence was a
+   * global-deduplication claim the key shape does not make — and a later session
+   * reasoning from it would build a retention sweep or a takedown on a property
+   * nothing enforces.
+   *
+   * The true guarantee is immutability and content identity WITHIN the scoped
+   * object namespace, with duplicate bodies across work-item, source and date
+   * prefixes permitted on purpose. This test is that sentence, in assertions.
+   */
+  const store = new MemoryEvidenceStore();
+  const page = "<p>Regular Session — Wednesday, January 14, 2026 at 9:00 a.m.</p>";
+
+  const one = recordAcquisition(
+    { ...ACQUISITION, workItemId: "wi-000000000000000000000a01" },
+    page,
+  ).artifact;
+  const two = recordAcquisition(
+    { ...ACQUISITION, workItemId: "wi-000000000000000000000b02" },
+    page,
+  ).artifact;
+  const otherSource = recordAcquisition({ ...ACQUISITION, sourceId: "granicus" }, page).artifact;
+  const otherDay = recordAcquisition(
+    { ...ACQUISITION, retrievedAt: "2026-08-29T14:03:00.000Z" },
+    page,
+  ).artifact;
+
+  // Identical bytes, therefore an identical artifact id — content identity holds.
+  assert.equal(one.contentHash, two.contentHash);
+  assert.equal(one.id, two.id, "the artifact id is a function of tier and bytes");
+
+  // And FOUR distinct keys, because the scope is in the key and the scope differs.
+  const keys = [one, two, otherSource, otherDay].map((a) => objectKey(PROJECT, a));
+  assert.equal(new Set(keys).size, 4, "the key scoping is not doing what the header now claims");
+  assert.notEqual(workItemPrefix(PROJECT, one), workItemPrefix(PROJECT, two));
+
+  for (const artifact of [one, two, otherSource, otherDay]) {
+    assert.equal((await putArtifact(store, PROJECT, artifact, utf8(page))).written, true);
+  }
+  assert.equal(store.size, 4, "duplicate bodies across prefixes are permitted, on purpose");
+
+  // The scoping is load-bearing and this is what it buys: one source's holdings,
+  // and one obligation's evidence, are each a single prefix read with no index.
+  assert.equal((await store.list(`project/${PROJECT}/source/granicus/`)).length, 1);
+  assert.equal((await store.list(workItemPrefix(PROJECT, one))).length, 1);
+
+  // EACH key is individually immutable. The duplication buys prefix rules; it
+  // does not buy anybody the right to rewrite one of the copies.
+  for (const artifact of [one, two, otherSource, otherDay]) {
+    assert.equal((await putArtifact(store, PROJECT, artifact, utf8(page))).written, false);
+    await assert.rejects(
+      () =>
+        store.put(objectKey(PROJECT, artifact), utf8(`${page} `), {
+          ...artifactMeta(artifact),
+          byteLength: page.length + 1,
+        }),
+      EvidenceStoreRefusal,
+    );
+  }
+  assert.equal(store.size, 4);
 });

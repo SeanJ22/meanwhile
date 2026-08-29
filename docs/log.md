@@ -4,9 +4,9 @@
 (`scripts/tracker.mjs`) from the tracker's own attribution and description fields,
 plus one authored sentence per session in `docs/log-purposes.json`.
 
-Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-29 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **158 sessions.**
+Newest first. **159 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,17 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## 2026-08-29 durable shadow runtime
+
+**What it started.** 4 row(s) opened, 4 still open.
+
+- **NH282** — The control plane can now survive a worker dying: leases expire, a dead Attempt is observed from outside, the route returns to the pool, another process resumes from durable state, and a crash between two writes is finished by a recovery pass. All of that is proven by tests. What does not exist is anything that RUNS the loop when nobody is watching. A workflow driver is the thing that wakes up, claims what is claimable, renews what it holds and reclaims what died. This repository has GitHub Actions and three workflows permitted to hold a cron, and an outside scheduler would be invisible to every guard the repo has, so the choice is yours rather than a session's. Nothing downstream is blocked except unattended operation itself - every rule, every refusal and the shadow proving run all work today when a person or a test starts them. *(open)*
+- **NH283** — When a captured public page carries a live third-party credential - which is not hypothetical, it is what PR #216 hit on Pima County's own Clerk of the Board page - the exact bytes are kept but quarantined, and only a sanitized copy reaches any parser. Those quarantined bytes currently cannot be stored durably, because the only two places this repository can write are a PUBLIC GitHub asset store and a plain folder on disk, and neither offers encryption at rest or access control. The tier was deliberately NOT weakened to fit what is available: that would put a working credential somewhere it can be read, which is the original incident one layer down. Ordinary evidence is fully durable already; this is only about the quarantined tier. *(open)*
+- **NH284** — When a site's robots.txt says do not crawl, we do not send a request at all. But every one of the six transport states describes an attempt that actually happened, so there is no honest value to record. Both the Pima shadow fixture and the new proving run write CHALLENGED, which reads as though we tried and were turned away. Nothing about correctness turns on it today - the route is disposed BLOCKED_CURRENTLY, an open state, so the obligation correctly stays open and no absence is asserted. But the vocabulary is imprecise at exactly the point where a wall must not become an emptiness, which is the one conversion this product cannot survive. *(open)*
+- **NH285** — states/nh/explainer.md says RSA 664:6 and 664:7 are quoted in sources.md. They are not: states/nh/sources.md contains no 664 string at all, and a repo-wide search finds no verbatim operative sentence anywhere. Two other states' notes summarise the rule as centralised on the Secretary of State, but a summary is not a quote. This blocks New Hampshire from entering the campaign-finance filing-regime registry, because a regime record built from a paraphrase of a routing rule is a different routing rule - and the registry's whole job is to say which authority governs a contest. *(open)*
+
+**Needs Sean.** NH282, NH283
 
 ## 2026-08-28 · grounded-Ask integration session
 

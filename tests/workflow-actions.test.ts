@@ -64,7 +64,11 @@ test("the workflow set is still the nine this rule was audited against", () => {
     // Seven as of NH Hunt 3 (2026-08-21): job-watch.yml joined the set under
     // RULING 56. Its pins were audited here at the same time — checkout@v7 and
     // setup-node@v7, matching every other workflow.
-    9,
+    10,
+    // TEN as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set.
+    // Its pins were audited here at the same time — checkout@v7 and setup-node@v7,
+    // matching every other workflow.
+    //
     `the workflow set changed: ${workflows.join(", ")} — audit the new one's action pins too`,
   );
 });
@@ -85,7 +89,10 @@ test("R45: no workflow pins an action major that targets Node 20", () => {
 
   assert.equal(
     pins,
-    20,
+    22,
+    // 22 as of 2026-08-29 (NH273), when post-deploy-integrity.yml added its own
+    // checkout + setup-node pair.
+    //
     // 20 as of 2026-08-24 (RULING 124), when refresh-daily.yml added its own
     // checkout + setup-node pair.
     //

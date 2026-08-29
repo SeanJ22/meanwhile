@@ -20,13 +20,20 @@
 import { OPEN_DISPOSITIONS } from "../workstate/types.ts";
 import { isBlocking, dischargesAudit, type AuditFinding, type Contradiction, type ValidationRecord } from "./audit.ts";
 import { isOutstanding, type RouteTask } from "./route-task.ts";
-import { isTerminalState, openEscalations, type WorkItem, type WorkItemState } from "./work-item.ts";
+import {
+  completionBlockingEscalations,
+  isTerminalState,
+  type WorkItem,
+  type WorkItemState,
+} from "./work-item.ts";
 
 /** Every distinct reason completion can be refused. Stable identifiers. */
 export const REFUSAL_CODES = [
   "INHERITED_ROUTE_WITHOUT_DISPOSITION",
+  "DISPOSITION_OUTSIDE_CONTRACT",
   "ROUTE_TASK_STILL_OUTSTANDING",
   "ROUTE_TASK_RECLAIMABLE",
+  "ROUTE_TASK_POLICY_DENIED",
   "BLOCKING_CONTRADICTION",
   "VALIDATION_MISSING",
   "VALIDATION_FAILED",
@@ -88,7 +95,7 @@ export function evaluateCompletion(
 ): CompletionVerdict {
   const refusals: Refusal[] = [];
   const satisfied: string[] = [];
-  const { item, routeTasks, now } = snapshot;
+  const { item, routeTasks } = snapshot;
 
   if (!isTerminalState(proposedState)) {
     return {
@@ -132,8 +139,64 @@ export function evaluateCompletion(
     );
   }
 
-  // ---- 2. Outstanding and reclaimable route work -------------------------
+  // ---- 1b. The contract's narrowed disposition set ------------------------
+  //
+  // `acceptableDispositions` narrows the clause immediately above it, and until
+  // this block existed it narrowed nothing at all: the field was declared,
+  // populated by callers, and read by no one. A contract clause the evaluator
+  // ignores is worse than an absent one, because it reads as a guarantee.
+  //
+  // The reading is the narrow one, argued in full on `CompletionContract`: it
+  // applies to INHERITED route tasks that carry a disposition. The floor is
+  // what the contract is about; a route discovered mid-walk was never part of
+  // it, and penalising an honest disposition on a bonus route would punish the
+  // extra hunting this product exists to do.
+  //
+  // It only ever TIGHTENS. Naming an open disposition here does not make it
+  // terminal — clause 2 below still refuses it as outstanding.
+  const acceptable = item.contract.acceptableDispositions;
+  if (acceptable !== null) {
+    const governed = routeTasks.filter((t) => t.inherited && t.disposition !== null);
+    let outside = 0;
+    for (const task of governed) {
+      const value = task.disposition!.disposition;
+      if (!acceptable.includes(value)) {
+        outside += 1;
+        refusals.push({
+          code: "DISPOSITION_OUTSIDE_CONTRACT",
+          subject: task.id,
+          detail:
+            `Inherited route ${task.routeLabel} is disposed ${value}, which this obligation's ` +
+            `contract does not accept (permitted: ${acceptable.length === 0 ? "(none)" : acceptable.join(", ")}). ` +
+            "The contract narrowed what may satisfy this obligation; a disposition outside that " +
+            "set has not satisfied it, whatever else is green.",
+        });
+      }
+    }
+    if (outside === 0) {
+      satisfied.push(
+        `contract disposition set: ${governed.length} inherited route(s) within ` +
+          `{${acceptable.join(", ") || "(none)"}}`,
+      );
+    }
+  }
+
+  // ---- 2. Outstanding, reclaimable and policy-denied route work -----------
   for (const task of routeTasks) {
+    if (task.state === "POLICY_DENIED") {
+      const denial = task.policyDenial ?? null;
+      refusals.push({
+        code: "ROUTE_TASK_POLICY_DENIED",
+        subject: task.id,
+        detail:
+          `Route ${task.routeLabel} was refused by OUR capability policy` +
+          (denial ? ` (${denial.reason})` : "") +
+          ". The route was never walked, so nothing is known about the publisher through it. " +
+          "Before a retry can differ from the last one, this must change: " +
+          (denial?.requiredChange ?? "no required change was recorded on the task."),
+      });
+      continue;
+    }
     if (task.state === "RECLAIMABLE") {
       refusals.push({
         code: "ROUTE_TASK_RECLAIMABLE",
@@ -247,9 +310,20 @@ export function evaluateCompletion(
 
   // ---- 7. Owner escalations ----------------------------------------------
   //
-  // Only escalations that BLOCK terminal truth. An owner decision about, say,
-  // a vendor account does not prevent an unrelated record from being complete.
-  for (const e of openEscalations(item, now)) {
+  // Only escalations that BLOCK terminal truth. An owner decision about, say, a
+  // vendor account does not prevent an unrelated record from being complete —
+  // that carve-out is `blocksCompletion: false`, decided in writing at the call
+  // site rather than inferred here.
+  //
+  // This clause used to read `openEscalations(item, now)`, which is the QUEUE
+  // view: it hides anything snoozed past `now`. So snoozing a genuinely
+  // blocking escalation into next week removed it from this loop and the
+  // obligation completed — an owner dismissing a notification had, without
+  // deciding anything, converted an unanswered question into a settled fact
+  // about a government. `completionBlockingEscalations` takes no clock, so
+  // there is no longer any moment you can move the evaluation to that changes
+  // its answer. Only `resolvedAt` clears one: somebody actually answered.
+  for (const e of completionBlockingEscalations(item)) {
     if (proposedState !== "AUTHOR_DECISION_REQUIRED" && proposedState !== "HUMAN_INTERACTION_REQUIRED") {
       refusals.push({
         code: "OWNER_ESCALATION_UNRESOLVED",

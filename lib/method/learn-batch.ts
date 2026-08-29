@@ -21,13 +21,25 @@
  * denominator impossible to omit, so this function owns it rather than trusting
  * each caller to remember.
  */
-import { readFileSync, writeFileSync } from "node:fs";
-
 import { floored, floorLine } from "../ops/denominator-floor.ts";
+import {
+  emptyCandidateStore,
+  introducedIssues,
+  markAdmitted,
+  markRejected,
+  markValidated,
+  proposeCandidate,
+  readCandidateStore,
+  readMethodStore,
+  writeCandidateStore,
+  writeMethodStore,
+  type CandidateStore,
+} from "./candidate.ts";
 import { attachClaims, type MethodClaim } from "./claims.ts";
 import {
   learnRoute,
   recordRouteOutcome,
+  type MethodIssue,
   type MethodKnowledge,
   type MethodRoute,
 } from "./knowledge.ts";
@@ -191,25 +203,224 @@ export function learnBatch(
   return { knowledge: k, versionBefore, learned, already, offered: routes.length, log };
 }
 
+/* ------------------------------------------------------- VALIDATION BEFORE ADMISSION */
+
+/**
+ * The Attempt id recorded when a route is admitted by a HAND-RUN SCRIPT rather
+ * than by a control-plane Attempt.
+ *
+ * It is a named sentinel, not a fabricated id. Minting `at-<hash>` here would
+ * put a value in the audit chain that resolves to nothing and reads exactly like
+ * one that resolves to something — the same failure `provenance.artifact` has,
+ * one field over. "No Attempt existed" is a fact about us and is written as one.
+ */
+export const UNATTRIBUTED_SCRIPT_ATTEMPT = "UNATTRIBUTED_SCRIPT_RUN";
+
+export interface AdmissionOutcome {
+  /** The prospective store. Identical to the input when admission was refused. */
+  readonly knowledge: MethodKnowledge;
+  readonly batch: LearnBatchResult;
+  readonly candidates: CandidateStore;
+  readonly admitted: boolean;
+  /** The issues this batch would INTRODUCE. Empty when admitted. */
+  readonly introduced: readonly MethodIssue[];
+  readonly refusal: string | null;
+}
+
+/**
+ * Which introduced issues belong to which proposal.
+ *
+ * The validator reports `id` as a route id, or as a claim id under the
+ * `<routeId>#<slug>` convention. Attribution is best-effort BY DESIGN: when
+ * nothing matches, the candidate keeps the WHOLE issue set rather than an empty
+ * one, because a rejection record that names no reason is the silence this
+ * mechanism exists to abolish.
+ */
+function issuesFor(routeId: string, introduced: readonly MethodIssue[]): readonly MethodIssue[] {
+  const mine = introduced.filter((i) => i.id === routeId || i.id.startsWith(`${routeId}#`));
+  return mine.length > 0 ? mine : introduced;
+}
+
+/**
+ * **OFFER, VALIDATE, THEN ADMIT — NEVER ADMIT AND THEN CHECK.**
+ *
+ * Every route becomes a durable `MethodCandidate` before anything is computed,
+ * the prospective store is validated by the canonical validators, and only a
+ * batch that introduces no issue reaches the write path.
+ *
+ * **The batch is atomic.** One store is written once, so a batch that cannot be
+ * written whole is not written at all — and every candidate in a refused batch is
+ * rejected with the issues, its own where they can be attributed and the whole
+ * set where they cannot. Admitting the innocent half would leave the store in a
+ * state no script has ever produced and no re-run reproduces.
+ */
+export function admitLearnedRoutes(
+  store: MethodKnowledge,
+  candidates: CandidateStore,
+  routes: readonly LearnedRoute[],
+  options: { stamp: string; attemptId?: string },
+): AdmissionOutcome {
+  const stamp = options.stamp;
+  const attemptId = options.attemptId ?? UNATTRIBUTED_SCRIPT_ATTEMPT;
+
+  let cs = candidates;
+  const ids: string[] = [];
+  for (const proposal of routes) {
+    const p = proposeCandidate(cs, {
+      attemptId,
+      proposal,
+      submittedAt: stamp,
+      observedMethodVersion: store.version,
+    });
+    cs = p.store;
+    ids.push(p.candidate.id);
+  }
+
+  const batch = learnBatch(store, routes, stamp);
+  const { introduced, preExisting } = introducedIssues(store, batch.knowledge);
+  const ok = introduced.length === 0;
+
+  for (let i = 0; i < ids.length; i += 1) {
+    // A candidate is marked VALIDATED whether or not it PASSED: `VALIDATED`
+    // records that the validators ran, and `ok` records what they said. A
+    // candidate that skipped straight from PROPOSED to REJECTED would be
+    // indistinguishable from one refused before validation could run at all.
+    const v = markValidated(cs, ids[i], {
+      at: stamp,
+      againstMethodVersion: store.version,
+      introduced: issuesFor(routes[i].id, introduced),
+      preExisting,
+      ok,
+    });
+    cs = v.store;
+  }
+
+  if (!ok) {
+    for (let i = 0; i < ids.length; i += 1) {
+      cs = markRejected(cs, ids[i], {
+        at: stamp,
+        code: "VALIDATION_FAILED",
+        reason:
+          `admitting this batch would introduce ${introduced.length} validator issue(s); the store is ` +
+          "written once and a batch that cannot be written whole is not written at all",
+        issues: issuesFor(routes[i].id, introduced),
+      }).store;
+    }
+    return {
+      knowledge: store,
+      batch,
+      candidates: cs,
+      admitted: false,
+      introduced,
+      refusal:
+        `REFUSED — ${introduced.length} validator issue(s) would be INTRODUCED by this batch. ` +
+        "Nothing written. Correct first.",
+    };
+  }
+
+  const known = new Map(batch.knowledge.routes.map((r) => [r.id, r]));
+  for (let i = 0; i < ids.length; i += 1) {
+    const landed = known.get(routes[i].id);
+    cs = markAdmitted(cs, ids[i], {
+      at: stamp,
+      admittedAs: routes[i].id,
+      effect: landed && landed.learnedAtVersion > store.version ? "LEARNED" : "ALREADY_KNOWN",
+      methodVersionAfter: batch.knowledge.version,
+    }).store;
+  }
+
+  return { knowledge: batch.knowledge, batch, candidates: cs, admitted: true, introduced: [], refusal: null };
+}
+
+export interface RunLearnBatchOptions {
+  /**
+   * The method version this caller believes the store is at. Defaults to the
+   * version this call itself reads, which is the correct precondition for a
+   * script that reads and writes in one breath.
+   */
+  readonly expectedVersion?: number;
+  /** The Attempt that submitted these routes, when one exists. */
+  readonly attemptId?: string;
+  /** Where to persist the candidate records. Omitted means in-memory only. */
+  readonly candidateStorePath?: string;
+}
+
+export interface RunLearnBatchResult {
+  readonly written: boolean;
+  readonly versionBefore: number;
+  readonly versionAfter: number;
+  readonly learned: number;
+  readonly already: number;
+  readonly offered: number;
+  readonly introduced: readonly MethodIssue[];
+  readonly refusal: string | null;
+  readonly candidates: CandidateStore;
+}
+
 /**
  * The whole of what a `learn-*-routes` script does: read the store, offer the
- * routes, write it back, and report.
+ * routes, VALIDATE, write it back through the governed path, and report.
  *
  * This exists because the two callers' `main` bodies were byte-identical and
  * extracting only `learnBatch` left them byte-identical again — RULING 103 is
  * satisfied by removing the duplicate, not by shrinking it. A script that
  * conceives routes should now contain nothing but the routes.
+ *
+ * **It can no longer write an invalid store.** It used to: read, learn,
+ * `writeFileSync`, with no gate of any kind, so a route carrying a value off a
+ * closed set landed in canonical project knowledge and `pnpm method:check`
+ * discovered it afterwards. The refusal is loud, it names every issue, it
+ * records a durable REJECTED candidate, and it exits non-zero.
  */
 export function runLearnBatch(
   storePath: string,
   routes: readonly LearnedRoute[],
   stamp: string,
-): void {
-  const store = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
-  const r = learnBatch(store, routes, stamp);
+  options: RunLearnBatchOptions = {},
+): RunLearnBatchResult {
+  const store = readMethodStore(storePath);
+  const candidatesBefore = options.candidateStorePath
+    ? readCandidateStore(options.candidateStorePath)
+    : emptyCandidateStore();
+
+  const a = admitLearnedRoutes(store, candidatesBefore, routes, {
+    stamp,
+    ...(options.attemptId ? { attemptId: options.attemptId } : {}),
+  });
+  const r = a.batch;
   for (const line of r.log) console.log(line);
 
-  writeFileSync(storePath, `${JSON.stringify({ ...r.knowledge, updatedOn: stamp }, null, 2)}\n`, "utf8");
+  const persistCandidates = (): void => {
+    if (options.candidateStorePath) writeCandidateStore(options.candidateStorePath, a.candidates, stamp);
+  };
+
+  if (!a.admitted) {
+    persistCandidates();
+    console.error(`\n${a.refusal}`);
+    for (const i of a.introduced.slice(0, 20)) console.error(`  ${i.id} ${i.rule}: ${i.detail}`);
+    console.error(
+      `A REJECTED candidate was recorded for each of the ${routes.length} route(s) offered — ` +
+        "a refusal is evidence, not a silence.",
+    );
+    process.exitCode = 1;
+    return {
+      written: false,
+      versionBefore: r.versionBefore,
+      versionAfter: r.versionBefore,
+      learned: 0,
+      already: 0,
+      offered: r.offered,
+      introduced: a.introduced,
+      refusal: a.refusal,
+      candidates: a.candidates,
+    };
+  }
+
+  writeMethodStore(storePath, a.knowledge, {
+    expectedVersion: options.expectedVersion ?? store.version,
+    stamp,
+  });
+  persistCandidates();
 
   console.log(
     `\nmethod version ${r.versionBefore} -> ${r.knowledge.version}   ` +
@@ -236,4 +447,16 @@ export function runLearnBatch(
           ),
     )}`,
   );
+
+  return {
+    written: true,
+    versionBefore: r.versionBefore,
+    versionAfter: r.knowledge.version,
+    learned: r.learned,
+    already: r.already,
+    offered: r.offered,
+    introduced: [],
+    refusal: null,
+    candidates: a.candidates,
+  };
 }

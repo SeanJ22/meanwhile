@@ -21991,3 +21991,194 @@ denominators.
 
 The aircraft is not finished. What exists is a foundation with its invariants
 proven against real obligations — which is what the plan asks Stage B to mean.
+
+## 2026-08-29 — the durable shadow runtime
+
+The overnight build of 2026-08-28 produced a semantic foundation and said, in
+its own closing lines, that it had not chosen a durable provider and had not
+proven durability. This session took the seven dimensions that brief named and
+moved each one as far as the repository could actually carry it, in six parallel
+workstreams over disjoint files, integrated on one branch, verified once at the
+combined head.
+
+### Four declarations that were not mechanisms
+
+The foundation declared more than it enforced, and every one of the four was
+found by reading the code against its own comments rather than by a test going
+red.
+
+`CompletionContract.acceptableDispositions` declared which dispositions could
+close an obligation and **the evaluator never read it**. Three call sites wrote
+it; all three wrote `null`, so no outcome anywhere could have differed. It is
+enforced now, narrowed to the inherited floor, with the two wider readings
+written down beside it and the reason each was rejected — governing every
+RouteTask would have punished a scout for honestly disposing an endpoint it
+discovered mid-walk, and matching on route id alone would let a floor route
+walked against a second host escape the filter entirely.
+
+A disposition could carry **another Attempt's id and cite another Attempt's
+artifact**. That is a conclusion about a government resting on bytes the
+execution making the claim never retrieved, with the hash chain pointing at a
+retrieval that did not happen. Three bindings close it, all mechanical.
+
+`reclaim()` proved almost nothing: any Attempt could reclaim any task, including
+a still-open one and a COMPLETED one. And `DENIED_BY_POLICY` — a capability our
+own policy engine refused — was swept into the same generic path as a crash,
+which is how a fact about us becomes indistinguishable from a fact about a
+publisher. It now parks the route in `POLICY_DENIED`: outstanding, never
+disposed, recording what must change before a retry.
+
+**A snooze could close an obligation.** `openEscalations(item, now)` hid
+escalations snoozed past `now`, and the completion evaluator used it as its
+input, so moving a date forward removed a blocking escalation from the
+completion test. Queue visibility and blocking truth are now separate questions,
+and the blocking one is evaluated **with no clock at all** — there is no moment
+the evaluation can be moved to that clears the refusal. An escalation created
+without an opinion blocks, because a field nobody set must never be the reason an
+obligation closed.
+
+### Evidence that proves its own identity
+
+The vault verified byte *length* and stopped. So bytes that were not the
+artifact's were accepted and stored at a key derived from a hash they did not
+have — the store manufacturing a false citation at the moment of writing. The
+positive control for the fix is deliberately byte-length-identical to the real
+page, because otherwise the old guard is what fires and the new one is untested.
+
+The header also claimed a global deduplication the key shape does not provide:
+five of its seven segments are scope, so identical bytes for two work items land
+on two keys. The claim is corrected to what the code guarantees — immutability
+and content identity **within the scoped namespace** — and the header now states
+what the duplication buys, which is that per-source takedown stays a prefix rule
+rather than a scan and `RESTRICTED_SHORT` expiry stays a storage lifecycle rule
+rather than a cron job that eventually stops running.
+
+The in-memory double was a bare `Map.set`. Every test that "proved" immutability
+was proving it about a double that did not have the property. A double may be
+stricter than production; it may never be looser.
+
+And a real defect surfaced that no amount of reading would have found: Windows
+`MoveFileExW` refuses a rename onto a destination another writer is renaming onto
+at the same instant, so two workers racing one legitimate retrieval became an
+error. The atomic write now takes a mandatory `acceptExisting` predicate — a lost
+race succeeds only when what is now present hashes identically, and a rebuilt
+manifest passes `null`, because two racing rebuilds genuinely disagree and must
+surface.
+
+### Workers can now die
+
+`WorkItem → RouteTask → Attempt` is persisted behind provider-neutral
+repositories with an in-memory double and a durable filesystem implementation.
+The substrate is the one the repository already governs — committed files, the
+same class as `data/workstate/` and `data/method/knowledge.json` — because
+control-plane work state is not reader-facing, and adding a Postgres migration
+for it would have tripped the schema gate and frozen a release for a reason with
+nothing to do with truth.
+
+Two design corrections were forced by building it. Write-then-rename is atomic
+for a **replacement**, which is exactly no help when the point is not to replace:
+two writers at revision N both rename and both win. Taking revision N+1 is now
+winning a race to exclusively create one filename, so compare-and-set is
+arbitrated by a single filesystem operation. And `put` compares against revision
+1 rather than the latest, because comparing against current state would refuse a
+legitimate re-registration of a task that has since been claimed — a guard that
+fires on correct behaviour is a guard on its way to being deleted.
+
+The acceptance test is the whole claim in one sequence: worker A claims, writes a
+partial artifact, disappears without a terminal disposition; time passes the
+lease; **a fresh repository instance over the same root** sees the durable
+history; worker B reclaims and completes; exactly one disposition exists; A's
+partial is still there and still attributed to A.
+
+What is honestly stated rather than claimed: one process cannot tear another's
+write mid-syscall, so no test here demonstrates a torn read. The defences are
+structural and the file says so.
+
+### Method learning that cannot overwrite itself or vanish
+
+`runLearnBatch` was an unconditional canonical writer — read, apply, write — so
+an invalid route reached `data/method/knowledge.json` and was found later by
+`pnpm method:check`. There is one governed write path now; it validates the
+prospective store with the canonical validators before writing, and refuses on
+any issue. It carries an optimistic-concurrency precondition, so a writer holding
+version N cannot overwrite a store at N+1. Six existing ungoverned writers are
+named in a ratchet that may shrink and never grow.
+
+A route discovered mid-walk is a candidate: `PROPOSED → VALIDATED → ADMITTED |
+REJECTED`, and **a rejection is persisted with its reason**, because a candidate
+that simply disappears teaches the next session nothing and will be proposed
+again. The `PriorConclusion` corpus the reopening engine had always lacked now
+exists, so a conclusion earned under version N is mechanically reopened by a
+genuinely new route admitted under N+1.
+
+### The freshness rule, and the premise that turned out to be false
+
+`STALE_HEALTHY` did not freeze anything, so a green reading about an earlier
+commit blessed every later one forever. The obvious fix is wrong and was
+rejected: a freeze keyed on the **candidate** commit can never be satisfied,
+because a post-deploy reading of a commit cannot exist before that commit
+deploys. An unsatisfiable gate is the strongest argument anyone will ever have
+for the skip flag this repository refuses to have.
+
+So the subject of the question is **what production actually serves**, and the
+instrument needs no credential: `/api/build` returns the deployed commit, and
+`next.config.ts` puts it there. Served commit equals the reading within a stated
+maximum age, the release proceeds; anything else — production moved, the reading
+expired, production could not be asked at all — freezes, and cannot be asked is
+never a pass.
+
+Building the observer surfaced a defect that would have been silent: adding a
+`fetch` to the freeze gate made `process.exit()` abort on Windows and **destroy
+the exit code**, so frozen and permitted runs both exited 127. Two verdicts, one
+indistinguishable result.
+
+And the session's own premise about production was wrong. NH281 records that
+nothing had deployed since `71325247` and that the build log needs the author's
+Netlify login. Measured twice, and independently confirmed: production serves
+`de61ff5d`, fifteen commits on, and `main`'s tip is docs-only, so production is
+CURRENT rather than behind. A fresh post-deploy reading against the served commit
+HELD — 23 of 23 migrations. The row is noted, not closed: it cleared on its own
+rather than being answered, and closing a Needs Sean row is the author's.
+
+### The proving run
+
+`pnpm shadow:run` carries one real obligation — Pima County's future Board
+sittings, the MTG-13 case — through the hardened runtime, over the publisher
+bytes already recorded under `tests/fixtures/`, and writes a replayable record.
+
+The floor is **28 routes, not 8**. With no field narrowing the projection offers
+122, including PDF extraction and portrait matching; narrowed to the two fields
+this obligation owes it is the 8 concrete adapter surfaces plus 20 meeting-bearing
+techniques the store holds on UNKNOWN portability. Twenty of those are undisposed,
+so **the obligation does not complete — 41 refusals** — and that is the runtime
+working rather than failing. A control plane that closed on eight of twenty-eight
+known routes would be the exact defect the architecture exists to prevent.
+
+Modelling the crash taught something. The first version had worker A and worker B
+retrieve identical bytes, so identical content hashes, so identical artifact ids
+— and the append-only log refused the second record for re-pointing A's artifact
+at B's Attempt. It was right to. A crashed capture is a **prefix** of what the
+server was sending, not the whole of it, and modelling it as a truncated body is
+both what actually happens and what makes the attribution honest.
+
+Every measured reader surface is byte-identical before and after, and that
+verdict is derived from the two digest maps rather than asserted — with a surface
+that could not be hashed counted as moved, because "we could not check it" must
+never render as "it did not move".
+
+### What this session did not do
+
+It did not choose a durable workflow driver, so the primitives never run
+unattended and the dimension stays PARTIAL. It did not activate `RESTRICTED_RAW`
+durability, because the only reachable substrates are a public store and a plain
+folder, and weakening the tier to fit them would put a live credential somewhere
+readable. It did not promote anything to reader truth. It did not fill the filing
+regime registry beyond the four regimes this repository can quote from a primary
+source — New Hampshire is left out because the explainer cites a statute quote
+that is not in the file it names, and New Jersey because its own notes record the
+statute as unread and two hosts refused.
+
+And it did not narrow either campaign-finance completion contract, having found
+the reason not to: the Arizona floor is not uniform. Two of its routes can land
+on an honest `NOT_APPLICABLE`, so a list right about two routes would refuse
+completion on a truthful record.

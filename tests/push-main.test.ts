@@ -171,7 +171,13 @@ test("R48: every workflow that pushes main goes through the protected push", () 
   );
   assert.equal(
     pushers.length,
-    8,
+    9,
+    // NINE as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set.
+    // It pushes exactly ONE non-shipping file — data/ops/production-integrity.json
+    // — so the reading it records costs no build and cannot start the very deploy
+    // it exists to observe. Its push-allowlist profile is scoped to that path and
+    // nothing else.
+    //
     // Eight as of 2026-08-24 (RULING 124): the seven below plus
     // refresh-daily.yml, the ONE orchestrated run that now carries every
     // source's cron. The other five keep their push-main call because they keep

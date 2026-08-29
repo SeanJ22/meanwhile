@@ -1,0 +1,391 @@
+{
+  "formatVersion": 1,
+  "_note": [
+    "CANONICAL DATA. This file is the campaign-finance FILING REGIME REGISTRY, read by",
+    "lib/control-plane/campaign-finance/filing-regime.ts and routed through by",
+    "lib/control-plane/campaign-finance/authority.ts. It is hand-maintained and is NOT a",
+    "generated artifact.",
+    "",
+    "IT IS WHAT THIS PROJECT KNOWS NOW. It is NEVER a complete list of American campaign-finance",
+    "filing regimes, and it may never be read as one. There are fifty states, the District, the",
+    "territories, and tens of thousands of local filing jurisdictions below them; two jurisdictions",
+    "are recorded here. A jurisdiction that is ABSENT from this file resolves to the explicit",
+    "NO_REGIME_ON_RECORD routing state, which keeps the contest OPEN and names the statute-reading",
+    "route still owed. Absence from this file is a fact about this file. It is never a fact about a",
+    "government, and it never closes a contest.",
+    "",
+    "EVERY REGIME HERE CARRIES PROVENANCE THIS REPOSITORY HAS ACTUALLY READ. A statutory quote is",
+    "the operative sentence verbatim, from the government's own site, with the URL and the date it",
+    "was read — never a paraphrase, because a paraphrase of a routing rule is a different routing",
+    "rule. Where a statute has NOT been read, statutoryBasis and statutoryQuote are null and",
+    "openQuestion says what is owed. A plausible citation typed from memory would be a fabrication",
+    "in the one field whose whole job is being checkable.",
+    "",
+    "ADDING A JURISDICTION IS A DATA CHANGE. Add its row to `jurisdictions`, add one regime per",
+    "routing rule its statute states, and the domain code routes it with no edit under lib/. That",
+    "is asserted by tests/filing-regime-registry.test.ts against a clearly-marked fixture",
+    "jurisdiction, so the claim is checked rather than believed."
+  ],
+  "jurisdictions": [
+    {
+      "jurisdiction": "US",
+      "name": "United States — federal offices",
+      "federated": false,
+      "filingJurisdictionCount": 1,
+      "filingJurisdictionBreakdown": "1 federal filing officer",
+      "denominatorSource": "docs/sources.md — OpenFEC",
+      "statutoryBasis": null,
+      "statutorySourceUrl": null,
+      "statutoryReadOn": null,
+      "statutoryOpenQuestion": "Which federal provision names the FEC as the federal filing officer has NOT been read from source in this repository. states/az/sources.md asks that question of every state and answers it for AZ, NH and NJ; the federal answer is owed and is not written down here as a guess."
+    },
+    {
+      "jurisdiction": "AZ",
+      "name": "Arizona",
+      "federated": true,
+      "filingJurisdictionCount": 109,
+      "filingJurisdictionBreakdown": "1 State, 15 County, 93 City/Town",
+      "denominatorSource": "states/az/sources.md — Jurisdictions.txt, pulled 2026-08-26 from ftp://ftp.azsos.gov/cfsdata2/",
+      "statutoryBasis": "A.R.S. § 16-928",
+      "statutorySourceUrl": "https://www.azleg.gov/ars/16/00928.htm",
+      "statutoryReadOn": "2026-08-26",
+      "statutoryOpenQuestion": null
+    }
+  ],
+  "regimes": [
+    {
+      "regimeId": "us:federal:fec",
+      "jurisdiction": "US",
+      "officeLevels": ["FEDERAL"],
+      "authorityLevel": "FEDERAL",
+      "custodianRole": "Federal Election Commission",
+      "custodianScope": "JURISDICTION_WIDE",
+      "provenance": {
+        "statutoryBasis": null,
+        "statutoryQuote": null,
+        "statutorySourceUrl": null,
+        "statutoryReadOn": null,
+        "openQuestion": "Which federal provision names the FEC as the federal filing officer has NOT been read from source in this repository. The custodian is established by official administrative record (below); the STATUTE is owed.",
+        "officialRecord": [
+          "data/reference/fec_combined_federal_state_disclosure_directory.csv — the FEC's own Combined Federal/State Disclosure and Election Directory",
+          "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+          "lib/funding/snapshot.ts",
+          "data/fec/fec-2026.json"
+        ]
+      },
+      "effective": {
+        "from": null,
+        "through": null,
+        "openQuestion": "The date this regime took effect is not read from source here, because the provision itself is not read from source here. A null `from` is UNBOUNDED-IN-THE-PAST for routing and an OPEN PROVENANCE QUESTION for the record; it is not a claim that the regime is ancient."
+      },
+      "supersedes": null,
+      "supersededBy": null,
+      "methodRouteIds": ["filing-fec"],
+      "applicableRouteIds": [
+        "FEC_COMMITTEE_TOTALS_SNAPSHOT",
+        "FEC_SCHEDULE_A_SECOND_HOP",
+        "FEC_SCHEDULE_E_INDEPENDENT_EXPENDITURES",
+        "FEC_REPORTING_CALENDAR"
+      ],
+      "custodians": [
+        {
+          "scopeKey": null,
+          "authority": {
+            "id": "us:federal:fec",
+            "name": "Federal Election Commission",
+            "level": "FEDERAL",
+            "jurisdiction": "US",
+            "recordClasses": [
+              "CANDIDATE_COMMITTEE_REPORT",
+              "PAC_REPORT",
+              "PARTY_COMMITTEE_REPORT",
+              "INDEPENDENT_EXPENDITURE_REPORT",
+              "STATEMENT_OF_ORGANIZATION"
+            ],
+            "statutoryBasis": null,
+            "statutoryQuote": null,
+            "statutoryOpenQuestion": "Which federal provision names the FEC as the filing officer has NOT been read from source in this repository. states/az/sources.md asks that question of every state and answers it for AZ, NH and NJ; the federal answer is owed and is not written down here as a guess.",
+            "discoveredVia": [
+              "docs/sources.md — OpenFEC, WIRED for committee TOTALS only",
+              "lib/funding/snapshot.ts",
+              "data/fec/fec-2026.json",
+              "data/reference/fec_combined_federal_state_disclosure_directory.csv"
+            ],
+            "filingsUrl": "https://www.fec.gov/data/",
+            "vendorPlatform": null
+          },
+          "publisher": {
+            "name": "Federal Election Commission",
+            "url": "https://www.fec.gov/data/",
+            "isVendorPlatform": false,
+            "note": "The authority publishes its own records. Custodian and publisher coincide here, which is why the two are separate fields — elsewhere they do not."
+          }
+        }
+      ],
+      "coRegulators": [],
+      "custodianUnresolvedNote": "There is one federal filing officer, so a federal contest has no unresolved-custodian branch. If this note is ever reached the registry has been edited into an inconsistent state.",
+      "custodianUnresolvedRoutes": []
+    },
+    {
+      "regimeId": "az:16-928:statewide-and-legislative",
+      "jurisdiction": "AZ",
+      "officeLevels": ["STATEWIDE", "LEGISLATIVE"],
+      "authorityLevel": "STATE",
+      "custodianRole": "secretary of state",
+      "custodianScope": "JURISDICTION_WIDE",
+      "provenance": {
+        "statutoryBasis": "A.R.S. § 16-928",
+        "statutoryQuote": "The secretary of state is the filing officer for statewide and legislative elections",
+        "statutorySourceUrl": "https://www.azleg.gov/ars/16/00928.htm",
+        "statutoryReadOn": "2026-08-26",
+        "openQuestion": null,
+        "officialRecord": [
+          "states/az/sources.md — A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm, HTTP 200, 3,387 bytes, titled '16-928 - Filing officer; statements and reports'",
+          "data/reference/fec_combined_federal_state_disclosure_directory.csv — ARIZONA, SECRETARY OF STATE"
+        ]
+      },
+      "effective": {
+        "from": null,
+        "through": null,
+        "openQuestion": "The statute was read on 2026-08-26 in its then-current form. WHEN this text took effect, and whether an earlier text routed these elections differently, is not read from source. A contest before that date must not be routed by this record without reading the statute as it stood."
+      },
+      "supersedes": null,
+      "supersededBy": null,
+      "methodRouteIds": ["filing-campaign-finance-state"],
+      "applicableRouteIds": [
+        "AZ_SEETHEMONEY_PLAIN_FETCH",
+        "AZ_SEETHEMONEY_LIVE_BROWSER",
+        "AZ_SOS_FTP_CFSDATA2"
+      ],
+      "custodians": [
+        {
+          "scopeKey": null,
+          "authority": {
+            "id": "az:state:secretary-of-state",
+            "name": "Arizona Secretary of State",
+            "level": "STATE",
+            "jurisdiction": "AZ",
+            "recordClasses": [
+              "CANDIDATE_COMMITTEE_REPORT",
+              "PAC_REPORT",
+              "PARTY_COMMITTEE_REPORT",
+              "BALLOT_MEASURE_COMMITTEE_REPORT",
+              "INDEPENDENT_EXPENDITURE_REPORT",
+              "STATEMENT_OF_ORGANIZATION"
+            ],
+            "statutoryBasis": "A.R.S. § 16-928",
+            "statutoryQuote": "The secretary of state is the filing officer for statewide and legislative elections",
+            "statutoryOpenQuestion": null,
+            "discoveredVia": [
+              "states/az/sources.md — A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm",
+              "data/reference/fec_combined_federal_state_disclosure_directory.csv — ARIZONA, SECRETARY OF STATE"
+            ],
+            "filingsUrl": "https://seethemoney.az.gov/",
+            "vendorPlatform": null
+          },
+          "publisher": {
+            "name": "See The Money (Arizona Secretary of State)",
+            "url": "https://seethemoney.az.gov/",
+            "isVendorPlatform": false,
+            "note": "HTTP 200, 109,107 B on 2026-08-26 — a single-page-app shell. The custodian is resolved; the records are not served in the HTML, which is a transport fact and not an absence. lib/funding/state-vocabulary.ts, the AZ refusal."
+          }
+        }
+      ],
+      "coRegulators": [
+        {
+          "id": "az:state:clean-elections-commission",
+          "name": "Citizens Clean Elections Commission",
+          "level": "ETHICS_COMMISSION",
+          "jurisdiction": "AZ",
+          "recordClasses": ["CANDIDATE_COMMITTEE_REPORT"],
+          "statutoryBasis": null,
+          "statutoryQuote": null,
+          "statutoryOpenQuestion": "The Commission's own enabling statute has not been read from source in this repository. It is recorded as a co-existing authority, not as the § 16-928 filing officer.",
+          "discoveredVia": [
+            "data/reference/fec_combined_federal_state_disclosure_directory.csv — ARIZONA, CITIZENS CLEAN ELECTIONS COMMISSION, 'Regulation of Campaign Finance Reports'",
+            "states/az/sources.md — Committees.txt types 810 participating vs 3,767 not participating"
+          ],
+          "filingsUrl": "https://www.azcleanelections.gov",
+          "vendorPlatform": null
+        }
+      ],
+      "custodianUnresolvedNote": "A.R.S. § 16-928 routes statewide and legislative elections to a single state officer, so this regime has no per-instance custodian to be unresolved.",
+      "custodianUnresolvedRoutes": []
+    },
+    {
+      "regimeId": "az:16-928:county-and-districts",
+      "jurisdiction": "AZ",
+      "officeLevels": [
+        "COUNTY",
+        "SCHOOL_DISTRICT",
+        "COMMUNITY_COLLEGE_DISTRICT",
+        "SPECIAL_TAXING_DISTRICT"
+      ],
+      "authorityLevel": "COUNTY",
+      "custodianRole": "county officer in charge of elections",
+      "custodianScope": "PER_COUNTY",
+      "provenance": {
+        "statutoryBasis": "A.R.S. § 16-928",
+        "statutoryQuote": "The county officer in charge of elections is the filing officer for county, school district, community college district and special taxing district elections",
+        "statutorySourceUrl": "https://www.azleg.gov/ars/16/00928.htm",
+        "statutoryReadOn": "2026-08-26",
+        "openQuestion": null,
+        "officialRecord": [
+          "states/az/sources.md — A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm",
+          "states/az/sources.md — the brief said 'county recorder, county elections department or board of supervisors'; the statute says THE COUNTY OFFICER IN CHARGE OF ELECTIONS, a single defined role which in Arizona is not always the recorder"
+        ]
+      },
+      "effective": {
+        "from": null,
+        "through": null,
+        "openQuestion": "The statute was read on 2026-08-26 in its then-current form. WHEN this text took effect, and whether an earlier text routed these elections differently, is not read from source. A contest before that date must not be routed by this record without reading the statute as it stood."
+      },
+      "supersedes": null,
+      "supersededBy": null,
+      "methodRouteIds": ["filing-campaign-finance-local"],
+      "applicableRouteIds": [
+        "AZ_PIMA_COUNTY_CAMPAIGN_FINANCE_PAGE",
+        "AZ_PIMA_EASYVOTE_PUBLIC_FILINGS",
+        "EASYVOTE_TENANT_LIST",
+        "AZ_SOS_FTP_CFSDATA2"
+      ],
+      "custodians": [
+        {
+          "scopeKey": "pima",
+          "authority": {
+            "id": "az:county:pima:officer-in-charge-of-elections",
+            "name": "Pima County officer in charge of elections",
+            "level": "COUNTY",
+            "jurisdiction": "AZ:Pima",
+            "recordClasses": [
+              "CANDIDATE_COMMITTEE_REPORT",
+              "PAC_REPORT",
+              "BALLOT_MEASURE_COMMITTEE_REPORT",
+              "INDEPENDENT_EXPENDITURE_REPORT",
+              "STATEMENT_OF_ORGANIZATION"
+            ],
+            "statutoryBasis": "A.R.S. § 16-928",
+            "statutoryQuote": "The county officer in charge of elections is the filing officer for county, school district, community college district and special taxing district elections",
+            "statutoryOpenQuestion": "WHICH Pima County office currently holds the role of 'officer in charge of elections' is not asserted here. states/az/sources.md records that in Arizona this is a single defined role and is NOT always the recorder; naming the office is owed, and https://www.pima.gov/620/Campaign-Finance is the route to it.",
+            "discoveredVia": [
+              "states/az/sources.md — A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm",
+              "states/az/sources.md — Pima County campaign finance, https://www.pima.gov/620/Campaign-Finance, HTTP 200, walked 2026-08-26"
+            ],
+            "filingsUrl": "https://www.pima.gov/620/Campaign-Finance",
+            "vendorPlatform": "EasyVote"
+          },
+          "publisher": {
+            "name": "EasyVote Campaign Finance (Pima County tenant)",
+            "url": "https://pimacountyaz.easyvotecampaignfinance.com/home/publicfilings",
+            "isVendorPlatform": true,
+            "note": "THE PUBLISHER IS NEITHER THE OFFICE NOR THE AUTHORITY. The school district holds the election, the county officer is the filing officer by statute, and a commercial vendor serves the records. That changes the permission question and nothing about who the custodian is. Recorded 2026-08-26 as NOT WALKED; whether an EasyVote tenant list exists is UNANSWERED as of 2026-08-26 (tracker AZ21)."
+          }
+        }
+      ],
+      "coRegulators": [],
+      "custodianUnresolvedNote": "A.R.S. § 16-928 routes this to the county officer in charge of elections, and this repository has walked that officer's page for Pima County only. County \"{scope}\" is unresolved. Arizona has 15 counties (states/az/sources.md, Counties.txt), and the routing rule is known while the custodian is not.",
+      "custodianUnresolvedRoutes": [
+        {
+          "routeId": "AZ_SOS_COUNTY_ELECTION_CONTACTS",
+          "label": "Arizona Secretary of State county election contact info — all 15 counties named",
+          "target": "azsos.gov",
+          "disposition": "DISCOVERED",
+          "note": "https://azsos.gov/elections/about-elections/county-election-contact-info — HTTP 200, 320,910 B, walked 2026-08-26, all 15 counties named. The route from the statute's ROLE to a named office.",
+          "citation": "states/az/sources.md",
+          "permission": "CANNOT_TELL",
+          "transport": "REACHABLE",
+          "rung": 2,
+          "lastAttemptedOn": "2026-08-26"
+        }
+      ]
+    },
+    {
+      "regimeId": "az:16-928:city-and-town",
+      "jurisdiction": "AZ",
+      "officeLevels": ["CITY_OR_TOWN"],
+      "authorityLevel": "MUNICIPAL",
+      "custodianRole": "city or town clerk",
+      "custodianScope": "PER_MUNICIPALITY",
+      "provenance": {
+        "statutoryBasis": "A.R.S. § 16-928",
+        "statutoryQuote": "The city or town clerk is the filing officer for city and town elections.",
+        "statutorySourceUrl": "https://www.azleg.gov/ars/16/00928.htm",
+        "statutoryReadOn": "2026-08-26",
+        "openQuestion": null,
+        "officialRecord": [
+          "states/az/sources.md — A.R.S. § 16-928, read 2026-08-26 from https://www.azleg.gov/ars/16/00928.htm",
+          "states/az/sources.md — Jurisdictions.txt: 93 City/Town filing jurisdictions, pulled 2026-08-26"
+        ]
+      },
+      "effective": {
+        "from": null,
+        "through": null,
+        "openQuestion": "The statute was read on 2026-08-26 in its then-current form. WHEN this text took effect, and whether an earlier text routed these elections differently, is not read from source. A contest before that date must not be routed by this record without reading the statute as it stood."
+      },
+      "supersedes": null,
+      "supersededBy": null,
+      "methodRouteIds": ["filing-campaign-finance-local"],
+      "applicableRouteIds": ["AZ_SOS_FTP_CFSDATA2"],
+      "custodians": [
+        {
+          "scopeKey": "tucson",
+          "authority": {
+            "id": "az:municipal:tucson:city-clerk",
+            "name": "City of Tucson Clerk",
+            "level": "CLERK",
+            "jurisdiction": "AZ:Tucson",
+            "recordClasses": [
+              "CANDIDATE_COMMITTEE_REPORT",
+              "PAC_REPORT",
+              "BALLOT_MEASURE_COMMITTEE_REPORT"
+            ],
+            "statutoryBasis": "A.R.S. § 16-928",
+            "statutoryQuote": "The city or town clerk is the filing officer for city and town elections.",
+            "statutoryOpenQuestion": null,
+            "discoveredVia": [
+              "states/az/sources.md — City of Tucson campaign finance, https://www.tucsonaz.gov/Departments/Clerks/Campaign-Finance-Information, HTTP 200, walked 2026-08-26"
+            ],
+            "filingsUrl": "https://www.tucsonaz.gov/Departments/Clerks/Campaign-Finance-Information",
+            "vendorPlatform": null
+          },
+          "publisher": {
+            "name": "City of Tucson Clerk",
+            "url": "https://www.tucsonaz.gov/Departments/Clerks/Campaign-Finance-Information",
+            "isVendorPlatform": false,
+            "note": "HTTP 200, walked 2026-08-26. The clerk publishes its own page; whether the FILINGS behind it are served there is not yet extracted."
+          }
+        }
+      ],
+      "coRegulators": [],
+      "custodianUnresolvedNote": "A.R.S. § 16-928 routes this to the city or town clerk, and this repository has walked that clerk for Tucson only. Municipality \"{scope}\" is unresolved. Arizona has 93 city/town filing jurisdictions (states/az/sources.md, Jurisdictions.txt).",
+      "custodianUnresolvedRoutes": [
+        {
+          "routeId": "AZ_LEAGUE_LOCAL_GOVERNMENT_DIRECTORY",
+          "label": "League of Arizona Cities and Towns local government directory",
+          "target": "lgd.azleague.org",
+          "disposition": "DISCOVERED",
+          "note": "http://lgd.azleague.org/ — HTTP 200, 232,717 B, walked 2026-08-26. Classified DERIVED-POINTER: a league of municipalities is a membership organisation, not a government body, so it points at the clerk and is never the record.",
+          "citation": "states/az/sources.md",
+          "permission": "CANNOT_TELL",
+          "transport": "REACHABLE",
+          "rung": 2,
+          "lastAttemptedOn": "2026-08-26"
+        }
+      ]
+    }
+  ],
+  "noRegimeRoutes": [
+    {
+      "routeId": "STATUTE_FILING_OFFICER_READ",
+      "label": "Read the jurisdiction's filing-officer statute from the legislature's own site",
+      "target": "the jurisdiction's own legislature",
+      "disposition": "UNWALKED",
+      "note": "The generalising question, asked of every state: which statute defines the filing officer, and what does it route to whom? Answered for AZ (A.R.S. § 16-928), NH (RSA 664:7 and 664:6) and NJ. Unanswered for any jurisdiction absent from this registry. A jurisdiction we have not read is a jurisdiction we have not read — never a jurisdiction with no filing officer.",
+      "citation": "states/az/sources.md",
+      "permission": "CANNOT_TELL",
+      "transport": null,
+      "rung": null,
+      "lastAttemptedOn": null
+    }
+  ]
+}

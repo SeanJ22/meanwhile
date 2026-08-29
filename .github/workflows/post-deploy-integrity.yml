@@ -1,0 +1,216 @@
+# The automatic post-deploy reading of production. NH273, part 2.
+#
+# ## What was missing
+#
+# `scripts/production-integrity.mts` takes a reading and
+# `scripts/release-freeze-gate.mts` enforces it, and NOTHING RAN THE FIRST ONE.
+# The gate's own header said so: "It is dispatched by hand against the commit
+# that actually shipped. Nothing runs it automatically yet." A mechanism whose
+# trigger is a person remembering reports on the days somebody remembered; the
+# 2026-08-28 schema drift is what the other days look like.
+#
+# ## Why the trigger is `push: main` and NOT `deployment_status`
+#
+# Measured, not assumed: `gh api repos/:owner/:repo/deployments` returns **0**.
+# Netlify creates no GitHub Deployment object for this repository, so no
+# `deployment_status` event has ever fired here and a workflow listening for one
+# would never run. A gate that never executes reports nothing and reads as
+# covered — worse than no gate. So the trigger is the push that CAUSES the
+# deploy, and the deploy's arrival is OBSERVED: the job polls
+# `GET https://sparkwtp.netlify.app/api/build` until the served commit is this
+# one, under a hard bound.
+#
+# ## The three outcomes, and none of them is a rollback
+#
+#   SERVING_EXPECTED   the reading is taken against the served commit through
+#                      the EXISTING gate and committed. A red reading marks
+#                      integrity DEGRADED, which freezes the next
+#                      production-changing release in build-check.yml's `gates`
+#                      job. NOTHING IS ROLLED BACK — the owner's decision of
+#                      2026-08-28, because production's database may already
+#                      have advanced and rolling code back underneath an
+#                      advanced schema manufactures a second incompatibility.
+#   PRODUCTION_BEHIND  the bound elapsed and production still serves something
+#                      else. A fact about the BUILD PIPELINE, never about the
+#                      schema. It is annotated as a warning and does NOT fail
+#                      this job — see the step's own comment for why.
+#   COULD_NOT_TELL     production could not be asked at all. Not a pass
+#                      (RULING 24); the job goes red.
+#
+# ## It cannot start a deploy loop
+#
+# The only file it commits is `data/ops/production-integrity.json`, and
+# `data/ops/` is in `NON_SHIPPING_PREFIXES` (`lib/ops/deploy-paths.ts`, commit
+# `6e591077` — "an ops record must not cost a build"). `classifyDeploy` returns
+# `cancel` for a commit carrying only that file, so the observer's own output can
+# never trigger the deploy the observer exists to observe.
+# `tests/post-deploy-observer.test.ts` asserts that through `classifyDeploy`
+# rather than trusting this sentence.
+
+name: Post-deploy integrity
+
+on:
+  push:
+    branches: [main]
+  # Dispatchable against any commit, which is how a missed or re-run deploy is
+  # read after the fact. `sha` defaults to the checked-out HEAD.
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: "The commit that should have become the served one. Blank = HEAD of main."
+        type: string
+        required: false
+      dry_run:
+        description: "Observe and take the reading, but record and commit nothing."
+        type: boolean
+        default: false
+
+permissions:
+  # The record is committed to `main`. The deploy-key bypass (RULING 165) is what
+  # actually authorises the push; this is the token scope the checkout needs.
+  contents: write
+  # ACTIONS READ — the diagnoser reads THIS run (the same reason
+  # intake-tripwire.yml and refresh-meetings-snapshot.yml carry it).
+  #
+  # Declaring `permissions:` at all switches the token from the repository
+  # default to exactly what is listed, so every scope not named here is `none`.
+  # With `contents: write` alone the `Name the cause` step below hits
+  # `gh: Resource not accessible by integration (HTTP 403)` on
+  # `GET /actions/runs/{id}` and prints `diagnose: CANNOT RUN` — correctly, and
+  # uselessly. `actions: read` is the minimum that endpoint needs; nothing else
+  # is widened.
+  actions: read
+
+# NOT `cancel-in-progress`. Two pushes to main in the same window are two
+# different deploys to observe, and cancelling the first would silently drop a
+# reading — the failure this whole workflow exists to end.
+concurrency:
+  group: post-deploy-integrity
+  cancel-in-progress: false
+
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    # F25: the platform default is 360 minutes. The poll's own bound is ten
+    # minutes; twenty is that plus install and the reading, and it fails loudly
+    # and named rather than sitting until GitHub kills it.
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          # `scripts/post-deploy-observer.mts` asks `classifyDeploy` whether the
+          # pushed commit could change what production serves, which needs the
+          # commit's own changed-path list — and `git show --name-only` needs a
+          # parent. Depth 2 is the smallest checkout that has one. If it still
+          # cannot be read the observer treats the commit as a release and
+          # observes anyway, because a skip we cannot justify is an unobserved
+          # deploy.
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable corepack (pnpm pinned by packageManager)
+        run: corepack enable
+
+      - name: Install
+        run: corepack pnpm install --frozen-lockfile
+
+      # THE OBSERVATION AND THE READING, IN ONE STEP.
+      #
+      # `WTP_PRODUCTION_DATABASE_URL_READONLY` is a real repository secret and it
+      # is the ONLY credential here. It is read-only by role: applying resolves a
+      # different variable through `lib/db/write-handle.ts`, which refuses this
+      # one by name. `NETLIFY_AUTH_TOKEN` is deliberately NOT used — it is not a
+      # repository secret at all, and `/api/build` answers the deployed-commit
+      # question without one.
+      #
+      # `WTP_RUN_ID` declares this run synthetic so no request it makes could be
+      # counted as reader signal in the sold store. `/api/build` writes nothing,
+      # which was confirmed by reading `app/api/build/route.ts`; the declaration
+      # is sent anyway, because an exception is how the rule erodes.
+      #
+      # THE EXIT CODES ARE KEPT APART, and this is the step's whole design.
+      # 3 is PRODUCTION_BEHIND — the deploy has not arrived — and it does NOT
+      # fail the job. NH281 is open on exactly that condition, its cause is in a
+      # build log behind the author's Netlify login, and a job that goes red
+      # every night for a known owner-blocked fact is the alarm nobody reads
+      # (RULING 115). It is annotated instead, so it is surfaced on the run
+      # without manufacturing a nightly false alarm. 1 and 2 DO fail: a refused
+      # reading and an unaskable production are both things a person must see.
+      - name: Observe the deploy and take the post-deploy reading
+        id: observe
+        timeout-minutes: 15
+        env:
+          WTP_PRODUCTION_DATABASE_URL_READONLY: ${{ secrets.WTP_PRODUCTION_DATABASE_URL_READONLY }}
+          WTP_RUN_ID: post-deploy-observer-${{ github.run_id }}
+        run: |
+          set +e
+          corepack pnpm exec tsx scripts/post-deploy-observer.mts \
+            --expect=${{ inputs.sha || github.sha }} \
+            ${{ inputs.dry_run == true && ' ' || '--write' }}
+          code=$?
+          set -e
+          echo "observer_exit=$code" >> "$GITHUB_OUTPUT"
+          case "$code" in
+            0) echo "The reading held and was recorded." ;;
+            1)
+              echo "::error title=Production integrity REFUSED::A post-deploy reading REFUSED. Integrity is now DEGRADED and the next production-changing release is frozen in build-check.yml's gates job. NOTHING WAS ROLLED BACK, and nothing will be."
+              exit 1
+              ;;
+            3)
+              echo "::warning title=Production is behind::The deploy did not arrive within the observer's bound; production still serves an earlier commit. This is a fact about the BUILD PIPELINE (NH281), not about production's schema, and no integrity reading was recorded. This job is not failed for it — see the step comment."
+              ;;
+            *)
+              echo "::error title=Could not tell::Production could not be asked what it serves, or the schema gate could not tell. An unreadable answer is never a passing one (RULING 24)."
+              exit "$code"
+              ;;
+          esac
+
+      # THE RECORD, COMMITTED THROUGH THE ONE DOOR EVERY SCHEDULED PUSHER USES.
+      #
+      # `scripts/push-main.mjs` (R48 rebase-and-retry, RULING 165 deploy key and
+      # per-workflow path allowlist) is the mechanism every other main-pushing
+      # workflow already uses. A second one would be a second set of rules for
+      # writing to `main`, and the allowlist is the whole of what stands between
+      # a scheduled job and the branch.
+      #
+      # The diff is re-checked at commit time, so an unchanged record never
+      # produces an empty commit — and a run whose reading did not move costs no
+      # commit, no push and no build.
+      - name: Commit the reading
+        if: steps.observe.outputs.observer_exit == '0' && inputs.dry_run != true
+        env:
+          PUSH_DEPLOY_KEY: ${{ secrets.PUSH_DEPLOY_KEY }}
+        run: |
+          if git diff --quiet -- data/ops/production-integrity.json; then
+            echo "the reading is byte-identical to the one on main — nothing to commit"
+            exit 0
+          fi
+          git config user.name "post-deploy-observer[bot]"
+          git config user.email "noreply@github.com"
+          git add data/ops/production-integrity.json
+          git commit -m "Post-deploy integrity reading: $(date -u +%Y-%m-%dT%H:%MZ)"
+          node scripts/push-main.mjs --workflow post-deploy-integrity
+
+      # ITEM 8a (2026-08-26) — EVERY JOB NAMES ITS OWN CAUSE BEFORE IT DIES.
+      #
+      # `Error: Process completed with exit code 1` is not an error message; it
+      # is the absence of one. This reads the job's own log and prints the
+      # failure CLASS and its remedy in plain words, or says loudly that the
+      # failure is unrecognised and shows what it saw. It never fails the job it
+      # is diagnosing — the job is already red, and a diagnoser that could turn a
+      # red run into a differently-red run would hide the cause it exists to name.
+      #
+      # It matters more here than in most workflows. This job's failures are
+      # about PRODUCTION — a schema that disagrees with the deployed code, a
+      # credential that stopped resolving — and those are exactly the failures
+      # nobody should have to reconstruct from a bare exit code the next morning.
+      - name: Name the cause
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: corepack pnpm diagnose

@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "bbabe4e99d52ad78",
+  "snapshot": "e9ba32c962418763",
   "counts": {
-    "records": 234,
-    "current": 213,
-    "law": 186,
+    "records": 241,
+    "current": 220,
+    "law": 193,
     "decisions": 27,
     "historical": 21
   },
@@ -3994,6 +3994,144 @@
           "target": "R-0183"
         }
       ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0198",
+      "aliases": [
+        "RULING 198",
+        "R198",
+        "R-198"
+      ],
+      "title": "RULING 198 — a declared contract clause is enforced, or it is not law",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0199",
+      "aliases": [
+        "RULING 199",
+        "R199",
+        "R-199"
+      ],
+      "title": "RULING 199 — a disposition may cite only the Attempt that earned it, and a policy denial is a fact about us",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0200",
+      "aliases": [
+        "RULING 200",
+        "R200",
+        "R-200"
+      ],
+      "title": "RULING 200 — a snooze is a notification decision and never a truth decision",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0201",
+      "aliases": [
+        "RULING 201",
+        "R201",
+        "R-201"
+      ],
+      "title": "RULING 201 — evidence bytes prove their own identity, and the vault guarantees scoped immutability rather than global dedup",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0202",
+      "aliases": [
+        "RULING 202",
+        "R202",
+        "R-202"
+      ],
+      "title": "RULING 202 — canonical method knowledge has ONE governed write path, and a rejected candidate is retained",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0203",
+      "aliases": [
+        "RULING 203",
+        "R203",
+        "R-203"
+      ],
+      "title": "RULING 203 — the pure canonical authorities are gates, and a writer is never made one",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0155"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0204",
+      "aliases": [
+        "RULING 204",
+        "R204",
+        "R-204"
+      ],
+      "title": "RULING 204 — production-integrity freshness fails closed, and the question is asked of what production SERVES",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [],
+      "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

@@ -1,11 +1,11 @@
 {
   "formatVersion": 1,
-  "deployedSha": "71325247",
-  "mainSha": "17d68f1c26138ebd960dcd92270c89932c60b9f7",
+  "deployedSha": "de61ff5dfd47ed56dea4c9bf6ae4c90c736bb74e",
+  "mainSha": "b064bf6b36d4d20d9fea8ba593b4fbee24207f39",
   "observed": "HELD",
   "failureClass": null,
   "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 23 of 23 committed migration(s) applied, head 0022_adorable_hemingway",
-  "observedAt": "2026-08-29T06:15:56.161Z",
+  "observedAt": "2026-08-29T16:01:14.134Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

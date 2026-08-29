@@ -349,9 +349,18 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   // reads a county clerk's public PDFs and rebuilds a committed JSON file; it
   // touches no database, which is why it appears here only as a count and not
   // in `withDatabase` below.
+  // TEN as of 2026-08-29 (NH273): post-deploy-integrity.yml joined the set. It
+  // is the SECOND workflow to hold a database credential, and like build-check
+  // it holds the READ-ONLY one — it asks production whether it holds the
+  // migrations the deployed commit ships, and records the answer. It commits
+  // exactly one non-shipping file. It is held to reading below, by the same
+  // assertion build-check is, because it runs unattended on every push to
+  // `main` and an unattended job is the last place a write-capable string
+  // should be reachable.
+  //
   // NINE as of 2026-08-24 (RULING 124): the eight below plus refresh-daily.yml,
   // the one orchestrated run that now carries every source's cron.
-  assert.equal(workflows.length, 9, `the workflow set changed: ${workflows.join(", ")}`);
+  assert.equal(workflows.length, 10, `the workflow set changed: ${workflows.join(", ")}`);
 
   const withDatabase: string[] = [];
   for (const file of workflows) {
@@ -360,7 +369,7 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
   }
   assert.deepEqual(
     withDatabase,
-    ["build-check.yml", "intake-tripwire.yml"],
+    ["build-check.yml", "intake-tripwire.yml", "post-deploy-integrity.yml"],
     "a workflow gained database access — if it writes, it needs its own " +
       "named sanction; if it only reads, say so where it is set",
   );
@@ -394,5 +403,34 @@ test("g13 audit: every scheduled workflow that writes carries a sanction", () =>
     buildCheck,
     /WTP_SANCTIONED_WRITE/,
     "build-check.yml must carry no write sanction — its database step exists to ask a question",
+  );
+
+  /*
+   * THE OBSERVER IS HELD TO READING TOO (2026-08-29, NH273).
+   *
+   * `post-deploy-integrity.yml` is the first workflow to hold a database
+   * credential AND run unattended on every push to `main`. `build-check.yml` at
+   * least fails in front of a person waiting on a pull request; this one runs
+   * while nobody is watching, which is the strongest case in the repository for
+   * holding it to exactly one read-only name.
+   *
+   * It is asserted with the same three clauses rather than a looser pair,
+   * because the reason build-check is held this way — a write-capable string in
+   * a broadly-reachable workflow — applies here more, not less.
+   */
+  const observer = readFileSync(`${dir}/post-deploy-integrity.yml`, "utf8");
+  const observerNames = [...observer.matchAll(/[A-Z_]*DATABASE_URL[A-Z_]*/g)].map((m) => m[0]);
+  assert.ok(observerNames.length > 0, "the observer found no database variable to check at all");
+  assert.deepEqual(
+    [...new Set(observerNames)],
+    ["WTP_PRODUCTION_DATABASE_URL_READONLY"],
+    "post-deploy-integrity.yml runs unattended on every push to main and may name only the " +
+      "READ-ONLY production variable. It takes a reading; it does not reconcile anything.",
+  );
+  assert.doesNotMatch(
+    observer,
+    /WTP_SANCTIONED_WRITE/,
+    "post-deploy-integrity.yml must carry no write sanction — the owner's NH273 decision is that " +
+      "a red reading marks state DEGRADED and freezes the next release. It never repairs production.",
   );
 });

@@ -399,3 +399,101 @@ depend on the decision is built.
 - **Autonomous canonical promotion.** Everything attaches in SHADOW. Reader
   truth stays with the existing adapters until promotion contracts exist and
   have passed.
+
+---
+
+## B. Dimension status — 2026-08-29, the durable shadow runtime
+
+The overnight build of 2026-08-28 produced a strong semantic/domain foundation
+and was explicit that it was not yet a durable runtime. This section records
+where each dimension stands after the 2026-08-29 session, **by dimension rather
+than in one sentence**, because a single "foundation proven" line is how a
+partial runtime gets treated as a whole one.
+
+| Dimension | State | What carries it |
+| --- | --- | --- |
+| `SEMANTIC_DOMAIN_FOUNDATION` | **PROVEN** | The four P0 holes are closed and each is enforced mechanically with a named refusal code (RULING 198, 199, 200). |
+| `DURABLE_STATE_RUNTIME` | **PROVEN** | `lib/control-plane/repository/` — provider-neutral repositories, compare-and-set arbitrated by a single filesystem operation, and a crash/restart acceptance test in which every step opens a fresh instance over the same root. |
+| `DURABLE_WORKFLOW_RUNTIME` | **PARTIAL** | Leases, bounded Attempts, reclaim-after-expiry, atomic disposition commit and `reconcile()` recovery all exist and are durable. What does not exist is an external scheduler that drives them unattended; that remains the owner-gated provider decision in the table above. |
+| `EVIDENCE_VAULT_DURABILITY` | **PARTIAL — RAW/SANITIZED PROVEN; RESTRICTED_RAW ACTIVATION BLOCKED** | Bytes prove their own identity at the store boundary, keys are immutable within their scope, and a fresh store instance over the same root reads artifacts back. `RESTRICTED_RAW` routes to a declared provider seam and is refused by name without one. |
+| `METHOD_RUNTIME_DURABILITY` | **PROVEN** | One governed write path with an optimistic-concurrency precondition, validation before admission, a retained rejection record, the `PriorConclusion` corpus the reopening engine lacked, and portability promotion as a deterministic idempotent job (RULING 202). |
+| `SHADOW_WORKER_ACTIVATION` | **READY** | `pnpm shadow:run` carries a real obligation through the hardened runtime end to end; `tests/control-plane-shadow-run.test.ts` asserts all ten required properties against durable stores. |
+| `NATIONAL_AUTONOMOUS_ACTIVATION` | **NOT READY** | Three dependencies, each named below. |
+
+### Why `DURABLE_WORKFLOW_RUNTIME` is PARTIAL and not PROVEN
+
+Everything the *domain* needs to survive a worker's death is durable and tested:
+the lease, the heartbeat, the expiry, the reclaim observed from outside, the
+compare-and-set on disposition, and the commit/apply pair that `reconcile()`
+finishes after a crash between two aggregate writes.
+
+What is missing is not a rule — it is a **driver**. Nothing runs the loop
+unattended. A workflow runtime is a scheduler that wakes up, claims what is
+claimable, renews what it holds and reclaims what died; this repository has
+GitHub Actions and three workflows that may hold a cron, asserted by name, and an
+external scheduler would be invisible to every guard the repo has. That is the
+owner-gated provider decision already recorded above, and calling the dimension
+PROVEN because the primitives exist would be reading a state machine as a
+process.
+
+### Why `RESTRICTED_RAW` durability stays off
+
+The two substrates reachable from this repository are a **public** read-only
+GitHub asset store and a plain filesystem root. Neither offers encryption at rest
+or access control, and quarantined credential-bearing bytes need both. Weakening
+the tier to fit an available store would put a live third-party credential
+somewhere it can be read — the PR #217 class, one layer down.
+
+So the seam exists (`RestrictedEvidenceProvider`), the durable store routes to it
+when present, and it refuses a provider that does not **declare** both properties
+— which is what stops the seam being satisfied by re-wrapping the plain
+filesystem store. Implementing the provider is a self-contained class against a
+four-verb interface once the substrate exists.
+
+### What `NATIONAL_AUTONOMOUS_ACTIVATION` is actually waiting on
+
+Not confidence, and not more control-plane files. Three specific things:
+
+1. **A durable workflow driver.** Above. Until something runs the loop
+   unattended, "autonomous" describes a capability rather than an operation.
+2. **`RESTRICTED_RAW` durable activation.** Above. A national fleet acquires from
+   thousands of publishers; the rate at which one of them emits a live credential
+   into its own page is not zero — PR #217 measured it at one county.
+3. **Method portability actually earned, at scale.** The promotion job is
+   deterministic and refuses over-promotion, and the store still holds 110 legacy
+   entries whose prose nobody has classified. Those are known as ROUTES and are
+   NOT inherited as conclusions, which is correct and is also the honest reason a
+   national floor cannot yet be computed from the store alone.
+
+A fourth thing is *not* on this list, and its absence is deliberate: the shadow
+run's completion refusal. The Pima obligation does not complete, and that is the
+runtime working. Twenty known meeting-bearing techniques have not been walked for
+that subject, and a control plane that closed anyway would be the exact defect
+the architecture was built to prevent.
+
+### The proving run, in numbers
+
+`data/control-plane/shadow-runs/shadow-pima-2026-08-29/run.json` is the record.
+Inherited floor **28 routes** at method version 55 — 8 concrete adapter surfaces
+plus 20 meeting-bearing techniques offered on UNKNOWN portability — against 110
+legacy entries reported beside it so a floor of 28 cannot read as a store of 28.
+Nine Attempts, one of which died and was reclaimed from outside; eight artifacts
+with real content hashes, including a truncated partial still attributed to the
+Attempt that fetched it; both a validation and an audit whose evidence base is
+independent of our own pipeline; **41 completion refusals**; and every measured
+reader surface byte-identical before and after.
+
+### One vocabulary gap, named rather than smoothed over
+
+`TRANSPORT_STATES` has no value for *never attempted, because permission refused
+it*. All six members describe an attempt that happened. The Granicus route —
+`Disallow: /`, so no request is made — is recorded as `CHALLENGED`, matching the
+already-shipped `tests/control-plane-pima-shadow.test.ts` rather than giving one
+fact a second reading (RULING 103).
+
+Nothing about correctness turns on it: the disposition is `BLOCKED_CURRENTLY`, an
+OPEN state, and the obligation stays open on that route. But the vocabulary is
+imprecise at exactly the point where a wall must not become an emptiness, and a
+seventh state is a change to a governed vocabulary that ripples through every
+disposition in the repository. It is carried to the tracker rather than decided
+in passing.

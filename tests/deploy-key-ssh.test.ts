@@ -296,8 +296,11 @@ test("RULING 165: every workflow that pushes main passes PUSH_DEPLOY_KEY to the 
   // nothing would otherwise report a clean sweep of an empty set.
   assert.equal(
     checked.length,
-    8,
-    `expected 8 scheduled pushers, found ${checked.length}: ${checked.join(", ")}. ` +
+    9,
+    // NINE as of 2026-08-29 (NH273): post-deploy-integrity.yml pushes the
+    // production-integrity reading, so it carries PUSH_DEPLOY_KEY like every
+    // other pusher and is swept here like every other pusher.
+    `expected 9 scheduled pushers, found ${checked.length}: ${checked.join(", ")}. ` +
       "If a pusher was added or removed, move this number in the same diff.",
   );
   assert.deepEqual(offenders, [], offenders.join("\n"));

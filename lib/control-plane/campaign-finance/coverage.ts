@@ -61,6 +61,18 @@ export const GAP_KINDS = [
   "IDENTITY_UNRESOLVED",
   /** A route bearing on this subject has no terminal disposition. */
   "ROUTE_OPEN",
+  /**
+   * We do not know WHICH AUTHORITY GOVERNS THIS CONTEST — the filing rule itself
+   * is unread, or read and not yet tied to an office. Distinct from
+   * `AUTHORITY_UNRESOLVED`, which is per-candidate: this one is the contest's.
+   */
+  "FILING_REGIME_UNRESOLVED",
+  /**
+   * A candidacy is on the ballot and carries NO coverage record at all. The
+   * asymmetry that hides from a per-candidate sweep, because the shallower side
+   * is not in the list being swept.
+   */
+  "COVERAGE_RECORD_ABSENT",
 ] as const;
 export type GapKind = (typeof GAP_KINDS)[number];
 
@@ -81,7 +93,12 @@ export type SymmetryVerdict = (typeof SYMMETRY_VERDICTS)[number];
 
 export interface SymmetryFinding {
   /** The dimension that differs. */
-  readonly dimension: "ACQUISITION_DEPTH" | "AUTHORITY_DISCOVERY" | "COMPLETENESS" | "LATEST_THROUGH";
+  readonly dimension:
+    | "ACQUISITION_DEPTH"
+    | "AUTHORITY_DISCOVERY"
+    | "COMPLETENESS"
+    | "LATEST_THROUGH"
+    | "COVERAGE_RECORD_ABSENT";
   readonly deeper: string;
   readonly shallower: string;
   readonly detail: string;
@@ -107,7 +124,51 @@ export interface SymmetryReport {
  */
 export function symmetryCheck(coverage: CampaignFinanceCoverage): SymmetryReport {
   const people = coverage.perCandidate;
+
+  /**
+   * **THE OMITTED PEER, CHECKED FIRST AND AGAINST THE BALLOT.**
+   *
+   * This block is here because the rest of this function sweeps
+   * `perCandidate` — and a candidate who was silently left out of the hunt is
+   * not IN `perCandidate`. Comparing the list against itself reports a contest
+   * where one candidate got coverage and a peer got none as perfectly
+   * symmetric, which is the seeded failure wearing this guard's own uniform.
+   *
+   * So the denominator is `candidateUniverse`, which comes from the ballot, and
+   * a missing record is the DEEPEST asymmetry there is: the shallower side was
+   * not merely covered less, it was not asked about. It can carry no
+   * `AsymmetryExplanation` either, because the record that would hold one is the
+   * thing that is missing — so `explainedBy` is structurally null and the
+   * verdict is structurally FAILURE.
+   */
+  const covered = new Set(people.map((p) => p.candidacyId));
+  const omitted = coverage.candidateUniverse.filter((id) => !covered.has(id));
+  const omittedFindings: SymmetryFinding[] = omitted.map((candidacyId) => ({
+    dimension: "COVERAGE_RECORD_ABSENT",
+    deeper: people[0]?.candidacyId ?? coverage.contestId,
+    shallower: candidacyId,
+    detail:
+      `${candidacyId} is on the ballot for ${coverage.contestId} (universe source: ` +
+      `${coverage.candidateUniverseSource}) and carries NO finance coverage record, while ` +
+      `${people.length} peer(s) in the same contest do. A peer who is absent from the comparison ` +
+      "cannot be found by comparing the ones who are present.",
+    explainedBy: null,
+  }));
+
   if (people.length < 2) {
+    if (omittedFindings.length > 0) {
+      return {
+        contestId: coverage.contestId,
+        verdict: "FAILURE",
+        findings: omittedFindings,
+        unexplained: omittedFindings,
+        why:
+          `${omittedFindings.length} candidacy(ies) on the ballot for ${coverage.contestId} carry no ` +
+          "coverage record at all. This is not a thin contest; it is a contest whose denominator " +
+          "shrank to what we happened to find, and a denominator that measures our own output " +
+          "always reads complete.",
+      };
+    }
     return {
       contestId: coverage.contestId,
       verdict: "SYMMETRIC",
@@ -127,7 +188,7 @@ export function symmetryCheck(coverage: CampaignFinanceCoverage): SymmetryReport
     .sort();
   const newestThrough = latestThroughSeen.at(-1) ?? null;
 
-  const findings: SymmetryFinding[] = [];
+  const findings: SymmetryFinding[] = [...omittedFindings];
 
   for (const person of people) {
     const explained = person.asymmetryExplanation;
@@ -265,6 +326,29 @@ export function candidateFinanceFeatureEligibility(
   const blocked: string[] = [];
   let complete = 0;
 
+  /**
+   * **AN UNRESOLVED FILING REGIME BLOCKS THE WHOLE CONTEST, AND DOES NOT CLOSE
+   * IT.**
+   *
+   * Two different failures share one cause here. If we do not know which
+   * authority governs this contest, then (a) every per-candidate record was
+   * built against a custodian nobody established, so "no filings missing" means
+   * "no filings expected from an office we never identified"; and (b) rendering
+   * money on that basis puts a number under a candidate's name sourced to a
+   * government we did not confirm holds it.
+   *
+   * The block is at the CONTEST level for the same reason the three-of-four rule
+   * is: a caveat does not survive the reader's glance at the cards.
+   */
+  if (coverage.filingRegimeState !== "RESOLVED") {
+    blocked.push(
+      `${coverage.contestId}: the filing regime is ${coverage.filingRegimeState}` +
+        `${coverage.filingRegimeId === null ? "" : ` (rule ${coverage.filingRegimeId})`} — we have ` +
+        "not established which authority governs this contest, so no per-candidate record can be " +
+        "complete against a custodian's calendar",
+    );
+  }
+
   for (const candidacyId of coverage.candidateUniverse) {
     const person = byId.get(candidacyId);
     if (!person) {
@@ -357,11 +441,39 @@ export function evaluateCoverage(
   const gaps: NamedGap[] = [];
   const byId = new Map(coverage.perCandidate.map((p) => [p.candidacyId, p]));
 
+  /**
+   * The contest-level routing question, asked before any per-candidate one.
+   *
+   * `NO_REGIME_ON_RECORD` is the state that must never be able to reach
+   * `COMPLETE_AS_OF`: it says this repository has not read the rule that names
+   * the custodian, and a contest declared complete on that basis would be
+   * asserting an absence about a government we never identified, let alone
+   * asked. Emitting a gap is what keeps it out of the terminal branch below —
+   * derived from state, never typed by a caller.
+   */
+  if (coverage.filingRegimeState !== "RESOLVED") {
+    gaps.push({
+      kind: "FILING_REGIME_UNRESOLVED",
+      subject: coverage.contestId,
+      what:
+        `the filing regime for this contest is ${coverage.filingRegimeState}` +
+        `${coverage.filingRegimeId === null ? "" : ` (rule ${coverage.filingRegimeId})`} — we do ` +
+        "not know which authority governs it",
+      nextMove:
+        coverage.filingRegimeState === "NO_REGIME_ON_RECORD"
+          ? "Read this jurisdiction's filing-officer rule from its own government's site and add the " +
+            "regime to data/campaign-finance/filing-regimes.json. Until then the custodian is UNKNOWN, " +
+            "which is a fact about us and never about whether these filings exist."
+          : "The routing rule is known and the office holding it is not. Walk the route from the " +
+            "rule's ROLE to a named office; do not substitute the jurisdiction-wide authority.",
+    });
+  }
+
   for (const candidacyId of coverage.candidateUniverse) {
     const person = byId.get(candidacyId);
     if (!person) {
       gaps.push({
-        kind: "COMMITTEE_UNIDENTIFIED",
+        kind: "COVERAGE_RECORD_ABSENT",
         subject: candidacyId,
         what: "on the ballot for this contest and carrying no finance coverage record at all",
         nextMove:

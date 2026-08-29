@@ -118,3 +118,20 @@ next-env.d.ts
 # every version of every binary forever, so a walk that captures the reader's
 # own screen writes its images here and commits only the text beside them.
 /data/hunt/**/*.png
+
+# THE SHADOW RUN'S WORKING STATE, but NOT its record.
+#
+# RULING 20's reasoning, applied to the control plane: git keeps every version
+# of every file forever, and a shadow run's durable state and evidence bodies
+# are ~1.8 MB of bytes ALREADY committed under tests/fixtures/. Storing them a
+# second time — and again on every re-run — buys nothing, because they are
+# reproducible in one command:
+#
+#     pnpm shadow:run --write
+#
+# What IS committed is the part worth keeping: `run.json`, the replayable
+# machine-readable record naming every route, disposition, attempt, artifact
+# hash and refusal, and `run.txt` beside it for a person. Those are the
+# deliverable; the state directory is the scratch space that produced them.
+/data/control-plane/shadow-runs/*/state/
+/data/control-plane/shadow-runs/*/evidence/

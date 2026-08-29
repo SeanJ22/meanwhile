@@ -27,6 +27,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+import { beginAttempt, claim as claimLease } from "../lib/control-plane/attempt.ts";
+import { createRouteTask } from "../lib/control-plane/route-task.ts";
+import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { applyClaimAmendment } from "../lib/method/amend.ts";
 import {
   CLAIM_CLASSES,
@@ -40,6 +43,8 @@ import {
   readCurrentMethod,
   requiresProvenance,
   retractClaim,
+  auditCoverage,
+  auditTrailFor,
   staleDependents,
   validateClaims,
   type ClaimProvenance,
@@ -830,4 +835,228 @@ test("the committed store's classification coverage is reported honestly", () =>
     COVERAGE_CLAIM: 3,
     DERIVED_CONCLUSION: 2,
   });
+});
+
+/* ------------------------------------------------------------------------ (f) */
+
+/**
+ * **AN AUDIT THAT JOINS ON A URL IS A RE-READING OF THE CLAIM.** (2026-08-29.)
+ *
+ * `provenance.artifact` is a string somebody typed. It does not identify an
+ * execution, it does not say whether that execution reached a completion
+ * boundary, and two different fetches of the same URL are indistinguishable in
+ * it. So before `provenance.attemptId` existed, "auditing" an inherited coverage
+ * claim meant reading the sentence that said where it came from — which is what
+ * the Pima case already proved insufficient.
+ *
+ * These controls prove the chain is walkable on IDENTIFIERS, that the real
+ * control-plane `Attempt` and `RouteTask` satisfy it, and — the half that keeps
+ * it honest — that a claim WITHOUT an Attempt id reports the gap by name instead
+ * of falling back to the prose.
+ */
+
+test("a claim is auditable claim -> assertion -> Attempt -> RouteTask -> artifacts, on identifiers", () => {
+  const workItem = createWorkItem({
+    project: "wtp",
+    subject: "ocd-division/country:us/state:az/county:pima",
+    obligation: "meetings for the county board",
+    why: "an audit-chain control",
+    now: "2026-08-29T00:00:00.000Z",
+  });
+  const task = createRouteTask({
+    workItemId: workItem.id,
+    routeId: "audit-chain-route",
+    routeLabel: "Legistar /Events",
+    target: "webapi.legistar.com",
+    inherited: true,
+    now: "2026-08-29T00:00:00.000Z",
+  });
+  const lease = claimLease(task.id, "worker-1", "2026-08-29T00:00:00.000Z", 60_000, null);
+  const attempt = {
+    ...beginAttempt({
+      routeTaskId: task.id,
+      workItemId: workItem.id,
+      worker: { role: "ACQUIRER" as const, provider: "anthropic", version: "test", instance: "i-1" },
+      lease,
+      now: "2026-08-29T00:00:00.000Z",
+      methodVersion: 55,
+      policyVersion: "test",
+    }),
+    artifactIds: ["sha256-deadbeef"],
+  };
+
+  const store = {
+    routes: [
+      {
+        id: "audit-chain-route",
+        claims: [
+          {
+            id: "audit-chain-route#coverage",
+            class: "COVERAGE_CLAIM" as const,
+            statement: "the vendor API returns every sitting in this window",
+            restsOn: ["audit-chain-route"],
+            provenance: {
+              artifact: "https://webapi.legistar.com/v1/pima/events",
+              observedVia: "audit-chain-route",
+              disposition: "YIELDED" as const,
+              jurisdictions: ["az"],
+              vendors: ["legistar"],
+              observedOn: "2026-08-29",
+              attemptId: attempt.id,
+            },
+            validation: { state: "VALIDATED" as const, on: "2026-08-29", by: "audit-chain-route" },
+          },
+        ],
+      },
+    ],
+  };
+
+  const trail = auditTrailFor(store, "audit-chain-route#coverage", [attempt], [task]);
+  assert.equal(trail.complete, true, `the chain broke: ${trail.gaps.join("; ")}`);
+  assert.deepEqual(trail.resolved, [
+    "CLAIM",
+    "METHOD_ASSERTION_ROUTE",
+    "ATTEMPT",
+    "ROUTE_TASK",
+    "ARTIFACTS",
+  ]);
+  assert.equal(trail.attemptId, attempt.id);
+  assert.equal(trail.routeTaskId, task.id);
+  assert.deepEqual(trail.artifactIds, ["sha256-deadbeef"]);
+  assert.match(trail.why, /every hop joined on an identifier and none on the prose reference/);
+
+  /*
+   * THE PROSE IS CARRIED AND IS NOT THE JOIN. Remove the Attempt id and the
+   * chain must STOP — not quietly fall back to the URL that is still sitting
+   * right there in the same record.
+   */
+  const proseOnly = {
+    routes: [
+      {
+        id: "audit-chain-route",
+        claims: [
+          {
+            ...store.routes[0].claims[0],
+            id: "audit-chain-route#legacy",
+            provenance: { ...store.routes[0].claims[0].provenance, attemptId: undefined },
+          },
+        ],
+      },
+    ],
+  };
+  const legacy = auditTrailFor(proseOnly, "audit-chain-route#legacy", [attempt], [task]);
+  assert.equal(legacy.complete, false);
+  assert.equal(legacy.attemptId, null);
+  assert.deepEqual(legacy.artifactIds, []);
+  assert.equal(legacy.proseArtifactNotAJoin, "https://webapi.legistar.com/v1/pima/events");
+  assert.ok(
+    legacy.gaps.some((g) => /a prose reference is not a join/.test(g)),
+    "the gap must be NAMED, never silently bridged by the artifact string",
+  );
+});
+
+test("a chain that resolves to the WRONG route is a gap, not a pass", () => {
+  const attempt = { id: "at-1", routeTaskId: "rt-1", artifactIds: ["sha256-1"] };
+  const task = { id: "rt-1", routeId: "a-different-route", disposition: null };
+  const store = {
+    routes: [
+      {
+        id: "audit-mismatch",
+        claims: [
+          {
+            id: "audit-mismatch#c",
+            class: "COVERAGE_CLAIM" as const,
+            statement: "something",
+            restsOn: ["audit-mismatch"],
+            provenance: {
+              artifact: "https://example.gov/x",
+              observedVia: "audit-mismatch",
+              disposition: "YIELDED" as const,
+              jurisdictions: ["az"],
+              vendors: [],
+              observedOn: "2026-08-29",
+              attemptId: "at-1",
+            },
+            validation: { state: "VALIDATED" as const, on: "2026-08-29", by: "x" },
+          },
+        ],
+      },
+    ],
+  };
+  const trail = auditTrailFor(store, "audit-mismatch#c", [attempt], [task]);
+  assert.equal(trail.complete, false);
+  assert.ok(trail.gaps.some((g) => /both resolve and disagree/.test(g)));
+
+  // An Attempt nobody holds, and a RouteTask nobody holds, each stop at their
+  // OWN hop. "The chain broke" is not an audit result; "it broke HERE" is.
+  assert.deepEqual(auditTrailFor(store, "audit-mismatch#c", [], [task]).resolved, [
+    "CLAIM",
+    "METHOD_ASSERTION_ROUTE",
+  ]);
+  assert.deepEqual(auditTrailFor(store, "audit-mismatch#c", [attempt], []).resolved, [
+    "CLAIM",
+    "METHOD_ASSERTION_ROUTE",
+    "ATTEMPT",
+  ]);
+
+  // A claim reaching an Attempt and a RouteTask with NO artifact: the chain
+  // arrives at a report of a fetch rather than at the fetch.
+  const noArtifacts = auditTrailFor(
+    store,
+    "audit-mismatch#c",
+    [{ ...attempt, artifactIds: [] }],
+    [{ ...task, routeId: "audit-mismatch" }],
+  );
+  assert.equal(noArtifacts.complete, false);
+  assert.ok(noArtifacts.gaps.some((g) => /nothing to re-read/.test(g)));
+});
+
+test("attemptId is ADDITIVE — the committed store still validates, and a blank one does not", () => {
+  /*
+   * The 116 committed routes carry no Attempt ids, and back-filling one for an
+   * execution that had no Attempt would be inventing exactly the kind of
+   * provenance record the provenance requirement exists to prevent.
+   */
+  const k = JSON.parse(readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8")) as MethodKnowledge;
+  assert.deepEqual(validateClaims(k), []);
+
+  const coverage = auditCoverage(k, [], []);
+  assert.ok(coverage.total > 0, "this control is vacuous if the store declares no C or D claims");
+  assert.equal(
+    coverage.auditable,
+    0,
+    "no committed claim is attempt-bound yet, and reporting otherwise would be the lie",
+  );
+  for (const t of coverage.trails) {
+    assert.ok(t.gaps.some((g) => /predates attempt-bound provenance/.test(g)));
+  }
+
+  // PLANTED: a PRESENT but blank attemptId reads to a traversal as a real join
+  // key and resolves to nothing. It is refused; OMITTING the field is not.
+  const planted = {
+    routes: [
+      {
+        id: "blank-attempt",
+        claims: [
+          {
+            id: "blank-attempt#c",
+            class: "COVERAGE_CLAIM" as const,
+            statement: "something",
+            restsOn: ["blank-attempt"],
+            provenance: {
+              artifact: "https://example.gov/x",
+              observedVia: "blank-attempt",
+              disposition: "YIELDED" as const,
+              jurisdictions: ["az"],
+              vendors: [],
+              observedOn: "2026-08-29",
+              attemptId: "   ",
+            },
+            validation: { state: "VALIDATED" as const, on: "2026-08-29", by: "x" },
+          },
+        ],
+      },
+    ],
+  };
+  assert.ok(validateClaims(planted).some((i) => i.rule === "claim-provenance-attempt-blank"));
 });

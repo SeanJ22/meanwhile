@@ -36,6 +36,7 @@ import {
   classificationCoverage,
   currentTruthFor,
   findDependencyFlags,
+  isRetracted,
   readCurrentMethod,
   requiresProvenance,
   retractClaim,
@@ -712,10 +713,28 @@ test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted,
   const r = applyClaimAmendment(store, PIMA_CLAIM_CLASSES);
   const k = r.knowledge;
 
-  assert.equal(r.claimsAdded.length, 12, "twelve assertions classified across the four routes");
-  assert.equal(r.retracted.length, 2, "two withdrawn: one coverage claim and one derived conclusion");
+  /*
+   * ASSERT THE END STATE, NOT THE DELTA. The amendment has since been applied
+   * to the committed store, so `claimsAdded` is now correctly 0 on a re-run —
+   * the script is idempotent by design and reports "already present". A test
+   * that asserted the delta would pass only before the work landed and fail
+   * forever after, which is a test that measures whether it has run rather
+   * than whether the store is right.
+   */
+  const applied = allClaims(k);
+  assert.equal(applied.length, 12, "twelve assertions classified across the four routes");
+  assert.equal(
+    applied.filter((c) => isRetracted(c.claim)).length,
+    2,
+    "two withdrawn: one coverage claim and one derived conclusion",
+  );
   assert.deepEqual(r.unknownRoutes, []);
   assert.deepEqual(r.unknownClaims, []);
+
+  // Idempotence is the stronger property the delta was standing in for.
+  const twice = applyClaimAmendment(k, PIMA_CLAIM_CLASSES);
+  assert.equal(allClaims(twice.knowledge).length, 12, "re-applying attaches nothing new");
+  assert.equal(twice.knowledge.version, k.version, "and bumps no version");
 
   // AN AMENDMENT ADDS NO AVENUE: version and route count are unchanged, so it
   // cannot mechanically reopen conclusions as though something were discovered.
@@ -800,19 +819,26 @@ test("the committed store's classification coverage is reported honestly", () =>
   const store = JSON.parse(
     readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
   ) as MethodKnowledge;
-  const before = classificationCoverage(store);
   const after = classificationCoverage(applyClaimAmendment(store, PIMA_CLAIM_CLASSES).knowledge);
 
-  assert.equal(before.classified + 4, after.classified, "the amendment classifies exactly four entries");
+  /*
+   * The END STATE, for the reason given on the control above: the amendment is
+   * applied to the committed store now, so a before/after delta would be 0 and
+   * this would be asserting that the work has not landed.
+   */
+  assert.equal(after.classified, 4, "exactly four entries carry a declared class");
   assert.equal(after.unclassified, after.routes - after.classified);
   assert.ok(
     after.unclassified > 0,
     "and the rest are reported as UNCLASSIFIED rather than quietly counted as class A",
   );
+  // The absolute per-class census, for the same end-state reason: 12 claims
+  // across four routes, and the two withdrawn ones are still counted here
+  // because a retracted claim is KEPT and labelled, never deleted.
   assert.deepEqual(after.byClass, {
-    ROUTE_EXISTENCE: before.byClass.ROUTE_EXISTENCE + 4,
-    ROUTE_OUTCOME: before.byClass.ROUTE_OUTCOME + 3,
-    COVERAGE_CLAIM: before.byClass.COVERAGE_CLAIM + 3,
-    DERIVED_CONCLUSION: before.byClass.DERIVED_CONCLUSION + 2,
+    ROUTE_EXISTENCE: 4,
+    ROUTE_OUTCOME: 3,
+    COVERAGE_CLAIM: 3,
+    DERIVED_CONCLUSION: 2,
   });
 });

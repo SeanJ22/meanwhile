@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "3fe76161c7b517a7",
+  "snapshot": "5ebf6921b5116732",
   "counts": {
-    "records": 228,
-    "current": 207,
-    "law": 180,
+    "records": 229,
+    "current": 208,
+    "law": 181,
     "decisions": 27,
     "historical": 21
   },
@@ -3835,6 +3835,30 @@
           "target": "R-0190"
         }
       ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0192",
+      "aliases": [
+        "RULING 192",
+        "R192",
+        "R-192"
+      ],
+      "title": "RULING 192 — method knowledge is typed by claim class, and a false conclusion never deletes a valid route",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-28",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "method.claim_integrity",
+          "value": "typed-classes-with-required-provenance"
+        }
+      ],
+      "relations": [],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

@@ -2787,7 +2787,55 @@
         "discovery": "NEW_METHOD",
         "note": "One sitemap read and one page fetch per body. The schedule page is nearly always in the sitemap under a name containing 'Schedule' or 'Calendar'."
       },
-      "learnedAtVersion": 41
+      "learnedAtVersion": 41,
+      "claims": [
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "When a vendor calendar runs dry a fortnight out, the body's OWN site is a separate record on a different publication clock, and a meeting-schedule page is usually in its sitemap under a name containing 'Schedule' or 'Calendar'.",
+          "restsOn": []
+        },
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#pima-recurring-rule-published",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28: www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule publishes the Board's recurring rule — 2nd and 4th Tuesdays, 5 p.m., Administration Building, 130 W. Congress St.",
+          "restsOn": [
+            "body-publishes-its-schedule-separately-from-its-agendas"
+          ]
+        },
+        {
+          "id": "body-publishes-its-schedule-separately-from-its-agendas#pima-september-only-as-rule",
+          "class": "DERIVED_CONCLUSION",
+          "statement": "Pima County's September 2026 sittings exist only as that recurring rule and are not individually published anywhere.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it#pima-window-complete",
+            "body-publishes-its-schedule-separately-from-its-agendas#pima-recurring-rule-published"
+          ],
+          "provenance": {
+            "artifact": "https://www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule, read beside the /events window that returned no September sitting",
+            "observedVia": "body-publishes-its-schedule-separately-from-its-agendas",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "CONTRADICTED",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "note": "Three individually published September sittings were recovered from the county's own Legistar InSite portal on the same day."
+          },
+          "retraction": {
+            "kind": "CORRECTED",
+            "on": "2026-08-28",
+            "why": "False. All three September sittings were individually published on Pima County's own Legistar InSite portal at the time this was recorded, with a date, a time, a room and a meeting kind, and the 2026-09-08 1:00 PM Study Session could not have been derived from the rule text, which gives study sessions no time at all. This was a claim about what a government publishes, made from one route's silence.",
+            "supersededBy": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "survives": "THE ROUTE, AND THE PUBLISHING-PRACTICE OBSERVATION UNDER IT. A body's schedule and its agendas really are different records on different publication clocks, Vail Unified remains the control that makes it practice rather than a defect, and asking the body's own site is still worth doing. What is withdrawn is the conclusion that the body's own site was the ONLY place those sittings existed — the diagnostic was too narrow, because the vendor's own web UI is a third record again."
+          }
+        }
+      ]
     },
     {
       "id": "reconcile-the-adapter-before-suspecting-it",
@@ -2831,7 +2879,56 @@
         "discovery": "NEW_METHOD",
         "note": "Two reads: the snapshot's per-source counters, then one hand query against the primary API over the adapter's own window."
       },
-      "learnedAtVersion": 42
+      "learnedAtVersion": 42,
+      "claims": [
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "Reading a source's own fetched / normalized / dropped-by-reason counters before opening the adapter, then re-asking the primary source the same query by hand over the same window, is an available route for deciding whether a 'missing rows' report is about the pipeline or about the publisher.",
+          "restsOn": []
+        },
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#pima-denominators-reconciled",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28: the snapshot recorded fetched 16, normalized 16, three placeless drops accounted, and webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01 returned seven events, newest 2026-08-25 — so nothing was lost between that source and the screen.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it"
+          ]
+        },
+        {
+          "id": "reconcile-the-adapter-before-suspecting-it#pima-window-complete",
+          "class": "COVERAGE_CLAIM",
+          "statement": "That reconciliation established the Pima County meeting record as COMPLETE for 2026-08-01 to 2026-11-01.",
+          "restsOn": [
+            "reconcile-the-adapter-before-suspecting-it#pima-denominators-reconciled"
+          ],
+          "provenance": {
+            "artifact": "https://webapi.legistar.com/v1/pima/events over 2026-08-01 to 2026-11-01, read beside the ingestion snapshot's per-source counters for the same run",
+            "observedVia": "reconcile-the-adapter-before-suspecting-it",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "CONTRADICTED",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records",
+            "note": "Contradicted the same day by driving the tenant's own Calendar.aspx date-range filter, which returned three individually published sittings inside the same window."
+          },
+          "retraction": {
+            "kind": "SUPERSEDED",
+            "on": "2026-08-28",
+            "why": "The reconciliation was real and the measurement was right; the word 'complete' was not licensed by either. Reconciling proves nothing was DROPPED between a source and the screen. It never proves enough was ASKED FOR, and three published Pima sittings were inside the same window and outside that route's reach.",
+            "supersededBy": "reconciled-is-not-complete#reconciliation-answers-loss-not-sufficiency",
+            "survives": "THE ROUTE AND ITS OUTCOME, BOTH INTACT AND BOTH STILL USABLE. Reading the per-source denominators before opening the adapter is still the right first move and still exonerated the pipeline by observation rather than by inspection, and the seven events over the window are still exactly what that endpoint returned. What is withdrawn is one word about what that answer established."
+          }
+        }
+      ]
     },
     {
       "id": "sibling-host-is-a-different-permission-decision",
@@ -2980,7 +3077,76 @@
         "readerIntegrityRepair": true,
         "note": "One adapter per vendor UI, then free per tenant. The comparison that proves the gap is two requests: the API over a window, and the UI's own filter over the same window."
       },
-      "learnedAtVersion": 46
+      "learnedAtVersion": 46,
+      "claims": [
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "A vendor's public API and the vendor's own public web UI are two different records of the same body's calendar; driving the UI's date-range filter is an available route when the API's forward horizon runs dry.",
+          "restsOn": []
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api",
+          "class": "ROUTE_OUTCOME",
+          "statement": "Walked in az on 2026-08-28 across three Legistar tenants on one 'Next Month' filter: Mesa 15 grid rows with 12 marked meeting_NotViewable and /events returning exactly the other 3; Phoenix 8 rows, 8 not viewable, 0 returned; Pima 3 rows, 3 not viewable, 0 returned — 26 future sittings visible in the UI and invisible to the API.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records"
+          ]
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#legistar-events-omits-non-viewable",
+          "class": "COVERAGE_CLAIM",
+          "statement": "webapi.legistar.com/v1/{client}/events is an INCOMPLETE view of a tenant's calendar: it returns only sittings whose InSite meeting-detail page is publicly viewable, the omitted events have no WebAPI record at all (40 of 40 probed ids 404 on the item endpoint), and the two routes number their meetings in disjoint id spaces.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api"
+          ],
+          "provenance": {
+            "artifact": "https://pima.legistar.com/Calendar.aspx (and the Mesa and Phoenix tenants) 'Next Month' filter, compared row by row against webapi.legistar.com/v1/{client}/events over the same window, plus 40 item-endpoint probes",
+            "observedVia": "vendor-api-and-vendor-web-ui-are-different-records",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "VALIDATED",
+            "on": "2026-08-28",
+            "by": "three independent tenants measured on one filter, with the id-space disjunction and the 404 probes as the mechanism",
+            "note": "An incompleteness claim, which is the safe direction: it says this route returns less than the calendar holds, never that any calendar is complete."
+          }
+        },
+        {
+          "id": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+          "class": "DERIVED_CONCLUSION",
+          "statement": "Pima County individually published all three of its September 2026 sittings — 2026-09-08 1:00 PM Study Session, 2026-09-08 5:00 PM and 2026-09-22 5:00 PM, all in the Board of Supervisors' Hearing Room — on its own Legistar InSite portal, with the 22 September sitting published on 2026-06-15, 74 days ahead.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#three-tenant-ui-vs-api",
+            "vendor-api-and-vendor-web-ui-are-different-records#legistar-events-omits-non-viewable"
+          ],
+          "provenance": {
+            "artifact": "https://pima.legistar.com/Calendar.aspx date-range postback over September 2026, with the InSite calendar RSS pubDate giving the 74-day lead time on the 22 September sitting",
+            "observedVia": "vendor-api-and-vendor-web-ui-are-different-records",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "VALIDATED",
+            "on": "2026-08-28",
+            "by": "the portal's own rows, each carrying a date, a time, a room and a meeting kind",
+            "note": "The 1:00 PM Study Session is the control: the recurrence rule gives study sessions no time at all, so this row cannot have been synthesised from the rule and can only have been read off a published record."
+          }
+        }
+      ]
     },
     {
       "id": "legistar-insite-calendar-postback-enumeration",
@@ -3055,7 +3221,42 @@
         "readerIntegrityRepair": true,
         "note": "No new retrieval. It is a rule about which sentence a reconciled count licenses, and it costs one extra route before the word 'complete' may be written."
       },
-      "learnedAtVersion": 48
+      "learnedAtVersion": 48,
+      "claims": [
+        {
+          "id": "reconciled-is-not-complete#route-exists",
+          "class": "ROUTE_EXISTENCE",
+          "statement": "Asking a second independent route the same question, before the word 'complete' may be written about the first route's answer, is an available and cheap step — the vendor's own web UI for a vendor-backed body, the sitemap for a body's own site.",
+          "restsOn": []
+        },
+        {
+          "id": "reconciled-is-not-complete#reconciliation-answers-loss-not-sufficiency",
+          "class": "COVERAGE_CLAIM",
+          "statement": "A reconciled denominator establishes only that nothing was LOST between one source and the screen. It never establishes that enough was ASKED FOR, so a reconciled count licenses 'this route returned N and nothing was lost' and never 'there are N'.",
+          "restsOn": [
+            "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "reconcile-the-adapter-before-suspecting-it#pima-window-complete"
+          ],
+          "provenance": {
+            "artifact": "the Pima correction of 2026-08-28: a snapshot recording fetched 16 / normalized 16 / three drops accounted, set beside three sittings the same window held and that route could not return",
+            "observedVia": "reconciled-is-not-complete",
+            "disposition": "YIELDED",
+            "jurisdictions": [
+              "az"
+            ],
+            "vendors": [
+              "legistar"
+            ],
+            "observedOn": "2026-08-28"
+          },
+          "validation": {
+            "state": "REVALIDATED_AFTER_UPSTREAM_RETRACTION",
+            "on": "2026-08-28",
+            "by": "vendor-api-and-vendor-web-ui-are-different-records#pima-september-individually-published",
+            "note": "This claim RESTS ON a withdrawn claim as its evidence, which is the opposite of depending on it being true: the lesson exists because that claim was false, and it is stronger, not weaker, for the withdrawal. Recorded explicitly so the dependency flag is dispositioned on the record rather than by nobody asking."
+          }
+        }
+      ]
     },
     {
       "id": "each-statewide-executive-office-publishes-its-own-officeholder",

@@ -21624,8 +21624,20 @@ CivicPlus HCMS bearer token issued 2026-08-28 and **live for thirty days**
 <!-- expected-future: the captured token's own exp claim, 2026-09-27 -->, sitting
 in the repository five times over. The New London capture is a *different*
 Google key in a `maps.googleapis.com` script tag, recorded nine days earlier by
-a different session through a different code path — it would have been the next
-red deploy, and no amount of fixing the file Netlify named would have found it.
+a different session through a different code path.
+
+**And Netlify does not flag that one at all**, which is the more useful half of
+the finding and was checked rather than assumed. The New London key has been on
+`main` since `f1d9337` and was present in `cb0f9af8`, `a44559ea`, `dcdaac41`,
+`e937958d` and `c5cd4a21` — **five deploys Netlify passed as `ready`**. Only the
+Pima occurrence turns the scan red. So this is not a case of getting there before
+the vendor did: for that second key, the vendor's scanner is not a net at all,
+and the repository's own guard is the only thing that will ever catch it.
+
+That also corrects the deploy history. Two merges were red, not one: `d2c5dc56`
+(PR #215) introduced the Pima fixture and failed with the same exit 2, and
+`52844f7f` (PR #216) inherited it. The `49b907b7` failure between them is
+unrelated — "Canceled build due to no content change", a docs-only commit.
 
 ### Why this scanner is pattern-based when `secret-redaction.ts` refuses to be
 
@@ -21727,7 +21739,14 @@ credential, and a hash is reproducible by anyone who re-captures the page.
     2 shape-matched and excluded on the evidence, with reasons printed
     17 new tests · 1 workstream · SINGLE_WORKSTREAM, dependency-proven
 
+### Shipped
+
+    PR #217 · merged 71325247 · exact-head CI green on ac63c2a0
+    Netlify deploy 6a92603cebd657000809464d · READY · secret scan passed
+    production serving 7132524 after two consecutive red merges
+
 Netlify's scanner found one instance of one class in one file. It was right, and
 it was reading the shallowest layer of the problem: the credential it named was
-not the live one, the file it named was not the only file, and the write that put
-it there was still in the tree.
+not the live one, the file it named was not the only file, the second file it
+never flagged at all across five green deploys, and the write that put them all
+there was still in the tree.

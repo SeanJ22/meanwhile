@@ -128,6 +128,8 @@
     "meetings:report": "tsx scripts/coverage-report.ts",
     "method:check": "tsx scripts/method-check.mts",
     "orchestration:check": "tsx scripts/orchestration-check.mts",
+    "orchestration:closeout": "tsx scripts/orchestration-check.mts --closeout",
+    "branches:retire": "tsx scripts/branch-retirement.mts",
     "schedule:audit": "tsx scripts/schedule-audit.mts",
     "method:learn-legistar-insite": "tsx scripts/learn-legistar-insite.mts",
     "statewide:portraits": "tsx scripts/hunt-statewide-portraits-0828.mts",

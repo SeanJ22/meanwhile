@@ -47,12 +47,17 @@ import {
 } from "./calendar.ts";
 import { parseClerkSchedule } from "./clerk-schedule.ts";
 import {
+  MEETING_PRODUCING_ROUTES,
   granicusWallObservation,
+  openObligations,
+  richerRouteLink,
   summarizeRoute,
   timelessInstances,
   unionFutureInstances,
   type DispositionVerdict,
   type InstanceDisposition,
+  type ProducedVendorRecord,
+  type RicherRouteLink,
   type RouteInstance,
   type RouteObservation,
   type UnionInstance,
@@ -385,6 +390,18 @@ export interface InSiteNormalizeResult {
    * sitting the product lost quietly.
    */
   dispositions: InstanceDisposition[];
+  /**
+   * **WHAT THIS RUN STILL OWES A READER**, derived from `dispositions` by
+   * `openObligations` — never asserted, never typed by hand.
+   *
+   * A disposition explains; it does not discharge. This is the subset that is
+   * explained AND still absent from the product: a sitting a first-party route
+   * published that we have not placed, a room we could not resolve, an hour
+   * nobody published. Every one of them is ALSO emitted as an incomplete
+   * `UPCOMING` scope in `partialScopes`, because that is the only one of these
+   * fields that survives the composite boundary and reaches the run's report.
+   */
+  openObligations: InstanceDisposition[];
 }
 
 /**
@@ -457,6 +474,17 @@ export function normalizeWithDrops(
      * reason reconstructed afterwards from the absence of a row is a guess.
      */
     const withheldBy = new Map<string, { verdict: DispositionVerdict; because: string }>();
+    /**
+     * Every sitting this tenant ACTUALLY PRODUCED, indexed by the vendor id the
+     * producing route gave it — `"<space>:<id>"`.
+     *
+     * It is the only checkable cross-route link this adapter has, and it exists
+     * so `SUPERSEDED_BY_RICHER_ROUTE` can be a precondition rather than a
+     * fallback: the word "superseded" is a claim about ANOTHER record, and a
+     * record nobody can look up is a guess. Per tenant, because an InSite id is
+     * minted per portal and two tenants' numbers are not comparable.
+     */
+    const producedByVendorId = new Map<string, ProducedVendorRecord>();
 
     for (const window of reading.windows) {
       // Every page of this range is one range's answer. The pager total is
@@ -740,6 +768,17 @@ export function normalizeWithDrops(
 
         if (futureKey) {
           producedKeys.add(futureKey);
+          if (row.insiteId && local) {
+            // Indexed only for a row that BECAME a meeting. A link to a record
+            // we did not produce would let one unserved sitting supersede
+            // another, which is the inversion this index exists to prevent.
+            producedByVendorId.set(`insite:${row.insiteId}`, {
+              key: futureKey,
+              date: local.date,
+              time: local.time,
+              route: "INSITE_CALENDAR_GRID",
+            });
+          }
           if (isCanceled(row)) {
             // Produced AND dispositioned: a canceled sitting still reaches the
             // reader — as canceled. The disposition records the publisher's own
@@ -794,17 +833,45 @@ export function normalizeWithDrops(
         ),
       );
 
+      /*
+       * **THE FALLBACK THAT INVERTED ITS OWN MEANING** (audit finding E,
+       * corrected 2026-08-28).
+       *
+       * This chain used to end in `SUPERSEDED_BY_RICHER_ROUTE` for any instance
+       * with no `Meeting` and no recorded reason — while its own comment said
+       * the meeting-producing route had NOT carried it. Nothing richer
+       * superseded those sittings; nothing carried them at all. And because
+       * `unaccounted()` is satisfied by ANY disposition, the verdict turned
+       * "an explicit first-party route published a sitting we did not produce"
+       * into "accounted for", with the sitting nowhere near a reader.
+       *
+       * Pima never exposed it: its grid carries all fourteen, so the branch was
+       * unreachable on the only corpus anyone read. The next tenant is where it
+       * would have been paid for.
+       *
+       * So supersession is now a PRECONDITION. `richerRouteLink` must hand back
+       * a produced canonical meeting reached through an id the two routes
+       * provably share, or the word is not available. What is left when it
+       * cannot is `PUBLISHED_BUT_UNPLACED_BY_US`: an open obligation, named as
+       * ours, carrying the exact fields that would discharge it.
+       */
+      const superseded: RicherRouteLink | null =
+        withheld || produced ? null : richerRouteLink(instance, producedByVendorId);
+
       const verdict: DispositionVerdict = withheld
         ? withheld.verdict
         : produced && at > servingEdge
           ? "BEYOND_APP_SERVING_HORIZON"
           : produced
             ? "REPRESENTED_IN_READER"
-            : // No `Meeting` and no recorded reason: the instance reached the
-              // union through a route that produces no meetings at all — the
-              // RSS or the Clerk's table — and the grid never carried it. That
-              // is the case worth seeing, so it is named rather than smoothed.
-              "SUPERSEDED_BY_RICHER_ROUTE";
+            : superseded
+              ? "SUPERSEDED_BY_RICHER_ROUTE"
+              : "PUBLISHED_BUT_UNPLACED_BY_US";
+
+      const missing =
+        verdict === "PUBLISHED_BUT_UNPLACED_BY_US"
+          ? missingForPlacement(instance, tenant)
+          : null;
 
       dispositions.push({
         key: instance.key,
@@ -818,8 +885,42 @@ export function normalizeWithDrops(
           observedAt: o.observedAt,
           quotedText: o.publishedText ?? `${o.date} ${o.time ?? "(no time published)"}`,
         })),
-        claimAboutContent: dispositionClaim(verdict, withheld?.because ?? null),
+        claimAboutContent: dispositionClaim(
+          verdict,
+          withheld?.because ??
+            (superseded
+              ? supersessionClaim(superseded)
+              : missing
+                ? unplacedClaim(instance, tenant, missing)
+                : null),
+        ),
+        ...(superseded ? { supersededBy: superseded } : {}),
+        ...(missing ? { missingForPlacement: missing } : {}),
       });
+
+      /*
+       * **AND IT LEAVES THE ADAPTER.** `dispositions`, `union` and `routes` are
+       * this function's own richer report and are dropped at the composite
+       * boundary (`lib/sources/composite/index.ts` destructures the
+       * `ReportingMeetingSource` contract and nothing else). `partialScopes` is
+       * in that contract, so it is the one channel a sitting we failed to place
+       * can use to reach the run's report and carry-forward.
+       *
+       * A published sitting we did not produce IS an incomplete UPCOMING
+       * enumeration for this division. Reporting it as anything less would be
+       * the same silence one layer up.
+       */
+      if (verdict === "PUBLISHED_BUT_UNPLACED_BY_US" && missing) {
+        partialScopes.push({
+          scope: "UPCOMING",
+          ocdIds: [tenant.ocdId],
+          cause:
+            `${instance.routes.join(", ")} published a ${instance.date} ${instance.time} ` +
+            `sitting of ${tenant.bodyName} that ${tenant.host} Calendar.aspx did not carry, ` +
+            `and this run did not place it. OURS, and OPEN — missing: ${missing.join("; ")}. ` +
+            "This is NOT a claim that the sitting is unpublished.",
+        });
+      }
     }
 
     /*
@@ -863,6 +964,9 @@ export function normalizeWithDrops(
       routes,
       union: tenantUnions,
       dispositions,
+      // DERIVED, never asserted: what is still owed is a property of the
+      // dispositions, and a hand-maintained second list would drift from them.
+      openObligations: openObligations(dispositions),
     },
     {
       logicalInput: considered,
@@ -902,16 +1006,105 @@ function dispositionClaim(verdict: DispositionVerdict, because: string | null): 
         "a statement that the sitting is unpublished, uncertain or far off — the " +
         "county published it and we hold it."
       );
+    /*
+     * Both of the verdicts below are ALWAYS given a specific `because` by the
+     * caller — `supersessionClaim` and `unplacedClaim` — because each is a
+     * claim about a particular record and a generic sentence could not name it.
+     * These are the floors, and they are written so that a caller which somehow
+     * reached them still says something true and still says whose gap it is.
+     */
     case "SUPERSEDED_BY_RICHER_ROUTE":
       return (
-        "This sitting reached the union through a route that publishes no room " +
-        "and no agenda link, and the route that produces meetings did not carry " +
-        "it. OURS: it is held with its publisher's own words and is not yet " +
-        "placeable as a meeting."
+        "THEIRS, then ours: a thinner route still carries this record, and the " +
+        "SAME publisher record reaches the reader under another canonical " +
+        "identity — see supersededBy, which names it. Nothing is missing."
+      );
+    case "PUBLISHED_BUT_UNPLACED_BY_US":
+      return (
+        "OURS, and OPEN: a first-party route published this sitting, the " +
+        "meeting-producing route did not carry it, and we have not placed it. " +
+        "Nothing superseded it. This is NOT a claim that the sitting is " +
+        "unpublished, moved or uncertain — see missingForPlacement."
       );
     default:
       return null;
   }
+}
+
+/**
+ * The named gap, in FIELD terms — what would have to be acquired before this
+ * sitting could reach a reader.
+ *
+ * Only fields that actually BLOCK construction are listed. A missing meeting
+ * kind is not one of them (`title` falls back to the body's own name), and
+ * listing it would inflate an honest gap into a bigger-sounding one. Never
+ * empty: a verdict that says "we could not place it" and then names nothing is
+ * a shrug wearing a schema.
+ */
+function missingForPlacement(instance: UnionInstance, tenant: InSiteTenant): string[] {
+  const missing: string[] = [];
+
+  if (!instance.location) {
+    missing.push(
+      "a published location — no route carrying this sitting states a room or a " +
+        "placeless label, and a place is never inferred",
+    );
+  } else if (!isPlaceless(instance.location) && !findTenantVenue(tenant, instance.location)) {
+    missing.push(
+      `a resolvable venue — the published location "${instance.location}" matches no ` +
+        `venue this registry states for ${tenant.slug}, and a room name is never ` +
+        "geocoded at runtime",
+    );
+  }
+
+  /*
+   * The identity limitation, stated even when every field happens to be
+   * present: the routes that carried this sitting are CORROBORATION. Producing
+   * a `Meeting` from one of them is promoting it to an ingestion source, which
+   * `CLAUDE.md` makes an ask-before — and `SittingRoute` in
+   * `lib/sources/event-identity.ts` cannot even name `CLERK_SCHEDULE_PAGE` as a
+   * field's supplier, so a composed record could not carry honest per-field
+   * provenance today. Both are ours to fix and neither is a fact about the body.
+   */
+  missing.push(
+    `a record on a meeting-producing route (${MEETING_PRODUCING_ROUTES.join(", ")}) — ` +
+      `this sitting is carried only by ${instance.routes.join(", ")}, which this adapter ` +
+      "reads as corroboration; promoting one to an ingestion source is an ask-before",
+  );
+
+  return missing;
+}
+
+/** The `PUBLISHED_BUT_UNPLACED_BY_US` claim, naming the routes and the gap. */
+function unplacedClaim(
+  instance: UnionInstance,
+  tenant: InSiteTenant,
+  missing: string[],
+): string {
+  return (
+    `OURS, and OPEN: ${instance.routes.join(", ")} — ` +
+    `${instance.routes.length > 1 ? "first-party routes" : "a first-party route"}, published ` +
+    `by ${tenant.publishingOrg} or its vendor — states a ${instance.date} ${instance.time} ` +
+    `sitting of ${tenant.bodyName}, and WE have not placed it. ` +
+    `${tenant.host} Calendar.aspx, the only route this adapter produces meetings from, ` +
+    "did not carry it, and NOTHING SUPERSEDED IT. Missing: " +
+    `${missing.join("; ")}. This is a gap in what this project has acquired and is NOT ` +
+    "a statement that the sitting is unpublished, cancelled or uncertain."
+  );
+}
+
+/** The `SUPERSEDED_BY_RICHER_ROUTE` claim, naming the record that stands in its place. */
+function supersessionClaim(link: RicherRouteLink): string {
+  return (
+    `THEIRS, then ours: ${link.thinRoute} still carries this record` +
+    `${link.quotedText ? ` — "${link.quotedText}"` : ""} — and it is the SAME ` +
+    `publisher record as one we produce: ${link.route} numbers both ` +
+    `${link.vendorIdSpace} ${link.vendorId}, and we serve it at ` +
+    `${link.supersedingDate} ${link.supersedingTime}. The publisher moved the hour and ` +
+    "the thinner route kept the earlier wording. The sitting REACHES THE READER under " +
+    "that identity; this record is superseded, not lost, and the link is a shared " +
+    "vendor id in one declared id space rather than a resemblance."
+  );
 }
 
 /**

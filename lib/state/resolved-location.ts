@@ -115,10 +115,45 @@
  * surface cannot retire a hedge, cannot claim a body governs the reader, and
  * cannot write back — the browse path is READ-ONLY over the home location and
  * every function below returns a new object.
+ *
+ * ---
+ *
+ * ## WGH-16 (2026-08-28) — A SHARED LEVEL IS NOT AN EXCLUSIVE LEVEL
+ *
+ * WGH-15's browse copy earns a strong sentence — *"your address is in a
+ * different one — this is here because you tapped it, not because it governs
+ * you"* — from `standingOf` returning `ELSEWHERE_IN_ZIP`, and that return was
+ * gated on one thing: **some other division sharing this one's `levelKeyOf`
+ * had been confirmed.**
+ *
+ * `levelKeyOf` is the deepest OCD segment. It is a string split, and it buckets
+ * every division type in the product — `place`, `school_district`, `county`,
+ * `sldl`, `sldu`, `cd`, `state`, and whatever a source adds next. For
+ * legislative and congressional districts the inference is airtight, because a
+ * point is in exactly one of them. **For two of those buckets it is not merely
+ * weak, it is invalid**, and both reach the browse surface through the map:
+ *
+ * ```
+ * place            75/113 AZ and 364/477 NJ interior points are in TWO
+ * school_district  39/104 interior points are in TWO
+ * ```
+ *
+ * A reader in an elementary school district is simultaneously in a regional
+ * high school district. Confirming the first told us nothing about the second,
+ * and the card said *this does not govern you* — a manufactured claim about a
+ * government, produced by a bucket name rather than by evidence.
+ *
+ * So exclusivity became a MEASURED property with its own module,
+ * `lib/state/division-levels.ts`, and `standingOf` gained a fourth state.
+ * `ELSEWHERE_IN_ZIP` is now reserved for levels proven to admit at most one
+ * division per point; `OVERLAP_NOT_RULED_OUT` carries the honest weaker case;
+ * and a level nobody has measured falls to `UNSETTLED` by MISSING from a
+ * lookup rather than by anyone remembering to handle it.
  */
 
 import { ocdSegments } from "../ocd/tiers.ts";
 import type { OcdId } from "../sources/types.ts";
+import { relationshipOfLevel } from "./division-levels.ts";
 
 /** How strongly the app knows where the reader is. */
 export type LocationCertainty =
@@ -159,8 +194,13 @@ export function zipOnly(zip: string | null): ResolvedLocation {
  *
  * The deepest segment, the same rule `tierForOcdId` uses — `place`,
  * `school_district`, `sldl`, `county`, `cd`. Two divisions with the same key
- * answer the same question about a reader, which is what makes one capable of
- * contradicting the other.
+ * answer the same question about a reader.
+ *
+ * **WGH-16: that is where the resemblance stops.** Sharing a level makes two
+ * divisions COMPARABLE; it does not make them mutually exclusive, and this
+ * function cannot tell the difference — it is a string split. Whether a
+ * positive match on one is evidence AGAINST the other is a separate, measured
+ * question, and it is answered in `lib/state/division-levels.ts`.
  */
 export function levelKeyOf(ocdId: string): string | null {
   const segments = ocdSegments(ocdId as OcdId);
@@ -182,8 +222,29 @@ export type BodyStanding =
    * The address settled this LEVEL and named a different division, so this
    * body governs somewhere else in the zip. Not a gap in what we hold: we hold
    * it in full, and it is simply not the reader's.
+   *
+   * **WGH-16: reserved for levels measured to admit AT MOST ONE division per
+   * point** — `cd`, `sldl`, `sldu`, `county`, `state`. This is the only
+   * standing that licenses a claim about a government, so it is the only one
+   * with an evidence gate in front of it.
    */
-  | "ELSEWHERE_IN_ZIP";
+  | "ELSEWHERE_IN_ZIP"
+  /**
+   * **WGH-16.** The address settled this level and named a different division —
+   * and the level is one where a point is routinely inside SEVERAL divisions at
+   * once, so that says nothing about this one.
+   *
+   * **The verb is OURS, and the name says so.** It records what WE have not
+   * established. It makes no claim about the body on the row: not that it
+   * governs the reader, not that it does not, and above all not the
+   * `ELSEWHERE_IN_ZIP` sentence, which would be a manufactured claim about a
+   * government whose territory nobody tested.
+   *
+   * A reader in an elementary school district and a regional high school
+   * district is governed by both. Confirming the first may never exclude the
+   * second. See `lib/state/division-levels.ts` for what was measured.
+   */
+  | "OVERLAP_NOT_RULED_OUT";
 
 /**
  * What may be said about one body, given the reader's resolved location.
@@ -208,11 +269,49 @@ export function standingOf(
   // A level the street genuinely crosses is not settled by this address.
   if (location.splitLevels.includes(level)) return "UNSETTLED";
 
-  // Settled at this level, and this is not the division that was settled.
+  // Nothing was settled at this level at all, so there is nothing to compare
+  // against. Silence is not a contradiction.
   const settledHere = location.confirmedDivisionIds.some(
     (id) => levelKeyOf(id) === level,
   );
-  return settledHere ? "ELSEWHERE_IN_ZIP" : "UNSETTLED";
+  if (!settledHere) return "UNSETTLED";
+
+  /*
+   * **WGH-16 — THE EVIDENCE GATE, AND WHY IT IS NOT A STYLE PREFERENCE.**
+   *
+   * Something else at this level was confirmed and this is not it. What that
+   * licenses depends ENTIRELY on whether the level can hold two divisions over
+   * one point, and `levelKeyOf` — a string split on the deepest OCD segment —
+   * cannot tell:
+   *
+   * - at `sldl`, confirming District 17 excludes District 19 without anyone
+   *   testing District 19's polygon, because a point is in exactly one;
+   * - at `school_district`, confirming an elementary district excludes
+   *   NOTHING. The reader is routinely inside a regional high school district
+   *   at the same time, and both are real governments they really vote for.
+   *
+   * The old rule returned `ELSEWHERE_IN_ZIP` for both, so the second case
+   * rendered *"this is here because you tapped it, not because it governs
+   * you"* — a false claim about a government, manufactured out of a bucket
+   * name.
+   *
+   * Three branches, and the third is the one that matters most. A level nobody
+   * has measured is not "probably like the others" — it is unknown, and it
+   * reaches `UNSETTLED`, the most neutral thing this module can say, because
+   * even the overlap sentence *("these can overlap, so this one may cover you
+   * too")* is a claim, and an unmeasured level has not earned that one either.
+   * `relationshipOfLevel` answers by MISSING from a lookup, so a division type
+   * a source introduces next month lands here by existing rather than by
+   * anyone remembering to add it.
+   */
+  switch (relationshipOfLevel(level)) {
+    case "MUTUALLY_EXCLUSIVE_PARTITION":
+      return "ELSEWHERE_IN_ZIP";
+    case "POTENTIALLY_OVERLAPPING":
+      return "OVERLAP_NOT_RULED_OUT";
+    case "UNKNOWN_SEMANTICS":
+      return "UNSETTLED";
+  }
 }
 
 /**
@@ -245,6 +344,13 @@ export function keepsCouldGovernPill(
    * open copy decision: what that row should say is "this one is not yours",
    * which is a different sentence from "could govern you", and inventing it
    * here would be this module writing reader copy.
+   *
+   * **WGH-16 changes nothing here and that is the correct outcome.**
+   * `OVERLAP_NOT_RULED_OUT` is also not `CONFIRMED`, so it also keeps the
+   * hedge — which is exactly right for a row we have not established anything
+   * about. The predicate is written against `CONFIRMED` rather than against a
+   * list of the other states, so a state added to the union inherits the
+   * cautious answer instead of silently falling out of the list.
    */
   return standingOf(body, location) !== "CONFIRMED";
 }
@@ -301,9 +407,14 @@ export interface SurfaceSubject {
    * Where the reader's HOME stands relative to `subjectOcdId`, computed against
    * the home location with the strongest evidence available.
    *
-   * `CONFIRMED`         — they are looking at their own district.
-   * `ELSEWHERE_IN_ZIP`  — their address settled this level and named another.
-   * `UNSETTLED`         — we have not been told enough to say, and we say that.
+   * `CONFIRMED`             — they are looking at their own district.
+   * `ELSEWHERE_IN_ZIP`      — their address settled this level, the level
+   *                           admits one division per point, and it named a
+   *                           different one.
+   * `OVERLAP_NOT_RULED_OUT` — their address named a different one at a level
+   *                           that can hold both. We claim nothing (WGH-16).
+   * `UNSETTLED`             — we have not been told enough to say, and we say
+   *                           that.
    *
    * On a `HOME` surface it is always `UNSETTLED`: there is no clicked subject
    * for the home to stand relative to, and manufacturing one would be this

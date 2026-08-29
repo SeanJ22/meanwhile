@@ -705,6 +705,65 @@ export const COVERAGE_AUDITS: BodyCoverageAudit[] = [
     notes:
       "Wired 2026-08-18 (session-date label; wall clock 2026-08-14) — first BoardBook Premier tenant, new vendor entry in docs/vendor-review.md. Two venues observed in 2026 rows, both in the venue cache with the feed's own published addresses.",
   },
+
+  /**
+   * **THE ROW MESA WAS SERVING WITHOUT** (2026-08-28).
+   *
+   * `lib/sources/legistar-insite/tenants.ts` began serving Mesa's City Council
+   * sittings on 2026-08-28 — ten of them are in `data/meetings-snapshot.json`
+   * under `…place:mesa#governing` — while this file had no row for that body,
+   * so `build-registry.ts` left it exactly as the derivation made it:
+   * `coverageStatus: NOT_ATTEMPTED`, `agendaSourceType: NONE`,
+   * `agendaSourceRef: null`, `homepageUrl: null`.
+   *
+   * That is not a cosmetic mismatch. `NOT_ATTEMPTED` is a *claim about us* —
+   * "nobody has looked at this body" — and it was false the moment the adapter
+   * shipped a meeting. A registry that says nobody looked, beside a snapshot
+   * built from what looking found, is the registry having stopped being the
+   * authority for what the product serves.
+   *
+   * The rungs below were walked on 2026-08-28, in this order, and every one
+   * of them is a URL that was actually opened.
+   */
+  {
+    bodyId: "ocd-division/country:us/state:az/place:mesa#governing",
+    attemptedAt: "2026-08-28",
+    attemptedBy:
+      "the InSite tenant repair; wired live by the composite through lib/registry/source-wiring.ts",
+    outcome: "COVERED",
+    rungs: [
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://webapi.legistar.com/v1/mesa/events",
+        note: "200, open client, no token. `$top=5` returns rows whose `EventBodyName` is the string \"City Council\" — the vendor's own name for the body, and it agrees with the city's. This route is NOT the complete one: it returns only the sittings whose InSite detail page is publicly viewable.",
+      },
+      {
+        rung: "VENDOR_API",
+        outcome: "HIT",
+        url: "https://mesa.legistar.com/Calendar.aspx",
+        note: "200, 314,408 bytes, 15 rows naming City Council. The tenant's own portal grid, and the route the adapter reads — it carries the sittings `/events` does not. `mesa.legistar.com/robots.txt` is HTTP 404, so the host publishes no restriction (NO_ROBOTS).",
+      },
+      {
+        rung: "BODY_AGENDA_PAGE",
+        outcome: "HIT",
+        url: "https://www.mesaaz.gov/Government/City-Council-Meetings",
+        note: "200, 159,373 bytes. The city's own page for this body's sittings: `<h1>City Council Meetings</h1>`, a Schedule & Location table (Council Meetings, generally first and third Monday, 5:45 p.m., City Hall upper level, 20 E. Main St.), an Agendas & Minutes section, and a Meeting Calendar listing dated instances with per-instance venues. Permitted: `www.mesaaz.gov/robots.txt` (200, read 2026-08-28) carries a single `User-agent: *` block of 265 directives, no bare `Disallow: /`, and disallows only this page's `/PublicComments` child — not the page itself.",
+      },
+      {
+        rung: "BODY_HOMEPAGE",
+        outcome: "HIT",
+        url: "https://www.mesaaz.gov/Government/Mayor-City-Council",
+        note: "200, 147,047 bytes, `<h1>Mayor &amp; City Council</h1>`. The body's own page, as distinct from its meetings page.",
+      },
+    ],
+    homepageUrl: "https://www.mesaaz.gov/Government/Mayor-City-Council",
+    agendaSourceType: "LEGISTAR",
+    agendaSourceRef: "https://mesa.legistar.com/Calendar.aspx",
+    coverageStatus: "LIVE",
+    notes:
+      "LIVE as of 2026-08-28. The body's name stays null on the registry row, and deliberately: this is a DERIVED_FROM_DIVISION_TYPE body, and finding a body's website does not make its EXISTENCE a sourced claim — the same rule Pima and Tucson sit under, asserted by tests/registry-oracle.test.ts. What the primary source DID settle is the reader-facing name the adapter renders: the city publishes this body as \"City Council\" on its own domain, so lib/sources/legistar-insite/tenants.ts is quoting the city rather than guessing. The city also publishes its own dated instance list on that page; it is NOT wired as a clerk schedule, because the parser that field feeds is a table parser written against Pima's HTML table and this page is a CMS event widget. That is a fact about our tooling — a rung nobody has built — and never about Mesa.",
+  },
 ];
 
 export const COVERAGE_AUDIT_FILE: CoverageAuditFile = {

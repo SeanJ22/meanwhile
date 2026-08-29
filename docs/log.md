@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **155 sessions.**
+Newest first. **156 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -36,6 +36,18 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH257** — lib/signal/taxonomy.ts inventories every live collection point and names three the product does not have: a reader who emails their board president, follows a citation to an agenda or opens an online-meeting link does so through an ordinary anchor and no row is written anywhere. They are recorded as gaps rather than omitted, because an omission from a taxonomy reads as coverage. Whether to collect any of them is a privacy decision before it is a product one - each would be a new class of behavioural record about a reader, and the Ask store's own capture is gated pending exactly that kind of approval. *(open)*
 
 **Needs Sean.** Nothing.
+
+## 2026-08-28 pre-control-plane cleanroom
+
+**What it started.** 5 row(s) opened, 5 still open.
+
+- **NH275** — The branch retirement sweep classified 143 remote branches and could prove 135 of them content-shipped. This one it could not. It holds a single commit from 2026-08-18, 'AUD-03 measurement: the eight pre-registered surfaces behind async boundaries', which changes map-entry.tsx by +52/-8. No pull request ever named it, it is not an ancestor of any merged integration head, and a trial merge is not a no-op. It is genuinely unshipped work, and the only person who can say whether it is still wanted is the author. *(open)*
+- **NH276** — The one sean/* branch on the remote. Its content IS provably in main — a trial merge is a no-op and PR #199 squash-merged it — so on evidence it is disposable. It was not deleted, because nothing in CLAUDE.md, the policies, or current-decisions.md says a session may retire a branch the author created, and the sweep will not invent a permission. *(open)*
+- **NH277** — The Legistar union now carries a truthful PUBLISHED_BUT_UNPLACED_BY_US disposition: a first-party route publishes a sitting, the meeting-producing route did not carry it, and we hold it without being able to place it. Discharging that obligation needs one of two things this session may not decide alone — promoting the RSS or the clerk schedule from corroboration to an ingestion source, which CLAUDE.md lists under Ask before as adding an external source; or composing a meeting from fields spread across routes, which needs SittingRoute in lib/sources/event-identity.ts to be able to name CLERK_SCHEDULE_PAGE at all. *(open)*
+- **NH278** — Mesa's own site lists dated council meetings, which is the first-party check on its Legistar tenant. parseClerkSchedule was written for Pima's HTML table; Mesa publishes a CMS calendar widget instead. Pointed at Mesa the existing parser returns zero rows, and a zero-row extraction is a FAILED extraction that would read forever as a city publishing no schedule of its own. *(open)*
+- **NH279** — The Legistar tenant comment says a study session names no place, so those rows drop as unknownVenue — we know the sitting exists and not where it is. The city's own council-meetings page contradicts that: it prints City Hall (lower level) for study sessions. The rows could carry a place. *(open)*
+
+**Needs Sean.** NH275, NH276, NH277
 
 ## 2026-08-28 finish-aug28
 

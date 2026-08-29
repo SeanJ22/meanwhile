@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-27T00:00:00.000Z",
+ "generatedAt": "2026-08-28T00:00:00.000Z",
  "divisions": [
   {
    "ocdId": "ocd-division/country:us/state:az/county:yuma",
@@ -49108,11 +49108,11 @@
    "name": null,
    "bodyClass": "GOVERNING",
    "bodyOrigin": "DERIVED_FROM_DIVISION_TYPE",
-   "coverageStatus": "NOT_ATTEMPTED",
-   "agendaSourceType": "NONE",
-   "agendaSourceRef": null,
+   "coverageStatus": "LIVE",
+   "agendaSourceType": "LEGISTAR",
+   "agendaSourceRef": "https://mesa.legistar.com/Calendar.aspx",
    "meetingCadence": null,
-   "homepageUrl": null,
+   "homepageUrl": "https://www.mesaaz.gov/Government/Mayor-City-Council",
    "demandCount": 0,
    "sourceDataset": "DERIVED",
    "provenance": {

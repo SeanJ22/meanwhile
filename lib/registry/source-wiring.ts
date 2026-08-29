@@ -85,6 +85,51 @@ export const SOURCE_WIRING: BodySourceWiring[] = [
     config: { slug: "pima" },
     verifiedAt: "2026-08-13",
   },
+  /**
+   * **THE ROW THAT MAKES THE REGISTRY THE AUTHORITY FOR MESA** (2026-08-28).
+   *
+   * Mesa was already serving. `lib/sources/legistar-insite/tenants.ts` carried
+   * it, ten of its sittings are in `data/meetings-snapshot.json` under
+   * `…place:mesa#governing`, and there was no row for it here — so a
+   * repo-wide search for that body id found it in a source adapter and in the
+   * derived registry, and nowhere in between.
+   *
+   * How a tenant reached production without one: `buildCompositeSource` gates
+   * each capability on `wiringForTypes(...).length === 0`, and the
+   * `legistar-insite` capability is built as `makeLegistarInSiteSource()` —
+   * with no arguments, so it falls through to its own `INSITE_TENANTS` and
+   * never sees the rows. Pima's row above satisfied the gate; Mesa rode in
+   * behind it. The same is true of `legistar` itself, which reads
+   * `LEGISTAR_CLIENTS`. **Both adapters predate `SOURCE_WIRING` and keep their
+   * own tables, so for them a row here is not what makes a body serve — it is
+   * what makes the registry able to SAY the body serves**, which is what
+   * failure attribution (`wiringForSourceName`), the coverage audit and the
+   * reader-facing gap notes all read.
+   *
+   * `lib/ops/tenant-body-binding.ts` is the guard that stops the next one
+   * arriving unannounced: it walks every adapter-owned tenant table and
+   * requires a wired body id to resolve to exactly one registry body of the
+   * matching division.
+   *
+   * `config.slug` is the InSite tenant slug, which is also the `{client}` path
+   * segment at `webapi.legistar.com`. Both routes serve the LEGISTAR type and
+   * both were 200 on the date below.
+   */
+  {
+    bodyId: "ocd-division/country:us/state:az/place:mesa#governing",
+    ocdId: "ocd-division/country:us/state:az/place:mesa" as OcdId,
+    agendaSourceType: "LEGISTAR",
+    jurisdiction: "Mesa, AZ",
+    publishingOrg: "City of Mesa City Clerk",
+    timeZone: "America/Phoenix",
+    config: { slug: "mesa" },
+    // The city's own page for this body's sittings, read 2026-08-28 (200,
+    // 159,373 bytes) and permitted by `www.mesaaz.gov/robots.txt`, which
+    // disallows only this page's `/PublicComments` child. It carries the
+    // schedule, the venue as the city prints it, and a dated instance list.
+    noticeUrl: "https://www.mesaaz.gov/Government/City-Council-Meetings",
+    verifiedAt: "2026-08-28",
+  },
 
   // ── Hyland OnBase Agenda Online ─────────────────────────────────────────
   // D16 reversed 2026-08-13: the terms enumerate five hyland.com hosts and do

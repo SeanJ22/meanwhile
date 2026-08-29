@@ -109,6 +109,26 @@ export const INSITE_TENANTS: InSiteTenant[] = [
      *
      * It is wired rather than merely fixtured because a control that only ever
      * runs in a test proves the parse, not the product.
+     *
+     * **AND WIRING IT WAS NOT FINISHED WHEN IT STARTED SERVING** (2026-08-28).
+     *
+     * `bodyId` below resolves to exactly one registry body — it always did, and
+     * an audit that reported it orphaned was reading a search, not the
+     * registry. What was actually wrong is narrower and worse: that body was
+     * `coverageStatus: NOT_ATTEMPTED`, `agendaSourceType: NONE`, with no row in
+     * `lib/registry/source-wiring.ts` naming it, while this tenant was putting
+     * ten of its sittings into `data/meetings-snapshot.json`. The registry said
+     * nobody had looked at a body the product was already publishing.
+     *
+     * It reached production that way because `buildCompositeSource` builds this
+     * adapter as `makeLegistarInSiteSource()` with no arguments — the wiring
+     * rows are passed to every other adapter and not to this one — so the
+     * capability turned on for Pima's row and this list decided the rest. **A
+     * tenant added here is a body added to the product.** Both halves now
+     * exist: `lib/registry/coverage-audit.ts` carries the walked rungs and
+     * `lib/registry/source-wiring.ts` carries the row, and
+     * `lib/ops/tenant-body-binding.ts` is the guard that fails the build
+     * if a serving tenant ever again names a body the registry does not have.
      */
     slug: "mesa",
     host: "mesa.legistar.com",
@@ -119,6 +139,19 @@ export const INSITE_TENANTS: InSiteTenant[] = [
       "City Council Study Session",
       "City Council Strategic Planning Session",
     ],
+    /**
+     * **THE CITY'S OWN WORD FOR ITSELF**, read 2026-08-28 from
+     * `https://www.mesaaz.gov/Government/City-Council-Meetings` (200, 159,373
+     * bytes): `<h1>City Council Meetings</h1>`, a Schedule & Location table
+     * headed "Council Meetings", and a calendar publishing "City Council
+     * Meeting" and "City Council Study Session" as dated instances. Granicus
+     * agrees independently — `webapi.legistar.com/v1/mesa/events` returns
+     * `EventBodyName: "City Council"`.
+     *
+     * Recorded because the string was previously here uncited, and a
+     * reader-facing body name that nothing sourced is a generated claim about
+     * a government however obvious it looks.
+     */
     bodyName: "City Council",
     jurisdiction: "Mesa, AZ",
     publishingOrg: "City of Mesa City Clerk",
@@ -145,17 +178,53 @@ export const INSITE_TENANTS: InSiteTenant[] = [
        * and are counted as such, which is the honest report: we know the
        * sitting exists and we do not know where it is. Inventing City Hall for
        * it would put a pin on a building nobody promised.
+       *
+       * **AND THE CITY PROMISES ONE.** (Found 2026-08-28, recorded and not
+       * yet taken.) `https://www.mesaaz.gov/Government/City-Council-Meetings`
+       * publishes study sessions at "Mesa City Hall Study Session, 20 East
+       * Main Street, Mesa, AZ 85201", and its Schedule & Location table
+       * separates the two rooms: Council Meetings at "City Hall (upper
+       * level)", study sessions at "City Hall (lower level)", both at 20 E.
+       * Main St. So the sentence above stays true of the LEGISTAR column and
+       * is no longer true of Mesa — the city names the place, on its own
+       * domain, and the robots.txt read the same day permits the page.
+       *
+       * Left as a dated lead rather than a venue row because a venue needs
+       * coordinates from the Census geocoder alongside the address, and
+       * because turning it on moves this tenant's `unknownVenue` tally, which
+       * the InSite drop accounting is asserted against. It is a rung nobody
+       * has climbed yet, not a place nobody publishes.
        */
     ],
     /**
-     * **NULL BECAUSE NOBODY HAS LOOKED, AND THAT IS THE HONEST VALUE.**
+     * **NULL BECAUSE THE ROUTE EXISTS AND OUR PARSER CANNOT READ IT YET.**
      *
-     * Mesa's own council-schedule publication on `mesaaz.gov` has not been
-     * hunted for in this workstream. This is a gap in THIS REGISTRY — a rung
-     * nobody has climbed — and it is emitted as a `NOT_RETRIEVED` route
-     * observation saying exactly that, so a later session reads "nobody has
-     * looked" and not "the city publishes no schedule of its own".
-     * `CLAUDE.md`: absence is never asserted.
+     * This said "nobody has looked" until 2026-08-28. Somebody has now looked,
+     * and the honest value moved without the field moving, so the reason is
+     * restated rather than left standing as a stale gap.
+     *
+     * **Found, and permitted.** `https://www.mesaaz.gov/Government/City-Council-Meetings`
+     * (200, 159,373 bytes, read 2026-08-28) carries a "Meeting Calendar"
+     * section publishing dated sittings on the city's own domain — 2026-08-31
+     * City Council Meeting and City Council Study Session, 2026-09-03 Audit,
+     * Finance and Enterprise Committee, a 2026-09-03 study session marked
+     * Canceled — each with the venue as the city prints it, and each with a
+     * "N more dates" expander (20 and 8 respectively).
+     * `www.mesaaz.gov/robots.txt` (200, read the same day) carries one
+     * `User-agent: *` block of 265 directives with no bare `Disallow: /`, and
+     * disallows only this page's `/PublicComments` child. There is no wall.
+     *
+     * **Still null because of US.** `./clerk-schedule.ts`'s `parseClerkSchedule`
+     * is a TABLE parser, written against the Clerk-published HTML table Pima
+     * serves. Mesa's page is a CMS event widget with a different shape
+     * entirely, and pointing a table parser at it would return zero rows —
+     * which `CLAUDE.md` calls a FAILED extraction, not an empty document, and
+     * which would then read on every refresh as the city having published
+     * nothing. `REQUIRES_NEW_ADAPTER` is the state, and it is a claim about our
+     * tooling; the city publishes its schedule, and this field must never be
+     * read as saying otherwise. Recorded in `lib/registry/coverage-audit.ts`
+     * with the rung and the URL so the next session inherits the finding rather
+     * than the hunt.
      */
     clerkScheduleUrl: null,
   },

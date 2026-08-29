@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **351 open**, 443 resolved.
-- **57 waiting on Sean** — the first section below.
+- **356 open**, 443 resolved.
+- **60 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**57 open · 52 resolved.**
+**60 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -118,6 +118,10 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 
 **NH274** — Arizona publishes 151 Governor's letters explaining why bills were signed or vetoed. They are scanned images rather than text, so reading them needs OCR, and the OCR tool cannot install itself without an elevation prompt.
 
+**NH275** — The branch retirement sweep classified 143 remote branches and could prove 135 of them content-shipped. This one it could not. It holds a single commit from 2026-08-18, 'AUD-03 measurement: the eight pre-registered surfaces behind async boundaries', which changes map-entry.tsx by +52/-8. No pull request ever named it, it is not an ancestor of any merged integration head, and a trial merge is not a no-op. It is genuinely unshipped work, and the only person who can say whether it is still wanted is the author.
+
+**NH277** — The Legistar union now carries a truthful PUBLISHED_BUT_UNPLACED_BY_US disposition: a first-party route publishes a sitting, the meeting-producing route did not carry it, and we hold it without being able to place it. Discharging that obligation needs one of two things this session may not decide alone — promoting the RSS or the clerk schedule from corroboration to an ingestion source, which CLAUDE.md lists under Ask before as adding an external source; or composing a meeting from fields spread across routes, which needs SittingRoute in lib/sources/event-identity.ts to be able to name CLERK_SCHEDULE_PAGE at all.
+
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
 **NS01** — The Meta Ad Library is the single best compliant route to a campaign that lives on Facebook, and it is the one route in the manifest that this project cannot walk at all. Political-ad disclosure is mandatory by law, so any candidate who buys a single ad appears there with the campaign's website, its paid-for-by disclaimer and often a contact. The API refuses every unauthenticated request (graph.facebook.com/ads_archive answers HTTP 500 OAuthException), and the public Ad Library web pages answer HTTP 403 with an anti-automation challenge. Measured 2026-08-22 for all sixteen Merrimack County candidates: ad-library REFUSED 16 of 16, and that refusal is recorded as a refusal rather than an absence, so no candidate field moved toward exhaustion on it. A token is issued against an identity-verified Meta developer account, which means it is tied to a real person and to that person's acceptance of Meta's platform terms. That is a standing commitment to a third party and a legal question wearing an API key, which CLAUDE.md lists as an ask-before. It is also the reason no session may make it: RULING 12 says a wall like Facebook's is named and not defeated, and authenticated access risks the account it runs under. This row exists so the decision is documented and yours, with counsel's read, rather than made quietly inside a session. NOTHING is blocked on it — the other three RULING 66 routes are built and walked, and the answer may simply be no.
@@ -173,6 +177,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH194** — From the 8/25 Part 2 walkthrough, capture 17-33-54, confirmed independently in this session's own desktop-01-map-wgh.png: in dark mode the district boundaries render as saturated yellow and orange across the whole viewport and dominate everything else on the map. The same rendering reads fine in light mode. Sean has said all he intends to say — tone down the contrast, no rework — and explicitly does not want the fix specified for him. The deliverable is a WRITTEN PROPOSAL with two or three concrete options and side-by-side captures in both themes, plus a recommendation, and NO map colour change ships until he reacts. THE ASK: once the proposal exists, which of the options do you want, or none of them? Not produced by part2-0825, which shed from the bottom of its item list — so what is owed him first is the proposal, and this row cannot close until that exists.
 
 **NH200** — You said the map lines and yellow are overwhelming in dark view and that the same rendering reads fine in light, and you deliberately did not specify a fix. Three concrete options are captured side by side for you to react to. Nothing shipped.
+
+**NH276** — The one sean/* branch on the remote. Its content IS provably in main — a trial merge is a no-op and PR #199 squash-merged it — so on evidence it is disposable. It was not deleted, because nothing in CLAUDE.md, the policies, or current-decisions.md says a session may retire a branch the author created, and the sweep will not invent a permission.
 
 **NS10** — RULING 119 gives tribal nations their own category, and they needed identifiers. The canonical national list of government identifiers - opencivicdata/ocd-division-ids - has no tribal category at all: read on 2026-08-24, its entire top-level vocabulary is states, districts, territories and courts of appeal, and searching it for the three nations by name returns only Navajo COUNTY, Arizona. So this project minted its own, built on the Census Bureau's own codes for tribal areas with the federal code recorded beside each one.
 
@@ -428,7 +434,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**32 open · 1 resolved.**
+**34 open · 1 resolved.**
 
 ### P1
 
@@ -468,6 +474,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 **NH266** — The corpus holds 12 executive orders read out of 37 indexed, and the index was not walked to its end.
 
+**NH278** — Mesa's own site lists dated council meetings, which is the first-party check on its Legistar tenant. parseClerkSchedule was written for Pima's HTML table; Mesa publishes a CMS calendar widget instead. Pointed at Mesa the existing parser returns zero rows, and a zero-row extraction is a FAILED extraction that would read forever as a city publishing no schedule of its own.
+
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
 **NH83** — Carried forward unchanged from AZ01. The 2026-08-23 session did not reach Arizona. Read as an image from the 8/22 capture of the ballot near 85701, the registration destination appears three times inside about ten lines: Check whether you're registered to vote as an inline link, the Secretary of State's own tool named beneath it, and a third box below the card repeating Check whether you're registered to vote. They deduplicate to ONE prominent pill pointing at the reader's Secretary of State, and the same pattern applies to polling location. The Secretary of State is the only authoritative source for either, and a reader who trusts an in-app answer and does not check loses their vote. AZ-1 also still needs hunting and fishing and state abortion law in Know the basics, both written to the plain-language register with the law stated, its source named and a fetch date, and no position taken.
@@ -499,6 +507,8 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 ### P3
 
 **NH245** — Wiring the verified CAWCD roster into BODY_ROSTERS needs a partisanship value, and every roster in that store cites the record that settled it. Neither the board's own page nor any statute reached on 2026-08-27 states whether these seats carry a party.
+
+**NH279** — The Legistar tenant comment says a study session names no place, so those rows drop as unknownVenue — we know the sitting exists and not where it is. The city's own council-meetings page contradicts that: it prints City Hall (lower level) for study sessions. The rows could carry a place.
 
 ## Visual feedback
 

@@ -48,7 +48,15 @@
  * @see lib/ballot/incumbency.ts for the per-candidate matching this sits above.
  */
 
-import type { Incumbency, IncumbencyDecision } from "./incumbency.ts";
+import {
+  nameParts,
+  namesAgree,
+  namesAgreeLoosely,
+  splitDisplayName,
+  type ComparableName,
+  type Incumbency,
+  type IncumbencyDecision,
+} from "./incumbency.ts";
 
 /* -------------------------------------------------------------------------- */
 /* THE THREE EXPLICIT STATES                                                   */
@@ -112,20 +120,196 @@ export interface UniverseFinding {
 /* THE CANDIDATE UNIVERSE                                                      */
 /* -------------------------------------------------------------------------- */
 
+/**
+ * ONE CERTIFIED NOMINEE PAIRED WITH THE RENDERED CANDIDATE WHO IS THAT PERSON.
+ *
+ * Both sides carry the RAW string each record printed, never the normalised
+ * form. The normalisation is how the two were matched; it is not a name anybody
+ * is called, and putting it on the object invites a later surface to render it.
+ */
+export interface IdentityPair {
+  readonly certified: string;
+  readonly rendered: string;
+}
+
+/**
+ * Whether the people on the page ARE the people the canvass certified.
+ *
+ * The three failure lists are separate because they are three different facts
+ * and only one report is actionable from each:
+ * `missingFromRendered` is a candidate the reader never sees, `absentFromCertified`
+ * is a person on the page the certified list does not name, and `ambiguous` is a
+ * name our comparison could not resolve to exactly one person on the other side.
+ */
+export interface IdentityReconciliation {
+  readonly reconciled: boolean;
+  readonly pairs: readonly IdentityPair[];
+  /** Certified nominees no rendered candidate could be reconciled to. Raw strings. */
+  readonly missingFromRendered: readonly string[];
+  /** Rendered candidates no certified nominee could be reconciled to. Raw strings. */
+  readonly absentFromCertified: readonly string[];
+  /** Names that matched more than one person on the other side. Refused, never chosen between. */
+  readonly ambiguous: readonly string[];
+}
+
+interface Parsed {
+  readonly raw: string;
+  readonly parts: ComparableName;
+}
+
+const parseSide = (names: readonly string[]): Parsed[] =>
+  names.map((raw) => {
+    const { givenName, familyName } = splitDisplayName(raw);
+    return { raw, parts: nameParts(givenName, familyName) };
+  });
+
+/**
+ * SET MEMBERSHIP OVER PEOPLE, NOT OVER STRINGS AND NOT OVER A COUNT.
+ * (2026-08-28, the candidate-identity repair.)
+ *
+ * ## The defect this closes, with the instance that was live when it was written
+ *
+ * `candidateUniverse` decided completeness with `rendered !== certified.count`.
+ * A count is not a set, and on 2026-08-28 this repository was shipping the
+ * proof. **`ballot-az-pima:us-house-6`**, resolved off the committed
+ * filed-candidate list, passed the candidate-universe gate on `4 === 4` and went
+ * label-eligible, producing three `NOT_INCUMBENT` labels — while the two lists
+ * were different sets of people:
+ *
+ * ```
+ * certified (SoS 2026 primary canvass)  JoAnna Mendoza  Juan Ciscomani  Jereme Lance Peters  Gary Swing
+ * rendered  (filed-candidate record)    JoAnna Mendoza  Juan Ciscomani  Jereme Lance Peters  Iman Bah
+ * ```
+ *
+ * **Iman Bah is not a certified nominee of that contest and was carrying a
+ * negative claim about himself measured against a universe he is not in; Gary
+ * Swing is certified and was not on the page at all.**
+ * `ballot-az-pima:state-senate-19` is the same shape — `2 === 2`, with Ryan
+ * Slawson rendered where the canvass certifies Bob Karp.
+ *
+ * **THE COUNT IS A DENOMINATOR AND A DIAGNOSTIC. IT IS NEVER THE PROOF OF
+ * MEMBERSHIP EQUALITY.** Two lists of the same length are two lists of the same
+ * length. It is reported, because *four certified against eight rendered* tells
+ * a reader where to look; it decides nothing.
+ *
+ * ## The rules, which are explicit and none of which are fuzzy
+ *
+ * There is no similarity score here and no threshold. Matching goes through the
+ * normaliser this repository already has and had already argued for —
+ * `splitDisplayName` → `nameParts` → `namesAgree`, then `namesAgreeLoosely` over
+ * whatever is left. That is deliberate reuse rather than a second
+ * implementation (RULING 63): those functions already carry the suffix handling
+ * (`Daniel Francis Butierez Sr.`), the quoted-alias rule the record itself
+ * prints (`Walter "Les" Presmyk`), the middle-initial rule (`Karen Elizabeth
+ * Ebel` / `Karen E. Ebel`) and the serving-name/filed-name prefix rule
+ * (`Gregory M. Sargent` / `Greg Sargent`), each with the measured instance that
+ * bought it. A second normaliser here would drift from the one the incumbency
+ * matcher uses, and then the universe and the label would disagree about who a
+ * person is.
+ *
+ * **Every pairing must be ONE-TO-ONE, in both directions, or it is refused.** A
+ * certified nominee that agrees with two rendered candidates is `ambiguous`, not
+ * a coin flip — the same fail-closed the matching layer takes when one sitting
+ * member matches two people on a ballot. Ordering is irrelevant by construction:
+ * this is set membership, and the pass loops rather than zips.
+ *
+ * A blank or unusable name fails closed on its own: `nameParts` gives it an
+ * empty surname, `namesAgree` refuses an empty surname, and it lands in the
+ * leftovers as unmatched. **We never invent an identity to close a set.**
+ */
+export function reconcileCandidateIdentities(
+  certified: readonly string[],
+  rendered: readonly string[],
+): IdentityReconciliation {
+  const left = parseSide(certified);
+  const right = parseSide(rendered);
+
+  const pairs: IdentityPair[] = [];
+  const pairedLeft = new Set<number>();
+  const pairedRight = new Set<number>();
+  /** Had at least one plausible counterpart, in either pass — so its failure is
+   *  ambiguity rather than absence, and those are different reports. */
+  const sawSomebodyLeft = new Set<number>();
+  const sawSomebodyRight = new Set<number>();
+
+  const pass = (agree: (a: ComparableName, b: ComparableName) => boolean): void => {
+    const hits = new Map<number, number[]>();
+    const hitters = new Map<number, number[]>();
+    for (let i = 0; i < left.length; i += 1) {
+      if (pairedLeft.has(i)) continue;
+      for (let j = 0; j < right.length; j += 1) {
+        if (pairedRight.has(j)) continue;
+        if (!agree(left[i].parts, right[j].parts)) continue;
+        hits.set(i, [...(hits.get(i) ?? []), j]);
+        hitters.set(j, [...(hitters.get(j) ?? []), i]);
+        sawSomebodyLeft.add(i);
+        sawSomebodyRight.add(j);
+      }
+    }
+    for (const [i, js] of hits) {
+      // Exactly one counterpart, and that counterpart wants only us. Anything
+      // else stays unpaired and is reported as ambiguous below.
+      if (js.length !== 1) continue;
+      const j = js[0];
+      if ((hitters.get(j) ?? []).length !== 1) continue;
+      pairedLeft.add(i);
+      pairedRight.add(j);
+      pairs.push({ certified: left[i].raw, rendered: right[j].raw });
+    }
+  };
+
+  pass(namesAgree);
+  // The serving-name / filed-name gap, over the leftovers only. See
+  // `namesAgreeLoosely` — an exact surname plus a first-name prefix of three
+  // characters or more, inside a two-to-five person contest.
+  pass(namesAgreeLoosely);
+
+  const ambiguous: string[] = [];
+  const missingFromRendered: string[] = [];
+  const absentFromCertified: string[] = [];
+  for (let i = 0; i < left.length; i += 1) {
+    if (pairedLeft.has(i)) continue;
+    (sawSomebodyLeft.has(i) ? ambiguous : missingFromRendered).push(left[i].raw);
+  }
+  for (let j = 0; j < right.length; j += 1) {
+    if (pairedRight.has(j)) continue;
+    (sawSomebodyRight.has(j) ? ambiguous : absentFromCertified).push(right[j].raw);
+  }
+
+  return {
+    reconciled:
+      missingFromRendered.length === 0 && absentFromCertified.length === 0 && ambiguous.length === 0,
+    pairs,
+    missingFromRendered,
+    absentFromCertified,
+    ambiguous,
+  };
+}
+
 export interface CandidateUniverseInput {
   /**
    * The certified nominee list for this contest, where one exists — the state's
    * own canvass, naming who is actually on the general-election ballot.
+   *
+   * **`names` is the whole point and replaced a `count`.** The certified source
+   * has to hand over WHO, because *how many* cannot tell a reader whether the
+   * people in front of them are the certified ones. Raw strings, exactly as the
+   * canvass prints them, so the mismatch report can quote the document. A
+   * contest whose corpus record carries no usable name for a nominee fails
+   * closed by the ordinary path: the name reconciles to nobody.
    */
-  readonly certified: { readonly source: string; readonly count: number } | null;
-  /** How many candidates this contest actually renders. */
-  readonly rendered: number;
+  readonly certified: { readonly source: string; readonly names: readonly string[] } | null;
+  /** The candidates this contest actually renders, as the page names them. */
+  readonly rendered: readonly string[];
   /** The source behind the rendered list, for the finding when it is not certified. */
   readonly renderedSource: string | null;
 }
 
+/** The English list, so a `reason` reads as a sentence and not as a dump. */
+const nameList = (names: readonly string[]): string => names.join(", ");
+
 /**
- * Is the candidate list the whole of who is in this contest?
+ * Is the candidate list the whole of who is in this contest — and IS IT THEM?
  *
  * **A FILING LIST IS NOT A NOMINEE LIST, and this session has the instance.**
  * Arizona's State Mine Inspector contest was built from the Secretary of
@@ -139,6 +323,13 @@ export interface CandidateUniverseInput {
  * So completeness requires a CERTIFIED nominee list, and it requires the
  * rendered list to BE that list — a certified list that exists somewhere while
  * the reader sees a filing list is not a complete universe on the page.
+ *
+ * **"BE that list" is decided over IDENTITIES.** It used to be decided over
+ * `count`, and `lib/ballot/contest-universe.ts`'s
+ * `reconcileCandidateIdentities` doc block carries the two live contests that
+ * passed that gate while showing the wrong people. The count survives here as a
+ * DIAGNOSTIC inside the reason — it tells a reader where to look — and it is
+ * never the proof of membership equality.
  */
 export function candidateUniverse(input: CandidateUniverseInput): UniverseFinding {
   if (input.certified === null) {
@@ -152,20 +343,51 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
         "general-election list publishes.",
     };
   }
-  if (input.rendered !== input.certified.count) {
+
+  const check = reconcileCandidateIdentities(input.certified.names, input.rendered);
+  if (!check.reconciled) {
+    /*
+     * WHOSE GAP: ours. The certified list is the government's statement of who
+     * is in this contest; a page showing somebody else is our assembly, not
+     * their omission. The specific names are the actionable half — a reader or
+     * a later session can act on "Gary Swing is not on this page" and can do
+     * nothing at all with "the universe is incomplete".
+     */
+    const clauses: string[] = [];
+    if (check.missingFromRendered.length > 0) {
+      clauses.push(
+        `the certified list names ${nameList(check.missingFromRendered)}, who we are not showing here`,
+      );
+    }
+    if (check.absentFromCertified.length > 0) {
+      clauses.push(
+        `we are showing ${nameList(check.absentFromCertified)}, who the certified list does not name`,
+      );
+    }
+    if (check.ambiguous.length > 0) {
+      clauses.push(
+        `we could not tell which person on the other list ${nameList(check.ambiguous)} is, and ` +
+          "guessing would be a claim about somebody by name",
+      );
+    }
     return {
       complete: false,
       source: input.certified.source,
       reason:
-        `a certified nominee list names ${input.certified.count} candidate(s) and this contest ` +
-        `renders ${input.rendered}. The reader is not looking at the certified universe, so it ` +
-        "cannot stand in for one.",
+        "the people shown here are not the people the certified nominee list names, so this list " +
+        `cannot stand in for the certified one: ${clauses.join("; ")}. ` +
+        `(The certified list names ${input.certified.names.length} candidate(s) and this contest ` +
+        `renders ${input.rendered.length} — a count that matches would still not make two lists the ` +
+        "same people.)",
     };
   }
+
   return {
     complete: true,
     source: input.certified.source,
-    reason: `the certified nominee list names all ${input.certified.count} candidate(s) shown here.`,
+    reason:
+      `every one of the ${input.certified.names.length} candidate(s) shown here is a candidate the ` +
+      "certified nominee list names, and the certified list names nobody we are not showing.",
   };
 }
 

@@ -123,6 +123,31 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "What happens to a route when a conclusion drawn from it turns out to be false?",
     values: ["untyped-prose-rewritten-in-place", "typed-classes-with-required-provenance"],
   },
+  {
+    key: "guard.evidence_standard",
+    question: "What may an instrument rest its own verdict on?",
+    values: ["declared-input-trusted", "checked-evidence-only"],
+  },
+  {
+    key: "orchestration.denominator",
+    question: "What counts as the number of workstreams a session ran?",
+    values: ["execution-branch-count", "declared-logical-workstreams-reconciled"],
+  },
+  {
+    key: "method.inheritance_interface",
+    question: "What does a later session actually inherit from the method store?",
+    values: ["raw-route-prose", "typed-current-claim-projection"],
+  },
+  {
+    key: "schema.migration_mutability",
+    question: "May a migration that has already been established be edited?",
+    values: ["editable-in-place", "immutable-append-only"],
+  },
+  {
+    key: "sources.tenant_identity",
+    question: "What authorizes the body identity a serving source adapter publishes under?",
+    values: ["adapter-may-mint", "registry-is-the-authority"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

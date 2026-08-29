@@ -51,6 +51,44 @@
  * correctness reason the repository cannot see, and the instrument's job is to
  * make it say so out loud rather than to overrule it.
  *
+ * **Two classes, and two is enough.** A third class was considered and refused.
+ * Every real dependency reduces to one of these two shapes: *we both write the
+ * same thing*, or *I need something you make*. The case that looks like a third
+ * — contention over an external resource neither workstream owns a file for, a
+ * production database, a rate-limited credential, a canonical store — is a
+ * conflict overlap already: `ConflictDomain.data` exists precisely so a domain
+ * with no single path is still declarable and still checkable. A third class
+ * that took prose and gave it a field name would prove nothing, because the
+ * property that makes these two mechanical is that BOTH SIDES declared the same
+ * token independently. Free prose is never proof, and renaming it does not make
+ * it one.
+ *
+ * ## The loophole this file used to have, and how it is closed
+ *
+ * The first implementation walked EVERY DECLARED `dependsOn` EDGE when deciding
+ * whether two workstreams were independent, and it did so BEFORE any edge was
+ * checked. `areIndependent` returned false the moment one id reached the other
+ * through the raw declared graph. The consequence was exact and total: a session
+ * that wanted to run independent work single-file only had to DECLARE an edge
+ * and write a sentence that dodged every `SERIALIZATION_NON_REASONS` pattern.
+ * The declaration suppressed `independent-work-serialized`, the prose survived
+ * the non-reason filter, the edge landed in `unprovenDependencies` — which the
+ * checker printed and did not fail on — and the plan returned `TEAM` with an
+ * empty `findings` array. **The guard could be turned off by the thing it was
+ * guarding against.**
+ *
+ * So the graph that SUPPRESSES independence now contains PROVEN EDGES ONLY. An
+ * unproven edge is still carried in the plan, still reported, and still allowed
+ * to be a stated hypothesis about the work — it simply cannot make two
+ * workstreams non-independent, and it cannot justify a `SERIALIZED` disposition.
+ * A SERIALIZED executable workstream whose every edge is unproven is now the
+ * finding `serialized-on-unproven-dependency`, and it is fatal.
+ *
+ * The DECLARED graph survives for the structural checks that legitimately need
+ * it. A declared cycle is malformed whether or not anyone could prove its edges,
+ * and a declared edge to an id that is not in the plan is malformed for the same
+ * reason — those are claims about the plan's own coherence, not about the work.
+ *
  * ## The observability limit, named rather than papered over
  *
  * **This file cannot prove wall-clock concurrency.** Nothing in the repository
@@ -63,6 +101,13 @@
  * down. `concurrencyEvidence` exists so a session can record the mechanism it
  * used — worktrees, branches, agent ids, concurrent processes — and that is
  * corroboration, never proof. It is reported, never scored.
+ *
+ * `executionArtifacts` is the same corroboration made MACHINE-READABLE, so that
+ * closeout can reconcile the declared plan against what actually ran. It carries
+ * one hard prohibition with it, and it is RULING 190's own: **an artifact count
+ * is not a workstream count.** One logical workstream may use zero artifacts,
+ * one, or six; two branches held by one workstream are still ONE workstream. The
+ * mapping is explicit or it does not exist. `lib/workstate/orchestration-closeout.ts`.
  */
 
 /**
@@ -168,6 +213,145 @@ export interface ConflictDomain {
   data: string[];
 }
 
+/**
+ * The kinds of thing a workstream can be executed ON.
+ *
+ * Deliberately a closed list. An open `kind: string` would let a session invent
+ * a category to make an unlinked artifact look accounted for at closeout, which
+ * is the same shape of evasion the declared-edge loophole was.
+ */
+export const EXECUTION_ARTIFACT_KINDS = [
+  "branch",
+  "worktree",
+  "agent",
+  "process",
+  /**
+   * The integration branch itself, claimed by a workstream that ran ON it.
+   *
+   * Its own kind rather than a `branch`, because it is the case that most
+   * cleanly disproves the branch-count substitution. The Aug 28 session's
+   * `governance-orchestration` workstream held the shared load-bearing files and
+   * therefore executed on the integration branch — it produced no `ws/*` ref at
+   * all. Under a branch count it does not exist; under an explicit mapping it is
+   * a workstream that honestly declares zero private refs.
+   */
+  "integration-branch",
+] as const;
+export type ExecutionArtifactKind = (typeof EXECUTION_ARTIFACT_KINDS)[number];
+
+/**
+ * One thing the work actually ran on, structured rather than narrated.
+ *
+ * **This is not a unit of work.** A workstream may declare none of these, one,
+ * or many; the count of artifacts and the count of workstreams are different
+ * numbers and RULING 190 forbids substituting either for the other. What the
+ * field buys is the MAPPING — given an observed ref, which logical workstream
+ * claims it — and that mapping is what closeout reconciliation needs and what
+ * free prose in `concurrencyEvidence` could never supply.
+ */
+export interface ExecutionArtifact {
+  kind: ExecutionArtifactKind;
+  /** The ref, worktree path, or agent id, exactly as it can be observed. */
+  ref: string;
+}
+
+/** Is this a well-formed artifact, or a shape that only looks like one? */
+export function isExecutionArtifact(value: unknown): value is ExecutionArtifact {
+  if (typeof value !== "object" || value === null) return false;
+  const a = value as Partial<ExecutionArtifact>;
+  return (
+    typeof a.ref === "string" &&
+    a.ref.trim().length > 0 &&
+    typeof a.kind === "string" &&
+    (EXECUTION_ARTIFACT_KINDS as readonly string[]).includes(a.kind)
+  );
+}
+
+/**
+ * A workstream appended to the plan AFTER it had already executed.
+ *
+ * The honest alternative to editing history quietly. A session that discovers at
+ * closeout that it ran work the plan never carried has exactly two truthful
+ * moves: leave the gap and fail, or backfill and SAY that it backfilled. This
+ * type is the second one, and its two fields are what make it a record rather
+ * than an excuse — WHEN the backfill happened, and WHAT EVIDENCE it was
+ * reconstructed from.
+ *
+ * A backfilled workstream counts as declared, because it is: the plan now
+ * carries it. It is counted and reported SEPARATELY, because a session that
+ * backfilled three workstreams did not run the append-safe discipline the rule
+ * asks for, and a reconciliation that hid that would be reporting the repair as
+ * though it were the practice.
+ */
+export interface PostHocDeclaration {
+  /** From `pnpm stamp`. An agent does not know today's date. */
+  backfilledOn: string;
+  /** The evidence the reconstruction rests on — refs, commits, what was compared. */
+  evidence: string;
+}
+
+/**
+ * A discrepancy between declared and executed that evidence CANNOT resolve.
+ *
+ * The mechanism exists so that "the counts do not agree and I cannot find out
+ * why" is sayable. **Never invent a mapping to make counts agree** — that is a
+ * fabricated fact about the session, and the whole reason this file distrusts
+ * numbers that were reasoned to rather than read. An unresolvable discrepancy is
+ * recorded, named, and carried.
+ */
+export interface PostHocDiscrepancy {
+  kind: string;
+  detail: string;
+}
+
+/**
+ * Every malformed artifact or post-hoc record on a workstream, named one by one.
+ *
+ * A typed field with no validator is prose wearing a type annotation: the plan
+ * is JSON on disk and `JSON.parse` will hand back whatever was written. This is
+ * what makes `executionArtifacts` and `declaredPostHoc` evidence rather than two
+ * more sentences.
+ */
+export function validateExecutionArtifacts(w: SessionWorkstream): string[] {
+  const out: string[] = [];
+  const seen = new Set<string>();
+  for (const [i, a] of (w.executionArtifacts ?? []).entries()) {
+    if (!isExecutionArtifact(a)) {
+      out.push(
+        `${w.id} executionArtifacts[${i}] is not a {kind, ref} of kind ` +
+          `${EXECUTION_ARTIFACT_KINDS.join("|")}: ${JSON.stringify(a)}`,
+      );
+      continue;
+    }
+    const key = `${a.kind}:${a.ref}`;
+    if (seen.has(key)) out.push(`${w.id} declares the artifact ${key} twice`);
+    seen.add(key);
+  }
+  const post = w.declaredPostHoc;
+  if (post !== undefined) {
+    if (typeof post !== "object" || post === null) {
+      out.push(`${w.id} declaredPostHoc is not a {backfilledOn, evidence}: ${JSON.stringify(post)}`);
+    } else {
+      // Both halves are required. A backfill with no date cannot be placed
+      // against the session it repairs, and a backfill with no evidence is the
+      // invented mapping this whole mechanism exists to refuse.
+      if (typeof post.backfilledOn !== "string" || !/^\d{4}-\d{2}-\d{2}/.test(post.backfilledOn)) {
+        out.push(
+          `${w.id} declaredPostHoc.backfilledOn is not a stamped date (YYYY-MM-DD, from \`pnpm stamp\`): ` +
+            JSON.stringify(post.backfilledOn),
+        );
+      }
+      if (typeof post.evidence !== "string" || post.evidence.trim().length === 0) {
+        out.push(
+          `${w.id} was declared post hoc and names no evidence — a backfill without evidence is an ` +
+            "invented mapping, and inventing one to make counts agree is the defect, not the repair",
+        );
+      }
+    }
+  }
+  return out;
+}
+
 export interface SessionWorkstream {
   /** Stable within the session. Referenced by `dependsOn`. */
   id: string;
@@ -189,6 +373,33 @@ export interface SessionWorkstream {
   blockedReason?: string;
   /** Corroboration only — worktrees, branches, agent ids. Never proof. */
   concurrencyEvidence?: string[];
+  /**
+   * The refs this workstream actually ran on, structured for reconciliation.
+   *
+   * OPTIONAL, so a plan written before the field existed still parses — a
+   * schema change that invalidates the canonical record of a shipped session is
+   * a worse defect than the gap it closes.
+   */
+  executionArtifacts?: ExecutionArtifact[];
+  /**
+   * Declared after the session opened — a mid-session P0, an addendum, work
+   * that only became visible once another workstream landed.
+   *
+   * Recorded because the alternative is that it is invisible: the Aug 28
+   * session ran three workstreams that were never appended to its plan, and
+   * nothing could tell that from a plan that had simply always had ten.
+   */
+  addedDuringSession?: boolean;
+  /**
+   * Appended AFTER it executed, with the backfill said out loud.
+   *
+   * Distinct from `addedDuringSession`, and the distinction is the point:
+   * `addedDuringSession` is the discipline working — a mid-session P0 given an
+   * id as it began. `declaredPostHoc` is the discipline having failed and been
+   * repaired honestly. Closeout accepts both as declared and reports the second
+   * separately.
+   */
+  declaredPostHoc?: PostHocDeclaration;
 }
 
 export interface OrchestrationPlan {
@@ -197,6 +408,16 @@ export interface OrchestrationPlan {
   /** The branch that owns integration, shared stores and the final ship. */
   integrationOwner: string;
   workstreams: SessionWorkstream[];
+  /**
+   * Declared-versus-executed gaps that evidence could not close.
+   *
+   * Carried on the PLAN rather than on a workstream, because a discrepancy that
+   * cannot be attributed to a workstream is exactly the case: an unaccounted ref
+   * whose provenance is gone, a count from a report that no longer reconciles.
+   * The alternative to recording it is to guess a mapping, and a guessed mapping
+   * is a fabricated fact about the session.
+   */
+  postHocDiscrepancies?: PostHocDiscrepancy[];
 }
 
 export const ORCHESTRATION_STATUSES = [
@@ -284,35 +505,104 @@ export function dependencyEvidence(
   return null;
 }
 
-/** Every id reachable from `id` by following `dependsOn`, `id` excluded. */
-function ancestors(id: string, byId: Map<string, SessionWorkstream>): Set<string> {
+/** The upstream ids of `id` that survive `dependencyEvidence`. Declared or proven. */
+function edgesOf(
+  id: string,
+  byId: Map<string, SessionWorkstream>,
+  provenOnly: boolean,
+): string[] {
+  const down = byId.get(id);
+  if (!down) return [];
+  if (!provenOnly) return down.dependsOn;
+  return down.dependsOn.filter((dep) => {
+    const up = byId.get(dep);
+    return up ? dependencyEvidence(up, down) !== null : false;
+  });
+}
+
+/**
+ * Every id reachable from `id` by following `dependsOn` as WRITTEN, `id`
+ * excluded.
+ *
+ * This is the plan's claim about itself, and it is the right graph for exactly
+ * one job: the structural checks that ask whether the plan is coherent. A
+ * declared cycle is malformed no matter what backs its edges — the session said
+ * A waits on B waits on A, and that sentence is broken on its own terms.
+ *
+ * It is the WRONG graph for independence, which is the defect this file used to
+ * have. See `provenAncestors`.
+ */
+function declaredAncestors(id: string, byId: Map<string, SessionWorkstream>): Set<string> {
+  return reachable(id, byId, false);
+}
+
+/**
+ * Every id reachable from `id` through edges `dependencyEvidence` can PROVE.
+ *
+ * A declared edge is a sentence; this closure is the subset of those sentences
+ * the repository can check. Only this graph may suppress independence, because
+ * only this graph cannot be extended by writing one.
+ */
+function provenAncestors(id: string, byId: Map<string, SessionWorkstream>): Set<string> {
+  return reachable(id, byId, true);
+}
+
+function reachable(
+  id: string,
+  byId: Map<string, SessionWorkstream>,
+  provenOnly: boolean,
+): Set<string> {
   const seen = new Set<string>();
-  const stack = [...(byId.get(id)?.dependsOn ?? [])];
+  const stack = [...edgesOf(id, byId, provenOnly)];
   while (stack.length > 0) {
     const next = stack.pop()!;
     if (seen.has(next)) continue;
     seen.add(next);
-    stack.push(...(byId.get(next)?.dependsOn ?? []));
+    stack.push(...edgesOf(next, byId, provenOnly));
   }
   return seen;
 }
 
 /**
  * Two workstreams are INDEPENDENT when neither reaches the other through the
- * dependency graph and their owned domains do not intersect.
+ * PROVEN dependency graph and their owned domains do not intersect.
  *
- * Both halves matter. A pair with no declared edge that both write
- * `app/globals.css` is not independent, and calling it independent is how a
- * session invents a merge conflict for itself.
+ * Both halves matter. A pair with no edge that both write `app/globals.css` is
+ * not independent, and calling it independent is how a session invents a merge
+ * conflict for itself.
+ *
+ * **The word PROVEN is the whole repair.** This predicate previously walked the
+ * declared graph, which meant a session could make any pair non-independent by
+ * declaring an edge between them — turning off the one finding that exists to
+ * catch a serial queue. An unproven edge is still reported, and it is still
+ * allowed to be the session's stated hypothesis about the work. It simply gets
+ * no vote here, because a vote here is a vote on whether the guard runs.
  */
 export function areIndependent(
   a: SessionWorkstream,
   b: SessionWorkstream,
   byId: Map<string, SessionWorkstream>,
 ): boolean {
-  if (ancestors(a.id, byId).has(b.id)) return false;
-  if (ancestors(b.id, byId).has(a.id)) return false;
+  if (provenAncestors(a.id, byId).has(b.id)) return false;
+  if (provenAncestors(b.id, byId).has(a.id)) return false;
   return conflictOverlap(a, b).length === 0;
+}
+
+/**
+ * The declared upstreams of `w` that nothing in the plan can check.
+ *
+ * Empty means either that every edge is proven or that there are no edges at
+ * all — the two are distinguished by `dependsOn.length`, and the caller must,
+ * because they are different findings.
+ */
+export function unprovenUpstreams(
+  w: SessionWorkstream,
+  byId: Map<string, SessionWorkstream>,
+): string[] {
+  return w.dependsOn.filter((dep) => {
+    const up = byId.get(dep);
+    return up ? dependencyEvidence(up, w) === null : false;
+  });
 }
 
 /**
@@ -376,12 +666,17 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
         });
       }
     }
-    if (ancestors(w.id, byId).has(w.id)) {
+    // The DECLARED graph, deliberately. A cycle is the plan contradicting
+    // itself, and that is broken whether or not any of its edges are provable.
+    if (declaredAncestors(w.id, byId).has(w.id)) {
       malformed.push({
         rule: "dependency-cycle",
         detail: `${w.id} reaches itself through dependsOn`,
         workstreams: [w.id],
       });
+    }
+    for (const bad of validateExecutionArtifacts(w)) {
+      malformed.push({ rule: "malformed-execution-artifact", detail: bad, workstreams: [w.id] });
     }
   }
 
@@ -399,6 +694,10 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
   }
 
   // --- dependency edges: proven, or named as unproven ------------------------
+  // Downstream ids already carrying a fatal finding about their OWN edges. A
+  // second finding about the same edges would be noise, and noise on a fatal
+  // report is how the real line gets skimmed past.
+  const alreadyFatalOnItsEdges = new Set<string>();
   for (const w of ws) {
     for (const dep of w.dependsOn) {
       const up = byId.get(dep)!;
@@ -412,6 +711,7 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
             `Stated: "${reason}"`,
           workstreams: [w.id, dep],
         });
+        alreadyFatalOnItsEdges.add(w.id);
         continue;
       }
       const evidence = dependencyEvidence(up, w);
@@ -445,8 +745,10 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
       findings.push({
         rule: "independent-work-serialized",
         detail:
-          `${a.id} and ${b.id} share no dependency edge and no owned path or data domain, ` +
-          "and both were run SERIALIZED. Independent executable work is parallel by default.",
+          `${a.id} and ${b.id} share no PROVEN dependency edge and no owned path or data domain, ` +
+          "and both were run SERIALIZED. Independent executable work is parallel by default. " +
+          "A declared edge between them, if there is one, does not suppress this: an edge nothing " +
+          "can check is not a reason, it is a sentence.",
         workstreams: [a.id, b.id],
       });
     }
@@ -454,6 +756,11 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
 
   // A SERIALIZED workstream that waits on nothing at all is the unexplained
   // serial chain in its purest form: it is not downstream of anything.
+  //
+  // Its sibling, below, is the same chain with sentences drawn between the
+  // links. The two are kept apart on purpose and never both fire for one
+  // workstream: `dependsOn.length === 0` is this rule's whole domain, and
+  // `dependsOn.length > 0 with nothing proven` is the other's.
   for (const w of ws) {
     if (w.disposition !== "SERIALIZED" || !w.executable) continue;
     if (w.dependsOn.length > 0) continue;
@@ -462,6 +769,32 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
       detail: `${w.id} is SERIALIZED and depends on nothing — there is no dependency to serialize behind`,
       workstreams: [w.id],
     });
+  }
+
+  // THE CLOSED LOOPHOLE, stated as a rule.
+  //
+  // An unproven edge is a hypothesis, and a session is allowed to hold one. It
+  // is not allowed to SERIALIZE EXECUTABLE WORK BEHIND ONE — that is the whole
+  // decision the guard exists to check, and permitting it means any session can
+  // exempt itself by writing a sentence. Reported-and-not-fatal survives for
+  // every other disposition, because there the edge changed nothing.
+  for (const w of ws) {
+    if (w.disposition !== "SERIALIZED" || !w.executable) continue;
+    if (w.dependsOn.length === 0) continue;
+    if (alreadyFatalOnItsEdges.has(w.id)) continue;
+    const unprovenUp = unprovenUpstreams(w, byId);
+    if (unprovenUp.length < w.dependsOn.length) continue; // at least one edge is proven
+    for (const dep of unprovenUp) {
+      findings.push({
+        rule: "serialized-on-unproven-dependency",
+        detail:
+          `${w.id} is SERIALIZED behind ${dep}, and no edge it declares is proven — ` +
+          `${dep} and ${w.id} share no owned path or data domain, and ${dep} produces nothing ` +
+          `${w.id} consumes. Stated: "${w.dependencyReasons[dep]}". The constraint may be real; ` +
+          "it is not a reason to make executable work wait, because nothing in the plan can check it.",
+        workstreams: [w.id, dep],
+      });
+    }
   }
 
   if (ws.length <= 1) {
@@ -497,5 +830,77 @@ export function classifyOrchestration(plan: OrchestrationPlan): OrchestrationVer
     unprovenDependencies: unproven,
     independentPairs,
     counts,
+  };
+}
+
+/**
+ * Refusal raised when a workstream cannot be appended to a plan.
+ *
+ * A throw rather than a returned error, because there is exactly one caller
+ * shape — a session that has just decided to run something — and the only safe
+ * response to "this id is already taken" is to stop and pick another. Swallowing
+ * it produces the Aug 28 failure: work that ran under a name the plan never
+ * carried.
+ */
+export class WorkstreamAppendError extends Error {
+  /*
+   * Fields declared and assigned, never a PARAMETER PROPERTY — the suite runs
+   * under `--experimental-strip-types`, which refuses a TS feature that emits
+   * code. See `lib/ops/denominator-floor.ts` for the same note and the same
+   * reason.
+   */
+  readonly workstream: string;
+
+  constructor(workstream: string, why: string) {
+    super(`cannot append workstream "${workstream}" to the plan: ${why}`);
+    this.name = "WorkstreamAppendError";
+    this.workstream = workstream;
+  }
+}
+
+/**
+ * Append a workstream discovered AFTER the session opened.
+ *
+ * ## Why this exists at all
+ *
+ * The Aug 28 session declared ten workstreams and ran thirteen. Three —
+ * `ws/mtg13union`, `ws/methodint`, `ws/incum` — were real, authorized,
+ * executed work that the canonical plan was never told about, and nothing could
+ * see the gap, because a plan is only ever compared against itself. A mid-session
+ * P0 or an addendum is NORMAL; RULING 190 explicitly requires that a P0 start
+ * immediately without freezing the others. What is not normal is for it to run
+ * without a canonical id.
+ *
+ * So the plan is append-safe DURING a session, and appending is the cheap path:
+ * `plan` in, `plan` out, id checked, edges checked, and `addedDuringSession`
+ * stamped so closeout can tell an addendum from an original declaration.
+ *
+ * Returns a NEW plan. The input is not mutated — a caller that has already
+ * written the plan to disk should write the result, not assume the object it
+ * held changed underneath it.
+ */
+export function appendWorkstream(
+  plan: OrchestrationPlan,
+  w: SessionWorkstream,
+): OrchestrationPlan {
+  const id = w.id?.trim();
+  if (!id) throw new WorkstreamAppendError(String(w.id), "the id is empty");
+  if (plan.workstreams.some((x) => x.id === id)) {
+    throw new WorkstreamAppendError(id, "the plan already carries that id, and ids are the mapping");
+  }
+  const known = new Set(plan.workstreams.map((x) => x.id));
+  for (const dep of w.dependsOn) {
+    if (!known.has(dep)) {
+      throw new WorkstreamAppendError(id, `it depends on ${dep}, which is not in the plan`);
+    }
+    if (!w.dependencyReasons[dep]?.trim()) {
+      throw new WorkstreamAppendError(id, `it depends on ${dep} and gives no reason`);
+    }
+  }
+  for (const bad of validateExecutionArtifacts(w)) throw new WorkstreamAppendError(id, bad);
+
+  return {
+    ...plan,
+    workstreams: [...plan.workstreams, { ...w, id, addedDuringSession: true }],
   };
 }

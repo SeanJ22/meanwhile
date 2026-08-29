@@ -598,3 +598,114 @@ test("NOTHING applies a migration automatically, and no gate may heal what it fi
       "same diff, and say who reviews the SQL before it reaches production.",
   );
 });
+
+/* ========================================================================== */
+/* 7. THE SMOKE PATH — a credential proof that invents no schema change       */
+/* ========================================================================== */
+
+/*
+ * WTP_PRODUCTION_DATABASE_URL_READONLY IS NOT YET A REPOSITORY SECRET.
+ *
+ * The gate above is SCOPED, which is right and which means the credential is
+ * only ever exercised when a schema change happens along — so a wrong, expired
+ * or absent secret would be discovered by the very pull request that most needs
+ * the gate working. `workflow_dispatch` gains an input that forces the gate to
+ * contact production on a commit that changed nothing.
+ *
+ * These assert the WIRING, because the secret cannot be asserted from here and
+ * inventing one would be the fabrication this repository forbids by name.
+ */
+
+test("the smoke input exists, is opt-in, and is off unless a person dispatches it", () => {
+  const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
+  const dispatchAt = text.indexOf("workflow_dispatch:");
+  assert.ok(dispatchAt > 0, "build-check.yml is no longer dispatchable, so nothing can prove the credential");
+
+  assert.match(text, /schema_smoke:/, "the smoke input is gone");
+  assert.match(text, /WTP_SCHEMA_GATE_SMOKE: \$\{\{ inputs\.schema_smoke \}\}/);
+  assert.match(
+    text.slice(dispatchAt),
+    /schema_smoke:[\s\S]{0,400}?default: false/,
+    "the smoke input must default to OFF — a gate that opens a connection by default is not scoped",
+  );
+});
+
+test("the smoke path did not change the gate's COMMAND — gate parity is not spent on it", () => {
+  /*
+   * RO04: a gate whose CI command drifts from its local command is a gate a
+   * session reports green while a required check fails. The smoke path is
+   * carried on `env:`, so `run:` is byte-identical to the entry in
+   * scripts/gates.mjs and `tests/gate-parity.test.ts` keeps holding.
+   */
+  const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
+  assert.ok(
+    text.includes(`run: corepack ${GATE_COMMAND}\n`),
+    "the schema gate's run: line moved — gate parity is anchored on it",
+  );
+  assert.ok(GATES.map((g) => g.command).includes(GATE_COMMAND));
+});
+
+test("the second reading is dispatchable — pre-deploy is not the only moment", () => {
+  /*
+   * A pre-merge answer is true about the moment it was taken. `post-deploy` is
+   * where BOTH phases are owed, and it is the one that fails on a CONTRACT
+   * migration that pre-deploy deliberately allows. Nothing runs it
+   * automatically yet; the gap is stated in the gate's own header rather than
+   * papered over, and this asserts the half that DOES exist.
+   */
+  const text = readFileSync(join(WORKFLOWS, "build-check.yml"), "utf8");
+  assert.match(text, /schema_moment:/);
+  assert.match(text, /WTP_SCHEMA_GATE_MOMENT: \$\{\{ inputs\.schema_moment \}\}/);
+
+  const gate = readFileSync(join(ROOT, "scripts", "db-shipping-gate.mts"), "utf8");
+  assert.match(
+    gate,
+    /process\.env\.WTP_SCHEMA_GATE_MOMENT === "post-deploy"/,
+    "the environment variable the workflow sets is not read by the gate",
+  );
+  assert.match(
+    gate,
+    /deployment_status/,
+    "the gate must name the route that would run the post-deploy reading automatically, so the " +
+      "remaining gap is a stated decision rather than a silence",
+  );
+});
+
+test("SMOKE MAY NOT MANUFACTURE A DIFF — the flag overrides the exit, never the finding", () => {
+  const gate = readFileSync(join(ROOT, "scripts", "db-shipping-gate.mts"), "utf8");
+  /*
+   * The tempting shortcut is a fake `--paths=` naming a migration, which also
+   * reaches the database and puts a false statement about what the change
+   * touched into a log somebody reads later. The scope test runs honestly and
+   * prints its honest NOT APPLICABLE; only the exit is overridden.
+   */
+  assert.match(gate, /if \(!involvement\.involved && SMOKE\)/);
+  assert.match(gate, /NOT APPLICABLE[\s\S]{0,400}SMOKE: contacting production anyway/);
+  assert.ok(
+    !/SMOKE\s*\?\s*\[[^\]]*lib\/db\/migrations/.test(gate),
+    "smoke mode must not synthesise a migration path to force applicability",
+  );
+  assert.match(
+    gate,
+    /const SMOKE =[\s\S]{0,300}argv\.includes\("--smoke"\)/,
+    "smoke must be stated by a person, never inferred by the gate",
+  );
+});
+
+test("the smoke proof prints the role and host and NOT the connection string", () => {
+  const gate = readFileSync(join(ROOT, "scripts", "db-shipping-gate.mts"), "utf8");
+  const proof = gate.slice(gate.indexOf("CREDENTIAL PROOF"), gate.indexOf("THE OTHER ANCHOR"));
+  assert.ok(proof.length > 200, "the credential proof block is gone");
+  assert.match(proof, /describeConnection\(connection\)/, "role and host come from the parsed URL");
+  assert.ok(
+    !/\$\{connection\}/.test(proof),
+    "the connection string itself must never reach stdout — the secrets sweep would be right to flag it",
+  );
+  // The ACCESSOR, not the word — a comment explaining what is withheld must not
+  // read as the thing being withheld (the guards-read-your-comment shape).
+  assert.ok(
+    !/\.password\b/.test(proof),
+    "the proof may not reach for the credential's password field",
+  );
+  assert.match(proof, /NOTHING WAS APPLIED/);
+});

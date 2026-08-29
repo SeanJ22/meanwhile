@@ -108,12 +108,17 @@ test("normalize windows the year, times it from the page, and cites its source",
     NOW,
   );
 
-  // Of the twelve published sittings, three fall inside [May 17, Oct 14]:
-  // June 15, August 17, September 28. The other nine are a deliberate window
-  // clip, not drops — which is why the drop counts are all zero.
+  // Of the twelve published sittings, five fall inside the window: June 15,
+  // August 17, September 28, October 26 and November 16. The rest are a
+  // deliberate window clip, not drops — which is why the drop counts are zero.
+  //
+  // Was three, until UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28 so
+  // that Pima's fourteen published sittings could reach a reader. The window
+  // is derived from that constant, so widening it reaches further into THIS
+  // fixture too — two more real sittings the district had already published.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-15", "2026-08-17", "2026-09-28"],
+    ["2026-06-15", "2026-08-17", "2026-09-28", "2026-10-26", "2026-11-16"],
   );
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.placeless, 0);
@@ -125,7 +130,8 @@ test("normalize windows the year, times it from the page, and cites its source",
     assert.equal(m.location!.address, "48 Knoll Drive, Rockaway, NJ 07866");
     assert.ok(Number.isFinite(m.location!.lat) && Number.isFinite(m.location!.lng));
     // 6:30 P.M. Eastern in June/August/September is UTC-4.
-    assert.match(m.startsAt, /T18:30:00-04:00$/);
+    // -05:00 once the wider window crosses November — the zone, not a drift.
+    assert.match(m.startsAt, /T18:30:00-0[45]:00$/);
     // The page it was read from, not a constructed permalink.
     assert.equal(
       m.provenance.sourceUrl,
@@ -170,7 +176,10 @@ test("a page with dates but no stated time ships DAY precision, not a guess", ()
     assert.equal(m.startPrecision, "DAY");
     // Local midnight is an ordering position and never a claim about when
     // the meeting starts — the card says the time was not posted.
-    assert.match(m.startsAt, /T00:00:00-04:00$/);
+    // -04:00 through the summer and -05:00 once the wider window crosses the
+    // DST boundary in November. The offset is the zone doing its job; what is
+    // asserted is that the TIME is local midnight, never a guessed hour.
+    assert.match(m.startsAt, /T00:00:00-0[45]:00$/);
   }
 });
 
@@ -256,9 +265,12 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
   // 15 of the 39 fall inside [May 17, Oct 14]. The rest are a window clip,
   // which is why nothing lands in the drop columns except the three rows the
   // table carries that are not meetings at all.
-  assert.equal(meetings.length, 15, JSON.stringify(meetings.map((m) => m.startsAt)));
+  // 19, not 15: UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28, and this
+  // window is derived from it, so four more sittings Kearsarge had already
+  // published now fall inside it. The last is 2026-12-10.
+  assert.equal(meetings.length, 19, JSON.stringify(meetings.map((m) => m.startsAt)));
   assert.equal(meetings[0].startsAt.slice(0, 10), "2026-05-21");
-  assert.equal(meetings[14].startsAt.slice(0, 10), "2026-10-08");
+  assert.equal(meetings[18].startsAt.slice(0, 10), "2026-12-10");
   assert.equal(drops.notConfigured, 3);
   assert.equal(drops.unknownVenue, 0);
   assert.equal(drops.unplaceableInTime, 0);
@@ -266,7 +278,7 @@ test("Kearsarge normalizes with the page's time, place and documents", () => {
   for (const m of meetings) {
     assert.equal(m.bodyName, "School Board");
     assert.equal(m.location!.address, "114 Main Street, New London, NH 03257");
-    assert.match(m.startsAt, /T18:30:00-04:00$/, "6:30 PM, off the page's bullet");
+    assert.match(m.startsAt, /T18:30:00-0[45]:00$/, "6:30 PM, off the page bullet");
     assert.equal(m.startPrecision, undefined);
     assert.equal(
       m.provenance.sourceUrl,
@@ -350,11 +362,14 @@ test("the Conservation Commission's two shapes union by date", () => {
     NOW,
   );
 
-  // June 9, July 14, August 11, September 10 — four inside the window.
-  // October 15 is one day past it.
+  // Seven inside the window. October 15 used to be ONE DAY past it, which is
+  // exactly the kind of edge a 60-day horizon hid: the commission had
+  // published it, and a reader looking a fortnight ahead could not see it.
+  // UPCOMING_HORIZON_DAYS moved 60 -> 120 on 2026-08-28 and it now reaches
+  // December 8.
   assert.deepEqual(
     meetings.map((m) => m.startsAt.slice(0, 10)),
-    ["2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10"],
+    ["2026-06-09", "2026-07-14", "2026-08-11", "2026-09-10", "2026-10-15", "2026-11-10", "2026-12-08"],
   );
   assert.equal(drops.unknownVenue, 0);
 
@@ -362,7 +377,7 @@ test("the Conservation Commission's two shapes union by date", () => {
     assert.equal(m.bodyName, "Conservation Commission");
     assert.equal(m.title, "Conservation Commission");
     assert.equal(m.location!.address, "937 Route 103, Newbury, NH 03255");
-    assert.match(m.startsAt, /T18:00:00-04:00$/);
+    assert.match(m.startsAt, /T18:00:00-0[45]:00$/);
   }
 
   // August 11 is the one date both shapes carry: the schedule block gives the

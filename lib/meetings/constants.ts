@@ -12,8 +12,26 @@
 /** Miles: 15, 40, 95. Roughly a city, a metro, a region. */
 export const RADIUS_LADDER_KM = [25, 60, 150] as const;
 
-/** How far ahead "upcoming" reaches. */
-export const UPCOMING_HORIZON_DAYS = 60;
+/**
+ * How far ahead "upcoming" reaches.
+ *
+ * **Raised from 60 to 120 on 2026-08-28, and the reason is a measurement.**
+ * Pima County publishes fourteen future Board of Supervisors sittings, out to
+ * 2026-12-15, on three independent first-party routes that agree on body, date
+ * and wall clock — the vendor's calendar grid, its RSS export, and the Clerk of
+ * the Board's own schedule table. At 60 days the product collected all
+ * fourteen and served SIX. The other eight were trimmed by this number and by
+ * nothing else.
+ *
+ * That is our limit rather than a fact about the county, and a reader looking
+ * for the December meeting could not tell the difference. This value is both
+ * the reader's serving horizon (`query.ts`) and each adapter's fetch window, so
+ * it had to move on both sides at once.
+ *
+ * It is still a BUDGET and never a completion condition: a body publishing
+ * further ahead than this is trimmed here, and that trim is ours to name.
+ */
+export const UPCOMING_HORIZON_DAYS = 120;
 
 /**
  * How far back the served window reaches (3g, 2026-08-16: 30 → 90). This

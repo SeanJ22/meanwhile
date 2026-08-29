@@ -108,9 +108,14 @@ test("normalizes Planning Commission meetings with venue, agenda and cancellatio
   const { meetings, drops } = source.normalizeWithDrops(raw, NOW);
 
   // M76 (2026-08-15): the back window is the SERVED window — 90 days, not
-  // 30 — so the window is [May 16, Oct 13] and the page's June 3 and July 1
-  // sittings come in with the three that were already here. Five, named, so
-  // the next widening has to state its count too.
+  // 30 — so the June 3 and July 1 sittings come in with the three already
+  // here. Five, named, so the next widening has to state its count too.
+  //
+  // The next widening, stating its count: SEVEN. UPCOMING_HORIZON_DAYS moved
+  // 60 -> 120 on 2026-08-28 so Pima's fourteen published Board sittings could
+  // reach a reader, and the forward half of this window is derived from that
+  // constant — so November 11 and December 2, which Tucson had already
+  // published, arrive too.
   assert.deepEqual(
     meetings.map((m) => m.id),
     [
@@ -119,6 +124,8 @@ test("normalizes Planning Commission meetings with venue, agenda and cancellatio
       "clerksboards:38:2026-08-12",
       "clerksboards:38:2026-09-02",
       "clerksboards:38:2026-10-07",
+      "clerksboards:38:2026-11-11",
+      "clerksboards:38:2026-12-02",
     ],
   );
   assert.equal(drops.unknownVenue, 0);

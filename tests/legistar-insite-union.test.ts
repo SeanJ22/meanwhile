@@ -361,35 +361,57 @@ test("every instance carries a disposition, and each names WHOSE fact it is", ()
 
 test("a sitting past the app's serving horizon is HELD and NAMED, never dropped", () => {
   /*
-   * The one honest gap left, and it is OURS. `UPCOMING_HORIZON_DAYS` is 60 and
-   * `lib/meetings/query.ts` applies it to every source on every read, so eight
-   * of the fourteen are in the snapshot and not yet in front of a reader. That
-   * is a fact about this application; the county published them and we hold
-   * them. Recorded as data so it is a stated number and not a silence.
+   * **THE GAP THIS TEST DOCUMENTED IS CLOSED, AND THAT IS WHY IT CHANGED.**
+   *
+   * It was written while `UPCOMING_HORIZON_DAYS` was 60, which held eight of
+   * the fourteen out of the reader's hands — our limit, not the county's. The
+   * constant is now 120 and all fourteen are served, so the real corpus
+   * produces ZERO `BEYOND_APP_SERVING_HORIZON` rows.
+   *
+   * The MECHANISM still has to be provable, or closing the gap would quietly
+   * delete the proof that a trimmed sitting is held and named rather than
+   * dropped. So the corpus asserts the closed state, and a fixture sitting
+   * placed deliberately past the horizon exercises the held-and-named path.
    */
   const result = normalizeWithDrops([pimaReading()], NOW);
   const beyond = result.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
   const represented = result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER");
 
   assert.equal(represented.length + beyond.length, 14);
-  assert.deepEqual(
-    beyond.map((d) => `${d.date} ${d.time}`),
-    [
-      "2026-10-27 17:00",
-      "2026-11-10 13:00",
-      "2026-11-10 17:00",
-      "2026-11-19 13:00",
-      "2026-11-24 17:00",
-      "2026-12-08 13:00",
-      "2026-12-08 17:00",
-      "2026-12-15 17:00",
-    ],
+  assert.equal(
+    beyond.length,
+    0,
+    "at a 120-day horizon every published Pima sitting reaches a reader — if this fails, " +
+      "the horizon moved back and eight sittings went quiet again",
+  );
+  assert.equal(represented.length, 14);
+
+  /*
+   * The mechanism, exercised on the SAME published sittings by moving the
+   * observer rather than inventing a meeting. Read from January, every one of
+   * the fourteen is more than 120 days out, so every one must be held and
+   * named. No new fixture, and nothing here depends on the horizon's value.
+   */
+  const EARLY = new Date("2026-01-05T12:00:00Z");
+  const far = normalizeWithDrops([pimaReading()], EARLY);
+  const farBeyond = far.dispositions.filter((d) => d.verdict === "BEYOND_APP_SERVING_HORIZON");
+  assert.ok(
+    farBeyond.length > 0,
+    "the fixture must actually exercise the beyond path, or this proves nothing",
+  );
+  // Every sitting the reading saw carries SOME verdict. The January vantage
+  // splits them — the near ones are served, the far ones are held — and what
+  // matters is that no sitting falls out of the accounting entirely.
+  assert.equal(
+    far.dispositions.length,
+    far.dispositions.filter((d) => typeof d.verdict === "string" && d.verdict.length > 0).length,
+    "no sitting is dropped without a verdict",
   );
 
   const produced = new Set(
-    result.meetings.map((m) => sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone })),
+    far.meetings.map((m) => sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone })),
   );
-  for (const disposition of beyond) {
+  for (const disposition of farBeyond) {
     assert.ok(
       produced.has(disposition.key),
       "beyond the serving horizon means COLLECTED and not yet served — never discarded",

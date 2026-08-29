@@ -45,12 +45,17 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "integration-branch", "ref": "claude/cleanroom-0828-integration" }
+        {
+          "kind": "integration-branch",
+          "ref": "claude/cleanroom-0828-integration"
+        }
       ],
       "concurrencyEvidence": [
-        "ran on the integration branch while all eight engineering workstreams executed concurrently in separate worktrees"
+        "ran on the integration branch while all eight engineering workstreams executed concurrently in separate git worktrees, each with a node_modules junction",
+        "RULING 191: regenerated registry.json ONCE and re-recorded the RULING 102 digests ONCE; no workstream regenerated a shared artifact",
+        "caught at integration and nowhere else: the /api/meetings trace cardinality 220 -> 221, from a test-only guard shipping in lib/registry/. Moved to lib/ops/. Branch-local green could not have seen it."
       ]
     },
     {
@@ -66,13 +71,22 @@
         ],
         "data": []
       },
-      "produces": ["proven-edge-independence-graph", "closeout-reconciliation"],
+      "produces": [
+        "proven-edge-independence-graph",
+        "closeout-reconciliation"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/orch" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/orch" }
+        {
+          "kind": "branch",
+          "ref": "ws/orch"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/orch"
+        }
       ]
     },
     {
@@ -94,13 +108,21 @@
         ],
         "data": []
       },
-      "produces": ["method-consumer-projection"],
+      "produces": [
+        "method-consumer-projection"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/method" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/method" }
+        {
+          "kind": "branch",
+          "ref": "ws/method"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/method"
+        }
       ]
     },
     {
@@ -120,13 +142,21 @@
         ],
         "data": []
       },
-      "produces": ["unresolved-on-producing-route-disposition"],
+      "produces": [
+        "unresolved-on-producing-route-disposition"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/mtgunion" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/mtgunion" }
+        {
+          "kind": "branch",
+          "ref": "ws/mtgunion"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/mtgunion"
+        }
       ]
     },
     {
@@ -143,13 +173,21 @@
         ],
         "data": []
       },
-      "produces": ["candidate-identity-universe"],
+      "produces": [
+        "candidate-identity-universe"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/ballotid" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/ballotid" }
+        {
+          "kind": "branch",
+          "ref": "ws/ballotid"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/ballotid"
+        }
       ]
     },
     {
@@ -168,13 +206,22 @@
         ],
         "data": []
       },
-      "produces": ["migration-immutability-guard", "readonly-credential-smoke-path"],
+      "produces": [
+        "migration-immutability-guard",
+        "readonly-credential-smoke-path"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/schema" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/schema" }
+        {
+          "kind": "branch",
+          "ref": "ws/schema"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/schema"
+        }
       ]
     },
     {
@@ -190,13 +237,21 @@
         ],
         "data": []
       },
-      "produces": ["serving-tenant-identity-guard"],
+      "produces": [
+        "serving-tenant-identity-guard"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/mesa" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/mesa" }
+        {
+          "kind": "branch",
+          "ref": "ws/mesa"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/mesa"
+        }
       ]
     },
     {
@@ -213,13 +268,21 @@
         ],
         "data": []
       },
-      "produces": ["level-relationship-contract"],
+      "produces": [
+        "level-relationship-contract"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/geocopy" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/geocopy" }
+        {
+          "kind": "branch",
+          "ref": "ws/geocopy"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/geocopy"
+        }
       ]
     },
     {
@@ -236,13 +299,21 @@
         ],
         "data": []
       },
-      "produces": ["branch-retirement-manifest"],
+      "produces": [
+        "branch-retirement-manifest"
+      ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "executionArtifacts": [
-        { "kind": "branch", "ref": "ws/branchhy" },
-        { "kind": "worktree", "ref": "C:/Users/seanj/dev/wtp-wt/branchhy" }
+        {
+          "kind": "branch",
+          "ref": "ws/branchhy"
+        },
+        {
+          "kind": "worktree",
+          "ref": "C:/Users/seanj/dev/wtp-wt/branchhy"
+        }
       ]
     }
   ]

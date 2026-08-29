@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-28 — **Four subsystems were resting a verdict on an input they had not checked.** The pre-control-plane cleanroom; its record is the LAST section of this file.
+Last updated: 2026-08-28 — **The deploy that failed had nothing wrong with it.** The fixture credential hotfix; its record is the LAST section of this file.
+
+Previous: 2026-08-28 — **Four subsystems were resting a verdict on an input they had not checked.** The pre-control-plane cleanroom.
 
 Previous: 2026-08-28 — **Most of what the walkthrough reported was not the defect it looked like.** The Aug 28 reader sweep.
 
@@ -21583,3 +21585,149 @@ Two things were found broken that this session did not go looking for.
 required at v55, invisible because it is not in `pnpm gates`. And a stray `NUL`
 byte written into a script was caught by the repo's own sweep, exactly as the
 project's memory predicts.
+
+## 2026-08-28 — the fixture credential hotfix
+
+**The deploy that failed had nothing wrong with it.** PR #216 compiled, bundled,
+traced and passed every one of GitHub's required checks. Netlify then scanned
+7,901 files and stopped it on one line of one test fixture:
+
+    1 instance(s) of likely secrets
+    "AIza***" detected as a likely secret
+    tests/fixtures/legistar-insite-pima-clerk-schedule.html, line 667
+
+Nobody pasted a credential. `scripts/learn-legistar-horizon.mts --record`
+retrieved Pima County's Clerk of the Board schedule page and wrote the bytes to
+disk, and **the page's own bootstrap JSON carries a Google Maps browser key**.
+The repository became a durable mirror of a third party's live credential
+because a `writeFileSync` did exactly what it was asked to do.
+
+So the class is not carelessness. It is acquisition:
+
+> PUBLIC WEB CAPTURE -> TEST FIXTURE MUST REMOVE CREDENTIAL-LIKE MATERIAL THAT
+> IS IRRELEVANT TO THE TESTED RECORD, WHILE PRESERVING PROVENANCE AND PARSER
+> SEMANTICS.
+
+### Netlify reported one. The class scan found three, in two files.
+
+Running the new sweep over all 1,908 committed text files before touching
+anything is what made this more than a one-line fix:
+
+    tests/fixtures/legistar-insite-pima-clerk-schedule.html
+      google_api_key   fp=0475203d7298  1 occurrence
+      jwt              fp=7c636da75860  5 occurrences
+    tests/fixtures/schedulepage/newlondon-calendar-2026-08.html
+      google_api_key   fp=c0243981d0e9  1 occurrence
+
+The JWT is the one Netlify never mentioned. It is `window.hcmsClientToken`, a
+CivicPlus HCMS bearer token issued 2026-08-28 and **live for thirty days**
+<!-- expected-future: the captured token's own exp claim, 2026-09-27 -->, sitting
+in the repository five times over. The New London capture is a *different*
+Google key in a `maps.googleapis.com` script tag, recorded nine days earlier by
+a different session through a different code path — it would have been the next
+red deploy, and no amount of fixing the file Netlify named would have found it.
+
+### Why this scanner is pattern-based when `secret-redaction.ts` refuses to be
+
+`lib/ops/secret-redaction.ts` argues at length that a secret sweep must run BY
+VALUE, from `.env.local`, because a shape scanner finds every git SHA and misses
+every credential of another shape. **That argument is correct and this does not
+contradict it.** The two modules answer different questions: that one looks for
+OUR credentials, whose values we hold; this one looks for a PUBLISHER'S, whose
+values were unknowable before the page was fetched. By-value is not merely worse
+here — it is not a thing that can be done.
+
+The false-positive problem is answered instead by **class-awareness in two
+stages**. Stage one is a literal anchor: `AIza`, `AKIA`, three base64url JWT
+segments, `-----BEGIN … PRIVATE KEY-----`. Stage two asks whether the match is a
+credential at all, and the two live cases in this repository are why it exists:
+
+- The Pima token decodes to `exp`, `nbf`, `iss`, `iat`, `jti`, `client_id`,
+  `scope` — RFC 7519 registered authentication claims. **A credential.**
+- `https://lnks.gd/l/eyJ…` in `data/hunt/nj-campaign-sites-*.json` decodes to
+  `{bulletin_link_id, uri, bulletin_id, url}`, a GovDelivery signed link whose
+  entire payload is a public justice.gov URL. **A public record identifier**,
+  and redacting it would have destroyed the provenance of a source link the
+  hunt genuinely found, to protect nothing.
+
+Registered-claims-or-`Bearer`-position separates those perfectly and is grounded
+in the standard rather than in a guessed vocabulary. The same discipline retired
+the first draft's other false positives: `docs/deploy-key-setup.md` names a PEM
+header in a sentence and `tests/deploy-key-ssh.test.ts` stubs one with a body of
+sixty-four `x`s. Requiring a real base64 body with genuine alphabet diversity
+excludes both **on the evidence**, which is the only exclusion that stays correct
+when somebody edits those files.
+
+**Nothing is set aside silently.** An unconfirmed match is still returned,
+counted, printed, and carries the reason it was not treated as a credential.
+
+### What the repair actually changed
+
+Seven substrings across two files, and nothing else:
+
+    pima      6 replaced (885×5 + 39)   1,164,526B -> 1,160,242B
+    newlondon 1 replaced (39)              56,565B ->    56,556B
+
+The sanitized text was reconstructed against the original and matched
+byte-for-byte outside the seven redacted spans. Line counts identical, `<script>`
+counts identical, **every `<table>` block byte-identical** — which is the only
+part `parseClerkSchedule` reads. MTG-13 is unmoved: fourteen future Pima
+sittings, fourteen Clerk rows, horizon through 2026-12-15 <!-- expected-future: the Pima Board's published schedule horizon -->
+and route composition unchanged, 26/26 union tests and 16/16 schedule-page tests
+green.
+
+### The line-ending trap, caught by the drift check it caused
+
+The New London capture is stored LF, because `.gitattributes` marks
+`tests/fixtures/** -text` — recorded evidence is never converted. A working copy
+carrying CRLF was hashed partway through the repair, so the `rawSha256` first
+written described 57,697 bytes that were not the captured bytes, and the commit
+would have rewritten 1,132 line endings of evidence to redact one value. Caught
+by reading `git diff --stat` and disbelieving a 2,264-line diff for a one-value
+change. The tree was reset and the repair redone from a clean checkout; the
+committed diff is now **4 insertions, 4 deletions**. A hash-agreement test now
+makes that class fail loudly instead of silently.
+
+I could not attribute what wrote the CRLF copy — it predates every write this
+session made, and the scan was verified read-only. That is stated rather than
+guessed at.
+
+### Where the gate now sits
+
+`tests/fixture-credentials.test.ts` runs in `pnpm test`, which is CI's required
+`gates` job, so **the class fails in GitHub minutes after a fixture is written
+rather than at the Netlify deploy**. Seventeen tests, and the positive controls
+are **synthesized at runtime from fragments** — committing a Google-shaped key to
+prove the guard catches Google-shaped keys would trip the very scanner this
+exists to satisfy.
+
+The negative controls are the half that keeps it usable: CivicPlus container
+GUIDs, Legistar meeting and body ids, pagination parameters, dates, times,
+analytics ids, a git SHA, a sha256 and an ordinary UUID are all asserted NOT to
+be flagged. A redactor that eats the public record is worse than the leak.
+
+`writeCapturedFixture` in `lib/ops/fixture-captures.ts` is now the one door a
+captured page enters through, and a structural guard refuses any bare
+`writeFileSync` into `tests/fixtures/`. It caught the sanitizer's own write the
+first time it ran, so the sweep goes through the same door rather than being
+exempted from it. Three recorders were rewired.
+
+Provenance lives in two halves that cannot drift apart: the DECLARED half
+(`SANITIZED_CAPTURES` — source URL, capture date, what captured it, what it
+proves) is hand-authored, and the DERIVED half (`data/fixtures/sanitization.json`
+— raw and sanitized SHA-256, classes, counts, fingerprints) is generated. **The
+raw bytes are not committed anywhere.** `rawSha256` is the entire memory of them,
+which is the point: this repository stops being a mirror of a live third-party
+credential, and a hash is reproducible by anyone who re-captures the page.
+
+### Numbers
+
+    3 credentials removed · 2 classes · 2 files · 7 substrings
+    1,908 text files scanned · 1,179 skipped (binary), counted and named
+    2 shape-matched and excluded on the evidence, with reasons printed
+    17 new tests · 1 workstream · SINGLE_WORKSTREAM, dependency-proven
+
+Netlify's scanner found one instance of one class in one file. It was right, and
+it was reading the shallowest layer of the problem: the credential it named was
+not the live one, the file it named was not the only file, and the write that put
+it there was still in the tree.

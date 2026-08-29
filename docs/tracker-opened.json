@@ -2046,5 +2046,12 @@
       "NH278",
       "NH279"
     ]
+  },
+  {
+    "session": "2026-08-28 post-cleanroom shipping hotfix",
+    "opened": "2026-08-28",
+    "ids": [
+      "NH280"
+    ]
   }
 ]

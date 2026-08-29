@@ -225,10 +225,36 @@ function writeJournal(dir: string, entries: readonly JournalEntry[]): void {
  * is stripped from the child so the exit codes are the guard's own and no
  * connection is possible.
  */
+/**
+ * Run the REAL gate against a scratch repository, in an environment that
+ * carries nothing this test did not put there.
+ *
+ * **The credential is not the only inherited input, and that cost a red CI
+ * run.** The first version of this helper deleted
+ * `WTP_PRODUCTION_DATABASE_URL_READONLY` and stopped. It passed on a laptop and
+ * failed on GitHub Actions, and the failure was the helper's rather than the
+ * gate's: on CI the child inherited `GITHUB_EVENT_PATH` and `GITHUB_EVENT_NAME`,
+ * so the gate resolved its changed-path base from the REAL pull request — a
+ * commit that does not exist in the throwaway repo it was pointed at. Unable to
+ * diff it, the gate did the correct fail-safe thing and asked production; with
+ * no credential that is `COULD NOT TELL`, exit 2, and the append test expects 0.
+ *
+ * The immutability verdict was right the whole time — the log says
+ * `migration immutability HOLDS`. What was wrong was a test whose result
+ * depended on an input it had not controlled, which is the defect RULING 193
+ * names and which this file exists to guard against. So the child is given the
+ * ambient environment MINUS every variable the gate reads: the fixture decides
+ * what the gate sees, on every machine.
+ */
 function runGate(dir: string, base: string): { status: number; out: string } {
   const env = { ...process.env };
   delete env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   delete env.WTP_SCHEMA_GATE_SMOKE;
+  delete env.WTP_SCHEMA_GATE_MOMENT;
+  // The CI event context. `scripts/db-shipping-gate.mts` reads these two to
+  // find its base; the rest go with them so no later reader can reintroduce
+  // the same coupling by reaching for a different one.
+  for (const key of Object.keys(env)) if (key.startsWith("GITHUB_")) delete env[key];
   const r = spawnSync(
     process.execPath,
     ["--experimental-strip-types", "--no-warnings", GATE, `--base=${base}`],

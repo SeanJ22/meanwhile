@@ -192,14 +192,29 @@ export function enumeratedSeatHolders(contest: { title: string; ocdId: string })
  * The canvass is named rather than summarised, because the finding it supports
  * — *this is the complete universe of candidates* — is only as good as the
  * document behind it.
+ *
+ * **IT HANDS OVER THE NAMES, AND IT USED TO HAND OVER A COUNT.**
+ * (2026-08-28, the candidate-identity repair.) `LineupNominee.name` is the only
+ * identity material the certified corpus carries — there is no candidate id, no
+ * filing number and no state person key in `data/ballot/az-general-lineup-2026.json`,
+ * for any of the twelve contests it names — so the name as the canvass prints it
+ * IS the certified identity, quoted marks and generational suffix included
+ * (`Walter "Les" Presmyk`, `Daniel Francis Butierez Sr.`). It is passed through
+ * RAW: the normalisation belongs to the reconciler, which is the same one the
+ * incumbency matcher uses, and a name normalised here would be a second
+ * normaliser drifting from that one.
+ *
+ * Returning a count was the defect. `candidateUniverse` could then only ask
+ * *how many*, and two contests in this repository answered that question
+ * correctly while showing a different set of people.
  */
-export function certifiedNomineesFor(contestId: string): { source: string; count: number } | null {
+export function certifiedNomineesFor(contestId: string): { source: string; names: string[] } | null {
   const entry = lineupForContest(contestId);
   if (entry === null) return null;
   const canvass = getGeneralLineup()?.canvass;
   return {
     source: canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass",
-    count: entry.nominees.length,
+    names: entry.nominees.map((n) => n.name),
   };
 }
 
@@ -244,7 +259,7 @@ export async function contestIncumbency(
    */
   universeSources: {
     enumeratedHolders?: (contest: { title: string; ocdId: string }) => SeatHolderRef[];
-    certifiedNominees?: (contestId: string) => { source: string; count: number } | null;
+    certifiedNominees?: (contestId: string) => { source: string; names: readonly string[] } | null;
   } = {},
 ): Promise<ContestIncumbencyResult> {
   const candidates = contest.candidates.map((c) => ({
@@ -414,9 +429,20 @@ export async function contestIncumbency(
     seatsThisContestFills: contest.voteFor,
   });
   const certified = (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
+  /*
+   * THE RENDERED SIDE IS NAMES, NOT A LENGTH. (2026-08-28.)
+   *
+   * `c.display` is the string the calling surface puts on the card, which is
+   * exactly the right thing to reconcile: the question the gate asks is whether
+   * THE PEOPLE A READER IS LOOKING AT are the certified ones, and the only
+   * honest witness to who a reader is looking at is the name printed on the
+   * card. Handing over `contest.candidates.length` let a contest built from the
+   * filed-candidate record pass while showing somebody the canvass never
+   * certified — see `reconcileCandidateIdentities`.
+   */
   const candidatesUniverse = candidateUniverse({
     certified,
-    rendered: contest.candidates.length,
+    rendered: contest.candidates.map((c) => c.display),
     renderedSource: contest.candidates.length > 0 ? "the contest's own filed-candidate record" : null,
   });
   const states = statesFromResolution(resolved, candidateKeys, officeholders.complete);

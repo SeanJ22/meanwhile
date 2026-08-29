@@ -27,8 +27,7 @@
  *    writes nothing and says which issue. Correct first.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
-
+import { issueKey, readMethodStore, writeMethodStore } from "./candidate.ts";
 import {
   attachClaims,
   findDependencyFlags,
@@ -36,7 +35,7 @@ import {
   type ClaimRetraction,
   type MethodClaim,
 } from "./claims.ts";
-import { validateKnowledge, type MethodIssue, type MethodKnowledge } from "./knowledge.ts";
+import { validateKnowledge, type MethodKnowledge } from "./knowledge.ts";
 
 export interface ClaimAmendment {
   /** A one-line name for the run, printed so a log says what was applied. */
@@ -121,8 +120,13 @@ export function applyClaimAmendment(k: MethodKnowledge, a: ClaimAmendment): Amen
   };
 }
 
-function issueKey(i: MethodIssue): string {
-  return `${i.id} ${i.rule}`;
+export interface RunAmendmentOptions {
+  /**
+   * The method version this caller believes the store is at. Defaults to the
+   * version this call reads. Supplying it lets a caller that read the store
+   * earlier refuse rather than overwrite work done in between.
+   */
+  readonly expectedVersion?: number;
 }
 
 /**
@@ -131,9 +135,18 @@ function issueKey(i: MethodIssue): string {
  *
  * `storePath` is an argument rather than a constant so the run can be proved
  * against a THROWAWAY COPY before it ever touches the canonical store.
+ *
+ * The write goes through `writeMethodStore`, which re-runs the same check as a
+ * backstop and adds the version precondition. The report below stays here
+ * because it is what a person reads; the gate is what a store gets.
  */
-export function runClaimAmendment(storePath: string, amendment: ClaimAmendment, stamp: string): void {
-  const before = JSON.parse(readFileSync(storePath, "utf8")) as MethodKnowledge;
+export function runClaimAmendment(
+  storePath: string,
+  amendment: ClaimAmendment,
+  stamp: string,
+  options: RunAmendmentOptions = {},
+): void {
+  const before = readMethodStore(storePath);
   const beforeIssues = new Set(validateKnowledge(before).map(issueKey));
 
   const r = applyClaimAmendment(before, amendment);
@@ -169,6 +182,12 @@ export function runClaimAmendment(storePath: string, amendment: ClaimAmendment, 
     return;
   }
 
-  writeFileSync(storePath, `${JSON.stringify({ ...r.knowledge, updatedOn: stamp }, null, 2)}\n`, "utf8");
-  console.log(`\nwritten to ${storePath}   —  validator issues: ${after.length}`);
+  const receipt = writeMethodStore(storePath, r.knowledge, {
+    expectedVersion: options.expectedVersion ?? before.version,
+    stamp,
+  });
+  console.log(
+    `\nwritten to ${receipt.path}   —  validator issues: ${after.length}, ${receipt.bytes} bytes, ` +
+      `method version ${receipt.version}`,
+  );
 }

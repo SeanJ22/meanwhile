@@ -438,6 +438,35 @@ export function applyEarnedPortability(
 }
 
 /**
+ * **WHAT A CONCLUSION'S CURRENCY IS, SEPARATELY FROM WHETHER IT WAS REOPENED.**
+ * (2026-08-29.)
+ *
+ * A conclusion can stop being current for two entirely different reasons, and
+ * running them together is how a route gets deleted for a sentence's mistake:
+ *
+ * - `REOPENED` — knowledge grew past it. The conclusion was honestly earned and
+ *   a later route means it must be re-walked. This is the RULING 178 mechanism
+ *   and it says nothing bad about the conclusion or the route beneath it.
+ * - `WITHDRAWN` / `INVALIDATED` — the conclusion itself was wrong, or the
+ *   evidence it rested on was. Withdrawn is the author or a later session
+ *   pulling it; invalidated is stronger evidence contradicting it.
+ *
+ * **A withdrawn or invalidated conclusion is no longer closing anything, so
+ * there is nothing left for a new route to reopen** — and, far more importantly,
+ * the route that produced it survives untouched. That is the same rule
+ * `lib/method/claims.ts` holds one level down: a false conclusion must never
+ * cause a valid route to be deleted.
+ *
+ * The union lives here rather than in `lib/method/conclusions.ts` so that
+ * `PriorConclusion` can carry it without the dependency running backwards.
+ */
+export const CONCLUSION_STATUSES = ["EARNED", "REOPENED", "WITHDRAWN", "INVALIDATED"] as const;
+export type ConclusionStatus = (typeof CONCLUSION_STATUSES)[number];
+
+/** The statuses under which a conclusion is still closing an avenue. */
+export const CLOSING_CONCLUSION_STATUSES: readonly ConclusionStatus[] = ["EARNED", "REOPENED"];
+
+/**
  * A prior conclusion — an absence, a block, a dark body, a converged graph.
  *
  * These are what a newly learned route REOPENS. Each one records the method
@@ -451,9 +480,19 @@ export interface PriorConclusion {
   jurisdiction: Jurisdiction;
   earnedAtVersion: number;
   earnedOn: string;
+  /**
+   * Optional and defaulting to `EARNED`, because the corpus predates the field
+   * and an absent status has always meant "this conclusion is standing".
+   */
+  status?: ConclusionStatus;
   /** Set when a later route reopened it. */
   reopenedBy?: string;
   reopenedOn?: string;
+}
+
+/** Is this conclusion still closing an avenue? An absent status means yes. */
+export function isClosing(c: PriorConclusion): boolean {
+  return CLOSING_CONCLUSION_STATUSES.includes(c.status ?? "EARNED");
 }
 
 export interface Reopening {
@@ -480,6 +519,11 @@ export function findReopenings(
   const out: Reopening[] = [];
   for (const c of conclusions) {
     if (c.reopenedBy) continue;
+    // A WITHDRAWN or INVALIDATED conclusion closes nothing, so nothing can
+    // reopen it. Flagging one as awaiting reopening would report a repair as an
+    // outstanding obligation forever, and — the part that matters — the route
+    // that produced the withdrawn conclusion is untouched either way.
+    if (!isClosing(c)) continue;
     for (const r of k.routes) {
       if (r.retiredOn) continue;
       // Only routes learned AFTER the conclusion was earned can reopen it.
@@ -513,7 +557,7 @@ export function applyReopenings(
     const r = byId.get(c.id);
     // The old measurement is PRESERVED — `earnedAtVersion` and `earnedOn` stay.
     // Reopening adds a fact; it never erases the one it supersedes.
-    return r ? { ...c, reopenedBy: r.route.id, reopenedOn: on } : c;
+    return r ? { ...c, status: "REOPENED" as ConclusionStatus, reopenedBy: r.route.id, reopenedOn: on } : c;
   });
 }
 
@@ -690,6 +734,17 @@ export function validateKnowledge(
   for (const c of conclusions) {
     if (typeof c.earnedAtVersion !== "number") {
       bad(c.id, "conclusion-without-version", `${c.kind} carries no method version`);
+    }
+    // The same closed-set hole the `effort` and `outcome` notes above record.
+    // An unrecognised status would fall out of `isClosing` as NOT closing —
+    // which silently removes the conclusion from the reopening sweep, the one
+    // guard that stops knowledge growing past a conclusion unnoticed.
+    if (c.status !== undefined && !(CONCLUSION_STATUSES as readonly string[]).includes(c.status)) {
+      bad(
+        c.id,
+        "conclusion-status-off-the-closed-set",
+        `status is ${JSON.stringify(c.status)}, which is none of ${CONCLUSION_STATUSES.join(", ")}`,
+      );
     }
   }
 

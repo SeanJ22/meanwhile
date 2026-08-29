@@ -2060,5 +2060,15 @@
     "ids": [
       "NH281"
     ]
+  },
+  {
+    "session": "2026-08-29 durable shadow runtime",
+    "opened": "2026-08-29",
+    "ids": [
+      "NH282",
+      "NH283",
+      "NH284",
+      "NH285"
+    ]
   }
 ]

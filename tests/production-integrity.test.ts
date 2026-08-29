@@ -7,12 +7,15 @@ import test from "node:test";
 import {
   FAILURE_CLASSES,
   INTEGRITY_STATES,
+  MAX_READING_AGE_HOURS,
   NEVER_CHECKED,
   assessIntegrity,
   evaluateReleaseFreeze,
   explainFreeze,
+  sameCommit,
   touchesSchemaContract,
   type IntegrityRecord,
+  type ProductionObservation,
 } from "../lib/ops/production-integrity.ts";
 import { GATES } from "../scripts/gates.mjs";
 
@@ -29,6 +32,8 @@ import { GATES } from "../scripts/gates.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SHA_A = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const SHA_B = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+/** The candidate being released — a third commit, because the candidate is no longer the subject. */
+const SHA_C = "cccccccccccccccccccccccccccccccccccccccc";
 
 const HELD: IntegrityRecord = {
   formatVersion: 1,
@@ -57,6 +62,27 @@ const NO_CREDENTIAL: IntegrityRecord = {
   detail: "db:gate: COULD NOT TELL — WTP_PRODUCTION_DATABASE_URL_READONLY is not set",
   gateExit: 2,
 };
+
+/**
+ * A production observation, built for a test.
+ *
+ * `servedSha` is what production was OBSERVED to serve; `ageHours` is how old
+ * the reading is. Both are measurements the pure module never takes for itself —
+ * `scripts/release-freeze-gate.mts` reads the clock and asks
+ * `GET /api/build` — which is what makes every branch of rule 4 constructible
+ * here rather than waited for in production.
+ */
+function serving(servedSha: string | null, ageHours: number | null): ProductionObservation {
+  return {
+    servedSha,
+    how: servedSha === null ? "the observation FAILED in this test" : "stated by the test",
+    readingAgeHours: ageHours,
+    maxAgeHours: MAX_READING_AGE_HOURS,
+  };
+}
+
+/** The ordinary healthy case: production serves what the reading is about, taken an hour ago. */
+const FRESH = serving(SHA_A, 1);
 
 const APP_CHANGE = ["app/api/meetings/route.ts", "lib/meetings/query.ts"];
 const SCHEMA_CHANGE = ["lib/db/migrations/0023_new_thing.sql", "lib/db/schema.ts"];
@@ -114,14 +140,32 @@ test("NC3: a docs-only change is not a production release and does not clear the
 
 /** ---------------------- 4. a green re-check clears the freeze ----------- */
 
-test("NC4: a passing re-check against the candidate clears the freeze", () => {
-  const frozen = evaluateReleaseFreeze({ record: REFUSED, candidateSha: SHA_B, changedPaths: APP_CHANGE });
+test("NC4: a passing re-check against what production serves clears the freeze", () => {
+  const frozen = evaluateReleaseFreeze({
+    record: REFUSED,
+    candidateSha: SHA_B,
+    changedPaths: APP_CHANGE,
+    production: FRESH,
+  });
   assert.equal(frozen.frozen, true);
 
-  const recheck: IntegrityRecord = { ...HELD, deployedSha: SHA_B, mainSha: SHA_B };
-  const cleared = evaluateReleaseFreeze({ record: recheck, candidateSha: SHA_B, changedPaths: APP_CHANGE });
+  /*
+   * The re-check is taken against the commit production ACTUALLY SERVES, which
+   * is the whole correction of 2026-08-29. A reading against the candidate could
+   * not exist yet — the candidate has not deployed, and this gate runs before
+   * the deploy — so keying the clearance on it would have made the freeze
+   * unsatisfiable by construction.
+   */
+  const recheck: IntegrityRecord = { ...HELD, deployedSha: SHA_A, mainSha: SHA_A };
+  const cleared = evaluateReleaseFreeze({
+    record: recheck,
+    candidateSha: SHA_B,
+    changedPaths: APP_CHANGE,
+    production: FRESH,
+  });
   assert.equal(cleared.frozen, false);
   assert.equal(cleared.state, "CURRENT");
+  assert.equal(cleared.freshness, "CURRENT_FOR_PRODUCTION");
 });
 
 /** ---------------------- 5. a missing credential cannot be green --------- */
@@ -198,18 +242,196 @@ test("NC7: a green reading about an earlier SHA is STALE_HEALTHY, never CURRENT"
   assert.equal(a.aboutSha, SHA_B);
   assert.match(a.reason, /not an answer about this one/);
 
-  // It does not freeze — it is an honest healthy history — but a report of it
-  // may never say CURRENT.
-  const v = evaluateReleaseFreeze({ record: HELD, candidateSha: SHA_B, changedPaths: APP_CHANGE });
-  assert.equal(v.frozen, false);
+  /*
+   * STALE_HEALTHY IS STILL AN HONEST STATE and is still never reported as
+   * CURRENT. What changed on 2026-08-29 is what FOLLOWS from it for a release:
+   * see the SEEDED FAILURE block below. The state itself is untouched, which is
+   * the point — no existing state was quietly repurposed.
+   */
+  const v = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_B,
+    changedPaths: APP_CHANGE,
+    production: serving(SHA_B, 1),
+  });
   assert.equal(v.state, "STALE_HEALTHY");
-  assert.doesNotMatch(explainFreeze(v), /CURRENT/);
+  assert.doesNotMatch(v.reason, /\bCURRENT\b/);
 });
 
 test("NC7b: HELD with no recorded commit holds for nothing", () => {
   const a = assessIntegrity({ ...HELD, deployedSha: null }, SHA_A);
   assert.equal(a.state, "UNKNOWN");
   assert.match(a.reason, /nothing it can be said to hold FOR/);
+});
+
+/** ------- SEEDED FAILURE: a stale reading treated as CURRENT ------------- */
+
+/**
+ * **THE SEEDED FAILURE, AND THE GUARD THAT CATCHES IT.**
+ *
+ * SEED: production-integrity says HELD; the reading was taken days ago against
+ * a commit production no longer serves; a production-changing release asks to
+ * ship. Under the rule 4 that stood until 2026-08-29 — *"STALE_HEALTHY does not
+ * freeze"* — this was PERMITTED, and it was permitted forever: nothing in the
+ * mechanism ever expired a healthy answer.
+ *
+ * GUARD: `evaluateReleaseFreeze`'s freshness clause. It keys on the SERVED sha
+ * and on the reading's AGE, both passed in by `scripts/release-freeze-gate.mts`,
+ * and refuses by name with the exact remedy.
+ *
+ * The route REJECTED, recorded so it is not re-proposed: keying the freeze on
+ * the CANDIDATE sha. A post-deploy reading against a candidate cannot exist
+ * until that candidate has deployed, and this gate runs before the deploy — so
+ * that rule freezes every production-changing release forever, and an
+ * unsatisfiable gate is the best argument anyone will ever have for the skip
+ * flag this repository refuses to have.
+ */
+test("SEEDED: a healthy reading about a commit production no longer serves FREEZES", () => {
+  const stale: IntegrityRecord = { ...HELD, observedAt: "2026-08-26T04:00:00.000Z" };
+  const v = evaluateReleaseFreeze({
+    record: stale,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    // Production moved on: it serves SHA_B, and the reading is about SHA_A.
+    production: serving(SHA_B, 72),
+  });
+
+  assert.equal(v.frozen, true, "this is the exact case the old rule 4 permitted forever");
+  assert.equal(v.freshness, "PRODUCTION_MOVED");
+  assert.equal(v.servedSha, SHA_B);
+  assert.match(v.reason, /PRODUCTION MOVED UNDER THE LAST READING/);
+  assert.ok(v.remedy, "a freeze must name what clears it");
+  assert.match(v.remedy!, /integrity:check --sha=/, "the remedy is a command, never a shrug");
+  assert.match(v.remedy!, /post-deploy-integrity\.yml/, "and it names the automatic path too");
+  assert.match(explainFreeze(v), /RELEASE FROZEN/);
+});
+
+test("SEEDED (age half): a reading older than the bound FREEZES even about the served commit", () => {
+  /*
+   * The independent half. Production has NOT moved — it serves exactly what the
+   * reading is about — and the reading has simply gone stale on the clock. This
+   * is the "indefinitely stale" clause, and it is the one with no escape hatch:
+   * a healthy answer that never expires is an answer about nothing.
+   */
+  const v = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: serving(SHA_A, MAX_READING_AGE_HOURS + 0.5),
+  });
+  assert.equal(v.frozen, true);
+  assert.equal(v.freshness, "READING_EXPIRED");
+  assert.match(v.reason, /THE READING HAS EXPIRED/);
+  assert.match(v.remedy!, /integrity:check/);
+});
+
+test("POSITIVE CONTROL: a fresh reading about the served commit PERMITS the release", () => {
+  /*
+   * Without this the guard above proves only that something refuses, which a
+   * gate that refuses everything also does. Production serves the commit the
+   * reading was taken against, and the reading is an hour old: the release
+   * proceeds, and the reason says why rather than printing a bare OK.
+   */
+  const v = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: serving(SHA_A, 1),
+  });
+  assert.equal(v.frozen, false);
+  assert.equal(v.freshness, "CURRENT_FOR_PRODUCTION");
+  assert.equal(v.state, "CURRENT");
+  assert.equal(v.remedy, null);
+  assert.match(v.reason, /Release permitted/);
+  assert.match(explainFreeze(v), /release permitted/);
+});
+
+test("an unsupplied observation FREEZES rather than defaulting to permitted", () => {
+  /*
+   * FAIL-CLOSED BY OMISSION. A caller that never asks what production serves
+   * gets the strict answer, so there is no way to be permitted by leaving the
+   * question unasked — which is the only shape under which "there is no skip
+   * flag" survives a caller who would like one.
+   */
+  const v = evaluateReleaseFreeze({ record: HELD, candidateSha: SHA_C, changedPaths: APP_CHANGE });
+  assert.equal(v.frozen, true);
+  assert.equal(v.freshness, "NOT_ASSESSED");
+  assert.match(v.reason, /An unasked question is not a passing answer/);
+});
+
+test("a production that could not be ASKED is COULD NOT TELL, and it freezes", () => {
+  const v = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: serving(null, 1),
+  });
+  assert.equal(v.frozen, true);
+  assert.equal(v.freshness, "PRODUCTION_UNOBSERVABLE");
+  assert.match(v.reason, /RULING 24/);
+  // And it is NOT reported as a failure of production's schema.
+  assert.notEqual(v.state, "DEGRADED");
+});
+
+test("a docs-only change is outside release-freeze semantics however stale the reading", () => {
+  /*
+   * Rule 1 is unchanged, and the freshness clause may not reach through it.
+   * Paperwork is not punished for the database's condition, and a close-out
+   * commit that could not alter what a reader sees is not a release.
+   */
+  const v = evaluateReleaseFreeze({
+    record: { ...HELD, observedAt: "2026-01-01T00:00:00.000Z" },
+    candidateSha: SHA_C,
+    changedPaths: DOCS_ONLY,
+    production: serving(SHA_B, 5_000),
+  });
+  assert.equal(v.frozen, false);
+  assert.equal(v.productionChanging, false);
+  assert.equal(v.freshness, "NOT_APPLICABLE");
+});
+
+test("an abbreviated recorded SHA and the full served one are the SAME commit", () => {
+  /*
+   * THE FALSE-FREEZE DIRECTION, guarded explicitly. The committed record has
+   * carried an abbreviated sha since 2026-08-28 (`"71325247"`) and
+   * `GET /api/build` returns all forty characters. Strict equality would have
+   * reported PRODUCTION_MOVED for a commit that had not moved — a refusal for a
+   * reason that was never true, which is the direction that gets a gate switched
+   * off rather than fixed.
+   */
+  const abbreviated = SHA_A.slice(0, 8);
+  assert.equal(sameCommit(abbreviated, SHA_A), true);
+  assert.equal(sameCommit(SHA_A, SHA_B), false);
+  assert.equal(sameCommit("713252", SHA_A), false, "below git's own abbreviation floor, refuse to match");
+  assert.equal(sameCommit(null, SHA_A), false, "an absent sha matches nothing");
+
+  const v = evaluateReleaseFreeze({
+    record: { ...HELD, deployedSha: abbreviated },
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: serving(SHA_A, 1),
+  });
+  assert.equal(v.frozen, false, "the same commit written two ways is not production moving");
+  assert.equal(v.freshness, "CURRENT_FOR_PRODUCTION");
+});
+
+test("the freshness bound has no environment escape hatch and no skip flag", () => {
+  /*
+   * RULING 24's family, asserted rather than asserted-in-a-comment. A bound a
+   * caller can raise is not a bound, and an env var that turns the clause off
+   * would restore the exact hole it closes.
+   */
+  // `module` as an identifier is refused by @next/next/no-assign-module-variable.
+  const pureModule = readFileSync(join(ROOT, "lib", "ops", "production-integrity.ts"), "utf8");
+  const gate = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
+  const code = (t: string) => t.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+
+  assert.doesNotMatch(code(pureModule), /process\.env/, "the pure module reads no environment at all");
+  const ESCAPE = /process\.env\.[A-Z_]*(SKIP|FORCE|IGNORE|OVERRIDE|STALE|FRESH|MAX_AGE|BYPASS)[A-Z_]*/;
+  assert.doesNotMatch(code(gate), ESCAPE, "the gate reads no override for the freshness bound");
+  assert.doesNotMatch(code(gate), /--(skip|force|no-freeze|served)\b/, "no flag may state or skip the observation");
+  // Positive control: the detector fires on the shape it hunts.
+  assert.match("if (process.env.WTP_SKIP_FRESHNESS) return;", ESCAPE, "the escape-hatch detector matches nothing");
 });
 
 /** ---------------------- the unreadable-list rule ----------------------- */

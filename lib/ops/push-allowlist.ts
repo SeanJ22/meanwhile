@@ -192,6 +192,31 @@ export const PUSHER_PROFILES: readonly PusherProfile[] = [
     workflow: ".github/workflows/job-watch.yml",
     allow: [TRACKER_ROW_GRANT, ...TRACKER_VIEW_GRANTS],
   },
+  {
+    /*
+     * THE POST-DEPLOY OBSERVER (2026-08-29, NH273's trigger half).
+     *
+     * It writes exactly one file, and the narrowness is the point. The observer
+     * establishes what production actually serves, asks the existing schema gate
+     * whether production holds the migrations that commit ships, and records the
+     * answer. A grant any wider would let a workflow that runs unattended on
+     * every push to `main` write something a person never reviewed.
+     *
+     * `data/ops/` is a NON_SHIPPING_PREFIX (`lib/ops/deploy-paths.ts`), so the
+     * record costs no build and cannot start a deploy loop — the observer would
+     * otherwise trigger the very deploy it exists to observe, forever. That
+     * property was established deliberately on 2026-08-29 and this profile
+     * depends on it.
+     */
+    id: "post-deploy-integrity",
+    workflow: ".github/workflows/post-deploy-integrity.yml",
+    allow: [
+      {
+        path: "data/ops/production-integrity.json",
+        why: "the post-deploy integrity reading (NH273) — a non-shipping path, so the record costs no build",
+      },
+    ],
+  },
 ] as const;
 
 /**

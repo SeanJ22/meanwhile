@@ -30,6 +30,35 @@
  * This module is PURE. It reads no clock, no disk, no network and no
  * environment. Everything it needs is passed in, so every state in the model
  * can be constructed in a test rather than waited for in production.
+ *
+ * ## THE HOLE THIS FILE CARRIED UNTIL 2026-08-29, AND HOW IT IS CLOSED
+ *
+ * Rule 4 used to read, in full: *"STALE_HEALTHY does not freeze."* So a
+ * production-changing release could rely on a green reading about a DIFFERENT
+ * commit **forever**. The state was honest and the consequence was not: nothing
+ * in the mechanism ever expired a healthy answer, and an answer that never
+ * expires is an answer that stops being about anything.
+ *
+ * **THE QUESTION THAT WAS WRONG.** The first repair drafted here keyed the
+ * freeze on the CANDIDATE sha — freeze whenever the reading was taken against
+ * something other than the commit being released. That is unsatisfiable by
+ * construction: a POST-deploy reading against a candidate cannot exist until
+ * that candidate has deployed, and this gate runs BEFORE the deploy. Every
+ * production-changing release would be frozen, always, and an unsatisfiable
+ * gate is the strongest argument anyone will ever have for the skip flag this
+ * repository refuses to have. Recorded here so it is not re-proposed.
+ *
+ * **THE QUESTION THAT IS RIGHT, and it is a different one.** Before shipping
+ * more code on top of production: *do we know that production AS IT STANDS NOW
+ * is healthy, and did we learn it recently enough for it still to be true?*
+ * Both halves are answerable today. What production serves is OBSERVABLE with
+ * no credential — `GET /api/build` returns the deployed commit — and the
+ * reading carries its own `observedAt`. So the freeze is keyed on the SERVED
+ * sha and on the reading's AGE, and `STALE_HEALTHY` keeps its exact meaning:
+ * "held, but about a different commit than the one in question". All that
+ * changed is WHICH commit is in question, and that was the whole defect.
+ *
+ * The observation and the clock are INPUTS. This module still touches neither.
  */
 
 import { classifyDeploy } from "./deploy-paths.ts";
@@ -113,6 +142,28 @@ export const NEVER_CHECKED: IntegrityRecord = {
   gateExit: null,
 };
 
+/**
+ * Are these two strings the same commit?
+ *
+ * **PREFIX-TOLERANT, AND THAT IS NOT A CONVENIENCE.** The committed record has
+ * carried an ABBREVIATED sha since 2026-08-28 (`"71325247"`), and
+ * `GET /api/build` returns the full forty characters. Strict equality would
+ * therefore have reported PRODUCTION_MOVED for a commit that had not moved at
+ * all — a false freeze on the mechanism's first real use, which is the failure
+ * direction that gets a gate switched off rather than fixed.
+ *
+ * Seven characters is the floor because that is git's own default abbreviation
+ * and the shortest thing anyone here writes down. Below it, two unrelated
+ * commits genuinely can share a prefix, so a shorter string is refused as a
+ * match rather than guessed at.
+ */
+export function sameCommit(a: string | null, b: string | null): boolean {
+  if (a === null || b === null) return false;
+  if (a === b) return true;
+  if (a.length < 7 || b.length < 7) return false;
+  return a.startsWith(b) || b.startsWith(a);
+}
+
 /** ------------------------------------------------------- the evaluator */
 
 export interface IntegrityAssessment {
@@ -178,7 +229,7 @@ export function assessIntegrity(
     };
   }
 
-  if (candidateSha !== null && candidateSha !== observedSha) {
+  if (candidateSha !== null && !sameCommit(candidateSha, observedSha)) {
     return {
       state: "STALE_HEALTHY",
       failureClass: null,
@@ -202,6 +253,76 @@ export function assessIntegrity(
 
 /** ---------------------------------------------------------- the freeze */
 
+/**
+ * THE MAXIMUM AGE A HEALTHY READING MAY CARRY, and the reason for the number.
+ *
+ * Twenty-four hours is one full cycle of this repository's own daily
+ * orchestrated run (`lib/ops/refresh-cadence.ts`, RULING 124) — the fastest
+ * independent thing that touches production at all. It is also the MEASURED
+ * width of the window the 2026-08-28 schema drift hid in: migrations 0021 and
+ * 0022 deployed against a schema that stood at 20, and the only thing that ever
+ * asked was the daily tripwire, the next morning. A healthy reading older than
+ * one cycle has had an entire deploy window to stop being true with nothing
+ * looking.
+ *
+ * It is an EXPLICIT PARAMETER of the observation and nothing else. There is no
+ * environment variable, no flag, and no skip: an escape hatch on this bound
+ * would restore the exact hole it closes, because "stale forever" and "stale
+ * with a way to say it is fine" are the same gate.
+ */
+export const MAX_READING_AGE_HOURS = 24;
+
+/**
+ * What production actually serves, observed, plus the age of the reading.
+ *
+ * Both fields are MEASUREMENTS taken by the caller — `scripts/release-freeze-gate.mts`
+ * reads the clock and asks `GET /api/build`. Neither is inferred here, and this
+ * module still opens no socket and reads no clock.
+ */
+export interface ProductionObservation {
+  /**
+   * The commit production is serving right now. `null` means the observation
+   * FAILED — a refusal, a non-200, an unparseable body, or an `unknown` commit.
+   * It never means "production serves nothing".
+   */
+  readonly servedSha: string | null;
+  /** How it was observed, or why it could not be. Printed either way. */
+  readonly how: string;
+  /**
+   * Hours between the reading's `observedAt` and the caller's clock. `null` is
+   * the absence of a measurement — a reading with no time cannot be aged — and
+   * is treated as expired rather than as young.
+   */
+  readonly readingAgeHours: number | null;
+  /** The bound in force for this evaluation. Passed, never read from anywhere. */
+  readonly maxAgeHours: number;
+}
+
+/**
+ * Whether a HEALTHY reading still covers the production it was taken against.
+ *
+ * This is a SEPARATE axis from `IntegrityState`, deliberately. `STALE_HEALTHY`
+ * keeps its meaning untouched — the reading held, about another commit — and
+ * this says what follows from that for a release. Folding the two together
+ * would have meant repurposing an existing state, which is how a vocabulary
+ * stops being readable.
+ */
+export const FRESHNESS_VERDICTS = [
+  /** The reading is about the commit production serves, and it is inside the age bound. */
+  "CURRENT_FOR_PRODUCTION",
+  /** Production serves a commit the reading was not taken against. It moved under us. */
+  "PRODUCTION_MOVED",
+  /** The reading is older than the bound, or carries no time at all. */
+  "READING_EXPIRED",
+  /** Production could not be asked what it serves. Not a pass (RULING 24). */
+  "PRODUCTION_UNOBSERVABLE",
+  /** No observation was supplied at all, so freshness was never established. */
+  "NOT_ASSESSED",
+  /** Freshness does not arise: the change is not a release, or the reading is not HELD. */
+  "NOT_APPLICABLE",
+] as const;
+export type FreshnessVerdict = (typeof FRESHNESS_VERDICTS)[number];
+
 export interface FreezeVerdict {
   readonly frozen: boolean;
   /** Why the release is refused, or why it is permitted. Always stated. */
@@ -213,6 +334,12 @@ export interface FreezeVerdict {
   readonly touchesSchemaContract: boolean;
   /** What clears it, when frozen. Never a shrug. */
   readonly remedy: string | null;
+  /** Whether a healthy reading still covers what production serves. */
+  readonly freshness: FreshnessVerdict;
+  /** The commit production was observed to serve, when it could be observed. */
+  readonly servedSha: string | null;
+  /** The measured age of the reading, in hours. */
+  readonly readingAgeHours: number | null;
 }
 
 /**
@@ -260,15 +387,57 @@ export function touchesSchemaContract(changed: readonly string[] | null): boolea
  *     release that leaves the schema alone is permitted and reported as
  *     UNPROVEN — loudly, and never as green.
  *
- *  4. STALE_HEALTHY does not freeze. It is a real, honest state: the last thing
- *     we asked held. It simply may not be reported as CURRENT.
+ *  4. **A HEALTHY READING MUST STILL COVER THE PRODUCTION IT IS ABOUT.**
+ *     (Amended 2026-08-29. The old rule 4 read "STALE_HEALTHY does not freeze",
+ *     full stop, and that is the hole: a green answer about another commit
+ *     blessed every later release forever.)
+ *
+ *     For a production-changing release whose last reading HELD, exactly one of
+ *     these is true, and each is named rather than defaulted:
+ *
+ *       - no observation was supplied            -> NOT_ASSESSED, FROZEN
+ *       - production could not be asked          -> PRODUCTION_UNOBSERVABLE, FROZEN
+ *       - production serves a different commit   -> PRODUCTION_MOVED, FROZEN
+ *       - the reading is older than the bound    -> READING_EXPIRED, FROZEN
+ *       - otherwise                              -> CURRENT_FOR_PRODUCTION, permitted
+ *
+ *     **NOT_ASSESSED FREEZES, and that direction is the design.** A caller that
+ *     omits the observation gets the strict answer, never the lenient one, so
+ *     there is no way to be permitted by leaving the question unasked. That is
+ *     the only shape under which "there is no skip flag" survives contact with
+ *     a caller who would like one.
+ *
+ *     **PRODUCTION_UNOBSERVABLE FREEZES** for the reason the whole file exists:
+ *     "we could not ask production anything" is the blindness of 2026-08-28,
+ *     and a network refusal that read as green would reintroduce it wholesale
+ *     (RULING 24).
+ *
+ *     Rule 4 reaches ONLY readings that HELD. A reading that is DEGRADED,
+ *     UNKNOWN or CREDENTIAL_MISSING has no health to go stale, and rules 2 and 3
+ *     are the author's decisions about those. Widening the freeze into them
+ *     through the back door of a freshness clause would be a different ruling
+ *     wearing this one's clothes.
  */
 export function evaluateReleaseFreeze(input: {
   record: IntegrityRecord;
   candidateSha: string | null;
   changedPaths: readonly string[] | null;
+  /**
+   * What production serves and how old the reading is. OMITTING IT IS NOT
+   * NEUTRAL — see rule 4: an unsupplied observation freezes a
+   * production-changing release on a healthy reading.
+   */
+  production?: ProductionObservation | null;
 }): FreezeVerdict {
-  const assessment = assessIntegrity(input.record, input.candidateSha);
+  const observation = input.production ?? null;
+  /*
+   * THE SUBJECT OF THE ASSESSMENT IS WHAT PRODUCTION SERVES, not the candidate.
+   * The candidate is only the fallback for the case where production could not
+   * be observed at all — and that case is frozen below on its own terms, so the
+   * fallback never decides anything by itself.
+   */
+  const subjectSha = observation?.servedSha ?? input.candidateSha;
+  const assessment = assessIntegrity(input.record, subjectSha);
   const deploy = classifyDeploy(input.changedPaths);
   const productionChanging = deploy.verdict !== "cancel";
   const schema = touchesSchemaContract(input.changedPaths);
@@ -277,12 +446,15 @@ export function evaluateReleaseFreeze(input: {
     state: assessment.state,
     productionChanging,
     touchesSchemaContract: schema,
+    servedSha: observation?.servedSha ?? null,
+    readingAgeHours: observation?.readingAgeHours ?? null,
   };
 
   if (!productionChanging) {
     return {
       ...base,
       frozen: false,
+      freshness: "NOT_APPLICABLE" as const,
       reason:
         `This change cannot alter what production serves (${deploy.reason}), so it is not a ` +
         `production release and the freeze does not reach it. Integrity is ${assessment.state}.`,
@@ -294,6 +466,7 @@ export function evaluateReleaseFreeze(input: {
     return {
       ...base,
       frozen: true,
+      freshness: "NOT_APPLICABLE" as const,
       reason:
         `PRODUCTION INTEGRITY IS DEGRADED and this change is production-changing. ${assessment.reason}`,
       remedy:
@@ -307,6 +480,7 @@ export function evaluateReleaseFreeze(input: {
     return {
       ...base,
       frozen: true,
+      freshness: "NOT_APPLICABLE" as const,
       reason:
         `This change moves the schema contract and production integrity is ${assessment.state}. ` +
         `${assessment.reason}`,
@@ -319,6 +493,90 @@ export function evaluateReleaseFreeze(input: {
     };
   }
 
+  /* ---------------- rule 4: the freshness clause (2026-08-29) ------------- */
+
+  const healthy =
+    input.record.observed === "HELD" &&
+    (assessment.state === "CURRENT" || assessment.state === "STALE_HEALTHY");
+
+  if (healthy) {
+    const reread =
+      "Take a post-deploy reading against the commit production actually serves:\n" +
+      "  pnpm integrity:check --sha=<the sha GET https://sparkwtp.netlify.app/api/build returns> --write\n" +
+      "or let the observer do it — `.github/workflows/post-deploy-integrity.yml` runs\n" +
+      "`pnpm exec tsx scripts/post-deploy-observer.mts` on every push to main and records the\n" +
+      "reading itself. There is no skip flag and no environment override for this bound.";
+
+    if (observation === null) {
+      return {
+        ...base,
+        frozen: true,
+        freshness: "NOT_ASSESSED" as const,
+        reason:
+          "The last reading HELD, but nothing established whether it still covers the production " +
+          "this release would ship on top of. An unasked question is not a passing answer, so a " +
+          "production-changing release is refused rather than permitted on an unmeasured reading.",
+        remedy: reread,
+      };
+    }
+
+    if (observation.servedSha === null) {
+      return {
+        ...base,
+        frozen: true,
+        freshness: "PRODUCTION_UNOBSERVABLE" as const,
+        reason:
+          "PRODUCTION COULD NOT BE ASKED WHAT IT SERVES, so nothing can be said about whether the " +
+          `last healthy reading still applies (${observation.how}). This is COULD NOT TELL, and a ` +
+          "check that cannot reach its subject must never print like one that did (RULING 24).",
+        remedy: reread,
+      };
+    }
+
+    if (!sameCommit(input.record.deployedSha, observation.servedSha)) {
+      return {
+        ...base,
+        frozen: true,
+        freshness: "PRODUCTION_MOVED" as const,
+        reason:
+          `PRODUCTION MOVED UNDER THE LAST READING. It serves ${observation.servedSha}, and the ` +
+          `reading was taken against ${input.record.deployedSha ?? "no commit"} at ` +
+          `${input.record.observedAt ?? "an unrecorded time"}. A green answer about the commit ` +
+          "production USED to serve is not an answer about the one it serves now.",
+        remedy: reread,
+      };
+    }
+
+    if (observation.readingAgeHours === null || observation.readingAgeHours > observation.maxAgeHours) {
+      const age =
+        observation.readingAgeHours === null
+          ? "carries no usable time, so it cannot be aged at all"
+          : `is ${observation.readingAgeHours.toFixed(1)} hours old`;
+      return {
+        ...base,
+        frozen: true,
+        freshness: "READING_EXPIRED" as const,
+        reason:
+          `THE READING HAS EXPIRED. It ${age}, and the bound is ${observation.maxAgeHours} hours — ` +
+          "one full cycle of the daily orchestrated run, which is the window the 2026-08-28 schema " +
+          "drift hid in. A healthy answer that never expires is an answer about nothing.",
+        remedy: reread,
+      };
+    }
+
+    return {
+      ...base,
+      frozen: false,
+      freshness: "CURRENT_FOR_PRODUCTION" as const,
+      reason:
+        `Release permitted. The last reading held against ${input.record.deployedSha}, which is what ` +
+        `production serves right now (${observation.how}), and it is ` +
+        `${(observation.readingAgeHours ?? 0).toFixed(1)} hours old against a bound of ` +
+        `${observation.maxAgeHours}.`,
+      remedy: null,
+    };
+  }
+
   const caveat =
     assessment.state === "CURRENT"
       ? ""
@@ -327,6 +585,7 @@ export function evaluateReleaseFreeze(input: {
   return {
     ...base,
     frozen: false,
+    freshness: "NOT_APPLICABLE" as const,
     reason: `Release permitted.${caveat}`,
     remedy: null,
   };
@@ -345,6 +604,9 @@ export function explainFreeze(v: FreezeVerdict): string {
     `${head} — production integrity: ${v.state}`,
     `  production-changing: ${v.productionChanging}`,
     `  moves schema contract: ${v.touchesSchemaContract}`,
+    `  freshness: ${v.freshness}` +
+      (v.servedSha ? ` — production serves ${v.servedSha}` : " — production's served commit was NOT observed") +
+      (v.readingAgeHours === null ? "" : `, reading ${v.readingAgeHours.toFixed(1)}h old`),
     `  ${v.reason}`,
   ];
   if (v.remedy) lines.push(`  REMEDY: ${v.remedy}`);

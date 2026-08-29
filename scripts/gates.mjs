@@ -47,7 +47,9 @@ import { rmSync } from "node:fs";
  *
  *  - The CHEAP, HIGH-SIGNAL gates go first. Lint is 25 seconds and it is the
  *    one that was missing; a session that has broken it learns so before
- *    spending ten minutes on two builds.
+ *    spending ten minutes on two builds. The three canonical-state checkers
+ *    added on 2026-08-29 are cheaper still — 3.8s, 1.1s and 1.1s measured —
+ *    and sit immediately behind the type check for that reason.
  *  - `test:bundle` scans the BUILT client chunks, so it must follow the
  *    default build that produces them. The workflow says this in as many
  *    words: with no `.next/static` it reports CANNOT RUN and skips.
@@ -67,6 +69,82 @@ const GATES = [
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm exec tsc --noEmit",
     why: "a fresh-checkout type check, never behind a build",
+  },
+  /*
+   * THE THREE CANONICAL AUTHORITIES, MADE EXPLICIT IN THE DOOR (2026-08-29).
+   *
+   * `governance:check`, `orchestration:check` and `method:check` were enforced
+   * only INDIRECTLY, by tests that assert things about their subject matter.
+   * That is not the same as running them, and the difference is the RO04 shape
+   * exactly: a session can run every gate it knows about, report all of them
+   * green truthfully, and merge a ledger whose generated views are stale.
+   *
+   * EACH WAS CLASSIFIED BY READING IT, not by assuming from its name:
+   *
+   *   pnpm governance:check    scripts/governance-check.mts       PURE CHECKER.
+   *     Loads the ledger, validates it, and regenerates every view INTO A
+   *     TEMPORARY COPY of the tree (`mkdtempSync` + `cpSync`) to compare byte
+   *     for byte. Its own comment states why: "a validator that repairs what it
+   *     measures cannot report a failure." Nothing under the repository is
+   *     written. Exits 1 on any structural issue or stale view.
+   *
+   *   pnpm orchestration:check scripts/orchestration-check.mts    PURE CHECKER.
+   *     Reads `data/workstate/orchestration/*.json`, classifies each plan, and
+   *     prints. No `writeFileSync`, no `mkdir`, no git mutation — the only
+   *     child process it can spawn is `git for-each-ref` / `git worktree list`
+   *     under `--closeout`. A repository with no plan on disk PASSES, so it
+   *     costs a single-workstream session nothing.
+   *
+   *   pnpm method:check        scripts/method-check.mts           PURE CHECKER.
+   *     Reads `data/method/knowledge.json` and `conclusions.json`, validates,
+   *     prints, exits 1 on any issue. It opens no writer at all.
+   *
+   * AND THE ONES DELIBERATELY NOT WIRED, NAMED SO THE OMISSION IS NOT READ AS
+   * AN OVERSIGHT:
+   *
+   *   pnpm governance:compile  — a GENERATOR. It writes the views this checker
+   *     compares against. Running it as a gate would have CI repair the very
+   *     staleness the gate exists to catch, and the run would go green having
+   *     destroyed its own evidence (RULING 92, RULING 102).
+   *   pnpm governance:accept / governance:import — ledger WRITERS.
+   *   pnpm orchestration:closeout — the SAME script with `--closeout`. It is
+   *     not a disk writer, and it is still refused here: it reconciles a plan
+   *     against artifacts only the running session can observe, it requires
+   *     `--plan`, and fed the empty artifact list CI would hand it, it
+   *     manufactures "unaccounted work" findings about a session that is not
+   *     running. A gate that invents findings is worse than one that is absent.
+   *   pnpm method:ingest — rebuilds the method store from the legacy manifest.
+   *     It once took the store from 88 routes at v27 to 62 at v0 while
+   *     reporting success. It is a writer, and a destructive one.
+   *   pnpm workstream:status / :close, pnpm tracker:* — status and close-out
+   *     WRITERS. Running one in CI to make a question "covered" would have the
+   *     gate mutate canonical work state on every pull request.
+   *
+   * THEY GO HERE — third, fourth and fifth, ahead of the browser assert and the
+   * suite — because they are the cheapest high-signal checks in the set.
+   * Measured on this machine: governance:check 3.8s cold and 2.1s warm,
+   * orchestration:check 1.1s, method:check 1.1s — against `pnpm test`'s suite
+   * and two ~5-minute builds. Six seconds for all three.
+   * A session that has left a generated view stale learns it six seconds in
+   * rather than ten minutes in.
+   */
+  {
+    id: "governance:check",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm governance:check",
+    why: "the ledger is the canonical store, and a generated view that disagrees with its generator is not law (RULING 92, RULING 102)",
+  },
+  {
+    id: "orchestration:check",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm orchestration:check",
+    why: "independent executable work serialized with nothing checkable behind it is a process defect (RULING 190)",
+  },
+  {
+    id: "method:check",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm method:check",
+    why: "the cumulative route knowledge is what every later jurisdiction inherits; a broken store reads as a project that knows nothing",
   },
   {
     id: "assert:browser",

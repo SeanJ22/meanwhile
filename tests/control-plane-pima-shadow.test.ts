@@ -72,6 +72,18 @@ function walk(
   disposition: Parameters<typeof disposeRoute>[2]["disposition"],
   opts: { artifacts?: string[]; transport?: "REACHABLE" | "CHALLENGED"; permission?: "ALLOWED" | "DISALLOWED"; rows?: number } = {},
 ): RouteTask {
+  /*
+   * THE ARTIFACTS ARE RECORDED ON THE ATTEMPT BEFORE THEY ARE CITED.
+   *
+   * This helper used to end the Attempt with no artifacts and then hand
+   * `disposeRoute` a disposition citing `art-<routeId>` anyway — evidence the
+   * Attempt presenting it had never recorded. `disposeRoute` now refuses that
+   * by name, and it is right to: it is how Attempt A launders Attempt B's
+   * artifact into a public-record conclusion. Hoisting the ids and closing the
+   * Attempt with them models the real sequence a worker follows — preserve the
+   * bytes, then conclude from them — so the fixture stops depending on a hole.
+   */
+  const artifactIds = opts.artifacts ?? ["art-" + task.routeId];
   const lease = claim(task.id, `w-${task.routeId}`, T0, TTL, null);
   const attempt = endAttempt(
     beginAttempt({
@@ -85,12 +97,13 @@ function walk(
     }),
     "COMPLETED",
     T1,
+    { artifactIds },
   );
   return disposeRoute(task, attempt, {
     disposition,
     attemptId: attempt.id,
     at: T1,
-    artifactIds: opts.artifacts ?? ["art-" + task.routeId],
+    artifactIds,
     observation: {
       rawCount: opts.rows ?? 0,
       normalizedCount: opts.rows ?? 0,

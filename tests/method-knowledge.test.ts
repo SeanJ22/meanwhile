@@ -1,9 +1,14 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+import {
+  explainPortability,
+  planPortabilityPromotions,
+  runPortabilityPromotion,
+} from "../lib/method/promote-portability.ts";
 import {
   applyReopenings,
   emptyKnowledge,
@@ -391,4 +396,161 @@ test("the committed method store validates and preserves the legacy manifest", (
     k.routes.every((r) => r.applicability),
     "every persisted route carries applicability state",
   );
+});
+
+/* ------------------------------------------------- THE PORTABILITY PROMOTION JOB */
+
+/**
+ * **A DERIVATION NOBODY EXECUTES IS A DERIVATION THE STORE DOES NOT HAVE.**
+ * (2026-08-29.)
+ *
+ * `earnedPortability()` was correct and unexecuted from the day it was written.
+ * These controls cover what turning it into a job adds — determinism,
+ * idempotence, and a refusal that NAMES an over-promotion — and, first, that the
+ * conservative rule underneath it did not move.
+ */
+
+function walked(id: string, jurisdictions: readonly string[]): Omit<MethodRoute, "learnedAtVersion"> {
+  return route(id, {
+    outcomes: jurisdictions.map((j, i) => ({
+      jurisdiction: j,
+      walkedOn: `2026-08-2${i}`,
+      rows: 3,
+      outcome: "YIELDED" as const,
+    })),
+  });
+}
+
+test("NO OVER-PROMOTION — one success in one jurisdiction earns nothing at all", () => {
+  let k = emptyKnowledge();
+  k = learnRoute(k, walked("one-state", ["nh"]), "2026-08-29").knowledge;
+  k = learnRoute(k, walked("two-states", ["nh", "az"]), "2026-08-29").knowledge;
+  k = learnRoute(k, walked("three-states", ["nh", "az", "nj"]), "2026-08-29").knowledge;
+
+  const plan = planPortabilityPromotions(k);
+  const by = new Map(plan.promotions.map((p) => [p.id, p.to]));
+
+  assert.equal(by.get("one-state"), undefined, "one success may never earn national or state-wide authority");
+  assert.equal(by.get("two-states"), "STATE_FAMILY");
+  assert.equal(by.get("three-states"), "NATIONWIDE");
+
+  // And the one that earned nothing is still UNKNOWN, which still INHERITS
+  // everywhere — the point of RULING 178 is that it keeps being offered.
+  const after = plan.knowledge.routes.find((r) => r.id === "one-state");
+  assert.equal(after?.applicability.portability, "UNKNOWN");
+  assert.equal(appliesTo(after!.applicability, { state: "az" }).applies, true);
+  assert.equal(appliesTo(after!.applicability, { state: "az" }).speculative, true);
+
+  // The explanation is available for the NON-promotion, which is the answer for
+  // most of the store and the one most often mistaken for a bug.
+  const why = explainPortability(k, "one-state");
+  assert.equal(why?.changed, false);
+  assert.match(why!.because, /one success does not prove it fails elsewhere/);
+});
+
+test("the job is DETERMINISTIC and IDEMPOTENT — a second run moves nothing", () => {
+  let k = emptyKnowledge();
+  for (const id of ["z-route", "a-route", "m-route"]) {
+    k = learnRoute(k, walked(id, ["nh", "az", "nj"]), "2026-08-29").knowledge;
+  }
+
+  const first = planPortabilityPromotions(k);
+  assert.deepEqual(
+    first.promotions.map((p) => p.id),
+    ["a-route", "m-route", "z-route"],
+    "the plan must be ordered by route id, never by iteration order",
+  );
+  assert.deepEqual(planPortabilityPromotions(k), first, "the same input produced a different plan");
+
+  const second = planPortabilityPromotions(first.knowledge);
+  assert.deepEqual(second.promotions, [], "running the job twice promoted something twice");
+  assert.equal(second.knowledge, first.knowledge, "an idempotent run must not rebuild the store");
+  assert.equal(second.floor.denominator, 3, "the denominator is the population, never the matches");
+  assert.equal(second.floor.matched, 0);
+});
+
+test("PLANTED: an over-promoted route REFUSES the run and is NAMED", () => {
+  // A route claiming NATIONWIDE on one state's evidence. `applyEarnedPortability`
+  // does not MOVE it — the earned class is UNKNOWN and narrowing on no declared
+  // jurisdictional failure is refused — so a job that only looked at its own
+  // moves would write the store and leave the over-claim standing, silently.
+  let k = emptyKnowledge();
+  k = learnRoute(
+    k,
+    route("over-claimer", {
+      applicability: { ...unknownApplicability("claims too much"), portability: "NATIONWIDE" },
+      outcomes: [{ jurisdiction: "nh", walkedOn: "2026-08-29", rows: 1, outcome: "YIELDED" }],
+    }),
+    "2026-08-29",
+  ).knowledge;
+
+  const plan = planPortabilityPromotions(k);
+  assert.equal(plan.refused.length, 1, "the over-claim was neither promoted nor refused — it was ignored");
+  assert.equal(plan.refused[0].id, "over-claimer");
+  assert.deepEqual(plan.refused[0].provenStates, ["nh"]);
+  assert.match(plan.refused[0].why, /RULING 178/);
+  assert.match(plan.refused[0].why, /REFUSED/);
+
+  // The negative control: the same store without the over-claim refuses nothing.
+  let clean = emptyKnowledge();
+  clean = learnRoute(clean, walked("honest", ["nh"]), "2026-08-29").knowledge;
+  assert.deepEqual(planPortabilityPromotions(clean).refused, []);
+});
+
+test("the job's DEFAULT is a dry run — the store is not written without --write", () => {
+  const dir = join(ROOT, ".scratch", "method-promote-dry");
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+  const storePath = join(dir, "knowledge.json");
+
+  let k = emptyKnowledge();
+  k = learnRoute(k, walked("dry-run-route", ["nh", "az", "nj"]), "2026-08-29").knowledge;
+  writeFileSync(storePath, `${JSON.stringify(k, null, 2)}\n`, "utf8");
+  const before = readFileSync(storePath, "utf8");
+
+  const dry = runPortabilityPromotion(storePath, { stamp: "2026-08-29" });
+  assert.equal(dry.written, false);
+  assert.equal(dry.plan.promotions.length, 1);
+  assert.ok(dry.lines.some((l) => /DRY RUN/.test(l)), "a dry run must say so");
+  assert.equal(readFileSync(storePath, "utf8"), before, "the default run wrote the store");
+
+  // With --write it writes, through the governed path, and a re-run is a no-op.
+  const wrote = runPortabilityPromotion(storePath, { stamp: "2026-08-29", write: true });
+  assert.equal(wrote.written, true);
+  assert.notEqual(readFileSync(storePath, "utf8"), before);
+  const afterFirstWrite = readFileSync(storePath, "utf8");
+
+  const again = runPortabilityPromotion(storePath, { stamp: "2026-08-30", write: true });
+  assert.equal(again.written, false, "an idempotent job must not write on a second run");
+  assert.equal(
+    readFileSync(storePath, "utf8"),
+    afterFirstWrite,
+    "the second run changed the bytes — updatedOn churn is not idempotence",
+  );
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("the promotion job refuses to write a store it would over-promote", () => {
+  const dir = join(ROOT, ".scratch", "method-promote-refuse");
+  rmSync(dir, { recursive: true, force: true });
+  mkdirSync(dir, { recursive: true });
+  const storePath = join(dir, "knowledge.json");
+
+  let k = emptyKnowledge();
+  k = learnRoute(
+    k,
+    route("refuse-me", {
+      applicability: { ...unknownApplicability("claims too much"), portability: "STATE_FAMILY" },
+      outcomes: [{ jurisdiction: "nh", walkedOn: "2026-08-29", rows: 1, outcome: "YIELDED" }],
+    }),
+    "2026-08-29",
+  ).knowledge;
+  writeFileSync(storePath, `${JSON.stringify(k, null, 2)}\n`, "utf8");
+  const before = readFileSync(storePath, "utf8");
+
+  const run = runPortabilityPromotion(storePath, { stamp: "2026-08-29", write: true });
+  assert.equal(run.written, false);
+  assert.match(run.refusal ?? "", /REFUSED/);
+  assert.equal(readFileSync(storePath, "utf8"), before, "the store changed during a refusal");
+  rmSync(dir, { recursive: true, force: true });
 });

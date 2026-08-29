@@ -114,6 +114,31 @@ export interface ClaimProvenance {
   vendors: string[];
   /** ISO date, from `pnpm stamp`. An agent does not know today's date. */
   observedOn: string;
+  /**
+   * **THE ATTEMPT THAT PRODUCED THE OBSERVATION.** (2026-08-29.)
+   *
+   * `artifact` is a URL, a record reference or a path — a STRING a person
+   * wrote. It is enough for a human to go and look, and it is not a join: two
+   * artifacts can carry the same URL, a URL can be rewritten, and nothing in it
+   * says which execution fetched it, under which method version, at which cost,
+   * or whether that execution ever reached a completion boundary. An audit that
+   * has only the prose has to trust the prose.
+   *
+   * With this field the chain is mechanical and every hop is an identifier:
+   *
+   *     claim -> provenance.attemptId -> Attempt.routeTaskId -> RouteTask
+   *           -> RouteTask.disposition.artifactIds -> the vault
+   *
+   * `auditTrailFor()` below walks exactly that and refuses to substitute
+   * `artifact` for any hop of it.
+   *
+   * **OPTIONAL, and it stays optional.** 116 routes and their claims predate
+   * the control plane, and back-filling an Attempt id for an execution that had
+   * no Attempt would be inventing a provenance record — the precise failure the
+   * provenance requirement exists to prevent. An absent `attemptId` is reported
+   * as a NAMED GAP by the traversal, never silently repaired.
+   */
+  attemptId?: string;
 }
 
 /**
@@ -552,6 +577,21 @@ export function validateClaims(k: ClaimStore): ClaimIssue[] {
         if (!Array.isArray(p.jurisdictions) || p.jurisdictions.length === 0) missing.push("jurisdictions");
         if (!Array.isArray(p.vendors)) missing.push("vendors");
         if (!isIsoDate(p.observedOn)) missing.push("observedOn");
+        /*
+         * `attemptId` is OPTIONAL — omitting it is the honest state of every
+         * claim written before the control plane existed. What is refused is a
+         * PRESENT one that is blank, which reads to a traversal as a real join
+         * key and resolves to nothing. Declaring the key is a promise the audit
+         * chain can be walked; an empty string breaks it silently.
+         */
+        if (p.attemptId !== undefined && !nonEmpty(p.attemptId)) {
+          bad(
+            claim.id,
+            "claim-provenance-attempt-blank",
+            "provenance.attemptId is present and empty — declare the Attempt that produced the " +
+              "observation, or omit the field so the traversal reports the gap by name",
+          );
+        }
       }
       if (missing.length > 0) {
         bad(
@@ -631,6 +671,230 @@ export function validateClaims(k: ClaimStore): ClaimIssue[] {
   }
 
   return out;
+}
+
+/* ------------------------------------------------------------------- THE AUDIT JOIN */
+
+/**
+ * The minimum this module needs from a control-plane `Attempt`.
+ *
+ * Declared structurally for the same reason `ClaimStore` is: the dependency
+ * runs ONE WAY. `lib/control-plane/preflight.ts` already imports the method
+ * store, so a method module importing the control plane back would close a
+ * package-level loop for the sake of two field names. The real `Attempt` in
+ * `lib/control-plane/attempt.ts` satisfies this by being what it already is,
+ * and `tests/method-claims.test.ts` passes a real one in to prove it.
+ */
+export interface AuditableAttempt {
+  readonly id: string;
+  readonly routeTaskId: string;
+  readonly artifactIds: readonly string[];
+  /** The method-store version this Attempt inherited. An audit needs it. */
+  readonly methodVersion?: number;
+}
+
+/** The minimum this module needs from a control-plane `RouteTask`. */
+export interface AuditableRouteTask {
+  readonly id: string;
+  readonly routeId: string;
+  readonly disposition: { readonly artifactIds: readonly string[] } | null;
+}
+
+/** Every hop of the chain, named, so a broken one says WHICH hop broke. */
+export const AUDIT_HOPS = [
+  "CLAIM",
+  "METHOD_ASSERTION_ROUTE",
+  "ATTEMPT",
+  "ROUTE_TASK",
+  "ARTIFACTS",
+] as const;
+export type AuditHop = (typeof AUDIT_HOPS)[number];
+
+export interface AuditTrail {
+  readonly claimId: string;
+  /** True only when every hop resolved by IDENTIFIER. */
+  readonly complete: boolean;
+  /** The hops that resolved, in order. */
+  readonly resolved: readonly AuditHop[];
+  /** The route the assertion is attached to. */
+  readonly routeId: string | null;
+  /** The route id the provenance says produced the observation. */
+  readonly observedViaRouteId: string | null;
+  readonly attemptId: string | null;
+  readonly routeTaskId: string | null;
+  readonly artifactIds: readonly string[];
+  /**
+   * The prose reference, CARRIED BUT NEVER JOINED ON. It is here so a human can
+   * open it, and it is named in a way no traversal can mistake for a key.
+   */
+  readonly proseArtifactNotAJoin: string | null;
+  /** Where the chain stopped, by name. Empty when `complete` is true. */
+  readonly gaps: readonly string[];
+  readonly why: string;
+}
+
+/**
+ * **WALK CLAIM -> ASSERTION -> ATTEMPT -> ROUTETASK -> ARTIFACTS, ON IDENTIFIERS.**
+ * (2026-08-29.)
+ *
+ * A later session inherits a coverage claim or a derived conclusion as a reason
+ * to stop looking. The only defensible ground for that is being able to get back
+ * to the bytes that were actually fetched — mechanically, without trusting the
+ * sentence that says where they came from.
+ *
+ * Before `provenance.attemptId` existed, the only link from a claim to evidence
+ * was `provenance.artifact`: a URL somebody typed. A URL is not a join. It does
+ * not identify an execution, it does not say whether that execution reached a
+ * completion boundary, and two different fetches of the same URL on the same day
+ * are indistinguishable in it. So an "audit" over prose is a re-reading of the
+ * claim, which is what the Pima case already proved insufficient.
+ *
+ * This function refuses to substitute the prose for any hop. When a hop cannot
+ * be made it stops and NAMES which one — `attemptId` absent, Attempt unknown,
+ * RouteTask unknown, no artifacts recorded — because a partial chain reported as
+ * an audit is worse than no audit at all (RULING 100).
+ *
+ * The `routeId` cross-check is deliberate: the RouteTask the Attempt belongs to
+ * must name the same route the provenance said produced the observation. Two
+ * identifiers that both resolve and disagree is a defect the chain would
+ * otherwise walk straight past.
+ */
+export function auditTrailFor(
+  k: ClaimStore,
+  claimId: string,
+  attempts: readonly AuditableAttempt[],
+  tasks: readonly AuditableRouteTask[],
+): AuditTrail {
+  const resolved: AuditHop[] = [];
+  const gaps: string[] = [];
+  const empty = {
+    claimId,
+    complete: false,
+    resolved: [] as AuditHop[],
+    routeId: null,
+    observedViaRouteId: null,
+    attemptId: null,
+    routeTaskId: null,
+    artifactIds: [] as string[],
+    proseArtifactNotAJoin: null,
+    gaps,
+    why: "",
+  };
+
+  const located = findClaim(k, claimId);
+  if (!located) {
+    return { ...empty, gaps: [`CLAIM: project knowledge holds no claim ${claimId}`], why: `no claim ${claimId}` };
+  }
+  resolved.push("CLAIM");
+
+  const { routeId, claim } = located;
+  const prose = claim.provenance?.artifact ?? null;
+  const observedVia = claim.provenance?.observedVia ?? null;
+  if (observedVia) resolved.push("METHOD_ASSERTION_ROUTE");
+  else gaps.push("METHOD_ASSERTION_ROUTE: the claim carries no provenance.observedVia route id");
+
+  const attemptId = claim.provenance?.attemptId ?? null;
+  if (!attemptId) {
+    gaps.push(
+      "ATTEMPT: provenance.attemptId is absent — this claim predates attempt-bound provenance, " +
+        "so the ONLY link to evidence is the prose artifact string, and a prose reference is not a join",
+    );
+    return {
+      ...empty,
+      resolved,
+      routeId,
+      observedViaRouteId: observedVia,
+      proseArtifactNotAJoin: prose,
+      gaps,
+      why: `${claimId} cannot be audited by identifier; the chain stops at ATTEMPT`,
+    };
+  }
+
+  const attempt = attempts.find((a) => a.id === attemptId) ?? null;
+  if (!attempt) {
+    gaps.push(`ATTEMPT: provenance names attempt ${attemptId}, which the control plane does not hold`);
+    return {
+      ...empty,
+      resolved,
+      routeId,
+      observedViaRouteId: observedVia,
+      attemptId,
+      proseArtifactNotAJoin: prose,
+      gaps,
+      why: `${claimId} names an Attempt nobody can produce`,
+    };
+  }
+  resolved.push("ATTEMPT");
+
+  const task = tasks.find((t) => t.id === attempt.routeTaskId) ?? null;
+  if (!task) {
+    gaps.push(
+      `ROUTE_TASK: attempt ${attemptId} names RouteTask ${attempt.routeTaskId}, which the control plane does not hold`,
+    );
+    return {
+      ...empty,
+      resolved,
+      routeId,
+      observedViaRouteId: observedVia,
+      attemptId,
+      routeTaskId: attempt.routeTaskId,
+      proseArtifactNotAJoin: prose,
+      gaps,
+      why: `${claimId} reaches an Attempt whose RouteTask is missing`,
+    };
+  }
+  resolved.push("ROUTE_TASK");
+
+  if (observedVia && task.routeId !== observedVia) {
+    gaps.push(
+      `ROUTE_TASK: provenance.observedVia says ${observedVia} but RouteTask ${task.id} walked ` +
+        `${task.routeId} — two identifiers that both resolve and disagree`,
+    );
+  }
+
+  // Artifacts from the Attempt AND from the disposition it wrote. An Attempt
+  // preserves artifacts even when it aborts, so the union is the honest set.
+  const artifactIds = [
+    ...new Set([...attempt.artifactIds, ...(task.disposition?.artifactIds ?? [])]),
+  ];
+  if (artifactIds.length === 0) {
+    gaps.push(
+      `ARTIFACTS: neither attempt ${attemptId} nor RouteTask ${task.id} recorded an artifact id — ` +
+        "there is nothing to re-read, and the claim rests on a report of a fetch rather than the fetch",
+    );
+  } else {
+    resolved.push("ARTIFACTS");
+  }
+
+  const complete = gaps.length === 0;
+  return {
+    claimId,
+    complete,
+    resolved,
+    routeId,
+    observedViaRouteId: observedVia,
+    attemptId,
+    routeTaskId: task.id,
+    artifactIds,
+    proseArtifactNotAJoin: prose,
+    gaps,
+    why: complete
+      ? `${claimId} -> ${observedVia} -> ${attemptId} -> ${task.id} -> ${artifactIds.length} artifact(s), ` +
+        "every hop joined on an identifier and none on the prose reference"
+      : `${claimId} is not auditable end to end: ${gaps.length} hop(s) unresolved`,
+  };
+}
+
+/** Every claim whose evidence chain is walkable, and every one that is not. */
+export function auditCoverage(
+  k: ClaimStore,
+  attempts: readonly AuditableAttempt[],
+  tasks: readonly AuditableRouteTask[],
+): { total: number; auditable: number; trails: AuditTrail[] } {
+  const trails = allClaims(k)
+    .filter(({ claim }) => requiresProvenance(claim.class))
+    .map(({ claim }) => auditTrailFor(k, claim.id, attempts, tasks));
+  return { total: trails.length, auditable: trails.filter((t) => t.complete).length, trails };
 }
 
 /* --------------------------------------------------------------------- MUTATION */

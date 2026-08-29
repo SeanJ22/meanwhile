@@ -23,9 +23,10 @@ import {
   reclaim,
   type RouteDisposition,
 } from "../lib/control-plane/route-task.ts";
-import { evaluateCompletion, type CompletionSnapshot } from "../lib/control-plane/completion.ts";
+import { evaluateCompletion } from "../lib/control-plane/completion.ts";
 import { createWorkItem } from "../lib/control-plane/work-item.ts";
 import { routeTaskId, workItemId } from "../lib/control-plane/ids.ts";
+import { completionSnapshot, T0, T1, T2 } from "./control-plane-fixtures.ts";
 
 /**
  * THE SEEDED FAILURE SUITE — execution layer.
@@ -36,9 +37,6 @@ import { routeTaskId, workItemId } from "../lib/control-plane/ids.ts";
  * property that matters when a worker is wrong.
  */
 
-const T0 = "2026-08-28T00:00:00.000Z";
-const T1 = "2026-08-28T00:05:00.000Z";
-const T2 = "2026-08-28T00:30:00.000Z";
 const TTL = 10 * 60 * 1000;
 
 const WORKER: WorkerRef = {
@@ -60,18 +58,6 @@ function pimaItem(floor: readonly string[]) {
   });
 }
 
-function snapshot(over: Partial<CompletionSnapshot> & Pick<CompletionSnapshot, "item">): CompletionSnapshot {
-  return {
-    routeTasks: [],
-    validations: [],
-    audits: [],
-    contradictions: [],
-    upstreamStates: new Map(),
-    denominatorComplete: null,
-    now: T2,
-    ...over,
-  };
-}
 
 /** -------------------------------------------------- identity is derived */
 
@@ -205,7 +191,16 @@ test("a non-COMPLETED attempt must name its reason, and no attempt ends twice", 
 
 /** ------------------------------- disposition integrity on a good attempt */
 
-function completedAttempt(taskId: string, instance = "worker-a") {
+/**
+ * A completed Attempt that RECORDED the artifacts its disposition will cite.
+ *
+ * `disposeRoute` now refuses a disposition citing evidence its own Attempt
+ * never captured, so these helpers have to model the real sequence: the walk
+ * preserves artifacts, then the disposition points at them. Passing the ids
+ * through `endAttempt` is what the acquirer actually does; the previous helper
+ * skipped it and the dispositions below cited artifacts out of thin air.
+ */
+function completedAttempt(taskId: string, instance = "worker-a", artifactIds: readonly string[] = ["art-1"]) {
   const lease = claim(taskId, instance, T0, TTL, null);
   return endAttempt(
     beginAttempt({
@@ -219,6 +214,7 @@ function completedAttempt(taskId: string, instance = "worker-a") {
     }),
     "COMPLETED",
     T1,
+    { artifactIds },
   );
 }
 
@@ -259,7 +255,7 @@ test("SEEDED: a route that never answered cannot be recorded as a zero", () => {
     inherited: true,
     now: T0,
   });
-  const a = completedAttempt(task.id);
+  const a = completedAttempt(task.id, "worker-a", ["art-empty-response"]);
 
   assert.throws(
     () =>
@@ -333,7 +329,7 @@ test("SEEDED: one host blocked -> BLOCKED_CURRENTLY stays OUTSTANDING, never ter
     inherited: true,
     now: T0,
   });
-  const a = completedAttempt(task.id);
+  const a = completedAttempt(task.id, "worker-a", ["art-challenge-page"]);
   const blocked = disposeRoute(
     task,
     a,
@@ -382,7 +378,7 @@ test("SEEDED: an inherited route with no disposition refuses completion by name"
     });
 
   const verdict = evaluateCompletion(
-    snapshot({ item, routeTasks: walked }),
+    completionSnapshot({ item, routeTasks: walked }),
     "VERIFIED_COMPLETE",
   );
 
@@ -408,7 +404,7 @@ test("SEEDED: endpoint returns zero while another route remains -> item stays op
     inherited: true,
     now: T0,
   });
-  const a = completedAttempt(zeroTask.id);
+  const a = completedAttempt(zeroTask.id, "worker-a", ["art-empty"]);
   const zero = disposeRoute(
     zeroTask,
     a,
@@ -420,7 +416,7 @@ test("SEEDED: endpoint returns zero while another route remains -> item stays op
     }),
   );
 
-  const verdict = evaluateCompletion(snapshot({ item, routeTasks: [zero] }), "VERIFIED_COMPLETE");
+  const verdict = evaluateCompletion(completionSnapshot({ item, routeTasks: [zero] }), "VERIFIED_COMPLETE");
   assert.equal(verdict.mayComplete, false, "a zero from one endpoint does not close the obligation");
   assert.ok(
     verdict.refusals.some(
@@ -456,7 +452,7 @@ test("a reclaimable route task refuses completion even when every route id is pr
   );
 
   const verdict = evaluateCompletion(
-    snapshot({ item, routeTasks: [reclaim(t, dead)] }),
+    completionSnapshot({ item, routeTasks: [reclaim(t, dead)] }),
     "VERIFIED_COMPLETE",
   );
   assert.equal(verdict.mayComplete, false);
@@ -480,7 +476,7 @@ test("validation, audit independence, denominator and escalation each refuse by 
     now: T0,
   });
 
-  const bare = evaluateCompletion(snapshot({ item: base }), "VERIFIED_COMPLETE");
+  const bare = evaluateCompletion(completionSnapshot({ item: base }), "VERIFIED_COMPLETE");
   const codes = bare.refusals.map((r) => r.code);
   assert.ok(codes.includes("VALIDATION_MISSING"));
   assert.ok(codes.includes("AUDIT_MISSING"));
@@ -488,7 +484,7 @@ test("validation, audit independence, denominator and escalation each refuse by 
 
   // An audit that only read our own summary does not discharge the clause.
   const selfAudited = evaluateCompletion(
-    snapshot({
+    completionSnapshot({
       item: base,
       validations: [
         { workItemId: base.id, passed: true, at: T1, by: "v", checked: ["identity"], detail: "ok" },
@@ -514,7 +510,7 @@ test("validation, audit independence, denominator and escalation each refuse by 
 
   // Independent and surviving: the item may complete.
   const clean = evaluateCompletion(
-    snapshot({
+    completionSnapshot({
       item: base,
       validations: [
         { workItemId: base.id, passed: true, at: T1, by: "v", checked: ["identity"], detail: "ok" },
@@ -557,13 +553,13 @@ test("a dependency absent from the snapshot is UNRESOLVED, never assumed satisfi
     ],
     now: T0,
   });
-  const verdict = evaluateCompletion(snapshot({ item }), "VERIFIED_COMPLETE");
+  const verdict = evaluateCompletion(completionSnapshot({ item }), "VERIFIED_COMPLETE");
   assert.ok(verdict.refusals.some((r) => r.code === "DEPENDENCY_UNRESOLVED"));
 });
 
 test("a non-terminal proposed state is refused outright", () => {
   const item = pimaItem([]);
-  const v = evaluateCompletion(snapshot({ item }), "OPEN");
+  const v = evaluateCompletion(completionSnapshot({ item }), "OPEN");
   assert.equal(v.mayComplete, false);
   assert.deepEqual(v.refusals.map((r) => r.code), ["NOT_A_TERMINAL_STATE"]);
 });

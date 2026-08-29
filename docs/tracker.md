@@ -4,7 +4,7 @@
 (`scripts/tracker.mjs`) from `docs/tracker-working.csv`. It cannot disagree with the
 store, because it is derived from it.
 
-Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
+Generated 2026-08-29 (America/Phoenix, from `pnpm stamp`).
 
 Open rows only. Finished work is in `docs/tracker-resolved.csv` and on the
 **Resolved** tab of `docs/tracker.xlsx`, which is the record of what was decided
@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **357 open**, 444 resolved.
-- **61 waiting on Sean** — the first section below.
+- **361 open**, 444 resolved.
+- **63 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**61 open · 52 resolved.**
+**63 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -123,6 +123,10 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH275** — The branch retirement sweep classified 143 remote branches and could prove 135 of them content-shipped. This one it could not. It holds a single commit from 2026-08-18, 'AUD-03 measurement: the eight pre-registered surfaces behind async boundaries', which changes map-entry.tsx by +52/-8. No pull request ever named it, it is not an ancestor of any merged integration head, and a trial merge is not a no-op. It is genuinely unshipped work, and the only person who can say whether it is still wanted is the author.
 
 **NH277** — The Legistar union now carries a truthful PUBLISHED_BUT_UNPLACED_BY_US disposition: a first-party route publishes a sitting, the meeting-producing route did not carry it, and we hold it without being able to place it. Discharging that obligation needs one of two things this session may not decide alone — promoting the RSS or the clerk schedule from corroboration to an ingestion source, which CLAUDE.md lists under Ask before as adding an external source; or composing a meeting from fields spread across routes, which needs SittingRoute in lib/sources/event-identity.ts to be able to name CLERK_SCHEDULE_PAGE at all.
+
+**NH282** — The control plane can now survive a worker dying: leases expire, a dead Attempt is observed from outside, the route returns to the pool, another process resumes from durable state, and a crash between two writes is finished by a recovery pass. All of that is proven by tests. What does not exist is anything that RUNS the loop when nobody is watching. A workflow driver is the thing that wakes up, claims what is claimable, renews what it holds and reclaims what died. This repository has GitHub Actions and three workflows permitted to hold a cron, and an outside scheduler would be invisible to every guard the repo has, so the choice is yours rather than a session's. Nothing downstream is blocked except unattended operation itself - every rule, every refusal and the shadow proving run all work today when a person or a test starts them.
+
+**NH283** — When a captured public page carries a live third-party credential - which is not hypothetical, it is what PR #216 hit on Pima County's own Clerk of the Board page - the exact bytes are kept but quarantined, and only a sanitized copy reaches any parser. Those quarantined bytes currently cannot be stored durably, because the only two places this repository can write are a PUBLIC GitHub asset store and a plain folder on disk, and neither offers encryption at rest or access control. The tier was deliberately NOT weakened to fit what is available: that would put a working credential somewhere it can be read, which is the original incident one layer down. Ordinary evidence is fully durable already; this is only about the quarantined tier.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -914,7 +918,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**25 open · 84 resolved.**
+**27 open · 84 resolved.**
 
 ### P1
 
@@ -961,6 +965,10 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH223** — scripts/adjudicate-leads.mts implements its own rung 2/3/4 ladder and its own decodeEntities, both of which lib/sources/http.ts already exports. RULING 63: duplication is worse than a gap. The private ladder works — it sends a raw browser User-Agent, which is what passes the *.nh.gov family — but it lacks rung 3b, it does not pace itself, and it will drift from the shared one. scripts/census-gap-walk.mts was converted to politeGetText in the same session and is the model.
 
 **NH253** — tests/tracker-transaction.test.ts writes a synthetic tracker row, backs the tracker files up in memory and restores them in a finally block. If a run is killed before that finally executes, the synthetic row NH246 survives in docs/tracker-working.csv — and every later run then fails, because the row is already open and tracker.mjs add correctly refuses a duplicate. Worse, the next run's backup is taken WITH the row present, so its own restore puts it back: the failure is self-perpetuating and only a manual removal clears it. Observed on 2026-08-27, where it turned a green suite red until the residue was written forward out of the four tracker files and the log. THE SPEC: the test should either use an id it can guarantee is unique per run, or detect and clear its own residue before writing, so an interrupted run cannot poison every subsequent one.
+
+**NH284** — When a site's robots.txt says do not crawl, we do not send a request at all. But every one of the six transport states describes an attempt that actually happened, so there is no honest value to record. Both the Pima shadow fixture and the new proving run write CHALLENGED, which reads as though we tried and were turned away. Nothing about correctness turns on it today - the route is disposed BLOCKED_CURRENTLY, an open state, so the obligation correctly stays open and no absence is asserted. But the vocabulary is imprecise at exactly the point where a wall must not become an emptiness, which is the one conversion this product cannot survive.
+
+**NH285** — states/nh/explainer.md says RSA 664:6 and 664:7 are quoted in sources.md. They are not: states/nh/sources.md contains no 664 string at all, and a repo-wide search finds no verbatim operative sentence anywhere. Two other states' notes summarise the rule as centralised on the Secretary of State, but a summary is not a quote. This blocks New Hampshire from entering the campaign-finance filing-regime registry, because a regime record built from a paraphrase of a routing rule is a different routing rule - and the registry's whole job is to say which authority governs a contest.
 
 **NH86** — Measured 2026-08-23. corepack pnpm closeout fails its build gate with "pnpm build refused (exit 1)" and no TS diagnostic, while the same build run on its own exits 0; pnpm closeout passes the gate in 9 seconds. This is the same failure already recorded for pnpm handoff --ship, one script later: close-out.mjs shells out to pnpm run build, and through corepack that inner call cannot run. The gate is honest about it - it refuses rather than passing - which is exactly the four-verdict discipline working, and it still cost a debugging round because nothing in the repo says so at the point of use. What is owed is small: close-out.mjs and handoff.mjs should detect a corepack-shimmed parent and say which command to run instead, rather than reporting a build refusal that is really an environment refusal. A note in CLAUDE.md's Commands section would do at a minimum.
 

@@ -33,6 +33,19 @@ const WORKFLOW = ".github/workflows/build-check.yml";
  * it prepares the runner or reports on the run; none of them is a check whose
  * failure means the tree is wrong.
  */
+/**
+ * THE THREE CANONICAL AUTHORITIES WIRED ON 2026-08-29, pinned by name.
+ *
+ * They were enforced only INDIRECTLY before — by tests that assert things about
+ * their subject matter — which is not the same as running them. Each was
+ * classified by READING the script before it was wired, and all three are pure
+ * checkers: they read canonical state, write nothing under the repository, and
+ * exit non-zero on a violation. The mutating neighbours (`governance:compile`,
+ * `method:ingest`, `orchestration:closeout`, the tracker and workstream
+ * writers) are excluded by name in `scripts/gates.mjs` and in the workflow.
+ */
+const CANONICAL_AUTHORITY_GATES = ["governance:check", "orchestration:check", "method:check"];
+
 const NOT_A_GATE = [
   "corepack enable",
   "corepack pnpm install --frozen-lockfile",
@@ -40,6 +53,16 @@ const NOT_A_GATE = [
   "echo \"path=$(corepack pnpm store path --silent)\" >> \"$GITHUB_OUTPUT\"",
   "node scripts/trace-census.mjs --files trace-files.txt",
 ];
+
+/*
+ * THIS TEST READS EXACTLY ONE FILE — `build-check.yml`, the workflow carrying
+ * the required contexts. `.github/workflows/post-deploy-integrity.yml`
+ * (2026-08-29) is NOT read here and needs no `NOT_A_GATE` entries: it is not a
+ * merge gate, it runs AFTER a push to main, and its commands are an observation
+ * and a commit rather than checks a session could run locally before merging.
+ * Adding its scaffolding to the exclusion list above would be adding exemptions
+ * for a file nothing here parses.
+ */
 
 function ciCommands(): string[] {
   const src = readFileSync(WORKFLOW, "utf8");
@@ -107,6 +130,94 @@ test("gate parity · lint is in the local gate set, by name", () => {
     GATES.some((g) => normalise(g.command) === "pnpm lint"),
     "`pnpm lint` is not in GATES — this is the exact gap that produced RO04",
   );
+});
+
+test("gate parity · each canonical authority is in BOTH the local set and the required CI job", () => {
+  /*
+   * BY NAME, IN BOTH DIRECTIONS, and the CI half is read out of the WORKFLOW
+   * FILE (RULING 147) rather than out of the gate list. The generic parity test
+   * above already fails if CI runs something the local door does not — but it
+   * would say nothing at all if a future edit dropped a step from BOTH files at
+   * once, which is exactly how lint fell out of the local set and stayed out.
+   *
+   * The workflow's `gates` job is the anchor because it is the required context
+   * branch protection names. A step added to the `build` job instead would pass
+   * the generic test and leave these unrun on the job that gates a merge.
+   */
+  const src = readFileSync(WORKFLOW, "utf8");
+  const gatesAt = src.indexOf("  gates:");
+  assert.ok(gatesAt > 0, "the gates job is gone from the workflow");
+  const gatesJob = src.slice(gatesAt);
+
+  const local = GATES.map((g) => normalise(g.command));
+  for (const id of CANONICAL_AUTHORITY_GATES) {
+    assert.ok(
+      GATES.some((g) => g.id === id),
+      `"${id}" is not in GATES in scripts/gates.mjs — it would run in CI and not locally`,
+    );
+    assert.ok(
+      local.includes(`pnpm ${id}`),
+      `GATES carries no command \`pnpm ${id}\` — the id and the command must agree`,
+    );
+    assert.ok(
+      gatesJob.includes(`run: corepack pnpm ${id}`),
+      `\`${id}\` runs in \`pnpm gates\` and NOT in build-check.yml's gates job — a gate the ` +
+        "local door runs and CI does not is a gate nothing enforces on a merge",
+    );
+  }
+});
+
+test("gate parity · every wired canonical authority names a bound and does not hide behind a failure", () => {
+  /*
+   * `if: always()` so one red gate does not hide the verdict of the others, and
+   * `timeout-minutes` so a hung check fails naming itself rather than sitting
+   * until the platform kills the job at six hours (F25).
+   */
+  const src = readFileSync(WORKFLOW, "utf8");
+  const gatesJob = src.slice(src.indexOf("  gates:"));
+  for (const id of CANONICAL_AUTHORITY_GATES) {
+    const at = gatesJob.indexOf(`run: corepack pnpm ${id}`);
+    assert.ok(at > 0, `\`${id}\` is not in the gates job`);
+    // The step's own keys sit immediately above its `run:` line.
+    const step = gatesJob.slice(Math.max(0, at - 300), at);
+    assert.match(step, /if: always\(\)/, `\`${id}\` may not hide behind an earlier failure`);
+    assert.match(step, /timeout-minutes:\s*\d+/, `\`${id}\` must bound itself`);
+  }
+});
+
+test("gate parity · no MUTATING command was wired in to make a question look covered", () => {
+  /*
+   * The other half of the classification, asserted rather than left to a
+   * comment. `governance:compile` regenerates the very views `governance:check`
+   * compares against — running it as a gate would have CI repair the staleness
+   * the gate exists to catch and go green having destroyed the evidence
+   * (RULING 102). `method:ingest` once took the method store from 88 routes to
+   * 62 while reporting success. The tracker and workstream commands write
+   * canonical state. None of them may become a gate.
+   */
+  const forbidden = [
+    "governance:compile",
+    "governance:accept",
+    "governance:import",
+    "method:ingest",
+    "orchestration:closeout",
+    "workstream:close",
+    "workstream:status",
+    "tracker:move",
+    "tracker:add",
+  ];
+  const local = GATES.map((g) => normalise(g.command));
+  const ci = ciCommands().map(normalise);
+  for (const command of forbidden) {
+    assert.ok(
+      !local.some((c) => c.includes(command)),
+      `\`${command}\` is a WRITER and is in the local gate set — a gate that mutates what it measures cannot report a failure`,
+    );
+    assert.ok(
+      !ci.some((c) => c.includes(command)),
+      `\`${command}\` is a WRITER and runs in build-check.yml — CI may not mutate canonical state on a pull request`,
+    );
+  }
 });
 
 test("gate parity · every gate names the CI job it stands in for", () => {

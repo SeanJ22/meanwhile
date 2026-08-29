@@ -36,7 +36,7 @@
 
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 import { getTableConfig } from "drizzle-orm/pg-core";
@@ -64,7 +64,6 @@ import {
   lineageOf,
   supersede,
   totalReceivedBy,
-  type CampaignFinanceCoverage,
   type CampaignFinanceFiling,
   type CandidateFinanceCoverage,
   type Contribution,
@@ -78,6 +77,7 @@ import {
   arizonaLocalObligation,
   federalObligation,
 } from "../lib/control-plane/campaign-finance/obligations.ts";
+import { coverageFixture } from "./control-plane-fixtures.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const NOW = "2026-08-28T00:00:00.000Z";
@@ -105,32 +105,6 @@ function fixtureCandidate(
   };
 }
 
-function fixtureCoverage(
-  over: Partial<CampaignFinanceCoverage> & { contestId: string },
-): CampaignFinanceCoverage {
-  return {
-    contestTitle: "fixture contest",
-    electionId: "fixture:election",
-    electionDate: "2026-11-03",
-    jurisdictionOcdId: "ocd-division/country:us/state:az",
-    officeLevel: "COUNTY",
-    candidateUniverse: [],
-    candidateUniverseSource: "fixture",
-    committeeUniverse: [],
-    expectedFilingAuthorityIds: [],
-    expectedFilingPeriods: [],
-    filingsAcquired: [],
-    filingsMissing: [],
-    latestThroughDate: null,
-    perCandidate: [],
-    routes: [],
-    identityGaps: [],
-    amendmentGaps: [],
-    status: "OPEN",
-    completeAsOf: null,
-    ...over,
-  };
-}
 
 /* ══ #12 — a local race with no FEC data stays OPEN ═══════════════════════ */
 
@@ -356,7 +330,7 @@ test("#13 finance complete for 3 of 4 candidates: named gap, and features FAIL C
     "fixture:contest:c",
     "fixture:contest:d",
   ];
-  const coverage = fixtureCoverage({
+  const coverage = coverageFixture({
     contestId: "fixture:four-candidate-contest",
     candidateUniverse: universe,
     perCandidate: [
@@ -407,7 +381,7 @@ test("#13 finance complete for 3 of 4 candidates: named gap, and features FAIL C
   // And a candidate on the ballot with NO coverage record at all is caught too —
   // the failure mode where the denominator quietly shrinks to what we found.
   const shrunk = evaluateCoverage(
-    fixtureCoverage({
+    coverageFixture({
       contestId: "fixture:denominator-shrink",
       candidateUniverse: universe,
       perCandidate: coverage.perCandidate.slice(0, 3),
@@ -418,7 +392,7 @@ test("#13 finance complete for 3 of 4 candidates: named gap, and features FAIL C
   assert.match(shrunk.featureEligibility.blockedBy.join(" "), /carrying NO coverage record at all/);
 
   // Four of four DOES pass — otherwise this guard would be refusing everything.
-  const allFour = fixtureCoverage({
+  const allFour = coverageFixture({
     contestId: "fixture:complete-contest",
     candidateUniverse: universe,
     perCandidate: universe.map((id, i) =>
@@ -434,7 +408,7 @@ test("#13 finance complete for 3 of 4 candidates: named gap, and features FAIL C
 /* ══ Neutrality: symmetric acquisition across a contest ═══════════════════ */
 
 test("unexplained asymmetric acquisition depth across two candidates FAILS symmetryCheck", () => {
-  const coverage = fixtureCoverage({
+  const coverage = coverageFixture({
     contestId: "fixture:asymmetric-contest",
     candidateUniverse: ["fixture:sym:incumbent", "fixture:sym:challenger"],
     perCandidate: [
@@ -464,7 +438,7 @@ test("unexplained asymmetric acquisition depth across two candidates FAILS symme
   // An authority resolved for one candidate and not the other is its own failure:
   // the custodian is a property of the CONTEST.
   const halfResolved = symmetryCheck(
-    fixtureCoverage({
+    coverageFixture({
       contestId: "fixture:half-resolved",
       candidateUniverse: ["fixture:sym:a", "fixture:sym:b"],
       perCandidate: [
@@ -483,7 +457,7 @@ test("unexplained asymmetric acquisition depth across two candidates FAILS symme
 
 test("a legitimate asymmetry WITH a source-supported explanation passes", () => {
   const explained = symmetryCheck(
-    fixtureCoverage({
+    coverageFixture({
       contestId: "fixture:explained-contest",
       candidateUniverse: ["fixture:exp:a", "fixture:exp:b"],
       perCandidate: [
@@ -509,7 +483,7 @@ test("a legitimate asymmetry WITH a source-supported explanation passes", () => 
 
   // An "explanation" with no source citation is not an explanation.
   const uncited = symmetryCheck(
-    fixtureCoverage({
+    coverageFixture({
       contestId: "fixture:uncited-contest",
       candidateUniverse: ["fixture:unc:a", "fixture:unc:b"],
       perCandidate: [
@@ -531,7 +505,7 @@ test("a legitimate asymmetry WITH a source-supported explanation passes", () => 
 
   // One candidate is never evidence of neutrality — the report says so.
   const lonely = symmetryCheck(
-    fixtureCoverage({
+    coverageFixture({
       contestId: "fixture:one-candidate",
       candidateUniverse: ["fixture:one:a"],
       perCandidate: [fixtureCandidate({ candidacyId: "fixture:one:a", displayName: "A" })],
@@ -831,8 +805,17 @@ test("nothing this domain adds introduces a Postgres table (RULING 126, wall 1)"
 
   // And this workstream's own directory contains no Drizzle table definition and
   // imports nothing from lib/db — the shape that would create one.
+  //
+  // The file list is READ FROM THE DIRECTORY rather than named, because a named
+  // list is a guard that silently stops covering the next file added beside it —
+  // and `filing-regime.ts` was exactly that next file. The four known modules are
+  // asserted present so a directory read that returned nothing cannot pass.
   const dir = join(ROOT, "lib", "control-plane", "campaign-finance");
-  for (const file of ["model.ts", "authority.ts", "coverage.ts", "obligations.ts"]) {
+  const files = readdirSync(dir).filter((f) => f.endsWith(".ts"));
+  for (const known of ["model.ts", "authority.ts", "coverage.ts", "obligations.ts", "filing-regime.ts"]) {
+    assert.ok(files.includes(known), `${known} was not swept — this guard is reading the wrong directory`);
+  }
+  for (const file of files) {
     const text = readFileSync(join(dir, file), "utf8");
     const imports = [...text.matchAll(/^\s*(?:import|export)\s[^;]*?from\s+["']([^"']+)["']/gm)].map(
       (m) => m[1],

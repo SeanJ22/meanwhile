@@ -201,12 +201,30 @@ export function emptyKnowledge(): MethodKnowledge {
 }
 
 /**
- * The routes a jurisdiction INHERITS.
+ * **THE APPLICABILITY ARITHMETIC, AND NOTHING ELSE. NOT A CONSUMER SURFACE.**
  *
  * Everything applicable, including the speculative ones. Inheritance is the
  * starting advantage of a new state, never its constraint (RULING 178).
+ *
+ * ## Why this is no longer called `inheritedRoutes`
+ *
+ * It was, and every consumer of method inheritance called it and got back raw
+ * `MethodRoute` objects — carrying `applicability.note`, `origin`,
+ * `outcomes[].note` and `subBranches[].reason`, four unclassified prose fields
+ * that no retraction can reach. On 2026-08-28 the Pima coverage claim and the
+ * Pima derived conclusion were both withdrawn in `claims`, correctly, with
+ * successors — and both went on being handed to workers out of those fields,
+ * because `pnpm method:prove` and `pnpm descent:handoff` never opened `claims`
+ * at all. The correction was real and the read path did not read it.
+ *
+ * So the name now says what the value is: routes that APPLY, UNPROJECTED. The
+ * consumer surface is `projectMethodFor()` in `lib/method/projection.ts`, which
+ * is the only caller of this function outside its own tests, and
+ * `tests/method-projection.test.ts` sweeps the repository to keep it that way.
+ * A rename does not stop a determined caller; it stops an accidental one, and
+ * the sweep stops the determined one from landing.
  */
-export function inheritedRoutes(
+export function applicableRoutesUnprojected(
   k: MethodKnowledge,
   j: Jurisdiction,
 ): Array<{ route: MethodRoute; reason: string; speculative: boolean }> {

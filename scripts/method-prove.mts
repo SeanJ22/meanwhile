@@ -22,13 +22,17 @@ import { fileURLToPath } from "node:url";
 import {
   applyReopenings,
   findReopenings,
-  inheritedRoutes,
   learnRoute,
   routeCount,
   validateKnowledge,
   type MethodKnowledge,
   type PriorConclusion,
 } from "../lib/method/knowledge.ts";
+import {
+  projectMethodFor,
+  projectionHasRoute,
+  substantiveAssertions,
+} from "../lib/method/projection.ts";
 import { unknownApplicability } from "../lib/method/portability.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 
@@ -63,14 +67,45 @@ console.log("");
 // this project's route names mean something else. RULING 60's own example of
 // where a New England route will not travel.
 const newState = { state: "la", governmentType: "parish" };
-const inherited = inheritedRoutes(k, newState);
-const speculative = inherited.filter((i) => i.speculative).length;
+/*
+ * **READ THROUGH THE PROJECTION, NEVER OFF THE RAW ROUTE.** (2026-08-28.)
+ *
+ * This block used to call `inheritedRoutes()` and print raw `MethodRoute`
+ * objects, which meant the proof's own idea of "what a new state inherits"
+ * included four unclassified prose fields — the same fields the withdrawn Pima
+ * conclusion is still sitting in. `projectMethodFor` hands over route identity,
+ * applicability, observations as tuples, and ONLY the substantive assertions
+ * whose retraction and validation state permit inheritance. See
+ * `lib/method/projection.ts`.
+ */
+const projection = projectMethodFor(k, newState);
+const inheritedCount = projection.counts.routesInherited;
 
 console.log("1. INHERITANCE — a state with no prior work here");
 console.log(`   jurisdiction            ${newState.state} / ${newState.governmentType}`);
-console.log(`   routes inherited        ${inherited.length} of ${startingRoutes}`);
-console.log(`   of those, speculative   ${speculative} (UNKNOWN portability — offered, never claimed as proven)`);
+console.log(`   routes inherited        ${inheritedCount} of ${startingRoutes}`);
+console.log(
+  `   of those, speculative   ${projection.counts.routesSpeculative} (UNKNOWN portability — offered, never claimed as proven)`,
+);
 console.log("   Inheritance is the STARTING advantage of a new state, never its constraint.");
+console.log("");
+console.log("   WHAT IT INHERITS AS AUTHORITY, by class:");
+console.log(`     A  route existence       ${projection.counts.existenceAssertions} declared assertion(s)`);
+console.log(
+  `     B  observations          ${projection.counts.observations} recorded walk(s), ` +
+    `${projection.counts.observationAssertions} declared assertion(s)`,
+);
+console.log(`     C+D substantive          ${projection.counts.substantiveAssertions} current and inheritable`);
+console.log(
+  `     WITHHELD                 ${projection.counts.withheld} substantive assertion(s) named and NOT taught`,
+);
+for (const w of projection.withheld) {
+  console.log(`       ${w.reason.padEnd(18)} ${w.id}`);
+  console.log(`                          corrected by: ${w.correctedBy ?? "(no successor — see what survives)"}`);
+}
+console.log(
+  `     UNCLASSIFIED LEGACY      ${projection.counts.routesLegacyUnclassified} route(s) known, prose NOT inherited as a conclusion`,
+);
 console.log("");
 
 // --- 2. a prior conclusion, earned under the CURRENT method version --------
@@ -110,6 +145,31 @@ const learned = learnRoute(
     subBranches: [],
     origin: "pnpm method:prove — the compounding proof",
     learnedOn: TODAY,
+    /*
+     * **AND IT DECLARES WHAT IT ASSERTS.** (2026-08-28.)
+     *
+     * Claim classes became required for any route entering after v55, and this
+     * proof invents a route at v56 every time it runs — so from the moment that
+     * rule landed, `pnpm method:prove` has been reporting COMPOUNDING PROOF
+     * FAILED on its own invented route, with one validator issue nobody was
+     * looking at because the command is not in `pnpm gates`.
+     *
+     * The right repair is the one the rule asks for rather than an exemption:
+     * the route declares its class. It is a class A ROUTE_EXISTENCE assertion —
+     * the only thing a route conceived and never walked can honestly claim —
+     * and it needs no provenance for exactly that reason. A route that has not
+     * been walked has no outcome, no coverage claim and no conclusion, and the
+     * proof now demonstrates that shape instead of tripping over it.
+     */
+    claims: [
+      {
+        id: "state-bulk-roster-download#route-exists",
+        class: "ROUTE_EXISTENCE",
+        statement:
+          "A body's own bulk roster download, taken before any page-by-page retrieval, is an available route wherever a body publishes one.",
+        restsOn: [],
+      },
+    ],
   },
   TODAY,
 );
@@ -125,13 +185,17 @@ console.log("");
 
 // --- 4. the route reaches a DIFFERENT jurisdiction --------------------------
 const otherState = { state: "nh", governmentType: "town" };
-const nowInherited = inheritedRoutes(k, otherState);
-const reachesOther = nowInherited.some((i) => i.route.id === "state-bulk-roster-download");
+const otherProjection = projectMethodFor(k, otherState);
+const reachesOther = projectionHasRoute(otherProjection, "state-bulk-roster-download");
 
 console.log("4. REAPPLICATION — the new route reaches somewhere it was not invented");
 console.log(`   jurisdiction            ${otherState.state} / ${otherState.governmentType}`);
 console.log(`   route available there?  ${reachesOther ? "YES" : "NO"}`);
-console.log(`   routes inherited        ${nowInherited.length}`);
+console.log(`   routes inherited        ${otherProjection.counts.routesInherited}`);
+console.log(
+  `   substantive inherited   ${substantiveAssertions(otherProjection).length}  ` +
+    `(${otherProjection.withheld.length} withheld and named)`,
+);
 console.log("");
 
 // --- 5. the old conclusion reopens, mechanically ----------------------------
@@ -160,8 +224,26 @@ const notReopened = validateKnowledge(k, conclusions);
 console.log(`   issues if NOT reopened  ${notReopened.length}  <- silence here would be the failure RULING 178 names`);
 console.log("");
 
+/*
+ * **AND NOTHING WITHDRAWN IS BEING TAUGHT.** (2026-08-28.)
+ *
+ * The proof asserted compounding and never asserted correctness of what
+ * compounds. A projection that inherited a retracted, contradicted or
+ * unevidenced coverage claim would print every number above unchanged, which is
+ * exactly how the Pima conclusion survived its own correction for a day.
+ */
+const taughtWithdrawn = substantiveAssertions(projection).filter(
+  (a) => a.validation?.state === "CONTRADICTED",
+);
+console.log("7. INHERITANCE INTEGRITY");
+console.log(`   substantive inherited   ${substantiveAssertions(projection).length}`);
+console.log(`   withdrawn or contradicted still taught  ${taughtWithdrawn.length}  <- must be 0`);
+for (const a of taughtWithdrawn) console.log(`   - ${a.id}`);
+console.log("");
+
 const ok =
-  inherited.length === startingRoutes &&
+  inheritedCount === startingRoutes &&
+  taughtWithdrawn.length === 0 &&
   routeCount(k) === startingRoutes + 1 &&
   k.version === startingVersion + 1 &&
   reachesOther &&

@@ -8,7 +8,7 @@ import {
   applyReopenings,
   emptyKnowledge,
   findReopenings,
-  inheritedRoutes,
+  applicableRoutesUnprojected,
   learnRoute,
   routeCount,
   validateKnowledge,
@@ -54,7 +54,7 @@ test("THE COMPOUNDING TEST — a 44th state inherits 76 methods and adds a 77th,
   // The new jurisdiction INHERITS everything applicable. Inheritance is the
   // starting advantage of a new state, never its constraint (RULING 178).
   const stateForty4 = { state: "la", governmentType: "parish" };
-  const inherited = inheritedRoutes(k, stateForty4);
+  const inherited = applicableRoutesUnprojected(k, stateForty4);
   assert.equal(inherited.length, 76, "every applicable route is offered to a new jurisdiction");
   assert.ok(
     inherited.every((i) => i.speculative),
@@ -116,16 +116,16 @@ test("THE NON-FINAL-MANIFEST TEST — nothing represents the route list as exhau
 test("THE INHERIT-AND-INVENT TEST — neither inheritance nor invention disables the other", () => {
   let k = storeOf(5);
   const j = { state: "az", governmentType: "county" };
-  const before = inheritedRoutes(k, j).length;
+  const before = applicableRoutesUnprojected(k, j).length;
   assert.equal(before, 5);
 
   k = learnRoute(k, route("az-bulk-ftp", {
     applicability: { ...unknownApplicability("azsos FTP"), portability: "STATE_SPECIFIC", states: ["az"] },
   }), "2026-08-26").knowledge;
 
-  assert.equal(inheritedRoutes(k, j).length, before + 1, "the invented route joins the inherited set");
+  assert.equal(applicableRoutesUnprojected(k, j).length, before + 1, "the invented route joins the inherited set");
   // ...and it does NOT leak to a state it was not proven in.
-  assert.equal(inheritedRoutes(k, { state: "nh" }).length, before);
+  assert.equal(applicableRoutesUnprojected(k, { state: "nh" }).length, before);
 });
 
 /* ------------------------------------------------------ THE VERSIONED-CONVERGENCE TEST */

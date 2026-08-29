@@ -28,6 +28,16 @@ import { seatHoldersForOffice } from "../registry/server.ts";
 import { standingChipMayAttach } from "../officials/elected-role.ts";
 
 import {
+  candidateUniverse,
+  contestLabelEligibility,
+  officeholderUniverse,
+  statesFromResolution,
+  type CandidateIncumbencyState,
+  type ContestEligibility,
+  type HolderSourceShape,
+} from "./contest-universe.ts";
+import { getGeneralLineup, lineupForContest } from "./general-lineup.ts";
+import {
   nameParts,
   namesAgree,
   namesAgreeLoosely,
@@ -91,10 +101,46 @@ export interface ContestForIncumbency {
   readonly ocdId: string;
   readonly candidates: readonly ContestCandidate[];
   readonly federal: boolean;
+  /**
+   * How many seats this contest fills, from the contest's own record.
+   *
+   * **REQUIRED, and required so that a caller cannot forget it.** It is the
+   * only reconciliation available against an enumerating holder source: a body
+   * that publishes its whole membership is still being asked for one seat
+   * inside it, and a slice that returns fewer people than the contest fills is
+   * a slice that failed. A caller that could omit it would silently get the
+   * fail-closed answer forever, which is the shape of a join failing quietly.
+   */
+  readonly voteFor: number;
 }
 
 export interface ContestIncumbencyResult {
+  /**
+   * **THE READER-FACING ANSWER, AND IT IS GATED.** (2026-08-28.)
+   *
+   * Where `contestLabelEligibility` refuses the contest, every entry here is
+   * UNKNOWN — including the candidate the matching layer positively identified
+   * as the sitting member. That is the point: a contest showing `Incumbent` on
+   * the one person we matched, while everyone else's status is unproven, tells
+   * a reader those others are challengers. We had not earned that.
+   *
+   * It is `decisions` — the name every existing caller already reads — because
+   * fail-closed has to be the DEFAULT. A gate that had to be opted into is a
+   * gate that some later surface renders around.
+   */
   readonly decisions: Map<string, IncumbencyDecision>;
+  /**
+   * What the MATCHING layer said, ungated: who does the holder record name?
+   *
+   * Kept because it is a different question from *may a label render*, and
+   * conflating them is how the census would come to report a split the page
+   * does not show. Anything reader-facing reads `decisions`.
+   */
+  readonly resolved: Map<string, IncumbencyDecision>;
+  /** The explicit deterministic state per candidate. See `CandidateIncumbencyState`. */
+  readonly states: Map<string, CandidateIncumbencyState>;
+  /** The eligibility decision and the inputs it turned on, so it can be explained. */
+  readonly eligibility: ContestEligibility;
   /**
    * Candidate key → the officeholder record they hold the seat under.
    *
@@ -117,6 +163,69 @@ export interface ContestIncumbencyResult {
  */
 export type FederalHolderLookup = (targetKey: string) => Promise<SeatHolder | null>;
 
+/**
+ * THE ONE SOURCE IN THIS REPOSITORY THAT ENUMERATES A LEGISLATIVE SEAT.
+ *
+ * The New Hampshire General Court publishes `Members.txt` — every sitting
+ * member of both chambers, keyed to county and district. Sliced to a district
+ * it is the district's WHOLE membership, which is the only thing that makes a
+ * candidate's absence from it the body's statement rather than our gap.
+ *
+ * It was already read here, but only by `anchorAgainstGencourt`, which REPORTS
+ * and never decides. Promoting it to the holder source where it answers is not
+ * a new claim: RULING 147 already treats the registry as an INTERMEDIARY and
+ * this as the body publishing itself, and where two records of the same seat
+ * exist the body's own is the one a decision should be taken on.
+ *
+ * **The state gate is not optional.** `State Senator, District 19` is a title
+ * Arizona and New Hampshire both use, and the census proved a title-only parser
+ * answers an Arizona contest with New Hampshire members.
+ */
+export function enumeratedSeatHolders(contest: { title: string; ocdId: string }): SeatHolderRef[] {
+  if (!contest.ocdId.includes("/state:nh/")) return [];
+  return nhLegislativeHolders(contest.title);
+}
+
+/**
+ * The certified nominee list for a contest, where the state has published one.
+ *
+ * The canvass is named rather than summarised, because the finding it supports
+ * — *this is the complete universe of candidates* — is only as good as the
+ * document behind it.
+ */
+export function certifiedNomineesFor(contestId: string): { source: string; count: number } | null {
+  const entry = lineupForContest(contestId);
+  if (entry === null) return null;
+  const canvass = getGeneralLineup()?.canvass;
+  return {
+    source: canvass ? `${canvass.title} (${canvass.issuedBy}, read ${canvass.readAt})` : "the certified canvass",
+    count: entry.nominees.length,
+  };
+}
+
+/**
+ * Which retrieval shape produced these registry holders, and therefore whether
+ * their absence means anything. See `HolderSourceShape`.
+ *
+ * The discriminator is the holder's OWN id namespace, which the registry
+ * already carries:
+ *
+ * | Prefix | Source | Shape |
+ * |---|---|---|
+ * | `congress:` | `unitedstates/congress-legislators` `legislators-current.json` — every sitting member of Congress, 100 senators and 437 representatives, with 6 unattached rows and all 6 of them territory delegates | enumerates |
+ * | `plural:` | Open States, attached division by division — 66 of 90 Arizona rows, 325 of 410 New Hampshire rows and 99 of 120 New Jersey rows never attached at all | collected |
+ * | `statewide:` | the curated statewide-executive store, whose own doc block calls it *what we have acquired so far* | collected |
+ *
+ * **Mixed is collected.** One row from a collection is enough to mean the seat
+ * might hold somebody we have never seen.
+ */
+export function shapeOfRegistryHolders(holders: readonly SeatHolder[]): HolderSourceShape {
+  if (holders.length === 0) return "NOTHING_READ";
+  return holders.every((h) => (h.id ?? "").startsWith("congress:"))
+    ? "ENUMERATES_THE_SEAT"
+    : "COLLECTED_PERSON_BY_PERSON";
+}
+
 export async function contestIncumbency(
   contest: ContestForIncumbency,
   federalHolderFor: FederalHolderLookup,
@@ -128,6 +237,15 @@ export async function contestIncumbency(
    * caller asked the only question it could ask.
    */
   holdersForSeat: (ocdId: string, officeTitle: string) => Promise<SeatHolder[]> = seatHoldersForOffice,
+  /**
+   * The two universe inputs, injectable so the eligibility gate can be proved
+   * against a FIXTURE rather than against a corpus that moves every time
+   * somebody acquires an officeholder. A control that rots is not a control.
+   */
+  universeSources: {
+    enumeratedHolders?: (contest: { title: string; ocdId: string }) => SeatHolderRef[];
+    certifiedNominees?: (contestId: string) => { source: string; count: number } | null;
+  } = {},
 ): Promise<ContestIncumbencyResult> {
   const candidates = contest.candidates.map((c) => ({
     id: c.key,
@@ -177,6 +295,22 @@ export async function contestIncumbency(
     personKey: h.id?.trim() || null,
     source: `the officeholder registry for ${h.officeTitle} on ${contest.ocdId}`,
   }));
+  let shape: HolderSourceShape = shapeOfRegistryHolders(registryHolders);
+
+  /*
+   * BRANCH ZERO, AND IT OUTRANKS THE REGISTRY WHERE IT ANSWERS: the body's own
+   * published membership. See `enumeratedSeatHolders`. It is asked FIRST for
+   * the universe because it is the only source whose silence about a person is
+   * the body's silence rather than ours — and a universe is exactly the thing a
+   * `NOT_INCUMBENT` has to be measured against.
+   */
+  if (officeIsElected) {
+    const enumerated = (universeSources.enumeratedHolders ?? enumeratedSeatHolders)(contest);
+    if (enumerated.length > 0) {
+      holders = enumerated;
+      shape = "ENUMERATES_THE_SEAT";
+    }
+  }
 
   if (holders.length === 0 && contest.federal) {
     /*
@@ -206,9 +340,10 @@ export async function contestIncumbency(
         personKey: holder.id?.trim() || null,
         source: "the FEC candidate/committee join against the congressional roster",
       }));
+    if (holders.length > 0) shape = "PROBED_PER_CANDIDATE";
   }
 
-  const decisions = resolveContestIncumbency({ candidates, holders, officeIsElected });
+  const resolved = resolveContestIncumbency({ candidates, holders, officeIsElected });
 
   /*
    * THE OFFICEHOLDER BEHIND EACH INCUMBENT, so the voting-record panel can be
@@ -219,7 +354,7 @@ export async function contestIncumbency(
    */
   const holderFor = new Map<string, SeatHolder>();
   for (const c of contest.candidates) {
-    if (decisions.get(c.key)?.standing !== "INCUMBENT") continue;
+    if (resolved.get(c.key)?.standing !== "INCUMBENT") continue;
     const cand = nameParts(splitDisplayName(c.display).givenName, splitDisplayName(c.display).familyName);
     const hit = registryHolders.find((h) => {
       const parts = splitDisplayName(h.name);
@@ -229,7 +364,92 @@ export async function contestIncumbency(
     if (hit) holderFor.set(c.key, hit);
   }
 
-  return { decisions, holderFor };
+  /*
+   * THE CONTEST-LEVEL GATE. (2026-08-28.)
+   *
+   * **The voting-record door above is deliberately OUTSIDE it.** Whether this
+   * person's roll calls exist is data we found, and RULING 26 says collection
+   * state never governs display. Whether we may call somebody a `Challenger` is
+   * a claim we have to earn. Two different questions, and only the second is
+   * gated.
+   */
+  const candidateKeys = contest.candidates.map((c) => c.key);
+  const holderSourceName = holders[0]?.source ?? null;
+
+  /*
+   * An office nobody is elected to never reaches the gate. It already carries
+   * the right answer and the right REASON — RULING 118's, that incumbency does
+   * not attach to an appointed role — and overwriting that with a sourcing
+   * explanation would replace a true statement about the office with a false
+   * one about our records.
+   */
+  if (!officeIsElected) {
+    const states = statesFromResolution(resolved, candidateKeys, false);
+    return {
+      decisions: resolved,
+      resolved,
+      states,
+      eligibility: contestLabelEligibility({
+        candidateUniverse: {
+          complete: false,
+          source: null,
+          reason: "incumbency does not attach to an office that is not filled by election (RULING 118).",
+        },
+        officeholderUniverse: {
+          complete: false,
+          source: null,
+          reason: "incumbency does not attach to an office that is not filled by election (RULING 118).",
+        },
+        candidateKeys,
+        states,
+      }),
+      holderFor,
+    };
+  }
+
+  const officeholders = officeholderUniverse({
+    shape,
+    source: holderSourceName,
+    holders: holders.length,
+    seatsThisContestFills: contest.voteFor,
+  });
+  const certified = (universeSources.certifiedNominees ?? certifiedNomineesFor)(contest.id);
+  const candidatesUniverse = candidateUniverse({
+    certified,
+    rendered: contest.candidates.length,
+    renderedSource: contest.candidates.length > 0 ? "the contest's own filed-candidate record" : null,
+  });
+  const states = statesFromResolution(resolved, candidateKeys, officeholders.complete);
+  const eligibility = contestLabelEligibility({
+    candidateUniverse: candidatesUniverse,
+    officeholderUniverse: officeholders,
+    candidateKeys,
+    states,
+  });
+
+  if (eligibility.eligible) return { decisions: resolved, resolved, states, eligibility, holderFor };
+
+  /*
+   * NOT ELIGIBLE — SO THE WHOLE CONTEST GOES QUIET, the matched incumbent
+   * included. Every card carries the SAME sentence, which is what keeps it a
+   * statement about our sourcing rather than a badge worn by whichever
+   * candidate we happen to know less about (RULING 42).
+   *
+   * The gap says which of the two true sentences to write. We hold holders and
+   * still cannot label anybody? Then "we haven't sourced who holds this seat"
+   * would be false about US, and there is a second sentence for that.
+   */
+  const gap = holders.length > 0 ? ("CONTEST_NOT_ESTABLISHED" as const) : ("HOLDER_NOT_SOURCED" as const);
+  const decisions = new Map<string, IncumbencyDecision>();
+  for (const key of candidateKeys) {
+    decisions.set(key, {
+      standing: "UNKNOWN",
+      basis: eligibility.reason,
+      source: holderSourceName,
+      gap,
+    });
+  }
+  return { decisions, resolved, states, eligibility, holderFor };
 }
 
 /**

@@ -32,9 +32,6 @@
  *   1  FROZEN
  */
 
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
-
 import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import { evaluateReleaseFreeze, explainFreeze } from "../lib/ops/production-integrity.ts";
@@ -42,8 +39,6 @@ import { evaluateReleaseFreeze, explainFreeze } from "../lib/ops/production-inte
 // RULING 103. The two copies were identical, and this mechanism turns on the
 // difference between "the answer is no" and "there was no answer".
 import { git, readRecord } from "./production-integrity.mts";
-
-const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 function arg(name: string): string | undefined {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));

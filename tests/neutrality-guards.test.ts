@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
-import { readdirSync, readFileSync, statSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
+import { tsFilesUnder } from "./read-code.ts";
 import * as schema from "../lib/db/schema.ts";
 
 /**
@@ -15,16 +16,15 @@ import * as schema from "../lib/db/schema.ts";
  * guard instead of waiting for someone to remember to extend a test.
  */
 
-/** Every .ts file under lib/, recursively. */
-function libFiles(dir = join(process.cwd(), "lib")): string[] {
-  const out: string[] = [];
-  for (const name of readdirSync(dir)) {
-    const path = join(dir, name);
-    if (statSync(path).isDirectory()) out.push(...libFiles(path));
-    else if (name.endsWith(".ts")) out.push(path);
-  }
-  return out;
-}
+/**
+ * Every .ts file under lib/, recursively.
+ *
+ * The walk itself moved to `./read-code.ts` on 2026-08-28 under RULING 103 —
+ * `tenant-body-binding.test.ts` needed the same sweep over `lib/sources/`, and
+ * a byte-identical second copy of a guard's DENOMINATOR is the class that
+ * ruling exists for. This stays as the name this file reads by.
+ */
+const libFiles = () => tsFilesUnder("lib");
 
 /** interface/type blocks whose name matches, with their body text. */
 function declaredShapes(

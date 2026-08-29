@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  SYNTHETIC. NOT A RECORDING. Written 2026-08-28 for the audit-finding-E control
+  in tests/legistar-insite-union.test.ts. Nothing fetched this document and
+  nothing may cite it as a measurement of the City of Mesa.
+
+  PROVENANCE, field by field:
+
+  - The envelope, the element order, the `Gateway.aspx?M=MD&From=RSS&ID=…&GUID=…`
+    link shape, the `<guid isPermaLink="false">` suffix and the `<category>`
+    element are copied structurally from the RECORDED Pima feed beside this file
+    (tests/fixtures/legistar-insite-pima-feed-this-year.xml, taken live from
+    pima.legistar.com on 2026-08-28). The parser under test reads only the
+    title, the link and the pubDate, and this file must exercise the real ones.
+
+  - The InSite ids and GUIDs of the two items that CORROBORATE the grid — 1336055
+    and 1336069 — are the real ones, read out of the recorded Mesa grid fixture
+    tests/fixtures/legistar-insite-mesa-calendar-next-month.html, so the shared
+    vendor-id link the supersession test asserts is a link between this file and
+    a genuinely recorded record rather than between two inventions.
+
+  - The times are the part that is INVENTED, and they are invented on purpose:
+
+      * 9/14/2026 5:45 PM (id 1336069) AGREES with the recorded grid row. It is
+        here so the feed is a corroborating route and not a purely adversarial
+        one — without it the control would prove only that disagreement is
+        handled.
+
+      * 9/28/2026 6:15 PM (id 1336055) DISAGREES with the recorded grid row,
+        which publishes 5:45 PM. This is the supersession positive control: one
+        publisher record, two canonical identities, the richer route's the one
+        we serve. Legistar RSS titles are generated at publication, so a body
+        that moves an hour and a feed that keeps the earlier wording is the
+        real shape of this disagreement.
+
+      * 10/12/2026 5:45 PM (id 1336099) is a sitting the recorded grid's "Next
+        Month" range does not carry at all. This is the audit-finding-E control:
+        an explicit first-party route publishing a timed future sitting that the
+        meeting-producing route is silent about. Its id is deliberately NOT a
+        recorded one, because the whole point of the case is that no produced
+        record shares it.
+
+      * The Planning and Zoning Board item is a real Mesa department name from
+        the recorded grid, and it is here so the control also proves the feed
+        route applies isWiredBody rather than accepting every row it can parse.
+-->
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title /><link>https://mesa.legistar.com/Gateway.aspx?M=C&amp;From=RSS&amp;Mode=</link><description /><generator>Legistar</generator><ttl>15</ttl><atom:link href="https://mesa.legistar.com/Feed.ashx?M=Calendar&amp;ID=51120044&amp;GUID=8f3c1a92-0d47-4b6e-9c15-7ad2e6b40f31" rel="self" type="application/atom+xml" /><item><title>City Council - 10/12/2026 - 5:45 PM</title><link>https://mesa.legistar.com/Gateway.aspx?M=MD&amp;From=RSS&amp;ID=1336099&amp;GUID=6E1C5E0A-7B21-4E37-9F0C-2A1D5B4C9E10</link><guid isPermaLink="false">6E1C5E0A-7B21-4E37-9F0C-2A1D5B4C9E10-2026-07-15-09-12-00</guid><description /><category>City Council</category><pubDate>Wed, 15 Jul 2026 09:12:00 GMT</pubDate></item><item><title>City Council - 9/28/2026 - 6:15 PM</title><link>https://mesa.legistar.com/Gateway.aspx?M=MD&amp;From=RSS&amp;ID=1336055&amp;GUID=AB5E66D7-A3F6-42F4-A52E-DBFE64BF3BFF</link><guid isPermaLink="false">AB5E66D7-A3F6-42F4-A52E-DBFE64BF3BFF-2026-05-04-16-30-00</guid><description /><category>City Council</category><pubDate>Mon, 04 May 2026 16:30:00 GMT</pubDate></item><item><title>City Council - 9/14/2026 - 5:45 PM</title><link>https://mesa.legistar.com/Gateway.aspx?M=MD&amp;From=RSS&amp;ID=1336069&amp;GUID=FAC7F0B4-39E0-4D2D-990E-714F3416712C</link><guid isPermaLink="false">FAC7F0B4-39E0-4D2D-990E-714F3416712C-2026-05-04-16-30-00</guid><description /><category>City Council</category><pubDate>Mon, 04 May 2026 16:30:00 GMT</pubDate></item><item><title>Planning and Zoning Board - Public Hearing - 9/23/2026 - 4:00 PM</title><link>https://mesa.legistar.com/Gateway.aspx?M=MD&amp;From=RSS&amp;ID=1439811&amp;GUID=DD860D77-A061-4004-B71A-D9EB25B87AD1</link><guid isPermaLink="false">DD860D77-A061-4004-B71A-D9EB25B87AD1-2026-06-02-11-05-00</guid><description /><category>Planning and Zoning Board</category><pubDate>Tue, 02 Jun 2026 11:05:00 GMT</pubDate></item></channel></rss>

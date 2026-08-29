@@ -495,3 +495,92 @@ test("an unparseable or future-shaped record reads as UNKNOWN rather than throwi
   assert.notEqual(future.formatVersion, 1);
   assert.equal(assessIntegrity(NEVER_CHECKED, SHA_A).state, "UNKNOWN");
 });
+
+/* ══════════════════════════════════════════════════════════════════════════
+ * WHERE A FRESHNESS FREEZE FAILS THE JOB, AND WHERE IT ONLY REPORTS
+ * (2026-08-29, measured on this gate's own first run against `main`.)
+ * ══════════════════════════════════════════════════════════════════════════ */
+
+/**
+ * THE DEFECT THIS PINS, and it was measured rather than imagined.
+ *
+ * The freshness clause shipped in PR #221, the merge landed, and the `gates` job
+ * on the merge commit went RED with `PRODUCTION_MOVED` while nothing whatever
+ * was wrong with production — the reading held, the deploy succeeded, and all 23
+ * migrations were applied.
+ *
+ * It was red BY CONSTRUCTION and would have been red after every
+ * production-changing merge forever: the `gates` job checks out the merge
+ * commit, whose integrity record necessarily predates the deploy that merge
+ * triggers, so `served != recorded` is guaranteed. A gate that fails regardless
+ * of the truth measures nothing, and a permanently red `main` is how a real red
+ * stops being read.
+ *
+ * These tests hold the narrowing in place and — more importantly — hold the
+ * PULL REQUEST half unchanged, because that is where every protection lives.
+ */
+test("the freshness split is by EVENT, and the pull-request half is untouched", () => {
+  const gate = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
+
+  // The condition is on the push-to-main event specifically, never on a bare
+  // "is this CI" test, which would take the pull request with it.
+  assert.match(gate, /GITHUB_EVENT_NAME === "push"/);
+  assert.match(gate, /refs\/heads\/main|GITHUB_REF_NAME === "main"/);
+
+  /*
+   * DEGRADED IS EXCLUDED BY NAME. `PRODUCTION_MOVED` and its siblings say "we do
+   * not currently know"; DEGRADED says "we asked, and production and the
+   * committed migrations disagree" — an active incident that is true whichever
+   * event observed it, and exactly the 2026-08-28 drift. If this ever falls
+   * through the same branch, a real incident stops failing `main`.
+   */
+  assert.match(gate, /verdict\.state !== "DEGRADED"/);
+});
+
+test("SEEDED: a DEGRADED reading is NOT covered by the push-to-main narrowing", () => {
+  // The narrowing must never reach a genuine incident. Asserted on the model
+  // rather than on the script's prose: a REFUSED reading freezes, and the
+  // verdict it produces carries the state the script excludes by name.
+  const degraded = evaluateReleaseFreeze({
+    record: {
+      ...NEVER_CHECKED,
+      deployedSha: "589676ae",
+      observed: "REFUSED",
+      failureClass: "MIGRATION_NOT_APPLIED",
+      detail: "production is missing 0022_adorable_hemingway",
+      observedAt: "2026-08-29T16:00:00.000Z",
+      moment: "post-deploy",
+      gateExit: 1,
+    },
+    candidateSha: "7634fdb0",
+    changedPaths: ["lib/db/migrations/0023_x.sql"],
+    production: { servedSha: "589676ae", how: "GET /api/build", readingAgeHours: 0.1, maxAgeHours: 24 },
+  });
+  assert.equal(degraded.frozen, true);
+  assert.equal(degraded.state, "DEGRADED", "a DEGRADED verdict must keep failing every event");
+});
+
+test("POSITIVE CONTROL: a freshness freeze and a DEGRADED freeze are DIFFERENT states", () => {
+  // Without this, the test above would pass against a model that reported every
+  // freeze as DEGRADED — and the script's exclusion would then silence
+  // everything rather than nothing.
+  const moved = evaluateReleaseFreeze({
+    record: {
+      ...NEVER_CHECKED,
+      deployedSha: "de61ff5d",
+      observed: "HELD",
+      failureClass: null,
+      detail: "held",
+      observedAt: "2026-08-29T16:01:14.134Z",
+      moment: "post-deploy",
+      gateExit: 0,
+    },
+    candidateSha: "7634fdb0",
+    changedPaths: ["lib/control-plane/completion.ts"],
+    production: { servedSha: "589676ae", how: "GET /api/build", readingAgeHours: 0.7, maxAgeHours: 24 },
+  });
+  assert.equal(moved.frozen, true, "production moved under the reading — still a freeze");
+  assert.notEqual(moved.state, "DEGRADED", "a stale reading is not an incident");
+  assert.equal(moved.state, "STALE_HEALTHY");
+  assert.equal(moved.freshness, "PRODUCTION_MOVED");
+});

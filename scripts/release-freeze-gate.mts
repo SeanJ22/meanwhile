@@ -214,6 +214,79 @@ async function main(): Promise<void> {
     console.log(
       `  pnpm integrity:check --sha=${verdict.servedSha ?? "<the sha /api/build returns>"} --write`,
     );
+
+    /*
+     * ======================================================================
+     * WHERE A FRESHNESS FREEZE FAILS THE JOB, AND WHERE IT ONLY REPORTS.
+     * (2026-08-29, measured on this gate's own first run against `main`.)
+     * ======================================================================
+     *
+     * **THE DEFECT, MEASURED RATHER THAN ANTICIPATED.** The freshness clause
+     * shipped, PR #221 merged, and the `gates` job on the merge commit went RED
+     * with `PRODUCTION_MOVED`. Nothing was wrong with production: the reading
+     * held, the deploy succeeded, and the migrations were all applied.
+     *
+     * It is red BY CONSTRUCTION, and it would be red after every
+     * production-changing merge forever:
+     *
+     *   1. The merge lands on `main` and Netlify starts building it.
+     *   2. The `gates` job checks out THE MERGE COMMIT — which necessarily
+     *      carries the integrity record as it stood BEFORE this deploy, because
+     *      the reading for this deploy cannot exist until the deploy finishes.
+     *   3. Production has meanwhile moved (to this release, or to the observer's
+     *      own record commit riding the accumulated Netlify diff).
+     *   4. served != recorded -> PRODUCTION_MOVED -> frozen -> `main` is red.
+     *
+     * A gate that is guaranteed to fail regardless of the truth is not
+     * measuring anything, and a permanently red `main` is how a real red stops
+     * being read.
+     *
+     * **THE SPLIT, AND WHY IT WEAKENS NOTHING.** The freeze exists to refuse the
+     * NEXT production-changing release while integrity is unproven. On a PULL
+     * REQUEST that is exactly the question and it is answerable: the release has
+     * not happened, production is serving the previous state, and its reading
+     * should be current. **Every protection lives there and every protection is
+     * kept — a frozen pull request still cannot merge.**
+     *
+     * On a PUSH TO `main` the release has ALREADY happened. Failing the job
+     * prevents nothing; it only reports, after the fact, on a race whose other
+     * half — `post-deploy-integrity.yml` — is already running and will record
+     * the reading that clears it. So a FRESHNESS freeze there is printed as a
+     * loud warning and does not fail the job.
+     *
+     * **DEGRADED IS DIFFERENT AND STILL FAILS EVERYWHERE.** `PRODUCTION_MOVED`,
+     * `READING_EXPIRED`, `PRODUCTION_UNOBSERVABLE` and `NOT_ASSESSED` all say
+     * *we do not currently know*. `DEGRADED` says *we asked, and production and
+     * the committed migrations disagree* — an active incident, true whichever
+     * event observed it, and exactly the 2026-08-28 drift. A red `main` is the
+     * correct response to that, so it is excluded from the split by name rather
+     * than by falling through a condition.
+     *
+     * This is a narrowing of WHERE a verdict fails a job. It is not an escape
+     * hatch: there is still no flag, no environment override, and no path by
+     * which a pull request carrying an unproven release reaches `main`.
+     */
+    const onMainPush =
+      process.env.GITHUB_EVENT_NAME === "push" &&
+      (process.env.GITHUB_REF === "refs/heads/main" || process.env.GITHUB_REF_NAME === "main");
+    const freshnessOnly = verdict.state !== "DEGRADED";
+
+    if (onMainPush && freshnessOnly) {
+      console.log("");
+      console.log(
+        "::warning title=Production integrity is not current::" +
+          `${verdict.freshness} on a push to main. The release has already happened, so this ` +
+          "reports rather than refuses; post-deploy-integrity.yml records the reading that " +
+          "clears it. A pull request in this state is REFUSED.",
+      );
+      console.log(
+        "REPORTED, NOT REFUSED — this is a push to `main`. The freeze governs whether a release\n" +
+          "MAY PROCEED, and this one already has. The same verdict on a pull request fails the job.",
+      );
+      process.exitCode = 0;
+      return;
+    }
+
     process.exitCode = 1;
     return;
   }

@@ -24,6 +24,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 import { floored, floorLine } from "../ops/denominator-floor.ts";
+import { attachClaims, type MethodClaim } from "./claims.ts";
 import {
   learnRoute,
   recordRouteOutcome,
@@ -66,6 +67,17 @@ export interface LearnedRoute {
    * measurement stays permanently unrecorded.
    */
   effort?: MethodRoute["effort"];
+  /**
+   * **THE ASSERTIONS THIS ROUTE MAKES, CLASSIFIED.** (2026-08-28.)
+   *
+   * Required by the validator for every route learned after method version 55,
+   * so a `learn-*` script that omits it fails `pnpm method:check` rather than
+   * landing an unclassified entry in the canonical store. The same
+   * additive-fill rule as `effort` applies to an already-known route: a claim
+   * id the route does not carry is added, and one it already carries is left
+   * exactly as its author wrote it.
+   */
+  claims?: MethodClaim[];
 }
 
 export interface LearnBatchResult {
@@ -113,6 +125,7 @@ export function learnBatch(
         origin: r.origin,
         learnedOn: stamp,
         ...(r.effort ? { effort: r.effort } : {}),
+        ...(r.claims ? { claims: r.claims } : {}),
       },
       stamp,
     );
@@ -136,6 +149,19 @@ export function learnBatch(
           routes[idx] = { ...routes[idx], effort: r.effort };
           k = { ...k, routes };
           log.push(`                  effort recorded for ${r.id} (was unmeasured)`);
+        }
+      }
+      /*
+       * Claims arrived after 116 routes existed, so the same additive fill
+       * applies: a claim id the route does not carry is added, and one it
+       * already carries is never rewritten. A re-run therefore says nothing
+       * changed rather than replacing a recorded assertion with a reworded one.
+       */
+      if (r.claims && r.claims.length > 0) {
+        const att = attachClaims(k.routes, r.id, r.claims);
+        if (att.added.length > 0) {
+          k = { ...k, routes: att.routes };
+          log.push(`                  claims attached to ${r.id}: ${att.added.join(", ")}`);
         }
       }
     } else {

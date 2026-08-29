@@ -26,6 +26,11 @@
  */
 
 import {
+  type MethodClaim,
+  isIsoDate,
+  validateClaims,
+} from "./claims.ts";
+import {
   type Applicability,
   type Jurisdiction,
   appliesTo,
@@ -33,6 +38,26 @@ import {
   unknownApplicability,
   type PortabilityClass,
 } from "./portability.ts";
+
+/**
+ * **WHEN CLAIM CLASSES BECAME REQUIRED.** (2026-08-28.)
+ *
+ * The store held 116 routes at method version 55 when the four claim classes
+ * were adopted, and backfilling 116 entries by re-deriving what each of their
+ * paragraphs was asserting would be a large act of guessing — precisely the
+ * thing the classes exist to prevent. So the requirement is FORWARD, and the
+ * floor is stated as the version the store stood at:
+ *
+ *   - a route that ENTERS project knowledge after v55 declares its classes;
+ *   - a route AMENDED after the adoption date — a dated sub-branch on or after
+ *     it — declares its classes, because an amendment is exactly the moment
+ *     somebody decided part of an entry was wrong;
+ *   - the 116 that came before are reported as UNCLASSIFIED, by number, and a
+ *     consumer is told that unclassified means nobody declared a class, NOT
+ *     that the entry contains no conclusion.
+ */
+export const CLAIM_CLASS_REQUIRED_FROM_VERSION = 55;
+export const CLAIM_CLASS_ADOPTED_ON = "2026-08-28";
 
 /** What a route yielded in one jurisdiction on one date. */
 export interface RouteOutcome {
@@ -102,6 +127,23 @@ export interface MethodRoute {
    * getting it cost, and can a machine do it again without a person.**
    */
   effort?: RouteEffort;
+  /**
+   * **THE ASSERTIONS THIS ENTRY MAKES, EACH CLASSIFIED AND SEPARATELY
+   * RETRACTABLE.** (2026-08-28. See `lib/method/claims.ts`.)
+   *
+   * A route is not one claim. It exists (A), it did something somewhere (B),
+   * and it is often read as saying something about coverage (C) or about the
+   * public record itself (D). Before this field those four lived together in
+   * `applicability.note` at one authority, so withdrawing the false part meant
+   * rewriting the paragraph or deleting the route — and the Pima case proved
+   * that a false D and a perfectly valid A can be written in the same sentence.
+   *
+   * Optional on the type because 116 routes predate it and inventing classes
+   * for them would be the guessing this field exists to stop. **Required by the
+   * validator for new and amended entries**, which is where the rule can be
+   * enforced without a fabrication.
+   */
+  claims?: MethodClaim[];
 }
 
 /**
@@ -570,7 +612,60 @@ export function validateKnowledge(
         bad(r.id, "subbranch-undated", "a failed inherited route records jurisdiction AND date");
       }
     }
+
+    /*
+     * **A NEW OR AMENDED ENTRY DECLARES WHAT IT IS ASSERTING.** (2026-08-28.)
+     *
+     * Two mechanical triggers, and neither one requires a person to remember:
+     *
+     *   NEW      — the route entered after the floor version.
+     *   AMENDED  — the route carries a sub-branch dated AFTER adoption, which
+     *              is the store's existing record of "somebody decided part of
+     *              this was wrong". That is exactly the moment the class
+     *              matters, because it is the moment a reader has to know
+     *              whether what changed was the route, its outcome, a coverage
+     *              claim, or a conclusion about a government.
+     *
+     * The boundary is STRICTLY after the adoption date, because a rule cannot
+     * demand a class of an amendment written before the rule existed, and
+     * everything written on adoption day was written before it existed. The two
+     * entries amended that day — the Pima pair — are classified anyway, by the
+     * amendment in `lib/method/pima-claim-classes.ts`, which is the worked
+     * example rather than an exemption.
+     *
+     * The amendment trigger reads only sub-branches whose `failedOn` PARSES as
+     * an ISO date. Thirteen legacy sub-branches carry prose in that field (the
+     * jurisdiction, date, reason and successor were written into each other's
+     * slots before this store had a writer), and an unparseable date is not a
+     * dated amendment. Those are counted and named by `method:check` rather
+     * than silently swept into a rule they cannot answer.
+     */
+    const claims = r.claims ?? [];
+    if (claims.length === 0) {
+      const amendedAfterAdoption = r.subBranches.some(
+        (sb) => isIsoDate(sb.failedOn) && sb.failedOn > CLAIM_CLASS_ADOPTED_ON,
+      );
+      if (r.learnedAtVersion > CLAIM_CLASS_REQUIRED_FROM_VERSION) {
+        bad(
+          r.id,
+          "claim-class-required-for-new-route",
+          `entered project knowledge at v${r.learnedAtVersion}, after claim classes were adopted at ` +
+            `v${CLAIM_CLASS_REQUIRED_FROM_VERSION}, and declares no claim class`,
+        );
+      } else if (amendedAfterAdoption) {
+        bad(
+          r.id,
+          "claim-class-required-for-amendment",
+          `materially amended on or after ${CLAIM_CLASS_ADOPTED_ON} and still declares no claim class — ` +
+            `an amendment must say whether what changed was the route, an outcome, a coverage claim or a conclusion`,
+        );
+      }
+    }
   }
+
+  // Everything the claim layer refuses: provenance required for C and D,
+  // closed sets, declared dependency edges, and the stale-dependent flag.
+  for (const i of validateClaims(k)) bad(i.id, i.rule, i.detail);
 
   // Every conclusion carries the method version it was earned under, or the
   // reopening machinery cannot see it at all.
@@ -607,3 +702,26 @@ export function routeCount(k: MethodKnowledge): number {
 }
 
 export { appliesTo, unknownApplicability, type Applicability, type Jurisdiction };
+
+export {
+  CLAIM_CLASSES,
+  CLAIM_CLASS_LETTER,
+  PROVENANCE_REQUIRED_CLASSES,
+  allClaims,
+  attachClaims,
+  classificationCoverage,
+  currentTruthFor,
+  findClaim,
+  findDependencyFlags,
+  isIsoDate,
+  readCurrentMethod,
+  retractClaim,
+  staleDependents,
+  validateClaims,
+  type ClaimClass,
+  type ClaimProvenance,
+  type ClaimRetraction,
+  type ClaimValidation,
+  type DependencyFlag,
+  type MethodClaim,
+} from "./claims.ts";

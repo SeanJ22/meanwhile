@@ -12,14 +12,23 @@ import { fileURLToPath } from "node:url";
 
 import { floorLine, floored } from "../lib/ops/denominator-floor.ts";
 import {
+  CLAIM_CLASS_LETTER,
+  classificationCoverage,
+  currentTruthFor,
+  findDependencyFlags,
   findReopenings,
+  isIsoDate,
+  readCurrentMethod,
   validateKnowledge,
   type MethodKnowledge,
   type PriorConclusion,
 } from "../lib/method/knowledge.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const STORE = join(ROOT, "data", "method", "knowledge.json");
+// An explicit path lets the SAME consumer be pointed at a throwaway copy, so a
+// migration can be proved by the instrument a future session will actually read
+// with, rather than by a paraphrase of it. No argument means the canonical store.
+const STORE = process.argv[2] ?? join(ROOT, "data", "method", "knowledge.json");
 const CONCLUSIONS = join(ROOT, "data", "method", "conclusions.json");
 
 if (!existsSync(STORE)) {
@@ -58,6 +67,72 @@ console.log(`  AWAITING reopening     ${reopenings.length}`);
 console.log("");
 console.log("NO ROUTE CAP EXISTS. This number is WHAT THE PROJECT KNOWS NOW,");
 console.log("never a statement about how many routes there are.");
+console.log("");
+
+/*
+ * **WHAT A FUTURE SESSION IS BEING TAUGHT.** (2026-08-28.)
+ *
+ * The four claim classes, the dependency flags a withdrawal raises, and — the
+ * part that matters most — the CORRECTED CURRENT ANSWER for every withdrawn
+ * claim, printed beside it. A consumer reading this must never be able to take
+ * a superseded conclusion for a current one.
+ */
+const cov = classificationCoverage(k);
+console.log(
+  `  ${floorLine(
+    floored("routes declaring a claim class", "data/method/knowledge.json", cov.routes, cov.classified),
+  )}`,
+);
+console.log(`claims declared          ${cov.claims}`);
+for (const [cls, n] of Object.entries(cov.byClass)) {
+  console.log(`  ${CLAIM_CLASS_LETTER[cls as keyof typeof CLAIM_CLASS_LETTER]}  ${cls.padEnd(20)} ${n}`);
+}
+console.log(`withdrawn (kept, never deleted)  ${cov.retracted}`);
+console.log(
+  `UNCLASSIFIED entries     ${cov.unclassified}  — nobody declared a class for these, which is NOT`,
+);
+console.log(
+  "                         the same as their carrying no conclusion; their prose may hold an",
+);
+console.log("                         undeclared coverage claim or derived conclusion.");
+
+const flags = findDependencyFlags(k);
+const stale = flags.filter((f) => f.status === "STALE");
+console.log(`dependency flags         ${flags.length}  (${stale.length} STALE, ${flags.length - stale.length} dispositioned)`);
+for (const f of flags) {
+  console.log(`  ${f.status.padEnd(14)} ${f.dependent}`);
+  console.log(`                 rests on ${f.upstream} (${f.upstreamKind} ${f.upstreamOn})`);
+}
+
+const withdrawn = readCurrentMethod(k).flatMap((v) => v.retracted.map((r) => r.claim));
+if (withdrawn.length > 0) {
+  console.log("");
+  console.log("CORRECTED CURRENT TRUTH — a withdrawn claim never answers as current:");
+  for (const c of withdrawn) {
+    const t = currentTruthFor(k, c.id);
+    console.log(`  ASKED    ${c.id}`);
+    console.log(`  STATUS   ${t.status}`);
+    console.log(`  CURRENT  ${t.claim ? t.claim.id : "(none — see what survives)"}`);
+    console.log(`           ${(t.claim?.statement ?? c.retraction?.survives ?? "").slice(0, 220)}`);
+  }
+}
+
+/*
+ * Thirteen legacy sub-branches carry prose where the date belongs — the
+ * jurisdiction, date, reason and successor were written into each other's slots
+ * before this store had a writer. `subbranch-undated` only checks that the
+ * field is non-empty, so it passes them. Counted here rather than swept up,
+ * because a rule that keys on a date cannot read these and must not pretend to.
+ */
+const undatedSubBranches = k.routes.flatMap((r) =>
+  r.subBranches.filter((sb) => !isIsoDate(sb.failedOn)).map((sb) => `${r.id}: ${sb.failedOn.slice(0, 60)}`),
+);
+console.log("");
+console.log(`sub-branches whose failedOn is not an ISO date   ${undatedSubBranches.length}`);
+if (undatedSubBranches.length > 0) {
+  console.log("  (legacy rows whose jurisdiction/date/reason/successor were written into each");
+  console.log("   other's slots. Reported, not swept: a dated rule cannot read them.)");
+}
 console.log("");
 
 const byRule = new Map<string, number>();

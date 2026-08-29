@@ -14,7 +14,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { loadIndex } from "../lib/governance/ledger.ts";
-import { inheritedRoutes } from "../lib/method/knowledge.ts";
+import { projectMethodFor } from "../lib/method/projection.ts";
 import { ELIGIBLE_EDGE_VERSION } from "../lib/workstate/eligibility.ts";
 import { proveResume } from "../lib/workstate/frontier.ts";
 import { DESCENT_STATES, loadMethodStore, loadWorkstreamFor } from "../lib/workstate/load.ts";
@@ -90,12 +90,42 @@ for (const state of DESCENT_STATES) {
   console.log("");
 }
 
-// --- what the method system hands over ------------------------------------
-const sample = method ? inheritedRoutes(method, { state: "nj" }) : [];
-console.log(`ROUTES INHERITED:              ${sample.length} applicable to a descent state`);
+/*
+ * --- what the method system hands over ------------------------------------
+ *
+ * **THROUGH THE PROJECTION.** (2026-08-28.) This read used to be
+ * `inheritedRoutes(method, …)`, which returned raw `MethodRoute` objects, so the
+ * handoff's own idea of what the next session inherits included four
+ * unclassified prose fields that no retraction reaches — and on 2026-08-28 a
+ * withdrawn conclusion about what Pima County publishes was sitting in two of
+ * them. A handoff is the one document a next session trusts without re-deriving,
+ * which makes it the worst possible place for a corrected sentence to survive
+ * its correction. `lib/method/projection.ts` is the read path now, and it prints
+ * what is inherited AS AUTHORITY separately from what is merely known.
+ */
+const p = method ? projectMethodFor(method, { state: "nj" }) : null;
+console.log(`ROUTES INHERITED:              ${p?.counts.routesInherited ?? 0} applicable to a descent state`);
 console.log(
-  `                               ${sample.filter((r) => r.speculative).length} speculative (UNKNOWN portability — offered, never claimed proven)`,
+  `                               ${p?.counts.routesSpeculative ?? 0} speculative (UNKNOWN portability — offered, never claimed proven)`,
 );
+console.log(
+  `INHERITED AS AUTHORITY:        ${p?.counts.existenceAssertions ?? 0} route-existence, ` +
+    `${p?.counts.observationAssertions ?? 0} outcome, ${p?.counts.substantiveAssertions ?? 0} coverage/conclusion assertion(s)`,
+);
+console.log(
+  `                               ${p?.counts.observations ?? 0} recorded walk(s), carried as tuples rather than as prose`,
+);
+console.log(
+  `WITHHELD, NAMED, NOT TAUGHT:   ${p?.counts.withheld ?? 0} substantive assertion(s) withdrawn, contradicted or unevidenced`,
+);
+for (const w of p?.withheld ?? []) {
+  console.log(`  ${w.reason.padEnd(18)} ${w.id}`);
+  console.log(`                     -> ${w.correctedBy ?? "(no successor — the retraction names what survives)"}`);
+}
+console.log(
+  `UNCLASSIFIED LEGACY ENTRIES:   ${p?.counts.routesLegacyUnclassified ?? 0} route(s) KNOWN, whose substantive prose is`,
+);
+console.log("                               NOT YET CLASSIFIED and is NOT inherited as a conclusion.");
 console.log(`NEWLY APPLICABLE ROUTES:       0 learned since the store was ingested (method version ${method?.version ?? 0})`);
 console.log("");
 

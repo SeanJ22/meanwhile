@@ -47,32 +47,21 @@ import {
 } from "../lib/method/claims.ts";
 import {
   emptyKnowledge,
-  inheritedRoutes,
+  applicableRoutesUnprojected,
   learnRoute,
   validateKnowledge,
   type MethodKnowledge,
   type MethodRoute,
 } from "../lib/method/knowledge.ts";
 import { PIMA_CLAIM_CLASSES } from "../lib/method/pima-claim-classes.ts";
-import { unknownApplicability } from "../lib/method/portability.ts";
+import { testRoute } from "./method-fixtures.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ON = "2026-08-28";
 
-function route(id: string, over: Partial<MethodRoute> = {}): Omit<MethodRoute, "learnedAtVersion"> {
-  return {
-    id,
-    title: id,
-    tier: "A1",
-    fields: ["meeting"],
-    applicability: unknownApplicability("test route"),
-    outcomes: [],
-    subBranches: [],
-    origin: "test",
-    learnedOn: ON,
-    ...over,
-  };
-}
+// The route factory is shared with `tests/method-projection.test.ts` — RULING
+// 103, and `tests/duplicate-implementations.test.ts` refuses the second copy.
+const route = testRoute;
 
 function storeWith(...routes: Array<Omit<MethodRoute, "learnedAtVersion">>): MethodKnowledge {
   let k = emptyKnowledge();
@@ -153,7 +142,7 @@ test("CONTROL (a): a valid route SURVIVES the correction of a false completeness
   ];
   k = { ...k, routes: attachClaims(k.routes, "the-route", claims).routes };
 
-  const before = inheritedRoutes(k, { state: "az" }).length;
+  const before = applicableRoutesUnprojected(k, { state: "az" }).length;
 
   // The completeness claim is withdrawn. Nothing else may move.
   const res = retractClaim(k.routes, "the-route#complete", {
@@ -173,7 +162,7 @@ test("CONTROL (a): a valid route SURVIVES the correction of a false completeness
   assert.equal(still!.retiredOn, undefined, "withdrawing a claim may never retire the route under it");
   // ...AND STILL USABLE: it is still offered to a jurisdiction.
   assert.equal(
-    inheritedRoutes(k, { state: "az" }).length,
+    applicableRoutesUnprojected(k, { state: "az" }).length,
     before,
     "the route is still inherited — a false C never removes an A from the offer",
   );
@@ -219,7 +208,7 @@ test("CONTROL (a), the other half: retracting every claim on a route still does 
     }).routes,
   };
   assert.equal(k.routes.length, 1);
-  assert.equal(inheritedRoutes(k, { state: "az" }).length, 1, "a route with zero current claims still inherits");
+  assert.equal(applicableRoutesUnprojected(k, { state: "az" }).length, 1, "a route with zero current claims still inherits");
 });
 
 /* ------------------------------------- (b) A RETRACTION FLAGS ITS DEPENDENTS, BY NAME */
@@ -750,7 +739,7 @@ test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted,
     const route = k.routes.find((x) => x.id === id)!;
     assert.equal(route.retiredOn, undefined, `${id} must not be retired by its conclusion being wrong`);
     assert.ok(
-      inheritedRoutes(k, { state: "az", governmentType: "county" }).some((i) => i.route.id === id),
+      applicableRoutesUnprojected(k, { state: "az", governmentType: "county" }).some((i) => i.route.id === id),
       `${id} is still offered to Arizona`,
     );
   }

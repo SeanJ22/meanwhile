@@ -23,6 +23,7 @@ import {
   type MethodKnowledge,
   type PriorConclusion,
 } from "../lib/method/knowledge.ts";
+import { projectMethodFor, substantiveAssertions } from "../lib/method/projection.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 // An explicit path lets the SAME consumer be pointed at a throwaway copy, so a
@@ -116,6 +117,34 @@ if (withdrawn.length > 0) {
     console.log(`           ${(t.claim?.statement ?? c.retraction?.survives ?? "").slice(0, 220)}`);
   }
 }
+
+/*
+ * **AND WHAT A WORKER ACTUALLY INHERITS.** (2026-08-28.)
+ *
+ * The block above reports what the STORE holds. This one reports what the
+ * consumer read path HANDS OVER, and the two are different numbers on purpose:
+ * a withdrawn coverage claim is still held and is never handed over, and 112
+ * unclassified entries are handed over as ROUTES with a named gap rather than as
+ * conclusions. Printing only the first number is how a correction that the read
+ * path does not read looks green. `lib/method/projection.ts`.
+ */
+const worker = projectMethodFor(k, { state: "az", governmentType: "county" });
+console.log("");
+console.log("WHAT A WORKER INHERITS (projection for az/county — the consumer read path):");
+console.log(`  routes offered                 ${worker.counts.routesInherited}`);
+console.log(`  A  route-existence assertions  ${worker.counts.existenceAssertions}`);
+console.log(`  B  recorded walks (tuples)     ${worker.counts.observations}`);
+console.log(`  B  outcome assertions          ${worker.counts.observationAssertions}`);
+console.log(`  C+D substantive, INHERITED     ${substantiveAssertions(worker).length}`);
+console.log(`  C+D substantive, WITHHELD      ${worker.counts.withheld}`);
+for (const w of worker.withheld) {
+  console.log(`     ${w.reason.padEnd(18)} ${w.id}`);
+  console.log(`                        -> ${w.correctedBy ?? "(no successor; the retraction names what survives)"}`);
+}
+console.log(
+  `  legacy UNCLASSIFIED routes     ${worker.counts.routesLegacyUnclassified}  — known as ROUTES; their substantive`,
+);
+console.log("                                 prose is NOT inherited as a conclusion.");
 
 /*
  * Thirteen legacy sub-branches carry prose where the date belongs — the

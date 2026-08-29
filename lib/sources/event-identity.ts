@@ -175,12 +175,48 @@ export function localWallClock(
 export function sittingKey(fields: SittingKeyFields): string | null {
   const local = localWallClock(fields.startsAt, fields.timeZone);
   if (!local) return null;
+  return sittingKeyFromLocal({ ...fields, ...local });
+}
+
+/**
+ * **THE SAME KEY, FOR A ROUTE THAT NEVER PUBLISHED AN INSTANT.**
+ * (2026-08-28, the union correction.)
+ *
+ * `sittingKey` takes `startsAt` because every adapter that produces a `Meeting`
+ * has resolved one. The routes that enumerate a body's future do not: the
+ * calendar grid prints `12/15/2026` and `5:00 PM`, the calendar RSS prints
+ * `Board of Supervisors - 12/15/2026 - 5:00 PM`, and the Clerk of the Board's
+ * own schedule table prints `12/15/26` and `Regular (at 5:00 p.m.)`. **None of
+ * them states a zone**, and constructing an instant just to key on it would
+ * make identity depend on a zone lookup that the publisher never performed.
+ *
+ * So the key is built from the local calendar date and the local wall clock
+ * DIRECTLY — which is what `sittingKey` reduces its instant to anyway, and is
+ * why the two functions cannot drift: this is the one that does the joining and
+ * `sittingKey` calls it.
+ *
+ * `localDate` is `YYYY-MM-DD` and `localTime` is 24-hour `HH:MM`. A caller
+ * holding `8/13/2026` and `1:00 PM` normalizes BEFORE it gets here; two
+ * spellings of one minute reaching this function are two keys, and that is the
+ * caller's defect, not something this function may paper over.
+ */
+export interface LocalSittingKeyFields {
+  bodyId?: string | null;
+  ocdId?: string | null;
+  jurisdiction?: string | null;
+  /** `YYYY-MM-DD`, the body's own calendar date. */
+  date: string;
+  /** `HH:MM`, 24-hour, the body's own wall clock. */
+  time: string;
+}
+
+export function sittingKeyFromLocal(fields: LocalSittingKeyFields): string | null {
   const who =
     fields.bodyId ??
     (fields.ocdId ? `division:${fields.ocdId}` : null) ??
     (fields.jurisdiction ? `jurisdiction:${fields.jurisdiction}` : null);
-  if (!who) return null;
-  return [who, local.date, local.time].join(UNIT_SEPARATOR);
+  if (!who || !fields.date || !fields.time) return null;
+  return [who, fields.date, fields.time].join(UNIT_SEPARATOR);
 }
 
 /**

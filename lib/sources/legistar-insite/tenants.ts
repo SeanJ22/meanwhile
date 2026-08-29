@@ -41,6 +41,22 @@ export interface InSiteTenant {
   publishingOrg: string;
   timeZone: string;
   venues: LegistarVenue[];
+  /**
+   * **THE BODY'S OWN SCHEDULE, ON THE BODY'S OWN DOMAIN.**
+   *
+   * Every other route in this adapter is Granicus telling us about the county.
+   * This is the county telling us about itself, and it is the only available
+   * check on the vendor: without a second first-party publisher there is no way
+   * to know whether `Calendar.aspx` has dropped a sitting or moved an hour.
+   *
+   * `null` means **nobody has looked yet** for this tenant. It is a gap in this
+   * registry and is reported as one — it is never a finding that the body
+   * publishes no schedule of its own.
+   *
+   * Read as corroboration only: no `Meeting` is produced from it. See
+   * `./clerk-schedule.ts`.
+   */
+  clerkScheduleUrl: string | null;
 }
 
 const pima = LEGISTAR_CLIENTS.find((client) => client.slug === "pima");
@@ -65,6 +81,21 @@ export const INSITE_TENANTS: InSiteTenant[] = [
     publishingOrg: pima.publishingOrg,
     timeZone: pima.timeZone,
     venues: pima.venues,
+    /**
+     * Found 2026-08-28 through `www.pima.gov/sitemap.xml` — 1,746 URLs, of
+     * which this is the one publishing dated Board sittings. The pages a
+     * reader lands on (`/2760/Board-of-Supervisors-Calendar`,
+     * `/2599/…-Agenda-Schedule`) publish only a recurrence rule in prose and a
+     * link to the vendor; **this** page publishes the instances, with the
+     * Clerk's own submission deadline beside each one.
+     *
+     * Measured the day it was found: 14 explicit future sittings here, 14 on
+     * the InSite grid, 14 of 14 agreeing on body, date and wall clock.
+     *
+     * Permitted: `www.pima.gov/robots.txt` (read 2026-08-28) disallows
+     * Baiduspider and Yandex only; `User-agent: *` carries no `Disallow`.
+     */
+    clerkScheduleUrl: "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
   },
   {
     /**
@@ -116,6 +147,17 @@ export const INSITE_TENANTS: InSiteTenant[] = [
        * it would put a pin on a building nobody promised.
        */
     ],
+    /**
+     * **NULL BECAUSE NOBODY HAS LOOKED, AND THAT IS THE HONEST VALUE.**
+     *
+     * Mesa's own council-schedule publication on `mesaaz.gov` has not been
+     * hunted for in this workstream. This is a gap in THIS REGISTRY — a rung
+     * nobody has climbed — and it is emitted as a `NOT_RETRIEVED` route
+     * observation saying exactly that, so a later session reads "nobody has
+     * looked" and not "the city publishes no schedule of its own".
+     * `CLAUDE.md`: absence is never asserted.
+     */
+    clerkScheduleUrl: null,
   },
 ];
 

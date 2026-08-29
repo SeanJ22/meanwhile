@@ -58,9 +58,13 @@ import {
   dateRangePostback,
   parseCalendarFeed,
   parseCalendarRows,
+  parseGridNoRecords,
   parseGridPager,
+  parseGridPageTargets,
   parseInSiteIcal,
   renderedRange,
+  type InSiteGridPager,
+  type InSiteRange,
 } from "../lib/sources/legistar-insite/calendar.ts";
 import {
   GRANICUS_LIVE_PROCEEDINGS_WALL,
@@ -83,11 +87,36 @@ const PIMA_NEXT_MONTH = fixture("legistar-insite-pima-calendar-next-month.html")
 const PIMA_THIS_MONTH = fixture("legistar-insite-pima-calendar-this-month.html");
 const MESA_NEXT_MONTH = fixture("legistar-insite-mesa-calendar-next-month.html");
 const MESA_THIS_YEAR_PAGED = fixture("legistar-insite-mesa-calendar-this-year-paged.html");
+const MESA_THIS_YEAR_PAGE2 = fixture("legistar-insite-mesa-calendar-this-year-page2.html");
+const PIMA_THIS_YEAR = fixture("legistar-insite-pima-calendar-this-year.html");
+const PIMA_NEXT_YEAR = fixture("legistar-insite-pima-calendar-next-year.html");
 const PIMA_FEED = fixture("legistar-insite-pima-feed.xml");
 
 const WEBAPI_AUG_OCT = JSON.parse(
   fixture("legistar-insite-pima-webapi-aug-oct.json"),
 ) as Record<string, unknown>[];
+
+/**
+ * One retrieved range, with the fields a real reading carries.
+ *
+ * `noRecords` is READ OFF THE FIXTURE rather than passed in, because it is the
+ * page's own statement and a test that could assert it by hand would be able to
+ * fake the one signal that licenses a zero.
+ */
+export function win(
+  range: InSiteRange,
+  html: string,
+  pager: InSiteGridPager | null = null,
+): LegistarInSiteRaw["windows"][number] {
+  return {
+    range,
+    rendered: range,
+    html,
+    pager,
+    pages: [],
+    noRecords: parseGridNoRecords(html),
+  };
+}
 
 function pimaReading(
   overrides: Partial<LegistarInSiteRaw> = {},
@@ -95,14 +124,13 @@ function pimaReading(
   return {
     slug: "pima",
     calendarUrl: "https://pima.legistar.com/Calendar.aspx",
-    windows: [
-      { range: "This Month", rendered: "This Month", html: PIMA_THIS_MONTH, pager: null },
-      { range: "Next Month", rendered: "Next Month", html: PIMA_NEXT_MONTH, pager: null },
-    ],
+    windows: [win("This Month", PIMA_THIS_MONTH), win("Next Month", PIMA_NEXT_MONTH)],
     feedXml: PIMA_FEED,
     feedUrl:
       "https://pima.legistar.com/Feed.ashx?M=Calendar&ID=43473383&GUID=88b7d677-6602-4f79-b987-4677f7f035e6",
     icalByInsiteId: {},
+    clerkScheduleHtml: null,
+    clerkScheduleUrl: null,
     collectedAt: "2026-08-28T18:30:00.000Z",
     ...overrides,
   };
@@ -407,10 +435,7 @@ test("(e) a cancellation on the portal supersedes the earlier future record", ()
   const after = normalizeWithDrops(
     [
       pimaReading({
-        windows: [
-          { range: "This Month", rendered: "This Month", html: PIMA_THIS_MONTH, pager: null },
-          { range: "Next Month", rendered: "Next Month", html: canceledGrid, pager: null },
-        ],
+        windows: [win("This Month", PIMA_THIS_MONTH), win("Next Month", canceledGrid)],
       }),
     ],
     NOW,
@@ -598,6 +623,8 @@ test("fetch drives the ASP.NET postback and reads back the range that was render
     "Last Month": PIMA_LAST_MONTH,
     "This Month": PIMA_THIS_MONTH,
     "Next Month": PIMA_NEXT_MONTH,
+    "This Year": PIMA_THIS_YEAR,
+    "Next Year": PIMA_NEXT_YEAR,
   };
   const fetchImpl = (async (url: string | URL, init?: RequestInit) => {
     const method = init?.method ?? "GET";
@@ -627,25 +654,31 @@ test("fetch drives the ASP.NET postback and reads back the range that was render
   assert.equal(raw.length, 1);
   assert.deepEqual(
     raw[0].windows.map((w) => [w.range, w.rendered]),
-    [
-      ["Last Month", "Last Month"],
-      ["This Month", "This Month"],
-      ["Next Month", "Next Month"],
-    ],
+    RANGES.map((r) => [r, r]),
     "every range was requested and the returned page confirms each one took",
+  );
+  assert.equal(
+    raw[0].windows.find((w) => w.range === "Next Year")?.noRecords,
+    true,
+    'the "Next Year" zero carries the publisher\'s own statement, so it is a zero we may keep',
   );
 
   const posted = seen.filter((r) => r.method === "POST");
   assert.ok(posted.length >= 2, "the range change must be a postback, not a query string");
-  const form = new URLSearchParams(posted.at(-1)?.body ?? "");
+  const rangePosts = posted.filter(
+    (r) =>
+      new URLSearchParams(r.body ?? "").get("__EVENTTARGET") ===
+      "ctl00$ContentPlaceHolder1$lstYears",
+  );
+  const form = new URLSearchParams(rangePosts.at(-1)?.body ?? "");
   assert.equal(form.get("__EVENTTARGET"), "ctl00$ContentPlaceHolder1$lstYears");
-  assert.equal(form.get("ctl00$ContentPlaceHolder1$lstYears"), "Next Month");
+  assert.equal(form.get("ctl00$ContentPlaceHolder1$lstYears"), RANGES.at(-1));
   assert.ok(
     (form.get("__VIEWSTATE") ?? "").length > 100,
     "the page's own __VIEWSTATE must be returned, or the server answers with the page it already had",
   );
   assert.ok(
-    form.get("ctl00_ContentPlaceHolder1_lstYears_ClientState")?.includes("Next Month"),
+    form.get("ctl00_ContentPlaceHolder1_lstYears_ClientState")?.includes(RANGES.at(-1)!),
     "the Telerik combo reads its selection from _ClientState; the text input alone is a silent no-op",
   );
 
@@ -717,12 +750,12 @@ test("a PAGED grid is an incomplete enumeration, and it is reported rather than 
       {
         slug: "mesa",
         calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
-        windows: [
-          { range: "This Year", rendered: "This Year", html: MESA_THIS_YEAR_PAGED, pager },
-        ],
+        windows: [win("This Year", MESA_THIS_YEAR_PAGED, pager)],
         feedXml: null,
         feedUrl: null,
         icalByInsiteId: {},
+        clerkScheduleHtml: null,
+        clerkScheduleUrl: null,
         collectedAt: "2026-08-28T18:30:00.000Z",
       },
     ],
@@ -731,11 +764,86 @@ test("a PAGED grid is an incomplete enumeration, and it is reported rather than 
 
   assert.equal(result.partialScopes.length, 1, "the shortfall must be reported, not swallowed");
   assert.deepEqual(result.partialScopes[0].ocdIds, [mesa.ocdId]);
-  assert.match(result.partialScopes[0].cause, /page 1 of 2, items 1-100 of 148/);
+  assert.match(result.partialScopes[0].cause, /1 page\(s\) walked of 2/);
+  assert.match(result.partialScopes[0].cause, /100 row\(s\) read of 148/);
   assert.match(
     result.partialScopes[0].cause,
     /INCOMPLETE, not empty/,
     "the wording has to distinguish a short answer from an empty calendar",
+  );
+  assert.equal(
+    result.partialScopes[0].scope,
+    "UPCOMING",
+    '"This Year" reaches the future, so a shortfall in it is an UPCOMING gap — ' +
+      "attributing it to ARCHIVE would let carry-forward treat the future as whole",
+  );
+});
+
+test("the SECOND page is walked, and the completed range reports no shortfall", () => {
+  /*
+   * The correction to the test above. Reporting the shortfall was right and it
+   * was never the finish: a range this adapter cannot enumerate is a range
+   * whose sittings a reader does not get. Mesa's "This Year" is 148 rows behind
+   * a two-page pager, both pages recorded here from one live session — 100 + 48
+   * = 148, and the two pages share no InSite id.
+   */
+  const page1 = parseGridPager(MESA_THIS_YEAR_PAGED)!;
+  const page2 = parseGridPager(MESA_THIS_YEAR_PAGE2)!;
+  assert.equal(page2.page, 2);
+  assert.equal(page2.totalItems, 148);
+
+  const walked = normalizeWithDrops(
+    [
+      {
+        slug: "mesa",
+        calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
+        windows: [
+          {
+            ...win("This Year", MESA_THIS_YEAR_PAGED, page1),
+            pages: [{ page: 2, html: MESA_THIS_YEAR_PAGE2, pager: page2 }],
+          },
+        ],
+        feedXml: null,
+        feedUrl: null,
+        icalByInsiteId: {},
+        clerkScheduleHtml: null,
+        clerkScheduleUrl: null,
+        collectedAt: "2026-08-28T18:30:00.000Z",
+      },
+    ],
+    NOW,
+  );
+
+  assert.deepEqual(
+    walked.partialScopes,
+    [],
+    "148 rows read against a published total of 148 is a COMPLETE enumeration",
+  );
+  assert.equal(
+    walked.accounting.logicalInput,
+    148,
+    "every row of both pages must reach the accounting, or the walk lost one silently",
+  );
+});
+
+test("a page target is READ OFF THE PAGER, never derived from the control index", () => {
+  /*
+   * The measured trap. Posting a guessed "next page" control at Pima's All
+   * Years grid returned **page 3** — 200, right range, 100 well-formed rows,
+   * and a hundred sittings skipped with every check passing. Telerik states the
+   * page each link goes to in its own onclick, so the mapping is a fact off the
+   * document.
+   */
+  const targets = parseGridPageTargets(MESA_THIS_YEAR_PAGED);
+  assert.deepEqual([...targets.keys()], [1, 2], "both numbered pages are published");
+  assert.notEqual(targets.get(1), targets.get(2), "two pages, two distinct postback targets");
+  for (const target of targets.values()) {
+    assert.match(target, /^ctl00\$ContentPlaceHolder1\$gridCalendar\$/);
+  }
+  assert.deepEqual(
+    [...parseGridPageTargets(PIMA_NEXT_MONTH).keys()],
+    [],
+    "an unpaged range publishes no page links, and none are invented for it",
   );
 });
 
@@ -748,17 +856,86 @@ test("a single-page range reports no shortfall — the check is not a blanket wa
   assert.deepEqual(normalizeWithDrops([pimaReading()], NOW).partialScopes, []);
 });
 
-test("the ranges this adapter drives stay inside the grid's page size on every recorded tenant", () => {
-  assert.deepEqual(RANGES, ["Last Month", "This Month", "Next Month"]);
-  for (const [name, html] of [
-    ["pima last month", PIMA_LAST_MONTH],
-    ["pima this month", PIMA_THIS_MONTH],
-    ["pima next month", PIMA_NEXT_MONTH],
-    ["mesa next month", MESA_NEXT_MONTH],
-  ] as const) {
-    const pager = parseGridPager(html);
-    assert.equal(pager, null, `${name} came back paged — the range set needs paging, not trust`);
-  }
+test("the range set reaches the whole PUBLISHED future, not one month of it", () => {
+  /*
+   * This test used to assert the opposite — three calendar months, chosen to
+   * stay inside the grid's 100-row page. That was a range set picked to avoid
+   * writing a pager walk, and it cost eleven of Pima's fourteen published
+   * future sittings. The pager walk is written; the ranges are the ones that
+   * reach the record.
+   */
+  assert.ok(
+    RANGES.includes("This Year"),
+    'without "This Year" the adapter cannot see past next month — measured 3 sittings against 14',
+  );
+  assert.ok(
+    RANGES.includes("Next Year"),
+    '"Next Year" is how January arrives the day Pima files it; today it answers ' +
+      'the publisher\'s own "No records were found."',
+  );
+  assert.ok(
+    RANGES.includes("Last Month"),
+    "the backward reach is unchanged; this correction is about the future only",
+  );
+
+  // Pima's "This Year" is unpaged at 46 rows and holds the whole horizon; the
+  // ranges that DO page are walked rather than trusted, which is the other test.
+  assert.equal(parseGridPager(PIMA_THIS_YEAR), null);
+  assert.equal(
+    parseCalendarRows(PIMA_THIS_YEAR).length,
+    46,
+    "the recorded page is the real one — 46 rows, no pager, nothing to reconcile",
+  );
+});
+
+test("a zero is only ever the PUBLISHER'S zero", () => {
+  /*
+   * RULING 100, at the range level. Pima's "Next Year" is the measured positive:
+   * HTTP 200, the grid rendered, `rgNoRecords`, and the sentence "No records
+   * were found." — Pima County saying it has filed no 2027 sittings yet.
+   *
+   * A zero WITHOUT that sentence is a failed retrieval, and the adapter reports
+   * it as an incomplete scope rather than folding it into the union as nothing.
+   */
+  assert.equal(parseCalendarRows(PIMA_NEXT_YEAR).length, 0);
+  assert.equal(
+    parseGridNoRecords(PIMA_NEXT_YEAR),
+    true,
+    "the publisher stated the emptiness, and only that licenses a zero",
+  );
+  assert.equal(
+    parseGridNoRecords(PIMA_THIS_YEAR),
+    false,
+    "a page WITH rows must never read as a no-records statement",
+  );
+
+  const windows = (nextYear: string) => [
+    win("This Month", PIMA_THIS_MONTH),
+    win("Next Month", PIMA_NEXT_MONTH),
+    win("Next Year", nextYear),
+  ];
+
+  const stated = normalizeWithDrops([pimaReading({ windows: windows(PIMA_NEXT_YEAR) })], NOW);
+  assert.deepEqual(
+    stated.partialScopes,
+    [],
+    "a publisher's own zero is a complete answer, not a shortfall",
+  );
+
+  // The same zero with the sentence stripped: an identical row count, an
+  // opposite verdict. Nothing else about the page changes.
+  const silent = PIMA_NEXT_YEAR.replace(/No records were found\./g, "&nbsp;");
+  assert.notEqual(silent, PIMA_NEXT_YEAR, "the variant did not apply — the test would prove nothing");
+  assert.equal(parseCalendarRows(silent).length, 0, "still the same zero rows");
+
+  const unstated = normalizeWithDrops([pimaReading({ windows: windows(silent) })], NOW);
+  assert.equal(unstated.partialScopes.length, 1);
+  assert.match(unstated.partialScopes[0].cause, /FAILED RETRIEVAL, never an empty calendar/);
+  assert.equal(
+    unstated.meetings.length,
+    stated.meetings.length,
+    "the two readings produce the same meetings — only the honesty of the zero differs",
+  );
 });
 
 // ---------------------------------------------------------------------------

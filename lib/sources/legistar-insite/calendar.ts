@@ -178,6 +178,75 @@ export function parseGridPager(html: string): InSiteGridPager | null {
 }
 
 /**
+ * **THE GRID SAYING IT HOLDS NOTHING, IN ITS OWN WORDS.** (Measured 2026-08-28.)
+ *
+ * `parseCalendarRows` returns `[]` for two completely different pages: one
+ * where the grid rendered and the publisher stated it has no rows for this
+ * filter, and one where the grid did not render at all — a challenge page, a
+ * session that expired, a template change this parser no longer matches.
+ * **Reporting those as the same fact is exactly the failure this adapter
+ * exists to correct**, and RULING 100 is explicit that a zero-row extraction is
+ * a FAILED extraction unless the source itself said zero.
+ *
+ * Pima's "Next Year" filter is the measured positive: HTTP 200, the grid
+ * present, `class="rgNoRecords"` and the literal sentence **"No records were
+ * found."**. That is Pima County stating that it has published no 2027 Board
+ * sittings yet. It is a fact about the publisher, and it is the ONLY shape in
+ * which this adapter will let a zero stand.
+ *
+ * False therefore never means "there are rows". It means **this page did not
+ * say it was empty**, and a caller holding zero rows and `false` has a wall.
+ */
+export function parseGridNoRecords(html: string): boolean {
+  return /class="rgNoRecords"/i.test(html) && /No records were found/i.test(html);
+}
+
+/**
+ * **PAGE NUMBER → THE POSTBACK THAT FETCHES IT, READ OFF THE PAGER ITSELF.**
+ * (2026-08-28.)
+ *
+ * The trap this replaces is a measured one. The pager's controls are ASP.NET
+ * auto-numbered — `…$gridCalendar$ctl00$ctl02$ctl00$ctl02`, `…$ctl04`,
+ * `…$ctl06` — and the indices are neither stable nor in an order anyone can
+ * derive: posting `ctl03$ctl01$ctl06` at Pima's "All Years" grid, guessed as
+ * "the next-page button", returned **page 3**. It returned it with HTTP 200,
+ * the right range still rendered, and 100 perfectly well-formed rows. A
+ * guessed control index does not fail; it silently reads the wrong page and
+ * calls it the next one, and the enumeration then skips a hundred sittings
+ * while every check passes.
+ *
+ * So the mapping is never constructed. Telerik renders each numbered page link
+ * with its intended page in its own `onclick` —
+ * `Telerik.Web.UI.Grid.NavigateToPage('…gridCalendar_ctl00', '3')` — beside the
+ * `__doPostBack` target that fetches it. This reads the pair the page
+ * published, so "the target for page 3" is a fact off the document rather than
+ * an arithmetic guess about a vendor's control tree.
+ *
+ * Empty map when the page renders no numbered pager. One page, nothing to walk.
+ */
+export function parseGridPageTargets(html: string): Map<number, string> {
+  const targets = new Map<number, string>();
+  const decoded = decodeEntities(html);
+  for (const match of decoded.matchAll(
+    /Telerik\.Web\.UI\.Grid\.NavigateToPage\('[^']*gridCalendar[^']*',\s*'(\d+)'\)[\s\S]{0,200}?__doPostBack\('([^']+)'/g,
+  )) {
+    const page = Number(match[1]);
+    // First writer wins: the grid renders the same pager top and bottom, and
+    // both copies name the same target. A later duplicate must not overwrite.
+    if (!targets.has(page)) targets.set(page, match[2]);
+  }
+  return targets;
+}
+
+/** The form body that walks the grid to `target`, a page link's own postback id. */
+export function gridPagePostback(html: string, target: string): Record<string, string> {
+  const form = parseFormFields(html);
+  form.__EVENTTARGET = target;
+  form.__EVENTARGUMENT = "";
+  return form;
+}
+
+/**
  * One sitting as the grid publishes it.
  *
  * Every field is what the row SAID. Nothing here is derived, and a cell the

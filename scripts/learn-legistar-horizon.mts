@@ -34,9 +34,9 @@
  * The legistar.com apex publishes `Crawl-delay: 2`; `InSiteSession` paces every
  * vendor request at it. `www.pima.gov` publishes no delay for `User-agent: *`.
  */
-import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { writeCapturedFixture } from "../lib/ops/fixture-captures.ts";
 import { localWallClock } from "../lib/sources/event-identity.ts";
 import {
   calendarFeedUrl,
@@ -81,10 +81,28 @@ if (!tenant) {
 }
 
 const today = localWallClock(new Date().toISOString(), tenant.timeZone)!.date;
+/**
+ * **A RECORDING GOES THROUGH THE SANITIZATION BOUNDARY, NEVER STRAIGHT TO DISK.**
+ * (2026-08-28.) This function used to be a bare `writeFileSync`, and that is
+ * exactly how Pima's own Google Maps key and a thirty-day CivicPlus bearer token
+ * reached `tests/fixtures/` and stopped a Netlify deploy that had otherwise
+ * built and bundled clean. What was redacted is PRINTED: a recorder that
+ * silently removed bytes from evidence would be the worse failure of the two.
+ */
 const save = (name: string, body: string) => {
   if (!record) return;
-  writeFileSync(join(ROOT, "tests/fixtures", name), body);
-  console.log(`    recorded tests/fixtures/${name} (${body.length}B)`);
+  const { bytes, replaced, classes } = writeCapturedFixture(
+    join(ROOT, "tests/fixtures", name),
+    body,
+  );
+  const redacted = replaced > 0 ? ` — ${replaced} source credential(s) redacted: ${classes.join(", ")}` : "";
+  console.log(`    recorded tests/fixtures/${name} (${bytes}B)${redacted}`);
+  if (replaced > 0) {
+    console.log(
+      `    DECLARE IT: add ${name} to SANITIZED_CAPTURES in lib/ops/fixture-captures.ts, ` +
+        "then run `pnpm fixtures:credentials --sanitize` to record its provenance.",
+    );
+  }
 };
 
 /** `M/D/YYYY` + `h:mm AM/PM` as the vendor prints them, to ISO local parts. */

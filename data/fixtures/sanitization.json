@@ -1,0 +1,54 @@
+{
+  "sanitizerVersion": "fx-cred-v1-2026-08-28",
+  "fixtures": {
+    "tests/fixtures/legistar-insite-pima-clerk-schedule.html": {
+      "sourceUrl": "https://www.pima.gov/2559/Board-of-Supervisors-Meeting-Schedule",
+      "capturedOn": "2026-08-28",
+      "capturedBy": "scripts/learn-legistar-horizon.mts --record",
+      "rawSha256": "0758eea6efa1343744297f9ee8ac0ea2d5bc3c98580ea20a49bd19bf1cd3899e",
+      "sanitizedSha256": "c3610c1029d92630ff77969508b10fe6bc41ca983e4360bf55810429ab7b5df2",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "jwt": 5,
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 2,
+      "substringsReplaced": 6,
+      "fingerprints": [
+        {
+          "classId": "jwt",
+          "fingerprint": "7c636da75860",
+          "length": 885,
+          "occurrences": 5
+        },
+        {
+          "classId": "google_api_key",
+          "fingerprint": "0475203d7298",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
+    },
+    "tests/fixtures/schedulepage/newlondon-calendar-2026-08.html": {
+      "sourceUrl": "https://newlondon.nh.gov/calendar",
+      "capturedOn": "2026-08-19",
+      "capturedBy": "the M123 (g21) schedule-page shape session",
+      "rawSha256": "5a0f9700ecfe31ef3ea1884598ace866e5b566530a8390ef9d17804ff75a86aa",
+      "sanitizedSha256": "bb7933d135fa927f37b2a30bf7ccaed1c15eeaa67cabc3cfa239d905a7fb6e66",
+      "sanitizerVersion": "fx-cred-v1-2026-08-28",
+      "redactionsByClass": {
+        "google_api_key": 1
+      },
+      "distinctValuesRedacted": 1,
+      "substringsReplaced": 1,
+      "fingerprints": [
+        {
+          "classId": "google_api_key",
+          "fingerprint": "c0243981d0e9",
+          "length": 39,
+          "occurrences": 1
+        }
+      ]
+    }
+  }
+}

@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-28 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **156 sessions.**
+Newest first. **157 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -48,6 +48,14 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH279** — The Legistar tenant comment says a study session names no place, so those rows drop as unknownVenue — we know the sitting exists and not where it is. The city's own council-meetings page contradicts that: it prints City Hall (lower level) for study sessions. The rows could carry a place. *(open)*
 
 **Needs Sean.** NH275, NH276, NH277
+
+## 2026-08-28 post-cleanroom shipping hotfix
+
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH280** — PR #216 built and bundled clean, then failed Netlify secret scanning: Pima County's own Clerk of the Board page emitted a Google Maps browser key into the HTML that scripts/learn-legistar-horizon.mts recorded verbatim as a test fixture. Scanning the whole tree for the class found more than Netlify reported - the same fixture also carried a live 30-day CivicPlus bearer token repeated five times, and a second fixture, the New London NH calendar, carried a different Google key that would have been the next red deploy. The repair sanitizes captured pages at the moment of acquisition, records the provenance of every redaction without keeping the credential, and adds a gate so GitHub CI catches the class before Netlify does. *(open)*
+
+**Needs Sean.** Nothing.
 
 ## 2026-08-28 finish-aug28
 

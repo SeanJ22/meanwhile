@@ -15,6 +15,7 @@ import { dirname, join } from "node:path";
 import { extractTextLayer } from "../lib/extract/text-layer.ts";
 import { runOcr, ocrEngineAvailable } from "../lib/extract/ocr.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
+import { writeCapturedFixture } from "../lib/ops/fixture-captures.ts";
 import {
   AZLEG_BASE,
   parseChapterStamp,
@@ -244,6 +245,26 @@ let paceState: HuntState | null = null;
 
 class BudgetSpent extends Error {}
 
+/**
+ * **A CAPTURED PAGE GOES THROUGH THE SANITIZATION BOUNDARY.** (2026-08-28.)
+ *
+ * These two recordings are public azleg.gov pages, and a public page is free to
+ * emit its own vendor credentials into the markup — which is exactly how a
+ * Google Maps key and a bearer token reached `tests/fixtures/` from Pima County
+ * and stopped a Netlify deploy. What is redacted is printed; a recorder that
+ * quietly removed bytes from evidence would be the worse of the two failures.
+ */
+function recordFixture(name: string, html: string): void {
+  const { bytes, replaced, classes } = writeCapturedFixture(
+    join("tests", "fixtures", name),
+    html,
+  );
+  console.log(
+    `    recorded tests/fixtures/${name} (${bytes}B)` +
+      (replaced > 0 ? ` — ${replaced} source credential(s) redacted: ${classes.join(", ")}` : ""),
+  );
+}
+
 async function paced(url: string): Promise<{ status: number; bytes: Uint8Array }> {
   if (spentThisRun >= BUDGET) throw new BudgetSpent("run budget spent");
   const since = Date.now() - lastRequestAt;
@@ -293,7 +314,7 @@ async function walkLetterIndex(state: HuntState): Promise<void> {
     };
   }
   if (WRITE_FIXTURES && status === 200) {
-    writeFileSync(join("tests", "fixtures", "azleg-governors-letters.html"), html, "utf8");
+    recordFixture("azleg-governors-letters.html", html);
   }
   saveState(state);
   console.log(`index /governors-letters/  ${status}  ${bytes.length}B  ${parsed.rows.length} bills from ${parsed.rowsSeen} <tr chunks`);
@@ -332,7 +353,7 @@ async function walkSessionLawIndex(state: HuntState): Promise<void> {
     };
   }
   if (WRITE_FIXTURES && status === 200) {
-    writeFileSync(join("tests", "fixtures", "azleg-sessionlaws.html"), html, "utf8");
+    recordFixture("azleg-sessionlaws.html", html);
   }
   saveState(state);
   console.log(`index /sessionlaws/        ${status}  ${bytes.length}B  ${parsed.rows.length} chapters from ${parsed.rowsSeen} <tr chunks, missing: ${parsed.missingChapters.length}`);

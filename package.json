@@ -42,6 +42,8 @@
     "db:apply": "tsx scripts/apply-migrations.mts",
     "db:check": "tsx scripts/check-schema-state.mts",
     "db:gate": "tsx scripts/db-shipping-gate.mts",
+    "integrity:check": "tsx scripts/production-integrity.mts",
+    "release:freeze": "tsx scripts/release-freeze-gate.mts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:surfaces": "tsx scripts/assert-serving-tables.mts",

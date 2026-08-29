@@ -103,6 +103,28 @@ const GATES = [
     why: "a deploy may not cross its own migrations — 0021 and 0022 shipped ahead of the schema",
   },
   {
+    /**
+     * THE RELEASE FREEZE (NH273, 2026-08-28, the author's decision).
+     *
+     * `db:gate` above asks whether production holds what this change ships. This
+     * one asks a different question that no other gate asks: whether the LAST
+     * post-deploy reading of production came back red, and therefore whether
+     * this release may proceed at all.
+     *
+     * It reads a committed record rather than a database, so it needs no
+     * credential and costs nothing. It is scoped by `classifyDeploy`, so a
+     * docs-only close-out is never treated as a production release.
+     *
+     * It lives here rather than in a tenth workflow for a measured reason:
+     * `gh api repos/:owner/:repo/deployments` returns 0, so Netlify creates no
+     * GitHub Deployment and a `deployment_status` workflow would never fire.
+     */
+    id: "release:freeze",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm exec tsx scripts/release-freeze-gate.mts",
+    why: "a production-changing release may not ship on top of a DEGRADED production integrity reading",
+  },
+  {
     id: "build",
     ciJob: "build (default)",
     command: "pnpm run build",

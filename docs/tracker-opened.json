@@ -2070,5 +2070,20 @@
       "NH284",
       "NH285"
     ]
+  },
+  {
+    "session": "job-watch",
+    "opened": "2026-08-29",
+    "ids": [
+      "JOB07",
+      "JOB08",
+      "JOB09",
+      "JOB10",
+      "JOB11",
+      "JOB12",
+      "JOB13",
+      "JOB14",
+      "JOB15"
+    ]
   }
 ]

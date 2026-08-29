@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -32,3 +32,35 @@ export function codeOf(...parts: string[]): string {
 
 /** The repository root, resolved from this file rather than from `cwd`. */
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+/**
+ * **EVERY `.ts` FILE UNDER A REPO DIRECTORY, RECURSIVELY.**
+ * (Consolidated 2026-08-28 under RULING 103, from `neutrality-guards.test.ts`.)
+ *
+ * The instrument behind every guard in this suite that sweeps a tree rather
+ * than a list — the shape that lets a new file walk into a rule instead of
+ * waiting for somebody to remember to extend it. `neutrality-guards` sweeps
+ * `lib/` for ranking keys; `tenant-body-binding` sweeps `lib/sources/` for
+ * body-id literals outside the serving-tenant denominator.
+ *
+ * Shared rather than copied for the reason `codeOf` above is: two copies of
+ * "which files does this rule apply to" are two places for a denominator to
+ * drift, and a guard whose denominator has quietly shrunk reads green without
+ * having looked — which is the exact failure the tenant-binding guard was
+ * written because of.
+ *
+ * Takes path parts relative to `ROOT`, never `cwd`, so a guard's denominator
+ * does not depend on where the runner was invoked. Returns absolute paths.
+ */
+export function tsFilesUnder(...parts: string[]): string[] {
+  const walk = (dir: string): string[] => {
+    const out: string[] = [];
+    for (const name of readdirSync(dir)) {
+      const path = join(dir, name);
+      if (statSync(path).isDirectory()) out.push(...walk(path));
+      else if (name.endsWith(".ts")) out.push(path);
+    }
+    return out;
+  };
+  return walk(join(ROOT, ...parts));
+}

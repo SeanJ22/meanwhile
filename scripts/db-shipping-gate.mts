@@ -709,35 +709,39 @@ if (SMOKE) {
 }
 
 /*
- * THE OTHER ANCHOR, AND ITS NAMED GAP.
+ * THE OTHER ANCHOR — LIVE SINCE 2026-08-28, AND THE REASON IT IS NOT REDUNDANT.
  *
  * `scripts/apply-migrations.mts` writes sha256 of each migration's raw bytes
- * into `drizzle.__drizzle_migrations.hash` — an independent record of what
- * production actually executed — and `lib/db/applied-migrations.ts` selects
- * `created_at` alone, so that column is written on every apply and read by
- * nothing. The comparison is `checksumViolations`, tested and ready; what is
- * missing is one column in one SELECT.
+ * into `drizzle.__drizzle_migrations.hash` on every apply, which is the only
+ * record anywhere of what production ACTUALLY EXECUTED.
+ * `lib/db/applied-migrations.ts` now selects it and returns `appliedHashes`,
+ * so `checksumViolations` compares committed SQL against executed SQL rather
+ * than git against git.
  *
- * It is printed either way. A check that is not running must never be silent,
- * because silence is indistinguishable from a pass (RULING 24).
+ * **THE TWO GUARDS FAIL IN OPPOSITE DIRECTIONS, WHICH IS WHY THERE ARE TWO.**
+ * The merge-base guard above sees every rewrite from now on and is structurally
+ * blind to one that landed BEFORE it existed. This one sees a disagreement
+ * whenever it happened and is blind to a rewrite of a migration production
+ * never applied. Neither covers the other's hole.
+ *
+ * It is printed either way, and the NOT-AVAILABLE branch is kept rather than
+ * deleted: this reads a credential, and a session that cannot reach production
+ * must be told the cross-check did not run. A check that is not running must
+ * never be silent, because silence is indistinguishable from a pass
+ * (RULING 24).
  */
 const appliedHashes = appliedHashesFrom(read);
 if (appliedHashes === null) {
   say(
-    "\n  content checksum cross-check: NOT AVAILABLE — lib/db/applied-migrations.ts selects " +
-      "created_at only.",
+    "\n  content checksum cross-check: NOT AVAILABLE — this read carries no `appliedHashes`.",
   );
   say(
     "    The hash IS recorded: scripts/apply-migrations.mts writes sha256 of the file's raw bytes " +
-      "on every apply.",
+      "on every apply, and lib/db/applied-migrations.ts selects it.",
   );
   say(
-    "    Adding `hash` to that one SELECT and returning it as `appliedHashes` makes this live " +
-      "against production.",
-  );
-  say(
-    "    Until then the git guard above is the whole of the immutability check, and it cannot see " +
-      "a rewrite that landed before it existed.",
+    "    A read reaching here without it is a reader that was changed, or one from before this " +
+      "was wired. The git guard above still ran; this second, independent check did not.",
   );
 } else {
   const rewritten = checksumViolations(readJournal(), appliedHashes, sha256OfMigration);

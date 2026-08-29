@@ -89,12 +89,28 @@ test("Drizzle's committed journal carries NO hash — the absence is asserted, n
   }
 });
 
-test("the applier records a sha256 that nothing reads back — the other anchor, named", () => {
+test("the applier's sha256 is read back — the content anchor, wired end to end", () => {
   /*
-   * The gap this pins is one column in one SELECT. `apply-migrations.mts`
-   * computes sha256 of the file's raw bytes and writes it; `applied-migrations.ts`
-   * asks for `created_at` alone. Until those meet, the git guard is the whole
-   * of the immutability check and cannot see a rewrite that landed before it.
+   * **THIS TEST USED TO PIN THE GAP. IT NOW PINS THE JOIN.**
+   *
+   * The gap was one column in one SELECT. `apply-migrations.mts` computed
+   * sha256 of each file's raw bytes and wrote it to
+   * `drizzle.__drizzle_migrations.hash`; `applied-migrations.ts` asked for
+   * `created_at` alone. So the strongest evidence in the system — the only
+   * record of what production ACTUALLY executed — was written on every apply
+   * and read by nothing, and the git guard was the whole of the immutability
+   * check.
+   *
+   * That mattered because the two guards fail in opposite directions. The git
+   * guard sees every rewrite from now on and cannot see one that landed
+   * BEFORE it existed. The checksum sees a disagreement between committed SQL
+   * and executed SQL whenever it happened, and cannot see a rewrite of a
+   * migration production never applied. Neither is redundant with the other,
+   * which is why closing this was worth a production read-path change.
+   *
+   * The column was never in doubt: the applier CREATEs the table with
+   * `hash text NOT NULL` and has itself run `SELECT hash, created_at` against
+   * production since the 2026-08-28 drift incident.
    */
   const applier = readFileSync(join(ROOT, "scripts", "apply-migrations.mts"), "utf8");
   assert.match(
@@ -108,22 +124,37 @@ test("the applier records a sha256 that nothing reads back — the other anchor,
   // `[\s\S]` rather than the `s` flag: tsconfig targets below es2018, where the
   // flag is a compile error rather than a runtime one — it would pass the suite
   // on this machine and fail `tsc --noEmit` on the fresh-checkout gate.
-  const selectsHash = new RegExp(
-    `SELECT[\\s\\S]*?\\bhash\\b[\\s\\S]*?\\bFROM\\s+drizzle\\.__drizzle_migrations\\b`,
-    "i",
-  ).test(reader);
+  assert.ok(
+    new RegExp(
+      `SELECT[\\s\\S]*?\\bhash\\b[\\s\\S]*?\\bFROM\\s+drizzle\\.__drizzle_migrations\\b`,
+      "i",
+    ).test(reader),
+    "lib/db/applied-migrations.ts must SELECT `hash` — without it the content cross-check is dark",
+  );
+  assert.ok(
+    /appliedHashes/.test(reader),
+    "the reader selects `hash` and must return it as `appliedHashes`, or the gate cannot feed " +
+      "checksumViolations and the column is being read for nothing",
+  );
+
+  // The absence is still reported rather than invented — a caller handed a
+  // read from BEFORE this wiring must get `null`, never an empty agreement.
   assert.equal(
     appliedHashesFrom({ ok: true, appliedWhen: [1, 2, 3] }),
     null,
     "appliedHashesFrom must report the absence rather than inventing an empty agreement",
   );
-  if (selectsHash) {
-    assert.fail(
-      "lib/db/applied-migrations.ts now selects `hash`. Return it as `appliedHashes` and delete " +
-        "this branch — the content cross-check in scripts/db-shipping-gate.mts goes live the " +
-        "moment it does.",
-    );
-  }
+
+  // And the live shape flows through.
+  assert.deepEqual(
+    appliedHashesFrom({
+      ok: true,
+      appliedWhen: [1756000000000],
+      appliedHashes: [{ when: 1756000000000, hash: "a".repeat(64) }],
+    }),
+    [{ when: 1756000000000, hash: "a".repeat(64) }],
+    "a read carrying appliedHashes must reach checksumViolations intact",
+  );
 });
 
 /* ========================================================================== */

@@ -48,6 +48,27 @@ export type AppliedMigrations =
        * sides up.
        */
       readonly appliedWhen: number[];
+      /**
+       * **WHAT THE DATABASE RECORDED EXECUTING, BY CONTENT.** (RULING 196.)
+       *
+       * `appliedWhen` answers a BOOKKEEPING question — did a migration with
+       * this timestamp run? — and that is the question a rewritten migration
+       * keeps answering correctly while its SQL no longer matches. `hash` is
+       * the sha256 of the raw bytes `scripts/apply-migrations.mts` wrote when
+       * it applied the file, which is the only record anywhere of what
+       * production ACTUALLY ran.
+       *
+       * The column has always been there: the applier CREATEs the table with
+       * `hash text NOT NULL` and has selected it against production since the
+       * 2026-08-28 drift incident. It was written on every apply and read by
+       * nothing, so `scripts/db-shipping-gate.mts` could compare git against
+       * git and never git against the database.
+       *
+       * This is the SECOND, INDEPENDENT immutability check, and it catches the
+       * one case the git guard structurally cannot: a rewrite that landed
+       * BEFORE the git guard existed.
+       */
+      readonly appliedHashes: { readonly when: number; readonly hash: string }[];
     }
   | {
       readonly ok: false;
@@ -67,9 +88,19 @@ export async function readAppliedMigrationWhen(connection: string): Promise<Appl
   try {
     const sql = neon(connection);
     const rows = (await sql`
-      SELECT created_at FROM drizzle.__drizzle_migrations
-    `) as { created_at: string | number }[];
-    return { ok: true, appliedWhen: rows.map((r) => Number(r.created_at)) };
+      SELECT hash, created_at FROM drizzle.__drizzle_migrations
+    `) as { hash: string; created_at: string | number }[];
+    return {
+      ok: true,
+      appliedWhen: rows.map((r) => Number(r.created_at)),
+      // A row whose hash is not a usable string is DROPPED rather than carried
+      // as an empty one: `checksumViolations` compares committed sha256 against
+      // recorded sha256, and a blank on either side would read as a mismatch
+      // about a file nobody has touched.
+      appliedHashes: rows
+        .filter((r) => typeof r.hash === "string" && r.hash.length > 0)
+        .map((r) => ({ when: Number(r.created_at), hash: r.hash })),
+    };
   } catch (error) {
     return { ok: false, why: (error as Error).message };
   }

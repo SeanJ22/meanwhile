@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-28 — **Most of what the walkthrough reported was not the defect it looked like.** The Aug 28 reader sweep; its record is the LAST section of this file.
+Last updated: 2026-08-28 — **Four subsystems were resting a verdict on an input they had not checked.** The pre-control-plane cleanroom; its record is the LAST section of this file.
+
+Previous: 2026-08-28 — **Most of what the walkthrough reported was not the defect it looked like.** The Aug 28 reader sweep.
 
 Previous: 2026-08-28 — **The engine existed and the product did not use it.** The grounded-Ask INTEGRATION session.
 
@@ -21373,3 +21375,211 @@ is now producible only against a complete officeholder universe, and
 completeness is READ OFF the holder source's own id namespace rather than
 assumed: a congressional roster enumerates its seat; a person-by-person
 collection does not. Only two contests are label-eligible.
+
+---
+
+## 2026-08-28 — the pre-control-plane cleanroom
+
+**FOUR SUBSYSTEMS WERE RESTING A VERDICT ON AN INPUT THEY HAD NOT CHECKED, AND
+NOTHING CONNECTED THEM UNTIL AN INDEPENDENT AUDIT LOOKED AT ALL FOUR IN ONE
+DAY.** That is the whole session. An outside audit of PR #215 filed nine
+findings; eight were confirmed, one had the right defect and the wrong root
+cause, and four of the nine turned out to be the same mistake wearing four
+costumes.
+
+Nine workstreams ran in parallel — eight engineering, one integration owner —
+with **zero serializations**, 36 independent pairs, and no dependency edge
+declared between any of them.
+
+### The class, and why it is a class
+
+    ORCHESTRATION   independence was computed over the DECLARED dependency
+                    graph, after every edge had been proven separately. An edge
+                    that FAILED its own proof still suppressed the finding it
+                    was supposed to earn.
+    BALLOT          a candidate universe was complete when the rendered COUNT
+                    equalled the certified COUNT.
+    MEETINGS        SUPERSEDED_BY_RICHER_ROUTE was assigned as a FALLBACK — on
+                    the one branch where no richer record had been observed.
+    LOCATION        a division was declared not to govern a reader because a
+                    DIFFERENT division at the same OCD level was confirmed, at
+                    every level, including levels that do not partition.
+
+Four unrelated modules, four authors, one shape: **a guard that reads a
+declared value and reports a verdict derived from it has not checked anything —
+it has restated the declaration in a stronger voice.** RULING 193 names it.
+Evidence is the checked kind or it is not evidence; a denominator is not a
+membership proof; unknown semantics fails closed.
+
+### What each of the four actually cost
+
+**The orchestration guard could be switched off by the thing it guarded
+against.** `dependsOn` was walked raw before any edge was proven, so a
+workstream could serialize independent executable work, keep `findings` empty
+and still return `TEAM`, by writing one sentence that dodged six regexes. The
+negative control is now a real prose string, asserted at test time to match none
+of them.
+
+**The candidate universe passed `4 === 4` on two different sets of people.**
+Arizona's 6th congressional district: the certified canvass names Mendoza,
+Ciscomani, Peters and **Gary Swing**; the filed-candidate record renders
+Mendoza, Ciscomani, Peters and **Iman Bah**. Both lists have four names, the
+gate passed, and three `NOT_INCUMBENT` labels were produced — one of them about
+a person the certified universe does not place in that contest at all. It did
+not reach the ballot page, because that page renders `lineup ? certified :
+filed` and those branches are mutually exclusive. **It was accidentally safe,
+not designed safe**, and one corpus change ends the accident.
+
+**A first-party route publishing a sitting we did not produce read as
+"accounted for".** Pima cannot expose it — its grid carries all fourteen — so
+the branch was unreachable on the only corpus anyone had read. On the Mesa
+control the union is 9, eight instances are unique to a single route, and the
+one the grid never carried now carries `PUBLISHED_BUT_UNPLACED_BY_US` with the
+exact missing fields named and a `PartialScopeFailure` so it reaches the run
+report as owed work rather than as silence.
+
+**And `levelKeyOf` put the City of Tucson and the Tucson CCD in the same
+bucket.** Both end in a `place` segment. So confirming a reader inside the
+CCD — a statistical shape with no government, as this file already said —
+licensed the card to tell them the City of Tucson *does not govern you*. That
+one WAS reader-facing and it shipped.
+
+Exclusivity is now measured rather than argued, per level key:
+
+    cd  sldl  sldu  county  state       0 double-containment    PARTITION
+    place                75/113 AZ interior points in two       OVERLAPPING
+                        364/477 NJ
+    school_district      39/104                                 OVERLAPPING
+    everything else                                             UNKNOWN — fails closed
+
+The fallback is structural, not remembered: the contract's value type makes
+`UNKNOWN_SEMANTICS` unwritable into the table, so it is reachable only by
+absence. A new division type cannot inherit the strong sentence by silence.
+
+### The denominator that had stopped describing the session
+
+The Aug 28 plan declared **ten** workstreams. Twelve `ws/*` refs existed. The
+final report said **twelve** — and twelve was the *branch count*, which is the
+one substitution RULING 190 forbids. It was an honest error: the canonical
+denominator no longer described the session, so the artifacts were the only
+number left that was true about anything.
+
+Reconstructed from preserved refs rather than asserted — each of
+`ws/mtg13union`, `ws/methodint` and `ws/incum` is one commit off the integration
+branch at `5349710`, and every non-test file in all three is byte-identical to
+the merged `origin/main`:
+
+    13 LOGICAL WORKSTREAMS on 12 EXECUTION ARTIFACTS
+    10 declared when it ran · 1 appended mid-session · 3 declared post hoc
+
+**The two numbers diverge in both directions at once**, which is exactly why
+neither can stand in for the other: `governance-orchestration` ran on the
+integration branch and owns no `ws/*` ref, while nine workstreams own two
+artifacts each. RULING 194 makes the plan append-safe and reconciles it at
+closeout; a backfill has to say that it is one, and a count that cannot be
+reconstructed is recorded as a typed discrepancy rather than fixed by inventing
+a mapping.
+
+### A correction the read path never read
+
+RULING 192 typed the method claims and gave a false conclusion a way to stop
+teaching. The consumer interface was never changed, so `method:prove` and the
+descent handoff kept handing workers `applicability.note` and route prose out of
+the struct next door — including two Pima sentences that had been formally
+withdrawn the same day. **A correction the read path does not read is not a
+correction.** RULING 195: one typed projection is the consumer surface, and for
+the 112 unclassified legacy entries the safe projection is exactly *the route is
+known; its substantive prose is not inherited as a conclusion*.
+
+    routes 116 · classified 4 · unclassified legacy 112
+    substantive INHERITED 3 · WITHHELD 2
+
+And `pnpm method:learn-schedule-vs-events` was still executable, still carrying
+all three false sentences. Its defence was that `learnRoute` refuses a duplicate
+id — a statement about *one store's current contents*, not about the writer.
+Against an empty, migrated, replayed or imported store it would have written
+them as current knowledge. It now refuses and names
+`pnpm method:learn-legistar-insite` instead, proven by a regression that runs
+the real script against a fresh store.
+
+### Two guards that fail in opposite directions
+
+An established migration was mutable. The gate joined production on a
+*timestamp*, so a rewritten already-applied migration reported APPLIED and IN
+SYNC from four separate instruments while the committed SQL was no longer what
+production ran. RULING 196 makes the merge-base guard refuse modification,
+deletion and rename — built on merge-base trees rather than dates, because CI
+clones shallowly here and per-file `git log` returns the tip date for every file
+with no error at all.
+
+The second half was already written and dark. `apply-migrations.mts` has
+recorded a sha256 of every migration's raw bytes since the Aug 28 drift
+incident, and `applied-migrations.ts` selected `created_at` alone — so the only
+record of what production *actually executed* was written on every apply and
+read by nothing. It is read now. **The merge-base guard sees every rewrite from
+now on and is blind to one that landed before it existed; the checksum sees a
+disagreement whenever it happened and is blind to a migration production never
+applied.** Neither covers the other's hole, and only one of them was running.
+
+### An adapter row is not a body
+
+The audit said Mesa's governing body existed nowhere but the tenant file. It was
+wrong: the body is in `registry.json`, derived from division type. The real
+defect was worse in a quieter way — Mesa was **serving ten live meetings** while
+the registry said `coverageStatus: NOT_ATTEMPTED`, `agendaSourceType: NONE`, and
+no source wiring named it at all. Two adapters predating `SOURCE_WIRING` keep
+private tenant tables (`make: () => …`, no arguments) and reach production
+without passing any registry check; the composite capability gate turns on for
+the whole `LEGISTAR` type, so Pima's row let Mesa in behind it.
+
+RULING 197 and a repo-wide guard: **126 serving tenants across three tables, 126
+bound, 0 faulted.** Mesa's row now reads `LIVE / LEGISTAR /
+mesa.legistar.com/Calendar.aspx`, and its `name` stays **null** — which is the
+law rather than an omission, since all thirteen `DERIVED_FROM_DIVISION_TYPE`
+bodies carry a null name and the oracle test asserts it. The reader-facing name
+lives on the tenant, quoted from the city's own page.
+
+### What the integrated head caught that no branch could
+
+The build refused: `/api/meetings` traces every `.ts` file in `lib/registry/`
+into its serving bundle, so the new tenant-binding guard — imported by nothing
+but its own test — began shipping to production and took that route's trace
+cardinality from 220 to **221**, one past the committed ceiling. The budget file
+permits re-measuring a baseline when a growth is understood, and doing that
+would have made the build green while leaving test-only code in the deploy. The
+postbuild check already asserts `tests/ traced 0`; the rule exists, the file was
+simply outside the directory the rule can see. Moved to `lib/ops/`, which traces
+zero files into that route.
+
+That is RULING 191 earning its keep: branch-local green is necessary and never
+sufficient, and this was only visible where the branches met.
+
+### The Git cleanroom
+
+**143 remote branches** classified, and the squash-merge trap was real rather
+than theoretical: **all twelve `ws/*` refs are non-ancestors of `main` and all
+twelve are fully shipped.** `git branch --merged` would have been actively
+misleading, and PR metadata alone would also have missed them — none of the
+twelve has a PR of its own. It took integration-ancestry against `c01f4a6`, the
+head PR #215 squashed.
+
+    SAFE_DELETE 135 · KEEP_ACTIVE 6 · REVIEW_REQUIRED 1 · OWNER_BRANCH 1
+
+The two survivors are the point. `claude/g17-aud03-measure` holds one commit of
+genuinely unshipped work, so it is not deleted — **ambiguity is never resolved
+toward deletion**. `sean/captures-0826` is provably content-shipped and is still
+not deleted, because nothing in this repository permits a session to retire an
+author's branch and a sweep does not invent permissions.
+
+### Numbers
+
+    tests 3324 -> 3440   (+7 +23 +6 +25 +13 +10 +13 +19, reconciling exactly)
+    law 181 -> 186 rules · 5 new rule slots · 0 semantic conflicts
+    8 of 8 local gates green · trace 220 of 220 · 260 repo files traced
+    9 workstreams · 36 independent pairs · 0 serializations
+
+Two things were found broken that this session did not go looking for.
+`pnpm method:prove` had been failing on `main` since claim classes became
+required at v55, invisible because it is not in `pnpm gates`. And a stray `NUL`
+byte written into a script was caught by the repo's own sweep, exactly as the
+project's memory predicts.

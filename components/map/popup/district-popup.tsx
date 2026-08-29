@@ -49,16 +49,37 @@ import {
  * and — where the reader's own address can settle it — says how their home
  * stands relative to it.
  *
- * **Three sentences, because there are three states and they are not the same
- * fact:**
+ * **Four sentences, because there are four states and no two of them are the
+ * same fact:**
  *
- * - `CONFIRMED`        their address is inside this district. Say so.
- * - `ELSEWHERE_IN_ZIP` their address settled this level and named another
- *                      district. This is a fact about THEIR STREET, not a gap
- *                      in what we hold — we hold this district in full.
- * - `UNSETTLED`        we have not been told enough. Says so about US, and
- *                      never "this is not your district", which would be an
- *                      absence asserted as a fact.
+ * - `CONFIRMED`             their address is inside this district. Say so.
+ * - `ELSEWHERE_IN_ZIP`      their address settled this level and named another
+ *                           district. This is a fact about THEIR STREET, not a
+ *                           gap in what we hold — we hold this district in
+ *                           full.
+ * - `OVERLAP_NOT_RULED_OUT` their address named a different one at a level
+ *                           where a point can be in several at once. See
+ *                           below — this branch is WGH-16 and it exists
+ *                           because the branch above it was being said about
+ *                           districts it was never true of.
+ * - `UNSETTLED`             we have not been told enough. Says so about US,
+ *                           and never "this is not your district", which would
+ *                           be an absence asserted as a fact.
+ *
+ * ## WGH-16 (2026-08-28) — THE STRONG SENTENCE WAS BEING SAID TOO OFTEN
+ *
+ * *"This is here because you tapped it, not because it governs you"* is a claim
+ * about a GOVERNMENT, and it is true only where a point can be in one division
+ * at that level. This card renders congressional, state house, state senate,
+ * county, municipal and school-district subjects, and the last two are measured
+ * to overlap: a reader is routinely inside an elementary district and a regional
+ * high school district at once, and inside an incorporated place and a county
+ * subdivision at once.
+ *
+ * So the strong sentence is now gated on measured exclusivity
+ * (`lib/state/division-levels.ts`), and the overlapping case gets the sentence
+ * the evidence actually supports — one that says which district IS theirs
+ * WITHOUT claiming this one is not.
  *
  * It reads from a `BROWSING` location, which settles nothing by construction,
  * so this card cannot retire a hedge and cannot write back to the home store.
@@ -89,6 +110,26 @@ export function BrowsingSubjectLine({
         <>
           You&apos;re looking at {label}. Your address is in a different one —
           this is here because you tapped it, not because it governs you.
+        </>
+      ) : subject.standing === "OVERLAP_NOT_RULED_OUT" ? (
+        /*
+         * WGH-16. Everything here is measured, and the sentence stops exactly
+         * where the measurement does.
+         *
+         * WE KNOW their address named a different district of this kind, and
+         * we know districts of this kind can cover the same ground — that is
+         * the whole content of `POTENTIALLY_OVERLAPPING`. WE DO NOT KNOW
+         * whether this one covers them, because nothing tested this district's
+         * boundary against their point.
+         *
+         * So the line says both known things and stops. It never says "this
+         * one is not yours" (the claim above, which is false here) and it never
+         * says "this one is also yours" (which nothing established either).
+         */
+        <>
+          You&apos;re looking at {label}. Your address is in a different one of
+          these — and areas like this can overlap, so this one may cover you as
+          well.
         </>
       ) : (
         // NEVER "this is not your district". Nothing has settled that, and

@@ -239,6 +239,13 @@ function SubjectLine({
  * may not print an OCD-ID — so the honest claim is the one the evidence
  * actually supports: *this covers another part of your zip*, which is a fact
  * about the boundary and not a guess about the reader.
+ *
+ * **WGH-16 (2026-08-28): and it now appears only where that is TRUE.** The
+ * mark is driven by `ELSEWHERE_IN_ZIP`, which `standingOf` may reach only at
+ * levels measured to hold one division per point. Rows at an overlapping level
+ * get {@link OverlapMark} instead. Nothing about this component changed except
+ * which rows qualify — which is the whole of the defect, because the sentence
+ * was always right and was being said about rows it was not right about.
  */
 function ElsewhereMark({ zip }: { zip: string }) {
   return (
@@ -254,6 +261,49 @@ function ElsewhereMark({ zip }: { zip: string }) {
 /** Only an EXCLUSION is marked. Confirmed and unsettled rows read as before. */
 function marksElsewhere(standing: BodyStanding | undefined): boolean {
   return standing === "ELSEWHERE_IN_ZIP";
+}
+
+/**
+ * **WGH-16 (2026-08-28) — THE ROW WHERE THE STRONG MARK WOULD BE A FALSE
+ * CLAIM.**
+ *
+ * `ElsewhereMark` above says *not yours*. That is a claim about a government,
+ * and `standingOf` may now only reach it at levels measured to hold ONE
+ * division per point — `sldl`, `sldu`, `cd`, `county`, `state`.
+ *
+ * The bodies on this card are not all at those levels. A school board and a
+ * municipality sit at `school_district` and `place`, and both of those are
+ * measured to OVERLAP: a reader is routinely inside an elementary district and
+ * a regional high school district at once, and inside an incorporated place
+ * and a county subdivision at once (`lib/state/division-levels.ts`). Before
+ * WGH-16 those rows wore *"not yours — covers another part of 85641"* on the
+ * strength of a shared bucket name, which is precisely the manufactured claim
+ * `CLAUDE.md` forbids.
+ *
+ * **The row is still marked, and it is still never removed.** What changes is
+ * that the mark now says what was actually established: their address named a
+ * different one, and these can overlap, so this one may be theirs too. That is
+ * weaker than the sentence above it and stronger than silence — and silence is
+ * not the safe option here, because an unmarked row on this card reads as
+ * *this governs you*.
+ */
+function OverlapMark({ zip }: { zip: string }) {
+  return (
+    <span
+      data-standing="OVERLAP_NOT_RULED_OUT"
+      className="ml-1.5 shrink-0 text-[0.625rem] leading-none text-muted"
+    >
+      may also cover you — your address named a different one in {zip}
+    </span>
+  );
+}
+
+/**
+ * Rows where something else at the same level is the reader's, at a level that
+ * can hold both. Marked, weakly and honestly — never with the exclusion above.
+ */
+function marksOverlap(standing: BodyStanding | undefined): boolean {
+  return standing === "OVERLAP_NOT_RULED_OUT";
 }
 
 function seatPhrase(seats: Seat[]): string | null {
@@ -679,6 +729,13 @@ function CoverageBody({
 
         It is a SENTENCE, never a filter. Every row is still rendered and every
         row is still openable (RULING 26, RULING 27).
+
+        WGH-16: `derived.elsewhere` counts `ELSEWHERE_IN_ZIP` and nothing else,
+        so this number now covers only the rows the address genuinely EXCLUDES
+        — the exclusive levels. It got smaller and it got true. The overlapping
+        rows are not folded in here on purpose: "governs a different part of
+        your zip" is the exact claim they have not earned, and a count that
+        mixed the two would restate it in aggregate.
       */}
       {derived.elsewhere > 0 && (
         <p
@@ -839,6 +896,17 @@ function CoverageBody({
                   that comment says the mark is waiting for.
                 */}
                 {marksElsewhere(body.standing) && <ElsewhereMark zip={zip} />}
+                {/*
+                  WGH-16: and the weaker case, which is the COMMON one on this
+                  list. Municipal and school-district rows sit at levels that
+                  overlap, so the exclusion above is unreachable for them and
+                  this is the mark they get instead. The seat lists further down
+                  carry only `sldl`, `sldu` and `cd` — all measured exclusive —
+                  so this mark is deliberately not repeated there: it could never
+                  fire, and a branch that cannot fire is a branch a later reader
+                  has to disprove.
+                */}
+                {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
               </span>
               <span
                 className={`trailing-space-trimmed shrink-0 font-mono text-[0.5625rem] uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}

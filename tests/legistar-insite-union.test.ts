@@ -46,13 +46,18 @@ import {
 import { parseCalendarRows, parseGridPager } from "../lib/sources/legistar-insite/calendar.ts";
 import {
   GRANICUS_LIVE_PROCEEDINGS_WALL,
+  MEETING_PRODUCING_ROUTES,
   granicusWallObservation,
   intersectionOfRoutes,
+  openObligations,
+  richerRouteLink,
   summarizeRoute,
   unaccounted,
   unionFutureInstances,
   type FirstPartyRoute,
+  type ProducedVendorRecord,
   type RouteInstance,
+  type UnionInstance,
 } from "../lib/sources/legistar-insite/horizon.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar-insite/index.ts";
 import { INSITE_TENANTS } from "../lib/sources/legistar-insite/tenants.ts";
@@ -84,6 +89,13 @@ const MESA_NEXT_MONTH = fixture("legistar-insite-mesa-calendar-next-month.html")
 const MESA_EVENTS_FUTURE = JSON.parse(
   fixture("legistar-mesa-events-future.json"),
 ) as Record<string, string>[];
+/**
+ * SYNTHETIC, and it says so in its own header. See the provenance block inside
+ * the file: real envelope, real InSite ids for the two corroborating items,
+ * invented times chosen to put one sitting on the feed alone and one sitting on
+ * both routes at two different hours.
+ */
+const MESA_FEED_SYNTHETIC = fixture("legistar-insite-mesa-feed-synthetic.xml");
 
 const pima = INSITE_TENANTS.find((t) => t.slug === "pima")!;
 const mesa = INSITE_TENANTS.find((t) => t.slug === "mesa")!;
@@ -757,6 +769,375 @@ test("a row that names a meeting without an hour keeps the meeting and NOT an in
     null,
     "the page's prose rule is not this row's published hour, and filling it would be a fabrication",
   );
+});
+
+// ---------------------------------------------------------------------------
+// AUDIT FINDING E — the unique-route disposition that hid a meeting
+// ---------------------------------------------------------------------------
+
+/**
+ * **THE FALLBACK THAT INVERTED ITS OWN MEANING.**
+ *
+ * The disposition chain used to end, for any union instance with no `Meeting`
+ * and no recorded reason, in `SUPERSEDED_BY_RICHER_ROUTE` — while its own
+ * comment said the meeting-producing route had NOT carried it. Nothing richer
+ * superseded those sittings; nothing carried them at all. And `unaccounted()`
+ * is satisfied by ANY disposition, so the verdict turned *an explicit
+ * first-party route published a sitting we did not produce* into *accounted
+ * for*, with the sitting nowhere near a reader.
+ *
+ * **Pima cannot expose it.** Its grid carries all fourteen, so the branch is
+ * unreachable on the only corpus anyone had read — which is exactly why the
+ * control below is a different tenant, and why it is written against a feed
+ * that publishes a sitting the grid is silent about.
+ */
+function mesaControlReading(
+  overrides: Partial<LegistarInSiteRaw> = {},
+): LegistarInSiteRaw {
+  return {
+    slug: "mesa",
+    calendarUrl: "https://mesa.legistar.com/Calendar.aspx",
+    // "Next Month" only, deliberately: the recorded range covers September, so
+    // the feed's 12 October sitting is absent from the producing route in the
+    // most literal sense available — the grid in hand does not mention it.
+    windows: [win("Next Month", MESA_NEXT_MONTH)],
+    feedXml: MESA_FEED_SYNTHETIC,
+    feedUrl:
+      "https://mesa.legistar.com/Feed.ashx?M=Calendar&ID=51120044&GUID=8f3c1a92-0d47-4b6e-9c15-7ad2e6b40f31",
+    icalByInsiteId: {},
+    clerkScheduleHtml: null,
+    clerkScheduleUrl: null,
+    collectedAt: OBSERVED,
+    ...overrides,
+  };
+}
+
+/** The three canonical identities this section is about. */
+const UNPLACED_KEY = sittingKeyFromLocal({
+  bodyId: mesa.bodyId,
+  date: "2026-10-12",
+  time: "17:45",
+})!;
+const SUPERSEDED_KEY = sittingKeyFromLocal({
+  bodyId: mesa.bodyId,
+  date: "2026-09-28",
+  time: "18:15",
+})!;
+const SUPERSEDING_KEY = sittingKeyFromLocal({
+  bodyId: mesa.bodyId,
+  date: "2026-09-28",
+  time: "17:45",
+})!;
+
+test("UNNAMED TENANT: a sitting only the FEED publishes is never called superseded", () => {
+  /*
+   * The finding-E control, at the product boundary. The feed publishes a timed
+   * future sitting the grid does not carry; the old chain called that
+   * "SUPERSEDED_BY_RICHER_ROUTE" and closed the book on it.
+   */
+  const result = normalizeWithDrops([mesaControlReading()], NOW);
+
+  const instance = result.union.find((i) => i.key === UNPLACED_KEY);
+  assert.ok(instance, "the feed's 12 October sitting must reach the union at all");
+  assert.equal(
+    instance.onlyOn,
+    "INSITE_CALENDAR_RSS",
+    "and it must be there on ONE route — otherwise this control proves nothing",
+  );
+
+  const disposition = result.dispositions.find((d) => d.key === UNPLACED_KEY);
+  assert.ok(disposition, "a union instance with no meeting must carry a disposition");
+
+  assert.notEqual(
+    disposition.verdict,
+    "SUPERSEDED_BY_RICHER_ROUTE",
+    "NOTHING superseded this sitting: no route carried it but the one that published it",
+  );
+  assert.equal(disposition.verdict, "PUBLISHED_BUT_UNPLACED_BY_US");
+  assert.equal(
+    disposition.supersededBy,
+    undefined,
+    "the supersession link is minted only by richerRouteLink and there is none to mint",
+  );
+
+  // The claim names the gap as OURS, and refuses to make it a claim about Mesa.
+  const claim = disposition.claimAboutContent ?? "";
+  assert.match(claim, /^OURS, and OPEN:/);
+  assert.match(claim, /INSITE_CALENDAR_RSS/, "it names the route that DID publish it");
+  assert.match(claim, /WE have not placed it/);
+  assert.match(claim, /NOTHING SUPERSEDED IT/);
+  assert.match(
+    claim,
+    /NOT a statement that the sitting is unpublished, cancelled or uncertain/,
+    "our gap may never render as a fact about the body",
+  );
+
+  // And the gap is named in FIELD terms, so it is an obligation somebody can
+  // discharge rather than a shrug.
+  assert.ok((disposition.missingForPlacement ?? []).length > 0);
+  assert.match(
+    (disposition.missingForPlacement ?? []).join(" | "),
+    /a published location/,
+    "the RSS publishes no room, and that is the field that blocks placement",
+  );
+  assert.match(
+    (disposition.missingForPlacement ?? []).join(" | "),
+    /meeting-producing route \(INSITE_CALENDAR_GRID\)/,
+    "and the identity limitation is stated, not left to be inferred",
+  );
+
+  // The evidence is the publisher's own words, from a citable URL.
+  assert.equal(disposition.evidence.length, 1);
+  assert.equal(disposition.evidence[0].route, "INSITE_CALENDAR_RSS");
+  assert.equal(disposition.evidence[0].quotedText, "City Council - 10/12/2026 - 5:45 PM");
+  assert.match(disposition.evidence[0].sourceUrl, /^https:\/\/mesa\.legistar\.com\//);
+});
+
+test("EXPLAINED IS NOT DISCHARGED: the unplaced sitting stays OPEN and leaves the adapter", () => {
+  /*
+   * The half of the defect that made it invisible. `unaccounted()` asks whether
+   * an instance was EXPLAINED and is satisfied by any verdict at all — so a
+   * fallback disposition read as "accounted for" and the hunt stopped. What is
+   * still owed is a different question, and it now has its own answer.
+   */
+  const result = normalizeWithDrops([mesaControlReading()], NOW);
+  const produced = new Set(
+    result.meetings.map((m) =>
+      sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone }),
+    ),
+  );
+
+  assert.deepEqual(
+    unaccounted(result.union, produced as ReadonlySet<string>, result.dispositions),
+    [],
+    "nothing is unexplained — which is exactly why 'unexplained' was never the check",
+  );
+
+  const open = result.openObligations;
+  assert.deepEqual(
+    open,
+    openObligations(result.dispositions),
+    "what is owed is DERIVED from the dispositions, never typed alongside them",
+  );
+  assert.ok(
+    open.some((d) => d.key === UNPLACED_KEY),
+    "a published sitting we did not place is OWED WORK, not a closed row",
+  );
+  assert.ok(
+    !open.some((d) => d.key === SUPERSEDING_KEY),
+    "and a sitting that reaches the reader is not owed",
+  );
+
+  /*
+   * It has to escape the adapter to matter. `dispositions`, `union` and
+   * `routes` are dropped at the composite boundary; `partialScopes` is in the
+   * ReportingMeetingSource contract, so that is the channel it travels on.
+   */
+  const scope = result.partialScopes.find((p) => /2026-10-12 17:45/.test(p.cause));
+  assert.ok(scope, "the unplaced sitting must reach the run's own report");
+  assert.equal(scope.scope, "UPCOMING");
+  assert.deepEqual(scope.ocdIds, [mesa.ocdId]);
+  assert.match(scope.cause, /OURS, and OPEN/);
+  assert.match(scope.cause, /NOT a claim that the sitting is unpublished/);
+
+  // A resolved venue is a different open state and keeps its own name — the new
+  // verdict must not have swallowed the ones that were already right.
+  const verdicts = new Set(result.dispositions.map((d) => d.verdict));
+  assert.ok(
+    verdicts.has("VENUE_NOT_RESOLVED"),
+    "Mesa prints 'Study Session' in its own location column, and that is still ITS own verdict",
+  );
+});
+
+test("POSITIVE CONTROL: supersession is still assigned — when a richer record provably exists", () => {
+  /*
+   * The other half. Naming the inversion is worthless if the fix simply retires
+   * the verdict: a record a richer route genuinely supersedes must still be
+   * called superseded, or every rescheduled sitting starts reporting itself as
+   * a sitting we lost.
+   *
+   * The feed carries InSite meeting 1336055 at 6:15 PM; the recorded grid
+   * carries the SAME meeting id at 5:45 PM, in Council Chambers, and we produce
+   * it. One publisher record, two canonical identities, and the link between
+   * them is a shared vendor id in one declared id space.
+   */
+  const result = normalizeWithDrops([mesaControlReading()], NOW);
+
+  const disposition = result.dispositions.find((d) => d.key === SUPERSEDED_KEY);
+  assert.ok(disposition, "the feed's 6:15 PM record must be dispositioned, not discarded");
+  assert.equal(disposition.verdict, "SUPERSEDED_BY_RICHER_ROUTE");
+  assert.equal(
+    disposition.missingForPlacement,
+    undefined,
+    "nothing is missing: the sitting is in front of a reader",
+  );
+
+  const link = disposition.supersededBy;
+  assert.ok(link, "the verdict is a PRECONDITION and may not be given without its proof");
+  assert.equal(link.via, "SHARED_VENDOR_ID");
+  assert.equal(link.vendorIdSpace, "insite");
+  assert.equal(link.vendorId, "1336055");
+  assert.equal(link.route, "INSITE_CALENDAR_GRID");
+  assert.equal(link.thinRoute, "INSITE_CALENDAR_RSS");
+  assert.equal(link.supersedingKey, SUPERSEDING_KEY);
+  assert.equal(link.supersedingDate, "2026-09-28");
+  assert.equal(link.supersedingTime, "17:45");
+
+  // The superseding identity is not a promise — it is a meeting that shipped.
+  const served = result.meetings.find(
+    (m) =>
+      sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone }) ===
+      SUPERSEDING_KEY,
+  );
+  assert.ok(served, "supersession claims another record reaches the reader; it must actually");
+  assert.equal(served.location?.name, "Mesa City Hall, Council Chambers");
+
+  const claim = disposition.claimAboutContent ?? "";
+  assert.match(claim, /^THEIRS, then ours:/);
+  assert.match(claim, /insite 1336055/, "the link is quoted, so a reader can check it");
+  assert.match(claim, /2026-09-28 17:45/);
+  assert.match(claim, /REACHES THE READER/);
+});
+
+test("richerRouteLink refuses every link it cannot PROVE", () => {
+  /*
+   * The precondition, unit-tested away from the corpus, because the whole
+   * defect was a verdict that nobody had to earn.
+   */
+  const observation = (over: Partial<RouteInstance> = {}): RouteInstance => ({
+    route: "INSITE_CALENDAR_RSS",
+    sourceUrl: "https://mesa.legistar.com/Gateway.aspx?M=MD&From=RSS&ID=1336055",
+    observedAt: OBSERVED,
+    bodyId: mesa.bodyId,
+    date: "2026-09-28",
+    time: "18:15",
+    kind: null,
+    location: null,
+    vendorId: "1336055",
+    vendorIdSpace: "insite",
+    publishedText: "City Council - 9/28/2026 - 6:15 PM",
+    ...over,
+  });
+  const instance = (over: Partial<UnionInstance> = {}): UnionInstance => ({
+    key: SUPERSEDED_KEY,
+    bodyId: mesa.bodyId,
+    date: "2026-09-28",
+    time: "18:15",
+    routes: ["INSITE_CALENDAR_RSS"],
+    onlyOn: "INSITE_CALENDAR_RSS",
+    observations: [observation()],
+    kind: null,
+    location: null,
+    ...over,
+  });
+  const produced = (over: Partial<ProducedVendorRecord> = {}) =>
+    new Map<string, ProducedVendorRecord>([
+      [
+        "insite:1336055",
+        {
+          key: SUPERSEDING_KEY,
+          date: "2026-09-28",
+          time: "17:45",
+          route: "INSITE_CALENDAR_GRID",
+          ...over,
+        },
+      ],
+    ]);
+
+  assert.ok(richerRouteLink(instance(), produced()), "the proven case links");
+
+  assert.equal(
+    richerRouteLink(instance(), new Map()),
+    null,
+    "no produced record means nothing superseded it — this is the whole defect",
+  );
+  assert.equal(
+    richerRouteLink(instance(), produced({ key: SUPERSEDED_KEY })),
+    null,
+    "the SAME canonical identity is the instance itself being served, not supersession",
+  );
+  assert.equal(
+    richerRouteLink(instance({ observations: [observation({ vendorIdSpace: null })] }), produced()),
+    null,
+    "an id with no declared space is not joinable, and a number alone is a resemblance",
+  );
+  assert.equal(
+    richerRouteLink(instance({ observations: [observation({ vendorId: null })] }), produced()),
+    null,
+    "the Clerk's table numbers nothing, and a synthesized id would look joinable",
+  );
+  assert.equal(
+    richerRouteLink(instance(), produced({ route: "CLERK_SCHEDULE_PAGE" })),
+    null,
+    "richer is a property of the route and is checked, not assumed",
+  );
+  assert.deepEqual(
+    MEETING_PRODUCING_ROUTES,
+    ["INSITE_CALENDAR_GRID"],
+    "the grid is the only route that publishes a room, so it is the only producing one",
+  );
+});
+
+test("ZERO SILENT LOSSES: every control-tenant instance is served, superseded-with-proof, or owed", () => {
+  const result = normalizeWithDrops([mesaControlReading()], NOW);
+  const produced = new Set(
+    result.meetings.map((m) =>
+      sittingKey({ bodyId: m.bodyId, startsAt: m.startsAt, timeZone: m.timeZone }),
+    ),
+  );
+
+  assert.equal(
+    result.dispositions.filter((d) => d.key).length,
+    result.union.length,
+    "one keyed disposition per union instance — no instance without a verdict",
+  );
+
+  for (const disposition of result.dispositions) {
+    if (disposition.verdict === "SUPERSEDED_BY_RICHER_ROUTE") {
+      assert.ok(
+        disposition.supersededBy && produced.has(disposition.supersededBy.supersedingKey),
+        `${disposition.date} ${disposition.time} claims supersession; the superseding ` +
+          "record must be one this run actually produced",
+      );
+      continue;
+    }
+    const isServed = produced.has(disposition.key);
+    const isOwed = result.openObligations.includes(disposition);
+    const isTheirs =
+      disposition.verdict === "CANCELED_BY_PUBLISHER" ||
+      disposition.verdict === "NOT_THE_WIRED_BODY";
+    assert.ok(
+      isServed || isOwed || isTheirs,
+      `${disposition.date} ${disposition.time} is ${disposition.verdict} — neither served, ` +
+        "owed, nor a fact about the publisher, which is a sitting going quiet",
+    );
+  }
+});
+
+test("REGRESSION: Pima's fourteen are untouched — no supersession, nothing owed", () => {
+  /*
+   * The correction is a repair to a branch Pima never reaches, and it must stay
+   * that way. If either of these fails, a sitting that was reaching a reader on
+   * 2026-08-28 has stopped.
+   */
+  const result = normalizeWithDrops([pimaReading()], NOW);
+  assert.equal(result.union.length, 14);
+  assert.equal(
+    result.dispositions.filter((d) => d.verdict === "REPRESENTED_IN_READER").length,
+    14,
+  );
+  assert.deepEqual(
+    result.dispositions.filter((d) => d.verdict === "SUPERSEDED_BY_RICHER_ROUTE"),
+    [],
+    "nothing in Pima's corpus was ever superseded, and nothing may start claiming it was",
+  );
+  assert.deepEqual(
+    result.dispositions.filter((d) => d.verdict === "PUBLISHED_BUT_UNPLACED_BY_US"),
+    [],
+    "and the grid carries all fourteen, so none of them is unplaced",
+  );
+  assert.deepEqual(result.openObligations, [], "Pima owes a reader nothing on this corpus");
+  assert.deepEqual(result.partialScopes, [], "and reports no incomplete scope");
 });
 
 test("a page with no schedule table is a FAILED EXTRACTION, never an empty schedule", () => {

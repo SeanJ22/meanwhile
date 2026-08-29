@@ -283,10 +283,130 @@ export type DispositionVerdict =
   | "CANCELED_BY_PUBLISHER"
   /** THEIRS: the row is a different body than the one this tenant is wired for. */
   | "NOT_THE_WIRED_BODY"
-  /** Ours and theirs: the same sitting on a route that carries more about it. */
+  /**
+   * Theirs and then ours: this record is the SAME PUBLISHER RECORD as one we
+   * produce under a different canonical identity — the county moved the hour
+   * and a thinner route still carries the earlier wording.
+   *
+   * **IT IS A CHECKED PRECONDITION AND NEVER A FALLBACK** (audit finding E,
+   * 2026-08-28). It is legal only when `richerRouteLink` below returns a
+   * concrete link: a produced canonical meeting, reached through an id the two
+   * routes provably share, in a declared id space. An instance that is simply
+   * missing from the meeting-producing route was NOT superseded by anything,
+   * and calling it superseded is the inversion this member exists to make
+   * impossible — see `PUBLISHED_BUT_UNPLACED_BY_US`.
+   */
   | "SUPERSEDED_BY_RICHER_ROUTE"
+  /**
+   * **OURS, AND STILL OPEN.** An explicit first-party route published this
+   * sitting, the meeting-producing route did not carry it, and we have not
+   * placed it.
+   *
+   * This is the honest name for what used to be reported as
+   * `SUPERSEDED_BY_RICHER_ROUTE` by fallback. Nothing richer exists: the
+   * sitting is published, and the gap is entirely in what THIS PROJECT has
+   * acquired. It is an OPEN OBLIGATION — see `openObligations` — and the
+   * disposition carries `missingForPlacement`, naming the exact fields that
+   * would let it be placed.
+   */
+  | "PUBLISHED_BUT_UNPLACED_BY_US"
   /** OURS, and a permission fact: the route publishes `Disallow: /`. */
   | "ROUTE_DISALLOWED";
+
+/**
+ * **THE ROUTES THIS ADAPTER CAN ACTUALLY TURN INTO A `Meeting`.**
+ *
+ * One, today: the portal grid is the only route that publishes a room, and a
+ * meeting with no place is not one this product will put in front of a reader.
+ * The RSS publishes a title and a publication instant; the Clerk's table
+ * publishes a date, an hour and a kind. Both are CORROBORATION — promoting
+ * either to an ingestion source is an ask-before under `CLAUDE.md`, and this
+ * constant is the single place that fact is checkable rather than commented.
+ *
+ * It is a list because it will grow, and it is exported because the disposition
+ * logic must be able to say "the producing route did not carry it" without
+ * hard-coding which route that is.
+ */
+export const MEETING_PRODUCING_ROUTES: readonly FirstPartyRoute[] = ["INSITE_CALENDAR_GRID"];
+
+/**
+ * **THE PROOF THAT SOMETHING RICHER ACTUALLY EXISTS.**
+ *
+ * Supersession is a claim about TWO records, and it is only true when the
+ * second one is real, is richer, and is provably the same record. This returns
+ * that proof or null, and `null` means the caller may not use the word.
+ *
+ * The link this can establish is a SHARED VENDOR ID inside ONE DECLARED ID
+ * SPACE — the only cross-route link in this adapter that is a fact rather than
+ * a resemblance. The routes do not share id spaces (the WebAPI calls Pima's 25
+ * August sitting `1825` and the portal calls it `1381574`), so the space is
+ * compared as well as the number and a null space never matches: the Clerk's
+ * table numbers nothing, and a synthesized id would look joinable and is not.
+ *
+ * The superseding record must be one this run PRODUCED, and it must sit under a
+ * DIFFERENT canonical identity — same identity would mean the instance itself
+ * is in front of a reader, which is `REPRESENTED_IN_READER` and not
+ * supersession.
+ */
+export interface RicherRouteLink {
+  /** The route whose record we produced — richer because it places the sitting. */
+  route: FirstPartyRoute;
+  /** The canonical sitting identity that stands in this record's place. */
+  supersedingKey: string;
+  /** Its local date and wall clock, so a reader of the disposition sees the move. */
+  supersedingDate: string;
+  supersedingTime: string;
+  /** HOW the two records are known to be one. Stated, never assumed. */
+  via: "SHARED_VENDOR_ID";
+  vendorId: string;
+  /** Which id space the number lives in, so nobody joins two that cannot join. */
+  vendorIdSpace: string;
+  /** The route whose thinner record this disposition is about. */
+  thinRoute: FirstPartyRoute;
+  /** That route's own words, kept so the disagreement stays inspectable. */
+  quotedText: string | null;
+}
+
+/** One produced sitting, indexed by the vendor id the producing route gave it. */
+export interface ProducedVendorRecord {
+  key: string;
+  date: string;
+  time: string;
+  route: FirstPartyRoute;
+}
+
+/**
+ * The link, or null. `producedByVendorId` is keyed `"<space>:<id>"` and holds
+ * ONLY sittings this run actually produced a `Meeting` for.
+ */
+export function richerRouteLink(
+  instance: UnionInstance,
+  producedByVendorId: ReadonlyMap<string, ProducedVendorRecord>,
+): RicherRouteLink | null {
+  for (const observation of instance.observations) {
+    if (!observation.vendorId || !observation.vendorIdSpace) continue;
+    const produced = producedByVendorId.get(`${observation.vendorIdSpace}:${observation.vendorId}`);
+    if (!produced) continue;
+    // Same identity is not supersession — it is the instance itself, served.
+    if (produced.key === instance.key) continue;
+    // Richer is a property of the ROUTE, checked rather than assumed: only a
+    // meeting-producing route carries the room and the agenda link that make
+    // one record richer than another.
+    if (!MEETING_PRODUCING_ROUTES.includes(produced.route)) continue;
+    return {
+      route: produced.route,
+      supersedingKey: produced.key,
+      supersedingDate: produced.date,
+      supersedingTime: produced.time,
+      via: "SHARED_VENDOR_ID",
+      vendorId: observation.vendorId,
+      vendorIdSpace: observation.vendorIdSpace,
+      thinRoute: observation.route,
+      quotedText: observation.publishedText,
+    };
+  }
+  return null;
+}
 
 /** One quotable thing a publisher actually said. */
 export interface DispositionEvidence {
@@ -314,6 +434,62 @@ export interface InstanceDisposition {
   verdict: DispositionVerdict;
   evidence: DispositionEvidence[];
   claimAboutContent: string | null;
+  /**
+   * The proof behind `SUPERSEDED_BY_RICHER_ROUTE`, present exactly when that
+   * verdict is given and absent everywhere else.
+   *
+   * It is a field rather than a sentence because the word "superseded" is a
+   * claim about another record, and a claim about a record nobody can look up
+   * is indistinguishable from a guess. `richerRouteLink` mints it; nothing
+   * else may.
+   */
+  supersededBy?: RicherRouteLink;
+  /**
+   * **WHAT WOULD LET US PLACE IT** — present exactly on
+   * `PUBLISHED_BUT_UNPLACED_BY_US`, and never empty when present.
+   *
+   * The named gap, in field terms: what a route would have to publish, or what
+   * this project would have to acquire, before the sitting could reach a
+   * reader. It is the difference between an obligation somebody can discharge
+   * and a shrug.
+   */
+  missingForPlacement?: string[];
+}
+
+/**
+ * **THE VERDICTS THAT LEAVE WORK OWED.**
+ *
+ * A disposition is not a closure. `unaccounted` below asks whether an instance
+ * was EXPLAINED; this asks whether the explanation still owes a reader
+ * something, which is a different question and the one that keeps a hunt
+ * running.
+ *
+ * `REPRESENTED_IN_READER` is discharged. `CANCELED_BY_PUBLISHER` and
+ * `NOT_THE_WIRED_BODY` are facts about the publisher and nothing is owed.
+ * `BEYOND_APP_SERVING_HORIZON` is collected and keyed — held, not missing.
+ * `SUPERSEDED_BY_RICHER_ROUTE` means the sitting IS served, under the
+ * identity `supersededBy` names. `ROUTE_DISALLOWED` is a permission wall and
+ * the obligation lives on the permission ladder, not here.
+ *
+ * The rest are ours and are open.
+ */
+export const OPEN_OBLIGATION_VERDICTS: readonly DispositionVerdict[] = [
+  "PUBLISHED_BUT_UNPLACED_BY_US",
+  "VENUE_NOT_RESOLVED",
+  "TIME_NOT_PUBLISHED",
+];
+
+/**
+ * The dispositions that are accounted for and NOT discharged — the sittings a
+ * publisher has published and this project has not placed.
+ *
+ * This is the answer to "what does this tenant still owe a reader?", and it is
+ * deliberately separate from `unaccounted`: an instance can be perfectly
+ * explained and still be missing from the product, and a project that reads
+ * "explained" as "done" stops hunting exactly where the hunting was owed.
+ */
+export function openObligations(dispositions: InstanceDisposition[]): InstanceDisposition[] {
+  return dispositions.filter((d) => OPEN_OBLIGATION_VERDICTS.includes(d.verdict));
 }
 
 /**
@@ -322,6 +498,11 @@ export interface InstanceDisposition {
  * **Asserted empty.** This is the whole acceptance rule expressed as a
  * function: an instance that is neither shipped nor explained is a sitting the
  * product lost quietly, which is the failure mode the September three were.
+ *
+ * **EMPTY HERE IS NOT "NOTHING IS OWED."** This function is satisfied by ANY
+ * disposition, which is exactly how a fallback verdict once turned an unserved
+ * sitting into an accounted one. What remains owed is `openObligations` above,
+ * and the two are read together or not at all.
  */
 export function unaccounted(
   union: UnionInstance[],

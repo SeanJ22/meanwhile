@@ -1,4 +1,10 @@
 /**
+ * @freshness-reads-here — `observedAt` is stamped at the moment production is
+ * actually read, in the same run that reads it. It is a measurement of when the
+ * reading happened, not a re-stamp of a date carried over from somewhere else,
+ * which is the restamping RULING 107 refuses. If this script ever recorded a
+ * reading it did not itself take, this declaration would be false.
+ *
  * `pnpm integrity:check` — take a production-integrity reading and record it.
  *
  * This is the trigger half of NH273. It asks the schema shipping gate for its
@@ -54,7 +60,16 @@ function arg(name: string): string | undefined {
   return hit ? hit.slice(name.length + 3) : undefined;
 }
 
-function git(...args: string[]): string | null {
+/**
+ * One git reader, exported, because the freeze gate needs the same one.
+ *
+ * It was briefly written out twice — identically — in this file and in
+ * `release-freeze-gate.mts`. RULING 103 refuses that, and it is right to: two
+ * copies of "ask git and treat a non-zero exit as null" are two places for the
+ * null handling to drift, and the whole NH273 mechanism turns on the difference
+ * between "the answer is no" and "there was no answer".
+ */
+export function git(...args: string[]): string | null {
   const r = spawnSync("git", args, { cwd: ROOT, encoding: "utf8" });
   if (r.status !== 0) return null;
   return r.stdout.trim();

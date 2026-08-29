@@ -32,24 +32,22 @@
  *   1  FROZEN
  */
 
-import { spawnSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
+import { floored } from "../lib/ops/denominator-floor.ts";
 import { evaluateReleaseFreeze, explainFreeze } from "../lib/ops/production-integrity.ts";
-import { readRecord } from "./production-integrity.mts";
+// `git` comes from the reader beside it rather than being written out again —
+// RULING 103. The two copies were identical, and this mechanism turns on the
+// difference between "the answer is no" and "there was no answer".
+import { git, readRecord } from "./production-integrity.mts";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 function arg(name: string): string | undefined {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
   return hit ? hit.slice(name.length + 3) : undefined;
-}
-
-function git(...args: string[]): string | null {
-  const r = spawnSync("git", args, { cwd: ROOT, encoding: "utf8" });
-  if (r.status !== 0) return null;
-  return r.stdout.trim();
 }
 
 /**
@@ -100,7 +98,29 @@ function main(): void {
 
   console.log("RELEASE FREEZE GATE (NH273)");
   console.log(`  candidate      ${candidateSha ?? "UNKNOWN"}`);
-  console.log(`  changed paths  ${paths === null ? "COULD NOT BE READ" : `${paths.length} (${how})`}`);
+
+  // RULING 159: the changed-path count is FLOORED, and the floor reports the
+  // split rather than a bare total — how many of the paths are production-
+  // bearing is the number the freeze actually turns on. A commit that genuinely
+  // touched nothing states that as its reason; a list that could not be READ is
+  // a different answer entirely and is printed as one.
+  if (paths === null) {
+    console.log(`  changed paths  COULD NOT BE READ (${how})`);
+  } else {
+    const split = classifyDeploy(paths);
+    const count = floored(
+      "changed paths that are production-bearing",
+      how,
+      paths.length,
+      split.shipping.length,
+      paths.length === 0 ? "the commit changed no files at all" : undefined,
+    );
+    console.log(
+      count.outcome === "MEASURED"
+        ? `  changed paths  ${count.matched} of ${count.denominator} are production-bearing (${how})`
+        : `  changed paths  COULD NOT ASSERT — ${count.reason}`,
+    );
+  }
   console.log(`  last reading   ${record.observed}${record.failureClass ? ` (${record.failureClass})` : ""}`);
   console.log(`                 taken ${record.observedAt ?? "never"} against ${record.deployedSha ?? "no commit"}`);
   console.log("");

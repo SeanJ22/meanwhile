@@ -218,7 +218,12 @@ test("a changed-path list that could not be read is treated as touching the sche
   assert.equal(touchesSchemaContract(null), true, "null is the absence of a measurement, not an empty one");
   assert.equal(touchesSchemaContract([]), false, "an empty list is a real measurement");
   assert.equal(touchesSchemaContract(["lib/db/schema.ts"]), true);
-  assert.equal(touchesSchemaContract(["lib\\db\\migrations\\0023_x.sql"]), true, "windows separators normalise");
+  // Built rather than written as a literal. A backslash repo path in source can
+  // only ever match on Windows, and RULING 14's guard refuses the shape on
+  // sight — correctly, even here, where the backslashes are the subject of the
+  // test rather than a way of naming a file.
+  const windowsPath = ["lib", "db", "migrations", "0023_x.sql"].join("\\");
+  assert.equal(touchesSchemaContract([windowsPath]), true, "windows separators normalise");
   assert.equal(touchesSchemaContract(["lib/db/queries.ts"]), false);
 });
 

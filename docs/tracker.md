@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **357 open**, 443 resolved.
+- **356 open**, 444 resolved.
 - **60 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **5**
@@ -912,7 +912,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**26 open · 83 resolved.**
+**25 open · 84 resolved.**
 
 ### P1
 
@@ -937,8 +937,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
 
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
-
-**NH273** — The gate now blocks a merge whose migrations production does not hold. The deploy half is unbuilt: Netlify could refuse to build a deploy whose expand-phase migrations are unapplied, which would close the window between merging and deploying.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

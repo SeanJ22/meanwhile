@@ -21295,3 +21295,81 @@ The daily schema tripwire is untouched. It failed closed and found this.
 
 **Reader-visible proof on the repaired head:** `walk:all` 390 checks ran, **0
 FAIL, 0 silent**, 14 declared COULD NOT RUN with reasons, no named regressions.
+
+### The addendum, absorbed at a control point rather than by stopping
+
+Four further requirements arrived mid-session. **Nothing running was cancelled
+or reserialized**; they were taken at the next safe control point and fanned out
+as three more workstreams, bringing the session to twelve.
+
+**Durability.** Work that exists only in a local worktree is not durable session
+state. All twelve workstream branches and the integration head are pushed, and
+containment is PROVEN rather than asserted — every workstream tip is an ancestor
+of the integration head, so none is orphaned. Pushing is a durability operation
+and is not shipping: no workstream has a PR, none is merged, and the single door
+to `main` remains the one integrated PR.
+
+**MTG-13 acceptance became the UNION, and the union is fourteen.** The three
+September sittings are regression floors, not the target. Measured per route:
+`/Events` 0 future (403 rows all-time, latest 2026-08-25), `EventDates/138`
+0 future, `Calendar.aspx` "This Year" **14**, out to 2026-12-15. <!-- expected-future: 2026-12-15 is the last sitting Pima PUBLISHES, read off three first-party routes, not a stamp -->
+**INTERSECTION OF THE TWO WIRED ROUTES: 0.** Intersection semantics would have
+shipped fourteen fewer sittings, so `intersectionOfRoutes()` exists in code as a
+NAMED FORBIDDEN COUNTERFACTUAL rather than a mistake to remember not to make.
+
+A third materially distinct route was found and it is the body's own: the Clerk
+of the Board publishes an instance table at `www.pima.gov/2559/...`, reached
+through `sitemap.xml`, carrying end times and amendments the vendor does not.
+The reader-facing county calendar pages publish only a prose recurrence rule —
+which is exactly how a session concludes a county publishes no instances.
+All fourteen are carried by three independent first-party routes agreeing on
+body, date and wall clock.
+
+`pima.granicus.com` was NOT FETCHED AT ANY RUNG (`Disallow: /`), recorded with a
+null claim about its contents. The December horizon proved fully reachable
+through permitted routes, so nothing was lost to that wall.
+
+**Two prior claims fell to measurement.** `meeting_NotViewable` is about the
+LINK and not reachability — the 15 December detail page answers 200 with 84KB,
+so a code comment calling it "a door that does not open" was false. And a
+GUESSED pager index silently returns the WRONG page with a clean 200 and 100
+well-formed rows.
+
+**The last gap was ours and it was one constant.** `UPCOMING_HORIZON_DAYS` was
+60, so the product COLLECTED fourteen and SERVED SIX. Raised to 120. The blast
+radius was real and every consequence was a sitting a body had already
+published: Kearsarge 15 to 19, a Tucson commission 5 to 7, a Newbury commission
+4 to 7 — including an October 15 sitting whose own test comment recorded it as
+ONE DAY past the window.
+
+Mesa is why the rule is the union rather than a preference: its WebAPI carries
+20 future sittings its portal does not, while Pima's carries zero. Preferring
+either route loses a tenant.
+
+**RULING 192 — method knowledge is typed by claim class.** The false Pima entry
+was not a bad route; it was a VALID route whose existence and outcome were both
+correct, carrying a false conclusion in the same paragraph at the same
+authority. With one blob per route the only moves are rewrite the paragraph or
+delete the route — and a deleted route is one a later session rediscovers as
+new. So each assertion carries its own record and its own retraction, structured
+provenance is REQUIRED for coverage claims and derived conclusions, dependence
+is DECLARED BY ID rather than inferred from text, and a withdrawn assertion
+whose dependents still teach is a validator failure. Applied to the canonical
+store: version 55 to 55 and routes 116 to 116, because an amendment adds no
+avenue.
+
+**BAL-27 became a contest-level eligibility decision, and it REMOVED labels this
+session had just added.** Officeholder acquisition finds incumbents before it
+proves anyone else, and that asymmetry was reaching readers: a lone `Incumbent`
+in a contest where nobody else's status is proven IS the sentence "these others
+are challengers", written by layout instead of by words.
+
+    Incumbent  20 -> 2      Challenger  59 -> 4      quiet  284 -> 357
+
+Twenty-one contests lost a label. Every one of the 55 withdrawn `Challenger`
+claims was the defect — the person was called a challenger for being absent from
+a store whose own doc block says WHAT WE HAVE ACQUIRED SO FAR. `NOT_INCUMBENT`
+is now producible only against a complete officeholder universe, and
+completeness is READ OFF the holder source's own id namespace rather than
+assumed: a congressional roster enumerates its seat; a person-by-person
+collection does not. Only two contests are label-eligible.

@@ -1,11 +1,11 @@
 {
   "formatVersion": 1,
-  "deployedSha": "6d9e0e543d5eb43abff8dfbd4993e6f8d1e10d33",
-  "mainSha": "6d9e0e543d5eb43abff8dfbd4993e6f8d1e10d33",
+  "deployedSha": "71325247",
+  "mainSha": "17d68f1c26138ebd960dcd92270c89932c60b9f7",
   "observed": "HELD",
   "failureClass": null,
-  "detail": "NOT APPLICABLE — none of the 15 changed path(s) touch the schema contract.",
-  "observedAt": "2026-08-29T05:37:57.016Z",
+  "detail": "HOLDS — shipping invariant HOLDS at post-deploy: 23 of 23 committed migration(s) applied, head 0022_adorable_hemingway",
+  "observedAt": "2026-08-29T06:15:56.161Z",
   "moment": "post-deploy",
   "gateExit": 0
 }

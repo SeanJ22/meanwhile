@@ -63,7 +63,11 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 - **NH273** — The gate now blocks a merge whose migrations production does not hold. The deploy half is unbuilt: Netlify could refuse to build a deploy whose expand-phase migrations are unapplied, which would close the window between merging and deploying.
 
-**Needs Sean.** Nothing.
+**What it started.** 1 row(s) opened, 1 still open.
+
+- **NH281** — Every application-bearing deploy since the fixture-credential hotfix has failed the same way, so the live site is serving an older build than main. The cause cannot be read from here: Netlify reports only "Build script returned non-zero exit code: 2" and the build log is not retrievable through the API with the token this repo holds. *(open)*
+
+**Needs Sean.** NH281
 
 ## 2026-08-28 finish-aug28
 

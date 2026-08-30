@@ -174,3 +174,19 @@ test("static markup still AGREES directly, and is not downgraded to the payload 
   const html = `<html><body><h2>Allison Pratt, President</h2></body></html>`;
   assert.equal(judgeName("Allison Pratt", renderedText(html), embeddedDataText(html)), "AGREED");
 });
+
+test('the instrument only fires as an entry point — importing it is side-effect free (2026-08-30)', () => {
+  /*
+   * This file imports three functions from scripts/verify-extraction.mts. An
+   * unguarded top-level main() there meant every 'pnpm test' fetched all 44
+   * roster pages LIVE and rewrote docs/extraction-verification.md as a side
+   * effect of an unrelated suite run - live calls in tests, and a measurement
+   * doc whose date moved without a measurement being asked for. The guard is
+   * asserted here, in the importer, because the importer is what pays.
+   */
+  const source = readFileSync('scripts/verify-extraction.mts', 'utf8');
+  const guardAt = source.indexOf('import.meta.url ===');
+  const mainCallAt = source.lastIndexOf('main().catch');
+  assert.ok(guardAt >= 0, 'the entry-point guard is gone');
+  assert.ok(mainCallAt > guardAt, 'main() runs outside the entry-point guard');
+});

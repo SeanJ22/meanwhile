@@ -14,8 +14,8 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **374 open**, 450 resolved.
-- **73 waiting on Sean** — the first section below.
+- **377 open**, 450 resolved.
+- **76 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**73 open · 53 resolved.**
+**76 open · 53 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -193,6 +193,36 @@ ENVELOPE USED: envelope 699 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in 
 THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-29T18:48:27.060Z, not as of when you are reading it.
 
 [job-watch:dispatch-delay:refresh-daily.yml@2026-08-29T09:11:00.000Z]
+
+**JOB16** — AUDITED SLOT: 2026-08-30T10:41:00.000Z (cron "41 10 * * *"). AS OF: 2026-08-30T18:47:02.742Z. Run 33318287070 was created 256.6 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 699 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (699 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-30T18:47:02.742Z, not as of when you are reading it.
+
+[job-watch:dispatch-delay:intake-tripwire.yml@2026-08-30T10:41:00.000Z]
+
+**JOB17** — AUDITED SLOT: 2026-08-30T15:40:00.000Z (cron "40 15 * * *"). AS OF: 2026-08-30T18:47:02.742Z. Run 33329026985 was created 186.5 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_IN_PROGRESS — status is "in_progress" — it has not concluded 
+
+ENVELOPE USED: envelope 699 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (699 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-30T18:47:02.742Z, not as of when you are reading it.
+
+[job-watch:dispatch-delay:job-watch.yml@2026-08-30T15:40:00.000Z]
+
+**JOB18** — AUDITED SLOT: 2026-08-30T09:11:00.000Z (cron "11 9 * * *"). AS OF: 2026-08-30T18:47:02.742Z. Run 33316760622 was created 313.1 minute(s) after that slot and waited 0 minute(s) to start, against a 60-minute tolerance. Because the wait is BEFORE creation rather than after it, this is GitHub dispatch delay and not runner queueing — every scheduled run read on 2026-08-28 had startedAt equal to createdAt. 
+
+WHY IT MATTERS EVEN THOUGH THE RUN WENT GREEN: a refresh that lands ten hours after its slot is a refresh whose data is a day old on arrival, and every failure-counting instrument in this repository reports it as healthy. What the run then did: RAN_SUCCEEDED_UNCLASSIFIED — it succeeded, and this workflow has no "Unchanged" step, so landed-versus-no-op cannot be told apart from its step list. That is a limit of the observation, not a claim that nothing landed. 
+
+ENVELOPE USED: envelope 699 min = the LARGEST DISPATCH DELAY OBSERVED SO FAR in this read (699 min) over 9 scheduled run(s); the stated floor of 60 min did not bind. THIS IS A FLOOR THAT GROWS, NOT A CEILING ON WHAT GITHUB CAN DO: on 2026-08-28 a slot sat silent past the then-maximum of 638 min and its run arrived anyway at 698 min (run 33209856186).
+
+THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every sentence above as true AS OF 2026-08-30T18:47:02.742Z, not as of when you are reading it.
+
+[job-watch:dispatch-delay:refresh-daily.yml@2026-08-30T09:11:00.000Z]
 
 **NH105** — Opened 2026-08-23. The instrument is built and the invitation list is generated - 272 of 272 Morris County candidacies, every row carrying invitedOn: null because nothing has been sent. The message is docs/candidate-questionnaire-invitation.md, quoted in full, plus a reminder message. FOUR THINGS ARE YOURS AND NONE OF THEM IS A SESSION'S CALL: (1) the message itself - it goes out under this product's name to 272 named people asking for votes; (2) a monitored reply address a person actually reads, which the message promises three times and which does not exist yet; (3) the schedule - one send date, two reminder dates and a deadline, which are constants at the top of scripts/questionnaire-invitations.mts and are quoted in full in that file and in data/questionnaire/invitations-nj-morris-2026.json; one edit moves all 272 symmetrically; (4) whether sparkwtp.netlify.app comes off its password wall first, because a candidate following the link today hits a password prompt. RULING 112 governs everything about the instrument itself; this row is only the decision to contact real people.
 

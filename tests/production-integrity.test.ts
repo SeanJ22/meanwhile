@@ -10,6 +10,7 @@ import {
   MAX_READING_AGE_HOURS,
   NEVER_CHECKED,
   assessIntegrity,
+  classifyEquivalenceRange,
   evaluateReleaseFreeze,
   explainFreeze,
   sameCommit,
@@ -583,4 +584,192 @@ test("POSITIVE CONTROL: a freshness freeze and a DEGRADED freeze are DIFFERENT s
   assert.notEqual(moved.state, "DEGRADED", "a stale reading is not an incident");
   assert.equal(moved.state, "STALE_HEALTHY");
   assert.equal(moved.freshness, "PRODUCTION_MOVED");
+});
+
+/** -------------------- NH289: served commit vs application release -------- */
+
+/*
+ * THE DEFECT, MEASURED ON 2026-08-30. PR #226 merged as `9fb33469` at
+ * 07:37:09Z; the post-deploy observer committed `5169fa32` — a child changing
+ * exactly `data/ops/production-integrity.json` — 62 seconds later; Netlify
+ * built the observer commit riding the accumulated diff, so production
+ * REPORTED `5169fa32` while SERVING `9fb33469`'s application byte for byte.
+ * The reading (HELD, 0.1h old, against `9fb33469`) was true, current and
+ * about the application production served — and the next pull request froze
+ * on PRODUCTION_MOVED anyway. The commit had moved; the application had not,
+ * and the gate could not tell them apart.
+ *
+ * The repair is a PROOF, never an allowlist: the served commit must be shown
+ * to descend from the measured release with nothing production-bearing in
+ * the range, by the same `classifyDeploy` predicate the deploy filter runs.
+ * Nothing here special-cases a sha, and every uncertain input stays frozen.
+ */
+
+test("POSITIVE CONTROL (NH289): a PROVEN non-shipping descendant is the same application", () => {
+  const verdict = evaluateReleaseFreeze({
+    record: HELD, // taken against SHA_A
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: {
+      ...serving(SHA_B, 1),
+      equivalence: {
+        verdict: "EQUIVALENT",
+        how: "bbbbbbb descends from aaaaaaa and all 1 changed path(s) in the range are non-shipping (first is data/ops/production-integrity.json)",
+      },
+    },
+  });
+  assert.equal(verdict.frozen, false, "the application production serves IS the measured release");
+  assert.equal(verdict.freshness, "CURRENT_FOR_PRODUCTION");
+  assert.equal(verdict.servedSha, SHA_B, "the served COMMIT is reported as observed");
+  assert.equal(verdict.applicationReleaseSha, SHA_A, "the application-bearing RELEASE is reported too");
+  const printed = explainFreeze(verdict);
+  assert.ok(printed.includes(SHA_B), "the log names the served commit");
+  assert.ok(printed.includes(`application-bearing release: ${SHA_A}`), "and the release the reading covers");
+});
+
+test("SEEDED (NH289): the same difference WITHOUT a proof still freezes — absence is not equivalence", () => {
+  const verdict = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: serving(SHA_B, 1), // no equivalence field at all
+  });
+  assert.equal(verdict.frozen, true);
+  assert.equal(verdict.freshness, "PRODUCTION_MOVED");
+});
+
+test("SEEDED (NH289): a SHIPPING child of the measured release is a real move and freezes", () => {
+  const verdict = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: {
+      ...serving(SHA_B, 1),
+      equivalence: {
+        verdict: "NOT_EQUIVALENT",
+        how: "1 of 2 path(s) in aaaaaaa..bbbbbbb are production-bearing — first is app/api/meetings/route.ts",
+      },
+    },
+  });
+  assert.equal(verdict.frozen, true);
+  assert.equal(verdict.freshness, "PRODUCTION_MOVED");
+  assert.ok(verdict.reason.includes("production-bearing"), "the refusal names the shipping evidence");
+});
+
+test("SEEDED (NH289): an UNPROVABLE range is CANNOT_TELL, and CANNOT_TELL freezes", () => {
+  const verdict = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: {
+      ...serving(SHA_B, 1),
+      equivalence: { verdict: "CANNOT_TELL", how: "the history here is too shallow to prove descent" },
+    },
+  });
+  assert.equal(verdict.frozen, true, "unprovable is never equivalent");
+  assert.equal(verdict.freshness, "PRODUCTION_MOVED");
+});
+
+test("SEEDED (NH289): a DEGRADED reading with a non-shipping child is STILL DEGRADED", () => {
+  // Equivalence lives inside rule 4 and rule 4 reaches only readings that
+  // HELD. A proof about the range must never soften an active incident.
+  const verdict = evaluateReleaseFreeze({
+    record: REFUSED,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: {
+      ...serving(SHA_B, 1),
+      equivalence: { verdict: "EQUIVALENT", how: "the range is exactly the observer's record commit" },
+    },
+  });
+  assert.equal(verdict.frozen, true);
+  assert.equal(verdict.state, "DEGRADED", "equivalence cannot reach rule 2");
+});
+
+test("SEEDED (NH289): an EXPIRED healthy parent stays expired however equivalent the child", () => {
+  const verdict = evaluateReleaseFreeze({
+    record: HELD,
+    candidateSha: SHA_C,
+    changedPaths: APP_CHANGE,
+    production: {
+      ...serving(SHA_B, MAX_READING_AGE_HOURS + 5),
+      equivalence: { verdict: "EQUIVALENT", how: "non-shipping descendant, proven" },
+    },
+  });
+  assert.equal(verdict.frozen, true, "equivalence settles WHICH release; it never resets the clock");
+  assert.equal(verdict.freshness, "READING_EXPIRED");
+});
+
+test("NH289: the range classifier proves each half and fails toward CANNOT_TELL", () => {
+  const RANGE = { recordedSha: SHA_A, servedSha: SHA_B };
+
+  const observer = classifyEquivalenceRange({
+    ...RANGE,
+    ancestry: "ancestor" as const,
+    rangePaths: ["data/ops/production-integrity.json"],
+  });
+  assert.equal(observer.verdict, "EQUIVALENT", "the observer's own record commit is the founding case");
+
+  const docsChild = classifyEquivalenceRange({ ...RANGE, ancestry: "ancestor", rangePaths: DOCS_ONLY });
+  assert.equal(docsChild.verdict, "EQUIVALENT", "a docs-only child is the same application release");
+
+  const identical = classifyEquivalenceRange({ ...RANGE, ancestry: "ancestor", rangePaths: [] });
+  assert.equal(identical.verdict, "EQUIVALENT", "identical trees are the same application");
+
+  const appInRange = classifyEquivalenceRange({
+    ...RANGE,
+    ancestry: "ancestor" as const,
+    rangePaths: ["data/ops/production-integrity.json", ...APP_CHANGE],
+  });
+  assert.equal(appInRange.verdict, "NOT_EQUIVALENT", "one app file anywhere in the range destroys equivalence");
+
+  const schemaInRange = classifyEquivalenceRange({ ...RANGE, ancestry: "ancestor", rangePaths: SCHEMA_CHANGE });
+  assert.equal(schemaInRange.verdict, "NOT_EQUIVALENT", "a migration in the range is a shipping change");
+
+  const unrelated = classifyEquivalenceRange({ ...RANGE, ancestry: "not-ancestor", rangePaths: [] });
+  assert.equal(unrelated.verdict, "NOT_EQUIVALENT", "identical trees do not rescue a foreign history");
+
+  const shallow = classifyEquivalenceRange({ ...RANGE, ancestry: "unknown", rangePaths: DOCS_ONLY });
+  assert.equal(shallow.verdict, "CANNOT_TELL", "unproven descent is unclaimed descent");
+
+  const unreadable = classifyEquivalenceRange({ ...RANGE, ancestry: "ancestor", rangePaths: null });
+  assert.equal(unreadable.verdict, "CANNOT_TELL", "an unreadable range is never equivalent");
+});
+
+test("NH289: there is no input that STATES equivalence — the gate classifies evidence only", () => {
+  // The proof is recomputed from git evidence on every run. The one place a
+  // caller could try to smuggle a bare trust-this-sha through is the source
+  // of the gate itself, so the gate is read: it must take its verdict from
+  // classifyEquivalenceRange and expose no flag naming a trusted commit.
+  const source = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
+  assert.ok(source.includes("classifyEquivalenceRange("), "the gate classifies evidence, never asserts");
+  for (const escape of ["--trust", "trust-sha", "TRUSTED_SHA", "EQUIVALENT_SHAS", "skip-equivalence"]) {
+    assert.ok(!source.includes(escape), `no '${escape}' input may exist`);
+  }
+});
+
+/** ---- NH290: the gates job's checkout can now READ a pull request's diff --- */
+
+test("NH290: on CI the freeze gate takes its base from the event payload, never from a local ref", () => {
+  /*
+   * Build Check run #463, measured: PR #227 changed four docs/ files and the
+   * gate printed "changed paths COULD NOT BE READ", because it diffed against
+   * `origin/main` — a ref a depth-1 `actions/checkout` does not have. A
+   * docs-only pull request then classified cannot-tell, which is
+   * production-changing, and the freeze reached the exact paperwork it is
+   * scoped never to reach. The repair is the db-shipping-gate.mts shape: the
+   * pull request's base sha from GITHUB_EVENT_PATH, fetched BY SHA with a
+   * deepening fetch, and a push's own added/modified/removed lists.
+   */
+  const source = readFileSync(join(ROOT, "scripts", "release-freeze-gate.mts"), "utf8");
+  assert.ok(source.includes("GITHUB_EVENT_PATH"), "the base comes from the platform's event payload");
+  assert.ok(source.includes("payload.pull_request?.base?.sha"), "a pull request diffs against its stated base sha");
+  assert.ok(source.includes("--depth="), "an absent base is fetched by sha, deepening not unshallowing");
+  assert.ok(source.includes("the push event's own commit list"), "a push uses the event's own path lists");
+  const ciStart = source.indexOf('event === "pull_request" || event === "push"');
+  const ciEnd = source.indexOf("async function main");
+  assert.ok(ciStart > 0 && ciEnd > ciStart, "the CI branch and main() are both present");
+  const ciBranch = source.slice(ciStart, ciEnd);
+  assert.ok(!ciBranch.includes('"origin/main"'), "the CI branch never reaches for a ref the checkout lacks");
+  assert.ok(!ciBranch.includes("HEAD~1"), "nor for a parent a depth-1 clone does not have");
 });

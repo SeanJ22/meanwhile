@@ -51,8 +51,10 @@
         "measurable-docs-only-pr-classification"
       ],
       "executable": true,
-      "disposition": "NOT_STARTED",
-      "concurrencyEvidence": [],
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "ran as the merge train: PR 228 (the gate repair) merged first because 227 consumes its product; 227 then obtained its honest green on run 33320655169 and merged as 45670b06 with no bypass"
+      ],
       "executionArtifacts": []
     },
     {
@@ -80,9 +82,10 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "NOT_STARTED",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "independent of the release machinery by file set; its terrain mapping already ran in a parallel subagent while workstream 1 was being implemented"
+        "independent of the release machinery by file set; its terrain mapping already ran in a parallel subagent while workstream 1 was being implemented",
+        "implemented by a worktree subagent (branch claude/nh288-body-names) concurrently with the freeze-gate workstream; merged as PR 229 (3bc0e7d2); reader-verified on production with before/after synthetic probes"
       ],
       "executionArtifacts": []
     },
@@ -109,8 +112,11 @@
         "sourced-body-names"
       ],
       "executable": true,
-      "disposition": "NOT_STARTED",
-      "concurrencyEvidence": [],
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "implemented by the integration owner in the NH288 worktree as a stacked branch while PR CI ran; rebased onto merged main; PR 232 open",
+        "merged as PR 232 (b52fea48); item-level selection verified live on production — 57 items held, 12 in pack, whole items only"
+      ],
       "executionArtifacts": []
     },
     {
@@ -140,8 +146,112 @@
         "pr-227-merged"
       ],
       "executable": true,
-      "disposition": "NOT_STARTED",
+      "disposition": "READY_FOR_INTEGRATION",
       "concurrencyEvidence": [],
+      "executionArtifacts": []
+    },
+    {
+      "id": "nh287-method-applicability",
+      "title": "P1 — typed applicability populated from route evidence, the school-district-to-county matcher leak closed as demote-not-exclude, routes split from reasoning disciplines",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/method/",
+          "scripts/method/",
+          "data/method/knowledge.json",
+          "tests/method-typed-applicability.test.ts",
+          "tests/route-floor-applicability.test.ts"
+        ],
+        "data": [
+          "method-store"
+        ]
+      },
+      "produces": [
+        "typed-route-applicability"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "worktree subagent on branch claude/nh287-method-applicability, run concurrently with the shipping lane and the NH288 workstream; PR 231 open",
+        "merged as PR 231 (199e74e8)"
+      ],
+      "executionArtifacts": []
+    },
+    {
+      "id": "verify-extraction-import-guard",
+      "title": "P1 — the unguarded top-level main() that made every pnpm test a 44-page live measurement, guarded",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "scripts/verify-extraction.mts",
+          "tests/verify-extraction-client-rendered.test.ts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "side-effect-free-test-imports"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "implemented by the integration owner between merge-train waits; merged as PR 230 (f42152b3); measured 44s of network to 126ms"
+      ],
+      "executionArtifacts": []
+    },
+    {
+      "id": "lane-a-detective",
+      "title": "Lane A — Pima outcome-coverage explanation by exact meeting, the 85641 route/permission gap table, and a live local campaign-finance retrieval proof",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [],
+        "data": []
+      },
+      "produces": [
+        "pima-outcome-classification",
+        "85641-gap-table",
+        "easyvote-live-proof"
+      ],
+      "consumes": [],
+      "executable": true,
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "read-only subagent run concurrently with all implementation workstreams; wrote nothing; its findings land through the tracker close-out"
+      ],
+      "executionArtifacts": []
+    },
+    {
+      "id": "local-finance-answerability",
+      "title": "P1 — held Pima campaign-finance records surfaced as Ask evidence for a local body, with CCFR-vs-IE denominators and sourced linkage only",
+      "dependsOn": [
+        "vote-evidence-selection"
+      ],
+      "dependencyReasons": {
+        "vote-evidence-selection": "OWNED-DOMAIN OVERLAP: both add sections to app/api/ask/grounded/route.ts; the finance agent works a disjoint region on strict instruction and the integration owner reconciles, so integration serializes behind the vote-selection merge."
+      },
+      "owns": {
+        "paths": [
+          "lib/ask/local-finance.ts",
+          "tests/ask-local-finance.test.ts"
+        ],
+        "data": []
+      },
+      "produces": [
+        "local-finance-evidence"
+      ],
+      "consumes": [
+        "question-shaped-vote-evidence"
+      ],
+      "executable": true,
+      "disposition": "INTEGRATED",
+      "concurrencyEvidence": [
+        "worktree subagent on branch claude/local-finance-answerability, running concurrently with the merge train",
+        "merged as PR 233 (58895ad3) after the integration owner repaired the import.meta.dirname build failure its green suite never exercised"
+      ],
       "executionArtifacts": []
     }
   ]

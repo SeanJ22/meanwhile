@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **162 sessions.**
+Newest first. **163 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -24,6 +24,24 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **B08** — Read separation agreement before signing · deleted 2026-08-20 by Sean · authority: his note: "This has absolutely nothing to do with this project at all.  Delete this entirely"
 
 ---
+
+## 2026-08-30 - release identity, the freeze gate's diff, and the reader's vote question
+
+**What it finished.** 4 row(s).
+
+- **NH288** — A reader asking the flagship question is answered about 'that Pima meeting'. canonicalBodyIdentity for ocd-division/country:us/state:az/county:pima#governing returns name 'Pima', divisionLabel 'Pima', nameIsBodysOwn false - the registry holds no body-own name for a county governing body, so nameAReaderCanSay falls back to the division label. Measured 2026-08-29 across the committed snapshot: 78 body entities, 14 with nameIsBodysOwn false, and the corpus carries a different name for all 14. The body ID is correct throughout - this is the DISPLAY NAME only, and the exact-body identity repair of PR #223 is unaffected. CLAUDE.md requires reader surfaces to speak plain language.
+- **NH289** — pnpm gates reported 11 of 12 green at session start with release:freeze FAILING, and it was failing before any work began. The gate is behaving CORRECTLY under RULING 204 - production moved under the last reading - but the move is self-inflicted and will recur after every observer commit. Measured 2026-08-29: production serves 2be8e854 (the observer commit titled 'Post-deploy integrity reading', whose only changed file is data/ops/production-integrity.json) with its own deployId 6a93a21a0eb31100089890e1, while the reading inside it was taken against parent b0f2299e.
+- **NH290** — Build Check run #463, measured: PR #227 changed four docs/ files and release-freeze-gate.mts printed 'changed paths COULD NOT BE READ', because on a pull_request event it diffed against origin/main — a ref a depth-1 actions/checkout does not have. The unreadable list classified cannot-tell, cannot-tell is production-changing, and the freeze reached the exact paperwork it is scoped never to reach. HEAD~1 on a push failed the same way. Distinct from NH289: this is WE COULD NOT MEASURE THE DIFF; NH289 is the measured diff pointing at a commit that is not the application.
+- **NH291** — tests/verify-extraction-client-rendered.test.ts imports three pure functions from scripts/verify-extraction.mts, whose main() ran unguarded at top level — so every test run, local and CI, fetched all 44 roster pages live and rewrote docs/extraction-verification.md as a side effect of an unrelated suite. Live calls in tests, which the fixture law forbids; this session watched the doc's stamp move under two suite runs before finding the cause.
+
+**What it started.** 6 row(s) opened, 4 still open.
+
+- **NH292** — lib/ask/inventory.ts's titleCaseName capitalizes every word, so the sourced body name 'Pima County Board of Supervisors' reaches pack.subject.name and the reader surface as 'Pima County Board Of Supervisors' — the particle 'of' wrongly capitalized. Observed on production 2026-08-30 in the post-deploy reader verification of the NH288 fix (synthetic run session-2026-08-30-lane-b-after). *(open)*
+- **NH293** — NH288's fix serves sourced body names from BODY_ROSTERS for 12 of the 14 division-label bodies. The two remaining — ocd-division/country:us/state:az/place:mesa#governing and ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board — have no roster read yet, so no sourced name is held and nothing was invented. Classified: source exists, not ingested. *(open)*
+- **NH294** — Lane A (2026-08-30) measured live routes and robots permission for 85641 bodies that have registry rows but no wired meetings/agenda route. Wirable with existing or trivial adapter classes: Tanque Verde USD board — Apptegy/Thrillshare org id 25, the exact keyless API class already wired for Vail (district site robots ALLOWED); Corona de Tucson FD (coronafire.org) and Sonoita-Elgin FD (sefd911.org) — Streamline class where sitemap.xml IS the dated meeting inventory, 115 and 70 dated sittings, both ALLOWED; Rincon Valley FD (rinconvalleyfdaz.gov) — first-party agenda+minutes PDFs, ALLOWED; Pima JTED (pimajted.org apex, not www) — 267 meetings 2009-2026, ALLOWED per docs/sources.md; Pima County RTA — listing HTML on rtamobility.com allowed while its PDFs are robots-disallowed, and the meeting PDFs actually live on pagregion.com (agendas, full packets, draft summaries), whose robots ALLOW them — host-per-document favors us. *(open)*
+- **NH295** — Lane A (2026-08-30): Sahuarita USD No. 30's agendas/packets/minutes live at susd-30.community.diligentoneplatform.com — the same 23,479-byte blocked-bots robots file (User-agent: * → Disallow: /) as the four Highbond tenants already recorded. THEIR wall, named, never rendered as absence. The district's own site susd30.us is ALLOWED (Crawl-delay 5) and links a board-approved meeting calendar PDF hosted on files.smartsites.parentsquare.com — a host whose robots were NOT read this session (not fetched, so no claim about it either way). Tanque Verde's Highbond tenant (tanqueverdeschools.community.highbond.com) is the same wall for agendas, while its meetings are wirable via Thrillshare (see the wirable-now row). *(open)*
+
+**Needs Sean.** Nothing.
 
 ## 2026-08-29 — exact body identity and answerability
 
@@ -50,10 +68,8 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 - **NH286** — The snapshot holds extracted PDF text from three vendor hosts whose robots.txt says 'User-agent: * / Disallow: /'. The text was collected 2026-08-13 to 2026-08-21, before the permission was ever read; nothing has been fetched from any of them since. The walking question is now settled and recorded in docs/sources.md - none of the three will be walked again. What is NOT settled, and is not a session's call, is whether the text already stored should stay, be purged, or be re-obtained by a permitted route. It is a legal and policy question about public records, not an engineering one.
 
-**What it started.** 2 row(s) opened, 2 still open.
+**What it started.** 2 row(s) opened, 0 still open.
 
-- **NH288** — A reader asking the flagship question is answered about 'that Pima meeting'. canonicalBodyIdentity for ocd-division/country:us/state:az/county:pima#governing returns name 'Pima', divisionLabel 'Pima', nameIsBodysOwn false - the registry holds no body-own name for a county governing body, so nameAReaderCanSay falls back to the division label. Measured 2026-08-29 across the committed snapshot: 78 body entities, 14 with nameIsBodysOwn false, and the corpus carries a different name for all 14. The body ID is correct throughout - this is the DISPLAY NAME only, and the exact-body identity repair of PR #223 is unaffected. CLAUDE.md requires reader surfaces to speak plain language. *(open)*
-- **NH289** — pnpm gates reported 11 of 12 green at session start with release:freeze FAILING, and it was failing before any work began. The gate is behaving CORRECTLY under RULING 204 - production moved under the last reading - but the move is self-inflicted and will recur after every observer commit. Measured 2026-08-29: production serves 2be8e854 (the observer commit titled 'Post-deploy integrity reading', whose only changed file is data/ops/production-integrity.json) with its own deployId 6a93a21a0eb31100089890e1, while the reading inside it was taken against parent b0f2299e. *(open)*
 
 **Needs Sean.** Nothing.
 

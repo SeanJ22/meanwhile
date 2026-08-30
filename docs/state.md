@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-29 — **Our own empty store was being read out to readers as a fact about a government, in the reader path and in the instrument that measures it.** The acquisition-doctrine session; its record is the LAST section of this file.
+Last updated: 2026-08-30 — **The served commit was not the application, and the reader finally heard how the Board voted.** The release-identity and reader-answerability session; its record is the LAST section of this file.
+
+Previous: 2026-08-29 — **Our own empty store was being read out to readers as a fact about a government, in the reader path and in the instrument that measures it.** The acquisition-doctrine session.
 
 Previous: 2026-08-29 — **The application retrieved the wrong government, and every check downstream was green.** The exact-body-identity and answerability session.
 
@@ -22612,3 +22614,179 @@ state zero typed applicability dimensions, all of them carry
 is a change to the method store, which another lane owned while it ran — two
 lanes rewriting one canonical store is refused by the parallel-execution rule
 rather than permitted by it.
+
+
+## 2026-08-30 — the served commit was not the application, and the reader finally heard how the Board voted
+
+The handoff opened on a repository that could not ship: PR #227 — four `docs/`
+files — stood frozen under a required check whose own scope rule says a
+docs-only change is never a production release. This session measured both
+defects under that freeze, repaired them as classes, unstranded the PR through
+an honest green, and then spent the rest of the day where the product actually
+lives: the reader's vote question, the method store's applicability claims, and
+the first local campaign-finance records to reach an evidence pack.
+
+### NH290 — the gate that had never read a pull request's diff
+
+Build Check run #463, measured: `release-freeze-gate.mts` diffed against
+`origin/main`, a ref a depth-1 `actions/checkout` does not have, so the
+changed-path list read COULD NOT BE READ, `classifyDeploy(null)` said
+cannot-tell, cannot-tell is production-changing, and the freeze reached the
+exact paperwork it is scoped never to reach. The repair is the shape
+`db-shipping-gate.mts` proved first: the base comes from the platform —
+`pull_request.base.sha` out of the event payload, fetched by sha with a
+deepening fetch; a push uses its own added/modified/removed lists. WE MEASURED
+NON-SHIPPING and WE COULD NOT MEASURE THE DIFF remain different answers, and
+the second still freezes. PR #228's own gates run then printed `changed paths
+3 of 5 are production-bearing (git diff fb0c623..HEAD (the pull request's
+base, from the event payload))` on the real shallow checkout, and #227 merged
+as `45670b06` with no bypass and no skip flag.
+
+### NH289 — a moved commit is not a moved application
+
+The freeze #227 fell into was a second defect. Netlify's own deploy list shows
+the class five times running (`589676ae`, `097fca30`, `2be8e854`, `ed0c253d`,
+`5169fa32`): the post-deploy observer's `data/ops/`-only commit lands about
+sixty seconds after an app-bearing merge, the last-successful-deploy pointer
+lags publish by roughly fifteen seconds, so the observer commit rides the
+accumulated diff and BUILDS — production then reports the observer's sha while
+serving the measured release's application byte for byte, `sameCommit` says
+moved, and every next production-changing release freezes. The deploy filter
+was correct at every step; cancelling inside the window could strand a
+shipping change if the parent build failed, so the wasted build stays the safe
+direction and the identity was repaired instead.
+
+The served commit and the application-bearing release are now two identities.
+`PRODUCTION_MOVED` consults a PROOF the gate measures from git evidence on
+every run: the served commit must descend from the recorded release, and every
+path in the range must be non-shipping under `classifyDeploy` — the deploy
+filter's own predicate, so a schema file or one app file anywhere in the range
+destroys equivalence by construction. `NOT_EQUIVALENT` freezes as a real move;
+`CANNOT_TELL` freezes as an unproven one; there is no flag, no trusted sha,
+and no allowlist. DEGRADED stays a hard freeze the proof cannot reach, the age
+bound still applies after equivalence, and the log states both identities.
+The mechanism met its founding scenario live the same afternoon: production
+reported `fbcac4ac` (the observer's child of `7fea24af`) and the gate printed
+`release permitted … a PROVEN non-shipping descendant … application-bearing
+release: 7fea24af`. During the merge train it also refused correctly — a range
+carrying #229's real shipping changes froze with `NOT_EQUIVALENT — 4 of 11
+path(s) … production-bearing` until the observer recorded the new reading,
+which is the freeze doing its job, not failing at it.
+
+### NH288 — the roster held the Board's name for seventeen days
+
+`registry.json` deliberately carries `name: null` on derived bodies, so 14 of
+78 bodies rendered as bare division labels, `pack.subject.name` was `"Pima"`,
+and the validator's require-a-subject-token rule reduced to *does the prose
+contain "pima"* — correct anaphora ("The Board voted 5-0…") was
+REJECTED_FELL_BACK and the flagship vote question returned records with no
+prose. The fix is in the reading layer: `lib/ask/body-identity.ts` falls back
+registry-own-name → `BODY_ROSTERS.bodyName` — sourced, cited, and sitting
+unread since 2026-08-13 — → division label. 12 of 14 bodies now serve sourced
+names; Mesa and Morris Hills Regional stay at their labels, classified *source
+exists, not ingested* (NH293), because nothing is invented. The validator was
+redesigned rather than weakened: `subject-not-substituted` now rejects prose
+that names a DIFFERENT known body's full name, over the body universe the
+route already holds, with the id-level `record-belongs-to-resolved-body` wall
+untouched — proven false-first, including the old rule's blind spot (foreign
+naming beside the word "Pima" used to pass).
+
+Reader-verified on production with synthetic before/after probes: *"How did
+the Pima County Board of Supervisors vote last time?"* moved from
+REJECTED_FELL_BACK to GROUNDED_CLAUDE prose naming the August 25 sitting and
+its items, subject resolved to the `#governing` body id, denominators
+`285 held / 60 in pack` stated. Two warts recorded rather than hidden:
+`titleCaseName` prints "Board Of Supervisors" (NH292), and a body-less "how
+did the board vote" is UNRESOLVED rather than misbound.
+
+### Which sixty votes (PR #232)
+
+The 60-row vote bound was honest about its size and silent about its choice —
+a first-N in store order, so which votes a reader heard about was an accident
+of ingestion sequence. Selection is now explainable: an item the question
+itself names first (two or more distinct five-plus-character tokens — a false
+match would spend the budget answering an unasked question), divided roll
+calls next (a 3-2 is what member rows exist for; a unanimous roll is carried
+by its action record), store order as the stable tail — and WHOLE ITEMS ONLY,
+because three members of a five-member roll reads as an absence for the other
+two. The items split is reported beside the rows split
+(`rollCallItemsHeldForThatMeeting` / `rollCallItemsInPack`), and the seeded
+control asserts whole items exactly against the store's own per-item counts.
+
+### NH287 — the method store stops leaking school districts into counties
+
+Measured at v61: 122 routes, 120 stating zero typed dimensions. Population is
+now mechanical or absent (`pnpm method:type-applicability`): states from
+YIELDED outcomes only, platforms and publishers from recorded hosts, additive,
+idempotent, portability untouched — 58 of 122 typed, and governmentTypes
+honestly zero because no OCD id exists anywhere in the store's evidence. The
+matcher leak is closed as demote-not-exclude: a mismatch on an evidence
+dimension turns PROVEN into OFFERED_UNPROVEN — an AZ school-district technique
+is an experiment for an AZ county, never a false REQUIRED floor, and never
+withheld. Routes and reasoning disciplines are now a typed `kind`, with 80
+routes honestly UNCLASSIFIED rather than guessed. (PR #231.)
+
+### The first local campaign-finance records to reach a reader's evidence pack
+
+The grounded route had no finance evidence provider, so it told readers we
+held nothing while `data/campaign-finance/` carried 900 contribution and 584
+distribution rows from the Pima EasyVote acquisition. `lib/ask/local-finance.ts`
+now links BODY ← OFFICE ← COMMITTEE strictly through the county register's own
+`officeName` plus a hand-audited crosswalk committed with its written basis —
+never a name match: the PAC "Citizens of Vail for Education" links to no body,
+and register-less "ANDRES FOR SUPERVISOR" never reaches the Board of
+Supervisors. Rows are date-ordered, never amount-ranked, never totalled, and
+every answer carries the named gap that independent-expenditure reports are a
+different filing not yet acquired. Lane A re-proved the route live the same
+day (anonymous by design, tenant GUID plus Origin header) and the register
+join to the state's `Committees.txt`. The branch also taught the session a
+lesson worth its own sentence: the full suite was green while the BUILD could
+not collect the route — `held-records.ts` resolved its stores off
+`import.meta.dirname`, undefined inside Next's build, harmless while only
+scripts imported it and fatal the moment the route did. The reads are now
+`process.cwd()` literals plus the tracing entry, the repo's two-half pattern
+for route-read data. (PR #233.)
+
+### The two Pima sittings with no outcomes, explained by exact meeting
+
+`legistar:pima:1803` (2026-06-09) and `legistar:pima:1869` (2026-07-28): both
+Study Sessions whose publisher's own minute text says "No Board action was
+taken" item by item — 36 and 16 items, zero action names, zero passed flags,
+minutes published within two days. THEIR fact, classification *no action
+published*, and NOT a property of the meeting type: three other Pima study
+sessions hold 8–10 recorded outcomes each. One OUR-side failure stays open on
+every sitting: the attendance ROLL CALL item's votes route returns HTTP 200
+with zero rows, recorded as a failed extraction, never an empty roll.
+
+### Also fixed, found in passing
+
+Every `pnpm test` was fetching all 44 roster pages live and rewriting
+`docs/extraction-verification.md`, because a test imports three pure functions
+from `scripts/verify-extraction.mts` and its `main()` ran unguarded at import.
+Guarded (the `production-integrity.mts` shape); measured 44 seconds of network
+down to 126ms (NH291, PR #230). And 784 of 837 held contribution rows carried
+the contributor's name only in first/middle/last parts and rendered anonymous;
+the reader now composes them.
+
+### The 85641 hunt moved
+
+Lane A measured routes and permission for every uncovered 85641 body: five are
+wirable now with existing adapter classes (NH294 — Tanque Verde via the same
+Thrillshare API as Vail, two Streamline fire districts whose sitemap IS the
+meeting inventory, Rincon Valley FD, Pima JTED, and the RTA whose meeting PDFs
+live on pagregion.com where robots allow them even though rtamobility.com's
+own PDFs are disallowed), and Sahuarita USD is the fifth walled
+Diligent/Highbond tenant (NH295) with its district-site calendar PDF on a host
+whose robots are deliberately still unread. No absence asserted anywhere; every
+wall named.
+
+### The standing walk, and what it said
+
+The integrated head was built locally and walked (RULING 125): **390 checks ran,
+14 declared COULD NOT RUN against a local target, 0 silent** against a baseline
+of 379. Two `g21` vote-center checks (B19/B16, the Tucson address) FAILED
+during the run and were re-probed immediately afterward against BOTH the same
+local server and production: Pima County, 148 sites, model VOTE_CENTER,
+narrowing NOT_NEEDED — correct on both, twice. The failure was transient under
+the walk's own load, not a regression, and it is recorded here rather than
+quietly absorbed; if it recurs it belongs in the flake sweep's hands.

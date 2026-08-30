@@ -2101,5 +2101,17 @@
       "NH288",
       "NH289"
     ]
+  },
+  {
+    "session": "2026-08-30 - release identity, the freeze gate's diff, and the reader's vote question",
+    "opened": "2026-08-30",
+    "ids": [
+      "NH290",
+      "NH291",
+      "NH292",
+      "NH293",
+      "NH294",
+      "NH295"
+    ]
   }
 ]

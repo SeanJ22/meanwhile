@@ -60,6 +60,7 @@ import {
   outcomeEvidenceFor,
   outcomeGapWhose,
   publicationObservationsFor,
+  sittingsForBody,
 } from "@/lib/outcomes/store";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
@@ -1086,6 +1087,40 @@ export async function POST(request: Request) {
         });
         denominators.outcomeRecordsForThatMeeting = evidence.records.length;
         denominators.outcomeRecordClassesRefused = evidence.refused.length;
+        denominators.personVotesHeldForThatMeeting = evidence.records.reduce(
+          (n, r) => n + (r.recordClass === "ROLL_CALL" ? r.votes.length : 0),
+          0,
+        );
+
+        /*
+         * **WHAT THE ITEM WAS, carried onto every vote row.**
+         *
+         * A per-member row reading "Rex Scott voted Aye." says who and how and
+         * never WHAT. Measured on production 2026-08-29: a sitting produces 285
+         * of them, they outnumbered every other record in the pack better than
+         * eight to one, and the synthesis rung wrote prose about the votes that
+         * never named the body — so `validateAnswer` refused it on
+         * `answer-does-not-name-resolved-subject` and the reader got the records
+         * with no prose at all. The evidence was right and unusable.
+         */
+        const itemTitleFor = new Map<number, string>();
+        for (const rec of evidence.records) {
+          if (rec.recordClass === "AGENDA") itemTitleFor.set(rec.eventItemId, rec.title);
+        }
+        if (itemTitleFor.size === 0) {
+          /*
+           * For HOW_DID_THEY_VOTE the class filter returns ROLL_CALL and
+           * nothing else - correctly, since an agenda may not answer it - so
+           * the titles are not in the evidence and are read off the sitting
+           * itself. They are used ONLY to say what a vote was cast on; no
+           * agenda record enters the pack for this question class, which is
+           * what the filter is protecting.
+           */
+          const sitting = sittingsForBody(subject.id).find((x) => x.meetingId === chosen.id);
+          for (const rec of sitting?.agenda ?? []) itemTitleFor.set(rec.eventItemId, rec.title);
+        }
+        const VOTE_ROWS_MAX = 60;
+        let voteRows = 0;
 
         for (const rec of evidence.records) {
           if (rec.recordClass === "ROLL_CALL") {
@@ -1094,14 +1129,25 @@ export async function POST(request: Request) {
              * each member voted is owed each member's own row with its own
              * source; a single record listing five names is one claim the
              * validator cannot check a name against.
+             *
+             * BOUNDED, for the same reason the agenda items are: a pack is what
+             * the synthesis rung can actually read, and an unbounded class
+             * crowds out the meeting record that says whose sitting this was.
+             * The bound is REPORTED in the denominators rather than silently
+             * applied — a truncation nobody can see reads as the whole set.
              */
             for (const vote of rec.votes) {
               if (!vote.personName || !vote.value) continue;
+              if (voteRows >= VOTE_ROWS_MAX) break;
+              voteRows += 1;
+              const on = itemTitleFor.get(rec.eventItemId);
               records.push({
                 kind: "MEETING_MEMBER_VOTE",
                 id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`,
                 bodyId: chosen.bodyId,
-                text: `${vote.personName} voted ${vote.value}.`,
+                text: on
+                  ? `On "${on}", ${vote.personName} voted ${vote.value}.`
+                  : `${vote.personName} voted ${vote.value}.`,
                 occurredAt: chosen.startsAt,
                 sourceUrl: rec.provenance.endpoint,
                 sourceOrg: rec.provenance.sourceOrg,
@@ -1143,6 +1189,8 @@ export async function POST(request: Request) {
          * `EXTRACTION_FAILED` are ours. The older sentence stays as the fallback
          * for a body the outcome store holds nothing for at all.
          */
+        denominators.personVoteRowsInPack = voteRows;
+
         if (evidence.gap) {
           gaps.push({ whose: outcomeGapWhose(evidence.state), statement: evidence.gap });
         } else if (!evidence.answerable) {

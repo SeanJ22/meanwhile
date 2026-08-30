@@ -13,10 +13,10 @@ a page fetched at HTTP 200, and the extractor read a news blurb instead.
 | | Count |
 |---|---|
 | Rosters sampled | **44 of 44** |
-| Rosters read | 40 |
-| Rosters unreadable or refused | 4 |
-| **Rosters where every name AGREED** | **26 of 40** |
-| Names agreed | **243** |
+| Rosters read | 39 |
+| Rosters unreadable or refused | 5 |
+| **Rosters where every name AGREED** | **25 of 39** |
+| Names agreed | **236** |
 | Names agreed ONLY in the page's client-render payload | 12 |
 | Names PARTIAL (one of given/surname present) | 11 |
 | Names DISAGREED (absent from the page) | **13** |
@@ -42,7 +42,7 @@ never measured; folding it into disagreement would accuse a roster nothing has e
 | Pima County Board of Supervisors | 5 | 0 | 0 | **0** | — | https://www.pima.gov/government/board_of_supervisors/ |
 | Tucson Mayor & Council | 7 | 0 | 0 | **0** | — | https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager |
 | Vail Unified School District Governing Board | 0 | 5 | 0 | **1** | John Carruth | https://www.vailschooldistrict.org/o/vsd/page/governing-board |
-| Newbury Selectboard | 3 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/selectboard |
+| Newbury Selectboard | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/selectboard |
 | Merrimack County Delegation | 2 | 0 | 1 | **3** | James MacKay; Karen Ebel; Michael Moffett; Thomas Schamberg (partial) | https://www.merrimackcounty.net/elected_officials/delegation/index.php |
 | Newbury Planning Board | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/planning-board |
 | Newbury Zoning Board of Adjustment | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/zoning-board-adjustment |
@@ -50,8 +50,8 @@ never measured; folding it into disagreement would accuse a roster nothing has e
 | Newbury 2026 Advisory Budget Committee | 5 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee |
 | Newbury Blodgett Sewer User Advisory Committee | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee |
 | Newbury Cemetery Trustees | 4 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/cemetery-trustees |
-| Newbury Joint Loss Management Committee | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/joint-loss-management-committee |
-| Newbury Septic Committee | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/newbury-septic-committee |
+| Newbury Joint Loss Management Committee | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/joint-loss-management-committee |
+| Newbury Septic Committee | 7 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/newbury-septic-committee |
 | Newbury Trustees of the Trust Funds | 3 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/trustees-trust-funds |
 | Kearsarge Regional School Board | 10 | 0 | 0 | **2** | Michael Bessette; Lawrence LeBoeuf | https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members |
 | Rockaway Township Council | 9 | 0 | 0 | **1** | Joseph Jackson | https://www.rockawaytownship.org/157/Township-Council |

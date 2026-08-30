@@ -77,6 +77,17 @@ function annotateFutureDates(line: string, todayStr: string): string {
 }
 
 function renderBody(todayStr: string): string {
+  /*
+   * The denominator floor (RULING 159): an empty entry list would render a
+   * ledger claiming the project asserts nothing, which is a false zero, not a
+   * measurement. The population must be earned.
+   */
+  if (STATUS_ENTRIES.length === 0) {
+    throw new Error(
+      "STATUS_ENTRIES in lib/ops/status-ledger.ts is empty — refusing to render a " +
+        "status ledger that would report zero capability rows as though it had looked (RULING 159)",
+    );
+  }
   const out: string[] = [];
   const proven = STATUS_ENTRIES.filter((e) => e.provingCheck !== null);
   const unproven = STATUS_ENTRIES.filter((e) => e.provingCheck === null);

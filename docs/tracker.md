@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **372 open**, 444 resolved.
+- **371 open**, 445 resolved.
 - **74 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -22,7 +22,7 @@ and when. Nothing is ever deleted.
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
   - Visual feedback — **2**
-  - Data infrastructure — **4**
+  - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
   - Repo & ops — **4**
@@ -664,13 +664,11 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**92 open · 109 resolved.**
+**91 open · 110 resolved.**
 
 ### P1
 
 **NH215** — pnpm tenancy found morriscountynj.gov linking out to morriscountynj.iqm2.com/Citizens/LegalNotice.aspx. This project has an IQM2 adapter (lib/sources/iqm2/) and Morris County is the county containing 07866, the New Jersey pilot zip. It has never been connected. This is the cheapest coverage in the product: an adapter we already own, a tenant we already found, a county a reader is standing in.
-
-**NH216** — The first extraction verification in this project's history (pnpm verify:extraction, 2026-08-26) compared every stored roster name against the rendered content of the page it was sourced from. Vail Unified School District Governing Board came back with five of six names ABSENT from its own governing-board page, including John Carruth — the literal case docs/source-ladder.md already names as the shape of a silently failed extraction. Vail is the 85641 school district whose Override Reauthorization 2026 the ballot pipeline also does not see.
 
 **NH270** — A definition tells a reader what a body actually does. definitionsForBody is keyed on the DIVISION rather than the BODY, so every body sharing the Pima County division resolves to the Arizona county class definition.
 

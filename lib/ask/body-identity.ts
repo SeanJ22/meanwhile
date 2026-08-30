@@ -1,6 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { BODY_ROSTERS } from "../registry/body-rosters.ts";
+
 /**
  * **WHICH BODY IS THIS — read off the canonical registry, synchronously.**
  * (2026-08-29, the exact-body-identity session.)
@@ -47,10 +49,23 @@ import { join } from "node:path";
  * `lib/registry/registry.json` is the authority (RULING 197: *the registry is
  * the authority* for the body identity a serving source publishes under). All
  * 78 body ids in the committed snapshot resolve in it, and 64 carry a sourced
- * name. The remaining 14 are `DERIVED_FROM_DIVISION_TYPE` rows whose name is
- * legitimately null and which render their division's label — the same
- * `name ?? divisionLabel` rule `lib/routing/ask.ts` and `lib/registry/coverage.ts`
- * already apply. **Nothing here mints an identity; it reads one.**
+ * name. The rest are `DERIVED_FROM_DIVISION_TYPE` rows whose registry name is
+ * legitimately null — the derivation knows the body EXISTS and may not mint
+ * what it is CALLED (`lib/registry/derive.ts`, held by
+ * `tests/registry-oracle.test.ts`). **Nothing here mints an identity; it reads
+ * one** — and for a derived row it reads the next sourced record the
+ * repository holds: `BODY_ROSTERS` (`lib/registry/body-rosters.ts`), where a
+ * curated roster carries the body's own name as its own page states it, cited
+ * and dated. Only a body with neither a registry name nor a roster renders its
+ * division's label — the same `name ?? divisionLabel` rule `lib/routing/ask.ts`
+ * and `lib/registry/coverage.ts` apply.
+ *
+ * That roster fallback is NH288's repair. Before it, the Pima County Board of
+ * Supervisors reached every Ask surface as "Pima" — a geography standing in
+ * for a government — while `BODY_ROSTERS` line 280 had held the sourced name
+ * since 2026-08-13, cited to the Board's own page. The roster stays the single
+ * store of that fact; this module reads it exactly as it reads the registry,
+ * and `tests/body-rosters.test.ts` holds the two views to one answer.
  *
  * ## Why synchronous, and why a second reader of `registry.json` is not a
  * second registry
@@ -94,8 +109,10 @@ export interface CanonicalBodyIdentity {
    */
   divisionLabel: string | null;
   /**
-   * True when the registry named this body itself, false when the name shown
-   * is the division's label standing in for a derived row.
+   * True when the name is the BODY'S OWN — read off the registry's sourced
+   * `name`, or off the body's curated roster (`BODY_ROSTERS.bodyName`, itself
+   * read from the body's own cited page). False when the name shown is the
+   * division's label standing in for a derived row nothing has named yet.
    *
    * Load-bearing for reporting rather than for matching: a caller that wants to
    * say *whose* name it is showing can, and one that wants to know whether the
@@ -157,6 +174,40 @@ function withoutTrailingAcronym(name: string): string {
   return name.replace(/\s*\([A-Z][A-Za-z0-9&.\-\/ ]{0,15}\)\s*$/, "").trim();
 }
 
+/**
+ * The curated roster's name for a body, or "" where no roster holds one.
+ *
+ * **NH288.** Twelve of the snapshot's derived-null bodies — the Pima County
+ * Board of Supervisors first among them — had a sourced, cited, dated
+ * `bodyName` sitting in `BODY_ROSTERS` while this index fell straight through
+ * to the division label, so a reader was shown "Pima" where the repository
+ * already knew "Pima County Board of Supervisors". The roster is read here as
+ * a FALLBACK only: a registry row that names the body itself wins, because the
+ * registry is the authority for the identity a serving source publishes under
+ * (RULING 197), and the roster fills exactly the null the derivation is
+ * forbidden to fill. Two sourced stores, one precedence, no second authority.
+ */
+function rosterBodyName(bodyId: string): string {
+  const name = rosterNames().get(bodyId);
+  return name ?? "";
+}
+
+let rosterNameCache: Map<string, string> | null = null;
+
+function rosterNames(): Map<string, string> {
+  if (!rosterNameCache) {
+    rosterNameCache = new Map();
+    for (const roster of BODY_ROSTERS) {
+      // First writer wins, matching rosterForBody's own read of the array;
+      // tests/body-rosters.test.ts separately forbids two rosters on one body.
+      if (!rosterNameCache.has(roster.bodyId)) {
+        rosterNameCache.set(roster.bodyId, roster.bodyName);
+      }
+    }
+  }
+  return rosterNameCache;
+}
+
 function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
   const registry = JSON.parse(
     readFileSync(join(root, REGISTRY_RELATIVE), "utf8"),
@@ -174,14 +225,21 @@ function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
     const division = row.ocdId ? divisions.get(row.ocdId) ?? null : null;
     const own = row.name ? withoutTrailingAcronym(row.name) : "";
     /*
-     * The fallback order is the registry's own: the body's sourced name, then
-     * the division's sourced label, then a mechanical un-slugging of the id.
-     * The third is reached only by a body that is in no registry at all, and
-     * it un-slugs the BODY half of the id — never the division half, which is
-     * the substitution this whole module exists to prevent.
+     * The roster's name for this body, consulted only where the registry row
+     * holds none (NH288). Both are the body's own sourced name; the registry's
+     * wins where both exist because it is the canonical store's own claim.
+     */
+    const roster = own ? "" : rosterBodyName(row.id);
+    /*
+     * The fallback order: the registry's sourced name, the roster's sourced
+     * name, then the division's sourced label, then a mechanical un-slugging
+     * of the id. The fourth is reached only by a body that is in no registry
+     * at all, and it un-slugs the BODY half of the id — never the division
+     * half, which is the substitution this whole module exists to prevent.
      */
     const name =
       own ||
+      roster ||
       division?.label ||
       unslugBodySuffix(row.id) ||
       row.id;
@@ -192,7 +250,7 @@ function buildIndex(root: string): Map<string, CanonicalBodyIdentity> {
       divisionType: division?.divisionType ?? null,
       bodyClass: row.bodyClass ?? null,
       divisionLabel: division?.label ?? null,
-      nameIsBodysOwn: own.length > 0,
+      nameIsBodysOwn: own.length > 0 || roster.length > 0,
     });
   };
 

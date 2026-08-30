@@ -185,3 +185,34 @@ test("no file under a non-shipping prefix is traced into the deploy", () => {
     "the sweep read the manifests and found no repo files at all — it proves nothing in that state",
   );
 });
+
+/*
+ * NH289, THE DEPLOY-FILTER HALF — MEASURED 2026-08-30 FROM NETLIFY'S OWN
+ * DEPLOY LIST, and recorded here so the 'why does the observer commit deploy'
+ * question is never re-litigated from guesses. Five observer-only children
+ * (589676ae, 097fca30, 2be8e854, ed0c253d, 5169fa32) each BUILT; every
+ * observer commit that arrived a few seconds later than those (e5d5a27c,
+ * fb0c623b, and six more) shows Netlify's 'checking build content for
+ * changes: Canceled' — the ignore script working. The discriminator is the
+ * gap between the parent's publish and the child's enqueue: at ~15 seconds
+ * or less, CACHED_COMMIT_REF still names the GRANDPARENT (the last-successful
+ * -deploy pointer lags publish), so the diff spans the parent's shipping
+ * changes and the filter builds — CORRECTLY, because cancelling there would
+ * strand the shipping change if the parent's own build had failed. The waste
+ * is the safe direction; the identity consequence is repaired in
+ * lib/ops/production-integrity.ts (application-release equivalence), not by
+ * making this filter guess.
+ */
+test('SEEDED (NH289): a shipping commit accumulated in the range BUILDS, even under a data-only head', () => {
+  // The exact shape of the 07:38 deploy: cached = grandparent, head = the
+  // observer commit, and the range carries BOTH the parent's app change and
+  // the observer's record file. One shipping path anywhere decides it.
+  const accumulated = classifyDeploy(['app/api/ask/grounded/route.ts', 'data/ops/production-integrity.json']);
+  assert.equal(accumulated.verdict, 'build', 'cancelling would strand the accumulated shipping change');
+  assert.deepEqual(accumulated.shipping, ['app/api/ask/grounded/route.ts']);
+});
+
+test('POSITIVE CONTROL (NH289): the observer commit alone cancels — the filter was never the defect', () => {
+  const observerOnly = classifyDeploy(['data/ops/production-integrity.json']);
+  assert.equal(observerOnly.verdict, 'cancel');
+});

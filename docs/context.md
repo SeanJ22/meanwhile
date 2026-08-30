@@ -1,7 +1,7 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 18:49:17 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 18:54:01 EDT.
 Session day 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
@@ -1029,14 +1029,14 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-30 18:49:16 EDT
-branch: main
-head sha: 86fd57370aeb316f773acc7c20fbcff0e6c81c20
-head subject: Session A closeout: state record, INTEGRATED orchestration dispositions, health run records
+generated: 2026-08-30 18:54:00 EDT
+branch: claude/session-a-architecture
+head sha: ec5ef90b7202dee990b80a56470ba2102a5d1637
+head subject: Close-out: the generated files handoff wrote on its way here (context.md, coverage-matrix.csv, repo-inventory.md)
 origin/main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
 origin/main subject: Job watch: a scheduled job has failed twice in a row
-local main sha: 86fd57370aeb316f773acc7c20fbcff0e6c81c20
-local main matches origin/main: no — 0 commit(s) behind, 13 ahead
+local main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
+local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 239 (recorded without a verdict)

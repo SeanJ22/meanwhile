@@ -1120,42 +1120,99 @@ export async function POST(request: Request) {
           const sitting = sittingsForBody(subject.id).find((x) => x.meetingId === chosen.id);
           for (const rec of sitting?.agenda ?? []) itemTitleFor.set(rec.eventItemId, rec.title);
         }
+        /*
+         * **WHICH SIXTY, AND WHAT BECOMES OF THE REST.** (2026-08-30.)
+         *
+         * The bound itself is honest — a pack is what the synthesis rung can
+         * read, and the denominators report the truncation. What the first
+         * version got wrong is WHICH rows spent the budget: a bare first-N in
+         * store order, so the answer's substance was shaped by an accident of
+         * ingestion sequence. A hard cap that silently decides which votes a
+         * reader hears about is still an editorial choice; this makes it an
+         * explainable one:
+         *
+         *   1. An item the QUESTION itself names goes first. Matching is
+         *      deliberately conservative — at least two distinct question
+         *      tokens of five or more characters found in the item's title —
+         *      because a false match would spend the whole budget answering a
+         *      question the reader did not ask.
+         *   2. DIVIDED roll calls next. A 3-2 is the vote a reader asking
+         *      "how did they vote" most needs the members' own rows for; a
+         *      unanimous roll is faithfully summarized by its action record.
+         *      Division is more than one distinct recorded value — a
+         *      selection heuristic over held rows, never a claim in the pack.
+         *   3. Store order last, as the stable tail.
+         *
+         * And WHOLE ITEMS ONLY: a roll call either brings every valid member
+         * row or waits. Three members of a five-member roll reads as an
+         * absence for the other two, which is a manufactured claim about
+         * people who voted. An item that no longer fits is skipped and a
+         * later, smaller one may still be taken — coverage, not prefix.
+         *
+         * One record PER MEMBER, unchanged: a single record listing five
+         * names is one claim the validator cannot check a name against. The
+         * items-level split is REPORTED in the denominators beside the
+         * row-level one, so "60 of 285 rows, 12 of 57 items" is a sentence
+         * the synthesis rung can actually write.
+         */
         const VOTE_ROWS_MAX = 60;
         let voteRows = 0;
 
-        for (const rec of evidence.records) {
-          if (rec.recordClass === "ROLL_CALL") {
-            /*
-             * One record PER MEMBER, not one per roll call. A reader asking how
-             * each member voted is owed each member's own row with its own
-             * source; a single record listing five names is one claim the
-             * validator cannot check a name against.
-             *
-             * BOUNDED, for the same reason the agenda items are: a pack is what
-             * the synthesis rung can actually read, and an unbounded class
-             * crowds out the meeting record that says whose sitting this was.
-             * The bound is REPORTED in the denominators rather than silently
-             * applied — a truncation nobody can see reads as the whole set.
-             */
-            for (const vote of rec.votes) {
-              if (!vote.personName || !vote.value) continue;
-              if (voteRows >= VOTE_ROWS_MAX) break;
-              voteRows += 1;
-              const on = itemTitleFor.get(rec.eventItemId);
-              records.push({
-                kind: "MEETING_MEMBER_VOTE",
-                id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`,
-                bodyId: chosen.bodyId,
-                text: on
-                  ? `On "${on}", ${vote.personName} voted ${vote.value}.`
-                  : `${vote.personName} voted ${vote.value}.`,
-                occurredAt: chosen.startsAt,
-                sourceUrl: rec.provenance.endpoint,
-                sourceOrg: rec.provenance.sourceOrg,
-              });
-            }
-            continue;
+        const rollCalls = evidence.records.filter(
+          (r): r is Extract<typeof evidence.records[number], { recordClass: "ROLL_CALL" }> =>
+            r.recordClass === "ROLL_CALL",
+        );
+        const questionTokens = [
+          ...new Set(question.toLowerCase().split(/[^a-z0-9]+/).filter((t) => t.length >= 5)),
+        ];
+        const namedByQuestion = (eventItemId: number): boolean => {
+          const title = (itemTitleFor.get(eventItemId) ?? "").toLowerCase();
+          if (!title) return false;
+          return questionTokens.filter((t) => title.includes(t)).length >= 2;
+        };
+        const ranked = rollCalls
+          .map((rec, index) => {
+            const votes = rec.votes.filter((v) => v.personName && v.value);
+            return {
+              rec,
+              index,
+              votes,
+              named: namedByQuestion(rec.eventItemId),
+              divided: new Set(votes.map((v) => v.value)).size > 1,
+            };
+          })
+          .filter((r) => r.votes.length > 0)
+          .sort(
+            (a, b) =>
+              Number(b.named) - Number(a.named) ||
+              Number(b.divided) - Number(a.divided) ||
+              a.index - b.index,
+          );
+
+        let rollCallItemsInPack = 0;
+        for (const { rec, votes } of ranked) {
+          if (voteRows + votes.length > VOTE_ROWS_MAX) continue;
+          rollCallItemsInPack += 1;
+          for (const vote of votes) {
+            voteRows += 1;
+            const on = itemTitleFor.get(rec.eventItemId);
+            records.push({
+              kind: "MEETING_MEMBER_VOTE",
+              id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`,
+              bodyId: chosen.bodyId,
+              text: on
+                ? `On "${on}", ${vote.personName} voted ${vote.value}.`
+                : `${vote.personName} voted ${vote.value}.`,
+              occurredAt: chosen.startsAt,
+              sourceUrl: rec.provenance.endpoint,
+              sourceOrg: rec.provenance.sourceOrg,
+            });
           }
+        }
+        denominators.rollCallItemsHeldForThatMeeting = rollCalls.length;
+        denominators.rollCallItemsInPack = rollCallItemsInPack;
+
+        for (const rec of evidence.records) {
           if (rec.recordClass === "ACTION_SUMMARY") {
             /*
              * `tallyText` is the clerk's prose and travels VERBATIM as their
@@ -1504,7 +1561,14 @@ export async function POST(request: Request) {
 
   if (synthesis.kind === "WROTE") {
     trace.synthesis = { ran: true, model: synthesis.model, ms: synthesis.ms };
-    const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack);
+    /*
+     * The body inventory rides along as the known-subject universe, so the
+     * substitution check can refuse prose that NAMES a different government we
+     * hold — and only that. It no longer demands the prose repeat the
+     * subject's name; the deterministic framing already names the subject, and
+     * "The Board voted 5-0..." is correct anaphora, not a substitution (NH288).
+     */
+    const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {
       ran: true,

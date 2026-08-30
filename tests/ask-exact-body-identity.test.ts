@@ -421,6 +421,66 @@ test("the per-member vote rows are BOUNDED, and the bound is reported rather tha
     withItem.length > 0,
     "no vote row carried the item it was cast on: " + JSON.stringify(votes[0]?.text),
   );
+
+  /*
+   * **SEEDED (2026-08-30): AN HONEST CAP MAY STILL NOT PICK ARBITRARILY.**
+   *
+   * The first bound was a first-N in store order, so WHICH sixty rows a reader
+   * heard about was an accident of ingestion sequence. Three properties now
+   * hold, and each is the refusal of a specific distortion:
+   *
+   *   WHOLE ITEMS — a roll call either brings every valid member row or none.
+   *   Three members of a five-member roll reads as an absence for the other
+   *   two, which is a manufactured claim about people who voted.
+   *
+   *   ITEM DENOMINATORS — "60 of 285 rows" alone hides that the rows cluster
+   *   into items; "12 of 57 items" is the sentence that makes the truncation
+   *   explainable, so both halves are reported.
+   *
+   *   DIVIDED FIRST — the budget prefers roll calls with more than one
+   *   recorded value, because a 3-2 is the vote the member rows exist for,
+   *   while a unanimous roll is faithfully carried by its action record.
+   */
+  const itemsHeld = body.denominators?.rollCallItemsHeldForThatMeeting;
+  const itemsInPack = body.denominators?.rollCallItemsInPack;
+  assert.equal(typeof itemsHeld, "number", "how many roll-call ITEMS are held must be reported");
+  assert.equal(typeof itemsInPack, "number", "and how many items reached the pack");
+  assert.ok(itemsHeld! >= itemsInPack!, "the store cannot hold fewer items than reached the pack");
+
+  const rowsPerItem = new Map();
+  for (const r of votes) {
+    const item = String(r.id).split("#")[0];
+    rowsPerItem.set(item, (rowsPerItem.get(item) ?? 0) + 1);
+  }
+  assert.equal(
+    rowsPerItem.size,
+    itemsInPack,
+    "the reported item count must be the actual number of distinct items in the pack",
+  );
+  // Exact, against the store: every item that reached the pack brought its
+  // ENTIRE valid roll, as the store holds it — not the modal size, because a
+  // roll with a genuinely smaller valid row set is not a split.
+  const { outcomeEvidenceFor } = await import("../lib/outcomes/store.ts");
+  const storeEvidence = outcomeEvidenceFor({
+    bodyId: "ocd-division/country:us/state:az/county:pima#governing",
+    questionClass: "HOW_DID_THEY_VOTE",
+  });
+  const storeRows = new Map();
+  for (const rec of storeEvidence.records) {
+    if (rec.recordClass !== "ROLL_CALL") continue;
+    storeRows.set(
+      String(rec.eventItemId),
+      rec.votes.filter((v) => v.personName && v.value).length,
+    );
+  }
+  for (const [item, count] of rowsPerItem) {
+    assert.equal(
+      count,
+      storeRows.get(item),
+      `item ${item} reached the pack with ${count} member row(s) while the store holds ` +
+        `${storeRows.get(item)} — a split roll call manufactures an absence for the members it dropped`,
+    );
+  }
 });
 
 test("NEGATIVE CONTROL: a body the outcome store holds nothing for still gets the OURS gap", async () => {

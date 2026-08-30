@@ -4,12 +4,14 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { test } from "node:test";
 
+import { canonicalBodyIdentity } from "../lib/ask/body-identity.ts";
 import {
   BODY_ROSTERS,
   governingRosterHoldersForDivision,
   rosterHoldersForBody,
 } from "../lib/registry/body-rosters.ts";
 import { SOURCE_WIRING } from "../lib/registry/source-wiring.ts";
+import { normalizeName } from "../lib/routing/exact-name.ts";
 
 /**
  * Tier-3 rosters (5a/5b) — officeholder discipline held mechanically:
@@ -157,6 +159,74 @@ test("every member has a name, a published title, and no invented contact", () =
       }
     }
   }
+});
+
+/**
+ * **NH288 — the sourced name and the served name are ONE name.** (2026-08-30.)
+ *
+ * `BODY_ROSTERS` has carried "Pima County Board of Supervisors" — cited to the
+ * Board's own page, dated — since 2026-08-13, while `canonicalBodyIdentity`
+ * fell through the registry's legitimately-null derived name straight to the
+ * division label and served "Pima" as the body's name on every Ask surface. A
+ * geography stood in for a government for seventeen days with every gate
+ * green, because nothing held the two stores to one answer. This test is that
+ * hold: it would have failed on 2026-08-13 and it fails again the day the two
+ * layers drift.
+ */
+test("NH288: every roster's sourced bodyName is the name the identity layer serves", () => {
+  const registry = JSON.parse(
+    readFileSync(join(process.cwd(), "lib", "registry", "registry.json"), "utf8"),
+  ) as { bodies: { id: string; name: string | null }[] };
+  const registryName = new Map(registry.bodies.map((b) => [b.id, b.name]));
+
+  for (const roster of BODY_ROSTERS) {
+    const identity = canonicalBodyIdentity(roster.bodyId);
+    assert.ok(
+      identity,
+      `${roster.bodyName}: ${roster.bodyId} resolves to no canonical identity at all`,
+    );
+
+    /* A roster is the body's own page read on a stated date; a body it names
+       may never report that nothing has named it. */
+    assert.ok(
+      identity.nameIsBodysOwn,
+      `${roster.bodyName}: nameIsBodysOwn is false while a sourced roster names the body`,
+    );
+
+    if (!registryName.get(roster.bodyId)) {
+      /* The registry row holds no name (a derived row is FORBIDDEN to mint
+         one), so the roster is the body's only sourced name and the identity
+         layer must serve exactly it — never the division's label. */
+      assert.equal(
+        identity.name,
+        roster.bodyName,
+        `${roster.bodyId}: the identity layer serves "${identity.name}" while the ` +
+          `roster's sourced name is "${roster.bodyName}" — a geography is standing ` +
+          "in for a government again",
+      );
+    } else {
+      /* The registry named the body itself and wins (RULING 197). The roster
+         may qualify that name with the town for display — "Newbury Planning
+         Board" over "Planning Board" — but the two are claims about ONE body,
+         so the served name must appear whole inside the roster's. */
+      assert.ok(
+        ` ${normalizeName(roster.bodyName)} `.includes(` ${normalizeName(identity.name)} `),
+        `${roster.bodyId}: registry name "${identity.name}" and roster name ` +
+          `"${roster.bodyName}" disagree about what this body is called`,
+      );
+    }
+  }
+});
+
+test("NH288: the named example — the Board of Supervisors is not 'Pima'", () => {
+  const identity = canonicalBodyIdentity(
+    "ocd-division/country:us/state:az/county:pima#governing",
+  );
+  assert.equal(identity?.name, "Pima County Board of Supervisors");
+  assert.equal(identity?.nameIsBodysOwn, true);
+  /* The division stays CONTEXT, carried separately — the repair adds the
+     body's name and removes nothing sourced. */
+  assert.equal(identity?.divisionLabel, "Pima");
 });
 
 test("the author's named example is covered: TUSD renders a full board", () => {

@@ -426,7 +426,24 @@ async function main(): Promise<void> {
   console.log("\nwrote docs/extraction-verification.md");
 }
 
-main().catch((err) => {
-  console.error(err instanceof Error ? err.message : err);
-  process.exitCode = 1;
-});
+/*
+ * GUARDED, BECAUSE A TEST IMPORTS THIS FILE. (2026-08-30.)
+ *
+ * `tests/verify-extraction-client-rendered.test.ts` imports `judgeName`,
+ * `renderedText` and `embeddedDataText` from here, and an unguarded top-level
+ * `main()` meant EVERY `pnpm test` fetched all 44 roster pages live and
+ * rewrote `docs/extraction-verification.md` as a side effect — live calls in
+ * tests, which `tests/fixtures/`'s own law forbids, and a measurement doc
+ * whose date moved on every unrelated suite run. The same guard shape as
+ * `scripts/production-integrity.mts`: run only when this file IS the entry
+ * point, export quietly when it is merely imported.
+ */
+if (
+  import.meta.url === `file://${process.argv[1]?.replace(/\\/g, "/")}` ||
+  process.argv[1]?.endsWith("verify-extraction.mts")
+) {
+  main().catch((err) => {
+    console.error(err instanceof Error ? err.message : err);
+    process.exitCode = 1;
+  });
+}

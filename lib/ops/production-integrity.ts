@@ -273,6 +273,110 @@ export function assessIntegrity(
 export const MAX_READING_AGE_HOURS = 24;
 
 /**
+ * WHETHER TWO COMMITS CARRY THE SAME APPLICATION — NH289.
+ *
+ * The served COMMIT and the application-bearing RELEASE are different
+ * identities, and conflating them froze a release on 2026-08-30: the
+ * post-deploy observer commits `data/ops/production-integrity.json` — a path
+ * `deploy-paths.ts` itself classifies as non-shipping — and when Netlify
+ * builds that commit (it rides the accumulated diff whenever it lands while
+ * the app-bearing build is still in flight), production starts REPORTING the
+ * observer's sha while SERVING the measured release's application, byte for
+ * byte. `sameCommit` then says moved, and the next production-changing PR is
+ * frozen over a difference no reader can see.
+ *
+ * This type is the caller's PROOF about that difference, and it is evidence,
+ * not leniency:
+ *
+ *   - `EQUIVALENT` may be claimed only when the caller mechanically verified
+ *     BOTH halves — the served commit DESCENDS from the measured release, and
+ *     every path changed across that range is non-shipping under
+ *     `classifyDeploy`, the same predicate the deploy filter runs. A schema or
+ *     migration file anywhere in the range is a shipping path, so it destroys
+ *     equivalence by construction.
+ *   - `NOT_EQUIVALENT` is a real measurement the other way: something in the
+ *     range ships. The freeze treats it exactly as a moved production.
+ *   - `CANNOT_TELL` is the absence of a measurement — an unreachable commit, a
+ *     history too shallow to prove descent, a diff that would not read — and
+ *     it NEVER counts as equivalent. An unprovable range freezes.
+ *
+ * There is no input that STATES equivalence: no flag, no allowlisted sha, no
+ * "trust this commit". The proof is recomputed from git evidence on every
+ * evaluation, so it works for every future non-shipping descendant rather
+ * than for the one that exposed the defect.
+ */
+export const EQUIVALENCE_VERDICTS = ["EQUIVALENT", "NOT_EQUIVALENT", "CANNOT_TELL"] as const;
+export type EquivalenceVerdict = (typeof EQUIVALENCE_VERDICTS)[number];
+
+export interface ApplicationEquivalence {
+  readonly verdict: EquivalenceVerdict;
+  /** The evidence, in one sentence. Printed with the freeze verdict. */
+  readonly how: string;
+}
+
+/**
+ * The pure half of the equivalence proof. The caller takes the two git
+ * measurements — whether the recorded release is an ancestor of the served
+ * commit, and which paths changed across the range — and this classifies
+ * them, so every branch is constructible in a test while the gate script
+ * stays a thin plumbing shell.
+ *
+ * Every uncertain input fails toward CANNOT_TELL, never toward EQUIVALENT:
+ * unknown ancestry, an unreadable range, each on its own is enough to refuse.
+ * The shipping predicate is `classifyDeploy` — the deploy filter's own — so a
+ * schema file, a migration, or any app path in the range is shipping and
+ * destroys equivalence with no separate list to drift.
+ */
+export function classifyEquivalenceRange(input: {
+  readonly recordedSha: string;
+  readonly servedSha: string;
+  /** Is the recorded release an ancestor of the served commit? `unknown` means git could not say. */
+  readonly ancestry: "ancestor" | "not-ancestor" | "unknown";
+  /** Paths changed across recorded..served, or `null` when the diff could not be read. */
+  readonly rangePaths: readonly string[] | null;
+}): ApplicationEquivalence {
+  const recorded = input.recordedSha.slice(0, 7);
+  const served = input.servedSha.slice(0, 7);
+
+  if (input.ancestry === "not-ancestor") {
+    return {
+      verdict: "NOT_EQUIVALENT",
+      how: `${served} does not descend from the recorded release ${recorded} — a different history, whatever its tree holds`,
+    };
+  }
+  if (input.ancestry === "unknown") {
+    return {
+      verdict: "CANNOT_TELL",
+      how: `whether ${recorded} is an ancestor of ${served} could not be established — descent unproven is descent unclaimed`,
+    };
+  }
+  if (input.rangePaths === null) {
+    return {
+      verdict: "CANNOT_TELL",
+      how: `the range ${recorded}..${served} could not be diffed, and an unreadable range is never equivalent`,
+    };
+  }
+  if (input.rangePaths.length === 0) {
+    return { verdict: "EQUIVALENT", how: `${recorded} and ${served} have identical trees` };
+  }
+  const split = classifyDeploy(input.rangePaths);
+  if (split.shipping.length > 0) {
+    return {
+      verdict: "NOT_EQUIVALENT",
+      how:
+        `${split.shipping.length} of ${input.rangePaths.length} path(s) in ${recorded}..${served} ` +
+        `are production-bearing — first is ${split.shipping[0]}`,
+    };
+  }
+  return {
+    verdict: "EQUIVALENT",
+    how:
+      `${served} descends from ${recorded} and all ${input.rangePaths.length} changed path(s) in ` +
+      `the range are non-shipping (first is ${input.rangePaths[0]})`,
+  };
+}
+
+/**
  * What production actually serves, observed, plus the age of the reading.
  *
  * Both fields are MEASUREMENTS taken by the caller — `scripts/release-freeze-gate.mts`
@@ -296,6 +400,13 @@ export interface ProductionObservation {
   readonly readingAgeHours: number | null;
   /** The bound in force for this evaluation. Passed, never read from anywhere. */
   readonly maxAgeHours: number;
+  /**
+   * The caller's measured proof that the served commit and the recorded
+   * release carry the same application (NH289). Consulted ONLY when the two
+   * shas differ; omitting it, or supplying `CANNOT_TELL`, leaves the strict
+   * answer — PRODUCTION_MOVED — in force.
+   */
+  readonly equivalence?: ApplicationEquivalence | null;
 }
 
 /**
@@ -340,6 +451,13 @@ export interface FreezeVerdict {
   readonly servedSha: string | null;
   /** The measured age of the reading, in hours. */
   readonly readingAgeHours: number | null;
+  /**
+   * The application-bearing release the integrity reading covers, when rule 4
+   * established one. Differs from `servedSha` exactly when production reports
+   * a PROVEN non-shipping descendant of the measured release (NH289); `null`
+   * whenever rule 4 did not reach a covered release.
+   */
+  readonly applicationReleaseSha: string | null;
 }
 
 /**
@@ -448,6 +566,7 @@ export function evaluateReleaseFreeze(input: {
     touchesSchemaContract: schema,
     servedSha: observation?.servedSha ?? null,
     readingAgeHours: observation?.readingAgeHours ?? null,
+    applicationReleaseSha: null as string | null,
   };
 
   if (!productionChanging) {
@@ -534,18 +653,41 @@ export function evaluateReleaseFreeze(input: {
     }
 
     if (!sameCommit(input.record.deployedSha, observation.servedSha)) {
-      return {
-        ...base,
-        frozen: true,
-        freshness: "PRODUCTION_MOVED" as const,
-        reason:
-          `PRODUCTION MOVED UNDER THE LAST READING. It serves ${observation.servedSha}, and the ` +
-          `reading was taken against ${input.record.deployedSha ?? "no commit"} at ` +
-          `${input.record.observedAt ?? "an unrecorded time"}. A green answer about the commit ` +
-          "production USED to serve is not an answer about the one it serves now.",
-        remedy: reread,
-      };
+      /*
+       * NH289: A DIFFERENT COMMIT IS NOT NECESSARILY A DIFFERENT APPLICATION.
+       * The observer's own record commit is non-shipping by the same predicate
+       * the deploy filter runs, and when Netlify builds it anyway production
+       * reports the observer's sha while serving the measured release's
+       * application. The caller may PROVE that — served commit descends from
+       * the recorded release and the whole range is non-shipping — and only
+       * `EQUIVALENT` continues to the age check below. `NOT_EQUIVALENT` is a
+       * real move; `CANNOT_TELL` and an absent proof freeze exactly as before,
+       * so there is still no way to be permitted by leaving the question
+       * unasked.
+       */
+      const equivalence = observation.equivalence ?? null;
+      if (equivalence?.verdict !== "EQUIVALENT") {
+        const evidence =
+          equivalence === null
+            ? "No application-equivalence proof was supplied."
+            : `Equivalence: ${equivalence.verdict} — ${equivalence.how}`;
+        return {
+          ...base,
+          frozen: true,
+          freshness: "PRODUCTION_MOVED" as const,
+          reason:
+            `PRODUCTION MOVED UNDER THE LAST READING. It serves ${observation.servedSha}, and the ` +
+            `reading was taken against ${input.record.deployedSha ?? "no commit"} at ` +
+            `${input.record.observedAt ?? "an unrecorded time"}. A green answer about the commit ` +
+            `production USED to serve is not an answer about the one it serves now. ${evidence}`,
+          remedy: reread,
+        };
+      }
     }
+    // The moved question is settled either way from here: the reading covers
+    // this application-bearing release, whether production reports its exact
+    // sha or a proven non-shipping descendant of it.
+    base.applicationReleaseSha = input.record.deployedSha;
 
     if (observation.readingAgeHours === null || observation.readingAgeHours > observation.maxAgeHours) {
       const age =
@@ -564,14 +706,17 @@ export function evaluateReleaseFreeze(input: {
       };
     }
 
+    const coverage = sameCommit(input.record.deployedSha, observation.servedSha)
+      ? `which is what production serves right now (${observation.how})`
+      : `and production serves ${observation.servedSha} — a PROVEN non-shipping descendant of that ` +
+        `release (${observation.equivalence?.how ?? "proof supplied"}), so the application is the same`;
     return {
       ...base,
       frozen: false,
       freshness: "CURRENT_FOR_PRODUCTION" as const,
       reason:
-        `Release permitted. The last reading held against ${input.record.deployedSha}, which is what ` +
-        `production serves right now (${observation.how}), and it is ` +
-        `${(observation.readingAgeHours ?? 0).toFixed(1)} hours old against a bound of ` +
+        `Release permitted. The last reading held against ${input.record.deployedSha}, ${coverage}, ` +
+        `and it is ${(observation.readingAgeHours ?? 0).toFixed(1)} hours old against a bound of ` +
         `${observation.maxAgeHours}.`,
       remedy: null,
     };
@@ -607,6 +752,12 @@ export function explainFreeze(v: FreezeVerdict): string {
     `  freshness: ${v.freshness}` +
       (v.servedSha ? ` — production serves ${v.servedSha}` : " — production's served commit was NOT observed") +
       (v.readingAgeHours === null ? "" : `, reading ${v.readingAgeHours.toFixed(1)}h old`),
+    // NH289: the served COMMIT and the application-bearing RELEASE are two
+    // identities, and the log states both whenever rule 4 established which
+    // release the reading covers.
+    ...(v.applicationReleaseSha
+      ? [`  application-bearing release: ${v.applicationReleaseSha}`]
+      : []),
     `  ${v.reason}`,
   ];
   if (v.remedy) lines.push(`  REMEDY: ${v.remedy}`);

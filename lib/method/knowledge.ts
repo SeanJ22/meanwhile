@@ -89,11 +89,46 @@ export interface SubBranch {
   replacedBy?: string;
 }
 
+/**
+ * **WHAT A STORE ENTRY IS: A FETCHABLE SURFACE, OR A WAY OF THINKING.**
+ * (2026-08-30.)
+ *
+ * The store has always held both — `legistar-insite-calendar-postback-
+ * enumeration` names a URL shape a machine can walk; `reconciled-is-not-
+ * complete` names a discipline a session applies to any walk — and nothing
+ * typed the difference. It matters to a consumer building a route FLOOR: a
+ * retrieval route can be materialised as a RouteTask against a target host,
+ * while a reasoning discipline has no target and can never be "walked" — an
+ * undisposed discipline on a floor is a row nobody can close.
+ *
+ * - `RETRIEVAL` — the entry names a retrieval mechanism: a URL, a host, a
+ *   vendor surface. Evidence: the route's own record carries one.
+ * - `REASONING_DISCIPLINE` — the entry is a way of interpreting or checking
+ *   work, applicable across routes rather than against a host.
+ *
+ * **An ABSENT `kind` means nobody classified it — a named gap, exactly like an
+ * absent claim class.** The mechanical populator writes `RETRIEVAL` only where
+ * the record itself proves a retrieval mechanism; it never writes
+ * `REASONING_DISCIPLINE`, because the absence of a URL in a record is evidence
+ * about the RECORD, not about the route — a poorly recorded retrieval route and
+ * a discipline read identically there, and asserting from absence is the move
+ * this store exists to refuse. A discipline is classified by a person or a
+ * session that read the entry, on purpose, through the amend path.
+ */
+export const ROUTE_KINDS = ["RETRIEVAL", "REASONING_DISCIPLINE"] as const;
+export type RouteKind = (typeof ROUTE_KINDS)[number];
+
 export interface MethodRoute {
   id: string;
   title: string;
   /** RULING 84 / RULING 166: A0, A1, B, C. */
   tier: "A0" | "A1" | "B" | "C";
+  /**
+   * Retrieval route or reasoning discipline. OPTIONAL: 122 entries predate the
+   * field, and an absent value is reported as UNCLASSIFIED by `method:check`
+   * rather than guessed. See `ROUTE_KINDS`.
+   */
+  kind?: RouteKind;
   /** Which owed field types this route can advance. */
   fields: string[];
   applicability: Applicability;
@@ -662,6 +697,21 @@ export function validateKnowledge(
           );
         }
       }
+    }
+
+    /*
+     * The same closed-set hole the `effort` and `outcome` notes above record,
+     * closed for `kind` on the day the field was declared rather than after a
+     * bad value lands. Absent is valid (UNCLASSIFIED, a named gap); a present
+     * value off the set would silently fall out of every consumer that
+     * branches on it.
+     */
+    if (r.kind !== undefined && !(ROUTE_KINDS as readonly string[]).includes(r.kind)) {
+      bad(
+        r.id,
+        "kind-value-off-the-closed-set",
+        `kind is ${JSON.stringify(r.kind)}, which is none of ${ROUTE_KINDS.join(", ")} (absent is valid and means UNCLASSIFIED)`,
+      );
     }
 
     // A route that stopped working is RETAINED with jurisdiction and date. A

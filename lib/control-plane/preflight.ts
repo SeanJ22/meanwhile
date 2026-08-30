@@ -145,6 +145,13 @@ export interface FloorRoute {
    */
   readonly matchedDimensions: readonly ApplicabilityDimension[];
   readonly unstatedDimensions: readonly ApplicabilityDimension[];
+  /**
+   * Dimensions both sides stated and that DISAGREED (2026-08-30). This is the
+   * government-type audit trail: "this school-district technique is on the
+   * county floor as an EXPERIMENT because its recorded governmentTypes evidence
+   * disagrees here" is a sentence a report derives from this field.
+   */
+  readonly mismatchedDimensions: readonly ApplicabilityDimension[];
   /** The field overlap that put it in scope for THIS obligation. */
   readonly matchedFields: readonly string[];
 }
@@ -256,6 +263,7 @@ export function computeRouteFloor(input: {
       grade: verdict.grade,
       matchedDimensions: verdict.matchedDimensions,
       unstatedDimensions: verdict.unstatedDimensions,
+      mismatchedDimensions: verdict.mismatchedDimensions,
       matchedFields,
     });
   }
@@ -297,6 +305,7 @@ export function computeRouteFloor(input: {
       grade: "PROVEN",
       matchedDimensions: ["publisher"],
       unstatedDimensions: [],
+      mismatchedDimensions: [],
       matchedFields: [...input.fields],
     });
   }
@@ -590,10 +599,14 @@ export function describeFloor(floor: RouteFloor): string {
         : "matched NOTHING";
     const unstated =
       r.unstatedDimensions.length > 0 ? `; unstated ${r.unstatedDimensions.join("+")}` : "";
+    const mismatched =
+      r.mismatchedDimensions.length > 0
+        ? `; evidence DISAGREES on ${r.mismatchedDimensions.join("+")}`
+        : "";
     return (
       `  ${r.routeId}  (${r.origins.join("+")}) [${r.proof}]\n` +
       `      ${r.label} -> ${r.target}\n` +
-      `      ${dims}${unstated}` +
+      `      ${dims}${unstated}${mismatched}` +
       (r.matchedFields.length > 0 ? `; in scope on field ${r.matchedFields.join("+")}` : "")
     );
   };

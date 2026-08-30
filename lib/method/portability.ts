@@ -100,6 +100,18 @@ export interface ApplicabilityVerdict {
    * through?" and it is a field rather than a sentence so a report can print it.
    */
   unstatedDimensions: readonly ApplicabilityDimension[];
+  /**
+   * Dimensions BOTH sides stated and that DISAGREED. (2026-08-30.)
+   *
+   * A mismatch on an EVIDENCE dimension is the third state the old two-column
+   * audit trail could not represent: it is neither a match nor an absence.
+   * A route whose recorded government-type evidence is all `school_district`
+   * being considered for a `county` has not matched anything and has not been
+   * left unstated — it has been measured and found different, and the verdict
+   * that carries that measurement is OFFERED_UNPROVEN, never PROVEN. See the
+   * module note on `gradeApplicability` for which mismatches EXCLUDE instead.
+   */
+  mismatchedDimensions: readonly ApplicabilityDimension[];
 }
 
 /** The typed dimensions applicability can be narrowed on. */
@@ -142,24 +154,43 @@ export type ApplicabilityDimension = (typeof APPLICABILITY_DIMENSIONS)[number];
 export const APPLICABILITY_GRADES = ["EXCLUDED", "PROVEN", "OFFERED_UNPROVEN"] as const;
 export type ApplicabilityGrade = (typeof APPLICABILITY_GRADES)[number];
 
+interface DimensionMismatch {
+  dimension: ApplicabilityDimension;
+  reason: string;
+}
+
 interface DimensionReading {
   matched: ApplicabilityDimension[];
   unstated: ApplicabilityDimension[];
-  excludedBy: { dimension: ApplicabilityDimension; reason: string } | null;
+  mismatched: DimensionMismatch[];
 }
 
 /**
  * Read the four typed dimensions once, and record for each one whether it
- * MATCHED, EXCLUDED, or was never stated by one side or the other.
+ * MATCHED, MISMATCHED, or was never stated by one side or the other.
  *
  * "Never stated" is tracked separately from "matched" on purpose. Collapsing
  * them is the whole defect: a route with `publishers: []` and a jurisdiction
  * with no publisher have not agreed about anything.
+ *
+ * **A MISMATCH IS A READING, NOT A VERDICT.** (2026-08-30.) This function used
+ * to convert the first mismatch on publisher, platform or government type into
+ * `excludedBy` — an exclusion — for EVERY portability class. That was correct
+ * for a route whose CLASS claims that bound (`PLATFORM_SPECIFIC` means "this
+ * technique is the platform's"), and wrong for every other class, where the
+ * populated dimension is a RECORD OF WHERE THE ROUTE WAS PROVEN, exactly like
+ * `states` below. A route proven on `apptegy` school-district sites is not
+ * thereby proven to FAIL on a `legistar` county portal, and excluding it there
+ * would withhold a route on evidence that was never a constraint — the
+ * expensive direction (RULING 178), and the same collapse the `states` comment
+ * below has always refused. Which mismatches are entitled to EXCLUDE is decided
+ * in `gradeApplicability`, where the route's class actually claims the bound.
+ * What a mismatch always does is stop the verdict reaching PROVEN.
  */
 function readDimensions(a: Applicability, j: Jurisdiction): DimensionReading {
   const matched: ApplicabilityDimension[] = [];
   const unstated: ApplicabilityDimension[] = [];
-  let excludedBy: DimensionReading["excludedBy"] = null;
+  const mismatched: DimensionMismatch[] = [];
 
   const check = (
     dimension: ApplicabilityDimension,
@@ -172,7 +203,7 @@ function readDimensions(a: Applicability, j: Jurisdiction): DimensionReading {
       return;
     }
     if (routeValues.includes(jurisdictionValue)) matched.push(dimension);
-    else if (!excludedBy) excludedBy = { dimension, reason };
+    else mismatched.push({ dimension, reason });
   };
 
   check("publisher", a.publishers, j.publisher, `publisher-specific to ${a.publishers.join(", ")}`);
@@ -199,8 +230,21 @@ function readDimensions(a: Applicability, j: Jurisdiction): DimensionReading {
   else if (a.states.includes(j.state)) matched.push("state");
   else unstated.push("state");
 
-  return { matched, unstated, excludedBy };
+  return { matched, unstated, mismatched };
 }
+
+/**
+ * The dimension each narrowing class CLAIMS as its bound. A mismatch on the
+ * claimed dimension is the route saying "I am the platform's technique and this
+ * is not that platform" — an exclusion. A mismatch on any OTHER dimension is a
+ * disagreement between the jurisdiction and the route's evidence record, and it
+ * demotes rather than excludes.
+ */
+const CLASS_CLAIMED_DIMENSION: Partial<Record<PortabilityClass, ApplicabilityDimension>> = {
+  GOVERNMENT_TYPE: "governmentType",
+  PLATFORM_SPECIFIC: "platform",
+  PUBLISHER_SPECIFIC: "publisher",
+};
 
 /**
  * Grade this route's applicability to this jurisdiction.
@@ -214,20 +258,67 @@ export function gradeApplicability(a: Applicability, j: Jurisdiction): Applicabi
   const base = {
     matchedDimensions: dims.matched,
     unstatedDimensions: dims.unstated,
+    mismatchedDimensions: dims.mismatched.map((m) => m.dimension),
   };
 
-  if (dims.excludedBy) {
-    const { reason } = dims.excludedBy;
-    return { applies: false, reason, speculative: false, grade: "EXCLUDED", ...base };
+  /*
+   * A MISMATCH ON THE CLASS-CLAIMED DIMENSION EXCLUDES. A `GOVERNMENT_TYPE`
+   * route that states `town` does not travel to a parish — the class IS the
+   * constraint, and failing it is the one honest exclusion these three
+   * dimensions can produce (the behaviour the old code applied to every class).
+   */
+  const claimedDimension = CLASS_CLAIMED_DIMENSION[a.portability];
+  const claimedMismatch = dims.mismatched.find((m) => m.dimension === claimedDimension);
+  if (claimedMismatch) {
+    return {
+      applies: false,
+      reason: claimedMismatch.reason,
+      speculative: false,
+      grade: "EXCLUDED",
+      ...base,
+    };
   }
 
-  const proven = (reason: string): ApplicabilityVerdict => ({
-    applies: true,
-    reason,
-    speculative: false,
-    grade: "PROVEN",
-    ...base,
-  });
+  /*
+   * **AN EVIDENCE MISMATCH DEMOTES PROOF; IT NEVER WITHHOLDS THE ROUTE.**
+   * (2026-08-30.)
+   *
+   * This is the government-type-aware half of the school-district-to-county
+   * fix. The first half (2026-08-29) stopped an EMPTY dimension counting as
+   * proof. This half stops a POPULATED one being ignored: a route whose
+   * `states` says `az` reaches `proven("proven in az")` below for an Arizona
+   * COUNTY even when every walk that earned that state was a school district —
+   * outcome jurisdiction at state granularity cannot see the difference, but
+   * the typed `governmentTypes` evidence can, and a proof that survives only by
+   * not reading it is the leak. So every `proven(...)` passes through this
+   * gate: a recorded evidence dimension that DISAGREES with the jurisdiction
+   * caps the grade at OFFERED_UNPROVEN. The route is still offered — a
+   * school-district technique is a legitimate EXPERIMENT for a county, and
+   * withholding it would be the expensive direction — it just cannot be
+   * REQUIRED, because "known to fit here" is exactly what the mismatch denies.
+   */
+  const demoted = (provedAs: string): string =>
+    `${provedAs}, but recorded ${dims.mismatched
+      .map((m) => m.reason)
+      .join("; ")} and this jurisdiction is not — evidence disagrees on ` +
+    `${dims.mismatched.map((m) => m.dimension).join("+")}, so the fit here is offered, not proven (RULING 178)`;
+
+  const proven = (reason: string): ApplicabilityVerdict =>
+    dims.mismatched.length > 0
+      ? {
+          applies: true,
+          reason: demoted(reason),
+          speculative: true,
+          grade: "OFFERED_UNPROVEN",
+          ...base,
+        }
+      : {
+          applies: true,
+          reason,
+          speculative: false,
+          grade: "PROVEN",
+          ...base,
+        };
   /**
    * OFFERED, never withheld. `applies` stays true so no route is ever dropped
    * from a hunt — RULING 178's bias is untouched. What changes is the GRADE,

@@ -59,6 +59,22 @@ console.log(`routes known now         ${k.routes.length}`);
 console.log(`with applicability       ${k.routes.filter((r) => r.applicability).length} of ${k.routes.length}`);
 console.log(`by portability           ${JSON.stringify(byPortability)}`);
 console.log(`unknown portability      ${byPortability.UNKNOWN ?? 0}  (a VALID state — never a gap to guess at)`);
+
+/*
+ * Routes vs reasoning disciplines (2026-08-30, NH287). `kind` is written only
+ * on evidence; an absent kind is a NAMED classification gap, never an assertion
+ * that the entry is a discipline.
+ */
+const byKind: Record<string, number> = {};
+for (const r of k.routes) byKind[r.kind ?? "UNCLASSIFIED"] = (byKind[r.kind ?? "UNCLASSIFIED"] ?? 0) + 1;
+console.log(`by kind                  ${JSON.stringify(byKind)}`);
+console.log("  (UNCLASSIFIED means no retrieval mechanism is recorded in the entry's own");
+console.log("   evidence — a fact about the record, never proof the entry is a discipline.)");
+const typedDims = k.routes.filter((r) => {
+  const a = r.applicability;
+  return a.states.length + a.governmentTypes.length + a.platforms.length + a.publishers.length > 0;
+}).length;
+console.log(`with any typed dimension ${typedDims} of ${k.routes.length}  (states/governmentTypes/platforms/publishers)`);
 console.log(`sub-branches retained    ${k.routes.reduce((n, r) => n + r.subBranches.length, 0)}`);
 console.log(`retired (never deleted)  ${k.routes.filter((r) => r.retiredOn).length}`);
 console.log(`prior conclusions        ${conclusions.length}`);

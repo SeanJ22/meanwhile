@@ -86,6 +86,28 @@ export interface EvidenceRecord {
     | "ROLL_CALL_VOTE";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
+  /**
+   * **WHOSE RECORD THIS IS — the canonical body id.** (2026-08-29.)
+   *
+   * Present on every record that belongs to one identifiable government: a
+   * MEETING, and anything read off that meeting's own documents. Null or absent
+   * where the record genuinely belongs to no single body — a ballot measure, a
+   * statewide officeholder, a topic sweep that deliberately ranges wider than
+   * one government.
+   *
+   * It exists so `validate.ts` can perform the ONE identity check that is
+   * mechanically decidable: a pack whose subject is a body must not contain
+   * another body's civic records. Before this, the validator could only compare
+   * PROSE against the subject's name — so it passed fluent prose built from a
+   * wrong-body pack, which is exactly what shipped when a Central Arizona Water
+   * Conservation District event was returned as the Pima County Board of
+   * Supervisors' next meeting.
+   *
+   * **The retrieval fix is primary and this is the second wall.** A check here
+   * cannot make retrieval correct; it can stop a future regression in retrieval
+   * from reaching a reader, which the name-only check demonstrably could not.
+   */
+  bodyId?: string | null;
   /** The record's own words, or a mechanical read of its fields. Never a summary. */
   text: string;
   /** ISO date this record is ABOUT, where that is meaningful. */

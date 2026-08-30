@@ -1,0 +1,459 @@
+/**
+ * WHAT WE ACTUALLY HOLD — the committed records, in the model's own types.
+ *
+ * `authority.ts` says which government holds the records. `answers.ts` renders
+ * what we hold. This file is the join between them, and it is the file where
+ * every honesty question about the pilot data actually gets decided.
+ *
+ * ## Two obligations, two very different depths, and the difference is the point
+ *
+ * **FEDERAL — `ballot-az-pima:us-house-6`.** Read out of `data/fec/fec-2026.json`
+ * rather than transcribed, so a snapshot refresh cannot leave a stale number
+ * behind. Itemized contribution rows exist for two of the four certified
+ * candidacies; a reported receipts and disbursements total exists for all four.
+ *
+ * **LOCAL — `ballot-az-pima:prop-423`.** Read out of
+ * `data/campaign-finance/az-pima-2026-held.json`, acquired 2026-08-29 from the
+ * Pima County filing officer's own portal. **It contains no money.** 138 filers
+ * and 680 filing records were retrieved; the filing BODIES answered HTTP 401,
+ * so not one contribution row, expenditure row or summary total for any Pima
+ * County committee is held. That is a wall on a route, and the whole apparatus
+ * below exists so it renders as a wall rather than as a quiet zero.
+ *
+ * ## THE FEC TOTALS ARE NOT A FILING
+ *
+ * `data/fec/fec-2026.json` carries `totals`, which the FEC produces by adding up
+ * reports it holds. No committee filed a document that says $6,172,866.72. So it
+ * is materialised as `AuthorityAggregate`, not as `CampaignFinanceFiling`, and
+ * the `EvidenceBasis` travels with it — because telling a reader that a figure
+ * appears "in the 2026 Q2 report" when it appears in no report is a fabricated
+ * citation, and a fabricated citation is worse than a missing one.
+ *
+ * ## THE TEN ROWS ARE NOT THE DONORS
+ *
+ * `FundingCandidate.topContributions` is the committee's TOP itemized receipts,
+ * not its itemized receipts. Every universe built here carries an
+ * `itemizationLimit` saying so, and `answerWhoContributed` emits the gap between
+ * the rows held and the total reported. A reader shown ten names beside a
+ * six-million-dollar figure will otherwise read the ten as the donors.
+ *
+ * ## Time
+ *
+ * Nothing here reads a clock. Dates come from the artifacts or from the caller.
+ */
+
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+import { fundingForTarget } from "../../funding/snapshot.ts";
+import type { FundingCandidate } from "../../funding/types.ts";
+import type {
+  AuthorityAggregate,
+  Contribution,
+  Expenditure,
+  IndependentExpenditureReport,
+  PoliticalCommittee,
+} from "./model.ts";
+import type { HeldFilingUniverse } from "./answers.ts";
+
+/* ── The Arizona local acquisition ────────────────────────────────────────── */
+
+export const AZ_PIMA_HELD_PATH = ["data", "campaign-finance", "az-pima-2026-held.json"] as const;
+
+const AZ_PIMA_FILE = join(import.meta.dirname, "..", "..", "..", ...AZ_PIMA_HELD_PATH);
+export const AZ_PIMA_CITATION = AZ_PIMA_HELD_PATH.join("/");
+
+export interface AzPimaFilingIndexRow {
+  readonly portalFilerId: string;
+  readonly committeeRegisteredName: string;
+  readonly filingId: string;
+  readonly documentName: string;
+  readonly documentType: string;
+  readonly dateSubmitted: string;
+  /** Always false in this acquisition. The index is public; the bodies are not. */
+  readonly documentBodyHeld: boolean;
+  readonly documentBodyWall: string;
+}
+
+export interface AzPimaCommitteeRow {
+  readonly portalFilerId: string;
+  readonly registeredName: string;
+  readonly filerType: string;
+  readonly status: string;
+  readonly officeName: string | null;
+  readonly filingCount: number;
+  readonly source: string;
+}
+
+export interface AzPimaHeld {
+  readonly formatVersion: number;
+  readonly recordedOn: string;
+  readonly filingAuthorityIdentification: {
+    readonly authorityId: string;
+    readonly officeNameAsPublished: string;
+    readonly readFrom: string;
+    readonly readOn: string;
+    readonly whatThisEstablishesAndWhatItDoesNot: string;
+  };
+  readonly committeeRegisterCountyPortal: readonly AzPimaCommitteeRow[];
+  readonly committeeRegisterStateFtp: readonly Record<string, string | null>[];
+  readonly filingsIndexed: readonly AzPimaFilingIndexRow[];
+  readonly expectedFilingPeriodsAz2026PacParty: readonly Record<string, string>[];
+  readonly acquisitions: readonly Record<string, unknown>[];
+  readonly notHeld: readonly string[];
+}
+
+let azPimaCache: AzPimaHeld | null = null;
+
+export function azPimaHeld(): AzPimaHeld {
+  if (!azPimaCache) azPimaCache = JSON.parse(readFileSync(AZ_PIMA_FILE, "utf8")) as AzPimaHeld;
+  return azPimaCache;
+}
+
+/**
+ * The Arizona 2026 PAC/Party reporting periods, from the Secretary of State's
+ * OWN table — `ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt`.
+ *
+ * **This is the expected-period DENOMINATOR**, and until this acquisition the
+ * repository did not have one. `coverage.ts` emits `PERIOD_DENOMINATOR_UNKNOWN`
+ * whenever `filingPeriodsExpected` is null, precisely because "filings acquired"
+ * with no denominator is a count that measures our own output. For Arizona, it
+ * is now a real list read from the state.
+ *
+ * `asOf` selects the periods whose FILING WINDOW HAS CLOSED. A period still open
+ * for filing is not a missing report — the filer has not been asked for it yet,
+ * and counting it as owed would manufacture a gap on a government's behalf.
+ */
+export function azExpectedPeriods(asOf: string): {
+  readonly all: readonly string[];
+  readonly due: readonly string[];
+  readonly notYetDue: readonly string[];
+  readonly sourceCitation: string;
+} {
+  const rows = azPimaHeld().expectedFilingPeriodsAz2026PacParty;
+  const all = rows.map((r) => r.ReportName);
+  const due: string[] = [];
+  const notYetDue: string[] = [];
+  for (const row of rows) {
+    // The table's dates are "YYYY-MM-DD HH:MM:SS"; the date half compares
+    // lexicographically against an ISO date, which is what asOf is.
+    const closes = String(row.FilingPeriodEndDate).slice(0, 10);
+    if (closes <= asOf) due.push(row.ReportName);
+    else notYetDue.push(row.ReportName);
+  }
+  return {
+    all,
+    due,
+    notYetDue,
+    sourceCitation: `${AZ_PIMA_CITATION} — expectedFilingPeriodsAz2026PacParty, from ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt`,
+  };
+}
+
+/** Committees the Pima County filing officer's portal lists for the Vail district. */
+export function azPimaCommittees(): readonly PoliticalCommittee[] {
+  const held = azPimaHeld();
+  return held.committeeRegisterCountyPortal.map((row) => ({
+    id: `easyvote:pima:${row.portalFilerId}`,
+    registeredName: row.registeredName,
+    type:
+      row.filerType === "Candidate"
+        ? "CANDIDATE_AUTHORIZED"
+        : row.filerType.startsWith("PAC")
+          ? "PAC"
+          : row.filerType === "Party"
+            ? "PARTY"
+            : "OTHER",
+    aliases: [],
+    registrations: [
+      {
+        registrationId: row.portalFilerId,
+        issuedBy: held.filingAuthorityIdentification.authorityId,
+        registeredOn: null,
+        terminatedOn: null,
+      },
+    ],
+    /**
+     * NULL EVEN FOR THE CANDIDATE COMMITTEES, and deliberately.
+     *
+     * The portal gives a committee name and an office name. It does not give a
+     * candidacy id in this repository's namespace, and matching "Ed Buster for
+     * VUSD Board" to a candidacy would be a name match — which this project's
+     * own bar refuses to treat as agreement. It stays null and the identity
+     * question stays open.
+     */
+    authorizedByCandidacyId: null,
+    sourceCitations: [row.source, AZ_PIMA_CITATION],
+  }));
+}
+
+/**
+ * The Arizona local filing universe.
+ *
+ * Note what is in `recordClassesHeld`: `STATEMENT_OF_ORGANIZATION` and
+ * `PAC_REPORT` are held **as index entries** — we know they exist, when they
+ * were filed and what the authority calls them. Nothing in `recordClassesHeld`
+ * implies we hold their CONTENTS, which is why every money answer built on this
+ * universe still emits an `OURS` gap.
+ */
+export function azPimaUniverse(asOf: string): HeldFilingUniverse {
+  const held = azPimaHeld();
+  const periods = azExpectedPeriods(asOf);
+  return {
+    authorityIds: [held.filingAuthorityIdentification.authorityId],
+    authorityNames: [held.filingAuthorityIdentification.officeNameAsPublished],
+    publisherRoute:
+      "https://pimacountyaz.easyvotecampaignfinance.com (EasyVote), served by https://ecf-api.easyvoteapp.com",
+    recordClassesHeld: [],
+    recordClassesNotHeld: [
+      "CANDIDATE_COMMITTEE_REPORT",
+      "PAC_REPORT",
+      "BALLOT_MEASURE_COMMITTEE_REPORT",
+      "INDEPENDENT_EXPENDITURE_REPORT",
+      "STATEMENT_OF_ORGANIZATION",
+    ],
+    periodsExpected: periods.due,
+    periodsHeld: [],
+    periodsNotHeld: periods.due,
+    coversThrough: null,
+    evidenceBasis: null,
+    itemizationLimit: null,
+    isCompleteFilingSet: false,
+    sourceCitations: [
+      AZ_PIMA_CITATION,
+      "https://ecf-api.easyvoteapp.com/filer/documentsearch/19626734-D3E9-449C-BB5D-EDB9C0034907",
+      "ftp://ftp.azsos.gov/cfsdata2/ReportingPeriods.txt",
+    ],
+  };
+}
+
+/**
+ * **THE WALL, AS A GAP THAT NAMES ITSELF AS OURS.**
+ *
+ * This is the whole local obligation in one value. The filing index is public
+ * and acquired; the filing bodies are behind HTTP 401. A reader must be told
+ * that we could not read them — never that the committees raised nothing.
+ */
+export function azPimaMoneyGap(subjectId: string): {
+  readonly attribution: "OURS";
+  readonly subject: string;
+  readonly what: string;
+  readonly nextMove: string;
+  readonly readerSentence: string;
+} {
+  return {
+    attribution: "OURS",
+    subject: subjectId,
+    what:
+      "the Pima County filing INDEX is held (138 filers, 680 filings) and every filing BODY is not: " +
+      "https://ecf-api.easyvoteapp.com/documents/getdocumentfiling/{documentId} answered HTTP 401 " +
+      "on 2026-08-29",
+    nextMove:
+      "Find the public route to the filing bodies — the portal renders them to an unauthenticated " +
+      "visitor, so a route exists that this walk did not find. Failing that, a public-records " +
+      "request to the Pima County filing officer.",
+    readerSentence:
+      "We know which committees have filed campaign-finance reports here and when they filed them, " +
+      "but we have not been able to read the reports themselves yet. The money in them is not " +
+      "something we can show you — that is a gap in our records, not a sign that none was raised.",
+  };
+}
+
+/* ── The federal materialisation ──────────────────────────────────────────── */
+
+export interface FederalHeldRecords {
+  readonly candidacyId: string;
+  readonly displayName: string;
+  readonly committee: PoliticalCommittee | null;
+  /** NOT a filing. The FEC's own arithmetic across the reports it holds. */
+  readonly aggregate: AuthorityAggregate | null;
+  readonly contributions: readonly Contribution[];
+  /**
+   * ALWAYS EMPTY in this snapshot, and the empty is a fact about us.
+   *
+   * `data/fec/fec-2026.json` carries a disbursements TOTAL and no itemized
+   * disbursement rows — the snapshot script fetches committee totals and top
+   * receipts, and Schedule B is not among them.
+   */
+  readonly expenditures: readonly Expenditure[];
+  /**
+   * ALWAYS EMPTY, and the empty is a fact about us and the law together.
+   *
+   * FEC Schedule E is not read at all: `docs/sources.md` records OpenFEC as
+   * "WIRED for committee TOTALS only", and tracker `D51` sits behind `PB10`/`D23`
+   * — the election-law counsel review of the 52 U.S.C. § 30111(a)(4)
+   * sale-or-use restriction. A blocked route is not a blocked fact.
+   */
+  readonly independentExpenditureReports: readonly IndependentExpenditureReport[];
+}
+
+export const FEC_SNAPSHOT_CITATION = "data/fec/fec-2026.json";
+
+function committeeFor(funding: FundingCandidate): PoliticalCommittee | null {
+  if (!funding.principalCommitteeId) return null;
+  return {
+    id: funding.principalCommitteeId,
+    registeredName: `${funding.name} — principal campaign committee`,
+    type: "CANDIDATE_AUTHORIZED",
+    aliases: [],
+    registrations: [
+      {
+        registrationId: funding.principalCommitteeId,
+        issuedBy: "us:federal:fec",
+        registeredOn: null,
+        terminatedOn: null,
+      },
+    ],
+    authorizedByCandidacyId: null,
+    sourceCitations: [funding.provenance.sourceUrl ?? FEC_SNAPSHOT_CITATION, FEC_SNAPSHOT_CITATION],
+  };
+}
+
+export function federalHeldRecordsFor(
+  candidacyId: string,
+  displayName: string,
+  deps?: { fundingForTarget?: (targetKey: string) => FundingCandidate | null },
+): FederalHeldRecords {
+  const read = deps?.fundingForTarget ?? fundingForTarget;
+  const funding = read(candidacyId);
+  if (!funding) {
+    return {
+      candidacyId,
+      displayName,
+      committee: null,
+      aggregate: null,
+      contributions: [],
+      expenditures: [],
+      independentExpenditureReports: [],
+    };
+  }
+
+  const committee = committeeFor(funding);
+  const committeeId = funding.principalCommitteeId ?? `${funding.fecCandidateId}:no-committee`;
+  const aggregateId = `fec-aggregate:${committeeId}:cycle-${funding.cycle}`;
+
+  const aggregate: AuthorityAggregate = {
+    recordKind: "AUTHORITY_AGGREGATE",
+    id: aggregateId,
+    committeeId,
+    filingAuthorityId: "us:federal:fec",
+    period: {
+      // The FEC's own two-year period identifier, and its own coverage-end
+      // field. Neither is invented, and no report label is claimed.
+      label: String(funding.cycle),
+      coversFrom: null,
+      coversThrough: funding.totals.coverageEndDate,
+      dueOn: null,
+    },
+    sourceUrl: funding.provenance.sourceUrl,
+    sourceCitation: FEC_SNAPSHOT_CITATION,
+    reportedReceipts: funding.totals.receipts,
+    reportedDisbursements: funding.totals.disbursements,
+    reportedItemizedReceipts: funding.totals.individualItemized,
+    // The FEC publishes the sum without publishing how many reports went into
+    // it. Null is the honest value; a count invented here would become a
+    // denominator nobody measured.
+    aggregatedAcrossFilings: null,
+    isCompleteFilingSet: false,
+  };
+
+  const contributions: Contribution[] = funding.topContributions.map((row, index) => ({
+    recordKind: "CONTRIBUTION",
+    intoCommitteeId: committeeId,
+    amountReceived: row.amount,
+    contributorNameAsFiled: row.contributorName,
+    receivedOn: row.receiptDate,
+    /**
+     * The AGGREGATE id, not a filing id — and it is prefixed `fec-aggregate:`
+     * so it cannot be mistaken for one at a glance. These rows came off the
+     * FEC's Schedule A endpoint keyed by committee and cycle, not off a single
+     * named report, and claiming a report here would be a fabricated citation.
+     */
+    filingId: aggregateId,
+    sourceCitation: `${FEC_SNAPSHOT_CITATION} — ${funding.fecCandidateId} topContributions[${index}]`,
+  }));
+
+  return {
+    candidacyId,
+    displayName,
+    committee,
+    aggregate,
+    contributions,
+    expenditures: [],
+    independentExpenditureReports: [],
+  };
+}
+
+/** The federal filing universe for one candidacy, with its limits stated. */
+export function federalUniverse(records: FederalHeldRecords): HeldFilingUniverse {
+  const agg = records.aggregate;
+  return {
+    authorityIds: ["us:federal:fec"],
+    authorityNames: ["Federal Election Commission"],
+    publisherRoute: "https://api.open.fec.gov/v1 — committed as data/fec/fec-2026.json",
+    recordClassesHeld: agg === null ? [] : ["CANDIDATE_COMMITTEE_REPORT"],
+    /**
+     * NAMED, never counted. The independent-expenditure class is the one whose
+     * absence changes what the other numbers MEAN.
+     */
+    recordClassesNotHeld: [
+      "INDEPENDENT_EXPENDITURE_REPORT",
+      "PAC_REPORT",
+      "PARTY_COMMITTEE_REPORT",
+      "STATEMENT_OF_ORGANIZATION",
+    ],
+    /**
+     * NULL, and it is the honest value: the FEC's own reporting calendar has
+     * not been read, so we do not know how many reports this cycle owes. The
+     * Arizona side has a real denominator now; the federal side does not, and
+     * pretending otherwise would be the coverage attack mode.
+     */
+    periodsExpected: null,
+    periodsHeld: agg === null ? [] : [agg.period.label],
+    periodsNotHeld: [],
+    coversThrough: agg?.period.coversThrough ?? null,
+    evidenceBasis: agg === null ? null : "AUTHORITY_AGGREGATE",
+    itemizationLimit:
+      records.contributions.length === 0
+        ? null
+        : `the ${records.contributions.length} largest itemized receipts as filed, not the complete itemized list`,
+    isCompleteFilingSet: false,
+    sourceCitations: [
+      FEC_SNAPSHOT_CITATION,
+      records.committee?.sourceCitations[0] ?? "https://www.fec.gov/data/",
+    ],
+  };
+}
+
+/**
+ * The federal independent-expenditure gap, attributed to `THE_LAW` rather than
+ * to the FEC.
+ *
+ * This distinction is the reason `GapAttribution` has four values instead of
+ * two. The FEC publishes Schedule E. We do not read it, and the reason is a
+ * legal restriction WE are subject to and a counsel review WE have not
+ * completed. Rendering that as "the FEC does not publish this" would move our
+ * blocker onto a government, which is a false claim about a government.
+ */
+export function federalIndependentExpenditureGap(subjectId: string): {
+  readonly attribution: "THE_LAW";
+  readonly subject: string;
+  readonly what: string;
+  readonly nextMove: string;
+  readonly readerSentence: string;
+} {
+  return {
+    attribution: "THE_LAW",
+    subject: subjectId,
+    what:
+      "FEC Schedule E is not read. docs/sources.md records OpenFEC as WIRED for committee TOTALS " +
+      "only; tracker D51 holds the independent-expenditure surface behind PB10/D23, the " +
+      "election-law counsel review of the 52 U.S.C. § 30111(a)(4) sale-or-use restriction.",
+    nextMove:
+      "Counsel closes D23. Nobody else may. Until then the route is BLOCKED_CURRENTLY, which is a " +
+      "statement about our permission to read and never about whether the spending happened.",
+    readerSentence:
+      "We are not able to show outside spending in this race yet. The Federal Election Commission " +
+      "publishes it; a legal question on our side about using that data is still open, so this is " +
+      "our restriction rather than a finding that no outside money was spent.",
+  };
+}

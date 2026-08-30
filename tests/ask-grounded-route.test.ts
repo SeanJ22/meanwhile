@@ -29,6 +29,17 @@ delete process.env.ANTHROPIC_API_KEY;
 const { POST, resetGroundedState } = await import("@/app/api/ask/grounded/route");
 
 const VAIL = "ocd-division/country:us/state:az/school_district:vail_unified_district";
+/**
+ * Vail's governing BOARD — the body — as distinct from the school district
+ * DIVISION above. (2026-08-29.) Ask used to resolve a reader's question to the
+ * division and filter meetings by geography; where a division carries more than
+ * one body that returned another government's meetings, which is how the Pima
+ * County Board of Supervisors came to be given a Central Arizona Water
+ * Conservation District event. Vail carries only one body, so its ANSWER was
+ * never wrong — but the id it resolved to was, and these assertions pin the
+ * body because that is what the reader actually named.
+ */
+const VAIL_BOARD = `${VAIL}#board`;
 const PIMA = "ocd-division/country:us/state:az/county:pima";
 const AZ = "ocd-division/country:us/state:az";
 const SLDU = "ocd-division/country:us/state:az/sldu:19";
@@ -101,7 +112,7 @@ async function ask(
 test("RED CONTROL: 'What's on the Vail school district agenda?' resolves Vail and takes the NEXT sitting", async () => {
   const body = await ask("What's on the Vail school district agenda?");
 
-  assert.equal(body.subject?.id, VAIL, "the government the reader NAMED");
+  assert.equal(body.subject?.id, VAIL_BOARD, "the BODY the reader NAMED, not its division");
   assert.equal(body.trace?.resolution.state, "BOUND");
   assert.equal(body.trace?.retrieval.selection, "NEXT", "'what's on the agenda' means the next sitting");
 
@@ -124,7 +135,7 @@ test("RED CONTROL: the SAME question in the past tense selects a DIFFERENT, earl
    */
   const body = await ask("What did the Vail school district discuss at its last meeting?");
 
-  assert.equal(body.subject?.id, VAIL);
+  assert.equal(body.subject?.id, VAIL_BOARD);
   assert.equal(body.trace?.retrieval.selection, "LAST");
   const meeting = body.records?.find((r) => r.kind === "MEETING");
   assert.equal(meeting!.id, "apptegy:vail:60703697", "the most recent PAST sitting");
@@ -702,7 +713,7 @@ test("ASK-05: a bound body NARROWS the sweep to its own agendas", async () => {
    * quote.
    */
   const named = await ask("Is there a rezoning on the Vail school district agenda?");
-  assert.equal(named.subject?.id, VAIL, "the reader named a government");
+  assert.equal(named.subject?.id, VAIL_BOARD, "the reader named a government");
 
   const wide = await ask("Is there a rezoning coming?");
   assert.ok(

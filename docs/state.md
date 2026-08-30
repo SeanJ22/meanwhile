@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-28 — **The repository already had most of the architecture's semantics and almost none of its runtime.** The overnight control-plane build; its record is the LAST section of this file.
+Last updated: 2026-08-29 — **The application retrieved the wrong government, and every check downstream was green.** The exact-body-identity and answerability session; its record is the LAST section of this file.
+
+Previous: 2026-08-28 — **The repository already had most of the architecture's semantics and almost none of its runtime.** The overnight control-plane build; See the control-plane section.
 
 Previous: 2026-08-28 — **The deploy that failed had nothing wrong with it.** The fixture credential hotfix.
 
@@ -22182,3 +22184,185 @@ And it did not narrow either campaign-finance completion contract, having found
 the reason not to: the Arizona floor is not uniform. Two of its routes can land
 on an honest `NOT_APPLICABLE`, so a list right about two routes would refuse
 completion on a truthful record.
+
+---
+
+## 2026-08-29 — the exact-body-identity and answerability session
+
+**The application retrieved the wrong government, and every check downstream
+was green.**
+
+A reader asked *"What's on the Pima County Board of Supervisors agenda?"* and
+production answered:
+
+> CAP University: Deeper Dive on How Water is Accounted for in the Lower Basin
+
+describing it as the Board's next meeting, and adding that there was no other
+upcoming Board meeting in the records. There were fourteen.
+
+The trace read `GROUNDED_CLAUDE`. That is the part worth sitting with. The model
+had stayed inside its evidence pack and paraphrased it faithfully. The
+substitution guard passed, because the pack's subject was "Pima" and the answer
+said "Pima". The temporal guard passed, because the meeting really was in the
+future. Every name in the sentence was the right name. **The evidence pack
+itself was wrong, and a wrong pack produces fluent, well-sourced, confident
+falsehood with every instrument reading green.**
+
+### The mechanism was one line, and the identity to fix it already existed
+
+`lib/ask/inventory.ts` built the Ask body inventory from `meeting.ocdId` — the
+DIVISION — and stamped each row `nameClass: "body"`. So the pipeline called a
+division a body, and `app/api/ask/grounded` selected meetings with
+`m.ocdId === subject.id`. The Pima County division carries 42 meetings: 30 are
+the Board's and **12 belong to the Central Arizona Water Conservation
+District**, a separate multi-county government recorded against the same
+geography. `selectSitting` then correctly chose the next sitting out of the
+wrong set.
+
+`lib/sources/types.ts` had said what the fix was since 2026-08-27, in capitals:
+`Meeting.bodyId` is *WHICH BODY IS MEETING — the registry id, not the
+geography*. `lib/meetings/snapshot.ts` already refuses to serve a snapshot whose
+meetings lack it — that guard exists because attributing meetings by geography
+once put 364 of 460 meetings on bodies that did not hold them. The identity was
+present in the corpus, asserted at the write boundary, and thrown away one layer
+above.
+
+**It was never a Pima peculiarity.** Nine divisions in the committed snapshot
+carry more than one body, and `az/place:tucson` carries fifteen — Mayor &
+Council alongside the Planning Commission, the Design Review Board, the
+Commission on Disability Issues and eleven more. Every one of them was an
+available wrong answer to a question about the Tucson city council.
+
+### What changed
+
+- **`lib/registry/body-identity.ts` (new).** A synchronous, cached view of the
+  canonical registry, keyed on body id. All 78 body ids in the committed
+  snapshot resolve in it; 64 carry a sourced name. It reads the registry, it
+  never mints identity, and it never writes.
+- **The Ask inventory emits one entity per canonical `bodyId`.** The division
+  travels alongside as `ocdId` — context for the class tie-break — and cannot be
+  mistaken for the identity, because it is a different field with a different
+  value. Names come from the registry rather than `meeting.bodyName`, which is
+  the meeting's own title carried onto the body: the corpus records Vail's board
+  as *"Governing Board Meeting"* and the water district under four names
+  including *"CAP University"*.
+- **`BindableEntity.level` is TYPED.** `nameClass: "body"` was carrying this and
+  could not, because it answers a different question — what KIND of thing a
+  reader can name. Retrieval refuses an entity that is not `level: "BODY"`
+  rather than falling back to its division; a fallback that fires "only when the
+  level is missing" is the same defect with a longer fuse.
+- **Evidence records carry `bodyId`, and the validator checks it.** An id
+  comparison, not NLP. The name-only check demonstrably could not catch this.
+- **`contactsForBody` split from `contactsForDivision`.** *Who represents this
+  area* and *who sits on this body* are different questions; they were one
+  function because Ask could only name divisions. The division's
+  representatives are now offered only for the body that IS that division's
+  government, so a Tucson advisory board cannot be given the Mayor and Council
+  as its membership — the failure `tests/body-composition.test.ts` already bans
+  one layer down, arriving through a different door.
+
+### A quarter of the corpus's bodies could not be named at all
+
+Nineteen of seventy-eight carry a registry name that identifies nothing on its
+own: seven called exactly *"Planning Board"*, four *"Budget Committee"*, three
+*"Select Board"*, plus *"Zoning Board"*, *"Road Committee"* and Tucson's
+*"Planning Commission"*. The binder declines such names on purpose — that
+discipline is what stopped a question about Vail binding to a Tucson body called
+"Agenda Committee" — so the reader who typed *"the Warner Planning Board"* got
+AMBIGUOUS. Honest, and useless, about exactly the hyperlocal sitting this
+product exists to surface.
+
+They are now qualified with the division's own sourced label, and **only** where
+the body's own name carries no identifying token. Nothing is invented: two
+sourced facts are stated together. Qualifying unconditionally would be a
+regression, and the corpus holds the case that proves it — the Central Arizona
+Water Conservation District is recorded against Pima and is not Pima's, so
+prefixing it would demand a word from a reader who would never say it and make
+the body unreachable. That control is a test.
+
+### The same class, one surface over: the govern verb
+
+`jurisdictionClaim` took no body id and returned *"Governs: Tucson"* for
+anything with a division, while `governVerbMayAttach` in
+`lib/registry/body-class-labels.ts` — written to enforce RULING 118 — was never
+consulted. Measured over the registry: **248 of 1,998 bodies were making a
+governing claim about a division that is not theirs.** They now read "Listed
+under". The map's representation note said *"We know this body governs here
+because its division exists"*, which is an inference from a division's
+existence; both surfaces now read one claim, so neither can carry the verb the
+other refuses.
+
+NH270's own code half turned out to have shipped already in PR #215. That was
+verified against the extracted pre-fix module rather than assumed, and a
+regression test was left behind so it stays fixed.
+
+### Answerability is now measured, and the measurement is unflattering
+
+`lib/answerability/` makes DISCOVERED → ACQUIRED → EXTRACTED → NORMALIZED →
+CANONICALLY_LINKED → QUERY_RETRIEVABLE → READER_VERIFIED seven separate stages
+with real denominators, and no upstream success may flow into a downstream
+numerator. For the Pima County Board of Supervisors:
+
+| question | reach |
+| --- | --- |
+| what was on the agenda | ACQUIRED 16 of 30, QUERY_RETRIEVABLE 16 |
+| what did they decide | **ACQUIRED 0 of 30** |
+| how did each member vote | **ACQUIRED 0 of 30** |
+
+The DISCOVERED denominator reads `DENOMINATOR_NOT_ESTABLISHED`: no source
+exposes how many sittings the Board actually held, so the 30 may be most of them
+or a fraction, and the report says so rather than implying completeness.
+
+`record-class.ts` makes the agenda/outcome distinction structural. An agenda
+proves what was NOTICED; items are continued, withdrawn, tabled and pulled from
+consent, and none of that changes the agenda. It is now mechanically impossible
+to hand an agenda to a question about a decision.
+
+### A speculative method hypothesis is not a known route
+
+`appliesTo` answered one question with a boolean plus a `speculative` side-flag,
+so every consumer reading `.applies` got "yes" for a route proven here and a
+route merely offered here. Two self-proof bugs were closed: a route that NAMED a
+narrowing dimension and left it EMPTY was granted proven status — which is
+precisely how a school-district technique becomes a proven county route — and
+`STATE_FAMILY` computed a union where it needed an intersection, so a
+jurisdiction listing itself in its own family proved every state-family route
+applied to it.
+
+The floor is now REQUIRED versus EXPLORATORY, and **the split is not an
+excuse**: exploratory routes are still materialized, scheduled, executed and
+still refuse the close as `ROUTE_TASK_STILL_OUTSTANDING`. What it forbids is a
+hypothesis being refused against as though it were a known API. Before the
+split, the Pima run emitted 20 refusals each asserting an applicability nobody
+had proven, burying the one real one.
+
+### The permission gap a document URL hides
+
+The detective found that `legistar.granicus.com` serves `Disallow: /` — and it
+is the host every Pima and Mesa agenda PDF URL in the snapshot actually resolves
+to. Its sibling `pima.granicus.com` was recorded DISALLOWED on 2026-08-28; this
+one had never been checked. Two more Highbond tenants are in the same position.
+Re-verified independently before recording. The portable rule, and the reason
+the gap existed:
+
+> THE HOST IN A DOCUMENT URL IS FREQUENTLY NOT THE HOST OF THE PORTAL THAT
+> LISTED IT. Permission must be checked per document host, never per portal.
+
+All three are now recorded DISALLOWED — NOT WALKED. The repo holds 29 documents
+with extracted text from them, collected before the permission was read.
+**Whether that text stays is not a session's decision**; it is NH286, a Needs
+Sean row, and it is stated there with the counter-argument rather than as an
+obvious purge.
+
+### What this session did NOT establish
+
+- **READER_VERIFIED is 0 everywhere.** The ladder's last rung is not claimed for
+  a single record.
+- **`QUERY_RETRIEVABLE` is a structural proxy** — addressable by body and tense,
+  with items — not an executed call into the Ask retrieval path.
+- **No method route is REQUIRED for Pima today.** The predicate was repaired;
+  114 of 116 routes still state zero typed constraints, and populating them is a
+  governed store change (NH287).
+- **No Pima County campaign-finance dollar figure is held.** The filing index
+  was acquired — 138 filers, 680 filings — and the document endpoint answered
+  401. Zero money, and a test asserts no amount field exists in the local record.

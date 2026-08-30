@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-29 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **159 sessions.**
+Newest first. **160 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -35,6 +35,15 @@ are hard-removed from both stores — this list is the whole surviving record.
 - **NH285** — states/nh/explainer.md says RSA 664:6 and 664:7 are quoted in sources.md. They are not: states/nh/sources.md contains no 664 string at all, and a repo-wide search finds no verbatim operative sentence anywhere. Two other states' notes summarise the rule as centralised on the Secretary of State, but a summary is not a quote. This blocks New Hampshire from entering the campaign-finance filing-regime registry, because a regime record built from a paraphrase of a routing rule is a different routing rule - and the registry's whole job is to say which authority governs a contest. *(open)*
 
 **Needs Sean.** NH282, NH283
+
+## 2026-08-29 - pilot autonomous shadow loop and reader answerability
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NH286** — The snapshot holds extracted PDF text from three vendor hosts whose robots.txt says 'User-agent: * / Disallow: /'. The text was collected 2026-08-13 to 2026-08-21, before the permission was ever read; nothing has been fetched from any of them since. The walking question is now settled and recorded in docs/sources.md - none of the three will be walked again. What is NOT settled, and is not a session's call, is whether the text already stored should stay, be purged, or be re-obtained by a permitted route. It is a legal and policy question about public records, not an engineering one. *(open)*
+- **NH287** — 16 of the 20 speculative Pima routes carry a recorded outcome with jurisdiction 'az'. Several of those walks were actually against school districts and water districts, not the county. Promoting a route to REQUIRED on that evidence would let a school-district technique become a required county route on the strength of 'somewhere in Arizona'. The route-floor repair therefore deliberately did NOT implement an OBSERVED_HERE proof kind, and 0 method routes are currently REQUIRED for Pima. *(open)*
+
+**Needs Sean.** NH286, NH287
 
 ## 2026-08-28 · grounded-Ask integration session
 

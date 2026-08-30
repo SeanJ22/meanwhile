@@ -14,10 +14,10 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **370 open**, 444 resolved.
-- **72 waiting on Sean** — the first section below.
+- **372 open**, 444 resolved.
+- **74 waiting on Sean** — the first section below.
 - P1 by section:
-  - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
+  - Needs Sean — **7** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
@@ -35,7 +35,7 @@ and when. Nothing is ever deleted.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**72 open · 52 resolved.**
+**74 open · 52 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -93,6 +93,8 @@ WHAT THE FAILING RUN PRINTED (run 32961466707). The last 14 of 257 line(s) the r
 **NH272** — The new migration shipping gate asks production whether it already holds the migrations a pull request is about to ship. To ask, the CI job needs a read-only production database URL. It is not currently a repository secret, and only the author can add one.
 
 **NH281** — Every application-bearing deploy since the fixture-credential hotfix has failed the same way, so the live site is serving an older build than main. The cause cannot be read from here: Netlify reports only "Build script returned non-zero exit code: 2" and the build log is not retrievable through the API with the token this repo holds.
+
+**NH286** — The snapshot holds extracted PDF text from three vendor hosts whose robots.txt says 'User-agent: * / Disallow: /'. The text was collected 2026-08-13 to 2026-08-21, before the permission was ever read; nothing has been fetched from any of them since. The walking question is now settled and recorded in docs/sources.md - none of the three will be walked again. What is NOT settled, and is not a session's call, is whether the text already stored should stay, be purged, or be re-obtained by a permitted route. It is a legal and policy question about public records, not an engineering one.
 
 **T05** — The abuse policy is written but the review path behind it does not exist. No free-text answer can be accepted until somebody can actually act on a threat.
 
@@ -217,6 +219,8 @@ THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflow
 **NH282** — The control plane can now survive a worker dying: leases expire, a dead Attempt is observed from outside, the route returns to the pool, another process resumes from durable state, and a crash between two writes is finished by a recovery pass. All of that is proven by tests. What does not exist is anything that RUNS the loop when nobody is watching. A workflow driver is the thing that wakes up, claims what is claimable, renews what it holds and reclaims what died. This repository has GitHub Actions and three workflows permitted to hold a cron, and an outside scheduler would be invisible to every guard the repo has, so the choice is yours rather than a session's. Nothing downstream is blocked except unattended operation itself - every rule, every refusal and the shadow proving run all work today when a person or a test starts them.
 
 **NH283** — When a captured public page carries a live third-party credential - which is not hypothetical, it is what PR #216 hit on Pima County's own Clerk of the Board page - the exact bytes are kept but quarantined, and only a sanitized copy reaches any parser. Those quarantined bytes currently cannot be stored durably, because the only two places this repository can write are a PUBLIC GitHub asset store and a plain folder on disk, and neither offers encryption at rest or access control. The tier was deliberately NOT weakened to fit what is available: that would put a working credential somewhere it can be read, which is the original incident one layer down. Ordinary evidence is fully durable already; this is only about the quarantined tier.
+
+**NH287** — 16 of the 20 speculative Pima routes carry a recorded outcome with jurisdiction 'az'. Several of those walks were actually against school districts and water districts, not the county. Promoting a route to REQUIRED on that evidence would let a school-district technique become a required county route on the strength of 'somewhere in Arizona'. The route-floor repair therefore deliberately did NOT implement an OBSERVED_HERE proof kind, and 0 method routes are currently REQUIRED for Pima.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 

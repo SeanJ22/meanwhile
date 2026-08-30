@@ -44,7 +44,7 @@
  * The record says which it did (`retrievalMode`), so nobody can later read a
  * replay as a fresh observation of Pima County.
  *
- * ## THE FLOOR IS 28, NOT 8, AND THE RUN DOES NOT PRETEND OTHERWISE
+ * ## THE FLOOR IS 28, AND IT IS 8 MANDATORY PLUS 20 EXPERIMENTS
  *
  * `computeRouteFloor` with no field narrowing offers 122 routes for this
  * jurisdiction — every speculative technique in the method store, including PDF
@@ -53,14 +53,24 @@
  * `agenda`, it is 28: the 8 concrete adapter surfaces plus 20 meeting-bearing
  * techniques the store offers on UNKNOWN portability.
  *
- * Those 20 are SPECULATIVE and they are still owed a disposition — an offer that
- * is never walked teaches nothing, and RULING 184 is explicit that a finite
- * attempt count never earns an absence. So this run disposes the 8 it has
- * recorded evidence for and leaves the 20 outstanding, and the honest
- * consequence is that THE OBLIGATION DOES NOT COMPLETE. That is the correct
- * outcome, not a failure of the run: 20 known techniques have not been walked
- * for this subject, and a control plane that closed anyway would be the exact
- * defect this architecture was built to prevent.
+ * Those two halves are NOT the same kind of thing, and since 2026-08-29 the
+ * floor says so (`FLOOR_OBLIGATIONS` in `preflight.ts`). The 8 are MANDATORY:
+ * the adapter declares them for this publisher, so omitting one refuses the
+ * close by name — that refusal is the whole architecture. The 20 are
+ * SPECULATIVE EXPERIMENTS: every one of them reached this floor with ZERO typed
+ * dimensions matched, on UNKNOWN portability, and the store's own words for them
+ * are "offered, not proven".
+ *
+ * They are still owed a disposition — an offer that is never walked teaches
+ * nothing, and RULING 184 is explicit that a finite attempt count never earns an
+ * absence — so they are materialised, registered and RUN through the exploration
+ * queue, and each returns either a disposition or a named reason it could not be
+ * walked here yet. Every one of them still holds the obligation open. What
+ * changed is only that they hold it open as themselves: an untested hypothesis,
+ * not a known API somebody forgot.
+ *
+ * The honest consequence is unchanged: THE OBLIGATION DOES NOT COMPLETE. That is
+ * the correct outcome, not a failure of the run.
  *
  * ## TIME IS A PARAMETER
  *
@@ -85,7 +95,15 @@ import {
   PIMA_UNION_DENOMINATOR,
   pimaFutureMeetingsWorkItem,
 } from "../fixtures/pima-meetings.ts";
-import { computeRouteFloor, materializeFloor, type RouteFloor } from "../preflight.ts";
+import {
+  auditFloorIntegrity,
+  computeRouteFloor,
+  materializeFloor,
+  runExplorationQueue,
+  type ExplorationOutcome,
+  type FloorIntegrityFinding,
+  type RouteFloor,
+} from "../preflight.ts";
 import {
   beginAttemptFor,
   claimRouteTask,
@@ -368,6 +386,17 @@ export interface ShadowRunResult {
    */
   readonly omissionVerdict: ReturnType<typeof evaluateCompletion>;
   readonly floor: RouteFloor;
+  /**
+   * What the exploration queue actually did. One entry per speculative
+   * experiment on the floor — never fewer, or the queue would be a list nothing
+   * consumed.
+   */
+  readonly exploration: readonly ExplorationOutcome[];
+  /**
+   * Structural findings against the materialised floor. MUST be empty: a
+   * non-empty list means a required first-party surface was dropped or demoted.
+   */
+  readonly floorIntegrity: readonly FloorIntegrityFinding[];
 }
 
 function digestFile(path: string): string {
@@ -410,10 +439,29 @@ export async function runPimaShadow(input: ShadowRunInput): Promise<ShadowRunRes
   });
 
   const item0 = pimaFutureMeetingsWorkItem(clock.start);
-  const { item, routeTasks } = materializeFloor(item0, floor, clock.start);
+  const { item, routeTasks, explorationTasks } = materializeFloor(item0, floor, clock.start);
+
+  /*
+   * THE GUARD RUNS BEFORE ANY WALK, and it reads no disposition.
+   *
+   * A required first-party surface that got dropped or demoted must be caught
+   * by the SHAPE of the floor, not by noticing later that a count looked odd.
+   * Running it here means no speculative success can ever have influenced it.
+   */
+  const floorIntegrity = auditFloorIntegrity({
+    floor,
+    adapterRoutes: PIMA_ADAPTER_ROUTES,
+    item,
+    routeTasks: [...routeTasks, ...explorationTasks],
+  });
 
   await registerWorkItem(input.repos, item, clock.start);
-  for (const task of routeTasks) await registerRouteTask(input.repos, task, clock.start);
+  // BOTH queues are registered. The exploration queue is real, durable, owed
+  // work; keeping it out of the repository would be the drop this split exists
+  // to avoid.
+  for (const task of [...routeTasks, ...explorationTasks]) {
+    await registerRouteTask(input.repos, task, clock.start);
+  }
 
   /* ---- 2. Walk every route we hold recorded evidence for ----------------- */
 
@@ -586,6 +634,47 @@ export async function runPimaShadow(input: ShadowRunInput): Promise<ShadowRunRes
     recordedAttempts.push(toRecordedAttempt(outcome.attempt.value, routeId));
   }
 
+  /* ---- 2c. THE EXPLORATION QUEUE IS RUN, NOT LISTED ---------------------- */
+
+  /*
+   * Every speculative experiment on the floor is offered to an executor, and
+   * every one comes back with a disposition or a NAMED reason it could not be
+   * walked here yet.
+   *
+   * This run reads recorded bytes (`retrievalMode`), and no bytes were ever
+   * recorded for these techniques against this publisher — several of them are
+   * not retrieval routes at all but reasoning disciplines (`reconciled-is-not-
+   * complete`, `prove-the-reader-before-believing-a-zero`) with nothing to
+   * fetch. So the honest result for each is UNTESTED with the reason stated,
+   * and NO disposition is written. Writing `WALKED_NO_YIELD` here would be a
+   * fabricated walk, and it would convert "we have no way to run this" into
+   * "this found nothing" — about a government we never asked.
+   *
+   * The tasks therefore stay outstanding and the obligation stays open on them.
+   * That is the frontier, reported as a frontier.
+   */
+  const exploration = await runExplorationQueue(floor, explorationTasks, async (route) => {
+    if (!(route.routeId in ROUTE_FIXTURES)) {
+      return {
+        disposition: null,
+        reason:
+          `no recorded bytes exist for "${route.label}" against ${route.target}, and this run ` +
+          "reads recorded bytes rather than re-fetching. The experiment is UNTESTED here: a " +
+          "statement about our capability, carrying no claim about the publisher.",
+      };
+    }
+    if (!(route.routeId in ROUTE_PLAN)) {
+      return {
+        disposition: null,
+        reason:
+          "bytes are recorded for this route but no walk plan exists for it — UNTESTED, and a " +
+          "disposition invented to fill the gap would be a fabricated walk",
+      };
+    }
+    const plan = ROUTE_PLAN[route.routeId];
+    return { disposition: plan.disposition, reason: plan.note };
+  });
+
   /* ---- 3. The two completion evaluations --------------------------------- */
 
   const validations: ValidationRecord[] = [
@@ -752,7 +841,7 @@ export async function runPimaShadow(input: ShadowRunInput): Promise<ShadowRunRes
     },
   };
 
-  return { record, omissionVerdict, floor };
+  return { record, omissionVerdict, floor, exploration, floorIntegrity };
 }
 
 /** ------------------------------------------------------------- helpers */

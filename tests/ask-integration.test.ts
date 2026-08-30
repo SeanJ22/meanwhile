@@ -203,8 +203,22 @@ test("ASK-05: the topic sweep survived the move, with its scope and its denomina
   assert.match(route, /agendaTopicEvidence\(\{/, "the one engine runs the sweep");
   assert.match(
     route,
-    /subject\?\.kind === "BODY"\s*\?\s*\{ meetings: meetings\.filter/,
+    /subject\?\.kind === "BODY"\s*\?\s*\{ meetings: meetingsForBody\(/,
     "a bound body must NARROW the sweep, not merely coexist with it",
+  );
+  /*
+   * **AND IT MUST NARROW ON THE BODY, NOT ON THE GEOGRAPHY.** (2026-08-29.)
+   *
+   * The assertion above passed throughout the Pima defect: the sweep WAS
+   * narrowed, to `m.ocdId === subject.id`, which on a division carrying two
+   * governments narrows to the wrong set rather than to none. "Narrowed" and
+   * "narrowed correctly" are different claims and only the second is worth
+   * guarding, so the rule the repair turns on is pinned here too.
+   */
+  assert.match(
+    route,
+    /function meetingsForBody\([\s\S]*?bound\.level !== "BODY"[\s\S]*?m\.bodyId === bound\.id/,
+    "the body sweep must select on bodyId — selecting on ocdId is the Pima defect",
   );
 });
 
@@ -660,7 +674,10 @@ test("the grounded route prints sittings through the shared formatter", () => {
    ══════════════════════════════════════════════════════════════════════ */
 
 test("CONTACTS: Vail's board and superintendent come back, each with a source", () => {
-  const contacts = contactsForBody(VAIL, "Vail Unified District");
+  const contacts = contactsForBody(
+    { bodyId: `${VAIL}#board`, ocdId: VAIL, divisionType: "school_district" },
+    "Vail Unified District",
+  );
   assert.ok(contacts.length >= 5, `expected the Vail roster, got ${contacts.length}`);
   for (const contact of contacts) {
     assert.ok(contact.sourceUrl, `${contact.name} must carry the record it was read from`);
@@ -678,8 +695,9 @@ test("CONTACTS: Vail's board and superintendent come back, each with a source", 
 });
 
 test("CONTACTS: nothing is invented for a body whose roster we do not hold", () => {
+  const unheld = "ocd-division/country:us/state:az/school_district:not_a_real_district";
   const contacts = contactsForBody(
-    "ocd-division/country:us/state:az/school_district:not_a_real_district",
+    { bodyId: `${unheld}#board`, ocdId: unheld, divisionType: "school_district" },
     "Nowhere Unified",
   );
   assert.deepEqual(contacts, [], "an unheld roster is an empty answer, never a plausible one");

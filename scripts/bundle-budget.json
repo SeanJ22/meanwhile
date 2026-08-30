@@ -90,11 +90,11 @@
   "serverTrace": {
     "appManifest": {
       "what": "Files traced into the largest manifest under .next/server/app — the routes that carry OUR code. A COUNT, not bytes. This is the number R23 blew up to 2554 and 2567 when a runtime-computed path made Turbopack trace the whole project, tests/ included.",
-      "largestManifestFiles": 195,
+      "largestManifestFiles": 221,
       "largest": "server/app/api/meetings/route.js.nft.json",
-      "ceiling": 220,
+      "ceiling": 230,
       "ceilingUnit": 10,
-      "ceilingNote": "The cap for a baseline of 195: floor(195 * 1.15 / 10) * 10. It was 240 until 2026-08-18 (g17), justified by /api/meetings legitimately tracing public/geo/** through outputFileTracingIncludes — real, but it is a reason for the BASELINE to move when a state is onboarded, not a reason for the ceiling to sit above the rule. Onboarding a state now re-measures 195 and records the boundary files that joined, which is the record that was previously being skipped.",
+      "ceilingNote": "RE-MEASURED 2026-08-29 from 195 to 221, and the ceiling from 220 to 230. The baseline had drifted to exactly 220 against a 220 ceiling — ZERO headroom — so the next commit to change anything server-side was going to refuse the build whatever it was, and the one that did was not the one at fault. WHAT ACTUALLY JOINED, measured by diffing this manifest against a full build of origin/main at 2be8e854 rather than inferred: the root server chunk split from one emitted file into two — +chunks/[root-of-the-server]__0g66kjr._.js and +chunks/[root-of-the-server]__0gnssvy._.js against -chunks/[root-of-the-server]__096q_35._.js. NOT ONE REPO FILE JOINED. Every one of this route's 83 unique repo files is the same file it traced before; there is no data/outcomes, no lib/outcomes and no lib/sources/legistar anywhere in it, which was checked by name because the Ask route's import of the outcome store had just caused the R23 failure this budget exists to catch (4,532 files, repaired in the same commit by making the store's read a literal). So this is Turbopack chunk granularity, not traced breadth, and 230 is the SMALLEST readable unit above the new measurement rather than the 250 the cap would have allowed: floor(221 * 1.15 / 10) * 10 = 250, and a ceiling tighter than the cap needs no reason. The previous note's rule still governs — a real change moves the BASELINE and records what joined; the headroom is not where a real change gets absorbed.",
       "modeIndependent": "Measured identical in default and standalone mode on 2026-08-18. If these ever diverge, the divergence is the finding."
     },
     "frameworkRuntime": {

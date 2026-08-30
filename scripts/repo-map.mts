@@ -308,7 +308,7 @@ function buildSections(files: string[]): Section[] {
       const libFiles = files.filter((f) => f.startsWith("lib/") && /\.(ts|tsx)$/.test(f));
       const byModule = new Map<string, Map<string, string[]>>();
       for (const f of libFiles) {
-        const module = f.split("/").length > 2 ? f.split("/").slice(0, 2).join("/") : "lib";
+        const moduleDir = f.split("/").length > 2 ? f.split("/").slice(0, 2).join("/") : "lib";
         const text = readFileSync(join(ROOT, f), "utf8");
         const names = new Set<string>();
         for (const m of text.matchAll(
@@ -325,8 +325,8 @@ function buildSections(files: string[]): Section[] {
             if (/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(name)) names.add(name);
           }
         }
-        if (!byModule.has(module)) byModule.set(module, new Map());
-        byModule.get(module)!.set(f, [...names].sort());
+        if (!byModule.has(moduleDir)) byModule.set(moduleDir, new Map());
+        byModule.get(moduleDir)!.set(f, [...names].sort());
       }
       const modules = [...byModule.keys()].sort();
       let totalSymbols = 0;

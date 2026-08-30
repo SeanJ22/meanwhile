@@ -1,6 +1,6 @@
 # Intake tripwire report
 
-Generated 2026-08-29T15:17:38.006Z by `scripts/intake-tripwire.mts` (T08 1f).
+Generated 2026-08-30T14:58:10.473Z by `scripts/intake-tripwire.mts` (T08 1f).
 Everything in this file is a date, a count, or a threshold — never an
 identifier. Flags are flagged, never auto-acted-on: the author decides.
 

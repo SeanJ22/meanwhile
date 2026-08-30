@@ -1,0 +1,129 @@
+{
+  "session": "2026-08-30 Session A — architecture reconciliation, contracts, and scaffolds: adopt R-A..R-I under canonical IDs, generated constitution view, frontier, scheduler-provider decision, ReaderQuestion/ControlFact/VisualAcceptanceCheck schemas, suite and control-set scaffolds, generated status ledger, generated repo inventory joined to the mirror, and the JOB-class Needs-Sean reroute",
+  "integrationOwner": "main-session",
+  "workstreams": [
+    {
+      "id": "ws-gov",
+      "title": "Work Items 1-3 — canonical ruling adoptions (R-0210..R-0220), generated constitution view, frontier.md, scheduler persistence-provider decision",
+      "dependsOn": [],
+      "dependencyReasons": {},
+      "owns": {
+        "paths": [
+          "lib/governance/adoptions.ts",
+          "lib/governance/claims.ts",
+          "scripts/governance-compile.mts",
+          "scripts/governance-check.mts",
+          "tests/governance-atomicity.test.ts",
+          "docs/governance/constitution.md",
+          "docs/frontier.md",
+          "docs/governance/ledger.jsonl",
+          "docs/rulings.md",
+          "docs/governance/policies",
+          "docs/governance/current-decisions.md",
+          "docs/governance/history.md",
+          "docs/governance/index.json"
+        ],
+        "data": ["governance-ledger"]
+      },
+      "produces": ["canonical-ruling-ids", "generated-constitution-view", "provider-decision-record"],
+      "consumes": [],
+      "executable": true,
+      "disposition": "IN_PROGRESS",
+      "concurrencyEvidence": ["executed by the main session while ws-contract and ws-generated run as parallel worktree agents"],
+      "executionArtifacts": []
+    },
+    {
+      "id": "ws-contract",
+      "title": "Work Items 4-5 — ReaderQuestion/ControlFact/VisualAcceptanceCheck schemas, health contracts, reader-suite and control-set scaffolds with honest zero-states and the seeded isolation-failure proof",
+      "dependsOn": ["ws-gov"],
+      "dependencyReasons": {
+        "ws-gov": {
+          "kind": "DEFINES_SCOPE",
+          "reason": "The schemas implement the vocabulary of the rulings ws-gov adopts (failure classes, proof classes, contract states). Execution proceeds in parallel because the operative ruling text is fixed verbatim by the author's Session A brief; only the canonical ID assignment is pending, and no schema file references a ruling number."
+        }
+      },
+      "owns": {
+        "paths": [
+          "lib/health",
+          "scripts/reader-suite.mts",
+          "scripts/control-set.mts",
+          "scripts/pilot-health.mts",
+          "tests/control-isolation.test.ts",
+          "tests/reader-question.test.ts",
+          "tests/health-contracts.test.ts",
+          "tests/visual-acceptance.test.ts",
+          "data/health"
+        ],
+        "data": ["health-run-records"]
+      },
+      "produces": ["health-schemas", "suite-scaffold", "control-set-plumbing"],
+      "consumes": ["canonical-ruling-ids"],
+      "executable": true,
+      "disposition": "IN_PROGRESS",
+      "concurrencyEvidence": ["parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session"],
+      "executionArtifacts": []
+    },
+    {
+      "id": "ws-generated",
+      "title": "Work Items 6-7 — generated status ledger and generated repo inventory, handoff --check byte-freshness, mirror join through scripts/mirror-set.mjs",
+      "dependsOn": ["ws-gov"],
+      "dependencyReasons": {
+        "ws-gov": {
+          "kind": "OWNED_DOMAIN_OVERLAP",
+          "reason": "Both edit lib/ops/generated-register.ts, package.json scripts, and tests/generator-digests.json. Resolved by worktree isolation plus single-owner integration: the integration owner reconciles the register and re-records digests ONCE on the integrated head."
+        }
+      },
+      "owns": {
+        "paths": [
+          "scripts/status-ledger.mts",
+          "scripts/repo-map.mts",
+          "lib/ops/status-ledger.ts",
+          "docs/status-ledger.md",
+          "docs/repo-inventory.md",
+          "scripts/mirror-set.mjs",
+          "tests/mirror-code.test.ts",
+          ".gitattributes",
+          "scripts/handoff.mjs",
+          "docs/state.md",
+          "README.md"
+        ],
+        "data": []
+      },
+      "produces": ["generated-status-ledger", "generated-repo-inventory", "handoff-check-freshness"],
+      "consumes": [],
+      "executable": true,
+      "disposition": "IN_PROGRESS",
+      "concurrencyEvidence": ["parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session"],
+      "executionArtifacts": []
+    },
+    {
+      "id": "ws-tracker",
+      "title": "Work Item 8 — JOB-class Needs-Sean reroute: RULING-79 closure of the dispatch-delay and failed-run rows under the adopted freshness-clock ruling, operational-incident WorkItems in the durable control plane, and the watcher rerouted at the source",
+      "dependsOn": ["ws-gov"],
+      "dependencyReasons": {
+        "ws-gov": {
+          "kind": "PRODUCES_CONSUMES",
+          "reason": "The RULING 79 closure path (tracker:move --ruling) validates the ruling number against docs/governance/ledger.jsonl, so the canonical ID of the adopted freshness-clock ruling must exist in the compiled ledger before any JOB row can be closed. Serialized behind ws-gov for exactly this handoff; nothing else blocks it."
+        }
+      },
+      "owns": {
+        "paths": [
+          "docs/tracker-working.csv",
+          "docs/tracker-resolved.csv",
+          "docs/tracker.md",
+          "docs/log.md",
+          "scripts/watch-workflows.mts",
+          "tests/watch-workflows.test.ts",
+          "data/control-plane/incidents"
+        ],
+        "data": ["tracker-stores", "control-plane-incidents"]
+      },
+      "produces": ["needs-sean-reroute", "operational-incident-workitems"],
+      "consumes": ["canonical-ruling-ids"],
+      "executable": true,
+      "disposition": "PLANNED",
+      "concurrencyEvidence": [],
+      "executionArtifacts": []
+    }
+  ]
+}

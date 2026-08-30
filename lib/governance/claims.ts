@@ -81,7 +81,11 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
   {
     key: "refresh.cadence",
     question: "How often do scheduled refreshes run?",
-    values: ["per-source-cron-daily", "orchestrated-daily-per-source-rate"],
+    values: [
+      "per-source-cron-daily",
+      "orchestrated-daily-per-source-rate",
+      "derived-from-reader-impact-and-change-rate",
+    ],
   },
   {
     key: "tracker.needs_sean_closure",
@@ -185,6 +189,56 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question:
       "What happens to public-record text already held when its route is later found disallowed?",
     values: ["purge-on-disallow", "keep-and-use-with-replacement-obligation"],
+  },
+  {
+    key: "reader.health_contract",
+    question: "What is the top-line health contract of the reader dimension?",
+    values: ["none-declared", "answerability-suite-with-typed-diagnostics"],
+  },
+  {
+    key: "truth.control_standard",
+    question: "How is answer truthfulness measured after activation?",
+    values: ["pre-activation-test-pass", "permanent-unannounced-control-set"],
+  },
+  {
+    key: "scheduler.orchestration",
+    question: "Does the freshness scheduler build on an external orchestration service?",
+    values: ["external-orchestration-service", "existing-control-plane-interfaces"],
+  },
+  {
+    key: "project.abstraction_investment",
+    question: "When is new multi-project abstraction built?",
+    values: ["speculatively-ahead-of-need", "second-project-first"],
+  },
+  {
+    key: "activation.external_workflows",
+    question: "May agents execute external workflows such as records requests and communications?",
+    values: ["level-5-planned", "removed-from-architecture"],
+  },
+  {
+    key: "status.claim_standard",
+    question: "How is a current capability or readiness claim recorded?",
+    values: ["hand-asserted", "generated-with-proving-check"],
+  },
+  {
+    key: "health.pilot_rollup",
+    question: "What makes the pilot read healthy?",
+    values: ["any-single-contract", "three-contracts-one-rollup"],
+  },
+  {
+    key: "freshness.clock_authority",
+    question: "What is the authoritative freshness clock?",
+    values: ["github-scheduled-workflows", "runtime-scheduler-derived-due"],
+  },
+  {
+    key: "governance.constitution_view",
+    question: "Where does the autonomous-system constitution live?",
+    values: ["hand-maintained-document", "generated-view-of-the-ledger"],
+  },
+  {
+    key: "scheduler.persistence_provider",
+    question: "Which persistence provider holds Level-2 scheduling authority?",
+    values: ["filesystem-provider", "postgres-provider-neutral-interfaces"],
   },
 ] as const;
 

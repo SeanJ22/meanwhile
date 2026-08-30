@@ -66,6 +66,7 @@ test("every generated governance view reproduces byte-for-byte", () => {
       "docs/governance/index.json",
       "docs/governance/current-decisions.md",
       "docs/governance/history.md",
+      "docs/governance/constitution.md",
       "docs/rulings.md",
       "docs/governance/policies/discovery.md",
       "docs/governance/policies/meta-governance.md",

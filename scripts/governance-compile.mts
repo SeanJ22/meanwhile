@@ -24,6 +24,7 @@ import { fileURLToPath } from "node:url";
 
 import {
   CLAIM_ASSIGNMENTS,
+  CLAIM_RETIREMENTS,
   NEW_DECISIONS,
   REMEDIATION_DATE,
   STATUS_RESOLUTIONS,
@@ -168,6 +169,28 @@ for (const res of STATUS_RESOLUTIONS) {
     r.routingNotes.push(`status resolved to ${res.status} by ${res.by}: ${res.why}`);
   }
   applied.statuses += 1;
+}
+
+// --- 3c. claim retirements ---------------------------------------------------
+// RUN AFTER ADOPTION AND RESOLUTION, for the same reason 3b runs after 3: the
+// ruling that takes a slot over is frequently adopted in the same compile, and
+// the existence check must be able to see it. A retirement removes ONLY the
+// claim from the amended record — the semantic index stops carrying two answers
+// for one question — while the record's body, status and history stay whole.
+// `findClaimConflicts` counts AMENDED records as current, so an amendment that
+// moves a slot MUST retire the old claim or report itself as a contradiction.
+// The removal is recorded in the record's routing notes; nothing is silent.
+for (const ret of CLAIM_RETIREMENTS) {
+  const r = byId.get(ret.id);
+  if (!r) throw new Error(`claim retirement targets a record that does not exist: ${ret.id}`);
+  if (!byId.has(ret.by)) throw new Error(`claim retirement ${ret.id} cites missing ${ret.by}`);
+  const before = r.claims.length;
+  r.claims = r.claims.filter((c) => c.key !== ret.key);
+  const note = `claim retired ${ret.key} -> ${ret.by}: ${ret.why}`;
+  if (!r.routingNotes.some((n) => n.startsWith(`claim retired ${ret.key}`))) {
+    r.routingNotes.push(note);
+  }
+  if (before !== r.claims.length) applied.claims += 1;
 }
 
 
@@ -465,6 +488,29 @@ for (const domain of DOMAINS) {
   }
   writeFileSync(join(POLICY_DIR, `${domain}.md`), out.join("\n"), "utf8");
 }
+
+// --- 6. the autonomous-system constitution ----------------------------------
+// GENERATED. The view IS the body of the adopting record (RULING 219), verbatim
+// plus a trailing newline — so the committed file byte-matches the adopted text
+// by construction, and changing the constitution means adopting a later ruling
+// that supersedes the current holder. Deliberately NOT assembled from pieces:
+// a view stitched together here would make this script a second author of the
+// constitution's wording, which is the dual write again. The holder is found by
+// claim, not by hard-coded id, so a superseding ruling takes the view with it.
+const constitutionHolder = records.find(
+  (r) =>
+    CURRENT_STATUSES.includes(r.status) &&
+    r.claims.some(
+      (c) => c.key === "governance.constitution_view" && c.value === "generated-view-of-the-ledger",
+    ),
+);
+if (!constitutionHolder) {
+  throw new Error(
+    "no current record claims governance.constitution_view = generated-view-of-the-ledger; " +
+      "the constitution view has no source and cannot be generated",
+  );
+}
+writeFileSync(join(GOV, "constitution.md"), constitutionHolder.body + "\n", "utf8");
 
 console.log(`historical classifications  ${classified}`);
 console.log(`constitution blocks         ${constitutionImported}`);

@@ -64,6 +64,11 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    path: "docs/governance/constitution.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
     path: "docs/governance/current-decisions.md",
     command: "corepack pnpm governance:compile",
     pure: true,

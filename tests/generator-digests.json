@@ -150,8 +150,8 @@
     "regeneratedOn": "2026-08-30"
   },
   "docs/repo-inventory.md": {
-    "digest": "e6f1c97afbdc990696bca07d0fcbccab93dcbd44129be3cc387beecc90a707d0",
-    "files": 7,
+    "digest": "12fec9854e9b97957d4221af5cd500392188652f1d828b3ae95e20a2d41f4c61",
+    "files": 8,
     "entry": "scripts/repo-map.mts",
     "regeneratedOn": "2026-08-30"
   },

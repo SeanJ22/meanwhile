@@ -46,6 +46,13 @@ import { GATES } from "./gates.mjs";
  * distinction structural instead of textual.
  */
 import { GOVERNED_METHOD_WRITER } from "../lib/method/retired-writers.ts";
+/*
+ * The file list is the WOULD-BE-COMMITTED set, through the shared path
+ * lib/ops/repo-files.ts (NH Hunt 3): tracked files plus new files git does not
+ * ignore. A tracked-only listing cannot see the change it is being run to
+ * describe, and tests/gate-ordering.test.ts refuses that shape by name.
+ */
+import { filesThatWouldBeCommitted } from "../lib/ops/repo-files.ts";
 import { MIRRORED_DOCS } from "./mirror-set.mjs";
 import { parseCsv, today } from "./doc-dates.mjs";
 import { generatedAtEastern } from "./generated-at.mjs";
@@ -84,13 +91,12 @@ function annotateFutureDates(line: string, todayStr: string): string {
   );
 }
 
-function git(...args: string[]): string {
-  return execFileSync("git", args, { cwd: ROOT, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
-}
-
-/** Tracked files, sorted. Untracked files are INVISIBLE to this instrument. */
-function trackedFiles(): string[] {
-  return git("ls-files", "-z").split("\0").filter(Boolean).sort();
+/**
+ * The would-be-committed set, sorted. Tracked files plus new files git does
+ * not ignore; files the repo IGNORES are invisible to this instrument.
+ */
+function repoFiles(): string[] {
+  return filesThatWouldBeCommitted({ cwd: ROOT }).sort();
 }
 
 interface Section {
@@ -137,10 +143,11 @@ function buildSections(files: string[]): Section[] {
     section("1. File tree with per-file line counts", (out) => {
       out.push("");
       out.push(
-        "Method: `git ls-files` — the TRACKED set. **Untracked files are invisible to this " +
-          "instrument**; a file passes every repo-wide sweep until it is git-added. " +
-          "Excluded here: `pnpm-lock.yaml` (lockfile). `node_modules/`, `.next/` and " +
-          "`.git/` are untracked and therefore never in `git ls-files` output. Binary " +
+        "Method: the would-be-committed set from `filesThatWouldBeCommitted()` in " +
+          "`lib/ops/repo-files.ts` (git's cached + others, minus what git ignores) — so a " +
+          "new file appears here before it is staged. **Files the repo IGNORES are " +
+          "invisible to this instrument** — `node_modules/`, `.next/`, `.git/` and other " +
+          "build output never appear. Excluded here: `pnpm-lock.yaml` (lockfile). Binary " +
           "files (extension or NUL-byte sniff) report BYTES instead of lines.",
       );
       out.push("");
@@ -193,7 +200,7 @@ function buildSections(files: string[]): Section[] {
     section("2. Route inventory", (out) => {
       out.push("");
       out.push(
-        "Method: every tracked `app/**/route.ts` and `app/**/page.tsx`, URL path derived by " +
+        "Method: every inventoried `app/**/route.ts` and `app/**/page.tsx`, URL path derived by " +
           "stripping the `app/` prefix and the filename. Dynamic segments render as written " +
           "(`[param]`).",
       );
@@ -210,7 +217,7 @@ function buildSections(files: string[]): Section[] {
       for (const f of pages) out.push(`| \`${urlOf(f) || "/"}\` | \`${f}\` | page |`);
       out.push("");
       if (routes.length + pages.length === 0) {
-        out.push("0 found — searched every tracked file matching `app/**/route.ts` and `app/**/page.tsx`.");
+        out.push("0 found — searched every inventoried file matching `app/**/route.ts` and `app/**/page.tsx`.");
         out.push("");
       }
     }),
@@ -222,7 +229,7 @@ function buildSections(files: string[]): Section[] {
       out.push("");
       const AREAS = ["registry", "db", "ask", "sources", "coverage", "routing"] as const;
       out.push(
-        "Method: for each tracked `.tsx` under `app/` and `components/`, list its import " +
+        "Method: for each inventoried `.tsx` under `app/` and `components/`, list its import " +
           "specifiers that resolve into `lib/registry`, `lib/db`, `lib/ask`, `lib/sources`, " +
           "`lib/coverage` or `lib/routing` (via `@/` aliases or relative paths). **Limits, " +
           "stated:** this sees direct imports only — a component fed civic data through props, " +
@@ -269,14 +276,14 @@ function buildSections(files: string[]): Section[] {
         if (mods.size > 0) rows.push({ file: f, mods: [...mods].sort() });
       }
       out.push(
-        `**Scanned ${tsx.length} tracked .tsx file(s) under app/ and components/; ` +
+        `**Scanned ${tsx.length} inventoried .tsx file(s) under app/ and components/; ` +
           `${rows.length} import at least one of the six civic-data lib areas.**`,
       );
       out.push("");
       if (rows.length === 0) {
         out.push(
-          "0 found — searched every tracked .tsx under app/ and components/ for imports into " +
-            "the six lib areas named above.",
+          "0 found — searched every inventoried .tsx under app/ and components/ for imports " +
+            "into the six lib areas named above.",
         );
       } else {
         out.push("| component | civic-data imports |");
@@ -369,7 +376,7 @@ function buildSections(files: string[]): Section[] {
       out.push(`**${tables.length} table(s) declared via pgTable across ${schemaFiles.length} lib/db file(s):**`);
       out.push("");
       if (tables.length === 0) {
-        out.push("0 found — searched every tracked lib/db/*.ts for `pgTable(`.");
+        out.push("0 found — searched every inventoried lib/db/*.ts for `pgTable(`.");
       } else {
         out.push("| table | declared in |");
         out.push("| --- | --- |");
@@ -696,7 +703,7 @@ function buildSections(files: string[]): Section[] {
     section("13. Test inventory", (out) => {
       out.push("");
       out.push(
-        "Method: every tracked file under `tests/`, with a mechanical count of `test(` and " +
+        "Method: every inventoried file under `tests/`, with a mechanical count of `test(` and " +
           "`it(` call tokens per `.test.ts` file. **Limits, stated:** the token count includes " +
           "subtests (`t.test(`) and any occurrence inside a string or comment, and `node --test` " +
           "reports its own authoritative totals — this column is an index, not the suite's " +
@@ -779,7 +786,7 @@ function buildSections(files: string[]): Section[] {
 /* -------------------------------------------------------------- assembly --- */
 
 function renderBody(todayStr: string): string {
-  const files = trackedFiles();
+  const files = repoFiles();
   const sections = buildSections(files);
   const out: string[] = [];
 

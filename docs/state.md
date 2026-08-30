@@ -4,7 +4,9 @@ Written for someone opening this repository with no prior context. It describes
 what is real, what is scaffolding, why things are the way they are, and what is
 still unresolved.
 
-Last updated: 2026-08-29 — **The application retrieved the wrong government, and every check downstream was green.** The exact-body-identity and answerability session; its record is the LAST section of this file.
+Last updated: 2026-08-29 — **Our own empty store was being read out to readers as a fact about a government, in the reader path and in the instrument that measures it.** The acquisition-doctrine session; its record is the LAST section of this file.
+
+Previous: 2026-08-29 — **The application retrieved the wrong government, and every check downstream was green.** The exact-body-identity and answerability session.
 
 Previous: 2026-08-28 — **The repository already had most of the architecture's semantics and almost none of its runtime.** The overnight control-plane build; See the control-plane section.
 
@@ -22423,3 +22425,190 @@ layer committing the exact error the constitution forbids the collection layer
 from committing** — asserting an absence it had not established, and rendering a
 wall as an emptiness. An instrument is not exempt from the law it enforces, and
 RULING 193 already said so.
+
+## 2026-08-29 — the acquisition doctrine, and our gaps stated as ours
+
+**The session was asked to make a doctrine permanent so the author never has to
+state it again, and the doctrine turned out to already be violated in two places
+nobody was looking.**
+
+### What the author ruled, and how it landed
+
+Five rulings, adopted from an explicit current author directive. The directive's
+own instruction was followed literally — *preserve one coherent current
+statement of each rule; amend where semantics overlap; add new rulings only for
+genuinely new semantic content* — so this is five rulings rather than the five
+laws the directive names, and one of those laws got no number at all.
+
+- **RULING 205** — if a public civic record exists, get it. The obligation is a
+  durable object that outlives every route disposition taken against it and
+  outlives the worker. Three closes and no fourth: acquired and
+  reader-answerable, affirmative source-backed evidence about the RECORD ITSELF,
+  or human/offline access required with the obligation still open. Extends
+  RULING 170 and RULING 184, which say what a session may not CONCLUDE; this
+  says what SURVIVES.
+- **RULING 206** — the vendor is not the record.
+  `GOVERNMENT → RECORD → REPRESENTATION(S) → ROUTE(S)`. Extends RULING 182:
+  that one keeps permission and transport apart, this keeps representation and
+  record apart, which is the same collapse one level up.
+- **RULING 207** — one successful route never collapses the source universe; an
+  adapter is a route portfolio, not one fetch function. Extends RULING 178.
+- **RULING 208** — an access escalation is a parallel lane. **Amends RULING
+  146**, which keeps the SESSION going past a Needs Sean row; this extends that
+  to the OBLIGATION the row is about, and gives the row a required content
+  shape.
+- **RULING 209** — a permission rule binds the next fetch, never possession of
+  what was already published. This is the general form of the author's NH286
+  decision, and it is what closed that row under RULING 79.
+
+The directive's LAW E was almost entirely RULING 177 and RULING 178 already. Its
+one new clause — that a spent portfolio obliges DISCOVERY of the next method
+rather than closing the obligation — lives inside 205 and 207, where it has
+operative force, rather than in a fifth number that would have restated two
+existing rules.
+
+**The doctrine is now in three places and a guard says so.**
+`docs/governance/ledger.jsonl` is canonical, `CLAUDE.md` carries it between
+the transparency mandate and the cross-cutting rules, and `AGENTS.md` carries
+the agent-facing mirror as its first project-owned content.
+
+### The guard exists because nothing else could catch this
+
+`governance:compile` deliberately does NOT re-derive constitutional records
+from the live `CLAUDE.md`. That mirror behaviour was a real defect: it silently
+deleted the transparency mandate and the ladder the moment the constitution was
+shortened, and it was removed for exactly that reason. **The consequence nobody
+had written down is that a session can delete law from `CLAUDE.md` and every
+governance gate stays green**, because deletion is not duplication and the
+ledger is untouched. `AGENTS.md` is worse — it is rewritten by a tool this
+repository does not own.
+
+So `tests/acquisition-doctrine.test.ts` reads all three and asserts the
+doctrine survives in each, plus a DRIFT check in both directions: a mantra the
+mirror states that current law does not is an agent obeying a rule nobody
+adopted, and a mantra law states that the mirror omits is an agent never meeting
+it. **All five red controls were proved by mutation** — deleting the CLAUDE.md
+section, softening one clause, deleting the AGENTS.md block, pushing content
+ahead of it, and dropping a mantra from law while the mirror kept it — each
+reverted with the tree verified byte-clean afterwards.
+
+### The defect the doctrine was written about, found twice
+
+**In the reader path.** `app/api/ask/grounded/route.ts` reached
+`whose: "THEIRS"` and *"No agenda has been published for that … meeting yet"*
+from `forMeeting.length === 0`. That condition measures ONE thing and it is a
+thing about us: this product holds zero agenda documents keyed to that meeting.
+The corpus carries **34 bodies with a future sitting and no document at all**,
+and every one of them was being reported to readers as a government that had not
+published. `tests/ask-body-agenda.test.ts` regex-pinned the sentence as
+correct, so the suite was protecting it.
+
+Live on production before the fix, asked *"What is on the Pima County Board of
+Supervisors agenda?"* — the body id resolved correctly, and the answer said
+*"The county has not published an agenda for that meeting yet."* After:
+`publication: UNKNOWN`, `acquisition: NOT_ACQUIRED`,
+`obligationOpen: true`, and *"We have not yet acquired the agenda for that …
+meeting. We are still looking for it."*
+
+**In the instrument that measures it.** `lib/answerability/stages.ts` had one
+block code in its `BLOCKS_ABOUT_THEM` group — `NO_DOCUMENT_URL_PUBLISHED` —
+and assigned it from `!obligation.agendaUrl`, an empty column in our own row.
+On the day it was found it was asserting that Pima County published no document
+for **14 of 30** Board sittings, on no evidence from Pima County at all. The
+doc comment explaining that the two must never print as one sentence was the
+thing licensing the collapse. It is now `NO_DOCUMENT_URL_HELD` and OURS, and
+the THEM group is reachable only from a first-party publisher observation of
+that exact sitting, inside a freshness window.
+
+**Neither of these is a new class.** Both are the render-default rule the
+constitution already carried, in code that was written to enforce it.
+
+### The outcome records existed and the reader could not reach them
+
+The Legistar Web API had already been proven to carry Pima's actions and
+per-person votes. The harvest lived in a probe script, and reader outcome
+answerability was **0 of 30 held sittings**. This session moved it into a
+durable store with exact canonical linkage and wired it into the evidence pack.
+
+Measured live and reproduced twice: **20 sittings, 1,360 agenda items, 525 with
+a recorded action, 2,083 per-person vote rows, 417 items with a roll call, 108
+acted items with no roll call.** Vote values are carried verbatim — **Aye 2,011,
+Nay 41, Recused 8, Not Present 23** — and a yes/no mapping would have destroyed
+72 real positions. **18 of 20 sittings now answer outcome questions.**
+
+Through the real handler: *"What did the Board decide at its last meeting?"*
+returns 58 `MEETING_ACTION` and 285 `MEETING_MEMBER_VOTE` records; *"How did
+they vote last time?"* returns 285 member votes and **zero action summaries**,
+because the class filter refuses them — the tally lives on the action record and
+only there, and one join between them is the difference between a real record
+and five fabricated positions.
+
+**And the class-level result is the one that matters.** The same route on Mesa
+returns **59 sittings, 874 agenda items, ZERO recorded actions and ZERO vote
+rows** — the outcome fields are on the wire and null on every row. *"Legistar is
+supported"* is not a safe sentence from one tenant.
+
+### The doctrine changed behaviour the day it was adopted
+
+Pima County's campaign-finance filing BODIES answer HTTP 401 on the one route
+anybody knew, and a prior session had recorded that honestly as a wall on a
+route rather than a statement about the filing — and stopped. Under RULING 205
+that leaves the obligation open, so it was worked: all **59 API routes were
+enumerated out of the publisher's own app bundle**, and
+`/advancedsearch/contributions/{customerId}` answered **500** rather than 401,
+with a stack trace naming `GetSubdomain(url)` throwing on a null URI. The API
+has its own anonymous website-user path and needed only the tenant subdomain,
+which it reads from the `Origin` header. With it set: **HTTP 200 at 1,090,303
+bytes — 900 contribution rows and 584 distribution rows**, no credential, no
+login, no bypass. *Citizens of Vail for Education* received \$5,000 from Concord
+General Contracting on 2025-12-17.
+
+900 was proved not to be a cap by partitioning against the server (2025:
+502 = 502, 2026: 368 = 368), because a truncated result cannot partition
+consistently.
+
+**A conflict was correctly refused rather than resolved.** The session brief
+asked for federal Schedule B and Schedule E records. `docs/sources.md` records
+those as gated behind the PB10/D23 election-law counsel review, and CLAUDE.md's
+precedence puts a session brief BELOW current policy. No Schedule B or E was
+walked and no live FEC call was made. The brief also assumed a missing API key;
+a real `FEC_API_KEY` exists and is wired, and DEMO_KEY would have been worse
+than the key rather than a substitute for it.
+
+### Six routes learned, and none of them is about Arizona
+
+Method version **55 → 61**, 116 routes → 122. Streamline's sitemap is a dated
+meeting inventory and its market is special districts, the thinnest layer in
+every state worked so far. BoardBook returns an entire archive on one
+unpaginated page — and its Minutes path is a client-rendered shell that strips
+to 757 bytes, so a parser pointed there reports every meeting as having empty
+minutes. The apex and `www` forms of a host are different origins: one
+answered 403 to four clients while the other served a 267-meeting archive. Two
+districts had migrated to `.gov` while an authoritative county GIS layer still
+published the dead host. A county has more than one filing officer. And a
+refused endpoint is answered by reading the publisher's own bundle.
+
+### What was found and deliberately not fixed
+
+**NH288.** A body's Ask subject name falls back to the bare division label for
+**14 of 78** bodies, so a reader is answered about *"that Pima meeting"*. The
+obvious fix is to use the corpus's own body name — and the corpus name is
+frequently a MEETING TITLE (`GOVERNING BOARD AGENDA SPECIAL MEETING`,
+`RTSD Board Meeting`), so substituting naively makes the reader text worse.
+The correct fix is registry data, not a heuristic over publisher-supplied
+titles.
+
+**NH289.** `release:freeze` was failing before this session started, and
+correctly: production serves the post-deploy observer's own data-only commit,
+which the workflow argues cannot happen because `data/ops/` is non-shipping.
+The classification is right; what is not established is that the cancel TAKES
+EFFECT, because every failure path in `scripts/netlify-ignore.mjs` builds by
+design. Diagnosing it properly needs the Netlify build log.
+
+**NH287** was re-measured rather than repaired: **114 of 116** method routes
+state zero typed applicability dimensions, all of them carry
+`portability: UNKNOWN`, and outcome jurisdiction is a free-form string mixing
+`az`, `nh`, `pilot-counties` and `az-pima-85641` in one field. The repair
+is a change to the method store, which another lane owned while it ran — two
+lanes rewriting one canonical store is refused by the parallel-execution rule
+rather than permitted by it.

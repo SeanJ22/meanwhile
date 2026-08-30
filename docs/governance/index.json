@@ -1,11 +1,11 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "e9ba32c962418763",
+  "snapshot": "f9fbe66f88e24e5f",
   "counts": {
-    "records": 241,
-    "current": 220,
-    "law": 193,
+    "records": 246,
+    "current": 225,
+    "law": 198,
     "decisions": 27,
     "historical": 21
   },
@@ -2867,7 +2867,7 @@
       ],
       "title": "RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_confirmed",
       "domain": "tracker-workflow",
       "adopted": "2026-08-25",
@@ -4132,6 +4132,161 @@
       "operativePolicy": "docs/governance/policies/shipping-ci.md",
       "claims": [],
       "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0205",
+      "aliases": [
+        "RULING 205",
+        "R205",
+        "R-205"
+      ],
+      "title": "RULING 205 — if a public civic record exists, get it: the obligation outlives the route and the worker",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "acquisition.obligation_closure",
+          "value": "acquired-evidenced-or-human-route"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0170"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0184"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0206",
+      "aliases": [
+        "RULING 206",
+        "R206",
+        "R-206"
+      ],
+      "title": "RULING 206 — the vendor is not the record, and a URL is not the record",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "acquisition.record_identity",
+          "value": "government-record-with-representations"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0182"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0207",
+      "aliases": [
+        "RULING 207",
+        "R207",
+        "R-207"
+      ],
+      "title": "RULING 207 — one successful route never collapses the source universe; an adapter is a route portfolio",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "discovery",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/discovery.md",
+      "claims": [
+        {
+          "key": "acquisition.representation_coverage",
+          "value": "every-material-representation"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0178"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0208",
+      "aliases": [
+        "RULING 208",
+        "R208",
+        "R-208"
+      ],
+      "title": "RULING 208 — an access escalation is a parallel lane, never a stop",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "tracker-workflow",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/tracker-workflow.md",
+      "claims": [
+        {
+          "key": "escalation.access_request",
+          "value": "parallel-never-blocking"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "amends",
+          "target": "R-0146",
+          "changed": "what a Needs Sean row leaves running. RULING 146 keeps the SESSION going past the row; this extends that to the OBLIGATION the row is about — an access escalation never closes, pauses or satisfies the underlying acquisition obligation — and it gives the row a required content shape, because a row that names no provider, mechanism, scope or unlocked capability cannot be acted on by the author it was written for",
+          "survives": "RULING 146 entire: nobody is watching, a question asked is hours lost, a decision genuinely the author's becomes a row and the session keeps going, no command may be capable of prompting, ambiguity resolves against the repo, and 'ran out of room' is not a blocker"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0190"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0209",
+      "aliases": [
+        "RULING 209",
+        "R209",
+        "R-209"
+      ],
+      "title": "RULING 209 — a permission rule binds the next fetch, never possession of what was already published",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "sources-licensing",
+      "adopted": "2026-08-29",
+      "operativePolicy": "docs/governance/policies/sources-licensing.md",
+      "claims": [
+        {
+          "key": "sources.held_artifact_retention",
+          "value": "keep-and-use-with-replacement-obligation"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0206"
+        }
+      ],
       "uncertain": [],
       "sourceRef": "lib/governance/adoptions.ts"
     },

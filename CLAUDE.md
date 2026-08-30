@@ -116,6 +116,75 @@ frequently deliberate, and this product exists to defeat it.
 
 ---
 
+## The acquisition doctrine
+
+*(Adopted 2026-08-29, the author's directive. RULING 205, RULING 206, RULING 207
+and RULING 208. Operative text: `docs/governance/policies/discovery.md`,
+`docs/governance/policies/sources-licensing.md`,
+`docs/governance/policies/tracker-workflow.md`. This is the transparency
+mandate's operative half — the mandate says go and get it; this says what that
+obliges, and the only three things that may ever end it.)*
+
+```
+IT EXISTS = GET IT
+VENDOR != RECORD                URL != RECORD
+ONE ROUTE SUCCESS != SOURCE UNIVERSE COMPLETE
+NEEDS SEAN != STOP
+EFFORT != EVIDENCE              EXHAUSTION != DISPOSITION
+THE WORKER MAY STOP; THE OBLIGATION DOES NOT
+```
+
+**If a public civic record exists, get it.** "Get it" is the whole chain —
+`DISCOVERED → ACQUIRED → EXTRACTED → NORMALIZED → CANONICALLY_LINKED →
+QUERY_RETRIEVABLE → READER_VERIFIED` — and **no upstream success implies a
+downstream one**. A route can fail; the record obligation does not. A route
+disposition closes a RouteTask and never closes the record obligation, so
+`ROUTE_BLOCKED → NO_SOURCE_FOUND → COMPLETE` is forbidden for a record known or
+strongly expected to exist. When the known portfolio is spent and the obligation
+is still open, the obligation is to find the next public-access method: having
+run out of KNOWN methods is not having run out of methods. (RULING 205.)
+
+**Three closes, and there is no fourth.** Acquired and reader-answerable;
+affirmative source-backed evidence about the RECORD ITSELF — not created, not
+yet published, lawfully withheld, destroyed under retention, or not obtainable
+publicly — where **our failure to retrieve it is never that evidence**; or every
+machine-executable public route worked with only a human or offline act left,
+which is **PUBLIC RECORD STILL OWED — HUMAN/OFFLINE ACCESS REQUIRED** and keeps
+the obligation live. Persistence is never intrusion: no bypassed authentication,
+no misused credentials, no exploited vulnerability, no non-public systems. Do
+not let one lock define the public information universe.
+
+**The vendor is not the record.** Granicus, Legistar, CivicClerk, BoardDocs,
+Diligent, CivicPlus, Hyland and every system like them are filing cabinets. The
+model is `GOVERNMENT → RECORD → REPRESENTATION(S) → ROUTE(S)`, and the record is
+this body, this exact meeting, this exact version — never the URL that served
+it. A restriction or failure on one document host is a fact about that host, not
+about the API, the portal, the accessible rendering, an alternate first-party
+copy, an archive, another custodian, or the record. **One representation lost
+means resolve another representation of the same record**, which makes an
+artifact held from a route later found unavailable a REPLACEMENT obligation
+rather than either a loss or a blessing. (RULING 206.)
+
+**One successful route never collapses the source universe.** Materially
+distinct representations carry different facts, so an API 200 never retires the
+PDF, a readable PDF never retires the API, and a meeting page is a branching
+surface rather than a URL to record and leave. **An adapter is a route
+portfolio, not one fetch function**, and its known routes are a floor.
+Reconcile every material representation into one canonical record with
+provenance, observation time and supersession; deduplicate exact duplicates and
+use change detection, but never skip a materially DISTINCT representation
+because another route already returned 200. (RULING 207.)
+
+**An access escalation is a parallel lane, never a stop.** Where a token,
+account, export, feed or quota would materially help, name it precisely —
+provider, mechanism, record class, scopes, what it unlocks, and what continues
+without it — and keep working every other executable path meanwhile. **NEEDS
+SEAN never closes, pauses or satisfies the obligation the row is about**, and
+one blocked record never freezes the rest of the hunt. No secret is ever pasted
+into chat, a prompt, a row, a commit, a fixture or a log. (RULING 208.)
+
+---
+
 ## The cross-cutting non-negotiables
 
 These bind everywhere, in every domain. The detail and the reasoning are in the

@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { agendaItems, agendaTopicFor, type AgendaDocumentLike } from "../lib/routing/agenda-search.ts";
+import { classifyAgendaPublication } from "../lib/ask/agenda-publication.ts";
 import {
   asksForBodyAgenda,
   bindNamedEntity,
@@ -177,28 +178,99 @@ test("every honest empty is a DIFFERENT state, never one flat absence", () => {
   assert.equal(new Set(STATES).size, STATES.length, "the states must be distinct");
 
   /*
-   * The four document facts, as the four sentences a reader now gets. Each one
-   * is about a DIFFERENT thing, and exactly one of them is THEIRS: a district
-   * that has not published an agenda yet is a fact about that district, and
-   * saying it the way we say our own extraction failure would be the render
-   * defect the constitution names.
+   * **THE DOCUMENT FACTS, AS THE SENTENCES A READER NOW GETS.**
+   * (Repaired by ASK-07, 2026-08-29.)
+   *
+   * This block used to read the route's SOURCE for four regexes, and the first
+   * of them was:
+   *
+   * ```
+   * /whose: "THEIRS",\s*\n\s*statement: `No agenda has been published/
+   * ```
+   *
+   * with a comment beside it arguing that "exactly one of them is THEIRS: a
+   * district that has not published an agenda yet is a fact about that
+   * district". **The comment was right about the principle and wrong about the
+   * input.** The branch it pinned fired on `forMeeting.length === 0` — a count
+   * of OUR OWN ROWS — so the sentence claimed a district had not published
+   * something nobody had ever looked for. This test was therefore protecting
+   * the render defect the constitution names, in the name of preventing it.
+   *
+   * Two things changed. The route delegates to
+   * `lib/ask/agenda-publication.ts`, which can only produce `THEIRS` from a
+   * first-party observation of that exact sitting; and this guard stopped
+   * grepping source. A regex over an implementation pins the implementation —
+   * which is precisely how a false sentence became load-bearing — so the four
+   * states are now put through the function the handler calls and the four
+   * sentences a reader would receive are compared to each other.
+   *
+   * What survives unchanged is the property that always mattered: FOUR
+   * DIFFERENT FACTS GET FOUR DIFFERENT SENTENCES. Loosening it to three would
+   * be the wrong fix and always was (RULING 100).
+   *
+   * The full ASK-07 net — including the red control that a zero-document
+   * sitting never becomes a claim about a government, and the green control
+   * that real publisher evidence still earns a scoped THEIRS — is
+   * `tests/agenda-publication-state.test.ts`.
    */
-  const grounded = readFileSync(
-    join(process.cwd(), "app/api/ask/grounded/route.ts"),
-    "utf8",
-  );
-  const DOCUMENT_SENTENCES = [
-    /whose: "THEIRS",\s*\n\s*statement: `No agenda has been published/,
-    /We hold an agenda document for that meeting but could not read its text/,
-    /is \$\{subject\.name\}'s agenda portal rather than the agenda itself/,
-    /We hold the agenda document for that meeting but could not extract its items/,
+  const readable = "1. Call to order\n2. Rezoning of parcel 44\n3. Adjournment";
+  const document = (over: Partial<AgendaDocumentLike> = {}): AgendaDocumentLike => ({
+    meetingId: "m1",
+    documentUrl: "https://example.gov/agenda.pdf",
+    sourceUrl: "https://example.gov/boards",
+    sourceOrg: "Town of Example",
+    retrievedAt: "2026-08-28T12:00:00.000Z",
+    text: readable,
+    extraction: "pdf",
+    ...over,
+  });
+  const portal = document({
+    documentUrl: "https://example.gov/portal",
+    text: "Board Portal Home Calendar Contact",
+  });
+  const reading = (over: Partial<Parameters<typeof classifyAgendaPublication>[0]>) =>
+    classifyAgendaPublication({
+      bodyName: "Vail Unified District",
+      meetingId: "m1",
+      documentsForMeeting: [],
+      documentsAcrossCorpus: [],
+      now: Date.parse("2026-08-29T00:00:00.000Z"),
+      ...over,
+    });
+
+  const DOCUMENT_STATES = [
+    reading({}),
+    reading({
+      documentsForMeeting: [document({ text: null, extraction: "failed" })],
+      documentsAcrossCorpus: [document({ text: null, extraction: "failed" })],
+    }),
+    reading({
+      documentsForMeeting: [portal],
+      documentsAcrossCorpus: [portal, { ...portal, meetingId: "m2" }],
+    }),
+    reading({
+      documentsForMeeting: [document({ text: "   " })],
+      documentsAcrossCorpus: [document({ text: "   " })],
+    }),
   ];
-  for (const re of DOCUMENT_SENTENCES) {
-    assert.match(
-      grounded,
-      re,
-      "a document state lost its own sentence and collapsed into another",
-    );
+
+  const sentences = DOCUMENT_STATES.map((r) => r.gap?.statement ?? "");
+  assert.equal(
+    new Set(sentences).size,
+    DOCUMENT_STATES.length,
+    `a document state lost its own sentence and collapsed into another: ${sentences.join(" | ")}`,
+  );
+  assert.equal(
+    new Set(DOCUMENT_STATES.map((r) => r.acquisition)).size,
+    DOCUMENT_STATES.length,
+    "the states themselves must stay distinct, not only their prose",
+  );
+  /* And with no publisher evidence in any of the four, every one of them is a
+     fact about US. The THEIRS branch is not unreachable — it is EARNED, and
+     `tests/agenda-publication-state.test.ts` holds the control that earns it. */
+  for (const r of DOCUMENT_STATES) {
+    assert.equal(r.gap?.whose, "OURS", r.gap?.statement);
+    assert.equal(r.publication, "UNKNOWN");
   }
 });
 

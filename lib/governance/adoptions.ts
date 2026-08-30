@@ -1340,6 +1340,336 @@ production's schema.** The observer records it as its own state and never as
 \`DEGRADED\`, because a false failure class in a durable record freezes releases
 for a reason that never happened.`,
   },
+
+  /*
+   * 205-208 — THE PUBLIC-RECORD ACQUISITION DOCTRINE.
+   *
+   * Adopted 2026-08-29 from the author's explicit current directive, which
+   * opens: "IF A PUBLIC CIVIC RECORD EXISTS, GET IT."
+   *
+   * The directive's own instruction on how to land it is followed literally:
+   * *preserve one coherent current statement of each rule; amend where
+   * semantics overlap; add new rulings only for genuinely new semantic
+   * content.* So this is deliberately FOUR rulings and not the five laws the
+   * directive names.
+   *
+   * What was already law, and is therefore NOT restated here:
+   *
+   *   RULING 170 / RULING 184  no finite attempt count earns an absence; "I
+   *                            have run out of ideas" is a claim about the
+   *                            session, never about a government; every cap is
+   *                            a floor
+   *   RULING 182               permission state and transport state are
+   *                            orthogonal; a blocked route is not a blocked
+   *                            fact
+   *   RULING 146               a decision genuinely the author's becomes a row
+   *                            and the session keeps going
+   *   RULING 177 / RULING 178  the method universe is never final; a new route
+   *                            mechanically reopens prior conclusions
+   *
+   * The directive's LAW E is almost entirely RULING 177 and RULING 178 already,
+   * so it does not get a number of its own; its one genuinely new clause — that
+   * a known portfolio failing to satisfy an obligation OBLIGES discovery of the
+   * next method rather than closing the obligation — lands inside 205 and 207,
+   * where it has operative force.
+   *
+   * What is genuinely new is the POSITIVE half nothing above states. The rules
+   * above all say what a session may not CONCLUDE. None of them says the
+   * obligation is a durable object that survives the route, the worker and the
+   * session, or names the closes it is allowed to reach.
+   */
+  {
+    n: 205,
+    title:
+      "RULING 205 — if a public civic record exists, get it: the obligation outlives the route and the worker",
+    adopted: "2026-08-29",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**IF A PUBLIC CIVIC RECORD EXISTS, GET IT.**
+
+"Get it" is the whole chain and nothing shorter:
+
+    DISCOVERED -> ACQUIRED -> EXTRACTED -> NORMALIZED
+      -> CANONICALLY_LINKED -> QUERY_RETRIEVABLE -> READER_VERIFIED
+
+**No upstream success implies a downstream one.** A route discovered whose fetch
+failed, a PDF acquired whose text would not extract, text extracted and attached
+to the wrong meeting, an exact meeting linked that retrieval never reaches, a
+correct evidence pack whose prose is refused, fluent prose returned from the
+WRONG evidence pack — each is a different achievement, and a report that
+collapses them overstates the product. Measure them separately or do not claim
+them.
+
+**A ROUTE CAN FAIL. THE RECORD OBLIGATION DOES NOT.** RULING 170 and RULING 184
+say what a session may not CONCLUDE from a finite count of failures. This says
+what SURVIVES it: the obligation to acquire the record is a durable object in
+its own right. It outlives every route disposition taken against it, and it
+outlives the worker.
+
+**A route disposition closes a RouteTask. It never closes the record
+obligation.** The laundering path forbidden by name is
+
+    ROUTE_BLOCKED -> NO_SOURCE_FOUND -> COMPLETE
+
+for a record known or strongly expected to exist. The legal transitions are
+
+    ROUTE_BLOCKED -> ALTERNATE_ROUTE_SEARCH -> NEW_ROUTE_TASK(S)
+    ROUTE_BLOCKED -> HUMAN/OFFLINE_ROUTE_REQUIRED    (obligation still OPEN)
+
+**Three closes, and there is no fourth.**
+
+1. **ACQUIRED AND READER-ANSWERABLE** — the exact applicable record completed
+   the chain above, or an equally strong governed path proves the reader can
+   obtain the exact grounded answer owed.
+2. **AFFIRMATIVE EVIDENCE ABOUT THE RECORD ITSELF** — source-backed evidence
+   that the record is not created, is not yet published because the event or
+   publication stage has not occurred, was lawfully withheld or redacted by the
+   custodian, was destroyed under an applicable retention rule, or otherwise
+   does not exist in publicly obtainable form. **Our failure to retrieve it is
+   never that evidence.**
+3. **HUMAN OR OFFLINE ACCESS REQUIRED** — every machine-executable public route
+   has been worked and what remains is a human act: an interactive site that is
+   not reliably automatable, an account the publisher requires, the clerk or
+   custodian, a records request, a published copying fee, in-person inspection,
+   a public terminal. That is not "record unavailable". It is **PUBLIC RECORD
+   STILL OWED — HUMAN/OFFLINE ACCESS REQUIRED**, and the obligation stays live
+   with its execution mode escalated.
+
+**When the known route portfolio is spent and the obligation is still open, the
+obligation is to DISCOVER THE NEXT PUBLIC-ACCESS METHOD** — public links, page
+state, the publisher's own UI traffic, feeds, sitemaps, archives, alternate
+official hosts, exports, mirrors, another custodian. RULING 178 already requires
+that a found route be kept and reapplied. This is the step before it: having run
+out of KNOWN methods is not having run out of methods.
+
+**EFFORT IS NOT EVIDENCE. EXHAUSTION IS NOT A DISPOSITION. THE WORKER MAY STOP;
+THE OBLIGATION DOES NOT DISAPPEAR.** Many URLs tried, tokens spent, a long
+elapsed time, a large PR, a tracker row opened, one worker exhausted, one host
+found blocked, one partial source found — every one is an execution fact about
+us, and none of them is completion.
+
+*The boundary, which is not caution.* Persistence is never intrusion. Do not
+bypass authentication, misuse or steal credentials, impersonate a user, exploit
+a vulnerability, defeat anti-bot controls by prohibited circumvention, evade
+technical access controls, or reach non-public systems or data. The instruction
+is not "break the lock". It is **do not let one lock define the public
+information universe** — find another public-access path.`,
+    claims: [{ key: "acquisition.obligation_closure", value: "acquired-evidenced-or-human-route" }],
+    relations: [
+      { kind: "extends", target: "R-0170" },
+      { kind: "extends", target: "R-0184" },
+    ],
+  },
+  {
+    n: 206,
+    title: "RULING 206 — the vendor is not the record, and a URL is not the record",
+    adopted: "2026-08-29",
+    domain: "sources-licensing",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**A vendor is publication infrastructure. It is not the record, it is not the
+government, and it does not decide whether the government's record exists.**
+
+Granicus, Legistar, CivicClerk, BoardDocs, Diligent, CivicPlus, Hyland and every
+system like them are filing cabinets, portals, CDNs, APIs and document hosts.
+The canonical model is:
+
+    GOVERNMENT / BODY -> PUBLIC RECORD OBLIGATION -> PUBLIC RECORD
+      -> ONE OR MORE REPRESENTATIONS -> ONE OR MORE ACQUISITION ROUTES
+
+The record is *this body, this exact meeting, this exact agenda version*. The
+record is NOT the vendor URL that happened to serve it. That URL is one
+representation, reached by one route, and the same agenda may exist
+simultaneously as a vendor PDF, a meeting-detail page, a clerk-hosted HTML
+agenda, an accessible rendering, an API object, a packet, an alternate
+government-hosted copy and an archived official copy.
+
+    VENDOR != RECORD
+    URL    != RECORD
+    A FAILED REPRESENTATION != A MISSING GOVERNMENT RECORD
+
+**A restriction or failure on one document host is a fact about that host.** It
+is not a fact about the publisher's API, its public portal, its accessible
+rendering, an alternate first-party copy, an official archive, another
+governmental custodian, or the underlying record. RULING 182 keeps PERMISSION
+and TRANSPORT apart; this keeps REPRESENTATION and RECORD apart, which is the
+same collapse one level up.
+
+**One representation lost means resolve another representation of the same
+record.** An artifact already held from a route later found unavailable does not
+become worthless, and it does not become blessed either: it acquires a
+REPLACEMENT obligation — exact record owed, current route status, alternate
+routes, reacquisition, equivalence check, provenance repair, reader
+re-verification — which is engineering work and not an author decision.
+
+The system's job is not to win an argument with a filing cabinet. It is to get
+the government's record.`,
+    claims: [{ key: "acquisition.record_identity", value: "government-record-with-representations" }],
+    relations: [{ kind: "extends", target: "R-0182" }],
+  },
+  {
+    n: 207,
+    title:
+      "RULING 207 — one successful route never collapses the source universe; an adapter is a route portfolio",
+    adopted: "2026-08-29",
+    domain: "discovery",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**USE EVERY MATERIAL INFORMATION-BEARING REPRESENTATION THE PUBLICATION
+ECOSYSTEM EXPOSES. ONE ROUTE SUCCEEDING DOES NOT CANCEL THE OTHERS.**
+
+Do not replace PDF-first thinking with API-first thinking, or API-first with
+HTML-first. **Do not choose one preferred door and call the building searched.**
+
+For one owed record, materially distinct representations carry DIFFERENT facts.
+One proves the meeting exists; another its current publication status; another
+the exact agenda text; another the addendum; another the attachments; another
+the structured item identifiers; another the action taken; another the
+per-person votes; another the matter history; another the revision; another the
+accessible text. A 200 on any one of them is evidence about that one.
+
+So a successful API response never means "ignore the PDF". A readable PDF never
+means "ignore the API". An accessible rendering never means "ignore the
+meeting-detail page". A meeting page never means "ignore its links" — it is a
+BRANCHING SURFACE, not a URL to record and leave. A summary never means "ignore
+item-level actions or votes".
+
+**A platform adapter is a ROUTE PORTFOLIO, not one fetch function.** It
+describes a capability graph: discovery, body identity, enumeration, publication
+status, content, accessible content, documents and packets, attachments,
+minutes and summaries, outcomes and actions, roll calls and votes, matter
+history, revisions, archives, feeds, alternate hosts. **Completion is measured
+against the information obligation, never against whether one adapter method
+returned 200.** A known portfolio is a FLOOR, exactly as RULING 184 makes every
+route list a floor.
+
+**Reconcile; do not pick a winner by habit.** Persist which representations
+exist, when each was observed, which are current and which superseded, whether
+body, date and item identifiers agree, what each carries uniquely, and every
+conflict between them. Retrieval serves the reconciled canonical record, never
+one arbitrary representation.
+
+**Format is not an excuse.** A route returning data is not the task; the data
+must be read. Structured responses keep their stable ids, raw publisher fields
+and publication timestamps; HTML is parsed for structure, items and links; a PDF
+has its bytes hashed, its text extracted, its pages preserved, and its
+scanned-only case sent to document extraction rather than recorded as empty.
+**A zero-row extraction is a FAILED extraction, never an empty document**
+(RULING 100).
+
+*What this does not license.* Duplicate calls for theater are still waste.
+Deduplicate exact duplicates and use change detection. What is forbidden is
+skipping a materially DISTINCT information-bearing representation because
+another route already returned 200.`,
+    claims: [{ key: "acquisition.representation_coverage", value: "every-material-representation" }],
+    relations: [{ kind: "extends", target: "R-0178" }],
+  },
+  {
+    n: 208,
+    title: "RULING 208 — an access escalation is a parallel lane, never a stop",
+    adopted: "2026-08-29",
+    domain: "tracker-workflow",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**An access escalation is a PARALLEL LANE. It never stops the record
+obligation, and it never stops unrelated work.**
+
+Where an API token, vendor account, public-data key, authorized service account,
+bulk export, government feed, quota increase or documented gated route would
+MATERIALLY improve retrieval, say so immediately and precisely — and keep
+working every other executable path while the answer is outstanding.
+
+    API_KEY_WOULD_HELP   is not   BLOCKED
+    NEEDS SEAN           is not   STOP
+
+RULING 146 says the SESSION keeps going past a row. This says the same of the
+thing the row is about: **opening an access escalation never closes, pauses or
+satisfies the underlying acquisition obligation**, and the detective,
+acquisition, extraction, reconciliation and reader streams all continue against
+every other representation while it is open. The correct simultaneous state is
+*escalation open* AND *acquisition still running*.
+
+**The escalation carries its own content, or it is not one.** Name the provider
+and the exact access mechanism; the record class it would improve; the
+capability it appears to expose and whether documentation confirms it; whether
+it is public, paid, government-sponsored or partner-only; the signup, request or
+contact path if known; the minimum scopes needed; what the system continues to
+do WITHOUT it; and what completeness or reliability it would unlock. A row
+reading only "an API key would help" is not an escalation.
+
+**Never ask the author to paste a secret into chat, a prompt, a tracker row, a
+commit, a fixture or a log.** A credential once obtained travels the
+repository's governed secret path.
+
+**The narrow exception is still not absence.** Where every machine-accessible
+public path for that exact record has genuinely been worked and only a human or
+account action remains, the state is **PUBLIC RECORD STILL OWED — HUMAN/ACCOUNT
+ACCESS REQUIRED**, which is RULING 205's third close and not a fourth one.
+**One blocked record never freezes the rest of the civic hunt.**`,
+    claims: [{ key: "escalation.access_request", value: "parallel-never-blocking" }],
+    relations: [
+      {
+        kind: "amends",
+        target: "R-0146",
+        changed:
+          "what a Needs Sean row leaves running. RULING 146 keeps the SESSION going past the row; this extends that to the OBLIGATION the row is about — an access escalation never closes, pauses or satisfies the underlying acquisition obligation — and it gives the row a required content shape, because a row that names no provider, mechanism, scope or unlocked capability cannot be acted on by the author it was written for",
+        survives:
+          "RULING 146 entire: nobody is watching, a question asked is hours lost, a decision genuinely the author's becomes a row and the session keeps going, no command may be capable of prompting, ambiguity resolves against the repo, and 'ran out of room' is not a blocker",
+      },
+      { kind: "extends", target: "R-0190" },
+    ],
+  },
+  {
+    n: 209,
+    title:
+      "RULING 209 — a permission rule binds the next fetch, never possession of what was already published",
+    adopted: "2026-08-29",
+    domain: "sources-licensing",
+    kind: "LAW_DECISION",
+    provenance: "author_explicit",
+    body: `**Public-record text already captured is KEPT AND USED. A route later found
+unavailable does not reach back and unpublish what it already served.**
+
+The author's decision of 2026-08-29, on the 29 extracted documents held from
+three vendor hosts whose \`robots.txt\` was read only after the capture: *keep and
+use the already-captured public-record text; do not purge it.* **That question
+is closed and is not put to the author again** (NH286).
+
+**Permission state governs what we may FETCH NEXT. It does not govern what we
+may hold, read, or serve from what a public body has already published to us.**
+Three facts, separate, all true at once:
+
+    HELD_PUBLIC_TEXT       KEEP AND USE
+    FUTURE_ROUTE_STATUS    whatever the source permission record currently says
+    REPLACEMENT            an engineering obligation, never an author decision
+
+*The reasoning stays attached, because the counter-argument is real and a later
+session will meet it again.* These are public records a government published; a
+crawling rule binds crawling rather than possession; and the documents were
+linked from portals we were permitted to read. Set against that, a disallowed
+host must not be walked again — and it is not. **Both hold. Conflating them is
+the error.** Deleting lawfully-held public-record text because a sibling host's
+rule was discovered afterwards would destroy civic information on a rule that
+never governed the holding.
+
+**What is still owed is the REPLACEMENT, not the deletion.** RULING 206's
+replacement obligation runs on every such artifact — exact record owed, current
+route status, alternate representations, reacquisition, equivalence check,
+provenance repair, reader re-verification — for provenance resilience, version
+checking and method learning. **It is never a precondition for using the held
+text**, and it is engineering work rather than a Needs Sean row.
+
+*And the permission check itself carries a portable lesson.* The host in a
+document URL is frequently NOT the host of the portal that listed it, so
+permission is established per DOCUMENT HOST and never per portal. All three
+hosts here were siblings of hosts already recorded disallowed, and were simply
+never checked.`,
+    claims: [
+      { key: "sources.held_artifact_retention", value: "keep-and-use-with-replacement-obligation" },
+    ],
+    relations: [{ kind: "extends", target: "R-0206" }],
+  },
 ];
 
 /**
@@ -1431,6 +1761,12 @@ export const STATUS_RESOLUTIONS: Array<{ id: string; status: Status; by: string;
     status: "AMENDED",
     by: "R-0170",
     why: "RULING 170 amends what reaching the end of the five moves MEANS; the moves, placement and void condition stand.",
+  },
+  {
+    id: "R-0146",
+    status: "AMENDED",
+    by: "R-0208",
+    why: "RULING 208 extends RULING 146's 'the session keeps going' to the obligation the row is about, and gives the row a required content shape. RULING 146 stands entire — unattended operation, no command capable of prompting, ambiguity resolving against the repo, and 'ran out of room' as a finding rather than a blocker.",
   },
   {
     id: "R-0120",

@@ -94,7 +94,15 @@ interface GroundedBody {
   mode: string;
   subject?: { kind: string; id: string; name: string } | null;
   answer?: string | null;
-  records?: { kind: string; id: string; text: string; bodyId?: string | null }[];
+  records?: {
+    kind: string;
+    id: string;
+    text: string;
+    bodyId?: string | null;
+    /* Carried because an outcome record with no source is not evidence, and
+       the assertion below is the only thing that would notice. */
+    sourceUrl?: string | null;
+  }[];
   gaps?: { whose: string; statement: string }[];
   denominators?: Record<string, number>;
   trace?: { resolution: { state: string; subjectId?: string | null } };
@@ -294,27 +302,104 @@ const OUTCOME_QUESTIONS = [
 ];
 
 for (const question of OUTCOME_QUESTIONS) {
-  test(`an outcome question carries the gap: ${question}`, async () => {
+  test(`an outcome question is answered from OUTCOME records: ${question}`, async () => {
     /*
-     * Before this, all three of these returned AGENDA_ITEM records and ZERO
-     * gaps — an agenda handed to a synthesis model as evidence about a vote,
-     * with nothing in the pack saying no outcome record was held. The likeliest
-     * sentence out of that pack is a confident, sourced account of a decision
-     * this product has no record of, fabricated from a real document.
+     * **WHAT THIS TEST GUARDED, AND WHAT IT GUARDS NOW.** (Rewritten
+     * 2026-08-29, when the outcome records arrived.)
+     *
+     * It was written when this product held NO outcome record for any sitting.
+     * All three questions returned AGENDA_ITEM records and ZERO gaps — an
+     * agenda handed to a synthesis model as evidence about a vote, with nothing
+     * in the pack saying no outcome record was held. The likeliest sentence out
+     * of that pack is a confident, sourced account of a decision this product
+     * had no record of, fabricated from a real document. So the test asserted a
+     * NAMED GAP, and asserted it was OURS.
+     *
+     * The gap is now correctly absent for this body: the durable outcome store
+     * holds 20 Pima Board sittings with 525 recorded actions and 2,083
+     * per-person vote rows, so the question is genuinely answerable and a gap
+     * would be a lie in the other direction.
+     *
+     * **The original protection did not go away — it moved.** The rule was
+     * never "always emit a gap"; it was *an agenda may never answer an outcome
+     * question*. That is now enforced by the class filter, and it is asserted
+     * below and again in the negative control that follows: a body the outcome
+     * store holds nothing for STILL gets the OURS gap, and still never gets its
+     * agenda offered as the answer.
      */
     const body = await ask(question);
-    const gaps = body.gaps ?? [];
-    assert.ok(
-      gaps.some((g) => /have not recorded/i.test(g.statement)),
-      `no gap named the missing outcome record. gaps: ${JSON.stringify(gaps)}`,
+    const records = body.records ?? [];
+    const outcomeRecords = records.filter(
+      (r) => r.kind === "MEETING_ACTION" || r.kind === "MEETING_MEMBER_VOTE",
     );
-    /* And the gap is OURS. We know WE hold no minutes; we have not established
-       that the county publishes none, and saying so would be a claim about a
-       government built out of our own collection state. */
-    const outcomeGap = gaps.find((g) => /have not recorded/i.test(g.statement));
-    assert.equal(outcomeGap?.whose, "OURS");
+    assert.ok(
+      outcomeRecords.length > 0,
+      `the pack carried no outcome record at all: ${JSON.stringify(
+        records.map((r) => r.kind),
+      )}`,
+    );
+
+    /* Every outcome record traces to the body that was asked about. */
+    for (const r of outcomeRecords) {
+      assert.equal(r.bodyId, BOARD_OF_SUPERVISORS, `an outcome record from another body: ${r.id}`);
+      assert.ok(r.sourceUrl, `an outcome record with no source: ${r.id}`);
+    }
+
+    /*
+     * **AN ACTION SUMMARY MAY NOT ANSWER "HOW DID THEY VOTE".**
+     *
+     * The tally lives on the action record and only there. If a
+     * `MEETING_ACTION` reached this question's pack, a synthesis rung would be
+     * one step from expanding "Motion carried 4-1" into four named ayes and a
+     * named nay — five positions nobody recorded.
+     */
+    if (/how did .* vote/i.test(question)) {
+      assert.equal(
+        records.filter((r) => r.kind === "MEETING_ACTION").length,
+        0,
+        "an action summary reached a per-member vote question",
+      );
+      assert.ok(
+        records.some((r) => r.kind === "MEETING_MEMBER_VOTE"),
+        "a per-member vote question got no per-member record",
+      );
+    }
+
+    /* And no outcome gap, because the records are held. */
+    assert.ok(
+      !(body.gaps ?? []).some((g) => /have not recorded/i.test(g.statement)),
+      `a gap claimed the outcome was missing while ${outcomeRecords.length} records were in the pack`,
+    );
   });
 }
+
+test("NEGATIVE CONTROL: a body the outcome store holds nothing for still gets the OURS gap", async () => {
+  /*
+   * The half of the original protection that must never lapse. The outcome
+   * ingest covers the Board and nothing else, so the water district is a real
+   * body, with real meetings and real agendas, and NO outcome record.
+   *
+   * It must not be answered from its agenda, and the gap must be OURS: we know
+   * WE hold no record of what it decided. We have not established that the
+   * district publishes none, and saying so would be a claim about a government
+   * built out of our own collection state.
+   */
+  const body = await ask("What did the Central Arizona Water Conservation District decide?");
+  const records = body.records ?? [];
+  assert.equal(
+    records.filter((r) => r.kind === "MEETING_ACTION" || r.kind === "MEETING_MEMBER_VOTE").length,
+    0,
+    "outcome records appeared for a body the store holds none for",
+  );
+  const gaps = body.gaps ?? [];
+  const outcomeGap = gaps.find((g) => /have not recorded|no outcome|not yet ingested/i.test(g.statement));
+  assert.ok(outcomeGap, `no gap named the missing outcome record. gaps: ${JSON.stringify(gaps)}`);
+  assert.equal(
+    outcomeGap?.whose,
+    "OURS",
+    "our own empty store was rendered as a fact about that district",
+  );
+});
 
 test("a question the agenda CAN answer is not given an outcome gap", async () => {
   /*

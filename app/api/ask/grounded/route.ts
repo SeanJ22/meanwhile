@@ -1,5 +1,5 @@
 import { readSnapshot } from "@/lib/meetings/snapshot";
-import { agendaItems, type AgendaDocumentLike } from "@/lib/routing/agenda-search";
+import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
 import { statewideExecutivesFor } from "@/lib/officials/statewide-executives";
 import {
   actionsFor,
@@ -52,6 +52,15 @@ import { readLocationOrigin, stampResidency } from "@/lib/ask/residency";
 import { captureAskInteraction } from "@/lib/db/ask-signal";
 import { synthesizeAnswer } from "@/lib/ask/synthesize";
 import { selectSitting, type AgendaSelection } from "@/lib/ask/select";
+import {
+  classifyAgendaPublication,
+  publisherAgendaObservationsFor,
+} from "@/lib/ask/agenda-publication";
+import {
+  outcomeEvidenceFor,
+  outcomeGapWhose,
+  publicationObservationsFor,
+} from "@/lib/outcomes/store";
 import { emptyTrace, type AnswerMode, type AskTrace } from "@/lib/ask/trace";
 import { validateAnswer } from "@/lib/ask/validate";
 import { loadBallotForDivisions, readerRepresentatives } from "@/lib/ask/server-sources";
@@ -914,38 +923,90 @@ export async function POST(request: Request) {
 
       const forMeeting = documents.filter((d) => d.meetingId === chosen.id);
       denominators.agendaDocumentsForThatMeeting = forMeeting.length;
-      const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
 
       /*
-       * A document the same body reuses across sittings is a LANDING PAGE by
-       * construction — one page cannot be the agenda of two meetings. The
-       * agenda route found 56 of 198 documents in this state, nine of them on
-       * Vail's own portal root. Handing one to the synthesis rung as "this
-       * meeting's agenda" would produce a confident summary of a navigation
-       * menu.
+       * ── ASK-07 ── **WHOSE GAP AN ABSENT AGENDA IS.** (2026-08-29.)
+       *
+       * This branch used to open with:
+       *
+       * ```ts
+       * if (forMeeting.length === 0) {
+       *   gaps.push({ whose: "THEIRS",
+       *     statement: `No agenda has been published for that ${subject.name} meeting yet.` });
+       * }
+       * ```
+       *
+       * `forMeeting.length === 0` measures ONE thing and it is a thing about
+       * US: this product holds zero agenda documents keyed to that meeting id.
+       * The sentence it produced was a claim about a GOVERNMENT — that a clerk
+       * had not posted a packet — and nothing in the input measured that. The
+       * committed corpus carries 34 bodies with a future sitting and no
+       * document at all; for every one of them the true reading is *we have not
+       * gone and got it*, which is the reading that sentence denied.
+       *
+       * The whole vocabulary now lives in `lib/ask/agenda-publication.ts`,
+       * which keeps the publisher's axis and ours mechanically apart and can
+       * only produce `whose: "THEIRS"` from a first-party observation of THAT
+       * EXACT sitting that is still inside its freshness window. No such
+       * observation exists in this product yet, so today every one of these is
+       * OURS with the acquisition obligation left open — which is the honest
+       * state and was always the honest state.
+       *
+       * The four document states ASK-05 split apart are preserved word for
+       * word; what changed is that the fifth one stopped being about them.
        */
-      const sharedWith = newest
-        ? new Set(
-            documents.filter((d) => d.documentUrl === newest.documentUrl).map((d) => d.meetingId),
-          ).size
-        : 0;
-      const items = newest?.text ? agendaItems(newest.text) : [];
+      /*
+       * **THE PUBLISHER'S OWN STATE, from the two places it can come from.**
+       *
+       * `publisherAgendaObservationsFor` is the in-memory seam an adapter
+       * writes at the moment of a read. `publicationObservationsFor` is the
+       * PERSISTED store: the Legistar lane stopped discarding the InSite grid's
+       * literal "Not Available" cell and now records it beside the Web API's
+       * `EventAgendaStatus` fields, one observation per surface.
+       *
+       * **Only `actionable` crosses this boundary.** It is null by construction
+       * on `DISAGREE`, so two publisher surfaces contradicting each other
+       * produce NO reading here rather than a winner picked in this file — and
+       * the reader falls back to the OURS gap, which is the honest answer when
+       * we cannot say what the publisher's state is. Reconciliation is the
+       * store's job (RULING 207); choosing between representations is nobody's.
+       *
+       * A caveat that belongs on the record rather than in a commit message:
+       * both surfaces reconciled here are Legistar. Agreement between them is
+       * two views of one vendor's database, not two independent custodians, so
+       * `AGREE_NOT_AVAILABLE` is weaker corroboration than its name suggests.
+       * The freshness window is what actually bounds the claim.
+       */
+      const reconciledPublication = publicationObservationsFor(chosen.id);
+      const publisherObservations = [
+        ...publisherAgendaObservationsFor(chosen.id),
+        ...(reconciledPublication.actionable ? [reconciledPublication.actionable] : []),
+      ];
+      const publication = classifyAgendaPublication({
+        bodyName: subject.name,
+        meetingId: chosen.id,
+        documentsForMeeting: forMeeting,
+        documentsAcrossCorpus: documents,
+        discoveredDocumentUrl: chosen.agendaUrl ?? null,
+        observations: publisherObservations,
+        now: Date.now(),
+      });
+      denominators.publisherPublicationObservationsForThatMeeting =
+        publisherObservations.length;
+      if (publication.gap) gaps.push(publication.gap);
 
-      if (forMeeting.length === 0) {
-        gaps.push({
-          whose: "THEIRS",
-          statement: `No agenda has been published for that ${subject.name} meeting yet.`,
-        });
-      } else if (!newest?.text) {
-        gaps.push({
-          whose: "OURS",
-          statement: `We hold an agenda document for that meeting but could not read its text.`,
-        });
-      } else if (sharedWith > 1 && items.length === 0) {
-        gaps.push({
-          whose: "OURS",
-          statement: `The link we hold for that meeting is ${subject.name}'s agenda portal rather than the agenda itself.`,
-        });
+      const newest = [...forMeeting].sort((a, b) => (a.retrievedAt < b.retrievedAt ? 1 : -1))[0];
+      const items = publication.items;
+
+      if (publication.acquisition === "ACQUIRED_IS_PUBLICATION_INDEX" && newest) {
+        /*
+         * A document the same body reuses across sittings is a LANDING PAGE by
+         * construction — one page cannot be the agenda of two meetings. The
+         * agenda route found 56 of 198 documents in this state, nine of them on
+         * Vail's own portal root. Handing one to the synthesis rung as "this
+         * meeting's agenda" would produce a confident summary of a navigation
+         * menu. The reading names it; the record says so out loud.
+         */
         records.push({
           kind: "AGENDA_DOCUMENT",
           id: newest.documentUrl,
@@ -957,12 +1018,7 @@ export async function POST(request: Request) {
           sourceOrg: newest.sourceOrg ?? null,
           retrievedAt: newest.retrievedAt,
         });
-      } else if (items.length === 0) {
-        gaps.push({
-          whose: "OURS",
-          statement: `We hold the agenda document for that meeting but could not extract its items.`,
-        });
-      } else {
+      } else if (publication.acquisition === "ITEMS_READER_READY" && newest) {
         denominators.agendaItemsExtracted = items.length;
         for (const [index, item] of items.slice(0, 40).entries()) {
           records.push({
@@ -1006,16 +1062,103 @@ export async function POST(request: Request) {
        */
       const outcomeClass = outcomeQuestionClass(question);
       if (outcomeClass) {
-        const heldClasses = records.some((r) => r.kind === "AGENDA_ITEM" || r.kind === "AGENDA_DOCUMENT")
-          ? ["AGENDA"]
-          : [];
-        const ruling = ruleOnQuestion(outcomeClass, heldClasses);
-        denominators.outcomeRecordsHeld = ruling.satisfiedBy.length;
-        if (!ruling.answerable) {
-          gaps.push({
-            whose: "OURS",
-            statement: outcomeGapStatement(subject.name, outcomeClass, heldClasses.length > 0),
-          });
+        /*
+         * **THE OUTCOME RECORDS, WHICH USED TO EXIST ONLY IN A PROBE SCRIPT.**
+         * (2026-08-29.)
+         *
+         * The measurement that motivated this: 20 Pima Board sittings carry
+         * 1,360 agenda items, 525 recorded actions and 2,083 per-person vote
+         * rows on the publisher's own API — and the reader could answer an
+         * outcome question about ZERO of 30 held sittings, because the harvest
+         * lived in a side script and never reached an evidence pack.
+         *
+         * `outcomeEvidenceFor` is the durable store's contract. It class-filters
+         * before it returns, so an AGENDA record is structurally unable to reach
+         * a `WHAT_WAS_DECIDED` answer, and what it refused comes back NAMED
+         * rather than dropped — which is what lets the answer say "we hold 135
+         * agenda records and no outcome record" instead of quietly answering
+         * from the agendas.
+         */
+        const evidence = outcomeEvidenceFor({
+          bodyId: subject.id,
+          meetingId: chosen.id,
+          questionClass: outcomeClass,
+        });
+        denominators.outcomeRecordsForThatMeeting = evidence.records.length;
+        denominators.outcomeRecordClassesRefused = evidence.refused.length;
+
+        for (const rec of evidence.records) {
+          if (rec.recordClass === "ROLL_CALL") {
+            /*
+             * One record PER MEMBER, not one per roll call. A reader asking how
+             * each member voted is owed each member's own row with its own
+             * source; a single record listing five names is one claim the
+             * validator cannot check a name against.
+             */
+            for (const vote of rec.votes) {
+              if (!vote.personName || !vote.value) continue;
+              records.push({
+                kind: "MEETING_MEMBER_VOTE",
+                id: `${rec.eventItemId}#${vote.personId ?? vote.personName}`,
+                bodyId: chosen.bodyId,
+                text: `${vote.personName} voted ${vote.value}.`,
+                occurredAt: chosen.startsAt,
+                sourceUrl: rec.provenance.endpoint,
+                sourceOrg: rec.provenance.sourceOrg,
+              });
+            }
+            continue;
+          }
+          if (rec.recordClass === "ACTION_SUMMARY") {
+            /*
+             * `tallyText` is the clerk's prose and travels VERBATIM as their
+             * sentence. It is never split into members — that join is the one
+             * step between a real record and five fabricated positions.
+             */
+            const parts = [
+              rec.action ? `The board's recorded action was "${rec.action}".` : null,
+              rec.mover ? `Moved by ${rec.mover}${rec.seconder ? `, seconded by ${rec.seconder}` : ""}.` : null,
+              rec.tallyText ? `The clerk recorded: "${rec.tallyText}"` : null,
+              rec.rollCall === "OUTCOME_WITHOUT_ROLL_CALL"
+                ? "No per-member roll call was published for this item."
+                : null,
+            ].filter(Boolean);
+            records.push({
+              kind: "MEETING_ACTION",
+              id: `${rec.eventItemId}#action`,
+              bodyId: chosen.bodyId,
+              text: `${rec.matterFile ? `${rec.matterFile}: ` : ""}${parts.join(" ")}`,
+              occurredAt: chosen.startsAt,
+              sourceUrl: rec.provenance.endpoint,
+              sourceOrg: rec.provenance.sourceOrg,
+            });
+          }
+        }
+
+        /*
+         * The gap. `evidence.gap` is null only on HELD, and its `whose` is
+         * derived from the STATE rather than asserted here: `NO_ACTION_RECORDED`
+         * and `ACTION_WITHOUT_ROLL_CALL` are facts about a government that we
+         * measured from their records; `NOT_YET_INGESTED` and
+         * `EXTRACTION_FAILED` are ours. The older sentence stays as the fallback
+         * for a body the outcome store holds nothing for at all.
+         */
+        if (evidence.gap) {
+          gaps.push({ whose: outcomeGapWhose(evidence.state), statement: evidence.gap });
+        } else if (!evidence.answerable) {
+          const heldClasses = records.some(
+            (r) => r.kind === "AGENDA_ITEM" || r.kind === "AGENDA_DOCUMENT",
+          )
+            ? ["AGENDA"]
+            : [];
+          const ruling = ruleOnQuestion(outcomeClass, heldClasses);
+          denominators.outcomeRecordsHeld = ruling.satisfiedBy.length;
+          if (!ruling.answerable) {
+            gaps.push({
+              whose: "OURS",
+              statement: outcomeGapStatement(subject.name, outcomeClass, heldClasses.length > 0),
+            });
+          }
         }
       }
     }

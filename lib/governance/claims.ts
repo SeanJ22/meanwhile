@@ -148,6 +148,44 @@ export const CLAIM_KEYS: readonly ClaimKeyDef[] = [
     question: "What authorizes the body identity a serving source adapter publishes under?",
     values: ["adapter-may-mint", "registry-is-the-authority"],
   },
+  /*
+   * The four acquisition slots (RULING 205-208, 2026-08-29).
+   *
+   * Each one's REFUSED value is the reading a session actually arrived at
+   * before the doctrine was written down, which is why the slot is worth
+   * declaring: none of these is a straw man.
+   *
+   *   route-disposition-closes    a blocked host closed the agenda obligation
+   *   representation-is-the-record  a vendor PDF URL WAS the record's identity
+   *   first-success-wins          a 200 from the API ended the route portfolio
+   *   blocks-until-answered       NEEDS SEAN read as permission to stop
+   */
+  {
+    key: "acquisition.obligation_closure",
+    question: "What closes an obligation to acquire a public civic record?",
+    values: ["route-disposition-closes", "acquired-evidenced-or-human-route"],
+  },
+  {
+    key: "acquisition.record_identity",
+    question: "Is a vendor URL or API object the public record, or a representation of it?",
+    values: ["representation-is-the-record", "government-record-with-representations"],
+  },
+  {
+    key: "acquisition.representation_coverage",
+    question: "Does one successful route discharge the others for the same owed record?",
+    values: ["first-success-wins", "every-material-representation"],
+  },
+  {
+    key: "escalation.access_request",
+    question: "What happens to the work while an access escalation to the author is open?",
+    values: ["blocks-until-answered", "parallel-never-blocking"],
+  },
+  {
+    key: "sources.held_artifact_retention",
+    question:
+      "What happens to public-record text already held when its route is later found disallowed?",
+    values: ["purge-on-disallow", "keep-and-use-with-replacement-obligation"],
+  },
 ] as const;
 
 const KEY_INDEX = new Map(CLAIM_KEYS.map((k) => [k.key, k]));

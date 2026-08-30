@@ -5,6 +5,8 @@
  * performs the read: `collectedAt` is taken at the moment of the fetch.
  */
 import { haversineKm } from "../../geo/distance.ts";
+import { observationFromGridCell } from "../../outcomes/publication.ts";
+import type { AgendaPublicationObservation } from "../../outcomes/publication.ts";
 import {
   CONCLUDED_LOOKBACK_DAYS,
   UPCOMING_HORIZON_DAYS,
@@ -378,6 +380,18 @@ export interface InSiteNormalizeResult {
    */
   routes: RouteObservation[];
   /**
+   * **The publisher's own statement about each sitting's agenda, one per
+   * produced sitting.**
+   *
+   * The grid's agenda cell was previously read, used to decide `agendaUrl`, and
+   * then discarded — leaving a null whose reader-facing sentence ("the body has
+   * not posted an agenda") was a claim about a government supported only by our
+   * own empty field. These are that reading, kept, scoped to one sitting, with
+   * what the cell said and when we read it. `lib/ask/agenda-publication.ts`
+   * decides what may be SAID from them; nothing here renders a sentence.
+   */
+  publicationObservations: AgendaPublicationObservation[];
+  /**
    * **THE ACCEPTANCE SET.** Every future sitting published by ANY route,
    * deduplicated on `(bodyId, local date, local time)`, each carrying the
    * routes that published it and `onlyOn` when exactly one did.
@@ -421,6 +435,19 @@ export function normalizeWithDrops(
   const routes: RouteObservation[] = [];
   const tenantUnions: UnionInstance[] = [];
   const dispositions: InstanceDisposition[] = [];
+  /**
+   * **What the portal said about each sitting's agenda, kept.**
+   *
+   * One per produced sitting. See `lib/outcomes/publication.ts` for why this
+   * exists and what was being lost without it.
+   */
+  const publicationObservations: AgendaPublicationObservation[] = [];
+  /*
+   * The instant this normalize ran, which is the instant the grid HTML in hand
+   * was read. `now` is injected by the caller and defaults to the clock, so a
+   * test gets a fixed observation time and a real refresh gets a true one.
+   */
+  const observedAt = now.toISOString();
   /** Canonical keys this run actually produced a `Meeting` for. */
   const producedKeys = new Set<string>();
   const drops: NormalizeDropCounts = {
@@ -671,6 +698,23 @@ export function normalizeWithDrops(
         const id = `${SOURCE_NAME}:${tenant.slug}:${row.insiteId ?? dedupeRef}`;
         const origin = `https://${tenant.host}`;
 
+        /*
+         * **KEEP THE PUBLISHER'S OWN READING.** One per sitting, scoped to that
+         * sitting, whatever the cell said — an "Agenda" cell is evidence too,
+         * and recording only the negatives would make this a defect log rather
+         * than an observation record.
+         */
+        publicationObservations.push(
+          observationFromGridCell({
+            meetingId: id,
+            status: row.agenda.status,
+            href: row.agenda.href,
+            calendarUrl: reading.calendarUrl,
+            sourceOrg: tenant.publishingOrg,
+            observedAt: observedAt,
+          }),
+        );
+
         meetings.push({
           id,
           ocdId: tenant.ocdId,
@@ -692,10 +736,23 @@ export function normalizeWithDrops(
             : null,
           ...(online ? { online } : {}),
           /*
-           * Null when the portal says "Not Available", which is the state
-           * every sitting the WebAPI cannot see is in. It renders as the
-           * NAMED GAP it is — the body has not posted an agenda — and is
-           * never filled with the portal's own search page dressed up as one.
+           * Null when the portal says "Not Available", and never filled with
+           * the portal's own search page dressed up as an agenda.
+           *
+           * **The comment here used to say this null "renders as the NAMED GAP
+           * it is — the body has not posted an agenda". That sentence is a
+           * claim about a government, and this expression was destroying the
+           * only evidence that could have supported it.**
+           *
+           * The grid cell is the county's own words about its own docket. It
+           * was read, tested against a regex, used to decide a URL, and then
+           * dropped — leaving the reader-facing claim resting on nothing but
+           * our own empty field, which is a fact about US. The reading is now
+           * kept as an OBSERVATION (`publicationObservations` below, and
+           * `lib/outcomes/publication.ts`), scoped to this sitting, carrying
+           * what the cell actually said and when we read it. What may be said
+           * to a reader is then decided by `lib/ask/agenda-publication.ts`
+           * from that evidence rather than from this null.
            */
           agendaUrl:
             row.agenda.href && !/not available/i.test(row.agenda.status)
@@ -964,6 +1021,7 @@ export function normalizeWithDrops(
       routes,
       union: tenantUnions,
       dispositions,
+      publicationObservations,
       // DERIVED, never asserted: what is still owed is a property of the
       // dispositions, and a hand-maintained second list would drift from them.
       openObligations: openObligations(dispositions),

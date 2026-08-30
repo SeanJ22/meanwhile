@@ -131,6 +131,8 @@
     "measures": "tsx scripts/measure-scoreboard.mts",
     "meetings:report": "tsx scripts/coverage-report.ts",
     "method:check": "tsx scripts/method-check.mts",
+    "outcomes:ingest": "tsx scripts/legistar-outcomes-ingest.mts",
+    "outcomes:probe": "tsx scripts/legistar-outcomes-probe.mts",
     "orchestration:check": "tsx scripts/orchestration-check.mts",
     "orchestration:closeout": "tsx scripts/orchestration-check.mts --closeout",
     "branches:retire": "tsx scripts/branch-retirement.mts",
@@ -329,7 +331,8 @@
     "zipgov:build": "tsx scripts/build-zip-governments.mts",
     "method:learn-schedule-vs-events": "tsx scripts/learn-schedule-vs-events.mts",
     "method:learn-azleg-permitted": "tsx scripts/learn-azleg-permitted.mts",
-    "method:learn-governor-letters": "tsx scripts/learn-governor-letters.mts"
+    "method:learn-governor-letters": "tsx scripts/learn-governor-letters.mts",
+    "method:learn-85641-districts": "tsx scripts/learn-85641-districts.mts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

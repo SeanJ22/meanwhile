@@ -94,7 +94,27 @@ test("1. the WorkItem is durable — a FRESH repository instance over the same r
 
 test("2. the inherited floor is computed from the canonical method projection", () => {
   const { floor, record } = RESULT;
-  assert.equal(floor.methodVersion, 55, "the floor pins the method version it was computed against");
+  /*
+   * **PINNED TO THE STORE, NOT TO A NUMBER.** (2026-08-29.)
+   *
+   * This read `assert.equal(floor.methodVersion, 55)`. The run computes its
+   * floor from `loadMethodStore(ROOT)` — the LIVE canonical store — so the
+   * literal was asserting that nobody had learned a route since the test was
+   * written. Six routes learned from the 85641 sweep took the store to 61 and
+   * turned method growth into a red suite, which is the failure RULING 178
+   * exists to make routine.
+   *
+   * What the assertion is FOR is that the floor records the version it was
+   * computed against instead of carrying a typed one. Comparing it to the store
+   * the run actually read proves exactly that, and cannot go stale.
+   */
+  const liveVersion = loadMethodStore(ROOT)?.version;
+  assert.ok(typeof liveVersion === "number", "the method store must be readable to compare against");
+  assert.equal(
+    floor.methodVersion,
+    liveVersion,
+    "the floor pins the method version it was computed against",
+  );
 
   const fromProjection = record.floor.routes.filter((r) => r.origins.includes("METHOD_PROJECTION"));
   const fromAdapter = record.floor.routes.filter((r) => r.origins.includes("ADAPTER_DECLARED"));

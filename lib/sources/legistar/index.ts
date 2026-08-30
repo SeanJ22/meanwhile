@@ -87,6 +87,56 @@ export type {
 const SOURCE_NAME = "legistar";
 
 /**
+ * **THE MEETING ID, MINTED IN ONE PLACE.**
+ *
+ * `<adapter>:<tenant>:<upstream id>` — `legistar:pima:1825`. It is the primary
+ * key of `data/meetings-snapshot.json`, the `meetings` table's `id`, and the
+ * join key the durable outcome store (`lib/outcomes/`) links an action and a
+ * roll call back to a sitting on.
+ *
+ * It was an inline template literal here and nowhere else, which was safe for
+ * exactly as long as nothing else needed to construct one. Two independent
+ * spellings of a join key do not fail loudly — they produce a store whose rows
+ * match nothing, and an outcome that exists and cannot be found reads to a
+ * reader as an outcome that was never collected. So it is a function, and
+ * `tests/legistar-outcome-store.test.ts` asserts what it returns is
+ * byte-identical to the ids the committed meetings snapshot already carries.
+ */
+export function legistarMeetingId(slug: string, eventId: number): string {
+  return `${SOURCE_NAME}:${slug}:${eventId}`;
+}
+
+/**
+ * **The sitting's start as an ISO instant, from the event alone.**
+ *
+ * `normalize()` computes this for every meeting it emits, but only for meetings
+ * that survive its drops and only inside its served window. The durable outcome
+ * store walks a WIDER window than the served snapshot — four months of Pima
+ * history against the snapshot's rolling horizon — so four of twenty backfilled
+ * sittings had no snapshot row to read a start time off.
+ *
+ * They came out with `startsAt: null`, which is honest and is also unorderable,
+ * and "the last meeting" is the single most common outcome question there is.
+ * So the store derives the instant here instead, through the SAME `calendarDate`
+ * / `wallClock` / `toZonedIso` path `normalize()` uses. A second implementation
+ * of the zone reassembly would be a second chance to be wrong about a zone, and
+ * this API's zonelessness — a date whose time half is always midnight and a
+ * separate 12-hour wall clock — is exactly the shape that punishes that.
+ *
+ * Null when the publisher gives no usable time, which is a real state and not a
+ * reason to invent midnight.
+ */
+export function legistarStartsAt(
+  event: LegistarEvent,
+  timeZone: string,
+): string | null {
+  const date = calendarDate(event.EventDate ?? "");
+  const time = wallClock(event.EventTime ?? "");
+  if (date === null || time === null) return null;
+  return toZonedIso(date.year, date.month, date.day, time.hour, time.minute, timeZone);
+}
+
+/**
  * The fetch window IS the served window (M76, 2026-08-15).
  *
  * These were literal 60 and 30 with a comment claiming they matched the
@@ -306,7 +356,7 @@ export function normalizeWithDrops(
       client.timeZone,
     );
 
-    const id = `${SOURCE_NAME}:${slug}:${event.EventId}`;
+    const id = legistarMeetingId(slug, event.EventId);
 
     /*
      * D19's live path. The segmentation is PURE — it reads the agenda and

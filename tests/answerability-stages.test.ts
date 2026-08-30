@@ -4,6 +4,7 @@ import test from "node:test";
 
 import {
   ANSWERABILITY_STAGES,
+  BLOCKS_ABOUT_THEM,
   DENOMINATOR_NOT_ESTABLISHED,
   classifySnapshotDocument,
   measureAnswerability,
@@ -400,8 +401,22 @@ test("SEEDED FAILURE: text extracted, ZERO items — normalisation failed, not a
 });
 
 test("SEEDED FAILURE: no document at all is a THIRD state, and names whose fact it is", () => {
+  /*
+   * **OUR EMPTY FIELD IS OUR GAP.**
+   *
+   * This assertion used to expect `NO_DOCUMENT_URL_PUBLISHED`, a code that
+   * lived in `BLOCKS_ABOUT_THEM`, on an input whose only distinguishing
+   * feature is that OUR row has no url. On the day it was found, the report
+   * was telling a reader that Pima County had published no document for 14 of
+   * its 30 Board sittings — a claim about a government, resting on an empty
+   * column of ours.
+   */
   const noUrl = measure([sitting({ agendaUrl: null })], []);
-  assert.equal(noUrl.ladders[0].blockedBy, "NO_DOCUMENT_URL_PUBLISHED");
+  assert.equal(noUrl.ladders[0].blockedBy, "NO_DOCUMENT_URL_HELD");
+  assert.ok(
+    !BLOCKS_ABOUT_THEM.includes(noUrl.ladders[0].blockedBy!),
+    "a null in our own corpus row is being counted as a fact about a government",
+  );
 
   const urlNotAcquired = measure([sitting()], []);
   assert.equal(
@@ -409,6 +424,67 @@ test("SEEDED FAILURE: no document at all is a THIRD state, and names whose fact 
     "DOCUMENT_URL_PUBLISHED_NOT_ACQUIRED",
     "a link they published and we never fetched is OUR gap, not theirs",
   );
+});
+
+test("POSITIVE CONTROL: a current first-party reading DOES earn a fact about them", () => {
+  const observed = measure(
+    [
+      sitting({
+        agendaUrl: null,
+        publication: {
+          provenance: "FIRST_PARTY_PUBLISHER",
+          report: "NOT_AVAILABLE",
+          observedAt: new Date().toISOString(),
+          observedUrl: "https://pima.legistar.com/Calendar.aspx",
+        },
+      }),
+    ],
+    [],
+  );
+  assert.equal(observed.ladders[0].blockedBy, "PUBLISHER_REPORTS_NO_DOCUMENT");
+  assert.ok(
+    BLOCKS_ABOUT_THEM.includes(observed.ladders[0].blockedBy!),
+    "an asked-and-answered publisher state is exactly what may be a fact about them",
+  );
+});
+
+test("SEEDED FAILURE: a stale or second-hand reading may not speak for the publisher", () => {
+  const base = {
+    report: "NOT_AVAILABLE",
+    observedUrl: "https://pima.legistar.com/Calendar.aspx",
+  } as const;
+  const hoursAgo = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+
+  /*
+   * Each of these is a DIFFERENT reason the reading cannot stand, and every one
+   * of them falls back to our own gap rather than to a claim about them. A
+   * publisher's "not available" becomes "agenda" with no event we would see,
+   * so an old negative is not a current fact (RULING 170 — the negative
+   * expires and is rechecked).
+   */
+  const refused: Array<[string, ObligationInput["publication"]]> = [
+    ["a reading older than the freshness bound", { ...base, provenance: "FIRST_PARTY_PUBLISHER", observedAt: hoursAgo(72) }],
+    ["an aggregator rather than the government", { ...base, provenance: "THIRD_PARTY", observedAt: hoursAgo(1) }],
+    ["something we inferred rather than read", { ...base, provenance: "INFERRED", observedAt: hoursAgo(1) }],
+    ["an unparseable timestamp", { ...base, provenance: "FIRST_PARTY_PUBLISHER", observedAt: "sometime last week" }],
+    ["a future stamp from a broken clock", { ...base, provenance: "FIRST_PARTY_PUBLISHER", observedAt: hoursAgo(-5) }],
+  ];
+
+  for (const [why, publication] of refused) {
+    const m = measure([sitting({ agendaUrl: null, publication })], []);
+    assert.equal(
+      m.ladders[0].blockedBy,
+      "NO_DOCUMENT_URL_HELD",
+      `${why} was allowed to speak for the publisher`,
+    );
+  }
+
+  // POSITIVE CONTROL: the boundary case just inside the window still counts.
+  const fresh = measure(
+    [sitting({ agendaUrl: null, publication: { ...base, provenance: "FIRST_PARTY_PUBLISHER", observedAt: hoursAgo(1) } })],
+    [],
+  );
+  assert.equal(fresh.ladders[0].blockedBy, "PUBLISHER_REPORTS_NO_DOCUMENT");
 });
 
 test("POSITIVE CONTROL: the same document, extracted, climbs the whole ladder", () => {

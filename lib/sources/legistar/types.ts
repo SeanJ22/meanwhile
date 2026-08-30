@@ -39,6 +39,33 @@ export interface LegistarEvent {
   /** "Final", "Draft", or null. */
   EventAgendaStatusName: string | null;
   /**
+   * The numeric companion to the name above — 10 for "Final", 9 for "Draft" on
+   * Pima. Carried because the NAME is a per-tenant label a clerk can rename and
+   * the ID is the vendor's enum; keeping both means a tenant that prints
+   * "Published" instead of "Final" is still comparable.
+   *
+   * Neither is read as a claim about the MEETING. An agenda status is a fact
+   * about a DOCUMENT's publication state and nothing else.
+   */
+  EventAgendaStatusId?: number | null;
+  EventMinutesStatusId?: number | null;
+  /**
+   * **When the publisher last put out the agenda document, in UTC.**
+   *
+   * The correct field for "is the agenda currently published, and how current
+   * is it" — and the reason that question never needs to be answered by
+   * guessing from a document URL's existence. Observed on Pima event 1825:
+   * `2026-08-25T18:04:04.46`, no zone suffix, which is Legistar's habit and is
+   * documented as UTC by the field name rather than by the value.
+   */
+  EventAgendaLastPublishedUTC?: string | null;
+  /** The same, for the minutes document. Null when none has been published. */
+  EventMinutesLastPublishedUTC?: string | null;
+  /** The vendor's stable GUID for this sitting. Needed by the View.ashx routes. */
+  EventGuid?: string | null;
+  /** "Public", "Not Viewable", null. A MEDIA_RECORD fact, never an outcome. */
+  EventVideoStatus?: string | null;
+  /**
    * "Final", "Draft", or null. **"Draft" on all 20 Pima Board sittings from
    * 2026-05-05 to 2026-08-25**, including sittings four months old — so
    * "Draft" here is the tenant's steady state and never a signal that minutes

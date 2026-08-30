@@ -98,7 +98,13 @@ test("the answer is built FROM the pack, so a reader cannot see a record validat
     records: [
       { kind: "AGENDA_ITEM", id: "m1#0", text: "Rezoning of parcel 44", sourceUrl: "https://x.gov/a" },
     ],
-    gaps: [{ whose: "THEIRS", statement: "No agenda has been published yet." }],
+    /* An OURS acquisition gap, not the old `THEIRS: "No agenda has been
+       published yet."` — this test is about pass-through and any gap would
+       exercise it, so the fixture is the one the route actually emits rather
+       than a sentence ASK-07 removed for asserting an absence nothing
+       measured. A fixture is a worked example, and a wrong worked example
+       gets copied. */
+    gaps: [{ whose: "OURS", statement: "We have not yet acquired the agenda for that meeting." }],
     denominators: { agendaItemsExtracted: 1 },
   });
   const payload = askAnswer({

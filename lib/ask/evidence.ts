@@ -83,7 +83,41 @@ export interface EvidenceRecord {
      * thing that mints these, and the identity rule that gates it is the whole
      * of that module's doc block.
      */
-    | "ROLL_CALL_VOTE";
+    | "ROLL_CALL_VOTE"
+    /*
+     * **WHAT A BODY DID TO ONE AGENDA ITEM.** (2026-08-29.)
+     *
+     * The clerk's post-meeting record: the verb, the disposition, the mover and
+     * seconder, and the tally prose verbatim. Classed `ACTION_SUMMARY` in
+     * `lib/answerability/record-class.ts`, which admits it for
+     * `WHAT_WAS_DECIDED` and REFUSES it for `HOW_DID_THEY_VOTE` — an action
+     * summary carries the result, never each member's position.
+     *
+     * **It is a different kind from `AGENDA_ITEM` because it is a different
+     * claim.** An agenda item proves a thing was NOTICED. This proves something
+     * was DONE with it. Collapsing them is the exact failure ASK-06 was written
+     * for: a pack of agenda lines handed to a synthesis rung that was asked
+     * about a decision produces a confident, sourced account of a vote nobody
+     * has a record of.
+     */
+    | "MEETING_ACTION"
+    /*
+     * **HOW ONE NAMED MEMBER VOTED ON ONE MEETING ITEM.** (2026-08-29.)
+     *
+     * Deliberately NOT `ROLL_CALL_VOTE`, which is minted only by
+     * `lib/ask/votes.ts` off `data/votes/*.json` — a legislator's position on a
+     * chamber's question, keyed on a stable officeholder identifier. This is a
+     * local body's per-item roll call read off the publisher's own vote table,
+     * and the two have different sources, different identity rules and
+     * different denominators. One kind for both would let a reader's "how did
+     * they vote" be answered from whichever store happened to have a row.
+     *
+     * The publisher's word is carried UNMAPPED — "Aye", "Not Present",
+     * "Recused", "Abstain". Across the 2,083 rows held on 2026-08-29, 72 are
+     * none of yes-or-no, and a mapping to a boolean would have destroyed every
+     * one of them. A tally is never expanded into these.
+     */
+    | "MEETING_MEMBER_VOTE";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
   /**
@@ -125,6 +159,15 @@ export interface EvidenceRecord {
  * that sitting yet" is a fact about a government. Rendering them as the same
  * sentence is the render defect the constitution names, and a synthesis model
  * handed an unlabelled gap will pick one at random.
+ *
+ * **AND THE SECOND SENTENCE HAS TO BE EARNED.** (ASK-07, 2026-08-29.) That
+ * example was written as an illustration of the TYPE and got read as a
+ * licence: the body-agenda branch emitted it off `documents.length === 0`,
+ * which measures our own rows and nothing about a district. `THEIRS` requires
+ * evidence that measured THEM — for agendas, a first-party reading of the
+ * publisher's own surface, scoped to that exact sitting and still inside its
+ * freshness window. `lib/ask/agenda-publication.ts` is where that is decided,
+ * and it is the only place in this pipeline that may decide it.
  */
 export interface EvidenceGap {
   whose: "OURS" | "THEIRS";

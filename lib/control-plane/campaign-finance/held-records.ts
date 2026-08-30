@@ -258,6 +258,284 @@ export function azPimaMoneyGap(subjectId: string): {
   };
 }
 
+/* ── The Arizona TRANSACTION acquisition — the route that broke the 401 ───── */
+
+export const AZ_PIMA_TRANSACTIONS_PATH = [
+  "data",
+  "campaign-finance",
+  "az-pima-2026-transactions.json",
+] as const;
+
+const AZ_PIMA_TX_FILE = join(import.meta.dirname, "..", "..", "..", ...AZ_PIMA_TRANSACTIONS_PATH);
+export const AZ_PIMA_TX_CITATION = AZ_PIMA_TRANSACTIONS_PATH.join("/");
+
+export interface AzPimaContributionRow {
+  readonly DocumentFilingId: string;
+  readonly DocumentType: string;
+  readonly ItemizedListType: string;
+  readonly RecipientCommitteeName: string | null;
+  readonly OfficeName: string | null;
+  readonly ContributorFullName: string | null;
+  readonly ContributorOrganizationName: string | null;
+  readonly ContributionDate: string | null;
+  readonly ContributionAmount: number | null;
+}
+
+export interface AzPimaDistributionRow {
+  readonly DocumentFilingId: string;
+  readonly DocumentType: string;
+  readonly ItemizedListType: string;
+  readonly CandidateCommitteeName: string | null;
+  readonly OfficeName: string | null;
+  readonly PayeeOrganizationName: string | null;
+  readonly PayeeFirstName: string | null;
+  readonly PayeeLastName: string | null;
+  readonly DistributionDate: string | null;
+  readonly DistributionAmount: number | null;
+}
+
+export interface AzPimaTransactions {
+  readonly formatVersion: number;
+  readonly recordedOn: string;
+  readonly acquisition: Record<string, unknown>;
+  readonly reconciliation: {
+    readonly capSuspected: boolean;
+    readonly verdict: string;
+    readonly probes: readonly { readonly year: string; readonly serverRows: number; readonly localRows: number }[];
+  };
+  readonly limitsOfThisUniverse: readonly string[];
+  readonly counts: Record<string, unknown>;
+  readonly contributions: readonly AzPimaContributionRow[];
+  readonly distributions: readonly AzPimaDistributionRow[];
+}
+
+let azTxCache: AzPimaTransactions | null = null;
+
+export function azPimaTransactions(): AzPimaTransactions {
+  if (!azTxCache) azTxCache = JSON.parse(readFileSync(AZ_PIMA_TX_FILE, "utf8")) as AzPimaTransactions;
+  return azTxCache;
+}
+
+/**
+ * **THE ONE ITEMIZED-LIST-TYPE THAT IS A CONTRIBUTION.**
+ *
+ * The contributions endpoint returns nine `ItemizedListType` values, and only
+ * one of them is a contribution. `Loan`, `Interest`, `Rebate/Refund`,
+ * `Donation/Support`, `Payment/Reimbursement`, `Outstanding Debt`,
+ * `Surplus Money` and `Miscellaneous Receipt` are all money arriving at a
+ * committee, and not one of them is somebody contributing to a campaign.
+ *
+ * Mapping them all to `Contribution` would answer "who has contributed to this
+ * campaign?" with a bank's interest payment. They are carried separately by
+ * {@link azPimaOtherReceiptsFor} so that nothing is dropped either.
+ */
+const AZ_CONTRIBUTION_TYPE = "Contribution";
+
+/**
+ * The distribution types that are this committee spending its own money.
+ *
+ * `Contributions Made` is deliberately NOT here: money this committee gave to
+ * ANOTHER committee is a contribution into that one, and folding it into
+ * "what this committee spent" double-counts it the moment both committees are
+ * rendered. `Rebates and Refunds` and `Outstanding Accounts/Debts` are not
+ * spending either. All of them are kept by {@link azPimaOtherDisbursementsFor}.
+ */
+const AZ_EXPENDITURE_TYPES: readonly string[] = [
+  "Disbursments", // the vendor's own spelling, preserved rather than corrected
+  "Expenditures",
+  "Miscellaneous Disbursements",
+];
+
+/** Committee names exactly as filed. NEVER normalised — see the caveat below. */
+export function azPimaTransactionCommitteeNames(): readonly string[] {
+  const tx = azPimaTransactions();
+  const names = new Set<string>();
+  for (const row of tx.contributions) if (row.RecipientCommitteeName) names.add(row.RecipientCommitteeName);
+  for (const row of tx.distributions) if (row.CandidateCommitteeName) names.add(row.CandidateCommitteeName);
+  return [...names].sort();
+}
+
+/**
+ * Rows are matched on the committee name EXACTLY AS FILED, case-sensitively.
+ *
+ * `Andrés for Supervisor` and `ANDRES FOR SUPERVISOR` are two distinct values in
+ * this data and are almost certainly one committee. They are NOT merged here.
+ * Merging them would be a name match, and this project's own bar refuses to
+ * treat a name match as agreement — the same rule that keeps
+ * `authorizedByCandidacyId` null on the committees above. A caller that wants
+ * both passes both, and the reader is told the universe is cut by name.
+ */
+export function azPimaContributionsFor(committeeNameAsFiled: string): readonly Contribution[] {
+  return azPimaTransactions()
+    .contributions.filter(
+      (row) => row.RecipientCommitteeName === committeeNameAsFiled && row.ItemizedListType === AZ_CONTRIBUTION_TYPE,
+    )
+    .map((row) => ({
+      recordKind: "CONTRIBUTION" as const,
+      intoCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
+      amountReceived: Number(row.ContributionAmount ?? 0),
+      contributorNameAsFiled: row.ContributorFullName ?? row.ContributorOrganizationName ?? null,
+      // As filed. Years 0006 and 2926 exist in this data and are NOT repaired.
+      receivedOn: row.ContributionDate,
+      filingId: row.DocumentFilingId,
+      sourceCitation: `${AZ_PIMA_TX_CITATION} — advancedsearch/contributions, filing ${row.DocumentFilingId}`,
+    }));
+}
+
+export function azPimaExpendituresFor(committeeNameAsFiled: string): readonly Expenditure[] {
+  return azPimaTransactions()
+    .distributions.filter(
+      (row) =>
+        row.CandidateCommitteeName === committeeNameAsFiled && AZ_EXPENDITURE_TYPES.includes(row.ItemizedListType),
+    )
+    .map((row) => ({
+      recordKind: "EXPENDITURE" as const,
+      byCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
+      amountSpent: Number(row.DistributionAmount ?? 0),
+      payeeNameAsFiled:
+        row.PayeeOrganizationName ?? [row.PayeeFirstName, row.PayeeLastName].filter(Boolean).join(" ") ?? null,
+      spentOn: row.DistributionDate,
+      /**
+       * NULL, and it is the honest value. This endpoint returns no purpose
+       * field at all. Arizona filings carry one; this representation does not
+       * expose it, and inventing a purpose from the payee's name would be
+       * exactly the inference this product refuses.
+       */
+      purposeAsFiled: null,
+      filingId: row.DocumentFilingId,
+      sourceCitation: `${AZ_PIMA_TX_CITATION} — advancedsearch/distributions, filing ${row.DocumentFilingId}`,
+    }));
+}
+
+/** Money in that is NOT a contribution, kept so the set is lossless. */
+export function azPimaOtherReceiptsFor(
+  committeeNameAsFiled: string,
+): readonly { readonly itemizedListTypeAsFiled: string; readonly amount: number; readonly on: string | null }[] {
+  return azPimaTransactions()
+    .contributions.filter(
+      (row) => row.RecipientCommitteeName === committeeNameAsFiled && row.ItemizedListType !== AZ_CONTRIBUTION_TYPE,
+    )
+    .map((row) => ({
+      itemizedListTypeAsFiled: row.ItemizedListType,
+      amount: Number(row.ContributionAmount ?? 0),
+      on: row.ContributionDate,
+    }));
+}
+
+/** Money out that is NOT this committee's own spending, kept so the set is lossless. */
+export function azPimaOtherDisbursementsFor(
+  committeeNameAsFiled: string,
+): readonly { readonly itemizedListTypeAsFiled: string; readonly amount: number; readonly on: string | null }[] {
+  return azPimaTransactions()
+    .distributions.filter(
+      (row) =>
+        row.CandidateCommitteeName === committeeNameAsFiled && !AZ_EXPENDITURE_TYPES.includes(row.ItemizedListType),
+    )
+    .map((row) => ({
+      itemizedListTypeAsFiled: row.ItemizedListType,
+      amount: Number(row.DistributionAmount ?? 0),
+      on: row.DistributionDate,
+    }));
+}
+
+/**
+ * The filing universe for ONE Pima County committee, from the transaction route.
+ *
+ * `evidenceBasis` is `FILING` and not `AUTHORITY_AGGREGATE`: every row carries
+ * the `DocumentFilingId` it came off, so unlike the FEC totals these figures
+ * really are off filings. What they are off is the REDACTED public copy of
+ * those filings, which is what `itemizationLimit` says.
+ */
+export function azPimaTransactionUniverse(committeeNameAsFiled: string): HeldFilingUniverse {
+  const held = azPimaHeld();
+  const contributions = azPimaContributionsFor(committeeNameAsFiled);
+  const expenditures = azPimaExpendituresFor(committeeNameAsFiled);
+  const anything = contributions.length > 0 || expenditures.length > 0;
+  const filingIds = new Set<string>();
+  for (const c of contributions) filingIds.add(c.filingId);
+  for (const e of expenditures) filingIds.add(e.filingId);
+
+  return {
+    authorityIds: [held.filingAuthorityIdentification.authorityId],
+    authorityNames: [held.filingAuthorityIdentification.officeNameAsPublished],
+    publisherRoute:
+      "https://ecf-api.easyvoteapp.com/advancedsearch/{contributions,distributions}/{customerId} — " +
+      "the Pima County tenant's own public transaction search",
+    recordClassesHeld: anything ? ["CANDIDATE_COMMITTEE_REPORT"] : [],
+    /**
+     * INDEPENDENT_EXPENDITURE_REPORT stays here even though money is now held.
+     * Every row this route returns carries `DocumentType: "CCFR"`; an Arizona
+     * independent-expenditure report is a different document type and this
+     * endpoint returned none. Holding contributions does not retire the class.
+     */
+    recordClassesNotHeld: [
+      "INDEPENDENT_EXPENDITURE_REPORT",
+      "BALLOT_MEASURE_COMMITTEE_REPORT",
+      "PARTY_COMMITTEE_REPORT",
+      "STATEMENT_OF_ORGANIZATION",
+    ],
+    /**
+     * NULL, and the null is load-bearing. The transaction search is not cut by
+     * reporting period — it returns rows across filings with no period label —
+     * so this repository cannot say which of Arizona's periods these rows cover.
+     * `azExpectedPeriods` has the state's real calendar; joining it to these
+     * rows would be a guess.
+     */
+    periodsExpected: null,
+    periodsHeld: [],
+    periodsNotHeld: [],
+    coversThrough: null,
+    evidenceBasis: anything ? "FILING" : null,
+    itemizationLimit: anything
+      ? "the itemized rows the county's public transaction search exposes, off REDACTED public " +
+        "copies of the filings — every filing id carried here ends '_Redacted'. Rows are matched on " +
+        "the committee name exactly as filed and are not deduplicated across spellings."
+      : null,
+    isCompleteFilingSet: false,
+    sourceCitations: [
+      AZ_PIMA_TX_CITATION,
+      `https://ecf-api.easyvoteapp.com/advancedsearch/contributions/19626734-D3E9-449C-BB5D-EDB9C0034907`,
+      ...[...filingIds].slice(0, 3),
+    ],
+  };
+}
+
+/**
+ * What is STILL missing in Pima County now that the money is held.
+ *
+ * {@link azPimaMoneyGap} described a total wall and was correct when it was
+ * written. It is superseded for committees the transaction route covers; this
+ * is the residual, and it is still `OURS` because every item in it is a route
+ * this session did not complete rather than a record Pima County withholds.
+ */
+export function azPimaResidualGap(subjectId: string): {
+  readonly attribution: "OURS";
+  readonly subject: string;
+  readonly what: string;
+  readonly nextMove: string;
+  readonly readerSentence: string;
+} {
+  return {
+    attribution: "OURS",
+    subject: subjectId,
+    what:
+      "itemized contributions and disbursements are now held off the county's public transaction " +
+      "search, but three things are not: the UNREDACTED filing bodies (every filing id held ends " +
+      "'_Redacted', and documents/getdocumentfiling still answers HTTP 401), any " +
+      "INDEPENDENT-EXPENDITURE report (every row returned carries DocumentType 'CCFR'), and any " +
+      "committee-to-measure linkage (neither the county portal nor the state register publishes it).",
+    nextMove:
+      "For independent expenditures, walk the Arizona Secretary of State's seethemoney.az.gov " +
+      "reporting surface, which is recorded REACHABLE with no robots.txt and no terms. For the " +
+      "unredacted bodies, a public-records request to the Pima County filing officer. For the " +
+      "linkage, the committees' own Statements of Organization.",
+    readerSentence:
+      "We can show you the contributions and spending these committees reported. We cannot yet show " +
+      "you outside spending for or against a measure, or say which committees are for or against one " +
+      "— those are gaps in our records rather than a sign that none exists.",
+  };
+}
+
 /* ── The federal materialisation ──────────────────────────────────────────── */
 
 export interface FederalHeldRecords {

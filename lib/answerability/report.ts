@@ -37,8 +37,16 @@ function padLeft(value: string, width: number): string {
  * The `blocked` column is not decoration: it is what keeps a low numerator
  * from reading as an absence. "8 stopped at EXTRACTED · EXTRACTION_FAILED"
  * is a fact about our extractor; "78 stopped at ACQUIRED ·
- * NO_DOCUMENT_URL_PUBLISHED" is a fact about a government. They may never be
- * printed as the same sentence, so they are printed with their codes.
+ * PUBLISHER_REPORTS_NO_DOCUMENT" is a fact about a government. They may never
+ * be printed as the same sentence, so they are printed with their codes.
+ *
+ * **This comment used to name `NO_DOCUMENT_URL_PUBLISHED` as the fact about a
+ * government, and it was the clearest statement of the bug.** That code was
+ * assigned from `ObligationInput.agendaUrl === null` — a null in OUR row — so
+ * the table was attributing our own missing links to governments, and the
+ * comment explaining the distinction was the thing licensing the collapse. The
+ * OURS half is now `NO_DOCUMENT_URL_HELD`, and the THEM half is reachable only
+ * from a current first-party publisher observation.
  */
 export function renderLadderTable(measurement: LadderMeasurement): string {
   const lines: string[] = [];

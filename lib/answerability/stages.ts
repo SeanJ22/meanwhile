@@ -95,13 +95,35 @@ export type Denominator = number | typeof DENOMINATOR_NOT_ESTABLISHED;
  * THEM from a fact about US, because they may never render as one sentence.
  */
 export const BLOCK_CODES = [
-  /* --- fact about them ------------------------------------------------- */
-  /** The publisher linked no document for this sitting. */
-  "NO_DOCUMENT_URL_PUBLISHED",
+  /* --- fact about them -------------------------------------------------
+   *
+   * EXACTLY ONE code may be a fact about a government, and it is reachable
+   * ONLY from a publisher observation of that exact sitting. There is no
+   * inference from our own store into this group, by construction.
+   */
+  /**
+   * The publisher's own current publication state says no document exists for
+   * this sitting yet. Assignable only from `ObligationInput.publication`, and
+   * only while that observation is fresh.
+   */
+  "PUBLISHER_REPORTS_NO_DOCUMENT",
   /* --- fact about us --------------------------------------------------- */
   /** The obligation row itself carries no id or no body name. Malformed input. */
   "OBLIGATION_NOT_IDENTIFIED",
   /* --- fact about us --------------------------------------------------- */
+  /**
+   * WE hold no document URL for this sitting, and nothing has established what
+   * the publisher exposes.
+   *
+   * **This was `NO_DOCUMENT_URL_PUBLISHED`, and it was in the THEM group.** It
+   * was assigned from `!obligation.agendaUrl` — an empty field in OUR row —
+   * and then printed as "the publisher linked no document". Our own null was
+   * being reported as a fact about a government, which is the exact render
+   * defect this module exists to measure. On the day it was found it was
+   * asserting that Pima County published no document for 14 of 30 Board
+   * sittings, on no evidence from Pima County at all.
+   */
+  "NO_DOCUMENT_URL_HELD",
   /** A URL is published and we hold no bytes for it. */
   "DOCUMENT_URL_PUBLISHED_NOT_ACQUIRED",
   /** Somebody read the document but no artifact was kept: unreplayable. */
@@ -131,8 +153,64 @@ export const BLOCK_CODES = [
 ] as const;
 export type BlockCode = (typeof BLOCK_CODES)[number];
 
-/** Block codes that are facts about a GOVERNMENT, not about this product. */
-export const BLOCKS_ABOUT_THEM: readonly BlockCode[] = ["NO_DOCUMENT_URL_PUBLISHED"];
+/**
+ * Block codes that are facts about a GOVERNMENT, not about this product.
+ *
+ * **Membership here is earned by EVIDENCE, never by naming.** The previous
+ * member was assigned from an empty field in our own corpus row, so the list
+ * was one entry long and that entry was wrong. Nothing joins this list unless
+ * the only path to it runs through an observation of the publisher.
+ */
+export const BLOCKS_ABOUT_THEM: readonly BlockCode[] = ["PUBLISHER_REPORTS_NO_DOCUMENT"];
+
+/**
+ * How fresh a publisher's stated absence has to be to still be reported.
+ *
+ * A publisher's "not available" is true at an instant, not forever: the Pima
+ * portal shows `Not Available` against a sitting until the clerk posts, and
+ * then it shows the agenda, with no event in between that we would see. So a
+ * negative reading EXPIRES, and an expired one falls back to our own gap
+ * rather than continuing to speak for the government.
+ */
+export const PUBLISHER_OBSERVATION_MAX_AGE_HOURS = 24;
+
+/**
+ * A reading taken FROM the publisher about one exact sitting.
+ *
+ * `FIRST_PARTY_PUBLISHER` means the government's own page or API said it.
+ * Nothing else can earn a fact about them — an aggregator, a cache or an
+ * inference is evidence about that source, and RULING 206 keeps a
+ * representation separate from the record it represents.
+ *
+ * **The field names and literals deliberately match
+ * `PublisherAgendaObservation` in `lib/ask/agenda-publication.ts`**, so one
+ * reading taken from a publisher can feed the reader path and this measurement
+ * without translation. The two modules stay separate on purpose — that one
+ * decides what may be SAID to a reader, this one measures corpus coverage —
+ * but they must not disagree about what a first-party reading IS.
+ */
+export interface PublisherObservation {
+  readonly provenance: "FIRST_PARTY_PUBLISHER" | "THIRD_PARTY" | "INFERRED";
+  readonly report: "NOT_AVAILABLE" | "AVAILABLE";
+  /** ISO. Unparseable and future-stamped both fail closed. */
+  readonly observedAt: string;
+  readonly observedUrl: string;
+}
+
+/** Whether an observation may still speak for the publisher, and only then. */
+export function publisherObservationIsCurrent(
+  observation: PublisherObservation | null | undefined,
+  now: Date = new Date(),
+): boolean {
+  if (!observation) return false;
+  if (observation.provenance !== "FIRST_PARTY_PUBLISHER") return false;
+  const at = Date.parse(observation.observedAt);
+  if (Number.isNaN(at)) return false;
+  const ageHours = (now.getTime() - at) / 3_600_000;
+  // A future stamp is a broken clock or a bad parse, never a fresh reading.
+  if (ageHours < 0) return false;
+  return ageHours <= PUBLISHER_OBSERVATION_MAX_AGE_HOURS;
+}
 
 /* ---------------------------------------------------------------- inputs */
 
@@ -150,8 +228,24 @@ export interface ObligationInput {
   readonly bodyName: string;
   /** ISO. Null and unparseable are different inputs and the same block. */
   readonly startsAt: string | null;
-  /** The document link the publisher exposed, if any. */
+  /**
+   * The document link WE HOLD for this sitting, if any.
+   *
+   * **Read the field name literally.** This was documented as "the document
+   * link the publisher exposed", and that description is what licensed reading
+   * its null as a fact about the publisher. A null here has at least three
+   * causes and the row cannot tell them apart: the publisher exposed nothing,
+   * the adapter never captured what was exposed, or the adapter captured it and
+   * discarded it. Only `publication` distinguishes them.
+   */
   readonly agendaUrl: string | null;
+  /**
+   * What the publisher itself said about this sitting, if anybody asked.
+   *
+   * Optional because almost nothing supplies it yet. Absent means UNKNOWN —
+   * never "nothing was published".
+   */
+  readonly publication?: PublisherObservation | null;
 }
 
 /**
@@ -476,10 +570,20 @@ export function measureAnswerability(input: MeasureInput): LadderMeasurement {
         blockedBy = "OBLIGATION_NOT_IDENTIFIED";
       } else if (stage === "ACQUIRED") {
         const held = heldClassesPerMeeting.get(obligation.meetingId);
+        const publisherSaysNone =
+          obligation.publication?.report === "NOT_AVAILABLE" &&
+          publisherObservationIsCurrent(obligation.publication);
         if (docs.length === 0 && held && held.size > 0) {
           blockedBy = "RECORD_CLASS_CANNOT_ANSWER";
+        } else if (docs.length === 0 && publisherSaysNone) {
+          /*
+           * The ONLY route into the THEM group, and it required somebody to
+           * have asked the publisher. Note the order: a current first-party
+           * reading outranks our own empty field, and nothing else does.
+           */
+          blockedBy = "PUBLISHER_REPORTS_NO_DOCUMENT";
         } else if (docs.length === 0 && !obligation.agendaUrl) {
-          blockedBy = "NO_DOCUMENT_URL_PUBLISHED";
+          blockedBy = "NO_DOCUMENT_URL_HELD";
         } else if (docs.length === 0) {
           blockedBy = "DOCUMENT_URL_PUBLISHED_NOT_ACQUIRED";
         } else {

@@ -260,6 +260,93 @@ test("Q: Under the replacement status model, how is the preceding descent sessio
 
 /* ------------------------------------------------------------ and the bar itself */
 
+/* ------------------------------------------- the acquisition doctrine (205-209) */
+
+/*
+ * These five are the questions the author had to answer IN PERSON, in a
+ * directive, because no artifact answered them. That is the whole test: a
+ * session reaching the same five moments must now find the answer here rather
+ * than needing him to state it again.
+ *
+ * Each one is phrased as the session actually meets it — mid-hunt, with a
+ * failure in hand and a plausible reason to stop.
+ */
+
+test("Q: every route we know is blocked and the record exists. Is that an absence?", () => {
+  assert.equal(claim("acquisition.obligation_closure"), "acquired-evidenced-or-human-route");
+  // The three closes, and the one thing that is never evidence of absence.
+  assert.ok(whereInLaw("Three closes, and there is no fourth", ROOT));
+  assert.ok(whereInLaw("our failure to retrieve it is never that evidence", ROOT));
+  // A blocked route escalates the EXECUTION MODE; it never produces a fact
+  // about the government.
+  assert.ok(whereInLaw("PUBLIC RECORD STILL OWED", ROOT));
+  assert.match(
+    flat(law),
+    /the record obligation does not/i,
+    "current law no longer says the obligation outlives the route",
+  );
+});
+
+test("Q: the vendor host that serves the agenda PDF disallows us. Is the agenda unavailable?", () => {
+  assert.equal(claim("acquisition.record_identity"), "government-record-with-representations");
+  assert.ok(whereInLaw("VENDOR != RECORD", ROOT));
+  // The distinction that does the work: the URL is a representation, and the
+  // record belongs to the government.
+  assert.match(
+    flat(law),
+    /GOVERNMENT → RECORD → REPRESENTATION\(S\) → ROUTE\(S\)/,
+    "current law no longer carries the record-vs-representation model",
+  );
+});
+
+test("Q: the API returned 200. May the adapter skip the accessible agenda and the PDF?", () => {
+  assert.equal(claim("acquisition.representation_coverage"), "every-material-representation");
+  assert.ok(whereInLaw("ONE ROUTE SUCCESS", ROOT));
+  assert.match(
+    flat(law),
+    /never skip a materially DISTINCT representation/i,
+    "current law no longer forbids collapsing the source universe onto one successful route",
+  );
+  // And the shape that prevents it recurring: an adapter is a portfolio.
+  assert.match(flat(law), /route\s*portfolio, not one fetch function/i);
+});
+
+test("Q: an API key would help. May this record's work stop until the author answers?", () => {
+  assert.equal(claim("escalation.access_request"), "parallel-never-blocking");
+  assert.ok(whereInLaw("NEEDS SEAN != STOP", ROOT));
+  assert.match(
+    flat(law),
+    /never closes, pauses or satisfies the obligation the row is about/i,
+    "current law no longer says an escalation leaves the obligation running",
+  );
+  /*
+   * RULING 146 is the older half — the SESSION keeps going. It must still be
+   * current, because RULING 208 extends it rather than replacing it, and an
+   * amendment that silently retires its target is the failure the ledger
+   * exists to make impossible.
+   */
+  const r146 = index.resolve("R-0146");
+  assert.ok(r146 && ["ACTIVE", "AMENDED"].includes(r146.status), "RULING 146 stopped being current");
+});
+
+test("Q: we hold text from a host later found to disallow crawling. Purge it?", () => {
+  assert.equal(claim("sources.held_artifact_retention"), "keep-and-use-with-replacement-obligation");
+  /*
+   * This one was a live Needs Sean row (NH286) for exactly as long as nothing
+   * answered it. The answer is deliberately general — permission binds the
+   * next fetch, not possession — so the next host discovered after the fact
+   * does not reopen the same question.
+   */
+  assert.match(
+    flat(law),
+    /binds the next fetch, never possession|does not govern what we\s*may hold/i,
+    "current law no longer separates permission-to-fetch from possession",
+  );
+  const r209 = index.resolve("R-0209");
+  assert.ok(r209, "RULING 209 is gone");
+  assert.match(flat(r209.body), /KEEP AND USE/, "RULING 209 no longer records the author's decision");
+});
+
 test("answering a CURRENT question never requires the history files", () => {
   // The bar: if answering a current-rule question still requires reading the
   // chronology, the remediation is not finished. So the history is measured

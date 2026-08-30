@@ -459,10 +459,30 @@ test("ASK01: the pack's source allow-list is exactly its records' URLs", () => {
 });
 
 test("ASK01: a named gap always says WHOSE gap it is", () => {
+  /*
+   * Shape only — this asserts that `whose` is one of two values and that a gap
+   * carries a sentence. It does NOT rule on whether either sentence is earned.
+   *
+   * The THEIRS example is written the way an earned one now reads, and that is
+   * deliberate. It used to say "The district has not published it yet." — a
+   * bare, unscoped claim about a government, which is exactly the sentence
+   * ASK-07 removed from `app/api/ask/grounded/route.ts` on 2026-08-29 because
+   * nothing in the input measured it. A worked example in a fixture is copied
+   * far more often than it is read, so leaving the deleted sentence sitting
+   * here as the illustration of a valid THEIRS would reintroduce it by hand.
+   * A THEIRS publication claim is earned only from a first-party observation
+   * of that exact sitting, still inside its freshness window
+   * (`lib/ask/agenda-publication.ts`), and it renders SCOPED TO THE MOMENT IT
+   * WAS TAKEN — which is what this one shows.
+   */
   const p = pack({
     gaps: [
       { whose: "OURS", statement: "We have not recorded this yet." },
-      { whose: "THEIRS", statement: "The district has not published it yet." },
+      {
+        whose: "THEIRS",
+        statement:
+          "As of 2026-08-29, Pima County had not posted an agenda for that meeting. We are still checking.",
+      },
     ],
   });
   for (const gap of p.gaps) {

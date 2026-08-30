@@ -291,7 +291,17 @@ export interface LegistarRecordProvenance {
  * a caller who climbs over that refusal still has nothing to render.
  */
 export interface LegistarAgendaRecord {
-  readonly recordClass: RecordClass;
+  /**
+   * The discriminant, as a LITERAL rather than as `RecordClass`.
+   *
+   * It was widened by an `as RecordClass` cast at the construction site, which
+   * made the union structurally undiscriminable while its own doc comment said
+   * it was discriminated by this field. A consumer narrowing on it got
+   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
+   * only ways out were a cast or a bespoke type guard — both of which undo the
+   * class filter at exactly the boundary that exists to enforce it.
+   */
+  readonly recordClass: "AGENDA";
   readonly eventItemId: number;
   readonly eventId: number | null;
   readonly sequence: number | null;
@@ -311,7 +321,17 @@ export interface LegistarAgendaRecord {
  * here and only here for exactly that reason.
  */
 export interface LegistarOutcomeRecord {
-  readonly recordClass: RecordClass;
+  /**
+   * The discriminant, as a LITERAL rather than as `RecordClass`.
+   *
+   * It was widened by an `as RecordClass` cast at the construction site, which
+   * made the union structurally undiscriminable while its own doc comment said
+   * it was discriminated by this field. A consumer narrowing on it got
+   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
+   * only ways out were a cast or a bespoke type guard — both of which undo the
+   * class filter at exactly the boundary that exists to enforce it.
+   */
+  readonly recordClass: "ACTION_SUMMARY";
   readonly eventItemId: number;
   readonly eventId: number | null;
   /** How the reader gets back to the matter. Not the item's printed title. */
@@ -362,7 +382,17 @@ export interface LegistarRecordedVote {
  * item alone to a roll call.
  */
 export interface LegistarRollCallRecord {
-  readonly recordClass: RecordClass;
+  /**
+   * The discriminant, as a LITERAL rather than as `RecordClass`.
+   *
+   * It was widened by an `as RecordClass` cast at the construction site, which
+   * made the union structurally undiscriminable while its own doc comment said
+   * it was discriminated by this field. A consumer narrowing on it got
+   * `Property 'votes' does not exist on type 'LegistarAgendaRecord'` and the
+   * only ways out were a cast or a bespoke type guard — both of which undo the
+   * class filter at exactly the boundary that exists to enforce it.
+   */
+  readonly recordClass: "ROLL_CALL";
   readonly eventItemId: number;
   readonly votes: readonly LegistarRecordedVote[];
   readonly provenance: LegistarRecordProvenance;
@@ -448,7 +478,7 @@ export function toAgendaRecords(
     readOn: context.readOn,
   };
   return items.map((item) => ({
-    recordClass: "AGENDA" as RecordClass,
+    recordClass: "AGENDA",
     eventItemId: item.EventItemId,
     eventId: item.EventItemEventId ?? context.eventId,
     sequence: item.EventItemAgendaSequence,
@@ -500,7 +530,7 @@ export function toOutcomeRecords(
     const rollCall = classifyRollCall(item, votes);
 
     records.push({
-      recordClass: "ACTION_SUMMARY" as RecordClass,
+      recordClass: "ACTION_SUMMARY",
       eventItemId: item.EventItemId,
       eventId: item.EventItemEventId ?? context.eventId,
       matterFile: item.EventItemMatterFile,
@@ -551,7 +581,7 @@ export function rollCallRecordFrom(
 ): LegistarRollCallRecord | null {
   if (votes === null || votes.length === 0) return null;
   return {
-    recordClass: "ROLL_CALL" as RecordClass,
+    recordClass: "ROLL_CALL",
     eventItemId,
     votes: votes.map((vote) => ({
       personName: vote.VotePersonName?.trim() || null,

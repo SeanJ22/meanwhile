@@ -1,0 +1,523 @@
+{
+  "generatedOn": "2026-08-29",
+  "generatedAt": "2026-08-30T05:40:12.819Z",
+  "tenants": [
+    "pima"
+  ],
+  "sittings": [
+    {
+      "meetingId": "legistar:pima:1848",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "slug": "pima",
+      "eventId": 1848,
+      "bodyName": "Board of Supervisors",
+      "jurisdiction": "Pima County, AZ",
+      "startsAt": "2026-05-05T13:30:00-07:00",
+      "sourceOrg": "Pima County Clerk of the Board",
+      "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1848&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+      "extraction": "RETRIEVED",
+      "extractionNote": null,
+      "publication": {
+        "agendaStatusName": "Final",
+        "agendaStatusId": 10,
+        "agendaFile": "https://legistar.granicus.com/pima/meetings/2026/5/1848_A_Board_of_Supervisors_26-05-05_Online_Agenda.pdf",
+        "agendaLastPublishedUtc": "2026-05-04T22:41:41.94",
+        "minutesStatusName": "Draft",
+        "minutesStatusId": 9,
+        "minutesFile": "https://legistar.granicus.com/pima/meetings/2026/5/1848_M_Board_of_Supervisors_26-05-05_Meeting_Summary.pdf",
+        "minutesLastPublishedUtc": "2026-05-05T22:34:28.753",
+        "inSiteUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1848&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "lastModifiedUtc": "2026-05-05T22:34:28.917",
+        "videoStatus": "Public",
+        "observedAt": "2026-08-30T05:38:01.398Z"
+      },
+      "minutesPointer": {
+        "url": "https://legistar.granicus.com/pima/meetings/2026/5/1848_M_Board_of_Supervisors_26-05-05_Meeting_Summary.pdf",
+        "status": "Draft",
+        "host": "legistar.granicus.com",
+        "retrievalNote": "Not retrieved. legistar.granicus.com answers \"User-agent: *\" with \"Disallow: /\" (docs/sources.md, 2026-08-29), so this route is not walked. The document is known to exist and its contents are not held."
+      },
+      "agenda": [
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 312821,
+          "eventId": 1848,
+          "sequence": 7,
+          "agendaNumber": "4.",
+          "title": "Opposing Tucson Electric Power (TEP) Rate Increase Resolution\nRESOLUTION NO. 2026 - XX, of the Board of Supervisors, opposing the proposed rate increase by Tucson Electric Power (TEP). (District 3)",
+          "matterFile": "File ID 20165",
+          "matterType": "Agenda Item",
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1848/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "recordClass": "ACTION_SUMMARY",
+          "eventItemId": 312821,
+          "eventId": 1848,
+          "matterFile": "File ID 20165",
+          "action": "approve",
+          "disposition": "PASSED",
+          "dispositionRaw": "Pass",
+          "dispositionConflict": null,
+          "dispositionGap": null,
+          "mover": "Jennifer Allen",
+          "seconder": "Andrés Cano",
+          "tallyText": "It was moved by Chair Allen, seconded by Supervisor Cano and carried by a 2-1 vote, Supervisor Christy voted \"Nay,\" Supervisors Heinz and Scott were absent for the vote, to approve the item.",
+          "matterStatus": "Approved",
+          "onConsentCalendar": false,
+          "rollCall": "RECORDED",
+          "rollCallGap": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1848/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "rollCalls": [
+        {
+          "recordClass": "ROLL_CALL",
+          "eventItemId": 312821,
+          "votes": [
+            {
+              "personName": "Rex Scott",
+              "personId": 206,
+              "value": "Not Present",
+              "sort": 1
+            },
+            {
+              "personName": "Jennifer Allen",
+              "personId": 216,
+              "value": "Aye",
+              "sort": 2
+            },
+            {
+              "personName": "Matt Heinz",
+              "personId": 205,
+              "value": "Not Present",
+              "sort": 3
+            },
+            {
+              "personName": "Steve Christy",
+              "personId": 198,
+              "value": "Nay",
+              "sort": 4
+            },
+            {
+              "personName": "Andrés Cano",
+              "personId": 221,
+              "value": "Aye",
+              "sort": 5
+            }
+          ],
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/eventitems/312821/votes",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "failedRollCallExtractions": [
+        312807
+      ],
+      "voteRequestFailures": [],
+      "routesWalked": [
+        "WEBAPI_EVENTS",
+        "WEBAPI_EVENTITEMS",
+        "WEBAPI_EVENTITEM_VOTES"
+      ],
+      "publicationObservations": [
+        {
+          "meetingId": "legistar:pima:1848",
+          "provenance": "FIRST_PARTY_PUBLISHER",
+          "report": "AVAILABLE",
+          "observedAt": "2026-08-30T05:38:01.398Z",
+          "observedUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1848&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+          "sourceOrg": "Pima County Clerk of the Board",
+          "evidenceQuote": "EventAgendaStatusName=Final; EventAgendaFile=https://legistar.granicus.com/pima/meetings/2026/5/1848_A_Board_of_Supervisors_26-05-05_Online_Agenda.pdf; EventAgendaLastPublishedUTC=2026-05-04T22:41:41.94",
+          "routeId": "WEBAPI_EVENT"
+        }
+      ]
+    },
+    {
+      "meetingId": "legistar:pima:9000001",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "slug": "pima",
+      "eventId": 9000001,
+      "bodyName": "Board of Supervisors",
+      "jurisdiction": "Pima County, AZ",
+      "startsAt": "2026-08-20T13:00:00-07:00",
+      "sourceOrg": "Pima County Clerk of the Board",
+      "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+      "extraction": "RETRIEVED",
+      "extractionNote": null,
+      "publication": {
+        "agendaStatusName": "Final",
+        "agendaStatusId": 10,
+        "agendaFile": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+        "agendaLastPublishedUtc": "2026-07-27T23:39:33.63",
+        "minutesStatusName": "Draft",
+        "minutesStatusId": 9,
+        "minutesFile": "https://legistar.granicus.com/pima/meetings/2026/7/1869_M_Board_of_Supervisors_26-07-28_Meeting_Summary.pdf",
+        "minutesLastPublishedUtc": "2026-07-29T17:16:44.777",
+        "inSiteUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "lastModifiedUtc": "2026-07-29T17:16:44.893",
+        "videoStatus": "Public",
+        "observedAt": "2026-08-30T05:38:01.398Z"
+      },
+      "minutesPointer": {
+        "url": "https://legistar.granicus.com/pima/meetings/2026/7/1869_M_Board_of_Supervisors_26-07-28_Meeting_Summary.pdf",
+        "status": "Draft",
+        "host": "legistar.granicus.com",
+        "retrievalNote": "Not retrieved. legistar.granicus.com answers \"User-agent: *\" with \"Disallow: /\" (docs/sources.md, 2026-08-29), so this route is not walked. The document is known to exist and its contents are not held."
+      },
+      "agenda": [
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325763,
+          "eventId": 1869,
+          "sequence": 1,
+          "agendaNumber": null,
+          "title": "PIMA COUNTY BOARD OF SUPERVISORS",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325764,
+          "eventId": 1869,
+          "sequence": 2,
+          "agendaNumber": null,
+          "title": "AGENDA/ADDENDUM AND BROADCAST INFORMATION",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325765,
+          "eventId": 1869,
+          "sequence": 3,
+          "agendaNumber": null,
+          "title": "PUBLIC COMMENTS",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325766,
+          "eventId": 1869,
+          "sequence": 4,
+          "agendaNumber": null,
+          "title": "HEARING ROOM NOTICE",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325767,
+          "eventId": 1869,
+          "sequence": 5,
+          "agendaNumber": null,
+          "title": "ACCESSIBILITY",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325768,
+          "eventId": 1869,
+          "sequence": 6,
+          "agendaNumber": null,
+          "title": "PAGE BREAK",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1869/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "outcomes": [],
+      "rollCalls": [],
+      "failedRollCallExtractions": [],
+      "voteRequestFailures": [],
+      "routesWalked": [
+        "WEBAPI_EVENTS",
+        "WEBAPI_EVENTITEMS",
+        "WEBAPI_EVENTITEM_VOTES"
+      ],
+      "publicationObservations": [
+        {
+          "meetingId": "legistar:pima:9000001",
+          "provenance": "FIRST_PARTY_PUBLISHER",
+          "report": "AVAILABLE",
+          "observedAt": "2026-08-30T05:38:01.398Z",
+          "observedUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+          "sourceOrg": "Pima County Clerk of the Board",
+          "evidenceQuote": "EventAgendaStatusName=Final; EventAgendaFile=https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf; EventAgendaLastPublishedUTC=2026-07-27T23:39:33.63",
+          "routeId": "WEBAPI_EVENT"
+        }
+      ]
+    },
+    {
+      "meetingId": "legistar:pima:9000002",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "slug": "pima",
+      "eventId": 9000002,
+      "bodyName": "Board of Supervisors",
+      "jurisdiction": "Pima County, AZ",
+      "startsAt": "2026-08-21T13:00:00-07:00",
+      "sourceOrg": "Pima County Clerk of the Board",
+      "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+      "extraction": "ZERO_ROWS_FAILED",
+      "extractionNote": "The eventitems route returned ZERO rows for this sitting. A zero-row extraction is a FAILED extraction, never an agenda with nothing on it (RULING 100), so no claim is made about what was noticed or decided here.",
+      "publication": {
+        "agendaStatusName": "Final",
+        "agendaStatusId": 10,
+        "agendaFile": "https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf",
+        "agendaLastPublishedUtc": "2026-07-27T23:39:33.63",
+        "minutesStatusName": "Draft",
+        "minutesStatusId": 9,
+        "minutesFile": "https://legistar.granicus.com/pima/meetings/2026/7/1869_M_Board_of_Supervisors_26-07-28_Meeting_Summary.pdf",
+        "minutesLastPublishedUtc": "2026-07-29T17:16:44.777",
+        "inSiteUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "lastModifiedUtc": "2026-07-29T17:16:44.893",
+        "videoStatus": "Public",
+        "observedAt": "2026-08-30T05:38:01.398Z"
+      },
+      "minutesPointer": {
+        "url": "https://legistar.granicus.com/pima/meetings/2026/7/1869_M_Board_of_Supervisors_26-07-28_Meeting_Summary.pdf",
+        "status": "Draft",
+        "host": "legistar.granicus.com",
+        "retrievalNote": "Not retrieved. legistar.granicus.com answers \"User-agent: *\" with \"Disallow: /\" (docs/sources.md, 2026-08-29), so this route is not walked. The document is known to exist and its contents are not held."
+      },
+      "agenda": [],
+      "outcomes": [],
+      "rollCalls": [],
+      "failedRollCallExtractions": [],
+      "voteRequestFailures": [],
+      "routesWalked": [
+        "WEBAPI_EVENTS",
+        "WEBAPI_EVENTITEMS",
+        "WEBAPI_EVENTITEM_VOTES"
+      ],
+      "publicationObservations": [
+        {
+          "meetingId": "legistar:pima:9000002",
+          "provenance": "FIRST_PARTY_PUBLISHER",
+          "report": "AVAILABLE",
+          "observedAt": "2026-08-30T05:38:01.398Z",
+          "observedUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1869&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+          "sourceOrg": "Pima County Clerk of the Board",
+          "evidenceQuote": "EventAgendaStatusName=Final; EventAgendaFile=https://legistar.granicus.com/pima/meetings/2026/7/1869_A_Board_of_Supervisors_26-07-28_Online_Agenda.pdf; EventAgendaLastPublishedUTC=2026-07-27T23:39:33.63",
+          "routeId": "WEBAPI_EVENT"
+        }
+      ]
+    },
+    {
+      "meetingId": "legistar:pima:9000003",
+      "bodyId": "ocd-division/country:us/state:az/county:pima#governing",
+      "ocdId": "ocd-division/country:us/state:az/county:pima",
+      "slug": "pima",
+      "eventId": 9000003,
+      "bodyName": "Board of Supervisors",
+      "jurisdiction": "Pima County, AZ",
+      "startsAt": "2026-08-22T13:00:00-07:00",
+      "sourceOrg": "Pima County Clerk of the Board",
+      "sourceUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+      "extraction": "RETRIEVED",
+      "extractionNote": null,
+      "publication": {
+        "agendaStatusName": "Final",
+        "agendaStatusId": 10,
+        "agendaFile": "https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf",
+        "agendaLastPublishedUtc": "2026-07-31T00:04:16.38",
+        "minutesStatusName": "Draft",
+        "minutesStatusId": 9,
+        "minutesFile": "https://legistar.granicus.com/pima/meetings/2026/8/1851_M_Board_of_Supervisors_26-08-03_Meeting_Summary.pdf",
+        "minutesLastPublishedUtc": "2026-08-03T22:30:59.807",
+        "inSiteUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+        "lastModifiedUtc": "2026-08-03T22:30:59.883",
+        "videoStatus": "Public",
+        "observedAt": "2026-08-30T05:38:01.398Z"
+      },
+      "minutesPointer": {
+        "url": "https://legistar.granicus.com/pima/meetings/2026/8/1851_M_Board_of_Supervisors_26-08-03_Meeting_Summary.pdf",
+        "status": "Draft",
+        "host": "legistar.granicus.com",
+        "retrievalNote": "Not retrieved. legistar.granicus.com answers \"User-agent: *\" with \"Disallow: /\" (docs/sources.md, 2026-08-29), so this route is not walked. The document is known to exist and its contents are not held."
+      },
+      "agenda": [
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325923,
+          "eventId": 1851,
+          "sequence": 1,
+          "agendaNumber": null,
+          "title": "The Pima County Board of Supervisors met remotely in special session through technological means at 1:00 p.m. on Monday, August 3, 2026.  Upon roll call, those present and absent were as follows:",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325924,
+          "eventId": 1851,
+          "sequence": 2,
+          "agendaNumber": "1.",
+          "title": "ROLL CALL",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325925,
+          "eventId": 1851,
+          "sequence": 3,
+          "agendaNumber": "2.",
+          "title": "PLEDGE OF ALLEGIANCE",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325926,
+          "eventId": 1851,
+          "sequence": 4,
+          "agendaNumber": "3.",
+          "title": "LAND ACKNOWLEDGEMENT STATEMENT",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325937,
+          "eventId": 1851,
+          "sequence": 5,
+          "agendaNumber": null,
+          "title": "ELECTIONS",
+          "matterFile": null,
+          "matterType": null,
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        },
+        {
+          "recordClass": "AGENDA",
+          "eventItemId": 325938,
+          "eventId": 1851,
+          "sequence": 6,
+          "agendaNumber": "4.",
+          "title": "Canvass\r\nPursuant to A.R.S. §16-642(A), canvass of the election results for the July 21, 2026, Primary Election.",
+          "matterFile": "File ID 20420",
+          "matterType": "Agenda Item",
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "outcomes": [
+        {
+          "recordClass": "ACTION_SUMMARY",
+          "eventItemId": 325938,
+          "eventId": 1851,
+          "matterFile": "File ID 20420",
+          "action": "approve",
+          "disposition": "PASSED",
+          "dispositionRaw": "Pass",
+          "dispositionConflict": null,
+          "dispositionGap": null,
+          "mover": "Andrés Cano",
+          "seconder": "Matt Heinz",
+          "tallyText": "It was moved by Supervisor Cano and seconded by Supervisor Heinz, to canvass the election. No vote was taken at this time.\r\n\r\n[ADD COMMENTS]\r\n\r\nUpon the vote, the motion carried 4-0, Supervisor Scott was absent.",
+          "matterStatus": "Approved",
+          "onConsentCalendar": false,
+          "rollCall": "OUTCOME_WITHOUT_ROLL_CALL",
+          "rollCallGap": "The publisher recorded the action and no per-person roll call for it. How each member voted is missing from their record.",
+          "provenance": {
+            "endpoint": "https://webapi.legistar.com/v1/pima/events/1851/eventitems",
+            "sourceOrg": "Pima County Clerk of the Board",
+            "readOn": "2026-08-29"
+          }
+        }
+      ],
+      "rollCalls": [],
+      "failedRollCallExtractions": [],
+      "voteRequestFailures": [],
+      "routesWalked": [
+        "WEBAPI_EVENTS",
+        "WEBAPI_EVENTITEMS",
+        "WEBAPI_EVENTITEM_VOTES"
+      ],
+      "publicationObservations": [
+        {
+          "meetingId": "legistar:pima:9000003",
+          "provenance": "FIRST_PARTY_PUBLISHER",
+          "report": "AVAILABLE",
+          "observedAt": "2026-08-30T05:38:01.398Z",
+          "observedUrl": "https://pima.legistar.com/MeetingDetail.aspx?LEGID=1851&GID=243&G=7B470E9E-E35C-4698-8FA6-D778FB28F394",
+          "sourceOrg": "Pima County Clerk of the Board",
+          "evidenceQuote": "EventAgendaStatusName=Final; EventAgendaFile=https://legistar.granicus.com/pima/meetings/2026/8/1851_A_Board_of_Supervisors_26-08-03_Online_Agenda.pdf; EventAgendaLastPublishedUTC=2026-07-31T00:04:16.38",
+          "routeId": "WEBAPI_EVENT"
+        }
+      ]
+    }
+  ]
+}

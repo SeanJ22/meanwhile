@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-29 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **161 sessions.**
+Newest first. **162 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -44,14 +44,26 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 **Needs Sean.** NH282, NH283
 
-## 2026-08-29 - pilot autonomous shadow loop and reader answerability
+## 2026-08-29 - public-record acquisition doctrine and Legistar class fix
+
+**What it finished.** 1 row(s).
+
+- **NH286** — The snapshot holds extracted PDF text from three vendor hosts whose robots.txt says 'User-agent: * / Disallow: /'. The text was collected 2026-08-13 to 2026-08-21, before the permission was ever read; nothing has been fetched from any of them since. The walking question is now settled and recorded in docs/sources.md - none of the three will be walked again. What is NOT settled, and is not a session's call, is whether the text already stored should stay, be purged, or be re-obtained by a permitted route. It is a legal and policy question about public records, not an engineering one.
 
 **What it started.** 2 row(s) opened, 2 still open.
 
-- **NH286** — The snapshot holds extracted PDF text from three vendor hosts whose robots.txt says 'User-agent: * / Disallow: /'. The text was collected 2026-08-13 to 2026-08-21, before the permission was ever read; nothing has been fetched from any of them since. The walking question is now settled and recorded in docs/sources.md - none of the three will be walked again. What is NOT settled, and is not a session's call, is whether the text already stored should stay, be purged, or be re-obtained by a permitted route. It is a legal and policy question about public records, not an engineering one. *(open)*
+- **NH288** — A reader asking the flagship question is answered about 'that Pima meeting'. canonicalBodyIdentity for ocd-division/country:us/state:az/county:pima#governing returns name 'Pima', divisionLabel 'Pima', nameIsBodysOwn false - the registry holds no body-own name for a county governing body, so nameAReaderCanSay falls back to the division label. Measured 2026-08-29 across the committed snapshot: 78 body entities, 14 with nameIsBodysOwn false, and the corpus carries a different name for all 14. The body ID is correct throughout - this is the DISPLAY NAME only, and the exact-body identity repair of PR #223 is unaffected. CLAUDE.md requires reader surfaces to speak plain language. *(open)*
+- **NH289** — pnpm gates reported 11 of 12 green at session start with release:freeze FAILING, and it was failing before any work began. The gate is behaving CORRECTLY under RULING 204 - production moved under the last reading - but the move is self-inflicted and will recur after every observer commit. Measured 2026-08-29: production serves 2be8e854 (the observer commit titled 'Post-deploy integrity reading', whose only changed file is data/ops/production-integrity.json) with its own deployId 6a93a21a0eb31100089890e1, while the reading inside it was taken against parent b0f2299e. *(open)*
+
+**Needs Sean.** Nothing.
+
+## 2026-08-29 - pilot autonomous shadow loop and reader answerability
+
+**What it started.** 2 row(s) opened, 1 still open.
+
 - **NH287** — 16 of the 20 speculative Pima routes carry a recorded outcome with jurisdiction 'az'. Several of those walks were actually against school districts and water districts, not the county. Promoting a route to REQUIRED on that evidence would let a school-district technique become a required county route on the strength of 'somewhere in Arizona'. The route-floor repair therefore deliberately did NOT implement an OBSERVED_HERE proof kind, and 0 method routes are currently REQUIRED for Pima. *(open)*
 
-**Needs Sean.** NH286, NH287
+**Needs Sean.** NH287
 
 ## 2026-08-28 · grounded-Ask integration session
 

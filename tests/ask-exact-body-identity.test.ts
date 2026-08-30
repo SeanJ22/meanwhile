@@ -373,6 +373,56 @@ for (const question of OUTCOME_QUESTIONS) {
   });
 }
 
+test("the per-member vote rows are BOUNDED, and the bound is reported rather than silent", async () => {
+  /*
+   * **A TRUNCATION NOBODY CAN SEE READS AS THE WHOLE SET.**
+   *
+   * Measured on production 2026-08-29, the first time this question was asked
+   * of the new outcome records: one sitting produced 285 per-member vote rows,
+   * they outnumbered every other record in the pack better than eight to one,
+   * and the synthesis rung wrote prose about the votes that never named the
+   * body — so `validateAnswer` refused it on
+   * `answer-does-not-name-resolved-subject` and the reader received the
+   * records with no prose at all. The evidence was correct and unusable.
+   *
+   * Two things are asserted, and the second is the one that matters more over
+   * time. The pack is BOUNDED, so the meeting record that says whose sitting
+   * this was cannot be crowded out. And the bound is REPORTED: the denominators
+   * carry how many votes are held AND how many reached the pack, because a cap
+   * applied silently is indistinguishable from a body that only voted sixty
+   * times — which is the completeness lie this repository refuses everywhere
+   * else.
+   */
+  const body = await ask("How did the Pima County Board of Supervisors vote last time?");
+  const votes = (body.records ?? []).filter((r) => r.kind === "MEETING_MEMBER_VOTE");
+  assert.ok(votes.length > 0, "the pack carried no per-member vote at all");
+
+  const held = body.denominators?.personVotesHeldForThatMeeting;
+  const inPack = body.denominators?.personVoteRowsInPack;
+  assert.equal(typeof held, "number", "how many per-person votes are HELD must be reported");
+  assert.equal(typeof inPack, "number", "and how many reached the pack must be reported too");
+  assert.equal(inPack, votes.length, "the reported pack count must be the actual pack count");
+  assert.ok(
+    held! >= inPack!,
+    "the store cannot hold fewer votes than reached the pack",
+  );
+  assert.ok(
+    votes.length <= 60,
+    `${votes.length} vote rows reached the pack; an unbounded class crowds out the meeting record`,
+  );
+
+  /*
+   * And each row says WHAT was voted on. "Rex Scott voted Aye." says who and
+   * how and never what, which is what left the synthesis rung with nothing to
+   * anchor prose to.
+   */
+  const withItem = votes.filter((r) => /^On "/.test(r.text));
+  assert.ok(
+    withItem.length > 0,
+    "no vote row carried the item it was cast on: " + JSON.stringify(votes[0]?.text),
+  );
+});
+
 test("NEGATIVE CONTROL: a body the outcome store holds nothing for still gets the OURS gap", async () => {
   /*
    * The half of the original protection that must never lapse. The outcome

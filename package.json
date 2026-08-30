@@ -157,6 +157,7 @@
     "method:learn-vail-agenda": "tsx scripts/learn-vail-agenda-routes.mts",
     "method:prove": "tsx scripts/method-prove.mts",
     "method:promote-portability": "tsx scripts/method-promote-portability.mts",
+    "method:type-applicability": "tsx scripts/method/type-applicability.mts",
     "method:candidates": "tsx scripts/method-candidate.mts",
     "mine:campaign-sites": "tsx scripts/mine-campaign-sites.mts",
     "mine:wiki-leaders": "tsx scripts/mine-wiki-leaders.mts",

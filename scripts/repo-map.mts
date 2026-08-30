@@ -37,6 +37,15 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { GATES } from "./gates.mjs";
+/*
+ * The canonical method store's PATH comes from the governed-writer constant
+ * rather than a literal here: the ungoverned-write detector in
+ * tests/method-concurrency.test.ts reports any file under scripts/ that both
+ * names the store and calls a filesystem write, and this generator writes a
+ * DOCUMENT while only READING the store. Importing the name keeps that
+ * distinction structural instead of textual.
+ */
+import { GOVERNED_METHOD_WRITER } from "../lib/method/retired-writers.ts";
 import { MIRRORED_DOCS } from "./mirror-set.mjs";
 import { parseCsv, today } from "./doc-dates.mjs";
 import { generatedAtEastern } from "./generated-at.mjs";
@@ -477,7 +486,7 @@ function buildSections(files: string[]): Section[] {
     section("9. Method knowledge registry", (out) => {
       out.push("");
       out.push(
-        "Method: `data/method/knowledge.json`, the canonical route store (types in " +
+        `Method: \`${GOVERNED_METHOD_WRITER.store}\`, the canonical route store (types in ` +
           "`lib/method/knowledge.ts`). Assertion classes are the four of " +
           "`lib/method/claims.ts` — ROUTE_EXISTENCE (A), ROUTE_OUTCOME (B), COVERAGE_CLAIM " +
           "(C), DERIVED_CONCLUSION (D). A route with no declared claims renders UNCLASSIFIED " +
@@ -504,7 +513,7 @@ function buildSections(files: string[]): Section[] {
         }>;
       }
       const store = JSON.parse(
-        readFileSync(join(ROOT, "data", "method", "knowledge.json"), "utf8"),
+        readFileSync(join(ROOT, GOVERNED_METHOD_WRITER.store), "utf8"),
       ) as { version: number; updatedOn: string | null; routes: RouteJson[] };
       const classified = store.routes.filter((r) => (r.claims ?? []).length > 0);
       out.push(

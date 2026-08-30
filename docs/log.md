@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **164 sessions.**
+Newest first. **165 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -25,7 +25,20 @@ are hard-removed from both stores — this list is the whole surviving record.
 
 ---
 
+## session-a-2026-08-30-nonhunt · 2026-08-30
+
+Session A of the autonomous-system reconciliation: adopted RULINGS 210-220, the generated constitution view, the scheduler provider decision, the health-contract schemas and scaffolds, the generated status ledger and repo inventory, and the RULING 218 reroute — no discovery hunting, hence the marker; the same session closed the JOB rows under the label session-a-2026-08-30 before the marker convention was applied to it.
+
+**What it started.** 2 row(s) opened, 2 still open.
+
+- **NS22** — The reader-answerability suite (RULING 210) shipped this session and runs today with an honest zero state: '0 questions loaded — awaiting owner corpus'. It evaluates YOUR questions against the rendered DOM of the four pilot ZIPs (85701, 85641, 07866, 03255) and turns every red into a typed diagnostic WorkItem. What it cannot do is invent the corpus: the questions are the owner's definition of what a reader must be able to learn, and a session writing them would be grading its own homework. Templates like 'When does [BODY] meet next?' instantiate mechanically from the registry; hand-authored adversarial literals are a distinct class that guards against an incorrectly small generated universe. The file is data/health/reader-questions.json; the schema is lib/health/reader-question.ts; 'pnpm reader:suite' shows the zero state. THE QUESTION: how do you want to author the corpus? Options: (a) you write questions in plain language (a sentence each is enough) and a session formalizes them into the schema for your review; (b) a session drafts a candidate corpus and you strike, amend and approve each question; (c) you dictate a handful of seed questions per ZIP now and the corpus grows continuously as RULING 210 expects. *(open)*
+- **NS23** — The permanent control set (RULING 211) needs roughly 40-60 OWNER-VERIFIED facts across the four pilot ZIPs — both known-present facts and known-absence negative controls carrying their authority, period and verified-through scope — weighted toward the dangerous failure modes (a denied present fact; an asserted absent one). Controls are injected unlabeled into normal flow; only the scoring harness may read control identity (the isolation is proven by a seeded-failure test shipped this session). A session cannot verify these facts for you without the set measuring the session instead of the system. The file is data/health/control-facts.json; the schema is lib/health/control-fact.ts; 'pnpm truth:controls --prove-fixture' demonstrates the whole plumbing on synthetic data and deletes it after. THE QUESTION: how do you want to build the answer key? Options: (a) a session proposes candidate facts with their sources and you verify or strike each one — your verification is what makes them controls; (b) you name facts you already know cold (meetings you attended, filings you read) and a session formalizes them; (c) a mix, starting with the negative controls since false presence is the costlier failure. *(open)*
+
+**Needs Sean.** NS22, NS23
+
 ## session-a-2026-08-30 · 2026-08-30
+
+The same Session A as session-a-2026-08-30-nonhunt: this label carries its 14 RULING 218 closures of the JOB dispatch-delay and failed-run rows, recorded before the non-hunt marker was added to the label.
 
 **What it finished.** 14 row(s).
 

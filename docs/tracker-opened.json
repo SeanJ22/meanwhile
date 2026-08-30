@@ -2122,5 +2122,13 @@
       "JOB17",
       "JOB18"
     ]
+  },
+  {
+    "session": "session-a-2026-08-30-nonhunt",
+    "opened": "2026-08-30",
+    "ids": [
+      "NS22",
+      "NS23"
+    ]
   }
 ]

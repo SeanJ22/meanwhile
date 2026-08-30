@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **378 open**, 446 resolved.
+- **374 open**, 450 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -666,7 +666,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**93 open · 110 resolved.**
+**92 open · 111 resolved.**
 
 ### P1
 
@@ -727,8 +727,6 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 **NH27** — Springfield is one of Kearsarge seven member towns and had no bodies in this registry at all. Eight are now enumerated and recorded KNOWN_UNCOVERED. They are not wired because the town iCal export is capped at the OLDEST 50 events and stops at 2024-11-07 - six different views all return the identical stale document and the plugin REST API answers 404. The town has NOT stopped meeting: its own front page links events/cemetery-trustees-meeting-2026-08-11 and events/conservation-commission-meeting-2026-09-03 [expected-future: the town's own published meeting date, read 2026-08-21]. The live meetings are in the HTML, and no adapter here reads that shape for this town yet. Wiring to the stale feed would have shipped eight bodies rendering as having no meetings while the town publishes them.
 
 **NH28** — Springfield was found by probing six conventional iCal paths against the town host - one request, and a town that had been dark since the registry was built produced eight named governing bodies. The same probe was run against Bradford, New London, Warner and Newbury; only Springfield and Newbury answered. Sutton at www.sutton-nh.gov does not resolve at all and needs its real host found. The remaining towns need the OTHER branches walked - vendor portals, board pages, minutes archives - rather than the conclusion that they publish nothing. Six of seven member towns were dark and this session moved one of them.
-
-**NH288** — A reader asking the flagship question is answered about 'that Pima meeting'. canonicalBodyIdentity for ocd-division/country:us/state:az/county:pima#governing returns name 'Pima', divisionLabel 'Pima', nameIsBodysOwn false - the registry holds no body-own name for a county governing body, so nameAReaderCanSay falls back to the division label. Measured 2026-08-29 across the committed snapshot: 78 body entities, 14 with nameIsBodysOwn false, and the corpus carries a different name for all 14. The body ID is correct throughout - this is the DISPLAY NAME only, and the exact-body identity repair of PR #223 is unaffected. CLAUDE.md requires reader surfaces to speak plain language.
 
 **NH29** — Springfield NH went from zero bodies in the registry to eight enumerated and the gap ledger is byte-identical at 22383 bytes before and after. The ledger measures special-district coverage against the Census of Governments, which is right and is not the whole of coverage: RULING 9 says the Census counts GOVERNMENTS and the product renders BODIES, and a New Hampshire town is one government and a dozen or more bodies. So the instrument that is supposed to say how covered a place is cannot see the unit the product actually renders. Six of Kearsarge seven member towns are dark at the body level and nothing measures that. This is a defect in the instrument rather than a gap in coverage, which is why it is a row and not a ledger entry.
 
@@ -1018,7 +1016,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**30 open · 84 resolved.**
+**27 open · 87 resolved.**
 
 ### P1
 
@@ -1029,10 +1027,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH264** — refresh-daily is on cron 09:11 UTC. Of the three scheduled runs on record two failed, the one success started 637 minutes late, and today's has not appeared at all ten hours past its cron.
 
 **NH280** — PR #216 built and bundled clean, then failed Netlify secret scanning: Pima County's own Clerk of the Board page emitted a Google Maps browser key into the HTML that scripts/learn-legistar-horizon.mts recorded verbatim as a test fixture. Scanning the whole tree for the class found more than Netlify reported - the same fixture also carried a live 30-day CivicPlus bearer token repeated five times, and a second fixture, the New London NH calendar, carried a different Google key that would have been the next red deploy. The repair sanitizes captured pages at the moment of acquisition, records the provenance of every redaction without keeping the credential, and adds a gate so GitHub CI catches the class before Netlify does.
-
-**NH290** — Build Check run #463, measured: PR #227 changed four docs/ files and release-freeze-gate.mts printed 'changed paths COULD NOT BE READ', because on a pull_request event it diffed against origin/main — a ref a depth-1 actions/checkout does not have. The unreadable list classified cannot-tell, cannot-tell is production-changing, and the freeze reached the exact paperwork it is scoped never to reach. HEAD~1 on a push failed the same way. Distinct from NH289: this is WE COULD NOT MEASURE THE DIFF; NH289 is the measured diff pointing at a commit that is not the application.
-
-**NH291** — tests/verify-extraction-client-rendered.test.ts imports three pure functions from scripts/verify-extraction.mts, whose main() ran unguarded at top level — so every test run, local and CI, fetched all 44 roster pages live and rewrote docs/extraction-verification.md as a side effect of an unrelated suite. Live calls in tests, which the fixture law forbids; this session watched the doc's stamp move under two suite runs before finding the cause.
 
 ### P2
 
@@ -1047,8 +1041,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
 
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
-
-**NH289** — pnpm gates reported 11 of 12 green at session start with release:freeze FAILING, and it was failing before any work began. The gate is behaving CORRECTLY under RULING 204 - production moved under the last reading - but the move is self-inflicted and will recur after every observer commit. Measured 2026-08-29: production serves 2be8e854 (the observer commit titled 'Post-deploy integrity reading', whose only changed file is data/ops/production-integrity.json) with its own deployId 6a93a21a0eb31100089890e1, while the reading inside it was taken against parent b0f2299e.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

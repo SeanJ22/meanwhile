@@ -34,15 +34,27 @@ import {
  * RULING 193 says an instrument may rest its verdict only on evidence it
  * actually checked, and this one had not checked where the names were.
  *
- * ## The fixture is the real page
+ * ## The fixture is recorded from the real page
  *
- * `data/hunt/vail-governing-board.html` is 1.4 MB of the district's own served
- * HTML, collected 2026-08-27. Asserting against the bytes that produced the
- * false absence is what makes this a regression test rather than a restatement
- * — and it needs no network, so it cannot go green because a site changed.
+ * `tests/fixtures/rosters/vail-governing-board-payload.html` carries the five
+ * name strings exactly as the district's own Nuxt payload ships them, in a
+ * `<script>` tag, with the surrounding prose reduced to what the page shows a
+ * reader. It is an EXCERPT of a real 200 response, not something written here.
+ *
+ * It deliberately does not live in `data/hunt/`, where the 1.4 MB original sits:
+ * `.gitignore` excludes `/data/hunt/*.html`, so a test asserting against that
+ * file passes on the machine that collected it and dies at module load on CI,
+ * where the file does not exist. That is exactly what happened on the first
+ * push of this test, and it is why recorded responses belong in
+ * `tests/fixtures/` — the home CLAUDE.md already names for them.
+ *
+ * No network, so it cannot go green because a site changed.
  */
 
-const VAIL_PAGE = readFileSync("data/hunt/vail-governing-board.html", "utf8");
+const VAIL_PAGE = readFileSync(
+  "tests/fixtures/rosters/vail-governing-board-payload.html",
+  "utf8",
+);
 
 /** The five seated members, read off the district's own accordion panels. */
 const SEATED = ["Allison Pratt", "Callie Tippett", "Jen Anderson", "Ed Buster", "Chris King"];
@@ -87,42 +99,48 @@ test("a name published only in the client-render payload is never called absent"
 test("without the payload the instrument reaches a WRONG verdict on every seated member", () => {
   /*
    * The counterfactual, stated rather than implied: this is what the old
-   * two-argument call did, and it is why NH216 exists.
-   *
-   * **Four of the five come back `DISAGREED` and Ed Buster comes back
-   * `PARTIAL`,** and the reason is worth recording because it is a second, real
-   * weakness in this instrument. `judgeName` tests membership with
-   * `String.includes`, so the given name "Ed" is found inside "published",
-   * "used", "provided" — on any page in the corpus. A two-letter given name
-   * therefore cannot produce `DISAGREED` no matter what the page says.
-   *
-   * That inflates `PARTIAL` for short names and it is NOT fixed here: this
-   * session's change is the payload blind spot, and widening the matcher to
-   * word boundaries would move counts in a report that is published, which
-   * deserves its own measured change rather than a drive-by. It is named in the
-   * assertion below so the next session finds it stated rather than buried.
-   *
-   * What the assertion actually pins is the thing that matters: pre-fix, not
-   * one of these names reached a verdict that agrees with the page publishing
-   * them.
+   * two-argument call did, and it is why NH216 exists. Not one of the five
+   * reached a verdict agreeing with the page that publishes them.
    */
-  const preFix = SEATED.map((name) => [name, judgeName(name, rendered)] as const);
-  for (const [name, verdict] of preFix) {
+  for (const name of SEATED) {
+    const verdict = judgeName(name, rendered);
     assert.ok(
       verdict !== "AGREED" && verdict !== "AGREED_IN_EMBEDDED_DATA",
       `${name} already agreed pre-fix — this file's premise is stale`,
     );
   }
-  assert.deepEqual(
-    preFix.filter(([, v]) => v === "DISAGREED").map(([n]) => n),
-    ["Allison Pratt", "Callie Tippett", "Jen Anderson", "Chris King"],
-    "the set flatly accused of being absent has changed",
+});
+
+test("KNOWN WEAKNESS: a short given name can never reach DISAGREED, whatever the page says", () => {
+  /*
+   * **A second real defect in this instrument, pinned rather than fixed.**
+   *
+   * `judgeName` tests membership with `String.includes`, so the two-letter
+   * given name "Ed" is found inside "published", "used", "provided", "amended"
+   * — ordinary words on ordinary government pages. A short given name
+   * therefore cannot produce `DISAGREED` no matter what the page says, which
+   * silently inflates `PARTIAL`.
+   *
+   * It is observable in the real corpus run: against the full 1.4 MB Vail page,
+   * whose prose contains "published", Ed Buster came back `PARTIAL` while his
+   * four colleagues came back `DISAGREED` — the same false absence wearing a
+   * softer label, which is why it went unnoticed.
+   *
+   * NOT fixed in this change. Widening the matcher to word boundaries moves
+   * counts in `docs/extraction-verification.md`, a published report, and that
+   * deserves its own measured change rather than a drive-by inside a different
+   * repair. Pinned here so the next session finds it STATED — and this
+   * assertion will start failing the moment somebody fixes it, which is the
+   * signal to delete this test rather than to work around it.
+   */
+  const page = renderedText("<html><body><p>The agenda was published.</p></body></html>");
+  assert.equal(
+    judgeName("Ed Buster", page),
+    "PARTIAL",
+    "if this is now DISAGREED the substring weakness is fixed — delete this test and say so",
   );
-  assert.deepEqual(
-    preFix.filter(([, v]) => v === "PARTIAL").map(([n]) => n),
-    ["Ed Buster"],
-    'only the two-letter given name "Ed" should escape DISAGREED, via the substring weakness',
-  );
+  /* The control: a long given name on the same page is correctly DISAGREED. */
+  assert.equal(judgeName("Bartholomew Buster", page), "DISAGREED");
 });
 
 /* ══════════════════════════════════════════════════════════════════════

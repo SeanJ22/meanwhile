@@ -160,43 +160,66 @@ function snapshotFor(item: WorkItem, tasks: readonly RouteTask[]): CompletionSna
  * THE AUDIT: why was each route considered applicable?
  * ====================================================================== */
 
-test("AUDIT: every speculative route on the real Pima floor matched ZERO typed dimensions", () => {
+test("AUDIT: typed dimensions now DO WORK on the real Pima floor, and matching one is still not proof", () => {
+  /*
+   * HISTORY, KEPT BECAUSE THE NUMBER MOVED AND THIS IS WHERE IT SAYS SO. At
+   * method version 55 every speculative route on this floor matched ZERO typed
+   * dimensions — 114 of 116 routes stated none, so there was nothing to match
+   * and nothing to fail, and this test asserted that measurement so it could
+   * not quietly rot. On 2026-08-30 (NH287) the dimensions were populated from
+   * each route's own recorded evidence: outcome jurisdictions became `states`,
+   * recorded vendor hosts became `platforms`, recorded first-party hosts
+   * became `publishers`. So the floor now shows typed evidence doing real
+   * work in BOTH directions — routes matching `state`, and routes DEMOTED
+   * where their recorded evidence disagrees with this jurisdiction — while
+   * the load-bearing invariant is unchanged: nothing speculative is PROVEN,
+   * and matching a dimension under UNKNOWN portability is still not proof.
+   */
   const { knowledge, floor } = realFloor();
 
   assert.ok(knowledge.routes.length > 100, "the committed store was not loaded; the floor is vacuous");
   assert.equal(floor.methodVersion, knowledge.version, "the floor pins the method version");
   assert.ok(floor.exploratory.length > 0, "no speculative route — this suite would prove nothing");
 
+  let matchedSomething = 0;
+  let demotedOnEvidence = 0;
   for (const r of floor.exploratory) {
-    /*
-     * THE MECHANICAL FINDING. Not one of them matched state, government type,
-     * platform or publisher. They flowed through on UNKNOWN portability with
-     * every dimension unstated on at least one side — which is not a narrow
-     * match, it is the ABSENCE of a constraint to fail.
-     */
-    assert.deepEqual(
-      r.matchedDimensions,
-      [],
-      `${r.routeId} is filed as speculative but matched ${r.matchedDimensions.join("+")}`,
-    );
-    assert.ok(
-      r.unstatedDimensions.length > 0,
-      `${r.routeId} matched nothing and stated nothing — the audit trail must say which dimension`,
-    );
+    assert.notEqual(r.grade, "PROVEN", `${r.routeId} graded PROVEN and is filed as an experiment`);
     assert.equal(r.grade, "OFFERED_UNPROVEN");
     assert.equal(r.proof, "APPLICABILITY_UNPROVEN");
+    /*
+     * THE AUDIT TRAIL IS TOTAL: every one of the four dimensions is accounted
+     * for as matched, mismatched or unstated — a dimension that silently fell
+     * out of all three buckets would be the old collapse back again.
+     */
+    assert.equal(
+      r.matchedDimensions.length + r.mismatchedDimensions.length + r.unstatedDimensions.length,
+      4,
+      `${r.routeId}: matched ${r.matchedDimensions.join("+")}, mismatched ${r.mismatchedDimensions.join("+")}, unstated ${r.unstatedDimensions.join("+")} do not account for all four dimensions`,
+    );
+    if (r.matchedDimensions.length > 0) matchedSomething += 1;
+    if (r.mismatchedDimensions.length > 0) demotedOnEvidence += 1;
     assert.ok(
       r.matchedFields.length > 0,
       `${r.routeId} is on a field-narrowed floor and must name the field that put it in scope`,
     );
   }
 
+  // The population is observable on the floor, in both directions. If either
+  // number returns to zero the typed dimensions have stopped doing work and
+  // somebody needs to read `pnpm method:type-applicability`'s report.
+  assert.ok(matchedSomething > 0, "no speculative route matched a typed dimension — the store has lost its typed evidence");
+  assert.ok(
+    demotedOnEvidence > 0,
+    "no route was demoted on disagreeing evidence — the government-type-aware demotion found nothing to do",
+  );
+
   // And the counterpart: the audit table is printable, so the finding is not
   // reachable only through a debugger.
   const described = describeFloor(floor);
   assert.match(described, /MANDATORY —/);
   assert.match(described, /SPECULATIVE EXPERIMENTS —/);
-  assert.match(described, /matched NOTHING/);
+  assert.match(described, /evidence DISAGREES on /);
 });
 
 test("AUDIT: the typed dimensions excluded almost nothing, and the report says the number", () => {

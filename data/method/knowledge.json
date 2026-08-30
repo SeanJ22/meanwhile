@@ -1,6 +1,6 @@
 {
   "version": 61,
-  "updatedOn": "2026-08-29",
+  "updatedOn": "2026-08-30",
   "routes": [
     {
       "id": "party-county-directory",
@@ -1437,10 +1437,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "az.gov",
+          "azdirect.az.gov"
+        ],
         "note": "established on one state portal (az.gov -> azdirect.az.gov). The SHAPE — a portal whose directory redirects across hosts while serving root-relative links — is common enough to be worth inheriting, and one state is not evidence that it travels. Portability is earned from recorded outcomes."
       },
       "outcomes": [
@@ -1455,7 +1460,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-26 while accounting for 88 unreachable Arizona leads: 80 shared one host, and varying the client showed the host was serving 404 for paths that resolve on the directory's redirect target",
       "learnedOn": "2026-08-26",
-      "learnedAtVersion": 1
+      "learnedAtVersion": 1,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "census-of-governments-gap-walk",
@@ -1506,7 +1512,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "nh"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -1543,7 +1551,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "nh"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -1585,7 +1595,9 @@
         "states": [],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "nh.gov"
+        ],
         "note": "measured across the *.nh.gov family, where rungs 2, 3 AND 4 are all refused 403 and a HEADER-LESS request is served 200. Isolating one variable at a time identified the cause: the substring `we-the-people civic meeting index`, which every rung puts in the User-Agent. Not the TLS stack — curl carrying the same suffix is refused too. The SHAPE — a WAF that pattern-matches an unfamiliar agent string, so that the politest client in the ladder is the one most likely to be refused — belongs to no single state, and one family is not evidence that it travels."
       },
       "outcomes": [
@@ -1600,7 +1612,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-26 after a private curl-only client reported 23 governments unreachable that Node's fetch reached; rung-by-rung measurement across the NH state family showed every identified rung refused and a bare request served, which is the opposite of what the ladder's numbering implies",
       "learnedOn": "2026-08-26",
-      "learnedAtVersion": 5
+      "learnedAtVersion": 5,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "identified-agent-refused",
@@ -1614,10 +1627,17 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "nh"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "morriscountyclerk.org",
+          "newbury.nh.gov",
+          "nh.gov",
+          "tucsonaz.gov"
+        ],
         "note": "measured across the *.nh.gov family, where a raw Chrome User-Agent is served 200 and the same UA with `we-the-people civic meeting index` appended is refused 403. The SHAPE is a WAF pattern-matching an unfamiliar agent string, which is not New Hampshire's alone. The OPPOSITE also exists in the same state and must keep it honest: newbury.nh.gov refuses every Node client and admits curl, and morriscountyclerk.org and tucsonaz.gov both ALLOWLIST this project by name. Which way a host leans is measured, never assumed."
       },
       "outcomes": [
@@ -1632,7 +1652,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-26 by isolating one header at a time after every rung of the ladder was refused by hosts that served a bare request",
       "learnedOn": "2026-08-26",
-      "learnedAtVersion": 6
+      "learnedAtVersion": 6,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "who-bills-for-it",
@@ -1643,10 +1664,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "nh"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "revenue.nh.gov"
+        ],
         "note": "proved on New Hampshire's Department of Revenue Administration, whose 2024 village sheet names 10 of the 15 Merrimack County governments the Census of Governments recorded with NO website. The SHAPE is statutory rather than local — a district that levies must have its rate set and published by somebody — and the specific publisher differs per state, so the route travels further than the URL does."
       },
       "outcomes": [
@@ -1661,7 +1686,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 from this repository's own note: states/TIERS.md said 'revenue.nh.gov's municipal and property division publishes the rate tables precisely because somebody has to be billed', and that host had refused this project at every rung until rung 3b landed the same day",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 7
+      "learnedAtVersion": 7,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "sitemap-when-the-index-is-javascript",
@@ -1674,10 +1700,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "nh"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "revenue.nh.gov"
+        ],
         "note": "proved on revenue.nh.gov, whose Municipal and Property Division landing page is 243,735 bytes carrying two usable anchors while its sitemap named 26 URLs about rates, villages and precincts. Any CMS that hydrates its navigation has this shape; recorded UNKNOWN because one site is not a measurement of how common it is."
       },
       "outcomes": [
@@ -1692,7 +1722,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 after a division landing page returned almost no links despite being a quarter of a megabyte — the giveaway that the navigation is built client-side",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 8
+      "learnedAtVersion": 8,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "reported-address-has-rotted",
@@ -1707,7 +1738,14 @@
         "states": [],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "centralhooksettwater.com",
+          "laketoddvillagedistrict.us",
+          "mtoliveboe.org",
+          "newbury.nh.gov",
+          "newburyh.org",
+          "www.mtlakes.org"
+        ],
         "note": "measured across the 2022 Census of Governments clip for three counties. The column is dated 2022 and no process re-checks it. Every register with a URL column has this shape — a state agency directory, a school-district list, a licensing roster — so the CHECK travels even though the specific rot does not."
       },
       "outcomes": [
@@ -1722,7 +1760,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 after a promotion control refused a page: mtoliveboe.org, the Mount Olive Township School District's reported address, answers HTTP 200 and serves a Japanese personal-finance blog",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 9
+      "learnedAtVersion": 9,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "zip-polygon-intersect-district-layers",
@@ -1735,7 +1774,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -1766,7 +1807,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -1795,10 +1838,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "gisdata.pima.gov"
+        ],
         "note": "`gisdata.pima.gov/arcgis/rest/services` answers 404 and the real root is `/arcgis1/`. Four other guessed hostnames also 404'd or failed to connect. The reliable route is to search the ArcGIS Online sharing API for the publisher's items and read the `url` field off one — it names the server, the folder and the layer index. Any ArcGIS-published government has this shape."
       },
       "outcomes": [
@@ -1813,7 +1860,8 @@
       "subBranches": [],
       "origin": "AZ 85641 hyperfocus, 2026-08-27",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 12
+      "learnedAtVersion": 12,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "vendor-api-leaked-by-hydration-payload",
@@ -1827,12 +1875,16 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [
           "apptegy"
         ],
-        "publishers": [],
+        "publishers": [
+          "vailschooldistrict.org"
+        ],
         "note": "vailschooldistrict.org serves 1.44 MB of HTML with NO roster in it — which is exactly why an earlier extraction verification found five of six stored names absent from the page they were cited to. `window.clientWorkStateTemp` carries the Thrillshare org id and every CMS endpoint. The route is the general one: a hydrated page must tell the browser where its data lives, so the payload always names it."
       },
       "outcomes": [
@@ -1847,7 +1899,8 @@
       "subBranches": [],
       "origin": "AZ 85641 hyperfocus, 2026-08-27",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 13
+      "learnedAtVersion": 13,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "older-vendor-api-version-returns-redacted-fields",
@@ -1859,7 +1912,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [
           "apptegy"
@@ -1893,7 +1948,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -1922,10 +1979,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "azdor.gov"
+        ],
         "note": "azdor.gov carries `User-agent: ClaudeBot / Disallow: /` alongside `User-agent: * / Allow: /` and a Cloudflare Content-Signal of `search=yes,ai-train=no,use=reference`. This project's client has always identified as we-the-people/1.0 with a mailto, so `*` is its group and `Allow: /` is its rule. The route is the REPORTING obligation, not a technique: a host that has thought about AI crawlers specifically has expressed something, and a session that silently took the `*` rule would be hiding that from the author."
       },
       "outcomes": [
@@ -1940,7 +2001,8 @@
       "subBranches": [],
       "origin": "AZ 85641 hyperfocus, 2026-08-27",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 16
+      "learnedAtVersion": 16,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "tls-altname-failure-is-a-moved-host-not-a-wall",
@@ -1951,10 +2013,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "to.pima.gov",
+          "www.pima.gov"
+        ],
         "note": "to.pima.gov (the Pima County Treasurer's historical hostname) resolves to 159.233.179.13, connects, and presents a certificate for another name; plain HTTP answers 500. curl reports only `000`, which reads identically to a network block, and the robots sweep therefore returned CANNOT_TELL and refused the walk. Node's fetch names the actual cause. The rule: when a sweep says CANNOT_TELL, ask a client that reports the TLS error before recording anything about the publisher."
       },
       "outcomes": [
@@ -1969,7 +2036,8 @@
       "subBranches": [],
       "origin": "AZ 85641 hyperfocus, 2026-08-27",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 17
+      "learnedAtVersion": 17,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "multi-tenant-vendor-apex-403-is-routing-not-permission",
@@ -1980,10 +2048,16 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
-        "publishers": [],
+        "platforms": [
+          "arcgis"
+        ],
+        "publishers": [
+          "azgeo.az.gov"
+        ],
         "note": "services6.arcgis.com serves org-scoped paths only, so a bare /robots.txt has no tenant and the router answers 403 with the body `Invalid URL`. The robots sweep correctly returns CANNOT_TELL and fails safe. RULING 182: permission state and transport state are orthogonal — the resolution is the PUBLISHER's permission (azgeo.az.gov -> azgeo-data-hub-agic.hub.arcgis.com, ALLOWED) plus the item's own access and licence fields, not a softer read of the vendor's robots."
       },
       "outcomes": [
@@ -1998,7 +2072,8 @@
       "subBranches": [],
       "origin": "AZ 85641 hyperfocus, 2026-08-27",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 18
+      "learnedAtVersion": 18,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "zip-crosses-districts-so-one-point-is-never-the-answer",
@@ -2011,7 +2086,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2041,7 +2118,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2072,10 +2151,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "budgetsystem.azed.gov",
+          "pima.gov"
+        ],
         "note": "proved on Arizona, where A.R.S. 15-905(C) requires the notice and budgetsystem.azed.gov posts it as a filed workbook. The STATUTE is Arizona's; the SHAPE is that every state which reviews district budgets receives a hearing notice with it, so the route travels further than the URL does. Recorded UNKNOWN because one state is not a measurement."
       },
       "outcomes": [
@@ -2090,7 +2174,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 for Empire Elementary School District No. 37, which two independent official enumerations (Pima County GIS and the NCES CCD LEA directory) record with a BLANK website field. The district operates no schools and employs no staff, which helps explain the blank — but a blank field is a dated measurement, not a permanent absence, and no source consulted says this district cannot publish one. (Corrected 2026-08-27: this route's origin previously read 'so it will never have a website', which converted a plausible cause into a verified permanent fact.) The route stands on its own either way: the meeting was found somewhere the district is COMPELLED to file rather than somewhere it chooses to publish, which is the stronger source regardless of whether a website ever appears.",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 21
+      "learnedAtVersion": 21,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "official-candidate-list-is-the-ballot-not-the-canvass",
@@ -2102,7 +2187,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2132,7 +2219,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2163,9 +2252,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "civicplus"
+        ],
         "publishers": [],
         "note": "proved on CivicPlus, whose pages carry content.civicplus.com/api/assets/<tenant>/<uuid> URLs and a per-item record with a parentId, i.e. a tree. Recorded UNKNOWN: the same shape is expected of any React/Redux-hydrated government CMS, and expecting is not measuring."
       },
@@ -2181,7 +2274,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 when a county CFD page rendered thirteen document names in its visible text and only five of them appeared as anchors in the served markup — the rest were reachable only through the embedded store.",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 24
+      "learnedAtVersion": 24,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "single-pass-cannot-tell-may-be-a-flapping-wall",
@@ -2193,10 +2287,16 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "apps.azsos.gov",
+          "azed.gov",
+          "www.azed.gov"
+        ],
         "note": "measured on two Arizona hosts with opposite answers, which is the point: azed.gov serves a Cloudflare interstitial to roughly one request in three and the real robots.txt to the others, while apps.arizona.vote served the interstitial at every one of rungs 2, 3, 4, 5 and 6. A retry distinguishes them and nothing else does. RULING 182 still governs the unresolved case: the route fails safe and the FACT is hunted elsewhere."
       },
       "outcomes": [
@@ -2211,7 +2311,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 after pnpm robots:sweep returned CANNOT_TELL for www.azed.gov, which would have refused the Arizona Department of Education — the authority holding the filings for a school district with no website.",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 25
+      "learnedAtVersion": 25,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "county-levy-resolution-is-the-taxing-universe",
@@ -2223,7 +2324,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2253,9 +2356,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "civicclerk"
+        ],
         "publishers": [],
         "note": "proved on CivicClerk, whose embed reads window.clerkEmbedProps = {tenant, categoryIds} and whose API then answers an unauthenticated OData GET at <tenant>.api.civicclerk.com/v1/Events. The SHAPE is every embed-delivered portal: the browser has to be told which tenant to render, so the page must carry the identifier, and the identifier is the whole key. Recorded UNKNOWN because one vendor is not a measurement of the class."
       },
@@ -2271,7 +2378,8 @@
       "subBranches": [],
       "origin": "conceived 2026-08-27 because the Central Arizona Water Conservation District governs 85641 and its own meetings page served 222,565 bytes with no dated meeting link and no iCalendar feed. The meetings were not missing from the page; the page was a client for a system whose name was in its own markup.",
       "learnedOn": "2026-08-27",
-      "learnedAtVersion": 27
+      "learnedAtVersion": 27,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "sos-general-election-candidate-listing",
@@ -2322,10 +2430,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "azleg.gov"
+        ],
         "note": "The SHAPE is as portable as anything this project holds: every elected office in the United States is created by a statute or a charter, and that instrument — not a canvass — is what says whether the office carries a party. It is also cheap, stable and citable: a canvass answers for ONE election and has to be re-read every cycle, while the statute answers for the office until the legislature changes it. Proved on A.R.S. 48-3708 and 48-3709 for the Central Arizona Water Conservation District, where four election-authority documents had failed to settle the same question. The limits are real and worth stating: a statute says what MUST happen and never what DID, so it can establish partisanship, apportionment and term but can never establish that a particular contest appeared on a particular ballot or who filed for it."
       },
       "outcomes": [
@@ -2346,7 +2458,8 @@
         "execution": "MACHINE",
         "discovery": "NEW_METHOD",
         "note": "Two plain fetches of azleg.gov/ars/ answered what four election-authority documents could not. The expensive part was realising the law was the instrument, not reading it."
-      }
+      },
+      "kind": "RETRIEVAL"
     },
     {
       "id": "cancelled-uncontested-district-election",
@@ -2359,7 +2472,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2398,7 +2513,10 @@
         "portability": "UNKNOWN",
         "states": [],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "boarddocs",
+          "diligent"
+        ],
         "publishers": [],
         "note": "THE SHAPE IS GENERAL AND IT IS A PERMISSION FACT, NOT A WALL. Two vendor hosts were read on 2026-08-27 and both publish a blanket disallow for every automated client: vailschooldistrict.community.highbond.com/robots.txt (23,479 bytes, 486 User-agent blocks, EXACTLY ONE 'User-agent: *' block carrying 'Disallow: /', and ZERO 'Allow:' directives anywhere in the file) and go.boarddocs.com/robots.txt (21,760 bytes, 'User-agent: * / Disallow: / / Crawl-delay: 1000'). Both were fetched successfully at rung 2, twice, with a bare curl client and with a browser user agent, so this is a READ RULE and not a transport failure — the CANNOT_TELL case of RULING 182 does not apply and must not be claimed here. THE CONSEQUENCE FOR ANY DISTRICT ON THESE PLATFORMS: there is no permitted machine route to the agenda through the vendor, and no number of client variations changes that, because varying the client to defeat a rule is not hunting, it is circumvention. The fact remains owed and the branches that stay eligible are the body's OWN publication, the statutory posting, a different vendor the same body also uses, and a public-records request. DO NOT RE-WALK THIS ON A CLOCK: a disallow is not an absence with an expiry, and RULING 184's recheck cadence is for blocked TRANSPORT, not for a published rule."
       },
@@ -2420,7 +2538,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "Cheap to establish and cheap to re-check: one robots.txt fetch per vendor host. The expensive mistake is skipping it and building an adapter first."
       },
-      "learnedAtVersion": 31
+      "learnedAtVersion": 31,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "district-site-hosts-events-but-links-agenda-out",
@@ -2435,7 +2554,9 @@
         "states": [],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.vailschooldistrict.org"
+        ],
         "note": "www.vailschooldistrict.org/robots.txt is 39 bytes and reads 'User-agent: * / Allow: / / Disallow: /api/'. So the body's own publication is PERMITTED — which is the source order this project already walks first — with one exclusion that matters: the Apptegy CMS API under /api/ is disallowed, so the vendor's JSON endpoint may not be called even though the pages it renders may be read. THE SITEMAP IS ALLOWED AND IS THE ENUMERATOR: /sitemap.xml, 37,821 bytes, 194 URLs, no robots restriction on it, and it names the board's own document folders directly. WHAT THE PAGE ACTUALLY HOLDS, read rather than assumed: the board documents page is Nuxt-rendered, and its embedded state carries every board meeting as an event with a description — but the description's whole agenda content is a LINK OUT. The district publishes the MEETING on its own site and publishes the AGENDA nowhere on it. That is why a permitted, correctly-walked Tier A source still yields no agenda document, and it is a distinct outcome from a source that failed."
       },
       "outcomes": [
@@ -2456,7 +2577,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "robots.txt, then sitemap.xml, then the board page's own embedded state. Three fetches."
       },
-      "learnedAtVersion": 32
+      "learnedAtVersion": 32,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "anchor-text-names-a-second-vendor-than-the-href",
@@ -2469,9 +2591,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "boarddocs",
+          "diligent"
+        ],
         "publishers": [],
         "note": "A GENUINELY NEW DETECTION AND THE MOST PORTABLE THING THIS HUNT PRODUCED. Vail's own board-meeting event descriptions contain, verbatim: 'Agenda can be found here - <a href=\"https://vailschooldistrict.community.highbond.com/Portal/\">https://go.boarddocs.com/az/vail/Board.nsf/Public</a>'. The HREF points at Highbond. The VISIBLE TEXT is a BoardDocs URL. They are different vendors and different tenants. A crawler that harvests hrefs — which is what every link-following route in this project does — sees exactly one portal and never learns the second one exists. THE SHAPE IS GENERAL: a body that migrates between agenda vendors very often updates the href and leaves the old URL as the link's visible words, or the reverse, because the two live in different halves of a CMS rich-text field and a human editor changes one. So the anchor TEXT of any government page is an independent source of tenant identifiers and must be extracted alongside the href. Note the practical caveat for this instance: both portals named here turn out to be robots-disallowed, so the second identifier does not unlock Vail. It is recorded because the DETECTION is what travels, not this instance's result — and a second tenant on a permitted vendor would."
       },
@@ -2493,7 +2620,8 @@
         "discovery": "NEW_METHOD",
         "note": "Free once known — it is a change to what the extractor keeps, not an extra fetch. Expensive to discover, because it is invisible to href-harvesting."
       },
-      "learnedAtVersion": 33
+      "learnedAtVersion": 33,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "novusagenda-public-portal-viewstate-search",
@@ -2507,7 +2635,9 @@
         "portability": "UNKNOWN",
         "states": [],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "novusagenda"
+        ],
         "publishers": [],
         "note": "PERMISSION IS CLEAN AND THAT IS THE FINDING: vailschools.novusagenda.com/robots.txt is HTTP 404, so the host publishes NO restriction, which is a definite permission answer and not a CANNOT_TELL. The portal is live — /agendapublic/ returns 84,595 bytes and /agendapublic/meetingsresponsive.aspx returns 35,506 — and its markup carries AgendaHTML and AgendaPDF markers, so agenda documents are what it serves. WHAT WAS TRIED AND DID NOT WORK: a bare viewstate POST to meetingsresponsive.aspx carrying __VIEWSTATE, __VIEWSTATEGENERATOR, __EVENTVALIDATION, the session cookie, btnSearch, and a 1/1/2015-12/31/2026 window in both txtCalendarFrom/hfFromDate and txtCalendarTo/hfToDate. It returned HTTP 200 and 35,442 bytes containing ZERO MeetingID links, ZERO agenda links, and a date range RESET TO THE PORTAL'S OWN DEFAULTS rather than echoing the window that was sent. THE RESET IS THE DIAGNOSIS: the date parameters were not applied, so the search never ran over the requested window. THIS IS A FAILED EXTRACTION AND IS RECORDED AS ONE (RULING 100) — a zero-row result from a search that did not accept its own parameters is not evidence that the portal holds no meetings, and it must never be written down as one. The untried branches are the Telerik date-picker's own callback protocol, a real browser at rung 6 driving the actual controls, and the per-meeting DisplayAgendaPublic.aspx?MeetingID=N endpoint enumerated directly rather than through the search form. NH229's claim that this portal 'carries everything before 2017-03-14' is UNVERIFIED and is mildly contradicted by the portal defaulting to a current window."
       },
@@ -2529,7 +2659,8 @@
         "discovery": "NEW_METHOD",
         "note": "Four fetches to establish permission and shape. The adapter itself is unbuilt and is the open work: an ASP.NET postback grid needs either the vendor's own callback protocol or a browser at rung 6."
       },
-      "learnedAtVersion": 34
+      "learnedAtVersion": 34,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "county-upcoming-elections-page-as-a-document-inventory",
@@ -2578,9 +2709,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "novusagenda"
+        ],
         "publishers": [],
         "note": "THE GENERAL SHAPE, AND IT EXPLAINS A WHOLE CLASS OF 'THE PORTAL IGNORED MY QUERY'. On NovusAGENDA's MeetingsResponsive.aspx the visible date inputs txtCalendarFrom and txtCalendarTo carry the DISABLED attribute, and the hidden hfFromDate/hfToDate beside them are written by the ddlDateRange <select> ('Last Month', 'Last Year', 'Custom Date Range', ...). A POST that sets the hidden fields and submits btnSearch therefore sets a value the server recomputes from the dropdown before the search runs, and the response echoes the DEFAULT window rather than the requested one. THE DIAGNOSTIC IS THE ECHO: read back whatever the page reports the applied window to be, and compare it to the window you asked for. Equal means the query ran; different means it did not, and a zero-row result from a query that did not run is a FAILED extraction (RULING 100) and never an absence. THE FIX IS TO OPERATE THE CONTROL THAT OWNS THE VALUE: select the named window, or select 'Custom Date Range' — which is what ENABLES the text boxes — and then type into them. A browser at rung 6 finds this in one step because it refuses to click a disabled element and says so; a hand-built POST cannot find it at all, because a disabled input is still serialisable and still ignored."
       },
@@ -2602,7 +2737,8 @@
         "discovery": "NEW_METHOD",
         "note": "One browser session to find it, and then it is a property of the platform rather than of the tenant. Every NovusAGENDA tenant has the same form."
       },
-      "learnedAtVersion": 36
+      "learnedAtVersion": 36,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "vendor-portal-is-a-historical-archive-with-a-measured-boundary",
@@ -2614,9 +2750,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "novusagenda"
+        ],
         "publishers": [],
         "note": "THE FINDING, AND THE CONTROL THAT MAKES IT ONE. vailschools.novusagenda.com is live (robots.txt is 404, so the host publishes NO restriction) and its search works once driven through ddlDateRange. Over 2010-01-01 to 2027-12-31 it returns meetings and agenda ITEMS whose newest is 2017-02-28. Over 2024-01-01 to 2026-12-31 it returns 'No records to display' — a MEASURED zero, from a query whose window the portal echoed back correctly, minutes after the same selectors in the same session read thirty rows. THE INSTRUMENT CHECK IS THE WHOLE POINT: a reader that returns zero because its selector is wrong returns zero on every tenant in the world and reads, in a report, exactly like a body that publishes nothing. Five candidate control tenants (hillsboroughcounty, cityofmesaaz, pinalcountyaz, cityofsanmateo, brevardcounty) proved NOTHING in either direction — all five are wildcard hosts answering 'Error: An HTTP error occurred' with no search form — and are recorded as proving nothing. The control that worked was the same tenant over a wider window. WHAT THIS DOES AND DOES NOT LICENSE: it licenses 'this vendor holds this body's agendas through 2017-02-28 and no later'. It does NOT license 'this body publishes no current agenda' — Vail publishes to Highbond, which disallows every automated client by published rule, and that wall is unchanged. A migrated-off portal is a real historical source and a permanent non-source for anything after its boundary."
       },
@@ -2638,7 +2778,8 @@
         "discovery": "NEW_METHOD",
         "note": "Two browser sessions: one to find the control, one to establish the boundary with a wide window and a narrow one. The adapter itself is ordinary once the form is understood."
       },
-      "learnedAtVersion": 37
+      "learnedAtVersion": 37,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "prove-the-reader-before-believing-a-zero",
@@ -2651,7 +2792,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -2686,10 +2829,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "azgovernor.gov"
+        ],
         "note": "THE RECORD CLASS A CORPUS OF OFFICEHOLDERS USUALLY LACKS. Rosters answer who someone IS; almost nothing answers what they have DONE, and a question about an official's year is unanswerable without it. WHAT WORKS: the office's own site publishes /executive-orders as a paginated index, and each entry links a detail page carrying the designation ('Executive Order 2026-02'), the office's own title for it, the DATE on the line immediately after the designation, the full operative text, and a signed PDF at a predictable path (/sites/default/files/executive-order-<n>.pdf). Walked on azgovernor.gov 2026-08-28: 37 orders indexed across 4 index pages, 12 detail pages read, and 12 of 12 carried BOTH a date and a signed PDF. THE DATE IS THE POINT AND IT IS READ POSITIONALLY AND THEN VALIDATED: 'in the last 12 months' is a window, an order with no date can be placed neither inside nor outside it, and a positional read that is not shape-checked produces a WRONG date the first time the template moves rather than a null. PERMISSION: robots.txt allows every content path with Crawl-delay 10, and the delay is honoured — a public body asking for ten seconds gets ten seconds. THE PORTABILITY CLAIM IS DELIBERATELY NARROW: this is one office on one Drupal template. What travels is the QUESTION — does this officeholder's own office publish its actions with dates and documents? — and that is worth asking of every executive before any third-party aggregator, because the office's own publication is the primary source and an aggregator is a copy of it."
       },
       "outcomes": [
@@ -2710,7 +2857,8 @@
         "discovery": "NEW_METHOD",
         "note": "One index walk plus one fetch per order, at whatever crawl delay the host asks for. The expensive part is not the retrieval; it is establishing that the office publishes at all, which is one page."
       },
-      "learnedAtVersion": 39
+      "learnedAtVersion": 39,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "the-other-half-of-an-executive-record-is-behind-a-legislature-disallow",
@@ -2724,7 +2872,10 @@
         "states": [],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "apps.azleg.gov",
+          "www.azleg.gov"
+        ],
         "note": "A GOVERNOR'S RECORD HAS TWO HALVES AND THEY HAVE DIFFERENT PUBLISHERS. Executive orders come from the executive's own office and are readable. Bills signed and vetoed are legislative history, and in Arizona they live in the legislature's bill-status application at apps.azleg.gov, whose robots.txt is 29 bytes: 'User-agent: * / Disallow: /'. Read 2026-08-28. That is a PERMISSION verdict and not a wall — no client variation changes it, and varying the client to defeat a published rule is circumvention rather than hunting (RULING 148: a disallow is never re-walked on a clock). WHAT REMAINS ELIGIBLE: www.azleg.gov is ALLOWED with Crawl-delay 120 and named disallows (/DocumentsForBill.asp, /FormatDocument.asp, /ExecutiveNominationsByNominee.asp, /search/), so the legacy site is a live branch that was NOT walked here and is recorded so the next session starts from the permission rather than from a guess. The other eligible branches are the executive office's own announcements of bill action, the Secretary of State's chaptered-laws publication, and a public-records request. THE CONSEQUENCE FOR ANY ANSWER BUILT ON THE HALF WE HAVE: it must NAME the missing half. Six executive orders presented without saying vetoes are absent reads as a complete account of a governor's year, which is an absence asserted by omission."
       },
       "outcomes": [
@@ -2745,7 +2896,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "One robots.txt fetch per legislature host. Cheap to establish and the expensive mistake is skipping it and building an adapter first."
       },
-      "learnedAtVersion": 40
+      "learnedAtVersion": 40,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "body-publishes-its-schedule-separately-from-its-agendas",
@@ -2756,10 +2908,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.pima.gov"
+        ],
         "note": "THE SHAPE, AND IT IS A PUBLISHING PRACTICE RATHER THAN A DEFECT. Pima County's Legistar tenant answered a 2026-08-01 to 2026-11-01 query with seven events, newest 2026-08-25 and none in September, from an adapter whose forward horizon is 60 days and whose denominators reconcile exactly (fetched 16, normalized 16, three placeless drops accounted). The September sittings are real and are published on the county's own site as a RULE — 'Meetings Beginning at 5 p.m. 2nd and 4th Tuesdays of the month', with the room and street address — at www.pima.gov/2599/Board-of-Supervisors-Agenda-Schedule. THE DIAGNOSTIC: when a tenant's calendar stops a fortnight out, ask the body's OWN site for a meeting-schedule page before concluding anything about the body; the two records have different publication clocks and a vendor calendar running dry is not a body that has stopped meeting. THE CONTROL that makes this practice rather than code: Vail Unified, same snapshot and same pipeline on the same day, DOES publish individual future sittings and its September 8 and September 22 render. WHAT IT DOES NOT LICENSE: computing meetings from the rule. Cancellations, holidays and special sessions override a recurring schedule, and rendering a computed date as a published sitting is a render default manufacturing a claim. The rule is a different RECORD, honestly describable as one."
       },
       "outcomes": [
@@ -2835,7 +2991,8 @@
             "survives": "THE ROUTE, AND THE PUBLISHING-PRACTICE OBSERVATION UNDER IT. A body's schedule and its agendas really are different records on different publication clocks, Vail Unified remains the control that makes it practice rather than a defect, and asking the body's own site is still worth doing. What is withdrawn is the conclusion that the body's own site was the ONLY place those sittings existed — the diagnostic was too narrow, because the vendor's own web UI is a third record again."
           }
         }
-      ]
+      ],
+      "kind": "RETRIEVAL"
     },
     {
       "id": "reconcile-the-adapter-before-suspecting-it",
@@ -2848,9 +3005,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "legistar"
+        ],
         "publishers": [],
         "note": "A READER SAYING 'THE MEETINGS ARE MISSING' IS A CLAIM ABOUT A SURFACE, AND IT HAS TWO COMPLETELY DIFFERENT CAUSES THAT LOOK IDENTICAL. Either rows are being lost between the source and the screen, or the source never had them. THE CHEAP DISCRIMINATOR RUNS FIRST AND IS ALREADY WRITTEN DOWN: the snapshot records fetched, normalized and drops-by-reason per source. If fetched equals normalized and the drops are accounted, no row was lost and the pipeline is not the suspect — which is a strictly stronger statement than 'the code looks right'. THEN ASK THE PRIMARY SOURCE THE SAME QUESTION THE ADAPTER ASKED, by hand, over the same window: if the API returns what the snapshot holds, the adapter is exonerated by observation rather than by inspection. Only then is the question about the publisher, and only then is it worth hunting other routes. Doing this in the other order costs a session: it is possible to read an adapter for an hour and learn nothing that one query would have settled. NOTE THE TRAP IN THE OTHER DIRECTION TOO — a reconciled denominator that is missing required source records is still a wrong result (RULING 100). Reconciling proves nothing was DROPPED; it never proves enough was ASKED FOR."
       },
@@ -2928,7 +3089,8 @@
             "survives": "THE ROUTE AND ITS OUTCOME, BOTH INTACT AND BOTH STILL USABLE. Reading the per-source denominators before opening the adapter is still the right first move and still exonerated the pipeline by observation rather than by inspection, and the seven events over the window are still exactly what that endpoint returned. What is withdrawn is one word about what that answer established."
           }
         }
-      ]
+      ],
+      "kind": "RETRIEVAL"
     },
     {
       "id": "sibling-host-is-a-different-permission-decision",
@@ -2941,10 +3103,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "apps.azleg.gov",
+          "www.azleg.gov"
+        ],
         "note": "THE MISTAKE THIS PREVENTS IS RECORDING A HOST'S DISALLOW AS A FACT ABOUT A GOVERNMENT. apps.azleg.gov publishes User-agent: * / Disallow: / and is correctly not walked. www.azleg.gov is a DIFFERENT HOST with a DIFFERENT ANSWER: a specific disallow list (/DocumentsForBill.asp, /FormatDocument.asp, /search/, /xml/, /aspWebCalendar/, /ExecutiveNominationsByNominee.asp, /Wordpress/, /azlegwp/, /aspnet_client/), Crawl-delay: 120, and a sitemap it advertises. The legislature's own publications are not forbidden anywhere in it. THE PROCEDURE: when a vendor or application subdomain disallows, resolve the PUBLISHER's own hostname and read ITS robots.txt before writing down anything about the record. A body very often runs a locked-down interactive app beside an open publication site, and the second one is where the primary documents actually live. FOUND ON THE PERMITTED HOST for Arizona: www.azleg.gov/sessionlaws/ (every bill enacted, by chapter) and www.azleg.gov/governors-letters/ (the Governor's transmittal letters to the legislature, which is where signing statements and VETOES are published). Neither is under a disallowed path."
       },
       "outcomes": [
@@ -2965,7 +3132,8 @@
         "discovery": "NEW_METHOD",
         "note": "One robots.txt per candidate hostname. The crawl-delay is the real cost here — 120 seconds between requests on this host, so a walk is paced in minutes rather than seconds and must be planned that way."
       },
-      "learnedAtVersion": 43
+      "learnedAtVersion": 43,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "read-the-navigation-off-the-404-page",
@@ -2979,10 +3147,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.azleg.gov"
+        ],
         "note": "A 404 FROM A PUBLISHED SITEMAP IS A LEAD AND NOT A WALL. www.azleg.gov advertises robotsitemap.xml; it lists 28 .asp URLs written against a scheme the site has since left, and SessionLaws.asp returns HTTP 404. Most walks stop there and record the route as dead. THE PAGE ITSELF IS THE ANSWER: a modern CMS serves a FULL page on 404 — this one is 78 KB and carries the site's live navigation, a session picker listing every legislature back to 2018, and 82 distinct links. Reading the hrefs off the error page produced the two routes the walk was looking for, both at new addresses. THE RULE: when a URL from a sitemap, an old bookmark or a search result 404s on a host that is otherwise up, EXTRACT THE LINKS FROM THE ERROR RESPONSE before concluding anything. Check the status AND the body — a 404 with 78 KB of navigation is a redirect nobody wrote, and the site is telling you where everything went on the page that says the old address is gone. The same shape appears wherever a body migrates CMS, which they all eventually do."
       },
       "outcomes": [
@@ -3003,7 +3175,8 @@
         "discovery": "NEW_METHOD",
         "note": "No extra request at all — the response is already in hand. It costs one link extraction over bytes that were downloaded anyway."
       },
-      "learnedAtVersion": 44
+      "learnedAtVersion": 44,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "governor-transmittal-letters-published-by-the-receiving-chamber",
@@ -3016,10 +3189,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.azleg.gov"
+        ],
         "note": "MEASURED 2026-08-28 ON www.azleg.gov/governors-letters/, WHICH IS PERMITTED. The page describes itself: 'Governor's Letters include the official letters that are sent from the Governor to the Legislature on a specific bill and usually include a brief explanation as to why the Governor has vetoed or signed the bill.' It links 151 letters for the 57th Legislature 2nd Regular Session — 83 HB and 68 SB — each a separate born-digital PDF at https://www.azleg.gov/govlettr/<leg>/<session>/<billno>.pdf, e.g. /govlettr/57leg/2r/hb2003.pdf. No search, no form, no session token, and /govlettr/ appears nowhere in the host's disallow list. THE GENERAL SHAPE, WHICH IS THE PORTABLE PART: a signed or vetoed bill produces a TRANSMITTAL DOCUMENT, and a transmittal document must be published somewhere the other branch can read it. So when an executive's own site is thin or the bill-status application is walled, ASK THE RECEIVING BODY FOR THE SAME ACT — a legislature that receives the governor's letters publishes them. The same reasoning reaches session laws, journals and enrolled-bill lists, all of which are records of one act held by more than one government. WHAT THIS CORRECTS: the corpus recorded this entire fact class as unreachable on the strength of one host's disallow, and the record was never in that host."
       },
       "outcomes": [
@@ -3040,7 +3217,8 @@
         "discovery": "NEW_METHOD",
         "note": "One index read per session, then one PDF per bill. The crawl-delay dominates: 151 letters at 120 seconds apart is about five hours for a full session, so an ingest has to be paced and resumable rather than run in one pass."
       },
-      "learnedAtVersion": 45
+      "learnedAtVersion": 45,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "vendor-api-and-vendor-web-ui-are-different-records",
@@ -3052,9 +3230,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "legistar"
+        ],
         "publishers": [],
         "note": "THE CLASS, AND IT IS THE VENDOR'S BEHAVIOUR RATHER THAN ANY ONE TENANT'S CONFIGURATION. webapi.legistar.com/v1/{client}/events returns ONLY the sittings whose InSite meeting-detail page is publicly viewable. It is not an agenda-status filter and it is not missing data: the omitted events have no WebAPI record at all (40 of 40 probed ids 404 on the item endpoint), and the two routes number their meetings in DISJOINT ID SPACES — EventInSiteURL points at MeetingDetail.aspx?LEGID=<apiEventId> while the portal grid's own links carry ID=1381575. MEASURED 2026-08-28 ON ONE 'Next Month' FILTER, THREE TENANTS: Mesa 15 grid rows, 12 carrying class=\"meeting_NotViewable\", and /events returned EXACTLY the other 3 (3 of 3 matched, 12 of 12 missed); Phoenix 8 rows, 8 not viewable, 0 returned; Pima 3 rows, 3 not viewable, 0 returned. THE CLOCKS, MEASURED THE SAME DAY: the InSite calendar RSS carries pubDate, and Pima's 22 September sitting was published 2026-06-15 — 74 days of notice — while the WebAPI's lead time across 32 Pima 2026 events (EventDate against EventAgendaLastPublishedUTC/EventLastModifiedUtc) is max 5 days, median 0, min -2. An adapter with a 60-day forward window is therefore asking that route for about ten times more than it can ever return. THE DIAGNOSTIC: when a vendor API's forward horizon runs dry, drive the vendor's OWN UI calendar filter before concluding anything about the body OR about the vendor — and expect the UI to hold rows the API cannot see, not merely the same rows sooner."
       },
@@ -3146,7 +3328,8 @@
             "note": "The 1:00 PM Study Session is the control: the recurrence rule gives study sessions no time at all, so this row cannot have been synthesised from the rule and can only have been read off a published record."
           }
         }
-      ]
+      ],
+      "kind": "RETRIEVAL"
     },
     {
       "id": "legistar-insite-calendar-postback-enumeration",
@@ -3158,9 +3341,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "legistar"
+        ],
         "publishers": [],
         "note": "THE MECHANICS, WRITTEN DOWN SO THE WALL NEVER COSTS A SECOND SESSION. (1) GET https://{tenant}.legistar.com/Calendar.aspx and keep EVERY form field it rendered. (2) POST back with __EVENTTARGET=ctl00$ContentPlaceHolder1$lstYears and the range in BOTH ctl00$ContentPlaceHolder1$lstYears and the Telerik hidden ctl00_ContentPlaceHolder1_lstYears_ClientState — the control is a RadComboBox, not a <select>, and posting only the visible text input is a SILENT NO-OP that answers HTTP 200 with 231 KB of correct markup and the previous range still selected. Read the rendered selection back out of ctl00_ContentPlaceHolder1_lstYears_Input to prove the filter took. The dropdown's own vocabulary is This/Next Week, Month, Year, All Years and every year back to 2013. (3) Parse rows on class=\"rgRow\"/\"rgAltRow\" and key cells on their ASP.NET control-id suffixes (hypBody, lblTime, hypiCal, hypMeetingDetail, hypAgenda, hypAccessibleAgendaHTML, hypMinutes, hypAccessibleMinutesHTML) rather than on column position, which a tenant can reorder. The meeting KIND is the <em> under the location. THE DISCRIMINATOR for what the API cannot see is class=\"meeting_NotViewable\" with title=\"Not viewable by the public\" and NO href. TWO SUPPORTING ROUTES, both weaker alone: Feed.ashx?M=Calendar&ID=..&GUID=.. is RSS carrying pubDate (the publication clock) but no location and no kind, and its ID/GUID pair is minted PER TENANT AND PER RANGE so it must be read off the page rather than stored; View.ashx?M=IC&ID=..&GUID=.. is one VEVENT per meeting whose DTSTART is FLOATING (20260908T130000, no Z, no TZID) and must be combined with the body's own zone — and the GUID is MANDATORY, because ID alone answers 200 with a 19 KB HTML confirmation page rather than an error. PERMISSION: legistar.com's apex robots.txt publishes Crawl-delay: 2 and disallows only *?wtime, *?wmediaid and *?wchannelid; the tenant hosts return 404 for robots.txt, which publishes no rules and is not licence to go faster than the vendor asked on its own name."
       },
@@ -3182,7 +3369,8 @@
         "discovery": "NEW_METHOD",
         "note": "One adapter, then two requests per tenant per range at the vendor's stated two-second spacing. No credential, no session beyond the one the page issues itself."
       },
-      "learnedAtVersion": 47
+      "learnedAtVersion": 47,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "reconciled-is-not-complete",
@@ -3196,9 +3384,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "legistar"
+        ],
         "publishers": [],
         "note": "THE CORRECTION, AND IT IS AN ACCOUNTING LESSON RATHER THAN A RETRIEVAL ONE. 'fetched 16, normalized 16, drops accounted' is a strong, true statement about ONE ROUTE'S ANSWER: nothing between that source and the screen was dropped. It is not a statement about the body's calendar, and the two get confused because the reconciliation feels like a proof and there is nothing else in view to compare it against. THE FAILURE MODE, OBSERVED: a session read a per-source denominator that reconciled exactly, queried the primary API by hand over the same window, got the same answer, and recorded the snapshot as 'complete for the window' — then inferred from the API's silence a fact about the government (that it publishes September only as a recurring rule). Every measurement in that chain was correct; the inference was false, and the portal published all three sittings individually. THE DISCRIMINATOR THAT IS MISSING FROM A RECONCILED DENOMINATOR IS A SECOND ROUTE. Until a second independent route has been asked the same question, a reconciled count has a denominator of ONE ROUTE'S OPINION, and the honest sentence is 'this route returned N and nothing was lost', never 'there are N'. THE CHEAP SECOND ROUTE for a vendor-backed body is the vendor's own web UI (see vendor-api-and-vendor-web-ui-are-different-records); for a body's own site it is the sitemap. RULING 100 already says a partial that reconciles is still a wrong answer — this is that ruling meeting a real reconciliation and losing."
       },
@@ -3267,10 +3459,22 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "asmi.az.gov",
+          "az.gov",
+          "azag.gov",
+          "azcc.gov",
+          "azed.gov",
+          "azmineinspector.gov",
+          "azsos.gov",
+          "aztreasury.gov",
+          "nj.gov"
+        ],
         "note": "THE SEAT-HOLDER GAP IS A CORPUS GAP AND THIS IS THE ROUTE THAT FILLS IT. A ballot names an office; the incumbency join needs a person on the other side of (division, office); and the primary publisher of who holds a statewide executive office is THAT OFFICE, not the Secretary of State and not an aggregator. WHAT WORKS: each office runs its own host and publishes a page titled for the person — azsos.gov/about/about-secretary (Adrian Fontes), azag.gov/kris-mayes (Kris Mayes), aztreasury.gov/treasurer-kimberly-yee (Kimberly Yee), azed.gov/adeinfo/about-state-superintendent (Tom Horne), asmi.az.gov/about/team (Les Presmyk), azcc.gov/<slug>/biography (five Corporation Commissioners), nj.gov/governor/admin/ltgovernor (Dale G. Caldwell). Ten officeholders across seven hosts and two states, 2026-08-28. THE HOST IS NOT GUESSABLE AND MUST NOT BE GUESSED: the obvious `azmineinspector.gov` DOES NOT EXIST — ENODATA from 1.1.1.1 and 8.8.8.8, ERR_NAME_NOT_RESOLVED in a real browser — while the office publishes at `asmi.az.gov`, found by walking the state's own az.gov namespace. A non-resolving host is a DNS fact, never a permission verdict and never evidence that the office publishes nothing. AND A MULTI-MEMBER STATEWIDE BODY IS THE SAME ROUTE: the Arizona Corporation Commission elects five people to ONE office, and five holder rows on one office key join a single ballot contest exactly as a multi-member legislative district does — no special case, because the office key never carried the seat."
       },
       "outcomes": [
@@ -3291,7 +3495,8 @@
         "discovery": "NEW_METHOD",
         "note": "One robots read plus one page read per OFFICE, and the office count is small (5-10 per state). The cost is locating the host, which is one walk of the state's own agency namespace, not a search."
       },
-      "learnedAtVersion": 49
+      "learnedAtVersion": 49,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "a-certified-candidate-listing-is-the-party-record-an-office-page-lacks",
@@ -3303,10 +3508,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "apps.azsos.gov"
+        ],
         "note": "AN OFFICE PAGE DOES NOT PRINT A PARTY, AND INVENTING ONE IS THE INFERENCE THIS PRODUCT FORBIDS. The record that does print it is the election authority's own: a statewide candidate listing (apps.azsos.gov/election/<year>/ge_cand/<year>_General_Candidates_Web.pdf — 5 pages, TEXT LAYER, 'Walden, Rachel | Corporation Commissioner | 3 | REP') or a county primary canvass, where the PARTY IS THE SECTION HEADING because a primary is by party ('REP State Mine Inspector — PRESMYK, WALTER \"LES\"'). PREFER THE FILING THE BALLOT SURFACE ALREADY CITES where the officeholder is also a current candidate: one record read by two surfaces cannot drift, whereas two records that agree today are two chances to disagree tomorrow. THE TRAP THAT COSTS A SESSION: the STATE-level signed canvass is a SCAN — apps.azsos.gov/election/2024/ge/canvass/20241105_GeneralCanvass_Signed.pdf is 19 pages, 0 with a text layer — while the per-county canvasses and the candidate listings extract cleanly. Reach for the listing first. AND THE COUNTY GENERAL canvass is precinct-level and carries NO party at all; only the PRIMARY canvass and the candidate listing do."
       },
       "outcomes": [
@@ -3327,7 +3536,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "One PDF per election year per state, read with pnpm pdf:read. Cheap once the right document class is known, and the wrong document class is a scan that reads as an empty file."
       },
-      "learnedAtVersion": 50
+      "learnedAtVersion": 50,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "a-quoted-nickname-in-a-filing-is-an-alias-the-record-itself-publishes",
@@ -3339,7 +3549,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],
@@ -3374,10 +3586,17 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "azsos.gov",
+          "butierezforcongress.com",
+          "nortonforaz.com",
+          "strobelforschoolboard.com"
+        ],
         "note": "THE MECHANICAL JOIN THAT STOPS A WRONG FACE HAS TWO HOLES AND BOTH WERE MEASURED IN ONE RUN. (1) MATCHING ON THE WHOLE URL IS VACUOUS ON A CAMPAIGN SITE, because a campaign's domain IS the candidate's name: nortonforaz.com, weir4liberty, butierezforcongress.com, strobelforschoolboard.com all matched EVERY image on the site, so the first image in the document won — which on a campaign site is the hero banner. Match on the alt text and the FILENAME. On a government roster page (jen_rowland.jpg, an alt of 'Kyle Russell') that changes nothing. (2) AN OFFICE'S OWN MASTHEAD IS NAMED AFTER THE OFFICEHOLDER: azsos.gov serves fontes_banner01_small-white.png with alt 'Logo for Arizona Secretary of State', which satisfies surname-plus-extension exactly. Refuse an image the page's own words call furniture — logo, banner, seal, masthead, wordmark, letterhead, favicon, icon, slide, hero, header — and split the filename on EVERY separator first, because `_` is a word character and \\b does not fire inside AidenSwallow_LOGOS.ai.png or RebeccaBennett-Logo_white-1.webp. AND A BANNER IS A SHAPE: every genuine portrait staged in this repository is taller than wide (14 rows, 0.67 to 1.00), while the campaign hero images measured 1.76, 1.78 and 3.45 to 1. Refuse above 1.5:1 — it is a measurement of the image, not a judgement about the person."
       },
       "outcomes": [
@@ -3398,7 +3617,8 @@
         "discovery": "NEW_METHOD",
         "note": "Changes to lib/hunt/portrait-pick.ts and lib/photos/staged.ts — the shared picker and the one door into the review, so no later hunt can be missing them (RULING 103)."
       },
-      "learnedAtVersion": 52
+      "learnedAtVersion": 52,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "azleg-governor-letters-are-scans-correcting-the-born-digital-claim",
@@ -3414,7 +3634,9 @@
         "states": [],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.azleg.gov"
+        ],
         "note": "CORRECTS THE ENTRY `governor-transmittal-letters-published-by-the-receiving-chamber`, WHICH RECORDS THE /govlettr/ PDFs AS 'each a separate born-digital PDF'. THAT IS FALSE AND WAS NEVER MEASURED. Measured 2026-08-28 with this repo's own instrument on https://www.azleg.gov/govlettr/57leg/2r/hb2003.pdf (40,860 bytes): lib/extract/text-layer.ts returns TEXT_LAYER ZERO_ROWS rows=0 pages=1 pagesWithText=0. The PDF internals say why: /Font 0, /Image 40, /CCITTFaxDecode 18, /DCTDecode 1 — a mixed-raster scan, a JPEG background carrying CCITT G4 bilevel text masks. The typed text is clean and roughly 200 DPI, which is near-ideal OCR input, but there is NO TEXT LAYER and no amount of retrying the text layer will produce one. THE ROUTE IS THEREFORE REQUIRES_NEW_ADAPTER AND NOT BLOCKED: OCR is the named rung (lib/extract/ocr.ts, which returns CANNOT_RUN with the install line when tesseract is absent from PATH). WHAT THE WRONG ENTRY WOULD HAVE COST: a session inheriting 'born-digital' runs the text layer, receives zero rows, and is one careless step from recording that the Governor's letter says nothing — a ZERO_ROWS extraction reported as an empty document, about a public official's own signed correspondence. CONTRAST, ON THE SAME HOST: the chaptered versions at /legtext/<Leg>Leg/<Sess>/laws/<NNNN>.pdf ARE born-digital and extract cleanly (TEXT_LAYER EXTRACTED rows=7 pages=7 on 0001.pdf). Two publication pipelines on one host, and the class of a PDF is a property of the pipeline that made it, never of the host or of the sibling directory next to it."
       },
       "outcomes": [
@@ -3435,7 +3657,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "One extraction attempt per document class, over bytes that were being fetched anyway. The expensive half is the crawl delay: www.azleg.gov asks 120 seconds between requests, so classifying a document class costs two minutes, and reading all 151 letters costs about five hours."
       },
-      "learnedAtVersion": 53
+      "learnedAtVersion": 53,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "verify-a-pdfs-class-before-recording-it-as-born-digital",
@@ -3448,10 +3671,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.azleg.gov"
+        ],
         "note": "THE PORTABLE RULE. A PDF's class — born-digital with a text layer, versus a raster scan needing OCR — is the single fact that decides which extraction rung applies, and it is cheap to measure and expensive to assume. RECORD IT ONLY FROM AN ACTUAL EXTRACTION, and record the numbers: rows, pages, pagesWithText. A publisher very often runs TWO pipelines side by side, so the class travels with the DOCUMENT CLASS and never with the host: on www.azleg.gov the chaptered bill texts under /legtext/ are born-digital and the Governor's transmittal letters under /govlettr/ are scans, and they are two directories on the same server. WHY IT MATTERS MORE THAN IT LOOKS: an unverified 'born-digital' is inherited by every later jurisdiction as a reason to trust a text layer, and when the text layer returns nothing the next session is being asked to choose between 'the parser failed' and 'the document is empty' with a stale note nudging it toward the second. That is the ZERO_ROWS-as-empty-document defect arriving pre-argued. THE CHEAP CHECK: run the text layer on ONE document of the class and look at pagesWithText; if it is zero, look at the PDF's internals (/Font count, /Image count, filter names) and write down what you saw, not what you expected."
       },
       "outcomes": [
@@ -3472,7 +3699,8 @@
         "discovery": "REAPPLIED_KNOWN_METHOD",
         "note": "One extraction over one document already in hand. Effectively free next to the fetch that produced it."
       },
-      "learnedAtVersion": 54
+      "learnedAtVersion": 54,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "grep-the-extracted-text-never-the-pdf-bytes",
@@ -3486,10 +3714,14 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "www.azleg.gov"
+        ],
         "note": "THE MISTAKE THIS PREVENTS IS MANUFACTURING A NAMED GAP OUT OF A BROKEN INSTRUMENT. A prior walk recorded that an enacted Arizona bill has NO PUBLISHED SIGNING DATE, on the evidence that grepping a chaptered version for approved|governor|filed returned nothing. The grep was run over the PDF's BYTES. A born-digital PDF stores its text inside FlateDecode content streams, so a byte grep cannot match ordinary words in it and returns nothing regardless of what the document says — the measurement was guaranteed to produce that answer before it was run. MEASURED CORRECTLY 2026-08-28: extract the text layer first, and every chaptered version at https://www.azleg.gov/legtext/57Leg/2R/laws/<NNNN>.pdf ends with its own enactment stamp — 'APPROVED BY THE GOVERNOR FEBRUARY 6, 2026. FILED IN THE OFFICE OF THE SECRETARY OF STATE FEBRUARY 6, 2026.' That is a signing date, published by the state, in the primary document, for every enacted bill. THE GENERAL RULE: NEVER grep, regex or string-search a PDF, a DOCX or any compressed container directly. Run the extraction layer and search ITS OUTPUT, and if the extraction returns nothing, that is a finding about the extraction. WHY THIS ONE IS DANGEROUS RATHER THAN MERELY WRONG: it does not fail loudly. It produces a confident, specific, plausible-sounding absence — 'the state does not publish signing dates' — which is a false claim about a government, and it then hardens into a NAMED GAP that later sessions inherit and cite. A SECOND LESSON FROM THE SAME DOCUMENT: read the stamp's WORDING, not just its date. A bill reaches a chapter three ways — approved by the governor, becoming law without signature, or passage over a veto — so 'chaptered' proves ENACTMENT and never proves a SIGNATURE, and filing every chapter as 'signed' is its own false claim about a governmental act."
       },
       "outcomes": [
@@ -3510,7 +3742,8 @@
         "discovery": "NEW_METHOD",
         "note": "No additional request. The correction costs one text-layer extraction over a document already downloaded, and it converted a permanent named gap into a populated field on every enacted-bill row."
       },
-      "learnedAtVersion": 55
+      "learnedAtVersion": 55,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "streamline-sitemap-is-a-dated-meeting-inventory",
@@ -3523,10 +3756,17 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
-        "publishers": [],
+        "platforms": [
+          "streamline"
+        ],
+        "publishers": [
+          "www.coronafire.org",
+          "www.sefd911.org"
+        ],
         "note": "THE SHAPE TRAVELS BECAUSE THE VENDOR DOES. Streamline publishes each sitting at a path of the form /<YYYY>-<MM>-<DD>-<body>-<slug>, so the DATE, the BODY and the meeting KIND are already separated in the URL before anything is parsed, and sitemap.xml lists them all. No API, no account, no pagination and no date-range control to defeat. Read 2026-08-29 on two tenants with byte-identical robots policy shape: www.coronafire.org (Corona de Tucson Fire District) yielded 115 dated sittings 2017-2026 and 5 directors with emails; www.sefd911.org (Sonoita-Elgin Fire District) yielded 70 dated sittings and 5 directors with seat, term, phone and email. Both robots.txt carry 'User-agent: * / Allow: /' with named disallows confined to SEO crawlers (SemrushBot, AhrefsBot, Sidetrade, PetalBot, MJ12bot). WHY IT MATTERS BEYOND TWO FIRE DISTRICTS: Streamline's market is SPECIAL DISTRICTS, which is the thinnest governmental layer in this product in every state worked so far, and the layer least likely to appear in any directory. The route to test on a new special district is its sitemap BEFORE its calendar page."
       },
       "outcomes": [
@@ -3563,7 +3803,8 @@
           ]
         }
       ],
-      "learnedAtVersion": 56
+      "learnedAtVersion": 56,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "boardbook-organization-page-returns-the-whole-archive",
@@ -3576,9 +3817,13 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
-        "platforms": [],
+        "platforms": [
+          "boardbook"
+        ],
         "publishers": [],
         "note": "TWO FACTS, AND THE SECOND ONE IS THE TRAP. /Public/Organization/{id} returns the ENTIRE archive on one page with no pagination — read 2026-08-29 on meetings.boardbook.org for Pima County JTED No. 11, yielding 267 meetings spanning 2009-2026 with agendas as HTML — and /Public/DownloadAgenda/{slug}?meeting={id} returned a verified 12.4 MB packet PDF. robots.txt answers HTTP 404, so NO_ROBOTS: the host publishes no restriction. THE TRAP: /Public/Minutes/ is a CLIENT-RENDERED shell that strips to 757 bytes of chrome. A parser pointed at it returns nothing and, unless the zero is treated as a failed extraction (RULING 100), reports every meeting in the archive as having empty minutes — an absence manufactured from a rendering choice. The minutes are reachable through the packet and through the 302 on /Documents/FileViewerOrPublic/, neither of which was walked. BoardBook is operated by Sparq Data Solutions Inc. and its market is school districts and JTEDs nationally."
       },
@@ -3616,7 +3861,8 @@
           ]
         }
       ],
-      "learnedAtVersion": 57
+      "learnedAtVersion": 57,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "apex-and-www-are-different-origins-for-permission-and-transport",
@@ -3629,10 +3875,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "pimajted.org",
+          "www.pimajted.org"
+        ],
         "note": "A HOST IS AN ORIGIN, NOT A GOVERNMENT, AND THE TWO FORMS ARE TWO ORIGINS. Read 2026-08-29: www.pimajted.org answers HTTP 403 with a Cloudflare interstitial titled 'Just a moment...' to four clients, while the apex pimajted.org answers 200, carries robots.txt with 'Disallow: /wp-admin/' only, and serves the entire site including a 267-meeting archive. A session that resolved the www form, met the interstitial and stopped would have recorded a body covering 36 of 44 sampled ZIP points as BLOCKED_CURRENTLY. Under RULING 182 the 403 is TRANSPORT and permission on that origin is CANNOT_TELL; it is never a permission verdict and never a fact about the body. THE GENERAL RULE: try both the apex and the www form before recording any host-level disposition, and record the disposition against the ORIGIN that produced it rather than against the government."
       },
       "outcomes": [
@@ -3655,7 +3906,8 @@
           "restsOn": []
         }
       ],
-      "learnedAtVersion": 58
+      "learnedAtVersion": 58,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "government-migrated-to-dot-gov-and-the-authoritative-layer-is-stale",
@@ -3668,10 +3920,17 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "mescalj6fd.gov",
+          "rinconvalleyfdaz.gov",
+          "www.mescalj6fd.com",
+          "www.rinconvalleyfd.org"
+        ],
         "note": "AN AUTHORITATIVE GOVERNMENT SOURCE CAN CARRY A DEAD HOST, AND A TLS ERROR CAN BE A TRUE READING OF A HOST THAT STOPPED BEING THE PUBLISHER. Two instances on 2026-08-29. www.mescalj6fd.com was recorded 2026-08-27 as CANNOT_TELL, 'unwalkable because of a certificate' (ERR_TLS_CERT_ALTNAME_INVALID); the TLS failure is real and reproducible, and plain HTTP answers 200 and redirects to https://mescalj6fd.gov/. www.rinconvalleyfd.org — the URL published by PIMA COUNTY'S OWN fire-taxation GIS layer, which is as authoritative as a source gets for district identity — 404s its robots and redirects to rinconvalleyfdaz.gov. Both districts had been recorded with zero rosters and zero meetings; both publish rosters, agendas and minutes at the new host. THE GENERAL RULE: before recording a body as unreachable, re-resolve its host over plain HTTP and follow redirects, and treat a special district's .com or .org as a candidate for a .gov migration. The corollary is sharper: a URL inherited from an authoritative layer is EVIDENCE, not a fact, and it goes stale like any other observation."
       },
       "outcomes": [
@@ -3702,7 +3961,8 @@
           ]
         }
       ],
-      "learnedAtVersion": 59
+      "learnedAtVersion": 59,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "the-filing-officer-publishes-what-the-elections-department-has-not",
@@ -3715,10 +3975,15 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
-        "publishers": [],
+        "publishers": [
+          "pima-county-schools.s3.amazonaws.com",
+          "www.schools.pima.gov"
+        ],
         "note": "A COUNTY'S ELECTIONS DEPARTMENT IS NOT THE ONLY FILING OFFICER, AND 'THE COUNTY HAS PUBLISHED ALMOST NOTHING' CAN BE TRUE OF ONE OFFICE AND FALSE OF ANOTHER. The corpus recorded that the Nov 3 2026 general had exactly ONE published document on the Pima County elections page. That reading was correct about the ELECTIONS DEPARTMENT and wrong as a statement about the county: on 2026-08-29 the Pima County School Superintendent at www.schools.pima.gov published every school district in the county with seats, minimum signatures, and each candidate's name, filing date and signature count — Vail Unified, 2 seats, Andrea Black (filed 2026-07-01, 474 signatures) and Edward Buster (2026-07-02, 374) — plus two ballot measures whose texts extracted from PDFs on pima-county-schools.s3.amazonaws.com. THE CUSTODIAN SPLIT, which is the portable half: FIRE DISTRICTS file with the County Elections Department while SCHOOL DISTRICTS file with the County School Superintendent, so a single 'who do I file with' answer is wrong for one of them. Its robots.txt answers HTTP 200 with a ZERO-BYTE body — a robots that exists and forbids nothing — and the bare host is ECONNREFUSED over HTTPS while the www form serves."
       },
       "outcomes": [
@@ -3755,7 +4020,8 @@
           ]
         }
       ],
-      "learnedAtVersion": 60
+      "learnedAtVersion": 60,
+      "kind": "RETRIEVAL"
     },
     {
       "id": "enumerate-the-app-bundle-routes-when-the-known-endpoint-refuses",
@@ -3768,7 +4034,9 @@
       ],
       "applicability": {
         "portability": "UNKNOWN",
-        "states": [],
+        "states": [
+          "az"
+        ],
         "governmentTypes": [],
         "platforms": [],
         "publishers": [],

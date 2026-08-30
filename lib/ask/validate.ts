@@ -1,4 +1,5 @@
 import { packSourceUrls, type EvidencePack } from "./evidence.ts";
+import { normalizeName } from "../routing/exact-name.ts";
 
 /**
  * **STRUCTURAL VALIDATION — the checks that can actually be made, made
@@ -21,8 +22,11 @@ import { packSourceUrls, type EvidencePack } from "./evidence.ts";
  *   points a reader at a page that does not say what we said it says.
  * - **A subject the answer names that is not the resolved subject.** The
  *   substitution class, checked at the last possible moment. If the pack is
- *   about Vail and the prose says Sunnyside, that is caught here even if every
- *   earlier rung passed.
+ *   about Vail and the prose names Sunnyside, that is caught here even if
+ *   every earlier rung passed. Checked as a FOREIGN-naming rule over the
+ *   known-body universe the caller supplies, never as a demand that the prose
+ *   repeat the subject's name — see `subject-not-substituted` below for why
+ *   the demand form was itself a defect (NH288).
  * - **Voting advice.** A ranking, a recommendation, a "you should support".
  *   Struck outright rather than trusted to the prompt.
  * - **A verdict on ourselves.** "Unfortunately we failed to find" is struck by
@@ -69,10 +73,22 @@ export function urlsIn(text: string): string[] {
   return text.match(/https?:\/\/[^\s)>\]"']+/gi) ?? [];
 }
 
+/**
+ * A subject the product can resolve, as the foreign-naming check needs it: the
+ * canonical id (to know it is not the pack's own subject) and the name a reader
+ * would see. The grounded route passes its body inventory; a caller with no
+ * universe passes nothing and the check honestly checks nothing.
+ */
+export interface KnownSubjectName {
+  id: string;
+  name: string;
+}
+
 export function validateAnswer(
   answer: string,
   citedUrls: readonly string[],
   pack: EvidencePack,
+  knownSubjects: readonly KnownSubjectName[] = [],
 ): ValidationVerdict {
   const checked: string[] = [];
   const failed: string[] = [];
@@ -94,24 +110,54 @@ export function validateAnswer(
     }
   }
 
+  /*
+   * **THE SUBSTITUTION CHECK NAMES THE FOREIGN GOVERNMENT, AND NEVER DEMANDS
+   * THE PROSE REPEAT THE SUBJECT.** (NH288, 2026-08-30.)
+   *
+   * The prior form required the answer to CONTAIN a distinctive token of the
+   * subject's name. That was a proxy for "is the answer about someone else",
+   * and the proxy failed in the honest direction the day the subject got its
+   * real name: the deterministic reader framing already names the body, so
+   * generated prose naturally continues "The Board voted 5-0..." — correct,
+   * natural anaphora about exactly the resolved subject — and the token rule
+   * rejected it. `REJECTED_FELL_BACK`, prose discarded, over sentences that
+   * were right. With "Pima" as the subject name the rule had degenerated to
+   * "does the prose contain 'pima'", and with the sourced name ("Pima County
+   * Board of Supervisors" → pima, supervisors) it still rejects "the Board".
+   *
+   * What the check exists to catch is the answer being ABOUT a different
+   * government, and the mechanically decidable form of that is the prose
+   * writing ANOTHER known body's name. So it now scans the caller's known
+   * subject universe for a foreign body named in full:
+   *
+   * - the whole normalized name, as a word sequence — "central arizona water
+   *   conservation district" in the prose fails a Pima pack; the word
+   *   "arizona" alone never does;
+   * - only names of two or more words. A one-word body name is a division
+   *   label standing in for a body nothing has named yet ("Mesa"), and prose
+   *   mentioning a geography word is not naming a government;
+   * - never a name the subject's own name contains — writing the subject
+   *   cannot be writing someone else.
+   *
+   * Structured identity is validated independently of prose either way:
+   * `record-belongs-to-resolved-body` below holds the pack's records to the
+   * resolved body at the ID level, which is the check the Pima defect actually
+   * needed. This rule is the second, narrower wall: explicitly naming a
+   * foreign government is refused even when every record is the right body's.
+   */
   checked.push("subject-not-substituted");
   if (pack.subject) {
-    /*
-     * Only names of OTHER resolved subjects are checked, not every proper noun:
-     * an agenda item legitimately names streets, companies and people, and
-     * flagging those would fail correct answers constantly. What must never
-     * happen is the answer being ABOUT a different government than the one
-     * that was bound, and the detectable form of that is the prose leading with
-     * another government we hold.
-     */
-    const subjectTokens = pack.subject.name.toLowerCase().split(/\s+/);
-    const distinctive = subjectTokens.filter(
-      (t) => t.length > 3 && !["district", "county", "school", "city", "town", "unified", "board"].includes(t),
-    );
-    if (distinctive.length > 0) {
-      const lower = answer.toLowerCase();
-      const mentionsSubject = distinctive.some((t) => lower.includes(t));
-      if (!mentionsSubject) failed.push("answer-does-not-name-resolved-subject");
+    const subjectName = ` ${normalizeName(pack.subject.name)} `;
+    const prose = ` ${normalizeName(answer)} `;
+    for (const known of knownSubjects) {
+      if (known.id === pack.subject.id) continue;
+      const foreign = normalizeName(known.name);
+      if (!foreign || !foreign.includes(" ")) continue;
+      if (subjectName.includes(` ${foreign} `)) continue;
+      if (prose.includes(` ${foreign} `)) {
+        failed.push(`answer-names-foreign-subject:${foreign.slice(0, 80)}`);
+        break;
+      }
     }
   }
 

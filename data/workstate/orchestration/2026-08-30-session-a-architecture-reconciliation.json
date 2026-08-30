@@ -37,11 +37,17 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "executed by the main session while ws-contract and ws-generated run as parallel worktree agents"
+        "executed by the main session while ws-contract and ws-generated run as parallel worktree agents",
+        "committed 0c22be7e/54bce3cf on the integration head; governance:check 13/13 green; re-verified in the integrated 3981-test suite run"
       ],
-      "executionArtifacts": []
+      "executionArtifacts": [
+        {
+          "kind": "integration-branch",
+          "ref": "main@0c22be7e"
+        }
+      ]
     },
     {
       "id": "ws-contract",
@@ -77,11 +83,21 @@
         "canonical-ruling-ids"
       ],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session"
+        "parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session",
+        "branch worktree-agent-ab5d1d05a0e937857 (b48fb057) merged --no-ff; re-verified on the integrated head: full suite 3981 pass / 0 fail, reader:suite reached the live local build (LOCAL_RENDER, status 200)"
       ],
-      "executionArtifacts": []
+      "executionArtifacts": [
+        {
+          "kind": "branch",
+          "ref": "worktree-agent-ab5d1d05a0e937857@b48fb057"
+        },
+        {
+          "kind": "integration-branch",
+          "ref": "main (merged --no-ff)"
+        }
+      ]
     },
     {
       "id": "ws-generated",
@@ -118,11 +134,21 @@
       ],
       "consumes": [],
       "executable": true,
-      "disposition": "PARALLEL",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session"
+        "parallel worktree agent (Agent tool), launched 2026-08-30 while ws-gov executes in the main session",
+        "branch worktree-agent-a7713b44abb5a7b22 (3ea87ba8) merged --no-ff; artifacts regenerated on the integrated head (042ed025), pnpm regen fully CURRENT, suite green"
       ],
-      "executionArtifacts": []
+      "executionArtifacts": [
+        {
+          "kind": "branch",
+          "ref": "worktree-agent-a7713b44abb5a7b22@3ea87ba8"
+        },
+        {
+          "kind": "integration-branch",
+          "ref": "main@3abf41f7 (merged --no-ff)"
+        }
+      ]
     },
     {
       "id": "ws-tracker",
@@ -156,11 +182,17 @@
         "canonical-ruling-ids"
       ],
       "executable": true,
-      "disposition": "SERIALIZED",
+      "disposition": "INTEGRATED",
       "concurrencyEvidence": [
-        "executed by the main session immediately after ws-gov compiled R-0218 into the ledger; ws-contract and ws-generated agents were running concurrently throughout"
+        "executed by the main session immediately after ws-gov compiled R-0218 into the ledger; ws-contract and ws-generated agents were running concurrently throughout",
+        "14 JOB rows closed under RULING 218 via tracker:move --ruling; two incident WorkItems registered durably; watcher reroute committed 0c22be7e; re-verified in the integrated suite run"
       ],
-      "executionArtifacts": []
+      "executionArtifacts": [
+        {
+          "kind": "process",
+          "ref": "tracker:move --ruling (14 closures) + control-plane incident registration, main@0c22be7e"
+        }
+      ]
     }
   ]
 }

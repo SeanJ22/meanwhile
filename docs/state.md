@@ -21834,3 +21834,86 @@ local server and production: Pima County, 148 sites, model VOTE_CENTER,
 narrowing NOT_NEEDED — correct on both, twice. The failure was transient under
 the walk's own load, not a regression, and it is recorded here rather than
 quietly absorbed; if it recurs it belongs in the flake sweep's hands.
+
+## 2026-08-30 — Session A: the architecture reconciled into law, and the loop made observable
+
+*(session-a-2026-08-30-nonhunt; the tracker also carries 14 closures under the
+pre-marker label session-a-2026-08-30 — one session, two labels, both purposed
+in `docs/log-purposes.json`.)*
+
+### Eleven rulings, one atomic governance change
+
+RULINGS 210–220 adopted (compile + check green, first run): the
+reader-answerability suite as the READER dimension's top-line contract (210);
+the permanent, unannounced known-answer control set (211); refresh cadence
+DERIVED from time-to-reader-impact and publisher change rate — a
+`supersedes_clause` on RULING 124's cadence half, with the `refresh.cadence`
+claim retired to the new holder through a new `CLAIM_RETIREMENTS` compiler step
+(212); no external orchestration service, with a measured revisit trigger
+(213); no new multi-project abstraction until a second project exists (214);
+activation Level 5 removed, Level 4 deferred (215); status generated with
+SESSION_MEASURED vs INDEPENDENTLY_REPRODUCED proof classes (216); pilot health
+as three contracts in one rollup (217); GitHub scheduled workflows are not the
+freshness clock (218); the autonomous-system constitution as a GENERATED view
+whose bytes are the RULING 219 record body (`docs/governance/constitution.md`,
+found by claim, registered in check + atomicity + the generated register); and
+the Level-2 scheduling provider decision — **a Postgres/Neon provider behind
+the existing `ControlPlaneRepositories` interfaces, in a dedicated database
+outside `lib/db` and invisible to `pnpm db:gate`**, with a seven-step
+migration/adapter plan Session B executes; nothing migrated this session
+(220). `docs/frontier.md` created as the mutable planning artifact.
+
+### The health loop, observable today with zero owner data
+
+`lib/health/` carries ReaderQuestion (registry-generated instances + hand-
+authored adversarial literals, temporal retirement, RULING 9 denominator
+typing, the twelve-member failure-class union, typed diagnostic WorkItems),
+ControlFact (exact brief fields; the context-assembly boundary throws on any
+control marker reaching worker-visible shape — proven by a seeded-failure test
+in `tests/control-isolation.test.ts`), VisualAcceptanceCheck (DOM_EVALUATED vs
+IMAGE_EVALUATED, image-only properties refuse DOM-only evidence), and the
+three contracts with the PILOT HEALTH rollup. Scaffolds ran against the live
+local build: `pnpm reader:suite` reached it (status 200, target LOCAL_RENDER)
+and reported **"0 questions loaded — awaiting owner corpus"**;
+`pnpm truth:controls` reported **"0 controls loaded — awaiting owner answer
+key"**, and `--prove-fixture` exercised the whole plumbing on synthetic data
+(recall 1 of 3, false-absence 1 of 3, false-presence 1 of 1) then deleted its
+fixture and verified the deletion. `pnpm pilot:health`: READER
+AWAITING_OWNER_DATA, TRUTH AWAITING_OWNER_DATA, FRESHNESS **NOT_READY** (the
+transition rule — correct and reported, not repaired), rollup NOT GREEN with
+all three blockers named. NS22/NS23 opened: the owner question corpus and the
+owner answer key are the two asks.
+
+### Status generated, inventory generated, both joined to the machinery
+
+`docs/status-ledger.md` (23 entries; 5 UNPROVEN rows stated with the check
+each needs; the Pima vote prose and the $297.86 finance prose both classed
+SESSION_MEASURED · PRODUCTION_RENDER until the answerability suite reproduces
+them) and `docs/repo-inventory.md` (14 sections, 5,403 lines, uncapped, every
+count derived) — both regenerate on the mutating handoff path, both verified
+byte-fresh by `pnpm handoff --check` without writing, and the inventory joined
+the mirror through `scripts/mirror-set.mjs` (26 docs, count derived). state.md
+§2/§3/§7 retired to pointers at the generated ledger; history untouched.
+
+### RULING 218 in practice
+
+The 14 JOB rows (JOB04, JOB06, JOB07–JOB18 — the measured 186.5/256.6/313.1
+min dispatch delays and the Commit-step double failures) closed under
+RULING 218 via the RULING 79 path; two standing incident WorkItems registered
+in the durable control plane (`data/control-plane/incidents`:
+`wi-7165ea942cb5f541cec6a413` dispatch-delay, `wi-47f15dbe16aeabb383c67c9f`
+run-failures); `watch-workflows.mts` now opens both finding families as
+repo-ops operational incidents. Needs Sean went 76 → 62 open rows.
+
+### Verification on the integrated head
+
+Full suite **3,981 pass / 0 fail / 0 skipped**; lint 0 errors (21 allowlisted
+warnings); tsc clean; governance:check 13/13; orchestration:check TEAM, four
+workstreams INTEGRATED (two parallel worktree agents, one main-session lane,
+one serialization proven by the R-0218 handoff); `pnpm regen` fully CURRENT.
+The standing walk against the local production build: **390 ran + 14 declared
+COULD NOT RUN, baseline 379, 0 silent, 0 failures** (quarantine held 1, it did
+not fail). One gate defect found and fixed en route: leftover worktrees of
+MERGED branches under `.claude/worktrees/` failed lint with 417 errors
+belonging to no current code — the directory is now ignored by the lint gate
+and the stale worktrees removed.

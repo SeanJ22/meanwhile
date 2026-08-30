@@ -117,7 +117,35 @@ export interface EvidenceRecord {
      * none of yes-or-no, and a mapping to a boolean would have destroyed every
      * one of them. A tally is never expanded into these.
      */
-    | "MEETING_MEMBER_VOTE";
+    | "MEETING_MEMBER_VOTE"
+    /*
+     * **A COMMITTEE'S ROW IN A FILING OFFICER'S OWN REGISTER.** (2026-08-30.)
+     *
+     * The filing officer's register is the one held record that links a
+     * committee to anything: it names the committee, its type, its status and
+     * the OFFICE it registered for — never a person, and never a position on a
+     * measure. `lib/ask/local-finance.ts` is the only thing that mints these,
+     * and it mints one only where the register's own office designation maps
+     * to the canonical body the reader asked about. A committee whose register
+     * row names no office appears for NO body, however suggestive its name.
+     */
+    | "FINANCE_COMMITTEE"
+    /*
+     * **ONE ITEMIZED MONEY ROW OFF A FILED CAMPAIGN-FINANCE REPORT.**
+     * (2026-08-30.)
+     *
+     * A contribution a committee reported receiving, or spending it reported
+     * making — the filer's own row, with the filing id it came off. The two
+     * directions are stated in the record's own text and are never summed,
+     * netted or totalled: a total would be our arithmetic wearing a filing's
+     * provenance. Every row this kind can carry today is from a
+     * candidate/committee campaign-finance report; an INDEPENDENT-EXPENDITURE
+     * report is a different document class, none is held, and the pack that
+     * carries these records must say so as a named gap — outside spending for
+     * or against a candidate is not money a campaign received, and collapsing
+     * the two would be a false claim built from real rows.
+     */
+    | "FINANCE_TRANSACTION";
   /** Stable id where one exists — the validation rung matches on it. */
   id: string;
   /**

@@ -73,6 +73,7 @@ import {
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
 import { agendaTopicEvidence } from "@/lib/ask/agenda-topic";
+import { financeQuestionAsked, localFinanceEvidenceFor } from "@/lib/ask/local-finance";
 import { statesOf, voteEvidenceFor } from "@/lib/ask/votes";
 
 /**
@@ -1304,6 +1305,38 @@ export async function POST(request: Request) {
     records.push(...votes.records);
     gaps.push(...votes.gaps);
     Object.assign(denominators, votes.denominators);
+  }
+
+  /*
+   * ── ASK-CF ── **CAMPAIGN MONEY, FROM THE FILINGS WE ACTUALLY HOLD.**
+   * (2026-08-30.)
+   *
+   * The repository has held itemized Pima County campaign-finance rows since
+   * 2026-08-29 — committee register rows, 900 contribution rows, 584
+   * distribution rows, each off the filing officer's own portal — and this
+   * route could reach none of them. A reader asking who funded a Vail school
+   * board campaign got a pack with no finance records, and the honest-gap
+   * machinery then said we hold no campaign-finance records: a sentence that
+   * had silently become FALSE about us.
+   *
+   * `lib/ask/local-finance.ts` holds the whole rule: linkage is the filing
+   * officer's own committee→office register row through a hand-audited
+   * office→body crosswalk, never a name match; rows are date-ordered, never
+   * amount-ranked; nothing is totalled; and every evidence set names the
+   * independent-expenditure class as not held, because filed campaign money
+   * without that caveat reads as the whole money picture. A covered body with
+   * no linked committee gets the named OURS gap rather than silence, and a
+   * federal candidate returns null here rather than a false "nothing
+   * recorded" — their finance records live in the FEC snapshot, not this
+   * store.
+   */
+  if (subject && financeQuestionAsked(question)) {
+    const finance = localFinanceEvidenceFor(subject);
+    if (finance) {
+      records.push(...finance.records);
+      gaps.push(...finance.gaps);
+      Object.assign(denominators, finance.denominators);
+    }
   }
 
   /*

@@ -276,6 +276,17 @@ export interface AzPimaContributionRow {
   readonly RecipientCommitteeName: string | null;
   readonly OfficeName: string | null;
   readonly ContributorFullName: string | null;
+  /**
+   * The endpoint files an individual contributor as NAME PARTS, not a full
+   * name: measured across the committed store, 784 of the 837 Contribution
+   * rows carry `ContributorFullName: null` with the name in these three
+   * fields. Reading only `ContributorFullName` renders the overwhelming
+   * majority of individual contributors as anonymous, which is a false
+   * statement about a public filing.
+   */
+  readonly ContributorFirstName: string | null;
+  readonly ContributorMiddleName: string | null;
+  readonly ContributorLastName: string | null;
   readonly ContributorOrganizationName: string | null;
   readonly ContributionDate: string | null;
   readonly ContributionAmount: number | null;
@@ -374,7 +385,18 @@ export function azPimaContributionsFor(committeeNameAsFiled: string): readonly C
       recordKind: "CONTRIBUTION" as const,
       intoCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
       amountReceived: Number(row.ContributionAmount ?? 0),
-      contributorNameAsFiled: row.ContributorFullName ?? row.ContributorOrganizationName ?? null,
+      /*
+       * Full name where the filer gave one, the organization where it is one,
+       * and otherwise the name PARTS joined in filed order — which is how 784
+       * of the 837 contribution rows actually carry the contributor. `|| null`
+       * so an all-empty row stays an honest null rather than an empty string.
+       */
+      contributorNameAsFiled:
+        row.ContributorFullName ??
+        row.ContributorOrganizationName ??
+        ([row.ContributorFirstName, row.ContributorMiddleName, row.ContributorLastName]
+          .filter(Boolean)
+          .join(" ") || null),
       // As filed. Years 0006 and 2926 exist in this data and are NOT repaired.
       receivedOn: row.ContributionDate,
       filingId: row.DocumentFilingId,
@@ -392,8 +414,12 @@ export function azPimaExpendituresFor(committeeNameAsFiled: string): readonly Ex
       recordKind: "EXPENDITURE" as const,
       byCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
       amountSpent: Number(row.DistributionAmount ?? 0),
+      /* `|| null`, not `?? null`: a join over two null parts is "", and an
+         empty string here would read as a payee with no name rather than a
+         row that names no payee. */
       payeeNameAsFiled:
-        row.PayeeOrganizationName ?? [row.PayeeFirstName, row.PayeeLastName].filter(Boolean).join(" ") ?? null,
+        row.PayeeOrganizationName ??
+        ([row.PayeeFirstName, row.PayeeLastName].filter(Boolean).join(" ") || null),
       spentOn: row.DistributionDate,
       /**
        * NULL, and it is the honest value. This endpoint returns no purpose

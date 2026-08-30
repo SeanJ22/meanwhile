@@ -22366,3 +22366,60 @@ obvious purge.
 - **No Pima County campaign-finance dollar figure is held.** The filing index
   was acquired — 138 filers, 680 filings — and the document endpoint answered
   401. Zero money, and a test asserts no amount field exists in the local record.
+
+### Addendum — the instrument that accused eight real people
+
+Landed after the main PR, on `claude/false-absence-verifier`.
+
+Resolving NH216 meant re-reading Vail Unified's board page, and the row's premise
+turned out to be false: the five names it said were **absent from the district's
+own page** are all on it, at HTTP 200, in bytes a plain node fetch receives.
+`pnpm verify:extraction` had produced a false absence — and a false `DISAGREED`
+is an accusation against a government's own publication, made by a check that
+had not looked where the answer was.
+
+It had two independent causes, and the second was found only because the fix
+made the report **not reproducible**.
+
+1. **The page it never read.** `renderedText()` strips `<script>` — right for
+   CODE, wrong for the DATA that IS the page on a client-rendered site. Vail
+   runs Apptegy; the roster ships in the hydration payload; the reader kept the
+   chrome and threw away the page. Now `embeddedDataText()` reads the JSON
+   string literals out of `<script>` blocks — string VALUES only, never raw
+   script source, because trading a false ABSENT for a false PRESENT is the
+   worse bargain.
+2. **The wall it read as an emptiness.** The curl rung was `curl -sL` and
+   `return stdout.length > 0`. curl prints the body of a refusal exactly as it
+   prints the body of a page, so `www.newbury.nh.gov` answering with a hard 403
+   became 5,591 bytes of denial HTML, became "the page", and three Newbury
+   Selectboard members were accused of not being on their own town's site. The
+   rung now asks for the status code; a refusal is `COULD_NOT_READ` and is
+   counted in its own column.
+
+```
+Vail     BEFORE  0 agreed · 1 partial · 5 DISAGREED
+         AFTER   0 agreed · 5 in payload · 0 partial · 1 DISAGREED   (Carruth, correctly — he is staff)
+Newbury  BEFORE  0 agreed · 3 DISAGREED
+         AFTER   3 agreed · 0 DISAGREED, stable across consecutive runs
+
+Names DISAGREED, corpus-wide        22 -> 13
+Rosters where every name agreed     24 of 39 -> 27 of 41
+```
+
+Nine false accusations against government pages removed, and the report is
+reproducible for the first time.
+
+**A third weakness was found and deliberately NOT fixed.** `judgeName` tests
+membership with `String.includes`, so the two-letter given name "Ed" is found
+inside "published", "used", "provided" — on any page in the corpus. A short
+given name therefore cannot reach `DISAGREED` whatever the page says, which
+inflates `PARTIAL`, and is why Ed Buster escaped the false accusation his four
+colleagues did not. It is named in the regression test rather than buried:
+widening the matcher to word boundaries moves counts in a published report and
+deserves its own measured change, not a drive-by.
+
+The lesson generalises past this instrument. **Both faults are the checking
+layer committing the exact error the constitution forbids the collection layer
+from committing** — asserting an absence it had not established, and rendering a
+wall as an emptiness. An instrument is not exempt from the law it enforces, and
+RULING 193 already said so.

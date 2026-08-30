@@ -28,6 +28,7 @@ docs/state.md        text eol=lf
 docs/tracker.csv     text eol=lf
 docs/deferred.md     text eol=lf
 docs/deferred.csv    text eol=lf
+docs/repo-inventory.md text eol=lf
 lib/sources/types.ts text eol=lf
 
 # The workbook is the one binary in the mirrored set. Marking it explicitly

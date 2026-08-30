@@ -64,6 +64,11 @@ export const GENERATED: GeneratedArtifact[] = [
     pure: true,
   },
   {
+    path: "docs/governance/constitution.md",
+    command: "corepack pnpm governance:compile",
+    pure: true,
+  },
+  {
     path: "docs/governance/current-decisions.md",
     command: "corepack pnpm governance:compile",
     pure: true,
@@ -304,6 +309,35 @@ export const GENERATED: GeneratedArtifact[] = [
     impurity:
       "a retrieval ledger records the bytes a body sent on a DATE. Regenerating it from " +
       "today's artifacts is correct; demanding byte-equality with a past walk is not.",
+  },
+  {
+    /*
+     * **Registered 2026-08-30, the same commit that created it** (Session A,
+     * Work Item 6 — the status-generation ruling: status is GENERATED, never
+     * asserted). The hand-written current-status surfaces in docs/state.md §2,
+     * §3 and §7 retired into this ledger the same day.
+     */
+    path: "docs/status-ledger.md",
+    command: "corepack pnpm status:ledger",
+    pure: false,
+    impurity:
+      "reads HEAD SHA and the wall clock for its generated-at stamp; the carried-stamp rule " +
+      "keeps it idempotent when the rendered body is unchanged, so only a changed body earns " +
+      "a fresh stamp.",
+  },
+  {
+    /*
+     * **Registered 2026-08-30, the same commit that created it** (Session A,
+     * Work Item 7). The mechanical repo inventory, joined to the Drive mirror
+     * via scripts/mirror-set.mjs.
+     */
+    path: "docs/repo-inventory.md",
+    command: "corepack pnpm repo-map",
+    pure: false,
+    impurity:
+      "reads HEAD SHA and the wall clock for its generated-at stamp, and git ls-files for " +
+      "the tree; the carried-stamp rule keeps it idempotent when the rendered body is " +
+      "unchanged, so only a changed body earns a fresh stamp.",
   },
 ];
 

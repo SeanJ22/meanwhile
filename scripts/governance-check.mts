@@ -37,6 +37,7 @@ const GENERATED = [
   "docs/governance/index.json",
   "docs/governance/current-decisions.md",
   "docs/governance/history.md",
+  "docs/governance/constitution.md",
   "docs/rulings.md",
 ];
 

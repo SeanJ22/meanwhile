@@ -533,8 +533,11 @@ for (const f of findings) {
     continue;
   }
 
+  // RULING 218: a late or failed scheduled dispatch is an engineering/freshness
+  // defect — an operational incident and WorkItem — never a Needs-Owner
+  // escalation by itself. The row opens in the section that owns the work.
   rows.push({
-    Section: "needs-sean",
+    Section: "repo-ops",
     Title: f.healed
       ? `${f.workflow} failed twice in a row and recovered unexamined`
       : `${f.workflow} has failed twice in a row`,
@@ -557,11 +560,14 @@ for (const f of findings) {
       // Sean, 2026-08-25: "night jobs keep tripping and nobody learns why".
       // A row naming the run id says WHERE to look; this says WHAT HAPPENED,
       // so the next diagnosis does not begin by fetching a log.
+      `\n\nOPERATIONAL INCIDENT (RULING 218): this is engineering work, not an owner ` +
+      `decision. The standing class incident is WorkItem incident-scheduled-run-failures ` +
+      `in data/control-plane/incidents.` +
       `\n\nWHAT THE FAILING RUN PRINTED (run ${f.runs[0].databaseId}). ${f.failureTail}\n\n${marker}`,
     Priority: "P1",
     prefix: "JOB",
   });
-  console.log("      -> Needs Sean row queued.\n");
+  console.log("      -> repo-ops incident row queued (RULING 218).\n");
 }
 
 /* -------------------------------------------------------------------------- */
@@ -588,8 +594,10 @@ for (const f of scheduleFindings) {
     continue;
   }
 
+  // RULING 218: dispatch-delay findings are operational incidents in the
+  // section that owns the work, never Needs-Owner escalations by themselves.
   rows.push({
-    Section: "needs-sean",
+    Section: "repo-ops",
     Title: gap
       ? `${f.workflow}: no run observed for the ${v.slot} slot`
       : `${f.workflow}: the ${v.slot} slot ran ${v.dispatchDelayMinutes} min late`,
@@ -617,11 +625,15 @@ for (const f of scheduleFindings) {
       `\n\nTHE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflows — on 2026-08-27 it ` +
       `ran 534 minutes after its own slot, so its report described a board nearly nine hours old. Read every ` +
       `sentence above as true AS OF ${v.asOf}, not as of when you are reading it.` +
+      `\n\nOPERATIONAL INCIDENT (RULING 218): GitHub scheduled workflows are not the ` +
+      `freshness clock; a late dispatch is an engineering/freshness defect, never a ` +
+      `Needs-Owner escalation by itself. The standing class incident is WorkItem ` +
+      `incident-github-dispatch-delay in data/control-plane/incidents.` +
       `\n\n${f.marker}`,
     Priority: gap ? "P1" : "P2",
     prefix: "JOB",
   });
-  console.log(`    -> Needs Sean row queued for ${f.workflow} at ${v.slot}.`);
+  console.log(`    -> repo-ops incident row queued for ${f.workflow} at ${v.slot} (RULING 218).`);
 }
 
 if (rows.length === 0) {

@@ -79,6 +79,14 @@ view of it. `docs/rulings.md` is a GENERATED compatibility view kept so every
 `RULING n` reference in this repository still resolves; it stopped being an
 authority on 2026-08-26.
 
+**The autonomous-system constitution — `docs/governance/constitution.md` — is a
+GENERATED view of the same ledger** (RULING 219): the operating law for
+autonomous execution, pasted whole into every autonomous-system brief. Its body
+is not duplicated here; it changes only through new governance records and the
+compile/check path, and **this file is superior wherever the two touch**.
+`docs/frontier.md` is the mutable planning artifact beside it — priorities
+only, never law, never a governance input.
+
 ---
 
 ## The order of every trade

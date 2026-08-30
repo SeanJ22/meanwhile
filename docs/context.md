@@ -1,30 +1,26 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-29 20:05:31 EDT.
-Session day 2026-08-29 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 18:54:01 EDT.
+Session day 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1245 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1221 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
 ---
 
-## Phases — 5 standing(s)
+## Phases — 0 standing(s)
 
-Source: docs/state.md §7 — Where the phases stand.
+Source: docs/state.md — section not found.
 
-| Phase | Status |
-|---|---|
-| Phase A — The federal card. Complete but for… | What they do (roll-call votes: **DONE**), who funds them (FEC money surfaces: **DONE**), who they are and how to reach them (the congress-legislators… |
-| Phase B — The state layer and the 50-state re… | State legislators (**DONE** — Plural), state votes (**DONE** — LegiScan, D54 weekly), jurisdiction depth (**IN PROGRESS, and further from done than t… |
-| Phase C — The commercial product. EMPTY, and… | C01 (the mock export — one measure, synthetic data), V05 (the beat-a-tracking-poll answer C01 doubles as), V01 (five buyer calls), the buyer-side dem… |
-| Phase D — Launch readiness. | The name (B01/B02 — USPTO classes 9 and 42 before any commitment), counsel (B05, plus the ripcord questions queued for them: D23 and the D61 review),… |
-| Phase E — National scale. Not started, delibe… | Vector tiling; the Census of Governments universe as the registry's denominator; vendor tenant enumeration; special districts; plus the notes / activ… |
+> **SECTION FAILED — phases could not be built.** `### Where the phases stand` is not in docs/state.md — the heading moved or was renamed
+
+> This is a failure of this generator, not a statement that the project has no phases.
 
 <!-- PINNED: never trimmed. Verbatim from CLAUDE.md. -->
 
@@ -616,7 +612,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 220 recorded
+## Rulings — 236 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -739,7 +735,7 @@ from. Each entry there names what it supersedes.
 - RULING 121 — one body that spans two towns has one identity, and renders in both  [R-0121 · LAW_DECISION · ACTIVE]
 - RULING 122 — a page on a party's own site can be a candidate's page, with the host named  [R-0122 · LAW_DECISION · ACTIVE]
 - RULING 123 — the author's decisions of 2026-08-24, recorded as a batch  [R-0123 · LAW_DECISION · ACTIVE]
-- RULING 124 — a commit that cannot change what a reader sees does not cost a deploy  [R-0124 · LAW_DECISION · ACTIVE]
+- RULING 124 — a commit that cannot change what a reader sees does not cost a deploy  [R-0124 · LAW_DECISION · AMENDED]
 - RULING 125 — verification happens on the local production build; production is the delivery truck, not the test bench  [R-0125 · LAW_DECISION · ACTIVE]
 - RULING 126 — campaign-finance data renders for readers and never enters anything sold  [R-0126 · LAW_DECISION · ACTIVE]
 - RULING 127 — no tool prints a credential value, and the guard is the values themselves  [R-0127 · LAW_DECISION · ACTIVE]
@@ -761,7 +757,7 @@ from. Each entry there names what it supersedes.
 - RULING 143 — what DONE means for 07866, and it is per candidate  [R-0143 · LAW_DECISION · ACTIVE]
 - RULING 144 — an argued absence may be built from walls, and it expires the day a wall falls  [R-0144 · LAW_DECISION · ACTIVE]
 - RULING 145 — a platform-hosted campaign presence fills the campaign-site field, with the host labelled  [R-0145 · LAW_DECISION · ACTIVE]
-- RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question  [R-0146 · LAW_DECISION · ACTIVE]
+- RULING 146 — a session runs unattended, and nothing it runs may be able to ask it a question  [R-0146 · LAW_DECISION · AMENDED]
 - RULING 147 — no reconciliation may compare a parser to itself  [R-0147 · LAW_DECISION · ACTIVE]
 - RULING 148 — the may-we-walk verdict is enforced by the fetcher, never remembered by a session  [R-0148 · LAW_DECISION · ACTIVE]
 - RULING 149 — the coverage matrix is generated, internal, and never rendered to a reader  [R-0149 · LAW_DECISION · ACTIVE]
@@ -817,6 +813,22 @@ from. Each entry there names what it supersedes.
 - RULING 202 — canonical method knowledge has ONE governed write path, and a rejected candidate is retained  [R-0202 · LAW_DECISION · ACTIVE]
 - RULING 203 — the pure canonical authorities are gates, and a writer is never made one  [R-0203 · LAW_DECISION · ACTIVE]
 - RULING 204 — production-integrity freshness fails closed, and the question is asked of what production SERVES  [R-0204 · LAW_DECISION · ACTIVE]
+- RULING 205 — if a public civic record exists, get it: the obligation outlives the route and the worker  [R-0205 · LAW_DECISION · ACTIVE]
+- RULING 206 — the vendor is not the record, and a URL is not the record  [R-0206 · LAW_DECISION · ACTIVE]
+- RULING 207 — one successful route never collapses the source universe; an adapter is a route portfolio  [R-0207 · LAW_DECISION · ACTIVE]
+- RULING 208 — an access escalation is a parallel lane, never a stop  [R-0208 · LAW_DECISION · ACTIVE]
+- RULING 209 — a permission rule binds the next fetch, never possession of what was already published  [R-0209 · LAW_DECISION · ACTIVE]
+- RULING 210 — the reader-answerability suite is the top-line health contract of the reader dimension  [R-0210 · LAW_DECISION · ACTIVE]
+- RULING 211 — the known-answer control set is permanent, continuous, and unannounced  [R-0211 · LAW_DECISION · ACTIVE]
+- RULING 212 — refresh cadence is derived from time-to-reader-impact and observed publisher change rate  [R-0212 · LAW_DECISION · ACTIVE]
+- RULING 213 — no external orchestration service; the scheduler builds on the existing control-plane interfaces  [R-0213 · DECISION · ACTIVE]
+- RULING 214 — no new multi-project abstraction until a second project exists  [R-0214 · DECISION · ACTIVE]
+- RULING 215 — activation Level 5 is removed from the architecture; Level 4 automatic publishing is deferred  [R-0215 · DECISION · ACTIVE]
+- RULING 216 — status is generated, never asserted, and proof classes are distinct  [R-0216 · LAW_DECISION · ACTIVE]
+- RULING 217 — pilot health is three contracts rolled into one owner-facing reading  [R-0217 · LAW_DECISION · ACTIVE]
+- RULING 218 — GitHub scheduled workflows are not the freshness clock  [R-0218 · LAW_DECISION · ACTIVE]
+- RULING 219 — the autonomous-system constitution is a generated governance view  [R-0219 · LAW_DECISION · ACTIVE]
+- RULING 220 — Level-2 scheduling authority persists in a Postgres provider behind the existing control-plane interfaces  [R-0220 · DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1017,18 +1029,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-29 20:05:31 EDT
-branch: claude/exact-body-identity
-head sha: 7119b09d719fab13198fdaa9a3662ef160f1930b
-head subject: The application retrieved the wrong government, and every check downstream was green
-origin/main sha: 32d35bfaf6f831597943c90b56dd04ee34a720f5
+generated: 2026-08-30 18:54:00 EDT
+branch: claude/session-a-architecture
+head sha: ec5ef90b7202dee990b80a56470ba2102a5d1637
+head subject: Close-out: the generated files handoff wrote on its way here (context.md, coverage-matrix.csv, repo-inventory.md)
+origin/main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
 origin/main subject: Job watch: a scheduled job has failed twice in a row
-local main sha: 097fca30e2e688a4973bd84164690faf1ba78d50
-local main matches origin/main: no — 1 commit(s) behind
+local main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
+local main matches origin/main: yes
 working tree: clean
 open prs: none
 last recorded tests: 239 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:21246
+last recorded status from: docs/state.md:20294
 ```

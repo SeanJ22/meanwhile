@@ -1,12 +1,12 @@
 {
   "generatedBy": "pnpm governance:compile",
   "neverHandEdit": true,
-  "snapshot": "f9fbe66f88e24e5f",
+  "snapshot": "1c3c4f675ef0d212",
   "counts": {
-    "records": 246,
-    "current": 225,
-    "law": 198,
-    "decisions": 27,
+    "records": 257,
+    "current": 236,
+    "law": 205,
+    "decisions": 31,
     "historical": 21
   },
   "records": [
@@ -2421,7 +2421,7 @@
       ],
       "title": "RULING 124 — a commit that cannot change what a reader sees does not cost a deploy",
       "kind": "LAW_DECISION",
-      "status": "ACTIVE",
+      "status": "AMENDED",
       "provenance": "author_explicit",
       "domain": "shipping-ci",
       "adopted": "2026-08-24",
@@ -2430,10 +2430,6 @@
         {
           "key": "shipping.closeout_path",
           "value": "no-separate-push"
-        },
-        {
-          "key": "refresh.cadence",
-          "value": "orchestrated-daily-per-source-rate"
         }
       ],
       "relations": [
@@ -4285,6 +4281,378 @@
         {
           "kind": "extends",
           "target": "R-0206"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0210",
+      "aliases": [
+        "RULING 210",
+        "R210",
+        "R-210"
+      ],
+      "title": "RULING 210 — the reader-answerability suite is the top-line health contract of the reader dimension",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "reader.health_contract",
+          "value": "answerability-suite-with-typed-diagnostics"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0211",
+      "aliases": [
+        "RULING 211",
+        "R211",
+        "R-211"
+      ],
+      "title": "RULING 211 — the known-answer control set is permanent, continuous, and unannounced",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "truth.control_standard",
+          "value": "permanent-unannounced-control-set"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0212",
+      "aliases": [
+        "RULING 212",
+        "R212",
+        "R-212"
+      ],
+      "title": "RULING 212 — refresh cadence is derived from time-to-reader-impact and observed publisher change rate",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "refresh.cadence",
+          "value": "derived-from-reader-impact-and-change-rate"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "supersedes_clause",
+          "target": "R-0124",
+          "changed": "the cadence half: RULING 124's one orchestrated daily run at hand-set per-source rates stops being the requirement. Cadence is now DERIVED from time-to-reader-impact and observed publisher change rate, no active obligation may have an unknown next-due, and the fixed daily floor survives only as a default for obligations with no better-derived cadence. The refresh.cadence claim moves to this ruling.",
+          "survives": "everything else in RULING 124, entire: a commit that cannot change what a reader sees does not cost a deploy; previews and branch deploys do not build; the path-keyed deploy filter with its allowlist direction; scripts/ is deliberately SHIPPING; every failure path builds; the close-out tool refuses a separate push to main (shipping.closeout_path = no-separate-push); and the trace-manifest measurement of the classification."
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0213",
+      "aliases": [
+        "RULING 213",
+        "R213",
+        "R-213"
+      ],
+      "title": "RULING 213 — no external orchestration service; the scheduler builds on the existing control-plane interfaces",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "scheduler.orchestration",
+          "value": "existing-control-plane-interfaces"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0214",
+      "aliases": [
+        "RULING 214",
+        "R214",
+        "R-214"
+      ],
+      "title": "RULING 214 — no new multi-project abstraction until a second project exists",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "project.abstraction_investment",
+          "value": "second-project-first"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0215",
+      "aliases": [
+        "RULING 215",
+        "R215",
+        "R-215"
+      ],
+      "title": "RULING 215 — activation Level 5 is removed from the architecture; Level 4 automatic publishing is deferred",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "business",
+      "adopted": "2026-08-30",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "activation.external_workflows",
+          "value": "removed-from-architecture"
+        }
+      ],
+      "relations": [],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0216",
+      "aliases": [
+        "RULING 216",
+        "R216",
+        "R-216"
+      ],
+      "title": "RULING 216 — status is generated, never asserted, and proof classes are distinct",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "status.claim_standard",
+          "value": "generated-with-proving-check"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "related_to",
+          "target": "R-0189"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0217",
+      "aliases": [
+        "RULING 217",
+        "R217",
+        "R-217"
+      ],
+      "title": "RULING 217 — pilot health is three contracts rolled into one owner-facing reading",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "health.pilot_rollup",
+          "value": "three-contracts-one-rollup"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0210"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0211"
+        },
+        {
+          "kind": "extends",
+          "target": "R-0212"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0218",
+      "aliases": [
+        "RULING 218",
+        "R218",
+        "R-218"
+      ],
+      "title": "RULING 218 — GitHub scheduled workflows are not the freshness clock",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/shipping-ci.md",
+      "claims": [
+        {
+          "key": "freshness.clock_authority",
+          "value": "runtime-scheduler-derived-due"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0212"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0124"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0219",
+      "aliases": [
+        "RULING 219",
+        "R219",
+        "R-219"
+      ],
+      "title": "RULING 219 — the autonomous-system constitution is a generated governance view",
+      "kind": "LAW_DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "meta-governance",
+      "adopted": "2026-08-30",
+      "operativePolicy": "docs/governance/policies/meta-governance.md",
+      "claims": [
+        {
+          "key": "governance.constitution_view",
+          "value": "generated-view-of-the-ledger"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "derived_from",
+          "target": "R-0210"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0211"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0212"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0213"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0214"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0215"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0216"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0217"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0218"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0205"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0206"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0207"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0184"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0100"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0192"
+        },
+        {
+          "kind": "derived_from",
+          "target": "R-0208"
+        }
+      ],
+      "uncertain": [],
+      "sourceRef": "lib/governance/adoptions.ts"
+    },
+    {
+      "id": "R-0220",
+      "aliases": [
+        "RULING 220",
+        "R220",
+        "R-220"
+      ],
+      "title": "RULING 220 — Level-2 scheduling authority persists in a Postgres provider behind the existing control-plane interfaces",
+      "kind": "DECISION",
+      "status": "ACTIVE",
+      "provenance": "author_explicit",
+      "domain": "shipping-ci",
+      "adopted": "2026-08-30",
+      "operativePolicy": null,
+      "claims": [
+        {
+          "key": "scheduler.persistence_provider",
+          "value": "postgres-provider-neutral-interfaces"
+        }
+      ],
+      "relations": [
+        {
+          "kind": "extends",
+          "target": "R-0213"
+        },
+        {
+          "kind": "related_to",
+          "target": "R-0126"
         }
       ],
       "uncertain": [],

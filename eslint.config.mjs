@@ -24,6 +24,15 @@ const eslintConfig = defineConfig([
      * and the ladder needs probes. Excluded in both places, together.
      */
     ".scratch/**",
+    /*
+     * Agent worktrees (2026-08-30, Session A). `.claude/worktrees/` holds
+     * transient git worktrees parallel subagents work in — each a full copy
+     * of the repository. Linting them re-reports every finding N times and,
+     * worse, a leftover worktree from a MERGED branch failed the lint gate
+     * with 417 errors that belonged to no current code. The worktree's own
+     * branch is gated when it integrates; the copy is never the subject.
+     */
+    ".claude/worktrees/**",
   ]),
   /*
    * THE `^_` DISCARD CONVENTION (g18, 2026-08-18, the author's ruling A).

@@ -63,7 +63,12 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // append-only record every brief orders sessions to read and hardcode from,
   // and the one such file that was unreachable from outside the repo. RULING
   // 108's failure aimed at a different file.
-  assert.equal(MIRRORED_DOCS.length, 25, "the canonical set changed size — was that a decision?");
+  // TWENTY-SIX since 2026-08-30, and it was a decision (Session A, Work Item
+  // 7): `repo-inventory.md`, the generated repo census written by
+  // `pnpm repo-map` — the reviewer reads a derived inventory from the folder
+  // rather than a reconstruction from reports, and it has a repo counterpart
+  // so it is drift-checkable like coverage-matrix.csv.
+  assert.equal(MIRRORED_DOCS.length, 26, "the canonical set changed size — was that a decision?");
 
   const names = MIRRORED_DOCS.map((d) => d.mirrorName);
   for (const expected of [
@@ -109,7 +114,10 @@ test("the canonical mirror set lives in one place, and holds what was ruled into
   // Twenty-three copied since 2026-08-26: docs/rulings.md has a repo counterpart
   // like the rest. It is the file every brief orders sessions to read, and the
   // only such file that could not be read from outside the repo (RULING 108).
-  assert.equal(COPIED_DOCS.length, 23);
+  // Twenty-four copied since 2026-08-30: docs/repo-inventory.md has a repo
+  // counterpart like the rest — a generated artifact in the canonical set is
+  // drift-checkable, which is why it is here and not a declared extra.
+  assert.equal(COPIED_DOCS.length, 24);
   assert.equal(MIRRORED_DOCS.filter((d) => d.repoPath === null).length, 2);
 });
 

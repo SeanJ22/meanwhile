@@ -158,6 +158,17 @@ export const MIRRORED_DOCS = [
   { mirrorName: "tracker.md", repoPath: "docs/tracker.md" },
   { mirrorName: "log.md", repoPath: "docs/log.md" },
   { mirrorName: "gap-ledger.md", repoPath: "docs/gap-ledger.md" },
+  /*
+   * **JOINED 2026-08-30 (Session A, Work Item 7 — the author's decision).**
+   * The generated repo inventory: `pnpm repo-map` renders the tree, the
+   * routes, the schema, the gates, the method store and the scheduled jobs
+   * from the repository itself, so the reviewer reads a derived census from
+   * the folder rather than a reconstruction from reports. It is a generated
+   * artifact WITH a repo counterpart, so it is drift-checkable like
+   * `coverage-matrix.csv` — which is the point of putting it in the canonical
+   * set rather than declaring it an extra.
+   */
+  { mirrorName: "repo-inventory.md", repoPath: "docs/repo-inventory.md" },
 ];
 
 /**

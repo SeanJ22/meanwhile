@@ -803,6 +803,70 @@ if (!CHECK_ONLY) {
   }
 }
 
+/* --------------------------------------------- generated status surfaces --- */
+
+/**
+ * **THE STATUS LEDGER AND THE REPO INVENTORY ARE REGENERATED EVERY MUTATING
+ * RUN, AND `--check` VERIFIES THEM WITHOUT WRITING.** (2026-08-30, Session A
+ * items 6 and 7 — the status-generation ruling: status is GENERATED, never
+ * asserted.)
+ *
+ * Same posture as the coverage matrix above: RULING 92 artifacts, regenerated
+ * rather than trusted, and a regeneration failure is a WARNING with its
+ * reason, because a session that shipped good code should not be blocked by
+ * its thermometer. Both generators carry a carried stamp, so a regeneration
+ * that changes nothing produces no diff and a plain handoff does not dirty
+ * the tree.
+ *
+ * Under `--check` each generator runs with its own `--check`, which writes
+ * NOTHING and exits nonzero when the committed artifact is stale — a stale
+ * generated status surface makes the handoff check RED rather than being
+ * silently repaired, and `pnpm handoff --check` still touches nothing on
+ * disk.
+ */
+{
+  const statusGenerators = [
+    { label: "status ledger", command: "pnpm run status:ledger", path: "docs/status-ledger.md" },
+    { label: "repo inventory", command: "pnpm run repo-map", path: "docs/repo-inventory.md" },
+  ];
+  for (const g of statusGenerators) {
+    if (CHECK_ONLY) {
+      try {
+        execSync(`${g.command} --check`, {
+          cwd: ROOT,
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+          maxBuffer: 64 * 1024 * 1024,
+        });
+        ok(g.label, `${g.path} is current (verified with --check; nothing written)`);
+      } catch (error) {
+        fail(
+          g.label,
+          `${g.path} is STALE against its generator — run \`${g.command}\` and commit. ` +
+            `--check repairs nothing. (${String(error.message).split("\n")[0]})`,
+        );
+      }
+    } else {
+      try {
+        const out = execSync(g.command, {
+          cwd: ROOT,
+          encoding: "utf8",
+          stdio: ["ignore", "pipe", "pipe"],
+          maxBuffer: 64 * 1024 * 1024,
+        });
+        const line = out
+          .split("\n")
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .at(-1);
+        ok(g.label, line ?? `${g.path} regenerated`);
+      } catch (error) {
+        warn(g.label, `${g.command} did not run — ${String(error.message).split("\n")[0]}`);
+      }
+    }
+  }
+}
+
 /* ---------------------------------------------------------- dev server --- */
 
 // Before the mirror, not after. A handoff that syncs and reports "safe to end
@@ -1395,9 +1459,12 @@ function ship() {
    * "commit first, a commit needs a message" rule below still stands for
    * everything else and is untouched.
    */
-  const generated = ["docs/context.md", "docs/coverage-matrix.csv"].filter(
-    (path) => git("status", "--porcelain", "--", path) !== "",
-  );
+  const generated = [
+    "docs/context.md",
+    "docs/coverage-matrix.csv",
+    "docs/status-ledger.md",
+    "docs/repo-inventory.md",
+  ].filter((path) => git("status", "--porcelain", "--", path) !== "");
   if (generated.length > 0) {
     try {
       git("add", ...generated);

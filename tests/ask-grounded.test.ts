@@ -266,6 +266,72 @@ test("ASK01: resolution is a SUPERSET of the binder that shipped without a model
 
 // ── Validation: the checks that can be made, made ───────────────────────
 
+/* ── The second wall: a pack holding another body's civic records ──────── */
+
+test("a MEETING record belonging to another body FAILS validation", () => {
+  /*
+   * **THE CHECK THE SUBSTITUTION CLASS ACTUALLY NEEDED.** (2026-08-29.)
+   *
+   * `subject-not-substituted` compares PROSE against the subject's name, and
+   * that is exactly why it could not catch the Pima defect: the subject WAS
+   * "Pima", the answer DID say "Pima", and the meeting inside the pack belonged
+   * to the Central Arizona Water Conservation District. Every name in the
+   * sentence was the right name; the RECORD was the wrong government's.
+   *
+   * The retrieval fix is primary and this is the second wall — it cannot make
+   * retrieval correct, only stop a future regression in it from reaching a
+   * reader, which the name-only check demonstrably could not.
+   */
+  const p = pack({
+    subject: { kind: "BODY", id: VAIL, name: "Vail Unified District" },
+    records: [
+      {
+        kind: "MEETING",
+        id: "civicclerk:capaz:696",
+        bodyId: "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district",
+        text: "Vail: CAP University, Monday, August 31.",
+        occurredAt: "2026-08-31T16:00:00.000Z",
+        sourceUrl: "https://example.gov/agenda.pdf",
+      },
+    ],
+  });
+  const verdict = validateAnswer("Vail's next meeting is on Monday.", [], p);
+  assert.equal(verdict.kind, "FAILED");
+  assert.ok(
+    verdict.kind === "FAILED" &&
+      verdict.failed.some((f) => f.startsWith("record-from-another-body")),
+    `expected a body-identity failure, got ${JSON.stringify(verdict)}`,
+  );
+});
+
+test("a record carrying the RESOLVED body's id passes", () => {
+  /* The positive control. A check that failed everything would be no check. */
+  const p = pack({
+    subject: { kind: "BODY", id: `${VAIL}#board`, name: "Vail Unified District" },
+    records: [
+      {
+        kind: "MEETING",
+        id: "apptegy:vail:1",
+        bodyId: `${VAIL}#board`,
+        text: "Vail Unified District: Governing Board Meeting.",
+        occurredAt: "2026-09-09T02:00:00.000Z",
+        sourceUrl: "https://example.gov/agenda.pdf",
+      },
+    ],
+  });
+  assert.equal(validateAnswer("Vail's board meets on the 9th.", [], p).kind, "PASSED");
+});
+
+test("a record with NO body id is not failed — it belongs to no single body", () => {
+  /*
+   * Ballot measures, statewide officeholders and deliberately wider topic
+   * sweeps legitimately belong to no one body. Failing them would discard
+   * correct answers, which is its own kind of wrong, so the check binds
+   * exactly where identity is stated and nowhere else.
+   */
+  assert.equal(validateAnswer("Vail will consider the 2027 capital budget.", [], pack()).kind, "PASSED");
+});
+
 test("ASK01: an invented source URL fails validation", () => {
   const p = pack();
   const verdict = validateAnswer(

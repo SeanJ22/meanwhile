@@ -153,6 +153,18 @@ const nextConfig: NextConfig = {
        * reason this list exists.
        */
       "./data/votes/*.json",
+      /*
+       * The Legistar outcome store (2026-08-29). Same reasoning as the votes
+       * snapshot immediately above, and the same failure mode if it is left
+       * out: 20 Pima Board sittings carrying 525 recorded actions and 2,083
+       * per-person votes would be absent from the deployed bundle, and a reader
+       * asking what the board decided would be told we have not acquired it —
+       * a sentence that is honest about our store and false about our repo.
+       *
+       * `lib/outcomes/store.ts` reads the default path as a LITERAL so the
+       * tracer can see it; this is the other half, and neither works alone.
+       */
+      "./data/outcomes/*.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

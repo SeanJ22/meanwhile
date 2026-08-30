@@ -94,7 +94,15 @@ interface GroundedBody {
   mode: string;
   subject?: { kind: string; id: string; name: string } | null;
   answer?: string | null;
-  records?: { kind: string; id: string; text: string; bodyId?: string | null }[];
+  records?: {
+    kind: string;
+    id: string;
+    text: string;
+    bodyId?: string | null;
+    /* Carried because an outcome record with no source is not evidence, and
+       the assertion below is the only thing that would notice. */
+    sourceUrl?: string | null;
+  }[];
   gaps?: { whose: string; statement: string }[];
   denominators?: Record<string, number>;
   trace?: { resolution: { state: string; subjectId?: string | null } };

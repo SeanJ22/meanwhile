@@ -16,6 +16,8 @@ import {
   outcomeEvidenceFor,
   publicationObservationsFor,
   resetOutcomeSnapshotCache,
+  useOutcomeSnapshotForTests,
+  loadedFrom,
   sittingsForBody,
 } from "../lib/outcomes/store.ts";
 import type {
@@ -295,12 +297,11 @@ test("HELD: a sitting with roll calls answers HOW_DID_THEY_VOTE with roll calls 
   const healthy = fixtureStore().sittings.find((s) => s.rollCalls.length > 0);
   assert.ok(healthy, "the fixture holds a sitting with real roll calls");
 
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const evidence = outcomeEvidenceFor(
     { meetingId: healthy.meetingId, questionClass: "HOW_DID_THEY_VOTE" },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
 
   assert.equal(evidence.state, "HELD");
   assert.equal(evidence.answerable, true);
@@ -327,15 +328,14 @@ test("SEEDED FAILURE: 135 agenda records can never reach a WHAT_WAS_DECIDED answ
    * Here the agenda records are not deprioritised. They are ABSENT from
    * `records` and present in `refused` with the sentence explaining why.
    */
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const evidence = outcomeEvidenceFor(
     {
       meetingId: "legistar:pima:9000001",
       questionClass: "WHAT_WAS_DECIDED",
     },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
 
   assert.equal(evidence.state, "NO_ACTION_RECORDED");
   assert.equal(evidence.answerable, false);
@@ -348,12 +348,11 @@ test("SEEDED FAILURE: 135 agenda records can never reach a WHAT_WAS_DECIDED answ
 });
 
 test("SEEDED FAILURE: a zero-row extraction reads as OUR failed retrieval, not as their empty meeting", () => {
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const evidence = outcomeEvidenceFor(
     { meetingId: "legistar:pima:9000002", questionClass: "WHAT_WAS_DECIDED" },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
 
   assert.equal(evidence.state, "EXTRACTION_FAILED");
   assert.equal(evidence.answerable, false);
@@ -372,38 +371,35 @@ test("ACTION_WITHOUT_ROLL_CALL is a fact about THEM and is not the same state as
    * the clerk entered no per-person roll. Returning "no records" for those would
    * describe a real, published decision as an absence.
    */
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const evidence = outcomeEvidenceFor(
     { meetingId: "legistar:pima:9000003", questionClass: "HOW_DID_THEY_VOTE" },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
 
   assert.equal(evidence.state, "ACTION_WITHOUT_ROLL_CALL");
   assert.equal(evidence.answerable, false);
   assert.match(String(evidence.gap), /action is published/i);
 
   // And the same sitting DOES answer what was decided.
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const decided = outcomeEvidenceFor(
     { meetingId: "legistar:pima:9000003", questionClass: "WHAT_WAS_DECIDED" },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
   assert.equal(decided.state, "HELD");
   assert.ok(decided.records.length > 0);
 });
 
 test("NO_SITTING_HELD is about US, and an unknown body does not read as a body that never met", () => {
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(fixtureStore());
   const evidence = outcomeEvidenceFor(
     {
       bodyId: "ocd-division/country:us/state:az/county:nowhere#governing",
       questionClass: "WHAT_WAS_DECIDED",
     },
-    FIXTURE_ROOT,
   );
-  resetOutcomeSnapshotCache();
+  useOutcomeSnapshotForTests(null);
 
   assert.equal(evidence.state, "NO_SITTING_HELD");
   assert.match(String(evidence.gap), /gap in what we have collected/i);
@@ -413,15 +409,43 @@ test("NO_SITTING_HELD is about US, and an unknown body does not read as a body t
   );
 });
 
-test("a missing store file is the empty store and every query stays honest", () => {
-  resetOutcomeSnapshotCache();
-  const evidence = outcomeEvidenceFor(
-    { bodyId: PIMA_BOARD, questionClass: "WHAT_WAS_DECIDED" },
-    join(process.cwd(), "tests", "fixtures", "no-such-directory"),
-  );
-  resetOutcomeSnapshotCache();
+test("an empty store is the empty store and every query stays honest", () => {
+  /*
+   * **A COVERAGE CHANGE, STATED RATHER THAN HIDDEN.** (2026-08-29.)
+   *
+   * This pointed `outcomeEvidenceFor` at a directory that does not exist, to
+   * prove a missing file yields the EMPTY store rather than throwing in a
+   * request path. It cannot do that any more: the store's read is now a
+   * LITERAL because a variable in that path made Turbopack trace 4,532 files
+   * into the Ask route bundle, and a literal read has no directory to point
+   * somewhere else.
+   *
+   * What is still tested is the property that mattered downstream — an empty
+   * store answers with an honest named state and a gap that claims nothing
+   * about the body. What is no longer covered HERE is the try/catch around a
+   * failed read itself; that is asserted by `loadedFrom()` reporting
+   * `EMPTY_STORE`, below.
+   */
+  useOutcomeSnapshotForTests({
+    generatedOn: "UNKNOWN",
+    generatedAt: "UNKNOWN",
+    tenants: [],
+    sittings: [],
+  });
+  const evidence = outcomeEvidenceFor({
+    bodyId: PIMA_BOARD,
+    questionClass: "WHAT_WAS_DECIDED",
+  });
+  const loaded = loadedFrom();
+  useOutcomeSnapshotForTests(null);
+
   assert.equal(evidence.state, "NO_SITTING_HELD");
   assert.equal(evidence.answerable, false);
+  assert.equal(loaded, "EMPTY_STORE", "an empty store must report itself as empty, never as a file");
+  assert.ok(
+    !/did not meet|no meetings|has not published|recorded no/i.test(String(evidence.gap)),
+    "an empty store produced a sentence about the body rather than about us",
+  );
 });
 
 /* ------------------------------------------------------------------ *

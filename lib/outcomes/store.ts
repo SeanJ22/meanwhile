@@ -93,17 +93,48 @@ let cacheRoot: string | null = null;
  * It is NOT a silent empty: `loadedFrom` reports whether a file was actually
  * read, and the ingest script and the tests both assert against real content.
  */
-export function getOutcomeSnapshot(root?: string): OutcomeSnapshot {
-  const base = root ?? process.cwd();
-  if (cache !== null && cacheRoot === base) return cache;
+/**
+ * A snapshot a test installed, taking precedence over the file.
+ *
+ * **This exists because the read below must be a LITERAL.** A path a bundler
+ * cannot see is a path it must assume could be anything, and when this module
+ * was first imported by `app/api/ask/grounded/route.ts` the old
+ * `join(base, ...OUTCOME_SNAPSHOT_PATH)` made Turbopack trace **4,532 files**
+ * into that one route bundle against a committed ceiling of 220 — `tests/`
+ * fixtures and `docs/feedback` screenshots included. That is the R23 shape
+ * `lib/sources/ballot-curated/index.ts` documents, and the last time it
+ * happened planted credential fixtures reached a deployed artefact and failed
+ * Netlify's secrets scan.
+ *
+ * A `root` PARAMETER cannot be reintroduced to fix a test. Any variable in the
+ * path re-arms the whole-project trace, which is why the seam is a parsed
+ * snapshot rather than a directory: a test that wants a different store reads
+ * its own fixture — test files are not bundled — and installs the result.
+ */
+let injected: OutcomeSnapshot | null = null;
+
+/**
+ * Install a snapshot for the duration of a test, or pass `null` to restore the
+ * file. Always restore: a leaked injection makes the next test read a store it
+ * did not choose.
+ */
+export function useOutcomeSnapshotForTests(snapshot: OutcomeSnapshot | null): void {
+  injected = snapshot;
+  cache = null;
+  cacheRoot = null;
+}
+
+export function getOutcomeSnapshot(): OutcomeSnapshot {
+  if (injected !== null) return injected;
+  if (cache !== null) return cache;
   try {
     cache = JSON.parse(
-      readFileSync(join(base, ...OUTCOME_SNAPSHOT_PATH), "utf8"),
+      readFileSync("data/outcomes/legistar-outcomes.json", "utf8"),
     ) as OutcomeSnapshot;
   } catch {
     cache = EMPTY;
   }
-  cacheRoot = base;
+  cacheRoot = "";
   return cache;
 }
 
@@ -114,8 +145,8 @@ export function resetOutcomeSnapshotCache(): void {
 }
 
 /** Did a real file back the current snapshot, or is this the empty store? */
-export function loadedFrom(root?: string): "FILE" | "EMPTY_STORE" {
-  const snapshot = getOutcomeSnapshot(root);
+export function loadedFrom(): "FILE" | "EMPTY_STORE" {
+  const snapshot = getOutcomeSnapshot();
   return snapshot.sittings.length === 0 && snapshot.generatedAt === "UNKNOWN"
     ? "EMPTY_STORE"
     : "FILE";
@@ -262,9 +293,8 @@ function selectSittings(
  */
 export function outcomeEvidenceFor(
   query: OutcomeQuery,
-  root?: string,
 ): OutcomeEvidence {
-  const snapshot = getOutcomeSnapshot(root);
+  const snapshot = getOutcomeSnapshot();
   const sittings = selectSittings(query, snapshot);
 
   if (sittings.length === 0) {
@@ -425,9 +455,8 @@ export function outcomeEvidenceFor(
  */
 export function sittingsForBody(
   bodyId: string,
-  root?: string,
 ): readonly PersistedSittingOutcomes[] {
-  return getOutcomeSnapshot(root)
+  return getOutcomeSnapshot()
     .sittings.filter((sitting) => sitting.bodyId === bodyId)
     .sort((a, b) => String(b.startsAt ?? "").localeCompare(String(a.startsAt ?? "")));
 }
@@ -449,9 +478,8 @@ export function sittingsForBody(
  */
 export function publicationObservationsFor(
   meetingId: string,
-  root?: string,
 ): ReconciledPublication {
-  const sitting = getOutcomeSnapshot(root).sittings.find(
+  const sitting = getOutcomeSnapshot().sittings.find(
     (row) => row.meetingId === meetingId,
   );
   return reconcilePublicationObservations(
@@ -461,9 +489,9 @@ export function publicationObservationsFor(
 }
 
 /** Every meeting id the store holds outcome records for. */
-export function answerableMeetingIds(root?: string): ReadonlySet<string> {
+export function answerableMeetingIds(): ReadonlySet<string> {
   const ids = new Set<string>();
-  for (const sitting of getOutcomeSnapshot(root).sittings) {
+  for (const sitting of getOutcomeSnapshot().sittings) {
     if (sitting.extraction === "RETRIEVED" && sitting.outcomes.length > 0) {
       ids.add(sitting.meetingId);
     }

@@ -14,7 +14,7 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **372 open**, 446 resolved.
+- **374 open**, 450 resolved.
 - **73 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **6** · **OVER THE FIVE-ROW CAP: THIS SECTION IS STOPPED**
@@ -532,7 +532,7 @@ Everything owed to a reader in New Jersey — Rockaway Township and 07866 first.
 
 Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (85701) first.
 
-**34 open · 1 resolved.**
+**36 open · 1 resolved.**
 
 ### P1
 
@@ -573,6 +573,10 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 **NH266** — The corpus holds 12 executive orders read out of 37 indexed, and the index was not walked to its end.
 
 **NH278** — Mesa's own site lists dated council meetings, which is the first-party check on its Legistar tenant. parseClerkSchedule was written for Pima's HTML table; Mesa publishes a CMS calendar widget instead. Pointed at Mesa the existing parser returns zero rows, and a zero-row extraction is a FAILED extraction that would read forever as a city publishing no schedule of its own.
+
+**NH294** — Lane A (2026-08-30) measured live routes and robots permission for 85641 bodies that have registry rows but no wired meetings/agenda route. Wirable with existing or trivial adapter classes: Tanque Verde USD board — Apptegy/Thrillshare org id 25, the exact keyless API class already wired for Vail (district site robots ALLOWED); Corona de Tucson FD (coronafire.org) and Sonoita-Elgin FD (sefd911.org) — Streamline class where sitemap.xml IS the dated meeting inventory, 115 and 70 dated sittings, both ALLOWED; Rincon Valley FD (rinconvalleyfdaz.gov) — first-party agenda+minutes PDFs, ALLOWED; Pima JTED (pimajted.org apex, not www) — 267 meetings 2009-2026, ALLOWED per docs/sources.md; Pima County RTA — listing HTML on rtamobility.com allowed while its PDFs are robots-disallowed, and the meeting PDFs actually live on pagregion.com (agendas, full packets, draft summaries), whose robots ALLOW them — host-per-document favors us.
+
+**NH295** — Lane A (2026-08-30): Sahuarita USD No. 30's agendas/packets/minutes live at susd-30.community.diligentoneplatform.com — the same 23,479-byte blocked-bots robots file (User-agent: * → Disallow: /) as the four Highbond tenants already recorded. THEIR wall, named, never rendered as absence. The district's own site susd30.us is ALLOWED (Crawl-delay 5) and links a board-approved meeting calendar PDF hosted on files.smartsites.parentsquare.com — a host whose robots were NOT read this session (not fetched, so no claim about it either way). Tanque Verde's Highbond tenant (tanqueverdeschools.community.highbond.com) is the same wall for agendas, while its meetings are wirable via Thrillshare (see the wirable-now row).
 
 **NH37** — Every Arizona officeholder's stored page URL carries a legislature number, and 67 of the 90 carry one that is not the current session: 5 at legislature 54, 23 at 55 and 39 at 56. Two of them surfaced as MISS-GENERIC in the officials audit - Rachel Keshel and Rosanna Gabaldon - and the rest are latent, waiting for their seat to be wired to a district.
 
@@ -662,7 +666,7 @@ Everything arriving in Sean's twice-weekly batches — what the product looks li
 
 Sources, ingest, denominators, extraction, crawlers. The machinery that turns a public record into a row.
 
-**92 open · 110 resolved.**
+**92 open · 111 resolved.**
 
 ### P1
 
@@ -724,9 +728,9 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 **NH28** — Springfield was found by probing six conventional iCal paths against the town host - one request, and a town that had been dark since the registry was built produced eight named governing bodies. The same probe was run against Bradford, New London, Warner and Newbury; only Springfield and Newbury answered. Sutton at www.sutton-nh.gov does not resolve at all and needs its real host found. The remaining towns need the OTHER branches walked - vendor portals, board pages, minutes archives - rather than the conclusion that they publish nothing. Six of seven member towns were dark and this session moved one of them.
 
-**NH288** — A reader asking the flagship question is answered about 'that Pima meeting'. canonicalBodyIdentity for ocd-division/country:us/state:az/county:pima#governing returns name 'Pima', divisionLabel 'Pima', nameIsBodysOwn false - the registry holds no body-own name for a county governing body, so nameAReaderCanSay falls back to the division label. Measured 2026-08-29 across the committed snapshot: 78 body entities, 14 with nameIsBodysOwn false, and the corpus carries a different name for all 14. The body ID is correct throughout - this is the DISPLAY NAME only, and the exact-body identity repair of PR #223 is unaffected. CLAUDE.md requires reader surfaces to speak plain language.
-
 **NH29** — Springfield NH went from zero bodies in the registry to eight enumerated and the gap ledger is byte-identical at 22383 bytes before and after. The ledger measures special-district coverage against the Census of Governments, which is right and is not the whole of coverage: RULING 9 says the Census counts GOVERNMENTS and the product renders BODIES, and a New Hampshire town is one government and a dozen or more bodies. So the instrument that is supposed to say how covered a place is cannot see the unit the product actually renders. Six of Kearsarge seven member towns are dark at the body level and nothing measures that. This is a defect in the instrument rather than a gap in coverage, which is why it is a row and not a ledger entry.
+
+**NH293** — NH288's fix serves sourced body names from BODY_ROSTERS for 12 of the 14 division-label bodies. The two remaining — ocd-division/country:us/state:az/place:mesa#governing and ocd-division/country:us/state:nj/school_district:morris_hills_regional_school_district#board — have no roster read yet, so no sourced name is held and nothing was invented. Classified: source exists, not ingested.
 
 **NH46** — One of the three coverageNotes in data/ballot/nh-merrimack-2026.json ends with a paragraph of internal record-keeping that reaches a reader on the ballot page: 'CORRECTED 2026-08-21 under RULING 52: this note used to end ... That was true when it was written on 2026-08-14 and is FALSE now - re-walked 2026-08-21, gc.nh.gov answers a plain rung-2 fetch at HTTP 200. A wall is recorded with the date it was last tested...'
 
@@ -880,7 +884,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**46 open · 141 resolved.**
+**47 open · 141 resolved.**
 
 ### P1
 
@@ -956,6 +960,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 
 **NH267** — The map's filter line reads '60 meetings · 1 venue' at 85641. The served set for that view holds 147 meetings across 15 distinct venues, 61 of them placeless.
 
+**NH292** — lib/ask/inventory.ts's titleCaseName capitalizes every word, so the sourced body name 'Pima County Board of Supervisors' reaches pack.subject.name and the reader surface as 'Pima County Board Of Supervisors' — the particle 'of' wrongly capitalized. Observed on production 2026-08-30 in the post-deploy reader verification of the NH288 fix (synthetic run session-2026-08-30-lane-b-after).
+
 **NH62** — Recorded so no future session re-derives Ballotpedia as an available branch and starts building one.
 
 **PU06** — Measured 2026-08-23 at 07866 against a local production build: TWELVE instances across NINE contests on /ballot, unchanged by this session. The MAP panel was fixed — six rows each carrying the full sentence became six asterisks and ONE pill, read as an image — but the ballot page renders the pill per contest heading, which RULING 28 permits and which Sean nonetheless called the headline UX problem of the New Jersey pass. WHAT IS OWED: decide whether the ballot page takes the same treatment (one page-level pill, marks on the affected contests) and, wherever the sentence survives, make it one clear deliberate annotation, bolder and more explicit than the current small text. It is not a completeness statement and it never gates a page.
@@ -1010,7 +1016,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**28 open · 84 resolved.**
+**27 open · 87 resolved.**
 
 ### P1
 
@@ -1035,8 +1041,6 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
 
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
-
-**NH289** — pnpm gates reported 11 of 12 green at session start with release:freeze FAILING, and it was failing before any work began. The gate is behaving CORRECTLY under RULING 204 - production moved under the last reading - but the move is self-inflicted and will recur after every observer commit. Measured 2026-08-29: production serves 2be8e854 (the observer commit titled 'Post-deploy integrity reading', whose only changed file is data/ops/production-integrity.json) with its own deployId 6a93a21a0eb31100089890e1, while the reading inside it was taken against parent b0f2299e.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

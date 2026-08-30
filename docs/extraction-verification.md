@@ -16,7 +16,7 @@ a page fetched at HTTP 200, and the extractor read a news blurb instead.
 | Rosters read | 40 |
 | Rosters unreadable or refused | 4 |
 | **Rosters where every name AGREED** | **26 of 40** |
-| Names agreed | **245** |
+| Names agreed | **243** |
 | Names agreed ONLY in the page's client-render payload | 12 |
 | Names PARTIAL (one of given/surname present) | 11 |
 | Names DISAGREED (absent from the page) | **13** |
@@ -47,11 +47,11 @@ never measured; folding it into disagreement would accuse a roster nothing has e
 | Newbury Planning Board | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/planning-board |
 | Newbury Zoning Board of Adjustment | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/zoning-board-adjustment |
 | Newbury Conservation Commission | 6 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/conservation-commission |
-| Newbury 2026 Advisory Budget Committee | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee |
+| Newbury 2026 Advisory Budget Committee | 5 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee |
 | Newbury Blodgett Sewer User Advisory Committee | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee |
 | Newbury Cemetery Trustees | 4 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/cemetery-trustees |
 | Newbury Joint Loss Management Committee | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/joint-loss-management-committee |
-| Newbury Septic Committee | 7 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/newbury-septic-committee |
+| Newbury Septic Committee | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/newbury-septic-committee |
 | Newbury Trustees of the Trust Funds | 3 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/trustees-trust-funds |
 | Kearsarge Regional School Board | 10 | 0 | 0 | **2** | Michael Bessette; Lawrence LeBoeuf | https://www.kearsarge.org/district/school-board-mbc/pages/school-board-members |
 | Rockaway Township Council | 9 | 0 | 0 | **1** | Joseph Jackson | https://www.rockawaytownship.org/157/Township-Council |

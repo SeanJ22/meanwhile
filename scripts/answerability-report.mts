@@ -13,6 +13,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import { getOutcomeSnapshot } from "../lib/outcomes/store.ts";
 import { join } from "node:path";
 
 import { MINUTES_SUMMARIES } from "../lib/meetings/minutes-summaries.ts";
@@ -118,7 +119,66 @@ export function documentsFrom(snapshot: Snapshot): DocumentInput[] {
     verifiedAt: null,
   }));
 
-  return [...notices, ...minutes];
+  /*
+   * **THE DURABLE OUTCOME STORE — and why its rows are not `ACQUIRED`.**
+   * (2026-08-29.)
+   *
+   * Until this was wired the report read only the agenda-document corpus, so
+   * every outcome question came back `RECORD_CLASS_CANNOT_ANSWER` — "we hold
+   * records, and not one of a class that can answer this". That sentence
+   * became FALSE the moment the outcome store landed: 18 of 20 Pima Board
+   * sittings hold ACTION_SUMMARY records and most hold per-person ROLL_CALLs,
+   * and the reader path answers from them. A measurement that says we hold no
+   * such class while the product answers from it is the instrument disagreeing
+   * with the thing it measures, and the instrument was wrong.
+   *
+   * They stop at `ACQUIRED_WITHOUT_ARTIFACT`, deliberately, and that is not a
+   * technicality. `contentHash` is null because the ingest kept the PARSED
+   * records and not the raw JSON bytes, so a silent revision upstream could not
+   * be detected and the read cannot be replayed from what we hold. The ladder's
+   * `ACQUIRED` means bytes retrieved and hashed; these are real evidence and
+   * they are not that. Storing the raw response beside the records is the work
+   * that would move them, and naming the gap is what stops it being forgotten.
+   *
+   * One row per sitting per class, because the ladder is document-centric: a
+   * sitting's 58 action records are one clerk's post-meeting record of it.
+   */
+  const outcomes: DocumentInput[] = [];
+  for (const sitting of getOutcomeSnapshot().sittings) {
+    const common = {
+      meetingId: sitting.meetingId,
+      ocdId: sitting.ocdId ?? null,
+      contentHash: null,
+      retrievedAt: sitting.publication?.observedAt ?? null,
+      text: null,
+      extraction: "none" as const,
+      verifiedAt: null,
+    };
+    if (sitting.outcomes.length > 0) {
+      outcomes.push({
+        ...common,
+        id: `legistar-actions:${sitting.meetingId}`,
+        documentUrl: sitting.outcomes[0]?.provenance.endpoint ?? sitting.sourceUrl ?? "",
+        recordClass: "ACTION_SUMMARY",
+        extractionNote:
+          `${sitting.outcomes.length} action record(s) parsed from the publisher's API; ` +
+          "the raw response bytes were not stored, so this is not replayable",
+      });
+    }
+    if (sitting.rollCalls.length > 0) {
+      outcomes.push({
+        ...common,
+        id: `legistar-rollcalls:${sitting.meetingId}`,
+        documentUrl: sitting.rollCalls[0]?.provenance.endpoint ?? sitting.sourceUrl ?? "",
+        recordClass: "ROLL_CALL",
+        extractionNote:
+          `${sitting.rollCalls.length} per-person roll call(s) parsed from the publisher's API; ` +
+          "the raw response bytes were not stored, so this is not replayable",
+      });
+    }
+  }
+
+  return [...notices, ...minutes, ...outcomes];
 }
 
 function scopedCorpus(

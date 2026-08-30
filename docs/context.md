@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-28 13:04:15 EDT.
-Session day 2026-08-28 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-29 20:05:31 EDT.
+Session day 2026-08-29 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1165 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1245 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -616,7 +616,7 @@ fixes is a session not knowing there was anything to look up.)*
 
 ---
 
-## Rulings — 205 recorded
+## Rulings — 220 recorded
 
 Source: `docs/rulings.md`, append-only. **This is an index, not the text.**
 `CLAUDE.md` is law; these are the author's calls that are not, and a session
@@ -802,6 +802,21 @@ from. Each entry there names what it supersedes.
 - RULING 186 — a session opens on task-relevant current authority, never on the full history  [R-0186 · LAW_DECISION · ACTIVE]
 - RULING 188 — the descent freezes only for the minimum safe state cutover  [R-0188 · LAW_DECISION · ACTIVE]
 - RULING 189 — a session does not measure its own context, and stops for real reasons only  [R-0189 · LAW_DECISION · ACTIVE]
+- RULING 190 — a session is an engineering organization, not one serial developer  [R-0190 · LAW_DECISION · ACTIVE]
+- RULING 191 — one integration owner, one combined head, one merge at the end  [R-0191 · LAW_DECISION · ACTIVE]
+- RULING 192 — method knowledge is typed by claim class, and a false conclusion never deletes a valid route  [R-0192 · LAW_DECISION · ACTIVE]
+- RULING 193 — a guard proves what it claims to prove, or it is not a guard  [R-0193 · LAW_DECISION · ACTIVE]
+- RULING 194 — the workstream plan is append-safe, and a branch is never the denominator  [R-0194 · LAW_DECISION · ACTIVE]
+- RULING 195 — one typed projection is what a session inherits, and no consumer reads raw route prose  [R-0195 · LAW_DECISION · ACTIVE]
+- RULING 196 — an established migration is immutable, and correction is a new migration  [R-0196 · LAW_DECISION · ACTIVE]
+- RULING 197 — a serving source tenant names a registered body; an adapter never mints one  [R-0197 · LAW_DECISION · ACTIVE]
+- RULING 198 — a declared contract clause is enforced, or it is not law  [R-0198 · LAW_DECISION · ACTIVE]
+- RULING 199 — a disposition may cite only the Attempt that earned it, and a policy denial is a fact about us  [R-0199 · LAW_DECISION · ACTIVE]
+- RULING 200 — a snooze is a notification decision and never a truth decision  [R-0200 · LAW_DECISION · ACTIVE]
+- RULING 201 — evidence bytes prove their own identity, and the vault guarantees scoped immutability rather than global dedup  [R-0201 · LAW_DECISION · ACTIVE]
+- RULING 202 — canonical method knowledge has ONE governed write path, and a rejected candidate is retained  [R-0202 · LAW_DECISION · ACTIVE]
+- RULING 203 — the pure canonical authorities are gates, and a writer is never made one  [R-0203 · LAW_DECISION · ACTIVE]
+- RULING 204 — production-integrity freshness fails closed, and the question is asked of what production SERVES  [R-0204 · LAW_DECISION · ACTIVE]
 - `package.json`'s `scripts` block is the list.  [R-C-commands-package-json-s-scripts-block-is-the-list · LAW_DECISION · ACTIVE]
 - More principles will not fix this.  [R-C-discovery-conduct-more-principles-will-not-fix-this · LAW_DECISION · ACTIVE]
 - THE REPORT CONTRACT IS A FILE NOW, AND IT IS AMENDED RATHER THAN REINVENTED  [R-C-discovery-conduct-the-report-contract-is-a-file-now-and-it-is-am · LAW_DECISION · ACTIVE]
@@ -1002,19 +1017,18 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-28 13:04:15 EDT
-branch: claude/grounded-ask-integration-0828
-head sha: a46b7a53afeb19094398a432bf89cfb71da981d8
-head subject: Prove by network observation which endpoint the map Ask input calls
-origin/main sha: e937958d3c9fcd97f778f6ef26a47dedf04fcc68
-origin/main subject: Session handoff: 8 commit(s) from claude/ask-grounded-0827
-local main sha: e937958d3c9fcd97f778f6ef26a47dedf04fcc68
-local main matches origin/main: yes
+generated: 2026-08-29 20:05:31 EDT
+branch: claude/exact-body-identity
+head sha: 7119b09d719fab13198fdaa9a3662ef160f1930b
+head subject: The application retrieved the wrong government, and every check downstream was green
+origin/main sha: 32d35bfaf6f831597943c90b56dd04ee34a720f5
+origin/main subject: Job watch: a scheduled job has failed twice in a row
+local main sha: 097fca30e2e688a4973bd84164690faf1ba78d50
+local main matches origin/main: no — 1 commit(s) behind
 working tree: clean
-open prs: 1
-open pr: #213 Finish the grounded Ask integration: the map surface, identity precedence, referents, and the ballot's own entities
-last recorded tests: 463 (fail)
+open prs: none
+last recorded tests: 239 (recorded without a verdict)
 last recorded lint: not recorded
 last recorded build: not recorded
-last recorded status from: docs/state.md:19257
+last recorded status from: docs/state.md:21246
 ```

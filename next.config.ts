@@ -165,6 +165,18 @@ const nextConfig: NextConfig = {
        * tracer can see it; this is the other half, and neither works alone.
        */
       "./data/outcomes/*.json",
+      /*
+       * The held campaign-finance stores (2026-08-30). Same two-half rule as
+       * the votes and outcome entries above: `lib/control-plane/campaign-
+       * finance/held-records.ts` reads both files through `process.cwd()`
+       * (its original `import.meta.dirname` is undefined inside Next's build
+       * and failed page-data collection outright), so the tracer cannot see
+       * the read, and without this line the deployed route would tell a
+       * reader we hold no finance records while the repo holds 1,484 filed
+       * money rows — the exact false sentence lib/ask/local-finance.ts was
+       * built to retire.
+       */
+      "./data/campaign-finance/*.json",
     ],
     "/api/ask/agenda": ["./data/*.json"],
   },

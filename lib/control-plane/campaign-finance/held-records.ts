@@ -60,7 +60,19 @@ import type { HeldFilingUniverse } from "./answers.ts";
 
 export const AZ_PIMA_HELD_PATH = ["data", "campaign-finance", "az-pima-2026-held.json"] as const;
 
-const AZ_PIMA_FILE = join(import.meta.dirname, "..", "..", "..", ...AZ_PIMA_HELD_PATH);
+/*
+ * READ THROUGH process.cwd(), AS A LITERAL — measured, not style (2026-08-30).
+ * app/api/ask/grounded/route.ts now imports this module, and inside Next's
+ * build `import.meta.dirname` is undefined: "Failed to collect page data for
+ * /api/ask/grounded" on both CI builds, TypeError at this exact line. The
+ * repo's pattern for route-read data (lib/ask/votes.ts, and the outcome
+ * store's 4,532-file lesson) is a cwd read the tracer cannot see PLUS an
+ * explicit outputFileTracingIncludes entry in next.config.ts — which
+ * /api/ask/grounded now carries for data/campaign-finance. A join over a
+ * spread path variable must not come back: any variable in the path re-arms
+ * the whole-project trace.
+ */
+const AZ_PIMA_FILE = join(process.cwd(), "data", "campaign-finance", "az-pima-2026-held.json");
 export const AZ_PIMA_CITATION = AZ_PIMA_HELD_PATH.join("/");
 
 export interface AzPimaFilingIndexRow {
@@ -266,7 +278,7 @@ export const AZ_PIMA_TRANSACTIONS_PATH = [
   "az-pima-2026-transactions.json",
 ] as const;
 
-const AZ_PIMA_TX_FILE = join(import.meta.dirname, "..", "..", "..", ...AZ_PIMA_TRANSACTIONS_PATH);
+const AZ_PIMA_TX_FILE = join(process.cwd(), "data", "campaign-finance", "az-pima-2026-transactions.json");
 export const AZ_PIMA_TX_CITATION = AZ_PIMA_TRANSACTIONS_PATH.join("/");
 
 export interface AzPimaContributionRow {
@@ -276,6 +288,17 @@ export interface AzPimaContributionRow {
   readonly RecipientCommitteeName: string | null;
   readonly OfficeName: string | null;
   readonly ContributorFullName: string | null;
+  /**
+   * The endpoint files an individual contributor as NAME PARTS, not a full
+   * name: measured across the committed store, 784 of the 837 Contribution
+   * rows carry `ContributorFullName: null` with the name in these three
+   * fields. Reading only `ContributorFullName` renders the overwhelming
+   * majority of individual contributors as anonymous, which is a false
+   * statement about a public filing.
+   */
+  readonly ContributorFirstName: string | null;
+  readonly ContributorMiddleName: string | null;
+  readonly ContributorLastName: string | null;
   readonly ContributorOrganizationName: string | null;
   readonly ContributionDate: string | null;
   readonly ContributionAmount: number | null;
@@ -374,7 +397,18 @@ export function azPimaContributionsFor(committeeNameAsFiled: string): readonly C
       recordKind: "CONTRIBUTION" as const,
       intoCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
       amountReceived: Number(row.ContributionAmount ?? 0),
-      contributorNameAsFiled: row.ContributorFullName ?? row.ContributorOrganizationName ?? null,
+      /*
+       * Full name where the filer gave one, the organization where it is one,
+       * and otherwise the name PARTS joined in filed order — which is how 784
+       * of the 837 contribution rows actually carry the contributor. `|| null`
+       * so an all-empty row stays an honest null rather than an empty string.
+       */
+      contributorNameAsFiled:
+        row.ContributorFullName ??
+        row.ContributorOrganizationName ??
+        ([row.ContributorFirstName, row.ContributorMiddleName, row.ContributorLastName]
+          .filter(Boolean)
+          .join(" ") || null),
       // As filed. Years 0006 and 2926 exist in this data and are NOT repaired.
       receivedOn: row.ContributionDate,
       filingId: row.DocumentFilingId,
@@ -392,8 +426,12 @@ export function azPimaExpendituresFor(committeeNameAsFiled: string): readonly Ex
       recordKind: "EXPENDITURE" as const,
       byCommitteeId: `easyvote:pima:name:${committeeNameAsFiled}`,
       amountSpent: Number(row.DistributionAmount ?? 0),
+      /* `|| null`, not `?? null`: a join over two null parts is "", and an
+         empty string here would read as a payee with no name rather than a
+         row that names no payee. */
       payeeNameAsFiled:
-        row.PayeeOrganizationName ?? [row.PayeeFirstName, row.PayeeLastName].filter(Boolean).join(" ") ?? null,
+        row.PayeeOrganizationName ??
+        ([row.PayeeFirstName, row.PayeeLastName].filter(Boolean).join(" ") || null),
       spentOn: row.DistributionDate,
       /**
        * NULL, and it is the honest value. This endpoint returns no purpose

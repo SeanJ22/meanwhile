@@ -63,7 +63,9 @@ wrong about what the app was. It points now, so that it cannot.
 | What you want | Where it lives |
 |---|---|
 | **The rules.** Non-negotiables, the transparency mandate, the retrieval ladder. Read this before changing anything. | [CLAUDE.md](./CLAUDE.md) |
-| **Current state.** What has shipped, what is in flight, which phase everything sits in. | [docs/state.md](./docs/state.md) §7 |
+| **Current status.** Generated capability claims, each naming the check that proves it (or UNPROVEN, stated). Written by `pnpm status:ledger` — never asserted by hand. | [docs/status-ledger.md](./docs/status-ledger.md) |
+| **Session history.** The append-only session records. The old hand-written "current state" sections (§2, §3, §7) retired into the generated ledger on 2026-08-30. | [docs/state.md](./docs/state.md) |
+| **Repo inventory.** The generated mechanical census — tree, routes, schema, gates, method store, scheduled jobs. Written by `pnpm repo-map`. | [docs/repo-inventory.md](./docs/repo-inventory.md) |
 | **Task status.** One row per ID, status and notes edited in the same commit as the work. | [docs/tracker.csv](./docs/tracker.csv) |
 | **Sources and what each rung of a hunt returned.** | [docs/source-ladder.md](./docs/source-ladder.md) |
 | **How to cover a new zip**, and the source ladder per jurisdiction type. Append-only. | [docs/zip-playbook.md](./docs/zip-playbook.md) |
@@ -79,10 +81,11 @@ wrong about what the app was. It points now, so that it cannot.
 pnpm walk:all
 ```
 
-The standing regression suite, run against production at the end of every
-session. Each check carries the session that shipped the claim behind it, so a
-failure reads as "the win that session shipped is undone" rather than as an
-anonymous red line. New checks append; the suite only grows.
+The standing regression suite, run against a LOCAL production build (RULING
+125 hard-refuses non-local targets, so the walk's load never lands on
+production). Each check carries the session that shipped the claim behind it,
+so a failure reads as "the win that session shipped is undone" rather than as
+an anonymous red line. New checks append; the suite only grows.
 
 ```bash
 pnpm stamp

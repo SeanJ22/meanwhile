@@ -13,10 +13,10 @@ a page fetched at HTTP 200, and the extractor read a news blurb instead.
 | | Count |
 |---|---|
 | Rosters sampled | **44 of 44** |
-| Rosters read | 41 |
-| Rosters unreadable or refused | 3 |
-| **Rosters where every name AGREED** | **27 of 41** |
-| Names agreed | **250** |
+| Rosters read | 40 |
+| Rosters unreadable or refused | 4 |
+| **Rosters where every name AGREED** | **26 of 40** |
+| Names agreed | **245** |
 | Names agreed ONLY in the page's client-render payload | 12 |
 | Names PARTIAL (one of given/surname present) | 11 |
 | Names DISAGREED (absent from the page) | **13** |
@@ -47,7 +47,7 @@ never measured; folding it into disagreement would accuse a roster nothing has e
 | Newbury Planning Board | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/planning-board |
 | Newbury Zoning Board of Adjustment | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/zoning-board-adjustment |
 | Newbury Conservation Commission | 6 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/conservation-commission |
-| Newbury 2026 Advisory Budget Committee | 5 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee |
+| Newbury 2026 Advisory Budget Committee | — | — | — | — | **could not read (UNREACHABLE)** | https://www.newbury.nh.gov/selectboard/2026-advisory-budget-committee |
 | Newbury Blodgett Sewer User Advisory Committee | 8 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/blodgett-sewer-user-advisory-committee |
 | Newbury Cemetery Trustees | 4 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/cemetery-trustees |
 | Newbury Joint Loss Management Committee | 11 | 0 | 0 | **0** | — | https://www.newbury.nh.gov/joint-loss-management-committee |

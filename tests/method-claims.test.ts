@@ -715,7 +715,15 @@ test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted,
    * forever after, which is a test that measures whether it has run rather
    * than whether the store is right.
    */
-  const applied = allClaims(k);
+  /*
+   * SCOPED TO THE AMENDMENT'S FOUR ROUTES (2026-08-29). `allClaims(k)` reads
+   * the WHOLE store, so this counted every classified assertion anywhere and
+   * broke the first time a later session learned a route carrying claims — six
+   * did, from the 85641 sweep. What this control is about is the Pima case, and
+   * the four routes it names are what it now measures.
+   */
+  const amendedIds = new Set(PIMA_CLAIM_CLASSES.attach.map((a) => a.routeId));
+  const applied = allClaims(k).filter(({ routeId }) => amendedIds.has(routeId));
   assert.equal(applied.length, 12, "twelve assertions classified across the four routes");
   assert.equal(
     applied.filter((c) => isRetracted(c.claim)).length,
@@ -725,9 +733,20 @@ test("CONTROL (e): THE REAL PIMA CASE — the false coverage claim is retracted,
   assert.deepEqual(r.unknownRoutes, []);
   assert.deepEqual(r.unknownClaims, []);
 
-  // Idempotence is the stronger property the delta was standing in for.
+  /*
+   * Idempotence is the stronger property the delta was standing in for — and
+   * it is asserted against the FIRST application rather than against 12
+   * (2026-08-29). The literal was a store-wide total, so it stopped measuring
+   * idempotence the moment any unrelated route was learned with claims, and
+   * six were. Comparing the two applications tests the actual property and
+   * cannot drift.
+   */
   const twice = applyClaimAmendment(k, PIMA_CLAIM_CLASSES);
-  assert.equal(allClaims(twice.knowledge).length, 12, "re-applying attaches nothing new");
+  assert.equal(
+    allClaims(twice.knowledge).length,
+    allClaims(k).length,
+    "re-applying attaches nothing new",
+  );
   assert.equal(twice.knowledge.version, k.version, "and bumps no version");
 
   // AN AMENDMENT ADDS NO AVENUE: version and route count are unchanged, so it
@@ -820,21 +839,51 @@ test("the committed store's classification coverage is reported honestly", () =>
    * applied to the committed store now, so a before/after delta would be 0 and
    * this would be asserting that the work has not landed.
    */
-  assert.equal(after.classified, 4, "exactly four entries carry a declared class");
-  assert.equal(after.unclassified, after.routes - after.classified);
-  assert.ok(
-    after.unclassified > 0,
-    "and the rest are reported as UNCLASSIFIED rather than quietly counted as class A",
-  );
-  // The absolute per-class census, for the same end-state reason: 12 claims
-  // across four routes, and the two withdrawn ones are still counted here
+  /*
+   * **SCOPED TO THIS AMENDMENT'S OWN ROUTES, and it was not.** (2026-08-29.)
+   *
+   * These were store-wide absolutes — `classified === 4` and a `byClass`
+   * census over every route in the store. That asserted the amendment had
+   * landed, which is right, AND that nobody had ever classified anything else,
+   * which is not: the first later session to learn a route with claims turned
+   * a growing store into a failing suite. Six routes learned from the 85641
+   * sweep did exactly that, and the store's own header already names the rule
+   * they broke — growing coverage must not read as a regression.
+   *
+   * What the amendment guarantees is about ITS four routes, so that is what is
+   * measured. The store-wide numbers stay as FLOORS, which still catch the
+   * failure this test was written for: the amendment silently not applying.
+   */
+  const amended = applyClaimAmendment(store, PIMA_CLAIM_CLASSES).knowledge;
+  const amendedIds = new Set(PIMA_CLAIM_CLASSES.attach.map((a) => a.routeId));
+  const ours = amended.routes.filter((r) => amendedIds.has(r.id));
+  assert.equal(ours.length, 4, "the amendment's four routes are all in the store");
+
+  const oursByClass = { ROUTE_EXISTENCE: 0, ROUTE_OUTCOME: 0, COVERAGE_CLAIM: 0, DERIVED_CONCLUSION: 0 };
+  let oursRetracted = 0;
+  for (const route of ours) {
+    assert.ok((route.claims?.length ?? 0) > 0, `${route.id} carries a declared class`);
+    for (const claim of route.claims ?? []) {
+      oursByClass[claim.class] += 1;
+      if (claim.retraction) oursRetracted += 1;
+    }
+  }
+  // 12 claims across the four, and the two withdrawn ones are still counted
   // because a retracted claim is KEPT and labelled, never deleted.
-  assert.deepEqual(after.byClass, {
+  assert.deepEqual(oursByClass, {
     ROUTE_EXISTENCE: 4,
     ROUTE_OUTCOME: 3,
     COVERAGE_CLAIM: 3,
     DERIVED_CONCLUSION: 2,
   });
+  assert.equal(oursRetracted, 2, "both withdrawals survive as labelled claims");
+
+  assert.ok(after.classified >= 4, "at least the amendment's four routes are classified");
+  assert.equal(after.unclassified, after.routes - after.classified);
+  assert.ok(
+    after.unclassified > 0,
+    "and the rest are reported as UNCLASSIFIED rather than quietly counted as class A",
+  );
 });
 
 /* ------------------------------------------------------------------------ (f) */

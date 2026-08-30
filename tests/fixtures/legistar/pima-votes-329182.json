@@ -1,0 +1,67 @@
+[
+  {
+    "VoteId": 31139,
+    "VoteGuid": "927F54B9-79BF-4E91-BF94-3B646AEDDF4E",
+    "VoteLastModifiedUtc": "2026-08-27T15:40:00.467",
+    "VoteRowVersion": "AAAAAAG3wzw=",
+    "VotePersonId": 206,
+    "VotePersonName": "Rex Scott",
+    "VoteValueId": 16,
+    "VoteValueName": "Aye",
+    "VoteSort": 1,
+    "VoteResult": 1,
+    "VoteEventItemId": 329182
+  },
+  {
+    "VoteId": 31140,
+    "VoteGuid": "66238E04-C006-4479-B4A0-9DDC6C4572AB",
+    "VoteLastModifiedUtc": "2026-08-27T15:40:00.467",
+    "VoteRowVersion": "AAAAAAG3wz0=",
+    "VotePersonId": 216,
+    "VotePersonName": "Jennifer Allen",
+    "VoteValueId": 16,
+    "VoteValueName": "Aye",
+    "VoteSort": 2,
+    "VoteResult": 1,
+    "VoteEventItemId": 329182
+  },
+  {
+    "VoteId": 31141,
+    "VoteGuid": "3616D116-4D94-4A21-9B08-7C4BCAF143D1",
+    "VoteLastModifiedUtc": "2026-08-27T15:40:00.467",
+    "VoteRowVersion": "AAAAAAG3w0I=",
+    "VotePersonId": 205,
+    "VotePersonName": "Matt Heinz",
+    "VoteValueId": 20,
+    "VoteValueName": "Not Present",
+    "VoteSort": 3,
+    "VoteResult": 0,
+    "VoteEventItemId": 329182
+  },
+  {
+    "VoteId": 31142,
+    "VoteGuid": "3A78A579-46A7-4E96-873F-78BE764B0725",
+    "VoteLastModifiedUtc": "2026-08-27T15:40:00.47",
+    "VoteRowVersion": "AAAAAAG3wz8=",
+    "VotePersonId": 198,
+    "VotePersonName": "Steve Christy",
+    "VoteValueId": 16,
+    "VoteValueName": "Aye",
+    "VoteSort": 4,
+    "VoteResult": 1,
+    "VoteEventItemId": 329182
+  },
+  {
+    "VoteId": 31143,
+    "VoteGuid": "E65C5771-CF77-46FD-BED4-8E48B304273D",
+    "VoteLastModifiedUtc": "2026-08-27T15:40:00.47",
+    "VoteRowVersion": "AAAAAAG3w0A=",
+    "VotePersonId": 221,
+    "VotePersonName": "Andrés Cano",
+    "VoteValueId": 16,
+    "VoteValueName": "Aye",
+    "VoteSort": 5,
+    "VoteResult": 1,
+    "VoteEventItemId": 329182
+  }
+]

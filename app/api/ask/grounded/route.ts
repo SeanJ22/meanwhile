@@ -23,6 +23,9 @@ import {
   type EvidenceSubject,
 } from "@/lib/ask/evidence";
 import { snapshotEntities, titleCaseName } from "@/lib/ask/inventory";
+import { canonicalBodyIdentity } from "@/lib/ask/body-identity";
+import { outcomeGapStatement, outcomeQuestionClass } from "@/lib/ask/outcome-question";
+import { ruleOnQuestion } from "@/lib/answerability/record-class";
 import { unavailableInterpretation, type AskInterpretation } from "@/lib/ask/intent";
 import { asksWhatAnOfficeDoes, officeInQuestion } from "@/lib/ask/office-question";
 import { interpretQuestion, interpretWithoutModel } from "@/lib/ask/interpret";
@@ -33,6 +36,7 @@ import {
   contactForOfficeholder,
   contactRecord,
   contactsForBody,
+  contactsForDivision,
   contactsForRepresentatives,
   MAX_ASK_CONTACTS,
   type AskContact,
@@ -154,12 +158,61 @@ export function resetGroundedState(): void {
 
 interface MeetingLike {
   id: string;
+  /**
+   * **WHICH BODY IS MEETING — the registry id, not the geography.**
+   * (2026-08-29.)
+   *
+   * This field was absent, and its absence is the whole Pima defect: with only
+   * `ocdId` in the shape, the one honest way to retrieve *this body's* meetings
+   * did not exist, and the code did the only thing the shape left it. The
+   * corpus has carried `Meeting.bodyId` since 2026-08-27 and
+   * `lib/meetings/snapshot.ts` refuses to serve a snapshot without it — this
+   * type simply had never been widened to let the identity through.
+   */
+  bodyId: string | null;
   ocdId: string | null;
   title: string;
   bodyName: string;
   startsAt: string;
   timeZone?: string | null;
   agendaUrl?: string | null;
+}
+
+/**
+ * **THE MEETINGS OF ONE EXACT BODY. Selected on `bodyId`, never on geography.**
+ * (2026-08-29, the exact-body-identity session.)
+ *
+ * This replaces `meetings.filter((m) => m.ocdId === subject.id)`, which is the
+ * line that answered *"What's on the Pima County Board of Supervisors agenda?"*
+ * with a **Central Arizona Water Conservation District** event. The county
+ * division carries 42 meetings; 30 are the Board's and 12 are the water
+ * district's. `selectSitting` then correctly picked the NEXT sitting out of the
+ * wrong set, which is why every rung downstream stayed green.
+ *
+ * ## Why it refuses rather than falls back
+ *
+ * An entity that is not `level: "BODY"` gets **no meetings at all**, not the
+ * meetings of its division. That is the whole point. The division fallback is
+ * the defect, and a fallback that fires "only when the level is missing" is the
+ * defect with a longer fuse — it would sit dormant until some future inventory
+ * forgot to stamp the level, and then answer confidently about the wrong
+ * government again.
+ *
+ * Empty here is honest and it is already handled: the caller turns it into a
+ * NAMED GAP that says whose gap it is, and `denominators.meetingsHeldForThisBody`
+ * reports zero. "We hold no meetings for this body" is a true statement about
+ * US. "This water district event is the Board's next meeting" was a false
+ * statement about a GOVERNMENT.
+ *
+ * ONE function and two callers — the sitting selection and the agenda-topic
+ * sweep — so the two can never disagree about which meetings are this body's.
+ */
+function meetingsForBody(
+  meetings: readonly MeetingLike[],
+  bound: BindableEntity | null,
+): MeetingLike[] {
+  if (!bound || bound.level !== "BODY") return [];
+  return meetings.filter((m) => m.bodyId !== null && m.bodyId === bound.id);
 }
 
 /**
@@ -447,7 +500,12 @@ export async function POST(request: Request) {
   const surface: "MAP" | "BALLOT" | "UNKNOWN" =
     body.surface === "BALLOT" || body.surface === "MAP" ? body.surface : "UNKNOWN";
 
-  const bodies = snapshotEntities(meetings);
+  /*
+   * Bodies resolve through the CANONICAL REGISTRY, so what a reader binds to is
+   * one government rather than a geography several of them share. See
+   * `lib/ask/inventory.ts` for the defect this closes.
+   */
+  const bodies = snapshotEntities(meetings, (bodyId) => canonicalBodyIdentity(bodyId));
   const people = personEntities(ocdIds);
 
   /*
@@ -763,7 +821,10 @@ export async function POST(request: Request) {
      * Unslugged from the canonical division id, which is the same mechanical
      * read `lib/ask/inventory.ts` does for the meetings inventory.
      */
-    contacts.push(...contactsForBody(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
+    /* A ballot subject is a contest, a candidate or a measure — it has an AREA
+       and no body, so this is the DIVISION question and it asks the division
+       resolver by name rather than borrowing the body one. */
+    contacts.push(...contactsForDivision(ballotRecord.ocdId, divisionNameOf(ballotRecord.ocdId)));
 
     /*
      * A candidate with no published positions is a NAMED GAP, never silence.
@@ -803,7 +864,7 @@ export async function POST(request: Request) {
       Object.assign(denominators, votes.denominators);
     }
   } else if (subject?.kind === "BODY") {
-    const forBody = meetings.filter((m) => m.ocdId === subject.id);
+    const forBody = meetingsForBody(meetings, bound);
     denominators.meetingsHeldForThisBody = forBody.length;
     /* The SAME selection the deterministic agenda route uses — one rule, two
        callers, so the two surfaces can never disagree about which meeting a
@@ -842,6 +903,10 @@ export async function POST(request: Request) {
       records.push({
         kind: "MEETING",
         id: chosen.id,
+        /* The meeting's OWN body, carried from the corpus rather than assumed
+           from the subject — so the validator is checking the record against
+           the subject rather than checking the subject against itself. */
+        bodyId: chosen.bodyId,
         text: `${subject.name}: ${label}, ${readableSitting(chosen)}.`,
         occurredAt: chosen.startsAt,
         sourceUrl: chosen.agendaUrl ?? null,
@@ -884,6 +949,9 @@ export async function POST(request: Request) {
         records.push({
           kind: "AGENDA_DOCUMENT",
           id: newest.documentUrl,
+          /* A document inherits body identity THROUGH the meeting it is
+             attached to, never from its own title text. */
+          bodyId: chosen.bodyId,
           text: `An agenda portal page for ${subject.name}, not a single meeting's agenda.`,
           sourceUrl: newest.documentUrl,
           sourceOrg: newest.sourceOrg ?? null,
@@ -900,11 +968,53 @@ export async function POST(request: Request) {
           records.push({
             kind: "AGENDA_ITEM",
             id: `${chosen.id}#${index}`,
+            /* Read out of THAT meeting's document, so it carries THAT meeting's
+               body. The chain is BODY -> MEETING -> DOCUMENT -> ITEM and every
+               link is an id, not an inference from a heading. */
+            bodyId: chosen.bodyId,
             text: item,
             occurredAt: chosen.startsAt,
             sourceUrl: newest.documentUrl,
             sourceOrg: newest.sourceOrg ?? null,
             retrievedAt: newest.retrievedAt,
+          });
+        }
+      }
+
+      /*
+       * **AN AGENDA IS NOT AN OUTCOME, AND THE PACK HAS TO SAY SO.**
+       * (2026-08-29.)
+       *
+       * Asked against the real handler before this existed, *"Did the Pima
+       * County Board of Supervisors vote on the budget?"* returned agenda items
+       * and ZERO gaps. The pack handed a synthesis model a list of things that
+       * were PUT ON AN AGENDA and asked it about a DECISION, with nothing
+       * anywhere in it saying no outcome record was held — and the likeliest
+       * sentence out of that pack is a confident, sourced account of a vote we
+       * have no record of. Fabricated from a real document, which is what makes
+       * it survive a skim.
+       *
+       * The agenda records are KEPT. They are honest evidence of what was
+       * noticed, and a reader asking about a vote is well served by "here is
+       * what was on the agenda, and we do not hold what was done with it." What
+       * is added is the second half of that sentence, as a NAMED GAP, so the
+       * absence travels with the records instead of being silence.
+       *
+       * The ruling comes from `lib/answerability/record-class.ts`, which holds
+       * the allow-list; this route only supplies which question was asked, which
+       * is the one thing that module says it cannot decide for itself.
+       */
+      const outcomeClass = outcomeQuestionClass(question);
+      if (outcomeClass) {
+        const heldClasses = records.some((r) => r.kind === "AGENDA_ITEM" || r.kind === "AGENDA_DOCUMENT")
+          ? ["AGENDA"]
+          : [];
+        const ruling = ruleOnQuestion(outcomeClass, heldClasses);
+        denominators.outcomeRecordsHeld = ruling.satisfiedBy.length;
+        if (!ruling.answerable) {
+          gaps.push({
+            whose: "OURS",
+            statement: outcomeGapStatement(subject.name, outcomeClass, heldClasses.length > 0),
           });
         }
       }
@@ -919,7 +1029,16 @@ export async function POST(request: Request) {
      * "Superintendent" — never an assessment of who matters. See
      * `lib/ask/contacts.ts` for why "most influential" is unbuildable here.
      */
-    contacts.push(...contactsForBody(subject.id, subject.name));
+    contacts.push(
+      ...contactsForBody(
+        {
+          bodyId: subject.id,
+          ocdId: bound?.ocdId ?? null,
+          divisionType: bound?.divisionType ?? null,
+        },
+        subject.name,
+      ),
+    );
     if (contacts.length === 0) {
       gaps.push({
         whose: "OURS",
@@ -1110,7 +1229,7 @@ export async function POST(request: Request) {
    */
   const sweepScope =
     subject?.kind === "BODY"
-      ? { meetings: meetings.filter((m) => m.ocdId === subject.id), label: subject.name }
+      ? { meetings: meetingsForBody(meetings, bound), label: subject.name }
       : ocdIds.length > 0
         ? {
             meetings: meetings.filter((m) => m.ocdId !== null && ocdIds.includes(m.ocdId)),

@@ -69,7 +69,7 @@ import { SCHOOL_DISTRICT_TYPES } from "@/lib/map/districts";
 import type { DistrictHit, DrawnDistrict } from "@/lib/map/districts";
 import type { DistrictType } from "@/lib/state/types";
 
-import { jurisdictionClaim } from "@/lib/meetings/jurisdiction-badge";
+import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/jurisdiction-badge";
 
 import { CoverageNotice } from "./coverage-notice";
 import { SiteFootnote } from "./site-footnote";
@@ -2623,6 +2623,18 @@ function bodySubject(
     ? roster.filter((h) => h.id !== superintendent.id)
     : roster;
 
+  /*
+   * GOV-1 (2026-08-29): ONE claim, read by BOTH surfaces below.
+   *
+   * The jurisdiction row and the representation note each made the same
+   * governing claim about the same body by a different route, and only one of
+   * them was ever going to be fixed at a time — which is JUR-1's own finding
+   * (two code paths, one subject, nothing making them agree). They now read a
+   * single value, so a body that may not carry the govern verb cannot carry it
+   * on one surface and not the other.
+   */
+  const claim = jurisdictionClaim(body);
+
   return {
     // BC-11: the body id, never the display title — nine Morris County
     // governments answer to "Township Council".
@@ -2659,8 +2671,15 @@ function bodySubject(
         : []),
     ],
     representation: seated,
-    representationNote:
-      "We know this body governs here because its division exists. We haven't sourced who sits on it.",
+    /*
+     * GOV-1 (2026-08-29): this read, unconditionally, "We know this body governs
+     * here because its division exists." That is an inference from the
+     * division's existence, and it was rendered on 248 bodies whose division is
+     * not theirs — the Tucson Design Review Board among them. It is now derived
+     * from the one claim, and survives only where the body IS that division's
+     * government and the govern verb may attach to it.
+     */
+    representationNote: representationNoteForClaim(claim),
     meetings,
     sources: districtCardSources(roster, meetings),
     // M136 (2026-08-18): the seven sections. Every one renders for every
@@ -2702,10 +2721,7 @@ function bodySubject(
        * no published boundary cannot produce a Governs row at all.
        */
       jurisdiction: [
-        (() => {
-          const claim = jurisdictionClaim(body);
-          return { label: claim.label, value: claim.value };
-        })(),
+        { label: claim.label, value: claim.value },
         { label: "Level", value: TIER_LABEL[body.tier] },
       ],
     },

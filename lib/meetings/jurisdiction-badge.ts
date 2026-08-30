@@ -1,4 +1,7 @@
+import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
 import { COULD_GOVERN_ACTION, COULD_GOVERN_TEXT } from "../ballot/could-govern.ts";
+import { governVerbMayAttach } from "../registry/body-class-labels.ts";
+import type { BodyClass, DivisionType } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
 
 /**
@@ -148,26 +151,157 @@ export const BADGE_COPY: Readonly<Record<JurisdictionBadge, BadgeCopy>> = {
  *
  * `tests/jurisdiction-badge.test.ts` asserts the two are mutually exclusive.
  */
+/* ========================================================================== *
+ * GOV-1 — THE GOVERN VERB IS KEYED ON THE BODY, NEVER ON THE GROUND IT STANDS
+ * ON. (2026-08-29. RULING 118 enforced by the path that predates it.)
+ *
+ * ## The defect, measured
+ *
+ * `jurisdictionClaim` took `{ ocdId, divisionLabel }` and returned
+ * `{ kind: "GOVERNS", ... }` for **every** body that had a division with a
+ * label — 1,256 of them. It never asked WHICH body it was.
+ *
+ * 248 of those 1,256 are not the government of the division they sit on, and
+ * every one of them rendered **"Governs: <that division>"**. The Tucson Design
+ * Review Board — an ADVISORY board — read *"Governs: Tucson"*. The Central
+ * Arizona Water Conservation District, which spans three counties, read
+ * *"Governs: Pima County"*, an area it does not govern and is not inside of.
+ * **100 of the 248 are `coverageStatus: LIVE`** and reader-reachable today.
+ *
+ * It is DATA-4's finding on a third surface. #214 said a body may not acquire
+ * MEMBERS from a shared division; DATA-4 said it may not acquire POWERS; this
+ * says it may not acquire a GOVERNING RELATIONSHIP WITH THE READER, which is
+ * the strongest of the three because it is a claim about the reader's own life.
+ *
+ * ## Two gates, and they are independent
+ *
+ * **Identity.** `isDivisionsOwnGovernment` — the body IS the government of that
+ * division, by the id grammar the registry derives such bodies under. If it is
+ * not, then `divisionLabel` is not this body's territory and no claim may be
+ * built out of it, whatever kind of body it is. This is what catches CAWCD,
+ * which is a real GOVERNING body that governs a real territory — just not this
+ * one.
+ *
+ * **The verb.** `governVerbMayAttach(bodyClass)` — RULING 118. Even where the
+ * division IS the body's own territory, an appointed body never carries the
+ * verb, and for a sovereign tribal nation the relationship is UNSETTLED rather
+ * than established (RULING 119). The labels table is the single authority on
+ * which; this module asks it rather than deciding.
+ *
+ * **On today's registry the identity gate strictly subsumes the verb gate** —
+ * all 1,008 division-derived bodies are `GOVERNING` — so the verb gate changes
+ * no current row. It is kept because it is the FLOOR, and because the day the
+ * registry derives a `SOVEREIGN_TRIBAL` or `EXECUTIVE_AGENCY` body from a
+ * division, the verb must not attach without anyone having decided that it may.
+ *
+ * ## What replaces the verb, and why it is not a weaker synonym
+ *
+ * A synonym for *governs* is the same claim in a quieter voice. So neither
+ * replacement makes a governing claim at all; each states only what is
+ * actually known, and the name says whose knowledge it is.
+ *
+ * - **Not the division's government → `LISTED_UNDER`.** *"Listed under: Pima
+ *   County"* is a fact about OUR REGISTRY — this is where we filed it — and it
+ *   asserts nothing about the body's own territory, which we do not have.
+ * - **Its government, but the verb may not attach → `TERRITORY`.** *"Territory:
+ *   <label>"* states the area, which IS known, without the relationship, which
+ *   is what RULING 118 and RULING 119 withhold. It is the labels table's own
+ *   words — *"this nation's government, its territory, its meetings — without
+ *   asserting a governing relationship it has not established."*
+ *
+ * Neither reuses `NO_BOUNDARY`'s copy, and that is deliberate. That line says
+ * *"no official boundary is published"*, which is a claim about the PUBLISHER.
+ * For a body nobody has yet sought a boundary for, that would be a fact about
+ * us wearing a fact about them — the exact substitution `CLAUDE.md` forbids.
+ * ========================================================================== */
+
 export type JurisdictionClaim =
   | { kind: "GOVERNS"; label: string; value: string }
-  | { kind: "NO_BOUNDARY"; label: string; value: string };
+  | { kind: "NO_BOUNDARY"; label: string; value: string }
+  /** Its own territory, stated without the relationship. RULING 118 / 119. */
+  | { kind: "TERRITORY"; label: string; value: string }
+  /** Where WE filed it. Never a claim about the body's own territory. */
+  | { kind: "LISTED_UNDER"; label: string; value: string };
 
 export function jurisdictionClaim(body: {
+  /**
+   * **REQUIRED, AND REQUIRED ON PURPOSE.** It is `CoveredBody.bodyId`.
+   *
+   * There is no default and it is not optional, for the reason
+   * `definitionsForBody` made it mandatory on the definition path: the thing an
+   * optional identity silently falls back to is the DIVISION, and that is the
+   * defect. A compiler error at every call site is the cheapest way to be told.
+   */
+  bodyId: string;
   ocdId: string | null;
+  divisionType: DivisionType | null;
   divisionLabel: string;
+  bodyClass: BodyClass;
 }): JurisdictionClaim {
-  // No division id, or a division with no label, is the same situation from the
-  // reader's side: there is no published area to be inside of. Naming it is the
-  // whole of the fix — the previous code rendered "Governs:" with an empty
-  // value, which reads as a finding rather than as the gap it is.
-  if (body.ocdId === null || body.divisionLabel.trim().length === 0) {
+  // No division id, no division type, or a division with no label: the same
+  // situation from the reader's side — there is no published area to be inside
+  // of. Naming it is the whole of JUR-1's fix; the code before it rendered
+  // "Governs:" with an empty value, which reads as a finding rather than a gap.
+  if (
+    body.ocdId === null ||
+    body.divisionType === null ||
+    body.divisionLabel.trim().length === 0
+  ) {
     return {
       kind: "NO_BOUNDARY",
       label: BADGE_COPY.NO_BOUNDARY.label,
       value: BADGE_COPY.NO_BOUNDARY.detail,
     };
   }
+
+  /*
+   * GATE ONE — IDENTITY. Is `divisionLabel` this body's territory at all?
+   *
+   * 248 bodies reach here and are not their division's government. For them the
+   * label names a NEIGHBOUR's territory, so every claim built from it is false
+   * — including the honest-looking ones.
+   */
+  if (!isDivisionsOwnGovernment(body.bodyId, body.ocdId, body.divisionType)) {
+    return { kind: "LISTED_UNDER", label: "Listed under", value: body.divisionLabel };
+  }
+
+  /*
+   * GATE TWO — THE VERB (RULING 118, RULING 119). The territory is this body's;
+   * the RELATIONSHIP is what the labels table may withhold. Asked here rather
+   * than at the call site, because a binary reinvented at a call site is how
+   * `door-overlay.tsx` came to call a sovereign nation advisory.
+   */
+  if (!governVerbMayAttach(body.bodyClass)) {
+    return { kind: "TERRITORY", label: "Territory", value: body.divisionLabel };
+  }
+
   return { kind: "GOVERNS", label: "Governs", value: body.divisionLabel };
+}
+
+/** What we hold on who sits on a body, when we hold nobody. A fact about US. */
+export const REPRESENTATION_NOTE_UNSOURCED = "We haven't sourced who sits on it.";
+
+/**
+ * The roster's absence note, gated on the SAME claim as the jurisdiction row.
+ *
+ * The body card said, unconditionally: *"We know this body governs here because
+ * its division exists. We haven't sourced who sits on it."* The first sentence
+ * is an inference from the division's existence — the banned move, in as many
+ * words — and it was rendered on all 248 bodies whose division is not theirs.
+ *
+ * It survives for `GOVERNS` and only there, where it is not an inference but
+ * the registry's own construction: such a body exists BECAUSE the division
+ * does. Everywhere else the note is the second sentence alone, which claims
+ * nothing beyond what we have looked for.
+ *
+ * It lives here so the two cannot drift — JUR-1's finding was two code paths,
+ * one subject, and nothing making them agree.
+ */
+export function representationNoteForClaim(claim: JurisdictionClaim): string {
+  if (claim.kind === "GOVERNS") {
+    return `We know this body governs here because its division exists. ${REPRESENTATION_NOTE_UNSOURCED}`;
+  }
+  return REPRESENTATION_NOTE_UNSOURCED;
 }
 
 /**

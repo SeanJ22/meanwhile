@@ -121,14 +121,46 @@ test("M81: the badge derives from the map's own geometry, never a second source"
    *   they drift. It is a pair of string constants, and importing it is
    *   deliberately cheaper than retyping the sentence.
    *
+   * - `../officials/division-government.ts` — `isDivisionsOwnGovernment`, added
+   *   by `GOV-1` (2026-08-29). A STRING COMPARISON: `bodyId === ocdId + "#" +
+   *   <the registry's derived suffix>`. It resolves nothing and reads no data.
+   *
+   *   It is imported from that LEAF module and deliberately not from
+   *   `body-definitions.ts`, which re-exports it. The predicate's meaning
+   *   belongs to the definitions module and its WEIGHT does not: that module
+   *   pulls in `body-blurbs`, `body-form` and `form-definitions`, so importing
+   *   the six-line predicate from there dragged the whole definition corpus
+   *   into every consumer. This badge is on `/api/meetings`, and doing so took
+   *   that route's file trace one over its committed ceiling and refused the
+   *   build. The build was right: a badge has no business depending on the
+   *   corpus. Keep this import pointed at the leaf.
+   * - `../registry/body-class-labels.ts` — `governVerbMayAttach`, RULING 118's
+   *   single authority on whether the verb may attach to a class of body. A
+   *   lookup in a hardcoded table.
+   * - `../registry/types.ts` — `BodyClass` and `DivisionType`, types only.
+   *
+   * The last three are the GOV-1 repair and they are the reason it cannot be
+   * undone by a forgetful call site: the govern verb was being handed to 248
+   * bodies that do not govern the division they sit on, because this function
+   * was never told which body it was describing. Asking the two questions HERE
+   * rather than at the call site is the point — a binary reinvented at a call
+   * site is how `door-overlay.tsx` came to call a sovereign nation advisory.
+   *
    * The rule this guards is unchanged and is asserted directly below: the
-   * module holds no geometry and resolves nothing.
+   * module holds no geometry and resolves nothing. None of the three can
+   * resolve a point, and the forbidden-substring sweep below is untouched.
    */
   assert.deepEqual(
     imported,
-    ["../ballot/could-govern.ts", "../sources/types.ts"],
-    "the badge module imports something other than the meeting type and the shared wording — " +
-      "it must take the resolved answer, never resolve its own",
+    [
+      "../ballot/could-govern.ts",
+      "../officials/division-government.ts",
+      "../registry/body-class-labels.ts",
+      "../registry/types.ts",
+      "../sources/types.ts",
+    ],
+    "the badge module imports something other than the meeting type, the shared wording and " +
+      "the two identity predicates — it must take the resolved answer, never resolve its own",
   );
   for (const forbidden of ["node:fs", "tiger", "geojson", "boundaries", "districts"]) {
     assert.ok(
@@ -173,18 +205,38 @@ test("M81: the API sends the resolved divisions, and null when it failed", () =>
  * to whether a boundary existed. Two paths, one subject, nothing making them
  * agree — which is the class this sweeps, not the instance.
  */
+/*
+ * **GOV-1 (2026-08-29): these calls now carry the BODY's identity.** The three
+ * added fields are not decoration — `jurisdictionClaim` takes `bodyId`,
+ * `divisionType` and `bodyClass` and consults them, because the govern verb is
+ * a claim about a BODY and this function was making it from a DIVISION. The
+ * JUR-1 assertions below are unchanged in substance: the subject is now spelled
+ * as the county's OWN governing body, which is what "a real body with a real
+ * division" always meant here.
+ */
+const MORRIS = "ocd-division/country:us/state:nj/county:morris";
+
 test("JUR-1: the two claims are mutually exclusive, by construction", () => {
   // A real body with a real division: GOVERNS, and nothing else.
   const withBoundary = jurisdictionClaim({
-    ocdId: "ocd-division/country:us/state:nj/county:morris",
+    bodyId: `${MORRIS}#governing`,
+    ocdId: MORRIS,
+    divisionType: "county",
     divisionLabel: "Morris County",
+    bodyClass: "GOVERNING",
   });
   assert.equal(withBoundary.kind, "GOVERNS");
   assert.equal(withBoundary.label, "Governs");
   assert.equal(withBoundary.value, "Morris County");
 
   // No division id at all — Pima Community College's district is the live case.
-  const noId = jurisdictionClaim({ ocdId: null, divisionLabel: "Pima County" });
+  const noId = jurisdictionClaim({
+    bodyId: "curated:az/pima-community-college#governing",
+    ocdId: null,
+    divisionType: null,
+    divisionLabel: "Pima County",
+    bodyClass: "GOVERNING",
+  });
   assert.equal(noId.kind, "NO_BOUNDARY");
   assert.equal(noId.label, BADGE_COPY.NO_BOUNDARY.label);
 
@@ -192,7 +244,13 @@ test("JUR-1: the two claims are mutually exclusive, by construction", () => {
   // side, and it is the one that produced the contradiction: the old code
   // rendered "Governs:" with nothing after it, which reads as a finding.
   for (const empty of ["", "   "]) {
-    const blank = jurisdictionClaim({ ocdId: "ocd-division/country:us/state:nj", divisionLabel: empty });
+    const blank = jurisdictionClaim({
+      bodyId: "ocd-division/country:us/state:nj#governing",
+      ocdId: "ocd-division/country:us/state:nj",
+      divisionType: "county",
+      divisionLabel: empty,
+      bodyClass: "GOVERNING",
+    });
     assert.equal(blank.kind, "NO_BOUNDARY", `an empty label must not produce a Governs row (${JSON.stringify(empty)})`);
     assert.notEqual(blank.label, "Governs");
   }

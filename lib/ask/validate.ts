@@ -115,6 +115,36 @@ export function validateAnswer(
     }
   }
 
+  /*
+   * **EXACT BODY IDENTITY — the check the substitution class actually needed.**
+   * (2026-08-29.)
+   *
+   * `subject-not-substituted` above compares PROSE against the subject's name,
+   * and that is why it could not catch the Pima defect: the pack's subject WAS
+   * "Pima", the answer DID say "Pima", and the meeting inside it belonged to
+   * the Central Arizona Water Conservation District. Every name in the sentence
+   * was the right name. The RECORD was the wrong government's.
+   *
+   * This is an id comparison and nothing else. Where the subject is a body and
+   * a record states which body it belongs to, they must be the same body. No
+   * NLP, no heading heuristics, no title matching — the canonical ids exist
+   * precisely so this question does not require reading.
+   *
+   * A record with no `bodyId` is NOT failed. Ballot measures, statewide
+   * officeholders and deliberately wider topic sweeps legitimately belong to no
+   * single body, and failing them would discard correct answers — which is its
+   * own kind of wrong. The check binds exactly where identity is stated.
+   */
+  checked.push("record-belongs-to-resolved-body");
+  if (pack.subject?.kind === "BODY") {
+    const foreign = pack.records.find(
+      (r) => typeof r.bodyId === "string" && r.bodyId.length > 0 && r.bodyId !== pack.subject!.id,
+    );
+    if (foreign) {
+      failed.push(`record-from-another-body:${foreign.kind}:${foreign.id.slice(0, 80)}`);
+    }
+  }
+
   checked.push("no-voting-advice");
   if (VOTING_ADVICE.some((p) => p.test(answer))) failed.push("voting-advice");
 

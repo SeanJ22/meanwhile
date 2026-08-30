@@ -236,7 +236,12 @@ export async function fetchEvents<T>(
   );
 }
 
-/** Agenda items for one meeting. Read only for the 4.6.9 multi-body check. */
+/**
+ * Agenda items for one meeting.
+ *
+ * The response carries BOTH record classes — what was noticed and what the
+ * body did about it. `outcomes.ts` splits them; see `types.ts`.
+ */
 export async function fetchEventItems<T>(
   slug: string,
   eventId: number,
@@ -244,6 +249,45 @@ export async function fetchEventItems<T>(
 ): Promise<T[]> {
   return getJson<T[]>(
     `${slug}/events/${eventId}/eventitems?$top=${PAGE_SIZE}`,
+    options,
+  );
+}
+
+/** One event record by id. Carries the minutes status and minutes pointer. */
+export async function fetchEvent<T>(
+  slug: string,
+  eventId: number,
+  options: RequestOptions = {},
+): Promise<T> {
+  return getJson<T>(`${slug}/events/${eventId}`, options);
+}
+
+/**
+ * **The per-person roll call for one agenda item** — the single strongest
+ * civic record this product can hold, and the only one `record-class.ts`
+ * admits for `HOW_DID_THEY_VOTE`.
+ *
+ * `/v1/{slug}/eventitems/{EventItemId}/votes`. Walked 2026-08-29 against the
+ * Pima tenant: HTTP 200 on every item probed, including items with no votes,
+ * so a 200 proves the route works and proves nothing about the item.
+ *
+ * **This returns the ROWS, never a verdict on them.** A zero-row reply is
+ * ambiguous at this layer — it is a legitimate empty for an item nobody put a
+ * question on, and a FAILED extraction for an item whose own record says a
+ * roll call was taken. Deciding which is `classifyRollCall` in `outcomes.ts`,
+ * where the item is in scope; deciding it here, with only the array, is how a
+ * wall becomes an emptiness.
+ *
+ * Not paged: an event item's roll is one body's membership, tens of rows at
+ * the outside, and `$top` at the collection cap covers it in one request.
+ */
+export async function fetchEventItemVotes<T>(
+  slug: string,
+  eventItemId: number,
+  options: RequestOptions = {},
+): Promise<T[]> {
+  return getJson<T[]>(
+    `${slug}/eventitems/${eventItemId}/votes?$top=${PAGE_SIZE}`,
     options,
   );
 }

@@ -129,6 +129,29 @@ export const NO_BODY_BLURB_LINE =
 /**
  * The blurb for a body, or null. The division override wins, because it exists
  * precisely for the case where the general answer is wrong.
+ *
+ * **THIS FUNCTION IS KEYED ON THE DIVISION, AND ITS NAME SAYS BODY. THAT GAP IS
+ * THE DEFECT DATA-4 / NH270 WAS ABOUT, AND IT IS LEFT NAMED RATHER THAN
+ * SILENT.** (2026-08-29.)
+ *
+ * Both lookups below take an `ocdId`. `DIVISION_BODY_BLURBS` says so in its own
+ * field name, and `BODY_BLURBS` is state × division-kind. So every answer this
+ * returns is a claim about *the government of that division* — and 58 bodies
+ * sit on `az/place:tucson`, of which exactly one is that government. Calling
+ * this for any of the other 57 hands *"This is the city's governing body — the
+ * mayor and the council together"* to a design review board.
+ *
+ * **The only legitimate caller is one that has ALREADY established the body IS
+ * its division's own government**, by `isDivisionsOwnGovernment` in
+ * `body-definitions.ts` — `bodyId === ocdId + "#" + <the registry's derived
+ * suffix>`. Today there is exactly one such caller, `definitionsForBody`, and
+ * the call sits below that gate. A new call site that does not pass the gate is
+ * a false claim about a named government, not a missing feature.
+ *
+ * The signature is deliberately NOT widened to take a `bodyId` and check the
+ * gate itself: that would make the gate a thing two modules each half-own, and
+ * the check would then run twice with no single place to read it. The gate has
+ * one home. This note names it.
  */
 export function blurbForBody(
   ocdId: string | null,

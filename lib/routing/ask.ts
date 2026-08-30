@@ -13,6 +13,7 @@ import {
 import { matchTopic, weakTopicMatch, type TopicMatch } from "./match.ts";
 import {
   bindNamedEntity,
+  nameAReaderCanSay,
   type BindableEntity,
   type NamedEntityBinding,
 } from "./named-entity.ts";
@@ -243,7 +244,18 @@ function bindableEntities(
   const fromCoverage: BindableEntity[] = [];
   const coveredNames = new Set<string>();
   for (const body of coverage.bodies) {
-    const label = body.name ?? body.divisionLabel;
+    /*
+     * **QUALIFIED WHERE THE BODY'S OWN NAME IDENTIFIES NOTHING** (2026-08-29).
+     *
+     * `body.name ?? body.divisionLabel` is the right fallback and it is not
+     * enough: a body genuinely called "Planning Board" has a name, so the
+     * fallback never fires, and the binder then declines it because every
+     * distinctive token is ordinary question vocabulary. Seven towns in the
+     * corpus have one. The same rule the meetings inventory uses, from the same
+     * function, so the two Ask paths cannot disagree about which governments a
+     * reader is able to name.
+     */
+    const label = nameAReaderCanSay(body.name, body.divisionLabel);
     if (!label) continue;
     coveredNames.add(normalizeName(label));
     fromCoverage.push({

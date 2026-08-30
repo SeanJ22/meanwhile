@@ -37,7 +37,38 @@ import {
   LEGISTAR_CLIENTS,
   type LegistarClient,
 } from "./clients.ts";
+import type { LegistarOutcomeRecord } from "./outcomes.ts";
 import type { LegistarEvent, LegistarEventItem } from "./types.ts";
+
+/**
+ * The outcome half of this adapter, re-exported so a caller reaching for
+ * "what did they decide" finds it at the same import as everything else — and
+ * finds the record classes already separated when they get there.
+ */
+export {
+  classifyRollCall,
+  collectEventOutcomes,
+  dispositionGap,
+  hasRecordedAction,
+  isFailedExtraction,
+  minutesPointerFor,
+  readDisposition,
+  receiptFor,
+  rollCallGap,
+  rollCallRecordFrom,
+  toAgendaRecords,
+  toOutcomeRecords,
+} from "./outcomes.ts";
+export type {
+  EventOutcomes,
+  LegistarAgendaRecord,
+  LegistarMinutesPointer,
+  LegistarOutcomeRecord,
+  LegistarRecordedVote,
+  LegistarRollCallRecord,
+  OutcomeDisposition,
+  RollCallState,
+} from "./outcomes.ts";
 
 /**
  * Granicus Legistar meeting source. Tracker **D12**.
@@ -83,6 +114,23 @@ export interface LegistarEventWithClient {
    * gets rendered would be a claim about a meeting nobody looked at.
    */
   items: LegistarEventItem[] | null;
+  /**
+   * What the body DID at this sitting, when a run collected it (2026-08-29).
+   *
+   * **Absent is not empty, for the third time in this file and for the same
+   * reason.** Undefined means outcomes were never collected for this row;
+   * `null` means collection was attempted and failed; `[]` means the sitting
+   * genuinely recorded no actions, which happens — Pima events 1803 and 1869
+   * each carry 36 and 16 agenda items and zero recorded actions.
+   *
+   * The default ingest does NOT populate this. Collecting it costs one extra
+   * request per ACTED item — 525 across the twenty Pima Board sittings
+   * measured — and wiring it into `fetch()` changes what a refresh writes to
+   * `data/meetings-snapshot.json`, which is an integration decision and not
+   * this adapter's to make unilaterally. `collectEventOutcomes` in
+   * `./outcomes.ts` is the entry point when that decision is taken.
+   */
+  outcomes?: LegistarOutcomeRecord[] | null;
 }
 
 function isoDate(date: Date): string {
@@ -367,6 +415,20 @@ export function detectSittingAs(items: LegistarEventItem[]): string[] {
  * `EventItemMatterFile` is the load-bearing field: it is present on business and
  * absent on headings, which is what lets the split work without depending on a
  * clerk's capitalisation habits.
+ *
+ * **THIS FUNCTION IS DELIBERATELY NOTICE-CLASS ONLY, and until 2026-08-29 that
+ * was an accident rather than a decision.** The `eventitems` reply carries
+ * `EventItemActionName`, `EventItemPassedFlagName`, `EventItemMover`,
+ * `EventItemSeconder` and `EventItemActionText`, and this map dropped every one
+ * of them on the line below — which is why the corpus could say what was on a
+ * Pima agenda and could not say what the Board decided.
+ *
+ * The fix is NOT to widen `AgendaItem`. `AgendaItem` feeds `segmentAgenda`,
+ * whose question is "which body was sitting", and an outcome on a notice-class
+ * shape is exactly the substitution `lib/answerability/record-class.ts` exists
+ * to refuse. The outcome fields are carried by `toOutcomeRecords` in
+ * `./outcomes.ts`, onto a record of a different class with a disjoint field
+ * set. Anything that needs a decision reads that; nothing reads it from here.
  */
 export function toAgendaItems(items: LegistarEventItem[]): AgendaItem[] {
   return items.map((item) => ({

@@ -416,6 +416,111 @@ export interface IndependentExpenditureReport {
   readonly independentExpenditures: readonly IndependentExpenditure[];
 }
 
+/* ── What a record CAME OFF, which is not always a filing ─────────────────── */
+
+/**
+ * **NOT A FILING.** An authority-side AGGREGATION across a filer's filings.
+ *
+ * The FEC's committee-totals endpoint answers "what has this committee reported
+ * cycle-to-date" by adding up reports the FEC holds. That number is real, it is
+ * the authority's own, and it is **not a report anybody filed** — so it must not
+ * wear `CampaignFinanceFiling`'s shape, because a reader told "as filed in the
+ * 2026 Q2 report" about a figure that exists in no report has been handed a
+ * fabricated citation.
+ *
+ * The distinction is load-bearing in two places a comment could not reach:
+ *
+ *   - `EvidenceBasis` travels on every answer, so the reader sentence says
+ *     "reported to the Federal Election Commission cycle-to-date" for an
+ *     aggregate and "as filed in <report>" only for a filing.
+ *   - `AuthorityAggregate` carries `isCompleteFilingSet: false` as a LITERAL.
+ *     There is no value of this type that claims to be the whole filing set,
+ *     which is the structural half of "never imply complete financial coverage
+ *     from one filing or one period".
+ *
+ * `aggregatedAcrossFilings` is nullable and the null is the honest value
+ * whenever the authority publishes the sum without publishing how many reports
+ * went into it. A count invented for a denominator is the coverage attack mode.
+ */
+export interface AuthorityAggregate {
+  readonly recordKind: "AUTHORITY_AGGREGATE";
+  /** Prefixed so it can never be mistaken for a filing id at a glance. */
+  readonly id: string;
+  readonly committeeId: string;
+  readonly filingAuthorityId: string;
+  /** The authority's own period label and bounds. Never invented. */
+  readonly period: FilingPeriod;
+  /** The authority endpoint or page the aggregate was read from. */
+  readonly sourceUrl: string | null;
+  /** In this repository, the artifact the aggregate is committed in. */
+  readonly sourceCitation: string;
+  /** Total the committee reported RECEIVING, per the authority. Null when unpublished. */
+  readonly reportedReceipts: number | null;
+  /** Total the committee reported SPENDING, per the authority. Null when unpublished. */
+  readonly reportedDisbursements: number | null;
+  /** The itemized-receipts subtotal, when the authority publishes one. */
+  readonly reportedItemizedReceipts: number | null;
+  /** How many filings were summed, when the authority says. Null is honest. */
+  readonly aggregatedAcrossFilings: number | null;
+  /** Never true. An aggregate is not a complete filing set and cannot claim to be. */
+  readonly isCompleteFilingSet: false;
+}
+
+/**
+ * What a rendered figure actually CAME OFF.
+ *
+ * A reader sentence built on `AUTHORITY_AGGREGATE` may never say "as filed in"
+ * a named report, and a sentence built on `FILING` may never be attributed to
+ * the authority's arithmetic. `answers.ts` derives this rather than accepting it.
+ */
+export const EVIDENCE_BASES = ["FILING", "AUTHORITY_AGGREGATE"] as const;
+export type EvidenceBasis = (typeof EVIDENCE_BASES)[number];
+
+/* ── A measure has SIDES, and the sides are the symmetry unit ─────────────── */
+
+/**
+ * The two sides of a ballot question.
+ *
+ * A candidate contest's neutrality unit is the CANDIDATE; a measure's is the
+ * SIDE, and nothing in this module knew that before. `symmetryCheck` sweeps
+ * `perCandidate`, and a measure contest has none — so a measure whose SUPPORT
+ * committees were hunted and whose OPPOSE committees were not came back
+ * `SYMMETRIC`, on the grounds that there was no second candidate to be
+ * asymmetric with. That is the seeded failure wearing the guard's own uniform,
+ * one tier down from where the guard was looking.
+ */
+export const MEASURE_SIDES = ["SUPPORT", "OPPOSE"] as const;
+export type MeasureSide = (typeof MEASURE_SIDES)[number];
+
+/**
+ * Coverage of ONE side of one ballot question.
+ *
+ * `committeeUniverseSource` being null is the state that matters most here and
+ * it is NOT the same as an empty committee list. Null means *we have not read a
+ * register, so we do not know which committees exist on this side* — a fact
+ * about us. An empty list WITH a source means *the register was read and this
+ * side has no registered committee* — a fact about the filers. Rendering those
+ * two as the same sentence is the exact defect the named-gap rule forbids, so
+ * they are two different fields and `answers.ts` reads both.
+ */
+export interface MeasureSideCoverage {
+  readonly side: MeasureSide;
+  readonly committeeIds: readonly string[];
+  /**
+   * Where the committee universe for this side came from. **Null means the
+   * register was never read** — never "there are none".
+   */
+  readonly committeeUniverseSource: string | null;
+  readonly filingAuthorityResolved: boolean;
+  readonly filingAuthorityIds: readonly string[];
+  readonly filingsAcquired: readonly string[];
+  readonly acquisitionDepth: AcquisitionDepth;
+  readonly latestThroughDate: string | null;
+  readonly openRouteIds: readonly string[];
+  /** Required for any asymmetry against the other side, and it must cite a source. */
+  readonly asymmetryExplanation: AsymmetryExplanation | null;
+}
+
 /* ── The invariant, at the type level ─────────────────────────────────────── */
 
 /**
@@ -770,6 +875,17 @@ export interface CampaignFinanceCoverage {
   readonly filingsMissing: readonly string[];
   readonly latestThroughDate: string | null;
   readonly perCandidate: readonly CandidateFinanceCoverage[];
+  /**
+   * THE SIDES OF A BALLOT QUESTION — the measure contest's symmetry unit.
+   *
+   * Optional in the TYPE and mandatory in the CHECK, deliberately. Making it
+   * required would have rewritten every existing candidate-contest record with
+   * an empty array, and an empty array is indistinguishable from "both sides
+   * were checked and neither has a committee". Undefined on a measure contest
+   * means the side question was never asked, and `sideSymmetryCheck` reports
+   * that as a FAILURE rather than as a pass — see `MEASURE_SIDES`.
+   */
+  readonly measureSides?: readonly MeasureSideCoverage[];
   readonly routes: readonly PlannedRoute[];
   readonly identityGaps: readonly string[];
   readonly amendmentGaps: readonly string[];

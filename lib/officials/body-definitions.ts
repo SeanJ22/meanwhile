@@ -781,36 +781,20 @@ export function bodyKindDefinitionFor(bodyId: string, ocdId: string | null): Def
 }
 
 /**
- * **The suffix the registry gives a body it DERIVED from a division.**
+ * The division-derivation predicate, RE-EXPORTED from its own leaf module.
  *
- * Not a naming convention this module invented — it is read off
- * `registry.json`, and the equivalence with `bodyOrigin ===
- * "DERIVED_FROM_DIVISION_TYPE"` is asserted over every body in the suite. A
- * division type absent from this table has no derived body, so nothing on it
- * can be a division's own government.
+ * It moved to `lib/officials/division-government.ts` on 2026-08-29 because it
+ * is a string comparison and this module is the definition CORPUS: every
+ * consumer of the predicate was dragging `body-blurbs`, `body-form` and
+ * `form-definitions` in behind it, which took `/api/meetings` one file over its
+ * committed trace ceiling the moment the govern-verb repair started asking the
+ * question. Re-exported so every existing importer is unchanged and there stays
+ * exactly one implementation.
  */
-const DERIVED_BODY_SUFFIX: Partial<Record<BodyDivisionType, string>> = {
-  place: "governing",
-  county: "governing",
-  school_district: "board",
-};
-
-/**
- * Whether this body IS the government of the division it sits on.
- *
- * Everything division-derived — the class definition, the form stamp, the
- * by-division blurb — is gated on this and may never be reached without it.
- */
-export function isDivisionsOwnGovernment(
-  bodyId: string,
-  ocdId: string | null,
-  divisionType: BodyDivisionType,
-): boolean {
-  if (ocdId === null) return false;
-  const suffix = DERIVED_BODY_SUFFIX[divisionType];
-  if (suffix === undefined) return false;
-  return bodyId === `${ocdId}#${suffix}`;
-}
+export { DERIVED_BODY_SUFFIX, isDivisionsOwnGovernment } from "./division-government.ts";
+/* Re-exporting does not bring the name into THIS module's scope, and
+   `definitionsForBody` gates all three division-derived layers on it. */
+import { isDivisionsOwnGovernment } from "./division-government.ts";
 
 export interface BodyDefinitions {
   /** Always present where a class row exists for this state and class. */

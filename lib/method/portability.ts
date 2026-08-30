@@ -90,6 +90,233 @@ export interface ApplicabilityVerdict {
    * marked, so a report can never claim the route was known to fit.
    */
   speculative: boolean;
+  /** The typed grade this verdict derives from. See `gradeApplicability`. */
+  grade: ApplicabilityGrade;
+  /** Dimensions the predicate actually CHECKED AND MATCHED. Empty means none. */
+  matchedDimensions: readonly ApplicabilityDimension[];
+  /**
+   * Dimensions the route or the jurisdiction left UNSTATED, so the predicate
+   * could not check them. This is the audit trail for "why did this flow
+   * through?" and it is a field rather than a sentence so a report can print it.
+   */
+  unstatedDimensions: readonly ApplicabilityDimension[];
+}
+
+/** The typed dimensions applicability can be narrowed on. */
+export const APPLICABILITY_DIMENSIONS = [
+  "state",
+  "governmentType",
+  "platform",
+  "publisher",
+] as const;
+export type ApplicabilityDimension = (typeof APPLICABILITY_DIMENSIONS)[number];
+
+/**
+ * **THE THREE ANSWERS, AND THE MIDDLE ONE IS NOT A BOOLEAN.**
+ *
+ * `appliesTo` used to answer one question with `applies: boolean` and hang a
+ * `speculative` flag off the side. Every consumer that read `.applies` got
+ * "yes" for both a route PROVEN here and a route merely OFFERED here — and one
+ * of those consumers is `evaluateCompletion`, whose whole job is to know the
+ * difference. Its refusal says "Inherited route X **is applicable to this
+ * subject**", which for an UNKNOWN-portability offer is a claim this module
+ * explicitly refuses to make one struct over.
+ *
+ * So the answer is graded:
+ *
+ *   - `EXCLUDED` — a typed dimension the route STATES excludes this jurisdiction.
+ *   - `PROVEN` — at least one dimension was checked AND MATCHED, or the route
+ *     carries evidence-backed reach that covers this jurisdiction.
+ *   - `OFFERED_UNPROVEN` — the route is still offered, because RULING 178's bias
+ *     is toward offering, but NOTHING was proven about its fit here.
+ *
+ * **ZERO DIMENSIONS MATCHED IS NOT PROOF.** That sentence is the fix. The old
+ * code returned `speculative: false` for `GOVERNMENT_TYPE`, `PLATFORM_SPECIFIC`,
+ * `PUBLISHER_SPECIFIC` and `DOCUMENT_TYPE` with the reason "match not excluded"
+ * — granting proven status to a route that named a narrowing dimension and then
+ * left it EMPTY, or whose jurisdiction never stated that dimension. That is
+ * exactly how a school-district technique becomes a proven county route: not by
+ * matching anything, but by there being nothing to fail. An underspecified
+ * constraint is an ABSENT constraint, and an absent constraint proves nothing.
+ */
+export const APPLICABILITY_GRADES = ["EXCLUDED", "PROVEN", "OFFERED_UNPROVEN"] as const;
+export type ApplicabilityGrade = (typeof APPLICABILITY_GRADES)[number];
+
+interface DimensionReading {
+  matched: ApplicabilityDimension[];
+  unstated: ApplicabilityDimension[];
+  excludedBy: { dimension: ApplicabilityDimension; reason: string } | null;
+}
+
+/**
+ * Read the four typed dimensions once, and record for each one whether it
+ * MATCHED, EXCLUDED, or was never stated by one side or the other.
+ *
+ * "Never stated" is tracked separately from "matched" on purpose. Collapsing
+ * them is the whole defect: a route with `publishers: []` and a jurisdiction
+ * with no publisher have not agreed about anything.
+ */
+function readDimensions(a: Applicability, j: Jurisdiction): DimensionReading {
+  const matched: ApplicabilityDimension[] = [];
+  const unstated: ApplicabilityDimension[] = [];
+  let excludedBy: DimensionReading["excludedBy"] = null;
+
+  const check = (
+    dimension: ApplicabilityDimension,
+    routeValues: readonly string[],
+    jurisdictionValue: string | undefined,
+    reason: string,
+  ): void => {
+    if (routeValues.length === 0 || !jurisdictionValue) {
+      unstated.push(dimension);
+      return;
+    }
+    if (routeValues.includes(jurisdictionValue)) matched.push(dimension);
+    else if (!excludedBy) excludedBy = { dimension, reason };
+  };
+
+  check("publisher", a.publishers, j.publisher, `publisher-specific to ${a.publishers.join(", ")}`);
+  check("platform", a.platforms, j.platform, `platform-specific to ${a.platforms.join(", ")}`);
+  check(
+    "governmentType",
+    a.governmentTypes,
+    j.governmentType,
+    `government-type-specific to ${a.governmentTypes.join(", ")}`,
+  );
+
+  /*
+   * STATE IS READ, AND IT MAY NOT EXCLUDE HERE.
+   *
+   * `a.states` is a record of where a route has been PROVEN, not a declaration
+   * of where it is confined. A route walked once in New Hampshire that says
+   * nothing about its reach is an UNKNOWN route with one data point, and
+   * refusing to offer it in Arizona would withhold a route on evidence that was
+   * never a constraint — the expensive direction (RULING 178). Which portability
+   * classes are entitled to EXCLUDE on state is decided in the switch below,
+   * where the route has actually claimed a state-bounded reach.
+   */
+  if (a.states.length === 0) unstated.push("state");
+  else if (a.states.includes(j.state)) matched.push("state");
+  else unstated.push("state");
+
+  return { matched, unstated, excludedBy };
+}
+
+/**
+ * Grade this route's applicability to this jurisdiction.
+ *
+ * `gradeApplicability` is the rule. `appliesTo` is a thin compatibility wrapper
+ * over it, so there is exactly one implementation and no way for the boolean and
+ * the grade to drift apart.
+ */
+export function gradeApplicability(a: Applicability, j: Jurisdiction): ApplicabilityVerdict {
+  const dims = readDimensions(a, j);
+  const base = {
+    matchedDimensions: dims.matched,
+    unstatedDimensions: dims.unstated,
+  };
+
+  if (dims.excludedBy) {
+    const { reason } = dims.excludedBy;
+    return { applies: false, reason, speculative: false, grade: "EXCLUDED", ...base };
+  }
+
+  const proven = (reason: string): ApplicabilityVerdict => ({
+    applies: true,
+    reason,
+    speculative: false,
+    grade: "PROVEN",
+    ...base,
+  });
+  /**
+   * OFFERED, never withheld. `applies` stays true so no route is ever dropped
+   * from a hunt — RULING 178's bias is untouched. What changes is the GRADE,
+   * which is what a consumer needing proof must read.
+   */
+  const offered = (reason: string): ApplicabilityVerdict => ({
+    applies: true,
+    reason,
+    speculative: true,
+    grade: "OFFERED_UNPROVEN",
+    ...base,
+  });
+
+  switch (a.portability) {
+    case "NATIONWIDE":
+      // The only class whose evidence is, by its own claim, unnarrowed.
+      // `overGeneralized` is the guard that stops it being claimed cheaply.
+      return proven("nationwide");
+
+    case "STATE_SPECIFIC":
+    case "JURISDICTION_SPECIFIC":
+      return a.states.includes(j.state)
+        ? proven(`proven in ${j.state}`)
+        : {
+            applies: false,
+            reason: `${a.portability.toLowerCase().replace("_", "-")} to ${a.states.join(", ") || "an unrecorded state"}`,
+            speculative: false,
+            grade: "EXCLUDED",
+            ...base,
+          };
+
+    case "STATE_FAMILY": {
+      /*
+       * THE INTERSECTION, NOT THE UNION — and the old code had it backwards.
+       *
+       * It built `new Set([...a.states, ...j.family])` and asked whether
+       * `j.state` was in it. A jurisdiction that lists ITSELF in its own family
+       * therefore proved every state-family route applied to it: the subject
+       * supplied the evidence for the claim about the subject. The honest
+       * question is whether the route was PROVEN SOMEWHERE this jurisdiction
+       * calls kin, so it is `a.states ∩ ({j.state} ∪ j.family)`.
+       */
+      const kin = new Set([j.state, ...(j.family ?? [])]);
+      const shared = a.states.filter((s) => kin.has(s));
+      if (shared.length > 0) return proven(`proven in ${shared.join(", ")}, kin to ${j.state}`);
+      return {
+        applies: false,
+        reason:
+          `state-family route proven in ${a.states.join(", ") || "no recorded state"}; ` +
+          `none is kin to ${j.state}`,
+        speculative: false,
+        grade: "EXCLUDED",
+        ...base,
+      };
+    }
+
+    case "GOVERNMENT_TYPE":
+    case "PLATFORM_SPECIFIC":
+    case "PUBLISHER_SPECIFIC":
+    case "DOCUMENT_TYPE": {
+      /*
+       * A CLASS THAT NAMES A NARROWING DIMENSION MUST HAVE MATCHED ONE.
+       *
+       * `DOCUMENT_TYPE` names no dimension in `Applicability` at all, so it can
+       * never reach proof through this path — which is honest: nothing in the
+       * type system records which document type it means.
+       */
+      const required: Partial<Record<PortabilityClass, ApplicabilityDimension>> = {
+        GOVERNMENT_TYPE: "governmentType",
+        PLATFORM_SPECIFIC: "platform",
+        PUBLISHER_SPECIFIC: "publisher",
+      };
+      const dimension = required[a.portability];
+      if (dimension && dims.matched.includes(dimension)) {
+        return proven(`${a.portability.toLowerCase()} match on ${dimension}`);
+      }
+      return offered(
+        `${a.portability.toLowerCase()} but ${
+          dimension
+            ? `its ${dimension} constraint is unstated on one side — not excluded is not matched`
+            : "the class names no checkable dimension"
+        } (RULING 178: offered, not proven)`,
+      );
+    }
+
+    case "UNKNOWN":
+    default:
+      return offered("portability unknown — offered, not proven (RULING 178)");
+  }
 }
 
 /**
@@ -101,65 +328,13 @@ export interface ApplicabilityVerdict {
  * a fact nobody finds, and nothing in the system would ever surface that. Those
  * are not comparable, which is the same reasoning the deploy-path allowlist
  * uses in RULING 124.
+ *
+ * `applies` therefore answers "should this be hunted here?", which is a
+ * different question from "is it known to fit here?". The second is
+ * `grade === "PROVEN"`, and a consumer that needs proof must ask for it by name.
  */
 export function appliesTo(a: Applicability, j: Jurisdiction): ApplicabilityVerdict {
-  const speculative = a.portability === "UNKNOWN";
-
-  if (a.publishers.length && j.publisher && !a.publishers.includes(j.publisher)) {
-    return { applies: false, reason: `publisher-specific to ${a.publishers.join(", ")}`, speculative: false };
-  }
-  if (a.platforms.length && j.platform && !a.platforms.includes(j.platform)) {
-    return { applies: false, reason: `platform-specific to ${a.platforms.join(", ")}`, speculative: false };
-  }
-  if (
-    a.governmentTypes.length &&
-    j.governmentType &&
-    !a.governmentTypes.includes(j.governmentType)
-  ) {
-    return {
-      applies: false,
-      reason: `government-type-specific to ${a.governmentTypes.join(", ")}`,
-      speculative: false,
-    };
-  }
-
-  switch (a.portability) {
-    case "NATIONWIDE":
-      return { applies: true, reason: "nationwide", speculative: false };
-    case "STATE_SPECIFIC":
-    case "JURISDICTION_SPECIFIC":
-      return a.states.includes(j.state)
-        ? { applies: true, reason: `proven in ${j.state}`, speculative: false }
-        : {
-            applies: false,
-            reason: `${a.portability.toLowerCase().replace("_", "-")} to ${a.states.join(", ") || "an unrecorded state"}`,
-            speculative: false,
-          };
-    case "STATE_FAMILY": {
-      const family = new Set([...a.states, ...(j.family ?? [])]);
-      return family.has(j.state)
-        ? { applies: true, reason: `state family includes ${j.state}`, speculative: false }
-        : {
-            applies: false,
-            reason: `state-family route; ${j.state} is not in ${[...family].join(", ") || "the recorded family"}`,
-            speculative: false,
-          };
-    }
-    case "GOVERNMENT_TYPE":
-    case "PLATFORM_SPECIFIC":
-    case "PUBLISHER_SPECIFIC":
-    case "DOCUMENT_TYPE":
-      // The narrowing dimension was checked above and did not exclude it —
-      // either it matched, or the jurisdiction did not state that dimension.
-      return { applies: true, reason: `${a.portability.toLowerCase()} match not excluded`, speculative: false };
-    case "UNKNOWN":
-    default:
-      return {
-        applies: true,
-        reason: "portability unknown — offered, not proven (RULING 178)",
-        speculative,
-      };
-  }
+  return gradeApplicability(a, j);
 }
 
 /**

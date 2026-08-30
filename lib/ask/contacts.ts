@@ -41,6 +41,8 @@ import { formatDateLong } from "../text/format-date.ts";
 import { rosterForBody } from "../registry/body-rosters.ts";
 import { representationForDivision } from "../registry/representation.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
+import { isDivisionsOwnGovernment } from "../officials/division-government.ts";
+import type { BodyDivisionType } from "../officials/body-blurbs.ts";
 
 /** Where a contact came from, so the answer can say the relationship out loud. */
 export type ContactBasis =
@@ -105,7 +107,7 @@ function isStaff(holder: SeatHolder): boolean {
  * With none it falls through to the curated governing roster, which is the
  * branch a school district or a county board answers on anyway.
  */
-export function contactsForBody(ocdId: string, bodyName: string): AskContact[] {
+export function contactsForDivision(ocdId: string, bodyName: string): AskContact[] {
   const holders = representationForDivision(null, ocdId);
   if (holders.length === 0) return [];
 
@@ -132,6 +134,53 @@ export function contactsForBody(ocdId: string, bodyName: string): AskContact[] {
       };
     })
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * **THE PEOPLE ON ONE EXACT BODY — and nobody, where we cannot say who.**
+ * (2026-08-29, the exact-body-identity session.)
+ *
+ * `contactsForDivision` above answers *who represents this AREA*. That is a
+ * different question from *who sits on THIS BODY*, and the two were one
+ * function because Ask could only name divisions. Now that a reader can bind
+ * the Tucson Design Review Board, the difference is load-bearing: the division
+ * resolver would hand back Tucson's Mayor and Council, and the caller would
+ * render them as *"Member on Design Review Board"* — a sourced-looking sentence
+ * about real named people that is simply false.
+ *
+ * That is the exact failure this module's own doc block already warned about
+ * one layer down, where `tests/body-composition.test.ts` bans
+ * `governingRosterHoldersForDivision` outside two callers *because the
+ * convenient division fallback is what once gave a Tucson advisory board the
+ * Mayor and Council as its membership*. The ban was right; the division
+ * question simply arrived through a different door.
+ *
+ * **So the division's representatives are offered ONLY for the body that IS
+ * that division's government**, decided by the registry's own derivation rule
+ * (`isDivisionsOwnGovernment`) rather than by a suffix guessed here. For every
+ * other body the honest answer is none, and the caller already turns that into
+ * a named gap that says whose gap it is: *"We have not recorded who sits on X
+ * or how to reach them."* True about us, and silent about them.
+ *
+ * Returning nothing is the conservative direction and it is a REAL answer. The
+ * alternative on offer is not "more contacts", it is wrong contacts.
+ */
+export function contactsForBody(
+  body: { bodyId: string; ocdId: string | null; divisionType: string | null },
+  bodyName: string,
+): AskContact[] {
+  const { bodyId, ocdId, divisionType } = body;
+  if (!ocdId || !divisionType) return [];
+  /*
+   * The cast is to the registry's own vocabulary and it is safe in the only
+   * direction that matters: `isDivisionsOwnGovernment` looks the value up in
+   * `DERIVED_BODY_SUFFIX` and returns FALSE for anything it does not know. An
+   * unrecognised division type therefore yields no contacts rather than the
+   * wrong ones.
+   */
+  const known = divisionType as BodyDivisionType;
+  if (!isDivisionsOwnGovernment(bodyId, ocdId, known)) return [];
+  return contactsForDivision(ocdId, bodyName);
 }
 
 /**

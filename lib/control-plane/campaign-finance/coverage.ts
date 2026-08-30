@@ -37,11 +37,13 @@
  */
 
 import {
+  MEASURE_SIDES,
   depthRank,
   type AcquisitionDepth,
   type CampaignFinanceCoverage,
   type CandidateFinanceCoverage,
   type CoverageStatus,
+  type MeasureSideCoverage,
 } from "./model.ts";
 
 /* ── Named gaps ───────────────────────────────────────────────────────────── */
@@ -73,6 +75,15 @@ export const GAP_KINDS = [
    * is not in the list being swept.
    */
   "COVERAGE_RECORD_ABSENT",
+  /**
+   * A ballot question whose two SIDES were not covered equally — or where the
+   * side question was never asked at all.
+   *
+   * The unit of neutrality in a candidate contest is the candidate. In a measure
+   * contest there are no candidates, so the unit is the SIDE, and until this
+   * kind existed nothing was checking it.
+   */
+  "MEASURE_SIDE_UNCOVERED",
 ] as const;
 export type GapKind = (typeof GAP_KINDS)[number];
 
@@ -98,7 +109,11 @@ export interface SymmetryFinding {
     | "AUTHORITY_DISCOVERY"
     | "COMPLETENESS"
     | "LATEST_THROUGH"
-    | "COVERAGE_RECORD_ABSENT";
+    | "COVERAGE_RECORD_ABSENT"
+    /** One side of a ballot question carries no coverage record, or was never asked about. */
+    | "MEASURE_SIDE_ABSENT"
+    /** One side's committee register was read and the other's was not. */
+    | "COMMITTEE_UNIVERSE_SOURCE";
   readonly deeper: string;
   readonly shallower: string;
   readonly detail: string;
@@ -287,6 +302,215 @@ export function symmetryCheck(coverage: CampaignFinanceCoverage): SymmetryReport
   };
 }
 
+/* ── The OTHER symmetry unit: the sides of a ballot question ──────────────── */
+
+/**
+ * **A MEASURE HAS NO CANDIDATES, SO `symmetryCheck` HAS NOTHING TO COMPARE.**
+ *
+ * That is not a small omission, it is a hole shaped exactly like the guard. Run
+ * `symmetryCheck` on Proposition 423 and it reports:
+ *
+ * > 0 candidate coverage record(s) — there is no second candidate to be
+ * > asymmetric with.
+ *
+ * …and returns `SYMMETRIC`. A contest where the YES committees were hunted, the
+ * NO committees were not, and nobody recorded a reason, passes the neutrality
+ * guard cleanly — because the guard was counting the wrong noun. Money shown for
+ * one side of a ballot question and absent for the other is read by a reader as
+ * one side having raised nothing, which is the same failure as the four-card
+ * candidate contest, one tier down.
+ *
+ * So the unit here is the SIDE, and the three states are kept apart:
+ *
+ *   - `measureSides` **undefined** — the side question was never asked. FAILURE,
+ *     and it must be, because the alternative is that forgetting to ask is
+ *     indistinguishable from asking and finding nothing.
+ *   - a side present with `committeeUniverseSource: null` — we did not read a
+ *     register, so we do not know what is on that side. A gap.
+ *   - a side present with a source and an empty committee list — the register
+ *     WAS read and that side has no registered committee. A finding about the
+ *     filers, and legitimately symmetric with the other side only if the other
+ *     side was read from the same register.
+ *
+ * A candidate contest returns `SYMMETRIC` from here with no findings: the side
+ * unit does not apply, `symmetryCheck` governs it, and reporting a false failure
+ * would train a reader to ignore this guard.
+ */
+export function sideSymmetryCheck(coverage: CampaignFinanceCoverage): SymmetryReport {
+  if (coverage.candidateUniverse.length > 0) {
+    return {
+      contestId: coverage.contestId,
+      verdict: "SYMMETRIC",
+      findings: [],
+      unexplained: [],
+      why:
+        `${coverage.contestId} is a candidate contest — its neutrality unit is the CANDIDATE, and ` +
+        "symmetryCheck governs it. The side unit does not apply here.",
+    };
+  }
+
+  const sides = coverage.measureSides;
+  if (sides === undefined) {
+    const findings: SymmetryFinding[] = MEASURE_SIDES.map((side) => ({
+      dimension: "MEASURE_SIDE_ABSENT",
+      deeper: coverage.contestId,
+      shallower: `${coverage.contestId}#${side}`,
+      detail:
+        `${coverage.contestId} is a ballot question with no candidates, and it carries no side ` +
+        `coverage at all — so the ${side} side has not been asked about. A measure's neutrality ` +
+        "unit is the side; comparing a list of candidates that is empty on both sides reports " +
+        "perfect symmetry for a contest nobody covered.",
+      explainedBy: null,
+    }));
+    return {
+      contestId: coverage.contestId,
+      verdict: "FAILURE",
+      findings,
+      unexplained: findings,
+      why:
+        `${coverage.contestId} has no candidates and no measureSides record. The side question was ` +
+        "never asked, and an unasked question is not a symmetric answer.",
+    };
+  }
+
+  const bySide = new Map<string, MeasureSideCoverage>(sides.map((s) => [s.side, s]));
+  const findings: SymmetryFinding[] = [];
+
+  for (const side of MEASURE_SIDES) {
+    if (!bySide.has(side)) {
+      findings.push({
+        dimension: "MEASURE_SIDE_ABSENT",
+        deeper: `${coverage.contestId}#${MEASURE_SIDES.filter((s) => s !== side).join("/")}`,
+        shallower: `${coverage.contestId}#${side}`,
+        detail:
+          `The ${side} side of ${coverage.contestId} carries no coverage record while the other ` +
+          "side does. A side that is absent from the comparison cannot be found by comparing the " +
+          "sides that are present, and it can carry no explanation either — the record that would " +
+          "hold one is the thing that is missing.",
+        explainedBy: null,
+      });
+    }
+  }
+
+  const present = MEASURE_SIDES.map((s) => bySide.get(s)).filter(
+    (s): s is MeasureSideCoverage => s !== undefined,
+  );
+
+  if (present.length === 2) {
+    const [a, b] = present;
+    const explanationFor = (side: MeasureSideCoverage): string | null => {
+      const e = side.asymmetryExplanation;
+      return e && e.sourceCitation.trim().length > 0
+        ? `${e.reason} [${e.sourceCitation}, recorded ${e.recordedOn}]`
+        : null;
+    };
+
+    const deeper = depthRank(a.acquisitionDepth) >= depthRank(b.acquisitionDepth) ? a : b;
+    const shallower = deeper === a ? b : a;
+
+    if (depthRank(shallower.acquisitionDepth) < depthRank(deeper.acquisitionDepth)) {
+      findings.push({
+        dimension: "ACQUISITION_DEPTH",
+        deeper: `${coverage.contestId}#${deeper.side}`,
+        shallower: `${coverage.contestId}#${shallower.side}`,
+        detail:
+          `The ${shallower.side} side is covered to ${shallower.acquisitionDepth} while the ` +
+          `${deeper.side} side is covered to ${deeper.acquisitionDepth} on the same question.`,
+        explainedBy: explanationFor(shallower),
+      });
+    }
+
+    /**
+     * THE REGISTER ASYMMETRY, which is the one that actually happens.
+     *
+     * Nobody sets out to hunt one side of a bond override. What happens is that
+     * a committee turns up under a searchable name on one side, the other side
+     * has no obvious name to search, and the second search never gets recorded
+     * as owed. A null `committeeUniverseSource` beside a non-null one is that,
+     * exactly, and it is invisible in a committee count because both sides can
+     * read zero.
+     */
+    if ((a.committeeUniverseSource === null) !== (b.committeeUniverseSource === null)) {
+      const unread = a.committeeUniverseSource === null ? a : b;
+      const read = unread === a ? b : a;
+      findings.push({
+        dimension: "COMMITTEE_UNIVERSE_SOURCE",
+        deeper: `${coverage.contestId}#${read.side}`,
+        shallower: `${coverage.contestId}#${unread.side}`,
+        detail:
+          `The ${read.side} side's committee universe was read from ${read.committeeUniverseSource}; ` +
+          `the ${unread.side} side's was never read from anything. An empty committee list with no ` +
+          "source is not a finding that no committee registered — it is a search nobody ran.",
+        explainedBy: explanationFor(unread),
+      });
+    }
+
+    if (!a.filingAuthorityResolved !== !b.filingAuthorityResolved) {
+      const unresolved = a.filingAuthorityResolved ? b : a;
+      findings.push({
+        dimension: "AUTHORITY_DISCOVERY",
+        deeper: `${coverage.contestId}#${(unresolved === a ? b : a).side}`,
+        shallower: `${coverage.contestId}#${unresolved.side}`,
+        detail:
+          `The filing authority is resolved for one side of ${coverage.contestId} and not for the ` +
+          `${unresolved.side} side. The custodian is a property of the QUESTION; one side's ` +
+          "resolution is the other's too unless a filed reason says otherwise.",
+        explainedBy: explanationFor(unresolved),
+      });
+    }
+
+    if (a.filingsAcquired.length !== b.filingsAcquired.length) {
+      const fewer = a.filingsAcquired.length < b.filingsAcquired.length ? a : b;
+      const more = fewer === a ? b : a;
+      findings.push({
+        dimension: "COMPLETENESS",
+        deeper: `${coverage.contestId}#${more.side}`,
+        shallower: `${coverage.contestId}#${fewer.side}`,
+        detail:
+          `The ${fewer.side} side holds ${fewer.filingsAcquired.length} filing(s) against the ` +
+          `${more.side} side's ${more.filingsAcquired.length} on the same question.`,
+        explainedBy: explanationFor(fewer),
+      });
+    }
+  }
+
+  const unexplained = findings.filter((f) => f.explainedBy === null);
+
+  if (findings.length === 0) {
+    return {
+      contestId: coverage.contestId,
+      verdict: "SYMMETRIC",
+      findings,
+      unexplained,
+      why:
+        `Both sides of ${coverage.contestId} are covered to the same depth, from the same register, ` +
+        "under the same resolved authority, with the same number of filings held.",
+    };
+  }
+  if (unexplained.length === 0) {
+    return {
+      contestId: coverage.contestId,
+      verdict: "EXPLAINED_ASYMMETRY",
+      findings,
+      unexplained,
+      why:
+        `${findings.length} asymmetr(y/ies) between the sides of ${coverage.contestId}, every one ` +
+        "carrying a source-supported explanation. The difference is a property of the filings, not " +
+        "of how hard either side was hunted.",
+    };
+  }
+  return {
+    contestId: coverage.contestId,
+    verdict: "FAILURE",
+    findings,
+    unexplained,
+    why:
+      `${unexplained.length} unexplained asymmetr(y/ies) between the sides of ${coverage.contestId}. ` +
+      "A reader cannot tell 'this side raised less' from 'we looked less hard at this side', and " +
+      "the second is this product putting a thumb on the scale of a ballot question.",
+  };
+}
+
 /* ── Feature eligibility, failing closed ──────────────────────────────────── */
 
 export interface FeatureEligibility {
@@ -420,6 +644,12 @@ export interface CoverageVerdict {
   readonly candidatesComplete: number;
   readonly openRouteIds: readonly string[];
   readonly symmetry: SymmetryReport;
+  /**
+   * The SIDE symmetry of a ballot question. Always present, and on a candidate
+   * contest it reports SYMMETRIC-not-applicable rather than being omitted, so a
+   * caller never has to know which kind of contest it is holding.
+   */
+  readonly sideSymmetry: SymmetryReport;
   readonly featureEligibility: FeatureEligibility;
   readonly deepestAcquisition: AcquisitionDepth;
   readonly why: string;
@@ -578,6 +808,30 @@ export function evaluateCoverage(
   }
 
   const symmetry = symmetryCheck(coverage);
+
+  /**
+   * THE SIDE SWEEP, whose findings become gaps like any other.
+   *
+   * They are pushed as gaps rather than only reported alongside, because
+   * `COMPLETE_AS_OF` is derived from `gaps.length === 0` — a side failure that
+   * lived only in its own report would let a one-sided ballot question reach
+   * completion while the report beside it said FAILURE.
+   */
+  const sideSymmetry = sideSymmetryCheck(coverage);
+  for (const finding of sideSymmetry.unexplained) {
+    gaps.push({
+      kind: "MEASURE_SIDE_UNCOVERED",
+      subject: finding.shallower,
+      what: finding.detail,
+      nextMove:
+        finding.dimension === "MEASURE_SIDE_ABSENT"
+          ? "Record coverage for this side of the question — including, explicitly, whether a " +
+            "register was read and what it said. An unasked side is not an empty one."
+          : "Acquire this side to the same depth as the other, or file a source-supported " +
+            "explanation for why the filings themselves differ.",
+    });
+  }
+
   const featureEligibility = candidateFinanceFeatureEligibility(coverage);
   const complete = coverage.perCandidate.filter(candidateCoverageComplete).length;
   const deepest =
@@ -589,7 +843,12 @@ export function evaluateCoverage(
 
   let status: CoverageStatus;
   let why: string;
-  if (gaps.length === 0 && symmetry.verdict !== "FAILURE" && featureEligibility.eligible) {
+  if (
+    gaps.length === 0 &&
+    symmetry.verdict !== "FAILURE" &&
+    sideSymmetry.verdict !== "FAILURE" &&
+    featureEligibility.eligible
+  ) {
     status = "COMPLETE_AS_OF";
     why =
       `Every candidate on the ballot for ${coverage.contestId} is answered, no route is open, and ` +
@@ -617,6 +876,7 @@ export function evaluateCoverage(
     candidatesComplete: complete,
     openRouteIds: openRoutes.map((r) => r.declaration.routeId),
     symmetry,
+    sideSymmetry,
     featureEligibility,
     deepestAcquisition: deepest,
     why,

@@ -147,6 +147,36 @@ export const CLASS_PHRASES: readonly string[] = [
 export interface BindableEntity extends NameableEntity {
   /** The registry's own division type — `school_district`, `place`, `county`. */
   divisionType?: string | null;
+  /**
+   * **WHICH LEVEL OF CIVIC IDENTITY THIS ROW'S `id` IS.** (2026-08-29.)
+   *
+   * `nameClass: "body"` was carrying this and could not: `lib/ask/inventory.ts`
+   * stamped it onto rows whose `id` was a DIVISION, so the Ask pipeline called
+   * a division a body and retrieval filtered meetings by geography. A reader
+   * asking about the Pima County Board of Supervisors was given a Central
+   * Arizona Water Conservation District event, because both are recorded
+   * against the same county division.
+   *
+   * The distinction is TYPED rather than inferred, because inferring it is
+   * exactly what failed. A caller that filters civic records on `id` must know
+   * which id space it is in, and `"body"` answered a different question — what
+   * KIND of thing a reader can name — which is why one field could not do both.
+   *
+   * Optional so that callers which genuinely bind at one level only
+   * (`lib/ask/ballot-inventory.ts` mints contests, candidacies and measures;
+   * `lib/routing/ask.ts` already binds on the registry's own `bodyId`) are
+   * unchanged. A consumer that would substitute one level for the other must
+   * check it and must fail honestly when it is absent — never fall back to the
+   * division, which is the defect.
+   */
+  level?: "BODY" | "GOVERNMENT";
+  /**
+   * For a BODY, the division it SITS IN. An association, never an identity.
+   *
+   * Carried so a caller can report a body's geography and run the class
+   * tie-break without ever having the division id to hand as `id`.
+   */
+  ocdId?: string | null;
 }
 
 /**
@@ -219,6 +249,59 @@ export const COMMON_QUESTION_NOUNS: ReadonlySet<string> = new Set([
   "kid", "kids", "child", "children", "student", "students", "teacher",
   "house", "home", "neighborhood", "area", "district4", "news", "info",
 ]);
+
+/**
+ * **A NAME A READER COULD ACTUALLY HAVE TYPED.** (2026-08-29.)
+ *
+ * Nineteen of the seventy-eight bodies in the committed meetings corpus — very
+ * nearly a quarter — carry a registry name that identifies NOTHING on its own:
+ * seven called exactly *"Planning Board"*, four *"Budget Committee"*, three
+ * *"Select Board"*, plus *"Zoning Board"*, *"Road Committee"*, *"Housing
+ * Commission"* and Tucson's *"Planning Commission"*.
+ *
+ * `bindNamedEntity` declines those on purpose — that is the discipline
+ * `COMMON_QUESTION_NOUNS` exists for, and it is what stopped a question about
+ * Vail binding to a Tucson body called "Agenda Committee". The consequence was
+ * that a reader typing *"the Warner Planning Board"* got AMBIGUOUS: honest, and
+ * useless, about precisely the hyperlocal sitting this product exists to
+ * surface.
+ *
+ * ## The rule, and why it is not "prefix everything"
+ *
+ * Qualify with the division's own SOURCED label, and only where the body's own
+ * name carries no identifying token. Nothing is invented — "Warner" is the
+ * registry's label for the division and the body genuinely is Warner's planning
+ * board, so two sourced facts are stated together rather than a third one made
+ * up.
+ *
+ * Prefixing unconditionally would be a REGRESSION, and the corpus holds the
+ * case that proves it: the Central Arizona Water Conservation District is
+ * recorded against the Pima County division and is a multi-county district that
+ * is not Pima's. Qualifying it would demand the word "Pima" from a reader who
+ * would never say it and make the body unreachable — one silent failure traded
+ * for another. A body that already has its own name keeps it, untouched.
+ *
+ * **It lives here, beside the binder, because the test IS the binder's own skip
+ * condition.** Both Ask paths need it — `lib/ask/inventory.ts` builds from the
+ * meetings snapshot and `lib/routing/ask.ts` from the reader's covered bodies —
+ * and two copies of a naming rule is how the two surfaces come to disagree
+ * about which governments a reader can name (RULING 103).
+ */
+export function nameAReaderCanSay(
+  name: string | null | undefined,
+  divisionLabel: string | null | undefined,
+): string {
+  if (!name) return divisionLabel ?? "";
+  if (!divisionLabel) return name;
+  const distinctive = distinctiveTokens(name);
+  const identifiesItself =
+    distinctive.length > 0 && !distinctive.every((t) => COMMON_QUESTION_NOUNS.has(t));
+  if (identifiesItself) return name;
+  /* Already qualified — "Tucson Parks and Recreation Commission" must not
+     become "Tucson Tucson Parks and Recreation Commission". */
+  if (normalizeName(name).startsWith(normalizeName(divisionLabel))) return name;
+  return `${divisionLabel} ${name}`;
+}
 
 export type NamedEntityBinding =
   /** No government was named. Context/ZIP default routing may apply. */

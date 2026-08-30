@@ -58,12 +58,18 @@
  *   1  FROZEN
  */
 
+import { spawnSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+
 import { classifyDeploy } from "../lib/ops/deploy-paths.ts";
 import { floored } from "../lib/ops/denominator-floor.ts";
 import {
   MAX_READING_AGE_HOURS,
+  classifyEquivalenceRange,
   evaluateReleaseFreeze,
   explainFreeze,
+  sameCommit,
+  type ApplicationEquivalence,
   type ProductionObservation,
 } from "../lib/ops/production-integrity.ts";
 // `git` comes from the reader beside it rather than being written out again —
@@ -126,20 +132,86 @@ function readingAgeHours(observedAt: string | null, now: number): number | null 
  * cautious answer, so a gate that cannot see what changed refuses rather than
  * waves through.
  */
+/**
+ * Make a commit reachable in this checkout, deepening rather than
+ * unshallowing — the same move `scripts/db-shipping-gate.mts` makes, for the
+ * same reason: this repository's pack is 311 MiB, and `actions/checkout`
+ * clones at depth 1, so the base of a pull request is simply not here until
+ * it is fetched BY SHA.
+ */
+function ensureCommit(sha: string): boolean {
+  if (git("cat-file", "-e", `${sha}^{commit}`) !== null) return true;
+  for (const depth of [100, 1000]) {
+    spawnSync("git", ["fetch", `--depth=${depth}`, "origin", sha], {
+      stdio: "ignore",
+      env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+    });
+    if (git("cat-file", "-e", `${sha}^{commit}`) !== null) return true;
+  }
+  return false;
+}
+
 function changedPaths(): { paths: readonly string[] | null; how: string } {
   const stated = arg("paths");
   if (stated !== undefined) {
     return { paths: stated.split(",").map((p) => p.trim()).filter(Boolean), how: "stated on the command line" };
   }
 
+  /*
+   * ON CI THE BASE IS TAKEN FROM THE PLATFORM, NEVER FROM A LOCAL REF.
+   * (2026-08-30, measured on Build Check run #463: PR #227 changed four
+   * `docs/` files and this gate printed COULD NOT BE READ, because the old
+   * code diffed against `origin/main` — a ref a depth-1 `actions/checkout`
+   * does not have — so a docs-only pull request classified `cannot-tell`,
+   * which is production-changing, and the freeze reached paperwork it is
+   * scoped never to reach. `HEAD~1` on a push failed the same way.)
+   *
+   * `scripts/db-shipping-gate.mts` worked this out first, and this is the
+   * same shape: a pull request diffs against `pull_request.base.sha` from the
+   * event payload — fetched by sha when absent — and the checkout's
+   * `refs/pull/N/merge` HEAD already merges the base, so `diff base HEAD` is
+   * exactly the pull request's own changes. A push takes the event's own
+   * added/modified/removed lists, which need no history at all. A payload
+   * that cannot be read stays `null` — COULD NOT BE READ is still the honest
+   * answer when it is true; it just may never be the answer for a readable
+   * pull request.
+   */
   const event = process.env.GITHUB_EVENT_NAME;
+  const eventPath = process.env.GITHUB_EVENT_PATH;
   if (event === "pull_request" || event === "push") {
-    const base = event === "pull_request" ? "origin/main" : "HEAD~1";
-    const diff = git("diff", "--name-only", `${base}...HEAD`) ?? git("diff", "--name-only", base, "HEAD");
-    if (diff !== null) {
-      return { paths: diff.split("\n").filter(Boolean), how: `git diff against ${base}` };
+    if (!eventPath) return { paths: null, how: `a ${event} event named no payload file` };
+    try {
+      const payload = JSON.parse(readFileSync(eventPath, "utf8")) as {
+        commits?: { added?: string[]; modified?: string[]; removed?: string[] }[];
+        pull_request?: { base?: { sha?: string } };
+      };
+
+      if (event === "push" && Array.isArray(payload.commits)) {
+        const paths = new Set<string>();
+        for (const c of payload.commits) {
+          for (const p of [...(c.added ?? []), ...(c.modified ?? []), ...(c.removed ?? [])]) paths.add(p);
+        }
+        return { paths: [...paths], how: "the push event's own commit list" };
+      }
+
+      const base = payload.pull_request?.base?.sha;
+      if (event === "pull_request" && base) {
+        if (!ensureCommit(base)) {
+          return { paths: null, how: `the base ${base.slice(0, 7)} could not be fetched into this checkout` };
+        }
+        const diff = git("diff", "--name-only", base, "HEAD");
+        if (diff !== null) {
+          return {
+            paths: diff.split("\n").filter(Boolean),
+            how: `git diff ${base.slice(0, 7)}..HEAD (the pull request's base, from the event payload)`,
+          };
+        }
+        return { paths: null, how: `the base ${base.slice(0, 7)} could not be diffed against HEAD` };
+      }
+      return { paths: null, how: `the ${event} payload carried no usable base or commit list` };
+    } catch (error) {
+      return { paths: null, how: `the event payload could not be read — ${(error as Error).message}` };
     }
-    return { paths: null, how: "the diff could not be read on this checkout" };
   }
 
   const diff = git("diff", "--name-only", "origin/main...HEAD");
@@ -156,6 +228,59 @@ function changedPaths(): { paths: readonly string[] | null; how: string } {
   return { paths: [...all], how: "origin/main...HEAD plus the working tree" };
 }
 
+/**
+ * PROVE, OR FAIL TO PROVE, THAT TWO COMMITS CARRY THE SAME APPLICATION — NH289.
+ *
+ * The post-deploy observer commits `data/ops/production-integrity.json`, a
+ * path the deploy predicate itself classifies as non-shipping — and when that
+ * commit lands while the app-bearing build is still in flight, Netlify builds
+ * it riding the accumulated diff, so production REPORTS the observer's sha
+ * while SERVING the measured release's application. Measured 2026-08-30:
+ * `9fb33469` merged at 07:37:09Z, the observer's `5169fa32` landed 62 seconds
+ * later, production served `5169fa32`, and the next pull request froze on
+ * PRODUCTION_MOVED over a range containing exactly one `data/ops/` file.
+ *
+ * The proof is git evidence, recomputed every run, and both halves must hold:
+ *
+ *   1. DESCENT — the recorded release is an ancestor of the served commit.
+ *      A served commit that does not descend from the measured release is a
+ *      different history, whatever its tree looks like.
+ *   2. NON-SHIPPING RANGE — every path changed across recorded..served is
+ *      non-shipping under `classifyDeploy`, the exact predicate the deploy
+ *      filter runs. One app file, one migration, one anything-shipping in the
+ *      range destroys equivalence.
+ *
+ * There is no input that states the answer. An unreachable commit, a history
+ * too shallow to prove descent even after deepening, or an unreadable diff is
+ * CANNOT_TELL — and CANNOT_TELL freezes, exactly as an unproven range should.
+ */
+function proveApplicationEquivalence(recordedSha: string, servedSha: string): ApplicationEquivalence {
+  for (const [label, sha] of [["recorded release", recordedSha], ["served commit", servedSha]] as const) {
+    if (!ensureCommit(sha)) {
+      return {
+        verdict: "CANNOT_TELL",
+        how: `the ${label} ${sha.slice(0, 7)} could not be fetched into this checkout, so nothing about the range can be proved`,
+      };
+    }
+  }
+
+  // `--is-ancestor` answers with its EXIT CODE — 0 is yes, 1 is no, anything
+  // else is "git could not say" — so it is the one git call here that cannot
+  // go through the returns-null-on-nonzero helper without collapsing "no"
+  // into "unknown", which are different verdicts below.
+  const ancestry = spawnSync("git", ["merge-base", "--is-ancestor", recordedSha, servedSha], {
+    encoding: "utf8",
+    env: { ...process.env, GIT_TERMINAL_PROMPT: "0" },
+  });
+  const diff = git("diff", "--name-only", recordedSha, servedSha);
+  return classifyEquivalenceRange({
+    recordedSha,
+    servedSha,
+    ancestry: ancestry.status === 0 ? "ancestor" : ancestry.status === 1 ? "not-ancestor" : "unknown",
+    rangePaths: diff === null ? null : diff.split("\n").filter(Boolean),
+  });
+}
+
 async function main(): Promise<void> {
   const record = readRecord();
   const { paths, how } = changedPaths();
@@ -163,6 +288,13 @@ async function main(): Promise<void> {
   const baseUrl = arg("base-url") ?? PRODUCTION_BASE_URL;
 
   const served = await observeProduction(baseUrl);
+  // The equivalence proof is taken only when there is a difference for it to
+  // be about, and it is measured here — the pure module consumes it and never
+  // runs git itself.
+  const equivalence =
+    record.deployedSha !== null && served.sha !== null && !sameCommit(record.deployedSha, served.sha)
+      ? proveApplicationEquivalence(record.deployedSha, served.sha)
+      : null;
   const production: ProductionObservation = {
     servedSha: served.sha,
     how: served.how,
@@ -170,6 +302,7 @@ async function main(): Promise<void> {
     // The bound is the exported constant, passed explicitly. There is no
     // environment variable and no flag that can move it (see the module header).
     maxAgeHours: MAX_READING_AGE_HOURS,
+    equivalence,
   };
 
   const verdict = evaluateReleaseFreeze({ record, candidateSha, changedPaths: paths, production });

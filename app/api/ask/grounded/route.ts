@@ -1471,7 +1471,14 @@ export async function POST(request: Request) {
 
   if (synthesis.kind === "WROTE") {
     trace.synthesis = { ran: true, model: synthesis.model, ms: synthesis.ms };
-    const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack);
+    /*
+     * The body inventory rides along as the known-subject universe, so the
+     * substitution check can refuse prose that NAMES a different government we
+     * hold — and only that. It no longer demands the prose repeat the
+     * subject's name; the deterministic framing already names the subject, and
+     * "The Board voted 5-0..." is correct anaphora, not a substitution (NH288).
+     */
+    const verdict = validateAnswer(synthesis.answer, synthesis.citedUrls, pack, bodies);
     validationPassed = verdict.kind === "PASSED";
     trace.validation = {
       ran: true,

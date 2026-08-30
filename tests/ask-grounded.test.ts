@@ -400,16 +400,134 @@ test("ASK02: a LAST question answered entirely from future records fails validat
   );
 });
 
-test("ASK01: an answer that never names the resolved subject fails", () => {
+/* ── Substitution is naming a FOREIGN government, not omitting a name ────
+ *
+ * **NH288 (2026-08-30).** The check here used to demand that the prose CONTAIN
+ * a distinctive token of the subject's name, and that demand was itself a
+ * defect: the deterministic reader framing already names the resolved subject,
+ * so correct generated prose continues "The Board voted 5-0..." — natural
+ * anaphora about exactly the right government — and the token rule discarded
+ * it (`REJECTED_FELL_BACK`, records rendered with no prose). The rule the
+ * defect class actually needs is the one `record-belongs-to-resolved-body`
+ * runs at the id level plus this one at the prose level: an answer may not
+ * NAME a different known government. Every control below states which half it
+ * guards.
+ */
+
+const PIMA_BOARD = "ocd-division/country:us/state:az/county:pima#governing";
+const CAWCD_BODY =
+  "ocd-division/country:us/state:az/county:pima#central-arizona-water-conservation-district";
+
+/** The known-subject universe the grounded route passes: its body inventory. */
+const KNOWN_BODIES = [
+  { id: PIMA_BOARD, name: "Pima County Board of Supervisors" },
+  { id: CAWCD_BODY, name: "Central Arizona Water Conservation District" },
+  { id: `${VAIL}#board`, name: "Vail Unified School District Governing Board" },
+  /* A derived body nothing has named yet still reaches the inventory under
+     its division's label — one word, a geography, not a government's name. */
+  { id: "ocd-division/country:us/state:az/place:mesa#governing", name: "Mesa" },
+];
+
+/** A correct exact-body pack for the Board, records carrying the Board's id. */
+function pimaPack(over: Partial<EvidencePack> = {}): EvidencePack {
+  return pack({
+    subject: { kind: "BODY", id: PIMA_BOARD, name: "Pima County Board of Supervisors" },
+    records: [
+      {
+        kind: "MEETING",
+        id: "granicus:pima:2331",
+        bodyId: PIMA_BOARD,
+        text: "Board of Supervisors Regular Meeting, Tuesday, September 1.",
+        occurredAt: "2026-09-01T16:00:00.000Z",
+        sourceUrl: "https://example.gov/agenda.pdf",
+      },
+    ],
+    ...over,
+  });
+}
+
+test("NH288: correct prose that says 'The Board' instead of the full name PASSES", () => {
+  /*
+   * FALSE-FIRST: this is the exact sentence shape the old token rule rejected.
+   * The subject's structured identity is already validated at the id level and
+   * the reader framing already names the body; anaphora is not substitution.
+   */
+  const verdict = validateAnswer(
+    "The Board voted 5-0 to approve the fiscal 2027 budget.",
+    [],
+    pimaPack(),
+    KNOWN_BODIES,
+  );
+  assert.equal(verdict.kind, "PASSED", JSON.stringify(verdict));
+});
+
+test("NH288: prose naming a DIFFERENT known government fails mechanically", () => {
+  const verdict = validateAnswer(
+    "The Central Arizona Water Conservation District meets Monday to discuss allocations.",
+    [],
+    pimaPack(),
+    KNOWN_BODIES,
+  );
+  assert.equal(verdict.kind, "FAILED");
+  assert.ok(
+    verdict.kind === "FAILED" &&
+      verdict.failed.some((f) => f.startsWith("answer-names-foreign-subject")),
+    JSON.stringify(verdict),
+  );
+});
+
+test("NH288: foreign naming still fails when the prose ALSO says the subject's name", () => {
+  /*
+   * FALSE-FIRST against the OLD rule, which passed any prose containing
+   * "pima" — including prose whose lead actor is another government.
+   */
+  const verdict = validateAnswer(
+    "Pima County heard a presentation from the Central Arizona Water Conservation District.",
+    [],
+    pimaPack(),
+    KNOWN_BODIES,
+  );
+  assert.equal(verdict.kind, "FAILED");
+  assert.ok(
+    verdict.kind === "FAILED" &&
+      verdict.failed.some((f) => f.startsWith("answer-names-foreign-subject")),
+  );
+});
+
+test("NH288: 'Pima County' and 'the Supervisors' are the subject, not a substitution", () => {
+  for (const prose of [
+    "Pima County will take up the budget on Tuesday.",
+    "The Supervisors approved the item unanimously.",
+  ]) {
+    const verdict = validateAnswer(prose, [], pimaPack(), KNOWN_BODIES);
+    assert.equal(verdict.kind, "PASSED", `${prose} → ${JSON.stringify(verdict)}`);
+  }
+});
+
+test("NH288: a one-word division label in the universe is a geography, never a naming", () => {
+  /* "Mesa" stands in for a body nothing has named yet. Prose placing a meeting
+     IN Mesa has not named a government, and failing it would discard correct
+     answers over a place word. */
+  const verdict = validateAnswer(
+    "The Board meets in Mesa on Tuesday.",
+    [],
+    pimaPack(),
+    KNOWN_BODIES,
+  );
+  assert.equal(verdict.kind, "PASSED", JSON.stringify(verdict));
+});
+
+test("NH288: with no known-subject universe the check checks nothing, honestly", () => {
+  /* The old test asserted this sentence FAILED for never saying "Vail". That
+     rejection was the NH288 defect. It passes now, and the substitution class
+     is carried by record-belongs-to-resolved-body plus the foreign-naming rule
+     above. */
   const verdict = validateAnswer(
     "The board will consider a capital budget at its next sitting.",
     [],
     pack(),
   );
-  assert.equal(verdict.kind, "FAILED");
-  assert.ok(
-    verdict.kind === "FAILED" && verdict.failed.includes("answer-does-not-name-resolved-subject"),
-  );
+  assert.equal(verdict.kind, "PASSED", JSON.stringify(verdict));
 });
 
 // ── The evidence boundary ───────────────────────────────────────────────

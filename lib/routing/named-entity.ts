@@ -95,6 +95,14 @@ export const GENERIC_CIVIC_TOKENS: ReadonlySet<string> = new Set([
   "village", "place", "municipal", "municipality", "council", "councils",
   "commission", "commissioners", "commissioner", "committee", "authority",
   "supervisors", "supervisor", "education", "select", "selectmen",
+  /* Office-class words a body's OWN name carries once the sourced roster
+   * names land (NH288). "Tucson Mayor & Council" and "Newbury Selectboard"
+   * are the bodies' own names, and "mayor" and "selectboard" classify the
+   * government's shape exactly as "council" and "select" + "board" already
+   * do. Leaving them distinctive would demand them from a reader who types
+   * "the tucson city council" — a partial name refused as no name at all —
+   * which is the CAWCD "Board of Directors" lesson over again. */
+  "mayor", "mayors", "selectboard",
   "department", "office", "bureau", "division", "public", "general",
   "body", "assembly", "court", "state", "united", "us",
   /* Membership words. A body's name often ends "... Board of Directors", and

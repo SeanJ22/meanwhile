@@ -606,13 +606,15 @@
       "reported": "Out-of-zip address is rejected instead of redirected",
       "correctState": "An address that resolves outside the shown zip offers to switch to the zip it does resolve to.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "FIXED_VERIFIED",
       "workItemId": "wi:feedback:8.30.26:BAL-38",
-      "instancesFound": 0,
-      "instancesFixed": 0,
-      "checkId": null,
-      "checkResult": null,
-      "blocker": "The geocoder already returns the resolved zip, so the evidence exists; the ballot's address handler discards it on a zip mismatch instead of offering it. Not reached this session."
+      "instancesFound": 1,
+      "instancesFixed": 1,
+      "checkId": "tests/out-of-zip-address.test.ts",
+      "checkResult": "PASS",
+      "blocker": null,
+      "resolution": "The blocker was right that the evidence existed and wrong about where. `locateAddressInZip` puts the ZIP INTO the geocoder query, so an address one ZIP over cannot match and returns exactly like a bad address — and `parseCensusPoint` read the coordinates and dropped `addressComponents.zip`, which the response has always carried. `zipThisAddressResolvesTo` re-asks the same geocoder WITHOUT the ZIP constraint, on the failure branch only and only with a house number, so nothing extra leaves this product on the happy path. The same ZIP back is not a redirect and offers nothing. The switch is OFFERED and never taken automatically: a reader looking at one ZIP's ballot who is silently moved to another has had their question changed for them.",
+      "verification": "Six tests, three seeded — the next-ZIP case, the same-ZIP non-redirect, and the street-only path proving no extra address is geocoded. The reader-facing offer is wired through components/ballot/ballot-narrowing.tsx to /ballot?zip=. NOT re-verified on the rendered DOM: reaching it needs a real out-of-zip address typed against a live geocoder, which the unit seam covers deterministically and a walk would not."
     },
     {
       "id": "BAL-39",
@@ -783,13 +785,20 @@
       "reported": "Owner amendment on Q6/Q7: add a clickable pill reading 'Want us to get this info sooner?' that registers the click with a brief confirmation",
       "correctState": "Stated by the owner; the mechanism is a reader demand signal.",
       "failureClass": "rendering",
-      "disposition": "OPEN_BLOCKED",
+      "disposition": "NEEDS_SEAN",
       "workItemId": "wi:feedback:8.30.26:OWN-Q6",
       "instancesFound": 0,
       "instancesFixed": 0,
       "checkId": null,
       "checkResult": null,
-      "blocker": "NEEDS SEAN, and deliberately not built. This captures a new reader signal and stores it, which is 'anything that changes how reactions are bucketed or exported' and 'adding a user data field' on CLAUDE.md's ask-before list. Building it unilaterally would be the one thing the collection rules reserve to the author."
+      "blocker": null,
+      "needsOwner": {
+        "tried": "Designed the bounded version the owner approved and traced it end to end against the existing collection law. The shape is settled: a `demand_signals` table beside `reactions` in lib/db/schema.ts carrying occurredAt, subjectType (BODY|CANDIDATE), subjectId, a single-member fixed enum, and the district stamp (ocdIds + divisionVintage) — no free text, no identity column, no address, and deliberately NO reactionKeyHash, because the owner said no identity and the reactions table's own browser-continuity hash is the nearest thing to one. No reader read path exists, so results cannot be shown back. A symmetry guard renders it on every body and candidate card or on none.",
+        "whyMachineCannot": "The storage half needs a Drizzle migration, and `pnpm db:gate` contacts PRODUCTION the moment the schema contract moves: it reads WTP_PRODUCTION_DATABASE_URL_READONLY and requires the migration to be APPLIED there. Committing migration 0024 without applying it turns the shipping gate red and freezes the release. Applying it means writing a schema change to the production serving database, which is an authorization this session does not hold and which CLAUDE.md reserves twice over — \"adding a user data field\" and \"anything that changes how reactions are bucketed or exported\" are both on the ask-before list. The FEATURE is approved; the production schema write is not the same decision.",
+        "authorizationRequired": "Either apply migration 0024 to the production database at merge time (pnpm db:apply), or confirm this session may run it. The pill, the write path and the symmetry guard land in the same change once the migration can be applied.",
+        "continuesWithout": "Nothing else in the sweep depends on it. The Q6/Q7 honest-gap behaviour the pill sits beside is unaffected and already correct.",
+        "blockedDescendants": 0
+      }
     },
     {
       "id": "OWN-Q8",
@@ -832,7 +841,7 @@
       "blocker": "Not worked this session. The disclosure rows added for WGH-18 are clickable; the districts named inside an Ask ANSWER are not."
     }
   ],
-  "resweptAt": "2026-08-31T16:32:51.328Z",
+  "resweptAt": "2026-08-31T17:31:14.846Z",
   "resweptBy": "Session B (resume), 2026-08-31",
   "reswepNote": "Session B closure pass. Reconciled under RULING 221: every row ends FIXED_VERIFIED, OPEN_EXECUTABLE or NEEDS_SEAN, and the three are counted separately. NEEDS_SEAN is terminal for this session and is never reported as open executable work; the record obligation each one names stays live on the frontier."
 }

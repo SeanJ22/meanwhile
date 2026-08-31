@@ -111,3 +111,27 @@ stand exactly as written. The **model half of cost truth is now PROVEN** — see
 `pnpm model:proof` — so item 4's dispatch upper half has one real
 `BOUNDED_MODEL_WORKER` Attempt behind it with provider-reported usage and a
 computed cost, rather than a lane label.
+
+### The check-identity baseline can no longer be written, and nothing says so
+
+`docs/walk-checks.txt` is the set of every check `walk:all` HAS, and it exists
+so a run diffs by set difference rather than by subtracting two totals — *a run
+that loses three checks and gains seven reports +4 either way, and the check
+dying quietly is the failure this suite exists to catch.*
+
+It is written **only** on a run where `AGAINST_PRODUCTION` is true. RULING 125
+(2026-08-24) refuses a production run outright, at the top of the same file. So
+the baseline has been frozen since that ruling landed, every session's new
+checks accumulate as `+ ADDED` forever, and the GONE detection degrades as the
+gap widens. This session added 22 identities and the file did not move.
+
+**It is not a one-line fix**, which is why it is here rather than done. Writing
+it from a local run would DELETE the production-only identities — the deploy-id
+and build-SHA checks a local build genuinely cannot run — which is precisely the
+quiet check death the file was built to catch, committed by its own repair. The
+baseline needs to record which checks EXIST across both targets, or to merge
+rather than overwrite, and that is a design decision.
+
+Discovered 2026-08-31 while verifying the merge. It falsifies none of this
+session's acceptance criteria and is not a regression from its changes, so it is
+recorded here rather than taken into the denominator (RULING 221).

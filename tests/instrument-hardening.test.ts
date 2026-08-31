@@ -35,22 +35,8 @@ import { resolveCapability, type RunRecordSet } from "../lib/ops/status-result.t
 import type { CapabilityEntry } from "../lib/ops/capability-registry.ts";
 import { coverageInstanceId } from "../lib/health/reader-question.ts";
 import { isQuestionShaped, loadKeptQuestions } from "../lib/health/owner-corpus.ts";
+import { groundedAnswer as answer } from "./rendered-answer-fixture.ts";
 
-/** A grounded, sourced answer about Pima. Every test varies one thing off it. */
-function answer(over: Partial<RenderedAnswer> = {}): RenderedAnswer {
-  return {
-    mode: "GROUNDED_CLAUDE",
-    subjectId: "wtp-body/pima#governing",
-    subjectName: "Pima County Board of Supervisors",
-    answerText: "The board reported a $297.86 contribution dated February 27, 2025.",
-    recordTexts: [],
-    gapAttributions: [],
-    gapStatements: [],
-    sourceCount: 1,
-    panelAbsent: false,
-    ...over,
-  };
-}
 
 /* ==========================================================================
  * WI1.1 — VALUE and LIST bind to canonical subject identity

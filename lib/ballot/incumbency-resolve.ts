@@ -407,11 +407,13 @@ export async function contestIncumbency(
       eligibility: contestLabelEligibility({
         candidateUniverse: {
           complete: false,
+          contradicted: false,
           source: null,
           reason: "incumbency does not attach to an office that is not filled by election (RULING 118).",
         },
         officeholderUniverse: {
           complete: false,
+          contradicted: false,
           source: null,
           reason: "incumbency does not attach to an office that is not filled by election (RULING 118).",
         },
@@ -468,6 +470,71 @@ export async function contestIncumbency(
   const gap = holders.length > 0 ? ("CONTEST_NOT_ESTABLISHED" as const) : ("HOLDER_NOT_SOURCED" as const);
   const decisions = new Map<string, IncumbencyDecision>();
   for (const key of candidateKeys) {
+    /*
+     * **BAL-32 (2026-08-30) — A POSITIVE SOURCED FACT IS NOT WITHHELD BECAUSE
+     * A NEGATIVE ONE CANNOT BE MADE.**
+     *
+     * This loop used to quiet EVERY card, the matched incumbent included, and
+     * cited RULING 42 for it. The owner reported the result twice: on 8/28 as
+     * BAL-27 and on 8/30 as BAL-32, both times as Katie Hobbs — the sitting
+     * Governor of Arizona — carrying *"We haven't confirmed this for everyone
+     * in this contest"* on the ballot while carrying **Incumbent** on the map
+     * battlecard for the same person, from the same registry, on the same day.
+     *
+     * RULING 42's amended text is what settles it, and it settles it against
+     * the old behaviour:
+     *
+     * > **BANNED — suppression.** Removing or withholding data about a
+     * > candidate because something else about them is missing.
+     *
+     * The marker that ruling deleted was a badge naming *the candidate we know
+     * LEAST about* — the information asymmetry pointed at the least-resourced
+     * person. "Incumbent" is the opposite of that badge: it is a positive fact
+     * about one person, sourced from the officeholder registry, asserting
+     * nothing whatever about anybody else in the contest.
+     *
+     * **The two labels are different claims and only one of them needs the
+     * universe.**
+     *
+     * ```
+     *   INCUMBENT    "this person holds this office"
+     *                positive · per-person · the registry sources it
+     *                needs NO universe — it makes no claim about the others
+     *
+     *   CHALLENGER   "this person does NOT hold this office"
+     *                an ASSERTED ABSENCE about a named person
+     *                needs the officeholder universe COMPLETE, or it is
+     *                absence asserted, which this product never does
+     * ```
+     *
+     * So the gate survives exactly where it was load-bearing — nobody is
+     * called a challenger on an incomplete universe — and stops suppressing
+     * the one thing we can actually source. Every card still carries a chip
+     * (BAL-20), and the others still carry the same sentence as each other,
+     * which is the RULING 42 property that mattered: no card wears a mark
+     * naming it as the thin one.
+     */
+    /*
+     * **AND THE ONE CASE WHERE EVEN THE POSITIVE FACT STAYS QUIET.**
+     *
+     * `contradicted` means a certified nominee list EXISTS and the people
+     * rendered are not the people it names. That is different in kind from not
+     * holding the list at all: it is positive evidence that this page's
+     * identities are wrong, so the person we matched to the officeholder
+     * record may not be the person on the card. Labelling them would be a
+     * claim about somebody by name that we hold evidence against — and the
+     * whole contest goes quiet, exactly as before.
+     *
+     * `tests/incumbency-eligibility.test.ts` holds this: the Testville mayor
+     * stays unlabelled because one rendered name could not be reconciled to
+     * the certified list, and that behaviour is unchanged.
+     */
+    const identityContradicted = eligibility.candidateUniverse.contradicted;
+    const resolvedHere = resolved.get(key);
+    if (!identityContradicted && resolvedHere?.standing === "INCUMBENT") {
+      decisions.set(key, resolvedHere);
+      continue;
+    }
     decisions.set(key, {
       standing: "UNKNOWN",
       basis: eligibility.reason,

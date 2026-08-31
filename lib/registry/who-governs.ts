@@ -83,6 +83,22 @@ export interface WhoGoverns<T extends CoveredBody = CoveredBody> {
   governingCount: number;
   /** How many of `rows` have a calendar actually wired. */
   governingWithSource: number;
+  /**
+   * **WGH-18 (2026-08-30) — the other bodies THEMSELVES, not just how many.**
+   *
+   * The panel stated *"We also track 27 more board and committee calendars
+   * here. 30 more bodies are being added."* and gave a reader no way to see
+   * one of them: reaching the list meant closing the panel, opening the
+   * sidebar, and clicking Bodies here (65). The owner: *"there's no way for me
+   * to find out which one of those are."*
+   *
+   * Naming a number a reader cannot open is the same defect as WGH-19's
+   * completeness claim, one step earlier — a panel describing contents it does
+   * not show. So the rows come out beside the count, from the SAME array the
+   * count is the length of, which is this file's own discipline: two
+   * expressions that must agree are two expressions that can disagree.
+   */
+  otherRows: T[];
   /** Boards, committees and commissions — real bodies, not governments. */
   others: number;
   /** How many of `others` have a calendar actually wired. */
@@ -109,6 +125,60 @@ export interface WhoGoverns<T extends CoveredBody = CoveredBody> {
  *        empty when they have not narrowed, which is the default and must
  *        stay the effortless one
  */
+/**
+ * **THE ORDER OF THE GOVERNING LIST.** (WGH-17, 2026-08-30.)
+ *
+ * The owner, reading eight flat rows at 85701: *"if I wanna know in general
+ * who governs me I think it's fair to say Pima. Tucson, TUSD, those are
+ * primarily the ones that people wanna see... I'm not even sure why it's
+ * picked these specific ones."*
+ *
+ * It had not picked them. They were in whatever order the coverage summary
+ * returned, which reads as arbitrary because it is.
+ *
+ * ## Why this is not a ranking, and the distinction is the whole of it
+ *
+ * `CLAUDE.md` forbids ordering by anything but a NEUTRAL CRITERION, and it
+ * forbids ranking, scoring or ordering CANDIDATES at all. This orders
+ * GOVERNMENTS, by WHAT KIND OF GOVERNMENT EACH ONE IS — a structural fact
+ * published by the Census division vocabulary, not a judgment about which
+ * matters more.
+ *
+ * The criterion is also STATED ON SCREEN, in the "Why these N?" disclosure,
+ * which is what makes it checkable by a reader rather than a hidden weighting.
+ * A criterion a reader cannot see is a ranking whatever it is called.
+ *
+ * ## The order, and it is the reader's own question
+ *
+ * County, then city or town, then school district, then every other district.
+ * That is the sequence in the owner's dictation verbatim, and it is the
+ * sequence of a person asking *who governs me* rather than the sequence of a
+ * database. Within a kind, nothing is reordered: the incoming order survives,
+ * because there is no neutral criterion for ranking two special districts
+ * against each other and inventing one would be exactly what this rule bans.
+ */
+const GOVERNMENT_KIND_ORDER: readonly string[] = [
+  "county",
+  "place",
+  "school_district",
+];
+
+export function orderByGovernmentKind<T extends { divisionType: string | null }>(
+  rows: readonly T[],
+): T[] {
+  const rank = (row: T): number => {
+    const at = GOVERNMENT_KIND_ORDER.indexOf(row.divisionType ?? "");
+    /* A kind the vocabulary does not name sorts after the three, never before
+       them and never dropped. A division type a source introduces next month
+       lands here by existing rather than by anyone remembering to add it. */
+    return at === -1 ? GOVERNMENT_KIND_ORDER.length : at;
+  };
+  /* A STABLE sort, and the stability is load-bearing: within one kind the
+     incoming order is preserved, so nothing here invents a preference between
+     two special districts. */
+  return [...rows].sort((a, b) => rank(a) - rank(b));
+}
+
 export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStanding }>(
   bodies: readonly T[],
   selectedOcdIds: ReadonlySet<string>,
@@ -129,9 +199,13 @@ export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStandi
       (b.ocdId !== null && selectedOcdIds.has(b.ocdId)),
   );
 
-  const rows = narrowed.filter((b) => b.bodyClass === "GOVERNING");
+  const rows = orderByGovernmentKind(
+    narrowed.filter((b) => b.bodyClass === "GOVERNING"),
+  );
   const wired = (list: readonly CoveredBody[]) =>
     list.filter((b) => WIRED_STATUSES.has(b.coverageStatus)).length;
+
+  const otherRows = narrowed.filter((b) => b.bodyClass !== "GOVERNING");
 
   return {
     rows,
@@ -139,7 +213,11 @@ export function deriveWhoGoverns<T extends CoveredBody & { standing?: BodyStandi
     // Two expressions that must agree are two expressions that can disagree.
     governingCount: rows.length,
     governingWithSource: wired(rows),
-    others: narrowed.length - rows.length,
+    otherRows,
+    /* WGH-18: the SAME array's length, for the same reason `governingCount` is
+       `rows.length`. The panel now renders these rows, so a count derived any
+       other way could state a number the disclosure does not open. */
+    others: otherRows.length,
     othersWithSource: wired(narrowed) - wired(rows),
     /*
      * WGH-15. Counted off `rows` — the SAME array the card renders and the same

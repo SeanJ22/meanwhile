@@ -29,8 +29,16 @@ import {
   hasRepresentation,
   leadKind,
   noticeLabel,
+  representationForDivision,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
+import {
+  elsewhereDisclosureLabel,
+  panelSeatsFor,
+  FEDERAL_SEAT_TYPES,
+  STATE_SEAT_TYPES,
+  type PanelSeat,
+} from "@/lib/state/panel-seats";
 import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
@@ -534,17 +542,57 @@ function CoverageBody({
    * changes is that the card no longer presents another district's members as
    * theirs by saying nothing.
    */
-  const seatsHere = applyResolvedLocation(seats, subject.location);
+  /*
+   * WGH-22 (2026-08-30): the `seatsHere` binding that stood here is gone, and
+   * the annotation it did has MOVED rather than been dropped —
+   * `panelSeatsFor` calls the same `applyResolvedLocation` over the same
+   * `seats` and the same `subject.location`, and then does the thing this line
+   * could not: it also reaches `coverage.divisions` for the districts the
+   * reader is actually in. `tests/resolved-location.test.ts` asserts the new
+   * wiring, so the guard follows the code rather than pinning a line number.
+   */
 
   // Item 2c (2026-08-14 second session): officials group under three
   // headers, closest-first — Local, State, Federal. The state seats and
   // the federal seat split by division type (structure, never a label
   // match); the governor (2b) rides under STATE after the legislators —
   // order of scope, district before statewide.
-  const stateSeats = seatsHere.filter(
-    (s) => s.divisionType === "sldl" || s.divisionType === "sldu",
+  /*
+   * **WGH-22 (2026-08-30) — AND WGH-15 WAS ONLY HALF OF IT.**
+   *
+   * These were `seatsHere.filter(...)`, and `seatsHere` is the ZIP's seats
+   * annotated with a standing. That let the panel MARK District 19 as not the
+   * reader's. It could not let the panel SHOW District 17, because District 17
+   * was never in the list being marked — the reader's own divisions live in
+   * `coverage.divisions`, which the districts popup has read correctly all
+   * along and this panel had never joined to.
+   *
+   * So the owner, at a resolved address, met a state section listing two
+   * districts labelled *not yours* and not listing either of the two that
+   * were. Hiding the marked rows alone would have made the section emptier
+   * rather than righter.
+   *
+   * `panelSeatsFor` returns both halves: the reader's own, and the zip's
+   * others kept behind a disclosure. Without an address it returns exactly
+   * what this line used to — the whole zip, one list. `UNSETTLED` is not
+   * `ELSEWHERE_IN_ZIP`, and a reader who gave only a zip gets no partition
+   * invented for them.
+   */
+  const statePanel = panelSeatsFor(
+    coverage,
+    subject.location,
+    STATE_SEAT_TYPES,
+    (ocdId) => representationForDivision(coverage, ocdId),
   );
-  const federalSeats = seatsHere.filter((s) => s.divisionType === "cd");
+  const federalPanel = panelSeatsFor(
+    coverage,
+    subject.location,
+    FEDERAL_SEAT_TYPES,
+    (ocdId) => representationForDivision(coverage, ocdId),
+  );
+  const stateSeats = statePanel.yours;
+  const federalSeats = federalPanel.yours;
+  const elsewhereSeats = [...statePanel.elsewhere, ...federalPanel.elsewhere];
 
   /*
    * The reader's device-local narrowing (M26): where they picked their
@@ -758,6 +806,51 @@ function CoverageBody({
         </p>
       )}
 
+      {/*
+        **WGH-18 (2026-08-30) — "SEE THE REST", AND IT OPENS IN PLACE.**
+
+        The sentence above states how many boards, committees and commissions
+        we track here. Until now that was the end of it: reaching one meant
+        closing this panel, opening the sidebar, and clicking Bodies here.
+        The owner: *"there's no way for me to find out which one of those
+        are."*
+
+        A number a reader cannot open is a panel describing contents it does
+        not show — the same defect as WGH-19's completeness claim, one step
+        earlier. The count in the label is `derived.otherRows.length` and the
+        rows are `derived.otherRows`, so the label cannot state a number the
+        list does not contain.
+
+        Collapsed by default (the owner's own rule for long content, MTG-5,
+        BAL-8, BAL-16, ASK-21), and each row opens the same battlecard the
+        governing rows open — a board is a real body a reader can follow.
+      */}
+      {derived.otherRows.length > 0 && (
+        <details className="mt-1" data-other-bodies-disclosure="">
+          <summary className="cursor-pointer text-[0.6875rem] text-link">
+            See the rest ({derived.otherRows.length})
+          </summary>
+          <ul className="mt-1 space-y-1">
+            {derived.otherRows.map((body) => (
+              <li
+                key={body.bodyId}
+                data-other-body-row=""
+                className="flex items-baseline justify-between gap-3 pb-1"
+              >
+                <button
+                  type="button"
+                  onClick={onOpenBody ? () => onOpenBody(body) : undefined}
+                  className="min-w-0 flex-1 truncate text-left text-[0.75rem] leading-snug text-paper hover:underline"
+                >
+                  {body.name ?? body.divisionLabel}
+                </button>
+                <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+
       {shown.length > 0 && (
         // Structural label (design pass): organizes, confident, with its
         // shelf rule — never smaller than the names it organizes.
@@ -791,14 +884,45 @@ function CoverageBody({
           <summary className="cursor-pointer text-[0.6875rem] text-link">
             Why these {shown.length}?
           </summary>
+          {/*
+            **WGH-19 (2026-08-30) — A TRUE SENTENCE THAT READS AS A FALSE ONE.**
+
+            This said *"All of them are listed; none is left out."* Read
+            against its own subject — the GOVERNMENTS — it was true, and the
+            following sentence separated boards and committees out explicitly.
+            The owner read it beside a sidebar reading 65 bodies here and
+            called it factually wrong and grammatically terrible in the same
+            breath, and he was right about the reading: a claim of
+            completeness sitting above eight rows, on a panel that elsewhere
+            says twenty-seven more calendars are tracked and thirty more
+            bodies are being added, cannot be parsed as narrowly as it was
+            written.
+
+            So the completeness claim goes and the SCOPE claim stays. What is
+            on the list is now said by naming the criterion — boundaries cover
+            this area, and this is a government rather than a board — which is
+            the fact we can source, in place of a "nothing was omitted" that
+            invites the reader to check it against a bigger number on the same
+            screen and find it wanting.
+
+            The neutrality sentence changes with it. WGH-17 orders these rows
+            by governmental layer, so *"nothing here is ordered"* would become
+            the next false self-description. The order and its criterion are
+            stated instead: county, municipality, school district, then the
+            rest — a structural fact about governments, never a judgment about
+            them, which is what `CLAUDE.md`'s neutral-criterion rule requires
+            of any ordering that reaches a reader.
+          */}
           <p className="mt-1 text-[0.6875rem] leading-relaxed text-voice">
             {shown.length === 1
               ? "This is the government whose boundary covers this area"
-              : `These are the ${shown.length} governments whose boundaries cover this area`}{" "}
+              : `These are ${shown.length} of the governments whose boundaries cover this area`}{" "}
             — the county, the city or town, the school district, and any
-            special district that governs here. All of them are listed; none is
-            left out. It isn&apos;t a ranking — nothing here is scored or
-            ordered by importance.
+            special district that governs here. They are ordered by what kind
+            of government each one is — county, then city or town, then school
+            district, then other districts — and by nothing else. Nothing here
+            is scored, and no order on this panel says one government matters
+            more than another.
             {others > 0 &&
               ` Boards, committees and commissions are real bodies you can follow, but they aren't governments, so they're counted separately: ${others} of them here.`}
           </p>
@@ -1181,7 +1305,7 @@ function CoverageBody({
                     <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList
-                          holders={seat.representatives}
+                          holders={[...seat.representatives]}
                           seatLabel={seat.label}
                           seatOcdId={seat.ocdId}
                           tier={seat.tier}
@@ -1221,11 +1345,38 @@ function CoverageBody({
                   </li>
                 ))}
               </ul>
-              {statewideExecutives.length > 0 && (
-                <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
-                  The governor is the only statewide office listed so far.
-                </p>
-              )}
+              {/*
+                * **WGH-21 (2026-08-30) — THE LINE THAT CONTRADICTED THE LIST
+                * DIRECTLY ABOVE IT.**
+                *
+                * This rendered *"The governor is the only statewide office
+                * listed so far"* whenever `statewideExecutives.length > 0`.
+                * It was written when the slate held one person and it was
+                * true then. It was never re-derived, so when the slate
+                * populated the panel printed nine statewide officeholders by
+                * name and party — Mayes, Yee, Horne, Presmyk and five
+                * corporation commissioners — and then said the governor was
+                * the only one. The owner highlighted it in yellow.
+                *
+                * It is not stale. It is FALSE about content rendered inches
+                * above it, and the governor is not even the nearest entry.
+                *
+                * The line is gone rather than corrected, and that is the
+                * owner's call verbatim: the contents are right, so the line is
+                * the thing that goes. Nothing replaces it, because the only
+                * replacement would be a completeness claim — *these are all
+                * the statewide offices* — and we hold no source for the
+                * denominator of statewide offices. Asserting it would be the
+                * manufactured claim `CLAUDE.md` forbids, and the product does
+                * not announce its own failure either (RULING 139). No claim
+                * beats a false one and beats an invented one.
+                *
+                * The CLASS, which is the part that matters: a surface
+                * asserting something about ITSELF from a hardcoded string
+                * that its own rendered contents can contradict. WGH-19 and
+                * MAP-5 in this same report are the same defect on other
+                * surfaces. `tests/self-description.test.ts` is the guard.
+                */}
             </>
           )}
 
@@ -1251,7 +1402,7 @@ function CoverageBody({
                     <span className="block person-under-heading">
                       {seat.representatives.length > 0 ? (
                         <HolderList
-                          holders={seat.representatives}
+                          holders={[...seat.representatives]}
                           seatLabel={seat.label}
                           seatOcdId={seat.ocdId}
                           tier={seat.tier}
@@ -1305,6 +1456,58 @@ function CoverageBody({
                 ))}
               </ul>
             </>
+          )}
+
+          {/*
+            **WGH-22 — THE ROWS THE ADDRESS RULED OUT, KEPT AND MOVED.**
+
+            These are districts we hold in full, that govern real people in
+            this zip, and that the reader's own address has POSITIVELY
+            established are not theirs. They stay on the panel — RULING 26 and
+            RULING 27 forbid dropping what we have found — and they stop
+            sitting in the list a reader reads as *these are yours*, which is
+            the state the owner circled in red.
+
+            Collapsed by default, and the count is derived from the rows
+            behind it rather than written beside them, so the label and the
+            list cannot disagree the way WGH-21's did.
+          */}
+          {elsewhereSeats.length > 0 && (
+            <details className="mt-3" data-elsewhere-disclosure="">
+              <summary className="cursor-pointer text-[0.6875rem] text-link">
+                {elsewhereDisclosureLabel(elsewhereSeats.length, zip)}
+              </summary>
+              <p className="mt-1 text-[0.625rem] leading-relaxed text-muted">
+                Your address settled which of these is yours. These cover other
+                parts of {zip} — they are here because they govern people in
+                this zip, not because they govern you.
+              </p>
+              <ul className="mt-1 space-y-1">
+                {elsewhereSeats.map((seat: PanelSeat) => (
+                  <li
+                    key={seat.ocdId}
+                    data-seat-standing={seat.standing}
+                    data-elsewhere-row=""
+                    className="text-[0.75rem] leading-snug"
+                  >
+                    <span className={TYPE_LABEL_CLASS}>{seat.label}</span>
+                    <span className="block person-under-heading">
+                      {seat.representatives.length > 0 ? (
+                        <HolderList
+                          holders={[...seat.representatives]}
+                          seatLabel={seat.label}
+                          seatOcdId={seat.ocdId}
+                          tier={seat.tier}
+                          onOpenOfficial={onOpenOfficial}
+                        />
+                      ) : (
+                        <span className="text-muted">no record yet</span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
         </>
       )}

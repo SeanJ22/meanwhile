@@ -6,7 +6,10 @@ import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
-import type { DrawnDistrict } from "@/lib/map/districts";
+import {
+  districtsSwitchedOffAndEmpty,
+  type DrawnDistrict,
+} from "@/lib/map/districts";
 import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
 import { representationForDivision } from "@/lib/registry/representation";
 import {
@@ -338,8 +341,22 @@ function DistrictsDoor({
         )
       : null;
 
+  /*
+   * **MAP-5 (2026-08-30) — THE DOOR NOW READS THE MAP, NOT THE SWITCH.**
+   *
+   * `districtOverlayOn && drawnDistricts.length > 0` made the SWITCH a veto
+   * over the EVIDENCE. `ui.showDistricts` is a mirror of the persisted
+   * preference the map reads directly, so it can lag or diverge — and when it
+   * did, this door told a reader looking at four named State House districts,
+   * beside a tile reading 33, that boundaries were switched off and there was
+   * nothing to count.
+   *
+   * The stats tile was repaired for exactly this on 2026-08-19 and this door
+   * was not, which is the owner's standing instruction failing inside one
+   * file. `districtsAreVisible` is now the single rule and both call it.
+   */
   const drawnRows =
-    districtOverlayOn && drawnDistricts.length > 0
+    drawnDistricts.length > 0
       ? districtDoorRows(drawnDistricts, coverage?.seats ?? [])
       : null;
 
@@ -374,8 +391,10 @@ function DistrictsDoor({
         {drawnRows ? (
           // 3g: EXACTLY one row per drawn district — the count stated above.
           <DistrictRows rows={drawnRows} onOpenOfficial={onOpenOfficial} />
-        ) : !districtOverlayOn ? (
+        ) : districtsSwitchedOffAndEmpty(drawnDistricts.length, districtOverlayOn) ? (
           // M57: the switch is here, not somewhere the reader has to go find.
+          // MAP-5: and this branch is reached only when the layer is off AND
+          // nothing is painted — the one state in which the sentence is true.
           <div className="mt-2">
             <p className="text-[0.8125rem] text-muted">
               District boundaries are switched off, so none are drawn and there

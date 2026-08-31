@@ -22,22 +22,8 @@ import {
   type ReaderExpectation,
   type RenderedAnswer,
 } from "../lib/health/ask-evaluation.ts";
+import { groundedAnswer as answer } from "./rendered-answer-fixture.ts";
 
-/** A grounded, sourced answer. Every test varies one thing off this. */
-function answer(over: Partial<RenderedAnswer> = {}): RenderedAnswer {
-  return {
-    mode: "GROUNDED_CLAUDE",
-    subjectId: "wtp-body/pima#governing",
-    subjectName: "Pima County Board of Supervisors",
-    answerText: "The board reported a $297.86 contribution dated February 27, 2025.",
-    recordTexts: [],
-    gapAttributions: [],
-    gapStatements: [],
-    sourceCount: 1,
-    panelAbsent: false,
-    ...over,
-  };
-}
 
 const VALUE_297: ReaderExpectation = {
   kind: "VALUE",

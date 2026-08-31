@@ -143,16 +143,33 @@ test("the holder's own identifier reaches the resolution instead of a hard-coded
    * `resolved` rather than `decisions`, and the distinction is the subject of
    * this test rather than an inconvenience to it (2026-08-28). What is being
    * asserted here is that the holder's own identifier reaches the MATCHING
-   * layer — which it does. Whether a label may then RENDER is a separate
-   * question answered by `contestLabelEligibility`, and for this contest the
-   * answer is no: the curated statewide store is assembled person by person, so
-   * nothing here shows we hold everyone who could sit in this office.
+   * layer — which it does.
+   *
+   * **BAL-32 (2026-08-30) changes the second assertion, and the change is the
+   * point.** This used to require `decisions` to stay UNKNOWN "until the
+   * officeholder universe is shown complete". The owner reported the result
+   * twice — the sitting Governor of Arizona wearing *"We haven't confirmed
+   * this for everyone in this contest"* on the ballot and **Incumbent** on the
+   * map, same person, same registry, same day.
+   *
+   * RULING 42's amended text bans withholding data about a candidate because
+   * something else is missing. INCUMBENT is a positive per-person fact the
+   * registry sources and it asserts nothing about anyone else, so no universe
+   * is needed for it. CHALLENGER is an asserted absence about a named person
+   * and still needs the universe — which is the half of the gate that was
+   * ever load-bearing, and it is untouched.
    */
   assert.equal(result.resolved.get("k")?.standing, "INCUMBENT");
   assert.equal(
     result.decisions.get("k")?.standing,
-    "UNKNOWN",
-    "and the reader-facing answer stays quiet until the officeholder universe is shown complete",
+    "INCUMBENT",
+    "a sourced positive fact about this person reaches the reader; the universe gates the " +
+      "NEGATIVE label, which is the one that asserts an absence",
+  );
+  assert.equal(
+    result.eligibility.eligible,
+    false,
+    "and the contest is still not established — nobody is labelled a challenger off it",
   );
   // The holder came back out of `holderFor`, which is only populated for an
   // INCUMBENT, and it is the SAME record — id included.

@@ -10,6 +10,8 @@ import {
   type BattlecardSectionId,
 } from "@/lib/ballot/battlecard-sections";
 import { CardSection, CardSectionGroup } from "@/components/officials/card-section";
+import { ContactPills } from "@/components/officials/contact-pills";
+import type { SeatHolder } from "@/lib/officials/lookup";
 import { IdentityChip, IdentityPortrait } from "@/components/officials/person-identity";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
@@ -81,8 +83,24 @@ export function CandidateBattlecard({
   sections,
   holdsOrHeldTheOffice = false,
   questionnaire = UNESTABLISHED,
+  contactHolder = null,
 }: {
   name: string;
+  /**
+   * **BAL-33 / BAL-35 (2026-08-30) — the officeholder record behind this
+   * candidate, where one joins.**
+   *
+   * The card's doc block above explains why it takes `children` rather than a
+   * holder, and that reasoning is untouched: the SECTIONS still come from the
+   * page so a challenger's own words and funding are never deleted to tidy an
+   * incumbent's card.
+   *
+   * This is narrower and is the thing the owner asked for: the CONTACT ROUTES,
+   * from the same `SeatHolder` the map battlecard renders, so one record
+   * answers on both surfaces. Null for a candidate with no officeholder
+   * record, and the row then renders nothing rather than an empty state.
+   */
+  contactHolder?: SeatHolder | null;
   /**
    * **BAL-18 (2026-08-25) — the party is a COLOURED PILL, matching the map.**
    *
@@ -345,6 +363,40 @@ export function CandidateBattlecard({
             </header>
 
             <div className="account-modal-body" data-battlecard-body>
+              {/*
+                **BAL-33 / BAL-35 (2026-08-30) — THE WAYS TO REACH THIS PERSON,
+                FROM THE SAME RECORD THE MAP READS.**
+
+                The owner opened Katie Hobbs on the ballot and on the map,
+                side by side. The map card carried a phone number, Email,
+                Contact form and Official page. The ballot card carried no
+                contact route at all and, expanded, said we hold no office
+                location for her. His words: *it says we have no way to
+                contact her, but obviously we do.*
+
+                This is `ContactPills` — the identical component the map
+                battlecard renders, taking the identical `SeatHolder`. Not a
+                second contact renderer: two surfaces answering one question
+                from different code is how they came to disagree, and a copy
+                here would drift the same way within a month.
+
+                **On the equal-effort rule, which this card's header block is
+                built around.** A contact row that only incumbents can fill IS
+                an asymmetry — and it is an asymmetry in the DATA, which is the
+                version this card already permits and already names in its
+                standard line. A challenger has no officeholder record because
+                nobody holds an office for them; that is a fact about the
+                world, not a difference in how hard we looked. The asymmetry
+                the rule forbids is the one made of COPY and LAYOUT, and this
+                row renders nothing at all rather than an empty state, so a
+                thin card does not grow a hollow section announcing what is
+                missing.
+              */}
+              {contactHolder && (
+                <div className="mb-3" data-ballot-contact-row>
+                  <ContactPills holder={contactHolder} scope="primary" />
+                </div>
+              )}
               {/*
                 **BC-1 — THE SAME SEVEN DROP-DOWNS, ON EVERY CARD, ALWAYS.**
                 (2026-08-22, the author's 8/22 walkthrough, item 14.)

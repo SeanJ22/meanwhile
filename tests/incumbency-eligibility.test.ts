@@ -107,12 +107,44 @@ const readerLabels = (decisions: ReadonlyMap<string, IncumbencyDecision>): strin
 /* CONTROL 3 — THE LOAD-BEARING ONE                                           */
 /* ========================================================================== */
 
-test("a KNOWN incumbent renders NO label while the contest is unresolved", async () => {
+test("a KNOWN incumbent renders the POSITIVE label; nobody is called a challenger", async () => {
   /*
    * The officeholder store holds the sitting Mayor and nothing else. It was
    * assembled person by person, so the other two candidates' absence from it is
    * OUR gap. The easy-positive behaviour would render `Incumbent` on Dana
-   * Okonkwo and `Challenger` on the other two — which is the false claim.
+   * Okonkwo and `Challenger` on the other two — which is the false claim, and
+   * it is still refused below.
+   *
+   * **BAL-32 (2026-08-30) split the two labels, and this test is where the
+   * split is stated.** It used to assert that the whole contest went quiet,
+   * the matched incumbent included. The owner reported the consequence twice —
+   * 8/28 as BAL-27 and 8/30 as BAL-32, both times Katie Hobbs, the sitting
+   * Governor of Arizona, carrying "We haven't confirmed this for everyone in
+   * this contest" on the ballot and **Incumbent** on the map battlecard for
+   * the same person, from the same registry, on the same day.
+   *
+   * ```
+   *   INCUMBENT    "this person holds this office"
+   *                positive, per-person, sourced from the registry.
+   *                It asserts NOTHING about anyone else, so the universe
+   *                is not what makes it true.
+   *
+   *   CHALLENGER   "this person does NOT hold this office"
+   *                an asserted absence about a named person, which needs
+   *                the officeholder universe complete — and never gets it
+   *                from a store assembled person by person.
+   * ```
+   *
+   * RULING 42's amended text is what decides it: what that ruling BANS is
+   * *withholding data about a candidate because something else about them is
+   * missing*, and the marker it deleted was a badge naming the candidate we
+   * know LEAST about. Suppressing a sourced positive fact about one person
+   * because we lack a universe covering the others is the banned move, not the
+   * required one.
+   *
+   * The RULING 42 property that mattered survives: every card that is NOT the
+   * sourced incumbent reads the SAME sentence as every other, so no card wears
+   * a mark identifying it as the thin one.
    */
   const result = await contestIncumbency(CONTEST, async () => null, async () => [SITTING_MAYOR], {
     certifiedNominees: CERTIFIED,
@@ -129,14 +161,24 @@ test("a KNOWN incumbent renders NO label while the contest is unresolved", async
   assert.equal(result.eligibility.eligible, false);
   assert.equal(result.eligibility.notIncumbent, 0, "NOT_INCUMBENT was never produced here");
 
-  // AND THE WHOLE CONTEST IS QUIET — the matched incumbent included.
-  for (const key of ["a", "b", "c"]) {
+  // The sourced positive fact reaches the reader.
+  assert.equal(result.decisions.get("a")?.standing, "INCUMBENT");
+  // And the two we have NOT established stay quiet, in one shared sentence.
+  for (const key of ["b", "c"]) {
     assert.equal(result.decisions.get(key)?.standing, "UNKNOWN", `${key} carries no label`);
   }
   const labels = readerLabels(result.decisions);
-  assert.equal(new Set(labels).size, 1, "every card in the contest reads the SAME sentence (RULING 42)");
-  assert.ok(!labels.includes("Incumbent"), "no reader sees `Incumbent` in this contest");
-  assert.ok(!labels.includes("Challenger"), "and no reader sees `Challenger` either");
+  assert.equal(
+    new Set(labels.filter((l) => l !== "Incumbent")).size,
+    1,
+    "every card that is not the sourced incumbent reads the SAME sentence as the others, so " +
+      "none of them wears a mark naming it as the thin one (RULING 42)",
+  );
+  assert.ok(
+    !labels.includes("Challenger"),
+    "and NO reader sees `Challenger` — that is the asserted absence, and it still needs the " +
+      "officeholder universe this store cannot supply",
+  );
 });
 
 test("the sentence the quiet contest renders is about US, and it is true", async () => {
@@ -144,11 +186,15 @@ test("the sentence the quiet contest renders is about US, and it is true", async
     certifiedNominees: CERTIFIED,
     enumeratedHolders: () => [],
   });
-  const line = incumbencyLabel("UNKNOWN", result.decisions.get("a")?.gap) ?? "";
+  /* BAL-32: "a" is now the sourced incumbent and carries a label rather than a
+     gap, so the quiet sentence is read off one of the candidates who is
+     genuinely quiet. The sentence itself is unchanged, and so is the reason it
+     is the right one. */
+  const line = incumbencyLabel("UNKNOWN", result.decisions.get("b")?.gap) ?? "";
 
   // We DO hold this seat's holder, so the original sentence would be false
   // about our own sourcing. It says the other thing instead.
-  assert.equal(result.decisions.get("a")?.gap, "CONTEST_NOT_ESTABLISHED");
+  assert.equal(result.decisions.get("b")?.gap, "CONTEST_NOT_ESTABLISHED");
   assert.ok(!line.startsWith("We haven't sourced"), `"${line}" would be untrue about us here`);
   assert.match(line, /^We haven't/, "it still names whose gap it is");
   assert.deepEqual(claimsInText(line), [], `"${line}" asserts something about a candidate`);
@@ -211,8 +257,8 @@ test("a candidate the resolution never saw is UNRESOLVED, and the contest is ref
   const states = statesFromResolution(new Map(), ["a", "b"], true);
   assert.equal(states.get("a"), "UNRESOLVED");
   const eligibility = contestLabelEligibility({
-    candidateUniverse: { complete: true, source: "s", reason: "r" },
-    officeholderUniverse: { complete: true, source: "s", reason: "r" },
+    candidateUniverse: { complete: true, contradicted: false, source: "s", reason: "r" },
+    officeholderUniverse: { complete: true, contradicted: false, source: "s", reason: "r" },
     candidateKeys: ["a", "b", "c"],
     states,
   });
@@ -610,11 +656,23 @@ test("Merrimack House District 7 has a COMPLETE officeholder universe and is sti
   assert.equal(result.eligibility.candidateUniverse.complete, false);
   assert.equal(result.eligibility.eligible, false);
 
-  // Ebel is the sitting member and she carries no label either.
+  /*
+   * BAL-32: Ebel is the sitting Deputy Speaker and the New Hampshire General
+   * Court publishes that she holds the seat. She carries the positive label.
+   *
+   * The contest is still not established and that still MATTERS — the
+   * candidates are the people who FILED for a September primary rather than a
+   * certified nominee list, so nobody is called a challenger off it. That is
+   * the assertion the original defect needed and it is the one kept: Karen
+   * Ebel rendering as `Challenger` is impossible either way.
+   */
   const ebel = [...result.resolved].find(([, d]) => d.standing === "INCUMBENT")?.[0];
   assert.ok(ebel, "the matcher still names the sitting members");
-  assert.equal(result.decisions.get(ebel)?.standing, "UNKNOWN");
-  assert.ok(!readerLabels(result.decisions).includes("Challenger"));
+  assert.equal(result.decisions.get(ebel)?.standing, "INCUMBENT");
+  assert.ok(
+    !readerLabels(result.decisions).includes("Challenger"),
+    "and the uncertified filers are never called challengers",
+  );
 });
 
 /* ========================================================================== */

@@ -2,7 +2,10 @@
 // is pure and belongs under `node --test`, which cannot resolve the alias. The
 // rest of lib/ is already written this way.
 import { haversineKm } from "../geo/distance.ts";
-import type { DrawnDistrict } from "../map/districts.ts";
+import {
+  districtsSwitchedOffAndEmpty,
+  type DrawnDistrict,
+} from "../map/districts.ts";
 import { tierForOcdId, type Tier } from "../ocd/tiers.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
@@ -494,9 +497,18 @@ export function deriveStatsView(
    * undo, and a dash — this product's word for "we could not check" — would
    * make the one number that was never broken read as the broken one (M57).
    */
-  const nothingDrawn = stats.districts === null || stats.districts === 0;
-  const drawn: StatsView["districts"] =
-    nothingDrawn && !showDistricts ? "Off" : (stats.districts ?? 0);
+  /* MAP-5 (2026-08-30): the rule is now `districtsSwitchedOffAndEmpty` in
+     lib/map/districts.ts, shared with the door this tile opens. The tile was
+     repaired for this on 2026-08-19 and the door was not, so a reader met
+     "33 Districts in view" and "boundaries are switched off" on one screen.
+     One predicate, both surfaces — the divergence is what has to be impossible,
+     not just currently absent. */
+  const drawn: StatsView["districts"] = districtsSwitchedOffAndEmpty(
+    stats.districts,
+    showDistricts,
+  )
+    ? "Off"
+    : (stats.districts ?? 0);
 
   // The governing mode needs the address AND the overlay's own number is
   // still worth keeping underneath — including when the overlay is off, where

@@ -21917,3 +21917,162 @@ not fail). One gate defect found and fixed en route: leftover worktrees of
 MERGED branches under `.claude/worktrees/` failed lint with 417 errors
 belonging to no current code — the directory is now ignored by the lint gate
 and the stale worktrees removed.
+
+---
+
+## 2026-08-30 · Session A.1 — contract instrumentation repair
+
+Session A shipped four instruments and this session made them real. Every
+finding it repairs is the same class: **a contract that appears enforced and is
+not.** Nothing here is new architecture; the Session A contracts and schemas
+stand and are now mechanically checkable.
+
+### The reader evaluator asks the question now (WI1)
+
+`scripts/reader-suite.mts` evaluated `document.body.innerText` and tested
+`includes(expectation.text)`. It never typed a question, never pressed the
+button, never waited for an answer, and never looked at one — so a page
+carrying the expected words anywhere went green while Ask could have returned a
+fallback, the wrong government, or nothing.
+
+It now seeds the ZIP, submits the question through the product's own Ask
+interaction (`[data-ask-box]`, Enter, exactly as a reader does), waits for the
+answer to SETTLE rather than for a fixed sleep, and evaluates **the answer**.
+GREEN requires all of: a rendered answer, a grounded mode from an allowlist
+(so a mode added tomorrow is not silently green), a visible source record, and
+the expected proposition asserted. The expectation is typed — ENTITY, VALUE,
+LIST or VERIFIED_ABSENCE — replacing `DOM_TEXT_INCLUDES`; values are normalised
+so `$297.86` and `297.86` agree and `29786` does not. Every RED carries a
+failure class from the twelve. New: `lib/health/ask-evaluation.ts`,
+`scripts/ask-harness.mts`. `components/ask/ask-box.tsx` gained
+`data-ask-sources` (a publisher count, the convention `data-ask-contacts`
+already uses) so "is it sourced" is machine-readable.
+
+### The universe check runs, against a denominator that can disagree (WI2)
+
+`checkInstanceUniverse` was never called, and the only body-layer denominator
+vocabulary was `PROJECT_REGISTRY` — the store the instances are GENERATED from.
+Registry checking registry is a mirror: it agrees over any universe, including
+one missing every body the registry omitted. NH232 is the proof that matters —
+a regeneration once silently dropped 731 promoted bodies and every green stayed
+green.
+
+The denominator now comes from the canonical INPUTS the registry is built from
+(`curated-bodies.ts` + `promoted-bodies.json`), under a new source
+`PROJECT_BODY_ENUMERATION_EVIDENCE`. RULING 9 is unchanged — it governs source
+CLASS, and this is the project's own enumeration evidence.
+`assertDenominatorIsIndependent` refuses a `PROJECT_REGISTRY` denominator for
+the body layer by name. The check runs BEFORE any scoring, a level with no
+independent denominator is NOT_EVALUABLE with the missing evidence named, and a
+disagreement produces a typed diagnostic WorkItem. New:
+`lib/health/body-denominator.ts`.
+
+### RED creates work, and only a qualifying GREEN closes it (WI3)
+
+`diagnosticWorkItemFor` existed and nothing called it; had it been called it
+wrote its completion condition into `why` as prose and attached
+`DEFAULT_CONTRACT`, so an item created because a reader could not learn a fact
+could be closed by a validator that never asked the question again.
+
+`CompletionContract` gains `instrumentEvidence` — instrument, instance id,
+creation SHA, required verdict — and `evaluateCompletion` gains two refusals:
+`INSTRUMENT_VERDICT_NOT_EARNED` and `INSTRUMENT_EVIDENCE_UNANCHORED`. Items are
+persisted to the durable file-store control plane, deduplicated by derived id,
+and closed only by a canonical run on a tree that CONTAINS the failure commit.
+A VISUAL_SUITE green cannot close a READER_SUITE obligation. New:
+`lib/health/diagnostics.ts`.
+
+### Controls run blind through the real path; visual checks exist (WI4)
+
+The control runner scored a simulated array; with real controls it reported
+`score: null`. Each fact is now asked as a reader-shaped question through the
+SAME `openAskAt`/`askAndRead` path — blindness holds by construction, because
+the transport is a text box with nowhere for control identity to travel. First
+real reading: **recall 0.500 (1 of 2), false-absence 0.000, false-presence no
+denominator** (no CONFIRMED known_absence row exists to give it one).
+
+`VisualAcceptanceCheck` had a load-bearing evidence-kind rule enforced against
+a population of zero. `pnpm visual:suite` loads checks, refuses any whose
+evidence cannot certify its property, captures the bound viewport, and
+evaluates DECODED PIXELS — clipping from the variance ratio at the boundary,
+visibility from luminance variance — never the selector that found the box.
+New: `lib/health/control-observation.ts`, `lib/health/visual-evaluation.ts`,
+`scripts/visual-suite.mts`.
+
+### pilot:health reads only canonical runs (WI5)
+
+It passed literals: `activeInstances: 0, evaluatedGreen: 0, target: null`, with
+a comment promising these came from a run record. Nothing read one. With a
+nonempty corpus the red branch tests `evaluatedGreen < activeInstances` — `0 <
+0`, false — so READER returned **GREEN over zero evaluated instances**.
+
+It now reads the newest reader and control run records: counts, target, run id,
+tested SHA, finish time. `readerContract` refuses a nonempty corpus with zero
+active instances unless an independently established zero proves it legitimate,
+and a run that is stale or tested on a tree HEAD does not contain reads
+NOT_READY. New: `lib/health/latest-runs.ts`.
+
+### Status definition split from status result (WI6)
+
+`lib/ops/status-ledger.ts` held both halves in one hand-typed array —
+`lastResult: "suite green in the workstream run that generated this ledger"`,
+`proofClass`, `asOf`, `sha` mostly "—" — and `--check` proved the Markdown
+matched that array. It proved a document equals its own source. The committed
+ledger said HEAD `e62c420` while the release was `096e0469`, every gate green.
+
+Split into `lib/ops/capability-registry.ts` (CURATED: all 23 capabilities
+carried across verbatim, `provenBy` a typed union naming instrument and
+identity, and **no field in which a result could be typed**) and
+`lib/ops/status-result.ts` (DERIVED from gate / walk / reader / observer run
+records). `proofClass` is now read off the record rather than declared.
+`pnpm gates` writes `data/ops/gate-runs/`; `pnpm walk:all` writes
+`data/health/walk-runs/` with a per-check outcome. `--check` is red when the
+ledger's recorded HEAD is not the generating HEAD. The old data module is
+deleted.
+
+### The standing walk: 1463.4s → 321.2s, same 390 checks (WI7)
+
+**Measured first, and the measurement found the cause.** Per-check wall time is
+now recorded on every run with the twenty slowest printed and a canonical
+summary written to `data/health/walk-runs/`, so the session reads a record
+instead of watching the walk.
+
+The baseline said 61 of 390 checks accounted for **93.3%** of the wall time. The
+cause was `appSettled`: it waited for `.coverage-notice` AND
+`.state-focus-layer`, and **no element carrying any class containing "coverage"
+is in the rendered DOM any more.** The condition could never be true, `until`
+ran to its full 20s ceiling on every call, and the return value was discarded.
+A blind twenty-second pause wearing an outcome wait's name — R49's own defect,
+inside R49's own helper. Measured at all four pilot zips: TIMED OUT at 20s,
+every time.
+
+Replaced with signals verified to arrive only after the work they stand for
+(state focus layer 311–1860ms, who-governs card 451–1955ms, meetings count
+196–1737ms) plus NH121's settle. The old 20s ceiling is unchanged — it is a
+wall, not a target. **The result is now returned and printed**, so this cannot
+silently become a sleep again.
+
+`390 ran + 14 declared COULD NOT RUN, baseline 379, 0 silent` on both runs —
+identical coverage. Regressions went 3 → 1; the two that stopped failing had
+been read at a fixed 20s that never confirmed readiness and are now read after a
+settle that does. This session did not fix them and does not claim to. The one
+that reproduced on both runs is NH297.
+
+### Owner intake (WI8)
+
+`defects.md` is retired as an owner surface and kept as a machine-maintained
+record. Intake is `owner-intake/` in the mirror with exactly two inputs —
+`defect-inbox/` and `Owner-Defects.xlsx` (yellow owner columns, gray machine
+columns, a status flow the owner only ever sets to NEW). Registered through
+`EXPECTED_DIRS` in `scripts/mirror-set.mjs`. The sweep gate fails when any
+image or NEW row is neither processed nor listed — unidentifiable is an
+accounting, not a skip.
+
+### The owner corpus is smaller than the brief expected, and that is reported
+
+`pnpm owner:corpus` reads the workbook under its own stated criteria. Three
+rows carry Status CONFIRMED — EX, F1, F5 — and EX is the workbook's own
+documented example row, excluded by id. **Two facts load, both known_present.
+Zero questions load**: Keep? is blank on all twelve Adversarial rows. So READER
+reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate. Rows
+that do not meet the criteria are not loaded and are not counted (NH299).

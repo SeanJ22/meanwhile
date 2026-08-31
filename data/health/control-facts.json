@@ -1,0 +1,24 @@
+[
+  {
+    "statement": "[DRAFT] The Pima County Board of Supervisors held a meeting on Aug 25, 2026.",
+    "expected_truth": {
+      "kind": "proposition",
+      "proposition": "[DRAFT] The Pima County Board of Supervisors held a meeting on Aug 25, 2026."
+    },
+    "fact_class": "known_present",
+    "verification_source": "https://pima.legistar.com/Calendar.aspx / https://pima.legistar.com/View.ashx?M=AADA&ID=1381574&GUID=2A012816-8F02-46CD-859A-2DC732E83DD3",
+    "verified_by": "owner",
+    "verified_date": "2026-08-30"
+  },
+  {
+    "statement": "[DRAFT] The Pima County Board of Supervisors has 5 members.",
+    "expected_truth": {
+      "kind": "proposition",
+      "proposition": "[DRAFT] The Pima County Board of Supervisors has 5 members."
+    },
+    "fact_class": "known_present",
+    "verification_source": "https://www.pima.gov/2317/Board-of-Supervisors",
+    "verified_by": "owner",
+    "verified_date": "2026-08-30"
+  }
+]

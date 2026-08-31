@@ -44,6 +44,10 @@ export const REFUSAL_CODES = [
   "DENOMINATOR_INCOMPLETE",
   "DEPENDENCY_UNRESOLVED",
   "NOT_A_TERMINAL_STATE",
+  /** A named instrument has not returned the verdict the contract requires. */
+  "INSTRUMENT_VERDICT_NOT_EARNED",
+  /** The contract names an instrument verdict but no SHA to qualify a run against. */
+  "INSTRUMENT_EVIDENCE_UNANCHORED",
 ] as const;
 export type RefusalCode = (typeof REFUSAL_CODES)[number];
 
@@ -72,6 +76,19 @@ export interface CompletionSnapshot {
    * it. Only an affirmative `true` satisfies the clause.
    */
   readonly denominatorComplete: boolean | null;
+  /**
+   * Instance/check ids that a CANONICAL RUN RECORD has evaluated GREEN on a
+   * qualifying tree, supplied by the caller that read those records.
+   *
+   * It is a set of ids rather than a boolean because the question this answers
+   * is per-instance: "has THIS question turned green", never "did the suite
+   * pass". A suite can pass with the one instance that matters still red.
+   *
+   * An id absent from this set is UNSATISFIED. That direction is deliberate:
+   * a caller that forgot to read the run records refuses completion rather
+   * than granting it, which is the safe way to be wrong.
+   */
+  readonly instrumentGreens: ReadonlySet<string>;
   readonly now: string;
 }
 
@@ -349,6 +366,43 @@ export function evaluateCompletion(
       });
     } else {
       satisfied.push("coverage denominator complete");
+    }
+  }
+
+  // ---- The named-instrument verdict. The reader-diagnostic clause. --------
+  //
+  // A.1 WI3. An item created because a reader could not learn a fact closes
+  // only when the instrument that found the failure says, on a tree at or
+  // after the one the failure was observed on, that THAT question is green.
+  // Effort does not close it, a route disposition does not close it, and a
+  // validation record about something else certainly does not.
+  const evidence = item.contract.instrumentEvidence;
+  if (evidence !== null) {
+    if (evidence.createdAtSha === null) {
+      refusals.push({
+        code: "INSTRUMENT_EVIDENCE_UNANCHORED",
+        subject: evidence.instanceId,
+        detail:
+          `The contract requires a ${evidence.instrument} ${evidence.requiredVerdict} for ` +
+          `${evidence.instanceId}, but no SHA was recorded when the failure was observed. ` +
+          "Without one, no run can be shown to have tested the code that failed, so nothing " +
+          "can satisfy this clause. That is a defect in how the item was created, and it " +
+          "refuses rather than closing on an unanchored green.",
+      });
+    } else if (!snapshot.instrumentGreens.has(evidence.instanceId)) {
+      refusals.push({
+        code: "INSTRUMENT_VERDICT_NOT_EARNED",
+        subject: evidence.instanceId,
+        detail:
+          `No canonical ${evidence.instrument} run at or after ${evidence.createdAtSha} has ` +
+          `evaluated ${evidence.instanceId} as ${evidence.requiredVerdict}. The obligation is ` +
+          "that specific question turning green, not this one being worked on.",
+      });
+    } else {
+      satisfied.push(
+        `${evidence.instrument} evaluated ${evidence.instanceId} ${evidence.requiredVerdict} ` +
+          `on a run at or after ${evidence.createdAtSha}`,
+      );
     }
   }
 

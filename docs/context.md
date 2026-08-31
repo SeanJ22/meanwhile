@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 18:54:01 EDT.
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 21:15:03 EDT.
 Session day 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1221 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1230 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -1029,13 +1029,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-30 18:54:00 EDT
-branch: claude/session-a-architecture
-head sha: ec5ef90b7202dee990b80a56470ba2102a5d1637
-head subject: Close-out: the generated files handoff wrote on its way here (context.md, coverage-matrix.csv, repo-inventory.md)
-origin/main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
-origin/main subject: Job watch: a scheduled job has failed twice in a row
-local main sha: e62c42024ad27c99a4e5605de0426ea7d9f410e7
+generated: 2026-08-30 21:15:03 EDT
+branch: claude/session-a1-contract-instrumentation
+head sha: e440c5fabed21386074e023696f8a0a80ac7e887
+head subject: A.1: make the four scaffolded contract instruments real
+origin/main sha: 608623c535eb0fdadae3524772769a4f78d0e1d4
+origin/main subject: Post-deploy integrity reading: 2026-08-30T23:12Z
+local main sha: 608623c535eb0fdadae3524772769a4f78d0e1d4
 local main matches origin/main: yes
 working tree: clean
 open prs: none

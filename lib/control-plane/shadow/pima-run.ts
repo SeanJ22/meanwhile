@@ -723,6 +723,10 @@ export async function runPimaShadow(input: ShadowRunInput): Promise<ShadowRunRes
     validations,
     audits,
     denominatorComplete: true,
+    /* This shadow run carries no instrument-evidence contract, so the set is
+       empty and the clause is a no-op. Stated rather than omitted: an absent
+       field would be a type error the day one of these items gains one. */
+    instrumentGreens: new Set<string>(),
   });
 
   // THE SEEDED FAILURE. The same durable snapshot with the one route's

@@ -16,10 +16,20 @@
  * output says so on every line that shows a number.
  */
 
-import { existsSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { loadJsonArray } from "../lib/health/json-store.ts";
+import { headSha } from "../lib/ops/git-facts.ts";
 import { nextRunRecordPath } from "../lib/health/run-records.ts";
+import {
+  controlQuestion,
+  observeControl,
+  type ObservationBasis,
+} from "../lib/health/control-observation.ts";
+
+import { askAndRead, openAskAt } from "./ask-harness.mts";
+import { launchGuarded } from "./browser.mts";
 
 import {
   assembleWorkerItem,
@@ -51,7 +61,28 @@ interface RunRecord {
   /** True only in fixture mode: none of these numbers describe owner data. */
   readonly fixtureData: boolean;
   readonly fixtureDeleted: boolean | null;
+  /** A.1 WI4: the fields a reading derived from the REAL path must carry. */
+  readonly runId?: string;
+  readonly testedSha?: string | null;
+  readonly baseUrl?: string;
+  /** One row per control actually run, with what was read and on what basis. */
+  readonly observations?: readonly {
+    readonly statement: string;
+    readonly factClass: string;
+    readonly question: string;
+    readonly observed: string;
+    readonly basis: ObservationBasis;
+    readonly detail: string;
+    readonly mode: string | null;
+    readonly wall: string | null;
+  }[];
 }
+
+/** The tree this run measured, through the shared helper (RULING 103). */
+const TESTED_SHA = headSha();
+
+const DEFAULT_BASE = "http://localhost:3000";
+const BASE = (process.env.SHOOT_BASE_URL ?? DEFAULT_BASE).replace(/\/$/, "");
 
 function writeRunRecord(record: RunRecord): string {
   const recordPath = nextRunRecordPath(RUNS_DIR, today());
@@ -59,13 +90,9 @@ function writeRunRecord(record: RunRecord): string {
   return recordPath;
 }
 
+/** Through the shared reader (RULING 103). See `lib/health/json-store.ts`. */
 function loadKey(path: string): ControlFact[] | null {
-  if (!existsSync(path)) return null;
-  const parsed = JSON.parse(readFileSync(path, "utf8")) as unknown;
-  if (!Array.isArray(parsed)) {
-    throw new Error(`${path} exists but is not an array of control facts`);
-  }
-  return parsed as ControlFact[];
+  return loadJsonArray<ControlFact>(path, "control facts");
 }
 
 function printScore(score: ControlScore, label: string): void {
@@ -217,7 +244,7 @@ function proveFixture(): void {
   }
 }
 
-function ownerKey(): void {
+async function ownerKey(): Promise<void> {
   const startedAt = new Date().toISOString();
   const facts = loadKey(KEY_PATH) ?? [];
   if (facts.length === 0) {
@@ -236,22 +263,82 @@ function ownerKey(): void {
     return;
   }
   for (const fact of facts) assertValidControlFact(fact);
-  // The audit that produces real observations rides the reader-suite harness;
-  // until it runs, loaded-but-unscored is stated rather than smoothed.
+
+  /*
+   * ------------------------------------------------------------------
+   * THE CONTROLS RUN BLIND THROUGH THE REAL PATH. (A.1 WI4.)
+   *
+   * This branch used to stop here and report "no audit has produced
+   * observations yet", `score: null`. The plumbing existed and nothing drove
+   * it, so the truth contract had a validated answer key and no measurement.
+   *
+   * Each fact is now asked as a reader-shaped question through the SAME
+   * `openAskAt` / `askAndRead` path an ordinary reader question uses — the
+   * same input, the same submit, the same wait, the same read. Nothing in the
+   * transport can carry control identity, because the transport is a text
+   * box. Real observations come back and the score is computed from them.
+   * ------------------------------------------------------------------
+   */
   console.log(
-    `truth:controls · ${facts.length} controls loaded and validated · no audit has produced ` +
-      "observations yet, so there is no score to report — a missing reading is stated, " +
-      "never defaulted",
+    `truth:controls · ${facts.length} control(s) loaded and validated · running each blind ` +
+      `through the reader Ask path at ${BASE}`,
   );
+
+  const browser = await launchGuarded({ label: "control-set", headless: true });
+  const observations: ControlObservation[] = [];
+  const rows: NonNullable<RunRecord["observations"]>[number][] = [];
+  try {
+    /*
+     * The controls carry no ZIP of their own — the workbook keys them to one,
+     * but the loader does not lift it, and inventing one here would silently
+     * decide which government a control is about. The pilot entry ZIP is used
+     * for orientation only; the question names its own subject and the engine
+     * binds against the whole corpus, so the ZIP does not choose the answer.
+     */
+    const page = await openAskAt(browser, BASE, "85701");
+    for (const fact of facts) {
+      const question = controlQuestion(fact);
+      const observed = await askAndRead(page, question);
+      const result = observeControl(fact, observed.answer);
+      observations.push(result.observation);
+      rows.push({
+        statement: fact.statement,
+        factClass: fact.fact_class,
+        question,
+        observed: result.observation.observed,
+        basis: result.basis,
+        detail: result.detail,
+        mode: observed.answer.mode,
+        wall: observed.wall,
+      });
+    }
+    await page.close();
+  } finally {
+    await browser.close();
+  }
+
+  const score = scoreControls(facts, observations);
+  console.log(`  ${observations.length} observation(s) derived from the real path:`);
+  for (const row of rows) {
+    console.log(`    ${row.observed.padEnd(17)} ${row.basis.padEnd(15)} ${row.statement.slice(0, 70)}`);
+    console.log(`        ${row.detail}`);
+    if (row.wall) console.log(`        WALL · ${row.wall}`);
+  }
+  printScore(score, "OWNER");
+
   const recordPath = writeRunRecord({
     startedAt,
     finishedAt: new Date().toISOString(),
     mode: "OWNER_KEY",
     controlsLoaded: facts.length,
-    state: "loaded, awaiting an audit run to observe",
-    score: null,
+    state: null,
+    score,
     fixtureData: false,
     fixtureDeleted: null,
+    runId: browser.runId,
+    testedSha: TESTED_SHA,
+    baseUrl: BASE,
+    observations: rows,
   });
   console.log(`  run record: ${recordPath}`);
 }
@@ -259,5 +346,5 @@ function ownerKey(): void {
 if (process.argv.includes("--prove-fixture")) {
   proveFixture();
 } else {
-  ownerKey();
+  await ownerKey();
 }

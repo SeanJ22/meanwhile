@@ -48,6 +48,26 @@ export interface ReaderContractInput {
   readonly notEvaluable: number;
   /** Where the last evaluation looked, when one has run. */
   readonly target: EvaluationTarget | null;
+  /**
+   * **WHY A ZERO DENOMINATOR IS LEGITIMATE, WHEN IT IS.** (A.1 WI5.)
+   *
+   * A nonempty corpus that produced zero active instances is normally a
+   * DEFECT — the generator matched nothing, the registry is empty for these
+   * ZIPs, the applicability rule is wrong — and the old contract read it as
+   * `0 < 0`, which is false, and returned GREEN.
+   *
+   * There is exactly one honest way for it to be a real zero: an independent
+   * enumeration established that the universe genuinely holds nothing to ask
+   * about. That is a claim someone has to make with evidence, so it arrives
+   * as a sentence naming the evidence, and `null` — the default — refuses.
+   */
+  readonly establishedZeroDenominator: string | null;
+  /**
+   * Why this reading cannot be treated as current, when it cannot: no run
+   * record, a stale one, or one tested on a tree the release does not
+   * contain. Non-null forces NOT_READY and can never be widened to green.
+   */
+  readonly notCurrent: string | null;
 }
 
 /**
@@ -63,6 +83,48 @@ export function readerContract(input: ReaderContractInput): ContractReading {
       reason: "0 questions loaded — awaiting owner corpus",
     };
   }
+
+  /*
+   * THE EVIDENCE MUST BE CURRENT. A green measured against a tree that is not
+   * this one is evidence about different code, and an old green is evidence
+   * about a different day. Neither is a reading about now, and both used to
+   * be indistinguishable from one because there was no run record at all.
+   */
+  if (input.notCurrent !== null) {
+    return {
+      contract: "READER",
+      state: "NOT_READY",
+      reason: input.notCurrent,
+    };
+  }
+
+  /*
+   * THE VACUOUS GREEN, CLOSED. A nonempty corpus with no active instances is
+   * a defect unless an independent enumeration says the zero is real. The old
+   * arithmetic reached "all 0 active instances evaluated green" through
+   * `0 < 0 === false`, which is the shape of every vacuous truth.
+   */
+  if (input.activeInstances === 0) {
+    if (input.establishedZeroDenominator === null) {
+      return {
+        contract: "READER",
+        state: "RED",
+        reason:
+          `${input.questionsLoaded} question(s) are loaded and 0 instances are active. A ` +
+          "corpus that generates nothing to ask is a defect in generation or applicability, " +
+          "not a contract that is satisfied — and an empty denominator can never be green " +
+          "without independently established evidence that the zero is real.",
+      };
+    }
+    return {
+      contract: "READER",
+      state: "GREEN",
+      reason:
+        `0 active instances over ${input.questionsLoaded} loaded question(s), and the zero ` +
+        `is independently established: ${input.establishedZeroDenominator}`,
+    };
+  }
+
   const evaluated = input.evaluatedGreen + input.evaluatedRed + input.notEvaluable;
   const target = input.target ?? "no recorded target";
   if (input.evaluatedRed > 0) {
@@ -100,6 +162,8 @@ export interface TruthContractInput {
   readonly controlsLoaded: number;
   /** The scorer's reading over the last audit, when one has run. */
   readonly score: ControlScore | null;
+  /** Why the audit cannot be read as current. Non-null forces NOT_READY. */
+  readonly notCurrent: string | null;
 }
 
 /**
@@ -120,6 +184,9 @@ export function truthContract(input: TruthContractInput): ContractReading {
       state: "AWAITING_OWNER_DATA",
       reason: "0 controls loaded — awaiting owner answer key",
     };
+  }
+  if (input.notCurrent !== null) {
+    return { contract: "TRUTH", state: "NOT_READY", reason: input.notCurrent };
   }
   const score = input.score;
   if (score === null) {

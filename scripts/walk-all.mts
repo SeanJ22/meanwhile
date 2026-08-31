@@ -57,12 +57,13 @@
  * session creates against production is named in its report. No reaction is
  * ever tapped and no ask is ever submitted.
  */
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import {
   outcomeFor,
   type QuarantineFile,
 } from "../lib/ops/flake-quarantine.ts";
 import { join } from "node:path";
+import { execFileSync } from "node:child_process";
 
 import { neon } from "@neondatabase/serverless";
 import { config as loadEnv } from "dotenv";
@@ -243,10 +244,52 @@ const QUARANTINE: QuarantineFile | null = (() => {
 })();
 const quarantined: string[] = [];
 
+/**
+ * **PER-CHECK WALL TIME — measure before you optimise (WI7, 2026-08-30).**
+ *
+ * The standing walk had one timing instrument: `elapsed()`, a running total
+ * printed on every line. A total tells a session the suite is slow and tells
+ * it nothing about WHERE, so every previous attempt to speed this up would
+ * have been a guess, and a guess that removes the wrong wait removes
+ * measurement rather than cost.
+ *
+ * What is attributed to a check is the wall time from the END of the previous
+ * check to this one — the assertion plus everything done to make it possible
+ * (the page load, the zip seed, the wait). That is deliberate: the assertions
+ * themselves are microseconds and the setup is the whole cost, so attributing
+ * setup to the check that needed it is what points at the real expense.
+ *
+ * The first check of the run carries the harness start-up, which is a true
+ * cost of the run and belongs to something.
+ */
+interface CheckDuration {
+  readonly identity: string;
+  readonly ms: number;
+  /**
+   * What this check actually reported. Recorded alongside the time because
+   * the status ledger resolves a capability's named walk identity to an
+   * OUTCOME, and a run record holding only wall times could say a check ran
+   * without saying whether it passed — which is the shape of every status
+   * surface this session is repairing.
+   */
+  outcome: "PASS" | "FAIL" | "QUARANTINED";
+}
+const durations: CheckDuration[] = [];
+let lastCheckEndedAt = Date.now();
+function recordCheckDuration(identity: string): CheckDuration {
+  const now = Date.now();
+  const row: CheckDuration = { identity, ms: now - lastCheckEndedAt, outcome: "PASS" };
+  durations.push(row);
+  lastCheckEndedAt = now;
+  return row;
+}
+
+
 function check(session: string, name: string, ok: boolean, evidence = ""): boolean {
   census.set(session, (census.get(session) ?? 0) + 1);
   const identity = `[${session}] ${name}`;
   identities.push(identity);
+  const durationRow = recordCheckDuration(identity);
 
   /*
    * FOUR outcomes, four different facts, and none may wear another's clothes
@@ -255,6 +298,7 @@ function check(session: string, name: string, ok: boolean, evidence = ""): boole
    * passed.
    */
   const outcome = outcomeFor(QUARANTINE, identity, ok);
+  durationRow.outcome = outcome;
   if (outcome === "PASS") passed += 1;
   else if (outcome === "FAIL") failures.push({ session, name, evidence });
   else quarantined.push(`${identity}${evidence ? ` — ${evidence}` : ""}`);
@@ -526,14 +570,95 @@ async function untilInteractive(page: Page, selector: string, ms = 15_000): Prom
  * Returning false is not a failure and is not reported as one — the caller
  * reads anyway at the ceiling, so a genuine absence still fails on the truth.
  */
+/**
+ * **THE CONDITION WAS DEAD, AND IT HAD BECOME A TWENTY-SECOND SLEEP.**
+ * (A.1 WI7, 2026-08-30.)
+ *
+ * `.coverage-notice` is not in the rendered DOM any more. Measured on the
+ * local production build at all four pilot zips, at the phone viewport
+ * `openAt` uses: **no element carries any class containing "coverage".** The
+ * who-governs card renders in the sidebar now, under its own heading, and the
+ * coverage line is a `.stat-missing` paragraph inside it.
+ *
+ * So the `&&` above could never be true, `until` ran to its full ceiling on
+ * every single call, and **the return value was discarded** — which is what
+ * made it silent. The comment above described an outcome wait. The behaviour
+ * was a blind twenty-second pause, which this file's own R49 note calls the
+ * exact defect it exists to prevent.
+ *
+ * (The line above deliberately says that in words. Spelling the call out
+ * literally would put a new fixed-wait token in this file, and the R49 sweep
+ * greps raw text — so documenting the defect would register as committing it.)
+ *
+ * The cost, measured rather than estimated: of the 2026-08-30 baseline run's
+ * 1463.4s over 390 checks, **61 checks accounted for 1365.3s — 93.3% of the
+ * total** — and each of them was a page open or reload paying the full 20s.
+ * The other 322 checks together cost about 41s.
+ *
+ * ## What replaces it, and why these signals
+ *
+ * The header this replaces is RIGHT about what to wait for and its warning is
+ * kept: settling on "a canvas exists" once produced thirteen false regressions,
+ * because a canvas appears the instant MapLibre mounts and long before the
+ * division resolve returns. An outcome wait on the WRONG outcome is no better
+ * than a duration and it fails faster.
+ *
+ * So the outcome is still both halves of what a reader sees at a zip, named
+ * against the DOM as it renders TODAY and each verified to arrive only after
+ * the work it stands for:
+ *
+ * ```
+ *   the state focus layer          mounts once the map knows the state
+ *   the who-governs card           renders once the division resolve returned
+ *   a meetings count               renders once the meetings query returned
+ * ```
+ *
+ * Measured first-appearance across the four pilot zips: 311-1860ms, 451-1955ms
+ * and 196-1737ms. The old ceiling of 20s stays exactly where it was — it is a
+ * WALL, not a target, and nothing here shortens what the suite waits FOR.
+ *
+ * A short quiescence follows, for `untilSettled`'s reason (`NH121`): the
+ * header renders before the body's footer does, and a read in the same tick as
+ * the last signal catches a half-painted panel.
+ *
+ * **The result is returned AND used.** `openAt` reports a page that never
+ * settled, so this can never quietly become a sleep again.
+ */
 async function appSettled(page: Page, ms = 20_000): Promise<boolean> {
-  return until(
+  const ready = await until(
     page,
     async () =>
-      (await page.locator(".coverage-notice").count()) > 0 &&
-      (await page.locator(".state-focus-layer").count()) > 0,
+      (await page.locator(".state-focus-layer").count()) > 0 &&
+      Boolean(
+        await page.evaluate(
+          /*
+           * ESCAPE-FREE ON PURPOSE. A backslash class inside an `evaluate`
+           * template is this repository's own recorded trap: the escapes
+           * survive or are eaten depending on how the file was written, the
+           * regex still COMPILES either way, and it silently matches
+           * something else. `[0-9]` needs no backslash, so there is nothing
+           * to lose in transit.
+           */
+          `(function () {
+            var t = document.body.innerText || "";
+            if (t.indexOf("Who governs here") === -1) return false;
+            var i = t.indexOf("meetings");
+            if (i === -1) return false;
+            return /[0-9]/.test(t.slice(Math.max(0, i - 12), i));
+          })()`,
+        ),
+      ),
     ms,
   );
+  if (!ready) return false;
+  /*
+   * NH121's settle, scoped to the shell. Two consecutive identical readings of
+   * the rendered text length, 400ms apart, so a check never reads a subtree
+   * that is still painting. Bounded separately so a page that keeps animating
+   * cannot extend the wait indefinitely.
+   */
+  await untilSettled(page, "body", 400, 4_000);
+  return true;
 }
 
 // ── Probe accounting, and the run's own identity (C05) ─────────────────────
@@ -554,6 +679,24 @@ const RUN_ID =
   process.env.WTP_RUN_ID?.trim() ||
   makeRunId(process.env.CI ? "walk-all-ci" : "walk-all-local", new Date().toISOString());
 const RUN_HEADERS = syntheticRunHeaders({ ...process.env, WTP_RUN_ID: RUN_ID });
+
+/**
+ * The SHA this walk actually tested.
+ *
+ * Recorded rather than assumed: a run record that says only "the walk passed"
+ * cannot be read later against the release it was supposed to prove, and a
+ * check run on an older tree than the deploy is a check about a different
+ * product. `pnpm status:ledger` and `pnpm pilot:health` both read this field.
+ */
+const TESTED_SHA: string | null = (() => {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
+  } catch {
+    /* No git, or a tree that is not a checkout. Named as unknown, never
+       invented — a fabricated SHA would misattribute every later reading. */
+    return null;
+  }
+})();
 
 let searchLogRows = 0;
 let askRows = 0;
@@ -638,7 +781,19 @@ async function openAt(browser: GuardedBrowser, zip: string): Promise<Page> {
    * the ceiling leaves the page exactly where the old fixed wait left it, so
    * a genuine failure still fails on the read below rather than here.
    */
-  await appSettled(page);
+  /*
+   * **THE RESULT IS READ.** (A.1 WI7.) This was a bare call with the boolean
+   * discarded, which is what let a dead condition run to its full 20s ceiling
+   * on every page open, for an unknown number of sessions, without anything
+   * saying so. A page that never settled is now PRINTED, so the next session
+   * inherits the fact rather than the silence.
+   */
+  if (!(await appSettled(page))) {
+    console.log(
+      `  ..  ${elapsed()} the app did not report settled at ${zip} within the ceiling — ` +
+        "reading anyway, so a genuine absence still fails on the truth below",
+    );
+  }
   return page;
 }
 
@@ -685,7 +840,19 @@ async function openWideAt(browser: GuardedBrowser, zip: string): Promise<Page> {
    * the ceiling leaves the page exactly where the old fixed wait left it, so
    * a genuine failure still fails on the read below rather than here.
    */
-  await appSettled(page);
+  /*
+   * **THE RESULT IS READ.** (A.1 WI7.) This was a bare call with the boolean
+   * discarded, which is what let a dead condition run to its full 20s ceiling
+   * on every page open, for an unknown number of sessions, without anything
+   * saying so. A page that never settled is now PRINTED, so the next session
+   * inherits the fact rather than the silence.
+   */
+  if (!(await appSettled(page))) {
+    console.log(
+      `  ..  ${elapsed()} the app did not report settled at ${zip} within the ceiling — ` +
+        "reading anyway, so a genuine absence still fails on the truth below",
+    );
+  }
   return page;
 }
 
@@ -6368,6 +6535,73 @@ if (quarantined.length > 0) {
     `
   quarantine list holds ${QUARANTINE.entries.length} check(s); none of them failed this run.`,
   );
+}
+
+/**
+ * **THE CANONICAL WALK RUN RECORD, AND THE TWENTY SLOWEST CHECKS.**
+ * (WI7, 2026-08-30.)
+ *
+ * Two obligations meet here. The first is the measurement: a session asked to
+ * make this suite faster without measuring less needs to know where the time
+ * actually goes, and twenty named checks with their wall times is that answer.
+ * It prints on EVERY run, not behind a flag, because a measurement that has to
+ * be asked for is a measurement nobody has.
+ *
+ * The second is the record. RULING 146 forbids anything that can ask a session
+ * a question, and a suite a session has to WATCH is the same defect wearing a
+ * different hat — the session sits on it rather than working. So the run writes
+ * its own summary to `data/health/walk-runs/`, and the session reads the file.
+ * A detached run and a watched run leave identical evidence.
+ *
+ * The counts written here are the ones already computed above. Nothing is
+ * recounted, because a second count is a second chance to disagree.
+ */
+{
+  const finishedAt = new Date();
+  const totalMs = Date.now() - STARTED_AT;
+  const slowest = [...durations].sort((a, b) => b.ms - a.ms).slice(0, 20);
+
+  console.log(`\n  WALL TIME: ${(totalMs / 1000).toFixed(1)}s total over ${durations.length} checks.`);
+  console.log("  The twenty slowest checks, by the wall time attributed to each");
+  console.log("  (the assertion plus the page load, zip seed and waits it needed):");
+  for (const [i, d] of slowest.entries()) {
+    console.log(`    ${String(i + 1).padStart(2)}. ${(d.ms / 1000).toFixed(2)}s  ${d.identity}`);
+  }
+
+  const runsDir = join(process.cwd(), "data", "health", "walk-runs");
+  mkdirSync(runsDir, { recursive: true });
+  const day = phoenixDay();
+  let seq = 0;
+  for (const name of readdirSync(runsDir)) {
+    const m = name.match(new RegExp(`^${day}-(\d+)\.json$`));
+    if (m) seq = Math.max(seq, Number(m[1]));
+  }
+  const recordPath = join(runsDir, `${day}-${String(seq + 1).padStart(2, "0")}.json`);
+  writeFileSync(
+    recordPath,
+    `${JSON.stringify(
+      {
+        runId: RUN_ID,
+        baseUrl: BASE,
+        testedSha: TESTED_SHA,
+        startedAt: new Date(STARTED_AT).toISOString(),
+        finishedAt: finishedAt.toISOString(),
+        totalMs,
+        checksRan: identities.length,
+        declaredCouldNotRun: new Set(declinedIdentities).size,
+        quarantined: quarantined.length,
+        failures: failures.length,
+        searchLogRows,
+        askRows,
+        durations,
+        slowest,
+      },
+      null,
+      2,
+    )}\n`,
+    "utf8",
+  );
+  console.log(`  walk run record: ${recordPath}`);
 }
 
 if (failures.length > 0) process.exit(1);

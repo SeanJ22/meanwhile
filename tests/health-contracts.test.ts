@@ -25,6 +25,8 @@ function greenReader(): ContractReading {
     evaluatedRed: 0,
     notEvaluable: 0,
     target: "LOCAL_RENDER",
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
 }
 
@@ -43,7 +45,7 @@ function cleanScore(): ControlScore {
 }
 
 function greenTruth(): ContractReading {
-  return truthContract({ controlsLoaded: 5, score: cleanScore() });
+  return truthContract({ controlsLoaded: 5, score: cleanScore(), notCurrent: null });
 }
 
 /** FRESHNESS as it will read AFTER Session B — hand-built, because the current
@@ -88,6 +90,8 @@ test("no contract certifies another: TRUTH green does not flip READER", () => {
     evaluatedRed: 0,
     notEvaluable: 0,
     target: null,
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
   const rollup = pilotHealth(readerAwaiting, greenTruth(), hypotheticalGreenFreshness());
   assert.equal(rollup.green, false);
@@ -105,11 +109,13 @@ test("empty corpora read as AWAITING_OWNER_DATA with the exact stated strings", 
     evaluatedRed: 0,
     notEvaluable: 0,
     target: null,
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
   assert.equal(reader.state, "AWAITING_OWNER_DATA");
   assert.equal(reader.reason, "0 questions loaded — awaiting owner corpus");
 
-  const truth = truthContract({ controlsLoaded: 0, score: null });
+  const truth = truthContract({ controlsLoaded: 0, score: null, notCurrent: null });
   assert.equal(truth.state, "AWAITING_OWNER_DATA");
   assert.equal(truth.reason, "0 controls loaded — awaiting owner answer key");
 });
@@ -129,6 +135,8 @@ test("READER is red while any active instance lacks a green verdict", () => {
     evaluatedRed: 0,
     notEvaluable: 0,
     target: "LOCAL_RENDER",
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
   assert.equal(unevaluated.state, "RED");
 
@@ -139,6 +147,8 @@ test("READER is red while any active instance lacks a green verdict", () => {
     evaluatedRed: 0,
     notEvaluable: 1,
     target: "LOCAL_RENDER",
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
   assert.equal(notEvaluable.state, "RED", "NOT_EVALUABLE is recorded, and it is never green");
 
@@ -149,6 +159,8 @@ test("READER is red while any active instance lacks a green verdict", () => {
     evaluatedRed: 1,
     notEvaluable: 0,
     target: "LOCAL_RENDER",
+    establishedZeroDenominator: null,
+    notCurrent: null,
   });
   assert.equal(red.state, "RED");
 });
@@ -157,6 +169,7 @@ test("TRUTH green requires both failure directions to have a denominator", () =>
   const noAbsenceControls = truthContract({
     controlsLoaded: 3,
     score: { ...cleanScore(), knownAbsenceCount: 0, falsePresenceRate: null },
+    notCurrent: null,
   });
   assert.equal(noAbsenceControls.state, "RED");
 
@@ -169,18 +182,21 @@ test("TRUTH green requires both failure directions to have a denominator", () =>
       recall: null,
       falseAbsenceRate: null,
     },
+    notCurrent: null,
   });
   assert.equal(noPresentControls.state, "RED");
 
   const dirty = truthContract({
     controlsLoaded: 5,
     score: { ...cleanScore(), falsePresences: 1, falsePresenceRate: 0.5 },
+    notCurrent: null,
   });
   assert.equal(dirty.state, "RED");
 
   const unobserved = truthContract({
     controlsLoaded: 5,
     score: { ...cleanScore(), unobserved: 1 },
+    notCurrent: null,
   });
   assert.equal(unobserved.state, "RED", "an unmeasured control is not a passed one");
 
@@ -193,4 +209,69 @@ test("the rollup refuses readings out of order rather than mislabelling them", (
       pilotHealth(greenTruth() as ContractReading, greenReader(), hypotheticalGreenFreshness()),
     /READER, TRUTH, FRESHNESS/,
   );
+});
+
+/* ====================================================================== *
+ * A.1 WI5 — THE VACUOUS GREEN, AND THE STALE READING.
+ * ====================================================================== */
+
+test("SEEDED: a nonzero corpus with zero evaluated instances cannot produce READER GREEN", () => {
+  /*
+   * THE EXACT DEFECT. `pnpm pilot:health` passed `activeInstances: 0,
+   * evaluatedGreen: 0` as literals with a nonempty corpus. The red branch
+   * tests `evaluatedGreen < activeInstances`, which is `0 < 0`, which is
+   * false — so the contract fell through every refusal and returned GREEN
+   * over zero measured instances.
+   */
+  const vacuous = readerContract({
+    questionsLoaded: 5,
+    activeInstances: 0,
+    evaluatedGreen: 0,
+    evaluatedRed: 0,
+    notEvaluable: 0,
+    target: null,
+    establishedZeroDenominator: null,
+    notCurrent: null,
+  });
+  assert.notEqual(vacuous.state, "GREEN", "zero evaluated instances is never a green contract");
+  assert.equal(vacuous.state, "RED");
+  assert.match(vacuous.reason, /0 instances are active/);
+});
+
+test("a zero denominator IS green when — and only when — it is independently established", () => {
+  const established = readerContract({
+    questionsLoaded: 5,
+    activeInstances: 0,
+    evaluatedGreen: 0,
+    evaluatedRed: 0,
+    notEvaluable: 0,
+    target: "LOCAL_RENDER",
+    establishedZeroDenominator:
+      "the enumeration evidence holds no governing body for these ZIPs at this layer",
+    notCurrent: null,
+  });
+  assert.equal(established.state, "GREEN");
+});
+
+test("SEEDED: a stale or off-tree run reads NOT_READY, never green", () => {
+  const stale = readerContract({
+    questionsLoaded: 3,
+    activeInstances: 5,
+    evaluatedGreen: 5,
+    evaluatedRed: 0,
+    notEvaluable: 0,
+    target: "LOCAL_RENDER",
+    establishedZeroDenominator: null,
+    /* Every count says green. The evidence is about a different tree. */
+    notCurrent: "the run tested aaaaaaaa, which the release bbbbbbbb does not contain",
+  });
+  assert.equal(stale.state, "NOT_READY");
+  assert.match(stale.reason, /does not contain/);
+
+  const truthStale = truthContract({
+    controlsLoaded: 5,
+    score: cleanScore(),
+    notCurrent: "the newest control-set run finished 96.0h ago",
+  });
+  assert.equal(truthStale.state, "NOT_READY");
 });

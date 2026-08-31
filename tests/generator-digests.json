@@ -156,7 +156,7 @@
     "regeneratedOn": "2026-08-30"
   },
   "docs/repo-inventory.md": {
-    "digest": "83fbec0950d0893f4b15da58bfb563f4b0024a84024a3689a956fc4c1e6f8552",
+    "digest": "5e1b1aec05b045ff5a5c6d4bd54296a9abefca90d9a41e3df5ee3f35d3519546",
     "files": 8,
     "entry": "scripts/repo-map.mts",
     "regeneratedOn": "2026-08-30"
@@ -168,8 +168,8 @@
     "regeneratedOn": "2026-08-30"
   },
   "docs/status-ledger.md": {
-    "digest": "c32731c9743184ba4a0da70539599a2f3462ef786ec166e1fed6f395e78e3b39",
-    "files": 4,
+    "digest": "7d4e08dfe5341a1d2fafe1fc46ed8df60137a0e157e70d5809cb34a43bd3d86e",
+    "files": 6,
     "entry": "scripts/status-ledger.mts",
     "regeneratedOn": "2026-08-30"
   },

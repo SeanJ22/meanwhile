@@ -14,14 +14,14 @@ and when. Nothing is ever deleted.
 
 ## Where the project stands
 
-- **365 open**, 464 resolved.
-- **64 waiting on Sean** — the first section below.
+- **369 open**, 464 resolved.
+- **65 waiting on Sean** — the first section below.
 - P1 by section:
   - Needs Sean — **4**
   - New Hampshire hunt — **2**
   - New Jersey hunt — **1**
   - Arizona hunt — **2**
-  - Visual feedback — **2**
+  - Visual feedback — **3**
   - Data infrastructure — **3**
   - Product / UI — **3**
   - Constitution & rules — **1**
@@ -35,7 +35,7 @@ No section is over the five-P1 cap.
 
 Anything only Sean can unblock: an API key, a legal review, a business decision, a visual judgment, and specifically go look at the site and confirm this is right.
 
-**64 open · 67 resolved.**
+**65 open · 67 resolved.**
 
 Only Sean closes a row here. A session may open one and may work it.
 
@@ -82,6 +82,8 @@ Only Sean closes a row here. A session may open one and may work it.
 **NH283** — When a captured public page carries a live third-party credential - which is not hypothetical, it is what PR #216 hit on Pima County's own Clerk of the Board page - the exact bytes are kept but quarantined, and only a sanitized copy reaches any parser. Those quarantined bytes currently cannot be stored durably, because the only two places this repository can write are a PUBLIC GitHub asset store and a plain folder on disk, and neither offers encryption at rest or access control. The tier was deliberately NOT weakened to fit what is available: that would put a working credential somewhere it can be read, which is the original incident one layer down. Ordinary evidence is fully durable already; this is only about the quarantined tier.
 
 **NH287** — 16 of the 20 speculative Pima routes carry a recorded outcome with jurisdiction 'az'. Several of those walks were actually against school districts and water districts, not the county. Promoting a route to REQUIRED on that evidence would let a school-district technique become a required county route on the strength of 'somewhere in Arizona'. The route-floor repair therefore deliberately did NOT implement an OBSERVED_HERE proof kind, and 0 method routes are currently REQUIRED for Pima.
+
+**NH299** — docs/Meanwhile-Owner-Checklist.xlsx holds three rows with Status CONFIRMED — EX, F1 and F5 — of which EX is the workbook's own documented example row. So the answer key is two facts, both known_present. The Adversarial questions tab has Keep? blank on all twelve rows, so zero questions load. The READER contract therefore reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate for want of a known_absence denominator.
 
 **NH43** — RULING 60's residual. NH Hunt 5 hand-worked every un-held unit at 03255 and holds 48 of 48. Three bodies inside those units were reached by nothing, and each is listed below with every branch already walked and what each returned. The ruling asks you to hunt one or two yourself and return the process, which then gets built as a branch the same way the six in zip-playbook.md section 8 were.
 
@@ -483,13 +485,15 @@ Everything owed to a reader in Arizona — Vail (85641) and downtown Tucson (857
 
 Everything arriving in Sean's twice-weekly batches — what the product looks like and reads like when he walks it.
 
-**19 open · 40 resolved.**
+**20 open · 40 resolved.**
 
 ### P1
 
 **F01** — Sean's full walk of the product on 2026-08-18, forty-odd findings across cards, meeting order, votes, the ask box, the ballot and the map. The parent row that keeps the whole batch together; the individual findings became their own rows.
 
 **NH183** — From the 8/25 Part 2 walkthrough, capture 17-17-53. Filters collapsed leaves a large empty white area between the FILTERS control and the sidebar's bottom edge; 17-18-13 shows the same sidebar with Filters expanded and no empty space, so the panel is holding its expanded height. Sean: floating empty space is not acceptable. THE PUSH-DOWN BEHAVIOUR WHEN FILTERS OPENS IS CORRECT AND PROTECTED — his words, I like that, I think that is smart — and the defect is only in the collapsed state. Not reached by part2-0825, which shed from the bottom of its item list after Item 8's WGH-11 half.
+
+**NH296** — The owner recorded a testing pass on 2026-08-30 and left 20 screenshots plus a commentary document under feedback/8.30.26/. He states in it that these are systemic issues and must be treated as class-wide rather than as instances. This row is the intake obligation for that pass; it is deferred to the next session by the owner's own instruction on 2026-08-30.
 
 ### P2
 
@@ -751,7 +755,7 @@ Sources, ingest, denominators, extraction, crawlers. The machinery that turns a 
 
 How the app behaves and reads — surfaces, flows, wording, features. Distinct from how it looks in a feedback batch.
 
-**47 open · 141 resolved.**
+**48 open · 141 resolved.**
 
 ### P1
 
@@ -782,6 +786,8 @@ How the app behaves and reads — surfaces, flows, wording, features. Distinct f
 **NH263** — Sean could not find the Ask feature in his own product. It sits below every contest, below the footnotes.
 
 **NH269** — A reader deciding whether they can attend should learn that a meeting has no room to walk into before they open it. The main meeting list already says Online. The door overlay next-meeting line and the Ask autocomplete do not.
+
+**NH297** — The standing walk names this regression on both the 2026-08-30 baseline run and the verification run after the walk speed-up. It reads 0 jurisdiction(s) carrying 0 recorded rung(s) where g21 shipped rungs. Pre-existing at this session's start on 608623c5 and untouched by A.1.
 
 **NH58** — When map tiles do not load, the reader-facing panel reads: 'BASEMAP UNAVAILABLE — Map tiles didn't load. Pins and meeting details still work. Set NEXT_PUBLIC_MAPTILER_KEY in .env.local to use'. An environment-variable name and a source file path are internal identifiers and may not render outside a technical-details disclosure.
 
@@ -883,7 +889,7 @@ CLAUDE.md, docs/rulings.md, and the guard tests that enforce them. The amendment
 
 CI, tests, workflows, storage, the machinery the project runs on.
 
-**27 open · 87 resolved.**
+**28 open · 87 resolved.**
 
 ### P1
 
@@ -908,6 +914,8 @@ CI, tests, workflows, storage, the machinery the project runs on.
 **NH205** — Branch protection is now asserted against the live GitHub API by one command, so the answer to whether main is still protected the way we think is a command rather than a memory. Nothing runs it automatically. It needs gh authenticated with admin scope, which the gates job does not have and should not be given, so wiring it into pnpm gates was deliberately not done.
 
 **NH256** — The standing regression net's g8 check asserts no internal adapter id reaches a reader surface. It greps the raw response text for each id as a word, so it matched INSIDE source URLs: civicplus in content.civicplus.com asset links and legistar in a pima.legistar.com LegislationDetail link. Both are CITATIONS — Pima County's own document CDN and its legislative portal — carried because the ballot corpus's absences must cite the record that settled them, which is the Vail Unified and Empire Elementary election cancellations. The guard was reporting the transparency rules working. MEASURED: with URLs stripped, ZERO adapter ids remain anywhere in the served HTML at any of the four pilot zips, so there was no reader-visible leak at any point. ATTRIBUTION, established rather than assumed: git log -S puts the citation in 9e75bea, the merged handoff of PR #210 from the 85641-detective branch, and git merge-base --is-ancestor confirms that commit is an ancestor of this session's start SHA 1e02e2f. The ask-entity session made no commits touching the Pima ballot corpus. So it had been failing on main since #210 and was reported as 2 regressions on every walk in between. REPAIRED: the check strips http and https URLs before scanning and nothing else changed. Narrowing a check is exactly where a check quietly stops checking, so a PLANTED control runs on every walk and asserts BOTH halves — an adapter id in reader text is still caught, and the same id inside a source URL is not — and says THE GUARD IS BLIND if the first half ever stops firing. Walk after the repair: 369 passed, 0 regressions, 11 could not run.
+
+**NH298** — A.1 WI7 measured the walk, repaired the dead readiness wait, and took it from 1463.4s to 321.2s over the same 390 checks. Three of the named avenues are not done: running checks concurrently across Playwright contexts, making the walk hermetic with no live network, and reusing the production build when HEAD is unchanged.
 
 **NH32** — The intake tripwire raised an alarm on 2026-08-21 at 00:28 UTC: a search_log insert was refused in production. The alarm is doing exactly what it was built for. The problem is that its output prints five dashes where the database's reason should be, so the one thing needed to diagnose it is the one thing not recorded. Production schema is in sync at 0015, so a missing column is ruled out.
 

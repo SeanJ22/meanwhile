@@ -6,7 +6,7 @@ plus one authored sentence per session in `docs/log-purposes.json`.
 
 Generated 2026-08-30 (America/Phoenix, from `pnpm stamp`).
 
-Newest first. **165 sessions.**
+Newest first. **166 sessions.**
 
 Runs before 2026-08-17 predate the session-naming convention, so they are named by
 their date and their own commit subject. That is a lookup rather than a guess, and
@@ -197,6 +197,17 @@ THE STAMP IS NOT DECORATION. job-watch.yml is itself one of the delayed workflow
 [job-watch:dispatch-delay:refresh-daily.yml@2026-08-30T09:11:00.000Z]
 
 **Needs Sean.** Nothing.
+
+## A.1 contract instrumentation repair · 2026-08-30
+
+**What it started.** 4 row(s) opened, 4 still open.
+
+- **NH296** — The owner recorded a testing pass on 2026-08-30 and left 20 screenshots plus a commentary document under feedback/8.30.26/. He states in it that these are systemic issues and must be treated as class-wide rather than as instances. This row is the intake obligation for that pass; it is deferred to the next session by the owner's own instruction on 2026-08-30. *(open)*
+- **NH297** — The standing walk names this regression on both the 2026-08-30 baseline run and the verification run after the walk speed-up. It reads 0 jurisdiction(s) carrying 0 recorded rung(s) where g21 shipped rungs. Pre-existing at this session's start on 608623c5 and untouched by A.1. *(open)*
+- **NH298** — A.1 WI7 measured the walk, repaired the dead readiness wait, and took it from 1463.4s to 321.2s over the same 390 checks. Three of the named avenues are not done: running checks concurrently across Playwright contexts, making the walk hermetic with no live network, and reusing the production build when HEAD is unchanged. *(open)*
+- **NH299** — docs/Meanwhile-Owner-Checklist.xlsx holds three rows with Status CONFIRMED — EX, F1 and F5 — of which EX is the workbook's own documented example row. So the answer key is two facts, both known_present. The Adversarial questions tab has Keep? blank on all twelve rows, so zero questions load. The READER contract therefore reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate for want of a known_absence denominator. *(open)*
+
+**Needs Sean.** NH299
 
 ## 2026-08-30 - release identity, the freeze gate's diff, and the reader's vote question
 

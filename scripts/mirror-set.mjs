@@ -186,7 +186,37 @@ export const COPIED_DOCS = MIRRORED_DOCS.filter((d) => d.repoPath !== null);
  * reviewer's read path into source, added 2026-08-17. Both are directories, so
  * neither is a document and neither belongs in the ten.
  */
-export const EXPECTED_DIRS = ["transcripts", "code"];
+export const EXPECTED_DIRS = ["transcripts", "code", "owner-intake"];
+
+/**
+ * **OWNER INTAKE — the folder the author writes into.** (A.1 WI8, 2026-08-30,
+ * the author's decision.)
+ *
+ * `defects.md` was his production-defect scratchpad and it joined the mirror on
+ * 2026-08-14 for exactly the right reason: he writes from outside the repo, so
+ * it had to be readable from outside the repo. It has since grown far too large
+ * to work in and has become a MACHINE surface — a long committed record that
+ * sessions append to and read. Asking him to keep writing into it is asking him
+ * to edit a file whose primary reader is a script.
+ *
+ * So intake moves to a folder with exactly two inputs, and `defects.md` stays
+ * in the set as a machine-maintained RECORD rather than a place he writes:
+ *
+ * ```
+ *   owner-intake/defect-inbox/       screenshots. Unnamed. Annotated.
+ *   owner-intake/Owner-Defects.xlsx  non-visual defects: wrong fact, wrong behavior
+ * ```
+ *
+ * It is registered as an EXPECTED_DIR rather than as a mirrored document
+ * because it is a directory, and directories have never been documents here —
+ * the same reasoning that put `transcripts/` and `code/` in this list.
+ */
+export const OWNER_INTAKE_DIR = "owner-intake";
+
+/** What the owner-intake folder is expected to hold. */
+export const OWNER_INTAKE_INBOX = "defect-inbox";
+export const OWNER_INTAKE_PROCESSED = "processed";
+export const OWNER_INTAKE_WORKBOOK = "Owner-Defects.xlsx";
 
 /**
  * Subdirectories that are the AUTHOR'S, not the mirror's.
@@ -226,6 +256,14 @@ export const DECLARED_EXTRAS = [
   "primary-rhetoric.csv",
   "primary-rhetoric-sample.csv",
   "primary-rhetoric-members.csv",
+  /*
+   * Placed by the author while verifying control fact F4 on 2026-08-30 — the
+   * Pima adopted-reports PDF he found through the OnBase index search, and
+   * named in that row's own Notes. His file, his evidence, and not this
+   * script's to remove. Declared so the set check reports it instead of
+   * failing on it.
+   */
+  "CL - Adopted_Reports_and_Plans - 8 25 2026 - MEMORANDUM OF UNDERSTANDING ESTABLISHING THE ARIZONA-TAIWAN TALENT AND INNOVATION HUB AT THE ROY PLACE BUILDING IN PIMA COUNTY-TUCSON, ARIZONA - 8 25 2026.pdf",
 ];
 
 /** Every repo path the document mirror already carries. */

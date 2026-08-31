@@ -1,6 +1,6 @@
 {
  "formatVersion": 1,
- "fetchedAt": "2026-08-26T19:41:12.697Z",
+ "fetchedAt": "2026-08-31T17:08:01.493Z",
  "cycle": 2026,
  "matchReport": {
   "rosterMatched": 10,
@@ -188,8 +188,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S0NH00219/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -373,8 +373,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00185/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -556,8 +556,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4AZ00139/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -739,8 +739,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00091/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -922,8 +922,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00466/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -1105,8 +1105,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S0AZ00350/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -1292,8 +1292,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H2AZ02360/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -1314,13 +1314,13 @@
    "principalCommitteeId": "C00878454",
    "cycle": 2026,
    "totals": {
-    "receipts": 3709389.94,
-    "disbursements": 1252997.78,
-    "cashOnHand": 2514390.01,
-    "individualItemized": 2560781.78,
-    "individualUnitemized": 209242.79,
-    "smallDonorShare": 0.05640894955357538,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 4155360.22,
+    "disbursements": 1512293.54,
+    "cashOnHand": 2701064.53,
+    "individualItemized": 2674128.42,
+    "individualUnitemized": 275917.47,
+    "smallDonorShare": 0.06640037334717518,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -1477,8 +1477,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H4NH02399/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -1664,8 +1664,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ07121/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -1849,8 +1849,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11286/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2032,8 +2032,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S4NJ00532/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2215,8 +2215,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NJ11211/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2237,12 +2237,12 @@
    "principalCommitteeId": "C00897090",
    "cycle": 2026,
    "totals": {
-    "receipts": 7354599.1,
-    "disbursements": 4093847.5,
-    "cashOnHand": 3260751.6,
-    "individualItemized": 3116127.48,
-    "individualUnitemized": 2800233.26,
-    "smallDonorShare": 0.3807458736941895,
+    "receipts": 7354808.32,
+    "disbursements": 4093931.72,
+    "cashOnHand": 3260876.6,
+    "individualItemized": 3123292.48,
+    "individualUnitemized": 2800193.26,
+    "smallDonorShare": 0.38072960411291856,
     "coverageEndDate": "2026-07-01"
    },
    "topContributions": [
@@ -2400,8 +2400,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06099/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2432,8 +2432,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H0AZ02216/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2466,8 +2466,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6AZ06214/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2651,8 +2651,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H4AZ07134/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2671,13 +2671,13 @@
    "principalCommitteeId": "C00916668",
    "cycle": 2026,
    "totals": {
-    "receipts": 206753.29,
-    "disbursements": 157755.26,
-    "cashOnHand": 48998.03,
-    "individualItemized": 106613,
-    "individualUnitemized": 74469.43,
-    "smallDonorShare": 0.36018498182060366,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 415081.06,
+    "disbursements": 311136.43,
+    "cashOnHand": 103944.63,
+    "individualItemized": 279168.96,
+    "individualUnitemized": 110224.82,
+    "smallDonorShare": 0.26555010724893113,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -2834,8 +2834,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00182/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -2854,13 +2854,13 @@
    "principalCommitteeId": "C00660464",
    "cycle": 2026,
    "totals": {
-    "receipts": 13371607.38,
-    "disbursements": 8595870.88,
-    "cashOnHand": 5183320.73,
-    "individualItemized": 7487413.29,
-    "individualUnitemized": 4138689.75,
-    "smallDonorShare": 0.3095132568871462,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 15384656.83,
+    "disbursements": 11540323.25,
+    "cashOnHand": 4251917.81,
+    "individualItemized": 8783187.43,
+    "individualUnitemized": 4743838.22,
+    "smallDonorShare": 0.30834865362414454,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -3017,8 +3017,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00141/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3037,13 +3037,13 @@
    "principalCommitteeId": "C00909622",
    "cycle": 2026,
    "totals": {
-    "receipts": 1943324.75,
-    "disbursements": 1207513.69,
-    "cashOnHand": 735811.06,
-    "individualItemized": 663146.38,
-    "individualUnitemized": 546024.21,
-    "smallDonorShare": 0.2809742478708203,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 2150452.49,
+    "disbursements": 1733910.18,
+    "cashOnHand": 416542.31,
+    "individualItemized": 762916.36,
+    "individualUnitemized": 628111.61,
+    "smallDonorShare": 0.2920834628622741,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -3200,8 +3200,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00166/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3220,13 +3220,13 @@
    "principalCommitteeId": "C00924092",
    "cycle": 2026,
    "totals": {
-    "receipts": 3662251.84,
-    "disbursements": 989605.38,
-    "cashOnHand": 2672646.46,
-    "individualItemized": 1660800.76,
-    "individualUnitemized": 395965.36,
-    "smallDonorShare": 0.10812073480997965,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 4124581.62,
+    "disbursements": 1104788.09,
+    "cashOnHand": 3019793.53,
+    "individualItemized": 1888045.47,
+    "individualUnitemized": 481948.57,
+    "smallDonorShare": 0.11684786831785378,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -3383,8 +3383,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/S6NH00208/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3403,13 +3403,13 @@
    "principalCommitteeId": "C00921882",
    "cycle": 2026,
    "totals": {
-    "receipts": 30152.81,
-    "disbursements": 25777.6,
-    "cashOnHand": 4375.21,
-    "individualItemized": 12973.95,
-    "individualUnitemized": 16928.86,
-    "smallDonorShare": 0.5614355676966757,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 43749.49,
+    "disbursements": 38956.07,
+    "cashOnHand": 4793.42,
+    "individualItemized": 17933.71,
+    "individualUnitemized": 25466.9,
+    "smallDonorShare": 0.5821073571371919,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -3566,8 +3566,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02261/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3644,8 +3644,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02295/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3664,13 +3664,13 @@
    "principalCommitteeId": "C00934919",
    "cycle": 2026,
    "totals": {
-    "receipts": 165180.74,
-    "disbursements": 168737.82,
-    "cashOnHand": 4914.15,
-    "individualItemized": 7274.74,
+    "receipts": 170940.99,
+    "disbursements": 169816.32,
+    "cashOnHand": 9595.9,
+    "individualItemized": 8034.99,
     "individualUnitemized": 0,
     "smallDonorShare": 0,
-    "coverageEndDate": "2026-06-30"
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -3827,8 +3827,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H6NH02287/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -3847,13 +3847,13 @@
    "principalCommitteeId": "C00800458",
    "cycle": 2026,
    "totals": {
-    "receipts": 1108535.07,
-    "disbursements": 573795.06,
-    "cashOnHand": 664219.61,
-    "individualItemized": 374429.77,
-    "individualUnitemized": 599501.41,
-    "smallDonorShare": 0.5408050915340008,
-    "coverageEndDate": "2026-06-30"
+    "receipts": 1199750.37,
+    "disbursements": 696288.03,
+    "cashOnHand": 632941.94,
+    "individualItemized": 416538.1,
+    "individualUnitemized": 645405.55,
+    "smallDonorShare": 0.5379498653540736,
+    "coverageEndDate": "2026-08-19"
    },
    "topContributions": [
     {
@@ -4010,8 +4010,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/candidate/H2NH02260/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   }
  ],
@@ -4020,98 +4020,98 @@
    "targetKey": "ballot-nj-morris:us-senate:kuniansky",
    "displayName": "Joanne KUNIANSKY",
    "reason": "no FEC candidate registered matching \"Joanne KUNIANSKY\" for NJ-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=KUNIANSKY&state=NJ"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:jarvis-david",
    "displayName": "David Jarvis",
    "reason": "no FEC candidate registered matching \"David Jarvis\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Jarvis&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:vail-john",
    "displayName": "John Vail",
    "reason": "no FEC candidate registered matching \"John Vail\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Vail&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:alciere-tom",
    "displayName": "Tom Alciere",
    "reason": "no FEC candidate registered matching \"Tom Alciere\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Alciere&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:danley-sky",
    "displayName": "Sky Danley",
    "reason": "no FEC candidate registered matching \"Sky Danley\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Danley&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:maxwell-mary",
    "displayName": "Mary Maxwell",
    "reason": "no FEC candidate registered matching \"Mary Maxwell\" for NH-S in the 2026 cycle (1 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Maxwell&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:mcmenamon-ii-richard-a-",
    "displayName": "Richard A. McMenamon II",
    "reason": "no FEC candidate registered matching \"Richard A. McMenamon II\" for NH-S in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=McMenamon%20II&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:smith-sabrina-ann",
    "displayName": "Sabrina Ann Smith",
    "reason": "no FEC candidate registered matching \"Sabrina Ann Smith\" for NH-S in the 2026 cycle (1 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Smith&state=NH"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-house-2:callis-michael-anthony",
    "displayName": "Michael Anthony Callis",
    "reason": "no FEC candidate registered matching \"Michael Anthony Callis\" for NH-H02 in the 2026 cycle (0 scoped results checked)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidates/?q=Callis&state=NH"
   },
   {
    "targetKey": "ballot-nj-morris:us-senate:fernandez",
    "displayName": "Veronica FERNANDEZ",
    "reason": "registered with the FEC (S0NJ00258) but no financial reports filed for the 2026 cycle (last report covered through 2020-11-27)",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidate/S0NJ00258/"
   },
   {
    "targetKey": "ballot-nj-morris:us-house-11:bond",
    "displayName": "Alan B. BOND",
    "reason": "registered with the FEC (H6NJ11328) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidate/H6NJ11328/"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:saal-maxwell-l-",
    "displayName": "Maxwell L. Saal",
    "reason": "registered with the FEC (S6NH00224) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidate/S6NH00224/"
   },
   {
    "targetKey": "ballot-nh-merrimack:us-senate:martin-andy",
    "displayName": "Andy Martin",
    "reason": "registered with the FEC (S4NH00096) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidate/S4NH00096/"
   },
   {
    "targetKey": "ballot-az-pima:us-house-6|Gary Swing",
    "displayName": "Gary Swing",
    "reason": "registered with the FEC (H6AZ06164) but no financial reports filed for the 2026 cycle",
-   "checkedAt": "2026-08-26",
+   "checkedAt": "2026-08-31",
    "searchUrl": "https://www.fec.gov/data/candidate/H6AZ06164/"
   }
  ],
@@ -4174,8 +4174,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00401224/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4266,8 +4266,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00107235/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4358,8 +4358,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00016683/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4450,8 +4450,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00004812/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4542,8 +4542,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00797670/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4634,8 +4634,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00734319/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4726,8 +4726,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00848317/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4818,8 +4818,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00904607/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -4910,8 +4910,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00408260/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5002,8 +5002,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00457234/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5094,8 +5094,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00009985/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5186,8 +5186,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00364455/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5278,8 +5278,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00426874/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5370,8 +5370,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00938720/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5462,8 +5462,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00912907/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5554,8 +5554,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00706861/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5586,8 +5586,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00908020/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5678,8 +5678,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00694323/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5770,8 +5770,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00825810/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5862,8 +5862,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00858373/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -5954,8 +5954,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00890137/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6046,8 +6046,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00663609/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6138,8 +6138,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00248948/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6230,8 +6230,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00892752/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6322,8 +6322,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00441949/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6414,8 +6414,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00617803/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6430,8 +6430,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00606962/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6490,6 +6490,21 @@
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "COMMITTEE_OR_ORGANIZATION",
+     "contributorName": "LABORERS' INTERNATIONAL UNION OF NORTH AMERICA (LIUNA PAC)",
+     "amount": 5000,
+     "receiptDate": "2026-07-01",
+     "city": "WASHINGTON",
+     "state": "DC",
+     "entityType": "PAC",
+     "lineNumber": "11C",
+     "committeeType": "Q",
+     "organizationType": "L",
+     "designation": "B",
+     "contributorCommitteeId": "C00007922"
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "COMMITTEE_OR_ORGANIZATION",
      "contributorName": "UNUM GROUP POLITICAL ACTION COMMITTEE (UNUMPAC)",
      "amount": 5000,
      "receiptDate": "2025-02-28",
@@ -6501,29 +6516,14 @@
      "organizationType": "C",
      "designation": "B",
      "contributorCommitteeId": "C00177436"
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "COMMITTEE_OR_ORGANIZATION",
-     "contributorName": "QUEST DIAGNOSTICS INCORPORATED POLITICAL ACTION COMMITTEE",
-     "amount": 5000,
-     "receiptDate": "2025-03-07",
-     "city": "SECAUCUS",
-     "state": "NJ",
-     "entityType": "PAC",
-     "lineNumber": "12",
-     "committeeType": "Q",
-     "organizationType": "C",
-     "designation": "B",
-     "contributorCommitteeId": "C00329185"
     }
    ],
    "receipts": 621678,
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00517235/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6614,8 +6614,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00174011/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6659,9 +6659,24 @@
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "INDIVIDUAL",
+     "contributorName": "STERN, JANE R",
+     "amount": 2000,
+     "receiptDate": "2026-07-31",
+     "city": "POTOMAC",
+     "state": "MD",
+     "entityType": "IND",
+     "lineNumber": "11AI",
+     "committeeType": null,
+     "organizationType": null,
+     "designation": null,
+     "contributorCommitteeId": null
+    },
+    {
+     "dataClass": "FEC_CONTRIBUTOR",
+     "kind": "INDIVIDUAL",
      "contributorName": "SCHMIDT, KATE",
      "amount": 2000,
-     "receiptDate": "2025-07-07",
+     "receiptDate": "2026-07-31",
      "city": "EAGAN",
      "state": "MN",
      "entityType": "IND",
@@ -6674,24 +6689,9 @@
     {
      "dataClass": "FEC_CONTRIBUTOR",
      "kind": "INDIVIDUAL",
-     "contributorName": "OTT, MARLENE F",
-     "amount": 2000,
-     "receiptDate": "2025-07-12",
-     "city": "GREENDALE",
-     "state": "WI",
-     "entityType": "IND",
-     "lineNumber": "11AI",
-     "committeeType": null,
-     "organizationType": null,
-     "designation": null,
-     "contributorCommitteeId": null
-    },
-    {
-     "dataClass": "FEC_CONTRIBUTOR",
-     "kind": "INDIVIDUAL",
      "contributorName": "MARLOWE, AMY",
      "amount": 2000,
-     "receiptDate": "2025-07-07",
+     "receiptDate": "2026-07-31",
      "city": "SYLACAUGA",
      "state": "AL",
      "entityType": "IND",
@@ -6706,8 +6706,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00003251/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6798,8 +6798,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00685552/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6890,8 +6890,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00113241/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -6982,8 +6982,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00489005/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7074,8 +7074,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00784694/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7166,8 +7166,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00941567/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7258,8 +7258,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00422774/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7350,8 +7350,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00949925/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7442,8 +7442,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00878702/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7534,8 +7534,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00898965/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7626,8 +7626,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00949933/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7718,8 +7718,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00909648/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   },
   {
@@ -7810,8 +7810,8 @@
    "provenance": {
     "sourceUrl": "https://www.fec.gov/data/committee/C00924175/",
     "sourceOrg": "Federal Election Commission",
-    "collectedAt": "2026-08-26",
-    "verifiedAt": "2026-08-26"
+    "collectedAt": "2026-08-31",
+    "verifiedAt": "2026-08-31"
    }
   }
  ]

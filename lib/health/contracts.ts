@@ -239,22 +239,59 @@ export function truthContract(input: TruthContractInput): ContractReading {
 /**
  * FRESHNESS: staleness risk against reader-risk tolerance.
  *
- * For Session A this reports NOT_READY, and that is the correct reading, not
- * a placeholder to widen: the runtime freshness scheduler is intentionally
- * not built yet, and the existing GitHub Actions refresh jobs are legacy and
- * non-authoritative — a green computed from them would certify freshness on
- * an instrument this architecture has already ruled out.
+ * ## It reports NOT_READY, and after Session B it reports NOT_READY WITH A
+ * ## NUMBER — which is a different thing
+ *
+ * For Session A this was NOT_READY with nothing behind it: the runtime
+ * scheduler did not exist, and a green computed from the legacy GitHub jobs
+ * would have certified freshness on an instrument RULING 218 has already ruled
+ * out by name.
+ *
+ * Session B built the scheduler and ran it in shadow. So the reading now
+ * CARRIES a measured staleness risk — obligations scheduled, unscheduled,
+ * overdue, debt rows and incidents, all with denominators — and still reports
+ * NOT_READY, because RULING 212 and RULING 218 make activation conditional on
+ * the scheduler being INDEPENDENTLY_REPRODUCED, and a measurement taken by the
+ * session that built the instrument is that session's own observation
+ * (RULING 216).
+ *
+ * **A number in a NOT_READY reading is not a step toward green.** It is what
+ * makes the NOT_READY checkable: "we have not proved this" and "we have not
+ * measured this" are different sentences, and until Session B only the second
+ * was available.
  */
-export function freshnessContract(): ContractReading {
+export function freshnessContract(risk?: {
+  readonly obligationsScheduled: number;
+  readonly obligationsUnscheduled: number;
+  readonly obligationsOverdue: number;
+  readonly debtRows: number;
+  readonly incidents: number;
+  readonly activation: "SHADOW_NOT_ACTIVATED";
+}): ContractReading {
+  if (!risk) {
+    return {
+      contract: "FRESHNESS",
+      state: "NOT_READY",
+      reason:
+        "the runtime freshness scheduler is a Session B deliverable; this contract " +
+        "transitions out of NOT_READY when Session B ships that scheduler as the " +
+        "authoritative instrument (the existing GitHub refresh jobs are legacy and " +
+        "non-authoritative), at which point staleness risk is computed against " +
+        "reader-risk tolerance",
+    };
+  }
   return {
     contract: "FRESHNESS",
     state: "NOT_READY",
     reason:
-      "the runtime freshness scheduler is a Session B deliverable; this contract " +
-      "transitions out of NOT_READY when Session B ships that scheduler as the " +
-      "authoritative instrument (the existing GitHub refresh jobs are legacy and " +
-      "non-authoritative), at which point staleness risk is computed against " +
-      "reader-risk tolerance",
+      `SHADOW / NOT ACTIVATED — measured staleness risk: ` +
+      `${risk.obligationsScheduled} obligation(s) carry a derived next-due, ` +
+      `${risk.obligationsUnscheduled} could not be scheduled and are named, ` +
+      `${risk.obligationsOverdue} overdue, ${risk.debtRows} debt row(s) across ` +
+      `${risk.incidents} incident(s) by root cause. The scheduler observes, acquires and ` +
+      "records; it does NOT promote to canonical reader truth. Activation is a later session " +
+      "gated on INDEPENDENTLY_REPRODUCED results (RULING 212, RULING 216, RULING 218), and a " +
+      "reading taken by the session that built the instrument is that session's own observation",
   };
 }
 

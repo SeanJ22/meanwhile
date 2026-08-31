@@ -35,6 +35,50 @@
  * with no reasons is a table the next session edits by feel.
  */
 
+/* ==========================================================================
+ * **THIS IS LEGACY RUNTIME, AND IT IS NOT THE FRESHNESS CLOCK.**
+ * (Session B, W3.6, 2026-08-30. RULING 218, RULING 212.)
+ *
+ * Everything below still RUNS and is still correct about what it does. What it
+ * is not, and has not been since RULING 218, is authoritative about freshness.
+ *
+ * ```
+ *   AUTHORITY      the runtime freshness scheduler
+ *                  lib/control-plane/scheduler/*
+ *                  next_due_at derived per obligation from reader impact and
+ *                  observed change rate, claimed durably, retried as debt
+ *
+ *   THIS FILE      a coarse calendar-driven backup wakeup, non-authoritative
+ *                  measured GitHub dispatch delays of 186-313 minutes typical
+ *                  and ~699 worst are recorded evidence that it cannot be a
+ *                  clock — a source due at 04:00 that fires at 15:39 was not
+ *                  late by accident, it was never on time
+ * ```
+ *
+ * **It is not removed, and removing it was never the plan.** RULING 212 and
+ * RULING 218 share a transition rule: the legacy jobs remain as explicitly
+ * non-authoritative runtime until the replacement is PROVED. Session B built
+ * and shadow-ran the scheduler; proving it requires INDEPENDENTLY_REPRODUCED
+ * results, which the session that built it cannot supply (RULING 216). So this
+ * stays, labelled, until a later session's canonical run says otherwise —
+ * because a gap between deleting the old clock and trusting the new one is a
+ * gap in which nothing refreshes at all.
+ *
+ * **A late or failed dispatch here is an engineering and freshness defect** —
+ * an operational incident and a WorkItem — and never a Needs-Owner escalation
+ * by itself (RULING 218).
+ * ========================================================================= */
+
+/** What this scheduling surface is, for anything that reports on it. */
+export const REFRESH_AUTHORITY = "LEGACY_NON_AUTHORITATIVE" as const;
+
+/** The named replacement, so the classification points somewhere. */
+export const REFRESH_REPLACEMENT =
+  "the runtime freshness scheduler in lib/control-plane/scheduler/ — obligation.ts derives " +
+  "next_due_at, dispatch.ts claims and runs it, debt.ts carries what failed. Shadow-run in " +
+  "Session B; it takes authority when its results are INDEPENDENTLY_REPRODUCED by a canonical " +
+  "run this session did not perform (RULING 212, RULING 216, RULING 218).";
+
 export type Cadence = "daily" | "weekly" | "monthly";
 
 export interface RefreshSource {

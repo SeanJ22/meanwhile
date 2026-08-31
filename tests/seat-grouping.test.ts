@@ -119,9 +119,13 @@ test("ALIGN-2: the who-governs card calls the shared helper and indents the bloc
     source.includes('className="block person-under-heading"'),
     "the holder block lost its subparagraph indent",
   );
+  /* 6 since WGH-22 (2026-08-30): the districts the reader's address ruled out
+     are kept on the panel behind a disclosure, and their rows indent under
+     their headings exactly like every other block — which is the property this
+     count is a proxy for. A new block that did NOT indent is what it catches. */
   assert.equal(
     (source.match(/className="block person-under-heading"/g) ?? []).length,
-    5,
+    6,
     "every heading block on this card indents, or the card is inconsistent",
   );
 

@@ -1,14 +1,14 @@
 # we-the-people — current context
 
 **GENERATED FILE — do not edit, and do not copy it back into the repo.**
-Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-30 21:15:03 EDT.
-Session day 2026-08-30 (America/Phoenix, from `pnpm stamp`).
+Written by `pnpm handoff` (`scripts/context-file.mjs`) at 2026-08-31 03:05:39 EDT.
+Session day 2026-08-31 (America/Phoenix, from `pnpm stamp`).
 
 It has no repo counterpart, is never compared for drift, is skipped by
 `pnpm handoff --check`, and is overwritten after every successful `--ship`.
 
 It exists so a conversation outside the repo can get current without pulling
-the 1230 KB `state.md`. **Nothing in it is composed** — every line is read
+the 1242 KB `state.md`. **Nothing in it is composed** — every line is read
 from `docs/state.md`, `docs/tracker.csv`, `lib/ripcords.ts` and git. Long
 fields are clipped with `…`; nothing is summarised.
 
@@ -1029,13 +1029,13 @@ Source: git history of `docs/tracker.csv` (first-parent), 14 commit(s) walked of
 Source: the same facts `git-state.txt` carries, generated in the same run.
 
 ```
-generated: 2026-08-30 21:15:03 EDT
-branch: claude/session-a1-contract-instrumentation
-head sha: e440c5fabed21386074e023696f8a0a80ac7e887
-head subject: A.1: make the four scaffolded contract instruments real
-origin/main sha: 608623c535eb0fdadae3524772769a4f78d0e1d4
-origin/main subject: Post-deploy integrity reading: 2026-08-30T23:12Z
-local main sha: 608623c535eb0fdadae3524772769a4f78d0e1d4
+generated: 2026-08-31 03:05:39 EDT
+branch: claude/b-w1-instruments
+head sha: 6923cd91ca7012a4b343cdab7daa6fddbc7ddaa0
+head subject: A quoted commit subject is not a date this file asserts
+origin/main sha: 886f3b3aee8858cbb7c31912f667a742b8b5d363
+origin/main subject: Post-deploy integrity reading: 2026-08-31T01:43Z
+local main sha: 886f3b3aee8858cbb7c31912f667a742b8b5d363
 local main matches origin/main: yes
 working tree: clean
 open prs: none

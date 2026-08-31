@@ -503,18 +503,46 @@ test("WGH-15 WIRING: the who-governs card routes its SEATS through the location"
    */
   const card = codeOf("components", "map", "coverage-notice.tsx");
 
+  /*
+   * **WGH-22 (2026-08-30) — the guard now asserts the STRONGER wiring.**
+   *
+   * WGH-15 got the seats annotated, which let the panel MARK District 19 as
+   * not the reader's. It could not let the panel SHOW District 17, because
+   * District 17 was never in the list being marked: `coverage.seats` is the
+   * ZIP's, and the reader's own divisions live in `coverage.divisions`.
+   *
+   * `panelSeatsFor` does both — it calls the same `applyResolvedLocation`, and
+   * it reaches the division list for the districts the address settled. The
+   * assertions follow the derivation rather than the old line, so the guard
+   * cannot be satisfied by a binding nothing reads.
+   */
   assert.match(
     card,
-    /const seatsHere = applyResolvedLocation\(seats,/,
-    "the seats must go through the same function the bodies do",
+    /const statePanel = panelSeatsFor\(/,
+    "the STATE seats go through the shared partition, which annotates them",
   );
-  assert.match(card, /const stateSeats = seatsHere\./, "STATE reads the annotated seats");
-  assert.match(card, /const federalSeats = seatsHere\./, "FEDERAL reads them too");
+  assert.match(card, /const federalPanel = panelSeatsFor\(/, "and so do the FEDERAL seats");
+  assert.match(card, /const stateSeats = statePanel\.yours/, "STATE renders the reader's own");
+  assert.match(card, /const federalSeats = federalPanel\.yours/, "FEDERAL renders the reader's own");
+
+  const derivation = codeOf("lib", "state", "panel-seats.ts");
+  assert.match(
+    derivation,
+    /applyResolvedLocation\(inScope, location\)/,
+    "the partition annotates through the same function the bodies use",
+  );
+  assert.match(
+    derivation,
+    /coverage\.divisions/,
+    "and it reads the divisions the ADDRESS settled, which is what the zip's seat list cannot supply",
+  );
 
   // And the exclusion actually reaches the row rather than being computed and
   // dropped a third time.
   assert.match(card, /data-seat-standing=\{seat\.standing\}/);
   assert.match(card, /marksElsewhere\(seat\.standing\)/);
+  // The excluded rows are KEPT (RULING 26/27) — disclosed, never dropped.
+  assert.match(card, /data-elsewhere-disclosure/, "the excluded districts stay on the panel");
 });
 
 test("WGH-15 WIRING: the who-governs card NAMES the question it answers", () => {

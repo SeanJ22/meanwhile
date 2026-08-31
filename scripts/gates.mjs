@@ -40,6 +40,7 @@ import { execSync } from "node:child_process";
 import { mkdirSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
+import { readRunProvenance } from "../lib/ops/run-provenance.ts";
 import { today } from "./doc-dates.mjs";
 
 /**
@@ -148,6 +149,18 @@ const GATES = [
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm method:check",
     why: "the cumulative route knowledge is what every later jurisdiction inherits; a broken store reads as a project that knows nothing",
+  },
+  {
+    id: "control-plane:gate",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm control-plane:gate",
+    why: "RULING 220 puts Level-2 scheduling state in a dedicated database outside lib/db and invisible to db:gate; that exemption must not become ungoverned, so the schema has its own version, applied-version and drift check (Session B, W3.2)",
+  },
+  {
+    id: "feedback:sweep",
+    ciJob: "gates (test · lint · tsc)",
+    command: "pnpm feedback:sweep --check",
+    why: "an owner pass that a sweep neither processes nor lists as unidentifiable is dropped rather than deferred, and the difference is that a deferral names what it is deferring (Session B, WS2.5)",
   },
   {
     id: "assert:browser",
@@ -419,6 +432,18 @@ function writeGateRunRecord(results) {
       status: r.status,
       seconds: Number(r.secs),
     })),
+    /*
+     * WHO RAN THIS, recorded at run time. (Session B WI1.8.)
+     *
+     * `status-result.ts` derives SESSION_MEASURED vs INDEPENDENTLY_REPRODUCED
+     * from this block and from nothing else. Without it every passing gate
+     * claimed the stronger class, including this session running gates on its
+     * own unmerged branch — the observation RULING 216 excludes by name. A
+     * record with no provenance reads SESSION_MEASURED, so this is the field
+     * that lets an independent run be recognised, never the field that lets a
+     * dependent one claim independence.
+     */
+    provenance: readRunProvenance(testedSha),
   };
   writeFileSync(recordPath, `${JSON.stringify(record, null, 2)}\n`, "utf8");
   console.log(`  gate run record: ${recordPath}`);

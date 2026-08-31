@@ -165,6 +165,42 @@ export function observeControl(
     };
   }
 
+  /*
+   * **A KNOWN-ABSENCE CONTROL IS ASKED WHETHER A THING EXISTS.** (B WI1.4.)
+   *
+   * The order below was written for `known_present` facts and applied to both
+   * classes, and on a `known_absence` fact it inverted the answer key. The
+   * fact's `expected_truth` for an absence row IS the absence — "there were no
+   * campaign filings by X in 2025" — so an answer correctly saying exactly
+   * that asserts every salient term of the proposition and was classified
+   * `FACT_STATED`. `scoreControls` reads `known_absence + FACT_STATED` as a
+   * FALSE PRESENCE. The product would have told the truth and the instrument
+   * would have recorded it as a lie about a government.
+   *
+   * It was not yet visible because both loaded controls are `known_present`.
+   * An instrument that inverts a verdict on a population of zero is still an
+   * instrument that inverts a verdict.
+   *
+   * So for an absence fact the absence question is asked FIRST, and
+   * `FACT_STATED` is reserved for what it means on this class: the surface
+   * asserting the thing EXISTS where the owner verified it does not.
+   */
+  const assertsAbsenceEarly = ABSENCE_PHRASES.some(
+    (p) => surface.includes(p) || gapText.includes(p),
+  );
+  const oursOnlyEarly =
+    answer.gapAttributions.length > 0 && answer.gapAttributions.every((w) => w === "OURS");
+  if (fact.fact_class === "known_absence" && assertsAbsenceEarly && !oursOnlyEarly) {
+    return {
+      observation: { statement: fact.statement, observed: "ABSENCE_ASSERTED" },
+      basis: "NO_ASSERTION",
+      detail:
+        "the answer states, with a gap attributed to the record holder rather than to us, " +
+        "that the record does not exist — which is the fact this known_absence control " +
+        "verified, correctly recalled",
+    };
+  }
+
   /* 1 · The owner's own deterministic formattings, checked exactly. */
   const forms = fact.accepted_forms ?? [];
   if (forms.length > 0 && forms.some((form) => surface.includes(form.toLowerCase()))) {
@@ -208,10 +244,13 @@ export function observeControl(
   }
 
   /* 3 · Did it assert that the thing does not exist? Only reached when the
-        fact was not stated, so an answer that did both has already returned. */
-  const assertsAbsence = ABSENCE_PHRASES.some((p) => surface.includes(p) || gapText.includes(p));
-  const oursOnly =
-    answer.gapAttributions.length > 0 && answer.gapAttributions.every((w) => w === "OURS");
+        fact was not stated, so an answer that did both has already returned.
+        On a `known_absence` fact this branch is unreachable — step 0 above has
+        already classified it — and that is deliberate: the two classes read
+        the same sentence as opposite verdicts, so exactly one of them may own
+        the classification. */
+  const assertsAbsence = assertsAbsenceEarly;
+  const oursOnly = oursOnlyEarly;
   if (assertsAbsence && !oursOnly) {
     return {
       observation: { statement: fact.statement, observed: "ABSENCE_ASSERTED" },

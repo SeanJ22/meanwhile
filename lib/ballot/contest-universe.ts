@@ -114,6 +114,26 @@ export interface UniverseFinding {
   readonly source: string | null;
   /** Why it is complete, or precisely what is missing. */
   readonly reason: string;
+  /**
+   * **NOT ACQUIRED, versus ACQUIRED AND DISAGREEING.** (BAL-32, 2026-08-30.)
+   *
+   * Both are `complete: false` and they are not the same fact, so anything
+   * deciding what a reader may be told has to be able to tell them apart:
+   *
+   * ```
+   *   contradicted: false   we hold no certified list for this contest.
+   *                         Nothing disputes the people shown.
+   *   contradicted: true    we hold one and the people shown are NOT the
+   *                         people it names. Something we can source says
+   *                         this page's identities are wrong.
+   * ```
+   *
+   * A positive per-person label may survive the first and may never survive
+   * the second: under a live identity discrepancy the person we matched to the
+   * officeholder record may not be the person on the card, and a label is
+   * then a claim about somebody by name that we have evidence against.
+   */
+  readonly contradicted: boolean;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -335,6 +355,7 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
   if (input.certified === null) {
     return {
       complete: false,
+      contradicted: false,
       source: input.renderedSource,
       reason:
         "no certified nominee list names this contest, so the candidates shown are the people who " +
@@ -372,6 +393,22 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
     }
     return {
       complete: false,
+      /*
+       * **THE ONE PLACE THIS IS TRUE.** (BAL-32, 2026-08-30.)
+       *
+       * A certified list exists AND the people rendered are not the people it
+       * names. That is not an unacquired universe, it is a live identity
+       * discrepancy: something we can source says this page's names are wrong.
+       * Under it, no per-person label may render at all — the person we
+       * matched to an officeholder record may not be the person on the card,
+       * and labelling them anyway is a claim about somebody by name that we
+       * hold evidence against.
+       *
+       * Every other incomplete finding is `contradicted: false` — we simply do
+       * not hold the list. Nothing disputes the people shown, and a positive
+       * sourced fact about one of them survives.
+       */
+      contradicted: true,
       source: input.certified.source,
       reason:
         "the people shown here are not the people the certified nominee list names, so this list " +
@@ -384,6 +421,7 @@ export function candidateUniverse(input: CandidateUniverseInput): UniverseFindin
 
   return {
     complete: true,
+    contradicted: false,
     source: input.certified.source,
     reason:
       `every one of the ${input.certified.names.length} candidate(s) shown here is a candidate the ` +
@@ -427,6 +465,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   if (input.shape === "NOTHING_READ" || input.holders === 0) {
     return {
       complete: false,
+      contradicted: false,
       source: input.source,
       reason: "we hold no record of who currently sits in this seat.",
     };
@@ -434,6 +473,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   if (input.shape === "COLLECTED_PERSON_BY_PERSON") {
     return {
       complete: false,
+      contradicted: false,
       source: input.source,
       reason:
         `this seat's ${input.holders} holder(s) come from a store assembled person by person, so a ` +
@@ -444,6 +484,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   if (input.shape === "PROBED_PER_CANDIDATE") {
     return {
       complete: false,
+      contradicted: false,
       source: input.source,
       reason:
         "this seat's holders were confirmed one candidate at a time, so the source can only ever " +
@@ -453,6 +494,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   if (input.seatsThisContestFills === null) {
     return {
       complete: false,
+      contradicted: false,
       source: input.source,
       reason:
         "the contest record does not state how many seats it fills, so the holders we read cannot " +
@@ -462,6 +504,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   if (input.holders !== input.seatsThisContestFills) {
     return {
       complete: false,
+      contradicted: false,
       source: input.source,
       reason:
         `the body's own roster returned ${input.holders} sitting member(s) for a seat this contest ` +
@@ -471,6 +514,7 @@ export function officeholderUniverse(input: OfficeholderUniverseInput): Universe
   }
   return {
     complete: true,
+    contradicted: false,
     source: input.source,
     reason:
       `the body publishes its whole membership and names ${input.holders} sitting member(s) for ` +

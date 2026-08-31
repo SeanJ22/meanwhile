@@ -149,14 +149,65 @@ export interface KeptQuestion {
   readonly questionText: string;
   readonly rightAnswer: string;
   readonly ownerEdit: string;
+  /**
+   * The owner's edit when it AMENDS rather than replaces. (Session B WI1.4.)
+   *
+   * Never dropped, because these carry product requirements: "add a small
+   * clickable pill", "prioritize to the closest", "not just FEC filings".
+   * Those are instructions, and an instruction silently discarded by a loader
+   * is an instruction the owner will have to give again.
+   */
+  readonly ownerAmendment: string | null;
+}
+
+/**
+ * Is this edit a replacement QUESTION, or an amendment to one?
+ *
+ * The distinction matters because the answer decides what gets typed into the
+ * Ask box. An edit reading *"As long as they are clickable"* is the owner
+ * adding a requirement to the drafted question — submitting it as the question
+ * would measure nothing, since it is not a question and has no answer to
+ * evaluate.
+ *
+ * Deliberately narrow: a replacement must END in a question mark, or OPEN
+ * with an interrogative. Both clauses are needed and neither is enough alone.
+ *
+ * Merely CONTAINING a question mark is not the test, and that distinction is
+ * not hypothetical — the owner's edits on Q6 and Q7 read *"Add a small
+ * clickable pill that says \"Want us to get this info sooner?\" so we can
+ * start to prioritize…"*. A contains-test reads the pill's own copy and
+ * promotes a product requirement into the Ask box.
+ *
+ * Everything else is an amendment, which is the safe direction: an amendment
+ * wrongly kept beside the draft costs a slightly stale question, while a
+ * requirement wrongly submitted as a question costs the whole instance.
+ */
+export function isQuestionShaped(text: string): boolean {
+  const trimmed = text.trim();
+  if (trimmed.length === 0) return false;
+  if (trimmed.endsWith("?")) return true;
+  return /^(who|what|when|where|which|why|how|is|are|does|do|did|can|will|would|should)\b/i.test(
+    trimmed,
+  );
 }
 
 /**
  * Load the adversarial questions the owner marked KEEP or EDIT.
  *
- * An EDIT row's own text wins where the owner wrote one: the edit column is
- * the owner correcting the drafted question, and preferring the draft over
- * the correction would ask the question they told us not to ask.
+ * ## The edit column is not always a replacement (Session B WI1.4)
+ *
+ * This read `questionText: edit || draft` — the edit wins whenever one
+ * exists. That was right for the case it was written for and wrong for the
+ * case that actually arrived: when the owner filled the tab, five of the nine
+ * kept rows carried edits like *"Add a small clickable pill…"* and *"As long
+ * as they are clickable"*. Those became the question text, so five of nine
+ * loaded templates were instances that would type a requirement into the Ask
+ * box and grade the answer.
+ *
+ * A corpus that loads nine and can evaluate four is the same defect as one
+ * that loads zero, wearing a number. So a replacement must be question-shaped;
+ * anything else is recorded as `ownerAmendment` beside the drafted question
+ * and reported, never dropped and never submitted.
  */
 export function loadKeptQuestions(rows: readonly SheetRow[]): CorpusLoad<KeptQuestion> {
   const matched: string[] = [];
@@ -169,11 +220,14 @@ export function loadKeptQuestions(rows: readonly SheetRow[]): CorpusLoad<KeptQue
     if (!KEEP_VALUES.includes(keep)) continue;
     matched.push(id);
     const edit = (row["Your edit / fill-in"] ?? "").trim();
+    const draft = (row["Question (fully written — keep, edit, or kill)"] ?? "").trim();
+    const replaces = isQuestionShaped(edit);
     loaded.push({
       id,
-      questionText: edit || (row["Question (fully written — keep, edit, or kill)"] ?? "").trim(),
+      questionText: replaces ? edit : draft,
       rightAnswer: (row["What the RIGHT answer looks like"] ?? "").trim(),
       ownerEdit: edit,
+      ownerAmendment: edit && !replaces ? edit : null,
     });
   }
 

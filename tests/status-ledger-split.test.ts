@@ -28,7 +28,16 @@ function noRecords(): RunRecordSet {
   return { gates: null, walk: null, observer: null };
 }
 
-function gateRecords(status: string, testedSha: string | null = HEAD): RunRecordSet {
+function gateRecords(
+  status: string,
+  testedSha: string | null = HEAD,
+  /**
+   * Session B: the run's PROVENANCE, which is now what decides the proof
+   * class. A record with none — the default here, and every record written
+   * before B — is `SESSION_MEASURED`. See `lib/ops/run-provenance.ts`.
+   */
+  provenance: unknown = undefined,
+): RunRecordSet {
   return {
     gates: {
       runId: "gates@2026-08-30T00:00:00.000Z",
@@ -36,6 +45,7 @@ function gateRecords(status: string, testedSha: string | null = HEAD): RunRecord
       finishedAt: "2026-08-30T00:00:00.000Z",
       gates: [{ id: "test", status, seconds: 42 }],
       path: "data/ops/gate-runs/2026-08-30-01.json",
+      provenance,
     } as never,
     walk: null,
     observer: null,
@@ -92,9 +102,53 @@ test("the curated registry has NO field in which a result could be typed", () =>
 test("a run record saying PASS on this tree DOES prove the row, and derives its proof class", () => {
   const result = resolveCapability(SUITE_ENTRY, gateRecords("PASS"), HEAD, always);
   assert.equal(result.state, "PROVEN");
-  assert.equal(result.proofClass, "INDEPENDENTLY_REPRODUCED");
+  /*
+   * SESSION_MEASURED, and the change from A.1's expectation here IS the WI1.8
+   * repair. This record carries no provenance, so nothing in it establishes
+   * that the run was separate from the implementing session's own observation
+   * — and RULING 216 excludes that observation from INDEPENDENTLY_REPRODUCED
+   * by name. A.1 returned the stronger class for every passing canonical
+   * result, which awarded the activation-gating class to `pnpm gates` run on
+   * an unmerged branch.
+   */
+  assert.equal(result.proofClass, "SESSION_MEASURED");
+  assert.match(result.proofClassReason ?? "", /carries no provenance block/);
   assert.equal(result.testedSha, HEAD);
   assert.equal(result.recordPath, "data/ops/gate-runs/2026-08-30-01.json");
+});
+
+test("the stronger proof class is still REACHABLE — an integrated, non-session run earns it", () => {
+  /* A repair that made INDEPENDENTLY_REPRODUCED unreachable would have traded
+     one wrong answer for another. */
+  const result = resolveCapability(
+    SUITE_ENTRY,
+    gateRecords("PASS", HEAD, {
+      runClass: "SCHEDULED",
+      workingTreeClean: true,
+      integratedAtRunTime: true,
+      integrationRef: "origin/main",
+    }),
+    HEAD,
+    always,
+  );
+  assert.equal(result.state, "PROVEN");
+  assert.equal(result.proofClass, "INDEPENDENTLY_REPRODUCED");
+});
+
+test("a run this session invoked on its own unmerged branch stays SESSION_MEASURED", () => {
+  const result = resolveCapability(
+    SUITE_ENTRY,
+    gateRecords("PASS", HEAD, {
+      runClass: "LOCAL_SESSION",
+      workingTreeClean: true,
+      integratedAtRunTime: false,
+      integrationRef: "origin/main",
+    }),
+    HEAD,
+    always,
+  );
+  assert.equal(result.proofClass, "SESSION_MEASURED");
+  assert.match(result.proofClassReason ?? "", /not yet in origin\/main/);
 });
 
 test("a run record saying FAIL renders FAILING, never absent and never green", () => {

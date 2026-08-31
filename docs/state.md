@@ -22076,3 +22076,205 @@ documented example row, excluded by id. **Two facts load, both known_present.
 Zero questions load**: Keep? is blank on all twelve Adversarial rows. So READER
 reads AWAITING_OWNER_DATA and TRUTH cannot score a false-presence rate. Rows
 that do not meet the criteria are not loaded and are not counted (NH299).
+
+## 2026-08-30 · Session B — the instruments repaired, the owner's pass swept, and a freshness clock that says when it does not know
+
+Three workstreams. Workstream 1 hardened the instruments so they could not
+certify the wrong thing. Workstream 2 swept `feedback/8.30.26/`. Workstream 3
+built and shadow-ran the autonomous freshness loop. The orchestration record is
+`data/workstate/orchestration/2026-08-30-session-b-instruments-sweep-freshness.json`
+and `orchestration:check` reads it TEAM: three workstreams, one independent
+pair, every serialization backed by a real handoff.
+
+### Workstream 1 — eight semantic holes, and a ninth found by using the repair
+
+An independent audit of A.1 named eight places where an instrument could
+certify the wrong thing. Each was a check that LOOKED enforced — the field
+existed, the branch ran, the verdict printed — and was missing a clause.
+
+**WI1.1.** ENTITY expectations checked `answer.subjectId`; VALUE and LIST did
+not. A grounded, sourced answer carrying the expected value ABOUT A DIFFERENT
+GOVERNMENT went GREEN. Every clause of the reader contract held except the one
+that makes the answer true. `expectedSubjectId` now binds both, from the
+owner's explicit id or from the instance's own `subjectBodyId`.
+
+**WI1.2.** `LIST.exhaustive` appeared in exactly one place — the failure
+message. An answer naming every real member plus an invented sixth passed a
+check whose whole purpose was to forbid the sixth. Extras are read off record
+lines; prose is deliberately NOT mined for names, and an exhaustive list with
+nothing enumerable is NOT_EVALUABLE rather than green.
+
+**WI1.3.** `VERIFIED_ABSENCE.period` existed since A.1 and nothing read it, so
+a true sentence about 2025 certified a claim about 2026. The answer's absence
+scope must now cover the expectation's, with ranges expanded.
+
+**WI1.4.** An absence fact's `expected_truth` IS the absence, so an answer
+correctly stating it matched every salient term and landed in `FACT_STATED` —
+which `scoreControls` reads as a FALSE PRESENCE. The product would have told
+the truth and the instrument would have recorded it as a lie about a
+government. Invisible only because both loaded controls are `known_present`; an
+instrument that inverts a verdict on a population of zero still inverts it.
+
+**WI1.5.** The observer adapter expected `sha` and `verdict: HEALTHY|OK`; the
+post-deploy observer writes `deployedSha`, `mainSha` and `observed: "HELD"`.
+Every field read came back undefined and the row went STALE — and the A.1
+report explained the STALE by saying the record "names no SHA". That was a
+claim about the DATA that was really a fact about the READER. The record names
+`f762a72e` in two fields. The row now renders PROVEN with that SHA.
+
+**WI1.6.** A coverage defect opened a diagnostic under a synthetic id
+`coverage:<zip>:<layer>` that `greenInstanceIds` could never contain, so a
+repaired denominator left it open forever. `coverageInstanceId` now derives the
+id for both directions.
+
+**WI1.7.** `visual_prominence` and `image_level` ran the VISIBILITY test, so
+"this element stands out" was certified by "something is painted here" — true
+of every element the product renders. Prominence now measures the element
+against its surrounding band. Real evaluators for overlap, position, spacing
+and reading order; anything without a capable evaluator is NOT_EVALUABLE, never
+a red blaming the product for a gap in the harness.
+
+**WI1.8.** Every passing canonical result was labelled
+`INDEPENDENTLY_REPRODUCED` — the class `pnpm gates` earns on an unmerged
+branch, which RULING 216 excludes by name. The class is now derived from
+recorded provenance: a clean tree, already contained by the integration branch
+when the run started, and a runner that is not a local session. **16 of 17
+ledger entries reclassified to `SESSION_MEASURED`.** The one that did not is
+the post-deploy observer row, which is genuinely scheduled — and it moved the
+other way, from STALE to PROVEN, because WI1.5 taught the adapter to read it.
+
+**WI1.9.** The universe check is independent of the GENERATED `registry.json`
+and NOT of the project's accumulated enumeration knowledge. It catches a
+generator regression — NH232, where a rebuild silently dropped 731 promoted
+bodies — and cannot catch a body nobody ever discovered, which is absent from
+every term of the comparison. That is why the hand-authored adversarial
+questions are load-bearing rather than a supplement, and the wording now says
+so where the stores are read, where the refusal lives, and in the harness.
+
+**The ninth, found by reloading the workbook after the repair.** The owner has
+filled the Adversarial questions tab. Five of the nine kept rows carry edits
+that are REQUIREMENTS rather than replacement questions — *"As long as they are
+clickable"*, *"Add a small clickable pill…"* — and `questionText: edit || draft`
+promoted every one into the Ask box. Five of nine instances would have typed a
+product requirement at the product and graded the answer. A replacement must
+now END in a question mark or OPEN with an interrogative; merely CONTAINING one
+reads the copy inside Q6's own suggested pill. Amendments are kept beside the
+question and reported. And the loader now states that **9 of 9 templates carry
+no typed expectation**, because a corpus that loads nine and evaluates zero is
+a silent zero wearing a number.
+
+**Owner corpus loaded.** Control facts: 3 of 17 rows CONFIRMED — EX, F1, F5 —
+EX excluded by id as the workbook's own demonstration row. **2 loaded, both
+`known_present`, 0 `known_absence`.** So the negative-control repair remains
+proved by a planted control rather than by a loaded owner row, and the
+false-presence rate still has no denominator. Adversarial questions: **9 of 12
+marked KEEP or EDIT — Q1 through Q9, all loaded.** Q10, Q11 and Q12 are
+unfilled templates. Zero KILL.
+
+### Workstream 2 — the owner's pass, swept
+
+`data/feedback/sweeps/8.30.26.json` is the committed record and
+`pnpm feedback:sweep` is the gate. **22 files inventoried, 35 items, 0
+unidentifiable. 32 the owner reported wrong; 12 verified fixed on the rendered
+DOM. 22 class instances found, 15 fixed.** The A.1 deferral of all twenty
+captures ends here.
+
+The seeded failure is committed twice: a date folder with no record fails, and
+an item disposed OPEN_BLOCKED or UNIDENTIFIABLE with no named blocker fails. So
+does a FIXED_VERIFIED item with no permanent check — BAL-32 was reported 8/28,
+fixed somewhere, and reported again 8/30 for the same named person, because
+nothing re-asked the question. So does a class with instances left unfixed,
+which is the owner's standing instruction made mechanical.
+
+**WGH-22, the headline, third session running.** At a resolved address in 85641
+the districts popup read State House 17 and the panel listed District 19 twice,
+labelled *not yours*, with District 17 nowhere on it. Two defects, and the
+second had never been named: WGH-15 got the seats annotated on 8/28, which let
+the panel MARK a wrong row — it could not let the panel SHOW the right one,
+because `coverage.seats` is the ZIP's and the reader's own divisions live in
+`coverage.divisions`. Hiding the marked rows alone would have made the section
+emptier rather than righter. The excluded rows are kept behind a disclosure:
+RULING 26/27 forbids dropping what we found, and moving a row we have
+POSITIVELY established is not the reader's is a fact about their address.
+
+The first repair of that failed against the real surface and its failure is
+seeded in `tests/panel-seats.test.ts`: it stamped the reader's list CONFIRMED
+from `coverage.divisions`, which at 85641 promoted the two excluded rows from a
+hedged claim to a confident wrong one. `standingOf` is now the only thing that
+may say what a row IS.
+
+**BAL-32.** RULING 42's amended text bans withholding data about a candidate
+because something else is missing, and the contest gate was doing exactly that
+to a positive sourced fact. INCUMBENT and CHALLENGER are different claims: the
+first is per-person and asserts nothing about anyone else; the second asserts
+an absence about a named person and still needs the universe. Split. And where
+a certified list EXISTS and disagrees with the rendered names — the new
+`contradicted` flag — the whole contest still goes quiet, because then we hold
+evidence the identities are wrong.
+
+**BAL-33** was the same defect ITEM 14 fixed on 8/26, two lines above the
+comment explaining it. **MAP-5** was the same defect the stats tile was
+repaired for on 8/19, in a door that was not. **WGH-21** was a hardcoded
+sentence contradicting nine names rendered inches above it. Three instances of
+one class in one report: a surface describing itself from a string its own
+contents can contradict.
+
+**ASK-18 is NOT fixed, and how it failed is the part worth keeping.** The first
+attempt derived a publisher observation from `agendaUrl === null`. It went
+green in its own new test file and rendered exactly what the owner asked for on
+the live surface. `tests/agenda-publication-state.test.ts` caught it: a
+Legistar grid prints a literal "Not Available", an iCal feed has no agenda
+field to be empty, and plenty of bodies post packets on a page the calendar
+never links. The gate is now `agendaSlotObservedEmpty`, set by the ADAPTER, and
+no adapter records it — so the Pima answer correctly renders the OURS gap
+again. **SWEEP-01** is the same mechanism found on the meeting card, which the
+owner PRAISED and asked Ask to copy.
+
+### Workstream 3 — the freshness clock
+
+`scheduleAll` returns two lists and the second is the point: an obligation
+whose cadence data is broken comes back NAMED, never defaulted. *We have no
+signal, so daily* is a decision recorded as `DEFAULT_NO_SIGNAL`; *this row's
+data is broken* is a defect, and papering it over would satisfy RULING 212's
+invariant by construction while leaving a hole in the clock.
+
+Debt is durable, self-retrying and unnotified, with a capped backoff —
+uncapped doubling converges to never checking again, which is
+indistinguishable from having dropped it. Incidents aggregate by (cause,
+target), so one host refusing 312 obligations is one incident with a size.
+
+Dispatch chooses deterministic code where a graduated method exists, and the
+answer is read from the method store rather than a string prefix. That exposed
+**NH301**: nothing joins a meetings publisher to a method route, so all 78
+resolve UNGRADUATED and the digest reads 0 deterministic, 8 bounded. Correct,
+and not the end state — a prefix test would have answered GRADUATED and hidden
+it.
+
+**The shadow cycle ran twice.** 78 obligations from the committed corpus, 78
+scheduled, 0 unscheduled, 8 due, 8 dispatched, 0 debt. The second cycle
+registered 0 and found 78 already durable. The FIRST run crashed and was right
+to: `createWorkItem` stamps `createdAt`, the id is a pure function of its
+inputs, so cycle two offered one id carrying two values and the store raised
+`IdentityCollision`. A standing obligation is registered once and scheduled
+forever after.
+
+**FRESHNESS now reports NOT_READY WITH A NUMBER.** That is not a step toward
+green — it is what makes the NOT_READY checkable, because *we have not proved
+this* and *we have not measured this* are different sentences and until now
+only the second was available. `promotedToReaderTruth` is structurally false
+and there is no parameter that could make it true.
+
+The Postgres provider is implemented, conformance-tested against the two
+providers that exist here, and its cutover proof is **escalated, not faked**:
+`WTP_CONTROL_PLANE_DATABASE_URL` is not provisioned, so RULING 220's step 6 —
+contention from both machines, crash/reclaim on Postgres, a restore drill — has
+not been performed. **NH300** carries it. `pnpm control-plane:gate` reports
+NOT_CONFIGURED and says that is not a pass.
+
+`pnpm walk:wait-audit`: 26 waits, 26 satisfiable — the A.1 dead-selector class
+is clear. **25 of 26 discard their result** (**NH302**), which is the other
+half: a wait nobody reads cannot fail, so an unsatisfiable one costs the
+ceiling and reports nothing. Converting 25 call sites to throw would red the
+walk on any slow surface, which `until()` was written not to do — so every
+timeout is now counted into the walk run record by label. A miss that cannot
+fail can at least not be missed.

@@ -41,6 +41,30 @@
  * had that disagreement in the dangerous direction — NH232, where a
  * regeneration silently dropped 731 promoted bodies and nothing failed.
  *
+ * ## WHAT "INDEPENDENT" MEANS HERE, EXACTLY — and what it does not
+ * *(Session B WI1.9. The word was doing more work than it had earned.)*
+ *
+ * ```
+ *   INDEPENDENT OF      the generated registry.json artifact
+ *   NOT INDEPENDENT OF  the project's own accumulated enumeration knowledge
+ * ```
+ *
+ * Both stores this reads are things the project discovered. So this check
+ * catches a GENERATOR REGRESSION — the registry losing bodies its own inputs
+ * still hold, which is NH232 exactly — and it **cannot catch a body that was
+ * never discovered at all**. Nothing derived from our own enumeration can:
+ * a body absent from curation, absent from promotion and absent from the
+ * registry is absent from every term of the comparison, and three stores
+ * agreeing about a government none of them has heard of is not evidence.
+ *
+ * That limit is why the HAND-AUTHORED ADVERSARIAL questions in the owner
+ * corpus are load-bearing rather than supplementary. The owner naming a body
+ * from outside our stores is the only instrument here that can fail on a
+ * government we never found, and describing this check as an independent
+ * universe check without that sentence beside it invites a later session to
+ * retire the questions as redundant. They are the opposite of redundant: they
+ * are the part that is not a mirror.
+ *
  * ## What this deliberately does NOT do
  *
  * It does not fall back to the registry when the evidence stores cannot be

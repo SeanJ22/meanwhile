@@ -48,8 +48,14 @@ import {
 } from "../lib/health/visual-acceptance.ts";
 import {
   evaluateClipping,
+  evaluateOverlap,
+  evaluatePosition,
+  evaluateProminence,
+  evaluateReadingOrder,
+  evaluateSpacing,
   evaluateVisibility,
   type ElementBox,
+  type ExpectedRegion,
   type ImageVerdict,
 } from "../lib/health/visual-evaluation.ts";
 
@@ -98,6 +104,22 @@ const TESTED_SHA = headSha();
 interface CheckBinding {
   readonly check: VisualAcceptanceCheck;
   readonly selector: string;
+  /**
+   * The SECOND element, for the properties that are relationships.
+   * (Session B WI1.7.) `overlap` and `spacing` are claims about a pair, and a
+   * check that binds one selector cannot state either — so a check for those
+   * properties without `against` is NOT_EVALUABLE with the missing binding
+   * named, never a red against the product.
+   */
+  readonly against?: string;
+  /** The declared order, for `responsive_hierarchy`. Two or more selectors. */
+  readonly order?: readonly string[];
+  /** Where `position` expects the element, in device-independent pixels. */
+  readonly expectedRegion?: ExpectedRegion;
+  /** The gap `spacing` expects between `selector` and `against`, in px. */
+  readonly expectedGapPx?: number;
+  /** Per-check slack, where the property takes one. Defaults live in the evaluator. */
+  readonly tolerancePx?: number;
 }
 
 interface CheckResult {
@@ -147,7 +169,8 @@ async function main(): Promise<void> {
   if (bindings.length > 0) {
     const browser = await launchGuarded({ label: "visual-suite", headless: true });
     try {
-      for (const { check, selector } of bindings) {
+      for (const binding of bindings) {
+        const { check, selector } = binding;
         const context = await browser.context({
           viewport: { width: check.viewport.width, height: check.viewport.height },
           deviceScaleFactor: 1,
@@ -208,34 +231,151 @@ async function main(): Promise<void> {
         const shot = await page.screenshot({ path: capturePath });
         const png = decodePng(shot);
 
-        let verdict: ImageVerdict;
+        /*
+         * **EACH PROPERTY IS EVALUATED BY SOMETHING CAPABLE OF PROVING IT.**
+         * (Session B WI1.7.)
+         *
+         * `visual_prominence` and `image_level` used to run the VISIBILITY
+         * test, so "this element stands out" was certified by "something is
+         * painted in this box" — true of every element the product renders.
+         * And overlap, position, spacing and responsive hierarchy fell to a
+         * default that scored the harness's own gap as a product RED.
+         *
+         * Now: a real evaluator per property, and where a check does not carry
+         * what its property needs — a second element, an expected region, a
+         * declared order — the result is NOT_EVALUABLE with the missing
+         * binding NAMED. Never GREEN, and never a red blaming the product for
+         * a check that did not say enough to be answered.
+         */
+        const boxFor = async (sel: string): Promise<ElementBox | null> =>
+          (await page.evaluate(
+            `(function () {
+              var el = document.querySelector(${JSON.stringify(sel)});
+              if (!el) return null;
+              var r = el.getBoundingClientRect();
+              return { x: r.x, y: r.y, width: r.width, height: r.height };
+            })()`,
+          )) as ElementBox | null;
+
+        let verdict: ImageVerdict | null = null;
+        let notEvaluable: string | null = null;
+
         switch (check.property) {
           case "clipping":
             verdict = evaluateClipping(png, box);
             break;
           case "visibility":
-          case "visual_prominence":
           case "image_level":
             verdict = evaluateVisibility(png, box);
             break;
+          case "visual_prominence":
+            verdict = evaluateProminence(png, box);
+            break;
+          case "overlap":
+          case "spacing": {
+            if (!binding.against) {
+              notEvaluable =
+                `property "${check.property}" is a relationship between two elements and this ` +
+                "check binds one selector. It needs `against`. A pair property cannot be read " +
+                "from a single box, so this is a gap in the CHECK, named, and not a verdict " +
+                "about the product.";
+              break;
+            }
+            const other = await boxFor(binding.against);
+            if (other === null) {
+              notEvaluable =
+                `the harness could not find the second element ${binding.against} on ` +
+                `${check.surface} at zip ${check.zip}; a pair property with one element ` +
+                "present is an unanswered observation, never a passing check.";
+              break;
+            }
+            if (check.property === "overlap") {
+              verdict = evaluateOverlap(png, box, other);
+            } else if (binding.expectedGapPx === undefined) {
+              notEvaluable =
+                "a spacing check states what the gap should be; this one carries no " +
+                "`expectedGapPx`, so there is no expectation to measure against.";
+            } else {
+              verdict = evaluateSpacing(
+                png,
+                box,
+                other,
+                binding.expectedGapPx,
+                1,
+                binding.tolerancePx,
+              );
+            }
+            break;
+          }
+          case "position": {
+            if (!binding.expectedRegion) {
+              notEvaluable =
+                "a position check states where the element belongs; this one carries no " +
+                "`expectedRegion`, and an unstated expectation cannot be met or missed.";
+              break;
+            }
+            verdict = evaluatePosition(
+              png,
+              box,
+              binding.expectedRegion,
+              1,
+              binding.tolerancePx,
+            );
+            break;
+          }
+          case "responsive_hierarchy": {
+            const order = binding.order ?? [];
+            if (order.length < 2) {
+              notEvaluable =
+                "a responsive-hierarchy check states the order it expects; this one binds " +
+                `${order.length} selector(s) in \`order\`, and one element has no hierarchy.`;
+              break;
+            }
+            const resolved: { label: string; box: ElementBox }[] = [];
+            const unfound: string[] = [];
+            for (const sel of order) {
+              const b = await boxFor(sel);
+              if (b === null) unfound.push(sel);
+              else resolved.push({ label: sel, box: b });
+            }
+            if (unfound.length > 0) {
+              notEvaluable =
+                `the harness could not find ${unfound.length} of ${order.length} ordered ` +
+                `element(s): ${unfound.join(", ")}. A hierarchy missing a member is an ` +
+                "unanswered observation.";
+              break;
+            }
+            verdict = evaluateReadingOrder(png, resolved);
+            break;
+          }
           default:
-            verdict = {
-              passed: false,
-              detail:
-                `no image evaluator is implemented for property "${check.property}". That is a ` +
-                "gap in this harness, stated as one — it is never a passing check.",
-            };
+            notEvaluable =
+              `no image evaluator is implemented for property "${check.property}". That is a ` +
+              "gap in this harness, stated as one — NOT_EVALUABLE, because a harness gap is " +
+              "not evidence about the product either way.";
         }
 
-        results.push({
-          checkId: check.id,
-          property: check.property,
-          verdict: verdict.passed ? "GREEN" : "RED",
-          detail: verdict.detail,
-          capturePath,
-        });
-        if (!verdict.passed) {
-          diagnostics.push(visualDiagnostic(check, "rendering", verdict.detail, TESTED_SHA, startedAt));
+        if (verdict === null) {
+          results.push({
+            checkId: check.id,
+            property: check.property,
+            verdict: "NOT_EVALUABLE",
+            detail: notEvaluable ?? "the property could not be evaluated and no reason was given",
+            capturePath,
+          });
+        } else {
+          results.push({
+            checkId: check.id,
+            property: check.property,
+            verdict: verdict.passed ? "GREEN" : "RED",
+            detail: verdict.detail,
+            capturePath,
+          });
+          if (!verdict.passed) {
+            diagnostics.push(
+              visualDiagnostic(check, "rendering", verdict.detail, TESTED_SHA, startedAt),
+            );
+          }
         }
         await page.close();
         await context.close();

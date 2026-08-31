@@ -623,6 +623,54 @@ export interface DrawnDistrict {
  * list, so the stated N and the rendered rows cannot diverge
  * (tests/representation.test.ts holds the coupling).
  */
+/**
+ * **DOES THE READER SEE DISTRICTS RIGHT NOW?** (MAP-5, 2026-08-30.)
+ *
+ * One predicate, called by every surface that describes the district layer,
+ * because the alternative has now failed twice on the same screen.
+ *
+ * On 2026-08-19 the author reported the stats tile reading *"Off"* while
+ * districts were plainly drawn. The cause is in `deriveStatsView`: the master
+ * switch is a persisted preference the map reads directly, and
+ * `ui.showDistricts` is a COPY kept in step by an effect — a mirror, which can
+ * lag or diverge. The tile was repaired to let the drawn set win. **The door
+ * behind the tile was not.**
+ *
+ * So on 2026-08-30 the owner opened that door over a map drawing State House
+ * Districts 16, 18, 21 and 23 by name, beside a tile reading *33 Districts in
+ * view*, and read: *"District boundaries are switched off, so none are drawn
+ * and there is nothing to count."* Three surfaces, two of them right.
+ *
+ * That is the owner's standing instruction failing in one file: the class was
+ * fixed at the instance it was reported at. The rule lives here now, and both
+ * surfaces call it, so the next surface to describe this layer inherits the
+ * repair instead of re-earning it.
+ *
+ * **The drawn set is EVIDENCE and the switch is INTENT.** `drawnDistrictsOn`
+ * reads features off the live map after rendering settles. Where the two
+ * disagree, what is painted wins — a reader can see the boundaries, and no
+ * flag gets to tell them they cannot.
+ */
+export function districtsAreVisible(
+  drawnCount: number | null,
+  switchOn: boolean,
+): boolean {
+  if (drawnCount !== null && drawnCount > 0) return true;
+  return switchOn;
+}
+
+/**
+ * The reader turned the layer off and nothing is drawn — the only state in
+ * which offering the switch is honest, and the only one in which "switched
+ * off" is a true sentence about the view.
+ */
+export function districtsSwitchedOffAndEmpty(
+  drawnCount: number | null,
+  switchOn: boolean,
+): boolean {
+  return !switchOn && (drawnCount === null || drawnCount === 0);
+}
+
 export function drawnDistrictsOn(
   map: MapLibreMap,
   activeTypes: readonly DistrictType[],

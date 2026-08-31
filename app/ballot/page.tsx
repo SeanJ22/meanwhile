@@ -504,6 +504,13 @@ async function BallotBattlecard({
        * the equal-effort rule exists to catch.
        */
       holdsOrHeldTheOffice={recordHolder !== null}
+      /*
+       * BAL-33 / BAL-35: the SAME record the map battlecard renders contact
+       * routes from. One person, one record, both surfaces — which is what
+       * the owner asked for in the sentence "anything the app holds anywhere
+       * is available everywhere".
+       */
+      contactHolder={recordHolder}
       sections={{
         /* BC-6: mandatory for every candidate and every elected official.
            Somebody voting for governor needs to know what a governor does. */
@@ -519,8 +526,33 @@ async function BallotBattlecard({
           positions.length > 0 ? (
             <CandidatePositions headline={positionsHeadline(positions)} positions={positions} />
           ) : null,
-        committees: holder ? <MemberCommitteesContent holder={holder} /> : null,
-        offices: holder ? <MemberOfficesContent holder={holder} /> : null,
+        /*
+         * **BAL-33 (2026-08-30) — THE SAME DEFECT ITEM 14 FIXED, TWO LINES
+         * ABOVE THE COMMENT EXPLAINING IT.**
+         *
+         * These read `holder`, which is `incumbentHolderFor` — the FEC funding
+         * join, needing a `congress:` roster id. So for every non-federal
+         * officeholder these sections had NO CODE PATH, and the owner opened
+         * Katie Hobbs' ballot card, expanded *Offices near you*, and read *"We
+         * don't hold an office location for this person"* beside a map card
+         * for the same person carrying a phone number, an email, a contact
+         * form and her official page.
+         *
+         * That sentence is about US and it was FALSE about us. We hold her
+         * offices; this surface was asking the wrong record for them.
+         *
+         * ITEM 14 diagnosed exactly this on 2026-08-26 and repaired `record:`
+         * — and `committees:` and `offices:`, immediately above it, kept the
+         * federal-only lookup. The owner's standing instruction, failing
+         * inside one object literal: *if the defect exists at that instance it
+         * exists at the class.*
+         *
+         * `recordHolder` is the federal join OR the officeholder the contest
+         * resolution matched to this candidate by seat — the same record the
+         * map battlecard renders from.
+         */
+        committees: recordHolder ? <MemberCommitteesContent holder={recordHolder} /> : null,
+        offices: recordHolder ? <MemberOfficesContent holder={recordHolder} /> : null,
         money: federal ? (
           <CandidateFunding targetKey={targetKey} context={context} />
         ) : stateMoney.length > 0 ? (

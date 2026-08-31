@@ -157,9 +157,21 @@ function renderBody(todayStr: string, results: StatusResult[]): string {
   out.push("- `UNPROVEN` — no run record names this check, or no check is named.");
   out.push("");
   out.push(
-    "`proofClass` is DERIVED too. A canonical suite or walk execution against a committed " +
-      "head is `INDEPENDENTLY_REPRODUCED` — reproduction by an instrument rather than by the " +
-      "implementing session's own one-off observation. Nothing else earns a proof class.",
+    "`proofClass` is DERIVED too, and derived from WHO RAN IT rather than from how canonical " +
+      "the command was. `INDEPENDENTLY_REPRODUCED` requires all three of: a clean working " +
+      "tree, a tested SHA the integration branch ALREADY contained when the run started, and " +
+      "a runner that is not a local session. Everything else — including every run this " +
+      "session invoked against its own work, and every record written before the provenance " +
+      "block existed — is `SESSION_MEASURED`.",
+  );
+  out.push("");
+  out.push(
+    "That distinction is the one RULING 216 turns on, and it was wrong until Session B: a " +
+      "passing canonical result was labelled `INDEPENDENTLY_REPRODUCED` unconditionally, " +
+      "which is the class `pnpm gates` earns on an unmerged branch. Only " +
+      "`INDEPENDENTLY_REPRODUCED` production-target results count toward the activation gate, " +
+      "so the strongest class in the repository was being awarded to the weakest evidence " +
+      "for it.",
   );
   out.push("");
   out.push(

@@ -124,6 +124,26 @@ export interface PublisherAgendaObservation {
    * What the surface ACTUALLY SAID, verbatim and trimmed — "Agenda not yet
    * posted", "Agenda: none", the empty-cell label. A report with no quoted
    * basis is an assertion, and this product does not carry those.
+   *
+   * **OR a STRUCTURAL basis, which is the ASK-18 extension (2026-08-30) and is
+   * held to the same standard.** Many calendars say nothing at all about a
+   * missing agenda: the row simply carries no agenda link. That absence is
+   * observed on a named page at a named time and is exactly as checkable as a
+   * quote — a reader can open `observedUrl` and see the same empty cell.
+   *
+   * It is NOT a loophole, and the difference from an assertion is precise:
+   *
+   * ```
+   *   ALLOWED   "the body's own calendar listing for this meeting carried no
+   *             agenda link when we read it"      — a description of a page
+   *   REFUSED   "no agenda has been published"    — a claim about a government
+   *             that no page was read for
+   * ```
+   *
+   * `structuralBasisFor` below is the ONE constructor, so the sentence a
+   * reader eventually meets cannot be hand-written per adapter. And the
+   * provenance still has to be `FIRST_PARTY_PUBLISHER`: a missing link on an
+   * aggregator's copy of a calendar says nothing about what the body posted.
    */
   readonly evidenceQuote: string;
   /**
@@ -143,6 +163,111 @@ export interface PublisherAgendaObservation {
  * enough that a nightly refresh keeps the state renderable.
  */
 export const DEFAULT_PUBLISHER_OBSERVATION_HOURS = 24;
+
+/**
+ * **THE STRUCTURAL BASIS SENTENCE, AND THERE IS ONE OF IT.** (ASK-18.)
+ *
+ * A calendar row with no agenda link is evidence, and this is the only
+ * sentence allowed to describe it. One constructor rather than a string per
+ * adapter, because the whole risk here is an adapter author writing something
+ * a shade stronger — *"no agenda published"* instead of *"the listing carried
+ * no agenda link"* — and that shade is the difference between describing a
+ * page and making a claim about a government.
+ *
+ * It describes the PAGE. It never says whether an agenda exists.
+ */
+export function structuralBasisFor(sourceOrg: string): string {
+  return (
+    `${sourceOrg}'s own calendar listing for this meeting carried no agenda link when we ` +
+    `read it`
+  );
+}
+
+/**
+ * Derive a first-party observation from a meeting record we already hold.
+ *
+ * **Why this exists.** `gapFor` has had a THEIRS branch since ASK-05 and it is
+ * unreachable outside the Legistar lane: nothing else populates observations,
+ * so every other body's answer falls to the OURS branch and tells a reader *we
+ * have not yet acquired the agenda... we are still looking for it* about a
+ * meeting whose body had simply not posted one. The owner checked at 8:30 that
+ * morning, confirmed nothing was posted for either Pima sitting, and reported
+ * the answer as the product blaming itself for someone else's timing.
+ *
+ * ## THE NARROWING THIS FUNCTION EXISTS TO ENFORCE, AND IT IS THE WHOLE POINT
+ *
+ * The first cut of this fired on `agendaUrl === null` and a first-party
+ * provenance. `tests/agenda-publication-state.test.ts` refused it, correctly,
+ * and the reason is the one thing that matters here:
+ *
+ * ```
+ *   an EMPTY AGENDA CELL on a page that has one   is evidence
+ *   a feed with NO AGENDA FIELD AT ALL            is not evidence of anything
+ * ```
+ *
+ * A Legistar InSite grid prints a literal "Not Available" in an Agenda column
+ * — the publisher saying something. A generic iCal feed has no agenda field, so
+ * its silence measures the FEED FORMAT, not the docket. Many bodies also post
+ * packets on a page the calendar never links. `agendaUrl === null` conflates
+ * all three, and turning that into *"they have not posted an agenda"* is a
+ * claim about a government drawn from the shape of a file format.
+ *
+ * So the caller must state that the surface it read HAS an agenda slot and
+ * that the slot was empty. That is per-adapter knowledge and **no adapter
+ * records it yet**, which means this returns null everywhere today. The seam
+ * is built, wired and tested; what it needs is the adapter work, and naming
+ * that precisely is more use than a derivation that would have shipped a false
+ * absence to close a feedback row.
+ */
+export function observationFromMeetingRecord(meeting: {
+  readonly id: string;
+  readonly agendaUrl?: string | null;
+  /**
+   * The source surface carries an agenda slot for this sitting AND it was
+   * empty when read. Set by the ADAPTER at the moment of the read; nothing may
+   * infer it from a null `agendaUrl`, which is exactly the conflation above.
+   */
+  readonly agendaSlotObservedEmpty?: boolean;
+  readonly provenance?: {
+    readonly sourceUrl: string | null;
+    readonly sourceOrg: string;
+    readonly collectedAt: string;
+    readonly secondHand?: boolean;
+  };
+  readonly carried?: unknown;
+}): PublisherAgendaObservation | null {
+  /*
+   * **THE GATE.** Absent means the adapter did not measure the publisher's
+   * agenda state, and not-measured is never not-published.
+   */
+  if (meeting.agendaSlotObservedEmpty !== true) return null;
+  /* An agenda we hold is not an absence to observe. */
+  if (meeting.agendaUrl != null) return null;
+  const p = meeting.provenance;
+  /* No provenance is NOT an observation. A shape that dropped the fields
+     produces nothing here rather than an observation with blanks in it. */
+  if (!p) return null;
+  /* A page we cannot name is a page a reader cannot check, and an
+     unverifiable observation is an assertion wearing a timestamp. */
+  if (!p.sourceUrl) return null;
+  /* An aggregator's missing link says nothing about what the BODY posted. */
+  if (p.secondHand === true) return null;
+  /* A carried-forward row was NOT retrieved on the run that wrote it, so its
+     `collectedAt` is not when this listing was read. Nothing about a carried
+     row may render a freshness it does not have. */
+  if (meeting.carried !== undefined) return null;
+  if (!p.collectedAt) return null;
+
+  return {
+    meetingId: meeting.id,
+    provenance: "FIRST_PARTY_PUBLISHER",
+    report: "NOT_AVAILABLE",
+    observedAt: p.collectedAt,
+    observedUrl: p.sourceUrl,
+    sourceOrg: p.sourceOrg,
+    evidenceQuote: structuralBasisFor(p.sourceOrg),
+  };
+}
 
 /** A week. Nothing about a docket stays measured for longer than this. */
 export const MAX_PUBLISHER_OBSERVATION_HOURS = 168;
@@ -471,11 +596,27 @@ function gapFor(args: {
    * which is the largest true statement the evidence supports.
    */
   if (publication === "REPORTS_NOT_AVAILABLE" && observation) {
+    /*
+     * **ASK-18 (2026-08-30) — THE SENTENCE LEADS WITH WHOSE FACT IT IS.**
+     *
+     * The clauses are unchanged and their ORDER is not. It read *"As of
+     * <date>, <org> had not posted an agenda..."*, which buries the subject
+     * behind a date and reads like hedging. The owner's instruction: *"we
+     * should very clearly say that this agenda is not posted"*, and separately
+     * that the map card's NO AGENDA POSTED YET is the right register.
+     *
+     * So the publisher and the fact come first and the date follows as the
+     * scope it is. Nothing is added: this still says only what a named
+     * publisher's own page showed on a named day, which is the largest true
+     * statement the evidence supports. Not "there is no agenda". Not "none has
+     * been published".
+     */
     return {
       whose: "THEIRS",
       statement:
-        `As of ${observation.observedAt.slice(0, 10)}, ${observation.sourceOrg} had not posted ` +
-        `an agenda for that ${bodyName} meeting on its own page. We are still checking.`,
+        `${observation.sourceOrg} has not posted an agenda for that ${bodyName} meeting — ` +
+        `its own page showed none when we read it on ` +
+        `${observation.observedAt.slice(0, 10)}. We are still checking.`,
     };
   }
 

@@ -112,18 +112,36 @@ export type ReaderExpectation =
       /** The name the bound subject must carry, as the owner states it. */
       readonly entityName: string;
     }
-  /** The answer must assert this value of this subject. Normalised before compare. */
+  /**
+   * The answer must assert this value OF THIS SUBJECT. Normalised before compare.
+   *
+   * `subjectId` binds the claim to a canonical government exactly as an ENTITY
+   * expectation does, and it is the clause that makes this a proposition about
+   * a body rather than about a number. A budget figure is the right answer for
+   * exactly one body; an answer carrying it about a different one is grounded,
+   * sourced and WRONG. Where the owner states no id, the instance's own
+   * `subjectBodyId` supplies it — see `ExpectationSubject`.
+   */
   | {
       readonly kind: "VALUE";
       readonly subject: string;
+      /** The registry id the answer must have bound, when one governs the claim. */
+      readonly subjectId?: string | null;
       readonly value: string | number;
       /** Deterministic alternate formattings the owner also accepts. */
       readonly acceptedForms?: readonly string[];
     }
-  /** The answer must assert every member. `exhaustive` also forbids extras being claimed. */
+  /**
+   * The answer must assert every member. `exhaustive` also forbids extras.
+   *
+   * `subjectId` binds the list to its body for the same reason VALUE does: a
+   * complete and correct roster of the WRONG council is a wrong answer.
+   */
   | {
       readonly kind: "LIST";
       readonly subject: string;
+      /** The registry id the answer must have bound, when one governs the claim. */
+      readonly subjectId?: string | null;
       readonly members: readonly string[];
       readonly exhaustive: boolean;
     }
@@ -254,6 +272,101 @@ function statesAbsence(text: string): boolean {
   return ABSENCE_PHRASES.some((phrase) => lower.includes(phrase));
 }
 
+/* ---------------------------------------------- the canonical subject bind */
+
+/**
+ * **THE INSTANCE'S OWN SUBJECT.** (B WI1.1, 2026-08-30.)
+ *
+ * ENTITY expectations have checked the bound subject since A.1. VALUE and LIST
+ * did not, and that hole has a name: an answer that carries the expected
+ * number, is grounded, is sourced, and is ABOUT A DIFFERENT GOVERNMENT went
+ * GREEN. Every clause of the contract held except the one that makes the
+ * answer true.
+ *
+ * The id comes from the expectation when the owner states one, and otherwise
+ * from the instance the question was generated for — `subjectBodyId`, the
+ * registry id the generator already bound. Null means the question has no body
+ * subject (a zip-level question about a whole area), and null is the only
+ * thing that legitimately skips the check.
+ */
+export interface ExpectationSubject {
+  /** The registry body id (`<ocdId>#<slug>`) this instance is about, or null. */
+  readonly subjectBodyId: string | null;
+}
+
+/**
+ * The id this expectation must have bound, or null when nothing binds it.
+ *
+ * Exported so the harness and the tests read the SAME rule rather than two
+ * copies of it: the owner's explicit id wins, the instance's supplies it
+ * otherwise, and an explicit `null` on the expectation means the owner has
+ * said out loud that no body governs this claim.
+ */
+export function expectedSubjectId(
+  expectation: ReaderExpectation,
+  subject: ExpectationSubject | null,
+): string | null {
+  if (expectation.kind !== "VALUE" && expectation.kind !== "LIST") return null;
+  if (expectation.subjectId !== undefined) return expectation.subjectId;
+  return subject?.subjectBodyId ?? null;
+}
+
+/* ------------------------------------------------- exhaustive list members */
+
+/**
+ * The members an answer CLAIMS, read off the record lines.
+ *
+ * `exhaustive` is a claim about extras, and extras can only be counted where
+ * the claimed members are enumerable. A record line is one member — that is
+ * what the structured ladder renders — so the leading name segment of each
+ * line is one claim. Prose is NOT mined for names: a sentence naming a body,
+ * a date and a chair alongside five members would manufacture extras out of
+ * grammar, and a false RED on an exhaustive list is as much a wrong instrument
+ * reading as the false GREEN this replaces.
+ *
+ * Where there are no record lines the exhaustive clause is NOT EVALUABLE, and
+ * `evaluateAnswer` says so rather than passing it.
+ */
+export function claimedMembers(answer: RenderedAnswer): string[] {
+  const out: string[] = [];
+  for (const line of answer.recordTexts) {
+    /* The name segment: everything before the first structural separator the
+       record renderer uses between a member and its role, ward or email. */
+    const head = line.split(/\s+[—–|]\s+|,|\(|·/)[0].trim();
+    if (head.length > 0) out.push(head);
+  }
+  return out;
+}
+
+/* ---------------------------------------------------------- period scoping */
+
+/**
+ * The years a period covers, expanded from ranges.
+ *
+ * A verified absence is an absence OVER A PERIOD. "No filings in 2025" and
+ * "no filings in 2026" are different claims about the same authority, and an
+ * evaluator that reads only the absence language and the authority name will
+ * accept either for the other — which is how a true statement about last year
+ * certifies a false one about this year.
+ *
+ * Ranges are expanded so an answer covering 2024-2026 satisfies a 2026
+ * expectation. An open-ended phrase with no year yields an empty set, and an
+ * empty EXPECTED set is what makes the scope check inapplicable rather than
+ * failed.
+ */
+export function periodYears(text: string): Set<string> {
+  const years = new Set<string>();
+  const source = String(text ?? "");
+  for (const match of source.matchAll(/\b(19|20)\d{2}\s*[–—-]\s*((19|20)\d{2})\b/g)) {
+    const [a, b] = match[0].split(/\s*[–—-]\s*/).map((n) => Number(n));
+    if (Number.isFinite(a) && Number.isFinite(b) && b >= a && b - a <= 50) {
+      for (let y = a; y <= b; y += 1) years.add(String(y));
+    }
+  }
+  for (const match of source.matchAll(/\b((19|20)\d{2})\b/g)) years.add(match[1]);
+  return years;
+}
+
 /* ------------------------------------------------------------ the verdict */
 
 function red(detail: string, failureClass: FailureClass): EvaluatedInstance {
@@ -285,6 +398,7 @@ export interface EvaluatedInstance {
 export function evaluateAnswer(
   answer: RenderedAnswer,
   expectation: ReaderExpectation | null,
+  subject: ExpectationSubject | null = null,
 ): EvaluatedInstance {
   if (expectation === null) {
     return {
@@ -346,7 +460,27 @@ export function evaluateAnswer(
     );
   }
 
-  /* 5. Does it assert the expected proposition? */
+  /*
+   * 5. Is it ABOUT the right government? (B WI1.1.)
+   *
+   * Before any value or member is compared, because a wrong-body answer is not
+   * a near miss to be diagnosed as a synthesis problem — it is an identity
+   * failure, and reporting it as anything else sends the next session hunting
+   * records we already hold. ENTITY runs its own richer bind below (id AND
+   * rendered name); this is the clause VALUE and LIST were missing entirely.
+   */
+  const wantedSubject = expectedSubjectId(expectation, subject);
+  if (wantedSubject !== null && answer.subjectId !== wantedSubject) {
+    return red(
+      `the answer bound ${JSON.stringify(answer.subjectId ?? "nothing")} where this ` +
+        `${expectation.kind} expectation is about ${JSON.stringify(wantedSubject)} — a ` +
+        "grounded, sourced answer carrying the expected content about the wrong government " +
+        "is a wrong answer, not a partial one",
+      "identity",
+    );
+  }
+
+  /* 6. Does it assert the expected proposition? */
   switch (expectation.kind) {
     case "ENTITY": {
       if (expectation.entityId !== null && answer.subjectId !== expectation.entityId) {
@@ -396,6 +530,51 @@ export function evaluateAnswer(
         (member) => !answerAssertsValue(answer, member),
       );
       if (missing.length === 0) {
+        /*
+         * **EXHAUSTIVE IS A CLAIM ABOUT EXTRAS.** (B WI1.2.)
+         *
+         * Until now `exhaustive` appeared in exactly one place — the failure
+         * message — so an answer carrying every expected member PLUS an
+         * invented sixth councillor passed a check whose whole purpose was to
+         * forbid the invented sixth. The flag was documentation.
+         *
+         * It is enforced against the record lines, and where there are none it
+         * is NOT_EVALUABLE rather than green: an extras claim needs enumerable
+         * members, and a check that cannot see extras may not certify their
+         * absence.
+         */
+        if (!expectation.exhaustive) {
+          return { verdict: { kind: "GREEN" }, failureClass: null };
+        }
+        const claimed = claimedMembers(answer);
+        if (claimed.length === 0) {
+          return {
+            verdict: {
+              kind: "NOT_EVALUABLE",
+              detail:
+                `every expected member of ${expectation.subject} is asserted, but the owner ` +
+                "states this list is EXHAUSTIVE and the answer rendered no record lines — " +
+                "there is nothing enumerable to check extras against. Prose is deliberately " +
+                "not mined for names: manufacturing members out of grammar would trade a " +
+                "false green for a false red. Recorded, and never counted green.",
+            },
+            failureClass: null,
+          };
+        }
+        const expectedForms = expectation.members.map((m) => normaliseValue(m));
+        const unexpected = claimed.filter((claim) => {
+          const folded = normaliseValue(claim);
+          return !expectedForms.some((form) => folded.includes(form) || form.includes(folded));
+        });
+        if (unexpected.length > 0) {
+          return red(
+            `the answer asserts ${unexpected.length} member(s) of ${expectation.subject} that ` +
+              `the owner's exhaustive list does not contain: ${unexpected.join(", ")}. An ` +
+              "exhaustive list is a claim that these and no others hold the seats, so an extra " +
+              "is a fabricated officeholder, which is the worse direction of the two",
+            answer.answerText ? "synthesis" : "evidence_selection",
+          );
+        }
         return { verdict: { kind: "GREEN" }, failureClass: null };
       }
       return red(
@@ -443,6 +622,44 @@ export function evaluateAnswer(
             "with no authority behind it is an assertion, and absence is never asserted",
           "synthesis",
         );
+      }
+      /*
+       * **AN ABSENCE IS AN ABSENCE OVER A PERIOD.** (B WI1.3.)
+       *
+       * The expectation has carried `period` since A.1 and nothing read it, so
+       * "no filings in 2025" satisfied an expectation scoped to 2026 as long
+       * as the authority was named. That is a TRUE sentence about last year
+       * certifying a claim about this one, and the reader meets it as a fact
+       * about a government.
+       *
+       * The answer's absence scope must COVER the expected period. A period
+       * the owner wrote with no year yields no requirement — inapplicable,
+       * never silently satisfied — and an answer with no year against a period
+       * that has one is unscoped, which is a synthesis failure rather than a
+       * green.
+       */
+      const wantedYears = periodYears(expectation.period);
+      if (wantedYears.size > 0) {
+        const statedYears = periodYears(absenceText);
+        if (statedYears.size === 0) {
+          return red(
+            `the answer states a sourced absence in ${expectation.authority}'s records but ` +
+              `scopes it to no period, where the owner verified it for ` +
+              `${JSON.stringify(expectation.period)} — an unscoped absence is a broader claim ` +
+              "than the one that was verified",
+            "synthesis",
+          );
+        }
+        const uncovered = [...wantedYears].filter((year) => !statedYears.has(year));
+        if (uncovered.length > 0) {
+          return red(
+            `the answer's absence covers ${[...statedYears].sort().join(", ")} where the ` +
+              `expectation is scoped to ${JSON.stringify(expectation.period)}; ` +
+              `${uncovered.sort().join(", ")} is not covered. A true absence in one period is ` +
+              "not evidence of an absence in another",
+            "synthesis",
+          );
+        }
       }
       return { verdict: { kind: "GREEN" }, failureClass: null };
     }

@@ -189,3 +189,284 @@ export function evaluateOverlap(
       `is painted (luminance sd ${stats.sd.toFixed(2)} over ${stats.n} pixel(s))`,
   };
 }
+
+/* ============================================================================
+ * **THE PROPERTIES THAT HAD NO EVALUATOR OF THEIR OWN.**
+ * (Session B WI1.7, 2026-08-30.)
+ *
+ * `visual_prominence` and `image_level` were dispatched to `evaluateVisibility`
+ * — the same luminance-variance test. So a check asserting that an element is
+ * PROMINENT passed on proof that something was painted in its box, which every
+ * rendered element in the product satisfies. Prominence is a claim about an
+ * element relative to the rest of the surface, and a test that never looks
+ * outside the element's own box cannot make it.
+ *
+ * `overlap`, `position`, `spacing` and `responsive_hierarchy` fell through to
+ * "no image evaluator is implemented", which the suite scored RED. Not green,
+ * so nothing was over-certified — but a harness gap rendered as a product
+ * defect, which files a diagnostic against code that is not at fault and
+ * teaches the next reader to distrust the red.
+ *
+ * What follows are real evaluators for the first four, and the rule for the
+ * rest: **a property with no evaluator capable of proving it is NOT_EVALUABLE,
+ * named, and never GREEN.**
+ * ========================================================================= */
+
+/** The band immediately outside a box, on all four sides. */
+function ringStats(
+  png: DecodedPng,
+  box: ElementBox,
+  scale: number,
+  ring: number,
+): { mean: number; sd: number; n: number } {
+  const outer = {
+    x: box.x - ring,
+    y: box.y - ring,
+    width: box.width + ring * 2,
+    height: box.height + ring * 2,
+  };
+  const o = rectStats(png, outer, scale);
+  const i = rectStats(png, box, scale);
+  const n = o.n - i.n;
+  if (n <= 0) return { mean: 0, sd: 0, n: 0 };
+  /* Ring = outer minus inner, recovered from the two accumulations rather than
+     walked again: mean and variance both compose, and walking an L-shape twice
+     is where an off-by-one lives. */
+  const sum = o.mean * o.n - i.mean * i.n;
+  const sumSq = (o.sd * o.sd + o.mean * o.mean) * o.n - (i.sd * i.sd + i.mean * i.mean) * i.n;
+  const mean = sum / n;
+  return { mean, sd: Math.sqrt(Math.max(0, sumSq / n - mean * mean)), n };
+}
+
+/**
+ * Is this element PROMINENT — distinguished from what surrounds it?
+ *
+ * Not "is it painted". An element is prominent when a reader's eye separates
+ * it from its neighbourhood, and that is measurable as a relationship between
+ * the element and the band around it: either its mean luminance departs from
+ * the surrounding band (a filled pill against a plain card), or its internal
+ * variance materially exceeds the band's (dense type against whitespace).
+ *
+ * Both readings are of PIXELS OUTSIDE the element as well as inside, which is
+ * the whole difference from `evaluateVisibility`. A visible element sitting in
+ * a field of equally busy elements is visible and not prominent, and this is
+ * the test that can tell them apart.
+ */
+export function evaluateProminence(
+  png: DecodedPng,
+  box: ElementBox,
+  scale = 1,
+  ring = 24,
+  minMeanDelta = 12,
+  minSdRatio = 1.8,
+): ImageVerdict {
+  if (box.width <= 0 || box.height <= 0) {
+    return {
+      passed: false,
+      detail: `the element reports a ${box.width}x${box.height} box — nothing is painted there`,
+    };
+  }
+  const inner = rectStats(png, box, scale);
+  if (inner.n === 0) {
+    return { passed: false, detail: "the element's box falls outside the captured image" };
+  }
+  const around = ringStats(png, box, scale, ring);
+  if (around.n === 0) {
+    return {
+      passed: false,
+      detail:
+        `no ${ring}px surrounding band is inside the capture, so this element cannot be ` +
+        "compared with anything — prominence is a relationship and there is nothing to relate it to",
+    };
+  }
+  const meanDelta = Math.abs(inner.mean - around.mean);
+  const sdRatio = around.sd < 0.5 ? Infinity : inner.sd / around.sd;
+  const passed = meanDelta >= minMeanDelta || sdRatio >= minSdRatio;
+  return {
+    passed,
+    detail:
+      `element mean ${inner.mean.toFixed(1)} sd ${inner.sd.toFixed(2)} against a ${ring}px ` +
+      `surround mean ${around.mean.toFixed(1)} sd ${around.sd.toFixed(2)}: ` +
+      `mean delta ${meanDelta.toFixed(1)} (floor ${minMeanDelta}), sd ratio ` +
+      `${Number.isFinite(sdRatio) ? sdRatio.toFixed(2) : "unbounded"} (floor ${minSdRatio}). ` +
+      (passed
+        ? "the element separates from its surroundings"
+        : "the element is painted but does not separate from what surrounds it — visible, " +
+          "and not prominent"),
+  };
+}
+
+/** Where an element is expected to sit, in device-independent pixels. */
+export interface ExpectedRegion {
+  readonly x: number;
+  readonly y: number;
+  readonly width: number;
+  readonly height: number;
+}
+
+/**
+ * Is this element WHERE it is supposed to be, and painted there?
+ *
+ * Both clauses, because either alone is a lie this repository has already
+ * shipped: a box reported at the right coordinates that paints nothing is a
+ * layout that "passes" while the reader sees an empty column, and painted
+ * pixels at the wrong coordinates are a different defect wearing the same
+ * green. `tolerance` is stated per check rather than global — a pill's
+ * placement and a column's placement do not deserve the same slack.
+ */
+export function evaluatePosition(
+  png: DecodedPng,
+  box: ElementBox,
+  expected: ExpectedRegion,
+  scale = 1,
+  tolerance = 8,
+): ImageVerdict {
+  const dx = Math.abs(box.x - expected.x);
+  const dy = Math.abs(box.y - expected.y);
+  const dw = Math.abs(box.width - expected.width);
+  const dh = Math.abs(box.height - expected.height);
+  const worst = Math.max(dx, dy, dw, dh);
+  const painted = rectStats(png, box, scale);
+  const isPainted = painted.n > 0 && painted.sd >= 1;
+  const geometryOk = worst <= tolerance;
+  return {
+    passed: geometryOk && isPainted,
+    detail:
+      `box ${Math.round(box.x)},${Math.round(box.y)} ${Math.round(box.width)}x` +
+      `${Math.round(box.height)} against expected ${expected.x},${expected.y} ` +
+      `${expected.width}x${expected.height}: worst axis deviation ${worst.toFixed(1)}px ` +
+      `(tolerance ${tolerance}); the box paints luminance sd ${painted.sd.toFixed(2)} over ` +
+      `${painted.n} pixel(s). ` +
+      (geometryOk
+        ? isPainted
+          ? "positioned and painted"
+          : "positioned correctly and painting nothing, which a reader meets as an empty space"
+        : "not where the check expects it"),
+  };
+}
+
+/**
+ * Is the GAP between two elements the size it should be, and actually empty?
+ *
+ * Spacing read from boxes alone certifies a gap that a third element is
+ * sitting in. So the measured gap must both match the expectation and be
+ * unpainted — the band between the two boxes has to look like background.
+ *
+ * The axis is chosen from the boxes rather than declared: two elements stacked
+ * vertically are spaced vertically. Boxes that already intersect are not a
+ * spacing question and are refused as one.
+ */
+export function evaluateSpacing(
+  png: DecodedPng,
+  a: ElementBox,
+  b: ElementBox,
+  expectedPx: number,
+  scale = 1,
+  tolerance = 4,
+): ImageVerdict {
+  const vertical = b.y >= a.y + a.height || a.y >= b.y + b.height;
+  const horizontal = b.x >= a.x + a.width || a.x >= b.x + b.width;
+  if (!vertical && !horizontal) {
+    return {
+      passed: false,
+      detail:
+        "the two boxes intersect on both axes, so there is no gap between them to measure — " +
+        "that is an overlap, and it is a different property",
+    };
+  }
+  const [first, second] = vertical
+    ? a.y <= b.y
+      ? [a, b]
+      : [b, a]
+    : a.x <= b.x
+      ? [a, b]
+      : [b, a];
+  const gap = vertical
+    ? second.y - (first.y + first.height)
+    : second.x - (first.x + first.width);
+  const band: ElementBox = vertical
+    ? {
+        x: Math.max(first.x, second.x),
+        y: first.y + first.height,
+        width: Math.max(1, Math.min(first.x + first.width, second.x + second.width) - Math.max(first.x, second.x)),
+        height: Math.max(1, gap),
+      }
+    : {
+        x: first.x + first.width,
+        y: Math.max(first.y, second.y),
+        width: Math.max(1, gap),
+        height: Math.max(1, Math.min(first.y + first.height, second.y + second.height) - Math.max(first.y, second.y)),
+      };
+  const inBand = rectStats(png, band, scale);
+  const sizeOk = Math.abs(gap - expectedPx) <= tolerance;
+  /* A gap with content in it is not a gap. The floor is deliberately low:
+     anti-aliased borders and a hairline rule are not "content", dense type is. */
+  const empty = inBand.n === 0 || inBand.sd < 6;
+  return {
+    passed: sizeOk && empty,
+    detail:
+      `${vertical ? "vertical" : "horizontal"} gap ${gap.toFixed(1)}px against expected ` +
+      `${expectedPx}px (tolerance ${tolerance}); the gap band paints luminance sd ` +
+      `${inBand.sd.toFixed(2)} over ${inBand.n} pixel(s). ` +
+      (sizeOk
+        ? empty
+          ? "spaced as expected and the gap is empty"
+          : "the gap measures correctly and something is painted inside it, so it is not a gap"
+        : "the gap is not the expected size"),
+  };
+}
+
+/**
+ * Do these elements hold their intended READING ORDER at this viewport?
+ *
+ * Responsive hierarchy is the claim that at a given width the important thing
+ * comes first. Read as: the boxes fall in the declared order top-to-bottom,
+ * and where two share a row, left-to-right — and every one of them is
+ * actually painted, because a hierarchy whose lead element renders blank has
+ * the order it claimed and none of the meaning.
+ *
+ * The viewport is the check's own; running the same check at a second width is
+ * a second check, which is what makes `responsive_hierarchy` a property of a
+ * viewport rather than of the page.
+ */
+export function evaluateReadingOrder(
+  png: DecodedPng,
+  boxes: readonly { readonly label: string; readonly box: ElementBox }[],
+  scale = 1,
+  rowTolerance = 8,
+): ImageVerdict {
+  if (boxes.length < 2) {
+    return {
+      passed: false,
+      detail:
+        `a reading-order check needs at least two elements; ${boxes.length} was bound. One ` +
+        "element has no order",
+    };
+  }
+  const blank = boxes.filter(({ box }) => {
+    const s = rectStats(png, box, scale);
+    return s.n === 0 || s.sd < 1;
+  });
+  const misordered: string[] = [];
+  for (let i = 1; i < boxes.length; i += 1) {
+    const prev = boxes[i - 1].box;
+    const here = boxes[i].box;
+    const sameRow = Math.abs(prev.y - here.y) <= rowTolerance;
+    const ok = sameRow ? prev.x <= here.x : prev.y <= here.y;
+    if (!ok) misordered.push(`${boxes[i - 1].label} before ${boxes[i].label}`);
+  }
+  const passed = misordered.length === 0 && blank.length === 0;
+  return {
+    passed,
+    detail:
+      `${boxes.length} element(s) in declared order: ` +
+      boxes
+        .map(({ label, box }) => `${label}@${Math.round(box.x)},${Math.round(box.y)}`)
+        .join(" -> ") +
+      (misordered.length > 0 ? `; out of order: ${misordered.join("; ")}` : "") +
+      (blank.length > 0
+        ? `; painted nothing: ${blank.map((b) => b.label).join(", ")}`
+        : "") +
+      (passed ? "; the declared hierarchy holds at this viewport" : ""),
+  };
+}

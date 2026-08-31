@@ -17,6 +17,7 @@ import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ball
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
 import { PositionsSection } from "@/components/officials/positions-section";
+import { DemandPill } from "@/components/demand/demand-pill";
 import {
   positionsEmptyLine,
   UNESTABLISHED,
@@ -494,6 +495,23 @@ export function CandidateBattlecard({
                   context={speakContext ?? undefined}
                 />
               </div>
+
+              {/*
+                **OWN-Q6 (2026-08-31) — the reader asking us to go get it.**
+
+                Directly under Speak Your Mind and above the collection note,
+                on the same reasoning that placed the pill above it: after the
+                evidence, because it is the reader's turn once they have read
+                what we hold. It is the SAME component on the body card, with
+                the same props, so the two surfaces cannot drift — a pill that
+                appeared only where coverage is good would itself be a
+                coverage claim.
+              */}
+              <DemandPill
+                subjectType="CANDIDATE"
+                subjectId={subjectId}
+                className="mt-3"
+              />
 
               <p
                 data-collection-note

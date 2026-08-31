@@ -228,6 +228,25 @@ test("item 8.4: every write path into a sold store states a tier", () => {
   assert.deepEqual(
     inserts.sort(),
     [
+      /*
+       * **RULED ON, OWN-Q6 (2026-08-31): `demand_signals` is NOT a sold
+       * aggregate record and carries no coverage tier.**
+       *
+       * It COULD carry one — unlike the questionnaire and the write alarm it
+       * holds `ocd_ids`, so there is a place whose coverage depth could be
+       * stated honestly. It does not, and the reason is the tier's own
+       * purpose: it exists so a BUYER weighting a row is told how well
+       * researched the place behind it is. There is no buyer. This store has
+       * no read path at all — `lib/db/demand-signal.ts` exports a write and
+       * nothing that reads — no export shape, no aggregate, and the owner's
+       * instruction is that results are never shown to readers.
+       *
+       * A column nothing reads, added in case a buyer appears, is a claim that
+       * one is coming. If the owner ever decides to sell demand signal, that
+       * decision reopens this and the tier arrives with it — which is exactly
+       * the conversation this comment is here to force.
+       */
+      "lib/db/demand-signal.ts",
       "lib/db/feedback.ts",
       "lib/db/intake-limiter.ts",
       /*

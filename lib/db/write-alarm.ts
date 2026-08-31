@@ -47,7 +47,18 @@ import { assertWriteAllowed } from "./write-guard.ts";
  * still renders. A new sold store outside the alarm would be the one store
  * nobody finds out about.
  */
-export type SoldStore = "search_log" | "reactions" | "speak_your_mind";
+export type SoldStore =
+  | "search_log"
+  | "reactions"
+  | "speak_your_mind"
+  /*
+   * OWN-Q6 (2026-08-31). NOT a sold store — no aggregate reads it, no export
+   * carries it and there is no reader read path at all. It is here because
+   * this alarm is what makes a failed write VISIBLE, and a write path whose
+   * failures are silent is the class RULING 25 exists about, whatever the row
+   * is worth to a buyer.
+   */
+  | "demand_signals";
 
 /** The database's own words are useful; a parameter echo is not. Capped. */
 const MESSAGE_CAP = 400;

@@ -214,6 +214,30 @@ function loaded(): Promise<Loaded> {
  * separates "nothing is scheduled" from "we cannot see what is scheduled", and
  * those must never render the same way.
  */
+/**
+ * **EVERY ID A `BODY` CARD CAN BE ABOUT.** (OWN-Q6, 2026-08-31.)
+ *
+ * The demand-signal route validates a `BODY` subject against this, for the
+ * same reason the reaction route validates a target against the votes and
+ * ballot snapshots: a row stored against a subject nothing can render is a row
+ * no operational reader can act on, which is worse than no row. A missing or
+ * unreadable registry fails CLOSED at the caller.
+ *
+ * **It is the UNION of two id spaces, because the surface is.** `BC-11` fixed
+ * the subject id on the body card to *the body id, never the display title* —
+ * and there are three constructors in `map-entry.tsx`, of which one uses a
+ * registry `body.id` and two use a division's own OCD-ID, because a PLACE and
+ * a DISTRICT are governments that are not registry body rows. Validating
+ * against only the first would refuse two of the three body cards this product
+ * renders, which reads as a broken pill rather than as a narrow allowlist.
+ */
+export async function knownBodySubjectIds(): Promise<Set<string>> {
+  const { registry, divisionsById } = await loaded();
+  const out = new Set<string>(registry.bodies.map((b) => b.id));
+  for (const ocdId of divisionsById.keys()) out.add(ocdId);
+  return out;
+}
+
 /** The divisions containing a point, from the committed geometry. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
   const { features, divisionsById } = await loaded();

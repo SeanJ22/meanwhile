@@ -47,7 +47,7 @@ import { SlidingWindowLimiter } from "../signal/rate-limit.ts";
  * here only affects the pre-check.
  */
 
-export type IntakeSpace = "reactions" | "feedback" | "speak";
+export type IntakeSpace = "reactions" | "feedback" | "speak" | "demand-signal";
 
 interface Windows {
   perKey: SlidingWindowLimiter;
@@ -68,6 +68,18 @@ export function intakeWindows(space: IntakeSpace): Windows {
    * sentence about a named body, which is the same act at the same rate as a
    * reaction with a verbatim, on the same surfaces. Giving it its own env vars
    * would be two numbers nobody tunes and one of them quietly wrong.
+   */
+  /*
+   * `demand-signal` takes the REACTIONS budget, deliberately and for the same
+   * reason `speak` does: it is a reader tapping a pill on a reader surface, at
+   * the same rate and on the same pages. Its own env vars would be two numbers
+   * nobody tunes and one of them quietly wrong. (OWN-Q6, 2026-08-31.)
+   *
+   * Its `perKey` window is CONSTRUCTED and never used — the route has no
+   * continuity key to bucket by, because the owner's instruction on that
+   * feature was no identity. Constructed anyway so the cache holds one shape
+   * per space and a later caller with a key gets a real limiter rather than a
+   * surprise.
    */
   const perMinute =
     space === "feedback" ? limits.feedbackPerMinuteHard : limits.reactionsPerMinuteHard;

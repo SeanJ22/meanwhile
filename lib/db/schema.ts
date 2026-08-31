@@ -1248,3 +1248,97 @@ export const askInteractions = pgTable(
     index("ask_interactions_surface_idx").on(table.surface),
   ],
 );
+
+/**
+ * **THE READER'S ASK FOR A RECORD SOONER.** (OWN-Q6, the owner's amendment on
+ * Q6/Q7, authorized 2026-08-31.)
+ *
+ * The owner asked for a pill reading *"Want us to get this info sooner?"* that
+ * registers the click with a brief confirmation. What that pill is, precisely,
+ * is a DEMAND SIGNAL: the reader telling us which gap to close first. It is the
+ * only reader input in this product that is about OUR backlog rather than about
+ * a government.
+ *
+ * ## What it is bounded to, and every bound is load-bearing
+ *
+ * ```
+ *   ONE fixed enum value       no free text, ever, on any path
+ *   NO identity column         no account, no address, and deliberately no
+ *                              browser-continuity hash either
+ *   NO read path for a reader  results are never rendered back, in any form
+ *   SYMMETRIC                  every body and candidate card, or none
+ * ```
+ *
+ * **The missing continuity hash is the deliberate part.** `reactions` carries
+ * `reactionKeyHash` so a reader can change their mind, and that hash is the
+ * nearest thing to an identifier this product holds. The owner's instruction on
+ * this feature was no identity, so there is no continuity here at all: a reader
+ * who taps twice writes two rows and neither is relatable to the other. A
+ * de-duplication that needed a key would be an identifier arriving through the
+ * back door, and the aggregate this feeds is a COUNT OF ASKS, which is what the
+ * pill literally records.
+ *
+ * ## Why it is a table beside `reactions` rather than a column on it
+ *
+ * Because it answers a different question and must never dilute the one the
+ * business sells. A reaction is *what I think of this public record*; a demand
+ * signal is *I want you to go get this*. Summing them would put our own backlog
+ * into a civic-interest aggregate, which is the one thing that number may not
+ * contain.
+ *
+ * **The n-stores rule holds by VALUE SPACE, not by column name** (RULING 132).
+ * This table shares `ocdIds` and `divisionVintage` with `reactions` and the
+ * search log — the same approximate-location basis, never an address — and
+ * carries no key that could relate a row here to a row there. `runId` is
+ * namespaced to its own digest space for exactly that reason.
+ *
+ * ## No read path, and that is structural
+ *
+ * There is no aggregate reader, no export shape and no surface. The pill
+ * confirms the write and says nothing about the total; `lib/db/demand-signal.ts`
+ * exposes a write and no read, and `tests/demand-signal.test.ts` asserts it.
+ * The owner sees demand through the ordinary operational path, not through the
+ * product.
+ */
+export const demandSignals = pgTable(
+  "demand_signals",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    occurredAt: timestamp("occurred_at", { withTimezone: true, mode: "string" }).notNull(),
+    /** What the reader was looking at. Two kinds, and the surface is symmetric on both. */
+    subjectType: text("subject_type", { enum: ["BODY", "CANDIDATE"] }).notNull(),
+    /** The body's or candidate's own key. Never a reader's anything. */
+    subjectId: text("subject_id").notNull(),
+    /**
+     * **THE SINGLE-MEMBER FIXED ENUM.**
+     *
+     * One value, because the pill asks one question and a reader who taps it
+     * has said one thing. It is a column rather than an implied constant so a
+     * second signal class — if the owner ever asks for one — arrives as a value
+     * a query can group by, rather than as a second table nobody reconciles.
+     * Widening it costs no migration: it is a text column with no CHECK.
+     */
+    signal: text("signal", { enum: ["WANT_THIS_SOONER"] }).notNull(),
+    /**
+     * Where the reader was looking, on the same approximate-location basis as
+     * the search log and reactions: divisions resolved from the map view,
+     * zip-level at finest. Never an address, never district truth.
+     */
+    ocdIds: jsonb("ocd_ids").$type<string[]>().notNull(),
+    divisionVintage: text("division_vintage").notNull(),
+    /**
+     * Whose traffic this row is. Same four classes and the same rule as
+     * `reactions`: the write path REQUIRES the declaration, and the database
+     * default is `UNKNOWN` so an undeclared row is never a reader.
+     */
+    runClass: text("run_class", { enum: ["ORGANIC", "SYNTHETIC", "UNKNOWN", "AUTHOR"] })
+      .notNull()
+      .default("UNKNOWN"),
+    /** `sha256("demand-run:" + runId)` — its own digest space, joining nothing. */
+    runId: text("run_id"),
+  },
+  (table) => [
+    index("demand_signals_occurred_idx").on(table.occurredAt),
+    index("demand_signals_subject_idx").on(table.subjectType, table.subjectId),
+  ],
+);

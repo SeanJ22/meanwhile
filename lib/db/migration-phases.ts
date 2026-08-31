@@ -342,6 +342,15 @@ export const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
       "Adds five evidence columns to ask_interactions — three defaulted, two nullable — so a " +
       "build that predates them still writes successfully. The second half of the same incident.",
   },
+  "0023_tricky_sister_grimm": {
+    phase: "expand",
+    why:
+      "Creates demand_signals and its two indexes (OWN-Q6). Purely additive: it touches no " +
+      "existing table and no existing column, so every build that predates it — including the " +
+      "one live while this applies — keeps working untouched. Applied to production BEFORE the " +
+      "code that names the table merges, which is the ordering the 2026-08-28 incident taught " +
+      "and the ordering the owner authorized on 2026-08-31.",
+  },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

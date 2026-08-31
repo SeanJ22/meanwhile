@@ -237,6 +237,10 @@ test("A-001 · run_id is the one handle shared across reader stores, and it name
       // ASK03 (2026-08-27): the Ask interaction store. Same rule, same reason -
       // it names a synthetic WALK and is null on every organic row.
       "ask_interactions.run_id",
+      // OWN-Q6 (2026-08-31): the demand-signal store. Same rule and the same
+      // reason, with a distinct digest prefix — sha256('demand-run:' + id) —
+      // so it shares this column's NAME and none of its VALUE SPACE.
+      "demand_signals.run_id",
       "feedback.run_id",
       "reactions.run_id",
       "search_log.run_id",
